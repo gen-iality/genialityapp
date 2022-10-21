@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Form, Divider, Button, Table, Input, Space } from 'antd';
-import { EventsApi } from '../../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import Modal from './modalRelation';
@@ -40,8 +40,8 @@ class RelationshipFields extends Component {
   }
 
   handleChange(e) {
-    let name = e.target.name;
-    let value = e.target.value;
+    const name = e.target.name;
+    const value = e.target.value;
     this.setState({ [name]: value });
   }
 

@@ -3,10 +3,10 @@ import { Button, Card, Form, Input, Space, Upload, Alert, PageHeader } from 'ant
 import { PictureOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
-import { saveImageStorage } from '../../../helpers/helperSaveImage';
-import { UsersApi } from '../../../helpers/request';
+import { saveImageStorage } from '@helpers/helperSaveImage';
+import { UsersApi } from '@helpers/request';
 import ShieldAccountIcon from '@2fd/ant-design-icons/lib/ShieldAccount';
-import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 
 const EditInformation = ({ cUser }) => {
   const { value, setCurrentUser } = cUser;
@@ -14,7 +14,7 @@ const EditInformation = ({ cUser }) => {
   const validateDefaultPicture =
     picture === 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y' ? null : picture;
 
-  let [imageAvatar, setImageAvatar] = useState(
+  const [imageAvatar, setImageAvatar] = useState(
     validateDefaultPicture ? [{ url: validateDefaultPicture }] : validateDefaultPicture
   );
   const [sendRecovery, setSendRecovery] = useState(null);

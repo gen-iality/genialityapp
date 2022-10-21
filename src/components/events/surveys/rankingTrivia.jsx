@@ -1,21 +1,21 @@
 import { useEffect } from 'react';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import RankingList from './rankingList';
 import RankingMyScore from './rankingMyScore';
 import { Divider } from 'antd';
-import { UseSurveysContext } from '../../../context/surveysContext';
-import { useCurrentUser } from '../../../context/userContext';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import { UseEventContext } from '../../../context/eventContext';
+import { useSurveysContext } from '@context/surveysContext';
+import { useCurrentUser } from '@context/userContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useEventContext } from '@context/eventContext';
 
 function RankingTrivia(props) {
   const { setGameRanking, setMyScore } = useHelper();
-  let cSurveys = UseSurveysContext();
-  let cUser = useCurrentUser();
-  let eventContext = UseEventContext();
-  let currentSurvey = cSurveys.currentSurvey;
-  let currentUser = cUser.value;
-  let currentEvent = eventContext.value;
+  const cSurveys = useSurveysContext();
+  const cUser = useCurrentUser();
+  const eventContext = useEventContext();
+  const currentSurvey = cSurveys.currentSurvey;
+  const currentUser = cUser.value;
+  const currentEvent = eventContext.value;
 
   // useEffect(() => {
   //   let unsubscribe;
@@ -57,8 +57,8 @@ function RankingTrivia(props) {
         .orderBy('timeSpent', 'asc')
         // .limit(10)
         .onSnapshot(async (querySnapshot) => {
-          var puntajes = [];
-          puntajes = await Promise.all(
+          const puntajes = [];
+          const newPuntajes = await Promise.all(
             querySnapshot.docs.map(async (doc, index) => {
               const result = doc.data();
               let picture;
@@ -71,6 +71,7 @@ function RankingTrivia(props) {
               return result;
             })
           );
+          puntajes.push(...newPuntajes);
 
           /** Puntaje de todos los participantes */
           // /** Ordenamos por puntaje */
@@ -101,7 +102,7 @@ function RankingTrivia(props) {
   }, [currentSurvey, currentUser]);
 
   const getDataUser = async (iduser) => {
-    let user = await firestore
+    const user = await firestore
       .collection(`${currentEvent._id}_event_attendees`)
       .where('account_id', '==', iduser)
       .get();

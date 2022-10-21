@@ -2,7 +2,7 @@ import { Component } from 'react';
 //custom
 import { Button } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const imageWidh = 1280;
 const imageheigh = 960;
@@ -61,7 +61,7 @@ class CameraFeed extends Component {
     const context = this.canvas.getContext('2d');
     context.drawImage(this.videoPlayer, 0, 0, imageWidh, imageheigh);
     this.canvas.toBlob(sendFile);
-    let image = this.canvas.toDataURL();
+    const image = this.canvas.toDataURL();
     this.setState({ image, hidden: false, hiddeVideo: true });
     DispatchMessageService({
       type: 'success',

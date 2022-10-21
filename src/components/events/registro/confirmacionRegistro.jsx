@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Row, Col, Checkbox, Form } from 'antd';
 import EviusReactQuill from '../../shared/eviusReactQuill';
-import { EventsApi } from '../../../helpers/request';
-import Header from '../../../antdComponents/Header';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { EventsApi } from '@helpers/request';
+import Header from '@antdComponents/Header';
+import { DispatchMessageService } from '@context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -12,8 +12,8 @@ const formLayout = {
 
 function ConfirmacionRegistro(props) {
   console.log('props.event.validateEmail', props.event.validateEmail);
-  //Se definen las variables de useState para enviar y obtener datos
-  let [validateEmail, setValidateEmail] = useState(() => {
+  // Se definen las variables de useState para enviar y obtener datos
+  const [validateEmail, setValidateEmail] = useState(() => {
     if (props.event && props.event.validateEmail) {
       if (props.event.validateEmail === 'true' || props.event.validateEmail === true) {
         return true;
@@ -24,7 +24,7 @@ function ConfirmacionRegistro(props) {
       return false;
     }
   });
-  let [registrationMessage, setRegistrationMessage] = useState(
+  const [registrationMessage, setRegistrationMessage] = useState(
     props.event && props.event.registration_message ? props.event.registration_message : ''
   );
 
@@ -38,7 +38,7 @@ function ConfirmacionRegistro(props) {
       msj: ' Por favor espere mientras se guarda el contenido...',
       action: 'show',
     });
-    let data = {
+    const data = {
       registration_message: registrationMessage,
       validateEmail: validateEmail,
     };
@@ -80,36 +80,9 @@ function ConfirmacionRegistro(props) {
             <Form.Item label={'Mensaje de Inscripción'}>
               <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />
             </Form.Item>
-            {/* Removed by geniality/requirement-of-content: 'Configuración de inscripción' */}
-            {/* <Form.Item label={'Requerir la validación del correo antes de completar la inscripción'}>
-              <Checkbox defaultChecked={validateEmail} onChange={(e) => setValidateEmail(e.target.checked)} />
-            </Form.Item> */}
           </Col>
         </Row>
       </Form>
-      {/* <h1>Mensaje confirmacion registro</h1>
-      <p>El siguiente mensaje le llegará a las personas inscritas en el curso o lección</p>
-      <Row gutter={[0, 24]}>
-        <Col span={12}>
-          <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />
-        </Col>
-      </Row>
-      <Row>
-        Se envia el valor a validEmail a useSate para usarla porteriormente en la funcion saveData
-        <Checkbox
-          defaultChecked={validateEmail}
-          style={{ marginRight: '2%' }}
-          onChange={(e) => setValidateEmail(e.target.checked)}
-        />
-        <label>Requerir la validación del correo antes de completar el registro</label>
-      </Row>
-      <Row>
-        <Col span={12}>
-          <Button type='primary' onClick={saveData}>
-            Guardar
-          </Button>
-        </Col>
-      </Row> */}
     </>
   );
 }

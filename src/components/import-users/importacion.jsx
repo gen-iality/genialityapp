@@ -4,23 +4,33 @@ import dayjs from 'dayjs';
 import momentLocalizer from 'react-widgets-moment';
 import { Row, Col, Button, Divider, Upload } from 'antd';
 import { DownloadOutlined, InboxOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../context/MessageService';
-import content from '@/containers/content';
+import { DispatchMessageService } from '@context/MessageService';
+import content from '@containers/content';
+import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 
 dayjs.locale('es');
 momentLocalizer();
 
 const Importacion = (props) => {
   const [errMsg, setErrMsg] = useState('');
-
   const handleXlsFile = (files) => {
+    if (files.status === 'error') {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error al cargar el archivo excel',
+        action: 'show',
+      });
+      return;
+    }
+    // The execution stops, since ant design updates the upload event with each change in the file upload progress, this generates an error in the steps of importing users
+    if (files.status !== 'done') return;
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
       msj: ' Por favor espere mientras se envía la información...',
       action: 'show',
     });
-    const f = files;
+    const f = files.originFileObj;
     const reader = new FileReader();
     try {
       reader.onload = (e) => {
@@ -29,11 +39,11 @@ const Importacion = (props) => {
         const sheetName = workbook.SheetNames[0];
         const sheetObj = workbook.Sheets[sheetName];
         if (sheetObj['!ref']) {
-          var range = utils.decode_range(sheetObj['!ref']);
-          let fields = [];
+          const range = utils.decode_range(sheetObj['!ref']);
+          const fields = [];
           for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
             const keyCell = sheetObj[utils.encode_cell({ r: range.s.r, c: colNum })];
-            let key = keyCell ? keyCell.v.trim() : undefined;
+            const key = keyCell ? keyCell.v.trim() : undefined;
             //columna vacia continuamos
             if (!key) continue;
             fields[colNum] = { key: key, list: [], used: false };
@@ -97,14 +107,14 @@ const Importacion = (props) => {
   };
 
   const downloadExcel = () => {
-    let data = [{}];
+    const data = [{}];
     props.extraFields.map((extra) => {
       return (data[0][extra.name] = '');
     });
 
     //data[0]['tiquete'] = '';
     /** Se agrega campo requerido que no viene en la consulta de la base de datos */
-    // data[0]['rol'] = '';
+    data[0]['rol'] = '';
     /* if (password) {
       data[0]['password'] = password;
     } */
@@ -119,7 +129,7 @@ const Importacion = (props) => {
 
   /** Se agregan campos extras para poder mostrar como información en CAMPOS REQUERIDOS */
   const addMoreItemsToExtraFields = () => {
-    let modifiedExtraFields = [...props.extraFields /*{ name: 'rol', type: 'rol' }*/];
+    const modifiedExtraFields = [...props.extraFields, { name: 'rol', type: 'rol' }];
     /* if (password) {
       modifiedExtraFields = [...props.extraFields, { name: 'password', type: 'password' }];
     } */
@@ -127,7 +137,7 @@ const Importacion = (props) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <div className='importacion-txt'>
         <p>
           Para importar los usuarios de tu curso, debes cargar un archivo excel (.xls) con las columnas organizadas
@@ -148,8 +158,10 @@ const Importacion = (props) => {
       <Row justify='center' align='middle' wrap gutter={[16, 16]}>
         <Col>
           <Upload.Dragger
-            onChange={(e) => handleXlsFile(e.fileList[0].originFileObj)}
-            onDrop={(e) => handleXlsFile(e.fileList[0].originFileObj)}
+            maxCount={1}
+            onChange={(e) => handleXlsFile(e.fileList[0])}
+            onDrop={(e) => handleXlsFile(e.fileList[0])}
+            customRequest={uploadImagedummyRequest}
             multiple={false}
             accept='.xls,.xlsx'
             style={{ margin: '0 15px', padding: '0 !important' }}>
@@ -164,7 +176,7 @@ const Importacion = (props) => {
           </Button>
         </Col>
       </Row>
-    </React.Fragment>
+    </>
   );
 };
 

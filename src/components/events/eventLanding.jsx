@@ -13,7 +13,8 @@ import HostList from '@components/agenda/components/HostList';
 import StudentSelfCourseProgress from '../StudentProgress/StudentSelfCourseProgress';
 import { activityContentValues } from '@context/activityType/constants/ui';
 import QuizApprovedStatus from '../quiz/QuizApprovedStatus';
-class eventLanding extends Component {
+
+class EventLanding extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -106,22 +107,9 @@ class eventLanding extends Component {
               this.props.cEvent.value.styles.show_card_banner &&
               this.props.cEvent.value.styles.show_card_banner === true
                 ? { marginTop: '2%' }
-                : { marginTop: '0px' },
-              this.props.cEvent.value._id === '61af4b3dab505c39ed5b5855' ||
-              this.props.cEvent.value._id === '61ae65cdba621c0fc94aff12'
-                ? { backgroundColor: '#000', border: 'none' }
-                : {})
-            }
-          >
-            {/* {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' ? (
-              ''
-            ) : (
-              <Row justify='center'>
-                <h1 className='is-size-4-desktop has-text-weight-semibold'>{this.props.cEvent.value.name}</h1>
-              </Row>
-            )} */}
+                : { marginTop: '0px' })
+            }>
             {/* Si event video existe */}
-            {/* {console.log("this.props.cEvent.value?.video_position",this.props.cEvent.value?.video)} */}
             {this.props.cEvent.value?.video_position == 'true' && this.props.cEvent.value.video && (
               <div className='mediaplayer'>
                 <ReactPlayer
@@ -196,5 +184,5 @@ class eventLanding extends Component {
   }
 }
 
-let EventLandingWithContext = withContext(eventLanding);
+const EventLandingWithContext = withContext(EventLanding);
 export default withRouter(EventLandingWithContext);

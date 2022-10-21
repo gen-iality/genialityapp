@@ -8,12 +8,12 @@ import {
   PlusCircleOutlined,
   SaveOutlined,
 } from '@ant-design/icons';
-import { handleRequestError } from '../../helpers/utils';
-import { firestore } from '../../helpers/firebase';
+import { handleRequestError } from '@helpers/utils';
+import { firestore } from '@helpers/firebase';
 import { SketchPicker } from 'react-color';
-import Header from '../../antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import Header from '@antdComponents/Header';
+import { DispatchMessageService } from '@context/MessageService';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const { Option } = Select;
 const { confirm } = Modal;
@@ -31,7 +31,7 @@ const Stands = (props) => {
   const [noValid, setNoValid] = useState(false);
   const { eventIsActive } = useHelper();
 
-  let columns = [
+  const columns = [
     {
       title: 'Nombre',
       dataIndex: 'label',
@@ -112,7 +112,7 @@ const Stands = (props) => {
   }
 
   async function obtenerConfig() {
-    let config = await firestore
+    const config = await firestore
       .collection('event_companies')
       .doc(props.event._id)
       .get();
@@ -151,13 +151,13 @@ const Stands = (props) => {
 
   const editStand = async () => {
     if (nameStand !== '' && nameStand !== null) {
-      let list = standsList;
-      let selectedStandEdit =
+      const list = standsList;
+      const selectedStandEdit =
         selectedStand !== null
           ? { ...selectedStand, label: nameStand, value: nameStand, color: colorStand }
           : { label: nameStand, value: nameStand, id: standsList.length, color: colorStand };
       selectedStand !== null ? (list[selectedStand.id] = selectedStandEdit) : list.push(selectedStandEdit);
-      let modifyObject = { ...documentEmpresa, stand_types: list };
+      const modifyObject = { ...documentEmpresa, stand_types: list };
       await actualizarData(modifyObject);
       DispatchMessageService({
         type: 'success',
@@ -207,7 +207,7 @@ const Stands = (props) => {
           try {
             let list = standsList;
             list = list.filter((stand) => stand.id !== id);
-            let modifyObject = { ...documentEmpresa, stand_types: list };
+            const modifyObject = { ...documentEmpresa, stand_types: list };
             await actualizarData(modifyObject);
             DispatchMessageService({
               key: 'loading',
@@ -275,8 +275,8 @@ const Stands = (props) => {
       .get()
       .then((resp) => {
         setDocumentEmpresa(resp.data());
-        let standTypesOptions = resp.data().stand_types;
-        let listStands = [];
+        const standTypesOptions = resp.data().stand_types;
+        const listStands = [];
         standTypesOptions &&
           standTypesOptions.map((stands, indx) => {
             stands.label && stands.label.label !== null && listStands.push({ ...stands, id: indx });

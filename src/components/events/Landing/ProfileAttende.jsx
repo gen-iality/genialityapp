@@ -1,9 +1,9 @@
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { List } from 'antd';
 
-import { formatDataToString } from '../../../helpers/utils';
+import { formatDataToString } from '@helpers/utils';
 const ProfileAttende = () => {
-  let { propertiesOtherprofile } = useHelper();
+  const { propertiesOtherprofile } = useHelper();
   return (
     <div className='ant-list ant-list-split ant-list-bordered'>
       <List.Item>

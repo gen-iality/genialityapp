@@ -3,8 +3,8 @@ import { Button, Row, Table, Tag } from 'antd';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { withRouter } from 'react-router';
-import API from '../../helpers/request';
-import Header from '../../antdComponents/Header';
+import API from '@helpers/request';
+import Header from '@antdComponents/Header';
 
 const OfertProduts = (props) => {
   const goBack = () => props.history.goBack();
@@ -15,12 +15,12 @@ const OfertProduts = (props) => {
       obtenerOrdenes();
     }
     async function obtenerOrdenes() {
-      let data = await API.get(
+      const data = await API.get(
         `api/events/${props.eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${props.match.params.id}"}]`
       );
 
       if (data) {
-        let orderOferts = data.data.data.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
+        const orderOferts = data.data.data.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
         setOferts(orderOferts);
       }
     }
@@ -70,13 +70,6 @@ const OfertProduts = (props) => {
     <>
       <Header title={'Ofertas de la obra'} back />
       <Table columns={columns} dataSource={oferts.length > 0 && oferts} />
-      {/* <Row>
-            <Button shape='circle' onClick={goBack} icon={<ArrowLeftOutlined />} />{' '}
-            <span style={{ marginLeft: 30 }}>Ofertas de la obra</span>
-          </Row>
-          <Row style={{marginTop:30}}>
-            <Table style={{width:'100%'}} columns={columns} dataSource={oferts.length>0 && oferts} />
-          </Row> */}
     </>
   );
 };

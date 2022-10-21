@@ -1,7 +1,7 @@
 import { Button, Col, Modal, Row, Spin } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import {
   ArrowLeftOutlined,
@@ -11,24 +11,24 @@ import {
   ExclamationCircleOutlined,
   LoadingOutlined,
 } from '@ant-design/icons';
-import WithEviusContext from '../../../context/withContext';
+import WithEviusContext from '@context/withContext';
 
 import Moment from 'moment-timezone';
-import { UseEventContext } from '../../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import HumanGreetingVariantIcon from '@2fd/ant-design-icons/lib/HumanGreetingVariant';
 import CancelIcon from '@2fd/ant-design-icons/lib/Cancel';
-import AgendaContext from '../../../context/AgendaContext';
-import { CurrentEventUserContext } from '../../../context/eventUserContext';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentEventUserContext } from '@context/eventUserContext';
 import { imageUtils } from '../../../Utilities/ImageUtils';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed';
 
 const HeaderColumns = (props) => {
-  let { currentActivity } = useHelper();
-  let cEvent = UseEventContext();
-  let cEventUSer = useContext(CurrentEventUserContext);
-  let [loading, setLoading] = useState(false);
-  let {
+  const { currentActivity } = useHelper();
+  const cEvent = useEventContext();
+  const cEventUSer = useContext(CurrentEventUserContext);
+  const [loading, setLoading] = useState(false);
+  const {
     request,
     transmition,
     getRequestByActivity,
@@ -186,27 +186,6 @@ const HeaderColumns = (props) => {
         <div style={{ padding: '8px' }}>
           <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
             {currentActivity && currentActivity?.name}
-            {/* {configfast && configfast.enableCount && (
-                            <>
-                                ( &nbsp;
-                                {configfast && configfast.totalAttendees
-                                    ? configfast.totalAttendees
-                                    : totalAttendees}
-                                {"/"} {totalAttendeesCheckedin}{" "}
-                                {"(" +
-                                    Math.round(
-                                        (totalAttendeesCheckedin /
-                                            (configfast.totalAttendees
-                                                ? configfast.totalAttendees
-                                                : totalAttendees)) *
-                                        100 *
-                                        100
-                                    ) /
-                                    100 +
-                                    "%)"}
-                                )
-                            </>
-                        )} */}
           </Row>
           <Row
             style={{
@@ -251,7 +230,6 @@ const HeaderColumns = (props) => {
             {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
           </Row>
           <Col>
-          {console.log("1. TIPE ACTIVITY==>",typeActivity,recordTypeForThisEvent( cEvent.value?._id) )}
             {typeActivity == 'eviusMeet' &&
               !request[cEventUSer.value?._id]?.active &&
               cEventUSer.value?._id &&
@@ -301,6 +279,6 @@ const HeaderColumns = (props) => {
   );
 };
 
-let HeaderColumnswithContext = WithEviusContext(HeaderColumns);
+const HeaderColumnswithContext = WithEviusContext(HeaderColumns);
 
 export default HeaderColumnswithContext;

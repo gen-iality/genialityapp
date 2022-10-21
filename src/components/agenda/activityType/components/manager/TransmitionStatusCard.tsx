@@ -9,7 +9,7 @@ import {
   getLiveStreamStatus,
   startLiveStream,
   deleteAllVideos,
-} from '@/adaptors/gcoreStreamingApi';
+} from '@adaptors/gcoreStreamingApi';
 import { useQueryClient } from 'react-query';
 import useActivityType from '@context/activityType/hooks/useActivityType';
 import { ExclamationCircleOutlined } from '@ant-design/icons';

@@ -1,5 +1,5 @@
 import { Card } from 'antd';
-import { useState, useEffect } from 'react';
+import { Component } from 'react';
 
 const tabList = [
   {
@@ -38,7 +38,7 @@ const contentListNoTitle = {
   project: <p>project content</p>,
 };
 
-export default class TabsCard extends React.Component {
+export default class TabsCard extends Component {
   state = {
     key: 'tab1',
     noTitleKey: 'app',

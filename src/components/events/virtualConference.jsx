@@ -1,20 +1,20 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Button, Avatar, Row, Col, Tooltip, Typography, Spin } from 'antd';
-import { AgendaApi } from '../../helpers/request';
-import { firestore } from '../../helpers/firebase';
+import { AgendaApi } from '@helpers/request';
+import { firestore } from '@helpers/firebase';
 import Moment from 'moment-timezone';
 import { FieldTimeOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
-import { UseEventContext } from '../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { Link } from 'react-router-dom';
 import { truncate } from 'lodash-es';
 import { imageUtils } from '../../Utilities/ImageUtils';
 const { Text } = Typography;
 
 const VirtualConference = () => {
-  let cEvent = UseEventContext();
-  let urlactivity = `/landing/${cEvent.value._id}/activity/`;
-  let urlAgenda = `/landing/${cEvent.value._id}/agenda/`;
+  const cEvent = useEventContext();
+  const urlactivity = `/landing/${cEvent.value._id}/activity/`;
+  const urlAgenda = `/landing/${cEvent.value._id}/agenda/`;
 
   const [infoAgendaArr, setinfoAgenda] = useState([]);
   const [agendageneral, setagendageneral] = useState(null);
@@ -38,13 +38,13 @@ const VirtualConference = () => {
         .doc(cEvent.value._id)
         .collection('activities')
         .onSnapshot((infoActivity) => {
-          let arratem = [];
+          const arratem = [];
 
           infoActivity.docs.map((doc) => {
             agendageneral.map((item) => {
               if (item._id == doc.id) {
                 let activity;
-                let { habilitar_ingreso, isPublished, meeting_id, platform, vimeo_id } = doc.data();
+                const { habilitar_ingreso, isPublished, meeting_id, platform, vimeo_id } = doc.data();
                 if (
                   habilitar_ingreso != 'ended_meeting_room' &&
                   isPublished &&
@@ -59,8 +59,8 @@ const VirtualConference = () => {
           });
 
           //ordenar
-          let activitiesorder = arratem.sort((a, b) => a.updated_at - b.updated_at);
-          let orderactivities = [];
+          const activitiesorder = arratem.sort((a, b) => a.updated_at - b.updated_at);
+          const orderactivities = [];
           orderactivities.push(activitiesorder[0]);
 
           setinfoAgenda(orderactivities);

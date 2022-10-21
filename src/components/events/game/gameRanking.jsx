@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import { Row, Col, Avatar, Divider } from 'antd';
 import RankingList from '../../events/surveys/rankingList';
 import RankingMyScore from '../../events/surveys/rankingMyScore';
 
-import WithEviusContext from '../../../context/withContext';
+import WithEviusContext from '@context/withContext';
 
 function GameRanking(props) {
   const { cUser, cEvent, cHelper } = props;
@@ -19,7 +19,7 @@ function GameRanking(props) {
   };
 
   useEffect(() => {
-    let gameId = '0biWfCwWbUGhbZmfhkvu';
+    const gameId = '0biWfCwWbUGhbZmfhkvu';
     // let unsubscribeCurrentUserScore;
     // //Consulta del puntaje del currentUser
     // if (!(Object.keys(currentUser).length === 0)) {
@@ -38,23 +38,24 @@ function GameRanking(props) {
     //     });
     // }
     //Consulta de todos los puntajes
-    let unsubscribeAllScores = firestore
+    const unsubscribeAllScores = firestore
       .collection('juegos/' + gameId + '/puntajes/')
       .orderBy('puntaje', 'desc')
       // .limit(10)
       .onSnapshot(async (querySnapshot) => {
-        var puntajes = [];
-        puntajes = await Promise.all(
+        const puntajes = [];
+        const newPuntajes = await Promise.all(
           querySnapshot.docs.map(async (doc, index) => {
             const result = doc.data();
 
-            let picture = await getDataUser(result.eventUser_id);
+            const picture = await getDataUser(result.eventUser_id);
             result['score'] = result.puntaje;
             result['imageProfile'] = picture;
             result['index'] = index + 1;
             return result;
           })
         );
+        puntajes.push(...newPuntajes);
         const cUserId = currentUser?._id;
         const filterForRankingUserId = puntajes.filter((rankingUsers) => rankingUsers.eventUser_id === cUserId);
 
@@ -73,7 +74,7 @@ function GameRanking(props) {
   }, [currentUser]);
 
   const getDataUser = async (iduser) => {
-    let user = await firestore
+    const user = await firestore
       .collection(`${cEvent.value._id}_event_attendees`)
       .where('account_id', '==', iduser)
       .get();
@@ -88,14 +89,10 @@ function GameRanking(props) {
   };
   return (
     <>
-      {/* {!(Object.keys(currentUser).length === 0) && ( */}
-      <>
-        {/*RANKING*/}
-        <RankingMyScore />
-        <Divider />
-        <RankingList />
-      </>
-      {/* )} */}
+      {/*RANKING*/}
+      <RankingMyScore />
+      <Divider />
+      <RankingList />
     </>
   );
 }

@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useHistory, withRouter } from 'react-router-dom';
-import { DocumentsApi } from '../../helpers/request';
-import { handleRequestError } from '../../helpers/utils';
+import { DocumentsApi } from '@helpers/request';
+import { handleRequestError } from '@helpers/utils';
 import { Form, Row, Col, Input, Modal, Upload, Button, Checkbox, Spin, Progress } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined, ReloadOutlined } from '@ant-design/icons';
-import { fireStorage } from '@/helpers/firebase';
-import Header from '../../antdComponents/Header';
+import { fireStorage } from '@helpers/firebase';
+import Header from '@antdComponents/Header';
 import dayjs from 'dayjs';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { confirm } = Modal;
 
@@ -21,9 +21,9 @@ const Document = (props) => {
   const history = useHistory();
   const [document, setDocument] = useState({});
   const [documentList, setDocumentList] = useState([]);
-  let [files, setFiles] = useState('');
-  let [fileName, setFileName] = useState('');
-  let [extention, setExtention] = useState('');
+  const [files, setFiles] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [extention, setExtention] = useState('');
   const [folder, setFolder] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadPercentage, setLoadPercentage] = useState(0);
@@ -220,7 +220,7 @@ const Document = (props) => {
 
     /* this.setState({ fileName: name }); */
     /* console.log(fileName, name); */
-    let uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files);
+    const uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files);
     /* setUploadTask(uploadTaskRef); */
     /* console.log(uploadTaskRef); */
     //Se envia a firebase y se pasa la validacion para poder saber el estado del documento
@@ -321,12 +321,6 @@ const Document = (props) => {
         }>
         <Row justify='center' wrap gutter={12}>
           <Col span={14}>
-            {/* <Form.Item label={'¿Desea crear carpeta?'} >
-              <Checkbox 
-                checked={folder}
-                onChange={(e) => setFolder(e.target.checked)}
-              />
-            </Form.Item> */}
             {!folder && (
               <Form.Item
                 label={

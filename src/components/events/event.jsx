@@ -3,7 +3,7 @@ import { Route, Redirect, Switch, Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import momentLocalizer from 'react-widgets-moment';
 import Loading from '../loaders/loading';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import ListEventUser from '../event-users';
 import { fetchRol } from '../../redux/rols/actions';
 import { fetchPermissions } from '../../redux/permissions/actions';
@@ -27,21 +27,20 @@ import ReportNetworking from '../networking/report';
 import NewsSectionRoutes from '../news/newsRoute';
 import ProductSectionRoutes from '../products/productsRoute';
 import { withRouter } from 'react-router-dom';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { Layout, Space, Row, Col, Button, Result } from 'antd';
-import { AdminUsers } from '../../components/AdminUsers/AdminUsers';
+import { AdminUsers } from '@components/AdminUsers/AdminUsers';
 import loadable from '@loadable/component';
 import NoMatchPage from '../notFoundPage/noMatchPage';
 import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms';
-import { DispatchMessageService } from '@/context/MessageService';
-import { handleRequestError } from '@/helpers/utils';
+import { DispatchMessageService } from '@context/MessageService';
+import { handleRequestError } from '@helpers/utils';
 import { ValidateEndEvent } from '@/hooks/validateEventStartAndEnd';
 import { featureBlockingListener, featureBlockingStatusSave } from '@/services/featureBlocking/featureBlocking';
 import IsolatedRoutes from '../isolated/IsolatedRoutes';
 import TimeTrackingRoutes from '../time-tracking/TimeTrackingRoutes';
 
 const { Sider, Content } = Layout;
-//import Styles from '../App/styles';
 
 // Code splitting
 const General = loadable(() => import('./general'));
@@ -57,6 +56,7 @@ const Messages = loadable(() => import('../messages'));
 /* const TicketInfo = loadable(() => import('../tickets/index_old')); */
 const Styles = loadable(() => import('../App/styles'));
 const DashboardEvent = loadable(() => import('../dashboard'));
+const BadgeEvent = loadable(() => import('../badge'));
 const OrdersEvent = loadable(() => import('../orders'));
 const ListCertificados = loadable(() => import('../certificados'));
 /* const ReporteCertificados = loadable(() => import('../certificados/reporte_old')); */
@@ -99,7 +99,7 @@ class Event extends Component {
 
     try {
       await this.props.dispatch(fetchRol());
-      let eventId = this.props.match.params.event;
+      const eventId = this.props.match.params.event;
       await this.props.dispatch(fetchPermissions(eventId));
       const event = await EventsApi.getOne(eventId);
       const eventWithExtraFields = this.addNewFieldsToEvent(event);
@@ -165,7 +165,7 @@ class Event extends Component {
       formatupperorlowercase = url.toString();
     }
 
-    var encodedUrl = formatupperorlowercase;
+    let encodedUrl = formatupperorlowercase;
     encodedUrl = encodedUrl.split(/\&+/).join('-and-');
     if (this.isUpper(url)) {
       encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-');
@@ -220,16 +220,6 @@ class Event extends Component {
 
     return (
       <Layout className='columns'>
-        {/* RESTRICIONES */}
-        {/* {iMustValidate && (
-          <>
-            <ValidateEndEvent
-              endDate={event.datetime_to}
-              callBackTheEventIsActive={this.theEventIsActive}
-              user={cUser}
-            />
-          </>
-        )} */}
         <Sider
           style={{
             overflow: 'auto',
@@ -354,6 +344,7 @@ class Event extends Component {
                 componentKey='checkin'
                 type='activity'
                 shownAll={false}
+                componentKeyToMergingOrAdaptIt='activity-checkin'
               />
 
               <Protected
@@ -393,18 +384,19 @@ class Event extends Component {
                 event={event}
                 componentKey='tipo-asistentes'
               />
-              {/* <Protected
-                path={`${match.url}/ticket`}
-                component={TicketInfo}
-                event={this.state.event}
-                componentKey='ticket'
-              /> */}
               <Protected
                 path={`${match.url}/dashboard`}
                 component={DashboardEvent}
                 eventId={event._id}
                 event={event}
                 componentKey='dashboard'
+              />
+              <Protected
+                path={`${match.url}/badge`}
+                component={BadgeEvent}
+                eventId={event._id}
+                event={event}
+                componentKey='badge'
               />
               <Protected path={`${match.url}/orders`} component={OrdersEvent} event={event} componentKey='orders' />
               <Protected
@@ -420,12 +412,6 @@ class Event extends Component {
                 event={event}
                 componentKey='espacios'
               />
-              {/* <Protected
-                path={`${match.url}/reporte-certificados`}
-                component={ReporteCertificados}
-                event={this.state.event}
-                componentKey='reporte-certificados'
-              /> */}
               <Protected
                 path={`${match.url}/speakers`}
                 component={Speakers}
@@ -442,13 +428,6 @@ class Event extends Component {
                 componentKey='styles'
               />
               {/* Ruta no usada posiblemente es la version 1 de la ruta /menuLanding */}
-              {/* <Protected
-                path={`${match.url}/configurationApp`}
-                component={ConfigurationApp}
-                eventId={this.state.event._id}
-                event={this.state.event}
-                componentKey='configurationApp'
-              /> */}
               <Protected
                 path={`${match.url}/notificationsApp`}
                 component={NotificationsApp}

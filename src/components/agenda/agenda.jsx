@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AgendaApi } from '../../helpers/request';
+import { AgendaApi } from '@helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import { Tag } from 'antd';
@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import lessonTypeToString from '../events/lessonTypeToString';
 
 const Agenda = (props) => {
-  let [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({});
 
   const columns = [
     {
@@ -44,7 +44,7 @@ const Agenda = (props) => {
         if (record.type === null) {
           return <div>Genérico</div>
         }
-        let typeName = lessonTypeToString(record.type.name) || 'Genérico';
+        const typeName = lessonTypeToString(record.type.name) || 'Genérico';
         return <div>{typeName}</div>
       }
     },

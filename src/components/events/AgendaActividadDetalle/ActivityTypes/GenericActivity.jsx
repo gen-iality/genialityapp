@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 import { Result, Grid } from 'antd';
-import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import HeaderColumnswithContext from '../HeaderColumns';
 
 const { useBreakpoint } = Grid;
 
 const GenericActivity = () => {
-  let { currentActivity } = useHelper();
+  const { currentActivity } = useHelper();
   const screens = useBreakpoint();
   const [activityState, setactivityState] = useState('');
 

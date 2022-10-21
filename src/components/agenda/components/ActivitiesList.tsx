@@ -4,14 +4,14 @@ import { ReadFilled, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { AgendaApi } from '@/helpers/request';
+import { AgendaApi } from '@helpers/request';
 import dayjs from 'dayjs';
-import { ExtendedAgendaType } from '@/Utilities/types/AgendaType';
-import { ActivityType } from '@/context/activityType/types/activityType';
-import { firestore } from '@/helpers/firebase';
+import { ExtendedAgendaType } from '@Utilities/types/AgendaType';
+import { ActivityType } from '@context/activityType/types/activityType';
+import { firestore } from '@helpers/firebase';
 import { ActivityCustomIcon } from './ActivityCustomIcon';
-import { activityContentValues } from '@/context/activityType/constants/ui';
-import QuizProgress from '@/components/quiz/QuizProgress';
+import { activityContentValues } from '@context/activityType/constants/ui';
+import QuizProgress from '@components/quiz/QuizProgress';
 import { useCurrentUser } from '@context/userContext';
 import Service from '@components/agenda/roomManager/service';
 import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton';
@@ -92,7 +92,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 if (!cEventUserId) return;
                 (async () => {
                   console.log('item._id', agenda._id);
-                  let activity_attendee = await firestore
+                  const activity_attendee = await firestore
                     .collection(`${agenda._id}_event_attendees`)
                     .doc(cEventUserId)
                     .get(); //checkedin_at
@@ -313,7 +313,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               >
                 <Link to={item.link}>
                   <div>
-                    {/* <ReadFilled className='list-icon' style={{marginRight: '1em'}} /> */}
                     <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
                     <span>{item.title}</span>
                   </div>

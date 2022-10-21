@@ -3,7 +3,7 @@ import { Select, Form, Button, Input, Modal } from 'antd';
 const { Option } = Select;
 
 const ModalEdit = ({ visible, data, onFinish }) => {
-  let [visibleModal, setVisibleModal] = useState();
+  const [visibleModal, setVisibleModal] = useState();
 
   const [form] = Form.useForm();
 

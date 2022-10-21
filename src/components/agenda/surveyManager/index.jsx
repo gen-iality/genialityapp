@@ -1,8 +1,9 @@
 import { Component } from 'react';
 import { Card, Row, Col } from 'antd';
-import { firestore, fireRealtime } from '../../../helpers/firebase';
+import { firestore, fireRealtime } from '@helpers/firebase';
 import SurveyItem from './surveyItem';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
+import { sendCommunicationOpen } from './services';
 
 export default class SurveyManager extends Component {
   constructor(props) {
@@ -53,7 +54,7 @@ export default class SurveyManager extends Component {
     return new Promise((resolve) => {
       //Abril 2021 @todo migracion de estados de firestore a firebaserealtime
       //let eventId = surveyInfo.eventId || 'general';
-      let eventId = data.eventId || 'general';
+      const eventId = data.eventId || 'general';
       fireRealtime.ref('events/' + eventId + '/surveys/' + survey_id).update(data);
       firestore
         .collection('surveys')
@@ -65,7 +66,10 @@ export default class SurveyManager extends Component {
 
   handleChange = async (survey_id, data) => {
     const result = await this.updateSurvey(survey_id, data);
-
+    const canSendComunications = this.props.canSendComunications;
+    if (canSendComunications && canSendComunications === true && data.isOpened === 'true') {
+      await sendCommunicationOpen(survey_id);
+    }
     if (result && result.state === 'updated') {
       DispatchMessageService({
         type: 'success',
@@ -91,9 +95,6 @@ export default class SurveyManager extends Component {
               <Col xs={4} lg={2}>
                 <label className='label'>Abrir</label>
               </Col>
-              {/* <Col xs={4} lg={2}>
-                <label className='label'>Pausar</label>
-              </Col> */}
             </Row>
             {publishedSurveys.map((survey) => {
               return <SurveyItem key={`survey-${survey.survey_id}`} survey={survey} onChange={this.handleChange} />;

@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { Modal, Form, Input, Button, Typography, Spin } from 'antd';
 import { DefaultProperties } from './propertiesdefault';
-import { OrganizationPlantillaApi } from '../../helpers/request';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
-import { DispatchMessageService } from '../../context/MessageService';
+import { OrganizationPlantillaApi } from '@helpers/request';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { DispatchMessageService } from '@context/MessageService';
 
 const ModalCreateTemplate = (props) => {
   const [loading, setloading] = useState(false);
-  let { helperDispatch } = useHelper();
+  const { helperDispatch } = useHelper();
 
   const onFinish = async (values) => {
     //por defecto
     values.user_properties = DefaultProperties;
-    let organizerid = props.organizationid;
+    const organizerid = props.organizationid;
     setloading(true);
     await OrganizationPlantillaApi.createTemplate(organizerid, { template_properties: [values] });
     DispatchMessageService({

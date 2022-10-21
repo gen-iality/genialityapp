@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiUrl } from '../../helpers/constants';
+import { ApiUrl } from '@helpers/constants';
 
 export function getFiles(EventID) {
   return new Promise((resolve) => {

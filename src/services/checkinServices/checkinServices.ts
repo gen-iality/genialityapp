@@ -1,9 +1,35 @@
-import { DispatchMessageService } from '@/context/MessageService';
-import { firestore } from '@/helpers/firebase';
-import { TicketsApi } from '@/helpers/request';
-import { structureScannedInformation } from '@/Utilities/checkInUtils';
-import { getFieldDataFromAnArrayOfFields } from '@/Utilities/generalUtils';
-import { newData, saveCheckInAttendeePropsTypes, searchDocumentOrIdPropsTypes } from '@/Utilities/types/types';
+import { DispatchMessageService } from '@context/MessageService';
+import { firestore } from '@helpers/firebase';
+import { Activity, TicketsApi } from '@helpers/request';
+import { structureScannedInformation } from '@Utilities/checkInUtils';
+import { getFieldDataFromAnArrayOfFields } from '@Utilities/generalUtils';
+import { AttendeeInformation, newData, saveCheckInAttendeePropsTypes, searchDocumentOrIdPropsTypes } from '@Utilities/types/types';
+
+export const checkinByEventOrByActivity = (attendee: AttendeeInformation, activityId: string) => {
+  if (!activityId) return attendee;
+
+  const usersInTheActivity: {}[] = [];
+
+  attendee?.activityProperties?.filter((userInActivity: { activity_id: string }) => {
+    if (userInActivity?.activity_id === activityId) {
+      usersInTheActivity.push({ ...attendee, ...userInActivity });
+    }
+  });
+
+  /* If the attendee is not in the activity, his information is still returned so that he can be added if necessary. */
+  if (!usersInTheActivity[0]) {
+    const theAttendeeDoesNotExistInTheActivity = attendee;
+
+    theAttendeeDoesNotExistInTheActivity.checked_in = false;
+    theAttendeeDoesNotExistInTheActivity.checkedin_at = null;
+    theAttendeeDoesNotExistInTheActivity.checkedin_type = null;
+    theAttendeeDoesNotExistInTheActivity.youDoNotExistInThisActivity = true;
+
+    return theAttendeeDoesNotExistInTheActivity;
+  }
+
+  return usersInTheActivity[0];
+};
 
 /**allows you to search by ID or document number for an eventuser in firebase */
 export const getAttendeeByParameter = ({
@@ -11,6 +37,7 @@ export const getAttendeeByParameter = ({
   searchValue,
   fields,
   eventID,
+  activityId,
   setScannerData,
   setLoadingregister,
 }: searchDocumentOrIdPropsTypes) => {
@@ -34,7 +61,7 @@ export const getAttendeeByParameter = ({
   switch (key) {
     case 'document':
       /** We divide the string taken with the scanner to be able to assign the values to their corresponding variable */
-      let split: string[] = searchValue.document.split('<>');
+      const split: string[] = searchValue.document.split('<>');
 
       const documentInformation: any = structureScannedInformation({
         split,
@@ -61,7 +88,7 @@ export const getAttendeeByParameter = ({
       break;
   }
 
-  let newData: newData = {
+  const newData: newData = {
     attendeeNotFound: false,
     attendeeFound: false,
     another: false,
@@ -97,9 +124,12 @@ export const getAttendeeByParameter = ({
         setLoadingregister(false);
       } else {
         querySnapshot.forEach((doc) => {
-          const attendeeData = doc.data();
+          const attendeeData: AttendeeInformation = doc.data() as AttendeeInformation;
+
+          const attendee = checkinByEventOrByActivity(attendeeData, activityId);
+
           newData.attendeeFound = true;
-          newData.attendee = attendeeData;
+          newData.attendee = attendee;
           setScannerData(newData);
           setLoadingregister(false);
         });
@@ -120,12 +150,15 @@ export const saveCheckInAttendee = async ({
   checkInAttendeeCallbak,
   notification = true,
   checkInType = 'Virtual',
+  activityId,
 }: saveCheckInAttendeePropsTypes) => {
   let response: any;
 
   try {
     if (checked) {
-      response = await TicketsApi.addCheckIn(_id, checkInType);
+      if (activityId) response = await Activity.addCheckIn(_id, checkInType, activityId);
+      else response = await TicketsApi.addCheckIn(_id, checkInType);
+
       if (notification)
         DispatchMessageService({
           type: 'success',
@@ -133,7 +166,8 @@ export const saveCheckInAttendee = async ({
           action: 'show',
         });
     } else {
-      response = await TicketsApi.deleteCheckIn(_id);
+      if (activityId) response = await Activity.deleteCheckIn(_id, activityId);
+      else response = await TicketsApi.deleteCheckIn(_id);
 
       if (notification)
         DispatchMessageService({

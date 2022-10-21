@@ -1,16 +1,16 @@
 import { Row, Col } from 'antd';
 import EventLanding from './eventLanding';
-import { UseEventContext } from '../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import Lobby from '../fair/lobby/Lobby';
 import { withRouter } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
-import { CurrentEventUserContext } from '@/context/eventUserContext';
+import { CurrentEventUserContext } from '@context/eventUserContext';
 
 const EventHome = props => {
   /*Contextos*/
-  let { setActivitiesAttendee } = props;
-  let cEvent = UseEventContext();
-  let cEventUser = useContext(CurrentEventUserContext);
+  const { setActivitiesAttendee } = props;
+  const cEvent = useEventContext();
+  const cEventUser = useContext(CurrentEventUserContext);
   if (!cEvent.value) {
     return <>Cargando...</>;
   }

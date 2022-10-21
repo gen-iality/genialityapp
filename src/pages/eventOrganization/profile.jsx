@@ -1,9 +1,9 @@
 /*global google*/
 import { useState, useEffect } from 'react';
-import { OrganizationApi, TypesApi } from '../../helpers/request';
+import { OrganizationApi, TypesApi } from '@helpers/request';
 import { Form, Input, Row, Col, Select } from 'antd';
-import Header from '../../antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
+import Header from '@antdComponents/Header';
+import { DispatchMessageService } from '@context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -13,7 +13,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 function OrganizationInformation(props) {
-  let { name, description, _id: organizationId, type_event } = props.org;
+  const { name, description, _id: organizationId, type_event } = props.org;
   const [typeEvents, setTypeEvents] = useState([]);
 
   async function updateOrganization(values) {
@@ -40,7 +40,7 @@ function OrganizationInformation(props) {
   }
 
   async function obtenerTypeEvents() {
-    let resp = await TypesApi.getAll();
+    const resp = await TypesApi.getAll();
     if (resp) {
       setTypeEvents(resp);
     }
@@ -68,8 +68,8 @@ function OrganizationInformation(props) {
               name={['organization', 'type_event']}>
               <Select onChange={null}>
                 {' '}
-                {typeEvents.map((type) => (
-                  <Option value={type.label}>{type.label}</Option>
+                {typeEvents.map((type, index) => (
+                  <Option key={index} value={type.label}>{type.label}</Option>
                 ))}
               </Select>
             </Form.Item>

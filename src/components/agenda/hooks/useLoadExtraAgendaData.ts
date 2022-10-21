@@ -1,5 +1,5 @@
-import { CategoriesAgendaApi, eventTicketsApi, RolAttApi, SpacesApi, SpeakersApi } from "@/helpers/request";
-import { handleSelect } from "@/helpers/utils";
+import { CategoriesAgendaApi, eventTicketsApi, RolAttApi, SpacesApi, SpeakersApi } from "@helpers/request";
+import { handleSelect } from "@helpers/utils";
 import dayjs from "dayjs";
 import EventType from "../types/EventType";
 import SelectOptionType from "../types/SelectOptionType";

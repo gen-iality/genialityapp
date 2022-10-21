@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
-import { EventsApi } from '../../../helpers/request';
-import { UseEventContext } from '../../../context/eventContext';
+import { EventsApi } from '@helpers/request';
+import { useEventContext } from '@context/eventContext';
 import { Form, Row, Col } from 'antd';
-import Header from '../../../antdComponents/Header';
-import { DispatchMessageService } from '../../../context/MessageService';
+import Header from '@antdComponents/Header';
+import { DispatchMessageService } from '@context/MessageService';
 
 export default function AdmininformativeSection1(props) {
-  const eventContext = UseEventContext();
+  const eventContext = useEventContext();
   const [content, setContent] = useState('');
 
   const onFinish = (values) => {
@@ -61,7 +61,7 @@ export default function AdmininformativeSection1(props) {
     async function getContent() {
       const result = await EventsApi.getOne(eventContext.value._id);
       console.log('data', result);
-      let markup = result?.itemsMenu?.informativeSection1?.markup || '';
+      const markup = result?.itemsMenu?.informativeSection1?.markup || '';
       setContent(markup);
     }
     getContent();

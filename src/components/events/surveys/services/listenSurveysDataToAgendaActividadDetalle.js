@@ -1,4 +1,4 @@
-import { firestore } from '../../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 
 function listenSurveysData(event, activity, currentUser, callback) {
    //Listener a firestore para detectar cuando cambia alguna propiedad de las encuestas

@@ -9,7 +9,7 @@ import News from './news';
 import NewCE from './newCE';
 
 const NewsSectionRoutes = (props) => {
-  let { path } = useRouteMatch();
+  const { path } = useRouteMatch();
 
   return (
     <Switch>
@@ -19,9 +19,6 @@ const NewsSectionRoutes = (props) => {
       <Route path={`${path}/new`}>
         <NewCE {...props} />
       </Route>
-      {/*  <Route path={`${path}/addnoticia/:id?`}>
-        <AddNews {...props} />
-      </Route> */}
     </Switch>
   );
 };

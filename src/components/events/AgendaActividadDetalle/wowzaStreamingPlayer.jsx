@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import WOWZAPlayer from '../../livetransmision/WOWZAPlayer';
-import { CurrentUserContext } from '../../../context/userContext';
+import { CurrentUserContext } from '@context/userContext';
 import { Grid } from 'antd';
-import AgendaContext from '../../../context/AgendaContext';
-import { CurrentEventUserContext } from '../../../context/eventUserContext';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentEventUserContext } from '@context/eventUserContext';
 import { getLiveStreamStatus } from '../../../adaptors/gcoreStreamingApi';
 
 const { useBreakpoint } = Grid;
@@ -42,7 +42,7 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
       live_stream_status && setLivestreamStats(live_stream_status);
       console.log('live_stream_status=>', live_stream_status);
       //!live_stream_status?.active && timer_id && clearInterval(timer_id )
-      let timerId = setTimeout(executer_startMonitorStatus, 5000);
+      const timerId = setTimeout(executer_startMonitorStatus, 5000);
       setTimerId(timerId);
       // console.log('live_stream_status===>', live_stream_status);
     } catch (e) {
@@ -109,17 +109,6 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
           )}
         </>
       )}
-      {/* {livestreamStatus?.state === 'started' ? (
-        <>
-          {livestreamStats?.connected.value === 'Yes' ? (
-            <WOWZAPlayer meeting_id={meeting_id} />
-          ) : (
-            <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
-          )}
-        </>
-      ) : (
-        <h1>Streaming detenido</h1>
-      )} */}
     </>
   );
 }

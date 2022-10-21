@@ -9,7 +9,7 @@ function HelpFiftyFifty(setFiftyfitfyused, survey) {
       });
     };
 
-   let question = survey.currentPage.questions[0];
+   const question = survey.currentPage.questions[0];
 
    if (!(question.correctAnswer && question.choices && question.choices.length > 2)) {
       const config = {
@@ -25,7 +25,7 @@ function HelpFiftyFifty(setFiftyfitfyused, survey) {
    let cuantasParaBorrar = Math.floor(choices.length / 2);
 
    choices = choices.filter((choice) => {
-      let noBorrar = question.correctAnswer === choice.value || cuantasParaBorrar-- <= 0;
+      const noBorrar = question.correctAnswer === choice.value || cuantasParaBorrar-- <= 0;
       return noBorrar;
    });
    question.choices = choices;

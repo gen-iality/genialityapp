@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Route, NavLink, Redirect, Switch, withRouter } from 'react-router-dom';
-import Loading from '@/components/profile/loading';
-import { OrganizationApi } from '@/helpers/request';
+import Loading from '@components/profile/loading';
+import { OrganizationApi } from '@helpers/request';
 import OrganizationProfile from './profile';
-import Styles from '@/components/App/styles';
+import Styles from '@components/App/styles';
 import OrgEvents from './events';
 import OrgMembers from './members';
 import MemberSettings from './memberSettings';
@@ -21,9 +21,10 @@ import {
   ProjectOutlined,
   MenuOutlined,
 } from '@ant-design/icons';
-import MenuLanding from '@/components/menuLanding/index';
-import NoMatchPage from '@/components/notFoundPage/noMatchPage';
-import ValidateAccessRouteCms from '@/components/roles/hooks/validateAccessRouteCms';
+
+import MenuLanding from '@components/menuLanding/index';
+import NoMatchPage from '@components/notFoundPage/noMatchPage';
+import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteCms';
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage';
 
 function Organization(props) {
@@ -118,7 +119,6 @@ function Organization(props) {
                     path={`${props.match.url}/`}
                     render={() => <Redirect to={`${props.match.url}/events`} />}
                   />
-                  {/* <Route exact path={`${props.match.url}/events`} render={() => <OrgEvents org={organization} />} /> */}
                   <Protected
                     exact
                     path={`${props.match.url}/events`}

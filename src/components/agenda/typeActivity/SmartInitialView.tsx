@@ -1,13 +1,13 @@
 import { Card, Result, Button, Spin } from 'antd';
 import SmartModalStepByStep from './SmartModalStepByStep';
 import ManagerView from './ManagerView';
-import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 import { useContext, useEffect, useState } from 'react';
-import AgendaContext from '../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 
 import InitialSVG from './components/svg/InitialSVG';
-import { AgendaApi } from '../../../helpers/request';
-import { CurrentEventContext } from '../../../context/eventContext';
+import { AgendaApi } from '@helpers/request';
+import { CurrentEventContext } from '@context/eventContext';
 import ModalPreviewVideo from './ModalPreviewVideo';
 
 const objecKeys: object = {
@@ -97,34 +97,6 @@ const SmartInitialView = (props: any) => {
     return resp;
   };
 
-  // const renderComponet = () => {
-  //   switch (selectedKey) {
-  //     case 'finish':
-  //       return (
-  //         <ManagerView
-  //           type={objecKeys[previewKey]}
-  //           activityName={props.activityName}
-  //           activityId={props.activityId}
-  //         />
-  //       );
-  //     default:
-  //       return (
-  //         <Card>
-  //           <Result
-  //             icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
-  //             status='info'
-  //             title='Define el tipo de contenido'
-  //             extra={
-  //               <Button onClick={() => toggleActivitySteps('type')} type='primary'>
-  //                 Escoge un tipo de contenido
-  //               </Button>
-  //             }
-  //           />
-  //         </Card>
-  //       );
-  //   }
-  // };
-
   return (
     <>
       <ModalPreviewVideo />
@@ -133,7 +105,6 @@ const SmartInitialView = (props: any) => {
         activityName={props.activityName}
         onClosedForm={props.onClosedForm}
       />
-      {/* {!loading ? renderComponet() : <Spin />} */}
     </>
   );
 };

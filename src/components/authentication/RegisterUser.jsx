@@ -3,11 +3,11 @@ import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-
 import { Form, Input, Button, Space, Upload, Alert } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import createNewUser from './ModalsFunctions/createNewUser';
-import { app } from '../../helpers/firebase';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
+import { app } from '@helpers/firebase';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
-import { DispatchMessageService } from '@/context/MessageService';
-import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import { DispatchMessageService } from '@context/MessageService';
+import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
@@ -60,9 +60,9 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   ];
 
   const [form] = Form.useForm();
-  let [imageAvatar, setImageAvatar] = useState(null);
-  let [modalInfo, setModalInfo] = useState(null);
-  let [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
+  const [imageAvatar, setImageAvatar] = useState(null);
+  const [modalInfo, setModalInfo] = useState(null);
+  const [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
 
   function resetFields() {
     form.resetFields();
@@ -85,7 +85,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
     };
 
     try {
-      let resp = await createNewUser(newValues);
+      const resp = await createNewUser(newValues);
       if (resp == 1) {
         // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
         app
@@ -158,9 +158,6 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         autoComplete='off'
         layout='vertical'
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-        {/* <Typography.Title level={4} type='secondary'>
-                      Nueva organizacion
-                    </Typography.Title> */}
         <Form.Item>
           <ImgCrop rotate shape='round'>
             <Upload

@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { handleRequestError } from '../../helpers/utils';
+import { handleRequestError } from '@helpers/utils';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
-import Header from '../../antdComponents/Header';
-import Table from '../../antdComponents/Table';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
-import { DispatchMessageService } from '../../context/MessageService';
+import Header from '@antdComponents/Header';
+import Table from '@antdComponents/Table';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { DispatchMessageService } from '@context/MessageService';
 import Loading from '../profile/loading';
 import Service from '../agenda/roomManager/service';
-import { firestore, fireRealtime } from '@/helpers/firebase';
-import { deleteLiveStream, deleteAllVideos } from '@/adaptors/gcoreStreamingApi';
+import { firestore, fireRealtime } from '@helpers/firebase';
+import { deleteLiveStream, deleteAllVideos } from '@adaptors/gcoreStreamingApi';
 const { confirm } = Modal;
 
 const CMS = (props) => {
@@ -61,7 +61,7 @@ const CMS = (props) => {
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
-  let { reloadTemplatesCms } = useHelper();
+  const { reloadTemplatesCms } = useHelper();
 
   useEffect(() => {
     getList();
@@ -168,7 +168,6 @@ const CMS = (props) => {
         messageHeaderAlert={messageHeaderAlert}
       />
 
-      {/* {list.length > 0 ? ( */}
       <Table
         header={columns}
         loading={loading}
@@ -204,9 +203,6 @@ const CMS = (props) => {
         extraPathUpdateTitle={extraPathUpdateTitle}
         updateMails={updateMails}
       />
-      {/* ) : (
-        <Loading />
-      )} */}
     </div>
   );
 };

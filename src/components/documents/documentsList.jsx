@@ -36,12 +36,11 @@ const columns = [
 // Estructura de boton para descargar documentos
 const IconText = ({ icon, text, onSubmit }) => (
   <Button icon={icon} htmlType='submit' type='link' href={onSubmit} target='_blank'>
-    + {/* {React.createElement(icon, { style: { margin: 0 } })} */}
     {text}
   </Button>
 );
 
-class documentsList extends Component {
+class DocumentsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -196,4 +195,4 @@ class documentsList extends Component {
     );
   }
 }
-export default documentsList;
+export default DocumentsList;

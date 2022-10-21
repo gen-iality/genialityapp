@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import Async from 'async';
-import { Actions } from '../../helpers/request';
+import { Actions } from '@helpers/request';
 import { Row, Col, Tag, Tabs, Table, Spin } from 'antd';
 
 const { TabPane } = Tabs;
@@ -30,7 +30,7 @@ class Result extends Component {
   uploadByOne = (users) => {
     const self = this;
     const { extraFields } = this.props;
-    let ok = [],
+    const ok = [],
       notok = [];
     const toImport = users.filter((user) => !this.isEmptyObject(user));
     Async.eachOfSeries(
@@ -83,7 +83,9 @@ class Result extends Component {
                 cb();
               });
           } else {
-            Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, user)
+            const activityId = this.props.locationParams?.state?.activityId;
+            const activity = activityId ? `activity_id=${activityId}` : '';
+            Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}/?${activity}`, user)
               .then((resp) => {
                 if (resp.message === 'OK') {
                   ok[key] = {
@@ -150,7 +152,7 @@ class Result extends Component {
     const { extraFields } = this.props;
     const data = [notok, ok];
     return (
-      <React.Fragment>
+      <>
         <Row justify='space-between' wrap>
           <Col>
             <Tag>{total}</Tag>
@@ -170,7 +172,7 @@ class Result extends Component {
           </Col>
         </Row>
         {total > 0 && (
-          <React.Fragment>
+          <>
             <Tabs defaultActiveKey='0'>
               <TabPane tab='Correctos' key='0'>
                 <Spin tip={'Cargando...'} spinning={data[1].length === 0}>
@@ -188,7 +190,6 @@ class Result extends Component {
                 </Spin>
               </TabPane>
               <TabPane tab='Incorrectos' key='1'>
-                {/* <Spin tip={'Cargando...'} spinning={data[0].length === 0}> */}
                 <Table
                   size='small'
                   rowKey='index'
@@ -200,12 +201,11 @@ class Result extends Component {
                   <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis={true} />
                   <Column title='Estado' dataIndex='status' ellipsis={true} />
                 </Table>
-                {/* </Spin> */}
               </TabPane>
             </Tabs>
-          </React.Fragment>
+          </>
         )}
-      </React.Fragment>
+      </>
     );
   }
 }

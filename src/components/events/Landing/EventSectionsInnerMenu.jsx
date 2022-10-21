@@ -1,14 +1,14 @@
 import { Layout, Spin, Row, Image } from 'antd';
 import MenuEvent from './Menus/MenuEvent';
 import { EyeOutlined } from '@ant-design/icons';
-import { UseEventContext } from '../../../context/eventContext';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useEventContext } from '@context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 const { Sider } = Layout;
 
 const EventSectionsInnerMenu = () => {
-  let cEvent = UseEventContext();
-  let event = cEvent.value;
-  let { eventPrivate } = useHelper();
+  const cEvent = useEventContext();
+  const event = cEvent.value;
+  const { eventPrivate } = useHelper();
 
   if (!event) return <Spin size='small' />;
   return (

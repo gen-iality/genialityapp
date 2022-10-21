@@ -11,19 +11,19 @@ class Pagination extends Component {
   }
 
   componentDidMount() {
-    let auxArr = this.props.items;
+    const auxArr = this.props.items;
     this.setPage(this.props.initialPage, auxArr);
   }
   componentDidUpdate(prevProps) {
     if (this.props.items !== prevProps.items || this.props.updatetable !== prevProps.updatetable) {
-      let auxArr = this.props.items;
+      const auxArr = this.props.items;
       this.setPage(this.state.pager.currentPage, auxArr);
     }
   }
 
   getDerivedStateFromProps(nextProps) {
     if (nextProps.items.length !== this.props.items.length || nextProps.change !== this.props.change) {
-      let auxArr = nextProps.items;
+      const auxArr = nextProps.items;
       this.setPage(nextProps.initialPage, auxArr);
     }
   }
@@ -85,11 +85,11 @@ class Pagination extends Component {
 
   render() {
     const totalItemsCount = this.props.totalItemsCount / 10;
-    let pages = [];
+    const pages = [];
     for (let i = 0; i < totalItemsCount; ++i) {
       pages.push(i + 1);
     }
-    let pager = this.state.pager;
+    const pager = this.state.pager;
     if (!pager.pages || pager.pages.length <= 1) {
       return null;
     }
@@ -102,31 +102,6 @@ class Pagination extends Component {
           total={this.props.items.length}
           onChange={(e) => this.setPage(e, this.state.datos)}
         />
-        {/* <nav className='pagination is-centered' role='navigation' aria-label='pagination'>
-          <button
-            onClick={() => this.setPage(pager.currentPage - 1, this.state.datos)}
-            className={`button pagination-previous`}
-            disabled={pager.currentPage === 1}>
-            <span className='icon'>
-              <i className='fas fa-angle-double-left' />
-            </span>
-          </button>
-          <button
-            onClick={() => this.setPage(pager.currentPage + 1, this.state.datos)}
-            className={`button pagination-next`}
-            disabled={pager.currentPage === pager.totalPages}>
-            <span className='icon'>
-              <i className='fas fa-angle-double-right' />
-            </span>
-          </button>
-          <ul className='pagination-list'>
-            {pager.pages.map((page, index) => (
-              <li key={index} onClick={() => this.setPage(page, this.state.datos)}>
-                <span className={`pagination-link ${pager.currentPage === page ? 'is-current' : ''}`}>{page}</span>
-              </li>
-            ))}
-          </ul>
-        </nav> */}
       </>
     );
   }

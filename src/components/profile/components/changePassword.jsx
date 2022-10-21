@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Form, Input, Button, Alert, Card, PageHeader, Typography } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useIntl } from 'react-intl';
-import { EventsApi } from '../../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import ShieldLockIcon from '@2fd/ant-design-icons/lib/ShieldLock';
 
 export const ChangePassword = ({ email }) => {

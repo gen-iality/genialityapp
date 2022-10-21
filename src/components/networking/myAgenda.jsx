@@ -18,11 +18,11 @@ import dayjs from 'dayjs';
 import { find, map, mergeRight, path, propEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useMemo, useState } from 'react';
-import { firestore } from '../../helpers/firebase';
-import { getDatesRange } from '../../helpers/utils';
+import { firestore } from '@helpers/firebase';
+import { getDatesRange } from '@helpers/utils';
 import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
 import { createChatRoom } from './agendaHook';
-import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
+import { isStagingOrProduccion } from '@Utilities/isStagingOrProduccion';
 
 const { TabPane } = Tabs;
 const { Meta } = Card;
@@ -98,7 +98,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   }
 
   if (currentRoom) {
-    let userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
+    const userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
     //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=8816111496
     //
 
@@ -164,23 +164,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 
   return (
     <div>
-      {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-      {/* <Switch>
-          <Route path={props.match.url+"listadoCitas"} render={(props) => (
-             <ListadoCitas {...props}/>
-          )} />
-            
-            <Route path={props.match.url+"/reunion"} render={(props) => (
-          
-            <Reunion {...props}/>
-            )} />
-          
-          <Route path={props.match.url+""} render={(props) => (
-            <ListadoCitas {...props}/>
-            )} />
-        </Switch> */}
-
       {isNonEmptyArray(eventDatesRange) ? (
         <Tabs>
           {eventDatesRange.map((eventDate, eventDateIndex) => {
@@ -242,7 +225,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
       alert('Tenemos problemas con tu usuario, itenta recargar la página');
       return;
     }
-    let roomName = data.id;
+    const roomName = data.id;
 
     setCurrentRoom(roomName);
   };
@@ -264,7 +247,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   };
 
   const validDateRoom = (room) => {
-    let dateFrom = dayjs(room.timestamp_start).format('YYYY-MM-DD');
+    const dateFrom = dayjs(room.timestamp_start).format('YYYY-MM-DD');
 
     if (dayjs().format('YYYY-MM-DD') == dateFrom) {
       return true;
@@ -292,7 +275,6 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
         }
         title={
           <Space wrap>
-            {/* <div style={{ textTransform: 'capitalize' }}>{dayjs(data.timestamp_start).format('MMMM DD')}</div> */}
             <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
               {dayjs(data.timestamp_start).format('hh:mm a')}
             </Typography.Text>
@@ -301,7 +283,6 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
             </Typography.Text>
           </Space>
         }>
-        {/* <div style={{ marginBottom: '10px' }}>{'Cita con: '}</div> */}
         <Meta
           avatar={
             userImage ? (

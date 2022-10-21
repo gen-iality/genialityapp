@@ -1,9 +1,9 @@
 import { CheckCircleOutlined } from "@ant-design/icons";
-import { getLiveStream } from "../../../../adaptors/wowzaStreamingAPI";
+import { getLiveStream } from "@adaptors/wowzaStreamingAPI";
 import { Form, Input,  Alert } from "antd";
 import { useState, useContext } from "react";
-import AgendaContext from "../../../../context/AgendaContext";
-import { DispatchMessageService } from '../../../../context/MessageService';
+import AgendaContext from "@context/AgendaContext";
+import { DispatchMessageService } from '@context/MessageService';
 
 export default function StoreAlreadyCreatedMeeting({
   setMeetingId,
@@ -13,7 +13,6 @@ export default function StoreAlreadyCreatedMeeting({
   const { platform } = useContext(AgendaContext);
   return (
     <>
-      {/*rules={[{ required: true }]}*/}
       <Form.Item
         name="meeting_id"
         label={"Ingrese el identificador de la conferencia/streaming"}
@@ -70,12 +69,6 @@ export default function StoreAlreadyCreatedMeeting({
         type="warning"
         showIcon
       />
-
-      {/* <Form.Item>
-        <Button type='primary' htmlType='submit'>
-          Guardar
-        </Button>
-      </Form.Item> */}
     </>
   );
 }

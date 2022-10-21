@@ -1,9 +1,9 @@
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import InvitedUsers from './eventUsersList';
 import CreateMessage from './send';
 import ImportUsers from '../import-users/importUser';
-import { EventsApi } from '@/helpers/request';
+import { EventsApi } from '@helpers/request';
 
 // function Tabla(props) {
 //   const [guests, setGuests] = useState([]);
@@ -37,7 +37,7 @@ import { EventsApi } from '@/helpers/request';
 // }
 
 function ListaInvitados({ ...props }) {
-  const { eventId, event, match } = props;
+  const { eventId, event, match, location } = props;
 
   useEffect(() => {
     if (match.path === `/eventAdmin/${eventId}/invitados`) {
@@ -54,13 +54,7 @@ function ListaInvitados({ ...props }) {
   const [userProperties, setUserProperties] = useState([]);
 
   return (
-    <Fragment>
-      {/* <Tabla {...props} /> */}
-      {/* <h1 style={{ color: "red" }}> ***TODO Esta sección falta hacerla. los usuarios invitados deben quedar en su propio modelo de personas invitadas.
-      Cuando confirmen inscribiendose si es un curso gratis,
-      o pagando si es un curso pago pasan a asistentes(eventUsers)
-      </h1> */}
-
+    <>
       <Switch>
         <Route
           exact
@@ -81,11 +75,17 @@ function ListaInvitados({ ...props }) {
           exact
           path={`${match.url}/importar-excel`}
           render={() => (
-            <ImportUsers extraFields={userProperties} eventId={eventId} event={event} matchUrl={match.url} />
+            <ImportUsers
+              extraFields={userProperties}
+              eventId={eventId}
+              event={event}
+              matchUrl={match.url}
+              locationParams={location}
+            />
           )}
         />
       </Switch>
-    </Fragment>
+    </>
   );
 }
 

@@ -2,8 +2,7 @@
  * NOTE: This component can be put in another side because it is very generic.
  */
 
- import * as React from 'react';
- import { useState, useMemo } from 'react';
+  import { useState, useMemo } from 'react';
  
  import {
    Card,

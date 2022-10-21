@@ -1,11 +1,12 @@
+import { ReactNode } from 'react';
 import { Input, Form } from 'antd';
-import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 
 /**
   addonBefore: 'https://vimeo.com/event/' || https://youtu.be/ || <LinkOutlined />
 */
 interface propsOptions {
-  addonBefore: React.ReactNode;
+  addonBefore: ReactNode;
   placeholder?: string;
   type: string;
 }
@@ -21,10 +22,10 @@ const rules = {
     () => ({
       validator(_: any, value: string) {
         //Aqui validamos si el ID es valido o si la url es validad si cualquiera de los dos es valido entonces retornamos true si no  retornamos el error
-        let regUrl = new RegExp(
+        const regUrl = new RegExp(
           /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
         );
-        let regId = new RegExp(/^((\w|-){11})(?:\S+)?$/);
+        const regId = new RegExp(/^((\w|-){11})(?:\S+)?$/);
         if (regUrl.test(value) || (regId.test(value) && value.length === 11)) {
           return Promise.resolve();
         }
@@ -66,14 +67,14 @@ const onChange = {
   // Este ochenge cumple la funcion de
   youTube: (e: any) => {
     //obtenemos el ID del youtube
-    let id = e.target.value.match(
+    const id = e.target.value.match(
       /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
     );
     // reternamos el ID si existe si no retornamos el valor del input
     return id ? id[1] : e.target.value;
   },
   vimeo: (e: any) => {
-    let idVimeo = e.target.value.match(/(videos|video|channels|event|\.com)\/([\d]+)/);
+    const idVimeo = e.target.value.match(/(videos|video|channels|event|\.com)\/([\d]+)/);
     return idVimeo ? idVimeo[2] : e.target.value;
   },
   url: (e: any) => {
@@ -85,7 +86,7 @@ const InputSource = ({ type, addonBefore, placeholder }: propsOptions) => {
   const { selectOption, typeOptions } = useTypeActivity();
   return (
     <Form>
-      <Form.Item name='url' rules={rules[typeOptions.key] || [{ required: true }]}>
+      <Form.Item name='url' rules={(rules as any)[typeOptions.key] || [{ required: true }]}>
         <Input
           type={type === 'vimeo' ? 'number' : 'text'}
           addonBefore={addonBefore}
@@ -93,7 +94,7 @@ const InputSource = ({ type, addonBefore, placeholder }: propsOptions) => {
           size='large'
           onChange={(e) => {
             //esto es para enviar solo el ID si es una url de youtube o vimeo
-            selectOption(typeOptions.key, onChange[typeOptions.key](e));
+            selectOption(typeOptions.key, (onChange as any)[typeOptions.key](e));
           }}
         />
       </Form.Item>

@@ -1,12 +1,13 @@
+import { createRef } from 'react';
 import { notification } from 'antd';
 import { isFunction, isNonEmptyArray } from 'ramda-adjunct';
 import { Component } from 'react';
-import { handleRequestError } from '../../../helpers/utils';
-import { fireStoreApi } from '../../../helpers/request';
+import { handleRequestError } from '@helpers/utils';
+import { fireStoreApi } from '@helpers/request';
 import CompanyStand from './exhibitor/Exhibitor';
 import { getEventCompanies } from '../../empresas/services';
 import './Exhibitors.css';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 class Company extends Component {
   constructor(props) {
@@ -16,7 +17,7 @@ class Company extends Component {
       companies: [],
       shownCompanyIndex: -1,
     };
-    this.standsListRef = React.createRef();
+    this.standsListRef = createRef();
   }
 
   componentDidMount() {
@@ -56,7 +57,7 @@ class Company extends Component {
     this.setState({ shownCompanyIndex: companyIndex });
     const { eventId, eventUser } = this.props;
     const { companies } = this.state;
-    let companyItem = companies[companyIndex];
+    const companyItem = companies[companyIndex];
 
     if (eventUser && eventUser._id && companyItem.visitors_space_id) {
       fireStoreApi

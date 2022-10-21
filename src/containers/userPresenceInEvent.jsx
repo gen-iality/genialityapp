@@ -1,6 +1,6 @@
-import { fireRealtime, app } from '../helpers/firebase';
-import { getCurrentUser } from '../helpers/request';
-let initUserPresence = async (cEvent) => {
+import { fireRealtime, app } from '@helpers/firebase';
+import { getCurrentUser } from '@helpers/request';
+const initUserPresence = async (cEvent) => {
   if (cEvent?.visibility === 'ANONYMOUS') return;
   const user = await getCurrentUser();
   if (!user) return;
@@ -8,20 +8,20 @@ let initUserPresence = async (cEvent) => {
   initUserPresenceInner(user.uid, cEvent._id);
 };
 
-let initUserPresenceInner = (uid, event_id) => {
+const initUserPresenceInner = (uid, event_id) => {
   // Create a reference to this user's specific status node.
   // This is where we will store data about being online/offline.
-  var userStatusDatabaseRef = fireRealtime.ref('/status/' + event_id + '/' + uid);
+  const userStatusDatabaseRef = fireRealtime.ref('/status/' + event_id + '/' + uid);
 
   // We'll create two constants which we will write to
   // the Realtime database when this device is offline
   // or online.
-  var isOfflineForDatabase = {
+  const isOfflineForDatabase = {
     state: 'offline',
     last_changed: app.database.ServerValue.TIMESTAMP,
   };
 
-  var isOnlineForDatabase = {
+  const isOnlineForDatabase = {
     state: 'online',
     last_changed: app.database.ServerValue.TIMESTAMP,
   };

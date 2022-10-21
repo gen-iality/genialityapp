@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
+import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '@helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 import {
   Collapse,
@@ -24,18 +24,18 @@ import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
 import ImgCrop from 'antd-img-crop';
 
-import { areaCode } from '../../../helpers/constants';
+import { areaCode } from '@helpers/constants';
 import TypeRegister from '../../tickets/typeRegister';
 import { ButtonPayment } from './payRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import { UseUserEvent } from '../../../context/eventUserContext';
-import { UseEventContext } from '../../../context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useUserEvent } from '@context/eventUserContext';
+import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
-import { app } from '../../../helpers/firebase';
-import { DispatchMessageService } from '../../../context/MessageService';
-import { countryApi } from '@/helpers/request';
+import { app } from '@helpers/firebase';
+import { DispatchMessageService } from '@context/MessageService';
+import { countryApi } from '@helpers/request';
 /**TODO::ocaciona error en ios */
 
 const { Option } = Select;
@@ -89,7 +89,7 @@ function OutsideAlerter(props) {
 //OBTENER NOMBRE ARCHIVO
 function obtenerName(fileUrl) {
   if (typeof fileUrl == 'string') {
-    let splitUrl = fileUrl?.split('/');
+    const splitUrl = fileUrl?.split('/');
     return splitUrl[splitUrl.length - 1];
   } else {
     return null;
@@ -124,11 +124,11 @@ function fieldsAditional(extraFields) {
 /** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
  * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
  */
-let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) => {
+const UpdateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) => {
   camposConOpcionTomada.map((field) => {
-    let taken = field.options.filter((option) => option.value == values[field.name]);
-    let updatedField = { ...field };
-    let fieldId = updatedField._id && updatedField._id['$oid'] ? updatedField._id['$oid'] : updatedField._id;
+    const taken = field.options.filter((option) => option.value == values[field.name]);
+    const updatedField = { ...field };
+    const fieldId = updatedField._id && updatedField._id['$oid'] ? updatedField._id['$oid'] : updatedField._id;
     // updatedField.optionstaken = updatedField.optionstaken ? [...updatedField.optionstaken, ...taken] : taken;
 
     // //Esto es un parche porque el field viene con campos tipo objeto que revientan el API
@@ -161,8 +161,8 @@ const FormRegister = ({
   validateEventUser,
 }) => {
   const intl = useIntl();
-  const cEvent = UseEventContext();
-  const cEventUser = UseUserEvent();
+  const cEvent = useEventContext();
+  const cEventUser = useUserEvent();
   const cUser = useCurrentUser();
   const {
     currentAuthScreen,
@@ -183,13 +183,14 @@ const FormRegister = ({
   const [event, setEvent] = useState(null);
   const [loggedurl, setLogguedurl] = useState(null);
   const [imageAvatar, setImageAvatar] = useState(null);
+  // eslint-disable-next-line prefer-const
   let [ImgUrl, setImgUrl] = useState('');
   const [typeRegister, setTypeRegister] = useState('pay');
   const [payMessage, setPayMessage] = useState(false);
   const [form] = Form.useForm();
-  let [areacodeselected, setareacodeselected] = useState('+57');
-  let [numberareacode, setnumberareacode] = useState(null);
-  let [fieldCode, setFieldCode] = useState(null);
+  const [areacodeselected, setareacodeselected] = useState('+57');
+  const [numberareacode, setnumberareacode] = useState(null);
+  const [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState({});
   const [country, setCountry] = useState({ name: '', countryCode: '', inputName: '' });
   const [region, setRegion] = useState({ name: '', regionCode: '', inputName: '' });
@@ -218,7 +219,7 @@ const FormRegister = ({
   };
 
   const getIso2ByName = (name) => {
-    let countryFound = countries.find((country) => country.name === name);
+    const countryFound = countries.find((country) => country.name === name);
     if (countryFound) {
       setCountry({
         ...country,
@@ -232,7 +233,7 @@ const FormRegister = ({
 
   const getNameTypeCountry = () => {
     if (extraFields.length === 0) return '';
-    let fieldFound = extraFields.find((field) => field.type === 'country');
+    const fieldFound = extraFields.find((field) => field.type === 'country');
     if (!fieldFound) return '';
     if (fieldFound.length > 1) {
       return fieldFound[0].name;
@@ -326,7 +327,7 @@ const FormRegister = ({
   }, [validateEventUser?.status, validateEventUser?.statusFields]);
 
   useEffect(() => {
-    let formType = !cEventUser.value?._id ? 'register' : 'transfer';
+    const formType = !cEventUser.value?._id ? 'register' : 'transfer';
     setFormMessage(FormTags(formType));
     setSubmittedForm(false);
     hideConditionalFieldsToDefault(conditionals, cEventUser);
@@ -340,14 +341,14 @@ const FormRegister = ({
 
   useEffect(() => {
     if (!extraFields) return;
-    let codeareafield = extraFields.filter((field) => field.type == 'codearea');
+    const codeareafield = extraFields.filter((field) => field.type == 'codearea');
     if (codeareafield[0]) {
-      let phonenumber =
+      const phonenumber =
         eventUser && codeareafield[0] && eventUser['properties'] ? eventUser['properties'][codeareafield[0].name] : '';
-      let codeValue = eventUser && eventUser['properties'] ? eventUser['properties']['code'] : '';
+      const codeValue = eventUser && eventUser['properties'] ? eventUser['properties']['code'] : '';
       setFieldCode(codeareafield[0].name);
       if (phonenumber && numberareacode == null) {
-        let splitphone = phonenumber.toString().split(' ');
+        const splitphone = phonenumber.toString().split(' ');
         setareacodeselected(codeValue);
       }
     }
@@ -442,7 +443,7 @@ const FormRegister = ({
           properties: { ...values, typeRegister: typeRegister },
         };
 
-        let textMessage = {};
+        const textMessage = {};
         textMessage.key = key;
         let eventUserId;
 
@@ -506,8 +507,8 @@ const FormRegister = ({
             // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
             // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
             //
-            let camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
-            updateTakenOptionInTakeableList(camposConOpcionTomada, values, cEvent.value?._id);
+            const camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
+            UpdateTakenOptionInTakeableList(camposConOpcionTomada, values, cEvent.value?._id);
 
             if (resp && resp._id) {
               setSuccessMessageInRegisterForm(resp.status);
@@ -515,7 +516,7 @@ const FormRegister = ({
               handleChangeTypeModal(null);
               textMessage.content = 'Usuario ' + formMessage.successMessage;
 
-              let $msg =
+              const $msg =
                 organization == 1
                   ? ''
                   : event.registration_message ||
@@ -553,7 +554,7 @@ const FormRegister = ({
                         }
                         // }
                       } else {
-                        setErrorLogin(true);
+                        // setErrorLogin(true); -> setErrorLogin is undefined
                       }
                     });
                 };
@@ -588,7 +589,7 @@ const FormRegister = ({
               }
             } else {
               if (typeRegister == 'free') {
-                let msg =
+                const msg =
                   intl.formatMessage({
                     id: 'registration.already.registered',
                   }) +
@@ -662,7 +663,7 @@ const FormRegister = ({
   const valuesChange = (changedValues, allValues) => {
     //validar que todos los campos de event user esten llenos
     ValidateEmptyFields(allValues);
-    let e = {
+    const e = {
       target: {
         value: changedValues[Object.keys(changedValues)[0]],
       },
@@ -681,7 +682,7 @@ const FormRegister = ({
       //para cada campo revisamos si se cumplen todas las condiciones para mostrarlo
 
       conditionals.map((conditional) => {
-        let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
+        const fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
 
         if (!fieldExistInThisCondition) return;
         fieldHasCondition = true;
@@ -689,7 +690,7 @@ const FormRegister = ({
         let fulfillConditional = false;
 
         //valor actual del condicional en el formulario
-        let valueToValidate = allFields[conditional.fieldToValidate];
+        const valueToValidate = allFields[conditional.fieldToValidate];
         fulfillConditional = conditional.value === valueToValidate;
         if (fulfillConditional) {
           fieldShouldBeDisplayed = true;
@@ -701,7 +702,7 @@ const FormRegister = ({
   };
 
   const hideConditionalFieldsToDefault = (conditionals, eventUser) => {
-    let allFields = eventUser && eventUser['properties'] ? eventUser['properties'] : [];
+    const allFields = eventUser && eventUser['properties'] ? eventUser['properties'] : [];
     updateFieldsVisibility(conditionals, allFields);
   };
 
@@ -718,7 +719,7 @@ const FormRegister = ({
   };
 
   function validateUrl() {
-    let url = window.location.pathname;
+    const url = window.location.pathname;
     return url.includes('/landing/') ? true : false;
   }
   /**
@@ -726,21 +727,21 @@ const FormRegister = ({
    */
   const renderForm = useCallback(() => {
     if (!extraFields) return '';
-    let formUI = extraFields.map((m, key) => {
+    const formUI = extraFields.map((m, key) => {
       /* console.log(m, key) */
       if (m.visibleByAdmin == true) {
         return;
       }
       //Este if es nuevo para poder validar las contraseñas viejos (nuevo flujo para no mostrar esos campos)
       if (m.name !== 'contrasena' && m.name !== 'password') {
-        let type = m.type || 'text';
-        let props = m.props || {};
-        let name = m.name;
-        let label = m.label;
-        let mandatory = m.mandatory;
-        let description = m.description;
-        let labelPosition = m.labelPosition;
-        let target = name;
+        const type = m.type || 'text';
+        const props = m.props || {};
+        const name = m.name;
+        const label = m.label;
+        const mandatory = m.mandatory;
+        const description = m.description;
+        const labelPosition = m.labelPosition;
+        const target = name;
         let value = callback
           ? eventUser && eventUser['properties']
             ? eventUser['properties'][target]
@@ -749,9 +750,9 @@ const FormRegister = ({
           ? initialValues[target]
           : '';
         //VISIBILIDAD DE CAMPOS
-        let visible =
+        const visible =
           (initialValues?.email && name == 'email') || (initialValues?.names && name == 'names') ? true : false;
-        let validations =
+        const validations =
           (type === 'region' && regiones.length == 0) ||
           (type === 'country' && countries.length == 0) ||
           (type === 'city' && cities.length == 0);
@@ -829,7 +830,7 @@ const FormRegister = ({
                 optionFilterProp='children'
                 style={{ width: '100%' }}
                 onChange={(val) => {
-                  areacodeselected = val;
+                  setareacodeselected(val);
                 }}
                 placeholder='Código de area del pais'>
                 {areaCode.map((code, key) => {
@@ -846,7 +847,7 @@ const FormRegister = ({
 
         if (type === 'tituloseccion') {
           input = (
-            <React.Fragment>
+            <>
               <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
                 <div
                   dangerouslySetInnerHTML={{
@@ -854,7 +855,7 @@ const FormRegister = ({
                   }}></div>
               </div>
               <Divider />
-            </React.Fragment>
+            </>
           );
         }
 
@@ -863,10 +864,9 @@ const FormRegister = ({
           input = <ReactSelect options={m.options} isMulti name={name} />;
         }
 
+        const textoError = intl.formatMessage({ id: 'form.field.required' });
         if (type === 'boolean') {
           if (mandatory) {
-            let textoError = intl.formatMessage({ id: 'form.field.required' });
-
             rule = {
               validator: (_, value) => (value == true ? Promise.resolve() : Promise.reject(textoError)),
             };
@@ -973,10 +973,10 @@ const FormRegister = ({
         if (type === 'list') {
           //Filtramos las opciones ya tomadas si la opción justonebyattendee esta activada
 
-          let fieldId = m._id && m._id['$oid'] ? m._id['$oid'] : m._id;
+          const fieldId = m._id && m._id['$oid'] ? m._id['$oid'] : m._id;
 
           if (event && m.justonebyattendee && m.options) {
-            let takenoptions = event['takenoptions_' + fieldId];
+            const takenoptions = event['takenoptions_' + fieldId];
             if (takenoptions) {
               m.options = m.options.filter((x) => {
                 return takenoptions.filter((c) => x.value == c.value).length <= 0;
@@ -1189,16 +1189,7 @@ const FormRegister = ({
         {!submittedForm ? (
           <Card
             bordered={false}
-            // title={
-            //   eventUser !== undefined && eventUser !== null
-            //     ? intl.formatMessage({ id: 'registration.title.update' })
-            //     : intl.formatMessage({ id: 'registration.title.create' })
-            // }
             bodyStyle={textLeft}>
-            {/* //Renderiza el formulario */}
-            {cEvent.value?._id && cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && !eventUser && (
-              <TypeRegister typeRegister={typeRegister} setTypeRegister={setTypeRegister} />
-            )}
             {eventUser !== undefined &&
               eventUser !== null &&
               eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&

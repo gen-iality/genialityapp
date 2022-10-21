@@ -2,7 +2,7 @@ export default function LetterAvatar(props) {
   let { name, size } = props;
   name = name || '';
   size = size || 60;
-  let colours = [
+  const colours = [
       '#1abc9c',
       '#2ecc71',
       '#3498db',

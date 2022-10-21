@@ -8,13 +8,13 @@ import * as surveysActions from '../../../redux/survey/actions';
 import SurveyCard from './components/surveyCard';
 
 /** Context´s */
-import { useCurrentUser } from '../../../context/userContext';
-import { UseSurveysContext } from '../../../context/surveysContext';
+import { useCurrentUser } from '@context/userContext';
+import { useSurveysContext } from '@context/surveysContext';
 
 const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
-  let cSurveys = UseSurveysContext();
+  const cSurveys = useSurveysContext();
   const { activity, setCurrentSurvey, setSurveyResult } = props;
 
   const currentUser = useCurrentUser();

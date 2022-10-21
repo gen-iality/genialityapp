@@ -5,13 +5,13 @@ import { Col, Card, Result, Row, Space } from 'antd';
 import { CloudDownloadOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import Loading from '../../loaders/loading';
 import DocumentsList from '../documentsList';
-import { DocumentsApi } from '../../../helpers/request';
+import { DocumentsApi } from '@helpers/request';
 import { Tabs } from 'antd';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
 const { TabPane } = Tabs;
 
-class documentsDetail extends Component {
+class DocumentsDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,11 +35,11 @@ class documentsDetail extends Component {
 
   async componentDidMount() {
     let { documents } = this.state;
-    let data = [];
+    const data = [];
 
     try {
-      let eventId = this.props.cEvent.value?._id;
-      let folders = await DocumentsApi.getAll(eventId);
+      const eventId = this.props.cEvent.value?._id;
+      const folders = await DocumentsApi.getAll(eventId);
       documents = await getFiles(eventId);
 
       this.setState({
@@ -207,5 +207,5 @@ class documentsDetail extends Component {
   }
 }
 
-let DocumentsWithContext = withContext(documentsDetail);
+const DocumentsWithContext = withContext(DocumentsDetail);
 export default DocumentsWithContext;

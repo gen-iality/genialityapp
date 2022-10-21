@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Row, Col, Form, Button, InputNumber, Card, Tag } from 'antd';
-import { firestore } from '../../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import dayjs from 'dayjs';
 
 function QueryTesting() {
@@ -37,7 +37,7 @@ function QueryTesting() {
       .collection('responses');
 
     const unSuscribe = firebaseRef.onSnapshot((snapShot) => {
-      let dataTest = [];
+      const dataTest = [];
       snapShot.forEach((data) => {
         if (data.data()) {
           dataTest.push(data.data());
@@ -80,12 +80,12 @@ function QueryTesting() {
   /** promedio por respuestas, como las respuestas se guardan con un campo answer de tipo number aqui se promedia esa data */
   function averagePerResponses() {
     if (data && data.length > 0) {
-      let average = data.reduce((sumTotal, rest) => {
+      const average = data.reduce((sumTotal, rest) => {
         return sumTotal + rest.answer;
       }, 0);
 
-      let totalAverage = average / data.length;
-      let totalAverageTwoDecimals = Math.round(totalAverage * 100) / 100;
+      const totalAverage = average / data.length;
+      const totalAverageTwoDecimals = Math.round(totalAverage * 100) / 100;
       setTotalAverageData(totalAverageTwoDecimals);
     } else {
       setTotalAverageData(null);
@@ -155,13 +155,6 @@ function QueryTesting() {
               )}
             </div>
           </Card>
-          {/* Prueba botones para probar funciones para medir tiempo */}
-          {/* <Button type='primary' onClick={startTimer}>
-                  iniciar
-               </Button>
-               <Button type='primary' onClick={endTimer}>
-                  detener
-               </Button> */}
         </Card>
       </Col>
     </Row>

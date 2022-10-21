@@ -33,7 +33,7 @@ function useSurveyQuery(eventId, idSurvey, isResetingSurvey) {
     if (!idSurvey) return;
     if (!currentUser.value?._id) return;
     const innerAsyncCall = async () => {
-      let loadedSurvey = await loadSelectedSurvey(eventId, idSurvey, currentUser.value._id);
+      const loadedSurvey = await loadSelectedSurvey(eventId, idSurvey, currentUser.value._id);
       //loadedSurvey.currentPage = 0;
       loadedSurvey.currentPage = await getUserCurrentSurveyPage(idSurvey, currentUser.value._id);
       console.log('500.innerAsyncCall loadedSurvey', loadedSurvey);
@@ -48,7 +48,7 @@ function useSurveyQuery(eventId, idSurvey, isResetingSurvey) {
       console.log('500.handleRealTimeCallback surveyStatus', surveyStatus);
       setInnerRealTimeQuery(surveyStatus);
     }
-    let unsuscribe = initRealTimeSurveyListening(idSurvey, handleRealTimeCallback);
+    const unsuscribe = initRealTimeSurveyListening(idSurvey, handleRealTimeCallback);
     return () => {
       if (unsuscribe) unsuscribe();
     };

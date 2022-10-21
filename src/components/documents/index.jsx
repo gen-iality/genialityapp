@@ -16,12 +16,6 @@ function DocumentsRoutes({ ...props }) {
           path={`${match.url}/document`}
           render={() => <Document event={event} matchUrl={match.url} {...props} />}
         />
-        {/* <Route exact path={`${match.url}/upload`} render={() => <DocumentsEdit event={event} matchUrl={match.url} />} /> */}
-        {/* <Route
-          exact
-          path={`${match.url}/permission`}
-          render={() => <DocumentsPermission event={event} matchUrl={match.url} />}
-        /> */}
       </Switch>
     </Fragment>
   );

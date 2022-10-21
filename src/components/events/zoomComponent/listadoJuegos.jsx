@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import { Row, Col, Card, Avatar } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import RankingList from './rankingList';
@@ -14,7 +14,7 @@ export default function ListadoJuegos(props) {
   useEffect(() => {
     props.changeContentDisplayed('games');
 
-    let gameId = '0biWfCwWbUGhbZmfhkvu';
+    const gameId = '0biWfCwWbUGhbZmfhkvu';
 
     //Consulta del puntaje del currentUser
     if (props.currentUser !== null) {
@@ -37,7 +37,7 @@ export default function ListadoJuegos(props) {
       .orderBy('puntaje', 'desc')
       .limit(10)
       .onSnapshot(function(querySnapshot) {
-        var puntajes = [];
+        const puntajes = [];
         querySnapshot.forEach(function(doc) {
           const result = doc.data();
           result['score'] = result.puntaje;
@@ -49,36 +49,6 @@ export default function ListadoJuegos(props) {
 
   return (
     <>
-      {/* <ul>
-        <li onClick={() => props.changeContentDisplayed('game')}>Juego 1</li>
-        <li onClick={() => props.changeContentDisplayed('game2')}>Juego 2</li>
-        <li onClick={() => props.changeContentDisplayed('conference')}>Conferencia</li>
-      </ul> */}
-      {/* <Row justify='space-between'>
-        <Col span={4}>
-          <ArrowLeftOutlined onClick={() => props.handleConferenceStyles()} />
-        </Col>
-        <Col span={14}>
-          <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
-        </Col>
-        <Col span={4}>
-          <VideoCameraOutlined />
-        </Col>
-      </Row> */}
-      {/*JUEGOS*/}
-      {/* <Card
-        hoverable
-        onClick={() => props.changeContentDisplayed('game')}
-        style={{ cursor: 'pointer', marginTop: '12px' }}>
-        <Row justify='space-between'>
-          <Col span={6}>
-            <Avatar size={38} icon={<BuildOutlined />} style={{ backgroundColor: '#87d068' }} />
-          </Col>
-          <Col span={18}>
-            <h2 style={{ fontWeight: '700' }}>Juego 1</h2>
-          </Col>
-        </Row>
-      </Card> */}
       <Card
         hoverable
         onClick={() => props.changeContentDisplayed('games')}

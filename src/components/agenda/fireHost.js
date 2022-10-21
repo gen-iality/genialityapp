@@ -18,7 +18,7 @@ export const setHostState = (hostId, state) => {
 export const getAllHost = () => {
   return new Promise((resolve, reject) => {
     firestore.collection("host").onSnapshot((docs) => {
-      let hostList = [];
+      const hostList = [];
       if (docs.empty) {
         resolve(false);
       }
@@ -35,7 +35,7 @@ export default (loadHost) => {
     .collection("host")
     .where("busy", "==", false)
     .onSnapshot((docs) => {
-      let hostList = [];
+      const hostList = [];
       if (!docs.empty) {
         docs.forEach((host) => {
           hostList.push({ _id: host.id, ...host.data() });

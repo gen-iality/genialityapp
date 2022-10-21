@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Redirect, Link, withRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es-us';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi } from '@helpers/request';
 /* import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; */
 import { FormattedMessage } from 'react-intl';
@@ -10,10 +10,10 @@ import Quill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Button, Checkbox, Row, Col, Form, Input, Modal, Spin, Card, Typography } from 'antd';
 dayjs.locale('es-us');
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
 import { CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import Loading from '../profile/loading';
 
@@ -38,7 +38,7 @@ class SendRsvp extends Component {
   }
 
   componentDidMount() {
-    let default_header = ' Has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> ';
+    const default_header = ' Has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> ';
     this.setState({
       rsvp: {
         ...this.state.rsvp,
@@ -90,7 +90,7 @@ class SendRsvp extends Component {
   };
 
   handleChange = (e) => {
-    let { name, value } = e.target;
+    const { name, value } = e.target;
     this.setState({
       rsvp: { ...this.state.rsvp, [name]: value },
     });
@@ -243,7 +243,6 @@ class SendRsvp extends Component {
                     data={this.state.rsvp.content_header}
                     handleChange={(e) => this.QuillComplement1(e)}
                   />
-                  {/* <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' /> */}
                 </Form.Item>
 
                 <Form.Item label={'Específicar fecha del curso'}>
@@ -325,7 +324,6 @@ class SendRsvp extends Component {
                     data={this.state.rsvp.message}
                     handleChange={(e) => this.QuillComplement2(e)}
                   />
-                  {/* <Quill value={this.state.rsvp.message} onChange={this.QuillComplement2} name='message' /> */}
                 </Form.Item>
 
                 <Form.Item>

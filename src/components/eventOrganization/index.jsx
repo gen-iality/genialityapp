@@ -1,7 +1,7 @@
 import { Col, Row, Typography, Badge, Grid, Space, Divider, Image, Empty, Button } from 'antd';
 import { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { OrganizationFuction } from '../../helpers/request';
+import { OrganizationFuction } from '@helpers/request';
 import EventCard from '../shared/eventCard';
 import dayjs from 'dayjs';
 import ModalAuth from '../authentication/ModalAuth';
@@ -31,7 +31,7 @@ class EventOrganization extends Component {
   }
 
   componentDidMount() {
-    let orgId = this.props.match.params.id;
+    const orgId = this.props.match.params.id;
     if (orgId) {
       this.fetchItem(orgId).then((respuesta) =>
         this.setState({
@@ -44,9 +44,9 @@ class EventOrganization extends Component {
   //Obtener los datos necesarios de la organización
   fetchItem = async (orgId) => {
     const events = await OrganizationFuction.getEventsNextByOrg(orgId);
-    let proximos = [];
-    let pasados = [];
-    let fechaActual = dayjs();
+    const proximos = [];
+    const pasados = [];
+    const fechaActual = dayjs();
     events.map((event) => {
       if (dayjs(event.datetime_from).isAfter(fechaActual)) {
         proximos.push(event);
@@ -67,7 +67,7 @@ class EventOrganization extends Component {
   };
 
   handleView = () => {
-    let ver = this.state.view;
+    const ver = this.state.view;
     this.setState({ view: !ver });
   };
 
@@ -78,12 +78,6 @@ class EventOrganization extends Component {
           backgroundImage: `url(${this.state.organization?.styles?.BackgroundImage})`,
           backgroundColor: `${this.state.organization?.styles?.containerBgColor || '#FFFFFF'}`,
         }}>
-        {console.log('Org', this.state.organization)}
-        {/* <ModalAuth
-          organization={'landing'}
-          idOrganization={this.props.match.params.id}
-          logo={this.state.organization?.styles?.event_image}
-        /> */}
         <ModalLoginHelpers />
         {!this.state.loading && this.state.orgId ? (
           <>
@@ -98,28 +92,6 @@ class EventOrganization extends Component {
                 ) : (
                   ''
                 )}
-                {/* <Space
-                  direction='horizontal'
-                  size={10}
-                  style={{
-                    position: 'fixed',
-                    top: '100px',
-                    left: `${this.state.view ? '0px' : '-110px'}`,
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: '2px',
-                    padding: '10px',
-                    zIndex: 5,
-                    transition: '1s all',
-                  }}>
-                  <InstagramOutlined style={{ fontSize: '25px', color: '#8C8C8C' }} />
-                  <FacebookOutlined style={{ fontSize: '25px', color: '#8C8C8C' }} />
-                  <GlobalOutlined style={{ fontSize: '25px', color: '#8C8C8C' }} />
-                  {this.state.view ? (
-                    <LeftOutlined onClick={this.handleView} style={{ fontSize: '25px', color: '#007ACC' }} />
-                  ) : (
-                    <RightOutlined onClick={this.handleView} style={{ fontSize: '25px', color: '#007ACC' }} />
-                  )}
-                </Space> */}
               </div>
             )}
 

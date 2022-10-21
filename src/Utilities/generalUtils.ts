@@ -1,7 +1,7 @@
 import { fieldsData } from './types/types';
 
 export const getFieldDataFromAnArrayOfFields = (fields: [], nameOfTheLabelToGet: string) => {
-  let defaultData = {
+  const defaultData = {
     label: '',
     name: '',
     type: '',

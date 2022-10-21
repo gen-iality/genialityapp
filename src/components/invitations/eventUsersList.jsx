@@ -1,17 +1,17 @@
 import { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { UsersApi, eventTicketsApi } from '../../helpers/request';
+import { UsersApi, eventTicketsApi } from '@helpers/request';
 import { Table, Input, Button, Space, Menu, Row, Col, Tag } from 'antd';
 import { SearchOutlined, UserOutlined, DownloadOutlined, UploadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { parseData2Excel } from '../../helpers/utils';
+import { parseData2Excel } from '@helpers/utils';
 import { utils, writeFileXLSX } from 'xlsx';
 import AddUser from '../modal/addUser';
 import ModalAdvise from './modal';
-import Header from '../../antdComponents/Header';
-import { HelperContext } from '@/context/helperContext/helperContext';
+import Header from '@antdComponents/Header';
+import { HelperContext } from '@context/helperContext/helperContext';
 
-class eventUsersList extends Component {
+class EventUsersList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,11 +28,11 @@ class eventUsersList extends Component {
 
   async componentDidMount() {
     const { eventID, event } = this.props;
-    let attendees = await UsersApi.getAll(eventID);
-    let tickets = await eventTicketsApi.getAll(eventID);
+    const attendees = await UsersApi.getAll(eventID);
+    const tickets = await eventTicketsApi.getAll(eventID);
     this.setState({ tickets });
-    let attendeesFormatedForTable = this.formatAttendeesForTable(attendees.data);
-    let columnsTable = this.createTableColumns(event);
+    const attendeesFormatedForTable = this.formatAttendeesForTable(attendees.data);
+    const columnsTable = this.createTableColumns(event);
 
     this.setState({ attendees: attendees.data, attendeesFormatedForTable, columnsTable });
   }
@@ -41,7 +41,7 @@ class eventUsersList extends Component {
         y de esta manera no romper la logica del filtro traida desde ant
     */
   formatAttendeesForTable(attendees) {
-    let attendeesFormatedForTable = [];
+    const attendeesFormatedForTable = [];
     let attendeeFlattenedData = '';
 
     for (let i = 0; attendees.length > i; i++) {
@@ -66,9 +66,9 @@ class eventUsersList extends Component {
   createTableColumns(event) {
     const { tickets } = this.state;
 
-    let filterTickets = [];
-    let propertiesTable = event.user_properties;
-    let columnsTable = [];
+    const filterTickets = [];
+    const propertiesTable = event.user_properties;
+    const columnsTable = [];
 
     columnsTable.push({
       title: 'Último ingreso',
@@ -280,7 +280,7 @@ class eventUsersList extends Component {
           text: 'Deselect all Data',
           width: '50%',
           onSelect: () => {
-            let newSelectedRowKeys = [];
+            const newSelectedRowKeys = [];
             this.setState({ selectedRowKeys: newSelectedRowKeys });
           },
         },
@@ -358,4 +358,4 @@ class eventUsersList extends Component {
   }
 }
 
-export default withRouter(eventUsersList);
+export default withRouter(EventUsersList);

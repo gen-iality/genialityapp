@@ -1,4 +1,4 @@
-import { firestore, fireRealtime } from '../../helpers/firebase';
+import { firestore, fireRealtime } from '@helpers/firebase';
 import dayjs from 'dayjs';
 
 const refSurvey = firestore.collection('surveys');
@@ -18,7 +18,7 @@ export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
   return new Promise((resolve) => {
     //Abril 2021 @todo migracion de estados de firestore a firebaserealtime
     //let eventId = surveyInfo.eventId || 'general';
-    let eventId = 'general';
+    const eventId = 'general';
     fireRealtime.ref('events/' + eventId + '/surveys/' + surveyId).update(surveyInfo);
 
     validateSurveyCreated(surveyId).then((existSurvey) => {
@@ -65,7 +65,7 @@ export const getTotalVotes = (surveyId, question) => {
 
 export const getAnswersByQuestion = (surveyId, questionId) => {
   return new Promise((resolve, reject) => {
-    let docs = [];
+    const docs = [];
     firestore
       .collection(`surveys/${surveyId}/answers/${questionId}/responses`)
       .orderBy('created', 'desc')
@@ -75,7 +75,7 @@ export const getAnswersByQuestion = (surveyId, questionId) => {
           resolve(false);
         }
         result.forEach((infoDoc) => {
-          let creation_date_text = dayjs.unix(infoDoc.data().created.seconds).format('DD MMM YYYY hh:mm a');
+          const creation_date_text = dayjs.unix(infoDoc.data().created.seconds).format('DD MMM YYYY hh:mm a');
           docs.push({ ...infoDoc.data(), creation_date_text });
         });
         resolve(docs);
@@ -97,7 +97,7 @@ export const getTriviaRanking = (surveyId) => {
       .then((result) => {
         if (!result.empty) {
           result.forEach((item) => {
-            let registerDate = dayjs.unix(item.data().registerDate.seconds).format('DD MMM YYYY hh:mm:ss a');
+            const registerDate = dayjs.unix(item.data().registerDate.seconds).format('DD MMM YYYY hh:mm:ss a');
 
             list.push({ ...item.data(), registerDate });
           });

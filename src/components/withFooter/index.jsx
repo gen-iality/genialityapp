@@ -6,7 +6,6 @@ export default function WithFooter({ children }) {
     <>
       {children}
       <Footer />
-      {/* <ToastContainer autoClose={2000} newestOnTop pauseOnVisibilityChange /> */}
     </>
   );
 }

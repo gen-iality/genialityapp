@@ -1,13 +1,13 @@
 import { Component } from 'react';
-import { Actions, OrganizationApi } from '../../helpers/request';
+import { Actions, OrganizationApi } from '@helpers/request';
 import { injectIntl } from 'react-intl';
 import { SketchPicker } from 'react-color';
 import { Button, Typography, Modal, Space, Row, Col, Form, Tag, Select, Spin } from 'antd';
 import ReactQuill from 'react-quill';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+import { DispatchMessageService } from '@context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import Loading from '../profile/loading';
 
@@ -287,7 +287,7 @@ class Styles extends Component {
 
   //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
   async saveEventImage(imageUrl, imageFieldName) {
-    let styles = { ...this.state.styles };
+    const styles = { ...this.state.styles };
     styles[imageFieldName] = imageUrl;
 
     this.setState({ styles: styles });
@@ -313,7 +313,7 @@ class Styles extends Component {
       if (thereIsAnOrganization) {
         info = await OrganizationApi.editOne(this.state.data, thereIsAnOrganization);
       } else {
-        let token = await GetTokenUserFirebase();
+        const token = await GetTokenUserFirebase();
         info = await Actions.put(`/api/events/${eventId}?token=${token}`, this.state.data);
       }
 
@@ -390,7 +390,7 @@ class Styles extends Component {
   }
 
   onColorChange = function(color, fieldName) {
-    let temp = { ...this.state.styles };
+    const temp = { ...this.state.styles };
     temp[fieldName] = color.hex;
     this.setState({ styles: temp });
   };
@@ -398,7 +398,7 @@ class Styles extends Component {
   handleClickSelectColor = (key) => {
     //react recomiendo copiar las cosas antes de modificarlas
     //Copiamos el array ColorDrawer a uno nuevo usando el spread operator (...)
-    let newColorDrawer = [...this.state.colorDrawer];
+    const newColorDrawer = [...this.state.colorDrawer];
     //invertimos el valor de editIsVisible del elemento clikeado indicado por key
     newColorDrawer[key].editIsVisible = !newColorDrawer[key].editIsVisible;
     //Actualizamos el estado
@@ -406,7 +406,7 @@ class Styles extends Component {
   };
 
   hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
       ? {
           r: parseInt(result[1], 16),
@@ -422,7 +422,7 @@ class Styles extends Component {
     /* let value = e.target.value; */
     /* let value = e; */
 
-    let styles = { ...this.state.styles };
+    const styles = { ...this.state.styles };
     styles[name] = value;
     /* console.log(styles[name], styles) */
 
@@ -438,7 +438,7 @@ class Styles extends Component {
   render() {
     const { stylesIsLoading } = this.state;
     return (
-      <React.Fragment>
+      <>
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Configuración de Estilos'} save form />
 
@@ -504,7 +504,6 @@ class Styles extends Component {
                       label={item.title}
                       help={item.description}
                       onClick={() => this.handleClickSelectColor(key)}>
-                      {/* {item.description && <label className='label has-text-grey-light'>{item.description}</label>} */}
                       <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]}>
                         {this.state.styles[item.fieldColorName]}
                       </Tag>
@@ -528,28 +527,6 @@ class Styles extends Component {
                         ))}
                       </Select>
                     </Form.Item>
-
-                    {/* {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
-                              <Form.Item label={'Link de video'}>
-                                <Input
-                                  defaultValue={this.state.styles['data_loader_page']}
-                                  value={this.state.styles['data_loader_page']}
-                                  type='text'
-                                  onChange={(e) => this.getDataLoaderPage(e.target.value)}
-                                />
-                              </Form.Item>
-                            )}
-                            {item.name === 'loader_page' && this.state.styles.loader_page === 'code' && (
-                              <Form.Item>
-                                <ReactQuill
-                                  id={item.name}
-                                  onChange={this.getDataLoaderPage}
-                                  defaultValue={this.state.styles.data_loader_page}
-                                  style={{ marginTop: '5%' }}
-                                  modules={toolbarEditor}
-                                />
-                              </Form.Item>
-                            )} */}
                   </div>
                 ))}
 
@@ -579,7 +556,7 @@ class Styles extends Component {
           </Row>
           <BackTop />
         </Form>
-      </React.Fragment>
+      </>
     );
   }
 }

@@ -1,4 +1,4 @@
-import { OrganizationApi } from '@/helpers/request';
+import { OrganizationApi } from '@helpers/request';
 
 /**
  * Get the user details for a member of an organization
@@ -8,7 +8,7 @@ import { OrganizationApi } from '@/helpers/request';
  */
 export async function getOrganizationUser(orgId: string) {
   if (!orgId) return;
-  let { data } = await OrganizationApi.getMeUser(orgId);
+  const { data } = await OrganizationApi.getMeUser(orgId);
 
   return data;
 }

@@ -7,19 +7,19 @@ import { Row, Col, Space, Typography, Button, Form, Input, InputRef, Switch, Car
 import { Select as SelectAntd } from 'antd';
 import { ExclamationCircleOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
 
-import { CategoriesAgendaApi, SpeakersApi } from '@/helpers/request';
-import { fieldsSelect, handleRequestError, handleSelect } from '@/helpers/utils';
+import { CategoriesAgendaApi, SpeakersApi } from '@helpers/request';
+import { fieldsSelect, handleRequestError, handleSelect } from '@helpers/utils';
 
 import Select from 'react-select';
 import Creatable from 'react-select';
 
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import useCreatableStyles from '../hooks/useCreatableStyles';
 import useValideChangesInFormData from '../hooks/useValideChangesInFormData';
 import useProcessDateFromAgendaDocument from '../hooks/useProcessDateFromAgendaDocument';
 import ImageUploaderDragAndDrop from '../../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import EviusReactQuill from '../../shared/eviusReactQuill';
-import BackTop from '../../../antdComponents/BackTop';
+import BackTop from '@antdComponents/BackTop';
 import Loading from '../../profile/loading';
 import RequiredStar from './RequiredStar';
 

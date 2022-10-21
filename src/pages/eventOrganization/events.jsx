@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { OrganizationApi } from '../../helpers/request';
+import { OrganizationApi } from '@helpers/request';
 import { Table, Button, Row, Col } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/eventTableColumns';
-import withContext from '../../context/withContext';
-import Header from '../../antdComponents/Header';
-// import ExportExcel from '../newComponent/ExportExcel';
+import withContext from '@context/withContext';
+import Header from '@antdComponents/Header';
 
 function OrgEvents(props) {
   const [eventData, setEventData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  let { _id: organizationId } = props.org;
+  const { _id: organizationId } = props.org;
   const history = useHistory();
 
   async function getEventsStatisticsData() {
@@ -46,7 +45,6 @@ function OrgEvents(props) {
         pagination={false}
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
-            <Col>{/* <ExportExcel columns={columns(goToEvent)} list={eventData} fileName={'eventReport'} /> */}</Col>
             <Col>
               <Button
                 type='primary'

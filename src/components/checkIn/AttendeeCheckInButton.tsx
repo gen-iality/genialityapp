@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
-import { AttendeeCheckInPropsTypes } from '@/Utilities/types/types';
+import { AttendeeCheckInPropsTypes } from '@Utilities/types/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Modal } from 'antd';
 
@@ -9,7 +9,12 @@ import { Button, Modal } from 'antd';
  * @param {AttendeeCheckInPropsTypes}  - AttendeeCheckInPropsTypes
  * @returns A React component Button.
  */
-const AttendeeCheckInButton = ({ attendee, reloadComponent, checkInAttendeeCallbak }: AttendeeCheckInPropsTypes) => {
+const AttendeeCheckInButton = ({
+  attendee,
+  activityId,
+  reloadComponent,
+  checkInAttendeeCallbak,
+}: AttendeeCheckInPropsTypes) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { _id } = attendee || {};
 
@@ -23,6 +28,7 @@ const AttendeeCheckInButton = ({ attendee, reloadComponent, checkInAttendeeCallb
         checked: true,
         reloadComponent,
         checkInType: 'Físico',
+        activityId,
         checkInAttendeeCallbak,
       });
       setLoading(false);
@@ -41,6 +47,7 @@ const AttendeeCheckInButton = ({ attendee, reloadComponent, checkInAttendeeCallb
           checked: true,
           reloadComponent,
           checkInType: 'Físico',
+          activityId,
           checkInAttendeeCallbak,
         });
         setLoading(false);

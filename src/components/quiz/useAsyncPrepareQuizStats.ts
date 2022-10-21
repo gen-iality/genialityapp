@@ -1,4 +1,4 @@
-import { SurveysApi } from '@/helpers/request';
+import { SurveysApi } from '@helpers/request';
 import { QuizStatus, QuizStats, Survey } from './types';
 import { getStatus as getSurveyStatus } from '../events/surveys/services/surveyStatus';
 import PooledQuestions from '@/classes/PooledQuestions';

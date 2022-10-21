@@ -25,7 +25,7 @@ class Lobby extends Component {
   }
 
   render() {
-    let lobby_data = {
+    const lobby_data = {
       info: {
         date: '26 Agosto 2021',
         time_from: '26 de Agosto 1:00 pm',
@@ -126,7 +126,6 @@ class Lobby extends Component {
                   </div>
                   <div className='the-lobby-header-general-info-group-item'>
                     <div>
-                      {/* <div>{lobby_data.info.date}</div> */}
                       <div>{lobby_data.info.type}</div>
                       <div>Organizador: {lobby_data.info.organizer}</div>
                     </div>
@@ -158,31 +157,7 @@ class Lobby extends Component {
             </div>
           </div>
         </div>
-        {/* <div className='the-lobby-events'>
-          <div className='the-lobby-events-title'>ESPACIOS VIRTUALES</div>
-          <div className='the-lobby-events-list'>
-            {lobby_data.virtual_events.map((item, id) => (
-              <div className='the-lobby-events-list-item' key={id}>
-                <div className='the-lobby-events-list-item-speaker-image'>
-                  <img src={item.speaker.image} alt='' />
-                </div>
-                <div className='the-lobby-events-list-item-content'>
-                  <div className='the-lobby-events-list-item-speaker'>
-                    <div className='the-lobby-events-list-item-speaker-name'>{item.speaker.name}</div>
-                  </div>
-                  <div className='the-lobby-events-list-item-name'>{item.name}</div>
-                  <div className='the-lobby-events-list-item-info'>
-                    {item.date} {item.hour_from} - {item.hour_to}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div> */}
 
-        {/* <div onClick={() => this.handleShowStands()} className='the-lobby-exhibitors-btn'>
-          <img src='/lobby/BOTON_STANDS.png' alt='' />
-        </div> */}
         {this.state.showIntro && (
           <div className='standlist-container'>
             <StandsList />

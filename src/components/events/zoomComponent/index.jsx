@@ -3,13 +3,13 @@ import { Button, Result, Spin, Row } from 'antd';
 import Fullscreen from 'react-full-screen';
 import { FullscreenOutlined, LineOutlined } from '@ant-design/icons';
 import SurveyForm from '../surveys';
-import API from '../../../helpers/request';
+import API from '@helpers/request';
 import connect from 'react-redux/es/connect/connect';
 import { fetchPermissions } from '../../../redux/permissions/actions';
 import { fetchRol } from '../../../redux/rols/actions';
 import ConferenceTabs from './conferenceTabs';
 
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 class ZoomComponent extends Component {
   constructor(props) {
     super(props);
@@ -50,7 +50,7 @@ class ZoomComponent extends Component {
   }
 
   async setUpUserForConference() {
-    let { userEntered } = this.props;
+    const { userEntered } = this.props;
 
     let displayName = 'Anónimo';
     let email = 'anonimo@evius.co';
@@ -66,7 +66,7 @@ class ZoomComponent extends Component {
     let urllogin_bigmarker = null;
     let error_bigmarker = null;
     if (this.state.event && this.state.event.event_platform === 'bigmarker') {
-      let data = {
+      const data = {
         id: this.props.activity.bigmaker_meeting_id,
         attendee_name: displayName,
         attendee_email: email,
@@ -98,7 +98,7 @@ class ZoomComponent extends Component {
   async componentDidMount() {
     try {
       await this.props.dispatch(fetchRol());
-      let eventId = this.props.match.params.event;
+      const eventId = this.props.match.params.event;
       await this.props.dispatch(fetchPermissions(eventId));
       // const event = await EventsApi.getOne(eventId);
       // const eventWithExtraFields = this.addNewFieldsToEvent(event);
@@ -249,7 +249,7 @@ class ZoomComponent extends Component {
 
   render() {
     const { toggleConference, event, activity } = this.props;
-    let {
+    const {
       url_conference,
       meeting_id,
       isMedium,
@@ -318,16 +318,6 @@ class ZoomComponent extends Component {
                 allowusermedia
                 style={conferenceStyles}></iframe>
 
-              {/* {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
-                <iframe
-                  src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
-                  frameBorder='0'
-                  allow='autoplay; fullscreen; camera *;microphone *'
-                  allowFullScreen
-                  allowusermedia
-                  style={{ width: '99vw', height: '100%' }}></iframe>
-              )} */}
-
               {this.state.contentDisplayed && this.state.contentDisplayed == 'game' && (
                 <iframe
                   src={
@@ -394,7 +384,6 @@ class ZoomComponent extends Component {
             </Row>
           )}
 
-          {/* style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", margin: 0, padding: 0 }}*/}
           {this.state.event && platform === 'bigmarker' && (
             <>
               {!this.state.error_bigmarker && !this.state.urllogin_bigmarker && <Spin tip='Loading...'></Spin>}

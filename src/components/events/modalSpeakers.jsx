@@ -1,12 +1,12 @@
 import { useState, useEffect, Fragment } from 'react';
 import { withRouter } from 'react-router';
 import { Modal, Row, Col, Avatar, Button } from 'antd';
-import { SpeakersApi } from '../../helpers/request';
+import { SpeakersApi } from '@helpers/request';
 import { UserOutlined } from '@ant-design/icons';
 
-let ModalSpeakers = (props) => {
-  let [speakers, setSpeakers] = useState({});
-  let [modalVisible, setModalVisible] = useState(false);
+const ModalSpeakers = (props) => {
+  const [speakers, setSpeakers] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     (async () => {

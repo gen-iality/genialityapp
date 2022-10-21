@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { InvitationsApi } from '../../helpers/request';
+import { InvitationsApi } from '@helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import dayjs from 'dayjs';
 
 const Report = (props) => {
-  let [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({});
 
   const columns = [
     {

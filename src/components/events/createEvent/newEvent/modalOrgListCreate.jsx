@@ -2,14 +2,14 @@ import { PictureOutlined } from '@ant-design/icons';
 import { Button, Form, Input, List, Modal, Row, Spin, message, Upload, Typography, Space, Tabs } from 'antd';
 import { useCurrentUser } from '@context/userContext';
 import { useState, useEffect } from 'react';
-import { useContextNewEvent } from '../../../../context/newEventContext';
+import { useContextNewEvent } from '@context/newEventContext';
 import ImgCrop from 'antd-img-crop';
 import functionCreateNewOrganization from '../../../profile/functionCreateNewOrganization';
 
 const ModalOrgListCreate = ({ modalListOrgIsVisible, orgId }) => {
   const { newOrganization, OrganizationsList, state, dispatch, createOrganization } = useContextNewEvent();
   const cUser = useCurrentUser();
-  let [imageAvatar, setImageAvatar] = useState(null);
+  const [imageAvatar, setImageAvatar] = useState(null);
   const [form] = Form.useForm();
   const { TabPane } = Tabs;
 
@@ -43,7 +43,7 @@ const ModalOrgListCreate = ({ modalListOrgIsVisible, orgId }) => {
   async function obtainOrganizations() {
     const organizations = await OrganizationsList();
     if (organizations.length === 0) {
-      let newOrganization = {
+      const newOrganization = {
         name: cUser.value?.names || cUser.value?.name,
         styles: { event_image: null },
       };

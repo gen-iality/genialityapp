@@ -1,8 +1,8 @@
 import { Component } from 'react';
-import { UsersApi, eventTicketsApi } from '@/helpers/request';
+import { UsersApi, eventTicketsApi } from '@helpers/request';
 import { Modal, Form, Input, Select, Checkbox, Button } from 'antd';
-import { DispatchMessageService } from '@/context/MessageService';
-import { handleRequestError } from '@/helpers/utils';
+import { DispatchMessageService } from '@context/MessageService';
+import { handleRequestError } from '@helpers/utils';
 
 const { Option } = Select;
 
@@ -24,7 +24,7 @@ class AddUser extends Component {
   }
 
   async componentDidMount() {
-    let user = {};
+    const user = {};
 
     const tickets = await eventTicketsApi.getAll(this.props.eventId);
     if (tickets.length > 0) this.setState({ tickets });
@@ -48,7 +48,7 @@ class AddUser extends Component {
       action: 'show',
     });
     try {
-      let resp = await UsersApi.createOne(snap, this.props.eventId);
+      const resp = await UsersApi.createOne(snap, this.props.eventId);
       if (resp) {
         DispatchMessageService({
           key: 'loading',
@@ -79,13 +79,13 @@ class AddUser extends Component {
 
   renderForm = () => {
     const { extraFields } = this.props;
-    let formUI = extraFields.map((m, key) => {
-      let type = m.type || 'text';
-      let props = m.props || {};
-      let name = m.name;
-      let mandatory = m.mandatory;
-      let target = name;
-      let value = this.state.user[target];
+    const formUI = extraFields.map((m, key) => {
+      const type = m.type || 'text';
+      const props = m.props || {};
+      const name = m.name;
+      const mandatory = m.mandatory;
+      const target = name;
+      const value = this.state.user[target];
       let input = (
         <Input
           {...props}
@@ -100,7 +100,7 @@ class AddUser extends Component {
       );
       if (type === 'boolean') {
         input = (
-          <React.Fragment>
+          <>
             <Form.Item label={name} htmlFor={name} style={{ textTransform: 'capitalize' }}>
               <Checkbox
                 name={name}
@@ -111,7 +111,7 @@ class AddUser extends Component {
                 }}
               />
             </Form.Item>
-          </React.Fragment>
+          </>
         );
       }
       if (type === 'list') {
@@ -182,8 +182,8 @@ class AddUser extends Component {
   };
 
   selectChange = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
+    const name = e.target.name;
+    const value = e.target.value;
     this.setState({ [name]: value });
   };
 

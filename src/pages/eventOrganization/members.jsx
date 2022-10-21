@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import { OrganizationApi, RolAttApi, EventsApi, AgendaApi } from '../../helpers/request';
+import { OrganizationApi, RolAttApi, EventsApi, AgendaApi } from '@helpers/request';
 import { FormattedDate, FormattedTime } from 'react-intl';
-import { firestore } from '@/helpers/firebase';
+import { firestore } from '@helpers/firebase';
 /** export Excel */
 import { useHistory } from 'react-router-dom';
 import { Table, Button, Row, Col, Tag } from 'antd';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
-import ModalMembers from '@/components/modal/modalMembers';
+import ModalMembers from '@components/modal/modalMembers';
 import dayjs from 'dayjs';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { utils, writeFileXLSX } from 'xlsx';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 
 function OrgMembers(props) {
   const [membersData, setMembersData] = useState([]);
@@ -24,7 +24,7 @@ function OrgMembers(props) {
   const [roleList, setRoleList] = useState([]);
   const [selectedUser, setSelectedUser] = useState({});
   const [editMember, setEditMember] = useState(false);
-  let { _id: organizationId } = props.org;
+  const { _id: organizationId } = props.org;
   const history = useHistory();
 
   async function getEventsStatisticsData() {
@@ -183,11 +183,6 @@ function OrgMembers(props) {
                   Exportar
                 </Button>
               )}
-              {/* <ExportExcel 
-                columns={columns(columnsData, editModalUser)} 
-                list={membersData} 
-                fileName={'memberReport'} 
-              /> */}
             </Col>
             <Col>
               <Button type='primary' icon={<PlusCircleOutlined />} onClick={addUser}>

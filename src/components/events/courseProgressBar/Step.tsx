@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { ReactNode } from 'react';
 import { useMemo, memo, useEffect, useState } from 'react';
 import './Step.css';
 
 export interface StepProps {
-  children: React.ReactNode;
+  children: ReactNode;
   isActive?: boolean | number;
   isSurvey?: boolean;
   key?: string;
@@ -17,7 +17,7 @@ export interface StepProps {
 function Step(props: StepProps) {
   const { children, isActive, isSurvey, key, currentId, setCurrentId, id, ...rest } = props;
 
-  let className = useMemo(() => {
+  const className = useMemo(() => {
     if (isActive) {
       return 'Step active';
     }

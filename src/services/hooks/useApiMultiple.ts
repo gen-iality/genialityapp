@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { ApiService, isError, multipleRequest } from '../interfaces/interfaces';
-import { ApiUrl } from '@/helpers/constants';
+import { ApiUrl } from '@helpers/constants';
 
 export const useApiMultiple = () => {
   const [responseData, setresponseData] = useState({});
@@ -33,7 +33,7 @@ export const useApiMultiple = () => {
     });
     setIsSuccess(false); */
     try {
-      let requestToMake = requests.map((request, index) => {
+      const requestToMake = requests.map((request, index) => {
         return [request, methods[index], keys[index], payloads[index], withCredentials[index]];
       });
 

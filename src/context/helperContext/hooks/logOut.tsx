@@ -1,9 +1,9 @@
-import { firestore, app } from '@/helpers/firebase';
+import { firestore, app } from '@helpers/firebase';
 import { remoteLogoutNotification } from './remoteLogoutNotification';
 import { logoutInterface } from '../interfaces/interfaces';
 
-let initialStateEvenUserContext = { status: 'LOADING', value: null };
-let initialStateUserContext = { status: 'LOADING', value: undefined };
+const initialStateEvenUserContext = { status: 'LOADING', value: null };
+const initialStateUserContext = { status: 'LOADING', value: undefined };
 
 /**
  * @function logout - Close session in firebase and eliminate active session validator, set userContext and eventUserContext to default states

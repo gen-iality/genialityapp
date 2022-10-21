@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { List, Result, Card } from 'antd';
 import GoogleControllerOff from '@2fd/ant-design-icons/lib/GoogleControllerOff';
 import UsersCard from '../../shared/usersCard';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 
 const bodyStyle = { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' };
 
@@ -13,7 +13,7 @@ function GameList(props) {
   const [isLoading, setIsLoading] = useState(true);
 
   function getGamesData() {
-    let games = gamesData ? gamesData : [];
+    const games = gamesData ? gamesData : [];
     const gamesDataFiltered = games.filter((games) => games.showGame === true);
     setListOfGames(gamesDataFiltered);
     setIsLoading(false);
@@ -25,9 +25,6 @@ function GameList(props) {
 
   return (
     <Card style={{ borderRadius: '10px', marginTop: '6px' }} bodyStyle={bodyStyle}>
-      {/* <div
-        className='container-ranking'
-        style={{ marginTop: 16, height: 'auto', overflowY: 'auto', overflowX: 'hidden' }}> */}
       <List
         loading={isLoading}
         itemLayout='horizontal'
@@ -48,7 +45,6 @@ function GameList(props) {
           emptyText: <Result icon={<GoogleControllerOff />} title='No hay juegos disponibles para esta lección' />,
         }}
       />
-      {/* </div> */}
     </Card>
   );
 }

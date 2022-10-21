@@ -18,9 +18,9 @@ import {
 import { CalendarOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-import { useContextNewEvent } from '../../../context/newEventContext';
-import { OrganizationApi } from '../../../helpers/request';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { useContextNewEvent } from '@context/newEventContext';
+import { OrganizationApi } from '@helpers/request';
+import { DispatchMessageService } from '@context/MessageService';
 import dayjs from 'dayjs';
 
 const { Text, Link, Title, Paragraph } = Typography;
@@ -93,11 +93,11 @@ const Informacion = (props) => {
     }
   };
   const createOrganization = async (name) => {
-    let newOrganization = {
+    const newOrganization = {
       name: !name ? props.currentUser?.names || props.currentUser?.name : name,
     };
     //CREAR ORGANIZACION------------------------------
-    let create = await OrganizationApi.createOrganization(newOrganization);
+    const create = await OrganizationApi.createOrganization(newOrganization);
 
     /* console.log('CREATE==>', create); */
     if (create) {
@@ -129,7 +129,7 @@ const Informacion = (props) => {
       );
     }
     async function obtenerTemplates() {
-      let resp = await obtainTemplates(selectOrganization?._id);
+      const resp = await obtainTemplates(selectOrganization?._id);
       //console.log("TEMPLATES==>",resp,selectOrganization)
     }
   }, [selectOrganization]);
@@ -305,47 +305,8 @@ const Informacion = (props) => {
                 )}
               </Modal>
             )}
-            {/* <Text>
-              Tipo de transmisión <span className='text-color'>*</span>
-            </Text>
-            <Row gutter={[16, 16]} justify='center'>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                <Row justify='center'>
-                  <Badge count={typeTransmission == 0 ? <CheckCircleFilled className='icon-checkout' /> : 0}>
-                    <div className='cards-type-information' onClick={() => changetypeTransmision(0)}>
-                      <Space direction='vertical'>
-                        <img src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceStreaming.png?alt=media&token=e36eac64-5d14-4a3a-995f-b7d239b6bbc1' />
-                        <Text strong>Streaming</Text>
-                        <Text type='secondary'>
-                          Tienes hasta 20 invitados que pueden interactuar con cámara y micrófono y los asistentes
-                          podrán solamente ver la conferencia. La cantidad de asistentes es ilimitada
-                        </Text>
-                      </Space>
-                    </div>
-                  </Badge>
-                </Row>
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                <Row justify='center'>
-                  <Badge count={typeTransmission == 1 ? <CheckCircleFilled className='icon-checkout' /> : 0}>
-                    <div className='cards-type-information' onClick={() => changetypeTransmision(1)}>
-                      <Space direction='vertical'>
-                        <img src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceConferencia.png?alt=media&token=a1242e00-2d12-41dc-8ced-82d54db447ba' />
-
-                        <Text strong>Conferencia interactiva</Text>
-
-                        <Text type='secondary'>
-                          Todos los asistentes podrán interactuar entre sí. Se podrán conectar hasta 50 participantes
-                        </Text>
-                      </Space>
-                    </div>
-                  </Badge>
-                </Row>
-              </Col>
-           </Row>*/}
           </Space>
         </div>
-        {/*console.log("ORGANIZATION SELECTED==>",selectOrganization)*/}
         {/* SELECT TEMPLATE BY ORGANIZATION */}
         {selectOrganization?.template_properties && (
           <Space direction='vertical'>

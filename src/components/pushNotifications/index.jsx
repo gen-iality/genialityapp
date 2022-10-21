@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react';
-import Header from '../../antdComponents/Header';
-import Table from '../../antdComponents/Table';
+import Header from '@antdComponents/Header';
+import Table from '@antdComponents/Table';
 import { Button } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
-import { UsersApi } from '../../helpers/request';
+import { UsersApi } from '@helpers/request';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import ModalNotifications from './modalNotificacions';
 
 function pushNotification(props) {
   const { _id: eventId, name: eventName } = props.event;
-  let [columnsData, setColumnsData] = useState({});
-  let [isLoading, setIstloading] = useState(true);
+  const [columnsData, setColumnsData] = useState({});
+  const [isLoading, setIstloading] = useState(true);
   const [listUsersWithNotifications, setListUsersWithNotifications] = useState([]);
   const [modalSendNotificationVisible, setModalSendNotificationVisible] = useState(false);
   const [userToNotify, setUserToNotify] = useState(false);
 
   async function usersWithNotificationsEnabled() {
-    let { data } = await UsersApi.getAll(eventId);
+    const { data } = await UsersApi.getAll(eventId);
     if (data) {
       const list = [];
       data.forEach(function(data) {

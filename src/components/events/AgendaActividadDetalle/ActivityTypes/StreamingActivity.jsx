@@ -2,13 +2,13 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { Result } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 import HeaderColumnswithContext from '../HeaderColumns';
-import WithEviusContext from '../../../../context/withContext';
+import WithEviusContext from '@context/withContext';
 import ImageComponentwithContext from '../ImageComponent';
-import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { withRouter } from 'react-router-dom';
-import { firestore } from '../../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import GcoreStreamingPlayer from '../GcoreStreamingPlayer';
-import AgendaContext from '../../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import ReactPlayer from 'react-player';
 
 const StreamingActivity = (props) => {
@@ -19,12 +19,12 @@ const StreamingActivity = (props) => {
 
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
 
-  let { transmition, setTransmition } = useContext(AgendaContext);
-  let { currentActivity } = useHelper();
+  const { transmition, setTransmition } = useContext(AgendaContext);
+  const { currentActivity } = useHelper();
 
   async function listeningStateStreamingRoom(event_id, activity_id) {
     if (!fnCiclo) {
-      let tempActivity = currentActivity;
+      const tempActivity = currentActivity;
       firestore
         .collection('events')
         .doc(event_id)

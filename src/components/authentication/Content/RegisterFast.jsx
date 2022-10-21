@@ -11,14 +11,13 @@ import {
 import { Form, Input, Button, Space, Upload, Avatar, Image } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
-import { useEventWithCedula } from '../../../helpers/helperEvent';
-import { UseEventContext } from '../../../context/eventContext';
-import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import { useEventWithCedula } from '@helpers/helperEvent';
+import { useEventContext } from '@context/eventContext';
+import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import './RegisterFast.css';
 
-//import styles from './ReigsterFast.less';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -28,7 +27,7 @@ function getBase64(img, callback) {
 
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
-  const cEvent = UseEventContext();
+  const cEvent = useEventContext();
   const [takingPhoto, setTakingPhoto] = useState(false);
   const [imageAvatar, setImageAvatar] = useState(null);
   const [form] = Form.useForm();
@@ -47,7 +46,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   }, [basicDataUser.picture]);
 
   const handleTakePhotoAnimationDone = (dataUri) => {
-    let pic = [
+    const pic = [
       {
         uid: '1',
         name: 'avatar.png',
@@ -117,7 +116,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   ];
 
   function onFinish(values) {
-    handleNext(values);
+    // handleNext(values); it is undefined
   }
 
   return (
@@ -177,7 +176,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
           </ImgCrop>
         </Form.Item>
 
-        {/* EN desktop el upload no toma fotos toca hacerlo por separado*/}
+        {/* En desktop el upload no toma fotos toca hacerlo por separado */}
         <Form.Item>
           {takingPhoto && (
             <div className='avatarCamera'>

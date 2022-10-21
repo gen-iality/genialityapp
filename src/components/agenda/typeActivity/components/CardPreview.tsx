@@ -15,13 +15,13 @@ import {
 } from 'antd';
 import ReactPlayer from 'react-player';
 import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
-import { useTypeActivity } from '../../../../context/typeactivity/hooks/useTypeActivity';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 import { useContext, useEffect, useState } from 'react';
-import AgendaContext from '../../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
 import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
-import { startRecordingLiveStream, stopRecordingLiveStream } from '@/adaptors/gcoreStreamingApi';
-import { urlErrorCodeValidation } from '@/Utilities/urlErrorCodeValidation';
+import { startRecordingLiveStream, stopRecordingLiveStream } from '@adaptors/gcoreStreamingApi';
+import { urlErrorCodeValidation } from '@Utilities/urlErrorCodeValidation';
 
 const CardPreview = (props: any) => {
   const [duration, setDuration] = useState(0);
@@ -54,7 +54,7 @@ const CardPreview = (props: any) => {
   //PERMITE RENDERIZAR EL COMPONENTE IFRAME O REACT PLAYER GCORE
   const renderPlayer = () => {
     //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
-    let { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
+    const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
     // console.log('🚀 debug ~ renderPlayer ~ visibleReactPlayer', visibleReactPlayer, urlVideo);
 
     //RENDERIZAR COMPONENTE
@@ -109,7 +109,8 @@ const CardPreview = (props: any) => {
             allowFullScreen
             onLoad={(e) => {
               if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
-                setErrorOcurred(urlErrorCodeValidation(e.target?.src, true));
+                const target = e.target as any | undefined;
+                setErrorOcurred(urlErrorCodeValidation(target?.src, true));
               }
             }}></iframe>
         )}
@@ -134,9 +135,9 @@ const CardPreview = (props: any) => {
   };
 
   function videoDuration(seconds: number) {
-    var hour: number | string = Math.floor(seconds / 3600);
-    var minute: number | string = Math.floor((seconds / 60) % 60);
-    var second: number | string = seconds % 60;
+    let hour: number | string = Math.floor(seconds / 3600);
+    let minute: number | string = Math.floor((seconds / 60) % 60);
+    let second: number | string = seconds % 60;
     hour = hour < 10 ? '0' + hour : hour;
     minute = minute < 10 ? '0' + minute : minute;
     second = second < 10 ? '0' + second : second;

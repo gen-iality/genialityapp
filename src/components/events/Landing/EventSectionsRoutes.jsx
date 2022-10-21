@@ -3,15 +3,15 @@ import { Redirect, Route, Switch, useHistory, useRouteMatch, withRouter } from '
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { useParams } from 'react-router-dom';
-import { UseUserEvent } from '../../../context/eventUserContext';
-import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
+import { useUserEvent } from '@context/eventUserContext';
+import { checkinAttendeeInEvent } from '@helpers/HelperAuth';
 import loadable from '@loadable/component';
 import initUserPresence from '../../../containers/userPresenceInEvent';
-import initBroadcastViewers from '@/containers/broadcastViewers';
-import withContext from '../../../context/withContext';
+import initBroadcastViewers from '@containers/broadcastViewers';
+import withContext from '@context/withContext';
 import { useCurrentUser } from '@context/userContext';
 import { activityContentValues } from '@context/activityType/constants/ui';
 import { fireRealtime } from '@helpers/firebase';
@@ -50,12 +50,12 @@ const ThisRouteCanBeDisplayed = loadable(() => import('./helpers/thisRouteCanBeD
 
 const EventSectionRoutes = props => {
   const { setActivitiesAttendee } = props;
-  let { path } = useRouteMatch();
-  let { event_id, event_name } = useParams();
-  let { GetPermissionsEvent } = useHelper();
-  let cEventUser = UseUserEvent();
-  let cUser = useCurrentUser();
-  let history = useHistory();
+  const { path } = useRouteMatch();
+  const { event_id, event_name } = useParams();
+  const { GetPermissionsEvent } = useHelper();
+  const cEventUser = useUserEvent();
+  const cUser = useCurrentUser();
+  const history = useHistory();
 
   //redirigir a curso Cancilleria
   if (event_id === '610976f24e10472fb738d65b') {
@@ -64,8 +64,8 @@ const EventSectionRoutes = props => {
 
   const obtenerFirstSection = () => {
     if (props.cEvent.value == null) return;
-    let firstroute = Object.keys(props.cEvent.value.itemsMenu).filter(item => item !== 'tickets');
-    let firstrouteValues = Object.values(props.cEvent.value.itemsMenu).filter(item => item.section !== 'tickets');
+    const firstroute = Object.keys(props.cEvent.value.itemsMenu).filter(item => item !== 'tickets');
+    const firstrouteValues = Object.values(props.cEvent.value.itemsMenu).filter(item => item.section !== 'tickets');
 
     let index = -1;
     if (firstroute && firstrouteValues) {
@@ -197,7 +197,6 @@ const EventSectionRoutes = props => {
             (props.cEvent.value?.styles.show_title === true || props.cEvent.value?.styles?.show_title === 'true') && (
               <InfoEvent />
             )}
-          {/* <VirtualConferenceBig /> */}
           {props.cEvent.value?.styles?.show_video_widget &&
             (props.cEvent.value?.styles?.show_video_widget === true ||
               props.cEvent.value?.styles?.show_video_widget === 'true') && (
@@ -357,5 +356,5 @@ const mapDispatchToProps = {
   setSectionPermissions,
 };
 
-let eventSectionsContext = withRouter(withContext(EventSectionRoutes));
+const eventSectionsContext = withRouter(withContext(EventSectionRoutes));
 export default connect(mapStateToProps, mapDispatchToProps)(eventSectionsContext);

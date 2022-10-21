@@ -1,11 +1,11 @@
 import { List, Badge, Tabs } from 'antd';
 import * as notificationsActions from '../../../redux/notifications/actions';
-import { UseEventContext } from '../../../context/eventContext';
-import { useCurrentUser } from '../../../context/userContext';
-import { UseUserEvent } from '../../../context/eventUserContext';
+import { useEventContext } from '@context/eventContext';
+import { useCurrentUser } from '@context/userContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import UsersCard from '../../shared/usersCard';
 
 import ThisRouteCanBeDisplayed, {
@@ -13,7 +13,7 @@ import ThisRouteCanBeDisplayed, {
   recordTypeForThisEvent,
 } from '../../events/Landing/helpers/thisRouteCanBeDisplayed';
 import AnonymousEvenUserForm from '../hooks/anonymousEvenUserForm';
-import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
+import { isStagingOrProduccion } from '@Utilities/isStagingOrProduccion';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 
@@ -24,11 +24,11 @@ const styleList = {
 };
 
 const ChatList = (props) => {
-  let cUser = useCurrentUser();
-  let cEvent = UseEventContext();
-  let cEventUser = UseUserEvent();
+  const cUser = useCurrentUser();
+  const cEvent = useEventContext();
+  const cEventUser = useUserEvent();
 
-  let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useHelper();
+  const { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useHelper();
 
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();
@@ -56,8 +56,8 @@ const ChatList = (props) => {
     return <AnonymousEvenUserForm />;
   }
 
-  let userNameActive = cUser.value?.name ? cUser.value?.name : cUser.value?.names;
-  let anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
+  const userNameActive = cUser.value?.name ? cUser.value?.name : cUser.value?.names;
+  const anonymous = cUser.value?.isAnonymous ? cUser.value?.isAnonymous : 'false';
 
   return (
     <Tabs activeKey={chatPublicPrivate} size='small' onChange={callback} centered>

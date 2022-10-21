@@ -61,13 +61,19 @@ export const assignMessageAndTypeToQrmodalAlert = ({ scannerData, attendeeId }: 
   let type = 'info';
   let message: ReactNode = <></>;
   const checkedinAt: any = scannerData?.attendee?.checkedin_at;
-  const dateAndTime: any = checkedinAt && checkedinAt?.toDate();
+  const dateAndTime: any = typeof checkedinAt === 'string' ? checkedinAt : checkedinAt?.toDate();
 
   if (scannerData?.attendeeNotFound) {
     type = 'error';
     message = `Usuario no encontrado ${attendeeId === '' ? attendeeId : 'Attendee Id: ' + attendeeId}`;
   }
   if (scannerData?.attendeeFound && !scannerData?.attendee?.checked_in) {
+    if (scannerData.attendee?.youDoNotExistInThisActivity) {
+      type = 'error';
+      message = 'Usuario encontrado pero no inscrito en esta actividad';
+      return { type, message };
+    }
+
     type = 'warning';
     message = 'Usuario encontrado, pero sin registro de ingreso';
   }

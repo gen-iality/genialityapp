@@ -1,9 +1,9 @@
-import { Actions } from '../../helpers/request';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { Actions } from '@helpers/request';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 
 export function fetchPermissions(event) {
   return async (dispatch) => {
-    let token = await GetTokenUserFirebase();
+    const token = await GetTokenUserFirebase();
     //const permissions = [rolPermissions.admin_badge]; //ESCARAPELA
     //const permissions = [rolPermissions.admin_staff]; //STAFF
     //const permissions = [rolPermissions.history_invitations]; //HISTORIAL INVITACIONS

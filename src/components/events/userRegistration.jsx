@@ -1,9 +1,9 @@
 import { Component } from 'react';
-import API, { EventsApi, TicketsApi } from '../../helpers/request';
-import { fieldNameEmailFirst } from '../../helpers/utils';
+import API, { EventsApi, TicketsApi } from '@helpers/request';
+import { fieldNameEmailFirst } from '@helpers/utils';
 import FormComponent from './registrationForm/form';
 import { Spin, Skeleton } from 'antd';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import { GetTokenUserFirebase } from 'helpers/HelperAuth';
 
 class UserRegistration extends Component {
@@ -39,8 +39,7 @@ class UserRegistration extends Component {
 
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = async () => {
-    let evius_token = await GetTokenUserFirebase();
-    let eventUser = null;
+    const evius_token = await GetTokenUserFirebase();
     if (!evius_token) {
       this.setState({ currentUser: 'guest', loading: false });
     } else {
@@ -48,7 +47,7 @@ class UserRegistration extends Component {
         const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
         if (resp.status === 200) {
           const data = resp.data;
-          eventUser = await EventsApi.getcurrentUserEventUser(this.props.cEvent.value._id);
+          const eventUser = await EventsApi.getcurrentUserEventUser(this.props.cEvent.value._id);
           const tickets = await TicketsApi.getByEvent(this.props.cEvent.value._id, evius_token);
 
           this.setState({
@@ -81,11 +80,11 @@ class UserRegistration extends Component {
   }
 
   render() {
-    let { registeredUser, loading, initialValues, extraFields, eventUser, conditionals } = this.state;
+    const { registeredUser, loading, initialValues, extraFields, eventUser, conditionals } = this.state;
 
     if (!loading)
       return !registeredUser ? (
-        <React.Fragment>
+        <>
           {/* initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals } */}
           <FormComponent
             initialValues={initialValues}
@@ -95,7 +94,7 @@ class UserRegistration extends Component {
             conditionals={conditionals}
             showSection={this.props.showSection}
           />
-        </React.Fragment>
+        </>
       ) : (
         <FormComponent
           showSection={this.props.showSection}
@@ -120,5 +119,5 @@ class UserRegistration extends Component {
   }
 }
 
-let UserRegistrationwithContext = withContext(UserRegistration);
+const UserRegistrationwithContext = withContext(UserRegistration);
 export default UserRegistrationwithContext;

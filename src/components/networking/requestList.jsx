@@ -2,13 +2,13 @@ import { useState, useEffect, useContext } from 'react';
 import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from 'antd';
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 /* import 'react-toastify/dist/ReactToastify.css'; */
-import { Networking, UsersApi } from '../../helpers/request';
+import { Networking, UsersApi } from '@helpers/request';
 import { getCurrentUser } from './services';
-import { addNotification } from '../../helpers/netWorkingFunctions';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
-import { CurrentEventUserContext } from '../../context/eventUserContext';
-import { CurrentEventContext } from '@/context/eventContext';
+import { addNotification } from '@helpers/netWorkingFunctions';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+import { DispatchMessageService } from '@context/MessageService';
+import { CurrentEventUserContext } from '@context/eventUserContext';
+import { CurrentEventContext } from '@context/eventContext';
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
@@ -29,7 +29,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
 
     async function obtenerData() {
       setLoading(true);
-      var dataNew = await Promise.all(
+      const dataNew = await Promise.all(
         list.map(async (request) => {
           const picture = await obtenerImageUser(request.id_user_requested);
           return { ...request, picture };
@@ -105,7 +105,7 @@ const InvitacionListSent = ({ list }) => {
 
     async function obtenerData() {
       setLoading(true);
-      var dataNew = await Promise.all(
+      const dataNew = await Promise.all(
         list.map(async (request) => {
           const picture = await obtenerImageUser(request.id_user_requesting);
           return { ...request, picture };
@@ -172,17 +172,17 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
   const getInvitationsList = async () => {
     // Se consulta el id del usuario por el token
     setLoading(true);
-    let evius_token = await GetTokenUserFirebase();
+    const evius_token = await GetTokenUserFirebase();
     if (evius_token) {
       // Servicio que obtiene el eventUserId del usuario actual
-      let eventUser = eventUserCtx.value;
+      const eventUser = eventUserCtx.value;
       // Servicio que trae las invitaciones / solicitudes recibidas
       Networking.getInvitationsReceived(eventId, eventUser._id).then(async ({ data }) => {
         setCurrentUserId(eventUser._id);
 
         // Solo se obtendran las invitaciones que no tengan respuesta
         if (data.length > 0) {
-          let response = data.filter((item) => item.response == undefined);
+          const response = data.filter((item) => item.response == undefined);
 
           setRequestListReceived(response);
           await insertNameRequested(response);
@@ -208,11 +208,11 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
   //Funcion para insertar dentro de requestListReceivedNew el nombre de quien envia la solicitud de contacto
   const insertNameRequested = async (requestListReceived) => {
     //Se crea un nuevo array
-    let requestListReceivedNew = [];
+    const requestListReceivedNew = [];
     //Se itera el array que llega para obtener los datos
     for (let i = 0; i < requestListReceived.length; i++) {
       //dentro del for se consulta la api para obtener el usuario
-      let dataUser = await UsersApi.getOne(eventId, requestListReceived[i].id_user_requested);
+      const dataUser = await UsersApi.getOne(eventId, requestListReceived[i].id_user_requested);
       // se realiza un if para validar que no se encuentre el campo response para insertar los datos resultantes
       if (!requestListReceived[i].response) {
         //se insertan los datos obtenidos del array que se esta iterando y se inserta el nombre del usuario
@@ -236,7 +236,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
 
   // Funcion para aceptar o rechazar una invitacion o solicitud
   const sendResponseToInvitation = async (requestId, state) => {
-    let data = { response: state ? 'accepted' : 'rejected' };
+    const data = { response: state ? 'accepted' : 'rejected' };
     Networking.acceptOrDeclineInvitation(eventId, requestId._id, data)
       .then(async () => {
         DispatchMessageService({
@@ -245,7 +245,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
           action: 'show',
         });
 
-        let notificationr = {
+        const notificationr = {
           idReceive: currentUserAc._id,
           idEmited: requestId && requestId._id,
           state: '1',

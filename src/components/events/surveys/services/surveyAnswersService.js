@@ -1,5 +1,5 @@
-import { firestore, fireRealtime } from '../../../../helpers/firebase';
-import { SurveysApi } from '../../../../helpers/request';
+import { firestore, fireRealtime } from '@helpers/firebase';
+import { SurveysApi } from '@helpers/request';
 import countAnswers from './counstAnswersService';
 
 const surveyAnswers = {
@@ -7,7 +7,7 @@ const surveyAnswers = {
   registerWithUID: (surveyId, questionId, dataAnswer, counter) => {
     const { responseData, date, uid, email, names, voteValue } = dataAnswer;
     const { optionQuantity, optionIndex, correctAnswer } = counter;
-    let data = {
+    const data = {
       response: responseData || '',
       created: date,
       id_user: uid,
@@ -38,7 +38,7 @@ const surveyAnswers = {
     const { responseData, date, uid } = dataAnswer;
     const { optionQuantity, optionIndex, correctAnswer } = counter;
 
-    let data =
+    const data =
       correctAnswer !== undefined
         ? {
             response: responseData,
@@ -75,9 +75,9 @@ const surveyAnswers = {
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
   getAnswersQuestion: async (surveyId, questionId, eventId, updateData, operation) => {
     // eslint-disable-next-line no-unused-vars
-    let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
-    let options = dataSurvey.questions.find((question) => question.id === questionId);
-    let optionsIndex = dataSurvey.questions.findIndex((index) => index.id === questionId);
+    const dataSurvey = await SurveysApi.getOne(eventId, surveyId);
+    const options = dataSurvey.questions.find((question) => question.id === questionId);
+    const optionsIndex = dataSurvey.questions.findIndex((index) => index.id === questionId);
     const realTimeRef = fireRealtime.ref(`surveys/${surveyId}/answer_count/${questionId}`);
 
     realTimeRef.on('value', (listResponse) => {

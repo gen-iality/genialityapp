@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, memo } from 'react';
 import ReactPlayer from 'react-player';
 import { getLiveStream } from '../../adaptors/gcoreStreamingApi';
 import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
 import { Button, Spin } from 'antd';
-import AgendaContext from '@/context/AgendaContext';
-import { CurrentUserContext } from '@/context/userContext';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentUserContext } from '@context/userContext';
 import { Grid } from 'antd';
 
 const { useBreakpoint } = Grid;
@@ -31,12 +31,12 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
       setVisibleReactPlayer(true);
     } else if (thereIsConnection) {
       console.log('100. INGRESA ACA 2===>', typeActivity, thereIsConnection);
-      let asyncfunction = async () => {
+      const asyncfunction = async () => {
         setConected('Yes');
         setPlatformurl('none');
-        let live_stream = await getLiveStream(meeting_id);
+        const live_stream = await getLiveStream(meeting_id);
         console.log('LIVE STREAM===>', live_stream);
-        let url = live_stream.iframe_url;
+        const url = live_stream.iframe_url;
         visibleReactPlayer && setVisibleReactPlayer(false);
 
         //console.log('100. URL==>', live_stream.hls_playlist_url);
@@ -97,4 +97,4 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
   );
 }
 
-export default React.memo(GcorePlayer);
+export default memo(GcorePlayer);

@@ -1,7 +1,6 @@
-import * as React from 'react';
 import { Typography } from 'antd';
 import QuizProgress from '../../quiz/QuizProgress';
-import QuizzesProgress from '@/components/quiz/QuizzesProgress';
+import QuizzesProgress from '@components/quiz/QuizzesProgress';
 
 // const eventId = '6283a7692d274913605fe751';
 // const activityId = '';

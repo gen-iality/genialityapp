@@ -6,7 +6,7 @@ import LoadingTypeActivity from '../typeActivity/components/LoadingTypeActivity'
 import ContentSource from '../typeActivity/components/layout/ContentSource';
 import ContentInformative from '../typeActivity/components/layout/ContentInformative';
 import { LinkOutlined, YoutubeOutlined } from '@ant-design/icons'; //Este icono para el addonBefore
-import { useTypeActivity } from '../../../context/typeactivity/hooks/useTypeActivity';
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
 import InputUploadVideo from './components/InputUploadVideo';
 
 const newContentSource = {
@@ -34,8 +34,6 @@ const ModalStepByStep = (props: any) => {
         {typeOptions.key !== 'vimeo' && typeOptions.key !== 'youTube' && typeOptions.key !== 'url' ? (
           <ContentTypeActivity options={typeOptions.typeOptions} />
         ) : null}
-        {/* <ResultTypeActivity title={'Transmisión creada correctamente'} status={'success'} /> */}
-        {/* <LoadingTypeActivity /> */}
         {typeOptions.key === 'cargarvideo' ? <InputUploadVideo activityName={props.activityName} /> : null}
         {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube' || typeOptions.key === 'url'
           ? typeOptions.typeOptions.map((options: mapContentSource) => {

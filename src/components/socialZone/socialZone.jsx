@@ -11,11 +11,11 @@ import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
 import GameList from '../events/game/gameList';
 import { useRef } from 'react';
-import { UseEventContext } from '../../context/eventContext';
-import { useCurrentUser } from '../../context/userContext';
+import { useEventContext } from '@context/eventContext';
+import { useCurrentUser } from '@context/userContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import ThisRouteCanBeDisplayed, { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 
 
@@ -32,11 +32,11 @@ const styleTabAttendes = {
   borderRadius: '10px',
 };
 
-let SocialZone = function(props) {
+const SocialZone = (props) => {
   //contextos
-  let cEvent = UseEventContext();
-  let cUser = useCurrentUser();
-  let {
+  const cEvent = useEventContext();
+  const cUser = useCurrentUser();
+  const {
     attendeeList,
     HandleChatOrAttende,
     chatAttendeChats,
@@ -45,11 +45,11 @@ let SocialZone = function(props) {
     tabsGenerals,
   } = useHelper();
   const [currentUser, setCurrentUser] = useState(null);
-  let [busqueda, setBusqueda] = useState(null);
-  let [strAttende, setstrAttende] = useState();
-  let [isFiltered, setIsFiltered] = useState(false);
-  let busquedaRef = useRef();
-  let history = useHistory();
+  const [busqueda, setBusqueda] = useState(null);
+  const [strAttende, setstrAttende] = useState();
+  const [isFiltered, setIsFiltered] = useState(false);
+  const busquedaRef = useRef();
+  const history = useHistory();
   const [typeEvent, settypeEvent] = useState();
   const [countAttendeesOnline, SetCountAttendeesOnline] = useState(0);
 
@@ -82,7 +82,7 @@ let SocialZone = function(props) {
   }
 
   useEffect(() => {
-    let eventype = recordTypeForThisEvent(cEvent);
+    const eventype = recordTypeForThisEvent(cEvent);
     settypeEvent(eventype);
   }, [cEvent]);
 

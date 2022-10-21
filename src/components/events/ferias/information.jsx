@@ -36,9 +36,6 @@ function feriaInformation(props) {
                     symbol: (
                       <span style={{ color: '#2D7FD6', fontSize: '14px' }}>
                         ver más
-                        {/* {Moment.locale() == 'en' ? 'More' : 'Ver más'}{' '} */}
-                        {/* Se valido de esta forma porque el componente FormattedMessage no hacia
-                               efecto en la prop del componente de Ant design */}
                       </span>
                     ),
                   }}

@@ -16,10 +16,11 @@ import Loading from '../loaders/loading';
 import useGetEventCompanies from './customHooks/useGetEventCompanies';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { firestore } from '../../helpers/firebase';
-import Header from '../../antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { firestore } from '@helpers/firebase';
+import Header from '@antdComponents/Header';
+import { DispatchMessageService } from '@context/MessageService';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { handleRequestError } from '@helpers/utils';
 
 const { confirm } = Modal;
 
@@ -56,11 +57,11 @@ function Empresas({ event, match }) {
       msj: 'Por favor espere mientras se guarda el orden...',
       action: 'destroy',
     });
-    let companies = updateList ? updateList : companyList;
+    const companies = updateList ? updateList : companyList;
     try {
       for (let i = 0; i < companies.length; i++) {
         companies[i].index = i + 1;
-        var { id, ...company } = companies[i];
+        const { id, ...company } = companies[i];
         await firestore
           .collection('event_companies')
           .doc(event._id)
@@ -119,7 +120,7 @@ function Empresas({ event, match }) {
               .doc(id)
               .delete()
               .then((resp) => {
-                let updateList = companyList.filter((company) => company.id !== id);
+                const updateList = companyList.filter((company) => company.id !== id);
                 setCompanyList(updateList);
                 orderCompany(updateList).then((r) => {});
               });
@@ -149,7 +150,7 @@ function Empresas({ event, match }) {
     });
   }
 
-  let companyColumns = [
+  const companyColumns = [
     {
       title: '',
       dataIndex: 'sort',

@@ -1,14 +1,14 @@
-import { firestoreeviuschat, app } from '../../helpers/firebase';
-var hoy = new Date();
+import { firestoreeviuschat, app } from '@helpers/firebase';
+const hoy = new Date();
 
 function formatAMPM(hoy) {
-  var hours = hoy.getHours();
-  var minutes = hoy.getMinutes();
-  var ampm = hours >= 12 ? 'pm' : 'am';
+  let hours = hoy.getHours();
+  let minutes = hoy.getMinutes();
+  const ampm = hours >= 12 ? 'pm' : 'am';
   hours = hours % 12;
   hours = hours ? hours : 12;
   minutes = minutes < 10 ? '0' + minutes : minutes;
-  var strTime = hours + ':' + minutes + ' ' + ampm;
+  const strTime = hours + ':' + minutes + ' ' + ampm;
   return strTime;
 }
 

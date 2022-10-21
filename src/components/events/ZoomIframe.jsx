@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { UseUserEvent } from '../../context/eventUserContext';
-import { isHost } from '../../helpers/helperEventUser';
-import { UseEventContext } from '../../context/eventContext';
+import { useUserEvent } from '@context/eventUserContext';
+import { isHost } from '@helpers/helperEventUser';
+import { useEventContext } from '@context/eventContext';
 import { getLiveStreamStatus, getLiveStreamStats, ResetLiveStream } from '../../adaptors/wowzaStreamingAPI';
+import WOWZAPlayer from '../livetransmision/WOWZAPlayer';
 
 const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, isHost }) => {
   const [ platformurl, setPlatformurl ] = useState(null);
@@ -14,11 +15,11 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
   }, [ meeting_id ]);
 
   const checkStreamStatus = async () => {
-    let live_stream_status = await getLiveStreamStatus(meeting_id);
-    setStreamStatus(live_stream_status);
+    const live_stream_status = await getLiveStreamStatus(meeting_id);
+    // setStreamStatus(live_stream_status); -> it is undefinded
 
-    let live_stream_stats = await getLiveStreamStats(meeting_id);
-    setStreamStats(live_stream_stats);
+    const live_stream_stats = await getLiveStreamStats(meeting_id);
+    // setStreamStats(live_stream_stats); -> it is undefinded
 
     setTimeout(checkStreamStatus, 5000);
   };
@@ -32,7 +33,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
     let url = null;
     switch (platform) {
       case 'zoom':
-        let url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
+        const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
         url =
           url_conference +
           meeting_id +
@@ -87,12 +88,12 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
 };
 
 const ZoomIframe = ({ platform, meeting_id, generalTabs }) => {
-  let cEventuser = UseUserEvent();
-  let cEvent = UseEventContext();
+  const cEventuser = useUserEvent();
+  const cEvent = useEventContext();
   const [ userEvent, setuserEvent ] = useState({});
   useEffect(() => {
     if (!cEventuser.value || !cEvent.value) return;
-    let { displayName, email } = cEventuser.value.properties;
+    const { displayName, email } = cEventuser.value.properties;
     setuserEvent({
       displayName: displayName,
       email: email,

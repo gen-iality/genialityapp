@@ -1,5 +1,5 @@
-import { DispatchMessageService } from '@/context/MessageService';
-import getAdditionalFields from '@/components/forms/getAdditionalFields';
+import { DispatchMessageService } from '@context/MessageService';
+import getAdditionalFields from '@components/forms/getAdditionalFields';
 import { aditionalFieldsPropsTypes, updateFieldsVisibilityPropsTypes } from './types/types';
 
 export const textLeft: {} = {
@@ -56,7 +56,7 @@ export const validateButtonText = (attendee: attendee, visibleInCms: boolean) =>
 
 export function getImagename(fileUrl: string) {
   if (typeof fileUrl == 'string') {
-    let splitUrl = fileUrl?.split('/');
+    const splitUrl = fileUrl?.split('/');
     return splitUrl[splitUrl.length - 1];
   } else {
     return null;

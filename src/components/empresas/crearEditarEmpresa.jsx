@@ -17,10 +17,11 @@ import useGetCompanyInitialValues from './customHooks/useGetCompanyInitialValues
 import useGetEventCompaniesStandTypesOptions from './customHooks/useGetEventCompaniesStandTypesOptions';
 import useGetEventCompaniesSocialNetworksOptions from './customHooks/useGetEventCompaniesSocialNetworksOptions';
 import { createEventCompany, updateEventCompany } from './services';
-import { firestore } from '../../helpers/firebase';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
-import { DispatchMessageService } from '../../context/MessageService';
+import { firestore } from '@helpers/firebase';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
+import { DispatchMessageService } from '@context/MessageService';
+import { handleRequestError } from '@helpers/utils';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -303,8 +304,6 @@ function CrearEditarEmpresa(props) {
 
                 <Field name='video_url' component={InputField} label='Video' placeholder='Url video' />
 
-                {/* <Field name='visible' component={SwitchField} label='Visible' /> */}
-
                 <ImageField required name='stand_image' label='Banner de la empresa' />
 
                 <ImageField name='list_image' label='Logo de la empresa' />
@@ -411,7 +410,6 @@ function CrearEditarEmpresa(props) {
                                 </Button>
                               )}
 
-                              {/* values.services.length < SERVICES_LIMIT && */}
                               {serviceIndex === values.services.length - 1 && (
                                 <Button
                                   type='primary'
@@ -661,21 +659,6 @@ function CrearEditarEmpresa(props) {
                     );
                   }}
                 />
-
-                {/* <Form.Item {...buttonsLayout}>
-                  <Link to={`/event/${event._id}/empresas`}>
-                    <Button
-                      disabled={isSubmitting}
-                      loading={isSubmitting}
-                      icon={<CaretLeftOutlined />}
-                      style={{ marginRight: '20px' }}>
-                      {'Volver'}
-                    </Button>
-                  </Link>
-                  <Button type='primary' htmlType='submit' disabled={isSubmitting} loading={isSubmitting}>
-                    {'Guardar'}
-                  </Button>
-                </Form.Item> */}
               </Col>
             </Row>
             <BackTop />

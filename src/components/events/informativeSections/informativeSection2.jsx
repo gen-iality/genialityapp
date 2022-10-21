@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Card, Row, Col, Typography } from 'antd';
 import Parser from 'html-react-parser';
 import ReactPlayer from 'react-player';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 
 class InformativeSection2 extends Component {
   constructor(props) {
@@ -144,5 +144,5 @@ class InformativeSection2 extends Component {
   }
 }
 
-let InformativeSection2WithContext = withContext(InformativeSection2);
+const InformativeSection2WithContext = withContext(InformativeSection2);
 export default InformativeSection2WithContext;

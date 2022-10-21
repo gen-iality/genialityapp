@@ -68,7 +68,7 @@ class SearchComponent extends Component {
 
           let found = false;
           //buscamos coindicencia por cada una de las propiedades
-          for (let key in item.properties) {
+          for (const key in item.properties) {
             let propertyValue = item.properties[key];
             if (!propertyValue) continue;
             propertyValue = String(propertyValue);
@@ -101,7 +101,7 @@ class SearchComponent extends Component {
   }
 
   handleFilter = (input) => {
-    let value = input.target.value;
+    const value = input.target.value;
     this.setState({ value });
 
     // if(value === '*'){
@@ -111,7 +111,7 @@ class SearchComponent extends Component {
     //   this.props.searchResult(filtered);
     // }
     if (value.length >= 3) {
-      let filtered = this.filterByAllColums(value);
+      const filtered = this.filterByAllColums(value);
       if (filtered.length > 0) this.setState({ showMessage: false, message: '', filtered });
       else this.setState({ showMessage: true, message: 'not' });
       this.props.searchResult(filtered);
@@ -159,12 +159,6 @@ class SearchComponent extends Component {
               </Tooltip>
             }
           />
-          {/* Total:{' '}
-          {this.props.users && this.props.users.length
-            ? this.props.users.length
-            : this.props.data && this.props.data.length
-            ? this.props.data.length
-            : '-'} */}
           {this.state.showMessage && (
             <Alert
               message={<FormattedMessage id={`global.search_${this.state.message}`} defaultMessage='Help' />}

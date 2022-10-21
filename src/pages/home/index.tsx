@@ -3,17 +3,17 @@ import dayjs from 'dayjs';
 import momentLocalizer from 'react-widgets-moment';
 import { useRequest } from '../../services/useRequest';
 import { useEffect, useState } from 'react';
-import ModalFeedback from '@/components/authentication/ModalFeedback';
+import ModalFeedback from '@components/authentication/ModalFeedback';
 import { Col, Row, Typography, Button, Space, Result } from 'antd';
-import LoadingEvent from '@/components/loaders/loadevent';
-import ErrorServe from '@/components/modal/serverError';
-import EventCard from '@/components/shared/eventCard';
+import LoadingEvent from '@components/loaders/loadevent';
+import ErrorServe from '@components/modal/serverError';
+import EventCard from '@components/shared/eventCard';
 import { useApiMultiple } from '@/services/hooks/useApiMultiple';
 dayjs.locale('es');
 momentLocalizer();
 
 const Home = () => {
-  let { isLoading, isError, isSuccess, responseData, useResponse, handleRequest } = useApiMultiple();
+  const { isLoading, isError, isSuccess, responseData, useResponse, handleRequest } = useApiMultiple();
 
   const [typeEvent, settypeEvent] = useState<string>('nextEvents');
   const [hasMore, sethasMore] = useState(false);

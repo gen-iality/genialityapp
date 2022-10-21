@@ -6,7 +6,7 @@ import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
@@ -27,11 +27,11 @@ const ItemStyle = {
 const { confirm, destroyAll } = Modal;
 
 const UserStatusAndMenu = (props) => {
-  let { cEventUser } = props;
-  let user = props.user;
-  let photo = props.photo;
-  let name = props.name;
-  let logout = props.logout;
+  const { cEventUser } = props;
+  const user = props.user;
+  const photo = props.photo;
+  const name = props.name;
+  const logout = props.logout;
   const [visible, setVisible] = useState(true);
   const intl = useIntl();
 
@@ -42,7 +42,7 @@ const UserStatusAndMenu = (props) => {
     if (props.eventId && props.eventId == '60cb7c70a9e4de51ac7945a2') setVisible(false);
   }, [props.eventId]);
 
-  let menu = !props.anonimususer ? (
+  const menu = !props.anonimususer ? (
     <Menu>
       {props.location.pathname.includes('landing') && cEventUser.value && cEventUser.status === 'LOADED' && (
         <Menu.ItemGroup
@@ -155,9 +155,9 @@ const UserStatusAndMenu = (props) => {
     </Menu>
   );
 
-  let loggedOutUser = <div style={MenuStyle}></div>;
+  const loggedOutUser = <div style={MenuStyle}></div>;
 
-  let loggedInuser = (
+  const loggedInuser = (
     <Row style={MenuStyle}>
       <Col style={MenuStyle}>
         <Dropdown arrow overlay={menu} placement='bottomRight'>
@@ -227,5 +227,6 @@ const UserStatusAndMenu = (props) => {
 const mapDispatchToProps = {
   setViewPerfil,
 };
-let UserStatusAndMenuWithContext = withContext(UserStatusAndMenu);
+
+const UserStatusAndMenuWithContext = withContext(UserStatusAndMenu);
 export default connect(null, mapDispatchToProps)(WithLoading(withRouter(UserStatusAndMenuWithContext)));

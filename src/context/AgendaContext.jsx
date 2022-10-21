@@ -3,12 +3,12 @@ import {
   getVideosLiveStream,
   startRecordingLiveStream,
   stopRecordingLiveStream,
-} from '@/adaptors/gcoreStreamingApi';
+} from '@adaptors/gcoreStreamingApi';
 import { message } from 'antd';
 
 import { createContext, useState, useEffect, useContext, useReducer } from 'react';
-import Service from '../components/agenda/roomManager/service';
-import { fireRealtime, firestore } from '../helpers/firebase';
+import Service from '@components/agenda/roomManager/service';
+import { fireRealtime, firestore } from '@helpers/firebase';
 import { CurrentEventContext } from './eventContext';
 import { CurrentEventUserContext } from './eventUserContext';
 import { DispatchMessageService } from './MessageService';
@@ -153,10 +153,10 @@ export const AgendaContextProvider = ({ children }) => {
       .ref(refActivity)
       .orderByChild('date')
       .on('value', (snapshot) => {
-        let listRequest = {};
-        let listRequestArray = [];
+        const listRequest = {};
+        const listRequestArray = [];
         if (snapshot.exists()) {
-          let data = snapshot.val();
+          const data = snapshot.val();
           if (Object.keys(data).length > 0) {
             Object.keys(data).map((requestData) => {
               listRequest[requestData] = {

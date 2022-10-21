@@ -1,11 +1,11 @@
-import { DispatchMessageService } from '@/context/MessageService';
-import { fireStorage } from '@/helpers/firebase';
+import { DispatchMessageService } from '@context/MessageService';
+import { fireStorage } from '@helpers/firebase';
 
 export const deleteFireStorageData = async (fileUrl: string) => {
   let theFileWasDeleted = '';
   try {
     // Create a reference to the file to delete
-    let fileRef = fireStorage.refFromURL(fileUrl);
+    const fileRef = fireStorage.refFromURL(fileUrl);
 
     /** Skip template directory */
     const fileRefPath: string = fileRef.fullPath;

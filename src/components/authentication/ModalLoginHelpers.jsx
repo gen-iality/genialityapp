@@ -1,11 +1,11 @@
 import { LeftCircleOutlined, LoadingOutlined, MailOutlined } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert, Row } from 'antd';
 import { useState } from 'react';
-import { EventsApi } from '../../helpers/request';
-import withContext from '../../context/withContext';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
+import { EventsApi } from '@helpers/request';
+import withContext from '@context/withContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
-import { UseEventContext } from '../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 
 const { useBreakpoint } = Grid;
 
@@ -19,8 +19,8 @@ const stylePaddingMobile = {
 };
 
 const ModalLoginHelpers = (props) => {
-  let { handleChangeTypeModal, typeModal, helperDispatch } = useHelper();
-  let cEvent = UseEventContext();
+  const { handleChangeTypeModal, typeModal, helperDispatch } = useHelper();
+  const cEvent = useEventContext();
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
   const [sendRecovery, setSendRecovery] = useState(null);
@@ -53,8 +53,7 @@ const ModalLoginHelpers = (props) => {
   //FUNCIÓN QUE PERMITE ENVIAR LA CONTRASEÑA AL EMAIL DIGITADO
   const handleRecoveryPass = async ({ email }) => {
     try {
-      let resp;
-      resp = await EventsApi.changePasswordUser(email, window.location.href);
+      const resp = await EventsApi.changePasswordUser(email, window.location.href);
       if (resp) {
         setSendRecovery(
           `${intl.formatMessage({

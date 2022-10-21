@@ -3,11 +3,11 @@ import { Modal, Form, Input, Button, Typography, Upload, Space } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { PictureOutlined } from '@ant-design/icons';
 import functionCreateNewOrganization from './functionCreateNewOrganization';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const ModalCreateOrg = (props) => {
   const [form] = Form.useForm();
-  let [imageAvatar, setImageAvatar] = useState(null);
+  const [imageAvatar, setImageAvatar] = useState(null);
 
   const beforeUpload = (file) => {
     const isLt5M = file.size / 1024 / 1024 < 5;

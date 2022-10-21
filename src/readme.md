@@ -3,10 +3,10 @@
 Ahora existe una nueva forma de importar los componentes o elementos de la aplicación, para hacer uso de este debe colocar **“@/”** luego el componente.
 
 **Forma común:**
-`import { DocumentsApi } from '../../../helpers/request';`
+`import { DocumentsApi } from '@helpers/request';`
 
 **Nueva forma:**
-`import { DocumentsApi } from '@helpers/request';` || `import { DocumentsApi } from '@/helpers/request';`
+`import { DocumentsApi } from '@helpers/request';` || `import { DocumentsApi } from '@helpers/request';`
 
 Es decir, para acceder al componente se debe agregar "@" o "@/"
 

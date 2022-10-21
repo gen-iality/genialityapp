@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import { AgendaApi } from '@/helpers/request';
-import { firestore } from '@/helpers/firebase';
+import { AgendaApi } from '@helpers/request';
+import { firestore } from '@helpers/firebase';
 import { Link } from 'react-router-dom';
 import { useCallback } from 'react';
 
@@ -29,7 +29,6 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
       console.log('700.cEventUserId:', cEventUserId);
       await Promise.all(
         data.map(async (activity: any) => {
-          console.log('700.Eliminación map');
           await firestore
             .collection(`${activity._id}_event_attendees`)
             .doc(cEventUserId)

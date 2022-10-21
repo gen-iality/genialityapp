@@ -49,7 +49,7 @@ export default (surveyData: SurveyPreModel) => {
     jsonObj.questions.unshift({
       type: 'html',
       html: `<div style='width: 90%; margin: 0 auto;'>${textMessage}</div>`,
-    });
+    } as any);
   }
 
   if (jsonObj.questions === undefined) {
@@ -58,7 +58,7 @@ export default (surveyData: SurveyPreModel) => {
   };
 
   jsonObj['questions'].forEach((page: any, index: number) => {
-    let newPage = page;
+    const newPage = page;
     newPage['isRequired'] = jsonObj.allow_gradable_survey === 'true' ? false : true;
     // Se agrega la imagen a la pregunta
     if (newPage?.image) {

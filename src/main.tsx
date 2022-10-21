@@ -15,7 +15,7 @@ const queryClient = new QueryClient();
 const language = (navigator.languages && navigator.languages[0]) || navigator.language;
 
 const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
-const messages = localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
+const messages = (localeData as any)[languageWithoutRegionCode] || (localeData as any)[language] || localeData.en;
 
 /* A helper function that will send errors to Sentry.io. */
 sentry();

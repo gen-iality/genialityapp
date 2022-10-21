@@ -12,11 +12,12 @@ import {
   center,
   textLeft,
   assignmentOfConditionsToAdditionalFields,
-} from '@/Utilities/formUtils';
-import { AttendeeInformation, FormEnrollAttendeeToEventPropsTypes } from '@/Utilities/types/types';
+} from '@Utilities/formUtils';
+import { AttendeeInformation, FormEnrollAttendeeToEventPropsTypes } from '@Utilities/types/types';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
+import AttendeeCheckInButtonPrint from '@components/checkIn/AttendeeCheckInButtonPrint';
 
 const { Title } = Typography;
 
@@ -34,6 +35,9 @@ const FormEnrollAttendeeToEvent = ({
     icon: <BadgeAccountOutlineIcon />,
     styles: {},
   },
+  printUser,
+  badgeEvent,
+  activityId,
 }: FormEnrollAttendeeToEventPropsTypes) => {
   const [form] = Form.useForm();
   const intl = useIntl();
@@ -148,15 +152,20 @@ const FormEnrollAttendeeToEvent = ({
                       <>
                         <AttendeeCheckInCheckbox
                           attendee={attendeeInformation}
+                          activityId={activityId}
                           reloadComponent={componentLoad}
                           checkInAttendeeCallbak={checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}}
                         />
                         {eventType === 'hybridEvent' && (
                           <AttendeeCheckInButton
                             attendee={attendeeInformation}
+                            activityId={activityId}
                             reloadComponent={componentLoad}
                             checkInAttendeeCallbak={checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}}
                           />
+                        )}
+                        {eventType !== 'onlineEvent' && badgeEvent && attendee && printUser && (
+                          <AttendeeCheckInButtonPrint onPrintUser={printUser!} />
                         )}
                       </>
                     )}

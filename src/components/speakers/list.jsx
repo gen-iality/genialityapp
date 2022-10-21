@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { withRouter } from 'react-router-dom';
-import { SpeakersApi } from '../../helpers/request';
+import { SpeakersApi } from '@helpers/request';
 import { Table, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import { columns } from './columns';
-import { DispatchMessageService } from '../../context/MessageService';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { DispatchMessageService } from '@context/MessageService';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
@@ -20,7 +20,7 @@ function SpeakersList(props) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [dataSpeakers, setdataSpeakers] = useState([]);
-  let { isLoading, data, refetch } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
+  const { isLoading, data, refetch } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
   const { eventIsActive } = useHelper();
   const cEventIsActive = eventIsActive;
 
@@ -33,7 +33,7 @@ function SpeakersList(props) {
 
   function sortAndIndexSpeakers() {
     //  let { data } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
-    let data = dataSpeakers;
+    const data = dataSpeakers;
     let list = [];
     if (data) {
       list = data.sort((a, b) => (a.sort && b.sort ? a.sort - b.sort : true));
@@ -125,7 +125,7 @@ function SpeakersList(props) {
       if (queryData.state === 'update') {
         await Promise.all(
           queryData.newData.map(async (speaker, index) => {
-            let speakerChange = { ...speaker, order: index + 1 };
+            const speakerChange = { ...speaker, order: index + 1 };
             const data = await SpeakersApi.editOne(speakerChange, speaker._id, queryData.eventId);
           })
         );
@@ -236,7 +236,6 @@ function SpeakersList(props) {
         }}
         pagination={false}
       />
-      {/* <ReactQueryDevtools initialIsOpen /> */}
     </div>
   );
 }

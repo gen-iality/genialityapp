@@ -1,9 +1,9 @@
 import { Component } from 'react';
-import { firestore } from '../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import { Avatar, List, Card, Spin, Row, Comment, Tooltip, Typography, Divider } from 'antd';
 import dayjs from 'dayjs';
-import withContext from '../../context/withContext';
-import { UsersApi } from '@/helpers/request';
+import withContext from '@context/withContext';
+import { UsersApi } from '@helpers/request';
 
 class CommentsList extends Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class CommentsList extends Component {
     };
   }
   async getDataUser(iduser) {
-    let user = await UsersApi.getProfile(iduser);
+    const user = await UsersApi.getProfile(iduser);
     if (user) {
       return user.picture;
     } else {
@@ -31,7 +31,7 @@ class CommentsList extends Component {
     try {
       let dataComment = [];
 
-      let admincommentsRef = firestore
+      const admincommentsRef = firestore
         .collection('adminPost')
         .doc(eventId)
         .collection('comment')
@@ -39,11 +39,11 @@ class CommentsList extends Component {
         .collection('comments')
         .orderBy('date', 'asc');
 
-      let snapshot = await admincommentsRef.get();
+      const snapshot = await admincommentsRef.get();
 
       dataComment = await Promise.all(
         snapshot.docs.map(async (doc) => {
-          let picture =
+          const picture =
             this.props.cEvent.value.visibility !== 'ANONYMOUS' && (await this.getDataUser(doc.data().author));
           return { id: doc.id, ...doc.data(), picture: picture };
         })
@@ -99,35 +99,12 @@ class CommentsList extends Component {
                   author={<Typography.Paragraph style={{ fontSize: '14px' }}>{item.authorName}</Typography.Paragraph>}
                   datetime={
                     <Tooltip title={dayjs(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
-                      {/* <span>{dayjs(new Date(item.date.toMillis())).format('YYYY-MM-DD')}</span> */}
                       <span>{dayjs(dayjs(new Date(item.date.toMillis()))).from(dayjs(new Date()))}</span>
                     </Tooltip>
                   }
                   content={item.comment}
                 />
               </List.Item>
-
-              // <List.Item style={{marginBottom:20,marginTop:10, border:'1px solid #f6f6f6', borderRadius:"5px"}} key={item.id}>
-              //   <List.Item.Meta
-              //     avatar={
-              //       item.authorName ? (
-              //         <Avatar>
-              //           {item.authorName &&
-              //             item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
-              //         </Avatar>
-              //       ) : (
-              //         <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
-              //       )
-              //     }
-              //     title={
-              //       <Row justify='space-between'>
-              //         <span>{item.authorName}</span>{' '}
-              //         <small>{dayjs(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')} </small>{' '}
-              //       </Row>
-              //     }
-              //     description={item.comment}
-              //   />
-              // </List.Item>
             )}
           />
         )}

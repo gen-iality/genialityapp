@@ -9,7 +9,6 @@ class Privacy extends Component {
   render() {
     return (
       <div style={{ textaAlign: 'justify', padding: '0 150px' }}>
-        {/* <h1 className="title">Términos y Condiciones</h1> */}
         <h1 className='title'>POLÍTICA DE TRATAMIENTO DE LA INFORMACIÓN Y DE LA PRIVACIDAD</h1>
         <p>
           EVIUS S.A.S. sociedad identificada con Nit No. 901262852 - 0 con domicilio en la Calle 67a 60-46 de la ciudad

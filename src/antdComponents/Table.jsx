@@ -12,20 +12,18 @@ import {
   CrownOutlined,
 } from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
-// import ExportExcel from '../components/newComponent/ExportExcel';
 import dayjs from 'dayjs';
 import { Suspense } from 'react';
-import { ExportExcel } from '../components/newComponent/ExportExcel';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
-//import { UseCurrentUser } from '../context/userContext';
+import { ExportExcel } from '@components/newComponent/ExportExcel';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const Table = (props) => {
-  //let cUser = UseCurrentUser();
+  //const cUser = useCurrentUser();
   const { eventIsActive } = useHelper();
-  let {
+  const {
     header,
     list,
     key,
@@ -65,7 +63,7 @@ const Table = (props) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [components, setComponents] = useState('');
-  let [headerState, setHeaderState] = useState(header);
+  const [headerState, setHeaderState] = useState(header);
 
   useEffect(() => {
     const options = {
@@ -202,7 +200,7 @@ const Table = (props) => {
       },
     };
     if (actions) {
-      let auxHeader = header;
+      const auxHeader = header;
       if (!auxHeader.includes(options)) {
         auxHeader.push(options);
         setHeaderState(auxHeader);
@@ -294,7 +292,7 @@ const Table = (props) => {
           return { ...data, index: key };
         });
       }
-      list = newData;
+      setList(newData);
     }
   }
 

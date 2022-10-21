@@ -3,35 +3,36 @@ import { Tag, Button, Modal, Row, Col, Tooltip, Tabs, Badge } from 'antd';
 import { ExclamationCircleOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { utils, writeFileXLSX } from 'xlsx';
 import dayjs from 'dayjs';
-import { getColumnSearchProps } from '../../../components/speakers/getColumnSearch';
-import Table from '../../../antdComponents/Table';
-import { handleRequestError } from '../../../helpers/utils';
-import { firestoreeviuschat, firestore } from '../../../helpers/firebase';
+import { getColumnSearchProps } from '@components/speakers/getColumnSearch';
+import Table from '@antdComponents/Table';
+import { handleRequestError } from '@helpers/utils';
+import { firestoreeviuschat, firestore } from '@helpers/firebase';
 import AccountCancel from '@2fd/ant-design-icons/lib/AccountCancel';
 import Account from '@2fd/ant-design-icons/lib/Account';
-import { DispatchMessageService } from '../../../context/MessageService';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
-import { UseEventContext } from '@/context/eventContext';
+import { DispatchMessageService } from '@context/MessageService';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useEventContext } from '@context/eventContext';
 
 const { TabPane } = Tabs;
 
 function formatAMPM(hours, minutes) {
   // var hours = date.getHours();
   // var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? 'pm' : 'am';
+  const ampm = hours >= 12 ? 'pm' : 'am';
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'
   minutes = minutes < 10 ? '0' + minutes : minutes;
-  var strTime = hours + ':' + minutes + ' ' + ampm;
+  const strTime = hours + ':' + minutes + ' ' + ampm;
   return strTime;
 }
 
 const ChatExport = ({ eventId, event }) => {
+  // eslint-disable-next-line prefer-const
   let [datamsjevent, setdatamsjevent] = useState([]);
   const [loading, setLoading] = useState(true);
-  let [columnsData, setColumnsData] = useState({});
-  let [listUsersBlocked, setlistUsersBlocked] = useState([]);
-  let cEvent = UseEventContext();
+  const [columnsData, setColumnsData] = useState({});
+  const [listUsersBlocked, setlistUsersBlocked] = useState([]);
+  const cEvent = useEventContext();
   const { eventIsActive } = useHelper();
 
   const renderMensaje = (text, record) => (
@@ -118,15 +119,15 @@ const ChatExport = ({ eventId, event }) => {
   }, []);
 
   function getChat() {
-    let datamessagesthisevent = [];
+    const datamessagesthisevent = [];
 
     firestoreeviuschat
       .collection('messagesevent_' + eventId)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          let conversion = dayjs(doc.data().sortByDateAndTime).format('YYYY-MM-DD HH:mm:ss');
-          let msjnew = {
+          const conversion = dayjs(doc.data().sortByDateAndTime).format('YYYY-MM-DD HH:mm:ss');
+          const msjnew = {
             chatId: doc.id,
             name: doc.data().name,
             text: doc.data().text,
@@ -142,8 +143,8 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function getBlocketdUsers() {
-    let list = [];
-    let path = cEvent.value._id + '_event_attendees/';
+    const list = [];
+    const path = cEvent.value._id + '_event_attendees/';
 
     setLoading(true);
     firestore
@@ -152,7 +153,7 @@ const ChatExport = ({ eventId, event }) => {
       .get()
       .then((res) => {
         res.forEach((user) => {
-          let newUser = {
+          const newUser = {
             name: user.data().user.names,
             email: user.data().user.email,
             idparticipant: user.data()._id,
@@ -277,9 +278,9 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function blockUser(item) {
-    let path = cEvent.value._id + '_event_attendees/' + item.idparticipant;
+    const path = cEvent.value._id + '_event_attendees/' + item.idparticipant;
 
-    let searchDataUser = new Promise((resolve, reject) => {
+    const searchDataUser = new Promise((resolve, reject) => {
       firestore
         .doc(path)
         .get()
@@ -289,7 +290,7 @@ const ChatExport = ({ eventId, event }) => {
     });
 
     searchDataUser.then((res) => {
-      let userBlocked = res.data;
+      const userBlocked = res.data;
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
@@ -349,8 +350,6 @@ const ChatExport = ({ eventId, event }) => {
   return (
     <Tabs defaultActiveKey='1' onChange={(getChat, getBlocketdUsers)}>
       <TabPane tab='Gestión de chats del curso' key='1'>
-        {/* <Header title={'Gestión de chats del curso'} /> */}
-
         <Table
           header={columns}
           list={datamsjevent}

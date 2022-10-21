@@ -10,7 +10,7 @@ import SurveyActivity from './ActivityTypes/SurveyActivity';
 
 function ActivityTypeSwitch({ activity }) {
   console.debug(activity);
-  let activityType = activity.type ? activity.type.name : 'generic';
+  const activityType = activity.type ? activity.type.name : 'generic';
   console.debug('HOC: activityType', activityType);
   switch (activityType) {
     case 'generic':

@@ -1,10 +1,9 @@
-import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Badge, Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
-import { SurveysApi } from '@/helpers/request';
+import { SurveysApi } from '@helpers/request';
 import { Survey } from './types';
 
 import { useCurrentUser } from '@context/userContext';

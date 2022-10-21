@@ -3,10 +3,10 @@ import { List, Avatar, Badge, Image, Tooltip, Popover, Typography } from 'antd';
 import { MessageTwoTone, EyeOutlined, CrownFilled, FileImageOutlined } from '@ant-design/icons';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import PopoverInfoUser from '../socialZone/hooks/Popover';
-import { useHelper } from '../../context/helperContext/hooks/useHelper';
-import { useCurrentUser } from '../../context/userContext';
-import { UseEventContext } from '../../context/eventContext';
-import { imageforDefaultProfile } from '@/helpers/constants';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useCurrentUser } from '@context/userContext';
+import { useEventContext } from '@context/eventContext';
+import { imageforDefaultProfile } from '@helpers/constants';
 import dayjs from 'dayjs';
 
 const { Paragraph, Title, Text } = Typography;
@@ -40,12 +40,12 @@ const styleListPointer = {
 };
 
 function UsersCard(props) {
-  let cUser = useCurrentUser();
-  let cEvent = UseEventContext();
-  let eventValues = cEvent.value;
+  const cUser = useCurrentUser();
+  const cEvent = useEventContext();
+  const eventValues = cEvent.value;
 
-  let eventColor = eventValues?.styles?.containerBgColor !== '#FFFFFF' ? eventValues?.styles.containerBgColor : '';
-  let { createNewOneToOneChat, HandleChatOrAttende, HandlePublicPrivate, HandleGoToChat, setGameData } = useHelper();
+  const eventColor = eventValues?.styles?.containerBgColor !== '#FFFFFF' ? eventValues?.styles.containerBgColor : '';
+  const { createNewOneToOneChat, HandleChatOrAttende, HandlePublicPrivate, HandleGoToChat, setGameData } = useHelper();
   const [actionCapture, setActionCapture] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -272,8 +272,6 @@ function UsersCard(props) {
             style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))' }}
             size={45}
           />
-          {/* {!imageProfile && name && name.charAt(0).toUpperCase()} */}
-          {/* </Avatar> */}
         </Badge>
       );
     });

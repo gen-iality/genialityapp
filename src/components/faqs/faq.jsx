@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { FaqsApi } from '../../helpers/request';
+import { FaqsApi } from '@helpers/request';
 import { useHistory } from 'react-router-dom';
-import { toolbarEditor } from '../../helpers/constants';
-import { handleRequestError } from '../../helpers/utils';
+import { toolbarEditor } from '@helpers/constants';
+import { handleRequestError } from '@helpers/utils';
 import { Row, Col, Form, Input, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import ReactQuill from 'react-quill';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { confirm } = Modal;
 
@@ -30,7 +30,7 @@ const Faq = (props) => {
 
   const getOne = async () => {
     const response = await FaqsApi.getOne(locationState.edit, eventID);
-    let data = response.data.find((faqs) => faqs._id === locationState.edit);
+    const data = response.data.find((faqs) => faqs._id === locationState.edit);
 
     setFaq(data);
     setFaq(data); //este esta repedito para poder cargar el titulo en caso de que tenga contenido, con uno solo no se porque no vuelve a cargar

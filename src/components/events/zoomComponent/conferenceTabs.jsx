@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, createElement } from 'react';
 import { Tabs, Button, Menu, Row, Col, Tooltip } from 'antd';
 import {
   CommentOutlined,
@@ -17,7 +17,7 @@ import RankingTrivia from './rankingTrivia';
 const { TabPane } = Tabs;
 
 export default function ConferenceTabsComponent(props) {
-  let [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   function callback(key) {
     props.handleActiveTab(key);
@@ -31,7 +31,7 @@ export default function ConferenceTabsComponent(props) {
   return (
     <div className='zoom-collapsed'>
       <Button onClick={() => setCollapsed(collapsed === false ? true : false)} className='zoom-collapsed_button'>
-        {React.createElement(collapsed ? RightOutlined : LeftOutlined, {
+        {createElement(collapsed ? RightOutlined : LeftOutlined, {
           className: 'trigger',
           onClick: () => setCollapsed(collapsed === false ? true : false),
         })}
@@ -51,30 +51,6 @@ export default function ConferenceTabsComponent(props) {
                 <LiveChat {...props} />
               </TabPane>
             )}
-            {/* {surveys && (
-              <TabPane
-                tab={
-                  <>
-                    <PieChartOutlined style={{ fontSize: '26px', textAlign: 'center' }} />
-                    <p style={{ marginBottom: '0px' }}>Votaciones</p>
-                  </>
-                }
-                key='surveys'>
-                <Row justify='space-between'>
-                  <Col span={4}>
-                    <ArrowLeftOutlined onClick={() => props.handleConferenceStyles()} />
-                  </Col>
-                  <Col span={14}>
-                    <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
-                  </Col>
-                  <Col span={4}>
-                    <VideoCameraOutlined />
-                  </Col>
-                </Row>
-
-               
-              </TabPane>
-            )} */}
 
             {attendees && (
               <TabPane

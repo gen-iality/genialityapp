@@ -5,11 +5,11 @@ import { useHelper } from '@context/helperContext/hooks/useHelper';
 import WithEviusContext from '@context/withContext';
 import { withRouter } from 'react-router-dom';
 import { firestore } from '@helpers/firebase';
-import Service from '@/components/agenda/roomManager/service';
+import Service from '@components/agenda/roomManager/service';
 import { Spin } from 'antd';
 
 function QuizActivity(props) {
-  let { currentActivity } = useHelper();
+  const { currentActivity } = useHelper();
   console.log('100.propsSurveyActivity', props);
 
   const [activityState, setActivityState] = useState('');
@@ -46,7 +46,6 @@ function QuizActivity(props) {
   return (
     <>
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />
-      {console.log('100.activityState', activityState)}
       {activityState?.meeting_id ? (
         <SurveyDetailPage surveyId={activityState.meeting_id} />
       ) : (

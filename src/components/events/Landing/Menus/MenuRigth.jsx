@@ -5,16 +5,16 @@ import { stylesMenuItems } from '../helpers/csshelpers';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import withContext from '../../../../context/withContext';
-import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
-import { UseEventContext } from '../../../../context/eventContext';
+import withContext from '@context/withContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useEventContext } from '@context/eventContext';
 import { recordTypeForThisEvent } from '../helpers/thisRouteCanBeDisplayed';
 
 const MenuRigth = (props) => {
-  let cEvent = UseEventContext();
+  const cEvent = useEventContext();
   const [typeEvent, settypeEvent] = useState();
 
-  let {
+  const {
     HandleOpenCloseMenuRigth,
     HandleChatOrAttende,
     eventPrivate,
@@ -143,5 +143,5 @@ const MenuRigth = (props) => {
   );
 };
 
-let MenuRigthWithContext = withContext(MenuRigth);
+const MenuRigthWithContext = withContext(MenuRigth);
 export default connect(null, null)(withRouter(MenuRigthWithContext));

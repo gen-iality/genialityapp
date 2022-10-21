@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import withContext from '../../../context/withContext';
+import withContext from '@context/withContext';
 import { withRouter } from 'react-router-dom';
 import { useState } from 'react';
-import { NewsFeed } from '../../../helpers/request';
+import { NewsFeed } from '@helpers/request';
 import { Card, Row, Spin, Col, Space, Badge, Typography, Button, Image } from 'antd';
 import { CalendarOutlined } from '@ant-design/icons';
 import Meta from 'antd/lib/card/Meta';
@@ -16,7 +16,7 @@ const imgNotFound =
 const { Paragraph, Text } = Typography;
 
 const NoticiasList = (props) => {
-  let { setVirtualConference, match, size, newId } = props;
+  const { setVirtualConference, match, size, newId } = props;
   const [eventId, setEventId] = useState(props.cEvent.value._id);
   const [loading, setLoading] = useState(true);
   const [noticias, setNoticias] = useState();
@@ -66,7 +66,7 @@ const NoticiasList = (props) => {
       setviewMenos(true);
     } else {
       if (size) {
-        let noticeList = noticiasAll.slice(0, size);
+        const noticeList = noticiasAll.slice(0, size);
         setNoticias(noticeList);
       }
       setviewMenos(false);
@@ -108,17 +108,11 @@ const NoticiasList = (props) => {
                       <div>
                         <Space direction='vertical' style={{ width: '100%' }}>
                           <h2 style={{ fontWeight: '700', marginBottom: '0px' }}>{news.title}</h2>
-                          {/* <p style={{color:'#9e9e9e'}}>{news.description_short}</p> */}
                           <Paragraph style={{ color: '#9e9e9e' }} ellipsis={(ellipsis, { rows: 3 })}>
                             <div dangerouslySetInnerHTML={{ __html: news && news.descriptionShort }}></div>
                           </Paragraph>
                         </Space>
                       </div>
-                      {/* <Meta          
-                        title={`${news.title}`}
-                        description={news.description_short}
-                        style={{fontWeight:'700', marginBottom:'0px'}}
-                        /> */}
                       <Space direction='horizontal'>
                         <CalendarOutlined style={{ fontSize: '15px' }} />
                         <Row style={{ color: 'rgba(0, 0, 0, 0.6)' }}>{`Fecha publicación: ${dayjs(news.time).format(
@@ -150,17 +144,11 @@ const NoticiasList = (props) => {
                     <div>
                       <Space direction='vertical' style={{ width: '100%' }}>
                         <h2 style={{ fontWeight: '700', marginBottom: '0px' }}>{news.title}</h2>
-                        {/* <p style={{color:'#9e9e9e'}}>{news.description_short}</p> */}
                         <Paragraph style={{ color: '#9e9e9e' }} ellipsis={(ellipsis, { rows: 3 })}>
                           <div dangerouslySetInnerHTML={{ __html: news && news.descriptionShort }}></div>
                         </Paragraph>
                       </Space>
                     </div>
-                    {/* <Meta          
-                      title={`${news.title}`}
-                      description={news.description_short}
-                      style={{fontWeight:'700', marginBottom:'0px'}}
-                      /> */}
                     <Space direction='horizontal'>
                       <CalendarOutlined style={{ fontSize: '15px' }} />
                       <Row style={{ color: 'rgba(0, 0, 0, 0.6)' }}>{`Fecha publicación: ${dayjs(news.time).format(
@@ -187,5 +175,5 @@ const NoticiasList = (props) => {
 const mapDispatchToProps = {
   setVirtualConference,
 };
-let NoticiasConnect = connect(null, mapDispatchToProps)(withContext(withRouter(NoticiasList)));
+const NoticiasConnect = connect(null, mapDispatchToProps)(withContext(withRouter(NoticiasList)));
 export default NoticiasConnect;

@@ -2,8 +2,8 @@ import { useContext, useEffect, useState, lazy } from 'react';
 import { Card, Row, Col, Switch, Popover, Avatar, Empty, Image, Alert, Select, Form } from 'antd';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import { getColumnSearchProps } from '../../speakers/getColumnSearch';
-import { firestore } from '../../../helpers/firebase';
-import AgendaContext from '../../../context/AgendaContext';
+import { firestore } from '@helpers/firebase';
+import AgendaContext from '@context/AgendaContext';
 import { Suspense } from 'react';
 
 const Header = lazy(() => import('../../../antdComponents/Header'));
@@ -15,7 +15,7 @@ export default function RoomController(props) {
 
   const [listOfGames, setListOfGames] = useState([]);
   const [updateMensaje, setUpdatedMensaje] = useState(false);
-  let [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({});
   const [showavailableGames, setShowavailableGames] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -24,7 +24,7 @@ export default function RoomController(props) {
   }, [games]);
 
   async function getGamesData() {
-    let gamesData = [];
+    const gamesData = [];
     const docRef = firestore.collection('gamesAvailable');
     await docRef.get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {

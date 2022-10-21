@@ -3,9 +3,9 @@ import { Upload, Spin, Image, Card } from 'antd';
 import { FileImageOutlined } from '@ant-design/icons';
 import { uploadImagedummyRequest, readUrlImg, handleImageName } from '../../Utilities/imgUtils';
 import { ImageUploaderDragAndDropType } from '../../Utilities/types/types';
-import { uploadImageData } from '@/Utilities/uploadImageData';
-import { fireStorage } from '@/helpers/firebase';
-import { deleteFireStorageData } from '@/Utilities/deleteFireStorageData';
+import { uploadImageData } from '@Utilities/uploadImageData';
+import { fireStorage } from '@helpers/firebase';
+import { deleteFireStorageData } from '@Utilities/deleteFireStorageData';
 
 const ImageUploaderDragAndDrop = ({
   imageDataCallBack,
@@ -14,8 +14,8 @@ const ImageUploaderDragAndDrop = ({
   height = 0,
 }: ImageUploaderDragAndDropType) => {
   const { Dragger } = Upload;
-  let [image, setImage] = useState<any>(null);
-  let [isUploading, setIsUploading] = useState<boolean>(false);
+  const [image, setImage] = useState<any>(null);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const fileList = [
     {

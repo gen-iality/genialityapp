@@ -1,7 +1,7 @@
 import { map, path, pick } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 
-import { firestore } from '../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import { companyFormKeys } from './crearEditarEmpresa';
 
 function dataMapper(doc) {

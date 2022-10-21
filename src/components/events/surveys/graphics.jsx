@@ -8,11 +8,11 @@ import Loading from './loading';
 import Chart from 'chart.js/auto';
 
 import SurveyAnswers from './services/surveyAnswersService';
-import { SurveysApi, UsersApi } from '../../../helpers/request';
+import { SurveysApi, UsersApi } from '@helpers/request';
 import { graphicsFrame } from './frame';
 
 import * as SurveyActions from '../../../redux/survey/actions';
-import { SurveysContext } from '../../../context/surveysContext';
+import { SurveysContext } from '@context/surveysContext';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
@@ -41,9 +41,9 @@ class Graphics extends Component {
   }
   // Funcion que permite dividir una cadena
   divideString = string => {
-    let separatedByWhiteSpace = string.split(/\s/);
+    const separatedByWhiteSpace = string.split(/\s/);
     let times;
-    let text = [];
+    const text = [];
 
     if (string.length > 140) {
       times = 3;
@@ -83,21 +83,21 @@ class Graphics extends Component {
   };
 
   updateData = ({ options, answer_count, optionsIndex }) => {
-    let { graphicsFrame, chartCreated, chart } = this.state;
-    let { horizontalBar, ChartPie, verticalBar } = graphicsFrame;
+    const { graphicsFrame, chartCreated, chart } = this.state;
+    const { horizontalBar, ChartPie, verticalBar } = graphicsFrame;
     const { operation } = this.props;
 
-    let graphyType = this.state.dataSurvey.graphyType;
-    let graphy =
+    const graphyType = this.state.dataSurvey.graphyType;
+    const graphy =
       graphyType === ChartPie.type || window.screen.width <= 800
         ? ChartPie
         : graphyType === horizontalBar.indexAxis
         ? horizontalBar
         : verticalBar;
 
-    let totalPercentResponse = {};
+    const totalPercentResponse = {};
     //se realiza iteracion para calcular porcentaje
-    for (let i in answer_count) {
+    for (const i in answer_count) {
       switch (operation) {
         case 'onlyCount':
           totalPercentResponse[i] = answer_count[i][0];
@@ -107,11 +107,11 @@ class Graphics extends Component {
           break;
       }
     }
-    let generatedlabels = [];
+    const generatedlabels = [];
     let totalVotosUsuarios = 0;
     let porcentaj_answer = 0;
     let colorB = [];
-    let list = [];
+    const list = [];
 
     /**
      * Given a number, return the letter of the alphabet that corresponds to that number
@@ -121,7 +121,7 @@ class Graphics extends Component {
     const numberToLetterOfAlphabet = number => {
       const alphabet = graphy.data.datasets[0].alphabet;
 
-      let orderAlphabet = alphabet[number % alphabet.length];
+      const orderAlphabet = alphabet[number % alphabet.length];
       if (number < 26) return orderAlphabet;
 
       return orderAlphabet + number;
@@ -166,7 +166,7 @@ class Graphics extends Component {
 
     let respuestadVotos = 0;
     let porcentajeUsuarios = 0;
-    let respuestatotal = 0;
+    const respuestatotal = 0;
 
     respuestadVotos = this.state.totalUser - totalVotosUsuarios;
     respuestadVotos = respuestadVotos > 0 ? respuestadVotos : 0;
@@ -284,8 +284,8 @@ class Graphics extends Component {
 
   mountChart = async () => {
     const { idSurvey, eventId, operation } = this.props;
-    let { dataSurvey, currentPage } = this.state;
-    let { questions } = dataSurvey;
+    const { dataSurvey, currentPage } = this.state;
+    const { questions } = dataSurvey;
     // Se ejecuta servicio para tener el conteo de las respuestas
     await SurveyAnswers.getAnswersQuestion(
       idSurvey,
@@ -301,34 +301,18 @@ class Graphics extends Component {
   }
 
   render() {
-    let { dataSurvey, currentPage, titleQuestion, dataVotos } = this.state;
+    const { dataSurvey, currentPage, titleQuestion, dataVotos } = this.state;
 
     const { Paragraph } = Typography;
     const { surveyLabel } = this.props;
 
-    let cSurveys = this.context;
+    const cSurveys = this.context;
     if (dataSurvey.questions)
       return (
         <>
           <Card bodyStyle={{ padding: '0' }} className='survyCard'>
-            {/* <strong style={{ fontSize: '18px' }}>{cSurveys.currentSurvey.name}</strong>
-            <div style={{ marginTop: 5 }}>
-              {this.props.currentActivity === null && (
-                <Button
-                  type='ghost primary'
-                  shape='round'
-                  onClick={() => {
-                    this.props.setCurrentSurvey(null);
-                    this.props.setSurveyVisible(false);
-                  }}>
-                  <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
-                </Button>
-              )}
-            </div> */}
             <strong style={{ fontSize: '16px' }}>{titleQuestion}</strong>
             {/* esta validacion es para que tomo los estilos la torta */}
-            {/*
-             */}
             <Card bodyStyle={{ padding: '0px' }}>
               <Row justify='center'>
                 <canvas

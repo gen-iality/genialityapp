@@ -1,21 +1,21 @@
 import { Form, Input } from 'antd';
 
 const getBasicFields = ({ fields, attendee }: any) => {
-  let attendeeProperties = attendee?.properties || {};
+  const attendeeProperties = attendee?.properties || {};
   if (fields?.lenght === 0) return [];
 
   const basicFormFields = fields.map((field: any, key: any) => {
     if (field.name !== 'contrasena' && field.name !== 'password') {
       let rule = {};
-      let type = field.type || 'text';
-      let name = field.name;
-      let label = field.label;
-      let mandatory = field.mandatory;
-      let labelPosition = field.labelPosition;
-      let target = name;
-      let value = attendeeProperties ? attendeeProperties[target] : '';
+      const type = field.type || 'text';
+      const name = field.name;
+      const label = field.label;
+      const mandatory = field.mandatory;
+      const labelPosition = field.labelPosition;
+      const target = name;
+      const value = attendeeProperties ? attendeeProperties[target] : '';
 
-      let input = (
+      const input = (
         <Form.Item initialValue={value} name={name} noStyle>
           <Input
             addonBefore={

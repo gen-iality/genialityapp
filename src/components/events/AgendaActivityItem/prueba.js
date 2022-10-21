@@ -4,7 +4,7 @@ import { Row, Col, Avatar, Card, Space, Timeline, Comment } from 'antd';
 
 import Moment from 'moment-timezone';
 import './style.scss';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import Icon, { LoadingOutlined, CaretRightOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
@@ -29,7 +29,7 @@ function AgendaActivityItem(props) {
   const intl = useIntl();
   const EnvivoIcon = (props) => <Icon component={EnVivoSvg} {...props} />;
   const timeZone = Moment.tz.guess();
-  let { item, event_image, registerStatus } = props;
+  const { item, event_image, registerStatus } = props;
 
   useEffect(() => {
     if (registerStatus) {
@@ -41,7 +41,7 @@ function AgendaActivityItem(props) {
         .doc(item._id)
         .onSnapshot((info) => {
           if (!info.exists) return;
-          let related_meetings = info.data().related_meetings;
+          const related_meetings = info.data().related_meetings;
           setRelatedMeetings(related_meetings);
         });
     };
@@ -84,7 +84,7 @@ function AgendaActivityItem(props) {
               props.gotoActivity(item);
             }
           }}>
-          {/* aquie empieza la agenda en estilo mobile */}
+          {/* aquí empieza la agenda en estilo mobile */}
           <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
             {/* card de agenda en mobile */}
             <Card hoverable className='card-agenda-mobile agendaHover efect-scale' bodyStyle={{ padding: '10px' }}>
@@ -300,7 +300,6 @@ function AgendaActivityItem(props) {
                             }>
                             {
                               <>
-                                {/*  */}
                                 <Comment
                                   className='descripcion'
                                   content={
@@ -329,16 +328,6 @@ function AgendaActivityItem(props) {
                                 <Space key={key} style={{ marginRight: '8px' }} direction='horizontal'>
                                   <Avatar size={25} src={speaker.image} />
                                   {speaker.name}
-                                  {/* <table>
-                                    <tr>
-                                      <th>
-                                        <Avatar size={25} src={speaker.image} />
-                                      </th>
-                                      <th style={{ marginRight: '12px' }}>
-                                        <div className='speaker-name'>{speaker.name}</div>
-                                      </th>
-                                    </tr>
-                                  </table> */}
                                 </Space>
                               ))}
                             </>

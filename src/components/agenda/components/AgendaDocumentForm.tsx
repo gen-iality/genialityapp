@@ -1,7 +1,6 @@
-import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { Select, Spin } from 'antd';
-import { DocumentsApi } from '@/helpers/request';
+import { DocumentsApi } from '@helpers/request';
 import SelectOptionType from '../types/SelectOptionType';
 
 import Document from '@components/documents/Document';

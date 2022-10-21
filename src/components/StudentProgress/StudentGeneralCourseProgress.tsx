@@ -67,7 +67,7 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
       const { data } = await AgendaApi.byEvent(eventId);
       setActivities(data);
       const existentActivities = data.map(async (activity: AgendaType) => {
-        let activity_attendee = await firestore
+        const activity_attendee = await firestore
           .collection(`${activity._id}_event_attendees`)
           .doc(eventUserId)
           .get(); //checkedin_at

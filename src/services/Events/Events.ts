@@ -1,6 +1,6 @@
 export const GetAllEvents = (): Promise<Event[]> => {
   return new Promise((resolve, reject) => {
-    Event.find({}, (err, events) => {
+    Event.find({}, (err: any, events: any) => {
       if (err) {
         reject(err);
       } else {

@@ -4,11 +4,11 @@ import { find, filter, keys, pathOr, propEq, whereEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 
-import { getDatesRange } from '../../helpers/utils';
+import { getDatesRange } from '@helpers/utils';
 import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId } from './services';
-import { addNotification } from '../../helpers/netWorkingFunctions';
+import { addNotification } from '@helpers/netWorkingFunctions';
 
 const { Option } = Select;
 
@@ -142,9 +142,9 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
       duration: 30,
     });
-    var usId = await getUsersId(targetEventUserId, cEvent.value._id);    
+    const usId = await getUsersId(targetEventUserId, cEvent.value._id);    
 
-    let notificationA = {
+    const notificationA = {
       idReceive: usId.account_id,
       idEmited: resp,
       emailEmited: 'email@gmail.com',

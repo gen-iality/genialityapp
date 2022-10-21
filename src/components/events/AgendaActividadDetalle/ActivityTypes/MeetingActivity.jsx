@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import WithEviusContext from '../../../../context/withContext';
+import WithEviusContext from '@context/withContext';
 import HeaderColumnswithContext from '../HeaderColumns';
-import { useHelper } from '../../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { withRouter } from 'react-router-dom';
 import MeetingPlayer from '../MeetingPlayer';
 
@@ -9,7 +9,7 @@ const MeetingActivity = (props) => {
 
   const [activityState, setactivityState] = useState('');
 
-  let { currentActivity } = useHelper();
+  const { currentActivity } = useHelper();
 
   return (
     <>

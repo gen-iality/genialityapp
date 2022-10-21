@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { ChromePicker } from 'react-color';
-import { CategoriesAgendaApi, TypesAgendaApi } from '../../helpers/request';
-import { handleRequestError } from '../../helpers/utils';
+import { CategoriesAgendaApi, TypesAgendaApi } from '@helpers/request';
+import { handleRequestError } from '@helpers/utils';
 import { Row, Col, Form, Input, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import Header from '../../antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
+import Header from '@antdComponents/Header';
+import { DispatchMessageService } from '@context/MessageService';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -25,7 +25,7 @@ const AgendaTypeCatCE = (props) => {
       ? CategoriesAgendaApi
       : TypesAgendaApi;
   const history = useHistory();
-  let [categoryValues, setCategoryValues] = useState({});
+  const [categoryValues, setCategoryValues] = useState({});
   const [name, setName] = useState('');
   const [color, setColor] = useState('#000000');
 

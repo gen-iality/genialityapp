@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { UsersApi, EventsApi } from '../../../helpers/request';
+import { UsersApi, EventsApi } from '@helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 import { Collapse, Form, Input, Col, Row, Checkbox, Alert, Card, Button, Result, Divider, Select, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -40,7 +40,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const [form] = Form.useForm();
 
   useEffect(() => {
-    let formType = !eventUserId ? 'register' : 'transfer';
+    const formType = !eventUserId ? 'register' : 'transfer';
     setFormMessage(FormTags(formType));
     setSubmittedForm(false);
     hideConditionalFieldsToDefault();
@@ -81,11 +81,11 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
     const snap = { properties: values };
 
-    let textMessage = {};
+    const textMessage = {};
     textMessage.key = key;
 
     try {
-      let resp = await UsersApi.createOne(snap, eventId);
+      const resp = await UsersApi.createOne(snap, eventId);
 
       if (resp.message === 'OK') {
         setSuccessMessageInRegisterForm(resp.status);
@@ -211,16 +211,16 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
    */
   const renderForm = () => {
     if (!extraFields) return '';
-    let formUI = extraFields.map((m, key) => {
+    const formUI = extraFields.map((m, key) => {
       // if (m.label === "pesovoto") return;
-      let type = m.type || 'text';
-      let props = m.props || {};
-      let name = m.name;
+      const type = m.type || 'text';
+      const props = m.props || {};
+      const name = m.name;
       let label = m.label;
-      let mandatory = m.mandatory;
-      let description = m.description;
-      let labelPosition = m.labelPosition;
-      let target = name;
+      const mandatory = m.mandatory;
+      const description = m.description;
+      const labelPosition = m.labelPosition;
+      const target = name;
       let value = user[target];
 
       if (m.visibleByAdmin == true) {
@@ -356,7 +356,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
 
       if (type == 'boolean' && mandatory) {
-        let textoError = 'Debes llenar este  campo es obligatorio';
+        const textoError = 'Debes llenar este  campo es obligatorio';
         rule = { validator: (_, value) => (value ? Promise.resolve() : Promise.reject(textoError)) };
       }
 
@@ -413,7 +413,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
           <Card title='Actualización de campos' bodyStyle={textLeft}>
-            {/* //Renderiza el formulario */}
             <Form
               form={form}
               layout='vertical'

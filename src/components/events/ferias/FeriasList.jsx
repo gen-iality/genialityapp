@@ -8,8 +8,8 @@ import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import FeriaStand from './FeriasStand';
 import { setTopBanner } from '../../../redux/topBanner/actions';
-import { firestore } from '../../../helpers/firebase';
-import withContext from '../../../context/withContext';
+import { firestore } from '@helpers/firebase';
+import withContext from '@context/withContext';
 
 const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) => {
   const [companies, loadingCompanies] = useGetEventCompanies(event_id);
@@ -34,18 +34,18 @@ const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) =>
         .collection('event_companies')
         .doc(event_id)
         .onSnapshot((resp) => {
-          let standTypesOptions = resp.data()?.stand_types;
+          const standTypesOptions = resp.data()?.stand_types;
           setTypeStand(standTypesOptions);
           setStandsColor(standTypesOptions);
           setConfig(resp.data()?.config);
-          let companiesSort = companies.sort((a, b) => a.index && b.index && a.index - b.index);
+          const companiesSort = companies.sort((a, b) => a.index && b.index && a.index - b.index);
           setCompaniesEvent(companiesSort);
         });
     }
   }, [loadingCompanies]);
   const obtenerColor = (stand) => {
     if (standsColor) {
-      let colorList = standsColor.filter((colors) => colors.label === stand);
+      const colorList = standsColor.filter((colors) => colors.label === stand);
       if (colorList.length > 0) {
         return colorList[0].color;
       }
@@ -55,7 +55,7 @@ const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) =>
   };
   const obtenertLabel = (stand) => {
     if (typeStand) {
-      let labelList = typeStand.filter((colors) => colors.label === stand);
+      const labelList = typeStand.filter((colors) => colors.label === stand);
       if (labelList.length > 0) {
         return labelList[0].label;
       }

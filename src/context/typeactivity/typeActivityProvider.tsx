@@ -2,7 +2,7 @@ import { message } from 'antd';
 import { useContext, useReducer, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { createLiveStream, stopLiveStream } from '../../adaptors/gcoreStreamingApi';
-import { AgendaApi, TypesAgendaApi } from '../../helpers/request';
+import { AgendaApi, TypesAgendaApi } from '@helpers/request';
 import AgendaContext from '../AgendaContext';
 import { CurrentEventContext } from '../eventContext';
 import { TypeActivityState } from './interfaces/interfaces';
@@ -39,7 +39,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
     switch (id) {
       case 'initial':
         //await deleteTypeActivity();
-        typeActivityDispatch({ type: 'initial', payload: { activityState: payload } });
+        typeActivityDispatch({ type: 'initial', payload: { activityState: payload! } });
         break;
       case 'type':
         typeActivityDispatch({ type: 'toggleType', payload: { id } });
@@ -57,7 +57,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         typeActivityDispatch({ type: 'toggleUrl', payload: { id } });
         break;
       case 'cargarvideo':
-        typeActivityDispatch({ type: 'toggleCargarvideo', payload: { id } });
+        typeActivityDispatch({ type: 'toggleCargarvideo', payload: { id, sendData: null } });
         break;
       case 'eviusStreaming':
         typeActivityDispatch({ type: 'toggleEviusStreaming', payload: { id } });
@@ -181,7 +181,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
       case 'vimeo':
         //PERMITE AGREGAR ID O URL COMPLETA DE VIMEO
         try {
-          let newDataVimeo = typeActivityState.data;
+          const newDataVimeo = typeActivityState.data;
           resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: newDataVimeo });
           setTypeActivity('vimeo');
           setPlatform('vimeo');
@@ -194,7 +194,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
       case 'youTube':
         //PERMITE AGREGAR ID O URL COMPLETA DE YOUTUBE
         try {
-          let newData = typeActivityState.data.includes('https://youtu.be/')
+          const newData = typeActivityState.data.includes('https://youtu.be/')
             ? typeActivityState.data
             : 'https://youtu.be/' + typeActivityState.data;
           resp = await saveConfig({ platformNew: 'wowza', type: 'youTube', data: newData });

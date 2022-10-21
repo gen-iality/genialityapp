@@ -1,12 +1,12 @@
 import { Component } from 'react';
-import { app } from '../../../helpers/firebase';
+import { app } from '@helpers/firebase';
 import UserLogin from '../UserLogin';
 import FormTags from './constants';
-import { Actions } from '../../../helpers/request';
+import { Actions } from '@helpers/request';
 class UserLoginContainer extends Component {
   constructor(props) {
     super(props);
-    //this.reCaptchaRef = React.createRef();
+    //this.reCaptchaRef = createRef();
     this.state = {
       user: {},
       emailError: false,

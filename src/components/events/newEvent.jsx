@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Actions, OrganizationFuction, UsersApi, AgendaApi, EventsApi } from '../../helpers/request';
-import { host_list } from '../../helpers/constants';
+import { Actions, OrganizationFuction, UsersApi, AgendaApi, EventsApi } from '@helpers/request';
+import { host_list } from '@helpers/constants';
 import { Steps, Button, Card, Row, Spin } from 'antd';
 import { PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
 /*vistas de paso a paso */
@@ -9,11 +9,11 @@ import Informacion from './newEvent/informacion';
 import Apariencia from './newEvent/apariencia';
 import Tranmitir from './newEvent/transmitir';
 /*vista de resultado de la creacion de un curso */
-import { cNewEventContext } from '../../context/newEventContext';
-import Service from '../../components/agenda/roomManager/service';
-import { firestore } from '../../helpers/firebase';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
+import { cNewEventContext } from '@context/newEventContext';
+import Service from '@components/agenda/roomManager/service';
+import { firestore } from '@helpers/firebase';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { Step } = Steps;
 
@@ -22,8 +22,8 @@ const { Step } = Steps;
 class NewEvent extends Component {
   constructor(props) {
     super(props);
-    let valores = window.location.search;
-    let urlParams = new URLSearchParams(valores);
+    const valores = window.location.search;
+    const urlParams = new URLSearchParams(valores);
 
     this.state = {
       orgId: urlParams.get('orgId'),
@@ -54,14 +54,14 @@ class NewEvent extends Component {
 
   async componentDidMount() {
     if (this.props.match.params.user) {
-      let profileUser = await UsersApi.getProfile(this.props.match.params.user);
+      const profileUser = await UsersApi.getProfile(this.props.match.params.user);
       this.setState({ currentUser: profileUser });
     }
     const valores = window.location.search;
     const urlParams = new URLSearchParams(valores);
-    var orgId = urlParams.get('orgId');
+    const orgId = urlParams.get('orgId');
     if (orgId) {
-      let eventNewContext = this.context;
+      const eventNewContext = this.context;
       let organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
       if (organization) {
         organization = { ...organization, id: organization._id };
@@ -93,7 +93,7 @@ class NewEvent extends Component {
   }; */
 
   async saveEvent(fields) {
-    let eventNewContext = this.context;
+    const eventNewContext = this.context;
     this.setState({ loading: true });
     if (eventNewContext.selectOrganization) {
       const data = {
@@ -173,13 +173,13 @@ class NewEvent extends Component {
       //console.log('EVENT TO CREATE==>', data);
       //CREAR CURSO
       try {
-        let token = await GetTokenUserFirebase();
+        const token = await GetTokenUserFirebase();
 
         const result = await Actions.create(`/api/events?token=${token}`, data);
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
           //console.log('SECCIONES ACA==>', eventNewContext.selectOrganization?.itemsMenu, newMenu);
-          let sectionsDefault = eventNewContext.selectOrganization?.itemsMenu
+          const sectionsDefault = eventNewContext.selectOrganization?.itemsMenu
             ? { itemsMenu: eventNewContext.selectOrganization?.itemsMenu }
             : newMenu;
           //HABILTAR SECCIONES POR DEFECTO
@@ -201,7 +201,7 @@ class NewEvent extends Component {
             //console.log("RESPUESTA AGENDA==>",agenda)
             if (agenda._id) {
               if (eventNewContext.typeTransmission == 1) {
-                let sala = await this.createZoomRoom(agenda, result._id);
+                const sala = await this.createZoomRoom(agenda, result._id);
                 if (sala) {
                   DispatchMessageService({
                     type: 'success',
@@ -280,7 +280,7 @@ class NewEvent extends Component {
     // Si la seleccion del host es manual se envia el campo host_id con el id del host tipo string
     // Si la seleccion del host es automática se envia el campo host_ids con un array de strings con los ids de los hosts
     const host_field = 'host_ids';
-    let host_ids = host_list.map((host) => host.host_id);
+    const host_ids = host_list.map((host) => host.host_id);
     const host_value = host_ids;
 
     const body = {
@@ -358,7 +358,7 @@ class NewEvent extends Component {
 
   /*Funciones para navegar en el paso a paso */
   next = () => {
-    let eventNewContext = this.context;
+    const eventNewContext = this.context;
     switch (this.state.current) {
       case 0:
         if (
@@ -391,23 +391,23 @@ class NewEvent extends Component {
   };
 
   nextPage = () => {
-    let current = this.state.current + 1;
+    const current = this.state.current + 1;
     this.setState({ current });
   };
 
   prev = () => {
-    let eventNewContext = this.context;
+    const eventNewContext = this.context;
     if (eventNewContext.optTransmitir && this.state.current == 2) {
       eventNewContext.changeTransmision(false);
     } else {
-      let current = this.state.current - 1;
+      const current = this.state.current - 1;
       this.setState({ current });
     }
   };
 
   render() {
     const { current } = this.state;
-    let context = this.context;
+    const context = this.context;
     return (
       <Row justify='center' className='newEvent'>
         {/* Items del paso a paso */}
@@ -449,54 +449,6 @@ class NewEvent extends Component {
             </Row>
           )}
         </Card>
-        {/* <div className='steps'>
-          <NavLink
-            activeClassName={'is-active'}
-            to={`${this.props.match.url}/main`}
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-            className={`step-item ${this.state.stepsValid.info ? 'is-completed' : ''}`}>
-            <div className='step-marker'>1</div>
-            <div className='step-details'>
-              <p className='step-title'>
-                Información <br /> General
-              </p>
-            </div>
-          </NavLink>
-          <NavLink
-            activeClassName={'is-active'}
-            to={`${this.props.match.url}/attendees`}
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-            className={`step-item ${this.state.stepsValid.fields ? 'is-completed' : ''}`}>
-            <div className='step-marker'>2</div>
-            <div className='step-details'>
-              <p className='step-title'>
-                Información <br /> Asistentes
-              </p>
-            </div>
-          </NavLink>
-        </div>
-        <Switch>
-          <Route
-            exact
-            path={`${this.props.match.url}/`}
-            render={() => <Redirect to={`${this.props.match.url}/main`} />}
-          />
-          <Route
-            exact
-            path={`${this.props.match.url}/main`}
-            render={() => <InfoGeneral nextStep={this.nextStep} data={this.state.info} />}
-          />
-          <Route
-            path={`${this.props.match.url}/attendees`}
-            render={() => (
-              <InfoAsistentes nextStep={this.saveEvent} prevStep={this.prevStep} data={this.state.fields} />
-            )}
-          />
-        </Switch> */}
       </Row>
     );
   }

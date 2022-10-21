@@ -14,7 +14,7 @@ function ResultsPanel(props) {
   const [userAnswers, setUserAnswers] = useState(undefined);
 
   async function getUserAnswers(questionId) {
-    let userAnswer = await SurveyAnswers.getAnswersQuestionV2(
+    const userAnswer = await SurveyAnswers.getAnswersQuestionV2(
       idSurvey, // survey ID
       questionId, // current question
       currentUser.value._id, // who
@@ -29,7 +29,7 @@ function ResultsPanel(props) {
     if (!query.data) return;
     if (!idSurvey || !currentUser.value._id) return;
 
-    let userAnswersLocal = [];
+    const userAnswersLocal = [];
 
     (async () => {
       // For each question, search thhe user's answer and save all in userAnswersLocal
@@ -38,7 +38,7 @@ function ResultsPanel(props) {
         // The first question is not a real question!!
         if (!question.id) continue;
         // Search the answer
-        let userAnswer = await getUserAnswers(question.id);
+        const userAnswer = await getUserAnswers(question.id);
         console.log('800.userAnswer - 1', userAnswer);
 
         // Save the current question, and the correct answer

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PlansApi, AlertsPlanApi, BillssPlanApi } from '../../../helpers/request';
+import { PlansApi, AlertsPlanApi, BillssPlanApi } from '@helpers/request';
 import PlanCard from './planCard';
 import Plan from './plan';
 import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Typography, Modal } from 'antd';
@@ -14,19 +14,19 @@ import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
 import { Link } from 'react-router-dom';
-import { GetTokenUserFirebase } from '@/helpers/HelperAuth';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import dayjs from 'dayjs';
 import { useIntl } from 'react-intl';
-import { DispatchMessageService } from '@/context/MessageService';
-import { handleRequestError } from '@/helpers/utils';
+import { DispatchMessageService } from '@context/MessageService';
+import { handleRequestError } from '@helpers/utils';
 
 const myPlan = ({ cUser }) => {
   const plan = cUser.value?.plan;
-  let [plans, setPlans] = useState([]);
-  let [notifications, setNotifications] = useState([]);
-  let [bills, setBills] = useState([]);
-  let [consumption, setConsumption] = useState([]);
-  let [totalUsersByPlan, setTotalUsersByPlan] = useState({});
+  const [plans, setPlans] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [bills, setBills] = useState([]);
+  const [consumption, setConsumption] = useState([]);
+  const [totalUsersByPlan, setTotalUsersByPlan] = useState({});
   const [loadingNotification, setLoadingNotification] = useState(true);
   const [loadingBill, setLoadingBill] = useState(true);
   const [loadingConsumption, setLoadingConsumption] = useState(true);
@@ -35,7 +35,7 @@ const myPlan = ({ cUser }) => {
   const [toShow, setToShow] = useState(0);
   const [toShowModal, setToShowModal] = useState('');
   const [UrlAdditional, setUrlAdditional] = useState('');
-  let [token, setToken] = useState('');
+  const [token, setToken] = useState('');
   const goBackUrlPayment = window.location.toString().includes('https://staging.evius.co/')
     ? 'https://staging.evius.co/myprofile/events'
     : window.location.toString().includes('https://app.evius.co/myprofile/events')
@@ -561,7 +561,7 @@ const myPlan = ({ cUser }) => {
     GetTokenUserFirebase().then((token) => {
       if (token) {
         setToken(token);
-        let urlRedirect = new URL(
+        const urlRedirect = new URL(
           `?redirect=additional&additionalUsers=${1}&goBack=${goBackUrlPayment}&goForward=${goBackUrlPayment}&token=${token}`,
           `https://pay.evius.co/`
         );
@@ -572,18 +572,18 @@ const myPlan = ({ cUser }) => {
 
   const getInfoPlans = async () => {
     /* Planes adicionales */
-    let plans = await PlansApi.getAll();
+    const plans = await PlansApi.getAll();
     setPlans(plans);
     /* console.log('plans', plans); */
 
     /* Notificaciones/Alertas */
-    let notifications = await AlertsPlanApi.getByUser(cUser.value?._id);
+    const notifications = await AlertsPlanApi.getByUser(cUser.value?._id);
     setNotifications(notifications.data);
     setLoadingNotification(false);
     /* console.log(notifications.data, 'notifications'); */
 
     /* Facturas/Comprobantes */
-    let bills = await BillssPlanApi.getByUser(cUser.value?._id);
+    const bills = await BillssPlanApi.getByUser(cUser.value?._id);
     setBills(bills.data);
     setLoadingBill(false);
     /* console.log('bills', bills.data); */
@@ -591,7 +591,7 @@ const myPlan = ({ cUser }) => {
 
     /* Consumos del usuario */
     try {
-      let consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value?._id);
+      const consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value?._id);
       setConsumption(consumption);
       setLoadingConsumption(false);
       /* console.log('consumption', consumption); */
@@ -601,7 +601,7 @@ const myPlan = ({ cUser }) => {
     }
 
     /* Total de registros de usuario */
-    let totalUsersByPlan = await PlansApi.getTotalRegisterdUsers();
+    const totalUsersByPlan = await PlansApi.getTotalRegisterdUsers();
     setTotalUsersByPlan(totalUsersByPlan);
     /* console.log(totalUsersByPlan, 'aqui'); */
   };

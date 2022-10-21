@@ -1,19 +1,19 @@
 import { Modal, notification, Button } from 'antd';
-import { UseEventContext } from '@/context/eventContext';
-import { useCurrentUser } from '@/context/userContext';
+import { useEventContext } from '@context/eventContext';
+import { useCurrentUser } from '@context/userContext';
 import withContext from '../../authentication/ModalAuthAnonymous';
-import { recordTypeForThisEvent } from '@/components/events/Landing/helpers/thisRouteCanBeDisplayed';
+import { recordTypeForThisEvent } from '@components/events/Landing/helpers/thisRouteCanBeDisplayed';
 import { useEffect, useState } from 'react';
-import { UsersApi } from '@/helpers/request';
+import { UsersApi } from '@helpers/request';
 import { async } from 'ramda-adjunct';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
-import { UseUserEvent } from '@/context/eventUserContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useUserEvent } from '@context/eventUserContext';
 const ModalUpdate = (props: any) => {
-  let cEvent = UseEventContext();
-  let cEventUser = UseUserEvent();
+  const cEvent = useEventContext();
+  const cEventUser = useUserEvent();
 
   const [isVisible, setIsVisible] = useState(false);
-  let { handleChangeTypeModal } = useHelper();
+  const { handleChangeTypeModal } = useHelper();
   const handleOpen = () => {
     setIsVisible(false);
     handleChangeTypeModal('update');

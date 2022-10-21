@@ -1,6 +1,6 @@
 import { sortBy, prop } from 'ramda';
-import { firestore } from '../../helpers/firebase';
-import API, { UsersApi, EventsApi } from '../../helpers/request';
+import { firestore } from '@helpers/firebase';
+import API, { UsersApi, EventsApi } from '@helpers/request';
 
 const filterList = (list, currentUser) => list.find((item) => item.account_id === currentUser);
 
@@ -33,7 +33,7 @@ export const getCurrentEventUser = (eventId, userId) => {
     (async () => {
       const users = await UsersApi.getAll(eventId, '?pageSize=10000');
 
-      let currentEventUser = filterList(users.data, userId);
+      const currentEventUser = filterList(users.data, userId);
 
       if (currentEventUser) resolve(currentEventUser);
       resolve(false);
@@ -136,7 +136,7 @@ export const createAgendaToEventUser = ({
               message,
             });
           // enviamos notificaciones por correo
-          let data = {
+          const data = {
             id_user_requested: targetEventUserId,
             id_user_requesting: currentEventUserId,
             request_id: newAgendaResult.id,
@@ -223,7 +223,7 @@ export const getMeeting = (eventId, meeting_id) => {
           .doc(meeting_id)
           .get();
 
-        let meeting = result.data();
+        const meeting = result.data();
         resolve(meeting);
       } catch (error) {
         reject(error);
@@ -281,7 +281,7 @@ export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newSta
             .doc(agendaId)
             .update({ request_status: newStatus });
           //ENVIO DE CORREOS
-          let status = newStatus == 'accepted' ? 'accept' : 'reject';
+          const status = newStatus == 'accepted' ? 'accept' : 'reject';
           EventsApi.acceptOrRejectRequest(eventId, agendaId, status);
           //console.log("RESPUESTA_MAIL==>", respuesta);
           resolve();
@@ -356,7 +356,7 @@ export const getUserByEmail = async (user, eventid) => {
 // OBTENER USUARIO A PARTIR DEL ACCOUNT ID
 export const getUserEvent = async (id, eventid) => {
   const dataUser = await UsersApi.getAll(eventid, `?filtered=[{"field":"account_id","value":"${id}"}]`);
-  let user = dataUser.data.filter((u) => u.account_id && u.account_id.trim() == id.trim())[ 0 ];
+  const user = dataUser.data.filter((u) => u.account_id && u.account_id.trim() == id.trim())[ 0 ];
   return user;
 };
 

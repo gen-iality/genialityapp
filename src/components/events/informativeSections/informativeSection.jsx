@@ -1,7 +1,7 @@
 import { Component, Fragment } from 'react';
 import { Alert, Button, Card, Col, Input, Row, Space, Typography } from 'antd';
-import withContext from '../../../context/withContext';
-import { EventsApi } from '../../../helpers/request';
+import withContext from '@context/withContext';
+import { EventsApi } from '@helpers/request';
 import { SettingOutlined, WarningOutlined } from '@ant-design/icons';
 import Meta from 'antd/lib/card/Meta';
 import Modal from 'antd/lib/modal/Modal';
@@ -75,17 +75,17 @@ class InformativeSection extends Component {
         return false;
       } else {
         //gestionar y guardar valor de oferta
-        let items = this.state.galeries;
-        let newPuja = { ...this.state.selectedGalery, price: this.state.value_oferta };
-        let newItems = items.map((item) => {
+        const items = this.state.galeries;
+        const newPuja = { ...this.state.selectedGalery, price: this.state.value_oferta };
+        const newItems = items.map((item) => {
           if (item._id === this.state.selectedGalery._id) {
             return newPuja;
           } else {
             return item;
           }
         });
-        let oferta = { valueOffered: parseFloat(this.state.value_oferta) };
-        let resp = await EventsApi.storeGalley(this.props.cEvent.value._id, this.state.selectedGalery._id, oferta);
+        const oferta = { valueOffered: parseFloat(this.state.value_oferta) };
+        const resp = await EventsApi.storeGalley(this.props.cEvent.value._id, this.state.selectedGalery._id, oferta);
 
         this.inputOferta.value = '';
         this.setState({
@@ -133,7 +133,7 @@ class InformativeSection extends Component {
             <Card
               title={informativeSection.name || 'clasificación'}
               bordered={false}
-              style={{ width: 1000, margin: 'auto' }}>
+              style={{ backgroundColor: 'transparent', margin: 'auto' }}>
               {this.props.cEvent.value._id !== '611c285104f5d97d1b0f5ed2' && markup && Parser(markup)}
 
               {this.props.cEvent.value._id == '611c285104f5d97d1b0f5ed2' && (
@@ -167,5 +167,5 @@ const mapDispatchToProps = {
   setVirtualConference,
 };
 
-let InformativeSection2WithContext = connect(null, mapDispatchToProps)(withContext(withRouter(InformativeSection)));
+const InformativeSection2WithContext = connect(null, mapDispatchToProps)(withContext(withRouter(InformativeSection)));
 export default InformativeSection2WithContext;

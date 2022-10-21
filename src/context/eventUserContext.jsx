@@ -1,17 +1,16 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { EventsApi } from '../helpers/request';
-import { UseEventContext } from './eventContext';
-import { app } from '../helpers/firebase';
+import { useState, useEffect, createContext, useContext } from 'react';
+import { EventsApi } from '@helpers/request';
+import { useEventContext } from './eventContext';
+import { app } from '@helpers/firebase';
 import { useCurrentUser } from './userContext';
-export const CurrentEventUserContext = React.createContext();
-let initialContextState = { status: 'LOADING', value: null };
+export const CurrentEventUserContext = createContext();
+const initialContextState = { status: 'LOADING', value: null };
 
 export function CurrentUserEventProvider({ children }) {
-  let cEvent = UseEventContext();
-  let cUser = useCurrentUser();
+  const cEvent = useEventContext();
+  const cUser = useCurrentUser();
   const [userEvent, setuserEvent] = useState(initialContextState);
-  let [updateUser, setUpdateUser] = useState(true);
+  const [updateUser, setUpdateUser] = useState(true);
 
   useEffect(() => {
     app.auth().onAuthStateChanged((user) => {
@@ -22,7 +21,7 @@ export function CurrentUserEventProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    let event_id = cEvent.value?._id;
+    const event_id = cEvent.value?._id;
     if (cUser.value == null || cUser.value == undefined || updateUser == false) return;
     async function asyncdata() {
       try {
@@ -57,10 +56,10 @@ export function CurrentUserEventProvider({ children }) {
   );
 }
 
-export function UseUserEvent() {
-  const contextuser = React.useContext(CurrentEventUserContext);
+export function useUserEvent() {
+  const contextuser = useContext(CurrentEventUserContext);
   if (!contextuser) {
-    throw new Error('UseEventuser debe estar dentro del proveedor');
+    throw new Error('useEventuser debe estar dentro del proveedor');
   }
 
   return contextuser;

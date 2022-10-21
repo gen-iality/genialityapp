@@ -3,10 +3,10 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Col, Row, Spin, Switch } from 'antd';
 import { withRouter } from 'react-router';
 import ReactQuill from 'react-quill';
-import { toolbarEditor } from '../../helpers/constants';
-import { firestore } from '../../helpers/firebase';
-import Header from '../../antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
+import { toolbarEditor } from '@helpers/constants';
+import { firestore } from '@helpers/firebase';
+import Header from '@antdComponents/Header';
+import { DispatchMessageService } from '@context/MessageService';
 
 const Configuration = (props) => {
   const [checkSubasta, setCheckSubasta] = useState(false);
@@ -19,13 +19,13 @@ const Configuration = (props) => {
       obtenerConfig();
     }
     async function obtenerConfig() {
-      let resp = await firestore
+      const resp = await firestore
         .collection('config')
         .doc(props.eventId)
         .get();
       if (resp.exists) {
         console.log('respuesta firebase=>', resp.data());
-        let data = resp.data();
+        const data = resp.data();
         setCheckSubasta(data.data.habilitar_subasta);
         setMessage(data.data.message);
       }
@@ -49,13 +49,13 @@ const Configuration = (props) => {
       action: 'show',
     });
     setLoading(true)     
-    let data={
+    const data={
       habilitar_subasta:checkSubasta,
       message:messageF
     }
 
     try{
-      let resp = await firestore
+      const resp = await firestore
       .collection('config')
       .doc(props.eventId).set({data});
       DispatchMessageService({

@@ -244,29 +244,6 @@ class Exhibitor extends Component {
           </div>
         )}
 
-        {/* <div className={`main-stand-modal ${this.state.showDocuments ? 'active' : ''}`}>
-          <div className="main-stand-modal-overlay" onClick={this.handleHideDocuments} />
-          <div className={`main-stand-modal-container`}>
-            <div className="main-stand-modal-header">
-              <div className="main-stand-modal-header-title">Catálogos</div>
-              <div className="main-stand-modal-close-window" onClick={this.handleHideDocuments}>
-                <img src="/exhibitors/icons/ic_close_24px.png" alt="" />
-              </div>
-            </div>
-            <div className="main-stand-modal-content">
-              {exhibitorData.documents.map((doc, index) => (
-                <div className="main-stand-documents-item" key={index}>
-                  <div>{doc.name}</div>
-                  <a href={doc.url} target="_blank" rel="noreferrer" className="main-stand-documents-item-btn">
-                    <img src="/exhibitors/icons/ic_dowload.png" alt="" />
-                    <span>Descargar</span>
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div> */}
-
         {isNonEmptyArray(services) && (
           <div className={`main-stand-modal ${this.state.showServices ? 'active' : ''}`}>
             <div className='main-stand-modal-overlay' onClick={this.handleHideServices} />

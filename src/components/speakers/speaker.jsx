@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
-import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '../../helpers/request';
+import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '@helpers/utils';
+import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '@helpers/request';
 import Creatable from 'react-select';
 import { Button, Typography, Row, Col, Form, Input, Image, Empty, Switch, Modal, Tooltip, Select } from 'antd';
 import {
@@ -14,11 +14,11 @@ import {
   UpOutlined,
   EditOutlined,
 } from '@ant-design/icons';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
-import { areaCode } from '../../helpers/constants';
-import { DispatchMessageService } from '../../context/MessageService';
-import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
+import { areaCode } from '@helpers/constants';
+import { DispatchMessageService } from '@context/MessageService';
+import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import Loading from '../profile/loading';
 
 const { Title } = Typography;
@@ -71,7 +71,7 @@ function Speaker(props) {
   async function dataTheLoaded() {
     console.log('getting data to eventID:', eventID)
     let categoriesData = await CategoriesAgendaApi.byEvent(eventID);
-    let event = await EventsApi.getOne(eventID);
+    const event = await EventsApi.getOne(eventID);
     //const typeEvent = await TypesApi.getAll();
     if (event) {
       setEvent(event);
@@ -395,32 +395,6 @@ function Speaker(props) {
                 />
               )}
             </Form.Item>
-
-            {/* <Form.Item label='Categoría'>
-              <Row wrap gutter={16}>
-                <Col span={22}>
-                  <Creatable
-                    isClearable
-                    styles={catStyles}
-                    onChange={selectCategory}
-                    isDisabled={isloadingSelect.categories}
-                    isLoading={isloadingSelect.categories}
-                    options={categories}
-                    placeholder={'Sin categoría....'}
-                    value={selectedCategories}
-                  />
-                </Col>
-                <Col span={2}>
-                  <Form.Item>
-                    <Button
-                      id='goToCategory'
-                      onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)}
-                      icon={<SettingOutlined />}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form.Item> */}
           </Col>
         )}
       </Row>

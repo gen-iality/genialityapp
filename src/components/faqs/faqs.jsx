@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { FaqsApi } from '../../helpers/request';
+import { FaqsApi } from '@helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 
 const Faqs = (props) => {
-  let [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({});
 
   const columns = [
     {

@@ -36,7 +36,7 @@ class Preview extends Component {
   }
 
   componentDidMount() {
-    let llaves = [],
+    const llaves = [],
       headers = [];
     const { list, extraFields } = this.props;
 
@@ -176,7 +176,7 @@ class Preview extends Component {
     list.map((item) => {
       return (item.used = this.headExist(item.key));
     });
-    let auxList = JSON.parse(JSON.stringify(list)); //create a copy of list
+    const auxList = JSON.parse(JSON.stringify(list)); //create a copy of list
     this.setState({ list, loading: false, auxList });
   };
 
@@ -204,7 +204,7 @@ class Preview extends Component {
       })
       .indexOf(item.tag);
     headers[j].used = true;
-    let listCopy = JSON.parse(JSON.stringify(list));
+    const listCopy = JSON.parse(JSON.stringify(list));
     listCopy[key].used = true;
     listCopy[key].key = item.tag;
     auxHead.splice(i, 1);
@@ -244,7 +244,7 @@ class Preview extends Component {
     const { list, auxArr, serverError, errorData } = this.state;
     const self = this;
     return (
-      <React.Fragment>
+      <>
         <Row justify='center' gutter={[24, 24]}>
           <Col span={10}>
             <Badge.Ribbon
@@ -340,99 +340,9 @@ class Preview extends Component {
           visible={this.state.showModal}>
           {this.content()}
         </Modal>
-        {/* <br />
-        <br />
-        {this.state.loading ? (
-          <Row justify='center'>Parsing excel</Row>
-        ) : (
-          <Row wrap gutter={[16, 16]}>
-            <Col span={14}>
-              <Row wrap gutter={[16, 16]}>
-                {list.map((item, index) => {
-                  return (
-                    <Col key={index}>
-                      <div
-                        style={{
-                          border: '1px solid gray',
-                          borderRadius: '3px',
-                          padding: '5px' 
-                        }}>
-                        <div style={{ textAlign: 'center' }}>
-                          {!item.used && auxArr.length > 0 && <ReloadOutlined />}
-                          <span
-                            className={`${
-                              item.used
-                                ? 'has-text-success'
-                                : `${auxArr.length > 0 ? 'has-text-danger' : 'has-text-warning'}`
-                            }`}
-                            style={{ fontSize: '16px' }}>
-                            Campo "{item.key}"
-                          </span>
-                          
-                          {!item.used && auxArr.length > 0 && (
-                            <Dropdown
-                              overlay={
-                                <Menu>
-                                  {auxArr.map((head, llave) => {
-                                    return (
-                                      <Menu.Item>
-                                        <a
-                                          key={llave}
-                                          onClick={() => {
-                                            self.sChange(head, index);
-                                          }}>
-                                          {head.tag}
-                                        </a>
-                                      </Menu.Item>
-                                    );
-                                  })}
-                                </Menu>
-                              }
-                              placement='bottomCenter'>
-                              <Button type='text' icon={<DownOutlined />} />
-                            </Dropdown>
-                          )}
-                        </div>
-                        <div>
-                          {item.list.slice(0, 2).map((item, j) => {
-                            return <p key={j}>{item}</p>;
-                          })}
-                        </div>
-                      </div>
-                    </Col>
-                  );
-                })}
-              </Row>
-            </Col>
-            <Col span={10}>
-              {auxArr.length > 0 && (
-                <p className='has-text-grey-light'>
-                  <ExclamationCircleOutlined className='has-text-danger' />
-                  <span>
-                    Los siguientes campos <strong className='has-text-danger'>Obligatorios</strong> no se han definido:{' '}
-                  </span>
-
-                  <p>
-                    {auxArr.map((item) => {
-                      return <strong key={item.tag}>{item.tag} </strong>;
-                    })}
-                  </p>
-                </p>
-              )}
-              {auxArr.length < 0 && (
-                <p className='has-text-grey-light'>
-                  <ExclamationCircleOutlined className='has-text-danger' />
-                  <span>
-                    Tienes algunos campos <strong className='has-text-warning'>Opcionales</strong> sin definir.
-                  </span>
-                </p>
-              )}
-            </Col>
-          </Row>
-        )} */}
 
         {serverError && <ErrorServe errorData={errorData} />}
-      </React.Fragment>
+      </>
     );
   }
 }

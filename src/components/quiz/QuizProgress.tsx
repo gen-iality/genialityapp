@@ -1,11 +1,9 @@
-import * as React from 'react';
 import { useState, useEffect, useMemo } from 'react';
-
-import { Typography, Space } from 'antd';
 
 import { QuizStats } from './types';
 import QuizBadge from './QuizBadge';
 import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
+
 interface QuizProgressProps {
   /**
    * The event ID

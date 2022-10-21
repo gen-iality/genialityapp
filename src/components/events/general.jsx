@@ -17,7 +17,7 @@ import { Component, createRef } from 'react';
  dayjs.extend(weekOfYear);
  dayjs.extend(weekYear);
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { Actions, CategoriesApi, EventsApi, OrganizationApi, PlansApi, TypesApi } from '../../helpers/request';
+import { Actions, CategoriesApi, EventsApi, OrganizationApi, PlansApi, TypesApi } from '@helpers/request';
 import ErrorServe from '../modal/serverError';
 import { injectIntl } from 'react-intl';
 import axios from 'axios/index';
@@ -45,12 +45,12 @@ import {
   TimePicker,
   DatePicker,
 } from 'antd';
-import { firestore } from '../../helpers/firebase';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
+import { firestore } from '@helpers/firebase';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
 import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons';
-import { handleRequestError } from '../../helpers/utils';
-import { DispatchMessageService } from '../../context/MessageService';
+import { handleRequestError } from '@helpers/utils';
+import { DispatchMessageService } from '@context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { ValidateEventStart } from '@/hooks/validateEventStartAndEnd';
 import {
@@ -58,8 +58,8 @@ import {
   disabledEndDate,
   disabledStartDateTime,
   disabledStartDate,
-} from '@/Utilities/disableTimeAndDatePickerInEventDate';
-import { CurrentUserContext } from '@/context/userContext';
+} from '@Utilities/disableTimeAndDatePickerInEventDate';
+import { CurrentUserContext } from '@context/userContext';
 
 dayjs.locale('es');
 const { Title, Text } = Typography;
@@ -141,7 +141,7 @@ class General extends Component {
       const { itemsMenu } = this.state.event;
       const { registerForm } = this.state;
 
-      let registerSection = registerForm;
+      const registerSection = registerForm;
 
       if (Object.keys(itemsMenu).length > 0) {
         Object.keys(itemsMenu).forEach((index) => {
@@ -374,11 +374,11 @@ class General extends Component {
   upsertTabs = async () => {
     const { event, intl } = this.props;
     const { tabs } = this.state;
-    let response = await this.validateTabs();
+    const response = await this.validateTabs();
 
     return new Promise(function(resolve) {
       if (response) {
-        let updateData = { ...response, tabs: { ...tabs } };
+        const updateData = { ...response, tabs: { ...tabs } };
 
         firestore
           .collection('events')
@@ -744,15 +744,6 @@ class General extends Component {
     return (
       <>
         {/* RESTRICIONES */}
-        {/* {iMustValidate && (
-          <>
-            <ValidateEventStart
-              startDate={event.datetime_from}
-              callBackTheEventIsActive={this.theEventIsActive}
-              user={cUser}
-            />
-          </>
-        )} */}
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Datos del curso'} save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey='1'>
@@ -936,8 +927,6 @@ class General extends Component {
                             <TimePicker
                               showNow={false}
                               inputReadOnly={true}
-                              //RESTRICIONES
-                              // disabledTime={(time) => disabledStartDateTime(event, streamingHours)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -946,14 +935,6 @@ class General extends Component {
                               format='h:mm a'
                               onChange={(value) => this.changeDate(value, 'hour_start')}
                             />
-                            {/* <DateTimePicker
-                              value={event.hour_start}
-                              step={60}
-                              date={false}
-                              onChange={(value) =>
-                                this.changeDate(value, 'hour_start')
-                              }
-                            /> */}
                           </Form.Item>
                         </Col>
                       </Row>
@@ -962,8 +943,6 @@ class General extends Component {
                           <Form.Item label={'Fecha fin'}>
                             <DatePicker
                               inputReadOnly={true}
-                              //RESTRICIONES
-                              // disabledDate={(date) => disabledEndDate(date, event, streamingHours)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -971,15 +950,6 @@ class General extends Component {
                               format={'DD/MM/YYYY'}
                               onChange={(value) => this.changeDate(value, 'date_end')}
                             />
-                            {/* <DateTimePicker
-                              value={event.date_end}
-                              min={this.minDate}
-                              format={'DD/MM/YYYY'}
-                              time={false}
-                              onChange={(value) =>
-                                this.changeDate(value, 'date_end')
-                              }
-                            /> */}
                           </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -987,8 +957,6 @@ class General extends Component {
                             <TimePicker
                               showNow={false}
                               inputReadOnly={true}
-                              //RESTRICIONES
-                              // disabledTime={(time) => disabledEndDateTime(event, streamingHours)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
@@ -997,14 +965,6 @@ class General extends Component {
                               format='h:mm a'
                               onChange={(value) => this.changeDate(value, 'hour_end')}
                             />
-                            {/* <DateTimePicker
-                              value={event.hour_end}
-                              step={60}
-                              date={false}
-                              onChange={(value) =>
-                                this.changeDate(value, 'hour_end')
-                              }
-                            /> */}
                           </Form.Item>
                         </Col>
                       </Row>
@@ -1012,14 +972,6 @@ class General extends Component {
                   ) : (
                     <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   )}
-
-                  {/* <Form.Item label={'Idioma del curso'}>
-                    <Select value={event.language} name={'language'} onChange={(e) => this.handleChange(e, 'language')}>
-                      <option value='es'>Español</option>
-                      <option value='en'>English</option>
-                      <option value='pt'>Portuguese</option>
-                    </Select>
-                  </Form.Item> */}
 
                   <Form.Item label={'Descripción'}>
                     <EviusReactQuill name={'description'} data={event.description} handleChange={this.chgTxt} />
@@ -1076,56 +1028,6 @@ class General extends Component {
                     />
                   </Form.Item>
 
-                  {/* <Form.Item>
-                    <SelectInput
-                      name={'Categorías:'}
-                      isMulti={true}
-                      max_options={2}
-                      selectedOptions={selectedCategories}
-                      selectOption={this.selectCategory}
-                      options={categories}
-                      / * required={true} * /
-                    />
-                  </Form.Item> */}
-
-                  {/* <Form.Item>
-                    <SelectInput
-                      name={'Tipo'}
-                      isMulti={false}
-                      selectedOptions={selectedType}
-                      selectOption={this.selectType}
-                      options={types}
-                      / * required={true} * /
-                    />
-                  </Form.Item> */}
-
-                  {/* <Form.Item label={'Id Google Analytics'}>
-                    <Input
-                      name={'googleanlyticsid'}
-                      placeholder={'UA-XXXXXX-X | G-XXXXXX'}
-                      value={event.googleanlyticsid}
-                      onChange={this.googleanlyticsid}
-                    />
-                  </Form.Item> */}
-
-                  {/* <Form.Item label={'Id Google Tag Manager'}>
-                    <Input
-                      name={'googletagmanagerid'}
-                      placeholder={'GTM-XXXXXX'}
-                      value={event.googletagmanagerid}
-                      onChange={this.googletagmanagerid}
-                    />
-                  </Form.Item> */}
-
-                  {/* <Form.Item label={'Id Facebook Pixel'}>
-                    <Input
-                      name={'facebookpixelid'}
-                      placeholder='014180041516129'
-                      value={event.facebookpixelid}
-                      onChange={this.facebookpixelid}
-                    />
-                  </Form.Item> */}
-
                   <Card title='Zona social'>
                     <Row style={{ padding: '8px 0px' }}>
                       <Col xs={18}>Chat general</Col>
@@ -1165,25 +1067,6 @@ class General extends Component {
                         />
                       </Col>
                     </Row>
-                    {/* <Row style={{ padding: '8px 0px' }}>
-                      <Col xs={18}>Asistentes</Col>
-                      <Col xs={6}>
-                        <Switch
-                          checked={this.state?.tabs?.attendees}
-                          onChange={(checked) =>
-                            this.setState(
-                              {
-                                tabs: {
-                                  ...this.state.tabs,
-                                  attendees: checked,
-                                },
-                              },
-                              async () => await this.upsertTabs()
-                            )
-                          }
-                        />
-                      </Col>
-                    </Row> */}
                   </Card>
                 </Col>
               </Row>
@@ -1329,12 +1212,12 @@ class General extends Component {
 
 //Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
 function handleFields(organizers, types, categories, event) {
-  let selectedCategories = [];
+  const selectedCategories = [];
   let selectedType = {};
   const { category_ids, organizer_id, event_type_id } = event;
   if (category_ids) {
     categories.map((item) => {
-      let pos = category_ids.indexOf(item.value);
+      const pos = category_ids.indexOf(item.value);
       return pos >= 0 ? selectedCategories.push(item) : '';
     });
   }

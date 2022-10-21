@@ -1,12 +1,12 @@
 import { Component, useState, useEffect } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
-import { firestore } from '../../helpers/firebase';
-import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
-import { AgendaApi } from '../../helpers/request';
+import { firestore } from '@helpers/firebase';
+import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request';
+import { AgendaApi } from '@helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
-import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
+import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '@helpers/utils';
 import dayjs from 'dayjs';
 import {
   Button,
@@ -43,14 +43,15 @@ import {
 } from '@ant-design/icons';
 import QrModal from './qrModal';
 
-import Header from '../../antdComponents/Header';
-import TableA from '../../antdComponents/Table';
+import Header from '@antdComponents/Header';
+import TableA from '@antdComponents/Table';
 import Highlighter from 'react-highlight-words';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 import Loading from '../profile/loading';
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
-import { HelperContext } from '@/context/helperContext/helperContext';
+import { HelperContext } from '@context/helperContext/helperContext';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
+import { UsersPerEventOrActivity } from './utils/utils';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -152,9 +153,7 @@ class ListEventUser extends Component {
       usersReq: [],
       pageOfItems: [],
       listTickets: [],
-      usersRef: firestore.collection(
-        `${props.match.params.id ? props.match.params.id : props.event._id}_event_attendees`
-      ),
+      usersRef: firestore.collection(`${props.event._id}_event_attendees`),
       pilaRef: firestore.collection('pila'),
       total: 0,
       totalCheckedIn: 0,
@@ -196,6 +195,8 @@ class ListEventUser extends Component {
       typeScanner: 'CheckIn options',
       nameActivity: props.location.state?.item?.name || '',
       qrModalOpen: false,
+      unSusCribeConFigFast: () => {},
+      unSuscribeAttendees: () => {},
     };
   }
   static contextType = HelperContext;
@@ -229,7 +230,7 @@ class ListEventUser extends Component {
 
   rol_component = (text, item, index) => {
     if (this.state.rolesList) {
-      for (let role of this.state.rolesList) {
+      for (const role of this.state.rolesList) {
         if (item.rol_id == role._id) {
           item['rol_name'] = role.name;
           return <p>{role.name}</p>;
@@ -251,11 +252,14 @@ class ListEventUser extends Component {
 
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
-    return <AttendeeCheckInCheckbox attendee={item} />;
+    const activityId = this.props.match.params.id;
+
+    return <AttendeeCheckInCheckbox attendee={item} activityId={activityId} />;
   };
 
   physicalCheckInComponent = (text, item, index) => {
-    return <AttendeeCheckInButton attendee={item} />;
+    const activityId = this.props.match.params.id;
+    return <AttendeeCheckInButton attendee={item} activityId={activityId} />;
   };
 
   checkInTypeComponent = (text, item, index) => {
@@ -299,7 +303,8 @@ class ListEventUser extends Component {
   };
 
   getAttendes = async () => {
-    let self = this;
+    const self = this;
+    const activityId = this.props.match.params.id;
 
     this.checkFirebasePersistence();
     try {
@@ -313,9 +318,9 @@ class ListEventUser extends Component {
 
       extraFields = this.addDefaultLabels(extraFields);
       extraFields = this.orderFieldsByWeight(extraFields);
-      let fieldsForm = Array.from(extraFields);
+      const fieldsForm = Array.from(extraFields);
       // AGREGAR EXTRAFIELDS DE ROL Y CHECKIN
-      let rolesOptions = rolesList.map((rol) => {
+      const rolesOptions = rolesList.map((rol) => {
         return {
           label: rol.name,
           value: rol._id,
@@ -355,7 +360,7 @@ class ListEventUser extends Component {
       });
 
       let columns = [];
-      let checkInColumn = {
+      const checkInColumn = {
         title: 'Ingreso',
         dataIndex: 'checkedin_at',
         key: 'checkedin_at',
@@ -366,7 +371,7 @@ class ListEventUser extends Component {
         render: self.checkedincomponent,
       };
 
-      let checkInType = {
+      const checkInType = {
         title: 'Tipo de checkIn',
         dataIndex: 'checkedin_type',
         key: 'checkedin_type',
@@ -376,7 +381,7 @@ class ListEventUser extends Component {
         render: self.checkInTypeComponent,
       };
 
-      let physicalCheckIn = {
+      const physicalCheckIn = {
         title: 'Registrar checkIn físico',
         dataIndex: 'physicalCheckIn',
         key: 'physicalCheckIn',
@@ -385,7 +390,7 @@ class ListEventUser extends Component {
         render: self.physicalCheckInComponent,
       };
 
-      let editColumn = {
+      const editColumn = {
         title: 'Editar',
         key: 'edit',
         fixed: 'right',
@@ -398,7 +403,7 @@ class ListEventUser extends Component {
 
       columns.push(checkInColumn);
 
-      let extraColumns = extraFields
+      const extraColumns = extraFields
         .filter((item) => {
           return item.type !== 'tituloseccion' && item.type !== 'password';
         })
@@ -458,7 +463,7 @@ class ListEventUser extends Component {
         )
       };
 
-      let rol = {
+      const rol = {
         title: 'Rol',
         dataIndex: 'rol_id',
         key: 'rol_id',
@@ -468,7 +473,7 @@ class ListEventUser extends Component {
         render: self.rol_component,
       };
 
-      let created_at = {
+      const created_at = {
         title: 'Creado',
         dataIndex: 'created_at',
         key: 'created_at',
@@ -478,7 +483,7 @@ class ListEventUser extends Component {
         ...self.getColumnSearchProps('created_at'),
         render: self.created_at_component,
       };
-      let updated_at = {
+      const updated_at = {
         title: 'Actualizado',
         dataIndex: 'updated_at',
         key: 'updated_at',
@@ -499,25 +504,25 @@ class ListEventUser extends Component {
       this.setState({ extraFields, rolesList, badgeEvent, fieldsForm });
       const { usersRef } = this.state;
 
-      firestore
+      const unSusCribeConFigFast = firestore
         .collection(`event_config`)
         .doc(event._id)
         .onSnapshot((doc) => {
           this.setState({ ...this.state, configfast: doc.data() });
         });
 
-      usersRef.orderBy('updated_at', 'desc').onSnapshot(
+      const unSuscribeAttendees = usersRef.orderBy('updated_at', 'desc').onSnapshot(
         {
           // Listen for document metadata changes
           //includeMetadataChanges: true
         },
         async (snapshot) => {
-          let currentAttendees = [...this.state.usersReq];
-          let updatedAttendees = updateAttendees(currentAttendees, snapshot);
+          const currentAttendees = [...this.state.usersReq];
+          const updatedAttendees = updateAttendees(currentAttendees, snapshot);
 
-          let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
+          const totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
 
-          let totalCheckedInWithWeight =
+          const totalCheckedInWithWeight =
             Math.round(
               updatedAttendees.reduce(
                 (acc, item) => acc + (item.checkedin_at ? parseFloat(item.pesovoto ? item.pesovoto : 1) : 0),
@@ -525,7 +530,7 @@ class ListEventUser extends Component {
               ) * 100
             ) / 100;
           //total de pesos
-          let totalWithWeight =
+          const totalWithWeight =
             Math.round(
               updatedAttendees.reduce((acc, item) => acc + parseFloat(item.pesovoto ? item.pesovoto : 1), 0) * 100
             ) / 100;
@@ -561,7 +566,7 @@ class ListEventUser extends Component {
                   updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
               }
               if (extraFields) {
-                let codearea = extraFields?.filter((field) => field.type == 'codearea');
+                const codearea = extraFields?.filter((field) => field.type == 'codearea');
                 if (
                   codearea[0] &&
                   updatedAttendees[i] &&
@@ -598,12 +603,15 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-          const sortedUsers = await this.sortUsersArray(updatedAttendees);
+
+          const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
 
           this.setState({
-            users: sortedUsers,
-            usersReq: sortedUsers,
-            auxArr: sortedUsers,
+            unSusCribeConFigFast,
+            unSuscribeAttendees,
+            users: attendees,
+            usersReq: updatedAttendees,
+            auxArr: attendees,
             loading: false,
           });
         },
@@ -621,9 +629,14 @@ class ListEventUser extends Component {
     this.getAttendes();
   }
 
+  async componentWillUnmount() {
+    this.state.unSusCribeConFigFast();
+    this.state.unSuscribeAttendees();
+  }
+
   obtenerName = (fileUrl) => {
     if (typeof fileUrl == 'string') {
-      let splitUrl = fileUrl?.split('/');
+      const splitUrl = fileUrl?.split('/');
       return splitUrl[splitUrl.length - 1];
     } else {
       return null;
@@ -683,7 +696,7 @@ class ListEventUser extends Component {
       message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
     } */
     //return;
-    let eventIdSearch = this.props.match.params.id ? this.props.match.params.id : this.props.event._id;
+    const eventIdSearch = this.props.match.params.id ? this.props.match.params.id : this.props.event._id;
 
     let userRef = null;
     try {
@@ -901,6 +914,18 @@ class ListEventUser extends Component {
     clearFilters();
     this.setState({ searchText: '' });
   };
+  printUser = () => {
+    const resp = this.props.badgeEvent;
+    if (resp._id) {
+      const badges = resp.BadgeFields;
+      console.log(this.ifrmPrint, badges);
+      if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
+      const printBagdeUser = (...args) => {
+        console.warn('printBagdeUser function was copied here but not its definition. F');
+      }
+      printBagdeUser(this.ifrmPrint, badges, this.state.user);
+    } else this.setState({ noBadge: true });
+  };
 
   render() {
     const {
@@ -924,6 +949,8 @@ class ListEventUser extends Component {
       fieldsForm,
     } = this.state;
 
+    const activityId = this.props.match.params.id;
+
     const { type, loading, componentKey } = this.props;
     const { eventIsActive } = this.context;
 
@@ -936,7 +963,7 @@ class ListEventUser extends Component {
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
 
     return (
-      <React.Fragment>
+      <>
         <ModalWithLessonsInfo
           show={this.state.showModalOfProgress}
           onHidden={() => {
@@ -948,6 +975,11 @@ class ListEventUser extends Component {
         />
         <Header
           title={type == 'activity' ? 'Inscripción de ' + nameActivity : 'Inscripción de curso'}
+          titleToMergingOrAdaptIt={
+            componentKey === 'activity-checkin'
+              ? 'Check-in actividad: ' + nameActivity
+              : `Check-in evento: ${this.props.event?.name}`
+          }
           description={`Se muestran los primeros 50 usuarios, para verlos todos por favor descargar el excel o realizar una
           búsqueda.`}
         />
@@ -979,10 +1011,11 @@ class ListEventUser extends Component {
             clearOption={this.clearOption}
             closeModal={this.closeQRModal}
             openModal={this.state.qrModalOpen}
+            badgeEvent={this.state.badgeEvent}
+            activityId={activityId}
           />
         )}
 
-        {/* {users.length > 0 && this.state.columns ? ( */}
         <TableA
           list={users.length > 0 && users}
           header={columns}
@@ -1003,26 +1036,31 @@ class ListEventUser extends Component {
           }
           titleTable={
             <Row gutter={[6, 6]}>
-              <Col>
-                <Tag
-                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                  color='lightgrey'
-                  icon={<UsergroupAddOutlined />}>
-                  <strong>Inscritos: </strong>
-                  <span style={{ fontSize: '13px' }}>{inscritos}</span>
-                </Tag>
-              </Col>
-              <Col>
-                <Tag
-                  style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                  color='lightgrey'
-                  icon={<StarOutlined />}>
-                  <strong>Participantes: </strong>
-                  <span style={{ fontSize: '13px' }}>
-                    {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
-                  </span>
-                </Tag>
-              </Col>
+              {!activityId && (
+                <React.Fragment>
+                  <Col>
+                    <Tag
+                      style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                      color='lightgrey'
+                      icon={<UsergroupAddOutlined />}>
+                      <strong>Inscritos: </strong>
+                      <span style={{ fontSize: '13px' }}>{inscritos}</span>
+                    </Tag>
+                  </Col>
+                  <Col>
+                    <Tag
+                      style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
+                      color='lightgrey'
+                      icon={<StarOutlined />}>
+                      <strong>Participantes: </strong>
+                      <span style={{ fontSize: '13px' }}>
+                        {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
+                      </span>
+                    </Tag>
+                  </Col>
+                </React.Fragment>
+              )}
+
               <Col>
                 {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
                   <>
@@ -1035,11 +1073,15 @@ class ListEventUser extends Component {
                   </>
                 )}
               </Col>
-              <Col>
-                <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
-                  Expandir
-                </Button>
-              </Col>
+
+              {!activityId && (
+                <Col>
+                  <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                    Expandir
+                  </Button>
+                </Col>
+              )}
+
               <Col>
                 <Select
                   name={'type-scanner'}
@@ -1048,9 +1090,9 @@ class ListEventUser extends Component {
                   onChange={(e) => this.handleChange(e)}
                   style={{ width: 220 }}>
                   <Option value='scanner-qr'>Escanear QR</Option>
-                  {fieldsForm.map((item) => {
+                  {fieldsForm.map((item, index) => {
                     if (item.type === 'checkInField')
-                      return <Option value='scanner-document'>Escanear {item.label}</Option>;
+                      return <Option key={index} value='scanner-document'>Escanear {item.label}</Option>;
                   })}
                 </Select>
               </Col>
@@ -1063,11 +1105,13 @@ class ListEventUser extends Component {
               </Col>
               <Col>
                 <Link
-                  to={
-                    !eventIsActive && window.location.toString().includes('eventadmin')
-                      ? ''
-                      : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`
-                  }>
+                  to={{
+                    pathname:
+                      !eventIsActive && window.location.toString().includes('eventadmin')
+                        ? ''
+                        : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`,
+                    state: { activityId },
+                  }}>
                   <Button
                     type='primary'
                     icon={<UploadOutlined />}
@@ -1089,9 +1133,6 @@ class ListEventUser extends Component {
             </Row>
           }
         />
-        {/* ) : (
-          <Loading />
-        )} */}
 
         {!loading && editUser && (
           <UserModal
@@ -1108,6 +1149,7 @@ class ListEventUser extends Component {
             edit={this.state.edit}
             substractSyncQuantity={this.substractSyncQuantity}
             componentKey={componentKey}
+            activityId={activityId}
           />
         )}
 
@@ -1204,7 +1246,7 @@ class ListEventUser extends Component {
             </Col>
           </Row>
         </Drawer>
-      </React.Fragment>
+      </>
     );
   }
 }

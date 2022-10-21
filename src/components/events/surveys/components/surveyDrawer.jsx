@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Row, Col, Button, Drawer, Space } from 'antd';
 import { FileDoneOutlined, PieChartOutlined, CloseOutlined } from '@ant-design/icons';
-import { UseSurveysContext } from '../../../../context/surveysContext';
-import { useCurrentUser } from '../../../../context/userContext';
+import { useSurveysContext } from '@context/surveysContext';
+import { useCurrentUser } from '@context/userContext';
 import SurveyDetailPage from '../SurveyDetailPage';
 import RankingTrivia from '../rankingTrivia';
 import ThisRouteCanBeDisplayed from '../../Landing/helpers/thisRouteCanBeDisplayed';
 
 function SurveyDrawer(props) {
-  let cSurveys = UseSurveysContext();
-  let cUser = useCurrentUser();
+  const cSurveys = useSurveysContext();
+  const cUser = useCurrentUser();
 
   // Estado para hacer visible el ranking
   const [rankingVisible, setRankingVisible] = useState(true);

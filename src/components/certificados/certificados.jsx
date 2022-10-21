@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { CertsApi, RolAttApi } from '../../helpers/request';
+import { CertsApi, RolAttApi } from '@helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import dayjs from 'dayjs';
 
 const Certificados = (props) => {
-  let [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({});
 
   const columns = [
     {

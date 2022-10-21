@@ -2,23 +2,23 @@ import { useEffect, useState } from 'react';
 import { Tooltip, Skeleton, Card, Avatar, notification, Spin } from 'antd';
 import { UserOutlined, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { InitialsNameUser } from './index';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
-import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
-import { UseUserEvent } from '../../../context/eventUserContext';
-import { UseEventContext } from '../../../context/eventContext';
+import { addNotification, haveRequest, isMyContacts, SendFriendship } from '@helpers/netWorkingFunctions';
+import { useUserEvent } from '@context/eventUserContext';
+import { useEventContext } from '@context/eventContext';
 import { setUserAgenda } from '../../../redux/networking/actions';
-import { EventsApi } from '../../../helpers/request';
+import { EventsApi } from '@helpers/request';
 
 const { Meta } = Card;
 
 const PopoverInfoUser = (props) => {
   const [userSelected, setUserSelected] = useState();
-  let eventUserContext = UseUserEvent();
-  let eventContext = UseEventContext();
-  let {
+  const eventUserContext = useUserEvent();
+  const eventContext = useEventContext();
+  const {
     containtNetworking,
     getPropertiesUserWithId,
     propertiesProfile,
@@ -29,7 +29,7 @@ const PopoverInfoUser = (props) => {
   } = useHelper();
 
   useEffect(() => {
-    let user = { _id: props.item.iduser, properties: props.item.properties, eventUserId: props.item._id, send: 0 };
+    const user = { _id: props.item.iduser, properties: props.item.properties, eventUserId: props.item._id, send: 0 };
     setUserSelected(user);
     obtainContacts();
     async function obtainContacts() {
@@ -63,18 +63,18 @@ const PopoverInfoUser = (props) => {
                     ? null
                     : async () => {
                         setViewPerfil({ view: false, perfil: userSelected });
-                        let userSelectedTwo = { ...userSelected, loading: true };
+                        const userSelectedTwo = { ...userSelected, loading: true };
                         setUserSelected(userSelectedTwo);
-                        let userReceive = {
+                        const userReceive = {
                           eventUserIdReceiver: userSelected.eventUserId,
                           userName:
                             userSelected.properties.names ||
                             userSelected.properties.name ||
                             userSelected.properties.email,
                         };
-                        let sendResp = await SendFriendship(userReceive, eventUserContext.value, eventContext.value);
+                        const sendResp = await SendFriendship(userReceive, eventUserContext.value, eventContext.value);
                         if (sendResp._id) {
-                          let notificationR = {
+                          const notificationR = {
                             idReceive: userSelected._id,
                             idEmited: sendResp._id,
                             emailEmited: eventUserContext.value.email || eventUserContext.value.user.email,
@@ -86,7 +86,7 @@ const PopoverInfoUser = (props) => {
                             type: 'amistad',
                             state: '0',
                           };
-                          let userSelectedTwo = { ...userSelected, loading: false, send: 1 };
+                          const userSelectedTwo = { ...userSelected, loading: false, send: 1 };
                           setUserSelected(userSelectedTwo);
 
                           addNotification(notificationR, eventContext.value, eventUserContext.value);
@@ -131,8 +131,8 @@ const PopoverInfoUser = (props) => {
                   onClick={async () => {
                     setViewPerfil({ view: false, perfil: userSelected });
                     //SE CREA EL OBJETO CON ID INVERTIDO PARA QUE EL COMPONENTE APPOINT MODAL FUNCIONE CORRECTAMENTE
-                    let evetuser = userSelected._id;
-                    let userReview = {
+                    const evetuser = userSelected._id;
+                    const userReview = {
                       ...userSelected,
                       _id: userSelected.eventUserId,
                       evetuserId: evetuser,

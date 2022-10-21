@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import Moment from 'moment-timezone';
 import { connect } from 'react-redux';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import {
   AgendaApi,
   SpacesApi,
@@ -10,16 +10,18 @@ import {
   DocumentsApi,
   AttendeeApi,
   discountCodesApi,
-} from '../../helpers/request';
+} from '@helpers/request';
 import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge, Row } from 'antd';
-import { firestore } from '../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem/index';
 import { ArrowRightOutlined, CalendarOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';
 import { setTabs } from '../../redux/stage/actions';
 import ActivitiesList from '../agenda/components/ActivitiesList';
+
 const { TabPane } = Tabs;
-let attendee_states = {
+
+const attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
   STATE_INVITED: '5ba8d213aac5b12a5a8ce749', //"INVITED";
   STATE_RESERVED: '5ba8d200aac5b12a5a8ce748', //"RESERVED";
@@ -83,7 +85,7 @@ class Agenda extends Component {
 
     //Si hay currentUser pasado por props entonces inicializamos el estado userId
     if (this.props.currentUser) {
-      let { currentUser } = this.props;
+      const { currentUser } = this.props;
       this.setState({ userId: currentUser._id });
     }
 
@@ -100,8 +102,8 @@ class Agenda extends Component {
           : true,
     });
 
-    let surveysData = await SurveysApi.getAll(this.props.cEvent.value._id);
-    let documentsData = await DocumentsApi.getAll(this.props.cEvent.value._id);
+    const surveysData = await SurveysApi.getAll(this.props.cEvent.value._id);
+    const documentsData = await DocumentsApi.getAll(this.props.cEvent.value._id);
 
     if (surveysData.data.length >= 1) {
       this.setState({ survey: surveysData.data });
@@ -161,8 +163,8 @@ class Agenda extends Component {
         .onSnapshot(infoActivity => {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
-          let { habilitar_ingreso, isPublished, meeting_id, platform } = data;
-          let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id, platform };
+          const { habilitar_ingreso, isPublished, meeting_id, platform } = data;
+          const updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id, platform };
           //this.props.setTabs(tabs);
           arr[index] = updatedActivityInfo;
           const filtered = this.filterByDay(this.state.days[0], arr);
@@ -172,9 +174,9 @@ class Agenda extends Component {
   }
 
   async filterStateMeetingRoom(list) {
-    let lista = await Promise.all(
+    const lista = await Promise.all(
       list.map(async (activity, index) => {
-        let infoActivity = await firestore
+        const infoActivity = await firestore
           .collection('events')
           .doc(this.props.cEvent.value._id)
           .collection('activities')
@@ -182,12 +184,12 @@ class Agenda extends Component {
           .get();
         //if (!infoActivity.exists) return;
         const data = infoActivity.data();
-        let habilitar_ingreso = data?.habilitar_ingreso;
-        let isPublished = data?.isPublished;
-        let meeting_id = data?.meeting_id;
-        let platform = data?.platform;
+        const habilitar_ingreso = data?.habilitar_ingreso;
+        const isPublished = data?.isPublished;
+        const meeting_id = data?.meeting_id;
+        const platform = data?.platform;
 
-        let updatedActivityInfo = { ...activity, habilitar_ingreso, isPublished, meeting_id, platform };
+        const updatedActivityInfo = { ...activity, habilitar_ingreso, isPublished, meeting_id, platform };
         //this.props.setTabs(tabs);
         return updatedActivityInfo;
       }),
@@ -198,14 +200,14 @@ class Agenda extends Component {
 
   exchangeCode = async () => {
     //this.state.discountCode
-    let code = this.state.discountCode;
-    let codeTemplateId = '5fc93d5eccba7b16a74bd538';
+    const code = this.state.discountCode;
+    const codeTemplateId = '5fc93d5eccba7b16a74bd538';
 
     try {
       await discountCodesApi.exchangeCode(codeTemplateId, { code: code, event_id: this.props.cEvent.value._id });
-      let eventUser = this.props.this.props.cUser;
-      let eventId = this.props.cEvent.value._id;
-      let data = { state_id: attendee_states.STATE_BOOKED };
+      const eventUser = this.props.this.props.cUser;
+      const eventId = this.props.cEvent.value._id;
+      const data = { state_id: attendee_states.STATE_BOOKED };
       AttendeeApi.update(eventId, data, eventUser._id);
 
       this.setState({
@@ -242,10 +244,10 @@ class Agenda extends Component {
         : null,
     );
     //se consulta la api de espacios para
-    let space = await SpacesApi.byEvent(this.props.cEvent.value._id);
+    const space = await SpacesApi.byEvent(this.props.cEvent.value._id);
     //FILTRO
 
-    let listFiltered = await this.filterStateMeetingRoom(data);
+    const listFiltered = await this.filterStateMeetingRoom(data);
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     //const filtered = this.filterByDay(this.state.days[0], data);
     await this.listeningStateMeetingRoom(data);
@@ -304,7 +306,7 @@ class Agenda extends Component {
 
   //Se realiza funcion para filtrar mediante dropdown
   selectionSpace() {
-    let space = document.getElementById('selectedSpace').value;
+    const space = document.getElementById('selectedSpace').value;
 
     const filtered = this.filterBySpace(space, this.state.list);
     this.setState({ filtered, toShow: filtered, space });
@@ -700,7 +702,6 @@ class Agenda extends Component {
                 showIcon
               />
             )}
-            {/* <Alert message="" type="info" /> */}
             <p>Ingresa el código de pago</p>
             <Input value={this.state.discountCode} onChange={e => this.setState({ discountCode: e.target.value })} />
           </div>
@@ -756,8 +757,6 @@ class Agenda extends Component {
                     this.props.cEvent.value.styles.hideDatesAgenda === true ||
                     this.props.cEvent.value.styles.hideDatesAgenda == undefined) && (
                     <>
-                      {/* {days.map((day) => this.getActivitiesByDay(day))} */}
-                      {/* this.getActivitiesByDay(null)*/}
                       <div
                         style={{
                           backgroundColor: 'white',
@@ -770,40 +769,6 @@ class Agenda extends Component {
                           setActivitiesAttendee={this.props.setActivitiesAttendee}
                         />
                       </div>
-                      {/*<Tabs
-                      //tabBarExtraContent={{right:<DoubleRightOutlined />, left:<DoubleLeftOutlined/>}}
-                      defaultActiveKey='0'
-                      size='large'
-                      style={{ paddingTop: '5px' }}
-                      tabBarStyle={{
-                        backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                        borderRadius: '10px',
-                        paddingLeft: '25px',
-                      }}>
-                      {days.map(
-                        (day, index) =>
-                          this.getActivitiesByDayVisibility(day) &&
-                          this.getActivitiesByDayVisibility(day).length > 0 && (
-                            <TabPane
-                              style={{ paddingLeft: '20px', paddingRight: '20px' }}
-                              tab={
-                                <span
-                                  style={{
-                                    fontWeight: 'bolder',
-                                    color: this.props.cEvent.value.styles.textMenu,
-                                    backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                                  }}>
-                                  {Moment(day)
-                                    .format('LL')
-                                    .toUpperCase()}
-                                </span>
-                              }
-                              key={index}>
-                              {this.getActivitiesByDay(day)}
-                            </TabPane>
-                          )
-                      )}
-                    </Tabs>*/}
                     </>
                   )}
               </div>
@@ -823,5 +788,5 @@ const mapDispatchToProps = {
   setTabs,
 };
 
-let AgendaWithContext = withContext(Agenda);
+const AgendaWithContext = withContext(Agenda);
 export default connect(mapStateToProps, mapDispatchToProps)(AgendaWithContext);

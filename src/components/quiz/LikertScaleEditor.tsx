@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState, useEffect, useMemo } from 'react';
 
 import { Checkbox, Button, Space } from 'antd';

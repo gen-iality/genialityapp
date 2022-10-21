@@ -11,13 +11,13 @@ import {
 } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi } from '@helpers/request';
 import Loading from '../loaders/loading';
 import { withRouter } from 'react-router-dom';
-import Header from '../../antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
-import { UseEventContext } from '@/context/eventContext';
-import { HelperContext } from '@/context/helperContext/helperContext';
+import Header from '@antdComponents/Header';
+import { DispatchMessageService } from '@context/MessageService';
+import { useEventContext } from '@context/eventContext';
+import { HelperContext } from '@context/helperContext/helperContext';
 
 const { Column } = Table;
 const { confirm } = Modal;
@@ -94,7 +94,7 @@ class Product extends Component {
       if (this.state.list) {
         await Promise.all(
           this.state.list.map(async (product, index) => {
-            let productChange = { ...product, position: product.index + 1 };
+            const productChange = { ...product, position: product.index + 1 };
             await EventsApi.editProduct(productChange, this.props.eventId, product._id);
           })
         );
@@ -132,7 +132,7 @@ class Product extends Component {
       msj: ' Por favor espere mientras se borra la configuración...',
       action: 'show',
     });
-    let self = this;
+    const self = this;
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -304,7 +304,6 @@ class Product extends Component {
               render={(data, prod) => <div>$ {prod.price}</div>}
               ellipsis={true}
             />
-            {/* <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" .concat((data || prod?.price)?" $ "+prod?.price:"").concat((prod?.start_price|| prod?.price||''))}</div>)} /> */}
             <Column
               title='Opciones'
               key='_id'

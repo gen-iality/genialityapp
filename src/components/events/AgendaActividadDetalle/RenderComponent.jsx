@@ -1,19 +1,19 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
-import WithEviusContext from '../../../context/withContext';
+import WithEviusContext from '@context/withContext';
 import ImageComponentwithContext from './ImageComponent';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { DolbyCard } from './DolbyCard';
 import ZoomIframe from '../ZoomIframe';
 import { VideoActivity } from './VideoActivity';
 import GameDrawer from '../game/gameDrawer';
 import { withRouter } from 'react-router-dom';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import HeaderColumnswithContext from './HeaderColumns';
 import WowzaStreamingPlayer from './wowzaStreamingPlayer';
-import AgendaContext from '../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 
 const RenderComponent = (props) => {
-  let tabsdefault = {
+  const tabsdefault = {
     attendees: false,
     chat: true,
     games: true,
@@ -27,12 +27,12 @@ const RenderComponent = (props) => {
   const [meetingId, setmeetingId] = useState('');
   const [fnCiclo, setFnCiclo] = useState(false);
   //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
-  let { transmition, setTransmition, setTypeActivity, typeActivity } = useContext(AgendaContext);
-  let { currentActivity, chatAttendeChats, HandleChatOrAttende, HandlePublicPrivate, helperDispatch } = useHelper();
+  const { transmition, setTransmition, setTypeActivity, typeActivity } = useContext(AgendaContext);
+  const { currentActivity, chatAttendeChats, HandleChatOrAttende, HandlePublicPrivate, helperDispatch } = useHelper();
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     if (!fnCiclo) {
-      let tempactivty = currentActivity;
+      const tempactivty = currentActivity;
       firestore
         .collection('events')
         .doc(event_id)
@@ -177,14 +177,6 @@ const RenderComponent = (props) => {
             }
             return (
               <>
-                {/* {webHookStreamStatus && (
-                  <>
-                    <b>Evius Meets status: </b>
-                    {webHookStreamStatus}
-                    <br />
-                  </>
-                )} */}
-
                 <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
               </>
             );

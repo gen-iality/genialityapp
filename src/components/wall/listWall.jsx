@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment, createElement } from 'react';
 import { Avatar, Button, List, Card, Spin, Alert, Popconfirm, Space, Typography, Image, Tooltip } from 'antd';
 import TimeStamp from 'react-timestamp';
 import { MessageOutlined, LikeOutlined, DeleteOutlined, LikeFilled } from '@ant-design/icons';
@@ -6,15 +6,15 @@ import CommentEditor from './commentEditor';
 import Comments from './comments';
 import '../../styles/landing/_wall.scss';
 import { saveFirebase } from './helpers';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import dayjs from 'dayjs';
-import { firestore } from '../../helpers/firebase';
-import { WallContextProvider } from '../../context/WallContext';
-import { DispatchMessageService } from '../../context/MessageService';
+import { firestore } from '@helpers/firebase';
+import { WallContextProvider } from '@context/WallContext';
+import { DispatchMessageService } from '@context/MessageService';
 
 const IconText = ({ icon, text, onSubmit, color, megusta }) => (
   <Button htmlType='submit' type='text' onClick={onSubmit} style={{ color: megusta == 1 ? color : 'gray' }}>
-    {React.createElement(icon, { style: { marginRight: '2px', fontSize: '20px' } })}
+    {createElement(icon, { style: { marginRight: '2px', fontSize: '20px' } })}
     {text}
   </Button>
 );
@@ -60,11 +60,11 @@ class WallList extends Component {
   };
 
   innershowComments = async (postId, commentsCount) => {
-    let newdisplayedComments = { ...this.state.displayedComments };
+    const newdisplayedComments = { ...this.state.displayedComments };
     this.state.displayedComments[postId];
     //Mostramos los comentarios
     if (!this.state.displayedComments[postId]) {
-      let content = (
+      const content = (
         <div>
           <Comments postId={postId} commentsCount={commentsCount} eventId={this.state.event._id} />
         </div>
@@ -81,7 +81,7 @@ class WallList extends Component {
 
   innerDeletePost = async (postId) => {
     await this.setState({ deleting: postId });
-    let eventId = this.state.event._id;
+    const eventId = this.state.event._id;
     const dataPostOld = this.state.dataPost;
     await saveFirebase.deletePost(postId, eventId);
     await this.setState({ deleting: null });
@@ -98,7 +98,7 @@ class WallList extends Component {
     this.getPosts();
   }
   async getDataUser(iduser) {
-    let user = await firestore
+    const user = await firestore
       .collection(`${this.props.cEvent.value._id}_event_attendees`)
       .where('account_id', '==', iduser)
       .get();
@@ -112,7 +112,7 @@ class WallList extends Component {
   //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
   getPosts() {
     try {
-      let adminPostRef = firestore
+      const adminPostRef = firestore
         .collection('adminPost')
         .doc(this.props.cEvent.value._id)
         .collection('posts')
@@ -126,8 +126,8 @@ class WallList extends Component {
 
         dataPost = await Promise.all(
           snapshot.docs.map(async (doc) => {
-            var data = doc.data();
-            let picture = await this.getDataUser(doc.data().author);
+            // data = doc.data();
+            const picture = await this.getDataUser(doc.data().author);
             return { ...doc.data(), id: doc.id, picture: picture };
           })
         );
@@ -259,7 +259,6 @@ class WallList extends Component {
                         description={
                           <div style={{ marginTop: '-10px' }}>
                             <Tooltip title={dayjs(new Date(item.datePost.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
-                              {/* <TimeStamp date={item.datePost.seconds} /> */}
                               <span>{dayjs(dayjs(new Date(item.datePost.toMillis()))).from(dayjs(new Date()))}</span>
                             </Tooltip>
                           </div>
@@ -284,12 +283,6 @@ class WallList extends Component {
                       )}
                     </List.Item>
                     {this.state.displayedComments[item.id]}
-                    {/* <CommentEditor
-                      onSubmit={(comment) => {
-                        this.innerCreateComment(item, comment);
-                      }}
-                      user={this.props.cUser}
-                    /> */}
                   </Card>
                 )}
               />
@@ -301,5 +294,5 @@ class WallList extends Component {
   }
 }
 
-let WallListwithContext = withContext(WallList);
+const WallListwithContext = withContext(WallList);
 export default WallListwithContext;

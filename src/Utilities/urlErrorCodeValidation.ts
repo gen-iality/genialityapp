@@ -5,7 +5,7 @@ export const urlErrorCodeValidation = (url: string, ignoreFirebaseStorage: boole
 
   if (ignoreFirebaseStorage && firebaseStorageValidation) return false;
 
-  let http = new XMLHttpRequest();
+  const http = new XMLHttpRequest();
   http.open('HEAD', url, false);
   http.send();
 

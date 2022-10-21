@@ -4,9 +4,9 @@ import Importacion from './importacion';
 import Preview from './preview';
 import Result from './result';
 import Async from 'async';
-import Header from '../../antdComponents/Header';
+import Header from '@antdComponents/Header';
 import { Steps } from 'antd';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { Step } = Steps;
 
@@ -39,7 +39,7 @@ class ImportUsers extends Component {
     });
 
     if (password) {
-      let genericPassword = [];
+      const genericPassword = [];
       for (let i = 0; i < users[0].list.length; i++) {
         genericPassword.push(password);
       }
@@ -60,14 +60,14 @@ class ImportUsers extends Component {
       Async.waterfall(
         [
           function(cb) {
-            let newUsers = users.filter((user) => {
+            const newUsers = users.filter((user) => {
               return user.used;
             });
             cb(null, newUsers);
           },
           function(newUsers, cb) {
-            let long = newUsers[0].list.length;
-            let itemsecondwaterfall = [];
+            const long = newUsers[0].list.length;
+            const itemsecondwaterfall = [];
             let initwaterfallcounter = 0;
             for (; initwaterfallcounter < long; ) {
               itemsecondwaterfall[initwaterfallcounter] = {};
@@ -78,7 +78,7 @@ class ImportUsers extends Component {
             }
           },
           function(items, newUsers, cb) {
-            let len = newUsers.length;
+            const len = newUsers.length;
             for (let i = 0; i < items.length; i++) {
               for (let j = 0; j < len; j++) {
                 items[i][newUsers[j].key] = newUsers[j].list[i];
@@ -120,11 +120,11 @@ class ImportUsers extends Component {
     this.props.handleModal();
   };
 
-  getDerivedStateFromProps(nextProps) {
-    if (nextProps.modal !== this.props.modal) {
-      this.setState({ modal: nextProps.modal, step: 0 });
-    }
-  }
+  // getDerivedStateFromProps(nextProps) {
+  //   if (nextProps.modal !== this.props.modal) {
+  //     this.setState({ modal: nextProps.modal, step: 0 });
+  //   }
+  // }
 
   /* onChange = step => {
     console.log('onChange:', step);
@@ -153,6 +153,7 @@ class ImportUsers extends Component {
         eventId={this.props.eventId}
         extraFields={this.props.extraFields}
         organization={this.props.organization}
+        locationParams={this.props.locationParams}
       />,
     ];
     return (

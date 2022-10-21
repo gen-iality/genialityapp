@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { ApiUrl } from '../../helpers/constants';
+import { ApiUrl } from '@helpers/constants';
 import { Tooltip, Button, Card, Col, Row, Statistic, Table, Spin, Typography } from 'antd';
 import {
   EyeOutlined,
@@ -28,11 +28,9 @@ import { Bar, Line } from 'react-chartjs-2';
 import ReactToPrint from 'react-to-print';
 import dayjs from 'dayjs';
 import { utils, writeFileXLSX } from 'xlsx';
-import API from '../../helpers/request';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
-
-// const [google, setGoogle] = useState(null)
+import API from '@helpers/request';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { Title } = Typography;
 //ESTILOS PAGINA PDF
@@ -137,7 +135,7 @@ class DashboardEvent extends Component {
 
   //Función que permite exportar los reportes formato excel
   exportReport = async (datos, name, type, namesheet) => {
-    let data = await exportDataReport(datos, type);
+    const data = await exportDataReport(datos, type);
     if (data) {
       const ws = utils.json_to_sheet(data);
       const wb = utils.book_new();
@@ -152,7 +150,7 @@ class DashboardEvent extends Component {
     }
   };
   async fetchDataMails() {
-    let token = await GetTokenUserFirebase();
+    const token = await GetTokenUserFirebase();
     return new Promise((resolve, reject) => {
       API.get(`/api/events/${this.props.eventId}/messages/?token=${token}`)
         .then(({ data }) => {
@@ -205,11 +203,11 @@ class DashboardEvent extends Component {
   componentDidMount() {
     // fin de la peticion a analytics
     async function GetUserToken() {
-      let token = await GetTokenUserFirebase();
+      const token = await GetTokenUserFirebase();
       return token;
     }
 
-    let evius_token = GetUserToken();
+    const evius_token = GetUserToken();
 
     const { eventId } = this.props;
     if (evius_token) {
@@ -264,9 +262,9 @@ class DashboardEvent extends Component {
   //Función que permite obtener las métricas generales del curso
   obtenerMetricas = async (data) => {
     const { eventId } = this.props;
-    let metricsgnal = await queryReportGnal(eventId);
-    let metricsActivity = await updateMetricasActivity(data, eventId, metricsgnal?.metrics);
-    let metricsGraphics = await queryReportGnalByMoth(eventId);
+    const metricsgnal = await queryReportGnal(eventId);
+    const metricsActivity = await updateMetricasActivity(data, eventId, metricsgnal?.metrics);
+    const metricsGraphics = await queryReportGnalByMoth(eventId);
     this.setState({
       metricsGraphics: metricsGraphics,
       metricsGnal: {
@@ -286,9 +284,9 @@ class DashboardEvent extends Component {
   };
   //GRAFICA REGISTROS POR DIA
   async graficRegistros() {
-    let labels = [],
+    const labels = [],
       values = [];
-    let metricsRegister = await metricasRegisterByDate(this.props.eventId);
+    const metricsRegister = await metricasRegisterByDate(this.props.eventId);
     if (metricsRegister) {
       metricsRegister.map((metric) => {
         labels.push(metric.date);
@@ -307,9 +305,9 @@ class DashboardEvent extends Component {
 
   //GRAFICA ASISTENTES POR DIA
   async graficAttendees() {
-    let labels = [],
+    const labels = [],
       values = [];
-    let metricsAttendees = this.state.metricsGraphics;
+    const metricsAttendees = this.state.metricsGraphics;
     if (metricsAttendees) {
       metricsAttendees.map((metric) => {
         labels.push(metric.month);
@@ -327,9 +325,9 @@ class DashboardEvent extends Component {
 
   //GRAFICA ASISTENTES POR DIA
   async graficPrintouts() {
-    let labels = [],
+    const labels = [],
       values = [];
-    let metricsAttendees = this.state.metricsGraphics;
+    const metricsAttendees = this.state.metricsGraphics;
     if (metricsAttendees) {
       metricsAttendees.map((metric) => {
         labels.push(metric.month);

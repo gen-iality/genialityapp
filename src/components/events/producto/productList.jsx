@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { EventsApi } from '../../../helpers/request';
-import withContext from '../../../context/withContext';
+import { EventsApi } from '@helpers/request';
+import withContext from '@context/withContext';
 import { useHistory } from 'react-router-dom';
 import { Card, Col, Row } from 'antd';
 import { useEffect } from 'react';
@@ -8,7 +8,7 @@ import ProductCard from './productCard';
 
 const ProductList = (props) => {
   const [products, setProducts] = useState([]);
-  let history = useHistory();
+  const history = useHistory();
 
   useEffect(() => {
     obtenerGaleria();
@@ -17,7 +17,7 @@ const ProductList = (props) => {
   const obtenerGaleria = () => {
     EventsApi.getProducts(props.cEvent.value._id).then((resp) => {
       if (resp && resp.data) {
-        let listporductOrder = resp.data.sort((a, b) => a?.position - b?.position);
+        const listporductOrder = resp.data.sort((a, b) => a?.position - b?.position);
         setProducts(listporductOrder);
       }
     });

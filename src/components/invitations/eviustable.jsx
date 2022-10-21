@@ -14,8 +14,8 @@ export default function EviusTable({ columns, data }) {
   return (
     <table>
       <thead className='ant-table-thead'>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
+        {headerGroups.map((headerGroup, index) => (
+          <tr key={index} {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
               <th className='ant-table-header-column'>{column.render('Header')}</th>
             ))}
@@ -40,7 +40,7 @@ export default function EviusTable({ columns, data }) {
 
 /*  Inicio de metodo para cargar millones de datos trabajo en proceso
 
-  const RenderRow = React.useCallback(
+  const RenderRow = useCallback(
     ({ index, style }) => {
       const row = rows[index]
       prepareRow(row)

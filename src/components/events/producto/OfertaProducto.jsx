@@ -1,10 +1,10 @@
 import { MinusOutlined, PlayCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, Alert, Spin } from 'antd';
 import { useState } from 'react';
-import { EventsApi } from '../../../helpers/request';
-import withContext from '../../../context/withContext';
+import { EventsApi } from '@helpers/request';
+import withContext from '@context/withContext';
 import { useEffect } from 'react';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { Title, Text } = Typography;
 
@@ -31,15 +31,15 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
       setPriceProduct(product && product.price);
       console.log('PRODUCT PRICE==>', product.price);
       setValorProduct(obtenerValor());
-      let minValueUp = product.currency == 'USD' ? 50 : 100000;
-      let valueOfertaMin =
+      const minValueUp = product.currency == 'USD' ? 50 : 100000;
+      const valueOfertaMin =
         product._id == '6116cae171f4b926d1363266'
           ? parseFloat(obtenerValor())
           : parseFloat(obtenerValor()) + minValueUp;
       setValueOferta(valueOfertaMin);
     }
     async function obtenerOfertas() {
-      let oferts = await EventsApi.ofertsProduct(eventId, product._id);
+      const oferts = await EventsApi.ofertsProduct(eventId, product._id);
       if (oferts && oferts.data) {
         setTotalOferts(oferts.data.length);
       }
@@ -123,19 +123,19 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
   const saveValue = async () => {
     setLoadingSave(true);
     if (valuOferta > 0) {
-      let data = {
+      const data = {
         valueOffered: valuOferta,
       };
       try {
-        let valueResp = await EventsApi.validPrice(eventId, product._id, data);
+        const valueResp = await EventsApi.validPrice(eventId, product._id, data);
         if (valueResp) {
-          let valueNumber = valueResp;
+          const valueNumber = valueResp;
 
           if (
             valuOferta > valueNumber ||
             (product && product._id == '6116cae171f4b926d1363266' && valuOferta >= valueNumber)
           ) {
-            let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
+            const respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
             if (respuestaApi) {
               DispatchMessageService({
                 type: 'success',
@@ -145,8 +145,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
               updateValues(true);
             }
           } else {
-            let minValueUp = product.currency == 'USD' ? 50 : 100000;
-            let valueOfertaMin = parseFloat(valueNumber) + minValueUp;
+            const minValueUp = product.currency == 'USD' ? 50 : 100000;
+            const valueOfertaMin = parseFloat(valueNumber) + minValueUp;
             setValueOferta(valueOfertaMin);
             setPriceProduct(valueResp);
             setValorProduct(valueNumber);
@@ -175,7 +175,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
   };
   //BOTON MENOS
   const downvalue = () => {
-    let minValueUp = product.currency == 'USD' ? 50 : 100000;
+    const minValueUp = product.currency == 'USD' ? 50 : 100000;
     if (+valuOferta - selectedValue >= +valorProduct + minValueUp) {
       setValueOferta(+valuOferta - selectedValue);
     }
@@ -203,7 +203,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                 <Text type='secondary'>
                   Oferta actual:{' '}
                   <Title level={4}>
-                    {/* priceProduct && product?.currency +  */ ' $ ' + priceProduct.toLocaleString('es-CO')}
+                    {' $ ' + priceProduct.toLocaleString('es-CO')}
                   </Title>
                 </Text>
                 {hability && permission() && <Divider></Divider>}

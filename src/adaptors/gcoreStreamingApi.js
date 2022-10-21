@@ -35,7 +35,6 @@ const getLiveStream = async (stream_id) => {
 
 const getLiveStreamStatus = async (stream_id) => {
   const res = await gCoreCLient.get('streams/' + stream_id);
-  console.log('10. RESPUESTA ACA===>', res);
   return res.data ? res.data : null;
 };
 
@@ -135,7 +134,6 @@ const obtenerVideos = async (name_activity, stream_id) => {
                 created_at: dataVideo.created_at,
                 image: dataVideo.screenshot,
               });
-              console.log('1. DATA VIDEO===>', dataVideo);
             }
           }
         })

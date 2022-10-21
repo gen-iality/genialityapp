@@ -94,7 +94,7 @@ export const fieldsFormQuestionWithPoints = [
 
 // Funcion que retorna los valores iniciales para los campos de la creacion de la pregunta
 export const initValues = () => {
-  let valuesFields = {};
+  const valuesFields = {};
   fieldsFormQuestion.forEach(({ name }) => {
     valuesFields[name] = '';
   });
@@ -102,7 +102,7 @@ export const initValues = () => {
 };
 
 export const searchWithMultipleIndex = (arr, arrIndex) => {
-  let response = [];
+  const response = [];
   for (let index = 0; index < arrIndex.length; index++) {
     response.push(arr[arrIndex[index]]);
   }

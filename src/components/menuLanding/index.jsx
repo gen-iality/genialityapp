@@ -1,14 +1,12 @@
-import { Component, Fragment } from 'react';
+import { Component  } from 'react';
 import { Typography, Select, Card, Input, Button, Col, Row, Spin, Form, InputNumber, Result } from 'antd';
-import { Actions, OrganizationApi } from '../../helpers/request';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
-import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../context/MessageService';
-import { CurrentUserContext } from '@/context/userContext';
-import { CurrentEventContext } from '@/context/eventContext';
+import { Actions, OrganizationApi } from '@helpers/request';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+import { DispatchMessageService } from '@context/MessageService';
+import { CurrentUserContext } from '@context/userContext';
 
-const { Title } = Typography;
 const { Option } = Select;
 const formLayout = {
   labelCol: { span: 24 },
@@ -16,7 +14,7 @@ const formLayout = {
   size: 'small',
 };
 
-class menuLanding extends Component {
+class MenuLanding extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -206,7 +204,7 @@ class menuLanding extends Component {
     const menuBase = this.state.menu;
     let menuLanding = {};
     if (this.props.organization != 1) {
-      let token = await GetTokenUserFirebase();
+      const token = await GetTokenUserFirebase();
       menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}?token=${token}`);
     } else {
       //OBTENER DE ORGANIZACIÓN
@@ -215,7 +213,7 @@ class menuLanding extends Component {
       menuLanding.itemsMenu = this.props.organizationObj.itemsMenu || [];
       /* console.log('ITEMS==>', menuLanding.itemsMenu); */
       this.state.itemsMenu = menuLanding.itemsMenu;
-      let items = menuLanding.itemsMenu;
+      const items = menuLanding.itemsMenu;
     }
     for (const prop in menuBase) {
       for (const prop1 in menuLanding.itemsMenu) {
@@ -237,7 +235,7 @@ class menuLanding extends Component {
 
   orderItemsMenu(itemsMenu) {
     let itemsMenuData = {};
-    let itemsMenuToSave = {};
+    const itemsMenuToSave = {};
     let items = Object.values(itemsMenu);
 
     items = items.map((item) => {
@@ -250,7 +248,7 @@ class menuLanding extends Component {
 
     itemsMenuData = Object.assign({}, items);
 
-    for (let item in itemsMenuData) {
+    for (const item in itemsMenuData) {
       itemsMenuToSave[itemsMenuData[item].section] = itemsMenuData[item];
     }
     return itemsMenuToSave;
@@ -264,7 +262,7 @@ class menuLanding extends Component {
       action: 'show',
     });
     const { itemsMenu } = this.state;
-    let menu = this.orderItemsMenu(itemsMenu);
+    const menu = this.orderItemsMenu(itemsMenu);
     const newMenu = { itemsMenu: { ...menu } };
 
     /*if (newMenu.itemsMenu.tickets) {
@@ -274,17 +272,17 @@ class menuLanding extends Component {
     }*/
 
     if (this.props.organization !== 1) {
-      let token = await GetTokenUserFirebase();
+      const token = await GetTokenUserFirebase();
       const resp = await Actions.put(`api/events/${this.props.event._id}?token=${token}`, newMenu);
     } else {
       //ACTUALIZAR ORGANIZACION
       // console.log("ORGANIZATIONOBJ==>",this.props.organizationObj.itemsMenu)
       //console.log(this.props.organizationObj)
-      let updateOrganization = {
+      const updateOrganization = {
         ...this.props.organizationObj,
         itemsMenu: { ...menu },
       };
-      let resp = await OrganizationApi.editMenu({ itemsMenu: menu }, updateOrganization._id);
+      const resp = await OrganizationApi.editMenu({ itemsMenu: menu }, updateOrganization._id);
       if (resp) {
         /* console.log('MENU GUARDADDO==>', newMenu); */
       }
@@ -301,8 +299,8 @@ class menuLanding extends Component {
   }
 
   async mapActiveItemsToAvailable(key) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+    const menuBase = { ...this.state.menu };
+    const itemsMenuDB = { ...this.state.itemsMenu };
     /* console.log('ITEMSMENUTOAVAILABLE==>', this.state.itemsMenu);
     console.log('items menù', itemsMenuDB);
     console.log('primero=>', menuBase[key]); */
@@ -319,8 +317,8 @@ class menuLanding extends Component {
   }
 
   changeNameMenu(key, name) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+    const menuBase = { ...this.state.menu };
+    const itemsMenuDB = { ...this.state.itemsMenu };
     /* console.log('CHANGEMENU==>', key, name); */
     if (name !== '') {
       if (itemsMenuDB[key]) {
@@ -332,8 +330,8 @@ class menuLanding extends Component {
   }
 
   changePositionMenu(key, position) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+    const menuBase = { ...this.state.menu };
+    const itemsMenuDB = { ...this.state.itemsMenu };
     if (position !== '') {
       if (itemsMenuDB[key]) {
         itemsMenuDB[key].position = position;
@@ -344,8 +342,8 @@ class menuLanding extends Component {
   }
 
   changeMarkup(key, markup) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+    const menuBase = { ...this.state.menu };
+    const itemsMenuDB = { ...this.state.itemsMenu };
     if (markup !== '') {
       itemsMenuDB[key].markup = markup;
       menuBase[key].markup = itemsMenuDB[key].markup || markup;
@@ -354,8 +352,8 @@ class menuLanding extends Component {
   }
 
   changePermissions(key, access) {
-    let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+    const menuBase = { ...this.state.menu };
+    const itemsMenuDB = { ...this.state.itemsMenu };
     /* console.log('itemsMenuDB', itemsMenuDB); */
     if (itemsMenuDB[key]) {
       itemsMenuDB[key].permissions = access;
@@ -366,8 +364,8 @@ class menuLanding extends Component {
   }
 
   orderPosition(key, order) {
-    let itemsMenu = { ...this.state.menu };
-    let itemsMenuToOrder = { ...this.state.itemsMenu };
+    const itemsMenu = { ...this.state.menu };
+    const itemsMenuToOrder = { ...this.state.itemsMenu };
     itemsMenuToOrder[key].position = order !== '' ? parseInt(order) : 0;
     itemsMenu[key].position = itemsMenuToOrder[key].position || order !== '' ? parseInt(order) : 0;
     this.setState({ itemsMenu: itemsMenuToOrder });
@@ -377,7 +375,7 @@ class menuLanding extends Component {
     console.log('props', this.props.event.visibility);
     const userPlan = userContext.value?.plan;
     return (
-      <Fragment>
+      <>
         <Form {...formLayout} onFinish={this.submit}>
           <Header
             title={
@@ -393,10 +391,6 @@ class menuLanding extends Component {
               {Object.keys(this.state.menu).map((key, index) => (
                 <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
                   <Card title={this.state.menu[key].name} bordered={true} style={{ maxHeight: '350px' }}>
-                    {/* RESTRICIONES */}
-                    {/* {this.state.menu[key].section === 'networking' && !userPlan?.availables?.networking ? (
-                      <Result title={'No se encuentra disponible en tu plan actual'} icon={<></>} />
-                    ) : ( */}
                     {(this.state.menu[key].section === 'networking' ||
                       this.state.menu[key].section === 'interviews' ||
                       this.state.menu[key].section === 'my_sesions') &&
@@ -453,98 +447,9 @@ class menuLanding extends Component {
           </Spin>
           <BackTop />
         </Form>
-
-        {/* <Title level={3}>
-          {this.props.organization != 1 ? 'Habilitar secciones del curso' : 'Secciones a habilitar para cada curso'}
-        </Title>
-        <h3>(Podrás guardar la configuración de tu menú en la parte inferior)</h3> */}
-        {/* <Row gutter={16}>
-          {console.log('MENU SECTIONS ', this.state.menu)}
-          {Object.keys(this.state.menu).map((key) => {
-            return (
-              <div key={key}>
-                <Col style={{ marginTop: '3%', marginRight: this.props.organization == 1 ? 20 : '' }} span={8}>
-                  <Card
-                    title={<Title level={4}>{this.state.menu[key].name}</Title>}
-                    bordered={true}
-                    style={{ width: this.props.organization == 1 ? 350 : 300, marginTop: '2%' }}>
-                    <div style={{ marginBottom: '3%' }}>
-                      <Button
-                        onClick={() => {
-                          this.mapActiveItemsToAvailable(key);
-                        }}>
-                        {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
-                      </Button>
-                    </div>
-
-                    <div style={{ marginTop: '4%' }}>
-                      <label>Cambiar nombre de la sección</label>
-                      <Input
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                       //value={this.state.menu[key].name}
-                        onChange={(e) => {
-                          this.changeNameMenu(key, e.target.value);
-                        }}
-                        placeholder={this.state.menu[key].name}
-                      />
-                    </div>
-                    <div style={{ marginTop: '4%' }}>
-                      <label>Permisos para la sección</label>
-                      <Select
-                        key={this.state.keySelect}
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].permissions}
-                        style={{ width: 200 }}
-                        onChange={(e) => {
-                          this.changePermissions(key, e);
-                        }}>
-                        <Option value='public'>Abierto para todos</Option>
-                        <Option value='assistants'>Usuarios inscritos al curso</Option>
-                      </Select>
-                    </div>
-                    <div>
-                      <label>Posición en el menú</label>
-                      <Input
-                        type='number'
-                        disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].position}
-                        onChange={(e) => this.orderPosition(key, e.target.value)}
-                      />
-                    </div>
-                  </Card>
-                </Col>
-              </div>
-            );
-          })}
-        </Row> */}
-        {/* <Row>
-                    <div style={{ marginTop: "4%" }}>
-                        {this.state.menu["informativeSection"].checked && (
-                            <>
-                                <label>Información para insercion en {this.state.menu["informativeSection"].name}</label>
-                               
-                                <textarea type="textbox" defaultValue={this.state.menu["informativeSection"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection", e.target.value) }} />
-                            </>
-                        )}
-                    </div>
-                    <div style={{ marginTop: "4%" }}>
-                        {this.state.menu["informativeSection1"].checked && (
-                            <>
-                                <label>Información para insercion en {this.state.menu["informativeSection1"].name}</label>
-                                <br/>
-                                <textarea defaultValue={this.state.menu["informativeSection1"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection1", e.target.value) }} />
-                            </>
-                        )}
-                    </div>
-                </Row> */}
-        {/* <Row>
-          <Button style={{ marginTop: '1%' }} type='primary' size='large' onClick={this.submit}>
-            Guardar
-          </Button>
-        </Row> */}
-      </Fragment>
+      </>
     );
   }
 }
 
-export default menuLanding;
+export default MenuLanding;

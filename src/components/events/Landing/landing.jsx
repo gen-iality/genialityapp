@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { UseEventContext } from '../../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
-import { UseUserEvent } from '../../../context/eventUserContext';
+import { useUserEvent } from '@context/eventUserContext';
 import { useHistory, Link } from 'react-router-dom';
 /** ant design */
 import { Layout, Spin, notification, Button, Result, Steps, Tooltip } from 'antd';
@@ -27,11 +27,11 @@ import { EnableAnalyticsByEVENT } from './helpers/analyticsHelper';
 import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 
 import loadable from '@loadable/component';
-import { DispatchMessageService } from '../../../context/MessageService.tsx';
-import WithEviusContext from '../../../context/withContext';
-import { checkinAttendeeInEvent } from '../../../helpers/HelperAuth';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
-import initBroadcastViewers from '@/containers/broadcastViewers';
+import { DispatchMessageService } from '@context/MessageService.tsx';
+import WithEviusContext from '@context/withContext';
+import { checkinAttendeeInEvent } from '@helpers/HelperAuth';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import initBroadcastViewers from '@containers/broadcastViewers';
 import DateEvent from '../dateEvent';
 import dayjs from 'dayjs';
 import { AgendaApi } from '@helpers/request';
@@ -84,20 +84,20 @@ const IconRender = type => {
 };
 
 const Landing = props => {
-  let cEventContext = UseEventContext();
-  let cUser = useCurrentUser();
-  let cEventUser = UseUserEvent();
-  let { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
+  const cEventContext = useEventContext();
+  const cUser = useCurrentUser();
+  const cEventUser = useUserEvent();
+  const { isNotification, ChangeActiveNotification, currentActivity, register, setRegister } = useHelper();
 
   const [activitiesAttendee, setActivitiesAttendee] = useState([]);
   const [activities, setActivities] = useState([]);
-  let history = useHistory();
+  const history = useHistory();
 
   const loadData = async () => {
     const { data } = await AgendaApi.byEvent(cEventContext.value?._id)
     setActivities(data);
     const existentActivities = data.map(async activity => {
-      let activity_attendee = await firestore
+      const activity_attendee = await firestore
         .collection(`${activity._id}_event_attendees`)
         .doc(cEventUser.value?._id)
         .get(); //checkedin_at
@@ -177,7 +177,8 @@ const Landing = props => {
     }
   }, [isNotification]);
 
-  let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
+  const [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
+  // eslint-disable-next-line prefer-const
   let [totalNewMessages, settotalnewmessages] = useState(0);
 
   useEffect(() => {
@@ -225,10 +226,6 @@ const Landing = props => {
 
   return (
     <>
-      {/* <ModalFeedback /> */}
-      {/* <ModalNoRegister /> */}
-      {/* <ModalAuth /> */}
-
       <ModalLoginHelpers />
       {cEventContext.value.visibility !== 'ANONYMOUS' && <ModalPermission />}
       <ModalFeedback />

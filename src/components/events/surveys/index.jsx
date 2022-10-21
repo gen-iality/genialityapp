@@ -1,13 +1,13 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Actions, TicketsApi } from '../../../helpers/request';
-import { firestore } from '../../../helpers/firebase';
+import { Actions, TicketsApi } from '@helpers/request';
+import { firestore } from '@helpers/firebase';
 import SurveyList from './surveyList';
 import SurveyDetailPage from './SurveyDetailPage';
 import { Card } from 'antd';
 import * as SurveyActions from '../../../redux/survey/actions';
-import withContext from '../../../context/withContext';
-import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
+import withContext from '@context/withContext';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
@@ -43,7 +43,7 @@ class SurveyForm extends Component {
     // Método para escuchar todas las encuestas relacionadas con el curso
     await this.listenSurveysData();
 
-    let eventUser = await this.getCurrentEvenUser(this.props.cEvent.value._id);
+    const eventUser = await this.getCurrentEvenUser(this.props.cEvent.value._id);
 
     this.setState({ eventUser: eventUser });
     // this.userVote();
@@ -152,7 +152,7 @@ class SurveyForm extends Component {
     const { publishedSurveys } = this.state;
 
     const checkMyResponses = new Promise((resolve) => {
-      let filteredSurveys = [];
+      const filteredSurveys = [];
 
       publishedSurveys.forEach(async (survey, index, arr) => {
         if (this.props.cUser.value._id) {
@@ -167,7 +167,7 @@ class SurveyForm extends Component {
       });
     });
 
-    let stateSurveys = await checkMyResponses;
+    const stateSurveys = await checkMyResponses;
 
     this.setState({
       publishedSurveys: stateSurveys,
@@ -188,16 +188,16 @@ class SurveyForm extends Component {
   };
 
   getCurrentEvenUser = async (eventId) => {
-    let evius_token = await GetTokenUserFirebase();
+    const evius_token = await GetTokenUserFirebase();
     if (!evius_token) return null;
-    let response = await TicketsApi.getByEvent(this.props.cEvent.value._id, evius_token);
+    const response = await TicketsApi.getByEvent(this.props.cEvent.value._id, evius_token);
     return response && response.data.length ? response.data[0] : null;
   };
 
   getItemsMenu = async () => {
-    let { defaultSurveyLabel } = this.state;
+    const { defaultSurveyLabel } = this.state;
     const response = await Actions.getAll(`/api/events/${this.props.cEvent.value._id}`);
-    let surveyLabel = response.itemsMenu.survey || defaultSurveyLabel;
+    const surveyLabel = response.itemsMenu.survey || defaultSurveyLabel;
     this.setState({ surveyLabel });
   };
 
@@ -213,7 +213,7 @@ class SurveyForm extends Component {
       });
       // if (data === true) this.listenSurveysData();
     } else if (Object.prototype.hasOwnProperty.call(data, '_id')) {
-      let selectedSurvey = data;
+      const selectedSurvey = data;
       this.setState({ selectedSurvey });
     }
   };
@@ -255,27 +255,6 @@ class SurveyForm extends Component {
 
     return (
       <div>
-        {/* {this.state.availableSurveysBar && publishedSurveys && publishedSurveys.length > 0 && (
-          <Button
-            className={` ${
-              publishedSurveys && !surveyVisible && !userVote && publishedSurveys.length > 0 ? 'parpadea' : ''
-            }`}
-            onClick={this.surveyVisible}>
-            {!userVote ? (
-              publishedSurveys.length > 0 && (
-                <span>
-                  {!surveyVisible ? 'Ver' : 'Ocultar'}{' '}
-                  <b style={surveyButtons.text}>&nbsp;{publishedSurveys && publishedSurveys.length}&nbsp;</b>
-                  {surveyLabel.name && surveyLabel.name.replace(/((e)?s)$|(e)?s\s/gi, this.pluralToSingular)}
-                  disponible(s).
-                </span>
-              )
-            ) : (
-              <span>{!surveyVisible ? 'Ver' : 'Ocultar'} Resultados</span>
-            )}
-          </Button>
-        )} */}
-
         <Card>
           <SurveyList
             //jsonData={publishedSurveys}
@@ -302,5 +281,5 @@ const mapDispatchToProps = {
   setSurveyVisible,
 };
 
-let SurveyFormWithContext = withContext(SurveyForm);
+const SurveyFormWithContext = withContext(SurveyForm);
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyFormWithContext);

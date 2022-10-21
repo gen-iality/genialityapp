@@ -1,10 +1,10 @@
-import { firestore } from '../../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 
 const userGamification = {
    getListPoints: (eventId, setRankingList) => {
       firestore.collection(`${eventId}_users_gamification`).onSnapshot((docs) => {
-         let userList = [];
-         let pointsList = [];
+         const userList = [];
+         const pointsList = [];
          docs.forEach((infoDoc) => {
             userList.push(infoDoc.data().user_name);
             pointsList.push(infoDoc.data().points);
@@ -34,7 +34,7 @@ const userGamification = {
    // Servicio que registra o actualiza los puntos de un usuario
    registerPoints: async (eventId, userInfo) => {
       // Verifica si ya hay un documento que almacene los puntos del usuario, para crearlo o actualizarlo
-      let response = await userGamification.getUserPoints(eventId, userInfo.user_id);
+      const response = await userGamification.getUserPoints(eventId, userInfo.user_id);
       //
 
       if (!response.status) {
@@ -48,7 +48,7 @@ const userGamification = {
             });
       } else {
          let { points } = userInfo;
-         let { data } = response;
+         const { data } = response;
          isNaN(data.points) ? points : points += data.points;
 
          firestore

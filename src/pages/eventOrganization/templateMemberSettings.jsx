@@ -1,16 +1,16 @@
-import Datos from '@/components/events/datos';
-import { OrganizationApi } from '../../helpers/request';
+import Datos from '@components/events/datos';
+import { OrganizationApi } from '@helpers/request';
 
 function TemplateMemberSettings(props) {
   const organizationId = props.org._id;
   const organization = props.org;
 
   async function updateTemplate(template, fields) {
-    let newTemplate = {
+    const newTemplate = {
       name: template.template.name,
       user_properties: fields,
     };
-    let resp = await OrganizationApi.updateTemplateOrganization(organizationId, template.template._id, newTemplate);
+    const resp = await OrganizationApi.updateTemplateOrganization(organizationId, template.template._id, newTemplate);
     if (resp) {
       return true;
     }
@@ -29,15 +29,15 @@ function TemplateMemberSettings(props) {
           url={props.match.url}
           edittemplate={true}
           createNewField={async (fields, template, updateTable) => {
-            let fieldsNew = Array.from(template.datafields || []);
+            const fieldsNew = Array.from(template.datafields || []);
             fieldsNew.push(fields);
-            let resp = await updateTemplate(template, fieldsNew);
+            const resp = await updateTemplate(template, fieldsNew);
             if (resp) {
               updateTable(fieldsNew);
             }
           }}
           orderFields={async (fields, template, updateTable) => {
-            let resp = await updateTemplate(template, fields);
+            const resp = await updateTemplate(template, fields);
             if (resp) {
               updateTable(fields);
             }
@@ -46,16 +46,16 @@ function TemplateMemberSettings(props) {
             template.datafields = template.datafields.map((field) => {
               return field?.order_weight == fieldupdate?.order_weight ? fieldupdate : field;
             });
-            let resp = await updateTemplate(template, template.datafields);
+            const resp = await updateTemplate(template, template.datafields);
             if (resp) {
               updateTable(template.datafields);
             }
           }}
           deleteField={async (nameField, template, updateTable) => {
             console.log(nameField, template);
-            let newtemplate = template.datafields?.filter((field) => field.name != nameField);
+            const newtemplate = template.datafields?.filter((field) => field.name != nameField);
 
-            let resp = await updateTemplate(template, newtemplate);
+            const resp = await updateTemplate(template, newtemplate);
             if (resp) {
               updateTable(newtemplate);
             }

@@ -4,30 +4,30 @@ import { Row, Col, Avatar, Card, Space, Timeline, Comment, Badge, Grid, Button, 
 import { useHistory } from 'react-router-dom';
 import Moment from 'moment-timezone';
 import './style.scss';
-import { firestore } from '../../../helpers/firebase';
-import { AgendaApi } from '../../../helpers/request';
+import { firestore } from '@helpers/firebase';
+import { AgendaApi } from '@helpers/request';
 import { LoadingOutlined, CaretRightOutlined, CheckCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
 import ReactPlayer from 'react-player';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
-import { zoomExternoHandleOpen } from '../../../helpers/helperEvent';
-import { UseEventContext } from '../../../context/eventContext';
-import { UseUserEvent } from '../../../context/eventUserContext';
+import { zoomExternoHandleOpen } from '@helpers/helperEvent';
+import { useEventContext } from '@context/eventContext';
+import { useUserEvent } from '@context/eventUserContext';
 import LessonViewedCheck from '../../agenda/LessonViewedCheck';
 import lessonTypeToString from '../lessonTypeToString';
-import QuizProgress from '@/components/quiz/QuizProgress';
-import { activityContentValues } from '@/context/activityType/constants/ui';
+import QuizProgress from '@components/quiz/QuizProgress';
+import { activityContentValues } from '@context/activityType/constants/ui';
 import { useCurrentUser } from '@context/userContext';
-import { ActivityCustomIcon } from '@/components/agenda/components/ActivityCustomIcon';
+import { ActivityCustomIcon } from '@components/agenda/components/ActivityCustomIcon';
 
 const { gotoActivity } = StageActions;
 const { useBreakpoint } = Grid;
 
 function AgendaActivityItem(props) {
-  let history = useHistory();
-  const cEvent = UseEventContext();
-  let urlactivity =
+  const history = useHistory();
+  const cEvent = useEventContext();
+  const urlactivity =
     cEvent && !cEvent?.isByname ? `/landing/${props.event._id}/activity/` : `/event/${cEvent?.nameEvent}/activity/`;
   const screens = useBreakpoint();
   function HandleGoActivity(activity_id) {
@@ -44,9 +44,9 @@ function AgendaActivityItem(props) {
   const [meetingId, setMeetingId] = useState(null);
 
   const timeZone = Moment.tz.guess();
-  let { item, event_image, registerStatus, event } = props;
+  const { item, event_image, registerStatus, event } = props;
 
-  const cEventUser = UseUserEvent();
+  const cEventUser = useUserEvent();
 
   // Take data
   useEffect(() => {
@@ -55,7 +55,7 @@ function AgendaActivityItem(props) {
     const loadData = async () => {
       // Ask if that activity (item) is stored in <ID>_event_attendees
       console.log('item._id', item._id)
-      let activity_attendee = await firestore
+      const activity_attendee = await firestore
         .collection(`${item._id}_event_attendees`)
         .doc(cEventUser.value._id)
         .get(); //checkedin_at
@@ -93,7 +93,7 @@ function AgendaActivityItem(props) {
         .doc(item._id)
         .onSnapshot((info) => {
           if (!info.exists) return;
-          let related_meetings = info.data().related_meetings;
+          const related_meetings = info.data().related_meetings;
           setRelatedMeetings(related_meetings);
         });
     };
@@ -135,7 +135,6 @@ function AgendaActivityItem(props) {
 
   return (
     <>
-      {/* {console.log('%c🆗 - item', 'color: #00A6ED;', typeActivity)} */}
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           className='agendaHover ' /* efect-scale */
@@ -338,171 +337,6 @@ function AgendaActivityItem(props) {
                   backgroundColor: cEvent.value.styles.toolbarDefaultBg,
                 }}>
                 <Row gutter={[8, 8]} style={{paddingLeft: '10px'}}>
-                  {/* <Col md={4} lg={4} xl={4} className='agenda-hora'>
-                    <div>
-                      {!props.hasDate && item.datetime_end ? (
-                        <Timeline>
-                          <Timeline.Item
-                            color={!validateTypeActivity(typeActivity) ? 'transparent' : cEvent.value.styles.textMenu}>
-                            <div style={{ color: cEvent.value.styles.textMenu }}>
-                              {!props.hasDate && item.datetime_start && validateTypeActivity(typeActivity)
-                                ? Moment.tz(
-                                    item.datetime_start,
-                                    'YYYY-MM-DD h:mm',
-                                    props.event?.timezone ? props.event.timezone : 'America/Bogota'
-                                  )
-                                    .tz(timeZone)
-                                    .format('h:mm a')
-                                : ''}
-                              {!props.hasDate && item.datetime_start && validateTypeActivity(typeActivity) && (
-                                <p className='ultrasmall' style={{ color: cEvent.value.styles.textMenu }}>
-                                  {Moment.tz(
-                                    item.datetime_start,
-                                    'YYYY-MM-DD HH:mm',
-                                    props.event?.timezone ? props.event.timezone : 'America/Bogota'
-                                  )
-                                    .tz(timeZone)
-                                    .format(' (Z') +
-                                    ' ' +
-                                    timeZone +
-                                    ') '}
-                                </p>
-                              )}
-                              {item.platform && (
-                                <div style={{ textAlign: 'center' }} className='contenedor-estado-agenda'>
-                                  {meetingState == 'open_meeting_room' ? (
-                                    <CaretRightOutlined
-                                      style={{
-                                        fontSize: '45px',
-                                        marginTop: '10px',
-                                        color: '#DD1616',
-                                      }}
-                                    />
-                                  ) : meetingState == 'closed_meeting_room' ? (
-                                    <LoadingOutlined
-                                      style={{
-                                        fontSize: '45px',
-                                        marginTop: '10px',
-                                        color: cEvent.value.styles.textMenu,
-                                      }}
-                                    />
-                                  ) : meetingState == 'ended_meeting_room' && item.video ? (
-                                    <CaretRightOutlined
-                                      style={{
-                                        fontSize: '45px',
-                                        marginTop: '10px',
-                                        color: cEvent.value.styles.textMenu,
-                                      }}
-                                    />
-                                  ) : meetingState == 'ended_meeting_room' ? (
-                                    <CheckCircleOutlined
-                                      style={{
-                                        fontSize: '45px',
-                                        marginTop: '10px',
-                                        color: cEvent.value.styles.textMenu,
-                                      }}
-                                    />
-                                  ) : (
-                                    <></>
-                                  )}
-
-                                  {(meetingState == '' || meetingState == null) && <></>}
-                                  <p style={{ fontSize: '12px', color: cEvent.value.styles.textMenu }}>
-                                    {meetingState == 'open_meeting_room'
-                                      ? intl.formatMessage({ id: 'live' })
-                                      : meetingState == 'ended_meeting_room' && item.video
-                                      ? intl.formatMessage({
-                                          id: 'live.ended.video.modify',
-                                        })
-                                      : meetingState == 'ended_meeting_room'
-                                      ? intl.formatMessage({ id: 'live.ended' })
-                                      : meetingState == 'closed_meeting_room'
-                                      ? intl.formatMessage({
-                                          id: 'live.closed',
-                                        })
-                                      : '     '}
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-                          </Timeline.Item>
-                          {validateTypeActivity(typeActivity) && (
-                            <Timeline.Item
-                              color={event.styles.toolbarDefaultBg}
-                              style={{ paddingBottom: '5px', color: cEvent.value.styles.textMenu }}>
-                              {!props.hasDate &&
-                                item.datetime_end &&
-                                Moment.tz(
-                                  item.datetime_end,
-                                  'YYYY-MM-DD HH:mm',
-                                  props.event?.timezone ? props.event.timezone : 'America/Bogota'
-                                )
-                                  .tz(timeZone)
-                                  .format('h:mm a')}
-                              {!props.hasDate && item.datetime_end && (
-                                <p className='ultrasmall'>
-                                  {Moment.tz(
-                                    item.datetime_end,
-                                    'YYYY-MM-DD HH:mm',
-                                    props.event?.timezone ? props.event.timezone : 'America/Bogota'
-                                  )
-                                    .tz(timeZone)
-                                    .format(' (Z') +
-                                    ' ' +
-                                    timeZone +
-                                    ') '}
-                                </p>
-                              )}
-                            </Timeline.Item>
-                          )}
-                        </Timeline>
-                      ) : (
-                        <div
-                          style={{
-                            textAlign: 'center',
-                            marginTop: '25%',
-                            marginBottom: '25%',
-                          }}>
-                          {meetingState == 'open_meeting_room' ? (
-                            <CaretRightOutlined
-                              style={{
-                                fontSize: '60px',
-                                marginTop: '10px',
-                                color: '#DD1616',
-                              }}
-                            />
-                          ) : meetingState == 'closed_meeting_room' ? (
-                            <LoadingOutlined
-                              style={{ fontSize: '60px', marginTop: '10px', color: cEvent.value.styles.textMenu }}
-                            />
-                          ) : meetingState == 'ended_meeting_room' && item.video ? (
-                            <CaretRightOutlined
-                              style={{ fontSize: '60px', marginTop: '10px', color: cEvent.value.styles.textMenu }}
-                            />
-                          ) : meetingState == 'ended_meeting_room' ? (
-                            <CheckCircleOutlined
-                              style={{ fontSize: '60px', marginTop: '10px', color: cEvent.value.styles.textMenu }}
-                            />
-                          ) : (
-                            <></>
-                          )}
-
-                          {(meetingState == '' || meetingState == null) && <></>}
-                          <p style={{ fontSize: '16px', color: cEvent.value.styles.textMenu }}>
-                            {meetingState == 'open_meeting_room'
-                              ? intl.formatMessage({ id: 'live' })
-                              : meetingState == 'ended_meeting_room' && item.video
-                              ? intl.formatMessage({ id: 'live.ended.video.modify' })
-                              : meetingState == 'ended_meeting_room'
-                              ? intl.formatMessage({ id: 'live.ended' })
-                              : meetingState == 'closed_meeting_room'
-                              ? intl.formatMessage({ id: 'live.closed' })
-                              : '     '}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </Col>*/}
                   <Col
                     md={24}
                     lg={24}
@@ -535,40 +369,6 @@ function AgendaActivityItem(props) {
                             {item && item.space && item.space.name}
                           </span>
                         </Row>
-                        {/* <Row style={{ width: '100%' }}>
-                          {item.description !== null && item.description !== '<p><br></p>' && (
-                            <div
-                              style={
-                                item.description !== null && item.description !== '<p><br></p>' ? {} : { display: '' }
-                              }>
-                              {
-                                <>
-                                  {/*  * /}
-                                  <Comment
-                                    className='descripcion'
-                                    content={
-                                      cEvent.value?._id !== '62c5e89176dfb307163c05a9' && (
-                                        <div
-                                          style={{
-                                            overflow: 'hidden',
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: '3',
-                                            WebkitBoxOrient: 'vertical',
-                                            width: '100%',
-                                            color: cEvent.value.styles.textMenu,
-                                          }}
-                                          dangerouslySetInnerHTML={{
-                                            __html: item.description,
-                                          }}
-                                        />
-                                      )
-                                    }
-                                  />
-                                </>
-                              }
-                            </div>
-                          )}
-                        </Row> */}
                       </Row>
                       <Row style={{ marginRight: '8px', marginLeft: '0px' }}>
                           {item.hosts.length > 0 &&
@@ -580,16 +380,6 @@ function AgendaActivityItem(props) {
                                     <Typography.Text style={{ color: cEvent.value.styles.textMenu, fontWeight: '400' }}>
                                       {speaker.name}
                                     </Typography.Text>
-                                    {/* <table>
-                                    <tr>
-                                      <th>
-                                        <Avatar size={25} src={speaker.image} />
-                                      </th>
-                                      <th style={{ marginRight: '12px' }}>
-                                        <div className='speaker-name'>{speaker.name}</div>
-                                      </th>
-                                    </tr>
-                                  </table> */}
                                   </Space>
                                 ))}
                               </>
@@ -630,50 +420,6 @@ function AgendaActivityItem(props) {
                         </Row>
                     </Space>
                   </Col>
-                  {/* <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight: '220px' }}>
-                    {/* {console.log(meetingState, 'meetingState', item.video)} * /}
-                    {/* Aplicada la condición ya que no mostraba el video * /}
-                    {(meetingState === 'ended_meeting_room' ||
-                      meetingState === '' ||
-                      meetingState === null ||
-                      meetingState === 'null') && (
-                      <>
-                        {item.video && (
-                          <div
-                            style={{
-                              position: 'absolute',
-                              alignItems: 'center',
-                              width: '100%',
-                              height: '100%',
-                              display: 'flex',
-                              justifyContent: 'center',
-                            }}>
-                            <Button
-                              style={{
-                                borderRadius: '10px',
-                                width: '100px',
-                                height: '60px',
-                                opacity: '0.6',
-                                border: 'none',
-                              }}
-                              icon={<PlayCircleOutlined style={{ fontSize: '50px' }} />}
-                            />
-                          </div>
-                        )}
-
-                        <img
-                          className='agenda-imagen'
-                          src={
-                            item.image
-                              ? item.image
-                              : event_image
-                              ? event_image
-                              : 'https://via.placeholder.com/150x100/FFFFFF/FFFFFF?text=imagen'
-                          }
-                        />
-                      </>
-                    )}
-                  </Col>*/}
                   <LessonViewedCheck isTaken={isTaken} />
                 </Row>
               </Card>

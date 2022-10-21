@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Form, Select, Radio, Space, List, Typography, Image } from 'antd';
-import AgendaContext from '../../../context/AgendaContext';
+import AgendaContext from '@context/AgendaContext';
 import WowzaStreamingPanel from './components/wowzaStreamingPanel';
 import VimeoStreamingPanel from './components/vimeoStreamingPanel';
 
@@ -124,16 +124,10 @@ export default function RoomConfig(props) {
                   ),
                 }}>
                 <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => setPlatform(e)}>
-                  {/* <Option value={''}>Seleccionar...</Option> */}
                   <Option value='wowza'>
                     Evius streaming <Typography.Text type='secondary'>(recomendado)</Typography.Text>
                   </Option>
                   <Option value='vimeo'>Vimeo</Option>
-                  {/* <Option value='youtube'>Youtube</Option> */}
-                  {/* <Option value='zoom'>Zoom</Option>
-                      <Option value='zoomExterno'>ZoomExterno</Option> */}
-
-                  {/* <Option value='dolby'>Dolby</Option> */}
                 </Select>
               </Form.Item>
 
@@ -212,13 +206,6 @@ export default function RoomConfig(props) {
                     </Typography.Text>
                     <Space direction='vertical'>
                       {/** create a meeting or reuse and old one */}
-                      {/* <Radio.Group onChange={onChange} value={useAlreadyCreated}>
-                        {(platform == 'zoom' || platform == 'zoomExterno' || platform == 'wowza') && (
-                          <Radio value={false}>Crear nueva transmisión</Radio>
-                        )}
-                        <Radio value={true}>Tengo ya una transmisión que quiero usar</Radio>
-                      </Radio.Group> */}
-
                       {/** StoreAlreadyCreatedMeeting */}
                       {useAlreadyCreated ? (
                         <StoreAlreadyCreatedMeeting {...{ setMeetingId, meeting_id }} />

@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
-import { CertsApi, RolAttApi } from '../../helpers/request';
+import { CertsApi, RolAttApi } from '@helpers/request';
 import { useHistory } from 'react-router-dom';
-import { handleRequestError } from '../../helpers/utils';
+import { handleRequestError } from '@helpers/utils';
 import { Row, Col, Form, Input, Modal, Select, Button, Upload, Image } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined } from '@ant-design/icons';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
+import Header from '@antdComponents/Header';
+import BackTop from '@antdComponents/BackTop';
 import ReactQuill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { toolbarEditor } from '../../helpers/constants';
+import { toolbarEditor } from '@helpers/constants';
 import dayjs from 'dayjs';
-import { firestore } from '../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import { withRouter } from 'react-router-dom';
-import { DispatchMessageService } from '../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -217,7 +217,7 @@ const Certificado = (props) => {
       setCertificado({ ...certificado, imageFile: window.URL.createObjectURL(file.originFileObj) });
       //Se crea un elemento Image para convertir la image en Base64 y tener el tipo y el formato
 
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsDataURL(file.originFileObj);
       reader.onload = () => {
         const imageData = { data: reader.result, full: file.type, type: file.type.split('/')[1] };
@@ -252,8 +252,8 @@ const Certificado = (props) => {
             if (item.tag.includes('event.')) value = props.event[item.value];
             else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin tiquete';
             else if (item.tag.includes('rol.')) {
-              let rols = roles.find((rol1) => rol1._id === oneUser.rol_id);
-              let rolName = rols ? rols.name.toUpperCase() : 'Sin rol';
+              const rols = roles.find((rol1) => rol1._id === oneUser.rol_id);
+              const rolName = rols ? rols.name.toUpperCase() : 'Sin rol';
               value = rolName;
             } else value = oneUser.properties[item.value];
             if (item.tag) {
@@ -416,19 +416,6 @@ const Certificado = (props) => {
 
           <Form.Item label={'Certificado'}>
             <EviusReactQuill name='content' data={certificado.content} handleChange={chgTxt} />
-            {/* <div className='editor-certificado'>
-              <div style={{ border: '1px solid', width: '800px', position: 'relative', margin: 'auto' }}>
-                <div className='texto-certificado'>
-                  <ReactQuill
-                    id='certContent'
-                    value={certificado.content}
-                    name={'content'}
-                    onChange={chgTxt}
-                    modules={toolbarEditor}
-                  />
-                </div>
-              </div>
-            </div> */}
           </Form.Item>
         </Col>
       </Row>

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Form, Input, Col, Row, Button, Spin, Card } from 'antd';
-import { app } from '../../../helpers/firebase';
+import { app } from '@helpers/firebase';
 import FormTags from './constants';
 import { injectIntl } from 'react-intl';
 
@@ -11,7 +11,7 @@ const textLeft = {
 class UserLogin extends Component {
   constructor(props) {
     super(props);
-    //this.reCaptchaRef = React.createRef();
+    //this.reCaptchaRef = createRef();
     this.state = {
       user: {},
       emailError: false,
@@ -34,7 +34,7 @@ class UserLogin extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    let { loading } = this.state;
+    const { loading } = this.state;
 
     if (prevState.loading !== loading) {
       if (!loading) {
@@ -45,7 +45,7 @@ class UserLogin extends Component {
   }
 
   initializeCaptcha = () => {
-    let { initialValues } = this.state;
+    const { initialValues } = this.state;
     if (Object.entries(initialValues).length == 0) {
       //
       window.recaptchaVerifier = new app.auth.RecaptchaVerifier(this.reCaptchaRef.current.id, {
@@ -123,7 +123,7 @@ class UserLogin extends Component {
 
   handleVerificationWithPhoneNumber = (values) => {
     this.setState({ loading: false });
-    var credential = app.auth.PhoneAuthProvider.credential(
+    const credential = app.auth.PhoneAuthProvider.credential(
       window.confirmationResult.verificationId,
       values.verificationCode
     );
@@ -160,50 +160,7 @@ class UserLogin extends Component {
     const { formTexts } = this.state;
     const { intl } = this.props;
     return (
-      //<div style={{background: '#ffffff', padding: '50px', width: '450px', borderRadius: '15px', margin: 'auto'}}>
       <Card title={intl.formatMessage({ id: 'restore.login.title' })} bodyStyle={textLeft}>
-        {/* {this.state.enabledLoginForm && (
-      <Form onFinish={this.handleLoginWithPhoneNumber}>
-        <Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <Form.Item
-              label="Celular"
-              name="phone"
-              rules={[
-                {
-                  required: true,
-                  message: 'Ingrese nÃºmero de celular',
-                },
-              ]}
-              >
-                <Input />
-            </Form.Item>
-          </Col>
-        </Row>  
-        <Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <div ref={ this.reCaptchaRef } id="este-test"></div>
-          </Col>
-        </Row>
-        {this.state.errorLogin && (
-          <Row gutter={[24, 24]}>
-            <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-              <span style={{color: 'red'}}>Sucedió un error, verifique la información ingresada</span>
-            </Col>
-          </Row> 
-        )}    
-        <Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Ingresar
-              </Button>
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form>
-    )} */}
-
         {/* Inicio  de formulario para autenticación con Email y contraseña */}
         {this.state.enabledLoginForm && (
           <Form onFinish={this.handleLoginEmailPassword} onFinishFailed={this.onFinishFailed}>
@@ -260,11 +217,6 @@ class UserLogin extends Component {
             <Row gutter={[24, 24]}>
               <span>Olvidé mi contraseña</span>
             </Row>
-            {/* <Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <div ref={ this.reCaptchaRef } id="este-test"></div>
-          </Col>
-        </Row> */}
           </Form>
         )}
 
@@ -286,11 +238,6 @@ class UserLogin extends Component {
                 </Form.Item>
               </Col>
             </Row>
-            {/* <Row gutter={[24, 24]}>
-        <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-          <div ref={ this.reCaptchaRef } id="este-test"></div>
-        </Col>
-      </Row> */}
             {this.state.errorValidation && (
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>

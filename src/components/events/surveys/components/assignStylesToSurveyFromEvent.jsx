@@ -3,9 +3,9 @@ import 'survey-react/modern.css';
 
 function assignStylesToSurveyFromEvent(eventStyles) {
   /** extrae las propiedades por defecto del thema 'modern' para modificarl los colores */
-  var defaultThemeColors = Survey.StylesManager.ThemeColors['modern'];
+  const defaultThemeColors = Survey.StylesManager.ThemeColors['modern'];
   // Validacion para evitar el color blanco en la ui de la encuesta
-  let color =
+  const color =
     eventStyles.textMenu == '#FFFFFF' || eventStyles.textMenu == '#ffffff'
       ? eventStyles.toolbarDefaultBg
       : eventStyles.textMenu;

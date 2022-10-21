@@ -1,9 +1,9 @@
 import { Col, Modal, Row, List } from 'antd';
 import { useEffect, useState } from 'react';
-import { useContextNewEvent } from '../../../context/newEventContext';
-import { OrganizationApi } from '../../../helpers/request';
+import { useContextNewEvent } from '@context/newEventContext';
+import { OrganizationApi } from '@helpers/request';
 import OptTranmitir from './optTransmitir';
-import { DispatchMessageService } from '../../../context/MessageService';
+import { DispatchMessageService } from '@context/MessageService';
 
 function Transmitir(props) {
   const {
@@ -41,11 +41,11 @@ function Transmitir(props) {
   }, [props.currentUser]);
 
   const createOrganization = async () => {
-    let newOrganization = {
+    const newOrganization = {
       name: props.currentUser?.names || props.currentUser?.name,
     };
     //CREAR ORGANIZACION------------------------------
-    let create = await OrganizationApi.createOrganization(newOrganization);
+    const create = await OrganizationApi.createOrganization(newOrganization);
     console.log('CREATE==>', create);
     if (create) {
       return create;

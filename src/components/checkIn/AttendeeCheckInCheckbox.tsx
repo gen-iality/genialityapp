@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Checkbox, Modal } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import dayjs from 'dayjs';
-import { AttendeeCheckInPropsTypes } from '@/Utilities/types/types';
+import { AttendeeCheckInPropsTypes } from '@Utilities/types/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
 
@@ -11,7 +11,12 @@ import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices'
  * @param {AttendeeCheckInPropsTypes}  - AttendeeCheckInPropsTypes
  * @returns A React component
  */
-const AttendeeCheckInCheckbox = ({ attendee, reloadComponent, checkInAttendeeCallbak }: AttendeeCheckInPropsTypes) => {
+const AttendeeCheckInCheckbox = ({
+  attendee,
+  activityId,
+  reloadComponent,
+  checkInAttendeeCallbak,
+}: AttendeeCheckInPropsTypes) => {
   const [attemdeeCheckIn, setAttemdeeCheckIn] = useState<boolean>(false);
   const [attemdeeCheckedinAt, setAttemdeeCheckedinAt] = useState<any>('');
   const { _id, checked_in, checkedin_at } = attendee || {};
@@ -35,6 +40,7 @@ const AttendeeCheckInCheckbox = ({ attendee, reloadComponent, checkInAttendeeCal
         setAttemdeeCheckIn,
         checkInAttendeeCallbak,
         checkInType: 'Físico',
+        activityId,
       });
       return;
     }
@@ -52,6 +58,7 @@ const AttendeeCheckInCheckbox = ({ attendee, reloadComponent, checkInAttendeeCal
           reloadComponent,
           setAttemdeeCheckIn,
           checkInAttendeeCallbak,
+          activityId,
         });
       },
     });

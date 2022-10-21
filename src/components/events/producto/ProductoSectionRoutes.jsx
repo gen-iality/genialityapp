@@ -2,13 +2,13 @@ import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 /** --------------------
  *  secciones del curso
  * ---------------------*/
-import { UseEventContext } from '../../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import DetailsProduct from './productDetails';
 import ProductList from './productList';
 
 const ProductoSectionRoutes = () => {
-  let { path } = useRouteMatch();
-  let cEvent = UseEventContext();
+  const { path } = useRouteMatch();
+  const cEvent = useEventContext();
 
   if (!cEvent.value) return <h1>Cargando...</h1>;
   return (

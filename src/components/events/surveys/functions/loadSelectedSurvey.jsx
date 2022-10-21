@@ -1,12 +1,12 @@
 import PooledQuestions from '@/classes/PooledQuestions';
-import { SurveysApi } from '../../../../helpers/request';
 import shuffleSurveyQuestion from '../models/shuffleSurveyQuestion';
+import { SurveysApi } from '@helpers/request';
 
 async function loadSelectedSurvey(eventId, idSurvey, userId) {
   /** Este componente nos permite cargar datos de la encuesta seleccionada */
   if (!idSurvey) throw new Error('Missing idSurvey');
 
-  let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
+  const dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
   // The random_survey_count or survey.questions.length
   const sampleCount = dataSurvey.random_survey === undefined ? dataSurvey.questions.length : Math.min(dataSurvey.random_survey_count, dataSurvey.questions.length);
@@ -76,7 +76,7 @@ async function loadSelectedSurvey(eventId, idSurvey, userId) {
     // Permite usar la primera pagina como introduccion
     dataSurvey.firstPageIsStarted = true;
     dataSurvey.startSurveyText = 'Iniciar cuestionario';
-    let textMessage = dataSurvey.initialMessage;
+    const textMessage = dataSurvey.initialMessage;
     dataSurvey['questions'].unshift({
       type: 'html',
       html: `<div style='width: 90%; margin: 0 auto;'>${textMessage}</div>`,
@@ -86,7 +86,7 @@ async function loadSelectedSurvey(eventId, idSurvey, userId) {
   if (dataSurvey['questions'] === undefined) return;
 
   dataSurvey['questions'].forEach((page, index) => {
-    let newPage = page;
+    const newPage = page;
     newPage['isRequired'] = dataSurvey.allow_gradable_survey === 'true' ? false : true;
     /** Se agrega la imagen a la pregunta */
     if (newPage?.image) {

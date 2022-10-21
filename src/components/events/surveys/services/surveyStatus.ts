@@ -1,4 +1,4 @@
-import { QuizStatus } from '@/components/quiz/types';
+import { QuizStatus } from '@components/quiz/types';
 import { firestore } from '@helpers/firebase';
 
 export const getRef = (surveyId: string, userId: string) => {
@@ -55,7 +55,7 @@ export const resetStatusByRestartAnswering = async (surveyId: string, userId: st
   let newTried = triedCount + 1;
   newTried = Math.min(newTried, maxTries);
 
-  let surveyCompleted = status;
+  const surveyCompleted = status;
 
   try {
     await firebaseRef.set(

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal } from 'antd';
 
 const ErrorServe = (props) => {
-  let { errorData } = props;
+  const { errorData } = props;
   const [modal, setModal] = useState(true);
 
   const closeModal = () => {

@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Reorder, getItemStyle, getQuestionListStyle } from './utils';
 import { DragOutlined } from '@ant-design/icons';
 import { Typography, Button, notification } from 'antd';
-import { Actions } from '../../../helpers/request';
+import { Actions } from '@helpers/request';
 
 const { Title } = Typography;
 

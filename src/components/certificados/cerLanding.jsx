@@ -1,11 +1,11 @@
-import { Component } from 'react';
+import { Component, createElement } from 'react';
 import dayjs from 'dayjs';
-import { firestore } from '../../helpers/firebase';
-import { CertsApi, RolAttApi } from '../../helpers/request';
+import { firestore } from '@helpers/firebase';
+import { CertsApi, RolAttApi } from '@helpers/request';
 import { Button, Card, Col, Alert, Modal, Spin, Row } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 
 import certificateImage from '../events/certificateImage';
 
@@ -13,7 +13,7 @@ import certificateImage from '../events/certificateImage';
 
 const IconText = ({ icon, text, onSubmit }) => (
   <Button htmlType='submit' type='primary' onClick={onSubmit}>
-    {React.createElement(icon, { style: { marginRight: 8 } })}
+    {createElement(icon, { style: { marginRight: 8 } })}
     {text}
   </Button>
 );
@@ -52,7 +52,7 @@ class CertificadoLanding extends Component {
   componentDidMount() {
     const { user_properties } = this.props.cEvent.value;
 
-    let fields = user_properties.filter((item) => item.name !== 'names' && item.name !== 'email');
+    const fields = user_properties.filter((item) => item.name !== 'names' && item.name !== 'email');
     const list = [...this.state.tags];
     fields.map((field) =>
       list.push({
@@ -165,7 +165,7 @@ class CertificadoLanding extends Component {
   }
 
   render() {
-    let checkedInUsers = this.props.cEventUser.value ? [this.props.cEventUser.value] : [];
+    const checkedInUsers = this.props.cEventUser.value ? [this.props.cEventUser.value] : [];
 
     return (
       <>
@@ -173,7 +173,6 @@ class CertificadoLanding extends Component {
           <Row gutter={[8, 8]} wrap justify='center'>
             <Col span={24}>
               <Card>
-                {/* {checkedInUsers.length > 0 ? ( */}
                 <>
                   {/* Alert informativo de certificados disponibles */}
                   <Alert message='Certificados disponibles' type='success' />
@@ -192,12 +191,6 @@ class CertificadoLanding extends Component {
                     </div>
                   ))}
                 </>
-                {/* ) : (
-                  <h1
-                    style={{
-                      fontSize: '27px',
-                    }}>{'En este momento no tiene certificados'}</h1>
-                )} */}
               </Card>
             </Col>
           </Row>
@@ -229,5 +222,5 @@ class CertificadoLanding extends Component {
   }
 }
 
-let CertificadoLandingwithContext = withContext(CertificadoLanding);
+const CertificadoLandingwithContext = withContext(CertificadoLanding);
 export default withRouter(CertificadoLandingwithContext);

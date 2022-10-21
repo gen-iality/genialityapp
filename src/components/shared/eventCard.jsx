@@ -29,10 +29,10 @@ class EventCard extends Component {
 
     //Esto sólo va a aplicar para cuando el usuario tiene un plan
     //Se esta validando la fecha en la que se va a bloquear el evento, osea hasta la fecha que tiene acceso
-    let actualDate = new Date(event.datetime_to);
+    const actualDate = new Date(event.datetime_to);
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
-    let blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
-    let formatDate = dayjs(blockedDate).format('DD MMM YYYY');
+    const blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
+    const formatDate = dayjs(blockedDate).format('DD MMM YYYY');
 
     return (
       <div className='animate__animated animate__fadeIn'>
@@ -125,17 +125,6 @@ class EventCard extends Component {
                       ? event.author?.displayName
                       : event.author?.names}
                   </span>
-                  {/* RESTRICIONES */}
-                  {/* {!eventIsActive[event._id] && window.location.toString().includes('myprofile') && (
-                    <Typography.Paragraph style={{ color: 'red' }}>
-                      {blockedEvent && (
-                        <small>
-                          Tu evento está bloqueado desde el {dayjs(event.datetime_to).format('DD MMM YYYY')}
-                          <br /> En la landing estará bloqueado a partir de el {formatDate}
-                        </small>
-                      )}
-                    </Typography.Paragraph>
-                  )} */}
                 </Space>
                 </Link>
               }

@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import GcorePlayer from '../../livetransmision/GcorePlayer';
-import { CurrentUserContext } from '../../../context/userContext';
+import { CurrentUserContext } from '@context/userContext';
 import { Grid } from 'antd';
-import AgendaContext from '../../../context/AgendaContext';
-import { CurrentEventUserContext } from '../../../context/eventUserContext';
+import AgendaContext from '@context/AgendaContext';
+import { CurrentEventUserContext } from '@context/eventUserContext';
 import { getLiveStreamStatus } from '../../../adaptors/gcoreStreamingApi';
 
 const { useBreakpoint } = Grid;
@@ -44,7 +44,7 @@ function GcoreStreamingPlayer({ meeting_id, transmition, activity }) {
       live_stream_status = await getLiveStreamStatus(meeting_id);
       live_stream_status && setLivestreamStatus(live_stream_status);
       console.log('live_stream_status=>', live_stream_status);
-      let timerId = setTimeout(executer_startMonitorStatus, 5000);
+      const timerId = setTimeout(executer_startMonitorStatus, 5000);
       setTimerId(timerId);
     } catch (e) {
       timer_id && clearInterval(timer_id);

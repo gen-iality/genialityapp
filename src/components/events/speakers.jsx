@@ -1,11 +1,11 @@
 import { Component } from 'react';
 
 //custom
-import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../helpers/request';
+import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '@helpers/request';
 import dayjs from 'dayjs';
 import { Card, Avatar, Button, Modal, Row, Col, Tooltip, Typography } from 'antd';
 import { CloseOutlined, UserOutlined } from '@ant-design/icons';
-import withContext from '../../context/withContext';
+import withContext from '@context/withContext';
 import ReactQuill from 'react-quill';
 
 const { Meta } = Card;
@@ -29,10 +29,10 @@ class Speakers extends Component {
 
   async componentDidMount() {
     //Se hace la consulta a la api de speakers
-    let speakers = await SpeakersApi.byEvent(this.props.cEvent.value._id);
+    const speakers = await SpeakersApi.byEvent(this.props.cEvent.value._id);
 
     //consultamos las categorias del curso
-    let categories = await CategoriesAgendaApi.byEvent(this.props.cEvent.value._id);
+    const categories = await CategoriesAgendaApi.byEvent(this.props.cEvent.value._id);
 
     //Recorremos las categorias si tienen el campo orden
     //en caso que no lo tengan le asignamos el ultimo orden basado en el maximo valor que exista
@@ -101,7 +101,7 @@ class Speakers extends Component {
 
   async activitySpeakers(eventId, id) {
     //Se consulta la api para traer la informacion de lecciones por conferencista
-    let InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(eventId, id);
+    const InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(eventId, id);
     //Se manda al estado la consulta
     this.setState({
       activityesBySpeaker: InfoActivityesBySpeaker.data,
@@ -155,22 +155,22 @@ class Speakers extends Component {
       renderSpeakerCategories,
     } = this.state;
 
-    let eventId = this.props.cEvent.value._id;
+    const eventId = this.props.cEvent.value._id;
 
-    let eventColor = this.props.cEvent.value.styles.toolbarDefaultBg; // outline:`5px dotted ${eventColor}`, outlineOffset:'10px' a los avatar
+    const eventColor = this.props.cEvent.value.styles.toolbarDefaultBg; // outline:`5px dotted ${eventColor}`, outlineOffset:'10px' a los avatar
 
     return (
       <div style={{ padding: '20px' }}>
         {renderSpeakerCategories && speakerCategories.length && (
           <>
-            {speakerCategories.map((category) => (
+            {speakerCategories.map((category, index) => (
               <>
                 {category.hasSpeaker && (
                   <>
                     {speakersWithCategory.length && (
                       <>
                         {speakersWithCategory[category.order].length && (
-                          <Row wrap gutter={[16, 16]} justify='center'>
+                          <Row wrap key={index} gutter={[16, 16]} justify='center'>
                             <div
                               style={{
                                 width: '98%',
@@ -258,16 +258,6 @@ class Speakers extends Component {
                                             <Paragraph style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
                                               {speaker.profession}
                                             </Paragraph>
-                                            {/* <p
-                                              style={{
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                              }}>
-                                              <Tooltip placement='bottomLeft' title={speaker.profession}>
-                                                <span>{speaker.profession}</span>
-                                              </Tooltip>
-                                            </p> */}
                                           </div>,
                                         ]}
                                       />
@@ -287,7 +277,6 @@ class Speakers extends Component {
           </>
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
-        {/* <div style={{ padding: '40px' }}> */}
         <Row wrap gutter={[16, 16]} justify='center' style={{ padding: '40px' }}>
           {/* Mapeo de datos para mostrar los Speakers */}
           {speakersWithoutCategory.length > 0 &&
@@ -339,25 +328,6 @@ class Speakers extends Component {
                       }
                       actions={speaker.description && [this.btnViewMore(speaker)]}>
                       <Meta
-                        /* title={[
-                            <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
-                              <Title level={4} >
-                                {speaker.name}
-                              </Title>
-                              <p
-                                style={{
-                                  fontSize: '18px',
-                                  fontWeight: 'bold',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                  overflow: 'hidden',
-                                }}>
-                                <Tooltip placement='bottomLeft' title={speaker.name}>
-                                  {speaker.name}
-                                </Tooltip>
-                              </p>
-                            </div>,
-                          ]} */
                         description={[
                           <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
                             <Title level={4} style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
@@ -366,11 +336,6 @@ class Speakers extends Component {
                             <Paragraph style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
                               {speaker.profession}
                             </Paragraph>
-                            {/* <p style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                                <Tooltip placement='bottomLeft' title={speaker.profession}>
-                                  <span>{speaker.profession}</span>
-                                </Tooltip>
-                              </p> */}
                           </div>,
                         ]}
                       />
@@ -380,7 +345,6 @@ class Speakers extends Component {
               </>
             ))}
         </Row>
-        {/* </div> */}
 
         {/* Modal de Speakers para mostrar la información del conferencista junto con sus lecciones */}
 
@@ -480,5 +444,5 @@ class Speakers extends Component {
   }
 }
 
-let SpeakerswithContext = withContext(Speakers);
+const SpeakerswithContext = withContext(Speakers);
 export default SpeakerswithContext;

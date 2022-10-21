@@ -7,12 +7,11 @@ import Contact from './contact';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { setTopBanner } from '../../../redux/topBanner/actions';
-//import { useLocation } from "react-router-dom";
 import { getEventCompany } from '../../empresas/services.js';
 import { useState } from 'react';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import Feedback from './feedback.jsx';
-import { UseEventContext } from '../../../context/eventContext';
+import { useEventContext } from '@context/eventContext';
 import ReactPlayer from 'react-player';
 
 const { useBreakpoint } = Grid;
@@ -24,7 +23,7 @@ const FeriasDetail = (props) => {
 
   const { Title } = Typography;
 
-  let cEvent = UseEventContext();
+  const cEvent = useEventContext();
 
   const colorTexto = cEvent.value.styles.textMenu;
   const colorFondo = cEvent.value.styles.toolbarDefaultBg;
@@ -41,8 +40,8 @@ const FeriasDetail = (props) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     const { match } = props;
-    let eventId = match.params.event_id;
-    let idCompany = match.params.id;
+    const eventId = match.params.event_id;
+    const idCompany = match.params.id;
     //tabs quemados por visibilidad de cliente ya que no se tenia información
     if (eventId === '60cb7c70a9e4de51ac7945a2') {
       setVisibleTab(false);
@@ -54,7 +53,7 @@ const FeriasDetail = (props) => {
   }, []);
 
   const obtenerEmpresa = async (eventId, idCompany) => {
-    let resp = await getEventCompany(eventId, idCompany);
+    const resp = await getEventCompany(eventId, idCompany);
     return resp;
   };
 
@@ -143,7 +142,6 @@ const FeriasDetail = (props) => {
             <TabPane tab='Contactos' key='3'>
               {/* componente  de contactos */}
               <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
-                {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
                 {companyDetail && companyDetail.advisor.length > 0 ? (
                   companyDetail.advisor.map((contactos, index) => (
                     <Contact
@@ -191,37 +189,6 @@ const FeriasDetail = (props) => {
             </TabPane>
           )}
         </Tabs>
-
-        {/* componente  de Productos */}
-        {/* <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '6vw' }}>
-        <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span>
-        <div style={{ paddingLeft: '5vw', paddingRight: '5vw', marginTop: '6vw' }}>
-          {
-            product.map((prod)=>
-            <Product
-              imgProduct={prod.imgProduct}
-              title={prod.title}
-              etiqueta={prod.etiqueta}
-              description={prod.description} />
-            )
-          } </div>    
-      </div> */}
-
-        {/* componente  de contactos */}
-        {/* <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '6vw' }}>
-          <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span>
-            {
-            contact.map((contactos)=>
-              <Contact
-              img={contactos.img} 
-              name={contactos.name}
-              position={contactos.position}
-              tel={contactos.tel}
-              email={contactos.email}
-                /> 
-            )
-            }
-        </div> */}
       </div>
     </div>
   );

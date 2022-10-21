@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useHelper } from '../../../context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row, Grid, Space } from 'antd';
-import WithEviusContext from '../../../context/withContext';
+import WithEviusContext from '@context/withContext';
 import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
 import ModalSpeaker from '../modalSpeakers';
@@ -14,10 +14,10 @@ const { Title } = Typography;
 const { useBreakpoint } = Grid;
 
 const AditionalInformation = (props) => {
-  let { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useHelper();
+  const { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useHelper();
   const intl = useIntl();
   const [activeTab, setActiveTab] = useState('description');
-  let [idSpeaker, setIdSpeaker] = useState(false);
+  const [idSpeaker, setIdSpeaker] = useState(false);
   const screens = useBreakpoint();
 
   function handleChangeLowerTabs(tab) {
@@ -62,7 +62,6 @@ const AditionalInformation = (props) => {
               <div></div>
             ) : (
               <div className='List-conferencistas'>
-                {/* <Title level={5}>{intl.formatMessage({ id: 'title.panelists' })} </Title> */}
                 <p style={{ marginTop: '5%', marginBottom: '5%' }}>
                   {props.orderedHost.length > 0 ? (
                     <Row>

@@ -1,5 +1,4 @@
-// import withContext from '../../../context/withContext';
-import { TypeActivityProvider } from '../../../context/typeactivity/typeActivityProvider';
+import { TypeActivityProvider } from '@context/typeactivity/typeActivityProvider';
 
 import SmartInitialView from './SmartInitialView';
 
@@ -38,6 +37,5 @@ function SmartTipeOfActivity(props: SmartTipeOfActivityProps) {
     </TypeActivityProvider>
   );
 }
-// const TipeOfActivityWithContext = withContext(TipeOfActivity);
 
 export default SmartTipeOfActivity;

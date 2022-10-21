@@ -1,5 +1,5 @@
 import { Component, Fragment, useState } from 'react';
-import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
+import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '@helpers/request';
 /* import { toast } from 'react-toastify'; */
 import { FormattedMessage, useIntl } from 'react-intl';
 import DatosModal from './modal';
@@ -16,13 +16,13 @@ import {
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import CMS from '../../newComponent/CMS';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@helpers/firebase';
 import ModalCreateTemplate from '../../shared/modalCreateTemplate';
-import Header from '../../../antdComponents/Header';
-import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../../context/MessageService';
+import Header from '@antdComponents/Header';
+import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+import { DispatchMessageService } from '@context/MessageService';
 import { createFieldForCheckInPerDocument } from './utils';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -76,8 +76,8 @@ class Datos extends Component {
     try {
       const organizationId = this?.organization?._id;
       let fields = [];
-      let fieldsReplace = [];
-      let checkInFieldsIds = [];
+      const fieldsReplace = [];
+      const checkInFieldsIds = [];
       if (
         (organizationId && !this.props.eventId && this.props.edittemplate) ||
         (organizationId && !this.props.eventId && !this.props.edittemplate)
@@ -122,7 +122,7 @@ class Datos extends Component {
   };
   //Permite asignarle un index a los elementos
   updateIndex = (fields) => {
-    for (var i = 0; i < fields.length; i++) {
+    for (let i = 0; i < fields.length; i++) {
       fields[i].index = i;
       fields[i].order_weight = i + 1;
     }
@@ -161,9 +161,9 @@ class Datos extends Component {
           .then((resp) => {
             if (resp.docs.length > 0) {
               resp.docs.map((doc) => {
-                var datos = doc.data();
-                var objectP = datos.properties;
-                var properties = objectP;
+                const datos = doc.data();
+                let objectP = datos.properties;
+                const properties = objectP;
                 objectP = { ...objectP, pesovoto: properties && properties.pesovoto ? properties.pesovoto : 1 };
                 datos.properties = objectP;
                 firestore
@@ -213,7 +213,7 @@ class Datos extends Component {
         await this.props.orderFields(this.state.properties);
       } else if (this.eventId && !organizationId) {
         // && this.props.byEvent condición que no esta llegando
-        let token = await GetTokenUserFirebase();
+        const token = await GetTokenUserFirebase();
         await Actions.put(`api/events/${this.props.eventId}?token=${token}`, this.state.properties);
       } else {
         await this.props.orderFields(this.state.isEditTemplate.datafields, this.state.isEditTemplate, this.updateTable);
@@ -282,7 +282,7 @@ class Datos extends Component {
   };
   //Borrar dato de la lista
   removeField = async (item, checkInFieldsDelete) => {
-    let self = this;
+    const self = this;
 
     const onHandlerRemove = async () => {
       try {
@@ -621,38 +621,6 @@ class Datos extends Component {
                   </Tooltip>
                 )}
               </Col>
-              {/* {key.name !== 'email' && key.name !== 'contrasena' && (
-                <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
-              )}
-            </Col>
-            <Col>
-              {key.name !== 'email' &&
-                key.name !== 'names' &&
-                key.type !== 'checkInField' &&
-                key.name !== 'birthdate' &&
-                key.name !== 'bloodtype' &&
-                key.name !== 'gender' && (
-                  <Tooltip placement='topLeft' title='Eliminar'>
-                    <Button
-                      key={`removeAction${key.index}`}
-                      id={`removeAction${key.index}`}
-                      onClick={() => this.removeField(key._id || key.name)}
-                      icon={<DeleteOutlined />}
-                      type='danger'
-                      size='small'
-                    />
-                  </Tooltip>
-                )}
-            </Col>
-            {/* {key.name !== 'email' && key.name !== 'contrasena' && (
-              <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
-            )}
-            {key.name !== 'email' && key.name !== 'names' && key.name !== 'contrasena' && (
-              <DeleteOutlined
-                style={{ float: 'right' }}
-                onClick={() => this.setState({ deleteModal: key._id || key.name })}
-              />
-            )} */}
             </Row>
           );
         },
@@ -754,12 +722,6 @@ class Datos extends Component {
               </Fragment>
             </TabPane>
           )}
-
-          {/* {this.props.eventId && this.props.type != 'organization' && (
-            <TabPane tab='Campos relacionados' key='2'>
-              <RelationField eventId={this.props.eventId} fields={fields} />
-            </TabPane>
-          )} */}
 
           {this.props.type == 'organization' && (
             <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>

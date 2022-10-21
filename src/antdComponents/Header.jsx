@@ -1,15 +1,14 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
 import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
-import { UseEventContext } from '@/context/eventContext';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
-//import { UseCurrentUser } from '../context/userContext';
+import { useEventContext } from '@context/eventContext';
+import { useHelper } from '@context/helperContext/hooks/useHelper';
 
 const { Title } = Typography;
 
 const Header = (props) => {
   const history = useHistory();
-  //let cUser = UseCurrentUser();
+  //const cUser = useCurrentUser();
   const { eventIsActive } = useHelper();
   const {
     title, //titulo del encabezado
@@ -48,21 +47,12 @@ const Header = (props) => {
           {title}
         </Tooltip>
       </Title>
-      {/* <small>
-        {listLenght?.length === cUser.value.plan.availables.speakers && (
-          <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
-        )}
-        {messageHeaderAlert && (
-          <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
-        )}
-      </small> */}
       {!eventIsActive && window.location.toString().includes('eventadmin') && (
         <Typography.Text style={{ color: 'red' }}>Tu curso se encuentra bloqueado</Typography.Text>
       )}
       {description && <p>{description}</p>}
       <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
         <Col>{extra && <div>{extra}</div>}</Col>
-        {/* {listLenght?.length !== cUser.value.plan.availables.speakers && ( */}
         <Col>
           {addUrl && (
             <Link to={addUrl}>
@@ -86,7 +76,6 @@ const Header = (props) => {
             </Button>
           )}
         </Col>
-        {/* )} */}
         <Col>
           {save && (
             <Button
