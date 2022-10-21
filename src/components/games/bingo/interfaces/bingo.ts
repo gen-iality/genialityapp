@@ -24,6 +24,8 @@ export interface AssignmentCardsProps {
   generateBingoForAllUsers: () => void;
   generateBingoForExclusiveUsers: () => void;
   listUsers: listUsers[];
+  bingo: Bingo;
+  bingoPrint: BingoPrintProps[];
 }
 export interface listUsers {
   bingo: boolean;
@@ -41,6 +43,13 @@ export interface BingoAppearance {
   background_image: string;
   background_color: string;
   dial_image: string;
+}
+
+export interface BingoPrintProps {
+  names: string;
+  email: string;
+  id: string;
+  values: RamdonBingoValue[];
 }
 
 export interface RamdonBingoValue {

@@ -33,6 +33,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
     setDemonstratedBallots,
     getBingoListener,
     bingoData,
+    bingoPrint,
   } = useDrawerBingo();
   const { bingo } = useBingo();
 
@@ -132,17 +133,9 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
       {bingo && (
         <PrintComponent
           bingo={bingo}
-          arrayDataBingo={arrayDataBingo}
           bingoCardRef={bingoCardRef}
           cardboardCode={cardboardCode}
-          bingoUsers={[
-            {
-              names: '',
-              email: '',
-              values_bingo_card: arrayDataBingo,
-              _id: '222',
-            },
-          ]}
+          bingoUsers={bingoPrint}
         />
       )}
     </Drawer>

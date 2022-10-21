@@ -7,7 +7,6 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 export default function PrintCardBoard({ bingoCardRef, cardboardCode }: { bingoCardRef: any; cardboardCode: string }) {
-  console.log('🚀 ~ file: PrintCardBoard.tsx ~ line 10 ~ PrintCardBoard ~ bingoCardRef', bingoCardRef);
   const [loading, setLoading] = useState(false);
   const handlePrintHook = useReactToPrint({
     content: () => bingoCardRef.current,

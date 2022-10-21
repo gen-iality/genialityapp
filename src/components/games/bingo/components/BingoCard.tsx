@@ -24,6 +24,7 @@ const BingoCard = forwardRef(
     changeValueLocalStorage,
     getBingoListener,
     setOpenOrClose,
+    isPrint,
   }: BingoCardInterface) => {
     useEffect(() => {
       const unSuscribe = getBingoListener();

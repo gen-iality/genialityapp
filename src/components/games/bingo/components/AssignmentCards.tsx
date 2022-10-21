@@ -1,17 +1,22 @@
 import { CheckCircleOutlined, CloseCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Input, List, Row, Space, Typography } from 'antd';
+import { Avatar, Button, Card, Col, List, Row, Space, Typography } from 'antd';
 import { AssignmentCardsProps } from '../interfaces/bingo';
 import SearchUser from './SearchUser';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import AssignmentCard from './AssignmentCard';
 import PrintComponent from './PrintComponent';
 import PrintCardBoard from './PrintCardBoard';
+
 export default function AssignmentCards({
   generateBingoForAllUsers,
   generateBingoForExclusiveUsers,
   listUsers,
+  bingo,
+  bingoPrint,
 }: AssignmentCardsProps) {
   const [keyboard, setKeyboard] = useState('');
   const [searchData, setDataSearchData] = useState<any[]>([]);
+  const bingoCardRef = useRef();
   const onSubmit = (values: string) => {
     const userSearch = listUsers.filter(
       (user) =>
@@ -48,9 +53,7 @@ export default function AssignmentCards({
                 Generar cartones faltantes
               </Button>
             </Space>
-            {/* <PrintCardBoard 
-            
-            /> */}
+            <PrintCardBoard bingoCardRef={bingoCardRef} cardboardCode='AlUserBingo' />
           </Row>
           <br />
           <SearchUser onSubmit={onSubmit} handleChange={handleChange} keyboard={keyboard} />
@@ -59,37 +62,19 @@ export default function AssignmentCards({
             dataSource={searchData}
             className='desplazar'
             style={{ marginTop: '10px', minHeight: '100%', maxHeight: '60vh', overflowY: 'scroll' }}
-            renderItem={(user: any) => (
-              <List.Item
-                key={user?._id}
-                actions={[
-                  <>
-                    {user?.bingo ? (
-                      <CheckCircleOutlined style={{ color: 'green', fontSize: '18px' }} />
-                    ) : (
-                      <CloseCircleOutlined style={{ color: 'red', fontSize: '18px' }} />
-                    )}
-                  </>,
-                ]}>
-                <List.Item.Meta
-                  avatar={
-                    user?.properties?.picture ? (
-                      <Avatar src={user?.properties?.picture} size={47} />
-                    ) : (
-                      <Avatar icon={<UserOutlined />} size={47} />
-                    )
-                  }
-                  title={user?.properties?.names}
-                  description={user?.properties?.email}
-                />
-              </List.Item>
-            )}
+            renderItem={(user: any, index) => {
+              return <AssignmentCard user={user} key={index} bingo={bingo} />;
+            }}
           />
         </Card>
       </Col>
-      {/* <PrintComponent
+      <PrintComponent
         bingoCardRef={bingoCardRef}
-      /> */}
+        bingoUsers={bingoPrint}
+        bingo={bingo}
+        cardboardCode='BingoCards'
+        isPrint
+      />
       {/* <Col span={12}></Col> */}
     </Row>
   );

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Bingo, DimensionInterface } from '@/components/games/bingo/interfaces/bingo';
+import { Bingo, BingoPrintProps, DimensionInterface } from '@/components/games/bingo/interfaces/bingo';
 import {
   CreateBingo,
   DeleteBingo,
@@ -42,7 +42,25 @@ export const useBingo = () => {
     startGame: false,
   });
   let [listUsers, setListUsers] = useState([]);
-
+  const [bingoPrint, setBingoPrint] = useState<BingoPrintProps[]>([
+    {
+      names: '',
+      email: '',
+      id: '',
+      values: [
+        {
+          carton_value: {
+            type: '',
+            value: 'string',
+          },
+          ballot_value: {
+            type: '',
+            value: '',
+          },
+        },
+      ],
+    },
+  ]);
   const initialFormDataBingo = {
     name: '',
     amount_of_bingo: 0,
@@ -461,7 +479,20 @@ export const useBingo = () => {
   const onGetListUsersWithOrWithoutBingo = async () => {
     let list = [];
     try {
-      list = await getListUsersWithOrWithoutBingo(value._id); /* '633d9b3101de36465758db36' */
+      list = await getListUsersWithOrWithoutBingo(value._id);
+      /* '633d9b3101de36465758db36' */ console.log(
+        '🚀 ~ file: useBingo.tsx ~ line 483 ~ onGetListUsersWithOrWithoutBingo ~ list',
+        list
+      );
+      const bingoPrintData = list.map((user: any) => {
+        return {
+          names: user?.properties?.names,
+          email: user?.properties?.email,
+          id: user?.bingo_card?._id,
+          values: user?.bingo_card?.values_bingo_card,
+        };
+      });
+      setBingoPrint(bingoPrintData);
       setListUsers(list);
     } catch (err) {
       console.log(err, 'err');
@@ -585,5 +616,6 @@ export const useBingo = () => {
     onGenerateBingoForAllUsers,
     listUsers,
     setListUsers,
+    bingoPrint,
   };
 };

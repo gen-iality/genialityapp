@@ -66,6 +66,7 @@ export default function index({ event }: { event: {} }) {
     saveValueData,
     listUsers,
     setListUsers,
+    bingoPrint,
   } = useBingo();
   const [openAndCloseImportModal, setOpenAndCloseImportModal] = useState(false);
   console.log('🚀 ~ file: index.tsx ~ line 70 ~ index ~ formDataBingo', formDataBingo);
@@ -252,6 +253,8 @@ export default function index({ event }: { event: {} }) {
                   generateBingoForExclusiveUsers={onGenerateBingoForExclusiveUsers}
                   generateBingoForAllUsers={onGenerateBingoForAllUsers}
                   listUsers={listUsers}
+                  bingo={bingo}
+                  bingoPrint={bingoPrint}
                 />
               </Tabs.TabPane>
 
