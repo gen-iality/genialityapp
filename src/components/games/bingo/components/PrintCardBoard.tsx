@@ -11,6 +11,7 @@ export default function PrintCardBoard({ bingoCardRef, cardboardCode }: { bingoC
   const handlePrintHook = useReactToPrint({
     content: () => bingoCardRef.current,
     documentTitle: `Bingo ID: ${cardboardCode}`,
+
     onAfterPrint: () => setLoading(false),
   });
 
@@ -45,11 +46,14 @@ export default function PrintCardBoard({ bingoCardRef, cardboardCode }: { bingoC
   return (
     <>
       <Space>
-        <Button loading={loading} disabled={loading} onClick={handleShare} icon={<DownloadIcon />}>
+        {/*  <Button loading={loading} disabled={loading} onClick={handleShare} icon={<DownloadIcon />}>
           Descargar
-        </Button>
-        <Button loading={loading} disabled={loading} onClick={() => onHandlePrint()} icon={<PrinterIcon />}>
-          Imprimir
+        </Button> */}
+        <Button loading={loading} disabled={loading} onClick={() => onHandlePrint()}>
+          <Space split='/'>
+            <DownloadIcon />
+            <PrinterIcon />
+          </Space>
         </Button>
       </Space>
     </>

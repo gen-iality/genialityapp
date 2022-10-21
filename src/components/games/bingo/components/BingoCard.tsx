@@ -243,17 +243,20 @@ const BingoCard = forwardRef(
 
     return (
       <Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '0px' }}>
-        <Col span={24}>
-          <img
-            style={{
-              width: '100%',
-              objectFit: 'cover',
-              borderRadius: '20px 20px 0px 0px',
-              height: '80px',
-            }}
-            src={bingo?.bingo_appearance?.banner}
-          />
-        </Col>
+        {
+          <Col span={24}>
+            <img
+              style={{
+                width: '100%',
+                objectFit: 'cover',
+                borderRadius: '20px 20px 0px 0px',
+                height: '80px',
+              }}
+              src={bingo?.bingo_appearance?.banner}
+            />
+          </Col>
+        }
+
         <Col span={24}>
           <Row align='middle' justify='center'>
             <Card
@@ -275,17 +278,19 @@ const BingoCard = forwardRef(
             </Card>
           </Row>
         </Col>
-        <Col span={24}>
-          <img
-            style={{
-              width: '100%',
-              objectFit: 'cover',
-              borderRadius: '0px 0px 20px 20px',
-              height: '60px',
-            }}
-            src={bingo?.bingo_appearance?.footer}
-          />
-        </Col>
+        {
+          <Col span={24}>
+            <img
+              style={{
+                width: '100%',
+                objectFit: 'cover',
+                borderRadius: '0px 0px 20px 20px',
+                height: '60px',
+              }}
+              src={bingo?.bingo_appearance?.footer}
+            />
+          </Col>
+        }
       </Card>
     );
   }
