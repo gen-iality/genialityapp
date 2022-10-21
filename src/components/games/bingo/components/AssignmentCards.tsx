@@ -3,7 +3,8 @@ import { Avatar, Button, Card, Col, Input, List, Row, Space, Typography } from '
 import { AssignmentCardsProps } from '../interfaces/bingo';
 import SearchUser from './SearchUser';
 import { useState, useEffect } from 'react';
-
+import PrintComponent from './PrintComponent';
+import PrintCardBoard from './PrintCardBoard';
 export default function AssignmentCards({
   generateBingoForAllUsers,
   generateBingoForExclusiveUsers,
@@ -47,6 +48,9 @@ export default function AssignmentCards({
                 Generar cartones faltantes
               </Button>
             </Space>
+            {/* <PrintCardBoard 
+            
+            /> */}
           </Row>
           <br />
           <SearchUser onSubmit={onSubmit} handleChange={handleChange} keyboard={keyboard} />
@@ -83,6 +87,9 @@ export default function AssignmentCards({
           />
         </Card>
       </Col>
+      {/* <PrintComponent
+        bingoCardRef={bingoCardRef}
+      /> */}
       {/* <Col span={12}></Col> */}
     </Row>
   );

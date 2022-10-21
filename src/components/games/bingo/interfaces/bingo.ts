@@ -199,6 +199,7 @@ export interface BingoCardInterface {
   changeValueLocalStorage: (index: number) => void;
   getBingoListener: () => any;
   setOpenOrClose: (state: boolean) => void;
+  isPrint?: boolean;
 }
 
 export interface PlayBingoHeaderInterface {

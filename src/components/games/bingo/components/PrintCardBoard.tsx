@@ -31,6 +31,11 @@ export default function PrintCardBoard({ bingoCardRef, cardboardCode }: { bingoC
         html2canvas(html).then((canvas) => {
           const imgData = canvas.toDataURL('image/png');
           const pdf = new jsPDF();
+          {
+            /*
+          ts-ignore
+        */
+          }
           pdf.addImage(imgData, 'JPEG', 0, 0);
           // pdf.output('dataurlnewwindow');
           pdf.save('download.pdf');
@@ -44,7 +49,6 @@ export default function PrintCardBoard({ bingoCardRef, cardboardCode }: { bingoC
         <Button loading={loading} disabled={loading} onClick={handleShare} icon={<DownloadIcon />}>
           Descargar
         </Button>
-
         <Button loading={loading} disabled={loading} onClick={() => onHandlePrint()} icon={<PrinterIcon />}>
           Imprimir
         </Button>

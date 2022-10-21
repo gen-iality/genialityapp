@@ -135,6 +135,14 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
           arrayDataBingo={arrayDataBingo}
           bingoCardRef={bingoCardRef}
           cardboardCode={cardboardCode}
+          bingoUsers={[
+            {
+              names: '',
+              email: '',
+              values_bingo_card: arrayDataBingo,
+              _id: '222',
+            },
+          ]}
         />
       )}
     </Drawer>
