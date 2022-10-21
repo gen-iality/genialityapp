@@ -4,6 +4,7 @@ import { Button, Row, Col, Space, Typography } from 'antd';
 import { ExclamationCircleOutlined, LineChartOutlined, BarsOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import CMS from '../newComponent/CMS';
+import { useConvertUTC } from '@/hooks/useConvertUTC';
 
 const { Text } = Typography;
 
@@ -53,9 +54,14 @@ function InvitationsList(props) {
       title: 'Enviado',
       dataIndex: 'created_at',
       key: 'created_at',
-      render: (text) => <span>{text} </span>,
       defaultSortOrder: 'descend',
       sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
+      render(val, item) {
+        //Se necesita enviar la fecha con el formato de new Date()
+        const newDate = new Date(val);
+        //Retorna la fecha con formato YYYY-MM-DD HH:mm:ss
+        return useConvertUTC(newDate).newDateWithMoment;
+      },
     },
   ];
 
