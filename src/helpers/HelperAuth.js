@@ -21,7 +21,7 @@ export async function GetTokenUserFirebase() {
   });
 }
 
-export const checkinAttendeeInActivity = (attende, activityId) => {
+export const checkinAttendeeInActivity_ = (attende, activityId) => {
   /** We use the activity id plus _event_attendees to be able to reuse the checkIn component per event */
   const userRef = firestore.collection(`${activityId}_event_attendees`).doc(attende._id);
   userRef.get().then(function(doc) {
@@ -91,4 +91,17 @@ export const checkinAttendeeInActivity = (attende, eventId, activityId) => {
     }
   });
   return unSuscribe;
+};
+
+export const checkinAttendeeInEvent = (attende, eventId) => {
+  const userRef = firestore.collection(`${eventId}_event_attendees`).doc(attende._id);
+
+  userRef.onSnapshot(function(doc) {
+    if (doc.exists) {
+      if (!doc.data().checked_in) {
+        /** We register the checkIn by calling the back */
+        saveCheckInAttendee({ _id: attende._id, checked: true, notification: false, type: 'Virtual' });
+      }
+    }
+  });
 };
