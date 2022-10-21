@@ -1,6 +1,6 @@
 import { useHistory } from 'react-router';
 import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty } from 'antd';
-import { EditOutlined, PicLeftOutlined, UserOutlined } from '@ant-design/icons';
+import { ClockCircleOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
 
 export const columns = (columnsData, editModalUser) => {
@@ -104,7 +104,7 @@ export const columns = (columnsData, editModalUser) => {
               onClick={() => {
                 history.push(`./members/timetracking/${item._id}`)
               }}
-              icon={<PicLeftOutlined />}
+              icon={<ClockCircleOutlined />}
             ></Button>
           </Tooltip>
           <Tooltip title='Editar'>

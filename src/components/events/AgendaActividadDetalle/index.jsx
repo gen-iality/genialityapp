@@ -21,8 +21,13 @@ import { useUserEvent } from '@context/eventUserContext';
 import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
+import Presence from '@components/presence/Presence';
+import { fireRealtime } from '@helpers/firebase';
+import Logger from '@Utilities/logger';
 
 const { setHasOpenSurveys } = SurveyActions;
+
+const { LOG, ERROR } = Logger('studentlanding-activity');
 
 const AgendaActividadDetalle = props => {
   const { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
@@ -149,6 +154,15 @@ const AgendaActividadDetalle = props => {
   // {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
   return (
     <div>
+      {(cUser.value?._id && cEvent.value?._id && activity?._id) && (
+        <Presence
+          data={{ eventId: cEvent.value._id, activityId: activity._id, type: 'activity' }}
+          debuglog={LOG}
+          errorlog={ERROR}
+          realtimeDB={fireRealtime}
+          collectionId={cUser.value._id}
+        />
+      )}
       <div className=' container_agenda-information container-calendar2'>
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
 
