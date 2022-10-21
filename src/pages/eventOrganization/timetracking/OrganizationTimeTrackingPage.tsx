@@ -1,14 +1,26 @@
-import { useState, useEffect, useMemo, type FunctionComponent } from 'react';
-import { Avatar, Card, Divider, Result, Select, Space, Typography } from 'antd';
+import { useState, useEffect, useMemo, type FunctionComponent, useCallback } from 'react';
+import { Avatar, Card, Divider, Result, Select, Space, Typography, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 import { fireRealtime } from '@helpers/firebase';
 import Logger from '@Utilities/logger';
 import Online from '@components/online/Online';
 import { OrganizationApi, UsersApi } from '@helpers/request';
 import { LoadingOutlined, UserOutlined } from '@ant-design/icons';
-import TimeTrackingByEvent from './TimeTrackingByEvent';
 import { type SessionPayload } from '@components/presence/types';
 
 const { LOG, ERROR, WARN } = Logger('time-tracking-page');
+
+type TimeInfo = {
+  time: number,
+  description: string,
+}
+
+type RowDataByEvent = {
+  key: string,
+  name: string;
+  logCount: number;
+  timeInfo: TimeInfo;
+};
 
 export interface OrganizationTimeTrackingPageProps {
   match: any,
@@ -21,6 +33,27 @@ export type OrganizationUserInfo = {
   picture?: string,
 };
 
+const columns: ColumnsType<RowDataByEvent> = [
+  {
+    title: 'Evento',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'Ingresos',
+    dataIndex: 'logCount',
+    key: 'logCount',
+  },
+  {
+    title: 'Tiempo',
+    dataIndex: 'timeInfo',
+    key: 'timeInfo',
+    render: (item: TimeInfo) => {
+      return `${item.time.toFixed(3)} ${item.description}`;
+    },
+  },
+];
+
 const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPageProps> = (props) => {
   const {
     org: organization,
@@ -32,6 +65,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
   const [userInfo, setUserInfo] = useState({} as OrganizationUserInfo);
   const [logs, setLogs] = useState<SessionPayload[]>([]);
   const [timeMode, setTimeMode] = useState<'minutes'|'hours'|'days'>('minutes');
+  const [dataSource, setDataSource] = useState<RowDataByEvent[]>([]);
 
   useEffect(() => {
     if (!memberId) return;
@@ -82,10 +116,64 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
     })();
   }, [memberId]);
 
-  const loggedTime = useMemo(() => {
+  useEffect(() => {
+    if (!events.length) return;
+    if (!userId) return;
+
+    const request = async () => {
+      const localRef = await fireRealtime.ref(`user_sessions/local/${userId}`);
+      const result = await localRef.get();
+      if (!result.exists()) {
+        LOG('no have user sessions for local');
+        return;
+      }
+
+      const allDocuments: {[x: string]: SessionPayload} = result.val();
+
+      const tableList: typeof dataSource = [];
+
+      // We need all logs that are offline, have time, are type activity
+      const filteredAllDocuments = Object.values(allDocuments)
+        .filter((document) => document.status === 'offline')
+        .filter((document) => document.startTimestamp !== undefined)
+        .filter((document) => document.endTimestamp !== undefined)
+        .filter((document) => document.data?.type === 'activity')
+        .filter((document) => document.data?.eventId !== undefined)
+        .filter((document) => document.data?.activityId !== undefined)
+
+      for (const event of events) {
+        const logsByEvent = filteredAllDocuments
+          .filter((document) => document.data?.eventId === event._id)
+        LOG(event._id, 'has', logsByEvent.length, 'logs');
+
+        // Create stats
+        const rowData: RowDataByEvent = {
+          key: event._id,
+          name: event.name,
+          logCount: logsByEvent.length,
+          timeInfo: processTime(logsByEvent, timeMode),
+        }
+        tableList.push(rowData);
+      }
+
+      const sorttedTableList = tableList.sort((a, b) => {
+        if (a.timeInfo.time > b.timeInfo.time) return 1;
+        if (a.timeInfo.time < b.timeInfo.time) return -1;
+        return 0;
+      }).reverse();
+
+      setDataSource(sorttedTableList);
+    };
+    request().catch((err) => ERROR('error to request events', err));
+  }, [events, timeMode]);
+
+  /**
+   * Given logs and timeMode, will return an object with information about time
+   */
+  const processTime = useCallback((_logs: typeof logs, _timeMode: typeof timeMode): TimeInfo => {
     let divisor = 1;
     let description = 'minuto(s)';
-    switch(timeMode) {
+    switch(_timeMode) {
       case 'minutes':
         divisor = 60;
         description = 'minuto(s)';
@@ -99,10 +187,14 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
         description = 'día(s)';
         break;
       default:
-        WARN('the prop', timeMode, 'is unknown');
+        WARN('the prop', _timeMode, 'is unknown');
     }
-    const time = logs.map((log) => (log.endTimestamp - log.startTimestamp) / 1000 / divisor).reduce((a, b) => a+b, 0);
-    return { time, description };    
+    const time = _logs.map((log) => (log.endTimestamp - log.startTimestamp) / 1000 / divisor).reduce((a, b) => a+b, 0);
+    return { time, description };  
+  }, []);
+
+  const loggedTime: TimeInfo = useMemo(() => {
+    return processTime(logs, timeMode);
   }, [logs, timeMode]);
 
   if (isLoading) {
@@ -160,19 +252,10 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       <Divider/>
       <Space direction='vertical'>
         <Typography.Text>{events.length} registros por área:</Typography.Text>
-        {events.length === 0 && (
+        {events.length === 0 ? (
           <Typography.Text italic>Sin datos.</Typography.Text>
-        )}
-        {userId && (
-          events.map((event, index) => (
-            <TimeTrackingByEvent
-              key={index}
-              eventName={event.name}
-              eventId={event._id}
-              userId={userId}
-              timeMode={timeMode}
-            />
-          ))
+        ) : (
+          <Table columns={columns} dataSource={dataSource} />
         )}
       </Space>
     </Card>
