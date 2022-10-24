@@ -1,6 +1,6 @@
 import { Card, Form, Input } from 'antd';
 import Header from '@/antdComponents/Header';
-import useSharePhoto from '../hooks/useSharePhoto';
+import useSharePhoto from '../../hooks/useSharePhoto';
 
 interface Props {
 	eventId: string;
