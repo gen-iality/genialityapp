@@ -69,7 +69,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
 
   const eventColumns: ColumnsType<RowDataByEvent> = [
     {
-      title: 'Evento',
+      title: 'Curso',
       dataIndex: 'name',
       key: 'name',
     },
@@ -83,7 +83,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       dataIndex: 'timeInfo',
       key: 'timeInfo',
       render: (item: TimeInfo) => {
-        return `${item.time.toFixed(3)} ${item.description}`;
+        return `${item.time.toFixed(2)} ${item.description}`;
       },
     },
     {
@@ -124,7 +124,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       dataIndex: 'timeInfo',
       key: 'timeInfo',
       render: (item: TimeInfo) => {
-        return `${item.time.toFixed(3)} ${item.description}`;
+        return `${item.time.toFixed(2)} ${item.description}`;
       },
     },
   ];
@@ -390,7 +390,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       ) : (
         <Result
           title='Cargando...'
-          subTitle={'Recuperando información del evento'}
+          subTitle={'Recuperando información del curso'}
           icon={<LoadingOutlined/>}
         />
       )}
