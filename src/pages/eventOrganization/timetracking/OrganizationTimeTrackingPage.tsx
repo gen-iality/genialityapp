@@ -20,6 +20,7 @@ type RowDataByEvent = {
   name: string;
   logCount: number;
   timeInfo: TimeInfo;
+  timeInfoWithoutActivities: TimeInfo;
   event: any;
 };
 
@@ -96,7 +97,15 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       key: 'logCount',
     },
     {
-      title: 'Tiempo',
+      title: 'Tiempo en el landing',
+      dataIndex: 'timeInfoWithoutActivities',
+      key: 'timeInfoWithoutActivities',
+      render: (item: TimeInfo) => {
+        return `${item.time.toFixed(2)} ${item.description}`;
+      },
+    },
+    {
+      title: 'Tiempo en actividades',
       dataIndex: 'timeInfo',
       key: 'timeInfo',
       render: (item: TimeInfo) => {
@@ -229,12 +238,23 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       .filter((document) => document.endTimestamp !== undefined)
       .filter((document) => document.data?.type === 'activity')
       .filter((document) => document.data?.eventId !== undefined)
-      .filter((document) => document.data?.activityId !== undefined)
+      .filter((document) => document.data?.activityId !== undefined);
+    
+    const filteredGlobalDocuments = globalLogs //
+      .filter((document) => document.status === 'offline')
+      .filter((document) => document.startTimestamp !== undefined)
+      .filter((document) => document.endTimestamp !== undefined)
+      .filter((document) => document.data?.type === 'activity')
+      .filter((document) => document.data?.eventId !== undefined)
+      .filter((document) => document.data?.activityId !== undefined);
 
     for (const event of events) {
       const logsByEvent = filteredAllDocuments
-        .filter((document) => document.data?.eventId === event._id)
+        .filter((document) => document.data?.eventId === event._id);
+      const eventWithoutActivityLogs = filteredGlobalDocuments //
+        .filter((document) => document.data?.eventId === event._id);
       LOG(event._id, 'has', logsByEvent.length, 'logs');
+      LOG('eventWithoutActivityLogs', eventWithoutActivityLogs)
 
       // Create stats
       const rowData: RowDataByEvent = {
@@ -242,6 +262,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
         name: event.name,
         logCount: logsByEvent.length,
         timeInfo: processTime(logsByEvent, timeMode),
+        timeInfoWithoutActivities: processTime(eventWithoutActivityLogs, timeMode),
         event: event,
       }
       tableList.push(rowData);
