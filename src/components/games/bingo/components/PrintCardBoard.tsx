@@ -42,9 +42,9 @@ export default function PrintCardBoard({ bingoCardRef, cardboardCode }: { bingoC
   return (
     <>
       <Space>
-        <Button loading={loading} disabled={loading} onClick={handleShare} icon={<DownloadIcon />}>
+        {/* <Button loading={loading} disabled={loading} onClick={handleShare} icon={<DownloadIcon />}>
           Descargar
-        </Button>
+        </Button> */}
         <Button loading={loading} disabled={loading} onClick={() => onHandlePrint()}>
           <Space split='/'>
             <DownloadIcon />
