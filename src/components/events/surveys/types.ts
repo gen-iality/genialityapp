@@ -68,3 +68,14 @@ export interface SurveyRealtimeData {
 export interface SurveyPreModel extends SurveyRealtimeData, SurveyData {
   currentPage: number,
 };
+
+export type SurveyStatus = {
+  surveyCompleted: string,
+  right: number,
+};
+
+export type SurveyStats = {
+  total: number,
+  right: number,
+  minimum: number,
+};

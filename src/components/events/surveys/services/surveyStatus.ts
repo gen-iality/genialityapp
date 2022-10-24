@@ -1,4 +1,4 @@
-import { QuizStatus } from '@components/quiz/types';
+import { SurveyStatus } from '@components/events/surveys/types';
 import { firestore } from '@helpers/firebase';
 
 export const getRef = (surveyId: string, userId: string) => {
@@ -91,13 +91,13 @@ export const addRightPoints = async (
     if (result?.exists) {
       const {
         right = 0, // By default
-      } = result.data() as QuizStatus;
+      } = result.data() as SurveyStatus;
       acumulativePoints = acumulativePoints + right;
       // Add points
     }
     // Speak pretty goodly with Firestore
     await firebaseRef.set(
-      { right: acumulativePoints + nextPoints } as QuizStatus, // Add values
+      { right: acumulativePoints + nextPoints } as SurveyStatus, // Add values
       {merge: true},
     );
     console.debug(`save survey status /votingStatusByUser/${userId}/surveyStatus/${surveyId}`, 'value', acumulativePoints, '->', acumulativePoints + nextPoints);

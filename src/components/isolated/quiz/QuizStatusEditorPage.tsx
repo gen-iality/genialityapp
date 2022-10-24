@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Button, Input, Space, Alert } from 'antd';
 
 import { firestore } from '@helpers/firebase';
-import { QuizStatus } from '@components/quiz/types';
+import { SurveyStatus } from '@components/events/surveys/types';
 
 export interface QuizStatusEditorPageProps {
 }
@@ -25,7 +25,7 @@ async function setCurrentUserSurveyStatus(
     .doc(surveyId);
     
   const result = await firebaseRef.get();
-  const payload: QuizStatus = {
+  const payload: SurveyStatus = {
     surveyCompleted: status,
     right: 0,
   };

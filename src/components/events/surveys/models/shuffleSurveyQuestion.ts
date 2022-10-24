@@ -1,4 +1,4 @@
-import { SurveyQuestion } from './types';
+import { SurveyQuestion } from '@components/events/surveys/types';
 import { SurveyModel } from 'survey-react';
 
 const getRandomIndex = (max: number) => Math.floor(Math.random() * max);

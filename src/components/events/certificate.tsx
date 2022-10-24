@@ -4,7 +4,7 @@ import { Row, Col, Card, Spin, Alert, Button, Modal } from 'antd';
 import { withRouter } from 'react-router-dom';
 import withContext from '@context/withContext';
 import { CertsApi, RolAttApi, SurveysApi } from '@helpers/request';
-import { Survey } from '../quiz/types';
+import { SurveyData } from '@components/events/surveys/types';
 import useAsyncPrepareQuizStats from '../quiz/useAsyncPrepareQuizStats';
 import { DownloadOutlined } from '@ant-design/icons';
 
@@ -42,7 +42,6 @@ function Certificate(props: CertificateProps) {
   const [isPassed, setIsPassed] = useState<boolean | undefined>(undefined);
 
   const background = certificateImage;
-
 
   const generateCert = async (dataUser: any) => {
     const modal = Modal.success({
@@ -102,13 +101,13 @@ function Certificate(props: CertificateProps) {
     if (!props.cEvent?.value?._id) return;
 
     (async () => {
-      const surveys: Survey[] = await SurveysApi.byEvent(props.cEvent?.value?._id);
+      const surveys: SurveyData[] = await SurveysApi.byEvent(props.cEvent?.value?._id);
 
       let passed = 0;
       let notPassed = 0;
 
       for (let i = 0; i < surveys.length; i++) {
-        const survey: Survey = surveys[i] as never;
+        const survey: SurveyData = surveys[i] as never;
         const stats = await useAsyncPrepareQuizStats(
           props.cEvent?.value?._id,
           survey._id!,

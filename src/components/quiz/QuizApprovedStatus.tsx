@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Badge, Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { SurveysApi } from '@helpers/request';
-import { Survey } from './types';
+import { SurveyData } from '@components/events/surveys/types';
 
 import { useCurrentUser } from '@context/userContext';
 import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
@@ -27,13 +27,13 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
   useEffect(() => {
     if (!cUser?.value?._id) return;
     (async () => {
-      const surveys: Survey[] = await SurveysApi.byEvent(props.eventId);
+      const surveys: SurveyData[] = await SurveysApi.byEvent(props.eventId);
 
       let passed = 0;
       let notPassed = 0;
 
       for (let i = 0; i < surveys.length; i++) {
-        const survey: Survey = surveys[i] as never;
+        const survey: SurveyData = surveys[i] as never;
         const stats = await useAsyncPrepareQuizStats(props.eventId, survey._id!, cUser?.value?._id, survey);
 
         if (stats.minimum > 0) {

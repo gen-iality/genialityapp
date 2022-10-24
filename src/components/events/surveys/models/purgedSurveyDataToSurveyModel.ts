@@ -1,5 +1,5 @@
 import * as Survey from'survey-react';
-import { SurveyPreModel } from './types';
+import { SurveyPreModel } from '@components/events/surveys/types';
 
 Survey.JsonObject.metaData.addProperty('question', 'id');
 Survey.JsonObject.metaData.addProperty('question', 'points');

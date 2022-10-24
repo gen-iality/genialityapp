@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 
-import { QuizStats } from './types';
+import { SurveyStats } from '@components/events/surveys/types';
 import QuizBadge from './QuizBadge';
 import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
 
@@ -32,7 +32,7 @@ function QuizProgress(props: QuizProgressProps) {
 
   useEffect(() => {
     useAsyncPrepareQuizStats(props.eventId, props.surveyId, props.userId)
-      .then((stats: QuizStats) => {
+      .then((stats: SurveyStats) => {
         // Update stats
         setTotalAnswers(stats.total);
         setGoodAnswers(stats.right);

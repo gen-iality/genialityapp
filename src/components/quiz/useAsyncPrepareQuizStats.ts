@@ -1,5 +1,5 @@
 import { SurveysApi } from '@helpers/request';
-import { QuizStatus, QuizStats, Survey } from './types';
+import { SurveyStatus, SurveyStats, SurveyData } from '@components/events/surveys/types';
 import { getStatus as getSurveyStatus } from '../events/surveys/services/surveyStatus';
 import PooledQuestions from '@/classes/PooledQuestions';
 
@@ -15,18 +15,18 @@ export default async function useQuizStatusRequesting(
   eventId: string,
   surveyId: string,
   userId: string,
-  survey?: Survey,
+  survey?: SurveyData,
 ) {
   console.debug('finding quiz status for userId', userId, 'with surveyId', surveyId);
 
-  let quizStatus: QuizStatus = {
+  let quizStatus: SurveyStatus = {
     right: 0,
     surveyCompleted: '',
   };
   let minimumScore = 0;
   let totalPoints = 0;
 
-  if (!surveyId) return { total: totalPoints, right: quizStatus.right, minimum: minimumScore } as QuizStats;
+  if (!surveyId) return { total: totalPoints, right: quizStatus.right, minimum: minimumScore } as SurveyStats;
 
   // Get info from Firebase: status that contains the `right` and `surveyCompleted` values
   try {
@@ -42,7 +42,7 @@ export default async function useQuizStatusRequesting(
   try {
     console.debug('finding eventId', eventId, 'with surveyId', surveyId);
 
-    const surveyIn: Survey = survey ? survey : await SurveysApi.getOne(eventId, surveyId);
+    const surveyIn: SurveyData = survey ? survey : await SurveysApi.getOne(eventId, surveyId);
 
     minimumScore = surveyIn.minimumScore ? surveyIn.minimumScore : 0;
     // questionLength = surveyIn.questions ? surveyIn.questions.length : 0;
@@ -62,7 +62,7 @@ export default async function useQuizStatusRequesting(
     console.error('SurveysApi.getOne', err);
   }
 
-  const stats: QuizStats = {
+  const stats: SurveyStats = {
     // total: questionLength,
     total: totalPoints,
     right: quizStatus.right,

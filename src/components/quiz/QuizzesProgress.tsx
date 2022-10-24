@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Table, Typography, Alert } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
-import { Survey } from './types';
+import { SurveyData } from '@components/events/surveys/types';
 import QuizStatusMessage from './quizStatus';
 import QuizBadge from './QuizBadge';
 import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
@@ -80,7 +80,7 @@ function QuizzesProgress(props: QuizzesProgressProps) {
 
   useEffect(() => {
     (async () => {
-      const surveys: Survey[] = await SurveysApi.byEvent(props.eventId);
+      const surveys: SurveyData[] = await SurveysApi.byEvent(props.eventId);
       setTotalCourses(surveys.length);
       // const surveys = [
       //   {
@@ -95,7 +95,7 @@ function QuizzesProgress(props: QuizzesProgressProps) {
       const caughtRows: RowData[] = [];
 
       for (let i = 0; i < surveys.length; i++) {
-        const survey: Survey = surveys[i] as never;
+        const survey: SurveyData = surveys[i] as never;
         const stats = await useAsyncPrepareQuizStats(props.eventId, survey._id!, props.userId, survey);
 
         let isPassed = undefined;
