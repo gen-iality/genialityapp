@@ -52,7 +52,7 @@ function TemplateMemberSettings(props) {
             }
           }}
           deleteField={async (nameField, template, updateTable) => {
-            console.log(nameField, template);
+            /* console.log(nameField, template); */
             let newtemplate = template.datafields?.filter((field) => field.name != nameField);
 
             let resp = await updateTemplate(template, newtemplate);

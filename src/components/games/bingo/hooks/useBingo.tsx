@@ -288,7 +288,7 @@ export const useBingo = () => {
         },
       });
     }
-    console.log('bingo', bingo);
+    /* console.log('bingo', bingo); */
     setLoading(false);
   };
 

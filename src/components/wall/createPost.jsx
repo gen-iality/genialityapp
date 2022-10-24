@@ -141,7 +141,7 @@ class CreatePost extends Component {
 
   //Funcion para mostrar el archivo, se pasa a base64 para poder mostrarlo
   previewImage(event) {
-    console.log(event);
+    /* console.log(event); */
     const permitFile = ['png', 'jpg', 'jpeg', 'gif'];
     //event.preventDefault();
     let file = event.fileList[0];

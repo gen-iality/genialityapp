@@ -70,10 +70,10 @@ const ActivityBlock = ({ preview }) => {
     }
   }, [cEvent.value]);
 
-  console.log('activities', activities);
+  /* console.log('activities', activities); */
 
   const determineType = (type) => {
-    console.log('type', type);
+    /* console.log('type', type); */
     switch (type) {
       case 'url':
       case 'cargarvideo':

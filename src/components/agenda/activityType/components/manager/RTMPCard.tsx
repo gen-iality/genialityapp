@@ -4,8 +4,8 @@ import AgendaContext from '@context/AgendaContext';
 import { useContext, useEffect, useState } from 'react';
 
 type DataTRMP = {
-  rtmp: string,
-  password: string,
+  rtmp: string;
+  password: string;
 };
 
 const description = `El Protocolo de mensajería en tiempo real te permite
@@ -20,7 +20,7 @@ const RTMPCard = () => {
       const data = dataLive.push_url.split('/');
       const password: string = data[data.length - 1];
       const rtmp: string = dataLive.push_url.replace(password, '');
-      console.debug('password:', password, rtmp);
+      /* console.debug('password:', password, rtmp); */
       setDataRtmp({ rtmp, password });
     }
   }, [dataLive]);
@@ -34,18 +34,13 @@ const RTMPCard = () => {
           </Typography.Text>
         }
         description={description}
-      />
-      {' '}
+      />{' '}
       <br />
       <Space direction='vertical' style={{ width: '100%' }}>
         <Space direction='vertical' style={{ width: '100%' }}>
           <Typography.Text>RTMP url</Typography.Text>
           <Input.Group compact>
-            <Input
-              style={{ width: 'calc(100% - 31px)' }}
-              disabled
-              value={dataRtmp?.rtmp}
-            />
+            <Input style={{ width: 'calc(100% - 31px)' }} disabled value={dataRtmp?.rtmp} />
             <Tooltip title='Copiar RTMP url'>
               <Button
                 onClick={() => copyToClipboard(dataRtmp?.rtmp)}
@@ -57,11 +52,7 @@ const RTMPCard = () => {
         <Space direction='vertical' style={{ width: '100%' }}>
           <Typography.Text>clave RTMP</Typography.Text>
           <Input.Group compact>
-            <Input
-              style={{ width: 'calc(100% - 31px)' }}
-              disabled
-              value={dataRtmp?.password}
-            />
+            <Input style={{ width: 'calc(100% - 31px)' }} disabled value={dataRtmp?.password} />
             <Tooltip title='Copiar RTMP clave'>
               <Button
                 onClick={() => copyToClipboard(dataRtmp?.password)}

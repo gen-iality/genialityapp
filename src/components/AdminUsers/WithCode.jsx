@@ -83,9 +83,9 @@ const WithCode = () => {
                 window.location.href = `${window.location.origin}`;
               }
             });*/
-          } else {
+          } /* else {
             console.log('NOT REQUEST');
-          }
+          } */
         });
     }
   }, []);

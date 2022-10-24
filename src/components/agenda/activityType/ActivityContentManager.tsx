@@ -106,11 +106,11 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
   useEffect(() => {
     getViewers(refActivityViewers);
-    console.debug('ActivityContentManager - take:', activityContentType);
+    /* console.debug('ActivityContentManager - take:', activityContentType);
     console.debug('ActivityContentManager - with source =', contentSource)
     console.debug('ActivityContentManager - dataLive:', JSON.stringify(dataLive));
     console.debug('ActivityContentManager - roomStatus:', JSON.stringify(roomStatus));
-    console.debug('ActivityContentManager - platform:', JSON.stringify(platform));
+    console.debug('ActivityContentManager - platform:', JSON.stringify(platform)); */
   }, []);
 
   if (!type) {
@@ -154,7 +154,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
                 <VideoListCard
                   refreshData={getVideoList}
                   videos={videos}
-                  toggleActivitySteps={() => console.log('¿esto cuándo se usa?')}
+                  toggleActivitySteps={() => console.log('toggleActivitySteps')}
                 />
               </Col>
             ) : (

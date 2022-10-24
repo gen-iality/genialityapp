@@ -14,7 +14,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
   const [duration, setDuration] = useState(0);
 
   const handleDuration = (duration) => {
-    console.log('onDuration', duration);
+    /* console.log('onDuration', duration); */
     setDuration(duration);
   };
 

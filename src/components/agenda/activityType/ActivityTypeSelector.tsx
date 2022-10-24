@@ -28,7 +28,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
 
   const handleCloseModal = (success: boolean = false) => {
     setIsModalShown(false);
-    console.log('this stuff was closed, success:', success)
+    /* console.log('this stuff was closed, success:', success) */
   }
 
   const handleSetActivityType = () => {
@@ -36,7 +36,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
   };
 
   const handleSelectionChange = (selected: ActivityType.Name) => {
-    console.log('[activity type modal] selected changes:', selected);
+    /* console.log('[activity type modal] selected changes:', selected); */
     setSelected(selected);
   };
 

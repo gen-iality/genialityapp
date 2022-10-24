@@ -5,7 +5,7 @@ export const hourWithAdditionalMinutes = (minutes: number) => {
   const fecha = new Date();
   fecha.setMinutes(fecha.getMinutes() + minutes);
   const m = moment(fecha, 'HH:mm:ss');
-  console.debug('create new default moment:', m);
+  /* console.debug('create new default moment:', m); */
   return m;
 };
 

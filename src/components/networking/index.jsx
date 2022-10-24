@@ -575,7 +575,7 @@ class ListEventUser extends Component {
                                 {!users?.user?.picture && users.properties.names
                                   ? users.properties.names.charAt(0).toUpperCase()
                                   : users.properties.names}
-                                {console.log('USER ACA===>', users)}
+                                {/* {console.log('USER ACA===>', users)} */}
                               </Avatar>
                             }
                             title={users.properties.names ? users.properties.names : 'No registra Nombre'}

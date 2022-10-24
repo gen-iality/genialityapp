@@ -82,29 +82,29 @@ export const AgendaContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (dataLive) {
-      console.log('DATA LIVE===>', dataLive.recording);
+      /* console.log('DATA LIVE===>', dataLive.recording); */
       setRecord(dataLive.recording ? 'stop' : 'start');
     }
   }, [dataLive]);
 
   useEffect(() => {
     if (activityEdit) {
-      console.log('8. ACTIVIDAD ACA===>', activityEdit);
+      /* console.log('8. ACTIVIDAD ACA===>', activityEdit); */
       obtenerDetalleActivity();
       setMeetingId(null);
     } else {
       initializeState();
     }
     async function obtenerDetalleActivity() {
-      console.log('8. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit);
+      /* console.log('8. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit); */
 
       const service = new Service(firestore);
       const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
-      console.log('8. EDIT HAS VIDEO CONFERENCE===>', hasVideoconference);
+      /* console.log('8. EDIT HAS VIDEO CONFERENCE===>', hasVideoconference); */
       if (hasVideoconference) {
         const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
 
-        console.log('8. CONFIGURATION==>', configuration);
+        /* console.log('8. CONFIGURATION==>', configuration); */
         setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
         setPlatform(configuration.platform ? configuration.platform : 'wowza');
         setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
@@ -316,7 +316,7 @@ export const AgendaContextProvider = ({ children }) => {
   };
 
   const approvedOrRejectedRequest = async (refActivity, key, status) => {
-    console.log('1. APROVE ACA=>', refActivity);
+    /* console.log('1. APROVE ACA=>', refActivity); */
     if (refActivity) {
       await fireRealtime
         .ref(`${refActivity}`)
@@ -383,8 +383,8 @@ export const AgendaContextProvider = ({ children }) => {
       live_stream_status = await getLiveStreamStatus(meeting_id);
 
       // console.log('live_stream_status', live_stream_status);
-      console.log('10. EJECUTANDOSE EL MONITOR===>', live_stream_status.live, liveLocal);
-      console.log('10. ENTRO A DETENER');
+      /* console.log('10. EJECUTANDOSE EL MONITOR===>', live_stream_status.live, liveLocal);
+      console.log('10. ENTRO A DETENER'); */
       setDataLive(live_stream_status);
 
       liveLocal = live_stream_status?.live;
@@ -416,13 +416,13 @@ export const AgendaContextProvider = ({ children }) => {
         break;
       case 'Video':
         const dataSplit = data.split('*');
-        console.log('dataSplit', dataSplit);
+        /* console.log('dataSplit', dataSplit); */
         urlVideo = dataSplit[0];
         break;
       default:
         urlVideo = data;
     }
-    console.log('TYPE==>', type);
+    /* console.log('TYPE==>', type); */
     //SE VALIDA CON URL QUE CONTENGA YOUTUBE DEBIDO A QUE REACT PLAYER NO MUESTRA VIDEO DE GCORE
     const visibleReactPlayer =
       ((type == 'Youtube' ||
@@ -438,7 +438,7 @@ export const AgendaContextProvider = ({ children }) => {
 
   const deleteTypeActivity = async () => {
     const { roomInfo, tabs } = prepareData({ type: 'delete' });
-    console.log('deleteing', roomInfo);
+    /* console.log('deleteing', roomInfo); */
 
     const activity_id = activityEdit;
     const service = new Service(firestore);
@@ -478,7 +478,7 @@ export const AgendaContextProvider = ({ children }) => {
   const startRecordTransmition = async () => {
     setLoadingRecord(true);
     const response = await startRecordingLiveStream(meeting_id);
-    console.log('response', response);
+    /* console.log('response', response); */
     setLoadingRecord(false);
     setRecord('stop');
   };
@@ -486,7 +486,7 @@ export const AgendaContextProvider = ({ children }) => {
   const stopRecordTransmition = async () => {
     setLoadingRecord(true);
     const response = await stopRecordingLiveStream(meeting_id);
-    console.log('response', response);
+    /* console.log('response', response); */
     setLoadingRecord(false);
     setRecord('start');
   };

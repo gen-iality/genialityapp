@@ -31,7 +31,7 @@ const SpeakersBlock = () => {
       //Se hace la consulta a la api de speakers
       setLoading(true);
       let speakers = await SpeakersApi.byEvent(cEvent.value._id);
-      console.log('SPEAKERS ACA=>', speakers);
+      /* console.log('SPEAKERS ACA=>', speakers); */
       //FILTRAMOS LOS SPEAKERS POR PUBLICADOS
       let filteredSpeakers = speakers.filter((speaker) => speaker.published);
       //ORDENAMOS LOS SPEAKERS

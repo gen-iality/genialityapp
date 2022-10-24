@@ -46,7 +46,7 @@ function Transmitir(props) {
     };
     //CREAR ORGANIZACION------------------------------
     let create = await OrganizationApi.createOrganization(newOrganization);
-    console.log('CREATE==>', create);
+    /* console.log('CREATE==>', create); */
     if (create) {
       return create;
     }

@@ -10,6 +10,8 @@ import AddUser from '../modal/addUser';
 import ModalAdvise from './modal';
 import Header from '../../antdComponents/Header';
 import { HelperContext } from '@/context/helperContext/helperContext';
+import moment from 'moment';
+import { useConvertUTC } from '@/hooks/useConvertUTC';
 
 class eventUsersList extends Component {
   constructor(props) {
@@ -77,6 +79,12 @@ class eventUsersList extends Component {
       ellipsis: true,
       sorter: (a, b) => a.checkedin_at.length - b.checkedin_at.length,
       ...this.getColumnSearchProps('checkedin_at'),
+      render(val, item) {
+        //Se necesita enviar la fecha con el formato de new Date()
+        const newDate = new Date(val);
+        //Retorna la fecha con formato YYYY-MM-DD HH:mm:ss
+        return useConvertUTC(newDate).newDateWithMoment;
+      },
     });
 
     if (tickets.length > 0) {
@@ -121,6 +129,12 @@ class eventUsersList extends Component {
         ellipsis: true,
         sorter: (a, b) => a.created_at - b.created_at,
         ...this.getColumnSearchProps('created_at'),
+        render(val, item) {
+          //Se necesita enviar la fecha con el formato de new Date()
+          const newDate = new Date(val);
+          //Retorna la fecha con formato YYYY-MM-DD HH:mm:ss
+          return useConvertUTC(newDate).newDateWithMoment;
+        },
       },
       {
         title: 'Actualizado',
@@ -129,6 +143,12 @@ class eventUsersList extends Component {
         ellipsis: true,
         sorter: (a, b) => a.updated_at - b.updated_at,
         ...this.getColumnSearchProps('updated_at'),
+        render(val, item) {
+          //Se necesita enviar la fecha con el formato de new Date()
+          const newDate = new Date(val);
+          //Retorna la fecha con formato YYYY-MM-DD HH:mm:ss
+          return useConvertUTC(newDate).newDateWithMoment;
+        },
       }
     );
 

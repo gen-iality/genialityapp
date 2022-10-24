@@ -132,7 +132,7 @@ const InvitacionListSent = ({ list }) => {
                         : item.user_name_requesting
                         ? item.user_name_requesting.charAt(0).toUpperCase()
                         : item._id.charAt(0).toUpperCase()}
-                      {console.log('ITEM===>', item)}
+                      {/* {console.log('ITEM===>', item)} */}
                     </Avatar>
                   }
                   title={item.user_name_requesting || item._id}
@@ -195,7 +195,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       // Servicio que trae las invitaciones / solicitudes enviadas
       Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
         if (data.length > 0) {
-          console.log('DATA===>', data);
+          /* console.log('DATA===>', data); */
           setRequestListSent(data.filter((item) => !item.response || item.response === 'rejected'));
           setLoading(false);
         }

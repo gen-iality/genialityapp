@@ -99,7 +99,7 @@ const CardStartTransmition = (props: any) => {
         });
       }
     } catch (error) {
-      console.log('ENTRA ACA');
+      console.error(error, 'error');
       setloading(false);
     }
 

@@ -103,7 +103,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
                     avatar={
                       <Avatar size={65} src={user['picture'] ? user['picture'] : ''}>
                         {!user['picture'] && user.names ? user.names.charAt(0).toUpperCase() : user.names}
-                        {console.log('USER ACA==>', user)}
+                        {/* {console.log('USER ACA==>', user)} */}
                       </Avatar>
                     }
                     title={user.names ? user.names : 'No registra Nombre'}

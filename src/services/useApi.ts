@@ -50,7 +50,7 @@ export default function useApiService() {
   };
 
   const useResponse = (key: string): [] => {
-    console.log('para esta key', key, 'este result', responseData[key as keyof typeof responseData]);
+    /* console.log('para esta key', key, 'este result', responseData[key as keyof typeof responseData]); */
     return responseData[key as keyof typeof responseData];
   };
 

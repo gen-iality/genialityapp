@@ -66,7 +66,7 @@ class CommentsList extends Component {
 
   render() {
     const { dataComment } = this.state;
-    console.log('COMENTARIOS==>', dataComment, this.props);
+    /* console.log('COMENTARIOS==>', dataComment, this.props); */
     return (
       <div style={{ textAlign: 'left' }}>
         {!dataComment && <Spin tip='Loading...' />}

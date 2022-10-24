@@ -392,9 +392,9 @@ const MainProfile = (props) => {
                                       bordered={false}
                                       event={event}
                                       action={{ name: 'Ver', url: `landing/${event._id}` }}
-                                      blockedEvent={
+                                      /* blockedEvent={
                                         props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
-                                      }
+                                      } */
                                     />
                                   </Col>
                                 );
@@ -485,9 +485,9 @@ const MainProfile = (props) => {
                                 </Link>
                               </div>,
                             ]}
-                            blockedEvent={
+                            /* blockedEvent={
                               props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
-                            }
+                            } */
                           />
                         </Col>
                       );
@@ -508,9 +508,9 @@ const MainProfile = (props) => {
                               bordered={false}
                               event={event}
                               action={{ name: 'Ver', url: `landing/${event._id}` }}
-                              blockedEvent={
+                              /* blockedEvent={
                                 props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
-                              }
+                              } */
                             />
                           </Col>
                         );

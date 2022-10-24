@@ -107,7 +107,7 @@ class NewEvent extends Component {
       case 1:
         eventNewContext.changeTransmision(false);
         this.nextPage();
-        console.log(eventNewContext.valueInputs);
+        /* console.log(eventNewContext.valueInputs); */
         break;
       case 2:
         break;

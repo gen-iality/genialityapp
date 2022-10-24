@@ -70,7 +70,7 @@ export const saveFirebase = {
   },
 
   async createComment(postId, eventId, comment, user) {
-    console.log('USER COMMENTARIO==>', user);
+    /* console.log('USER COMMENTARIO==>', user); */
     const dataPost = [];
     var docRef = await firestore
       .collection('adminPost')

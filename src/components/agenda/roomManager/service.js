@@ -30,7 +30,7 @@ class Service {
     //SI EXISTE ACTIVITY ID SI NO SE ROMPE AL CREAR LA ACTIVIDAD
     // console.log('***SE EJECUTA LA ACTUALIZACION***');
     if (activity_id) {
-      console.log(event_id, activity_id, roomInfo, tabs, 'service');
+      /* console.log(event_id, activity_id, roomInfo, tabs, 'service'); */
       const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
       const {
         roomState,
