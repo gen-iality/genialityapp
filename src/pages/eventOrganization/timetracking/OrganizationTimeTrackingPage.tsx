@@ -265,7 +265,15 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       .filter((document) => document.endTimestamp !== undefined)
       .filter((document) => document.data?.type === 'activity')
       .filter((document) => document.data?.eventId !== undefined)
-      .filter((document) => document.data?.activityId !== undefined)
+      .filter((document) => document.data?.activityId !== undefined);
+    
+    const filteredGlobalDocuments = globalLogs //
+      .filter((document) => document.status === 'offline')
+      .filter((document) => document.startTimestamp !== undefined)
+      .filter((document) => document.endTimestamp !== undefined)
+      .filter((document) => document.data?.type === 'activity')
+      .filter((document) => document.data?.eventId !== undefined)
+      .filter((document) => document.data?.activityId !== undefined);
 
     const request = async () => {
       const currentEvent = events.filter((event) => event._id === selectedEvent._id)[0];
@@ -278,10 +286,21 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       const eventLogs = filteredLocalDocuments //
         .filter((document) => document.data?.eventId === selectedEvent._id);
       
+      const eventWithoutActivityLogs = filteredGlobalDocuments //
+        .filter((document) => document.data?.eventId === selectedEvent._id);
+      
       // Get all the activities
       const { data: activities } = await AgendaApi.byEvent(selectedEvent._id);
 
       const dataRows: typeof activityDataSource = [];
+
+      // Add info about event-without-activity logs
+      dataRows.push({
+        key: 'without',
+        logCount: eventWithoutActivityLogs.length,
+        name: 'Registro en el landing del curso',
+        timeInfo: processTime(eventWithoutActivityLogs, timeMode),
+      });
 
       for (const activity of activities) {
         // Filter by activity ID
@@ -300,7 +319,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       LOG('dataRows', dataRows);
     };
     request().catch((err) => ERROR('error to request activities', err));
-  }, [localLogs, selectedEvent, timeMode]);
+  }, [localLogs, selectedEvent, timeMode, globalLogs]);
 
   /**
    * Given logs and timeMode, will return an object with information about time
