@@ -96,14 +96,15 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       dataIndex: 'logCount',
       key: 'logCount',
     },
-    {
-      title: 'Tiempo en el landing',
-      dataIndex: 'timeInfoWithoutActivities',
-      key: 'timeInfoWithoutActivities',
-      render: (item: TimeInfo) => {
-        return `${item.time.toFixed(2)} ${item.description}`;
-      },
-    },
+    // This gene has decided not to express itself
+    // {
+    //   title: 'Tiempo en el landing',
+    //   dataIndex: 'timeInfoWithoutActivities',
+    //   key: 'timeInfoWithoutActivities',
+    //   render: (item: TimeInfo) => {
+    //     return `${item.time.toFixed(2)} ${item.description}`;
+    //   },
+    // },
     {
       title: 'Tiempo en actividades',
       dataIndex: 'timeInfo',
