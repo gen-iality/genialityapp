@@ -1,18 +1,53 @@
-// import { CameraOutlined, SearchOutlined, TableOutlined } from '@ant-design/icons';
-// import { Button, Card, Grid, Typography } from 'antd';
-import React from 'react';
-// import ChooseAction from '../components/ChooseAction';
 import DrawerSharePhoto from '../components/DrawerSharePhoto';
-// import StepsContainer from '../components/StepsContainer';
-// import StepsSharePhoto from '../components/StepsSharePhoto';
+import SharePhotoProvider from '../contexts/SharePhotoContext';
+import SharePhotoInLandingProvider from '../contexts/SharePhotoInLandingContext';
+import useSharePhotoInLanding from '../hooks/useSharePhotoInLanding';
+import ChooseAction from './landing/ChooseAction';
+import CreatePost from './landing/CreatePost';
+import Galery from './landing/Galery';
+import ImportPhoto from './landing/ImportPhoto';
+import Introduction from './landing/Introduction';
+import TakePhoto from './landing/TakePhoto';
 
-export default function SharePhotoInLanding() {
+const RenderView = () => {
+	const { location } = useSharePhotoInLanding();
+
+	const views = {
+		introduction: {
+			component: <Introduction />,
+		},
+		chooseAction: {
+			component: <ChooseAction />,
+		},
+		importPhoto: {
+			component: <ImportPhoto />,
+		},
+		takePhoto: {
+			component: <TakePhoto />,
+		},
+		createPost: {
+			component: <CreatePost />,
+		},
+		galery: {
+			component: <Galery />,
+		},
+	};
+
+	return views[location.activeView].component;
+};
+
+interface Props {
+	eventId?: string;
+}
+
+export default function SharePhotoInLanding(props: Props) {
 	return (
-		<DrawerSharePhoto>
-			{/* <StepsContainer /> */}
-			{/* Initial Choose */}
-      {/* <ChooseAction/> */}
-			{/* Initial Choose */}
-		</DrawerSharePhoto>
+		<SharePhotoProvider>
+			<SharePhotoInLandingProvider>
+				<DrawerSharePhoto>
+					<RenderView />
+				</DrawerSharePhoto>
+			</SharePhotoInLandingProvider>
+		</SharePhotoProvider>
 	);
 }

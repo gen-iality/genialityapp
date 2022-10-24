@@ -14,8 +14,12 @@ export interface SharePhoto extends Base {
 	// Event Info
 	event_id: string;
 	title: string;
-	start_date: Date | string;
-	end_date: Date | string;
+	tematic: {
+		type: 'text' | 'image' | string
+		content: string
+	}
+	// start_date: Date | string;
+	// end_date: Date | string;
 	// Event Status
 	published: boolean;
 	active: boolean;
@@ -27,11 +31,10 @@ export interface SharePhoto extends Base {
 export interface CreateSharePhotoDto
 	extends Omit<
 		SharePhoto,
-		| 'id'
+		| '_id'
 		| 'created_at'
 		| 'updated_at'
-		| 'start_date'
-		| 'end_date'
+		| 'tematic'
 		| 'published'
 		| 'active'
 		| 'points_per_like'
@@ -47,17 +50,17 @@ export interface Post extends Base {
 	// created_at: Date | string;
 	// updated_at: Date | string;
 	// Dynamic info
-	dynamic_id: string;
+	// dynamic_id: string;
 	user_id: string;
 	// Post data
 	image: string;
 	thumb: string;
 	title: string;
-	like: Like[];
+	likes: Like[];
 }
 
 export interface CreatePostDto
-	extends Omit<Post, 'id' | 'created_at' | 'updated_at'> {}
+	extends Omit<Post, '_id' | 'created_at' | 'updated_at' | 'thumb' | 'likes'> {}
 
 export interface Like extends Base {
 	// // Base
@@ -65,8 +68,9 @@ export interface Like extends Base {
 	// created_at: Date | string;
 	// updated_at: Date | string;
 	// Like data
+	post_id: string;
 	user_id: string;
 }
 
-export interface CreateLikeDto
-	extends Omit<Like, 'id' | 'created_at' | 'updated_at'> {}
+export interface AddLikeDto
+	extends Omit<Like, '_id' | 'created_at' | 'updated_at'> {}
