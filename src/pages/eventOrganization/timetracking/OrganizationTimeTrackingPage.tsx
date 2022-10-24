@@ -45,19 +45,36 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
   const {
     org: organization,
   } = props;
+  // From URI we take the member ID.
   const [memberId] = useState(props.match.params.memberIdParam);
+  // Then, we ask for the User ID
   const [userId, setUserId] = useState<string | undefined>();
-  const [events, setEvents] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // And build a user info
   const [userInfo, setUserInfo] = useState({} as OrganizationUserInfo);
-  const [logs, setLogs] = useState<SessionPayload[]>([]);
+
+  // This is info about all the events in this organization where member is into
+  const [events, setEvents] = useState<any[]>([]);
+  // All is loaded?
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Global logs records all the global session logs for an specify user
   const [globalLogs, setGlobalLogs] = useState<SessionPayload[]>([]);
+  // To display how many the user has used the platform
+  const [closedGlobalSessionLogs, setClosedGlobalSessionLogsLogs] = useState<SessionPayload[]>([]);
+  // This saves info about each logs by event
   const [localLogs, setLocalLogs] = useState<SessionPayload[]>([]);
+
+  // To control the time mode: whether the time should be adapt to human format
   const [timeMode, setTimeMode] = useState<'minutes'|'hours'|'days'>('minutes');
+
+  // These states save data about the table data source
   const [eventDataSource, setEventDataSource] = useState<RowDataByEvent[]>([]);
   const [activityDataSource, setActivityDataSource] = useState<RowDataByActivity[]>([]);
-  const [isModalShown, setIsModalShown] = useState(false);
+  // The selected event to load data about an specify logs of event
   const [selectedEvent, setSelectedEvent] = useState<any>();
+
+  // Modal controller
+  const [isModalShown, setIsModalShown] = useState(false);
 
   const openModal = useCallback(() => setIsModalShown(true), []);
   const closeModal = useCallback(() => setIsModalShown(false), []);
@@ -145,9 +162,10 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       // Get the member data
       try {
         const member = await OrganizationApi.getEpecificUser(organization._id, memberId);
+        setUserId(member.user._id);
+
         userInfo.name = member.user.names;
         userInfo.picture = member.user.picture;
-        setUserId(member.user._id);
 
         // Get info about the beacon status
         try {
@@ -157,6 +175,8 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
           LOG('userId:', member.user._id, 'beacon:', beacon);
         } catch (err) {
           ERROR('Cannot get beacon status to userId', member.user._id, 'getting:', err);
+        } finally {
+          setUserInfo(userInfo);
         }
 
         const globalRef = await fireRealtime.ref(`user_sessions/global/${member.user._id}`);
@@ -168,7 +188,6 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
         ERROR('Cannot get the organization member to orgId and userId:', organization._id, memberId, 'getting:', err);
       }
 
-      setUserInfo(userInfo);
       setIsLoading(false);
     })();
   }, [memberId]);
@@ -198,7 +217,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       .filter((log: any) => log.startTimestamp !== undefined)
       .filter((log: any) => log.endTimestamp !== undefined);
     LOG(filteredLogDict.length, 'logs loaded', filteredLogDict);
-    setLogs(filteredLogDict as SessionPayload[]);
+    setClosedGlobalSessionLogsLogs(filteredLogDict as SessionPayload[]);
   }, [globalLogs]);
 
   useEffect(() => {
@@ -286,7 +305,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
   /**
    * Given logs and timeMode, will return an object with information about time
    */
-  const processTime = useCallback((_logs: typeof logs, _timeMode: typeof timeMode): TimeInfo => {
+  const processTime = useCallback((_logs: typeof closedGlobalSessionLogs, _timeMode: typeof timeMode): TimeInfo => {
     let divisor = 1;
     let description = 'minuto(s)';
     switch(_timeMode) {
@@ -310,8 +329,8 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
   }, []);
 
   const loggedTime: TimeInfo = useMemo(() => {
-    return processTime(logs, timeMode);
-  }, [logs, timeMode]);
+    return processTime(closedGlobalSessionLogs, timeMode);
+  }, [closedGlobalSessionLogs, timeMode]);
 
   if (isLoading) {
     return (
@@ -360,7 +379,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       >
       </Space>
       <Space direction='vertical'>
-        <Typography.Text>{logs.length} ingresos</Typography.Text>
+        <Typography.Text>{closedGlobalSessionLogs.length} ingresos</Typography.Text>
         <Space direction='horizontal'>
           <Card>{loggedTime.time.toFixed(2)} {loggedTime.description}</Card>
         </Space>
