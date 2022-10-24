@@ -113,6 +113,7 @@
     "react-timestamp": "^5.1.0",
     "react-to-pdf": "^0.0.14",
     "react-to-print": "^2.12.6",
+    "react-webcam": "^7.0.1",
     "react-widgets": "4.6.1",
     "react-widgets-moment": "^4.0.19",
     "react-window": "^1.8.5",
