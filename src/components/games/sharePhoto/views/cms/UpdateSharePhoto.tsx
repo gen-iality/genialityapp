@@ -1,7 +1,7 @@
 import Header from '@/antdComponents/Header';
 import { Card, Col, Form, Input, Row, Switch, Tabs, Typography } from 'antd';
 import TematicInput from '../../components/TematicInput';
-import useSharePhoto from '../hooks/useSharePhoto';
+import useSharePhoto from '../../hooks/useSharePhoto';
 
 interface Props {
 	eventId: string;
