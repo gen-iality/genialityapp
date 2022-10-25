@@ -11,8 +11,9 @@ export const activityTypeNames: { [key in ActivityType.MainUIKey]: ActivityType.
   live: MainUI.LIVE,
   meeting: MainUI.MEETING,
   video: MainUI.VIDEO,
-  quizing: MainUI.QUIZ, // mockup
-  survey: MainUI.SURVEY, // mockup
+  quizing: MainUI.QUIZ,
+  survey: MainUI.SURVEY,
+  pdf: MainUI.PDF,
 };
 
 export const activityContentValues: { [key in ActivityType.DeepUIKey]: ActivityType.ContentValue } = {
@@ -24,8 +25,9 @@ export const activityContentValues: { [key in ActivityType.DeepUIKey]: ActivityT
   file: DeepUI.FILE,
   rtmp: DeepUI.RTMP,
   meet: DeepUI.MEET,
-  quizing: DeepUI.QUIZ, // mockup
-  survey: DeepUI.SURVEY, // mockup
+  quizing: DeepUI.QUIZ,
+  survey: DeepUI.SURVEY,
+  pdf: DeepUI.PDF,
 };
 
 export const typeToDisplaymentMap: ActivityType.TypeToDisplaymentMap = {
@@ -39,8 +41,9 @@ export const typeToDisplaymentMap: ActivityType.TypeToDisplaymentMap = {
   RTMP: TypeDisplayment.TRANSMISSION,
   cargarvideo: TypeDisplayment.VIDEO,
   video: TypeDisplayment.VIDEO,
-  quizing: TypeDisplayment.EXAM, // mockup
-  survey: TypeDisplayment.SURVEY, // mockup
+  quizing: TypeDisplayment.EXAM,
+  survey: TypeDisplayment.SURVEY,
+  pdf: TypeDisplayment.PDF,
 };
 
 const urlInputForms: { [key in keyof typeof activityContentValues]?: ActivityType.FormUI } = {
@@ -147,6 +150,16 @@ const videoActivityTypeCards: ActivityType.CardUI[] = [
   },
 ];
 
+const pdfForm: ActivityType.FormUI = {
+  formType: FormType.INFO,
+  key: activityContentValues.pdf,
+  MainTitle: '',
+  title: 'PDF interactivo',
+  description: 'Carga un PDF iteractivo',
+  image:
+    'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fmeeting.png?alt=media&token=02a6259b-3c30-436f-b0b0-f4cf1eecdfd6',
+};
+
 const meetingForm: ActivityType.FormUI = {
   formType: FormType.INFO,
   key: activityContentValues.meeting,
@@ -223,6 +236,16 @@ export const formWidgetFlow: ActivityType.MainUI = {
       description: 'En esta opción podrás agregar encuestas.',
       image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b',
       form: surveyForm,
+    },
+    {
+      widgetType: WidgetType.FORM,
+      key: activityTypeNames.pdf,
+      MainTitle: 'Agrega un PDF interactivo',
+      title: 'PDF',
+      description: 'En esta opción podrás agregar PDFs interactivos',
+      image:
+        'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b',
+      form: pdfForm,
     },
   ],
 };
