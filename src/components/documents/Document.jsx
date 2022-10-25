@@ -46,6 +46,7 @@ const Document = (props) => {
   };
 
   const resetDocument = () => {
+    console.debug('reset all the Document component');
     setDocument({});
     setFolder(false);
     setFiles('');
@@ -194,6 +195,14 @@ const Document = (props) => {
         },
       });
     }
+    setTimeout(() => {
+      // This function SHOULD be called, but, interactively the user calls to
+      // remove, and before the App calls `onHandlerFile` again and edits the
+      // progress (and other states), and we NEED avoid that re-calling, but we
+      // can not because `onHandlerFile` listens the event `onChange` and it
+      // does not check if that changing is from uploading or removing.
+      resetDocument();
+    }, 3000);
   };
 
   const handleChange = (e) => {
@@ -206,7 +215,7 @@ const Document = (props) => {
   };
 
   const onHandlerFile = async (e) => {
-    console.log('onHandlerFile calling...')
+    console.log('onHandlerFile calling...', e)
     /* console.log(e.file.originFileObj); */
     setLoading(true);
     setDocumentList(e.fileList);
