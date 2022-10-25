@@ -19,6 +19,7 @@ function EviusReactQuill(props) {
   let reactQuilllRef = useRef(null);
   const [modules, setModules] = useState({});
   const [codeBlock, setCodeBlock] = useState(false);
+  let optionsTools = props?.blockedOptions || { link: true, image: true, code_block: true };
   //Habilitar solo para efectos de testeo del funcionamiento del componente
   // useEffect(() => {
   //
@@ -106,7 +107,7 @@ function EviusReactQuill(props) {
           ['bold', 'italic', 'underline', 'strike', 'blockquote'],
           [{ color: colorsF }, { background: [] }],
           [{ list: 'ordered' }, { list: 'bullet' }],
-          ['link', !props.blockedOptions && 'image', !props.blockedOptions && 'code-block'],
+          [optionsTools.link && 'link', optionsTools.image && 'image', optionsTools.code_block && 'code-block'],
         ],
         handlers: {
           image: imageHandlerUpload,
