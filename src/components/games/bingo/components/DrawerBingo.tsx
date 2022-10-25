@@ -44,7 +44,8 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
 
   return (
     <Drawer
-      extra={<PrintCardBoard bingoCardRef={bingoCardRef} cardboardCode={cardboardCode} />}
+      footer={screens.xs && <PrintCardBoard bingoCardRef={bingoCardRef} cardboardCode={cardboardCode} />}
+      extra={!screens.xs && <PrintCardBoard bingoCardRef={bingoCardRef} cardboardCode={cardboardCode} />}
       headerStyle={{
         padding: '1px 24px',
       }}
