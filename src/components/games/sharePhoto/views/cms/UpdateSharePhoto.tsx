@@ -5,14 +5,14 @@ import TabResults from '../../components/cms/TabResults';
 import TabSetup from '../../components/cms/TabSetup';
 import TabStyle from '../../components/cms/TabStyle';
 import useSharePhoto from '../../hooks/useSharePhoto';
-
+import Loading from '@/components/profile/loading';
 interface Props {
 	eventId: string;
 }
 
 export default function UpdateSharePhoto(props: Props) {
 	const { eventId } = props;
-	const { sharePhoto, deleteSharePhoto, updateSharePhoto } = useSharePhoto();
+	const { sharePhoto, loading, deleteSharePhoto, updateSharePhoto } = useSharePhoto();
 
 	const handleDelete = () => {
 		if (sharePhoto !== null) {
@@ -41,6 +41,8 @@ export default function UpdateSharePhoto(props: Props) {
 	if (sharePhoto === null) {
 		return <p>Ups!, esta dinamica no existe aun</p>;
 	}
+
+	if (loading) return <Loading />;
 
 	return (
 		<Form onFinish={handleFinish}>

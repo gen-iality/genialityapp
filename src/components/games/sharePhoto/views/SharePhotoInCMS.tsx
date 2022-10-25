@@ -2,6 +2,7 @@ import SharePhotoProvider from '../contexts/SharePhotoContext';
 import useSharePhoto from '../hooks/useSharePhoto';
 import CreateSharePhoto from './cms/CreateSharePhoto';
 import UpdateSharePhoto from './cms/UpdateSharePhoto';
+import Loading from '@/components/profile/loading';
 
 interface RenderViewProps {
 	eventId: string;
@@ -9,7 +10,9 @@ interface RenderViewProps {
 
 const RenderView = (props: RenderViewProps) => {
 	const { eventId } = props;
-	const { sharePhoto } = useSharePhoto();
+	const { sharePhoto, loading } = useSharePhoto();
+
+	if (loading) return <Loading />;
 
 	return sharePhoto === null ? <CreateSharePhoto eventId={eventId} /> : <UpdateSharePhoto eventId={eventId} />;
 };
