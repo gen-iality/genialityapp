@@ -24,6 +24,9 @@ function ActivityTypeSwitch({ activity }) {
     case 'url':
     case 'cargarvideo':
       return <VideoActivity />;
+    case 'pdf':
+    case 'pdf2':
+      return <PdfActivity />;
     case 'quiz':
     case 'quizing':
       return <SurveyProvider><QuizActivity /></SurveyProvider>;
