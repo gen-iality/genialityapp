@@ -69,6 +69,7 @@ const ContentContainer = () => {
             <PrivateRoute exact path='/myprofile' component={MainProfile} />
           )}
           <PrivateRoute exact path='/myprofile' component={MainProfile} />
+          <Route path='/loginWithCode' component={LoginWithCode} />
           <RouteContext exact path={'/:event_id'} component={ViewPrelanding} />
 
           <Route path='/social/:event_id' component={socialZone} />
@@ -102,7 +103,6 @@ const ContentContainer = () => {
           <Route exact path='/eventfinished' component={EventFinished} />
 
           {/* <Route exact path='/' component={RedirectPortal} /> */}
-          <Route path='/loginWithCode' component={LoginWithCode} />
 
           <Route
             path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
