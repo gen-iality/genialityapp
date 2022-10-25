@@ -82,36 +82,39 @@ const Document = (props) => {
       });
 
       try {
-        if (locationState.edit && !props.simpleMode) {
-          console.debug('document editing');
-          await DocumentsApi.editOne(
-            !folder ? document : { title: document.title, type: 'folder', folder },
-            locationState.edit,
-            props.event._id
-          );
-          console.debug('document edited');
-        } else {
-          console.debug('document creating');
-          await DocumentsApi.create(
-            !folder ? document : { title: document.title, type: 'folder', folder },
-            props.event._id
-          );
-          console.debug('document created');
-          if (typeof props.cbUploaded === 'function') {
-            props.cbUploaded();
-            resetDocument();
+        if (!props.notRecordFileInDocuments) {
+          if (locationState.edit && !props.simpleMode) {
+            console.debug('document editing');
+            await DocumentsApi.editOne(
+              !folder ? document : { title: document.title, type: 'folder', folder },
+              locationState.edit,
+              props.event._id
+            );
+            console.debug('document edited');
+          } else {
+            console.debug('document creating');
+            await DocumentsApi.create(
+              !folder ? document : { title: document.title, type: 'folder', folder },
+              props.event._id
+            );
+            console.debug('document created');
+            if (typeof props.cbUploaded === 'function') {
+              props.cbUploaded();
+              resetDocument();
+            }
           }
+
+          DispatchMessageService({
+            key: 'loading',
+            action: 'destroy',
+          });
+          DispatchMessageService({
+            type: 'success',
+            msj: 'Información guardada correctamente!',
+            action: 'show',
+          });
         }
 
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        });
         if (!props.simpleMode) history.push(`${props.matchUrl}`);
         setLoading(false);
       } catch (e) {
