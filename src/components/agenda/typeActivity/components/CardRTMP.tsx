@@ -11,7 +11,7 @@ const CardRTMP = () => {
       const data = dataLive?.push_url.split('/');
       const password = data[data.length - 1];
       const rtmp = dataLive.push_url.replace(password, '');
-      console.log('PASSWORD==>', password, rtmp);
+      /* console.log('PASSWORD==>', password, rtmp); */
       setDataRtmp({ rtmp, password });
     }
   }, [dataLive]);

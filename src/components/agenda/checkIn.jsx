@@ -94,7 +94,7 @@ class CheckAgenda extends Component {
       let roles = rolesList?.map((role) => {
         return { label: role.name, value: role._id };
       });
-      console.log('AGENDA ID==>', agendaID, this.props.location.state);
+      /* console.log('AGENDA ID==>', agendaID, this.props.location.state); */
       let userRef = firestore
         .collection(`${event._id}_event_attendees`)
         .doc('activity')
@@ -143,7 +143,7 @@ class CheckAgenda extends Component {
       let newList = [...this.state.attendees];
 
       newList = await Activity.getActivyAssitantsAdmin(this.props.event._id, agendaID);
-      console.log('NEW LIST==>', newList);
+      /* console.log('NEW LIST==>', newList); */
 
       newList = newList.map((item) => {
         let attendee = item.attendee

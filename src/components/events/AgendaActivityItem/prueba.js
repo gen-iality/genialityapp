@@ -50,8 +50,8 @@ function AgendaActivityItem(props) {
   }, [registerStatus, item]);
 
   useEffect(() => {
-    console.log('DATE HAS');
-    console.log(props.hasDate);
+    /* console.log('DATE HAS');
+    console.log(props.hasDate); */
     (async () => {
       await listeningStateMeetingRoom(item.event_id, item._id);
     })();

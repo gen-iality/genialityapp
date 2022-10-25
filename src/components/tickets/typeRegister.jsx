@@ -2,7 +2,7 @@ import { Radio, Input, Space } from 'antd';
 
 const TypeRegister = ({ setTypeRegister, typeRegister }) => {
   const onChange = (e) => {
-    console.log('radio checked', e.target.value);
+    /* console.log('radio checked', e.target.value); */
     setTypeRegister(e.target.value);
   };
 

@@ -47,7 +47,7 @@ function useValideChangesInFormData(
     };
 
     const equalityValidation = deepStateEqualityValidation(modified, formattedModified);
-    console.log('equalityValidation:', equalityValidation);
+    /* console.log('equalityValidation:', equalityValidation); */
     setWasChanged(equalityValidation === false);
   };
 

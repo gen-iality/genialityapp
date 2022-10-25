@@ -6,12 +6,14 @@ import { getUserBingo, saveBingoByUser } from '@/components/games/bingo/services
 import {
   Bingo,
   BingoByUserInterface,
+  BingoPrintProps,
   PickedNumberInterface,
   RamdonBingoValue,
 } from '@/components/games/bingo/interfaces/bingo';
 export const useDrawerBingo = () => {
   const { value } = UseEventContext();
   const cUser = UseUserEvent();
+  console.log('🚀 ~ file: useDrawerBingo.tsx ~ line 16 ~ useDrawerBingo ~ cUser', cUser);
 
   const [arrayLocalStorage, setArrayLocalStorage] = useState<number[]>([]);
   const [arrayDataBingo, setArrayDataBingo] = useState<RamdonBingoValue[]>([]);
@@ -22,6 +24,25 @@ export const useDrawerBingo = () => {
   const [ballotValue, setBallotValue] = useState<PickedNumberInterface>({ type: '', value: '¡BINGO!' });
   const [userCartons, setUserCartons] = useState<string[]>(['1']);
   const [bingoData, setBingoData] = useState<Bingo>();
+  const [bingoPrint, setBingoPrint] = useState<BingoPrintProps[]>([
+    {
+      names: '',
+      email: '',
+      id: '',
+      values: [
+        {
+          carton_value: {
+            type: '',
+            value: 'string',
+          },
+          ballot_value: {
+            type: '',
+            value: '',
+          },
+        },
+      ],
+    },
+  ]);
 
   const [mediaUrl, setMediaUrl] = useState<string>(
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807'
@@ -130,6 +151,7 @@ export const useDrawerBingo = () => {
     });
     setDemonstratedBallots(arrayDataDemonstrated);
   };
+
   const distributionDataUser = (data: BingoByUserInterface) => {
     if (data) {
       const { values_bingo_card } = data;
@@ -143,6 +165,14 @@ export const useDrawerBingo = () => {
       });
       setArrayDataBingoBallot(arrayDataBingoBallot);
       setArrayDataBingo(arrayDataBingo);
+      setBingoPrint([
+        {
+          names: cUser.value.properties.names,
+          email: cUser.value.properties.email,
+          id: data._id,
+          values: arrayDataBingo,
+        },
+      ]);
     }
   };
 
@@ -195,5 +225,6 @@ export const useDrawerBingo = () => {
     setDemonstratedBallots,
     dataFirebaseBingo,
     bingoData,
+    bingoPrint,
   };
 };

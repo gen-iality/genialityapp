@@ -32,7 +32,7 @@ const DrawerProfile = (props) => {
 
   useEffect(() => {
     if (props.profileuser) {
-      console.log(props.profileuser._id, cEventUser.value, props.profileuser);
+      /* console.log(props.profileuser._id, cEventUser.value, props.profileuser); */
       if (props.profileuser._id !== cEventUser.value?.account_id) {
         let isContact = isMyContacts(props.profileuser, props.cHelper.contacts);
         setIsMe(cUser.value._id == props.profileuser._id);

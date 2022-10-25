@@ -157,7 +157,7 @@ class ImportUsers extends Component {
       />,
     ];
     return (
-      <>
+      <div style={{ width: '100%', overflowX: 'hidden' }}>
         <Header
           title={<Link to={this.props.matchUrl}>{'Invitados'}</Link>}
           back
@@ -172,7 +172,7 @@ class ImportUsers extends Component {
         <br />
 
         <div>{layout[this.state.step]}</div>
-      </>
+      </div>
     );
   }
 }

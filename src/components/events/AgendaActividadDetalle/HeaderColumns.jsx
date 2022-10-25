@@ -252,7 +252,7 @@ const HeaderColumns = (props) => {
             {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
           </Row>
           <Col>
-            {console.log('1. TIPE ACTIVITY==>', typeActivity, recordTypeForThisEvent(cEvent.value?._id))}
+            {/* {console.log('1. TIPE ACTIVITY==>', typeActivity, recordTypeForThisEvent(cEvent.value?._id))} */}
             {typeActivity == 'eviusMeet' &&
               !request[cEventUSer.value?._id]?.active &&
               cEventUSer.value?._id &&

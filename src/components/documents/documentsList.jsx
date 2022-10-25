@@ -25,7 +25,7 @@ const columns = [
 // Estructura de boton para descargar documentos
 const IconText = ({ icon, text, onSubmit }) => (
   <Button icon={icon} htmlType='submit' type='link' href={onSubmit} target='_blank'>
-    + {/* {React.createElement(icon, { style: { margin: 0 } })} */}
+    {/* {React.createElement(icon, { style: { margin: 0 } })} */}
     {text}
   </Button>
 );

@@ -54,7 +54,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
     if (selected) {
       onConfirmType(selected);
       onClose(true);
-      console.log('confirm content type as', selected);
+      /* console.log('confirm content type as', selected); */
     } else {
       alert('No puede guardar dato vacío');
     }
@@ -65,7 +65,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
    * @param newKey new widget key that is equal to a content type.
    */
   const handleWidgetKeyChange = (newKey: ActivityType.GeneralTypeValue) => {
-    console.log('selected changed to', newKey);
+    /* console.log('selected changed to', newKey); */
     setSelected(newKey);
   };
 
@@ -75,7 +75,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
   useEffect(() => {
     const data = useGetWidgetForContentType(widgetKey as ActivityType.GeneralTypeValue);
     if (data) setWidgetData(data);
-    console.debug('get data to key', widgetKey, ':', data);
+    /* console.debug('get data to key', widgetKey, ':', data); */
   }, [widgetKey]);
 
   /**
@@ -85,7 +85,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
     if (widgetKeyStack.length) {
       const [newWidgetKey] = widgetKeyStack.slice(-1);
       setWidgetKey(newWidgetKey);
-      console.debug('current widget key is', newWidgetKey);
+      /* console.debug('current widget key is', newWidgetKey); */
     }
   }, [widgetKeyStack]);
 
@@ -98,7 +98,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
       setWidgetData(widget);
       setWidgetKey(widget.key);
       setWidgetKeyStack([widget.key]);
-      console.debug('reset modal states');
+      /* console.debug('reset modal states'); */
     }
   }, [isVisible]);
 

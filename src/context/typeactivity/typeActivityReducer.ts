@@ -151,7 +151,7 @@ export const typeActivityReducer = (state: TypeActivityState, action: TypeActivi
       });
 
       const disableButtonCargarVideo = action.payload.id === 'cargarvideo';
-      console.log('state.typeOptions', action.payload);
+      /* console.log('state.typeOptions', action.payload); */
 
       return {
         ...state,

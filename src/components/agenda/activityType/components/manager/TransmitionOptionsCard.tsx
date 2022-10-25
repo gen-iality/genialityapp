@@ -42,9 +42,9 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
   const cEvent: any = useContext(CurrentEventContext);
 
   const deleteTransmition = async () => {
-    console.debug('deleteTransmition is called');
+    /* console.debug('deleteTransmition is called'); */
     deleteLiveStream(meeting_id);
-    console.debug('will call deleteLiveStream with meeting_id:', meeting_id);
+    /* console.debug('will call deleteLiveStream with meeting_id:', meeting_id); */
     setDataLive(null);
     await resetActivityType('liveBroadcast');
   };
@@ -89,27 +89,27 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     setDataLive(null);
 
     const value = 'created_meeting_room';
-    console.debug('saves value of RoomStatus:', value);
+    /* console.debug('saves value of RoomStatus:', value); */
     setRoomStatus(value);
     setMeetingId(null);
     await saveConfig({ habilitar_ingreso: value, data: null, type: 'delete' });
-    console.debug('config saved - habilitar_ingreso:', value);
+    /* console.debug('config saved - habilitar_ingreso:', value); */
 
     setActivityContentType(null); // last "toggleActivitySteps('initial')";
     switch (type) {
       case TypeDisplayment.VIDEO:
-        console.debug('TransmitionOptionsCard reset AT to video');
+        /* console.debug('TransmitionOptionsCard reset AT to video'); */
         await resetActivityType(MainUI.VIDEO);
         break;
       case TypeDisplayment.MEETING:
-        console.debug('TransmitionOptionsCard reset AT to meeting2');
+        /* console.debug('TransmitionOptionsCard reset AT to meeting2'); */
         await resetActivityType(MainUI.MEETING);
         break;
       case TypeDisplayment.TRANSMISSION:
       case TypeDisplayment.EVIUS_MEET:
       case TypeDisplayment.VIMEO:
       case TypeDisplayment.YOUTUBE:
-        console.debug('TransmitionOptionsCard reset AT to liveBroadcast');
+        /* console.debug('TransmitionOptionsCard reset AT to liveBroadcast'); */
         await resetActivityType(MainUI.LIVE);
     }
     setIsDeleting(false);

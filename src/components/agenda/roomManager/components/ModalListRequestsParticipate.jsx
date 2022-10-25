@@ -40,8 +40,8 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
   };
 
   const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
-    console.log('sourceSelectedKeys:', sourceSelectedKeys);
-    console.log('targetSelectedKeys:', targetSelectedKeys);
+    /* console.log('sourceSelectedKeys:', sourceSelectedKeys);
+    console.log('targetSelectedKeys:', targetSelectedKeys); */
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 

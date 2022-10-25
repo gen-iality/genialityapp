@@ -248,7 +248,7 @@ function AgendaEdit(props: AgendaEditProps) {
           /** Si es un evento recien creado se envia a la misma ruta con el
            * estado edit el cual tiene el id de la actividad para poder editar
            * */
-          console.debug('created agenda is used from origin');
+          /* console.debug('created agenda is used from origin'); */
           agendaContext.setActivityEdit(agenda._id);
           setCurrentActivityID(agenda._id);
           setIsEditing(true);

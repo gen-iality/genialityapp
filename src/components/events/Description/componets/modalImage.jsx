@@ -36,7 +36,7 @@ const ModalImageComponent = ({
     }
   };
   const handleImage = (imageUrl) => {
-    console.log('imageUrl', imageUrl);
+    /* console.log('imageUrl', imageUrl); */
     setImage(imageUrl);
   };
   return (

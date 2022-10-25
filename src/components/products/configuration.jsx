@@ -24,7 +24,7 @@ const Configuration = (props) => {
         .doc(props.eventId)
         .get();
       if (resp.exists) {
-        console.log('respuesta firebase=>', resp.data());
+        /* console.log('respuesta firebase=>', resp.data()); */
         let data = resp.data();
         setCheckSubasta(data.data.habilitar_subasta);
         setMessage(data.data.message);
@@ -41,23 +41,24 @@ const Configuration = (props) => {
     setMessage(e);
   };
 
-  const saveConfiguration = async() => { 
+  const saveConfiguration = async () => {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
       msj: ' Por favor espere mientras se guarda la configuración...',
       action: 'show',
     });
-    setLoading(true)     
-    let data={
-      habilitar_subasta:checkSubasta,
-      message:messageF
-    }
+    setLoading(true);
+    let data = {
+      habilitar_subasta: checkSubasta,
+      message: messageF,
+    };
 
-    try{
+    try {
       let resp = await firestore
-      .collection('config')
-      .doc(props.eventId).set({data});
+        .collection('config')
+        .doc(props.eventId)
+        .set({ data });
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
@@ -66,7 +67,7 @@ const Configuration = (props) => {
         type: 'success',
         msj: 'Configuración guardada correctamente!',
         action: 'show',
-      });       
+      });
     } catch (e) {
       DispatchMessageService({
         key: 'loading',
@@ -78,9 +79,8 @@ const Configuration = (props) => {
         action: 'show',
       });
     }
-    setLoading(false)
+    setLoading(false);
   };
-  
 
   return !loadingData ? (
     <>

@@ -24,7 +24,7 @@ const InputUploadVideo = (props: any) => {
         const { status, response } = info.file;
         switch (status) {
           case 'done':
-            console.log('RESPONSE ACA===>', response);
+            /* console.log('RESPONSE ACA===>', response); */
             selectOption(typeOptions.key, `${response.video.iframe_url}*${response.video.id}`);
             setLoading(false);
             break;

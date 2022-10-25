@@ -52,22 +52,22 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
 
   useEffect(() => {
     if (selectedType !== undefined) {
-      console.debug('confirm the selectedType:', selectedType);
+      /* console.debug('confirm the selectedType:', selectedType); */
       saveActivityContent(selectedType as ActivityType.ContentValue);
       setTimeout(() => {
         setSelectedType(undefined);
-        console.debug('reset selectedType because it matters');
+        /* console.debug('reset selectedType because it matters'); */
       }, 1000);
-    } else console.debug('selectedType is undefined again');
+    } /* else console.debug('selectedType is undefined again'); */
   }, [selectedType]);
 
   const handleCloseModal = (success: boolean = false) => {
-    console.debug('modal is hidden', success ? 'successfully' : 'failurely');
+    /* console.debug('modal is hidden', success ? 'successfully' : 'failurely'); */
     setIsModalShown(false);
   };
 
   const handleInput = (text: string) => {
-    console.debug('text will:', text);
+    /* console.debug('text will:', text); */
     setContentSource(text);
   };
 

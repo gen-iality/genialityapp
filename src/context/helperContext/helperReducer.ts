@@ -90,7 +90,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
     //     };
 
     default:
-      console.log('🚀 FUERA DEL REDUCER');
+      /* console.log('🚀 FUERA DEL REDUCER'); */
       return state;
   }
 };

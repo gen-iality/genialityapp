@@ -374,7 +374,7 @@ class menuLanding extends Component {
   }
   render() {
     const userContext = this.context;
-    console.log('props', this.props.event.visibility);
+    /* console.log('props', this.props.event.visibility); */
     const userPlan = userContext.value?.plan;
     return (
       <Fragment>

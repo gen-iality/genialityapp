@@ -29,7 +29,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
         setBloquearPuja(true);
       }
       setPriceProduct(product && product.price);
-      console.log('PRODUCT PRICE==>', product.price);
+      /* console.log('PRODUCT PRICE==>', product.price); */
       setValorProduct(obtenerValor());
       let minValueUp = product.currency == 'USD' ? 50 : 100000;
       let valueOfertaMin =
@@ -182,7 +182,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
   };
   return (
     <>
-      {console.log(product, 'producto')}
+      {/* {console.log(product, 'producto')} */}
       {product && product._id != '6116cae171f4b926d1363266' && (
         <Card>
           <Row>

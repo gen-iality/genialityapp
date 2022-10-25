@@ -69,7 +69,7 @@ const RenderComponent = (props) => {
           tempactivty.avalibleGames = avalibleGames;
           helperDispatch({ type: 'currentActivity', currentActivity: tempactivty });
           setFnCiclo(true);
-          console.log('tempactivty', tempactivty);
+          /* console.log('tempactivty', tempactivty); */
         });
     }
   }
@@ -93,7 +93,7 @@ const RenderComponent = (props) => {
       }
     }
   }, [chatAttendeChats]);
-  console.log('isBingo', props.isBingo, props.isBingo === false || props.isBingo === undefined);
+  /* console.log('isBingo', props.isBingo, props.isBingo === false || props.isBingo === undefined); */
   const RenderizarComponente = useCallback((plataforma, actividad_estado, reder_Game) => {
     switch (plataforma) {
       case 'vimeo':
@@ -195,9 +195,9 @@ const RenderComponent = (props) => {
             );
 
           case 'closed_meeting_room':
-            {
+            /* {
               console.log('100. TYPE ACTIVITY==>', typeActivity);
-            }
+            } */
             return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
             ) : (

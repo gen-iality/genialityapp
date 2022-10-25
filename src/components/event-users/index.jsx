@@ -768,7 +768,7 @@ class ListEventUser extends Component {
     const resp = this.props.badgeEvent;
     if (resp._id) {
       let badges = resp.BadgeFields;
-      console.log(this.ifrmPrint, badges);
+      /* console.log(this.ifrmPrint, badges); */
       if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
       printBagdeUser(this.ifrmPrint, badges, this.state.user);
     } else this.setState({ noBadge: true });

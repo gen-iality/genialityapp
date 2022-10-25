@@ -40,7 +40,7 @@ export default function AdmininformativeSection1(props) {
 
       try {
         const result = await EventsApi.editOne(data, eventContext.value._id);
-        console.log('result', result);
+        /* console.log('result', result); */
         DispatchMessageService({
           type: 'success',
           msj: 'Guardado',
@@ -60,7 +60,7 @@ export default function AdmininformativeSection1(props) {
   useEffect(() => {
     async function getContent() {
       const result = await EventsApi.getOne(eventContext.value._id);
-      console.log('data', result);
+      /* console.log('data', result); */
       let markup = result?.itemsMenu?.informativeSection1?.markup || '';
       setContent(markup);
     }
@@ -69,7 +69,7 @@ export default function AdmininformativeSection1(props) {
 
   const handleChangeReactQuill = (e) => {
     setContent(e);
-    console.log('content', e);
+    /* console.log('content', e); */
   };
 
   if (eventContext.status === 'LOADING') return 'Loading...';

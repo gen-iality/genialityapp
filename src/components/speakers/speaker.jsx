@@ -252,7 +252,7 @@ function Speaker(props) {
       value={areacodeselected}
       onChange={(val) => {
         setareacodeselected(val);
-        console.log(val);
+        /* console.log(val); */
       }}
       placeholder='Codigo de area del pais'>
       {areaCode.map((code, key) => {

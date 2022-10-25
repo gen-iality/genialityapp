@@ -56,9 +56,9 @@ const Header = (props) => {
           <Typography.Text style={{ color: 'red' }}>Has alcanzado el límite de {title} en tu plan</Typography.Text>
         )}
       </small> */}
-      {!eventIsActive && window.location.toString().includes('eventadmin') && (
+      {/* {!eventIsActive && window.location.toString().includes('eventadmin') && (
         <Typography.Text style={{ color: 'red' }}>Tu evento se encuentra bloqueado</Typography.Text>
-      )}
+      )} */}
       {description && <p>{description}</p>}
       <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
         <Col>{extra && <div>{extra}</div>}</Col>
