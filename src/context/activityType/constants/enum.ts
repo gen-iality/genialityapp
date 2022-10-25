@@ -16,6 +16,7 @@ export enum MainUI {
   VIDEO = 'video',
   QUIZ = 'quizing2',
   SURVEY = 'survey2',
+  PDF = 'pdf2',
 };
 
 export enum DeepUI {
@@ -29,6 +30,7 @@ export enum DeepUI {
   MEET = 'eviusMeet',
   QUIZ = 'quizing',
   SURVEY = 'survey',
+  PDF = 'pdf',
 };
 
 export enum TypeDisplayment {
@@ -40,4 +42,5 @@ export enum TypeDisplayment {
   EVIUS_MEET = 'EviusMeet',
   EXAM = 'Quizing',
   SURVEY = 'Survey',
+  PDF = 'pdf', // TODO: this should be uppercase, but we have to check where it is used
 };
