@@ -1,49 +1,35 @@
 import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { Card, Form, Input, Switch, Typography } from 'antd';
-import { useState } from 'react'
+import { useState } from 'react';
 
-export default function TematicInput() {
-  const [mode, setMode] = useState<'text' | 'image'>('text');
+interface Props {
+	initialState: string;
+}
 
-	const handleChangeMode = () => {
-		setMode(prev => (prev === 'text' ? 'image' : 'text'));
-	};
+export default function TematicInput(props: Props) {
+	const { initialState } = props;
 	return (
 		<Card
-			title='Instrucciones y Tematica'
+			title='Tematica'
 			bodyStyle={{
 				display: 'flex',
 				flexDirection: 'column',
 				justifyContent: 'center',
 			}}>
-			<Typography>
-				Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia
-				corrupti quaerat impedit repudiandae quos accusantium eos dolorum,
-				laboriosam provident iure, blanditiis recusandae optio cupiditate
-				voluptas aliquam culpa deserunt minus sequi nulla numquam veritatis
-				illum. Aspernatur voluptatem ad amet reprehenderit tempora.
-			</Typography>
-			<div>
-				<Switch onChange={handleChangeMode} />
-			</div>
-			{mode === 'text' && (
-				<Form.Item
-					label={<label>Tematica</label>}
-					// initialValue={sharePhoto?.title}
-					name='tematic'>
-					<Input type='text' />
-				</Form.Item>
-			)}
-			{mode === 'image' && (
-				<Form.Item label={<label>Tematica</label>}>
-					<ImageUploaderDragAndDrop
-						imageDataCallBack={imageUrl => console.log(imageUrl)}
-						imageUrl={''}
-						width={1080}
-						height={1080}
-					/>
-				</Form.Item>
-			)}
+			<Form.Item
+				// style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+				// label={<label>Tematica</label>}
+				initialValue={initialState}
+				name='tematic'>
+				<Input.TextArea
+					rows={6}
+					value={`Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid iste ipsam expedita magni suscipit sapiente
+					voluptates, recusandae omnis, totam alias quibusdam, reprehenderit porro dolores officiis? Cupiditate
+					deleniti, sapiente doloremque ratione doloribus obcaecati quos aperiam fugiat consectetur ea! Qui laboriosam
+					beatae sunt in blanditiis, saepe voluptas consequatur ipsam, nisi, ab repudiandae?`}
+				/>
+				<div></div>
+			</Form.Item>
 		</Card>
 	);
 }

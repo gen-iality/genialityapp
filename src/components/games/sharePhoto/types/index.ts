@@ -14,10 +14,11 @@ export interface SharePhoto extends Base {
 	// Event Info
 	event_id: string;
 	title: string;
-	tematic: {
-		type: 'text' | 'image' | string
-		content: string
-	}
+	// tematic: {
+	// 	type: 'text' | 'image' | string
+	// 	content: string
+	// }
+	tematic: string | null;
 	// start_date: Date | string;
 	// end_date: Date | string;
 	// Event Status

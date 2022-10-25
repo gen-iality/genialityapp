@@ -1,6 +1,6 @@
 import { CameraOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Col, Row } from 'antd';
-import ChooseButton from '../../components/ChooseButton';
+import ChooseButton from '../../components/landing/ChooseButton';
 import useSharePhotoInLanding from '../../hooks/useSharePhotoInLanding';
 
 export default function ChooseAction() {
@@ -8,14 +8,10 @@ export default function ChooseAction() {
 	return (
 		<>
 			<Row gutter={[12, 12]}>
-				<Col
-					xs={24}
-					style={{ display: 'flex', justifyContent: 'space-between' }}>
+				<Col xs={24} style={{ display: 'flex', justifyContent: 'space-between' }}>
 					<Button onClick={() => goTo('introduction')}>Atras</Button>
 				</Col>
-				<Col
-					xs={24}
-					style={{ display: 'flex', height: '50vh', alignItems: 'center' }}>
+				<Col xs={24} style={{ display: 'flex', height: '50vh', alignItems: 'center' }}>
 					<ChooseButton
 						onClick={() => goTo('importPhoto')}
 						icon={<UploadOutlined style={{ fontSize: '40px' }} />}

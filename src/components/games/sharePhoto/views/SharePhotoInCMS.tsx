@@ -11,19 +11,15 @@ const RenderView = (props: RenderViewProps) => {
 	const { eventId } = props;
 	const { sharePhoto } = useSharePhoto();
 
-	return !sharePhoto ? (
-		<CreateSharePhoto eventId={eventId} />
-	) : (
-		<UpdateSharePhoto eventId={eventId} />
-	);
-}
+	return sharePhoto === null ? <CreateSharePhoto eventId={eventId} /> : <UpdateSharePhoto eventId={eventId} />;
+};
 
 interface Props {
 	eventId: string;
 }
 
 export default function SharePhotoInCMS(props: Props) {
-	const { eventId } = props
+	const { eventId } = props;
 	return (
 		<SharePhotoProvider>
 			<RenderView eventId={eventId} />
