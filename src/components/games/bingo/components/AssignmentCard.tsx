@@ -4,11 +4,11 @@ import PrintCardBoard from './PrintCardBoard';
 import PrintComponent from './PrintComponent';
 import { useRef } from 'react';
 import { CheckCircleOutlined, CloseCircleOutlined, UserOutlined } from '@ant-design/icons';
-export default function AssignmentCard({ user, bingo }: any) {
+export default function AssignmentCard({ user, bingo, index }: any) {
   const bingoUser = useRef(null);
   return (
     <List.Item
-      key={user?._id}
+      key={`${user?._id || index}-user-bingo-${index}`}
       actions={[
         <>
           {user?.bingo ? (
@@ -16,7 +16,9 @@ export default function AssignmentCard({ user, bingo }: any) {
           ) : (
             <CloseCircleOutlined style={{ color: 'red', fontSize: '18px' }} />
           )}
-          <PrintCardBoard cardboardCode={user?._id} bingoCardRef={bingoUser} />
+          {bingo.bingo_values.length >= bingo.dimensions.minimun_values && (
+            <PrintCardBoard cardboardCode={user?._id} bingoCardRef={bingoUser} />
+          )}
         </>,
       ]}>
       <List.Item.Meta
@@ -30,20 +32,23 @@ export default function AssignmentCard({ user, bingo }: any) {
         title={user?.properties?.names}
         description={user?.properties?.email}
       />
-      <PrintComponent
-        bingoCardRef={bingoUser}
-        bingoUsers={[
-          {
-            names: user.properties.names,
-            email: user.properties.email,
-            id: user.bingo_card._id,
-            values: user.bingo_card.values_bingo_card,
-          },
-        ]}
-        bingo={bingo}
-        cardboardCode='BingoCards'
-        isPrint
-      />
+      {bingo.bingo_values.length >= bingo.dimensions.minimun_values && (
+        <PrintComponent
+          bingoCardRef={bingoUser}
+          bingoUsers={[
+            {
+              names: user?.properties?.names,
+              email: user?.properties?.email,
+              id: user?.bingo_card?._id,
+              values: user?.bingo_card?.values_bingo_card,
+            },
+          ]}
+          bingo={bingo}
+          cardboardCode='BingoCards'
+          isPrint
+          key={`${user?._id || index}-user-print-${index}`}
+        />
+      )}
     </List.Item>
   );
 }
