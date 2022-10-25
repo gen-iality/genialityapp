@@ -1,5 +1,11 @@
 import { Form, Modal, Select, Button } from 'antd';
+
 const { Option } = Select;
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
+};
+
 export default function ModalEdit({
   editField,
   isVisible,
@@ -13,11 +19,11 @@ export default function ModalEdit({
   return (
     <Modal
       destroyOnClose
-      title='Actualizar parametro'
+      title='Actualizar parámetro'
       visible={isVisible}
       footer={null}
       onCancel={() => setIsVisible(false)}>
-      <Form>
+      <Form {...formLayout}>
         <Form.Item label='Campo' name='id_properties'>
           <Select
             onChange={(value) =>
@@ -60,7 +66,7 @@ export default function ModalEdit({
         </Form.Item>
         <Form.Item>
           <Button type='primary' onClick={() => editField()}>
-            Agregar
+            Guardar
           </Button>
         </Form.Item>
       </Form>
