@@ -24,7 +24,7 @@ export default function PrintComponent({
       <div ref={bingoCardRef}>
         {bingoUsers.map((userBingo: any) => {
           return (
-            <div style={{ padding: '50px' }}>
+            <div style={{ padding: '50px', width: '1270px', height: '720px' }}>
               <Space style={{ width: '100%', height: '100%' }} direction='vertical'>
                 <Descriptions
                   size='small'
