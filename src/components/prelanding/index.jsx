@@ -283,7 +283,7 @@ const PreLandingSections = ({ tabActive, changeTab }) => {
         <Card style={{ borderRadius: '20px', height: '100%' }} loading={loading}>
           <Row gutter={[4, 4]}>
             <Col span={24}>
-              <Typography.Title level={5}>Opciones rapidas</Typography.Title>
+              <Typography.Title level={5}>Opciones rápidas</Typography.Title>
             </Col>
             <Col span={24}>
               <Space direction='vertical' style={{ width: '100%' }}>
