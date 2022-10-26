@@ -27,6 +27,7 @@ import { activityContentValues } from '@context/activityType/constants/ui';
 import type { ActivityType } from '@context/activityType/types/activityType';
 import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
 import { TypeDisplayment } from '@context/activityType/constants/enum';
+import Document from '@components/documents/Document';
 
 import QuizCMS from '../../quiz/QuizCMS';
 import SurveyCMS from '../../survey/SurveyCMS';
@@ -66,6 +67,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
 
   const {
     contentSource,
+    setContentSource,
     translateActivityType,
     activityContentType,
     saveActivityContent,
@@ -129,6 +131,43 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   if (!type) {
     return (
       <Typography.Title>Tipo de contenido no soportado aún</Typography.Title>
+    );
+  }
+
+  if (activityContentValues.pdf === activityContentType) {
+    return (
+      <>
+        {!contentSource && <Alert type='info' message='Cargando contenido...' />}
+        <Document
+          simpleMode
+          notRecordFileInDocuments
+          event={eventContext.value} // Awful, but who are we
+          matchUrl={props.matchUrl}
+          location={{ location: { state: { edit: false } } }} // Awful, but who are we
+          activityId={activityEdit}
+          fromPDFDocumentURL={contentSource}
+          onSave={(pdfUrl: string) => {
+            console.debug('call onSave from Document. pdfUrl will be', pdfUrl);
+            if (contentSource !== pdfUrl) {
+              saveActivityContent(activityContentType, pdfUrl);
+            } else {
+              console.info(`Resaving stopped because contentSource = pdfUrl ${pdfUrl}`);
+            }
+          }}
+          onRemoveDocumentContent={() => {
+            // Maybe does not work, but this will be fixed by anybody else
+            console.debug('remove content source...');
+            setContentSource('');
+            setTimeout(() => {
+              saveActivityContent(activityContentType, '');
+              setTimeout(() => {
+                resetActivityType('pdf2');
+              }, 2000);
+            }, 2000);
+          }}
+          inserted
+        />
+      </>
     );
   }
 
