@@ -7,6 +7,7 @@ import QuizActivity from './ActivityTypes/QuizActivity';
 import VideoActivity from './ActivityTypes/VideoActivity';
 import GenericActivity from './ActivityTypes/GenericActivity';
 import SurveyActivity from './ActivityTypes/SurveyActivity';
+import PdfActivity from './ActivityTypes/PdfActivity';
 
 function ActivityTypeSwitch({ activity }) {
   console.debug(activity);
