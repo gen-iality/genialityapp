@@ -50,7 +50,9 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const [videoObject, setVideoObject] = useState<any | null>(null);
   const [activityType, setActivityType] = useState<ActivityType.Name | null>(null);
   const [activityContentType, setActivityContentType] = useState<ActivityType.ContentValue | null>(null);
-  const [contentSource, setContentSource] = useState<string | null>(meetingId || null);
+  // const [contentSource, setContentSource] = useState<string | null>(meetingId || null);
+  const contentSource: string | null = meetingId;
+  const setContentSource: (data: string | null) => void = setMeetingId;
 
   const queryClient = useQueryClient();
 
@@ -189,8 +191,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
     if (type !== undefined) setActivityContentType(type);
     if (data !== undefined) setContentSource(data);
-    const contentType = activityContentType || type;
-    const inputContentSource = contentSource || data;
+    const contentType = type !== undefined ? type : activityContentType;
+    const inputContentSource = data !== undefined ? data : contentSource;
 
     if (!contentType) {
       console.error('ActivityTypeProvider.saveActivityContent: content type must not be none');
@@ -310,14 +312,15 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         break;
       }
       case activityContentValues.pdf: {
-        if (!inputContentSource) {
+        console.debug('saving pdf..', inputContentSource);
+        if (inputContentSource === undefined) {
           console.error('ActivityTypeProvider: contentSource is none:', inputContentSource);
           return;
         }
         const respUrl = await AgendaApi.editOne({ meeting_id: inputContentSource }, activityEdit, cEvent.value._id);
         await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
         setTypeActivity(activityContentValues.pdf);
-        setMeetingId(inputContentSource)
+        setMeetingId(inputContentSource);
         // if (!!inputContentSource) setMeetingId(inputContentSource);
         break;
       }
@@ -450,12 +453,12 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     }
   }, [activityEdit]);
 
-  useEffect(() => {
-    if (!meetingId) return;
+  // useEffect(() => {
+  //   if (!meetingId) return;
 
-    console.debug('reset contentSource to meetingId:', meetingId);
-    setContentSource(meetingId);
-  }, [meetingId]);
+  //   console.debug('reset contentSource to meetingId:', meetingId);
+  //   setContentSource(meetingId);
+  // }, [meetingId]);
 
   return (
     <ActivityTypeContext.Provider value={value}>
