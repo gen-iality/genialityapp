@@ -1,16 +1,15 @@
-import {
-	CameraOutlined,
-	DeleteOutlined,
-	SendOutlined,
-	SwapOutlined,
-} from '@ant-design/icons';
+import { CameraOutlined, DeleteOutlined, SendOutlined, SwapOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Image, Row } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import Webcam from 'react-webcam';
 import useSharePhotoInLanding from '../../hooks/useSharePhotoInLanding';
+import { fireStorage } from '@/helpers/firebase';
+import { uploadImage } from '@/helpers/utils';
+import { uploadImageData } from '@/Utilities/uploadImageData';
+// import { uploadImageData } from '@/Utilities/uploadImageData';
 
 export default function TakePhoto() {
-	const { goTo } = useSharePhotoInLanding();
+	const { goTo, setImageUploaded } = useSharePhotoInLanding();
 	const [photo, setPhoto] = useState('');
 	const [deviceSelected, setDeviceSeleted] = useState<number>(0);
 	const [deviceId, setDeviceId] = useState<MediaDeviceInfo | null>(null);
@@ -31,6 +30,39 @@ export default function TakePhoto() {
 		setDeviceId(devices[index]);
 	};
 
+	const DataURIToBlob = (dataURI: string) => {
+		const splitDataURI = dataURI.split(',');
+		const byteString = splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1]);
+		const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
+
+		const ia = new Uint8Array(byteString.length);
+		for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+
+		return new Blob([ia], { type: mimeString });
+	};
+
+	const dataURIToFile = (dataURI: string, name: string) => {
+		const byteString = window.atob(dataURI.split(',')[1]);
+		const mimeString = dataURI
+			.split(',')[0]
+			.split(':')[1]
+			.split(';')[0];
+		const ab = new ArrayBuffer(byteString.length);
+		const ia = new Uint8Array(ab);
+		for (let i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		const blob = new Blob([ab], { type: mimeString });
+		return new File([blob], name);
+	};
+
+	const handleUploadImage = async () => {
+		const file = dataURIToFile(photo, 'my-photo-from-camera');
+		const photoUrl = await uploadImageData(file);
+		setImageUploaded(photoUrl);
+		goTo('createPost');
+	};
+
 	useEffect(() => {
 		navigator.mediaDevices.enumerateDevices().then(handleDevices);
 	}, [handleDevices]);
@@ -38,7 +70,7 @@ export default function TakePhoto() {
 	return (
 		<Row gutter={[12, 12]}>
 			<Col xs={24} style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Button onClick={() => goTo('chooseAction')}>Atras</Button>
+				<Button onClick={() => goTo('chooseAction')}>Atras</Button>
 				{/* <Button>Siguiente</Button> */}
 			</Col>
 			<Col xs={24} style={{ display: 'grid', placeContent: 'center' }}>
@@ -69,8 +101,9 @@ export default function TakePhoto() {
 											transform: 'translate(-50%, -50%)',
 										}}
 										onClick={() => {
-											const photo = getScreenshot();
+											const photo = getScreenshot({ height: 1080, width: 1080 });
 											if (photo) {
+												console.log(photo);
 												setPhoto(photo);
 											}
 										}}
@@ -108,7 +141,8 @@ export default function TakePhoto() {
 								transform: 'translate(-50%, -50%)',
 							}}
 							shape='circle'
-							onClick={() => alert('Go to CreatePost View')}
+							// onClick={() => alert('Go to CreatePost View')}
+							onClick={handleUploadImage}
 							icon={<SendOutlined style={{ fontSize: '40px' }} />}
 						/>
 						<Button

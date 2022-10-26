@@ -151,7 +151,7 @@ const AgendaActividadDetalle = props => {
 		}
 	}, [cEvent.value, cEventUser.value, cUser.value]);
 
-	console.log(cEvent)
+	console.log('cEvent', cEvent)
 
 	return (
 		<div>

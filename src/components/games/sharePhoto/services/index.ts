@@ -2,15 +2,16 @@ import { DispatchMessageService } from '@/context/MessageService';
 import { SharePhotoApi } from '@/helpers/request';
 import { AddLikeDto, CreatePostDto, CreateSharePhotoDto, Post, SharePhoto, UpdateSharePhotoDto } from '../types';
 
-let sharePhotoData: SharePhoto | null = null;
-
 export const get = async (eventId: string): Promise<SharePhoto | null> => {
 	try {
 		const response = await SharePhotoApi.getOne(eventId);
-		if (response._id && !response.posts) {
-			return { ...response, posts: []}
+		if (response._id) {
+			if (!response.posts) {
+				return { ...response, posts: [] };
+			}
+			return response;
 		} else {
-			return null
+			return null;
 		}
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al obtener la dinamica', action: 'show' });
@@ -28,20 +29,23 @@ export const create = async (createSharePhotoDto: CreateSharePhotoDto): Promise<
 			published: false,
 			points_per_like: 1,
 		});
-		return { ...response, posts: []};
+		return { ...response, posts: [] };
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al crear la dinamica', action: 'show' });
 		return null;
 	}
 };
 
-export const update = async (sharePhotoId: SharePhoto['_id'], updateSharePhotoDto: UpdateSharePhotoDto): Promise<SharePhoto | null> => {
+export const update = async (
+	sharePhotoId: SharePhoto['_id'],
+	updateSharePhotoDto: UpdateSharePhotoDto
+): Promise<SharePhoto | null> => {
 	try {
-		const response = await SharePhotoApi.updateOne(sharePhotoId, updateSharePhotoDto)
+		const response = await SharePhotoApi.updateOne(sharePhotoId, updateSharePhotoDto);
 		if (!response.post) {
-			return { ...response, posts: []}
+			return { ...response, posts: [] };
 		}
-		return response
+		return response;
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al actualizar la dinamica', action: 'show' });
 		return null;
@@ -50,31 +54,24 @@ export const update = async (sharePhotoId: SharePhoto['_id'], updateSharePhotoDt
 
 export const remove = async (idSharePhoto: SharePhoto['_id']) => {
 	try {
-		const response = await SharePhotoApi.deleteOne(idSharePhoto)
-		return true
+		const response = await SharePhotoApi.deleteOne(idSharePhoto);
+		return true;
 	} catch (error) {
-		DispatchMessageService({ type: 'error', msj: 'Error al eliminar la dinamica', action: 'show' })
-		return null
+		DispatchMessageService({ type: 'error', msj: 'Error al eliminar la dinamica', action: 'show' });
+		return null;
 	}
 };
 
-export const addPost = (idSharePhoto: SharePhoto['_id'], createPostDto: CreatePostDto) => {
-	// if (sharePhotoData) {
-	// 	const postsLength = sharePhotoData.posts.length;
-	// 	const newPost: Post = {
-	// 		_id: postsLength === 1 ? '1' : `${postsLength + 1}`,
-	// 		created_at: new Date(),
-	// 		updated_at: new Date(),
-	// 		thumb: createPostDto.image,
-	// 		likes: [],
-	// 		...createPostDto,
-	// 	};
-	// 	sharePhotoData.posts.push(newPost);
-	// 	return newPost;
-	// }
-	// return {};
+export const addPost = async (idSharePhoto: SharePhoto['_id'], createPostDto: CreatePostDto) => {
+	try {
+		const response = await SharePhotoApi.addOnePost(idSharePhoto, createPostDto);
+		return response;
+	} catch (error) {
+		DispatchMessageService({ type: 'error', msj: 'Error al crear publicación', action: 'show' });
+		return null;
+	}
 };
 
-export const addLike = (idSharePhoto: SharePhoto['_id'], idPost: Post['_id'], addLikeDto: AddLikeDto) => {
+export const addLike = (idSharePhoto: SharePhoto['_id'], idPost: Post['id'], addLikeDto: AddLikeDto) => {
 	// return {};
 };

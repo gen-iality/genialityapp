@@ -489,7 +489,7 @@ export const SharePhotoApi = {
   },
   addOnePost: async (sharePhotoId, postData) => {
     let token = await GetTokenUserFirebase()
-    return await Actions.put(`api/sharephoto/${sharePhotoId}/addPost?token=${token}`, postData, true)
+    return await Actions.put(`api/sharephoto/${sharePhotoId}/addpost?token=${token}`, postData, true)
   },
   deleteOnePost: async (sharePhotoId, postId) => {
     let token = await GetTokenUserFirebase()
@@ -497,7 +497,7 @@ export const SharePhotoApi = {
   },
   addOneLike: async (sharePhotoId, postId, likeData) => {
     let token = await GetTokenUserFirebase()
-    return await Actions.put(`api/sharephoto/${sharePhotoId}/addLike/${postId}?token=${token}`, likeData, true)
+    return await Actions.put(`api/sharephoto/${sharePhotoId}/addlike/${postId}?token=${token}`, likeData, true)
   },
   deleteOneLike: async (sharePhotoId, likeId) => {
     let token = await GetTokenUserFirebase()
