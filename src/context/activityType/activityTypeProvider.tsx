@@ -19,7 +19,7 @@ import { activityContentValues, formWidgetFlow, activityTypeNames, typeToDisplay
 // Temporally
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType';
 
-const onlyActivityTypes: ActivityType.Name[] = ['liveBroadcast', 'meeting2', 'video', 'quizing2', 'survey2', 'pdf2'];
+const onlyActivityTypes: ActivityType.Name[] = ['liveBroadcast', 'meeting2', 'video', 'quizing2', 'survey2', 'pdf2', 'html2'];
 const theseAreLiveToo: ActivityType.ContentValue[] = ['RTMP', 'eviusMeet', 'vimeo', 'youTube'];
 const theseAreMeeting: ActivityType.ContentValue[] = ['meeting'];
 const theseAreVideo: ActivityType.ContentValue[] = ['url', 'cargarvideo'];
@@ -80,6 +80,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         return 'vídeo';
       case MainUI.PDF:
         return 'PDF';
+      case MainUI.HTML:
+        return 'HTML';
       default:
         return typeIncoming;
     }
@@ -436,6 +438,10 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
               setActivityType(MainUI.PDF);
               // setContentSource(meetingId); this is doing by useEffect directly from meetingId
               console.debug('from beginning contentSource is going to be:', meetingId);
+            } else if ((typeIncoming as ActivityType.ContentValue) === 'html') {
+              setActivityType(MainUI.HTML);
+              // setContentSource(meetingId); this is doing by useEffect directly from meetingId
+              console.debug('from beginning contentSource is going to be:', (meetingId || '').substring(0, 20));
             } else {
               console.warn('set activity type as null because', typeIncoming, 'is weird');
               setActivityType(null);
