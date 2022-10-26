@@ -19,16 +19,11 @@ import { activityContentValues, formWidgetFlow, activityTypeNames, typeToDisplay
 // Temporally
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType';
 
-const onlyActivityTypes: ActivityType.Name[] = [
-  'liveBroadcast',
-  'meeting2',
-  'video',
-  'quizing2',
-  'survey2',
-];
+const onlyActivityTypes: ActivityType.Name[] = ['liveBroadcast', 'meeting2', 'video', 'quizing2', 'survey2', 'pdf2'];
 const theseAreLiveToo: ActivityType.ContentValue[] = ['RTMP', 'eviusMeet', 'vimeo', 'youTube'];
 const theseAreMeeting: ActivityType.ContentValue[] = ['meeting'];
 const theseAreVideo: ActivityType.ContentValue[] = ['url', 'cargarvideo'];
+const externalFileTypes: ActivityType.ContentValue[] = ['pdf'];
 
 function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const {
@@ -71,12 +66,20 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const humanizeActivityType = useCallback((typeIncoming: string): string => {
     type TypeIncoming = ActivityType.Name;
     switch (typeIncoming as TypeIncoming) {
-      case MainUI.LIVE: return 'transmisión';
-      case MainUI.MEETING: return 'reunión';
-      case MainUI.QUIZ: return 'quiz';
-      case MainUI.SURVEY: return 'encuesta';
-      case MainUI.VIDEO: return 'vídeo';
-      default: return typeIncoming;
+      case MainUI.LIVE:
+        return 'transmisión';
+      case MainUI.MEETING:
+        return 'reunión';
+      case MainUI.QUIZ:
+        return 'quiz';
+      case MainUI.SURVEY:
+        return 'encuesta';
+      case MainUI.VIDEO:
+        return 'vídeo';
+      case MainUI.PDF:
+        return 'PDF';
+      default:
+        return typeIncoming;
     }
   }, []);
 
@@ -306,6 +309,18 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         if (!!inputContentSource) setMeetingId(inputContentSource);
         break;
       }
+      case activityContentValues.pdf: {
+        if (!inputContentSource) {
+          console.error('ActivityTypeProvider: contentSource is none:', inputContentSource);
+          return;
+        }
+        const respUrl = await AgendaApi.editOne({ meeting_id: inputContentSource }, activityEdit, cEvent.value._id);
+        await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
+        setTypeActivity(activityContentValues.pdf);
+        setMeetingId(inputContentSource)
+        // if (!!inputContentSource) setMeetingId(inputContentSource);
+        break;
+      }
       default:
         // alert(`wtf is ${contentType}`);
         console.warn(`wtf is ${contentType}`);
@@ -412,6 +427,10 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else if ((typeIncoming as ActivityType.ContentValue) === 'survey') {
               setActivityType(MainUI.SURVEY);
+              // setContentSource(meetingId); this is doing by useEffect directly from meetingId
+              console.debug('from beginning contentSource is going to be:', meetingId);
+            } else if (externalFileTypes.includes(typeIncoming as ActivityType.ContentValue)) {
+              setActivityType(MainUI.PDF);
               // setContentSource(meetingId); this is doing by useEffect directly from meetingId
               console.debug('from beginning contentSource is going to be:', meetingId);
             } else {

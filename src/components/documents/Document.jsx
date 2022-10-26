@@ -35,6 +35,51 @@ const Document = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!props.fromPDFDocumentURL) return;
+
+    // "Load" the file from URL.
+    const url = props.fromPDFDocumentURL;
+
+    let filename = url.substring(url.lastIndexOf('/') + 1);
+    if (filename.indexOf('?') !== -1) {
+      filename = filename.substring(0, filename.indexOf('?'));
+    }
+    if (filename.indexOf('#') !== -1) {
+      filename = filename.substring(0, filename.indexOf('#'));
+    }
+    const fakeDocument = {
+      format: 'pdf',
+      title: filename,
+      name: filename,
+      file: url,
+      type: 'file',
+      documentList: [
+        {
+          // "uid": "rc-upload-0",
+          // "lastModified": {
+          //   "$numberLong": "1661874625498"
+          // },
+          name: filename,
+          size: 0, // Imposible to know this from URL in the easy way
+          type: 'application/pdf',
+          percent: 100,
+          // "originFileObj": {
+          //   "uid": "rc-upload-0"
+          // },
+          status: 'success',
+          thumbUrl: null,
+        }
+      ],
+      state: 'father',
+    };
+    
+    setDocument(fakeDocument);
+    setFolder(fakeDocument.folder);
+    setFiles([fakeDocument.file]);
+    setDocumentList(fakeDocument.documentList);
+  }, [props.fromPDFDocumentURL]);
+
   const getDocument = async () => {
     const response = await DocumentsApi.getOne(locationState.edit, props.event._id);
     setDocument(response);
@@ -46,6 +91,7 @@ const Document = (props) => {
   };
 
   const resetDocument = () => {
+    console.debug('reset all the Document component');
     setDocument({});
     setFolder(false);
     setFiles('');
@@ -82,36 +128,39 @@ const Document = (props) => {
       });
 
       try {
-        if (locationState.edit && !props.simpleMode) {
-          console.debug('document editing');
-          await DocumentsApi.editOne(
-            !folder ? document : { title: document.title, type: 'folder', folder },
-            locationState.edit,
-            props.event._id
-          );
-          console.debug('document edited');
-        } else {
-          console.debug('document creating');
-          await DocumentsApi.create(
-            !folder ? document : { title: document.title, type: 'folder', folder },
-            props.event._id
-          );
-          console.debug('document created');
-          if (typeof props.cbUploaded === 'function') {
-            props.cbUploaded();
-            resetDocument();
+        if (!props.notRecordFileInDocuments) {
+          if (locationState.edit && !props.simpleMode) {
+            console.debug('document editing');
+            await DocumentsApi.editOne(
+              !folder ? document : { title: document.title, type: 'folder', folder },
+              locationState.edit,
+              props.event._id
+            );
+            console.debug('document edited');
+          } else {
+            console.debug('document creating');
+            await DocumentsApi.create(
+              !folder ? document : { title: document.title, type: 'folder', folder },
+              props.event._id
+            );
+            console.debug('document created');
+            if (typeof props.cbUploaded === 'function') {
+              props.cbUploaded();
+              resetDocument();
+            }
           }
+
+          DispatchMessageService({
+            key: 'loading',
+            action: 'destroy',
+          });
+          DispatchMessageService({
+            type: 'success',
+            msj: 'Información guardada correctamente!',
+            action: 'show',
+          });
         }
 
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        });
         if (!props.simpleMode) history.push(`${props.matchUrl}`);
         setLoading(false);
       } catch (e) {
@@ -129,6 +178,7 @@ const Document = (props) => {
   };
 
   const remove = () => {
+    console.debug('call Document.remove');
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -164,17 +214,23 @@ const Document = (props) => {
                     });
                 });
               } */
-              await DocumentsApi.deleteOne(locationState.edit, props.event._id);
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              });
+              if (!props.notRecordFileInDocuments) {
+                await DocumentsApi.deleteOne(locationState.edit, props.event._id);
+                DispatchMessageService({
+                  key: 'loading',
+                  action: 'destroy',
+                });
+                DispatchMessageService({
+                  type: 'success',
+                  msj: 'Se eliminó la información correctamente!',
+                  action: 'show',
+                });
+              }
               if (!props.simpleMode) history.push(`${props.matchUrl}`);
+              if (typeof props.onRemoveDocumentContent === 'function') {
+                props.onRemoveDocumentContent();
+              }
+              lazyResetDocument();
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',
@@ -190,8 +246,24 @@ const Document = (props) => {
           onHandlerRemove();
         },
       });
+    } else {
+      if (typeof props.onRemoveDocumentContent === 'function') {
+        props.onRemoveDocumentContent();
+      }
+      lazyResetDocument();
     }
   };
+
+  const lazyResetDocument = () => {
+    setTimeout(() => {
+      // This function SHOULD be called, but, interactively the user calls to
+      // remove, and before the App calls `onHandlerFile` again and edits the
+      // progress (and other states), and we NEED avoid that re-calling, but we
+      // can not because `onHandlerFile` listens the event `onChange` and it
+      // does not check if that changing is from uploading or removing.
+      resetDocument();
+    }, 3000);
+  }
 
   const handleChange = (e) => {
     const { name } = e.target;
@@ -203,7 +275,7 @@ const Document = (props) => {
   };
 
   const onHandlerFile = async (e) => {
-    console.log('onHandlerFile calling...')
+    console.log('onHandlerFile calling...', e)
     /* console.log(e.file.originFileObj); */
     setLoading(true);
     setDocumentList(e.fileList);
@@ -259,6 +331,8 @@ const Document = (props) => {
       await uploadTaskRef.snapshot.ref.getDownloadURL().then(function(downloadURL) {
         file = downloadURL;
         console.log(downloadURL);
+        // Send the URL to the parent component. Save it.
+        if (typeof props.onSave === 'function') props.onSave(downloadURL);
         setLoading(false);
       });
       setDocument({
@@ -303,7 +377,15 @@ const Document = (props) => {
         save={props.simpleMode || ((loadPercentage > 0 && true) || fromEditing)}
         saveMethod={props.simpleMode && onSubmit}
         form={!props.simpleMode}
-        remove={() => { props.simpleMode ? history.push(`${props.matchUrl.replace('agenda', 'documents')}`) : remove()}}
+        remove={() => {
+          if (props.notRecordFileInDocuments) {
+            remove();
+          } else if (props.simpleMode) {
+            history.push(`${props.matchUrl.replace('agenda', 'documents')}`);
+          } else {
+            remove();
+          }
+        }}
         edit={locationState?.edit}
         loadingSave={loading}
       />

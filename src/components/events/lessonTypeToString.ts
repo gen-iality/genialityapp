@@ -12,6 +12,10 @@ export default function lessonTypeToString (inputType: string) {
     case 'video':
       typeName = 'Vídeo'; // desde URL
       break;
+    case 'pdf':
+    case 'pdf2':
+      typeName = 'PDF';
+      break;
     case 'vimeo':
     case 'youTube':
     case 'RTMP':

@@ -21,6 +21,9 @@ export function useGetWidgetForActivityType (currentActivityType: ActivityType.N
     case activityTypeNames.survey:
       index = 4;
       break;
+    case activityTypeNames.pdf:
+        index = 5;
+        break;
     default:
       console.error(`No puede reconocer actividad de tipo "${currentActivityType}"`);
       break;
