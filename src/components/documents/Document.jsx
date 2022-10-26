@@ -178,6 +178,7 @@ const Document = (props) => {
   };
 
   const remove = () => {
+    console.debug('call Document.remove');
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -229,6 +230,7 @@ const Document = (props) => {
               if (typeof props.onRemoveDocumentContent === 'function') {
                 props.onRemoveDocumentContent();
               }
+              lazyResetDocument();
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',
@@ -244,7 +246,15 @@ const Document = (props) => {
           onHandlerRemove();
         },
       });
+    } else {
+      if (typeof props.onRemoveDocumentContent === 'function') {
+        props.onRemoveDocumentContent();
+      }
+      lazyResetDocument();
     }
+  };
+
+  const lazyResetDocument = () => {
     setTimeout(() => {
       // This function SHOULD be called, but, interactively the user calls to
       // remove, and before the App calls `onHandlerFile` again and edits the
@@ -253,7 +263,7 @@ const Document = (props) => {
       // does not check if that changing is from uploading or removing.
       resetDocument();
     }, 3000);
-  };
+  }
 
   const handleChange = (e) => {
     const { name } = e.target;
@@ -367,7 +377,15 @@ const Document = (props) => {
         save={props.simpleMode || ((loadPercentage > 0 && true) || fromEditing)}
         saveMethod={props.simpleMode && onSubmit}
         form={!props.simpleMode}
-        remove={() => { (props.simpleMode && !props.notRecordFileInDocuments) ? history.push(`${props.matchUrl.replace('agenda', 'documents')}`) : remove()}}
+        remove={() => {
+          if (props.notRecordFileInDocuments) {
+            remove();
+          } else if (props.simpleMode) {
+            history.push(`${props.matchUrl.replace('agenda', 'documents')}`);
+          } else {
+            remove();
+          }
+        }}
         edit={locationState?.edit}
         loadingSave={loading}
       />
