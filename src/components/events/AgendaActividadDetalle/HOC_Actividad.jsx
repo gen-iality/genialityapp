@@ -8,6 +8,7 @@ import VideoActivity from './ActivityTypes/VideoActivity';
 import GenericActivity from './ActivityTypes/GenericActivity';
 import SurveyActivity from './ActivityTypes/SurveyActivity';
 import PdfActivity from './ActivityTypes/PdfActivity';
+import HtmlActivity from './ActivityTypes/HtmlActivity';
 
 function ActivityTypeSwitch({ activity }) {
   console.debug(activity);
@@ -33,6 +34,8 @@ function ActivityTypeSwitch({ activity }) {
       return <SurveyProvider><QuizActivity /></SurveyProvider>;
     case 'survey':
       return <SurveyProvider><SurveyActivity /></SurveyProvider>;
+    case 'html':
+      return <HtmlActivity/>;
     default:
       return <GenericActivity />;
   }
