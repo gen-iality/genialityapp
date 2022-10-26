@@ -12,11 +12,20 @@ const samplePDF =
 const PdfActivity = () => {
   let { currentActivity } = useHelper();
 
-  const [activityState, setactivityState] = useState('');
+  const [activityState, setActivityState] = useState('');
+  const [pdfURL, setPdfURL] = useState();
 
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [pdfFile, setPdfFile] = useState(null);
+
+  useEffect(() => {
+    setActivityState(currentActivity);
+  }, [currentActivity]);
+  
+  useEffect(() => {
+    setPdfURL(activityState.meeting_id);
+  }, [activityState]);
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
@@ -42,7 +51,8 @@ const PdfActivity = () => {
   return (
     <>
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />
-      <Document file={samplePDF} onLoadSuccess={onDocumentLoadSuccess}>
+      <a href={pdfURL} target='blank'>Descargar PDF</a>
+      <Document file={pdfURL} onLoadSuccess={onDocumentLoadSuccess}>
         <Page pageNumber={pageNumber} width={600} />
       </Document>
       <div>
