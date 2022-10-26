@@ -213,17 +213,22 @@ const Document = (props) => {
                     });
                 });
               } */
-              await DocumentsApi.deleteOne(locationState.edit, props.event._id);
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              });
+              if (!props.notRecordFileInDocuments) {
+                await DocumentsApi.deleteOne(locationState.edit, props.event._id);
+                DispatchMessageService({
+                  key: 'loading',
+                  action: 'destroy',
+                });
+                DispatchMessageService({
+                  type: 'success',
+                  msj: 'Se eliminó la información correctamente!',
+                  action: 'show',
+                });
+              }
               if (!props.simpleMode) history.push(`${props.matchUrl}`);
+              if (typeof props.onRemoveDocumentContent === 'function') {
+                props.onRemoveDocumentContent();
+              }
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',
