@@ -10,7 +10,7 @@ const samplePDF =
   'https://firebasestorage.googleapis.com/v0/b/eviusauthdev.appspot.com/o/documents%2F633c3faf6ddd2a144254b192%2F2022-20-10-2022-07-10-Interactivo.pdf?alt=media&token=eb8d36a1-b678-4d03-8279-96ae3297178f';
 
 const PdfActivity = () => {
-  let { currentActivity } = useHelper();
+  const { currentActivity } = useHelper();
 
   const [activityState, setActivityState] = useState('');
   const [pdfURL, setPdfURL] = useState();
