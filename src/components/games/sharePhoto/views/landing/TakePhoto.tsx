@@ -3,10 +3,7 @@ import { Button, Card, Col, Image, Row } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import Webcam from 'react-webcam';
 import useSharePhotoInLanding from '../../hooks/useSharePhotoInLanding';
-import { fireStorage } from '@/helpers/firebase';
-import { uploadImage } from '@/helpers/utils';
 import { uploadImageData } from '@/Utilities/uploadImageData';
-// import { uploadImageData } from '@/Utilities/uploadImageData';
 
 export default function TakePhoto() {
 	const { goTo, setImageUploaded } = useSharePhotoInLanding();
@@ -28,17 +25,6 @@ export default function TakePhoto() {
 		const index = deviceSelected < devices.length - 1 ? deviceSelected + 1 : 0;
 		setDeviceSeleted(index);
 		setDeviceId(devices[index]);
-	};
-
-	const DataURIToBlob = (dataURI: string) => {
-		const splitDataURI = dataURI.split(',');
-		const byteString = splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1]);
-		const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
-
-		const ia = new Uint8Array(byteString.length);
-		for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-
-		return new Blob([ia], { type: mimeString });
 	};
 
 	const dataURIToFile = (dataURI: string, name: string) => {
@@ -71,7 +57,6 @@ export default function TakePhoto() {
 		<Row gutter={[12, 12]}>
 			<Col xs={24} style={{ display: 'flex', justifyContent: 'space-between' }}>
 				<Button onClick={() => goTo('chooseAction')}>Atras</Button>
-				{/* <Button>Siguiente</Button> */}
 			</Col>
 			<Col xs={24} style={{ display: 'grid', placeContent: 'center' }}>
 				{!photo.length ? (
@@ -141,7 +126,6 @@ export default function TakePhoto() {
 								transform: 'translate(-50%, -50%)',
 							}}
 							shape='circle'
-							// onClick={() => alert('Go to CreatePost View')}
 							onClick={handleUploadImage}
 							icon={<SendOutlined style={{ fontSize: '40px' }} />}
 						/>

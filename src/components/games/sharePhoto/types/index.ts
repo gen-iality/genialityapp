@@ -34,7 +34,7 @@ export interface CreatePostDto extends Omit<Post, 'id' | 'created_at' | 'updated
 
 export interface Like {
 	created_at: Date | string;
-	user_id: string;
+	event_user_id: string;
 }
 
 export interface AddLikeDto extends Omit<Like, 'created_at'> {}

@@ -1,6 +1,6 @@
 import { HeartFilled } from '@ant-design/icons';
-import { Button, Card, Col, Image, Row } from 'antd';
-import { useState } from 'react';
+import { Badge, Button, Card, Col, Image, Row } from 'antd';
+import { useEffect, useState } from 'react';
 import useSharePhoto from '../../hooks/useSharePhoto';
 import useSharePhotoInLanding from '../../hooks/useSharePhotoInLanding';
 import { Post } from '../../types';
@@ -9,7 +9,7 @@ const { Meta } = Card;
 
 export default function Galery() {
 	const { goTo } = useSharePhotoInLanding();
-	const { sharePhoto } = useSharePhoto();
+	const { sharePhoto, addLike, listenSharePhoto } = useSharePhoto();
 	const [postSelected, setPostSelected] = useState<Post | null>(null);
 
 	const handleBack = () => {
@@ -19,6 +19,19 @@ export default function Galery() {
 			goTo('chooseAction');
 		}
 	};
+
+	useEffect(() => {
+		const postUpdated = sharePhoto?.posts.find(post => post.id === postSelected?.id);
+		if (postUpdated) {
+			setPostSelected(postUpdated);
+		}
+	}, [sharePhoto?.posts]);
+
+	useEffect(() => {
+		const unSubscribe = listenSharePhoto();
+		return () => unSubscribe();
+	}, []);
+
 	return (
 		<>
 			<Row gutter={[12, 12]}>
@@ -26,27 +39,33 @@ export default function Galery() {
 					<Button onClick={handleBack}>Atras</Button>
 				</Col>
 			</Row>
-			<Row gutter={[12, 12]} style={{ marginTop: 10 }}>
-				<Col xs={24}>
-					<Card
-						style={{ maxHeight: '60vh', display: postSelected ? 'block' : 'none', margin: 'auto' }}
-						cover={<Image src={postSelected?.image} preview={false} />}>
-						<Meta
-							avatar={
-								<Button
-									size='large'
-									style={{ width: '100%', height: '100%', padding: 2, margin: 2, border: 'none' }}
-									danger
-									ghost
-									icon={<HeartFilled style={{ fontSize: '40px' }} />}
-								/>
-							}
-							title={'Author'}
-							description={postSelected?.title}
-						/>
-					</Card>
-				</Col>
-			</Row>
+			{postSelected && (
+				<Row gutter={[12, 12]} style={{ marginTop: 10 }}>
+					<Col xs={24}>
+						<Card
+							style={{ maxHeight: '60vh', display: postSelected ? 'block' : 'none', margin: 'auto' }}
+							cover={<Image src={postSelected.image} preview={false} />}>
+							<Meta
+								avatar={
+									<Badge count={postSelected.likes.length}>
+										<Button
+											size='large'
+											style={{ width: '100%', height: '100%', padding: 2, margin: 2, border: 'none' }}
+											danger
+											ghost
+											// onClick={() => console.log('postId', postSelected?.id)}
+											onClick={() => addLike(postSelected.id)}
+											icon={<HeartFilled style={{ fontSize: '40px' }} />}
+										/>
+									</Badge>
+								}
+								title={'Author'}
+								description={postSelected?.title}
+							/>
+						</Card>
+					</Col>
+				</Row>
+			)}
 			<Row gutter={[12, 12]} style={{ display: postSelected ? 'none' : 'block' }}>
 				<Col style={{ maxHeight: '70vh', overflowY: 'scroll' }}>
 					<Card>

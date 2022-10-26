@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { SharePhotoContext } from '../contexts/SharePhotoContext';
-import { CreatePostDto, CreateSharePhotoDto, SharePhoto, UpdateSharePhotoDto } from '../types';
+import { CreatePostDto, CreateSharePhotoDto, Post, SharePhoto, UpdateSharePhotoDto } from '../types';
 import * as service from '../services';
 import { UseUserEvent } from '@/context/eventUserContext';
 
@@ -15,7 +15,6 @@ export default function useSharePhoto() {
 
 	useEffect(() => {
 		const eventId = cUser.value.event_id;
-		console.log('eventId', eventId);
 		if (eventId && sharePhoto === null) {
 			getSharePhoto(eventId);
 		}
@@ -25,7 +24,6 @@ export default function useSharePhoto() {
 		try {
 			setLoading(true);
 			const sharePhoto = await service.get(eventId);
-			console.log('sharePhoto', sharePhoto);
 			setSharePhoto(sharePhoto);
 		} catch (error) {
 			console.log(error);
@@ -65,7 +63,7 @@ export default function useSharePhoto() {
 	const deleteSharePhoto = async (id: SharePhoto['_id']) => {
 		try {
 			setLoading(true);
-			const deletedSharePhoto = await service.remove(id);
+			const deletedSharePhoto = await service.remove(id, cUser.value.event_id);
 			if (deletedSharePhoto) {
 				setSharePhoto(null);
 			}
@@ -79,13 +77,12 @@ export default function useSharePhoto() {
 	const createPost = async (createPostDto: Omit<CreatePostDto, 'event_user_id'>) => {
 		try {
 			setLoading(true);
-			if (sharePhoto !== null && sharePhoto._id) {
-				const createdPost = await service.addPost(sharePhoto._id, {
-					...createPostDto,
-					event_user_id: cUser.value._id,
-				});
-				return createdPost;
-			}
+			if (sharePhoto === null || !sharePhoto._id) return;
+			const createdPost = await service.addPost(sharePhoto._id, {
+				...createPostDto,
+				event_user_id: cUser.value._id,
+			});
+			return createdPost;
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -93,15 +90,24 @@ export default function useSharePhoto() {
 		}
 	};
 
-	const addLike = () => {
+	const addLike = async (postId: Post['id']) => {
 		try {
 			setLoading(true);
-			// const
+			if (sharePhoto === null || !sharePhoto._id) return;
+			const response = await service.addLike(sharePhoto._id, postId, {
+				event_user_id: cUser.value._id,
+			});
+			return response;
 		} catch (error) {
 			console.log(error);
 		} finally {
 			setLoading(false);
 		}
+	};
+
+	const listenSharePhoto = () => {
+		const unSubscribe = service.listenSharePhoto(cUser.value.event_id, setSharePhoto);
+		return unSubscribe
 	};
 
 	return {
@@ -112,5 +118,6 @@ export default function useSharePhoto() {
 		deleteSharePhoto,
 		createPost,
 		addLike,
+		listenSharePhoto,
 	};
 }

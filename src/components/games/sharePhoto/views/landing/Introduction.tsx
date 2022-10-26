@@ -1,12 +1,20 @@
 import { CameraOutlined, TableOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Typography } from 'antd';
+import { useEffect } from 'react';
 import ChooseButton from '../../components/landing/ChooseButton';
 import useSharePhoto from '../../hooks/useSharePhoto';
 import useSharePhotoInLanding from '../../hooks/useSharePhotoInLanding';
 
 export default function Introduction() {
-	const { sharePhoto } = useSharePhoto();
+	const { sharePhoto, listenSharePhoto } = useSharePhoto();
 	const { goTo } = useSharePhotoInLanding();
+
+	useEffect(() => {
+		if (sharePhoto !== null) {
+			const unSubscribe = listenSharePhoto();
+			return () => unSubscribe();
+		}
+	}, [sharePhoto]);
 
 	if (!sharePhoto) {
 		return <p>Ups! esta dinamica no existe aun!</p>;
