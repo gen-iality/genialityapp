@@ -4,11 +4,35 @@ import {
 } from '../constants/enum';
 
 export namespace ActivityType {
-  export type MainUIKey = 'live' | 'meeting' | 'video' | 'quizing' | 'survey';
-  export type DeepUIKey = 'streaming' | 'vimeo' | 'youtube' | 'url' | 'file' | 'meeting' | 'meet' | 'rtmp' | 'quizing' | 'survey';
+  export type MainUIKey = 'live' | 'meeting' | 'video' | 'quizing' | 'survey' | 'pdf';
+  export type DeepUIKey =
+    | 'streaming'
+    | 'vimeo'
+    | 'youtube'
+    | 'url'
+    | 'file'
+    | 'meeting'
+    | 'meet'
+    | 'rtmp'
+    | 'quizing'
+    | 'survey'
+    | 'pdf';
 
-  export type Name = 'liveBroadcast' | 'meeting2' | 'video' | 'quizing2' | 'survey2';
-  export type ContentValue = '' | 'meeting' | 'eviusStreaming' | 'vimeo' | 'youTube' | 'url' | 'cargarvideo' | 'eviusMeet' | 'RTMP' | 'quizing' | 'survey';
+  export type Name = 'liveBroadcast' | 'meeting2' | 'video' | 'quizing2' | 'survey2' | 'pdf2';
+
+  export type ContentValue =
+    | ''
+    | 'meeting'
+    | 'eviusStreaming'
+    | 'vimeo'
+    | 'youTube'
+    | 'url'
+    | 'cargarvideo'
+    | 'eviusMeet'
+    | 'RTMP'
+    | 'quizing'
+    | 'survey'
+    | 'pdf';
 
   export type UIKey = 
     | (MainUIKey & string)
@@ -18,7 +42,18 @@ export namespace ActivityType {
     | (Name & string)
     | (ContentValue & string);
 
-  export type TypeAsDisplayment = '' | 'Transmisión' | 'Video' | 'reunión' | 'vimeo' | 'Youtube' | 'EviusMeet' | 'Quizing' | 'Survey';
+  export type TypeAsDisplayment =
+    | ''
+    | 'Transmisión'
+    | 'Video'
+    | 'reunión'
+    | 'vimeo'
+    | 'Youtube'
+    | 'EviusMeet'
+    | 'Quizing'
+    | 'Survey'
+    | 'pdf'; // TODO: convert to uppercase, but check if all works goodly.
+
   export type TypeToDisplaymentMap = { [key in ContentValue]: TypeAsDisplayment } & { video: TypeAsDisplayment };
 
   export interface FormUI {
