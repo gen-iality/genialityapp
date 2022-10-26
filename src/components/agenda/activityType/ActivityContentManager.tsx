@@ -159,11 +159,8 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
             console.debug('remove content source...');
             setContentSource('');
             setTimeout(() => {
-              saveActivityContent(activityContentType, '');
-              setTimeout(() => {
-                resetActivityType('pdf2');
-              }, 2000);
-            }, 2000);
+              saveActivityContent(activityContentType, 'empty');
+            }, 3000);
           }}
           inserted
         />
