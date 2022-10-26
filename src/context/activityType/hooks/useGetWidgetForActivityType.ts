@@ -24,7 +24,7 @@ export function useGetWidgetForActivityType (currentActivityType: ActivityType.N
     case activityTypeNames.pdf:
         index = 5;
         break;
-    case activityTypeNames.pdf:
+    case activityTypeNames.html:
       index = 6;
       break;
     default:
