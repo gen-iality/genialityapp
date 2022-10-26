@@ -51,12 +51,12 @@ export default function UpdateSharePhoto(props: Props) {
         <Tabs.TabPane tab='Configurar' key='sharePhotoConfigurar'>
           <TabSetup sharePhoto={sharePhoto} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='Apariencia' key='sharePhotoApariencia'>
+        {/* <Tabs.TabPane tab='Apariencia' key='sharePhotoApariencia'>
           <TabStyle sharePhoto={sharePhoto} />
-        </Tabs.TabPane>
-        <Tabs.TabPane tab='Publicar' key='sharePhotoPublicar'>
+        </Tabs.TabPane> */}
+        {/* <Tabs.TabPane tab='Publicar' key='sharePhotoPublicar'>
           <TabPublish sharePhoto={sharePhoto} />
-        </Tabs.TabPane>
+        </Tabs.TabPane> */}
         <Tabs.TabPane tab='Resultados' key='sharePhotoResultados'>
           <TabResults sharePhoto={sharePhoto} />
         </Tabs.TabPane>
