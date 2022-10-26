@@ -321,6 +321,8 @@ const Document = (props) => {
       await uploadTaskRef.snapshot.ref.getDownloadURL().then(function(downloadURL) {
         file = downloadURL;
         console.log(downloadURL);
+        // Send the URL to the parent component. Save it.
+        if (typeof props.onSave === 'function') props.onSave(downloadURL);
         setLoading(false);
       });
       setDocument({
@@ -365,7 +367,7 @@ const Document = (props) => {
         save={props.simpleMode || ((loadPercentage > 0 && true) || fromEditing)}
         saveMethod={props.simpleMode && onSubmit}
         form={!props.simpleMode}
-        remove={() => { props.simpleMode ? history.push(`${props.matchUrl.replace('agenda', 'documents')}`) : remove()}}
+        remove={() => { (props.simpleMode && !props.notRecordFileInDocuments) ? history.push(`${props.matchUrl.replace('agenda', 'documents')}`) : remove()}}
         edit={locationState?.edit}
         loadingSave={loading}
       />
