@@ -133,6 +133,14 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
     );
   }
 
+  if (activityContentValues.html === activityContentType) {
+    return (
+      <>
+      Inserte un editor aquí, que guarde el HTML en el meeting_id ese
+      </>
+    );
+  }
+
   if (activityContentValues.pdf === activityContentType) {
     return (
       <>
