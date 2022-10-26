@@ -17,6 +17,7 @@ export enum MainUI {
   QUIZ = 'quizing2',
   SURVEY = 'survey2',
   PDF = 'pdf2',
+  HTML = 'html2',
 };
 
 export enum DeepUI {
@@ -31,6 +32,7 @@ export enum DeepUI {
   QUIZ = 'quizing',
   SURVEY = 'survey',
   PDF = 'pdf',
+  HTML = 'html',
 };
 
 export enum TypeDisplayment {
@@ -43,4 +45,5 @@ export enum TypeDisplayment {
   EXAM = 'Quizing',
   SURVEY = 'Survey',
   PDF = 'pdf', // TODO: this should be uppercase, but we have to check where it is used
+  HTML = 'HTML',
 };

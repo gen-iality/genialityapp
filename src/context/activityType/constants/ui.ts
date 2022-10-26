@@ -14,6 +14,7 @@ export const activityTypeNames: { [key in ActivityType.MainUIKey]: ActivityType.
   quizing: MainUI.QUIZ,
   survey: MainUI.SURVEY,
   pdf: MainUI.PDF,
+  html: MainUI.HTML,
 };
 
 export const activityContentValues: { [key in ActivityType.DeepUIKey]: ActivityType.ContentValue } = {
@@ -28,6 +29,7 @@ export const activityContentValues: { [key in ActivityType.DeepUIKey]: ActivityT
   quizing: DeepUI.QUIZ,
   survey: DeepUI.SURVEY,
   pdf: DeepUI.PDF,
+  html: DeepUI.HTML,
 };
 
 export const typeToDisplaymentMap: ActivityType.TypeToDisplaymentMap = {
@@ -44,6 +46,7 @@ export const typeToDisplaymentMap: ActivityType.TypeToDisplaymentMap = {
   quizing: TypeDisplayment.EXAM,
   survey: TypeDisplayment.SURVEY,
   pdf: TypeDisplayment.PDF,
+  html: TypeDisplayment.HTML,
 };
 
 const urlInputForms: { [key in keyof typeof activityContentValues]?: ActivityType.FormUI } = {
