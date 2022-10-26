@@ -35,6 +35,51 @@ const Document = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!props.fromPDFDocumentURL) return;
+
+    // "Load" the file from URL.
+    const url = props.fromPDFDocumentURL;
+
+    let filename = url.substring(url.lastIndexOf('/') + 1);
+    if (filename.indexOf('?') !== -1) {
+      filename = filename.substring(0, filename.indexOf('?'));
+    }
+    if (filename.indexOf('#') !== -1) {
+      filename = filename.substring(0, filename.indexOf('#'));
+    }
+    const fakeDocument = {
+      format: 'pdf',
+      title: filename,
+      name: filename,
+      file: url,
+      type: 'file',
+      documentList: [
+        {
+          // "uid": "rc-upload-0",
+          // "lastModified": {
+          //   "$numberLong": "1661874625498"
+          // },
+          name: filename,
+          size: 0, // Imposible to know this from URL in the easy way
+          type: 'application/pdf',
+          percent: 100,
+          // "originFileObj": {
+          //   "uid": "rc-upload-0"
+          // },
+          status: 'success',
+          thumbUrl: null,
+        }
+      ],
+      state: 'father',
+    };
+    
+    setDocument(fakeDocument);
+    setFolder(fakeDocument.folder);
+    setFiles([fakeDocument.file]);
+    setDocumentList(fakeDocument.documentList);
+  }, [props.fromPDFDocumentURL]);
+
   const getDocument = async () => {
     const response = await DocumentsApi.getOne(locationState.edit, props.event._id);
     setDocument(response);
