@@ -60,3 +60,14 @@ export const TemplateData = [
     'Valor en la balota': 'Logo de evius',
   },
 ];
+
+export const KEYSDATAIMPORT = [
+  'Tipo Carton',
+  'Valor en el cartón',
+  'Tipo Balota',
+  'Valor en la balota',
+  'Cardboard Type',
+  'Value on the board',
+  'Ballot Type',
+  'Value on the ballot',
+];

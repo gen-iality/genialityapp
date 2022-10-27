@@ -5,6 +5,7 @@ import ImportValues from './importValues';
 import { importValuesBingo } from '../services';
 import { DispatchMessageService } from '@/context/MessageService';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { KEYSDATAIMPORT } from '../constants/constants';
 const ImportModal = ({
   event,
   openAndCloseImportModal,
@@ -56,6 +57,18 @@ const ImportModal = ({
   const savedataImport = async () => {
     setLoading(true);
     let tempArray = new Array();
+    const headerTitle = Object.keys(importData[0  as keyof typeof importData] || {});
+    const setCorrectHeader = (currentValue: string)=>KEYSDATAIMPORT.includes(currentValue)
+    const isCorrectHeader = headerTitle.every(setCorrectHeader)
+    if(isCorrectHeader === false) {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error al verificar la data, verifique la estructura con el template',
+        action: 'show',
+      });
+      setLoading(false);
+      return
+    }
     importData.forEach((importItem) => {
       const keys = Object.keys(importItem);
       extraFields.map((extraField: any) => {
