@@ -1,5 +1,6 @@
 import { Button, Drawer, Grid } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import useSharePhoto from '../../hooks/useSharePhoto';
 
 interface Props {
 	children: React.ReactNode;
@@ -8,8 +9,9 @@ interface Props {
 const { useBreakpoint } = Grid;
 
 export default function DrawerSharePhoto(props: Props) {
-	const screens = useBreakpoint();
 	const [open, setOpen] = useState(false);
+	const { sharePhoto, listenSharePhoto } = useSharePhoto();
+	const screens = useBreakpoint();
 
 	const handleOpen = () => {
 		setOpen(true);
@@ -19,9 +21,22 @@ export default function DrawerSharePhoto(props: Props) {
 		setOpen(false);
 	};
 
+	useEffect(() => {
+		if (sharePhoto !== null) {
+			const unSubscribe = listenSharePhoto();
+			return () => unSubscribe();
+		}
+	}, [sharePhoto]);
+
+	if (sharePhoto === null) return null;
+
 	return (
 		<>
-			<Button size='large' type='primary' onClick={handleOpen}>
+			<Button
+				size='large'
+				type='primary'
+				onClick={handleOpen}
+				style={{ display: sharePhoto.published ? 'block' : 'none' }}>
 				¡Comparte tu foto 📷!
 			</Button>
 			<Drawer
@@ -38,7 +53,7 @@ export default function DrawerSharePhoto(props: Props) {
 				onClose={handleClose}
 				width='100vw'
 				destroyOnClose={true}>
-				{props.children}
+				{sharePhoto.active ? props.children : <p>Esta dinamica no esta activa aun</p>}
 			</Drawer>
 		</>
 	);
