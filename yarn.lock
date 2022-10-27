@@ -13597,12 +13597,19 @@ quill-delta@^3.6.2:
     extend "^3.0.2"
     fast-diff "1.1.2"
 
+quill-html-edit-button@^2.2.12:
+  version "2.2.12"
+  resolved "https://registry.yarnpkg.com/quill-html-edit-button/-/quill-html-edit-button-2.2.12.tgz#45f7ad9f907252d9efdf9f5b5590834a2f5484f9"
+  integrity sha512-lrCJmf2XpvkpjpofRW77ShsCj5x9JhL4Mji03aIKZWR6uGKeKal0IKI22buW8tG6hFekTHzv7UBl2Jz0Yd+BTQ==
+  dependencies:
+    quill "^1.x"
+
 quill-image-drop-and-paste@^1:
   version "1.2.10"
   resolved "https://registry.npmjs.org/quill-image-drop-and-paste/-/quill-image-drop-and-paste-1.2.10.tgz"
   integrity sha512-1guHUVyRct42qeIbTaYQdfKKtKi/VtuPZ/woV3pz/5FgmVZy5b3QBcQw0dx0KxbqqUdj1cPDhoaMhdhfP46R4g==
 
-quill@^1.3.7:
+quill@^1.3.7, quill@^1.x:
   version "1.3.7"
   resolved "https://registry.npmjs.org/quill/-/quill-1.3.7.tgz"
   integrity sha512-hG/DVzh/TiknWtE6QmWAF/pxoZKYxfe3J/d/+ShUWkDvvkZQVTPeVmUJVu1uE6DDooC4fWTiCLh84ul89oNz5g==
