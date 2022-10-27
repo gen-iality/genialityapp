@@ -24,6 +24,7 @@ const PdfActivity = () => {
   }, [currentActivity]);
   
   useEffect(() => {
+    if (!activityState) return;
     setPdfURL(activityState.meeting_id);
   }, [activityState]);
 
