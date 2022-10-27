@@ -4,7 +4,7 @@ import {
 } from '../constants/enum';
 
 export namespace ActivityType {
-  export type MainUIKey = 'live' | 'meeting' | 'video' | 'quizing' | 'survey' | 'pdf';
+  export type MainUIKey = 'live' | 'meeting' | 'video' | 'quizing' | 'survey' | 'pdf' | 'html';
   export type DeepUIKey =
     | 'streaming'
     | 'vimeo'
@@ -16,9 +16,10 @@ export namespace ActivityType {
     | 'rtmp'
     | 'quizing'
     | 'survey'
-    | 'pdf';
+    | 'pdf'
+    | 'html';
 
-  export type Name = 'liveBroadcast' | 'meeting2' | 'video' | 'quizing2' | 'survey2' | 'pdf2';
+  export type Name = 'liveBroadcast' | 'meeting2' | 'video' | 'quizing2' | 'survey2' | 'pdf2' | 'html2';
 
   export type ContentValue =
     | ''
@@ -32,7 +33,8 @@ export namespace ActivityType {
     | 'RTMP'
     | 'quizing'
     | 'survey'
-    | 'pdf';
+    | 'pdf'
+    | 'html';
 
   export type UIKey = 
     | (MainUIKey & string)
@@ -52,7 +54,8 @@ export namespace ActivityType {
     | 'EviusMeet'
     | 'Quizing'
     | 'Survey'
-    | 'pdf'; // TODO: convert to uppercase, but check if all works goodly.
+    | 'pdf' // TODO: convert to uppercase, but check if all works goodly.
+    | 'HTML'
 
   export type TypeToDisplaymentMap = { [key in ContentValue]: TypeAsDisplayment } & { video: TypeAsDisplayment };
 

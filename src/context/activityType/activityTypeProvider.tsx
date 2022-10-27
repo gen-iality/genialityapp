@@ -19,7 +19,7 @@ import { activityContentValues, formWidgetFlow, activityTypeNames, typeToDisplay
 // Temporally
 import { ExtendedAgendaType } from '@Utilities/types/AgendaType';
 
-const onlyActivityTypes: ActivityType.Name[] = ['liveBroadcast', 'meeting2', 'video', 'quizing2', 'survey2', 'pdf2'];
+const onlyActivityTypes: ActivityType.Name[] = ['liveBroadcast', 'meeting2', 'video', 'quizing2', 'survey2', 'pdf2', 'html2'];
 const theseAreLiveToo: ActivityType.ContentValue[] = ['RTMP', 'eviusMeet', 'vimeo', 'youTube'];
 const theseAreMeeting: ActivityType.ContentValue[] = ['meeting'];
 const theseAreVideo: ActivityType.ContentValue[] = ['url', 'cargarvideo'];
@@ -80,6 +80,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         return 'vídeo';
       case MainUI.PDF:
         return 'PDF';
+      case MainUI.HTML:
+        return 'HTML';
       default:
         return typeIncoming;
     }
@@ -174,6 +176,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   }
 
   const saveActivityContent = async (type?: ActivityType.ContentValue | null, data?: string | null) => {
+    console.debug('saveActivityContent is been calling');
     if (activityType === null) {
       console.error('activityType (from ActivityTypeProvider) is none');
       return;
@@ -193,6 +196,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     if (data !== undefined) setContentSource(data);
     const contentType = type !== undefined ? type : activityContentType;
     const inputContentSource = data !== undefined ? data : contentSource;
+
+    console.debug('inputContentSource', inputContentSource);
 
     if (!contentType) {
       console.error('ActivityTypeProvider.saveActivityContent: content type must not be none');
@@ -324,6 +329,19 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         // if (!!inputContentSource) setMeetingId(inputContentSource);
         break;
       }
+      case activityContentValues.html: {
+        console.debug('saving html..');
+        if (inputContentSource === undefined) {
+          console.error('ActivityTypeProvider: contentSource is none:', inputContentSource);
+          return;
+        }
+        const respUrl = await AgendaApi.editOne({ meeting_id: inputContentSource }, activityEdit, cEvent.value._id);
+        await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
+        setTypeActivity(activityContentValues.html);
+        setMeetingId(inputContentSource);
+        // if (!!inputContentSource) setMeetingId(inputContentSource);
+        break;
+      }
       default:
         // alert(`wtf is ${contentType}`);
         console.warn(`wtf is ${contentType}`);
@@ -436,6 +454,10 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
               setActivityType(MainUI.PDF);
               // setContentSource(meetingId); this is doing by useEffect directly from meetingId
               console.debug('from beginning contentSource is going to be:', meetingId);
+            } else if ((typeIncoming as ActivityType.ContentValue) === 'html') {
+              setActivityType(MainUI.HTML);
+              // setContentSource(meetingId); this is doing by useEffect directly from meetingId
+              console.debug('from beginning contentSource is going to be:', (meetingId || '').substring(0, 20));
             } else {
               console.warn('set activity type as null because', typeIncoming, 'is weird');
               setActivityType(null);

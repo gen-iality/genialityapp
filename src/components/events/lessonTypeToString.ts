@@ -33,6 +33,10 @@ export default function lessonTypeToString (inputType: string) {
     case 'survey2':
       typeName = 'Encuesta'
       break;
+    case 'html':
+    case 'html2':
+      typeName = 'Código HTML'
+      break;
     default:
       typeName = inputType;
   }

@@ -8,6 +8,7 @@ import {
   Typography,
   Statistic,
   Alert, // to info messages
+  Button,
 } from 'antd';
 import useActivityType from '@context/activityType/hooks/useActivityType';
 import AgendaContext from '@context/AgendaContext';
@@ -30,6 +31,7 @@ import Document from '@components/documents/Document';
 
 import QuizCMS from '../../quiz/QuizCMS';
 import SurveyCMS from '../../survey/SurveyCMS';
+import EviusReactQuill from '@components/shared/eviusReactQuill';
 
 export interface ActivityContentManagerProps {
   activityName: string,
@@ -130,6 +132,23 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   if (!type) {
     return (
       <Typography.Title>Tipo de contenido no soportado aún</Typography.Title>
+    );
+  }
+
+  if (activityContentValues.html === activityContentType) {
+    return (
+      <>
+      <Button
+        onClick={() => {
+          saveActivityContent(activityContentType, contentSource);
+        }}
+      >Forzar actualizar</Button>
+      <EviusReactQuill
+        name='html'
+        data={contentSource}
+        handleChange={(value: string) => setContentSource(value)}
+      />
+      </>
     );
   }
 

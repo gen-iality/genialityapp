@@ -14,6 +14,7 @@ export const activityTypeNames: { [key in ActivityType.MainUIKey]: ActivityType.
   quizing: MainUI.QUIZ,
   survey: MainUI.SURVEY,
   pdf: MainUI.PDF,
+  html: MainUI.HTML,
 };
 
 export const activityContentValues: { [key in ActivityType.DeepUIKey]: ActivityType.ContentValue } = {
@@ -28,6 +29,7 @@ export const activityContentValues: { [key in ActivityType.DeepUIKey]: ActivityT
   quizing: DeepUI.QUIZ,
   survey: DeepUI.SURVEY,
   pdf: DeepUI.PDF,
+  html: DeepUI.HTML,
 };
 
 export const typeToDisplaymentMap: ActivityType.TypeToDisplaymentMap = {
@@ -44,6 +46,7 @@ export const typeToDisplaymentMap: ActivityType.TypeToDisplaymentMap = {
   quizing: TypeDisplayment.EXAM,
   survey: TypeDisplayment.SURVEY,
   pdf: TypeDisplayment.PDF,
+  html: TypeDisplayment.HTML,
 };
 
 const urlInputForms: { [key in keyof typeof activityContentValues]?: ActivityType.FormUI } = {
@@ -160,6 +163,16 @@ const pdfForm: ActivityType.FormUI = {
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fmeeting.png?alt=media&token=02a6259b-3c30-436f-b0b0-f4cf1eecdfd6',
 };
 
+const htmlForm: ActivityType.FormUI = {
+  formType: FormType.INFO,
+  key: activityContentValues.html,
+  MainTitle: '',
+  title: 'HTML Código',
+  description: 'Este tipo de contenido te permiterá subir código HTML que ser visualizará como un curso',
+  image:
+    'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fmeeting.png?alt=media&token=02a6259b-3c30-436f-b0b0-f4cf1eecdfd6',
+};
+
 const meetingForm: ActivityType.FormUI = {
   formType: FormType.INFO,
   key: activityContentValues.meeting,
@@ -246,6 +259,15 @@ export const formWidgetFlow: ActivityType.MainUI = {
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b',
       form: pdfForm,
+    },
+    {
+      widgetType: WidgetType.FORM,
+      key: activityTypeNames.html,
+      MainTitle: 'Agregar código HTML',
+      title: 'Código HTML',
+      description: 'En esta opción podrás agregar código HTML',
+      image: 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b',
+      form: htmlForm,
     },
   ],
 };
