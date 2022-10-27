@@ -176,6 +176,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   }
 
   const saveActivityContent = async (type?: ActivityType.ContentValue | null, data?: string | null) => {
+    console.debug('saveActivityContent is been calling');
     if (activityType === null) {
       console.error('activityType (from ActivityTypeProvider) is none');
       return;
@@ -195,6 +196,8 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
     if (data !== undefined) setContentSource(data);
     const contentType = type !== undefined ? type : activityContentType;
     const inputContentSource = data !== undefined ? data : contentSource;
+
+    console.debug('inputContentSource', inputContentSource);
 
     if (!contentType) {
       console.error('ActivityTypeProvider.saveActivityContent: content type must not be none');
@@ -322,6 +325,19 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         const respUrl = await AgendaApi.editOne({ meeting_id: inputContentSource }, activityEdit, cEvent.value._id);
         await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
         setTypeActivity(activityContentValues.pdf);
+        setMeetingId(inputContentSource);
+        // if (!!inputContentSource) setMeetingId(inputContentSource);
+        break;
+      }
+      case activityContentValues.html: {
+        console.debug('saving html..');
+        if (inputContentSource === undefined) {
+          console.error('ActivityTypeProvider: contentSource is none:', inputContentSource);
+          return;
+        }
+        const respUrl = await AgendaApi.editOne({ meeting_id: inputContentSource }, activityEdit, cEvent.value._id);
+        await saveConfig({ platformNew: '', type: contentType, data: inputContentSource });
+        setTypeActivity(activityContentValues.html);
         setMeetingId(inputContentSource);
         // if (!!inputContentSource) setMeetingId(inputContentSource);
         break;
