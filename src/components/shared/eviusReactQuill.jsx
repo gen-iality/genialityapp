@@ -4,8 +4,13 @@ import QuillImageDropAndPaste from 'quill-image-drop-and-paste';
 import { Actions } from '@helpers/request';
 import { Input } from 'antd';
 
+import htmlEditButton from 'quill-html-edit-button';
+
 const { Quill } = ReactQuill;
-Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
+Quill.register({
+  'modules/imageDropAndPaste': QuillImageDropAndPaste,
+  'modules/htmlEditButton': htmlEditButton,
+});
 
 /**
  * Se creo un componente para extender la funcionalidad de Quill para que las imagenes que se suban no queden cómo base64 sino se suben
@@ -110,6 +115,7 @@ function EviusReactQuill(props) {
           imageHandler(imageDataUrl, type, imageData, reactQuilllRef);
         },
       },
+      htmlEditButton: {},
     });
     const setupToolBarImageUploadInput = (reactQuilllRef) => {
       const ImageData = QuillImageDropAndPaste.ImageData;
