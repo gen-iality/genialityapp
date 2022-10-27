@@ -1,4 +1,4 @@
-import { Card, Col, Form, Input, Row, Switch, Typography } from 'antd';
+import { Card, Col, Form, Input, InputNumber, Row, Switch, Typography } from 'antd';
 import { SharePhoto } from '../../types';
 
 interface Props {
@@ -23,13 +23,13 @@ export default function TabSetup(props: Props) {
           </Form.Item>
           <Form.Item
             rules={[
-              { min: 1, message: 'El valor debe ser superior o igual a 1' },
+              { type: 'number', min: 1, message: 'El valor debe ser superior o igual a 1' },
               { required: true, message: 'El valor debe ser superior o igual a 1' },
             ]}
             label={<label>Puntos por like</label>}
             initialValue={Number(sharePhoto.points_per_like)}
             name='points_per_like'>
-            <Input type='number' min={1} />
+            <InputNumber min={1} type='number' />
           </Form.Item>
         </Card>
       </Col>
