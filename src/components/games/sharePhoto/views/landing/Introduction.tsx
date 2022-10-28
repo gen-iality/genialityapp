@@ -1,62 +1,57 @@
-import { CameraOutlined, TableOutlined } from '@ant-design/icons';
-import { Card, Col, Row, Typography } from 'antd';
+import { Button, Grid, Result, Row, Typography } from 'antd';
 import { useEffect } from 'react';
-import ChooseButton from '../../components/landing/ChooseButton';
 import useSharePhoto from '../../hooks/useSharePhoto';
 import useSharePhotoInLanding from '../../hooks/useSharePhotoInLanding';
 
+const { useBreakpoint } = Grid;
+
 export default function Introduction() {
-	const { sharePhoto, listenSharePhoto } = useSharePhoto();
-	const { goTo } = useSharePhotoInLanding();
+  const { sharePhoto, listenSharePhoto } = useSharePhoto();
+  const { goTo } = useSharePhotoInLanding();
+  const screens = useBreakpoint();
 
-	useEffect(() => {
-		if (sharePhoto !== null) {
-			const unSubscribe = listenSharePhoto();
-			return () => unSubscribe();
-		}
-	}, [sharePhoto]);
+  useEffect(() => {
+    if (sharePhoto !== null) {
+      const unSubscribe = listenSharePhoto();
+      return () => unSubscribe();
+    }
+  }, [sharePhoto]);
 
-	if (!sharePhoto) {
-		return <p>Ups! esta dinamica no existe aun!</p>;
-	}
+  if (!sharePhoto) {
+    return <p>Ups! esta dinamica no existe aun!</p>;
+  }
 
-	return (
-		<>
-			<Row gutter={[12, 12]}>
-				<Col xs={24} md={12}>
-					<Card title='Tematica' headStyle={{ textAlign: 'center' }} style={{ height: '100%' }}>
-						<Typography>{sharePhoto.tematic}</Typography>
-					</Card>
-				</Col>
-				<Col
-					xs={24}
-					style={{
-						display: 'flex',
-						justifyContent: 'space-around',
-						marginTop: 6,
-					}}>
-					<ChooseButton
-						onClick={() => goTo('galery')}
-						icon={<TableOutlined style={{ fontSize: '40px' }} />}
-						label='Ver galeria'
-					/>
-					<ChooseButton
-						onClick={() => goTo('chooseAction')}
-						icon={<CameraOutlined style={{ fontSize: '40px' }} />}
-						label='Subir mi foto'
-					/>
-				</Col>
-				<Col xs={24} md={12}>
-					<Card title='Instrucciones' headStyle={{ textAlign: 'center' }} style={{ height: '100%' }}>
-						<Typography>
-							Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aliquam veniam magni assumenda, illo hic
-							facere optio natus cupiditate impedit exercitationem nostrum autem nam eum reiciendis id neque atque ab.
-							Atque quaerat corporis, omnis alias asperiores iure laudantium. Modi sapiente, facilis velit laudantium
-							fuga ullam explicabo laborum delectus temporibus. Consequatur.
-						</Typography>
-					</Card>
-				</Col>
-			</Row>
-		</>
-	);
+  return (
+    <>
+      <Row gutter={[0, 0]} justify='center' align='middle' style={{ height: '100%' }}>
+        <Result
+          className='editAnt'
+          icon={' '} // dejar el espacio en blanco para eliminar icono por defecto que trae el componente
+          title={
+            <Typography.Title level={screens.xs ? 3 : 1} style={{ letterSpacing: '0.1em' }}>
+              {sharePhoto.title}
+            </Typography.Title>
+          }
+          subTitle={
+            <Typography.Text style={{ fontSize: screens.xs ? '18px' : '24px' }}>{sharePhoto.tematic}</Typography.Text>
+          }
+          extra={[
+            <Button onClick={() => goTo('galery')} size='large' key='galery'>
+              Ver Galería
+            </Button>,
+            <Button onClick={() => goTo('chooseAction')} size='large' key='photo'>
+              Subir Foto
+            </Button>,
+          ]}>
+          <Typography.Text strong>Instrucciones</Typography.Text>
+          <Typography.Paragraph>
+            Risus sed et gravida eleifend mauris vulputate egestas tempus. Magna est eu diam leo neque massa quis. Urna
+            arcu massa vel fermentum. Est tortor, amet elit orci massa blandit tristique et faucibus. Amet nisi tortor,
+            feugiat nec arcu sapien volutpat arcu quisque. Et vestibulum tristique sed ullamcorper viverra malesuada
+            purus, arcu tortor. Maecenas interdum ornare faucibus donec id.
+          </Typography.Paragraph>
+        </Result>
+      </Row>
+    </>
+  );
 }
