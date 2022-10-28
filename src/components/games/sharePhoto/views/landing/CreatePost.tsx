@@ -2,61 +2,67 @@ import { Button, Card, Col, Form, Image, Input, Row } from 'antd';
 import { useState } from 'react';
 import useSharePhoto from '../../hooks/useSharePhoto';
 import useSharePhotoInLanding from '../../hooks/useSharePhotoInLanding';
+import SendIcon from '@2fd/ant-design-icons/lib/Send';
 
 export default function CreatePost() {
-	const [title, setTitle] = useState<string>('');
-	const { goTo, imageUploaded } = useSharePhotoInLanding();
-	const { createPost } = useSharePhoto();
+  const [title, setTitle] = useState<string>('');
+  const { goTo, imageUploaded } = useSharePhotoInLanding();
+  const { createPost } = useSharePhoto();
 
-	const handleFinish = async () => {
-		if (imageUploaded) {
-			const newPost = {
-				image: imageUploaded,
-				thumb: imageUploaded,
-				title,
-			};
-			await createPost(newPost);
-			goTo('galery');
-		}
-	};
+  const handleFinish = async () => {
+    if (imageUploaded) {
+      const newPost = {
+        image: imageUploaded,
+        thumb: imageUploaded,
+        title,
+      };
+      await createPost(newPost);
+      goTo('galery');
+    }
+  };
 
-	if (!imageUploaded) return <p>No has subido o tomado una foto aun</p>;
+  if (!imageUploaded) return <p>No has subido o tomado una foto aun</p>;
 
-	return (
-		<Row gutter={[12, 12]}>
-			<Col xs={24} style={{ display: 'flex', justifyContent: 'space-between' }}>
-				<Button onClick={() => goTo('chooseAction')}>Atras</Button>
-			</Col>
-			<Col xs={24} style={{ display: 'grid', placeContent: 'center' }}>
-				<Card bodyStyle={{ position: 'relative' }}>
-					<Form onFinish={handleFinish}>
-						<Image preview={false} src={imageUploaded} style={{ maxHeight: '50vh' }} />
-						<Card
-							style={{
-								width: '100%',
-								border: 'none',
-								padding: 0,
-								margin: 0,
-							}}
-							bodyStyle={{
-								padding: 0,
-								paddingTop: 10,
-							}}
-						>
-							<Form.Item>
-								<Input value={title} onChange={e => setTitle(e.target.value)} placeholder='Ponle un titulo' />
-							</Form.Item>
-							<Button
-								type='primary'
-								style={{ width: '100%', marginTop: 0 }}
-								htmlType='submit'
-							>
-								Enviar
-							</Button>
-						</Card>
-					</Form>
-				</Card>
-			</Col>
-		</Row>
-	);
+  return (
+    <>
+      <Button onClick={() => goTo('chooseAction')}>Atras</Button>
+      <Row gutter={[0, 0]} justify='center' align='middle' style={{ height: '100%' }}>
+        <Col xs={24} style={{ display: 'grid', placeContent: 'center' }}>
+          <Card
+            style={{ maxWidth: '450px' }}
+            cover={<Image style={{ filter: 'brightness(70%) blur(2px)' }} preview={false} src={imageUploaded} />}
+            bordered={false}
+            bodyStyle={{ padding: '10px' }}>
+            <Form
+              style={{
+                position: 'absolute',
+                bottom: '1%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '330px',
+              }}
+              onFinish={handleFinish}>
+              <Form.Item required>
+                <Input.Group compact>
+                  <Input
+                    style={{ width: '88%' }}
+                    size='large'
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder='Ponle un titulo'
+                  />
+                  <Button
+                    icon={<SendIcon style={{ color: '#FFFFFF' }} />}
+                    size='large'
+                    type='text'
+                    style={{ backgroundColor: '#52C41A' }}
+                    htmlType='submit'></Button>
+                </Input.Group>
+              </Form.Item>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
+    </>
+  );
 }
