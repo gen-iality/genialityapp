@@ -40,6 +40,7 @@ export default function DrawerSharePhoto(props: Props) {
         ¡Comparte tu foto 📷!
       </Button>
       <Drawer
+        extra={<Button>Atras</Button>}
         visible={open}
         bodyStyle={{
           // backgroundImage: `url(${cEvent.value?.styles?.BackgroundImage})`,

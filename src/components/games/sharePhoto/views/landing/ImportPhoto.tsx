@@ -11,7 +11,7 @@ export default function ImportPhoto() {
   const paddingDinamic = screens.xs ? '10px' : '80px';
   return (
     <>
-      <Button onClick={() => goTo('chooseAction')}>Atras</Button>
+      {/*  <Button onClick={() => goTo('chooseAction')}>Atras</Button> */}
       <Row
         gutter={[0, 0]}
         justify='center'

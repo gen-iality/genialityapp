@@ -63,7 +63,7 @@ export default function TakePhoto() {
 
   return (
     <>
-      <Button onClick={() => goTo('chooseAction')}>Atras</Button>
+      {/* <Button onClick={() => goTo('chooseAction')}>Atras</Button> */}
       <Row gutter={[0, 0]} justify='center' align='middle' style={{ height: '100%' }}>
         <Col xs={24} style={{ display: screens.xs ? 'block' : 'grid', placeContent: 'center' }}>
           {!photo.length ? (

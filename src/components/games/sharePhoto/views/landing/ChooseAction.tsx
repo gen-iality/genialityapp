@@ -12,7 +12,7 @@ export default function ChooseAction() {
   const screens = useBreakpoint();
   return (
     <>
-      <Button onClick={() => goTo('introduction')}>Atras</Button>
+      {/* <Button onClick={() => goTo('introduction')}>Atras</Button> */}
       <Row gutter={[0, 0]} justify='center' align='middle' style={{ height: '100%' }}>
         <Result
           className='editAnt'

@@ -18,18 +18,18 @@ export default function CreatePost() {
         title,
       };
       await createPost(newPost);
-      setImageUploaded(null)
+      setImageUploaded(null);
       goTo('galery');
     }
   };
 
   if (!imageUploaded) return <p>No has subido o tomado una foto aun</p>;
 
-  if (loading) return <Loading />
+  if (loading) return <Loading />;
 
   return (
     <>
-      <Button onClick={() => goTo('chooseAction')}>Atras</Button>
+      {/* <Button onClick={() => goTo('chooseAction')}>Atras</Button> */}
       <Row gutter={[0, 0]} justify='center' align='middle' style={{ height: '100%' }}>
         <Col xs={24} style={{ display: 'grid', placeContent: 'center' }}>
           <Card
@@ -60,7 +60,8 @@ export default function CreatePost() {
                     size='large'
                     type='text'
                     style={{ backgroundColor: '#52C41A' }}
-                    htmlType='submit'/>
+                    htmlType='submit'
+                  />
                 </Input.Group>
               </Form.Item>
             </Form>
