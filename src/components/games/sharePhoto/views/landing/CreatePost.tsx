@@ -3,11 +3,12 @@ import { useState } from 'react';
 import useSharePhoto from '../../hooks/useSharePhoto';
 import useSharePhotoInLanding from '../../hooks/useSharePhotoInLanding';
 import SendIcon from '@2fd/ant-design-icons/lib/Send';
+import Loading from '@/components/profile/loading';
 
 export default function CreatePost() {
   const [title, setTitle] = useState<string>('');
-  const { goTo, imageUploaded } = useSharePhotoInLanding();
-  const { createPost } = useSharePhoto();
+  const { goTo, imageUploaded, setImageUploaded } = useSharePhotoInLanding();
+  const { createPost, loading } = useSharePhoto();
 
   const handleFinish = async () => {
     if (imageUploaded) {
@@ -17,11 +18,14 @@ export default function CreatePost() {
         title,
       };
       await createPost(newPost);
+      setImageUploaded(null)
       goTo('galery');
     }
   };
 
   if (!imageUploaded) return <p>No has subido o tomado una foto aun</p>;
+
+  if (loading) return <Loading />
 
   return (
     <>
@@ -56,7 +60,7 @@ export default function CreatePost() {
                     size='large'
                     type='text'
                     style={{ backgroundColor: '#52C41A' }}
-                    htmlType='submit'></Button>
+                    htmlType='submit'/>
                 </Input.Group>
               </Form.Item>
             </Form>
