@@ -134,12 +134,12 @@ export const MenuItems = [
         key: 'bingo',
         onClick: handleClick,
       },
-      // {
-      //   name: 'Comparte tu foto',
-      //   path: '/share-photo',
-      //   key: 'share-photo',
-      //   onClick: handleClick,
-      // },
+      {
+        name: 'Comparte tu foto',
+        path: '/share-photo',
+        key: 'share-photo',
+        onClick: handleClick,
+      },
       // {
       //   name: '¿Dónde se encuentra?',
       //   path: '/whereIs',
