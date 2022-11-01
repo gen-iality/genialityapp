@@ -113,6 +113,7 @@ export const listenSharePhoto = (
 		.collection('sharePhotoByEvent')
 		.doc(eventId)
 		.onSnapshot(data => {
+			// console.log(data.metadata.hasPendingWrites)
 			const dataUpdated = data.data();
 			if (dataUpdated) {
 				setSharePhoto(prev => {

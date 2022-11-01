@@ -17,6 +17,7 @@ interface Props {
 
 export default function SharePhotoProvider(props: Props) {
 	const [sharePhoto, setSharePhoto] = useState<SharePhoto | null>(null);
+	// console.log('context')
 
 	return (
 		<SharePhotoContext.Provider value={{ sharePhoto, setSharePhoto }}>

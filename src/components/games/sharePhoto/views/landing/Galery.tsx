@@ -37,21 +37,21 @@ export default function Galery() {
     }
   };
 
-  useEffect(() => {
-    const postUpdated = sharePhoto?.posts.find((post) => post.id === postSelected?.id);
-    if (postUpdated) {
-      setPostSelected(postUpdated);
-    }
-  }, [sharePhoto?.posts]);
+  // useEffect(() => {
+  //   const postUpdated = sharePhoto?.posts.find((post) => post.id === postSelected?.id);
+  //   if (postUpdated) {
+  //     setPostSelected(postUpdated);
+  //   }
+  //   // console.log('postSelected', postSelected);
+  // }, [sharePhoto?.posts]);
 
   useEffect(() => {
     const unSubscribe = listenSharePhoto();
     return () => unSubscribe();
   }, []);
-  console.log('postSelected', postSelected);
+  // console.log('postSelected');
   return (
     <>
-      {/*  <Button onClick={handleBack}>Atras</Button> */}
       {postSelected && (
         <Drawer
           bodyStyle={{ padding: screens.xs ? '0px' : '0' }}
@@ -62,10 +62,10 @@ export default function Galery() {
             <Col span={24}>
               <PageHeader
                 style={{ padding: '0px 10px' }}
-                avatar={{ icon: <UserOutlined />, src: '' }}
+                avatar={{ icon: <UserOutlined />, src: postSelected.picture }}
                 title={
                   <Typography.Text type='secondary' style={{ fontSize: screens.xs ? '16px' : '18px' }}>
-                    {'Autor'}
+                    {postSelected.user_name}
                   </Typography.Text>
                 }
                 children={<Typography.Title level={4}>{postSelected.title}</Typography.Title>}
@@ -111,32 +111,6 @@ export default function Galery() {
           </Row>
         </Drawer>
       )}
-
-      {/* {postSelected && (
-        <Row gutter={[12, 12]} style={{ marginTop: 10 }}>
-          <Col xs={24}>
-            <Card style={{ width: '40%' }} cover={<Image src={postSelected.image} preview={false} />}>
-              <Meta
-                avatar={
-                  <Badge count={postSelected.likes.length}>
-                    <Button
-                      size='large'
-                      style={{ width: '100%', height: '100%', padding: 2, margin: 2, border: 'none' }}
-                      danger
-                      ghost
-                      // onClick={() => console.log('postId', postSelected?.id)}
-                      onClick={() => addLike(postSelected.id)}
-                      icon={<HeartFilled style={{ fontSize: '40px' }} />}
-                    />
-                  </Badge>
-                }
-                title={'Author'}
-                description={postSelected?.title}
-              />
-            </Card>
-          </Col>
-        </Row>
-      )} */}
       <Row gutter={[16, 16]}>
         {sharePhoto?.posts.map((post) => (
           <Col key={post.id} xs={8} sm={8} md={6} lg={4} xl={4} xxl={4}>

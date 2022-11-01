@@ -24,13 +24,15 @@ export interface Post {
 	created_at: Date | string;
 	updated_at: Date | string;
 	event_user_id: string;
+	user_name: string;
+	picture: string;
 	image: string;
 	thumb: string;
 	title: string;
 	likes: Like[];
 }
 
-export interface CreatePostDto extends Omit<Post, 'id' | 'created_at' | 'updated_at' | 'thumb' | 'likes'> {}
+export interface CreatePostDto extends Omit<Post, 'id' | 'created_at' | 'updated_at' | 'thumb' | 'likes' | 'user_name' | 'picture'> {}
 
 export interface Like {
 	created_at: Date | string;
