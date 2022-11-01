@@ -69,7 +69,6 @@ export default function index({ event }: { event: {} }) {
     bingoPrint,
   } = useBingo();
   const [openAndCloseImportModal, setOpenAndCloseImportModal] = useState(false);
-  console.log('🚀 ~ file: index.tsx ~ line 70 ~ index ~ formDataBingo', formDataBingo);
   const formLayout = {
     labelCol: { span: 24 },
     wrapperCol: { span: 24 },
@@ -79,10 +78,6 @@ export default function index({ event }: { event: {} }) {
   const columnsTable = useColumnsTable({ actionEditBallotValue, deleteBallotValue });
 
   const saveImage = async (image: any, setImag: any, name: string) => {
-    console.log('🚀 ~ file: index.tsx ~ line 81 ~ saveImage ~ name', name);
-    console.log('🚀 ~ file: index.tsx ~ line 81 ~ saveImage ~ setImag', setImag);
-    console.log('🚀 ~ file: index.tsx ~ line 81 ~ saveImage ~ image', image);
-
     setImag(image);
     setValuesData({
       ...valuesData,

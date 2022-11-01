@@ -146,6 +146,12 @@ export const MenuItems = [
       //   key: 'whereIs',
       //   onClick: handleClick,
       // },
+      {
+        name: '¿Quién quiere ser Millonario?',
+        path: '/whoWantsToBeAMillonaire',
+        key: 'whoWantsToBeAMillonaire',
+        onClick: handleClick,
+      },
     ],
   },
   {
