@@ -26,7 +26,9 @@ export const checkinAttendeeInActivity = (attende, activityId) => {
   const userRef = firestore.collection(`${activityId}_event_attendees`).doc(attende._id);
   userRef.get().then(function(doc) {
     if (doc.exists) {
+      console.log('exist* attendee', `${activityId}_event_attendees`, attende._id);
       if (!doc.data().checked_in) {
+        console.log('update* attendee', `${activityId}_event_attendees`, attende._id);
         userRef.update(
           {
             checkinsList: app.firestore.FieldValue.arrayUnion(new Date()),
@@ -37,6 +39,7 @@ export const checkinAttendeeInActivity = (attende, activityId) => {
         );
       }
     } else {
+      console.log('set* attendee', `${activityId}_event_attendees`, attende._id);
       firestore
         .collection(`${activityId}_event_attendees`)
         .doc(attende._id)
