@@ -179,8 +179,7 @@ export default function WhereisInLanding() {
 
   return (
     <DrawerWhereIs lifes={<Lifes />} footer={<Footer />}>
-      <InstructionsWhereIs />
-      {/* <Button onClick={handleRestart}>Restart</Button>
+      <Button onClick={handleRestart}>Restart</Button>
       <div style={{ margin: 'auto 0', height: 'auto', width: '100%' }}>
         <div style={{ overflow: 'auto' }}>
           <Stage
@@ -219,7 +218,7 @@ export default function WhereisInLanding() {
             </Layer>
           </Stage>
         </div>
-      </div> */}
+      </div>
     </DrawerWhereIs>
   );
 }
