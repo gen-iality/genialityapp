@@ -8,6 +8,7 @@ import { CheckCircleFilled, HeartFilled } from '@ant-design/icons';
 import { isMobile } from 'react-device-detect';
 import CardsHeartIcon from '@2fd/ant-design-icons/lib/CardsHeart';
 import HeartBrokenIcon from '@2fd/ant-design-icons/lib/HeartBroken';
+import InstructionsWhereIs from '../components/landing/InstructionsWhereIs';
 
 const bg = {
   image:
@@ -178,7 +179,8 @@ export default function WhereisInLanding() {
 
   return (
     <DrawerWhereIs lifes={<Lifes />} footer={<Footer />}>
-      <Button onClick={handleRestart}>Restart</Button>
+      <InstructionsWhereIs />
+      {/* <Button onClick={handleRestart}>Restart</Button>
       <div style={{ margin: 'auto 0', height: 'auto', width: '100%' }}>
         <div style={{ overflow: 'auto' }}>
           <Stage
@@ -217,7 +219,7 @@ export default function WhereisInLanding() {
             </Layer>
           </Stage>
         </div>
-      </div>
+      </div> */}
     </DrawerWhereIs>
   );
 }
