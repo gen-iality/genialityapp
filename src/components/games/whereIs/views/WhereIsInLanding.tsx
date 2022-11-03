@@ -67,15 +67,10 @@ interface FooterProps {
   points: Point[];
 }
 
-// interface Props {
-//   timeoutInSeconds: number;
-// }
-
 export default function WhereisInLanding() {
   const [points, setPoints] = useState<Point[]>(INITIAL_POINTS);
   const [lifes, setLifes] = useState<number>(INITIAL_LIFES);
   const [hasScrolled, setHasScrolled] = useState<boolean>(false);
-  //const [timeLeftInSeconds, setTimeLeftInSeconds] = useState<number>(timeoutInSeconds);
 
   const addPoint = (id: number) => {
     if (!lifes) return;
@@ -155,14 +150,17 @@ export default function WhereisInLanding() {
 
   const Lifes = () => {
     return (
-      <Space>
-        {Array.from({ length: INITIAL_LIFES })
-          .map((e, i) => i)
-          .sort((a, b) => b - a)
-          .map((life) => (
-            <HeartFilled key={`life-${life}`} style={{ color: life < lifes ? 'red' : 'gray' }} />
-          ))}
-      </Space>
+      <Row>
+        <Space></Space>
+        <Space>
+          {Array.from({ length: INITIAL_LIFES })
+            .map((e, i) => i)
+            .sort((a, b) => b - a)
+            .map((life) => (
+              <HeartFilled key={`life-${life}`} style={{ color: life < lifes ? 'red' : 'gray' }} />
+            ))}
+        </Space>
+      </Row>
     );
   };
 
