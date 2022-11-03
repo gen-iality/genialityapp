@@ -67,15 +67,15 @@ interface FooterProps {
   points: Point[];
 }
 
-interface Props {
-  timeoutInSeconds: number;
-}
+// interface Props {
+//   timeoutInSeconds: number;
+// }
 
 export default function WhereisInLanding() {
   const [points, setPoints] = useState<Point[]>(INITIAL_POINTS);
   const [lifes, setLifes] = useState<number>(INITIAL_LIFES);
   const [hasScrolled, setHasScrolled] = useState<boolean>(false);
-  const [timeLeftInSeconds, setTimeLeftInSeconds] = useState<number>(timeoutInSeconds);
+  //const [timeLeftInSeconds, setTimeLeftInSeconds] = useState<number>(timeoutInSeconds);
 
   const addPoint = (id: number) => {
     if (!lifes) return;
@@ -166,26 +166,9 @@ export default function WhereisInLanding() {
     );
   };
 
-  const TextSecondTimer = ({ timeoutInSeconds }: Props) => {
-    const [timeLeftInSeconds, setTimeLeftInSeconds] = useState<number>(timeoutInSeconds);
-
-    useEffect(() => {
-      setTimeLeftInSeconds(timeoutInSeconds);
-    }, [timeoutInSeconds]);
-
-    useEffect(() => {
-      const interval: number = setInterval(() => {
-        const newTimeLeftInMillis = timeLeftInSeconds - 1;
-        return newTimeLeftInMillis < 0 ? clearInterval(interval) : setTimeLeftInSeconds(timeLeftInSeconds - 1);
-      }, 1000);
-      return () => clearInterval(interval);
-    });
-  };
-
   return (
     <DrawerWhereIs lifes={<Lifes />} footer={<Footer />}>
       <Button onClick={handleRestart}>Restart</Button>
-      {timeLeftInSeconds}
       <div style={{ margin: 'auto 0', height: 'auto', width: '100%' }}>
         <div style={{ overflow: 'auto' }}>
           <Stage
