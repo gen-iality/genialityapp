@@ -91,14 +91,13 @@ export default function WhereisInLanding() {
 		const id = Number(e.target.id());
 		addPoint(id);
 		e.cancelBubble = true;
-		setLifes(prev => prev - 1);
 	};
 
 	const handleOutsideClick = (e: any) => {
 		if (!lifes) return;
 		if (isMobile) return;
 		DispatchMessageService({ type: 'error', action: 'show', msj: 'Sorry!' });
-		// console.log('Mal!');
+		e.cancelBubble = true;
 		setLifes(prev => (prev > 0 ? prev - 1 : 0));
 	};
 
