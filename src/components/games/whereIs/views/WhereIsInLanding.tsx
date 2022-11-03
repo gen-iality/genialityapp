@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import DrawerWhereIs from '../components/DrawerWhereIs';
 import { Stage, Layer, Star, Circle, Text } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
