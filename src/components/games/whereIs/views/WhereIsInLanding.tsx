@@ -1,11 +1,14 @@
-import { useState, useEffect } from 'react';
+import { ChangeEvent, useState } from 'react';
 import DrawerWhereIs from '../components/DrawerWhereIs';
 import { Stage, Layer, Star, Circle, Text } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { DispatchMessageService } from '@/context/MessageService';
-import { Button, Col, Image, Row, Space, Typography } from 'antd';
-import { HeartFilled } from '@ant-design/icons';
+import { Badge, Button, Col, Image, Row, Space, Typography } from 'antd';
+import { CheckCircleFilled, HeartFilled } from '@ant-design/icons';
 import { isMobile } from 'react-device-detect';
+import CardsHeartIcon from '@2fd/ant-design-icons/lib/CardsHeart';
+import HeartBrokenIcon from '@2fd/ant-design-icons/lib/HeartBroken';
+import InstructionsWhereIs from '../components/landing/InstructionsWhereIs';
 
 const bg = {
   image:
@@ -75,7 +78,6 @@ export default function WhereisInLanding() {
   const addPoint = (id: number) => {
     if (!lifes) return;
     DispatchMessageService({ type: 'success', action: 'show', msj: 'Yujuuu!' });
-
     const newPoint = points.find((point) => point.id === id);
     if (!newPoint) return;
     setPoints((prev) =>
@@ -133,15 +135,21 @@ export default function WhereisInLanding() {
 
   const Footer = () => {
     return (
-      <Row align='middle' justify='center' gutter={[50, 0]}>
+      <Row align='middle' justify={isMobile ? 'space-around' : 'center'} gutter={[20, 0]}>
         {points.map((point) => (
-          <Col key={point.id} style={{ border: point.isFound ? '2px solid red' : '', borderRadius: 10 }}>
-            <Image
-              src={point.image}
-              height={isMobile ? 50 : 80}
-              preview={false}
-              style={{ filter: point.isFound ? 'grayscale(100%)' : '' }}
-            />
+          <Col key={point.id} style={{}}>
+            <Badge
+              offset={[-10, 10]}
+              count={point.isFound ? <CheckCircleFilled style={{ color: '#52C41A', fontSize: '32px' }} /> : 0}>
+              <Image
+                src={point.image}
+                height={isMobile ? 40 : 60}
+                preview={false}
+                style={{
+                  filter: point.isFound ? 'grayscale(100%)' : '',
+                }}
+              />
+            </Badge>
           </Col>
         ))}
       </Row>
@@ -150,17 +158,22 @@ export default function WhereisInLanding() {
 
   const Lifes = () => {
     return (
-      <Row>
-        <Space></Space>
-        <Space>
-          {Array.from({ length: INITIAL_LIFES })
-            .map((e, i) => i)
-            .sort((a, b) => b - a)
-            .map((life) => (
-              <HeartFilled key={`life-${life}`} style={{ color: life < lifes ? 'red' : 'gray' }} />
-            ))}
-        </Space>
-      </Row>
+      <Space>
+        {Array.from({ length: INITIAL_LIFES })
+          .map((e, i) => i)
+          .sort((a, b) => b - a)
+          .map((life) =>
+            life < lifes ? (
+              <CardsHeartIcon
+                className='animate__animated animate__heartBeat'
+                key={`life-${life}`}
+                style={{ color: 'red', fontSize: '25px' }}
+              />
+            ) : (
+              <HeartBrokenIcon key={`life-${life}`} style={{ color: 'gray', fontSize: '25px' }} />
+            )
+          )}
+      </Space>
     );
   };
 
@@ -185,6 +198,7 @@ export default function WhereisInLanding() {
             <Layer>
               {points.map((point) => (
                 <Circle
+                  className='animate__animated animate__heartBeat'
                   key={point.id}
                   id={point.id.toString()}
                   x={point.x}
