@@ -7,8 +7,9 @@ export default function Timer() {
   // const [counter, setCounter] = useState(0);
 
   //add minutes and seconds
+  const miliseconds = whereIsGame.duration * 1000;
   const minutes = String(Math.floor(whereIsGame.duration / 60)).padStart(2);
-  const seconds = String(whereIsGame.duration - +minutes * 60).padStart(2);
+  const seconds = String(whereIsGame.duration - +minutes * 60).padStart(2, 0);
 
   // // Uncomment in production
   useEffect(() => {
