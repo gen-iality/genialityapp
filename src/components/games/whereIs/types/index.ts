@@ -55,8 +55,8 @@ export interface WhereIs {
 	game_image: string;
 	game_image_width: number;
 	game_image_height: number;
-	points: Point;
-	players: Player;
+	points: Point[];
+	players: Player[];
 }
 
 export interface Point {
@@ -68,6 +68,10 @@ export interface Point {
 	radius: number;
 }
 
+export interface PointInGame extends Point {
+	stroke: undefined | string;
+	isFound: boolean;
+}
 export interface Player {
 	created_at: string;
 	updated_at: string;
@@ -89,4 +93,16 @@ export interface CreatePlayerDto {
 	event_user_id: string;
 	user_name: string;
 	picture: string;
+}
+
+export interface WhereIsGame {
+	// id: string;
+	duration: number;
+	won: boolean;
+	dynamic_id: string;
+	event_user_id: string;
+	user_name: string;
+	picture: string;
+	lifes: number;
+	points: PointInGame[];
 }

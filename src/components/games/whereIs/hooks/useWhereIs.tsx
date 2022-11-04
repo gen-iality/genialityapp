@@ -23,7 +23,8 @@ export default function useWhereIs() {
 		try {
 			setLoading(true);
 			const whereIs = await service.get(eventId);
-			// setWhereIs(whereIs);
+			setWhereIs(whereIs);
+			console.log(whereIs);
 		} catch (error) {
 			console.log(error);
 		} finally {
