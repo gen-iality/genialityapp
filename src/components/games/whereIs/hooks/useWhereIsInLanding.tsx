@@ -30,9 +30,9 @@ export default function useWhereIsInLanding() {
 	const { location, setLocation, whereIsGame, setWhereIsGame } = context;
 
 	useEffect(() => {
-		if (whereIsGame.lifes === 0) {
-			goTo('results');
-		}
+		// if (whereIsGame.lifes === 0) {
+		// 	goTo('results');
+		// }
 	}, [whereIsGame.lifes]);
 
 	const goTo = (location: WhereIsLocationView) => {
