@@ -18,8 +18,8 @@ interface WhereIsInLandingType {
 export const WhereIsInLandingContext = createContext<WhereIsInLandingType>({} as WhereIsInLandingType);
 
 const initialLocation: WhereIsLocation = {
-	activeView: 'game',
-	views: ['introduciton', 'game', 'results'],
+	activeView: 'introduction',
+	views: ['introduction', 'game', 'results'],
 };
 
 const initialWhereIsGame: WhereIsGame = {
