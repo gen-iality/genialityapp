@@ -1,4 +1,4 @@
-import { Button, Drawer, Grid, Typography } from 'antd';
+import { Button, Drawer, Grid } from 'antd';
 import { ReactNode, useState } from 'react';
 import useWhereIs from '../hooks/useWhereIs';
 import useWhereIsInLanding from '../hooks/useWhereIsInLanding';
