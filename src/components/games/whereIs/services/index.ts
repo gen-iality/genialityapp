@@ -1,6 +1,6 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import { firestore } from '@/helpers/firebase';
-import { CreatePlayerDto, Point, WhereIs } from '../types';
+import { CreatePlayerDto, Player, Point, WhereIs } from '../types';
 
 export const get = async (eventId: string): Promise<WhereIs | null> => {
 	try {
@@ -68,12 +68,8 @@ export const getPlayer = async (getPlayerDto: GetPlayerDto) => {
 			.collection('players')
 			.doc(event_user_id)
 			.get();
-		console.log(playerDoc);
 		if (!playerDoc.exists) return null;
-		const player = playerDoc.data();
-		console.log(player);
-		// if (points === null) return [];
-		// return points as Point[];
+		return playerDoc.data() as Player;
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al obtener la dinamica', action: 'show' });
 		return null;
@@ -93,10 +89,9 @@ export const getScores = async (getScoreDto: GetScoreDto) => {
 			.collection('players')
 			.get();
 		if (playersDoc.empty) return [];
-		const points = playersDoc.docs.map(doc => doc.data());
-		console.log(points);
-		// if (points === null) return [];
-		// return points as Point[];
+		const players = playersDoc.docs.map(doc => doc.data());
+		if (players === null) return [];
+		return players as Player[];
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al obtener la dinamica', action: 'show' });
 		return null;

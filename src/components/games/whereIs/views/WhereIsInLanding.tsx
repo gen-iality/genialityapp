@@ -12,7 +12,7 @@ interface RenderViewProps {
 
 const RenderView = (props: RenderViewProps) => {
 	const { eventId } = props;
-	const { location } = useWhereIsInLanding();
+	const { location, player } = useWhereIsInLanding();
 
 	const views = {
 		introduction: {
@@ -25,6 +25,8 @@ const RenderView = (props: RenderViewProps) => {
 			component: <Results />,
 		},
 	};
+
+	if (player !== null) return views.results.component;
 
 	return views[location.activeView].component;
 };

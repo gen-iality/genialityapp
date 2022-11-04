@@ -30,7 +30,13 @@ export default function useWhereIsInLanding() {
 			picture: '',
 			points,
 		}));
+		verifyPlayer();
 	}, []);
+
+	const verifyPlayer = async () => {
+		const player = await services.getPlayer({ event_id: cEvent.nameEvent, event_user_id: cUser.value._id });
+		setPlayer(player);
+	};
 
 	const { location, setLocation, whereIsGame, setWhereIsGame, player, setPlayer } = context;
 

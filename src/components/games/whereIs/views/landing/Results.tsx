@@ -4,12 +4,12 @@ import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import useWhereIsInLanding from '../../hooks/useWhereIsInLanding';
 import Ranking from '@/components/games/common/Ranking';
 
-const DataTimerResult = ({ time = 0 }: { time?: number }) => {
+const DataTimerResult = ({ time = 0, won }: { time?: number; won: boolean }) => {
 	return (
 		<Tag
 			style={{ padding: '5px 10px', fontSize: '16px' }}
 			icon={<TimerOutlineIcon style={{ fontSize: '16px' }} />}
-			color={'error' /* Si gano 'success', si perdio 'error' */}>
+			color={won ? 'success' : 'error' /* Si gano 'success', si perdio 'error' */}>
 			{time}
 		</Tag>
 	);
@@ -43,7 +43,7 @@ export default function Results() {
 					icon={won ? dataResult.winner.icon : dataResult.loser.icon}
 					title={won ? dataResult.winner.title : dataResult.loser.title}
 					subTitle={won ? dataResult.winner.msg : dataResult.loser.msg}
-					extra={<DataTimerResult time={player?.duration} />}
+					extra={<DataTimerResult time={player?.duration} won={won} />}
 				/>
 			</Col>
 			<Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
