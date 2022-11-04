@@ -240,7 +240,7 @@ function UsersCard(props) {
 					color: `${index === 1 ? '#FFD800' : index === 2 ? '#DADDE9' : index === 3 ? '#D36A62' : '#DDDDDD'}`,
 					fontWeight: '600',
 				}}>
-				{index}
+				{index === 0 ? '' : index}
 			</Text>
 		);
 		setTitle(() => {

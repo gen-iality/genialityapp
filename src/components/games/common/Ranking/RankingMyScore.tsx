@@ -9,6 +9,7 @@ export interface Score {
 	imageProfile: string;
 	index: number;
 	score: string;
+	isFinish: boolean;
 }
 
 interface Props {

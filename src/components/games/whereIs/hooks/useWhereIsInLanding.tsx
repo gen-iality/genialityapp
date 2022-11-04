@@ -6,6 +6,7 @@ import { Player, PointInGame } from '../types';
 import useWhereIs from './useWhereIs';
 import * as services from '../services';
 import { UseEventContext } from '@/context/eventContext';
+import { fromPlayerToScore } from '../utils/fromPlayerToScore';
 
 export default function useWhereIsInLanding() {
 	const cUser = UseUserEvent();
@@ -30,7 +31,7 @@ export default function useWhereIsInLanding() {
 			picture: '',
 			points,
 		}));
-		verifyPlayer();
+		// verifyPlayer(); //TODO: Activar en producción
 	}, []);
 
 	const verifyPlayer = async () => {
@@ -140,11 +141,24 @@ export default function useWhereIsInLanding() {
 	};
 
 	const getPlayer = async () => {
-		await services.getPlayer({ event_id: cEvent.nameEvent, event_user_id: cUser.value._id });
+		const player = await services.getPlayer({ event_id: cEvent.nameEvent, event_user_id: cUser.value._id });
+		return player;
 	};
 
 	const getScores = async () => {
-		await services.getScores({ event_id: cEvent.nameEvent });
+		const players = await services.getScores({ event_id: cEvent.nameEvent });
+		if (players === null) return { scoresFinished: [], scoresNotFinished: [] };
+
+		const playersFinished = players.filter(player => player.isFinish === true);
+		const playersNotFinished = players.filter(player => player.isFinish === false);
+		const playersOrderedByDuration = playersFinished.sort((playerA, playerB) => playerA.duration - playerB.duration);
+		const scoresFinished = playersOrderedByDuration.map((player, i) => {
+			return fromPlayerToScore(player, i + 1);
+		});
+		const scoresNotFinished = playersNotFinished.map(player => {
+			return fromPlayerToScore(player, 0);
+		});
+		return { scoresFinished, scoresNotFinished };
 	};
 
 	return { location, goTo, whereIsGame, wrongPoint, foundPoint, setTimer, winGame, player, getPlayer, getScores };

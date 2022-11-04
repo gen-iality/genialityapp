@@ -3,6 +3,7 @@ import HeartBrokenIcon from '@2fd/ant-design-icons/lib/HeartBroken';
 import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import useWhereIsInLanding from '../../hooks/useWhereIsInLanding';
 import Ranking from '@/components/games/common/Ranking';
+import { parseTime } from '../../utils/parseTime';
 
 const DataTimerResult = ({ time = 0, won }: { time?: number; won: boolean }) => {
 	return (
@@ -10,7 +11,7 @@ const DataTimerResult = ({ time = 0, won }: { time?: number; won: boolean }) => 
 			style={{ padding: '5px 10px', fontSize: '16px' }}
 			icon={<TimerOutlineIcon style={{ fontSize: '16px' }} />}
 			color={won ? 'success' : 'error' /* Si gano 'success', si perdio 'error' */}>
-			{time}
+			{parseTime(time)}
 		</Tag>
 	);
 };
