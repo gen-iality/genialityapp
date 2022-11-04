@@ -35,11 +35,13 @@ export default function Game() {
 		if (isMobile) return; // Verify isMobile or not, I think is redundant
 		const id = e.target.id();
 		foundPoint(id);
+		e.cancelBubble = true;
 	};
 
 	const handleOutsideClick = (e: KonvaEventObject<MouseEvent>) => {
 		if (isMobile) return; // Verify isMobile or not, I think is redundant
 		wrongPoint();
+		e.cancelBubble = true;
 	};
 
 	const handleTouchStart = (e: KonvaEventObject<TouchEvent>) => {

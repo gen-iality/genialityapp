@@ -81,7 +81,7 @@ export default function useWhereIsInLanding() {
 	};
 
 	const wrongPoint = () => {
-		console.log(cUser);
+		// console.log(cUser);
 		if (!whereIsGame.lifes) return;
 		if (whereIsGame.lifes - 1 === 0) {
 			setWhereIsGame(prev => ({
