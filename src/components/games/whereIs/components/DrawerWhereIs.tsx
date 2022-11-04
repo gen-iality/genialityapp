@@ -34,11 +34,7 @@ export default function DrawerWhereIs(props: Props) {
         title={<Timer />}
         visible={open}
         bodyStyle={{
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-          backgroundSize: 'cover',
-          paddingLeft: screens.xs ? '5px' : '24px',
-          paddingRight: screens.xs ? '5px' : '24px',
+          padding: location.activeView === 'game' ? '0px' : screens.xs ? '5px' : '24px',
         }}
         headerStyle={{
           padding: 12,
