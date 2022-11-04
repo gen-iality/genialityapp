@@ -32,5 +32,5 @@ export default function useWhereIs() {
 		}
 	};
 
-	return { whereIs, loading };
+	return { whereIs, loading, cUser };
 }

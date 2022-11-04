@@ -18,11 +18,11 @@ export default function DrawerWhereIs(props: Props) {
 
 	const handleOpen = () => {
 		setOpen(true);
+		goTo('introduction');
 	};
 
 	const handleClose = () => {
 		setOpen(false);
-		goTo('introduction');
 	};
 
 	return (
