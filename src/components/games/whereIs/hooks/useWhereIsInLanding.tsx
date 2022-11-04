@@ -133,5 +133,13 @@ export default function useWhereIsInLanding() {
 		goTo('results');
 	};
 
-	return { location, goTo, whereIsGame, wrongPoint, foundPoint, setTimer, winGame, player };
+	const getPlayer = async () => {
+		await services.getPlayer({ event_id: cEvent.nameEvent, event_user_id: cUser.value._id });
+	};
+
+	const getScores = async () => {
+		await services.getScores({ event_id: cEvent.nameEvent });
+	};
+
+	return { location, goTo, whereIsGame, wrongPoint, foundPoint, setTimer, winGame, player, getPlayer, getScores };
 }

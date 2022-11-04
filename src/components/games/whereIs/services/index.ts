@@ -53,3 +53,52 @@ export const createPlayer = async (createPlayerDto: CreatePlayerDto) => {
 		return null;
 	}
 };
+
+interface GetPlayerDto {
+	event_id: string;
+	event_user_id: string;
+}
+
+export const getPlayer = async (getPlayerDto: GetPlayerDto) => {
+	try {
+		const { event_id, event_user_id } = getPlayerDto;
+		const playerDoc = await firestore
+			.collection('whereIsByEvent')
+			.doc(event_id)
+			.collection('players')
+			.doc(event_user_id)
+			.get();
+		console.log(playerDoc);
+		if (!playerDoc.exists) return null;
+		const player = playerDoc.data();
+		console.log(player);
+		// if (points === null) return [];
+		// return points as Point[];
+	} catch (error) {
+		DispatchMessageService({ type: 'error', msj: 'Error al obtener la dinamica', action: 'show' });
+		return null;
+	}
+};
+
+interface GetScoreDto {
+	event_id: string;
+}
+
+export const getScores = async (getScoreDto: GetScoreDto) => {
+	try {
+		const { event_id } = getScoreDto;
+		const playersDoc = await firestore
+			.collection('whereIsByEvent')
+			.doc(event_id)
+			.collection('players')
+			.get();
+		if (playersDoc.empty) return [];
+		const points = playersDoc.docs.map(doc => doc.data());
+		console.log(points);
+		// if (points === null) return [];
+		// return points as Point[];
+	} catch (error) {
+		DispatchMessageService({ type: 'error', msj: 'Error al obtener la dinamica', action: 'show' });
+		return null;
+	}
+};
