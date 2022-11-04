@@ -13,18 +13,16 @@ export default function Introduction() {
       icon={' '} // dejar el espacio en blanco para eliminar icono por defecto que trae el componente
       title={
         <Typography.Title level={screens.xs ? 3 : 1} style={{ letterSpacing: '0.1em' }}>
-          BUSCANDO EL ELEMENTO ESCONDIDO
+          BUSCANDO EL ELEMENTO
         </Typography.Title>
       }
       subTitle={
         <Typography.Paragraph style={{ fontSize: screens.xs ? '16px' : '18px' }}>
-          El objetivo de la dinámica es que logres encontrar el logo de cada uno de nuestros patrocinadores (FEC, Somos,
-          Protección) que se encuentran escondidos dentro del mapa de Piscilago, tu posición en el ranking dependerá del
-          tiempo que tardes en encontrarlos, es necesario que identifiques la posición de todos los logos para que
-          puedas registrar tu tiempo final. Una vez encuentres uno de los logos, debes de oprimirlo para que se marque
-          correctamente. Cuentas con 5 vidas para lograr el objetivo, perderás una vida en el momento en que selecciones
-          una ubicación del mapa donde no se encuentre escondido uno de los logos, en caso de que pierdas todas tus
-          vidas, no se registrará tu tiempo. ¡Muchos éxitos en tu búsqueda!
+          El objetivo es que logres encontrar los logos de nuestros patrocinadores (FEC, Somos, Protección) que se
+          encuentran escondidos dentro del mapa de Piscilago en el menor tiempo posible. Cuando encuentres un logo debes
+          hacer clic para que se marque correctamente. Cuentas con 5 vidas para lograr el objetivo, perderás una vida en
+          el momento que selecciones una ubicación equivocada. tu tiempo final va a determinar tu posición en el
+          ranking. ¡Muchos éxitos en tu búsqueda!
         </Typography.Paragraph>
       }
       extra={
