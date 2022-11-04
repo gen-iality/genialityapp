@@ -99,6 +99,7 @@ export interface WhereIsGame {
 	// id: string;
 	duration: number;
 	won: boolean;
+	isFinish: boolean;
 	dynamic_id: string;
 	event_user_id: string;
 	user_name: string;

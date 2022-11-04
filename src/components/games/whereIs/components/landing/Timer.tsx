@@ -3,19 +3,28 @@ import { useEffect, useState } from 'react';
 import useWhereIsInLanding from '../../hooks/useWhereIsInLanding';
 
 export default function Timer() {
-	const { location } = useWhereIsInLanding();
-	const [counter, setCounter] = useState(0);
+	const { location, setTimer, whereIsGame } = useWhereIsInLanding();
+	// const [counter, setCounter] = useState(0);
 
 	// // Uncomment in production
+	useEffect(() => {
+		if (location.activeView === 'game' && !whereIsGame.isFinish) {
+			setTimeout(() => {
+				setTimer(whereIsGame.duration + 1);
+			}, 1000);
+		}
+	}, [location.activeView, whereIsGame.duration, whereIsGame.isFinish]);
+
 	// useEffect(() => {
-	// 	if (location.activeView === 'game') {
-	// 		setTimeout(() => {
-	// 			setCounter(prev => prev + 1);
-	// 		}, 1000);
+	// 	// return () => {
+	// 	if (whereIsGame.won) {
+	// 		console.log(counter);
+	// 		setTimer(counter);
 	// 	}
-	// }, [location.activeView, counter]);
+	// 	// };
+	// }, [location.activeView, whereIsGame.won]);
 
 	if (location.activeView !== 'game') return null;
 
-	return <Typography style={{ fontSize: '20px' }}>{counter}</Typography>;
+	return <Typography style={{ fontSize: '20px' }}>{whereIsGame.duration}</Typography>;
 }
