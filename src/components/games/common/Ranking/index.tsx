@@ -1,5 +1,13 @@
-import React from 'react';
+import { Divider } from 'antd';
+import RankingList from './RankingList';
+import RankingMyScore from './RankingMyScore';
 
 export default function Ranking() {
-	return <div>Ranking</div>;
+	return (
+		<>
+			<RankingMyScore />
+			<Divider />
+			<RankingList />
+		</>
+	);
 }

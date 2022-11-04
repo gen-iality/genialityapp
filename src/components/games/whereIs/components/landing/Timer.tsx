@@ -5,6 +5,8 @@ import useWhereIsInLanding from '../../hooks/useWhereIsInLanding';
 export default function Timer() {
 	const { location, setTimer, whereIsGame } = useWhereIsInLanding();
 	// const [counter, setCounter] = useState(0);
+	const minutes = Math.floor(whereIsGame.duration / 60);
+	const seconds = whereIsGame.duration - minutes * 60;
 
 	// // Uncomment in production
 	useEffect(() => {
@@ -26,5 +28,5 @@ export default function Timer() {
 
 	if (location.activeView !== 'game') return null;
 
-	return <Typography style={{ fontSize: '20px' }}>{whereIsGame.duration}</Typography>;
+	return <Typography style={{ fontSize: '20px' }}>{`${minutes} : ${seconds}`}</Typography>;
 }
