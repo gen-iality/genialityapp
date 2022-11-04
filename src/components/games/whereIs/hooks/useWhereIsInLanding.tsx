@@ -6,14 +6,10 @@ import { Player, PointInGame } from '../types';
 import useWhereIs from './useWhereIs';
 import * as services from '../services';
 import { UseEventContext } from '@/context/eventContext';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 export default function useWhereIsInLanding() {
 	const cUser = UseUserEvent();
 	const cEvent = UseEventContext();
-	const cHelper = useHelper();
-	console.log(cHelper);
-	console.log(cUser);
 	const context = useContext(WhereIsInLandingContext);
 
 	if (context === undefined) {
@@ -137,5 +133,13 @@ export default function useWhereIsInLanding() {
 		goTo('results');
 	};
 
-	return { location, goTo, whereIsGame, wrongPoint, foundPoint, setTimer, winGame, player };
+	const getPlayer = async () => {
+		await services.getPlayer({ event_id: cEvent.nameEvent, event_user_id: cUser.value._id });
+	};
+
+	const getScores = async () => {
+		await services.getScores({ event_id: cEvent.nameEvent });
+	};
+
+	return { location, goTo, whereIsGame, wrongPoint, foundPoint, setTimer, winGame, player, getPlayer, getScores };
 }

@@ -13,7 +13,7 @@ export default function Timer() {
 		if (location.activeView === 'game' && !whereIsGame.isFinish) {
 			setTimeout(() => {
 				setTimer(whereIsGame.duration + 1);
-			}, 1000);
+			}, 10);
 		}
 	}, [location.activeView, whereIsGame.duration, whereIsGame.isFinish]);
 

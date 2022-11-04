@@ -10,25 +10,11 @@ export default function Game() {
 	const { loading, whereIs } = useWhereIs();
 	const { whereIsGame, wrongPoint, foundPoint } = useWhereIsInLanding();
 	// States
-	// const [lifes, setLifes] = useState<number>(0);
-	// const [points, setPoints] = useState<PointInGame[]>([]);
 	const [hasScrolled, setHasScrolled] = useState<boolean>(false);
 	// from useWhereIs
 	if (whereIs === null) return <p>Ups!, esta dinamica no existe aun</p>;
 
 	const { game_image, game_image_height, game_image_width } = whereIs;
-
-	// Game handlers
-	// const foundPoint = (id: PointInGame['id']) => {
-	// 	if (!lifes) return; // Verify if there are lifes, I think is redundant
-	// 	DispatchMessageService({ type: 'success', action: 'show', msj: 'Yujuuu!' });
-	// };
-
-	// const wrongPoint = () => {
-	// 	if (!lifes) return; // Verify if there are lifes, I think is redundant
-	// 	setLifes(prev => (prev > 0 ? prev - 1 : 0));
-	// 	DispatchMessageService({ type: 'error', action: 'show', msj: 'Ups!, perdiste una vida 💔' });
-	// };
 
 	// Interaction handlers
 	const handleClick = (e: KonvaEventObject<MouseEvent>) => {
