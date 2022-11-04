@@ -5,8 +5,12 @@ import useWhereIsInLanding from '../../hooks/useWhereIsInLanding';
 
 export default function FooterWithHints() {
 	const {
+		location,
 		whereIsGame: { points },
 	} = useWhereIsInLanding();
+
+	if (location.activeView !== 'game') return null;
+
 	return (
 		<Row align='middle' justify={isMobile ? 'space-around' : 'center'} gutter={[20, 0]}>
 			{points.map(point => (

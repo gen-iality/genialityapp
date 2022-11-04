@@ -1,5 +1,6 @@
 import { Button, Drawer, Grid, Typography } from 'antd';
 import { ReactNode, useState } from 'react';
+import useWhereIsInLanding from '../hooks/useWhereIsInLanding';
 import FooterWithHints from './landing/FooterWithHints';
 import Lifes from './landing/Lifes';
 import Timer from './landing/Timer';
@@ -13,6 +14,7 @@ const { useBreakpoint } = Grid;
 export default function DrawerWhereIs(props: Props) {
 	const screens = useBreakpoint();
 	const [open, setOpen] = useState(false);
+	const { goTo, location } = useWhereIsInLanding();
 
 	const handleOpen = () => {
 		setOpen(true);
@@ -20,6 +22,7 @@ export default function DrawerWhereIs(props: Props) {
 
 	const handleClose = () => {
 		setOpen(false);
+		goTo('introduction');
 	};
 
 	return (
@@ -45,7 +48,7 @@ export default function DrawerWhereIs(props: Props) {
 						<Lifes />
 					</div>
 				}
-				footer={<FooterWithHints />}
+				footer={location.activeView === 'game' ? <FooterWithHints /> : undefined}
 				onClose={handleClose}
 				width='100vw'
 				destroyOnClose={true}>
