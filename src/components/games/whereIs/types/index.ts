@@ -82,17 +82,8 @@ export interface Player {
 	user_name: string;
 	picture: string;
 }
-export interface CreatePlayerDto {
-	// id: string;
+export interface CreatePlayerDto extends Player {
 	event_id: string;
-	created_at: string;
-	updated_at: string;
-	isFinish: boolean;
-	duration: number;
-	dynamic_id: string;
-	event_user_id: string;
-	user_name: string;
-	picture: string;
 }
 
 export interface WhereIsGame {
