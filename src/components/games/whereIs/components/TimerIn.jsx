@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 
+//suma segundos ///
 export function secondsToTime(seconds) {
   const m = Math.floor((seconds % 3600) / 60)
       .toString()
@@ -11,6 +12,7 @@ export function secondsToTime(seconds) {
   return m + ':' + s;
 }
 
+// Devuelve los segundos y los imprime
 export function Timer(props) {
   useEffect(() => {
     let counterInterval;
