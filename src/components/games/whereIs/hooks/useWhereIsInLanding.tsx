@@ -4,9 +4,12 @@ import { useContext, useEffect } from 'react';
 import { WhereIsInLandingContext, WhereIsLocationView } from '../contexts/WhereIsInLandingContext';
 import { Player, PointInGame } from '../types';
 import useWhereIs from './useWhereIs';
+import * as services from '../services';
+import { UseEventContext } from '@/context/eventContext';
 
 export default function useWhereIsInLanding() {
 	const cUser = UseUserEvent();
+	const cEvent = UseEventContext();
 	const context = useContext(WhereIsInLandingContext);
 
 	if (context === undefined) {
@@ -31,62 +34,17 @@ export default function useWhereIsInLanding() {
 
 	const { location, setLocation, whereIsGame, setWhereIsGame, player, setPlayer } = context;
 
-	// useEffect(() => {
-	// 	if (whereIsGame.points.every(point => point.isFound === true)) {
-	// 		// console.log(whereIsGame.points.every(point => point.isFound === true));
-	// 		// console.log('Player');
-	// 		if (whereIs === null) return;
-	// 		setWhereIsGame(prev => ({
-	// 			...prev,
-	// 			isFinish: true,
-	// 			won: true,
-	// 		}));
-	// 		const player: Player = {
-	// 			created_at: new Date().toISOString(),
-	// 			updated_at: new Date().toISOString(),
-	// 			isFinish: true,
-	// 			duration: whereIsGame.duration,
-	// 			dynamic_id: whereIs.id,
-	// 			event_user_id: cUser.value._id,
-	// 			user_name: cUser.value.names,
-	// 			picture: cUser.value.picture,
-	// 		};
-	// 		console.log(player);
-	// 		goTo('results');
-	// 	}
-	// }, [whereIsGame.points]);
-
-	// useEffect(() => {
-	// 	if (whereIsGame.won && player === null) {
-	// 		// console.log(cUser);
-	// 		// console.log('Ganaste');
-	// 		if (whereIs === null) return;
-	// 		const player: Player = {
-	// 			created_at: new Date().toISOString(),
-	// 			updated_at: new Date().toISOString(),
-	// 			isFinish: true,
-	// 			duration: whereIsGame.duration + 1,
-	// 			dynamic_id: whereIs.id,
-	// 			event_user_id: cUser.value._id,
-	// 			user_name: cUser.value.user.names,
-	// 			picture: cUser.value.user.picture,
-	// 		};
-	// 		setPlayer(player);
-	// 		console.log(player);
-	// 	}
-	// }, [whereIsGame.won, player]);
-
 	const goTo = (location: WhereIsLocationView) => {
 		setLocation(prev => ({ ...prev, activeView: location }));
 	};
 
 	const wrongPoint = () => {
-		// console.log(cUser);
+		console.log(cEvent.nameEvent);
 		if (!whereIsGame.lifes) return;
 		if (whereIsGame.lifes - 1 === 0) {
 			setWhereIsGame(prev => ({
 				...prev,
-				won: true,
+				won: false,
 				isFinish: true,
 			}));
 			loseGame();
@@ -139,7 +97,7 @@ export default function useWhereIsInLanding() {
 		}));
 	};
 
-	const winGame = () => {
+	const winGame = async () => {
 		if (whereIs === null) return;
 		const player: Player = {
 			created_at: new Date().toISOString(),
@@ -153,10 +111,11 @@ export default function useWhereIsInLanding() {
 		};
 		setPlayer(player);
 		console.log('Ganaste');
-		console.log(player);
+		await services.createPlayer({ ...player, event_id: cEvent.nameEvent });
+		goTo('results');
 	};
 
-	const loseGame = () => {
+	const loseGame = async () => {
 		if (whereIs === null) return;
 		const player: Player = {
 			created_at: new Date().toISOString(),
@@ -169,8 +128,10 @@ export default function useWhereIsInLanding() {
 			picture: cUser.value.user.picture,
 		};
 		console.log('Perdiste');
-		console.log(player);
+		setPlayer(player);
+		await services.createPlayer({ ...player, event_id: cEvent.nameEvent });
+		goTo('results');
 	};
 
-	return { location, goTo, whereIsGame, wrongPoint, foundPoint, setTimer, winGame };
+	return { location, goTo, whereIsGame, wrongPoint, foundPoint, setTimer, winGame, player };
 }

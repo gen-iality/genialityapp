@@ -95,7 +95,7 @@ export default function Game() {
 								y={point.y}
 								fill='transparent'
 								stroke={point.stroke}
-								radius={20}
+								radius={point.radius}
 								opacity={0.8}
 								onClick={handleClick}
 								onTouchStart={handleTouchStart}
