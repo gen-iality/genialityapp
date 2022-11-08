@@ -29,8 +29,12 @@ export default function DrawerWhereIs(props: Props) {
 
 	return (
 		<>
-			<Button size='large' type='primary' onClick={handleOpen} style={{ display: whereIs === null ? 'none' : 'block' }}>
-				¿Y dónde se encuentra?
+			<Button
+				size='large'
+				type='primary'
+				onClick={handleOpen}
+				style={{ display: whereIs !== null && whereIs.published ? 'block' : 'none' }}>
+				Buscando el elemento
 			</Button>
 			<Drawer
 				title={<Timer />}
