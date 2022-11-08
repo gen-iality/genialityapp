@@ -22,9 +22,11 @@ import { UseEventContext } from '@/context/eventContext';
 import { UseCurrentUserContext } from '@/context/userContext';
 import DrawerBingo from '@components/games/bingo/components/DrawerBingo';
 import SharePhotoInLanding from '@/components/games/sharePhoto/views/SharePhotoInLanding';
+import WhereisInLanding from '@/components/games/whereIs/views/WhereIsInLanding';
 const { setHasOpenSurveys } = SurveyActions;
 import PlayMillonaire from '@/components/games/WhoWantsToBeAMillonaire/components/PlayMillonaire';
 const sharePhotoEventStatus = true;
+const whereIsEventStatus = true;
 const millonaireEventSatus = true;
 
 const AgendaActividadDetalle = (props) => {
@@ -225,13 +227,18 @@ const AgendaActividadDetalle = (props) => {
               <DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
             </>
           )}
-          {millonaireEventSatus && <PlayMillonaire />}
           {sharePhotoEventStatus && (
             <>
               <Row align='middle' justify='center' style={{ padding: '10px' }}>
                 <SharePhotoInLanding eventId={cEvent.value._id} />
               </Row>
             </>
+          )}
+          {millonaireEventSatus && <PlayMillonaire />}
+          {whereIsEventStatus && (
+            <Row align='middle' justify='center' style={{ padding: '10px' }}>
+              <WhereisInLanding />
+            </Row>
           )}
           <AditionalInformation orderedHost={orderedHost} />
         </Card>

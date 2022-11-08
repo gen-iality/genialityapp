@@ -1,20 +1,18 @@
-import { ReactNode, createContext } from 'react';
+import { ReactNode, createContext, useState } from 'react';
 import { WhereIs } from '../types';
 
 interface WhereIsContextType {
-  whereIs: WhereIs | null;
+	whereIs: WhereIs | null;
+	setWhereIs: React.Dispatch<React.SetStateAction<WhereIs | null>>;
 }
 
 export const WhereIsContext = createContext<WhereIsContextType>({} as WhereIsContextType);
 
-const initialState = {
-  whereIs: null,
-};
-
 interface Props {
-  children: ReactNode;
+	children: ReactNode;
 }
 
 export default function WhereIsProvider(props: Props) {
-  return <WhereIsContext.Provider value={initialState}>{props.children}</WhereIsContext.Provider>;
+	const [whereIs, setWhereIs] = useState<WhereIs | null>(null);
+	return <WhereIsContext.Provider value={{ whereIs, setWhereIs }}>{props.children}</WhereIsContext.Provider>;
 }
