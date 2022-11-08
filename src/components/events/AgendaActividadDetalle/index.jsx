@@ -22,8 +22,10 @@ import { UseEventContext } from '@/context/eventContext';
 import { UseCurrentUserContext } from '@/context/userContext';
 import DrawerBingo from '@components/games/bingo/components/DrawerBingo';
 import SharePhotoInLanding from '@/components/games/sharePhoto/views/SharePhotoInLanding';
+import WhereisInLanding from '@/components/games/whereIs/views/WhereIsInLanding';
 const { setHasOpenSurveys } = SurveyActions;
-const sharePhotoEventStatus = false;
+const sharePhotoEventStatus = true;
+const whereIsEventStatus = true;
 
 const AgendaActividadDetalle = props => {
 	let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
@@ -151,6 +153,8 @@ const AgendaActividadDetalle = props => {
 		}
 	}, [cEvent.value, cEventUser.value, cUser.value]);
 
+	console.log('cEvent', cEvent);
+
 	return (
 		<div>
 			<div className=' container_agenda-information container-calendar2'>
@@ -224,9 +228,14 @@ const AgendaActividadDetalle = props => {
 					{sharePhotoEventStatus && (
 						<>
 							<Row align='middle' justify='center' style={{ padding: '10px' }}>
-								<SharePhotoInLanding />
+								<SharePhotoInLanding eventId={cEvent.value._id} />
 							</Row>
 						</>
+					)}
+					{whereIsEventStatus && (
+						<Row align='middle' justify='center' style={{ padding: '10px' }}>
+							<WhereisInLanding />
+						</Row>
 					)}
 					<AditionalInformation orderedHost={orderedHost} />
 				</Card>

@@ -45,7 +45,7 @@
       padding-bottom: 3px;
     }
   }
- 
+
   button {
     .icon-close {
       color: white;
@@ -56,24 +56,24 @@
       background-color: red;
     }
   }
-  .tab-button{
-    width: 311px !important;   
-  } 
+  .tab-button {
+    width: 311px !important;
+  }
   @media only screen and (max-width: $breakpoint-mobile) {
-      .tab-button{
-        width: 311px !important;   
-      }
+    .tab-button {
+      width: 311px !important;
+    }
   }
 }
 
 // *************** Iframe Zoom *********************//
 .aspect-ratio-box {
-  width:100%;
-  position:relative;
-  padding-top:57%;
+  width: 100%;
+  position: relative;
+  padding-top: 57%;
   height: 0;
-  border:1px solid green;
-  background-color:#31d871;
+  border: 1px solid green;
+  background-color: #31d871;
   @media only screen and (min-width: $breakpoint-mobile) {
     width: 275px;
   }
@@ -85,7 +85,6 @@
   width: 100%;
   height: 100%;
 }
-
 
 .iframe-zoom {
   min-width: auto;
@@ -116,7 +115,7 @@
   height: 95%;
   display: flex;
   background-color: white;
-  .parpadea{
+  .parpadea {
     // position: absolute;
     // right: 6px;
     display: none;
@@ -124,14 +123,13 @@
   @media only screen and (max-width: $breakpoint-mobile) {
     display: block;
     height: 100%;
-    .parpadea{
+    .parpadea {
       position: absolute;
-      right:6px;
+      right: 6px;
       top: 12%;
     }
   }
 }
-
 
 .survyCard {
   min-width: 45vw;
@@ -144,11 +142,10 @@
     margin-left: 0px;
   }
 
-
   .sv-body__footer {
     padding: 0;
   }
-  
+
   /* Tener cuidado ser más estrategicos al estilizar esto se tira el diseno */
   .ant-card-body canvas {
     padding: 13px !important;
@@ -162,17 +159,17 @@
       padding: 0px !important;
     }
   }
-  @media screen and (max-width: $breakpoint-mobile){ 
+  @media screen and (max-width: $breakpoint-mobile) {
     .ant-list-item {
-      display: table!important;
+      display: table !important;
       margin-left: 12%;
     }
   }
 }
 // vimeo
-.platform-vimeo{
+.platform-vimeo {
   width: 100%;
-  @media screen and (max-width: $breakpoint-mobile){ 
+  @media screen and (max-width: $breakpoint-mobile) {
     height: 100%;
   }
   // @media (orientation:){
@@ -184,23 +181,24 @@
   // }
 }
 //estilo de zoom de collapsed
-.zoom-collapsed{
+.zoom-collapsed {
   position: relative;
-  .zoom-collapsed_button{
+  .zoom-collapsed_button {
     position: absolute;
     right: 103%;
     z-index: 100000;
   }
-  .zoom-collapsed_tabs{
+  .zoom-collapsed_tabs {
     padding: 0% 7%;
     width: 400px;
   }
   .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #333F44;
+    color: #333f44;
     font-weight: 500;
     // margin-left: 13px;
   }
-  .ant-tabs > .ant-tabs-nav .ant-tabs-nav-list, .ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-list {
+  .ant-tabs > .ant-tabs-nav .ant-tabs-nav-list,
+  .ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-list {
     position: relative;
     display: flex;
     transition: transform 0.3s;
@@ -212,51 +210,65 @@
   // }
 }
 //estilo del chat vimeo
-.chat-vimeo{
+.chat-vimeo {
   width: 100vw;
-  height: 80vh; 
+  height: 80vh;
   padding: 2px;
-  @media screen and (max-width: $breakpoint-mobile){ 
+  @media screen and (max-width: $breakpoint-mobile) {
     width: 80vw;
   }
 }
 
-//estilos del ranking-listadojuegos
-.container-ranking{
-  overflow-y:scroll;
-  height: 341px;
-  .ranking-user{
-  border: 2px solid #8ce1f0;
+.container-dinamic-ranking {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100%;
+  .ranking-user {
+    border: 2px solid #8ce1f0;
   }
 }
-.container-ranking::-webkit-scrollbar{
-  width:9px;
+
+.card-dinamic-ranking {
+  width: 100%;
+  padding: 5px;
+  .ant-card-body {
+    padding: 10px;
+  }
+}
+
+//estilos del ranking-listadojuegos
+.container-ranking {
+  overflow-y: scroll;
+  height: 341px;
+  .ranking-user {
+    border: 2px solid #8ce1f0;
+  }
+}
+.container-ranking::-webkit-scrollbar {
+  width: 9px;
 }
 .container-ranking::-webkit-scrollbar-thumb {
   background-color: rgb(140, 225, 240);
   border-radius: 20px;
   border: 2px solid #f1f2f3;
 }
-.container-ranking::-webkit-scrollbar-track-piece{
+.container-ranking::-webkit-scrollbar-track-piece {
   background-color: #f5f5f5;
 }
-.card-games-ranking{
+.card-games-ranking {
   width: 304px;
   padding: 5px;
   .ant-card-body {
     padding: 10px;
   }
-  
 }
-
-
 
 // Estilos para pantalla media
 .mediumScreen {
   min-height: 75%;
   min-width: 70%;
   height: 75%;
-  .parpadea{
+  .parpadea {
     position: absolute;
   }
 }
@@ -265,7 +277,7 @@
 .minimizeScreen {
   height: 0%;
   top: 95%;
-  .parpadea{
+  .parpadea {
     position: absolute;
   }
 }

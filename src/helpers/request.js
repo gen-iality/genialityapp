@@ -470,6 +470,43 @@ export const BingoApi = {
   },
 };
 
+export const SharePhotoApi = {
+  getOne: async (eventId) => {
+    let token = await GetTokenUserFirebase()
+    return await Actions.getAll(`api/events/${eventId}/sharephotos?token=${token}`, true)
+  },
+  createOne: async (data) => {
+    let token = await GetTokenUserFirebase()
+    return await Actions.post(`api/sharephoto?token=${token}`, data, true)
+  },
+  updateOne: async (sharePhotoId, data) => {
+    let token = await GetTokenUserFirebase()
+    return await Actions.put(`api/sharephoto/${sharePhotoId}?token=${token}`, data, true)
+  },
+  deleteOne: async (sharePhotoId) => {
+    let token = await GetTokenUserFirebase()
+    return await Actions.delete(`api/sharephoto/${sharePhotoId}?token=${token}`, true)
+  },
+  addOnePost: async (sharePhotoId, postData) => {
+    let token = await GetTokenUserFirebase()
+    return await Actions.put(`api/sharephoto/${sharePhotoId}/addpost?token=${token}`, postData, true)
+  },
+  deleteOnePost: async (sharePhotoId, postId) => {
+    let token = await GetTokenUserFirebase()
+    return await Actions.delete(`api/sharephoto/${sharePhotoId}/post/${postId}?token=${token}`, true)
+  },
+  addOneLike: async (sharePhotoId, postId, likeData) => {
+    let token = await GetTokenUserFirebase()
+    return await Actions.put(`api/sharephoto/${sharePhotoId}/addlike/${postId}?token=${token}`, likeData, true)
+  },
+  deleteOneLike: async (sharePhotoId, likeId) => {
+    let token = await GetTokenUserFirebase()
+    return await Actions.delete(`api/sharephoto/${sharePhotoId}/unlike/${likeId}?token=${token}`, true)
+  }
+
+
+}
+
 export const InvitationsApi = {
   getAll: async (id) => {
     return await Actions.getAll(`/api/events/${id}/invitation`);

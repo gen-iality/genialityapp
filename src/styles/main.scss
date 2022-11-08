@@ -335,6 +335,18 @@ iframe {
   background-color: transparent !important;
 }
 
+.editAnt {
+  .ant-result-content {
+    margin-top: 32px;
+    padding: 24px 40px;
+    background-color: #fafafa;
+    border-radius: 10px !important;
+    @media screen and (max-width: $breakpoint-mobile) {
+      padding: 24px 24px;
+    }
+  }
+}
+
 // Estilos para la caja de colores en reactQuill, modifica los dos primero colores
 
 .ql-color-picker {
