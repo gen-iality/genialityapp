@@ -1,8 +1,11 @@
-import generateColumnsQuestion from '../functions/genereteColumnsQuestions';
-import { Card, Space, Table } from 'antd';
+import generateColumnsStages from '../functions/genereteColumnsStages';
+import { Button, Card, Modal, Space, Table, Typography, Form } from 'antd';
 import Header from '../../../../antdComponents/Header';
-const QuestionSettings = () => {
-  const columns = generateColumnsQuestion();
+
+const { Title } = Typography;
+
+const StageSettings = () => {
+  const columns = generateColumnsStages();
   return (
     <>
       <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', height: '100%' }}>
@@ -11,7 +14,8 @@ const QuestionSettings = () => {
           <Table size='small' columns={columns} />
         </Space>
       </Card>
+
     </>
   );
 };
-export default QuestionSettings;
+export default StageSettings;

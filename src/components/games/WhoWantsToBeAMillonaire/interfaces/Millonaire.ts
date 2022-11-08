@@ -1,28 +1,42 @@
+import { background_image, background_color } from './../../bingo/constants/constants';
 export interface IMillonaire {
+  questions: IQuestions[] | any[];
   name: string;
-  numberOfQuestions: number;
-  timeForQuestions: number;
+  numberOfQuestions: number | null;
+  timeForQuestions?: number;
   rules?: string;
+  appearance: {
+    logo: string;
+    background_image: string;
+    background_color: string;
+  };
+  id?: string;
+  stages: IStages[] | any[];
 }
-export interface IQuestions {
-  question: string;
+export interface IStages {
+  stage: number;
+  question: IQuestions[] | any[];
   lifeSaver: boolean;
   score: number;
+}
+
+export interface IQuestions {
+  question: string;
   timeForQuestion: number;
-  type: 'text' | 'image';
-  answers: IAnswers;
+  type: string;
+  answers: IAnswers[] | any[];
 }
 export interface IAnswers {
   answer: string;
   isCorrect: boolean;
   isTrueOrFalse: number;
-  type: 'text' | 'image';
+  type: string;
 }
 export interface IUserScore {
   answer: string;
   isCorrect: boolean;
-  isTrueOrFalse: number;
-  type: 'text' | 'image';
+  isTrueOrFalse: boolean;
+  type: string;
 }
 export interface IUserAnswer {
   timePerQuestion: number;
@@ -40,10 +54,27 @@ export interface IUserRating {
 }
 export type TMillonaireContextProps = {
   event: any;
-  millonaire: IMillonaire | null;
+  millonaire: IMillonaire;
   loading: boolean;
   isNewGame: boolean;
+  question: IQuestions;
+  stage: IStages;
+  isVisibleModalQuestion: boolean;
+  isVisibleModalStage: boolean;
   onChangeMillonaire: (name: string, value: any) => void;
+  onChangeAppearance: (name: string, value: any) => void;
   onCreateMillonaire: () => void;
   onSubmit: () => void;
+  onDelete: () => Promise<void>;
+  onSaveQuestion: () => void;
+  onSaveStage: () => void;
+  onCancelModalQuestion: () => void;
+  onCancelModalStage: () => void;
+  setIsVisibleModalQuestion: any;
+  setIsVisibleModalStage: any;
 };
+
+export interface IEditModal {
+  isEdit: boolean;
+  id: null;
+}

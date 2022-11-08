@@ -18,10 +18,18 @@ export default function Index() {
 }
 
 const MillonaireMain = () => {
-  const { onSubmit, millonaire, event } = useMillonaireCMS();
+  const { onSubmit, millonaire, event, onDelete, isNewGame } = useMillonaireCMS();
   return (
     <Form onFinish={onSubmit} {...FORMLAYOUT}>
-      <Header title={'Quien quiere ser millonario'} description={''} back save form />
+      <Header
+        edit={isNewGame === false}
+        title={'Quien quiere ser millonario'}
+        description={''}
+        back
+        save
+        form
+        remove={onDelete}
+      />
       <RenderView />
     </Form>
   );

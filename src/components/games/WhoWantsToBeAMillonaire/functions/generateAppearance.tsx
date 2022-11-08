@@ -6,6 +6,12 @@ const generateAppearance = () => {
       width: '728',
       height: '728',
     },
+    {
+      label: 'Logo',
+      name: 'logo',
+      width: '728',
+      height: '728',
+    },
   ];
   return apperanceItems;
 };

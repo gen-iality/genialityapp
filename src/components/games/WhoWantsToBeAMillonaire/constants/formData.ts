@@ -41,9 +41,41 @@ export const INITIAL_VALUES_DATA_CREATE = {
 
 export const VALUES_TOTAL_QUESTIONS = [15, 30, 45, 60, 75];
 
+export const INITIAL_STATE_ANSWER = {
+  answer: '',
+  isCorrect: false,
+  isTrueOrFalse: false,
+  type: 'text',
+};
+export const INITIAL_STATE_QUESTION = {
+  question: '',
+  timeForQuestion: 30,
+  type: 'text',
+  answers: [],
+};
+export const INITIAL_STATE_STAGE = {
+  stage: 0,
+  question: [],
+  lifeSaver: false,
+  score: 100,
+};
+
 export const INITIAL_STATE_MILLONAIRE = {
   name: '',
-  numberOfQuestions: 0,
-  timeForQuestions: 0,
+  numberOfQuestions: null,
+  timeForQuestions: 30,
   rules: '',
+  id: '',
+  appearance: {
+    logo: '',
+    background_image: '',
+    background_color: '',
+  },
+  questions: [],
+  stages: [],
+};
+
+export const INITIAL_STATE_EDIT_MODAL = {
+  isEdit: false,
+  id: null,
 };

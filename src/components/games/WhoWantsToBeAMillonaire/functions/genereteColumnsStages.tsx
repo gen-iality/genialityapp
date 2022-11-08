@@ -5,34 +5,20 @@ import { Button, Col, Row, Tag, Tooltip, Typography, Image } from 'antd';
 
 const { Text } = Typography;
 
-const GenerateColumnsQuestion = () => {
+const GenerateColumnsStages = () => {
   const columns = [
+    {
+      title: 'Etapa',
+      key: 'stage',
+      dataIndex: 'stage',
+      type: 'string',
+      name: 'Etapa',
+    },
     {
       title: 'Pregunta',
       key: 'question',
-      dataIndex: 'question',
-      type: 'string',
-      name: 'Pregunta',
-      render: (text: string, value: any, index: any) => {
-        return value.carton_value.type === 'image' ? (
-          <Image
-            preview={{ mask: 'Ver', maskClassName: 'borderRadius' }}
-            style={{ borderRadius: '10px' }}
-            width={50}
-            height={50}
-            src={value.carton_value.value}
-            alt={value.id + ' carton_value'}
-          />
-        ) : (
-          <Text>{value.carton_value.value}</Text>
-        );
-      },
-    },
-    {
-      title: 'Tipo de pregunta',
-      key: 'question_type',
       dataIndex: 'string',
-      name: 'Tipo de pregunta',
+      name: 'Pregunta',
       render: (text: string, value: any, index: any) => {
         return value.carton_value.type === 'image' ? (
           <Tag color='blue' icon={<ImageOutlineIcon />}>
@@ -46,16 +32,16 @@ const GenerateColumnsQuestion = () => {
       },
     },
     {
-      title: 'Tiempo por pregunta',
-      key: 'timeForQuestions',
-      dataIndex: 'number',
-      name: 'Tiempo por pregunta',
+      title: 'Salvavidas',
+      key: 'lifeSaver',
+      dataIndex: 'boolean',
+      name: 'Salvavidas',
     },
     {
-      title: '# respuestas',
-      key: 'answers',
-      dataIndex: 'object',
-      name: '# respuestas',
+      title: 'Puntaje',
+      key: 'score',
+      dataIndex: 'number',
+      name: 'Puntaje',
     },
     {
       title: 'Opciones',
@@ -89,4 +75,4 @@ const GenerateColumnsQuestion = () => {
   return columns;
 };
 
-export default GenerateColumnsQuestion;
+export default GenerateColumnsStages;

@@ -5,6 +5,7 @@ import { firestore } from './firebase';
 import Moment from 'moment';
 import { GetTokenUserFirebase } from './HelperAuth';
 import { DispatchMessageService } from '../context/MessageService';
+import { async } from 'ramda-adjunct';
 
 const publicInstance = axios.create({
   url: ApiUrl,
@@ -470,42 +471,59 @@ export const BingoApi = {
   },
 };
 
+export const WhoWantsToBeAMillonaireApi = {
+  getOne: async (eventId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.get(`api/events/${eventId}/millionaires?token=${token}`, true);
+  },
+  editOne: async (eventId, millonaireId, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/events/${eventId}/millionaires/${millonaireId}?token=${token}`, data, true);
+  },
+  deleteOne: async (eventId, millonaireId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/events/${eventId}/millionaires/${millonaireId}?token=${token}`, true);
+  },
+  createOne: async (eventId, body) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/events/${eventId}/millionaires?token=${token}`, body, true);
+  },
+};
+
 export const SharePhotoApi = {
   getOne: async (eventId) => {
-    let token = await GetTokenUserFirebase()
-    return await Actions.getAll(`api/events/${eventId}/sharephotos?token=${token}`, true)
+    let token = await GetTokenUserFirebase();
+    return await Actions.getAll(`api/events/${eventId}/sharephotos?token=${token}`, true);
   },
   createOne: async (data) => {
-    let token = await GetTokenUserFirebase()
-    return await Actions.post(`api/sharephoto?token=${token}`, data, true)
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/sharephoto?token=${token}`, data, true);
   },
   updateOne: async (sharePhotoId, data) => {
-    let token = await GetTokenUserFirebase()
-    return await Actions.put(`api/sharephoto/${sharePhotoId}?token=${token}`, data, true)
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/sharephoto/${sharePhotoId}?token=${token}`, data, true);
   },
   deleteOne: async (sharePhotoId) => {
-    let token = await GetTokenUserFirebase()
-    return await Actions.delete(`api/sharephoto/${sharePhotoId}?token=${token}`, true)
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/sharephoto/${sharePhotoId}?token=${token}`, true);
   },
   addOnePost: async (sharePhotoId, postData) => {
-    let token = await GetTokenUserFirebase()
-    return await Actions.put(`api/sharephoto/${sharePhotoId}/addpost?token=${token}`, postData, true)
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/sharephoto/${sharePhotoId}/addpost?token=${token}`, postData, true);
   },
   deleteOnePost: async (sharePhotoId, postId) => {
-    let token = await GetTokenUserFirebase()
-    return await Actions.delete(`api/sharephoto/${sharePhotoId}/post/${postId}?token=${token}`, true)
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/sharephoto/${sharePhotoId}/post/${postId}?token=${token}`, true);
   },
   addOneLike: async (sharePhotoId, postId, likeData) => {
-    let token = await GetTokenUserFirebase()
-    return await Actions.put(`api/sharephoto/${sharePhotoId}/addlike/${postId}?token=${token}`, likeData, true)
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/sharephoto/${sharePhotoId}/addlike/${postId}?token=${token}`, likeData, true);
   },
   deleteOneLike: async (sharePhotoId, likeId) => {
-    let token = await GetTokenUserFirebase()
-    return await Actions.delete(`api/sharephoto/${sharePhotoId}/unlike/${likeId}?token=${token}`, true)
-  }
-
-
-}
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/sharephoto/${sharePhotoId}/unlike/${likeId}?token=${token}`, true);
+  },
+};
 
 export const InvitationsApi = {
   getAll: async (id) => {
