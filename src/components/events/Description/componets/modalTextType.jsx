@@ -71,8 +71,7 @@ const ModalTextComponent = ({
           placeholder='Ingresa aquí la descripción'
           colors={[textColor, bgColor]}
           styles={{ caretColor: textColor, color: textColor }}
-          className='insideModal'
-          blockedOptions={true}
+          blockedOptions={{ link: true, image: false, code_block: false }}
           name='Texto'
           data={text}
           handleChange={(value) => handleText(value)}

@@ -73,7 +73,7 @@ export const getAttendeeByParameter = ({
       });
 
       searchParameter = `properties.${name}`;
-      valueParameter = String(split[0]);
+      valueParameter = ValidatedCero(String(split[0]));
       names = documentInformation.names;
       email = documentInformation.email;
       checkInField = documentInformation.checkInField;
@@ -196,4 +196,11 @@ export const saveCheckInAttendee = async ({
         action: 'show',
       });
   }
+};
+export const ValidatedCero = (value: string) => {
+  if (value[0] === '0') {
+    const valueWithOutCero = Number(value);
+    return String(valueWithOutCero);
+  }
+  return value;
 };
