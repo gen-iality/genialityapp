@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import MillonaireCMSContext from '../contexts/MillonaireCMSContext';
 export const useMillonaireCMS = () => {
   const {

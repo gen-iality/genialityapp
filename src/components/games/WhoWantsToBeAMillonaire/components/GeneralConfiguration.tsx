@@ -6,7 +6,6 @@ const GeneralConfiguration = () => {
   return (
     <Space>
       <CreateMillonaire />
-
       <QuestionSettings />
     </Space>
   );

@@ -74,6 +74,15 @@ export type TMillonaireContextProps = {
   setIsVisibleModalStage: any;
 };
 
+export interface TMillonaireContextPropLanding {
+  event: any;
+  millonaire: IMillonaire;
+  loading: boolean;
+  isVisible: boolean;
+  startGame: boolean;
+  onChangeVisibilityDrawer: () => void;
+}
+
 export interface IEditModal {
   isEdit: boolean;
   id: null;
