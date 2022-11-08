@@ -1,6 +1,8 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import { firestore } from '@/helpers/firebase';
+import { Score } from '../../common/Ranking/RankingMyScore';
 import { CreatePlayerDto, Player, Point, WhereIs } from '../types';
+import { fromPlayerToScore } from '../utils/fromPlayerToScore';
 
 export const get = async (eventId: string): Promise<WhereIs | null> => {
 	try {
@@ -113,4 +115,34 @@ export const getScores = async (getScoreDto: GetScoreDto) => {
 		DispatchMessageService({ type: 'error', msj: 'Error al obtener la dinamica', action: 'show' });
 		return null;
 	}
+};
+
+export const getScoresListener = (event_id: string, setScores: React.Dispatch<React.SetStateAction<Score[]>>) => {
+	console.log('Se inicializa el listener');
+	console.log(event_id);
+	const unsubscribe = firestore
+		.collection('whereIsByEvent')
+		.doc(event_id)
+		.collection('players')
+		.onSnapshot(
+			playersDoc => {
+				if (playersDoc.empty) {
+					console.log('playersDoc is empty');
+				} else {
+					const players = playersDoc.docs.map(doc => doc.data()) as Player[];
+					const playersFinished = players.filter(player => player.isFinish === true);
+					const playersOrderedByDuration = playersFinished.sort(
+						(playerA, playerB) => playerA.duration - playerB.duration
+					);
+					const scoresFinished = playersOrderedByDuration.map((player, i) => {
+						return fromPlayerToScore(player, i + 1);
+					});
+					setScores(scoresFinished);
+				}
+			},
+			onError => {
+				console.log(onError);
+			}
+		);
+	return unsubscribe;
 };

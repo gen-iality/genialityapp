@@ -7,6 +7,7 @@ import useWhereIs from './useWhereIs';
 import * as services from '../services';
 import { UseEventContext } from '@/context/eventContext';
 import { fromPlayerToScore } from '../utils/fromPlayerToScore';
+import { Score } from '../../common/Ranking/RankingMyScore';
 
 export default function useWhereIsInLanding() {
 	const cUser = UseUserEvent();
@@ -161,5 +162,23 @@ export default function useWhereIsInLanding() {
 		return { scoresFinished, scoresNotFinished };
 	};
 
-	return { location, goTo, whereIsGame, wrongPoint, foundPoint, setTimer, winGame, player, getPlayer, getScores };
+	// const getScoresListener = (setScores: React.Dispatch<React.SetStateAction<Score[]>>) => {
+	// 	console.log(cEvent.nameEvent);
+	// 	const unsubscribe = services.getScoresListener(cEvent.nameEvent, setScores);
+	// 	return unsubscribe;
+	// };
+
+	return {
+		location,
+		goTo,
+		whereIsGame,
+		wrongPoint,
+		foundPoint,
+		setTimer,
+		winGame,
+		player,
+		getPlayer,
+		getScores,
+		// getScoresListener,
+	};
 }

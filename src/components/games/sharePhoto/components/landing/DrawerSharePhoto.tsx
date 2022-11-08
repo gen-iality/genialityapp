@@ -23,10 +23,10 @@ export default function DrawerSharePhoto(props: Props) {
 	};
 
 	useEffect(() => {
-		if (sharePhoto !== null) {
-			const unSubscribe = listenSharePhoto();
-			return () => unSubscribe();
-		}
+		// if (sharePhoto !== null) {
+		// 	const unSubscribe = listenSharePhoto();
+		// 	return () => unSubscribe();
+		// }
 	}, [sharePhoto]);
 
 	if (sharePhoto === null) return null;
