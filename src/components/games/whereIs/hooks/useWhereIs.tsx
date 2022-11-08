@@ -17,6 +17,8 @@ export default function useWhereIs() {
 		if (eventId && whereIs === null) {
 			getWhereIs(eventId);
 		}
+		const unsubscribe = service.getWhereIsListener(eventId, setWhereIs);
+		return () => unsubscribe();
 	}, []);
 
 	const getWhereIs = async (eventId: string) => {

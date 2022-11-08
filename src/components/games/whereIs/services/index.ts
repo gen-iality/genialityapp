@@ -27,6 +27,23 @@ export const getWhereIs = async (eventId: string) => {
 	return whereIsDoc.data() as WhereIs;
 };
 
+export const getWhereIsListener = (
+	eventId: string,
+	setWhereIs: React.Dispatch<React.SetStateAction<WhereIs | null>>
+) => {
+	const unsubscribe = firestore
+		.collection('whereIsByEvent')
+		.doc(eventId)
+		.onSnapshot(doc => {
+			if (!doc.exists) {
+				console.log('Document doesnt exists yet');
+			} else {
+				setWhereIs(prev => ({ ...prev, ...(doc.data() as WhereIs) }));
+			}
+		});
+	return unsubscribe;
+};
+
 export const getWhereIsPoints = async (eventId: string): Promise<Point[]> => {
 	const pointsDoc = await firestore
 		.collection('whereIsByEvent')

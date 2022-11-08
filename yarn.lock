@@ -472,7 +472,7 @@
     "@babel/traverse" "^7.19.0"
     "@babel/types" "^7.19.0"
 
-"@babel/helpers@^7.12.1", "@babel/helpers@^7.19.4":
+"@babel/helpers@^7.12.1", "@babel/helpers@^7.19.0", "@babel/helpers@^7.19.4":
   version "7.19.4"
   resolved "https://registry.yarnpkg.com/@babel/helpers/-/helpers-7.19.4.tgz#42154945f87b8148df7203a25c31ba9a73be46c5"
   integrity sha512-G+z3aOx2nfDHwX/kyVii5fJq+bgscg89/dJNWpYeKeBv3v9xX8EIabmx1k6u9LS04H7nROFVRVK+e3k0VHp+sw==
