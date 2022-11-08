@@ -32,7 +32,7 @@ export default function useWhereIsInLanding() {
 			picture: '',
 			points,
 		}));
-		// verifyPlayer(); //TODO: Activar en producción
+		verifyPlayer();
 	}, []);
 
 	const verifyPlayer = async () => {
