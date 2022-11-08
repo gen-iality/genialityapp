@@ -28,7 +28,6 @@ export default function Ranking() {
 			// const scoresFinished = scoresFinished.filter(score => score.isFinish === true);
 			setScores(scoresFinished);
 		});
-		console.log(cEvent.nameEvent);
 		const unsubscribe = getScoresListener(cEvent.nameEvent, setScores);
 		return () => unsubscribe();
 	}, []);
