@@ -8,7 +8,6 @@ export interface SharePhoto {
 	published: boolean;
 	active: boolean;
 	points_per_like: number;
-	posts: Post[];
 }
 
 export interface CreateSharePhotoDto
@@ -32,11 +31,17 @@ export interface Post {
 	likes: Like[];
 }
 
-export interface CreatePostDto extends Omit<Post, 'id' | 'created_at' | 'updated_at' | 'thumb' | 'likes' | 'user_name' | 'picture'> {}
+export interface CreatePostDto extends Omit<Post, 'id' | 'created_at' | 'updated_at' | 'thumb' | 'likes'> {}
 
 export interface Like {
+	id: string;
 	created_at: Date | string;
 	event_user_id: string;
+	user_name: string;
+	picture: string;
 }
 
-export interface AddLikeDto extends Omit<Like, 'created_at'> {}
+export interface AddLikeDto extends Omit<Like, 'created_at'> {
+	event_id: string;
+	post_id: string;
+}

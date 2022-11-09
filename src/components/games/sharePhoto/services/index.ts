@@ -7,9 +7,6 @@ export const get = async (eventId: string): Promise<SharePhoto | null> => {
 	try {
 		const response = await SharePhotoApi.getOne(eventId);
 		if (response._id) {
-			if (!response.posts) {
-				return { ...response, posts: [] };
-			}
 			return response;
 		} else {
 			return null;
@@ -30,12 +27,11 @@ export const create = async (createSharePhotoDto: CreateSharePhotoDto): Promise<
 			published: false,
 			points_per_like: 1,
 		});
-		const result = { ...response, posts: [] };
 		await firestore
 			.collection('sharePhotoByEvent')
 			.doc(createSharePhotoDto.event_id)
-			.set(result);
-		return result;
+			.set(response);
+		return response;
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al crear la dinamica', action: 'show' });
 		return null;
@@ -48,15 +44,11 @@ export const update = async (
 ): Promise<SharePhoto | null> => {
 	try {
 		const response = await SharePhotoApi.updateOne(sharePhotoId, updateSharePhotoDto);
-		let result = response;
-		if (!response.posts) {
-			result = { ...response, posts: [] };
-		}
 		await firestore
 			.collection('sharePhotoByEvent')
-			.doc(result.event_id)
-			.update(result);
-		return result;
+			.doc(response.event_id)
+			.update(response);
+		return response;
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al actualizar la dinamica', action: 'show' });
 		return null;
@@ -77,28 +69,81 @@ export const remove = async (sharePhotoId: SharePhoto['_id'], eventId: string) =
 	}
 };
 
-export const addPost = async (sharePhotoId: SharePhoto['_id'], createPostDto: CreatePostDto) => {
+// Fix from here
+export const addPost = async (createPostDto: CreatePostDto, eventId: string) => {
 	try {
-		const response = await SharePhotoApi.addOnePost(sharePhotoId, createPostDto);
+		// const response = await SharePhotoApi.addOnePost(sharePhotoId, createPostDto);
+		const newPost = {
+			created_at: new Date().toISOString(),
+			updated_at: new Date().toISOString(),
+			event_user_id: createPostDto.event_user_id,
+			user_name: createPostDto.user_name,
+			picture: createPostDto.picture,
+			image: createPostDto.image,
+			thumb: createPostDto.image,
+			title: createPostDto.title,
+		};
 		await firestore
 			.collection('sharePhotoByEvent')
-			.doc(response.event_id)
-			.update(response);
-		return response;
+			.doc(eventId)
+			.collection('posts')
+			.doc(createPostDto.event_user_id)
+			.set(newPost);
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al crear publicación', action: 'show' });
 		return null;
 	}
 };
 
-export const addLike = async (sharePhotoId: SharePhoto['_id'], postId: Post['id'], addLikeDto: AddLikeDto) => {
+export const getPosts = async (eventId: string) => {
 	try {
-		const response = await SharePhotoApi.addOneLike(sharePhotoId, postId, addLikeDto);
+		const postsDoc = await firestore
+			.collection('sharePhotoByEvent')
+			.doc(eventId)
+			.collection('posts')
+			.get();
+		if (postsDoc.empty) {
+			return [];
+		}
+		const posts = postsDoc.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Post[];
+		return posts;
+	} catch (error) {
+		DispatchMessageService({ type: 'error', msj: 'Error al crear publicación', action: 'show' });
+		return [];
+	}
+};
+
+export const getPostsListener = (eventId: string, setPosts: React.Dispatch<React.SetStateAction<Post[]>>) => {
+	const unsubscribe = firestore
+		.collection('sharePhotoByEvent')
+		.doc(eventId)
+		.collection('posts')
+		.onSnapshot(postsDoc => {
+			if (postsDoc.empty) {
+				console.log('No posts yet');
+			} else {
+				const posts = postsDoc.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Post[];
+				console.log(posts);
+				setPosts(posts);
+			}
+		});
+	return unsubscribe;
+};
+
+export const addLike = async (addLikeDto: AddLikeDto) => {
+	try {
 		await firestore
 			.collection('sharePhotoByEvent')
-			.doc(response.event_id)
-			.update(response);
-		return response;
+			.doc(addLikeDto.event_id)
+			.collection('posts')
+			.doc(addLikeDto.post_id)
+			.collection('likes')
+			.doc(addLikeDto.event_user_id)
+			.set({
+				created_at: new Date(),
+				user_name: addLikeDto.user_name,
+				picture: addLikeDto.picture,
+			});
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al dar me gusta', action: 'show' });
 		return null;
@@ -112,26 +157,8 @@ export const listenSharePhoto = (
 	const unSubscribe = firestore
 		.collection('sharePhotoByEvent')
 		.doc(eventId)
-		.onSnapshot(data => {
-			// console.log(data.metadata.hasPendingWrites)
-			const dataUpdated = data.data();
-			if (dataUpdated) {
-				setSharePhoto(prev => {
-					if (prev === null) return null;
-					return {
-						_id: dataUpdated._id ?? prev?._id,
-						created_at: dataUpdated.created_at ?? prev?.created_at,
-						updated_at: dataUpdated.updated_at ?? prev?.updated_at,
-						event_id: dataUpdated.event_id ?? prev?.event_id,
-						title: dataUpdated.title ?? prev?.title,
-						tematic: dataUpdated.tematic ?? prev?.tematic,
-						published: dataUpdated.published ?? prev?.published,
-						active: dataUpdated.active ?? prev?.active,
-						points_per_like: dataUpdated.points_per_like ?? prev?.points_per_like,
-						posts: dataUpdated.posts ?? prev?.posts,
-					};
-				});
-			}
+		.onSnapshot(doc => {
+			console.log(doc);
 		});
 	return unSubscribe;
 };

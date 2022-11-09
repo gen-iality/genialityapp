@@ -11,7 +11,7 @@ const { useBreakpoint } = Grid;
 
 export default function DrawerSharePhoto(props: Props) {
 	const [open, setOpen] = useState(false);
-	const { sharePhoto, listenSharePhoto } = useSharePhoto();
+	const { sharePhoto } = useSharePhoto();
 	const screens = useBreakpoint();
 
 	const handleOpen = () => {

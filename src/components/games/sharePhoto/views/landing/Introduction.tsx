@@ -6,16 +6,14 @@ import useSharePhotoInLanding from '../../hooks/useSharePhotoInLanding';
 const { useBreakpoint } = Grid;
 
 export default function Introduction() {
-	const { sharePhoto, listenSharePhoto } = useSharePhoto();
+	const { sharePhoto } = useSharePhoto();
 	const { goTo } = useSharePhotoInLanding();
 	const screens = useBreakpoint();
 
 	useEffect(() => {
-		if (sharePhoto !== null) {
-			// const unSubscribe = listenSharePhoto();
-			// return () => unSubscribe();
-		}
-	}, [sharePhoto]);
+		// Here goes the listener
+		// return () => unsubscribe();
+	}, []);
 
 	if (!sharePhoto) {
 		return <p>Ups! esta dinamica no existe aun!</p>;
