@@ -81,6 +81,7 @@ export interface TMillonaireContextPropLanding {
   isVisible: boolean;
   startGame: boolean;
   onChangeVisibilityDrawer: () => void;
+  onStartGame: () => void;
 }
 
 export interface IEditModal {

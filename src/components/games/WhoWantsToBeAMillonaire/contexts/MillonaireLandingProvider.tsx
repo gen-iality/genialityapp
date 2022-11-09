@@ -45,6 +45,12 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     setLoading(false);
   };
 
+  const onStartGame = () => {
+    setLoading(true);
+    setStartGame(true);
+    setLoading(false);
+  };
+
   //   const onSaveAnswers = () => {
   //     //setLoading(true);
   //     setMillonaire((prevState) => ({
@@ -68,6 +74,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
         isVisible,
         startGame,
         onChangeVisibilityDrawer,
+        onStartGame,
       }}>
       {children}
     </MillonaireLandingContext.Provider>

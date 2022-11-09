@@ -3,7 +3,6 @@ import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 import { Card, Col, Form, Row, Switch } from 'antd';
 export default function PlayMillonaireCMS() {
   const { event } = useMillonaireCMS();
-  console.log('🚀 ~ file: PlayMillonaire.tsx ~ line 5 ~ PlayMillonaire ~ event', event);
   return (
     <div>
       <Row>

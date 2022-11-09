@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import MillonaireLandingContext from '../contexts/MillonaireLandingContext';
 export const useMillonaireLanding = () => {
-  const { event, millonaire, loading, isVisible, startGame, onChangeVisibilityDrawer } = useContext(
+  const { event, millonaire, loading, isVisible, startGame, onChangeVisibilityDrawer, onStartGame } = useContext(
     MillonaireLandingContext
   );
 
@@ -12,5 +12,6 @@ export const useMillonaireLanding = () => {
     isVisible,
     startGame,
     onChangeVisibilityDrawer,
+    onStartGame,
   };
 };
