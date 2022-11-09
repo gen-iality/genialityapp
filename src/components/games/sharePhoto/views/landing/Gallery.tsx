@@ -8,7 +8,7 @@ import { Post } from '../../types';
 const { Meta } = Card;
 const { useBreakpoint } = Grid;
 
-export default function Galery() {
+export default function Gallery() {
 	const { goTo } = useSharePhotoInLanding();
 	const { sharePhoto, addLike, posts } = useSharePhoto();
 	const [postSelected, setPostSelected] = useState<Post | null>(null);
@@ -182,7 +182,7 @@ export default function Galery() {
 							<Row justify='center' align='middle' style={{ height: '100%' }}>
 								<Space style={{ fontSize: '20px', color: '#FFFFFF' }}>
 									<HeartFilled />
-									{/* {post.likes.length} */}
+									{post.likes}
 								</Space>
 							</Row>
 						</div>
