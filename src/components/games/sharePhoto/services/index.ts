@@ -105,7 +105,17 @@ export const getPosts = async (eventId: string) => {
 		if (postsDoc.empty) {
 			return [];
 		}
-		const posts = postsDoc.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Post[];
+		const posts = (await Promise.all(
+			postsDoc.docs.map(async doc => {
+				const likes = await doc.ref.collection('likes').get();
+
+				return {
+					id: doc.id,
+					...doc.data(),
+					likes: likes.docs.length,
+				};
+			})
+		)) as Post[];
 		return posts;
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al crear publicación', action: 'show' });
@@ -122,9 +132,17 @@ export const getPostsListener = (eventId: string, setPosts: React.Dispatch<React
 			if (postsDoc.empty) {
 				console.log('No posts yet');
 			} else {
-				const posts = postsDoc.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Post[];
-				console.log(posts);
-				setPosts(posts);
+				Promise.all(
+					postsDoc.docs.map(async doc => {
+						const likes = await doc.ref.collection('likes').get();
+
+						return {
+							id: doc.id,
+							...doc.data(),
+							likes: likes.docs.length,
+						};
+					})
+				).then(posts => setPosts(posts as Post[]));
 			}
 		});
 	return unsubscribe;

@@ -28,7 +28,7 @@ export interface Post {
 	image: string;
 	thumb: string;
 	title: string;
-	likes: Like[];
+	likes: number;
 }
 
 export interface CreatePostDto extends Omit<Post, 'id' | 'created_at' | 'updated_at' | 'thumb' | 'likes'> {}
@@ -41,7 +41,7 @@ export interface Like {
 	picture: string;
 }
 
-export interface AddLikeDto extends Omit<Like, 'created_at'> {
+export interface AddLikeDto extends Omit<Like, 'id' | 'created_at'> {
 	event_id: string;
 	post_id: string;
 }

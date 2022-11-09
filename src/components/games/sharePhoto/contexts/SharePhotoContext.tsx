@@ -140,11 +140,14 @@ export default function SharePhotoProvider(props: Props) {
 	const addLike = async (postId: Post['id']) => {
 		try {
 			setLoading(true);
-			// if (sharePhoto === null || !sharePhoto._id) return;
-			// const response = await service.addLike(sharePhoto._id, postId, {
-			// 	event_user_id: cUser.value._id,
-			// });
-			// return response;
+			console.log('giving like');
+			await service.addLike({
+				event_id: eventId,
+				post_id: postId,
+				event_user_id: cUser.value._id,
+				picture: cUser.value.user.picture,
+				user_name: cUser.value.user.names,
+			});
 		} catch (error) {
 			console.log(error);
 		} finally {
