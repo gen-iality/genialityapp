@@ -43,7 +43,7 @@ export default function TabResults(props: Props) {
 		<Row gutter={[12, 12]}>
 			<Col xs={24} style={{ display: 'flex', justifyContent: 'center' }}>
 				<Card style={{ width: '100%', maxWidth: '600px' }}>
-					<Ranking scores={scores} type='points' myScore={myScore} withMyScore={true} />
+					<Ranking scores={scores} type='points' />
 				</Card>
 			</Col>
 		</Row>
