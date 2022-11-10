@@ -3,6 +3,7 @@ import { UseUserEvent } from '@/context/eventUserContext';
 import { ReactNode, createContext, useState, useEffect } from 'react';
 import { CreatePostDto, CreateSharePhotoDto, Like, Post, SharePhoto, UpdateSharePhotoDto } from '../types';
 import * as service from '../services';
+import { Score } from '../../common/Ranking/types';
 
 interface SharePhotoContextType {
 	sharePhoto: SharePhoto | null;
@@ -31,6 +32,8 @@ export default function SharePhotoProvider(props: Props) {
 	const [likes, setLikes] = useState<Like[]>([] as Like[]);
 	const [alreadyLiked, setAlreadyLiked] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [scores, setScores] = useState<Score[]>([] as Score[]);
+	const [myScore, setScore] = useState<Score | null>(null);
 	// hooks
 	const cUser = UseUserEvent();
 	// console.log(cUser);
@@ -99,7 +102,6 @@ export default function SharePhotoProvider(props: Props) {
 		}
 	};
 
-	// Fix from here
 	const createPost = async (createPostDto: Omit<CreatePostDto, 'event_user_id' | 'picture' | 'user_name'>) => {
 		try {
 			setLoading(true);
@@ -132,10 +134,10 @@ export default function SharePhotoProvider(props: Props) {
 		}
 	};
 
-	// const postsListener = () => {
-	// 	const unsubscribe = service.getPostsListener(eventId, setPosts)
-	// 	return unsubscribe
-	// }
+	// Fix from here
+	const postsListener = () => {
+		return service.getPostsListener(eventId, setPosts);
+	};
 
 	const addLike = async (postId: Post['id']) => {
 		try {
