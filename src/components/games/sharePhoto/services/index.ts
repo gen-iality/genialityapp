@@ -1,11 +1,13 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import { firestore } from '@/helpers/firebase';
 import { SharePhotoApi } from '@/helpers/request';
+import { Score } from '../../common/Ranking/types';
 import {
 	AddLikeDto,
 	CreatePostDto,
 	CreateSharePhotoDto,
 	GetPostByTitleDto,
+	Like,
 	ListenLikesDto,
 	Post,
 	RemoveLikeDto,
@@ -87,7 +89,11 @@ export const listenSharePhoto = (
 		.collection('sharePhotoByEvent')
 		.doc(eventId)
 		.onSnapshot(doc => {
-			console.log(doc);
+			if (doc.exists) {
+				setSharePhoto(doc.data() as SharePhoto);
+			} else {
+				console.log('No data yet');
+			}
 		});
 	return unSubscribe;
 };
@@ -248,7 +254,7 @@ export const removeLike = async (removeLikeDto: RemoveLikeDto) => {
 	}
 };
 
-export const listenLikes = async (listenLikesDto: ListenLikesDto, setLikes: any) => {
+export const listenLikes = (listenLikesDto: ListenLikesDto, setLikes: React.Dispatch<React.SetStateAction<Like[]>>) => {
 	return firestore
 		.collection('sharePhotoByEvent')
 		.doc(listenLikesDto.event_id)
@@ -258,9 +264,51 @@ export const listenLikes = async (listenLikesDto: ListenLikesDto, setLikes: any)
 		.onSnapshot(likesDocs => {
 			if (likesDocs.empty) {
 				console.log('No likes yet');
+				setLikes([]);
 			} else {
-				const likes = likesDocs.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+				const likes = likesDocs.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Like[];
 				console.log(likes);
+				setLikes(likes);
 			}
 		});
+};
+
+// -------------- Ranking services ----------------- //
+export const getRanking = async (eventId: string, points_per_like: number) => {
+	try {
+		const postsDoc = await firestore
+			.collection('sharePhotoByEvent')
+			.doc(eventId)
+			.collection('posts')
+			.get();
+		if (postsDoc.empty) {
+			return [];
+		}
+		const posts = (await Promise.all(
+			postsDoc.docs.map(async doc => {
+				const likes = await doc.ref.collection('likes').get();
+
+				return {
+					id: doc.id,
+					...doc.data(),
+					likes: likes.docs.length,
+				};
+			})
+		)) as Post[];
+
+		const scores: Score[] = posts
+			.sort((b, a) => a.likes - b.likes)
+			.map((post, index) => ({
+				uid: post.id,
+				imageProfile: post.picture,
+				name: post.user_name,
+				index: index + 1,
+				score: `${post.likes} likes`,
+			}));
+		console.log(scores);
+		return scores;
+	} catch (error) {
+		DispatchMessageService({ type: 'error', msj: 'Error al dar me gusta', action: 'show' });
+		return [];
+	}
 };

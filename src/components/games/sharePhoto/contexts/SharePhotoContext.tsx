@@ -10,13 +10,21 @@ interface SharePhotoContextType {
 	loading: boolean;
 	posts: Post[];
 	filteredPosts: Post[];
+	likes: Like[];
+	postSelected: Post | null;
+	scores: Score[];
+	myScore: Score | null;
+	setPostSelected: React.Dispatch<React.SetStateAction<Post | null>>;
+	postsListener: () => () => void;
+	likesListener: (postId: Post['id']) => () => void;
 	createSharePhoto: (createSharePhotoDto: CreateSharePhotoDto) => Promise<void>;
 	updateSharePhoto: (id: SharePhoto['_id'], updateSharePhotoDto: UpdateSharePhotoDto) => Promise<void>;
 	deleteSharePhoto: (id: SharePhoto['_id']) => Promise<void>;
 	createPost: (createPostDto: Omit<CreatePostDto, 'event_user_id' | 'picture' | 'user_name'>) => Promise<void>;
 	addLike: (postId: Post['id']) => Promise<void>;
+	handleLike: (postId: Post['id']) => Promise<void>;
 	getPostByTitle: (stringSearch: string) => Promise<void>;
-	// listenSharePhoto: () => void;
+	listenSharePhoto: () => () => void;
 	// postsListener:
 }
 
@@ -30,7 +38,7 @@ export default function SharePhotoProvider(props: Props) {
 	const [sharePhoto, setSharePhoto] = useState<SharePhoto | null>(null);
 	const [posts, setPosts] = useState<Post[]>([] as Post[]);
 	const [filteredPosts, setFilteredPosts] = useState<Post[]>([] as Post[]);
-	// const [postSelected, setPostSelected] = useState<Post | null>(null);
+	const [postSelected, setPostSelected] = useState<Post | null>(null);
 	const [likes, setLikes] = useState<Like[]>([] as Like[]);
 	const [alreadyLiked, setAlreadyLiked] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -47,10 +55,16 @@ export default function SharePhotoProvider(props: Props) {
 			getSharePhoto();
 			getPosts();
 		}
-		// TODO: Move to specific component
-		const unsubscribe = service.getPostsListener(eventId, setPosts);
-		return unsubscribe;
+		const unsubscribe = listenSharePhoto();
+		return () => unsubscribe();
 	}, []);
+
+	useEffect(() => {
+		if (!scores.length && !!sharePhoto) {
+			console.log('fetch results');
+			getRanking();
+		}
+	}, [sharePhoto]);
 
 	const getSharePhoto = async () => {
 		try {
@@ -104,6 +118,11 @@ export default function SharePhotoProvider(props: Props) {
 		}
 	};
 
+	const listenSharePhoto = () => {
+		return service.listenSharePhoto(cUser.value.event_id, setSharePhoto);
+	};
+
+	// -------------- Posts hooks ----------------- //
 	const createPost = async (createPostDto: Omit<CreatePostDto, 'event_user_id' | 'picture' | 'user_name'>) => {
 		try {
 			setLoading(true);
@@ -149,11 +168,11 @@ export default function SharePhotoProvider(props: Props) {
 		}
 	};
 
-	// Fix from here
 	const postsListener = () => {
 		return service.getPostsListener(eventId, setPosts);
 	};
 
+	// -------------- Likes services ----------------- //
 	const addLike = async (postId: Post['id']) => {
 		try {
 			setLoading(true);
@@ -187,10 +206,33 @@ export default function SharePhotoProvider(props: Props) {
 			setLoading(false);
 		}
 	};
-	// const listenSharePhoto = () => {
-	// 	const unSubscribe = service.listenSharePhoto(cUser.value.event_id, setSharePhoto);
-	// 	return unSubscribe;
-	// };
+
+	const handleLike = async (postId: Post['id']) => {
+		if (likes.map(like => like.id).includes(cUser.value._id)) {
+			return await deleteLike(postId);
+		} else {
+			return await addLike(postId);
+		}
+	};
+
+	const likesListener = (postId: Post['id']) => {
+		return service.listenLikes({ event_id: eventId, post_id: postId }, setLikes);
+	};
+
+	// -------------- Likes services ----------------- //
+	const getRanking = async () => {
+		try {
+			setLoading(true);
+			if (sharePhoto === null) return;
+			console.log('se ejecuta la query');
+			const scores = await service.getRanking(eventId, sharePhoto?.points_per_like);
+			setScores(scores);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	return (
 		<SharePhotoContext.Provider
@@ -198,14 +240,22 @@ export default function SharePhotoProvider(props: Props) {
 				sharePhoto,
 				posts,
 				loading,
+				postSelected,
+				setPostSelected,
 				createSharePhoto,
 				updateSharePhoto,
 				deleteSharePhoto,
 				createPost,
+				postsListener,
 				addLike,
 				getPostByTitle,
+				likesListener,
 				filteredPosts,
-				// listenSharePhoto,
+				likes,
+				handleLike,
+				listenSharePhoto,
+				scores,
+				myScore,
 			}}>
 			{props.children}
 		</SharePhotoContext.Provider>

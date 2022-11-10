@@ -12,8 +12,15 @@ const { useBreakpoint } = Grid;
 
 export default function Gallery() {
 	const { goTo } = useSharePhotoInLanding();
-	const { sharePhoto, addLike, posts, getPostByTitle, filteredPosts } = useSharePhoto();
-	const [postSelected, setPostSelected] = useState<Post | null>(null);
+	const {
+		postsListener,
+		postSelected,
+		setPostSelected,
+		addLike,
+		posts,
+		getPostByTitle,
+		filteredPosts,
+	} = useSharePhoto();
 	const [overlay, setOverlay] = useState('');
 	const [postsToShow, setPostsToShow] = useState<'all' | 'filtered'>('all');
 
@@ -51,25 +58,22 @@ export default function Gallery() {
 
 	useEffect(() => {
 		// Here goes the listener
-		// return () => unsubscribe();
+		const unsubscribe = postsListener();
+		return () => unsubscribe();
 	}, []);
 	return (
 		<>
 			{postSelected && <PostDrawer postSelected={postSelected} addLike={addLike} handleBack={handleBack} />}
-			{/* ==================================================================================
-                                             GALLERY
-          ==================================================================================
-      */}
 			<Row align='middle' justify='center'>
-        <Input.Search
-          style={{ marginBottom: '20px', width: screens.xs ? '80vw' : '40vw', border: 'none' }}
-          placeholder='Buscar publicación'
-          allowClear
-          enterButton={<SearchOutlined />}
-          size='large'
-          onSearch={handlerSearch}
-        />
-      </Row>
+				<Input.Search
+					style={{ marginBottom: '20px', width: screens.xs ? '80vw' : '40vw', border: 'none' }}
+					placeholder='Buscar publicación'
+					allowClear
+					enterButton={<SearchOutlined />}
+					size='large'
+					onSearch={handlerSearch}
+				/>
+			</Row>
 			<PostsGrid
 				posts={postsToShow === 'filtered' ? filteredPosts : posts}
 				overlay={overlay}

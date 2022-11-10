@@ -1,17 +1,28 @@
 import { HeartFilled, UserOutlined } from '@ant-design/icons';
 import { Badge, Button, Card, Col, Drawer, Grid, Image, PageHeader, Row, Space, Typography } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
+import useSharePhoto from '../../hooks/useSharePhoto';
+import { Post } from '../../types';
 
 const { useBreakpoint } = Grid;
 
 interface Props {
-	postSelected: any;
+	postSelected: Post;
 	addLike: any;
 	handleBack: any;
 }
 
 export default function PostDrawer(props: Props) {
-	const { postSelected, addLike, handleBack } = props;
+	const { likes, likesListener, handleLike } = useSharePhoto();
+	const { addLike, handleBack, postSelected } = props;
+
+	useEffect(() => {
+		const unsubscribe = likesListener(postSelected.id);
+		return () => {
+			unsubscribe();
+			console.log('unmount');
+		};
+	}, []);
 
 	const screens = useBreakpoint();
 	return (
@@ -42,7 +53,7 @@ export default function PostDrawer(props: Props) {
 						danger
 						ghost
 						// onClick={() => console.log('postId', postSelected?.id)}
-						onClick={() => addLike(postSelected.id)}
+						onClick={() => handleLike(postSelected.id)}
 						icon={<HeartFilled style={{ fontSize: '35px' }} />}
 					/>
 					<Badge
@@ -54,7 +65,10 @@ export default function PostDrawer(props: Props) {
 							color: '#000000',
 							backgroundColor: 'transparent',
 						}}
-						count={postSelected.likes}></Badge>
+						count={likes.length}></Badge>
+					{`me gusta de ${likes.map(like => like.user_name)[0]}${
+						likes.length - 1 > 0 ? ` y ${likes.length - 1} ${likes.length - 1 > 1 ? 'personas' : 'persona'} mas` : ''
+					}`}
 				</Space>
 			}>
 			<Row gutter={[0, 0]}>
