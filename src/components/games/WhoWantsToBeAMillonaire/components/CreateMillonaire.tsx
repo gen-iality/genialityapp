@@ -6,8 +6,6 @@ const { Option } = Select;
 
 export default function CreateMillonaire() {
   const { onChangeMillonaire, millonaire, isNewGame } = useMillonaireCMS();
-  console.log('🚀 ~ file: CreateMillonaire.tsx ~ line 9 ~ CreateMillonaire ~ millonaire', millonaire);
-
   return (
     <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
       <Form.Item

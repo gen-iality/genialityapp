@@ -1,20 +1,28 @@
 import React from 'react';
 import { Button, Space, Typography } from 'antd';
-
+import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 const { Title, Paragraph } = Typography;
+
 export default function Millonaire() {
-  //   const { time, score, question, answers } = useMillonaireLanding();
+  const { currentStage, onSaveAnswer } = useMillonaireLanding();
+
+  if (typeof currentStage === 'string') return <Title>{currentStage}</Title>;
+
   return (
-    <div>
-      <span>30 segundo</span>
-      <span>100 </span>
-      <Paragraph>"Quien es goku"</Paragraph>
-      <Space>
-        <Button>respuesta 1</Button>
-        <Button>respuesta 2</Button>
-        <Button>respuesta 3</Button>
-        <Button>respuesta 4</Button>
+    <Space direction='vertical'>
+      <span>{currentStage.question.timeForQuestion}</span>
+      <span>{currentStage.score}</span>
+      <Paragraph>{currentStage.question.question}</Paragraph>
+
+      <Space direction='vertical'>
+        {currentStage.question.answers.map((answer, index) => {
+          return (
+            <Button key={index} onClick={() => onSaveAnswer(currentStage.question, answer)}>
+              {answer.answer}
+            </Button>
+          );
+        })}
       </Space>
-    </div>
+    </Space>
   );
 }

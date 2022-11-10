@@ -488,6 +488,26 @@ export const WhoWantsToBeAMillonaireApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.post(`api/events/${eventId}/millionaires?token=${token}`, body, true);
   },
+  createOneQuestion: async (millonaireId, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/millionaires/${millonaireId}/questions?token=${token}`, data, true);
+  },
+  deleteOneQuestion: async (millonaireId, questionId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/millionaires/${millonaireId}/questions/${questionId}?token=${token}`, true);
+  },
+  editOneQuestion: async (millonaireId, questionId, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/millionaires/${millonaireId}/questions/${questionId}?token=${token}`, data, true);
+  },
+  createOneStage: async (millonaireId, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.post(`api/millionaires/${millonaireId}/stages?token=${token}`, data, true);
+  },
+  deleteOneStage: async (millonaireId, stageId) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/millionaires/${millonaireId}/stages/${stageId}?token=${token}`, true);
+  },
 };
 
 export const SharePhotoApi = {

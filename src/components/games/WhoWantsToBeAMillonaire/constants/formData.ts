@@ -55,7 +55,7 @@ export const INITIAL_STATE_QUESTION = {
 };
 export const INITIAL_STATE_STAGE = {
   stage: 0,
-  question: [],
+  question: '',
   lifeSaver: false,
   score: 100,
 };
@@ -79,3 +79,4 @@ export const INITIAL_STATE_EDIT_MODAL = {
   isEdit: false,
   id: null,
 };
+export const STAGES_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];

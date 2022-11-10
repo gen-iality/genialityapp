@@ -49,3 +49,50 @@ export const DeleteMillonairApi = async (eventId: string, millonaireId: string) 
     return null;
   }
 };
+
+export const createQuestionMillonaireApi = async (millonaireId: string, data: any) => {
+  try {
+    const response = await WhoWantsToBeAMillonaireApi.createOneQuestion(millonaireId, data);
+    return response;
+  } catch (error) {
+    DispatchMessageService({ type: 'error', msj: 'Error al crear la pregunta', action: 'show' });
+    return null;
+  }
+};
+export const UpdateQuestionMillonaireApi = async (millonaireId: string, questionId: string, data: any) => {
+  try {
+    const response = await WhoWantsToBeAMillonaireApi.editOneQuestion(millonaireId, questionId, data);
+    return response;
+  } catch (error) {
+    DispatchMessageService({ type: 'error', msj: 'Error al actualizar la pregunta', action: 'show' });
+    return null;
+  }
+};
+
+export const DeleteQuestionMillonairApi = async (millonaireId: string, questionId: string) => {
+  try {
+    await WhoWantsToBeAMillonaireApi.deleteOneQuestion(millonaireId, questionId);
+    return true;
+  } catch (error) {
+    DispatchMessageService({ type: 'error', msj: 'Error al eliminar la pregunta', action: 'show' });
+    return null;
+  }
+};
+export const createStageMillonaireApi = async (millonaireId: string, data: any) => {
+  try {
+    const response = await WhoWantsToBeAMillonaireApi.createOneStage(millonaireId, data);
+    return response;
+  } catch (error) {
+    DispatchMessageService({ type: 'error', msj: 'Error al crear la etapa', action: 'show' });
+    return null;
+  }
+};
+export const DeleteStageMillonairApi = async (millonaireId: string, stageId: string) => {
+  try {
+    await WhoWantsToBeAMillonaireApi.deleteOneStage(millonaireId, stageId);
+    return true;
+  } catch (error) {
+    DispatchMessageService({ type: 'error', msj: 'Error al eliminar la etapa', action: 'show' });
+    return null;
+  }
+};

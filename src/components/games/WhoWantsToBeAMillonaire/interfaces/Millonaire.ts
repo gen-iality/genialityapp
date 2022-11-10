@@ -15,9 +15,10 @@ export interface IMillonaire {
 }
 export interface IStages {
   stage: number;
-  question: IQuestions[] | any[];
+  question: string;
   lifeSaver: boolean;
   score: number;
+  id?: string;
 }
 
 export interface IQuestions {
@@ -25,12 +26,14 @@ export interface IQuestions {
   timeForQuestion: number;
   type: string;
   answers: IAnswers[] | any[];
+  id?: string;
 }
 export interface IAnswers {
   answer: string;
   isCorrect: boolean;
-  isTrueOrFalse: number;
+  isTrueOrFalse: boolean;
   type: string;
+  id?: string;
 }
 export interface IUserScore {
   answer: string;
@@ -58,9 +61,13 @@ export type TMillonaireContextProps = {
   loading: boolean;
   isNewGame: boolean;
   question: IQuestions;
+  answer: IAnswers;
   stage: IStages;
   isVisibleModalQuestion: boolean;
   isVisibleModalStage: boolean;
+  isEditAnswer: boolean;
+  isEditQuestion: boolean;
+  isEditStage: boolean;
   onChangeMillonaire: (name: string, value: any) => void;
   onChangeAppearance: (name: string, value: any) => void;
   onCreateMillonaire: () => void;
@@ -72,16 +79,32 @@ export type TMillonaireContextProps = {
   onCancelModalStage: () => void;
   setIsVisibleModalQuestion: any;
   setIsVisibleModalStage: any;
+  onChangeQuestion: (name: string, value: string) => void;
+  onChangeAnswer: (name: string, value: string | boolean) => void;
+  onChangeStage: (name: string, value: string | boolean | number) => void;
+  onSaveAnswerInQuestion: () => void;
+  onDeleteQuestion: (question: IQuestions) => void;
+  onDeleteStage: (stage: IStages) => void;
+  onActionEditQuestion: (question: IQuestions) => void;
+  onActionEditAnwser: (answer: IAnswers) => void;
+  onSubmitQuestion: () => void;
+  onSubmitAnswer: () => void;
+  onSubmitStage: () => void;
 };
 
 export interface TMillonaireContextPropLanding {
   event: any;
   millonaire: IMillonaire;
+  stages: IStages;
   loading: boolean;
   isVisible: boolean;
   startGame: boolean;
+  currentStage: IStages | string;
   onChangeVisibilityDrawer: () => void;
   onStartGame: () => void;
+  onFinishedGame: () => void;
+  onFiftyOverFifty: () => void;
+  onSaveAnswer: (question: IQuestions, answer: IAnswers) => void;
 }
 
 export interface IEditModal {

@@ -3,6 +3,7 @@ import GeneralConfiguration from './GeneralConfiguration';
 import AppearanceSettings from './AppearanceSettings';
 import PlayMillonaire from './PlayMillonaire';
 import QuestionBank from './QuestionBank';
+import React from 'react';
 export default function UpdateMillonaire() {
   return (
     <Tabs>

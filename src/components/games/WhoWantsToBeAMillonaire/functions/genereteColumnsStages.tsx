@@ -2,10 +2,11 @@ import FormatTextIcon from '@2fd/ant-design-icons/lib/FormatText';
 import ImageOutlineIcon from '@2fd/ant-design-icons/lib/ImageOutline';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Col, Row, Tag, Tooltip, Typography, Image } from 'antd';
-
+import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 const { Text } = Typography;
 
 const GenerateColumnsStages = () => {
+  const { onDeleteStage } = useMillonaireCMS();
   const columns = [
     {
       title: 'Etapa',
@@ -15,32 +16,24 @@ const GenerateColumnsStages = () => {
       name: 'Etapa',
     },
     {
-      title: 'Pregunta',
+      title: 'Pregunta ID',
       key: 'question',
-      dataIndex: 'string',
-      name: 'Pregunta',
-      render: (text: string, value: any, index: any) => {
-        return value.carton_value.type === 'image' ? (
-          <Tag color='blue' icon={<ImageOutlineIcon />}>
-            Imagen
-          </Tag>
-        ) : (
-          <Tag color='green' icon={<FormatTextIcon />}>
-            Texto
-          </Tag>
-        );
-      },
+      dataIndex: 'question',
+      name: 'Pregunta ID',
     },
     {
       title: 'Salvavidas',
       key: 'lifeSaver',
-      dataIndex: 'boolean',
+      dataIndex: 'lifeSaver',
       name: 'Salvavidas',
+      render: (text: string, value: any, index: any) => {
+        return value.lifeSaver === true ? <Tag color='green'>Salvavidad</Tag> : <Tag color='red'>No Salvavidad</Tag>;
+      },
     },
     {
       title: 'Puntaje',
       key: 'score',
-      dataIndex: 'number',
+      dataIndex: 'score',
       name: 'Puntaje',
     },
     {
@@ -51,11 +44,11 @@ const GenerateColumnsStages = () => {
       render: (text: string, value: any, index: any) => {
         return (
           <Row gutter={[8, 8]}>
-            <Col>
+            {/* <Col>
               <Tooltip placement='topLeft' title='Editar'>
                 <Button icon={<EditOutlined />} type='primary' size='small' />
               </Tooltip>
-            </Col>
+            </Col> */}
             <Col>
               <Tooltip placement='topLeft' title='Eliminar'>
                 <Button
@@ -64,6 +57,7 @@ const GenerateColumnsStages = () => {
                   icon={<DeleteOutlined />}
                   danger
                   size='small'
+                  onClick={() => onDeleteStage(value)}
                 />
               </Tooltip>
             </Col>

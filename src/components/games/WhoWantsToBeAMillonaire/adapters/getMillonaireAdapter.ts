@@ -1,26 +1,21 @@
 import { IMillonaireApi, IStageApi, IQuestionApi } from './../interfaces/MillonaireApi';
 const getMillonaireAdapter = (data: IMillonaireApi) => {
+  console.log('🚀 ~ file: getMillonaireAdapter.ts ~ line 3 ~ getMillonaireAdapter ~ data', data);
   const stages = data?.stages?.map((stageItem: IStageApi) => ({
     stage: stageItem?.number || 0,
-    question: {
-      question: stageItem?.question?.question || '',
-      timeForQuestion: stageItem?.question?.time_limit || 30,
-      type: stageItem?.question?.type || '',
-      answers:
-        stageItem?.question?.answers?.map((answerItem) => ({
-          answer: answerItem?.answer || '',
-          isCorrect: answerItem?.is_correct || false,
-          isTrueOrFalse: answerItem?.is_true_or_false || true,
-          type: answerItem?.type || 'text',
-        })) || [],
-    },
+    question: stageItem.question || '',
+    lifeSaver: stageItem.life_save || false,
+    score: stageItem.score,
+    id: stageItem.id || '',
   }));
   const questions = data?.questions?.map((questionItem: IQuestionApi) => ({
     question: questionItem.question || '',
     timeForQuestion: questionItem.time_limit || 30,
     type: questionItem.type || '',
+    id: questionItem?.id,
     answers:
       questionItem?.answers?.map((answerItem) => ({
+        id: answerItem?.id,
         answer: answerItem?.answer || '',
         isCorrect: answerItem?.is_correct || false,
         isTrueOrFalse: answerItem?.is_true_or_false || true,

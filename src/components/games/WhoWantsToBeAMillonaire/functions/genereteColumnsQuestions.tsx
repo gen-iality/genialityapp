@@ -2,10 +2,11 @@ import FormatTextIcon from '@2fd/ant-design-icons/lib/FormatText';
 import ImageOutlineIcon from '@2fd/ant-design-icons/lib/ImageOutline';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Col, Row, Tag, Tooltip, Typography, Image } from 'antd';
-
+import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 const { Text } = Typography;
 
 const GenerateColumnsQuestion = () => {
+  const { onDeleteQuestion, onActionEditQuestion } = useMillonaireCMS();
   const columns = [
     {
       title: 'Pregunta',
@@ -14,17 +15,17 @@ const GenerateColumnsQuestion = () => {
       type: 'string',
       name: 'Pregunta',
       render: (text: string, value: any, index: any) => {
-        return value.carton_value.type === 'image' ? (
+        return value.type === 'image' ? (
           <Image
             preview={{ mask: 'Ver', maskClassName: 'borderRadius' }}
             style={{ borderRadius: '10px' }}
             width={50}
             height={50}
-            src={value.carton_value.value}
-            alt={value.id + ' carton_value'}
+            src={value.question}
+            alt={value.id || index + ' question'}
           />
         ) : (
-          <Text>{value.carton_value.value}</Text>
+          <Text>{value.question}</Text>
         );
       },
     },
@@ -34,7 +35,7 @@ const GenerateColumnsQuestion = () => {
       dataIndex: 'string',
       name: 'Tipo de pregunta',
       render: (text: string, value: any, index: any) => {
-        return value.carton_value.type === 'image' ? (
+        return value.type === 'image' ? (
           <Tag color='blue' icon={<ImageOutlineIcon />}>
             Imagen
           </Tag>
@@ -47,15 +48,21 @@ const GenerateColumnsQuestion = () => {
     },
     {
       title: 'Tiempo por pregunta',
-      key: 'timeForQuestions',
+      key: 'timeForQuestion',
       dataIndex: 'number',
       name: 'Tiempo por pregunta',
+      render: (text: string, value: any, index: any) => {
+        return <Typography.Text>{value.timeForQuestion} segundos</Typography.Text>;
+      },
     },
     {
       title: '# respuestas',
       key: 'answers',
       dataIndex: 'object',
       name: '# respuestas',
+      render: (text: string, value: any, index: any) => {
+        return <Tag color='green'>{value.answers.length}</Tag>;
+      },
     },
     {
       title: 'Opciones',
@@ -67,7 +74,12 @@ const GenerateColumnsQuestion = () => {
           <Row gutter={[8, 8]}>
             <Col>
               <Tooltip placement='topLeft' title='Editar'>
-                <Button icon={<EditOutlined />} type='primary' size='small' />
+                <Button
+                  onClick={() => onActionEditQuestion(value)}
+                  icon={<EditOutlined />}
+                  type='primary'
+                  size='small'
+                />
               </Tooltip>
             </Col>
             <Col>
@@ -78,6 +90,7 @@ const GenerateColumnsQuestion = () => {
                   icon={<DeleteOutlined />}
                   danger
                   size='small'
+                  onClick={() => onDeleteQuestion(value)}
                 />
               </Tooltip>
             </Col>

@@ -1,17 +1,33 @@
-import { useContext } from 'react';
-import MillonaireLandingContext from '../contexts/MillonaireLandingContext';
+import { useContext } from "react";
+import MillonaireLandingContext from "../contexts/MillonaireLandingContext";
 export const useMillonaireLanding = () => {
-  const { event, millonaire, loading, isVisible, startGame, onChangeVisibilityDrawer, onStartGame } = useContext(
-    MillonaireLandingContext
-  );
+  const {
+    event,
+    millonaire,
+    stages,
+    loading,
+    isVisible,
+    startGame,
+    currentStage,
+    onChangeVisibilityDrawer,
+    onFinishedGame,
+    onStartGame,
+    onFiftyOverFifty,
+    onSaveAnswer,
+  } = useContext(MillonaireLandingContext);
 
   return {
     event,
     loading,
     millonaire,
     isVisible,
+    stages,
     startGame,
+    currentStage,
     onChangeVisibilityDrawer,
     onStartGame,
+    onFinishedGame,
+    onFiftyOverFifty,
+    onSaveAnswer,
   };
 };

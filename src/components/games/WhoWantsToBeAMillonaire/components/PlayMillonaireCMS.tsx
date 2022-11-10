@@ -2,7 +2,6 @@ import UserRating from './UserRating';
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 import { Card, Col, Form, Row, Switch } from 'antd';
 export default function PlayMillonaireCMS() {
-  const { event } = useMillonaireCMS();
   return (
     <div>
       <Row>

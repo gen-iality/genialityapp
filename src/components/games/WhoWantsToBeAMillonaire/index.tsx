@@ -18,7 +18,7 @@ export default function Index() {
 }
 
 const MillonaireMain = () => {
-  const { onSubmit, millonaire, event, onDelete, isNewGame } = useMillonaireCMS();
+  const { onSubmit, onDelete, isNewGame } = useMillonaireCMS();
   return (
     <Form onFinish={onSubmit} {...FORMLAYOUT}>
       <Header
