@@ -45,3 +45,19 @@ export interface AddLikeDto extends Omit<Like, 'id' | 'created_at'> {
 	event_id: string;
 	post_id: string;
 }
+
+export interface RemoveLikeDto {
+	event_id: string;
+	post_id: string;
+	event_user_id: string;
+}
+
+export interface ListenLikesDto {
+	event_id: string;
+	post_id: string;
+}
+
+export interface GetPostByTitleDto {
+	event_id: string;
+	title: string;
+}

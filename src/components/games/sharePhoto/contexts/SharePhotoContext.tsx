@@ -3,16 +3,19 @@ import { UseUserEvent } from '@/context/eventUserContext';
 import { ReactNode, createContext, useState, useEffect } from 'react';
 import { CreatePostDto, CreateSharePhotoDto, Like, Post, SharePhoto, UpdateSharePhotoDto } from '../types';
 import * as service from '../services';
+import { Score } from '../../common/Ranking/types';
 
 interface SharePhotoContextType {
 	sharePhoto: SharePhoto | null;
 	loading: boolean;
 	posts: Post[];
+	filteredPosts: Post[];
 	createSharePhoto: (createSharePhotoDto: CreateSharePhotoDto) => Promise<void>;
 	updateSharePhoto: (id: SharePhoto['_id'], updateSharePhotoDto: UpdateSharePhotoDto) => Promise<void>;
 	deleteSharePhoto: (id: SharePhoto['_id']) => Promise<void>;
 	createPost: (createPostDto: Omit<CreatePostDto, 'event_user_id' | 'picture' | 'user_name'>) => Promise<void>;
 	addLike: (postId: Post['id']) => Promise<void>;
+	getPostByTitle: (stringSearch: string) => Promise<void>;
 	// listenSharePhoto: () => void;
 	// postsListener:
 }
@@ -27,10 +30,12 @@ export default function SharePhotoProvider(props: Props) {
 	const [sharePhoto, setSharePhoto] = useState<SharePhoto | null>(null);
 	const [posts, setPosts] = useState<Post[]>([] as Post[]);
 	const [filteredPosts, setFilteredPosts] = useState<Post[]>([] as Post[]);
-	const [postSelected, setPostSelected] = useState<Post | null>(null);
+	// const [postSelected, setPostSelected] = useState<Post | null>(null);
 	const [likes, setLikes] = useState<Like[]>([] as Like[]);
 	const [alreadyLiked, setAlreadyLiked] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [scores, setScores] = useState<Score[]>([] as Score[]);
+	const [myScore, setScore] = useState<Score | null>(null);
 	// hooks
 	const cUser = UseUserEvent();
 	// console.log(cUser);
@@ -99,7 +104,6 @@ export default function SharePhotoProvider(props: Props) {
 		}
 	};
 
-	// Fix from here
 	const createPost = async (createPostDto: Omit<CreatePostDto, 'event_user_id' | 'picture' | 'user_name'>) => {
 		try {
 			setLoading(true);
@@ -132,10 +136,23 @@ export default function SharePhotoProvider(props: Props) {
 		}
 	};
 
-	// const postsListener = () => {
-	// 	const unsubscribe = service.getPostsListener(eventId, setPosts)
-	// 	return unsubscribe
-	// }
+	const getPostByTitle = async (stringSearch: string) => {
+		try {
+			setLoading(true);
+			const posts = await service.getPostByTitle({ event_id: eventId, title: stringSearch });
+			console.log(posts);
+			setFilteredPosts(posts);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	// Fix from here
+	const postsListener = () => {
+		return service.getPostsListener(eventId, setPosts);
+	};
 
 	const addLike = async (postId: Post['id']) => {
 		try {
@@ -155,6 +172,21 @@ export default function SharePhotoProvider(props: Props) {
 		}
 	};
 
+	const deleteLike = async (postId: Post['id']) => {
+		try {
+			setLoading(true);
+			console.log('removing like');
+			await service.removeLike({
+				event_id: eventId,
+				post_id: postId,
+				event_user_id: cUser.value._id,
+			});
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	};
 	// const listenSharePhoto = () => {
 	// 	const unSubscribe = service.listenSharePhoto(cUser.value.event_id, setSharePhoto);
 	// 	return unSubscribe;
@@ -171,6 +203,8 @@ export default function SharePhotoProvider(props: Props) {
 				deleteSharePhoto,
 				createPost,
 				addLike,
+				getPostByTitle,
+				filteredPosts,
 				// listenSharePhoto,
 			}}>
 			{props.children}
