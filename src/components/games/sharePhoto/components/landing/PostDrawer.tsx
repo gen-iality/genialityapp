@@ -6,6 +6,7 @@ import { Post } from '../../types';
 import { isMobile } from 'react-device-detect';
 import { UseUserEvent } from '@/context/eventUserContext';
 import WindowCloseIcon from '@2fd/ant-design-icons/lib/WindowClose';
+import PostDeleteModal from './PostDeleteModal';
 
 const { useBreakpoint } = Grid;
 
@@ -25,7 +26,7 @@ export default function PostDrawer(props: Props) {
     const unsubscribe = likesListener(postSelected.id);
     return () => {
       unsubscribe();
-      console.log('unmount');
+      // console.log('unmount');
     };
   }, []);
 
@@ -49,6 +50,7 @@ export default function PostDrawer(props: Props) {
 
   return (
     <Drawer
+      headerStyle={{ border: 'none' }}
       closable={false}
       bodyStyle={{ padding: '0' }}
       width={
@@ -73,13 +75,17 @@ export default function PostDrawer(props: Props) {
         />
       }
       extra={
-        <Button
-          size='large'
-          shape='circle'
-          type='text'
-          icon={<WindowCloseIcon style={{ color: '#5B667A' }} />}
-          onClick={() => handleBack()}
-        />
+        <Space size='middle'>
+          {cUser.value._id === postSelected.event_user_id && <PostDeleteModal postId={postSelected.id} />}
+          {/* {<PostDeleteModal postId={postSelected.id} />} */}
+          <Button
+            size='large'
+            shape='circle'
+            type='text'
+            icon={<WindowCloseIcon style={{ color: '#5B667A', fontSize: '25px' }} />}
+            onClick={() => handleBack()}
+          />
+        </Space>
       }
       footerStyle={{ border: 'none' }}
       footer={
@@ -113,7 +119,7 @@ export default function PostDrawer(props: Props) {
               count={likes.length}></Badge>
           </Space>
           <Space align='center'>
-            <Avatar.Group size={'small'} maxCount={1} maxStyle={{ backgroundColor: '#2bd8c4' }}>
+            <Avatar.Group maxStyle={{ backgroundColor: '#2bd8c4' }} size={'small'} maxCount={1}>
               {likes.map((like) => (
                 <Avatar size={'small'} src={like.picture} />
               ))}
@@ -150,9 +156,9 @@ export default function PostDrawer(props: Props) {
                   style={{
                     minHeight: '420px',
                     objectFit:
-                      isMobile && handleDeviceOrientation() === 'VERTICAL'
+                      screens.xs && handleDeviceOrientation() === 'VERTICAL'
                         ? 'contain'
-                        : isMobile && handleDeviceOrientation() === 'HORIZONTAL'
+                        : !screens.lg && !screens.xl && handleDeviceOrientation() === 'HORIZONTAL'
                         ? 'cover'
                         : 'unset',
                     backgroundColor: '#00000033',

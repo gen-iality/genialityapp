@@ -128,12 +128,12 @@ export const addPost = async (createPostDto: CreatePostDto, eventId: string) => 
 	}
 };
 
-export const removePost = async (deletePostDto: any) => {
+export const removePost = async (deletePostDto: { event_id: string; postId: string }) => {
 	await firestore
 		.collection('sharePhotoByEvent')
 		.doc(deletePostDto.event_id)
 		.collection('posts')
-		.doc(deletePostDto.event_user_id)
+		.doc(deletePostDto.postId)
 		.delete();
 };
 
@@ -202,7 +202,8 @@ export const getPostsListener = (eventId: string, setPosts: React.Dispatch<React
 		.collection('posts')
 		.onSnapshot(postsDoc => {
 			if (postsDoc.empty) {
-				console.log('No posts yet');
+				// console.log('No posts yet');
+				setPosts([]);
 			} else {
 				Promise.all(
 					postsDoc.docs.map(async doc => {
@@ -350,12 +351,12 @@ export const listenRanking = (
 				postsDoc.docs.map(postDoc => {
 					postDoc.ref.collection('likes').onSnapshot(likesDoc => {
 						if (likesDoc.empty) {
-							console.log(`Find score with uid: ${postDoc.id} and replace its likes for 0`);
+							// console.log(`Find score with uid: ${postDoc.id} and replace its likes for 0`);
 
 							setScores(prevScore => findScoreAndUpdate(prevScore, postDoc.id, 0));
 						} else {
 							// console.log(likesDoc.docs.length)
-							console.log(`Find score with uid: ${postDoc.id} and replace its likes for ${likesDoc.docs.length}`);
+							// console.log(`Find score with uid: ${postDoc.id} and replace its likes for ${likesDoc.docs.length}`);
 							setScores(prevScore => findScoreAndUpdate(prevScore, postDoc.id, likesDoc.docs.length * points_per_like));
 						}
 					});
