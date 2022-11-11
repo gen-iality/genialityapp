@@ -14,6 +14,7 @@ import {
 	SharePhoto,
 	UpdateSharePhotoDto,
 } from '../types';
+import { findScoreAndUpdate } from '../utils/findScoreAndUpdate';
 import { orderPosts } from '../utils/orderPosts';
 import { postToScore } from '../utils/postToScore';
 
@@ -330,6 +331,7 @@ export const listenRanking = (
 			if (postsDoc.empty) {
 				setScores([]);
 			} else {
+				// It update when post is created
 				Promise.all(
 					postsDoc.docs.map(async doc => {
 						const likes = await doc.ref.collection('likes').get();
@@ -343,6 +345,20 @@ export const listenRanking = (
 				).then(posts => {
 					const score = orderPosts(posts, 'likes').map((post, index) => postToScore(post, index, points_per_like));
 					setScores(score);
+				});
+				// It update when a like is added or removed
+				postsDoc.docs.map(postDoc => {
+					postDoc.ref.collection('likes').onSnapshot(likesDoc => {
+						if (likesDoc.empty) {
+							console.log(`Find score with uid: ${postDoc.id} and replace its likes for 0`);
+
+							setScores(prevScore => findScoreAndUpdate(prevScore, postDoc.id, 0));
+						} else {
+							// console.log(likesDoc.docs.length)
+							console.log(`Find score with uid: ${postDoc.id} and replace its likes for ${likesDoc.docs.length}`);
+							setScores(prevScore => findScoreAndUpdate(prevScore, postDoc.id, likesDoc.docs.length * points_per_like));
+						}
+					});
 				});
 			}
 		});
