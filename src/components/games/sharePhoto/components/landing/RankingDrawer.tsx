@@ -1,5 +1,5 @@
 import Ranking from '@/components/games/common/Ranking';
-import { Button, Drawer, Space } from 'antd';
+import { Button, Drawer, Grid, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 import useSharePhoto from '../../hooks/useSharePhoto';
 import { isMobile } from 'react-device-detect';
@@ -33,11 +33,11 @@ const myScore = {
 // ];
 
 const type: 'time' | 'points' = 'points';
-
+const { useBreakpoint } = Grid;
 export default function RankingDrawer() {
   const [open, setOpen] = useState(false);
   const { scores, rankingListener } = useSharePhoto();
-
+  const screens = useBreakpoint();
   useEffect(() => {
     const unsubscribe = rankingListener();
     return () => unsubscribe();
@@ -50,6 +50,20 @@ export default function RankingDrawer() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleDeviceOrientation = () => {
+    const deviceOrientation = window.screen.orientation.type;
+    switch (deviceOrientation) {
+      case 'landscape-primary':
+      case 'landscape-secondary':
+        return 'HORIZONTAL';
+      case 'portrait-primary':
+      case 'portrait-secondary':
+        return 'VERTICAL';
+      default:
+        return 'VERTICAL';
+    }
+  };
   return (
     <Space>
       <Button type='primary' onClick={handleOpen}>
@@ -57,8 +71,14 @@ export default function RankingDrawer() {
       </Button>
       <Drawer
         title='Ranking'
-        bodyStyle={{ padding: isMobile ? '10px' : '24px', backgroundColor: '#F1F1F1' }}
-        width={isMobile ? '100vw' : '35vw'}
+        bodyStyle={{ padding: screens.xs ? '10px' : '24px', backgroundColor: '#F1F1F1' }}
+        width={
+          screens.xs && handleDeviceOrientation() === 'VERTICAL'
+            ? '100vw'
+            : !screens.lg && !screens.xl && handleDeviceOrientation() === 'HORIZONTAL'
+            ? '60vw'
+            : '35vw'
+        }
         visible={open}
         onClose={handleClose}>
         <Ranking scores={scores} myScore={myScore} withMyScore={true} type='points' />
