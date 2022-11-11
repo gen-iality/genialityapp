@@ -14,6 +14,9 @@ import {
 	SharePhoto,
 	UpdateSharePhotoDto,
 } from '../types';
+import { findScoreAndUpdate } from '../utils/findScoreAndUpdate';
+import { orderPosts } from '../utils/orderPosts';
+import { postToScore } from '../utils/postToScore';
 
 export const get = async (eventId: string): Promise<SharePhoto | null> => {
 	try {
@@ -185,7 +188,7 @@ export const getPostByTitle = async (getPostByTitleDto: GetPostByTitleDto) => {
 				};
 			})
 		)) as Post[];
-		return posts;
+		return orderPosts(posts);
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al crear publicación', action: 'show' });
 		return [];
@@ -209,9 +212,12 @@ export const getPostsListener = (eventId: string, setPosts: React.Dispatch<React
 							id: doc.id,
 							...doc.data(),
 							likes: likes.docs.length,
-						};
+						} as Post;
 					})
-				).then(posts => setPosts(posts as Post[]));
+				).then(posts => {
+					const orderedPosts = orderPosts(posts);
+					setPosts(orderedPosts);
+				});
 			}
 		});
 	return unsubscribe;
@@ -228,6 +234,7 @@ export const addLike = async (addLikeDto: AddLikeDto) => {
 			.collection('likes')
 			.doc(addLikeDto.event_user_id)
 			.set({
+				post_id: addLikeDto.post_id,
 				created_at: new Date().toISOString(),
 				user_name: addLikeDto.user_name,
 				picture: addLikeDto.picture,
@@ -263,11 +270,9 @@ export const listenLikes = (listenLikesDto: ListenLikesDto, setLikes: React.Disp
 		.collection('likes')
 		.onSnapshot(likesDocs => {
 			if (likesDocs.empty) {
-				console.log('No likes yet');
 				setLikes([]);
 			} else {
 				const likes = likesDocs.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Like[];
-				console.log(likes);
 				setLikes(likes);
 			}
 		});
@@ -305,7 +310,7 @@ export const getRanking = async (eventId: string, points_per_like: number) => {
 				index: index + 1,
 				score: `${post.likes * points_per_like}`,
 			}));
-		console.log(scores);
+		// console.log(scores);
 		return scores;
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al dar me gusta', action: 'show' });
@@ -313,43 +318,47 @@ export const getRanking = async (eventId: string, points_per_like: number) => {
 	}
 };
 
-export const listenRanking = (eventId: string, points_per_like: number, setScores: any) => {
+export const listenRanking = (
+	eventId: string,
+	points_per_like: number,
+	setScores: React.Dispatch<React.SetStateAction<Score[]>>
+) => {
 	return firestore
 		.collection('sharePhotoByEvent')
 		.doc(eventId)
 		.collection('posts')
 		.onSnapshot(postsDoc => {
 			if (postsDoc.empty) {
-				console.log('is empty', []);
+				setScores([]);
 			} else {
+				// It update when post is created
 				Promise.all(
 					postsDoc.docs.map(async doc => {
-						const likes = await doc.ref.collection('likes').onSnapshot(likesDoc => {
-							if (likesDoc.empty) {
-								console.log('is empty', []);
-							} else {
-								likesDoc.docs.map(doc => console.log(doc));
-							}
-						});
+						const likes = await doc.ref.collection('likes').get();
 
 						return {
 							id: doc.id,
 							...doc.data(),
-							// likes: likes.docs.length,
-							likes: 2,
+							likes: likes.docs.length,
 						} as Post;
 					})
 				).then(posts => {
-					const scores: Score[] = posts
-						.sort((b, a) => a.likes - b.likes)
-						.map((post, index) => ({
-							uid: post.id,
-							imageProfile: post.picture,
-							name: post.user_name,
-							index: index + 1,
-							score: `${post.likes * points_per_like}`,
-						}));
-					console.log('scores', scores);
+					const score = orderPosts(posts, 'likes').map((post, index) => postToScore(post, index, points_per_like));
+					setScores(score);
+				});
+				// It update when a like is added or removed
+				postsDoc.docs.map(postDoc => {
+					postDoc.ref.collection('likes').onSnapshot(likesDoc => {
+						if (likesDoc.empty) {
+							console.log(`Find score with uid: ${postDoc.id} and replace its likes for 0`);
+
+							setScores(prevScore => findScoreAndUpdate(prevScore, postDoc.id, 0));
+						} else {
+							// console.log(likesDoc.docs.length)
+							console.log(`Find score with uid: ${postDoc.id} and replace its likes for ${likesDoc.docs.length}`);
+							setScores(prevScore => findScoreAndUpdate(prevScore, postDoc.id, likesDoc.docs.length * points_per_like));
+						}
+					});
 				});
 			}
 		});
