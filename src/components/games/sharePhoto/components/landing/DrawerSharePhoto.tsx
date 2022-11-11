@@ -40,7 +40,7 @@ export default function DrawerSharePhoto(props: Props) {
 				type='primary'
 				onClick={handleOpen}
 				style={{ display: sharePhoto.published ? 'block' : 'none' }}>
-				¡Comparte tu foto 📷!
+				Comparte tu foto
 			</Button>
 			<Drawer
 				title={<RankingDrawer />}
