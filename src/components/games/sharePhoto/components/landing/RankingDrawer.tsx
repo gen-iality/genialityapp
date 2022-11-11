@@ -76,7 +76,7 @@ export default function RankingDrawer() {
 		} else {
 			setMyScore(null);
 		}
-	}, [scores.length]);
+	}, [scores]);
 
 	return (
 		<Space>
