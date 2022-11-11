@@ -113,7 +113,7 @@ export default function PostDrawer(props: Props) {
               count={likes.length}></Badge>
           </Space>
           <Space align='center'>
-            <Avatar.Group size={'small'} maxCount={1}>
+            <Avatar.Group size={'small'} maxCount={1} maxStyle={{ backgroundColor: '#2bd8c4' }}>
               {likes.map((like) => (
                 <Avatar size={'small'} src={like.picture} />
               ))}
@@ -123,7 +123,7 @@ export default function PostDrawer(props: Props) {
                 `a ${likes.map((like) => like.user_name)[0]}${
                   likes.length - 1 > 0
                     ? ` y ${likes.length - 1} ${likes.length - 1 > 1 ? 'personas' : 'persona'} mas les gusta esto`
-                    : ''
+                    : ' le gusta esto'
                 }`}
             </Typography.Paragraph>
           </Space>
