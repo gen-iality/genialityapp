@@ -1,21 +1,27 @@
+import { UseUserEvent } from '@/context/eventUserContext';
 import { Button, Grid, Result, Row, Typography } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useSharePhoto from '../../hooks/useSharePhoto';
 import useSharePhotoInLanding from '../../hooks/useSharePhotoInLanding';
 
 const { useBreakpoint } = Grid;
 
 export default function Introduction() {
-	const { sharePhoto, listenSharePhoto } = useSharePhoto();
+	const { sharePhoto, posts } = useSharePhoto();
 	const { goTo } = useSharePhotoInLanding();
 	const screens = useBreakpoint();
+	const cUser = UseUserEvent();
+	const userId = cUser.value._id;
+	const [alreadyPosted, setAlreadyPosted] = useState(false);
 
 	useEffect(() => {
-		if (sharePhoto !== null) {
-			// const unSubscribe = listenSharePhoto();
-			// return () => unSubscribe();
+		const myPost = posts.find(post => post.id === userId);
+		if (myPost) {
+			setAlreadyPosted(true);
+		} else {
+			setAlreadyPosted(false);
 		}
-	}, [sharePhoto]);
+	}, [posts.length]);
 
 	if (!sharePhoto) {
 		return <p>Ups! esta dinamica no existe aun!</p>;
@@ -39,16 +45,22 @@ export default function Introduction() {
 						<Button onClick={() => goTo('galery')} size='large' key='galery'>
 							Ver Galería
 						</Button>,
-						<Button onClick={() => goTo('chooseAction')} size='large' key='photo'>
+						<Button
+							onClick={() => goTo('chooseAction')}
+							size='large'
+							key='photo'
+							style={alreadyPosted ? { display: 'none' } : undefined}>
 							Subir Foto
 						</Button>,
 					]}>
-					<Typography.Text strong>Instrucciones</Typography.Text>
-					<Typography.Paragraph>
-						Risus sed et gravida eleifend mauris vulputate egestas tempus. Magna est eu diam leo neque massa quis. Urna
-						arcu massa vel fermentum. Est tortor, amet elit orci massa blandit tristique et faucibus. Amet nisi tortor,
-						feugiat nec arcu sapien volutpat arcu quisque. Et vestibulum tristique sed ullamcorper viverra malesuada
-						purus, arcu tortor. Maecenas interdum ornare faucibus donec id.
+					<Typography.Title level={5}>Instrucciones</Typography.Title>
+					<Typography.Paragraph style={{ textAlign: 'justify' }}>
+						Debes de tomarte una fotografía o cargarla desde tu galería conforme a la temática propuesta para la
+						dinámica, podrás cargar una sola foto así que queremos poner a prueba tu creatividad e ingenio, en caso de
+						que quieras remplazarla podrás eliminarla y cargar una nueva, sin embargo, ¡Ten cuidado! Porque perderás
+						todos los me gustas con los que ya cuentes. Podrás dar un solo me gusta a todas las fotos que desees, no
+						olvides darte un recorrido por toda la galería para apoyar las fotos que más te gusten. Recuerda que entre
+						más me gustas tengas más posibilidades tendrás ganar.
 					</Typography.Paragraph>
 				</Result>
 			</Row>
