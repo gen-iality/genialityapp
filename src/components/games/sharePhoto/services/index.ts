@@ -118,9 +118,8 @@ export const addPost = async (createPostDto: CreatePostDto, eventId: string) => 
 			.collection('sharePhotoByEvent')
 			.doc(eventId)
 			.collection('posts')
-			// .doc(createPostDto.event_user_id)
-			.doc()
-			// .doc(createPostDto.event_user_id)
+			.doc(createPostDto.event_user_id)
+			// .doc()
 			.set(newPost);
 	} catch (error) {
 		DispatchMessageService({ type: 'error', msj: 'Error al crear publicación', action: 'show' });
@@ -129,6 +128,29 @@ export const addPost = async (createPostDto: CreatePostDto, eventId: string) => 
 };
 
 export const removePost = async (deletePostDto: { event_id: string; postId: string }) => {
+	const likesDoc = await firestore
+		.collection('sharePhotoByEvent')
+		.doc(deletePostDto.event_id)
+		.collection('posts')
+		.doc(deletePostDto.postId)
+		.collection('likes')
+		.get();
+
+	const likes = likesDoc.docs.map(doc => doc.id);
+
+	await Promise.all(
+		likes.map(async likeId => {
+			return await firestore
+				.collection('sharePhotoByEvent')
+				.doc(deletePostDto.event_id)
+				.collection('posts')
+				.doc(deletePostDto.postId)
+				.collection('likes')
+				.doc(likeId)
+				.delete();
+		})
+	);
+
 	await firestore
 		.collection('sharePhotoByEvent')
 		.doc(deletePostDto.event_id)
