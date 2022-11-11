@@ -25,6 +25,7 @@ interface SharePhotoContextType {
 	handleLike: (postId: Post['id']) => Promise<void>;
 	getPostByTitle: (stringSearch: string) => Promise<void>;
 	listenSharePhoto: () => () => void;
+	rankingListener: () => () => void;
 	// postsListener:
 }
 
@@ -219,7 +220,7 @@ export default function SharePhotoProvider(props: Props) {
 		return service.listenLikes({ event_id: eventId, post_id: postId }, setLikes);
 	};
 
-	// -------------- Likes services ----------------- //
+	// -------------- Ranking services ----------------- //
 	const getRanking = async () => {
 		try {
 			setLoading(true);
@@ -232,6 +233,10 @@ export default function SharePhotoProvider(props: Props) {
 		} finally {
 			setLoading(false);
 		}
+	};
+
+	const rankingListener = () => {
+		return service.listenRanking(eventId, sharePhoto?.points_per_like || 1, setScores);
 	};
 
 	return (
@@ -256,6 +261,7 @@ export default function SharePhotoProvider(props: Props) {
 				listenSharePhoto,
 				scores,
 				myScore,
+				rankingListener,
 			}}>
 			{props.children}
 		</SharePhotoContext.Provider>

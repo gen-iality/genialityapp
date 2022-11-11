@@ -303,7 +303,7 @@ export const getRanking = async (eventId: string, points_per_like: number) => {
 				imageProfile: post.picture,
 				name: post.user_name,
 				index: index + 1,
-				score: `${post.likes} likes`,
+				score: `${post.likes * points_per_like}`,
 			}));
 		console.log(scores);
 		return scores;
@@ -311,4 +311,46 @@ export const getRanking = async (eventId: string, points_per_like: number) => {
 		DispatchMessageService({ type: 'error', msj: 'Error al dar me gusta', action: 'show' });
 		return [];
 	}
+};
+
+export const listenRanking = (eventId: string, points_per_like: number, setScores: any) => {
+	return firestore
+		.collection('sharePhotoByEvent')
+		.doc(eventId)
+		.collection('posts')
+		.onSnapshot(postsDoc => {
+			if (postsDoc.empty) {
+				console.log('is empty', []);
+			} else {
+				Promise.all(
+					postsDoc.docs.map(async doc => {
+						const likes = await doc.ref.collection('likes').onSnapshot(likesDoc => {
+							if (likesDoc.empty) {
+								console.log('is empty', []);
+							} else {
+								likesDoc.docs.map(doc => console.log(doc));
+							}
+						});
+
+						return {
+							id: doc.id,
+							...doc.data(),
+							// likes: likes.docs.length,
+							likes: 2,
+						} as Post;
+					})
+				).then(posts => {
+					const scores: Score[] = posts
+						.sort((b, a) => a.likes - b.likes)
+						.map((post, index) => ({
+							uid: post.id,
+							imageProfile: post.picture,
+							name: post.user_name,
+							index: index + 1,
+							score: `${post.likes * points_per_like}`,
+						}));
+					console.log('scores', scores);
+				});
+			}
+		});
 };

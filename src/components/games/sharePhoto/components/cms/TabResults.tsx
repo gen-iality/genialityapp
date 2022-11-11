@@ -1,6 +1,7 @@
 import Ranking from '@/components/games/common/Ranking';
 import { UseEventContext } from '@/context/eventContext';
 import { Card, Col, Row } from 'antd';
+import { useEffect } from 'react';
 import useSharePhoto from '../../hooks/useSharePhoto';
 import { SharePhoto } from '../../types';
 
@@ -40,7 +41,13 @@ interface Props {
 
 export default function TabResults(props: Props) {
 	// const cEvent = UseEventContext();
-	const { scores, myScore } = useSharePhoto();
+	const { scores, myScore, rankingListener } = useSharePhoto();
+
+	useEffect(() => {
+		const unsubscribe = rankingListener();
+		return () => unsubscribe();
+	}, []);
+
 	return (
 		<Row gutter={[12, 12]}>
 			<Col xs={24} style={{ display: 'flex', justifyContent: 'center' }}>
