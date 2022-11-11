@@ -16,6 +16,7 @@ interface SharePhotoContextType {
 	myScore: Score | null;
 	setPostSelected: React.Dispatch<React.SetStateAction<Post | null>>;
 	postsListener: () => () => void;
+	deletePost: (postId: Post['id']) => void;
 	likesListener: (postId: Post['id']) => () => void;
 	createSharePhoto: (createSharePhotoDto: CreateSharePhotoDto) => Promise<void>;
 	updateSharePhoto: (id: SharePhoto['_id'], updateSharePhotoDto: UpdateSharePhotoDto) => Promise<void>;
@@ -62,7 +63,7 @@ export default function SharePhotoProvider(props: Props) {
 
 	useEffect(() => {
 		if (!scores.length && !!sharePhoto) {
-			console.log('fetch results');
+			// console.log('fetch results');
 			getRanking();
 		}
 	}, [sharePhoto]);
@@ -160,8 +161,20 @@ export default function SharePhotoProvider(props: Props) {
 		try {
 			setLoading(true);
 			const posts = await service.getPostByTitle({ event_id: eventId, title: stringSearch });
-			console.log(posts);
+			// console.log(posts);
 			setFilteredPosts(posts);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const deletePost = async (postId: string) => {
+		try {
+			setLoading(true);
+			await service.removePost({ event_id: eventId, postId });
+			setPostSelected(null);
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -177,7 +190,7 @@ export default function SharePhotoProvider(props: Props) {
 	const addLike = async (postId: Post['id']) => {
 		try {
 			setLoading(true);
-			console.log('giving like');
+			// console.log('giving like');
 			await service.addLike({
 				event_id: eventId,
 				post_id: postId,
@@ -195,7 +208,7 @@ export default function SharePhotoProvider(props: Props) {
 	const deleteLike = async (postId: Post['id']) => {
 		try {
 			setLoading(true);
-			console.log('removing like');
+			// console.log('removing like');
 			await service.removeLike({
 				event_id: eventId,
 				post_id: postId,
@@ -225,7 +238,7 @@ export default function SharePhotoProvider(props: Props) {
 		try {
 			setLoading(true);
 			if (sharePhoto === null) return;
-			console.log('se ejecuta la query');
+			// console.log('se ejecuta la query');
 			const scores = await service.getRanking(eventId, sharePhoto?.points_per_like);
 			setScores(scores);
 		} catch (error) {
@@ -261,6 +274,7 @@ export default function SharePhotoProvider(props: Props) {
 				listenSharePhoto,
 				scores,
 				myScore,
+				deletePost,
 				rankingListener,
 			}}>
 			{props.children}
