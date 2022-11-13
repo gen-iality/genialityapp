@@ -21,7 +21,7 @@ export interface IStageApi {
   life_save: boolean;
   score: number;
   id: string;
-  question: IQuestionApi;
+  question: string;
 }
 export interface IMillonaireApi {
   _id: string;

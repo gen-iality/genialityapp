@@ -96,3 +96,13 @@ export const DeleteStageMillonairApi = async (millonaireId: string, stageId: str
     return null;
   }
 };
+
+export const UpdateStageMillonaireApi = async (millonaireId: string, stageId: string, data: any) => {
+  try {
+    const response = await WhoWantsToBeAMillonaireApi.editOneStage(millonaireId, stageId, data);
+    return response;
+  } catch (error) {
+    DispatchMessageService({ type: 'error', msj: 'Error al actualizar la etapa', action: 'show' });
+    return null;
+  }
+};

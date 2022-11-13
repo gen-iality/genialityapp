@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import MillonaireLandingContext from "../contexts/MillonaireLandingContext";
+import { useContext } from 'react';
+import MillonaireLandingContext from '../contexts/MillonaireLandingContext';
 export const useMillonaireLanding = () => {
   const {
     event,
@@ -9,11 +9,17 @@ export const useMillonaireLanding = () => {
     isVisible,
     startGame,
     currentStage,
+    score,
+    time,
+    statusGame,
+    question,
+    stage,
     onChangeVisibilityDrawer,
     onFinishedGame,
     onStartGame,
     onFiftyOverFifty,
     onSaveAnswer,
+    onAnnouncement,
   } = useContext(MillonaireLandingContext);
 
   return {
@@ -24,10 +30,16 @@ export const useMillonaireLanding = () => {
     stages,
     startGame,
     currentStage,
+    score,
+    time,
+    statusGame,
+    question,
+    stage,
     onChangeVisibilityDrawer,
     onStartGame,
     onFinishedGame,
     onFiftyOverFifty,
     onSaveAnswer,
+    onAnnouncement,
   };
 };

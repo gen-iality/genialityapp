@@ -54,7 +54,7 @@ export const INITIAL_STATE_QUESTION = {
   answers: [],
 };
 export const INITIAL_STATE_STAGE = {
-  stage: 0,
+  stage: NaN,
   question: '',
   lifeSaver: false,
   score: 100,
@@ -77,6 +77,11 @@ export const INITIAL_STATE_MILLONAIRE = {
 
 export const INITIAL_STATE_EDIT_MODAL = {
   isEdit: false,
-  id: null,
+  id: '',
 };
 export const STAGES_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+export const INITIAL_STATE_MODAL_VISIBLE = {
+  isVisibleAdd: false,
+  isVisibleList: false,
+};

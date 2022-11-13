@@ -6,7 +6,7 @@ import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 const { Text } = Typography;
 
 const GenerateColumnsStages = () => {
-  const { onDeleteStage } = useMillonaireCMS();
+  const { onDeleteStage, millonaire, onActionEditStage } = useMillonaireCMS();
   const columns = [
     {
       title: 'Etapa',
@@ -20,6 +20,10 @@ const GenerateColumnsStages = () => {
       key: 'question',
       dataIndex: 'question',
       name: 'Pregunta ID',
+      render: (text: string, value: any, index: any) => {
+        const question = millonaire.questions.find((question) => question.id === value.question);
+        return question ? <Text>{question.question}</Text> : <Text type='danger'>No se encontró la pregunta</Text>;
+      },
     },
     {
       title: 'Salvavidas',
@@ -27,7 +31,7 @@ const GenerateColumnsStages = () => {
       dataIndex: 'lifeSaver',
       name: 'Salvavidas',
       render: (text: string, value: any, index: any) => {
-        return value.lifeSaver === true ? <Tag color='green'>Salvavidad</Tag> : <Tag color='red'>No Salvavidad</Tag>;
+        return value.lifeSaver === true ? <Tag color='green'>Salvavidas</Tag> : <Tag color='red'>No Salvavidas</Tag>;
       },
     },
     {
@@ -44,11 +48,16 @@ const GenerateColumnsStages = () => {
       render: (text: string, value: any, index: any) => {
         return (
           <Row gutter={[8, 8]}>
-            {/* <Col>
+            <Col>
               <Tooltip placement='topLeft' title='Editar'>
-                <Button icon={<EditOutlined />} type='primary' size='small' />
+                <Button
+                  onClick={() => onActionEditStage(value, index)}
+                  icon={<EditOutlined />}
+                  type='primary'
+                  size='small'
+                />
               </Tooltip>
-            </Col> */}
+            </Col>
             <Col>
               <Tooltip placement='topLeft' title='Eliminar'>
                 <Button

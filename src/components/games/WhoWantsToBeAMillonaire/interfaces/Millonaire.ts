@@ -68,6 +68,10 @@ export type TMillonaireContextProps = {
   isEditAnswer: boolean;
   isEditQuestion: boolean;
   isEditStage: boolean;
+  isVisibleModalAnswer: boolean;
+  isVisibleModalAnswerList: boolean;
+  previusStage: IStages;
+  laterStage: IStages;
   onChangeMillonaire: (name: string, value: any) => void;
   onChangeAppearance: (name: string, value: any) => void;
   onCreateMillonaire: () => void;
@@ -85,29 +89,52 @@ export type TMillonaireContextProps = {
   onSaveAnswerInQuestion: () => void;
   onDeleteQuestion: (question: IQuestions) => void;
   onDeleteStage: (stage: IStages) => void;
-  onActionEditQuestion: (question: IQuestions) => void;
-  onActionEditAnwser: (answer: IAnswers) => void;
+  onActionEditQuestion: (question: IQuestions, index: string | number) => void;
+  onActionEditAnwser: (answer: IAnswers, index: string | number) => void;
   onSubmitQuestion: () => void;
   onSubmitAnswer: () => void;
   onSubmitStage: () => void;
+  onDeleteAnswer: (answer: IAnswers, index: number) => void;
+  onChangeVisibleModalAnswer: () => void;
+  onChangeVisibleModalAnswerList: () => void;
+  onActiveModalStage: () => void;
+  onActionEditStage: (stage: IStages, index: string | number) => void;
 };
 
 export interface TMillonaireContextPropLanding {
   event: any;
   millonaire: IMillonaire;
-  stages: IStages;
+  stages: IStages[];
   loading: boolean;
   isVisible: boolean;
   startGame: boolean;
-  currentStage: IStages | string;
+  currentStage: IStages;
+  time: number;
+  score: number;
+  statusGame: string;
+  question: IQuestions;
+  stage: number;
   onChangeVisibilityDrawer: () => void;
   onStartGame: () => void;
   onFinishedGame: () => void;
   onFiftyOverFifty: () => void;
   onSaveAnswer: (question: IQuestions, answer: IAnswers) => void;
+  onAnnouncement: () => void;
 }
 
 export interface IEditModal {
   isEdit: boolean;
-  id: null;
+  id: string | number;
+}
+
+export interface IModalVisible {
+  isVisibleAdd: boolean;
+  isVisibleList: boolean;
+}
+
+export interface IRenderViewLanding {
+  NOT_STARTED: JSX.Element;
+  STARTED: JSX.Element;
+  GAME_OVER: JSX.Element;
+  ANNOUNCEMENT: JSX.Element;
 }

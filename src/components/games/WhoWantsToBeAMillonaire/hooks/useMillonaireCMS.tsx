@@ -14,6 +14,10 @@ export const useMillonaireCMS = () => {
     isEditStage,
     isEditAnswer,
     isEditQuestion,
+    isVisibleModalAnswer,
+    isVisibleModalAnswerList,
+    previusStage,
+    laterStage,
     onChangeAppearance,
     onChangeMillonaire,
     onSubmit,
@@ -35,6 +39,11 @@ export const useMillonaireCMS = () => {
     onSubmitAnswer,
     onSubmitStage,
     onSubmitQuestion,
+    onDeleteAnswer,
+    onChangeVisibleModalAnswer,
+    onChangeVisibleModalAnswerList,
+    onActiveModalStage,
+    onActionEditStage,
   } = useContext(MillonaireCMSContext);
 
   return {
@@ -50,6 +59,10 @@ export const useMillonaireCMS = () => {
     isEditStage,
     isEditAnswer,
     isEditQuestion,
+    isVisibleModalAnswerList,
+    isVisibleModalAnswer,
+    previusStage,
+    laterStage,
     onChangeMillonaire,
     onChangeAppearance,
     onSubmit,
@@ -71,5 +84,10 @@ export const useMillonaireCMS = () => {
     onSubmitAnswer,
     onSubmitStage,
     onSubmitQuestion,
+    onDeleteAnswer,
+    onChangeVisibleModalAnswer,
+    onChangeVisibleModalAnswerList,
+    onActiveModalStage,
+    onActionEditStage,
   };
 };

@@ -2,7 +2,7 @@ import MillonaireLandingContext from './MillonaireLandingContext';
 import { CurrentEventContext } from '@/context/eventContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { IMillonaire, IQuestions, IEditModal, IStages, IAnswers } from '../interfaces/Millonaire';
-import { INITIAL_STATE_MILLONAIRE } from '../constants/formData';
+import { INITIAL_STATE_MILLONAIRE, INITIAL_STATE_STAGE } from '../constants/formData';
 import { DispatchMessageService } from '@/context/MessageService';
 import { GetMillonaireAPi } from '../services/api';
 import getMillonaireAdapter from '../adapters/getMillonaireAdapter';
@@ -11,157 +11,16 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   const cEvent = useContext(CurrentEventContext);
   const [loading, setLoading] = useState(false);
   const [millonaire, setMillonaire] = useState<IMillonaire>(INITIAL_STATE_MILLONAIRE);
-  const stagesForExample: IStages[] = [
-    {
-      stage: 1,
-      question: {
-        question: 'Cuanto es dos mas dos?',
-        timeForQuestion: 30,
-        type: 'text',
-        answers: [
-          {
-            answer: '1',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: '2',
-            isCorrect: true,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: '4',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: '6',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-        ],
-      },
-      lifeSaver: true,
-      score: 100,
-    },
-    {
-      stage: 2,
-      question: {
-        question: 'Agua es ?',
-        timeForQuestion: 10,
-        type: 'text',
-        answers: [
-          {
-            answer: 'nada',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: 'h2o',
-            isCorrect: true,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: 'false',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: '6',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-        ],
-      },
-      lifeSaver: false,
-      score: 200,
-    },
-    {
-      stage: 3,
-      question: {
-        question: 'Pais que empieza con CO',
-        timeForQuestion: 40,
-        type: 'text',
-        answers: [
-          {
-            answer: 'Paraguay',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: 'COSTA RICA',
-            isCorrect: true,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: 'CAMERUN',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: '6',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-        ],
-      },
-      lifeSaver: true,
-      score: 300,
-    },
-    {
-      stage: 4,
-      question: {
-        question: 'Animal mas peligros de la tierrra ?',
-        timeForQuestion: 60,
-        type: 'text',
-        answers: [
-          {
-            answer: 'perro',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: 'oso',
-            isCorrect: true,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: 'leon',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-          {
-            answer: 'gato',
-            isCorrect: false,
-            isTrueOrFalse: false,
-            type: 'text',
-          },
-        ],
-      },
-      lifeSaver: true,
-      score: 400,
-    },
-  ];
   const eventId = cEvent?.value?._id || '';
   const [startGame, setStartGame] = useState(false);
-  const [currentStage, setCurrentStage] = useState<IStages | string>('INICIAR PREGUNTA');
-  const [stage, setStage] = useState<number | string>(0);
-  const [score, setScore] = useState<Number>(0);
+  const [statusGame, setStatusGame] = useState('NOT_STARTED');
+  const [currentStage, setCurrentStage] = useState<IStages>(INITIAL_STATE_STAGE);
+  const [stage, setStage] = useState<number>(1);
+  const [stages, setStages] = useState<IStages[]>([]);
+  const [questions, setQuestions] = useState<IQuestions[]>([]);
+  const [question, setQuestion] = useState<IQuestions>({} as IQuestions);
+  const [score, setScore] = useState<number>(0);
+  const [time, setTime] = useState<number>(0);
   //-------------------STATE-MODALS---------------------------------------//
   const [isVisible, setIsVisible] = useState(false);
   //-------------USEEFECTS---------------------------------------//
@@ -174,6 +33,28 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     };
   }, [eventId]);
 
+  // CountDown with currentStage
+  useEffect(() => {
+    if (statusGame === 'STARTED') {
+      setTime(questions[0].timeForQuestion);
+      const interval = setInterval(() => {
+        setTime((time) => time - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [currentStage]);
+
+  // game over when time is 0
+  useEffect(() => {
+    if (time === 0 && statusGame === 'STARTED') {
+      setStartGame(false);
+      setStatusGame('GAME_OVER');
+      setCurrentStage(INITIAL_STATE_STAGE);
+      setStage(0);
+      setScore(0);
+    }
+  }, [time]);
+
   //--------------FUNCIONES-------------------------------------//
 
   const onGetMillonaire = async () => {
@@ -182,6 +63,8 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     if (response) {
       const millonaireAdapter = getMillonaireAdapter(response);
       setMillonaire(millonaireAdapter);
+      setQuestions(millonaireAdapter.questions);
+      setStages(millonaireAdapter.stages);
       setLoading(false);
       return DispatchMessageService({
         type: 'success',
@@ -193,17 +76,30 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     setLoading(false);
   };
 
+  // const timeOutStartGame = setTimeout(() => {
+  //   onStartGame();
+  // }, 10000);
+
+  const onAnnouncement = () => {
+    setStatusGame('ANNOUNCEMENT');
+    // timeOutStartGame();
+  };
+
   const onStartGame = () => {
     setLoading(true);
     setStartGame(true);
-    setCurrentStage(stagesForExample[stage]);
+    setStatusGame('STARTED');
+    setStage(stages[0].stage);
+    setCurrentStage(stages[0]);
+    clearTimeout(onAnnouncement);
+    setQuestion(questions.find((question) => question.id === stages[0].question) as IQuestions);
     setLoading(false);
   };
 
   const onFinishedGame = () => {
     setLoading(true);
     setStartGame(false);
-    setCurrentStage('JUEGO FINALIZADO');
+    setCurrentStage(INITIAL_STATE_STAGE);
     setLoading(false);
     setStage(0);
   };
@@ -211,9 +107,22 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   //------------------- FUNCIONES PARA WILDCARD --------------------------//
 
   const onFiftyOverFifty = () => {
-    setLoading(true);
-    setStartGame(false);
-    setLoading(false);
+    // funcion para eliminar dos respuestas incorrectas
+    // if (typeof currentStage === 'string') return;
+    // const answers = currentStage.question.answers;
+    // const answersCorrect = answers.filter((answer) => answer.isCorrect);
+    // const answersIncorrect = answers.filter((answer) => !answer.isCorrect);
+    // const answersIncorrectRandom = answersIncorrect.sort(() => Math.random() - 0.5);
+    // const answersIncorrectRandomCut = answersIncorrectRandom.slice(0, 2);
+    // const answersRandom = answersCorrect.concat(answersIncorrectRandomCut).sort(() => Math.random() - 0.5);
+    // const newCurrentStage = {
+    //   ...currentStage,
+    //   question: {
+    //     ...currentStage.question,
+    //     answers: answersRandom,
+    //   },
+    // };
+    // setCurrentStage(newCurrentStage);
   };
 
   //   const onSaveAnswers = () => {
@@ -232,25 +141,15 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
 
   //--------------------------------FUNCIONES DE JUGABILIDAD -----------------------------------------//
   const onNextQuestion = () => {
-    if (typeof stage === 'number') {
+    if (stage < stages.length - 1) {
       const newStage = stage + 1;
-      if (stage < stagesForExample.length - 1) {
-        setCurrentStage(stagesForExample[newStage]);
-        setStage(newStage);
-        return;
-      }
-      setCurrentStage('JUEGO FINALIZADO');
-      setStage(newStage);
-    }
-    if (stage !== 'Finalizado') {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Algo ha ocurrido al avanzar',
-        action: 'show',
-      });
-    }
 
-    return;
+      setCurrentStage(stages[newStage]);
+      setStage(newStage);
+      setQuestion(questions.find((question) => question.id === stages[newStage].question) as IQuestions);
+      return;
+    }
+    setStatusGame('GAME_OVER');
   };
 
   const onSaveAnswer = (question: IQuestions, answer: IAnswers) => {
@@ -269,8 +168,8 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
         action: 'show',
       });
       // agregar funcionalidad de firebase
-      setCurrentStage('JUEGO FINALIZADO, NO CONTESTO CORRECTAMENTE');
-      setStage('Finalizado');
+      setCurrentStage(INITIAL_STATE_STAGE);
+      setStatusGame('GAME_OVER');
       return;
     }
     // agregar funcionalidad a firebase
@@ -282,16 +181,22 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       value={{
         event: cEvent,
         millonaire,
-        stages: stagesForExample,
+        stages,
         loading,
         isVisible,
         startGame,
         currentStage,
+        score,
+        time,
+        statusGame,
+        question,
+        stage,
         onChangeVisibilityDrawer,
         onStartGame,
         onFinishedGame,
         onFiftyOverFifty,
         onSaveAnswer,
+        onAnnouncement,
       }}>
       {children}
     </MillonaireLandingContext.Provider>

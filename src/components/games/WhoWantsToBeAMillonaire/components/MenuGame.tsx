@@ -2,7 +2,7 @@ import { Button, Space, Modal, Spin } from 'antd';
 import Rules from './Rules';
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 export default function MenuGame() {
-  const { millonaire, loading, onStartGame } = useMillonaireLanding();
+  const { millonaire, loading, onAnnouncement } = useMillonaireLanding();
 
   if (loading) return <Spin />;
 
@@ -34,7 +34,7 @@ export default function MenuGame() {
         alt='logo.png'
       />
       <Space direction='vertical'>
-        <Button onClick={() => onStartGame()}>Iniciar</Button>
+        <Button onClick={() => onAnnouncement()}>Iniciar</Button>
         <Rules rules={millonaire.rules} />
         <Button>Ranking</Button>
       </Space>

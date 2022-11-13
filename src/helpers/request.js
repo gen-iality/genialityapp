@@ -508,6 +508,10 @@ export const WhoWantsToBeAMillonaireApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.delete(`api/millionaires/${millonaireId}/stages/${stageId}?token=${token}`, true);
   },
+  editOneStage: async (millonaireId, stageId, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/millionaires/${millonaireId}/stages/${stageId}?token=${token}`, data, true);
+  },
 };
 
 export const SharePhotoApi = {

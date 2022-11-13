@@ -7,6 +7,8 @@ import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imag
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 import { VALUES_TIME_PER_ANSWERS } from '../constants/formData';
 import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import Answers from './Answers';
+import CreateAnswers from './CreateAnswers';
 
 export default function QuestionBank() {
   const columns = generateColumnsQuestion();
@@ -25,6 +27,7 @@ export default function QuestionBank() {
     onSubmitAnswer,
     loading,
     onActionEditAnwser,
+    onDeleteAnswer,
   } = useMillonaireCMS();
   return (
     <>
@@ -54,7 +57,7 @@ export default function QuestionBank() {
               question.question === '' ||
               question.timeForQuestion === 0 ||
               question.type === '' ||
-              question.answers.length < 3 ||
+              question.answers.length < 4 ||
               loading
             }
             loading={false}
@@ -97,68 +100,10 @@ export default function QuestionBank() {
             </Select>
           </Form.Item>
           <Divider />
-          <Typography.Text>Agregar respuestas</Typography.Text>
-          <Form.Item label='Respuesta'>
-            <Input.TextArea value={answer.answer} onChange={(e) => onChangeAnswer('answer', e.target.value)} />
-          </Form.Item>
-          <Form.Item label='Es la respuesta correcta'>
-            <Checkbox
-              disabled={question.answers.find((answer) => answer.isCorrect === true)}
-              checked={answer.isCorrect}
-              onChange={() => onChangeAnswer('isCorrect', !answer.isCorrect)}
-            />
-          </Form.Item>
-          <Form.Item label='Tipo'>
-            <Select value={answer.type} onChange={(e) => onChangeAnswer('type', e)}>
-              <Select.Option value='text'>Texto</Select.Option>
-              <Select.Option disabled value='image'>
-                Imagen
-              </Select.Option>
-            </Select>
-          </Form.Item>
-          <Button
-            disabled={
-              answer.answer === '' ||
-              answer.type === '' ||
-              question.answers.length === 4 ||
-              (question.answers.length === 3 &&
-                !question.answers.find((answer) => answer.isCorrect === true) &&
-                answer.isCorrect === false) ||
-              loading
-            }
-            onClick={() => onSubmitAnswer()}>
-            {isEditAnswer ? 'Editar respuesta' : 'Agregar respuesta'}
-          </Button>
-
-          {question.answers && question.answers.length > 0 && (
-            <List
-              dataSource={question.answers}
-              renderItem={(item, index) => (
-                <List.Item
-                  actions={[
-                    <Button
-                      key={`removeAction${index}`}
-                      id={`removeAction${index}`}
-                      icon={<DeleteOutlined />}
-                      danger
-                      size='small'
-                    />,
-                    <Button
-                      onClick={() => onActionEditAnwser(item)}
-                      icon={<EditOutlined />}
-                      type='primary'
-                      size='small'
-                    />,
-                  ]}>
-                  <List.Item.Meta
-                    avatar={item.isCorrect ? <CheckOutlined /> : <CloseOutlined />}
-                    title={'RESPUESTA:'}
-                    description={item.answer}
-                  />
-                </List.Item>
-              )}
-            />
-          )}
+          <Space>
+            <CreateAnswers />
+            {question.answers && question.answers.length > 0 && <Answers />}
+          </Space>
         </>
       </Modal>
     </>

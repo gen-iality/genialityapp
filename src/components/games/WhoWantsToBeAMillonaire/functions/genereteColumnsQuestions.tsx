@@ -75,7 +75,7 @@ const GenerateColumnsQuestion = () => {
             <Col>
               <Tooltip placement='topLeft' title='Editar'>
                 <Button
-                  onClick={() => onActionEditQuestion(value)}
+                  onClick={() => onActionEditQuestion(value, index)}
                   icon={<EditOutlined />}
                   type='primary'
                   size='small'

@@ -1,13 +1,14 @@
 import MillonaireCMSContext from './MillonaireCMSContext';
 import { CurrentEventContext } from '@/context/eventContext';
 import React, { useContext, useEffect, useState } from 'react';
-import { IMillonaire, IQuestions, IEditModal, IStages, IAnswers } from '../interfaces/Millonaire';
+import { IMillonaire, IQuestions, IEditModal, IStages, IAnswers, IModalVisible } from '../interfaces/Millonaire';
 import {
   INITIAL_STATE_MILLONAIRE,
   INITIAL_STATE_QUESTION,
   INITIAL_STATE_STAGE,
   INITIAL_STATE_EDIT_MODAL,
   INITIAL_STATE_ANSWER,
+  INITIAL_STATE_MODAL_VISIBLE,
 } from '../constants/formData';
 import { DispatchMessageService } from '@/context/MessageService';
 import {
@@ -18,6 +19,9 @@ import {
   createQuestionMillonaireApi,
   DeleteQuestionMillonairApi,
   createStageMillonaireApi,
+  DeleteStageMillonairApi,
+  UpdateQuestionMillonaireApi,
+  UpdateStageMillonaireApi,
 } from '../services/api';
 import createMillonaireAdapter from '../adapters/createMillonaireAdapter';
 import getMillonaireAdapter from '../adapters/getMillonaireAdapter';
@@ -31,18 +35,20 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
   const [question, setQuestion] = useState<IQuestions>(INITIAL_STATE_QUESTION);
   const [answer, setAnswer] = useState<IAnswers>(INITIAL_STATE_ANSWER);
   const [stage, setStage] = useState<IStages>(INITIAL_STATE_STAGE);
-  const [isEditQuestion, setIsEditQuestion] = useState(false);
-  const [isEditStage, setIsEditStage] = useState(false);
-  const [isEditAnswer, setIsEditAnswer] = useState(false);
+  const [isEditQuestion, setIsEditQuestion] = useState<IEditModal>(INITIAL_STATE_EDIT_MODAL);
+  const [isEditStage, setIsEditStage] = useState<IEditModal>(INITIAL_STATE_EDIT_MODAL);
+  const [isEditAnswer, setIsEditAnswer] = useState<IEditModal>(INITIAL_STATE_EDIT_MODAL);
+  const [isVisibleModalAnswer, setIsVisibleModalAnswer] = useState<IModalVisible>(INITIAL_STATE_MODAL_VISIBLE);
   const [isNewGame, setIsNewGame] = useState(true);
   const eventId = cEvent?.value?._id || '';
+  const [previusStage, setPreviusStage] = useState<IStages>(INITIAL_STATE_STAGE);
+  const [laterStage, setLaterStage] = useState<IStages>(INITIAL_STATE_STAGE);
 
   //-------------------STATE-MODALS---------------------------------------//
   const [isVisibleModalQuestion, setIsVisibleModalQuestion] = useState(false);
   const [isVisibleModalStage, setIsVisibleModalStage] = useState(false);
-  const [canEditQuestion, setCanEditQuestion] = useState<IEditModal>(INITIAL_STATE_EDIT_MODAL);
-  const [canEditStage, setCanEditStage] = useState<IEditModal>(INITIAL_STATE_EDIT_MODAL);
-  //-------------USEEFECTS---------------------------------------//
+
+  //-------------🚀 USEEFECTS 🚀---------------------------------------//
 
   useEffect(() => {
     onGetMillonaire();
@@ -52,7 +58,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     };
   }, [eventId]);
 
-  //--------------FUNCIONES-------------------------------------//
+  //--------------🚀 FUNCIONES MANEJAR FORMULARIO 🚀-------------------------------------//
   const onChangeMillonaire = (name: string, value: string) => {
     setMillonaire((prevState) => ({
       ...prevState,
@@ -68,6 +74,27 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       },
     }));
   };
+  const onChangeQuestion = (name: string, value: string) => {
+    setQuestion((prevQuestion) => ({
+      ...prevQuestion,
+      [name]: value,
+    }));
+  };
+  const onChangeAnswer = (name: string, value: string | boolean) => {
+    setAnswer((prevAnswer) => ({
+      ...prevAnswer,
+      [name]: value,
+    }));
+  };
+
+  const onChangeStage = (name: string, value: string | number | boolean) => {
+    setStage((prevStage) => ({
+      ...prevStage,
+      [name]: value,
+    }));
+  };
+
+  //----------------------🚀 FUNCION PARA OBETENER EL MILLONARIO 🚀--------------------------//
 
   const onGetMillonaire = async () => {
     setLoading(true);
@@ -87,6 +114,8 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     setIsNewGame(true);
     setLoading(false);
   };
+
+  //---------------------- FUNCION PARA CREAR EL MILLONARIO--------------------------//
 
   const onCreateMillonaire = async () => {
     setLoading(true);
@@ -113,6 +142,8 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     }
     setLoading(false);
   };
+
+  //---------------------- FUNCION PARA ACTUALIZAR EL MILLONARIO--------------------------//
 
   const onUpdateMillonaire = async () => {
     setLoading(true);
@@ -145,6 +176,8 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     setLoading(false);
   };
 
+  //---------------------- FUNCION PARA ELIMINAR EL MILLONARIO--------------------------//
+
   const onDelete = async () => {
     setLoading(true);
     const { id } = millonaire;
@@ -168,6 +201,9 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
 
     setLoading(false);
   };
+
+  //---------------------- FUNCION PARA CREAR  O ACTUALIZAR LA PREGUNTA--------------------------//
+
   const onSubmit = () => {
     if (isNewGame) {
       onCreateMillonaire();
@@ -175,7 +211,10 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       onUpdateMillonaire();
     }
   };
-  //--------------------Funciones para banco de pregunta-----------------------//
+
+  //-------------------------🚀 FUNCIONES BANCO PREGUNTAS 🚀 ----------------------------------------------//
+
+  //---------------------- FUNCION PARA CREAR LA PREGUNTA--------------------------//
   const onSaveQuestion = async () => {
     setLoading(true);
     const { id } = millonaire;
@@ -214,6 +253,8 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     setLoading(false);
   };
 
+  //---------------------- FUNCION PARA ACTUALIZAR LA PREGUNTA--------------------------//
+
   const onEditQuestion = async () => {
     setLoading(true);
     const { id } = millonaire;
@@ -236,38 +277,23 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       questions: prevState.questions.map((item) => (item.id === question.id ? question : item)),
     }));
     const dataToSend = createQuestionAdapter(question);
-    const response = await createQuestionMillonaireApi(id!, dataToSend);
+    const response = await UpdateQuestionMillonaireApi(id!, question.id, dataToSend);
     if (response) {
       const millonaireAdapter = getMillonaireAdapter(response);
       setMillonaire(millonaireAdapter);
       DispatchMessageService({
         type: 'success',
-        msj: 'Se creo la dinamica correctamente',
+        msj: 'Se actualizo la dinamica correctamente',
         action: 'show',
       });
       setIsVisibleModalQuestion(!isVisibleModalQuestion);
       setAnswer(INITIAL_STATE_ANSWER);
       setQuestion(INITIAL_STATE_QUESTION);
     }
-
     setLoading(false);
   };
 
-  const onEditAnswer = () => {
-    setQuestion((prevState) => ({
-      ...prevState,
-      answers: prevState.answers.map((item) => (item.id === answer.id ? answer : item)),
-    }));
-    setAnswer(INITIAL_STATE_ANSWER);
-  };
-
-  const onEditStage = () => {
-    setMillonaire((prevState) => ({
-      ...prevState,
-      stages: prevState.stages.map((item) => (item.id === stage.id ? stage : item)),
-    }));
-    setStage(INITIAL_STATE_STAGE);
-  };
+  //---------------------- FUNCION PARA ELIMINAR LA PREGUNTA--------------------------//
 
   const onDeleteQuestion = async (question: IQuestions) => {
     setLoading(true);
@@ -283,15 +309,88 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     if (response) {
       DispatchMessageService({
         type: 'success',
-        msj: 'Se elimino la pregunta correctamente',
+        msj: 'Se elimino la pregunta correctamente, verifique que no este en uso',
         action: 'show',
       });
-      setIsNewGame(true);
     }
 
     setLoading(false);
   };
 
+  //---------------------- FUNCION PARA CREAR O ACTUALIZAR PREGUNTA --------------------------//
+
+  const onSubmitQuestion = () => {
+    if (isEditQuestion.isEdit) {
+      onEditQuestion();
+    } else {
+      onSaveQuestion();
+    }
+  };
+
+  //-----------------------🚀 FUNCIONES ANWSER 🚀----------------------------------------------//
+
+  //---------------------- FUNCION PARA CREAR LA RESPUESTA--------------------------//
+
+  const onEditAnswer = () => {
+    if (answer.id) {
+      setQuestion((prevState) => ({
+        ...prevState,
+        answers: prevState.answers.map((item) => (item.id === answer.id ? answer : item)),
+      }));
+    } else {
+      setQuestion((prevState) => ({
+        ...prevState,
+        answers: prevState.answers.map((item, i) => (i === isEditAnswer.id ? answer : item)),
+      }));
+    }
+    setIsEditAnswer(INITIAL_STATE_EDIT_MODAL);
+    setAnswer(INITIAL_STATE_ANSWER);
+  };
+
+  //---------------------- FUNCION PARA ELIMINAR LA RESPUESTA--------------------------//
+  const onDeleteAnswer = (answer: IAnswers, index: number) => {
+    if (answer.id) {
+      setQuestion((prevState) => ({
+        ...prevState,
+        answers: prevState.answers.filter((item) => item.id !== answer.id),
+      }));
+    }
+    // delete with index if is not saved in database
+    else {
+      setQuestion((prevState) => ({
+        ...prevState,
+        answers: prevState.answers.filter((item, i) => i !== index),
+      }));
+    }
+  };
+
+  //---------------------- FUNCION PARA CREAR  --------------------------//
+
+  const onSaveAnswerInQuestion = () => {
+    setQuestion((prevQuestion) => ({
+      ...prevQuestion,
+      answers: [...prevQuestion.answers, answer],
+    }));
+    setAnswer(INITIAL_STATE_ANSWER);
+  };
+
+  console.log('🚀 ~ file: index.tsx ~ line 100 ~ Millonaire ~ millonaire', millonaire, question);
+
+  //---------------------- FUNCION PARA CREAR O ACTUALIZAR RESPUESTA --------------------------//
+
+  const onSubmitAnswer = () => {
+    if (isEditAnswer.isEdit) {
+      onEditAnswer();
+      onChangeVisibleModalAnswer();
+    } else {
+      onSaveAnswerInQuestion();
+      onChangeVisibleModalAnswer();
+    }
+  };
+
+  //-----------------------🚀 FUNCIONES ETAPA 🚀----------------------------------------------//
+
+  //---------------------- FUNCION PARA CREAR LA ETAPA--------------------------//
   const onSaveStage = async () => {
     setLoading(true);
     const { id } = millonaire;
@@ -329,6 +428,40 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     setLoading(false);
   };
 
+  //---------------------- FUNCION PARA ACTUALIZAR LA ETAPA--------------------------//
+
+  const onEditStage = async () => {
+    setLoading(true);
+    const { id } = millonaire;
+    if (id && id === '') {
+      return DispatchMessageService({
+        type: 'error',
+        msj: 'No se encontro la dinamica',
+        action: 'show',
+      });
+    }
+    const dataToSend = createStageAdapter(stage);
+    const response = await UpdateStageMillonaireApi(id!, stage.id!, dataToSend);
+    if (response) {
+      setMillonaire((prevState) => ({
+        ...prevState,
+        stages: prevState.stages.map((item) => (item.id === stage.id ? stage : item)),
+      }));
+      setStage(INITIAL_STATE_STAGE);
+      setIsVisibleModalStage(!isVisibleModalStage);
+      const millonaireAdapter = getMillonaireAdapter(response);
+      setMillonaire(millonaireAdapter);
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Se actualizo la etapa correctamente',
+        action: 'show',
+      });
+    }
+    setLoading(false);
+  };
+
+  //---------------------- FUNCION PARA ELIMINAR LA ETAPA--------------------------//
+
   const onDeleteStage = async (stage: IStages) => {
     setLoading(true);
     const { id } = millonaire;
@@ -339,93 +472,100 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         action: 'show',
       });
     }
-    const response = await DeleteMillonairApi(id!, stage.id!);
+    const response = await DeleteStageMillonairApi(id!, stage.id!);
     if (response) {
-      setMillonaire(INITIAL_STATE_MILLONAIRE);
+      setMillonaire((prevState) => ({
+        ...prevState,
+        stages: prevState.stages.filter((item) => item.id !== stage.id),
+      }));
       DispatchMessageService({
         type: 'success',
         msj: 'Se elimino la dinamica correctamente',
         action: 'show',
       });
-      setIsNewGame(true);
     }
 
     setLoading(false);
   };
 
+  //---------------------- FUNCION PARA CREAR O ACTUALIZAR ETAPA --------------------------//
+
   const onSubmitStage = () => {
-    if (isEditStage) {
+    if (isEditStage.isEdit) {
       onEditStage();
     } else {
       onSaveStage();
     }
   };
 
-  const onSubmitQuestion = () => {
-    if (isEditQuestion) {
-      onEditQuestion();
-    } else {
-      onSaveQuestion();
-    }
-  };
+  //-----------------------🚀 FUNCIONES ACTIVADORAS 🚀----------------------------------------------//
 
-  const onSubmitAnswer = () => {
-    if (isEditAnswer) {
-      onEditAnswer();
-    } else {
-      onSaveAnswerInQuestion();
-    }
-  };
-
-  const onActionEditQuestion = (question: IQuestions) => {
+  const onActionEditQuestion = (question: IQuestions, index: string | number) => {
     setQuestion(question);
-    setIsEditQuestion(!isEditQuestion);
+    setIsEditQuestion({
+      isEdit: true,
+      id: question.id || index,
+    });
     setIsVisibleModalQuestion(!isVisibleModalQuestion);
   };
 
-  const onActionEditAnwser = (answer: IAnswers) => {
+  const onActionEditAnwser = (answer: IAnswers, index: string | number) => {
+    setQuestion(question);
     setAnswer(answer);
-    setIsEditAnswer(isEditAnswer);
+    setIsEditAnswer({
+      isEdit: true,
+      id: answer.id || index,
+    });
+    onChangeVisibleModalAnswer();
+  };
+  const onActionEditStage = (stage: IStages, index: string | number) => {
+    setStage(stage);
+    setIsEditStage({
+      isEdit: true,
+      id: stage.id || index,
+    });
+    setIsVisibleModalStage(!isVisibleModalStage);
+    const etapaAnterior = millonaire.stages.find((item) => item.stage === stage.stage - 1);
+    if (etapaAnterior) {
+      setPreviusStage(etapaAnterior);
+    }
+    const etapaPosterior = millonaire.stages.find((item) => item.stage === stage.stage + 1);
+    if (etapaPosterior) {
+      setLaterStage(etapaPosterior);
+    }
   };
 
   //-------------------------------------------FUNCIONES MODAL-------------------------------------------//
   const onCancelModalQuestion = () => {
     setIsVisibleModalQuestion(!isVisibleModalQuestion);
     setQuestion(INITIAL_STATE_QUESTION);
-    setCanEditQuestion(INITIAL_STATE_EDIT_MODAL);
+    setIsEditQuestion(INITIAL_STATE_EDIT_MODAL);
+    setIsEditAnswer(INITIAL_STATE_EDIT_MODAL);
   };
 
   const onCancelModalStage = () => {
     setIsVisibleModalStage(!isVisibleModalStage);
     setStage(INITIAL_STATE_STAGE);
-    setCanEditStage(INITIAL_STATE_EDIT_MODAL);
+    setIsEditStage(INITIAL_STATE_EDIT_MODAL);
   };
-  const onChangeQuestion = (name: string, value: string) => {
-    setQuestion((prevQuestion) => ({
-      ...prevQuestion,
-      [name]: value,
-    }));
+
+  const onActiveModalStage = () => {
+    setIsVisibleModalStage(!isVisibleModalStage);
+    setStage({ ...INITIAL_STATE_STAGE, stage: millonaire.stages.length + 1 });
   };
-  const onChangeAnswer = (name: string, value: string | boolean) => {
-    setAnswer((prevAnswer) => ({
-      ...prevAnswer,
-      [name]: value,
+
+  const onChangeVisibleModalAnswer = () => {
+    setIsVisibleModalAnswer((prevState) => ({
+      ...prevState,
+      isVisibleAdd: !prevState.isVisibleAdd,
     }));
   };
 
-  const onChangeStage = (name: string, value: string | number | boolean) => {
-    setStage((prevStage) => ({
-      ...prevStage,
-      [name]: value,
+  const onChangeVisibleModalAnswerList = () => {
+    setIsVisibleModalAnswer((prevState) => ({
+      ...prevState,
+      isVisibleList: !prevState.isVisibleList,
     }));
-  };
-
-  const onSaveAnswerInQuestion = () => {
-    setQuestion((prevQuestion) => ({
-      ...prevQuestion,
-      answers: [...prevQuestion.answers, answer],
-    }));
-    setAnswer(INITIAL_STATE_ANSWER);
   };
 
   return (
@@ -438,11 +578,15 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         stage,
         question,
         answer,
+        previusStage,
+        laterStage,
         isVisibleModalQuestion,
         isVisibleModalStage,
-        isEditAnswer,
-        isEditQuestion,
-        isEditStage,
+        isEditAnswer: isEditAnswer.isEdit,
+        isEditQuestion: isEditQuestion.isEdit,
+        isEditStage: isEditStage.isEdit,
+        isVisibleModalAnswer: isVisibleModalAnswer.isVisibleAdd,
+        isVisibleModalAnswerList: isVisibleModalAnswer.isVisibleList,
         onChangeMillonaire,
         onChangeAppearance,
         onCreateMillonaire,
@@ -465,6 +609,11 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         onSubmitQuestion,
         onSubmitAnswer,
         onSubmitStage,
+        onDeleteAnswer,
+        onChangeVisibleModalAnswer,
+        onChangeVisibleModalAnswerList,
+        onActiveModalStage,
+        onActionEditStage,
       }}>
       {children}
     </MillonaireCMSContext.Provider>
