@@ -91,7 +91,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     setStatusGame('STARTED');
     setStage(stages[0].stage);
     setCurrentStage(stages[0]);
-    clearTimeout(onAnnouncement);
+    //  clearTimeout(onAnnouncement);
     setQuestion(questions.find((question) => question.id === stages[0].question) as IQuestions);
     setLoading(false);
   };

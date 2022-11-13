@@ -1,43 +1,26 @@
-import { UseEventContext } from '@/context/eventContext';
-import { UseUserEvent } from '@/context/eventUserContext';
 import { Divider } from 'antd';
-import { useEffect, useState } from 'react';
-import useWhereIsInLanding from '../../whereIs/hooks/useWhereIsInLanding';
-import { getScoresListener } from '../../whereIs/services';
+import RankingMyScore from './RankingMyScore';
 import RankingList from './RankingList';
-import RankingMyScore, { Score } from './RankingMyScore';
+import { Score } from './types';
 
-export default function Ranking() {
-	const cUser = UseUserEvent();
-	const cEvent = UseEventContext();
-	const [scores, setScores] = useState<Score[]>([]);
-	const [myScore, setMyScore] = useState<Score>({} as Score);
-	const { getPlayer, getScores, player } = useWhereIsInLanding();
+interface Props {
+	myScore?: Score;
+	scores: Score[];
+	type: 'time' | 'points';
+	withMyScore?: boolean;
+}
 
-	useEffect(() => {
-		getScores().then(({ scoresFinished, scoresNotFinished }) => {
-			// const myIndexScore = scores.findIndex(score => score.uid === cUser.value._id);
-			const myScoreWin = scoresFinished.find(score => score.uid === (cUser.value._id as string));
-			const myScoreLose = scoresNotFinished.find(score => score.uid === (cUser.value._id as string));
-			if (myScoreWin) {
-				setMyScore(myScoreWin);
-			}
-			if (myScoreLose) {
-				setMyScore(myScoreLose);
-			}
-			// const scoresFinished = scoresFinished.filter(score => score.isFinish === true);
-			setScores(scoresFinished);
-		});
-		const unsubscribe = getScoresListener(cEvent.nameEvent, setScores);
-		return () => unsubscribe();
-	}, []);
-
+export default function Ranking(props: Props) {
+	const { myScore, scores, type, withMyScore } = props;
 	return (
-		<div style={{ height: '80vh', overflowY: 'auto' }}>
-			{myScore.uid && <RankingMyScore myScore={myScore} type='time' />}
-			{/* {!myScore.isFinish && <p>Lo sentimos, perdiste</p>} */}
-			<Divider />
-			{!!scores.length && <RankingList scores={scores} type='time' />}
-		</div>
+		<>
+			{!!withMyScore && myScore && (
+				<>
+					<RankingMyScore myScore={myScore} type={type} />
+					<Divider />
+				</>
+			)}
+			<RankingList scores={scores} type={type} />
+		</>
 	);
 }

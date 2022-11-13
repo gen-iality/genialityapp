@@ -68,7 +68,7 @@ const HeaderColumns = (props) => {
     if (currentActivity) {
       //SE SETEA EL CURRENTACTIVITY PARA DETECTAR SI LA TRANSMISION ES POR EVIUSMEET U OTRO
 
-      console.log('1. SE EJECUTA ESTO');
+      // console.log('1. SE EJECUTA ESTO');
     }
     if (!currentActivity || typeActivity !== 'eviusMeet') return;
     const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;

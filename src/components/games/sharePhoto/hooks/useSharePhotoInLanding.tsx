@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { SharePhotoInLandingContext, SharePhotoLocationView } from '../contexts/SharePhotoInLandingContext';
+import { SharePhotoInLandingContext } from '../contexts/SharePhotoInLandingContext';
 
 export default function useSharePhotoInLanding() {
 	const context = useContext(SharePhotoInLandingContext);
@@ -8,11 +8,5 @@ export default function useSharePhotoInLanding() {
 		throw new Error('Debe estar dentro del SharePhotoInLandingProvider');
 	}
 
-	const { location, setLocation, imageUploaded, setImageUploaded } = context;
-
-	const goTo = (location: SharePhotoLocationView) => {
-		setLocation(prev => ({ ...prev, activeView: location }));
-	};
-
-	return { location, goTo, imageUploaded, setImageUploaded };
+	return context;
 }

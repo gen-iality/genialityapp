@@ -77,7 +77,7 @@ export default function TakePhoto() {
                     aspectRatio: 10 / 16,
                   }}
                   width={screens.xs ? '100%' : 400}
-                  mirrored={true}>
+                  mirrored={false}>
                   {({ getScreenshot }) => (
                     <Button
                       style={{

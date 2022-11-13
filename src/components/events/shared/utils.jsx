@@ -140,12 +140,13 @@ export const MenuItems = [
         key: 'share-photo',
         onClick: handleClick,
       },
-      // {
-      //   name: '¿Dónde se encuentra?',
-      //   path: '/whereIs',
-      //   key: 'whereIs',
-      //   onClick: handleClick,
-      // },
+      {
+        name: '¿Dónde se encuentra?',
+        path: '/whereIs',
+        key: 'whereIs',
+        onClick: handleClick,
+      },
+
       {
         name: '¿Quién quiere ser Millonario?',
         path: '/whoWantsToBeAMillonaire',
