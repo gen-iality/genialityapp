@@ -18,6 +18,9 @@ export const useMillonaireCMS = () => {
     isVisibleModalAnswerList,
     previusStage,
     laterStage,
+    published,
+    active,
+    scores,
     onChangeAppearance,
     onChangeMillonaire,
     onSubmit,
@@ -44,6 +47,7 @@ export const useMillonaireCMS = () => {
     onChangeVisibleModalAnswerList,
     onActiveModalStage,
     onActionEditStage,
+    onChangeVisibilityControl,
   } = useContext(MillonaireCMSContext);
 
   return {
@@ -63,6 +67,9 @@ export const useMillonaireCMS = () => {
     isVisibleModalAnswer,
     previusStage,
     laterStage,
+    published,
+    active,
+    scores,
     onChangeMillonaire,
     onChangeAppearance,
     onSubmit,
@@ -89,5 +96,6 @@ export const useMillonaireCMS = () => {
     onChangeVisibleModalAnswerList,
     onActiveModalStage,
     onActionEditStage,
+    onChangeVisibilityControl,
   };
 };

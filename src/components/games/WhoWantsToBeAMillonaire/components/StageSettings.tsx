@@ -64,7 +64,9 @@ const StageSettings = () => {
             type='primary'
             disabled={
               isEditStage
-                ? Number(previusStage.score) >= Number(stage.score) || Number(laterStage.score) <= Number(stage.score)
+                ? stage.stage === 1
+                  ? 0 >= Number(stage.score) || Number(laterStage.score) <= Number(stage.score)
+                  : Number(previusStage.score) >= Number(stage.score) || Number(laterStage.score) <= Number(stage.score)
                 : millonaire?.stages?.find((stageToFind) => Number(stageToFind.score) >= Number(stage.score))
             }
             loading={false}

@@ -14,12 +14,17 @@ export const useMillonaireLanding = () => {
     statusGame,
     question,
     stage,
+    visibilityControl,
+    scoreUser,
+    scores,
+    usedWildCards,
     onChangeVisibilityDrawer,
     onFinishedGame,
     onStartGame,
     onFiftyOverFifty,
     onSaveAnswer,
     onAnnouncement,
+    onChangeStatusGame,
   } = useContext(MillonaireLandingContext);
 
   return {
@@ -35,11 +40,16 @@ export const useMillonaireLanding = () => {
     statusGame,
     question,
     stage,
+    visibilityControl,
+    scoreUser,
+    scores,
+    usedWildCards,
     onChangeVisibilityDrawer,
     onStartGame,
     onFinishedGame,
     onFiftyOverFifty,
     onSaveAnswer,
     onAnnouncement,
+    onChangeStatusGame,
   };
 };

@@ -1,7 +1,15 @@
 import MillonaireCMSContext from './MillonaireCMSContext';
 import { CurrentEventContext } from '@/context/eventContext';
 import React, { useContext, useEffect, useState } from 'react';
-import { IMillonaire, IQuestions, IEditModal, IStages, IAnswers, IModalVisible } from '../interfaces/Millonaire';
+import {
+  IMillonaire,
+  IQuestions,
+  IEditModal,
+  IStages,
+  IAnswers,
+  IModalVisible,
+  IVisibility,
+} from '../interfaces/Millonaire';
 import {
   INITIAL_STATE_MILLONAIRE,
   INITIAL_STATE_QUESTION,
@@ -9,6 +17,7 @@ import {
   INITIAL_STATE_EDIT_MODAL,
   INITIAL_STATE_ANSWER,
   INITIAL_STATE_MODAL_VISIBLE,
+  INITIAL_STATE_VISIBILITY,
 } from '../constants/formData';
 import { DispatchMessageService } from '@/context/MessageService';
 import {
@@ -23,10 +32,13 @@ import {
   UpdateQuestionMillonaireApi,
   UpdateStageMillonaireApi,
 } from '../services/api';
+
+import { saveVisibilityControl, getVisibilityControl, listenRanking } from '../services/firebase';
 import createMillonaireAdapter from '../adapters/createMillonaireAdapter';
 import getMillonaireAdapter from '../adapters/getMillonaireAdapter';
 import createQuestionAdapter from '../adapters/createQuestionAdapter';
 import createStageAdapter from '../adapters/createStageAdapter';
+import { Score } from '../../common/Ranking/types';
 
 export default function MillonaireCMSProvider({ children }: { children: React.ReactNode }) {
   const cEvent = useContext(CurrentEventContext);
@@ -43,20 +55,39 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
   const eventId = cEvent?.value?._id || '';
   const [previusStage, setPreviusStage] = useState<IStages>(INITIAL_STATE_STAGE);
   const [laterStage, setLaterStage] = useState<IStages>(INITIAL_STATE_STAGE);
-
+  const [visibilityControl, setVisibilityControl] = useState(INITIAL_STATE_VISIBILITY);
   //-------------------STATE-MODALS---------------------------------------//
   const [isVisibleModalQuestion, setIsVisibleModalQuestion] = useState(false);
   const [isVisibleModalStage, setIsVisibleModalStage] = useState(false);
+  const [scores, setScores] = useState<Score[]>([] as Score[]);
 
   //-------------🚀 USEEFECTS 🚀---------------------------------------//
 
   useEffect(() => {
     onGetMillonaire();
+    getVisibility();
     return () => {
       setLoading(false);
       setMillonaire(INITIAL_STATE_MILLONAIRE);
     };
   }, [eventId]);
+
+  // listen ranking
+  useEffect(() => {
+    let unsubscribe: any;
+    if (eventId) {
+      unsubscribe = listenRanking(eventId, (scores) => {
+        setScores(scores);
+      });
+    }
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, [eventId]);
+
+  // useEffect(() => {
+  //   getVisibility();
+  // }, [millonaire.id]);
 
   //--------------🚀 FUNCIONES MANEJAR FORMULARIO 🚀-------------------------------------//
   const onChangeMillonaire = (name: string, value: string) => {
@@ -374,8 +405,6 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     setAnswer(INITIAL_STATE_ANSWER);
   };
 
-  console.log('🚀 ~ file: index.tsx ~ line 100 ~ Millonaire ~ millonaire', millonaire, question);
-
   //---------------------- FUNCION PARA CREAR O ACTUALIZAR RESPUESTA --------------------------//
 
   const onSubmitAnswer = () => {
@@ -568,6 +597,41 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     }));
   };
 
+  //-------------------------------------- FUNCIONALIDAD DE VISIBILIDAD DE LA DINAMICA --------------------------------------//
+
+  //-------------------FUNCION PARA CAMBIAR EL ESTADO DE LA DINAMICA-------------------//
+  const onChangeVisibilityControl = async (name: string, value: boolean) => {
+    const { id } = millonaire;
+    if (id && id === '') {
+      return DispatchMessageService({
+        type: 'error',
+        msj: 'No se encontro la dinamica',
+        action: 'show',
+      });
+    }
+    saveVisibilityControl(eventId, { ...visibilityControl, [name]: value }).then(() => {
+      setVisibilityControl((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    });
+  };
+
+  //------------------- OBTENER EL ESTADO DE LA DINAMICA-------------------//
+  const getVisibility = async () => {
+    if (eventId === undefined && eventId === '') {
+      return DispatchMessageService({
+        type: 'error',
+        msj: 'No se encontro el evento',
+        action: 'show',
+      });
+    }
+    const response = await getVisibilityControl(eventId!);
+    if (response) {
+      setVisibilityControl(response as IVisibility);
+    }
+  };
+
   return (
     <MillonaireCMSContext.Provider
       value={{
@@ -587,6 +651,9 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         isEditStage: isEditStage.isEdit,
         isVisibleModalAnswer: isVisibleModalAnswer.isVisibleAdd,
         isVisibleModalAnswerList: isVisibleModalAnswer.isVisibleList,
+        published: visibilityControl.published,
+        active: visibilityControl.active,
+        scores,
         onChangeMillonaire,
         onChangeAppearance,
         onCreateMillonaire,
@@ -614,6 +681,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         onChangeVisibleModalAnswerList,
         onActiveModalStage,
         onActionEditStage,
+        onChangeVisibilityControl,
       }}>
       {children}
     </MillonaireCMSContext.Provider>

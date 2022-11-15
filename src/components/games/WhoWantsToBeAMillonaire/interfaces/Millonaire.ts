@@ -1,4 +1,5 @@
-import { background_image, background_color } from './../../bingo/constants/constants';
+import { Score } from '@/components/games/common/Ranking/types';
+
 export interface IMillonaire {
   questions: IQuestions[] | any[];
   name: string;
@@ -72,6 +73,9 @@ export type TMillonaireContextProps = {
   isVisibleModalAnswerList: boolean;
   previusStage: IStages;
   laterStage: IStages;
+  published: boolean;
+  active: boolean;
+  scores: Score[];
   onChangeMillonaire: (name: string, value: any) => void;
   onChangeAppearance: (name: string, value: any) => void;
   onCreateMillonaire: () => void;
@@ -99,6 +103,7 @@ export type TMillonaireContextProps = {
   onChangeVisibleModalAnswerList: () => void;
   onActiveModalStage: () => void;
   onActionEditStage: (stage: IStages, index: string | number) => void;
+  onChangeVisibilityControl: (name: string, value: boolean) => void;
 };
 
 export interface TMillonaireContextPropLanding {
@@ -114,12 +119,21 @@ export interface TMillonaireContextPropLanding {
   statusGame: string;
   question: IQuestions;
   stage: number;
+  visibilityControl: IVisibility;
+  scoreUser: Score;
+  scores: Score[];
+  usedWildCards: {
+    used50: boolean;
+    usedCall: boolean;
+    usedAudience: boolean;
+  };
   onChangeVisibilityDrawer: () => void;
   onStartGame: () => void;
   onFinishedGame: () => void;
   onFiftyOverFifty: () => void;
   onSaveAnswer: (question: IQuestions, answer: IAnswers) => void;
   onAnnouncement: () => void;
+  onChangeStatusGame: (status: string) => void;
 }
 
 export interface IEditModal {
@@ -137,4 +151,8 @@ export interface IRenderViewLanding {
   STARTED: JSX.Element;
   GAME_OVER: JSX.Element;
   ANNOUNCEMENT: JSX.Element;
+}
+export interface IVisibility {
+  published: boolean;
+  active: boolean;
 }

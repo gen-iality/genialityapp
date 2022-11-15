@@ -4,6 +4,7 @@ import AppearanceSettings from './AppearanceSettings';
 import PlayMillonaire from './PlayMillonaire';
 import QuestionBank from './QuestionBank';
 import React from 'react';
+import PlayMillonaireCMS from './PlayMillonaireCMS';
 export default function UpdateMillonaire() {
   return (
     <Tabs>
@@ -17,7 +18,7 @@ export default function UpdateMillonaire() {
         <QuestionBank />
       </Tabs.TabPane>
       <Tabs.TabPane tab='Jugar' key='4'>
-        <PlayMillonaire />
+        <PlayMillonaireCMS />
       </Tabs.TabPane>
     </Tabs>
   );

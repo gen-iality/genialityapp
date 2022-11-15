@@ -1,10 +1,16 @@
 import { Button, Space, Typography, Slider } from 'antd';
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 const { Title, Paragraph } = Typography;
-
+import type { SliderMarks } from 'antd/lib/slider';
+import { IStages } from '../interfaces/Millonaire';
 export default function Millonaire() {
   const { currentStage, question, onSaveAnswer, time, score, stage, millonaire } = useMillonaireLanding();
-  console.log('🚀 ~ file: Millonaire.tsx ~ line 8 ~ Millonaire ~ currentStage', question, stage);
+const marksRender: SliderMarks = (millonaire?.stages?.map ((stage:IStages) => {
+    return {
+    [stage.stage]: Number(stage.stage)
+    };
+  }) || []).reduce((acc, curr) => ({ ...acc, ...curr }), {});
+
 
   return (
     <div>
@@ -16,7 +22,7 @@ export default function Millonaire() {
           alignItems: 'center',
           height: '100%',
         }}>
-        <span>{time}</span>
+        <span>{time} o {question.timeForQuestion}</span>
         <span>{currentStage.score}</span>
         <Paragraph>{question.question}</Paragraph>
         <Space direction='vertical' align='center'>
@@ -40,9 +46,8 @@ export default function Millonaire() {
         step={1}
         disabled
         max={millonaire?.stages?.length}
-        marks={millonaire?.stages?.reverse().map((stage) => {
-          return Number(stage.stage);
-        })}
+ 
+        marks={marksRender}
       />
     </div>
   );

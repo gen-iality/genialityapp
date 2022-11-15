@@ -480,10 +480,6 @@ export const useBingo = () => {
     let list = [];
     try {
       list = await getListUsersWithOrWithoutBingo(value._id);
-      /* '633d9b3101de36465758db36' */ console.log(
-        '🚀 ~ file: useBingo.tsx ~ line 483 ~ onGetListUsersWithOrWithoutBingo ~ list',
-        list
-      );
       const bingoPrintData = list.map((user: any) => {
         return {
           names: user?.properties?.names,

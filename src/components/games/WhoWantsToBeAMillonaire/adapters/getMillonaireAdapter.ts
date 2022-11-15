@@ -1,6 +1,5 @@
 import { IMillonaireApi, IStageApi, IQuestionApi } from './../interfaces/MillonaireApi';
 const getMillonaireAdapter = (data: IMillonaireApi) => {
-  console.log('🚀 ~ file: getMillonaireAdapter.ts ~ line 3 ~ getMillonaireAdapter ~ data', data);
   const stages = data?.stages?.map((stageItem: IStageApi) => ({
     stage: stageItem?.number || 0,
     question: stageItem.question || '',

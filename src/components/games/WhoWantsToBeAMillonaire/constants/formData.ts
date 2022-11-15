@@ -85,3 +85,14 @@ export const INITIAL_STATE_MODAL_VISIBLE = {
   isVisibleAdd: false,
   isVisibleList: false,
 };
+
+export const INITIAL_STATE_VISIBILITY = {
+  published: false,
+  active: false,
+};
+
+export const INITIAL_STATE_USED_WILDCARD = {
+  used50: false,
+  usedCall: false,
+  usedAudience: false,
+};
