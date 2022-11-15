@@ -5,6 +5,7 @@ import useSharePhoto from '../../hooks/useSharePhoto';
 import { isMobile } from 'react-device-detect';
 import { Score } from '@/components/games/common/Ranking/types';
 import { UseUserEvent } from '@/context/eventUserContext';
+import { deviceOrientation } from '../../utils/deviceOrientation';
 
 // const myScore = {
 //   uid: '636c0c6d96121d4a4e3995a4',
@@ -55,20 +56,6 @@ export default function RankingDrawer() {
 		setOpen(false);
 	};
 
-	const handleDeviceOrientation = () => {
-		const deviceOrientation = window.screen.orientation.type;
-		switch (deviceOrientation) {
-			case 'landscape-primary':
-			case 'landscape-secondary':
-				return 'HORIZONTAL';
-			case 'portrait-primary':
-			case 'portrait-secondary':
-				return 'VERTICAL';
-			default:
-				return 'VERTICAL';
-		}
-	};
-
 	useEffect(() => {
 		const myScore = scores.find(score => score.uid === cUser.value._id);
 		if (myScore) {
@@ -87,9 +74,9 @@ export default function RankingDrawer() {
 				title='Ranking'
 				bodyStyle={{ padding: screens.xs ? '10px' : '24px', backgroundColor: '#F1F1F1' }}
 				width={
-					screens.xs && handleDeviceOrientation() === 'VERTICAL'
+					screens.xs && deviceOrientation() === 'VERTICAL'
 						? '100vw'
-						: !screens.lg && !screens.xl && handleDeviceOrientation() === 'HORIZONTAL'
+						: !screens.lg && !screens.xl && deviceOrientation() === 'HORIZONTAL'
 						? '60vw'
 						: '35vw'
 				}
