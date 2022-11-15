@@ -1,16 +1,8 @@
 import UsersCard from '@/components/shared/usersCard';
 import { UseEventContext } from '@/context/eventContext';
-import { Divider, List, Row } from 'antd';
+import { Divider, List, Row, Typography } from 'antd';
 import { useState } from 'react';
-
-export interface Score {
-  name: string;
-  uid: string;
-  imageProfile: string;
-  index: number;
-  score: string;
-  isFinish: boolean;
-}
+import { Score } from './types';
 
 interface Props {
   myScore: Score;
@@ -25,17 +17,15 @@ export default function RankingMyScore(props: Props) {
 
   return (
     <>
-      <div style={{ marginTop: 16 }} className='card-dinamic-ranking ranking-user'>
+      <div className='card-dinamic-ranking ranking-user'>
         <Row justify='center'>
-          <h1
+          <Typography.Title
+            level={3}
             style={{
-              fontSize: '25px',
-              fontWeight: 'bold',
-              lineHeight: '3px',
               color: `${styles && styles.textMenu}`,
             }}>
             Mi Puntaje
-          </h1>
+          </Typography.Title>
           <Divider style={{ backgroundColor: `${styles && styles.textMenu}` }} />
         </Row>
         <div className='container-dinamic-ranking' style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>

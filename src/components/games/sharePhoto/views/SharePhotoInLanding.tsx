@@ -4,7 +4,7 @@ import SharePhotoInLandingProvider from '../contexts/SharePhotoInLandingContext'
 import useSharePhotoInLanding from '../hooks/useSharePhotoInLanding';
 import ChooseAction from './landing/ChooseAction';
 import CreatePost from './landing/CreatePost';
-import Galery from './landing/Galery';
+import Gallery from './landing/Gallery';
 import ImportPhoto from './landing/ImportPhoto';
 import Introduction from './landing/Introduction';
 import TakePhoto from './landing/TakePhoto';
@@ -14,7 +14,7 @@ interface RenderViewProps {
 }
 
 const RenderView = (props: RenderViewProps) => {
-	const { eventId } = props
+	const { eventId } = props;
 	const { location } = useSharePhotoInLanding();
 
 	const views = {
@@ -34,7 +34,7 @@ const RenderView = (props: RenderViewProps) => {
 			component: <CreatePost />,
 		},
 		galery: {
-			component: <Galery />,
+			component: <Gallery />,
 		},
 	};
 
@@ -46,7 +46,7 @@ interface Props {
 }
 
 export default function SharePhotoInLanding(props: Props) {
-	const { eventId } = props
+	const { eventId } = props;
 	return (
 		<SharePhotoProvider>
 			<SharePhotoInLandingProvider>

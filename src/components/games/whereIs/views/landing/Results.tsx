@@ -4,6 +4,11 @@ import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import useWhereIsInLanding from '../../hooks/useWhereIsInLanding';
 import Ranking from '@/components/games/common/Ranking';
 import { parseTime } from '../../utils/parseTime';
+import { useEffect, useState } from 'react';
+import { getScores, getScoresListener } from '../../services';
+import { UseUserEvent } from '@/context/eventUserContext';
+import { UseEventContext } from '@/context/eventContext';
+import { Score } from '@/components/games/common/Ranking/types';
 
 const DataTimerResult = ({ time = 0, won }: { time?: number; won: boolean }) => {
 	return (
@@ -19,6 +24,7 @@ const DataTimerResult = ({ time = 0, won }: { time?: number; won: boolean }) => 
 export default function Results() {
 	const {
 		whereIsGame: { won },
+		getScores,
 		player,
 	} = useWhereIsInLanding();
 	const dataResult = {
@@ -37,6 +43,30 @@ export default function Results() {
 			// extra: <DataTimerResult time={player?.duration && 0} />,
 		},
 	};
+
+	const cUser = UseUserEvent();
+	const cEvent = UseEventContext();
+	const [scores, setScores] = useState<Score[]>([]);
+	const [myScore, setMyScore] = useState<Score>({} as Score);
+
+	useEffect(() => {
+		getScores().then(({ scoresFinished, scoresNotFinished }) => {
+			// const myIndexScore = scores.findIndex(score => score.uid === cUser.value._id);
+			const myScoreWin = scoresFinished.find(score => score.uid === (cUser.value._id as string));
+			const myScoreLose = scoresNotFinished.find(score => score.uid === (cUser.value._id as string));
+			if (myScoreWin) {
+				setMyScore(myScoreWin);
+			}
+			if (myScoreLose) {
+				setMyScore(myScoreLose);
+			}
+			// const scoresFinished = scoresFinished.filter(score => score.isFinish === true);
+			setScores(scoresFinished);
+		});
+		const unsubscribe = getScoresListener(cEvent.nameEvent, setScores);
+		return () => unsubscribe();
+	}, []);
+
 	return (
 		<Row justify='center' align='middle'>
 			<Col xs={24} sm={24} md={14} lg={14} xl={14} xxl={14}>
@@ -50,7 +80,7 @@ export default function Results() {
 
 			<Col xs={24} sm={24} md={10} lg={10} xl={10} xxl={10}>
 				<Card bodyStyle={{ padding: '10px' }}>
-					<Ranking />
+					<Ranking scores={scores} type='time' myScore={myScore} withMyScore={true} />
 				</Card>
 			</Col>
 		</Row>

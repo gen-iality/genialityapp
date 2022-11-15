@@ -1,8 +1,8 @@
 import UsersCard from '@/components/shared/usersCard';
 import { UseEventContext } from '@/context/eventContext';
-import { Divider, List, Row } from 'antd';
+import { Divider, List, Row, Typography } from 'antd';
 import { useState } from 'react';
-import { Score } from './RankingMyScore';
+import { Score } from './types';
 
 interface Props {
   scores: Score[];
@@ -16,18 +16,15 @@ export default function RankingList(props: Props) {
   const styles = cEvent.value.styles;
 
   return (
-    <div style={{ marginTop: 16 }}>
+    <div>
       <Row justify='center'>
-        <h1
+        <Typography.Title
+          level={3}
           style={{
-            fontSize: '25px',
-            fontWeight: 'bold',
-            lineHeight: '3px',
             color: `${styles && styles.textMenu}`,
           }}>
           Ranking
-        </h1>
-        <Divider style={{ backgroundColor: `${styles && styles.textMenu}` }} />
+        </Typography.Title>
       </Row>
       <div className='container-dinamic-ranking' style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
         <List
