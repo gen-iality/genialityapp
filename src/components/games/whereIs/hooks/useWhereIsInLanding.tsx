@@ -7,7 +7,6 @@ import useWhereIs from './useWhereIs';
 import * as services from '../services';
 import { UseEventContext } from '@/context/eventContext';
 import { fromPlayerToScore } from '../utils/fromPlayerToScore';
-import { Score } from '../../common/Ranking/RankingMyScore';
 
 export default function useWhereIsInLanding() {
 	const cUser = UseUserEvent();
