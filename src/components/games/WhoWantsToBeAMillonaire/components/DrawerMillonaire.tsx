@@ -34,8 +34,18 @@ export default function DrawerMillonaire() {
         </Row>
       )}
       <Drawer
+        headerStyle={{
+          border: 'none',
+          background: millonaire.appearance?.background_color ? millonaire.appearance?.background_color : '#33166A',
+        }}
+        bodyStyle={{
+          padding: '0px',
+          background: millonaire.appearance?.background_color ? millonaire.appearance?.background_color : '#33166A',
+          backgroundImage: `url(${millonaire.appearance?.background_image})`,
+        }}
+        width={'100vw'}
         onClose={onChangeVisibilityDrawer}
-        title={<Typography.Title level={4}>{millonaire.name}</Typography.Title>}
+        /*  title={<Typography.Title level={5}>{millonaire.name}</Typography.Title>} */
         footer={statusGame === 'STARTED' && <WildCards />}
         visible={isVisible}>
         {RenderView[(statusGame as keyof IRenderViewLanding) || 'NOT_STARTED']}

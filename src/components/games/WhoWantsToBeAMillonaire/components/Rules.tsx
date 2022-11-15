@@ -10,8 +10,8 @@ export default function Rules({ rules }: { rules: string }) {
 
   return (
     <>
-      <Button type='primary' onClick={() => setIsVisible(!isVisible)}>
-        Reglas
+      <Button block size='large' onClick={() => setIsVisible(!isVisible)}>
+        <Typography.Text strong> Reglas</Typography.Text>
       </Button>
       <Modal title='Reglas de la dinamica' visible={isVisible} onOk={onHandleModal}>
         <Paragraph>{rules}</Paragraph>
