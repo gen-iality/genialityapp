@@ -18,7 +18,7 @@ export default function WildCards() {
       okType: 'danger',
       cancelText: 'Seguir jugando',
       onOk() {
-        () => onFinishedGame();
+        onFinishedGame();
       },
       onCancel() {
         console.log('Seguir jugando');
