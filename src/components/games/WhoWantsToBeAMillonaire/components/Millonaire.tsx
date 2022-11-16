@@ -22,7 +22,7 @@ const marksRender: SliderMarks = (millonaire?.stages?.map ((stage:IStages) => {
           alignItems: 'center',
           height: '100%',
         }}>
-        <span>{time} o {question.timeForQuestion}</span>
+        <span>{time} o {question?.timeForQuestion}</span>
         <span>{currentStage.score}</span>
         <Paragraph>{question.question}</Paragraph>
         <Space direction='vertical' align='center'>

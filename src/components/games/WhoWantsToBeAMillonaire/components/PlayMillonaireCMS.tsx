@@ -1,10 +1,10 @@
 import UserRating from './UserRating';
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
-import { Card, Col, Form, Row, Switch } from 'antd';
+import { Button, Card, Col, Form, Row, Switch } from 'antd';
 import Ranking from '../../common/Ranking';
 
 export default function PlayMillonaireCMS() {
-  const { published, active, onChangeVisibilityControl, scores } = useMillonaireCMS();
+  const { published, active, onChangeVisibilityControl, scores, onResetProgressAll } = useMillonaireCMS();
   return (
     <Row gutter={[16, 16]} style={{ padding: '40px' }}>
       <Col>
@@ -31,7 +31,11 @@ export default function PlayMillonaireCMS() {
               defaultChecked={active}
             />
           </Form.Item>
-          {/* Aqui deberia ir lo de controlar el estado publicado y abierto */}
+          <Form.Item
+            tooltip='Elimana todos los puntajes, progreso de los asistentes'
+            label={<label>Restablecer dinamica</label>}>
+            <Button onClick={() => onResetProgressAll()}>Restablecer</Button>
+          </Form.Item>
         </Card>
       </Col>
       <Col>

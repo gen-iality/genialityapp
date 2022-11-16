@@ -21,6 +21,7 @@ export const useMillonaireCMS = () => {
     published,
     active,
     scores,
+    tab,
     onChangeAppearance,
     onChangeMillonaire,
     onSubmit,
@@ -48,6 +49,8 @@ export const useMillonaireCMS = () => {
     onActiveModalStage,
     onActionEditStage,
     onChangeVisibilityControl,
+    onResetProgressAll,
+    onChangeTab,
   } = useContext(MillonaireCMSContext);
 
   return {
@@ -69,6 +72,7 @@ export const useMillonaireCMS = () => {
     laterStage,
     published,
     active,
+    tab,
     scores,
     onChangeMillonaire,
     onChangeAppearance,
@@ -97,5 +101,7 @@ export const useMillonaireCMS = () => {
     onActiveModalStage,
     onActionEditStage,
     onChangeVisibilityControl,
+    onResetProgressAll,
+    onChangeTab,
   };
 };

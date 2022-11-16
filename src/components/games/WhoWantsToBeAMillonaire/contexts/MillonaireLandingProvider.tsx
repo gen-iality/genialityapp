@@ -15,6 +15,7 @@ import {
   saveStageUser,
   getStatusGameByUser,
   saveStatusGameByUser,
+  deleteStatusStagesAndScoreAll,
 } from '../services/firebase';
 import { CurrentEventUserContext } from '@/context/eventUserContext';
 import { Score } from '../../common/Ranking/types';

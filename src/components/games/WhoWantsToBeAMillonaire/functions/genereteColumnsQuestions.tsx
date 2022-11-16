@@ -46,24 +46,24 @@ const GenerateColumnsQuestion = () => {
         );
       },
     },
-    {
-      title: 'Tiempo por pregunta',
-      key: 'timeForQuestion',
-      dataIndex: 'number',
-      name: 'Tiempo por pregunta',
-      render: (text: string, value: any, index: any) => {
-        return <Typography.Text>{value.timeForQuestion} segundos</Typography.Text>;
-      },
-    },
-    {
-      title: '# respuestas',
-      key: 'answers',
-      dataIndex: 'object',
-      name: '# respuestas',
-      render: (text: string, value: any, index: any) => {
-        return <Tag color='green'>{value.answers.length}</Tag>;
-      },
-    },
+    // {
+    //   title: 'Tiempo por pregunta',
+    //   key: 'timeForQuestion',
+    //   dataIndex: 'number',
+    //   name: 'Tiempo por pregunta',
+    //   render: (text: string, value: any, index: any) => {
+    //     return <Typography.Text>{value.timeForQuestion} segundos</Typography.Text>;
+    //   },
+    // },
+    // {
+    //   title: '# respuestas',
+    //   key: 'answers',
+    //   dataIndex: 'object',
+    //   name: '# respuestas',
+    //   render: (text: string, value: any, index: any) => {
+    //     return <Tag color='green'>{value.answers.length}</Tag>;
+    //   },
+    // },
     {
       title: 'Opciones',
       key: 'action',

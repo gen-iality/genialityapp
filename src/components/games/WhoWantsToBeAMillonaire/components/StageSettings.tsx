@@ -22,18 +22,8 @@ const StageSettings = () => {
     isEditStage,
     onSubmitStage,
     onActiveModalStage,
+    onChangeTab,
   } = useMillonaireCMS();
-
-  console.log(
-    'STAGE',
-    previusStage.score > stage.score || laterStage.score < stage.score,
-    'PREVIUS',
-    previusStage.score,
-    'LATER',
-    laterStage.score,
-    'STAGE',
-    stage.score
-  );
 
   return (
     <>

@@ -5,7 +5,9 @@ import PlayMillonaire from './PlayMillonaire';
 import QuestionBank from './QuestionBank';
 import React from 'react';
 import PlayMillonaireCMS from './PlayMillonaireCMS';
+import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 export default function UpdateMillonaire() {
+  const { tab } = useMillonaireCMS();
   return (
     <Tabs>
       <Tabs.TabPane tab='Configuracion general' key='1'>

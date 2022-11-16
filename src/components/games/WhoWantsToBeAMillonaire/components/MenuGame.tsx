@@ -53,7 +53,7 @@ export default function MenuGame() {
             <Button
               block
               size='large'
-              disabled={statusGame === 'GAME_OVER' ? true : false}
+              //disabled={statusGame === 'GAME_OVER' ? true : false}
               onClick={() => onAnnouncement()}>
               <Typography.Text strong>Jugar</Typography.Text>
             </Button>

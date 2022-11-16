@@ -76,6 +76,7 @@ export type TMillonaireContextProps = {
   published: boolean;
   active: boolean;
   scores: Score[];
+  tab: string;
   onChangeMillonaire: (name: string, value: any) => void;
   onChangeAppearance: (name: string, value: any) => void;
   onCreateMillonaire: () => void;
@@ -104,6 +105,8 @@ export type TMillonaireContextProps = {
   onActiveModalStage: () => void;
   onActionEditStage: (stage: IStages, index: string | number) => void;
   onChangeVisibilityControl: (name: string, value: boolean) => void;
+  onResetProgressAll: () => void;
+  onChangeTab: (key: string) => void;
 };
 
 export interface TMillonaireContextPropLanding {

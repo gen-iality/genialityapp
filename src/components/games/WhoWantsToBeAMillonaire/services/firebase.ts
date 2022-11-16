@@ -136,3 +136,42 @@ export const listenRanking = (idEvent: string, callback: (ranking: Score[]) => v
       callback(ranking);
     });
 };
+
+export const deleteStatusStagesAndScoreAll = async (idEvent: string) => {
+  await firestore
+    .collection('dinamicas')
+    .doc('WhoWantsToBeAMillonaire')
+    .collection('events')
+    .doc(idEvent)
+    .collection('statusGame')
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    });
+  await firestore
+    .collection('dinamicas')
+    .doc('WhoWantsToBeAMillonaire')
+    .collection('events')
+    .doc(idEvent)
+    .collection('stages')
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    });
+  await firestore
+    .collection('dinamicas')
+    .doc('WhoWantsToBeAMillonaire')
+    .collection('events')
+    .doc(idEvent)
+    .collection('scores')
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    });
+};

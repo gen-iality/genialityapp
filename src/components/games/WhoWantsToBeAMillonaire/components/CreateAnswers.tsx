@@ -1,5 +1,6 @@
 import { Modal, Typography, Form, Input, Checkbox, Select, Button } from 'antd';
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
+import AnswersFours from './AnswersFours';
 
 const { Title } = Typography;
 
@@ -38,7 +39,7 @@ export default function CreateAnswers() {
             {isEditAnswer ? 'Editar respuesta' : 'Agregar respuesta'}
           </Button>,
         ]}>
-        <Title
+        {/* <Title
           style={{
             marginTop: '20px',
             marginBottom: '20px',
@@ -64,7 +65,8 @@ export default function CreateAnswers() {
               Imagen
             </Select.Option>
           </Select>
-        </Form.Item>
+        </Form.Item> */}
+        <AnswersFours />
       </Modal>
     </>
   );

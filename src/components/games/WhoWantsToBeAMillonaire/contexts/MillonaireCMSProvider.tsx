@@ -33,7 +33,12 @@ import {
   UpdateStageMillonaireApi,
 } from '../services/api';
 
-import { saveVisibilityControl, getVisibilityControl, listenRanking } from '../services/firebase';
+import {
+  saveVisibilityControl,
+  getVisibilityControl,
+  listenRanking,
+  deleteStatusStagesAndScoreAll,
+} from '../services/firebase';
 import createMillonaireAdapter from '../adapters/createMillonaireAdapter';
 import getMillonaireAdapter from '../adapters/getMillonaireAdapter';
 import createQuestionAdapter from '../adapters/createQuestionAdapter';
@@ -56,6 +61,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
   const [previusStage, setPreviusStage] = useState<IStages>(INITIAL_STATE_STAGE);
   const [laterStage, setLaterStage] = useState<IStages>(INITIAL_STATE_STAGE);
   const [visibilityControl, setVisibilityControl] = useState(INITIAL_STATE_VISIBILITY);
+  const [tab, setTab] = useState('1');
   //-------------------STATE-MODALS---------------------------------------//
   const [isVisibleModalQuestion, setIsVisibleModalQuestion] = useState(false);
   const [isVisibleModalStage, setIsVisibleModalStage] = useState(false);
@@ -632,6 +638,18 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     }
   };
 
+  //-------------------FUNCION PARA CAMBIAR EL ESTADO DE LA DINAMICA-------------------//
+  const onResetProgressAll = async () => {
+    setLoading(true);
+    await deleteStatusStagesAndScoreAll(eventId);
+    setLoading(false);
+  };
+
+  //------------------------ 🚀 FUNCIONES TAB ------------------------//
+  const onChangeTab = (key: string) => {
+    setTab(key);
+  };
+
   return (
     <MillonaireCMSContext.Provider
       value={{
@@ -654,6 +672,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         published: visibilityControl.published,
         active: visibilityControl.active,
         scores,
+        tab,
         onChangeMillonaire,
         onChangeAppearance,
         onCreateMillonaire,
@@ -682,6 +701,8 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         onActiveModalStage,
         onActionEditStage,
         onChangeVisibilityControl,
+        onResetProgressAll,
+        onChangeTab,
       }}>
       {children}
     </MillonaireCMSContext.Provider>
