@@ -8,6 +8,7 @@ import GameStartAnnoucement from './GameStartAnnoucement';
 import { IRenderViewLanding } from '../interfaces/Millonaire';
 import Ranking from '../../common/Ranking';
 import UsersRanking from './UsersRanking';
+import { CloseOutlined } from '@ant-design/icons';
 export default function DrawerMillonaire() {
   const {
     isVisible,
@@ -34,14 +35,19 @@ export default function DrawerMillonaire() {
         </Row>
       )}
       <Drawer
+        closeIcon={<CloseOutlined style={{ color: '#FFFFFF' }} />}
         headerStyle={{
           border: 'none',
-          background: millonaire.appearance?.background_color ? millonaire.appearance?.background_color : '#33166A',
+          background: '#120754',
         }}
         bodyStyle={{
           padding: '0px',
-          background: millonaire.appearance?.background_color ? millonaire.appearance?.background_color : '#33166A',
-          backgroundImage: `url(${millonaire.appearance?.background_image})`,
+          background: 'linear-gradient(180deg, #120754 0%, #382485 51.04%, #120754 100%)',
+          /* backgroundImage: `url(${millonaire.appearance?.background_image})`, */
+        }}
+        footerStyle={{
+          border: 'none',
+          background: '#120754',
         }}
         width={'100vw'}
         onClose={onChangeVisibilityDrawer}

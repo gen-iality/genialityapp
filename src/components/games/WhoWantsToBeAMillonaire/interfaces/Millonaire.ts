@@ -159,3 +159,8 @@ export interface IVisibility {
   published: boolean;
   active: boolean;
 }
+
+export interface TimerM {
+  countdown: number;
+  timer: number;
+}
