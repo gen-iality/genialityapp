@@ -96,3 +96,30 @@ export const INITIAL_STATE_USED_WILDCARD = {
   usedCall: false,
   usedAudience: false,
 };
+
+export const INITIAL_ANSWER_TO_RENDER = [
+  {
+    answer: '',
+    isCorrect: false,
+    isTrueOrFalse: false,
+    type: 'text',
+  },
+  {
+    answer: '',
+    isCorrect: false,
+    isTrueOrFalse: false,
+    type: 'text',
+  },
+  {
+    answer: '',
+    isCorrect: false,
+    isTrueOrFalse: false,
+    type: 'text',
+  },
+  {
+    answer: '',
+    isCorrect: false,
+    isTrueOrFalse: false,
+    type: 'text',
+  },
+];

@@ -76,14 +76,14 @@ export default function QuestionBank() {
             Gestionar valores
           </Title>
 
-          <Form.Item label='Tipo'>
+          {/* <Form.Item label='Tipo'>
             <Select value={question.type} onChange={(e) => onChangeQuestion('type', e)}>
               <Select.Option value='text'>Texto</Select.Option>
               <Select.Option disabled value='image'>
                 Imagen
               </Select.Option>
             </Select>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item label='Pregunta'>
             <Input.TextArea value={question.question} onChange={(e) => onChangeQuestion('question', e.target.value)} />
@@ -102,7 +102,7 @@ export default function QuestionBank() {
           <Divider />
           <Space>
             <CreateAnswers />
-            {question.answers && question.answers.length > 0 && <Answers />}
+            {/* {question.answers && question.answers.length > 0 && <Answers />} */}
           </Space>
         </>
       </Modal>

@@ -29,32 +29,32 @@ const GenerateColumnsQuestion = () => {
         );
       },
     },
-    {
-      title: 'Tipo de pregunta',
-      key: 'question_type',
-      dataIndex: 'string',
-      name: 'Tipo de pregunta',
-      render: (text: string, value: any, index: any) => {
-        return value.type === 'image' ? (
-          <Tag color='blue' icon={<ImageOutlineIcon />}>
-            Imagen
-          </Tag>
-        ) : (
-          <Tag color='green' icon={<FormatTextIcon />}>
-            Texto
-          </Tag>
-        );
-      },
-    },
     // {
-    //   title: 'Tiempo por pregunta',
-    //   key: 'timeForQuestion',
-    //   dataIndex: 'number',
-    //   name: 'Tiempo por pregunta',
+    //   title: 'Tipo de pregunta',
+    //   key: 'question_type',
+    //   dataIndex: 'string',
+    //   name: 'Tipo de pregunta',
     //   render: (text: string, value: any, index: any) => {
-    //     return <Typography.Text>{value.timeForQuestion} segundos</Typography.Text>;
+    //     return value.type === 'image' ? (
+    //       <Tag color='blue' icon={<ImageOutlineIcon />}>
+    //         Imagen
+    //       </Tag>
+    //     ) : (
+    //       <Tag color='green' icon={<FormatTextIcon />}>
+    //         Texto
+    //       </Tag>
+    //     );
     //   },
     // },
+    {
+      title: 'Tiempo por pregunta',
+      key: 'timeForQuestion',
+      dataIndex: 'number',
+      name: 'Tiempo por pregunta',
+      render: (text: string, value: any, index: any) => {
+        return <Typography.Text>{value.timeForQuestion} segundos</Typography.Text>;
+      },
+    },
     // {
     //   title: '# respuestas',
     //   key: 'answers',

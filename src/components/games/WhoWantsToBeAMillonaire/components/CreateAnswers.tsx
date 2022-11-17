@@ -8,17 +8,21 @@ export default function CreateAnswers() {
   const {
     question,
     isEditAnswer,
+    isEditQuestion,
     answer,
+    answers,
     loading,
     isVisibleModalAnswer,
     onChangeVisibleModalAnswer,
     onSubmitAnswer,
     onChangeAnswer,
+    onChangeAnswerFour,
+    onSaveAnswerFour,
   } = useMillonaireCMS();
 
   return (
     <>
-      <Button onClick={() => onChangeVisibleModalAnswer()}>{isEditAnswer ? 'Editar' : 'Agregar Respuesta'}</Button>
+      <Button onClick={() => onChangeVisibleModalAnswer()}> Respuestas</Button>
       <Modal
         visible={isVisibleModalAnswer}
         maskClosable={false}
@@ -27,16 +31,18 @@ export default function CreateAnswers() {
         footer={[
           <Button
             disabled={
-              answer.answer === '' ||
-              answer.type === '' ||
-              (!isEditAnswer && question.answers.length === 4) ||
-              (question.answers.length === 3 &&
-                !question.answers.find((answer) => answer.isCorrect === true) &&
-                answer.isCorrect === false) ||
+              // answer.answer === '' ||
+              // answer.type === '' ||
+              // (!isEditAnswer && question.answers.length === 4) ||
+              // (question.answers.length === 3 &&
+              //   !question.answers.find((answer) => answer.isCorrect === true) &&
+              //   answer.isCorrect === false) ||
+              answers.find((answer) => answer.answer === '') !== undefined ||
+              answers.every((answer) => answer.isCorrect === false) ||
               loading
             }
             onClick={() => onSubmitAnswer()}>
-            {isEditAnswer ? 'Editar respuesta' : 'Agregar respuesta'}
+            {isEditQuestion ? 'Actualizar' : 'Crear'}
           </Button>,
         ]}>
         {/* <Title

@@ -208,6 +208,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     setStartGame(false);
     setStatusGame('GAME_OVER');
     setCurrentStage(INITIAL_STATE_STAGE);
+    saveScoreUser(eventId, currentUser.user.uid!, user);
     saveStatusGameByUser(eventId, currentUser.user.uid, 'GAME_OVER');
     setLoading(false);
     setStage(0);

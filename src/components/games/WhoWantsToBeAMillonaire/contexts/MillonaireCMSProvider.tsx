@@ -18,6 +18,7 @@ import {
   INITIAL_STATE_ANSWER,
   INITIAL_STATE_MODAL_VISIBLE,
   INITIAL_STATE_VISIBILITY,
+  INITIAL_ANSWER_TO_RENDER,
 } from '../constants/formData';
 import { DispatchMessageService } from '@/context/MessageService';
 import {
@@ -51,6 +52,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
   const [millonaire, setMillonaire] = useState<IMillonaire>(INITIAL_STATE_MILLONAIRE);
   const [question, setQuestion] = useState<IQuestions>(INITIAL_STATE_QUESTION);
   const [answer, setAnswer] = useState<IAnswers>(INITIAL_STATE_ANSWER);
+  const [answers, setAnswers] = useState<IAnswers[]>(INITIAL_ANSWER_TO_RENDER);
   const [stage, setStage] = useState<IStages>(INITIAL_STATE_STAGE);
   const [isEditQuestion, setIsEditQuestion] = useState<IEditModal>(INITIAL_STATE_EDIT_MODAL);
   const [isEditStage, setIsEditStage] = useState<IEditModal>(INITIAL_STATE_EDIT_MODAL);
@@ -401,6 +403,31 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     }
   };
 
+  //---------------------- FUNCION PARA CREAR O ACTUALIZAR RESPUESTA --------------------------//
+  const onChangeAnswerFour = (index: number, key: string, value: any) => {
+    if (key === 'isCorrect') {
+      setAnswers((prev) => {
+        return prev.map((item) => {
+          return {
+            ...item,
+            isCorrect: false,
+          };
+        });
+      });
+    }
+    setAnswers((prev) => {
+      return prev.map((item, i) => {
+        if (i === index) {
+          return {
+            ...item,
+            [key]: value,
+          };
+        }
+        return item;
+      });
+    });
+  };
+
   //---------------------- FUNCION PARA CREAR  --------------------------//
 
   const onSaveAnswerInQuestion = () => {
@@ -410,15 +437,23 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     }));
     setAnswer(INITIAL_STATE_ANSWER);
   };
+  const onSaveAnswerFour = () => {
+    setQuestion((prevQuestion) => ({
+      ...prevQuestion,
+      answers: [...answers],
+    }));
+  };
 
   //---------------------- FUNCION PARA CREAR O ACTUALIZAR RESPUESTA --------------------------//
 
   const onSubmitAnswer = () => {
     if (isEditAnswer.isEdit) {
-      onEditAnswer();
+      //onEditAnswer();
+      onSaveAnswerFour();
       onChangeVisibleModalAnswer();
     } else {
-      onSaveAnswerInQuestion();
+      //onSaveAnswerInQuestion();
+      onSaveAnswerFour();
       onChangeVisibleModalAnswer();
     }
   };
@@ -541,11 +576,13 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       isEdit: true,
       id: question.id || index,
     });
+    setAnswers(question.answers);
     setIsVisibleModalQuestion(!isVisibleModalQuestion);
   };
 
   const onActionEditAnwser = (answer: IAnswers, index: string | number) => {
     setQuestion(question);
+    setAnswers(question.answers);
     setAnswer(answer);
     setIsEditAnswer({
       isEdit: true,
@@ -673,6 +710,8 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         active: visibilityControl.active,
         scores,
         tab,
+        answers,
+        onChangeAnswerFour,
         onChangeMillonaire,
         onChangeAppearance,
         onCreateMillonaire,
@@ -703,6 +742,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         onChangeVisibilityControl,
         onResetProgressAll,
         onChangeTab,
+        onSaveAnswerFour,
       }}>
       {children}
     </MillonaireCMSContext.Provider>

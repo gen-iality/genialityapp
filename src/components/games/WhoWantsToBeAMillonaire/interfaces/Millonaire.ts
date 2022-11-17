@@ -77,6 +77,7 @@ export type TMillonaireContextProps = {
   active: boolean;
   scores: Score[];
   tab: string;
+  answers: IAnswers[];
   onChangeMillonaire: (name: string, value: any) => void;
   onChangeAppearance: (name: string, value: any) => void;
   onCreateMillonaire: () => void;
@@ -107,6 +108,8 @@ export type TMillonaireContextProps = {
   onChangeVisibilityControl: (name: string, value: boolean) => void;
   onResetProgressAll: () => void;
   onChangeTab: (key: string) => void;
+  onChangeAnswerFour: (key: number, name: string, value: string | boolean) => void;
+  onSaveAnswerFour: () => void;
 };
 
 export interface TMillonaireContextPropLanding {

@@ -22,7 +22,7 @@ export const saveScoreUser = async (idEvent: string, idUser: string, user: Score
     .doc(idEvent)
     .collection('scores')
     .doc(idUser)
-    .set({ user, time: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+    .set({ ...user, time: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
 };
 
 export const getScoreUser = async (idEvent: string, idUser: string) => {

@@ -20,9 +20,6 @@ export default function WildCards() {
       onOk() {
         onFinishedGame();
       },
-      onCancel() {
-        console.log('Seguir jugando');
-      },
     });
   };
   return (

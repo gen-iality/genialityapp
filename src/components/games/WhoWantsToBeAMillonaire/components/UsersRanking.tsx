@@ -6,10 +6,10 @@ export default function UsersRanking() {
 
   // ordernar los scores por time y score de forma descendente
   const scoresOrder = scores.sort((a, b) => {
-    if (a.time < b.time) {
+    if (new Date(a.time.seconds * 1000) < new Date(b.time.seconds * 1000)) {
       return 1;
     }
-    if (a.time > b.time) {
+    if (new Date(a.time.seconds * 1000) < new Date(b.time.seconds * 1000)) {
       return -1;
     }
     if (a.score < b.score) {
@@ -20,10 +20,23 @@ export default function UsersRanking() {
     }
     return 0;
   });
+  const newScores = scoresOrder.map((score, index) => {
+    return {
+      ...score,
+      index: index + 1,
+    };
+  });
+
+  const scoreUserNew = newScores.find((score) => score.uid === scoreUser.uid);
 
   return (
     <Space direction='vertical'>
-      <Ranking withMyScore myScore={scoreUser} scores={scoresOrder} type={'points'} />
+      <Ranking
+        withMyScore
+        myScore={Object.entries(scoreUser).length > 0 ? scoreUserNew : undefined}
+        scores={newScores}
+        type={'points'}
+      />
 
       <Button onClick={() => onChangeStatusGame('NOT_STARTED')}>Volver</Button>
     </Space>
