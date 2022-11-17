@@ -60,7 +60,7 @@ export default function QuestionBank() {
               question.answers.length < 4 ||
               loading
             }
-            loading={false}
+            loading={loading}
             onClick={() => onSubmitQuestion()}>
             {isEditQuestion ? 'Editar valores' : ' Agregar valores'}
           </Button>,

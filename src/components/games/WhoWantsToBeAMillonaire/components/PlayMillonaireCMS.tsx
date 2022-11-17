@@ -4,7 +4,8 @@ import { Button, Card, Col, Form, Row, Switch } from 'antd';
 import Ranking from '../../common/Ranking';
 
 export default function PlayMillonaireCMS() {
-  const { published, active, onChangeVisibilityControl, scores, onResetProgressAll } = useMillonaireCMS();
+  const { published, active, onChangeVisibilityControl, scores, onResetProgressAll, millonaire } = useMillonaireCMS();
+  console.log('🚀 ~ file: PlayMillonaireCMS.tsx ~ line 8 ~ PlayMillonaireCMS ~ millonaire', millonaire);
   const scoresOrder = scores.sort((a, b) => {
     if (new Date(a.time?.seconds * 1000) < new Date(b.time?.seconds * 1000)) {
       return 1;
@@ -39,6 +40,7 @@ export default function PlayMillonaireCMS() {
               unCheckedChildren='No'
               checked={published}
               defaultChecked={published}
+              disabled={millonaire.numberOfQuestions! > millonaire?.stages?.length}
             />
           </Form.Item>
           <Form.Item
@@ -50,12 +52,15 @@ export default function PlayMillonaireCMS() {
               unCheckedChildren='No'
               checked={active}
               defaultChecked={active}
+              disabled={millonaire.numberOfQuestions! > millonaire?.stages?.length}
             />
           </Form.Item>
           <Form.Item
             tooltip='Elimana todos los puntajes, progreso de los asistentes'
             label={<label>Restablecer dinamica</label>}>
-            <Button onClick={() => onResetProgressAll()}>Restablecer</Button>
+            <Button disabled={!active} onClick={() => onResetProgressAll()}>
+              Restablecer
+            </Button>
           </Form.Item>
         </Card>
       </Col>

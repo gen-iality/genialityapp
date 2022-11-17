@@ -5,7 +5,7 @@ import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 const { Option } = Select;
 
 export default function CreateMillonaire() {
-  const { onChangeMillonaire, millonaire, isNewGame } = useMillonaireCMS();
+  const { onChangeMillonaire, millonaire, isNewGame, loading } = useMillonaireCMS();
   return (
     <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
       <Form.Item

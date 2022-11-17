@@ -18,7 +18,7 @@ export default function Index() {
 }
 
 const MillonaireMain = () => {
-  const { onSubmit, onDelete, isNewGame } = useMillonaireCMS();
+  const { onSubmit, onDelete, isNewGame, loading } = useMillonaireCMS();
   return (
     <Form onFinish={onSubmit} {...FORMLAYOUT}>
       <Header
@@ -29,6 +29,7 @@ const MillonaireMain = () => {
         save
         form
         remove={onDelete}
+        loadingSave={loading}
       />
       <RenderView />
     </Form>

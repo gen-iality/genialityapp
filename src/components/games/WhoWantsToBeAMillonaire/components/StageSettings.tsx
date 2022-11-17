@@ -14,6 +14,7 @@ const StageSettings = () => {
     millonaire,
     previusStage,
     laterStage,
+    loading,
     onCancelModalStage,
     isVisibleModalStage,
     setIsVisibleModalStage,
@@ -31,7 +32,12 @@ const StageSettings = () => {
         <Space style={{ width: '100%' }} direction='vertical'>
           <Header
             title='Configuración de etapas'
-            addFn={millonaire?.stages?.length < millonaire.numberOfQuestions! ? () => onActiveModalStage() : null}
+            addFn={
+              millonaire?.stages?.length >= millonaire.numberOfQuestions! ||
+              millonaire?.questions?.length >= millonaire.numberOfQuestions!
+                ? () => onActiveModalStage()
+                : null
+            }
           />
           <Table size='small' columns={columns} dataSource={millonaire.stages} />
         </Space>
@@ -59,7 +65,7 @@ const StageSettings = () => {
                   : Number(previusStage.score) >= Number(stage.score) || Number(laterStage.score) <= Number(stage.score)
                 : millonaire?.stages?.find((stageToFind) => Number(stageToFind.score) >= Number(stage.score))
             }
-            loading={false}
+            loading={loading}
             onClick={() => onSubmitStage()}>
             {isEditStage ? 'Editar' : 'Agregar'}
           </Button>,

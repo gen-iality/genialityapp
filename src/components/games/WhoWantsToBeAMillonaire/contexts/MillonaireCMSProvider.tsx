@@ -442,6 +442,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       ...prevQuestion,
       answers: [...answers],
     }));
+    setAnswers(INITIAL_ANSWER_TO_RENDER);
   };
 
   //---------------------- FUNCION PARA CREAR O ACTUALIZAR RESPUESTA --------------------------//
@@ -623,7 +624,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
 
   const onActiveModalStage = () => {
     setIsVisibleModalStage(!isVisibleModalStage);
-    setStage({ ...INITIAL_STATE_STAGE, stage: millonaire.stages.length + 1 });
+    setStage({ ...INITIAL_STATE_STAGE, stage: millonaire?.stages?.length + 1 || 1 });
   };
 
   const onChangeVisibleModalAnswer = () => {

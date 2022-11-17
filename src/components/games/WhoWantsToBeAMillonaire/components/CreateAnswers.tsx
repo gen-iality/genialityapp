@@ -41,7 +41,8 @@ export default function CreateAnswers() {
               answers.every((answer) => answer.isCorrect === false) ||
               loading
             }
-            onClick={() => onSubmitAnswer()}>
+            onClick={() => onSubmitAnswer()}
+            loading={loading}>
             {isEditQuestion ? 'Actualizar' : 'Crear'}
           </Button>,
         ]}>

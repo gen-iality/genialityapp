@@ -3,8 +3,8 @@ import CreateMillonaire from './CreateMillonaire';
 import UpdateMillonaire from './UpdateMillonaire';
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 const RenderView = () => {
-  const { loading, isNewGame } = useMillonaireCMS();
-  if (loading) return <Loading />;
+  const { isNewGame } = useMillonaireCMS();
+
   if (isNewGame === true) {
     return <CreateMillonaire />;
   }

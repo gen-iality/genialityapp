@@ -49,7 +49,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   const eventId = cEvent?.value?._id || '';
   const currentUser = cUser?.value || null;
   const stagesInitial =
-    currentStage.stage > 1 ? currentStage : stages.find((stage) => stage.stage === 1) || INITIAL_STATE_STAGE;
+    currentStage.stage > 1 ? currentStage : stages?.find((stage) => stage.stage === 1) || INITIAL_STATE_STAGE;
   const questionInitial = questions.find((question) => question.id === stagesInitial.question) as IQuestions;
   const user = {
     name: currentUser?.properties?.names,
