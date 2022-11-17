@@ -7,7 +7,7 @@ import AlphaAIcon from '@2fd/ant-design-icons/lib/AlphaA';
 import AlphaBIcon from '@2fd/ant-design-icons/lib/AlphaB';
 import AlphaCIcon from '@2fd/ant-design-icons/lib/AlphaC';
 import AlphaDIcon from '@2fd/ant-design-icons/lib/AlphaD';
-import { SaveFilled } from '@ant-design/icons';
+import ProgressStarIcon from '@2fd/ant-design-icons/lib/ProgressStar';
 const { useBreakpoint } = Grid;
 
 const iconsLetters = {
@@ -79,7 +79,10 @@ export default function Millonaire() {
                 sm={{ span: 12, order: 3 }}
                 xs={{ span: 12, order: 3 }}
                 style={{ textAlign: 'center' }}>
-                <Tag color='#FFB500' style={{ fontSize: '20px', padding: '10px 10px' }}>
+                <Tag
+                  icon={<ProgressStarIcon style={{ fontSize: '20px' }} />}
+                  color='#FFB500'
+                  style={{ fontSize: '20px', padding: '10px 10px' }}>
                   {currentStage.score}
                 </Tag>
               </Col>

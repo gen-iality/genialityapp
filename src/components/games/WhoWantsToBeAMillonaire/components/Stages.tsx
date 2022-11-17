@@ -3,6 +3,7 @@ import { Drawer, List, Avatar, Button, Typography, Tooltip } from 'antd';
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 import FlagVariantIcon from '@2fd/ant-design-icons/lib/FlagVariant';
 import { CloseOutlined } from '@ant-design/icons';
+import ProgressStarIcon from '@2fd/ant-design-icons/lib/ProgressStar';
 
 export default function Stages() {
   const { stages, currentStage, stage } = useMillonaireLanding();
@@ -60,7 +61,7 @@ export default function Stages() {
                   <Typography.Text
                     strong
                     style={{ color: currentStage.stage === stage.stage ? '#120754' : '#FFFFFF', fontSize: '18px' }}>
-                    {stage.score}
+                    <ProgressStarIcon style={{ fontSize: '20px' }} /> {stage.score}
                   </Typography.Text>
                 }
               />
