@@ -18,16 +18,8 @@ const iconsLetters = {
 };
 
 export default function Millonaire() {
-  const { currentStage, question, onSaveAnswer, time, score, stages, millonaire } = useMillonaireLanding();
+  const { currentStage, question, onSaveAnswer, time, millonaire } = useMillonaireLanding();
 
-  const stagesOrderByStage = stages.sort((a, b) => b.stage - a.stage);
-  /*  const marksRender: SliderMarks = (millonaire?.stages?.map((stage: IStages) => {
-    return {
-      [stage.stage]: Number(stage.stage)
-    };
-  }) || []).reduce((acc, curr) => ({ ...acc, ...curr }), {});
- */
-  const screens = useBreakpoint();
   return (
     <Row>
       <Col span={24}>
