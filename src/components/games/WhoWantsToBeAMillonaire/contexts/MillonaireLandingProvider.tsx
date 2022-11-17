@@ -23,6 +23,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   //-----------------------------------CONTEXT--------------------------//
   const cEvent = useContext(CurrentEventContext);
   const cUser = useContext(CurrentEventUserContext);
+  console.log('🚀 ~ file: MillonaireLandingProvider.tsx ~ line 26 ~ MillonaireLandingProvider ~ cUser', cUser);
   //-----------------------------STATE---------------------------------//
   const [loading, setLoading] = useState(false);
   const [millonaire, setMillonaire] = useState<IMillonaire>(INITIAL_STATE_MILLONAIRE);
@@ -263,6 +264,8 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       });
       return;
     }
+    console.log('🚀 ~ file: MillonaireLandingProvider.tsx ~ line 284 ~ onSaveAnswer ~ stages', stages);
+    console.log('🚀 ~ file: MillonaireLandingProvider.tsx ~ line 284 ~ onSaveAnswer ~ stage', stage);
     saveStageUser(eventId, scoreUser.uid, currentStage);
     if (answer.isCorrect === false) {
       DispatchMessageService({
