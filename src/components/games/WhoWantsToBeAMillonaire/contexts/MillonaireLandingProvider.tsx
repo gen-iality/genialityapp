@@ -99,7 +99,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [currentStage]);
+  }, [currentStage, statusGame]);
 
   // game over when time is 0
   useEffect(() => {
@@ -111,7 +111,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       setStage(0);
       setScore(0);
     }
-  }, [time]);
+  }, [time, statusGame]);
 
   useEffect(() => {
     if (statusGame === 'GAME_OVER') {
@@ -169,6 +169,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
           setStage(stage?.stage || 1);
           setQuestion(questions.find((question) => question.id === stage?.question) as IQuestions);
           setStartGame(true);
+          setTime((questions.find((question) => question.id === stage?.question) as IQuestions)?.timeForQuestion);
         }
         setStatusGame(statusGame?.status || 'NOT_STARTED');
       });

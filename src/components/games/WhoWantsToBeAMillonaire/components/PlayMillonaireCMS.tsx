@@ -6,10 +6,10 @@ import Ranking from '../../common/Ranking';
 export default function PlayMillonaireCMS() {
   const { published, active, onChangeVisibilityControl, scores, onResetProgressAll } = useMillonaireCMS();
   const scoresOrder = scores.sort((a, b) => {
-    if (new Date(a.time.seconds * 1000) < new Date(b.time.seconds * 1000)) {
+    if (new Date(a.time?.seconds * 1000) < new Date(b.time?.seconds * 1000)) {
       return 1;
     }
-    if (new Date(a.time.seconds * 1000) < new Date(b.time.seconds * 1000)) {
+    if (new Date(a.time?.seconds * 1000) < new Date(b.time?.seconds * 1000)) {
       return -1;
     }
     if (a.score < b.score) {

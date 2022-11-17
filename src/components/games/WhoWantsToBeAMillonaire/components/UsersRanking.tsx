@@ -6,10 +6,10 @@ export default function UsersRanking() {
 
   // ordernar los scores por time y score de forma descendente
   const scoresOrder = scores.sort((a, b) => {
-    if (new Date(a.time.seconds * 1000) < new Date(b.time.seconds * 1000)) {
+    if (new Date(a.time?.seconds * 1000) < new Date(b.time?.seconds * 1000)) {
       return 1;
     }
-    if (new Date(a.time.seconds * 1000) < new Date(b.time.seconds * 1000)) {
+    if (new Date(a.time?.seconds * 1000) < new Date(b.time?.seconds * 1000)) {
       return -1;
     }
     if (a.score < b.score) {
