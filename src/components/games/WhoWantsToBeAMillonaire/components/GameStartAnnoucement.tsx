@@ -24,7 +24,8 @@ export default function GameStartAnnoucement() {
           title={<Typography.Title level={2}>{name}</Typography.Title>}
           subTitle={
             <Typography.Paragraph>
-              El juego esta por empezar, recuerde que tiene que responder antes del tiempo termine o si no perdera
+              ¿Estas listo para iniciar? No olvides estar muy atento al tiempo que tienes por pregunta, en caso de que
+              el contador llegue a cero no podrás continuar jugando.
             </Typography.Paragraph>
           }
           extra={

@@ -35,7 +35,7 @@ export default function MenuGame() {
                     preview={false}
                     height={'200px'}
                     width={'200px'}
-                    src={'https://via.placeholder.com/800/000000/FFFFFF/?text=Cargando'}
+                    src={'https://via.placeholder.com/800/D4D1E3/FFFFFF/?text=Cargando'}
                   />
                 }
                 style={{
