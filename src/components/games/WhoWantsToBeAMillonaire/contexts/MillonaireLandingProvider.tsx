@@ -285,12 +285,6 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     }
     saveStageUser(eventId, scoreUser.uid!, currentStage);
     if (answer.isCorrect === false) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Perdites, no contesto correctamente la pregunta',
-        action: 'show',
-      });
-      // agregar funcionalidad de firebase
       setCurrentStage(INITIAL_STATE_STAGE);
       setStatusGame('GAME_OVER');
       saveStatusGameByUser(eventId, scoreUser.uid!, 'GAME_OVER');
@@ -309,11 +303,6 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       });
     }
     saveStatusGameByUser(eventId, scoreUser.uid, 'STARTED');
-    DispatchMessageService({
-      type: 'success',
-      msj: 'Felicidades, contesto correctamente la pregunta',
-      action: 'show',
-    });
     onNextQuestion();
   };
 
