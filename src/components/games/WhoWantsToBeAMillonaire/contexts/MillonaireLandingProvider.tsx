@@ -8,6 +8,7 @@ import { GetMillonaireAPi } from '../services/api';
 import getMillonaireAdapter from '../adapters/getMillonaireAdapter';
 import {
   listenerVisibilityControl,
+  listenRanking,
   saveScoreUser,
   getScoreUser,
   getScore,
@@ -30,18 +31,16 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   const [startGame, setStartGame] = useState(false);
   const [statusGame, setStatusGame] = useState('NOT_STARTED');
   const [currentStage, setCurrentStage] = useState<IStages>(INITIAL_STATE_STAGE);
-  console.log(
-    '🚀 ~ file: MillonaireLandingProvider.tsx ~ line 31 ~ MillonaireLandingProvider ~ currentStage',
-    currentStage
-  );
   const [stage, setStage] = useState<number>(1);
+  console.log('🚀 ~ file: MillonaireLandingProvider.tsx ~ line 39 ~ MillonaireLandingProvider ~ stage', stage);
   const [stages, setStages] = useState<IStages[]>([]);
+  console.log('🚀 ~ file: MillonaireLandingProvider.tsx ~ line 41 ~ MillonaireLandingProvider ~ stages', stages);
   const [questions, setQuestions] = useState<IQuestions[]>([]);
   const [question, setQuestion] = useState<IQuestions>({} as IQuestions);
   const [score, setScore] = useState<number>(0);
   const [scores, setScores] = useState<Score[]>([]);
   const [scoreUser, setScoreUser] = useState<Score>({} as Score);
-  const [time, setTime] = useState<number>(0);
+  const [time, setTime] = useState<number>(30);
   const [visibilityControl, setVisibilityControl] = useState<IVisibility>({} as IVisibility);
   const [usedWildCards, setUsedWildCards] = useState(INITIAL_STATE_USED_WILDCARD);
   //-------------------STATE-MODALS---------------------------------------//
@@ -55,11 +54,13 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   const user = {
     name: currentUser?.properties?.names,
     uid: currentUser?.user?.uid,
-    imageProfile: currentUser?.user?.picture,
+    imageProfile: currentUser?.user?.picture || '',
     index: stage,
     score: '0',
     //  email: currentUser.properties.email,
   };
+  const stagesReset = stages.find((stage) => stage.stage === 0) || INITIAL_STATE_STAGE;
+  const questionReset = questions.find((question) => question.id === stagesReset?.question) as IQuestions;
 
   //-------------USEEFECTS---------------------------------------//
 
@@ -104,23 +105,27 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
 
   // game over when time is 0
   useEffect(() => {
-    if (time === 0 && statusGame === 'STARTED') {
+    if (time === 0) {
       setStartGame(false);
       setStatusGame('GAME_OVER');
-      setCurrentStage(INITIAL_STATE_STAGE);
-      saveScoreUser(eventId, currentUser.user.uid!, scoreUser);
-      setStage(0);
-      setScore(0);
-    }
-  }, [time, statusGame]);
 
-  useEffect(() => {
-    if (statusGame === 'GAME_OVER') {
-      getScore(eventId).then((res) => {
-        setScores((res as unknown) as Score[]);
-      });
+      setCurrentStage(stagesReset!);
+      setQuestion(questionReset);
+      saveScoreUser(eventId, currentUser.user.uid!, scoreUser);
+      setScore(0);
+      setStage(0);
+      setQuestion(questionInitial);
+      saveStatusGameByUser(eventId, currentUser.user.uid!, 'GAME_OVER');
     }
-  }, [statusGame]);
+  }, [time]);
+
+  // useEffect(() => {
+  //   if (statusGame === 'GAME_OVER') {
+  //     getScore(eventId).then((res) => {
+  //       setScores((res as unknown) as Score[]);
+  //     });
+  //   }
+  // }, [statusGame]);
 
   // listenerVisibilityControl
   useEffect(() => {
@@ -134,6 +139,18 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       unsubscribe && unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    let unsubscribe: any;
+    if (eventId) {
+      unsubscribe = listenRanking(eventId, (scores) => {
+        setScores(scores);
+      });
+    }
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, [eventId]);
 
   //--------------FUNCIONES-------------------------------------//
 
@@ -172,7 +189,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
           setStartGame(true);
           setTime((questions.find((question) => question.id === stage?.question) as IQuestions)?.timeForQuestion);
         }
-        setStatusGame(statusGame?.status || 'NOT_STARTED');
+        setStatusGame('NOT_STARTED');
       });
     }
     setLoading(false);
@@ -198,7 +215,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     setStage(stagesInitial.stage);
     setCurrentStage(stagesInitial);
     setScoreUser(user);
-    saveScoreUser(eventId, currentUser.user.uid!, user);
+    saveScoreUser(eventId, currentUser.user.uid!, scoreUser);
     setQuestion(questionInitial);
     setLoading(false);
     saveStatusGameByUser(eventId, currentUser.user.uid, 'STARTED');
@@ -209,11 +226,12 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     setLoading(true);
     setStartGame(false);
     setStatusGame('GAME_OVER');
-    setCurrentStage(INITIAL_STATE_STAGE);
-    saveScoreUser(eventId, currentUser.user.uid!, user);
-    saveStatusGameByUser(eventId, currentUser.user.uid, 'GAME_OVER');
-    setLoading(false);
     setStage(0);
+    setCurrentStage(stagesReset!);
+    setQuestion(questionReset);
+    saveScoreUser(eventId, currentUser.user.uid!, scoreUser);
+    saveStatusGameByUser(eventId, currentUser.user.uid!, 'GAME_OVER');
+    setLoading(false);
   };
 
   //------------------- FUNCIONES PARA WILDCARD --------------------------//
@@ -245,6 +263,9 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       return;
     }
     setStatusGame('GAME_OVER');
+    setStage(0);
+    setCurrentStage(stagesReset!);
+    setQuestion(questionReset);
   };
 
   const onSaveAnswer = (question: IQuestions, answer: IAnswers) => {
@@ -264,9 +285,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       });
       return;
     }
-    console.log('🚀 ~ file: MillonaireLandingProvider.tsx ~ line 284 ~ onSaveAnswer ~ stages', stages);
-    console.log('🚀 ~ file: MillonaireLandingProvider.tsx ~ line 284 ~ onSaveAnswer ~ stage', stage);
-    saveStageUser(eventId, scoreUser.uid, currentStage);
+    saveStageUser(eventId, scoreUser.uid!, currentStage);
     if (answer.isCorrect === false) {
       DispatchMessageService({
         type: 'error',
@@ -276,18 +295,20 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       // agregar funcionalidad de firebase
       setCurrentStage(INITIAL_STATE_STAGE);
       setStatusGame('GAME_OVER');
-      saveStatusGameByUser(eventId, scoreUser.uid, 'GAME_OVER');
+      saveStatusGameByUser(eventId, scoreUser.uid!, 'GAME_OVER');
       saveScoreUser(eventId, scoreUser.uid!, scoreUser);
       return;
     }
-
     if (currentStage.lifeSaver === true || stage === stages.length) {
       // agregar funcionalidad de firebase
       setScoreUser((prevState) => ({
         ...prevState,
         score: String(currentStage.score),
       }));
-      saveScoreUser(eventId, scoreUser.uid, scoreUser);
+      saveScoreUser(eventId, scoreUser.uid, {
+        ...scoreUser,
+        score: String(currentStage.score),
+      });
     }
     saveStatusGameByUser(eventId, scoreUser.uid, 'STARTED');
     DispatchMessageService({

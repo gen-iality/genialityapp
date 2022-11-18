@@ -1,12 +1,22 @@
-import { Button, Space, Modal, Spin, Row, Col, Image, Typography, Card, Grid } from 'antd';
+import { Button, Space, Modal, Spin, Row, Col, Image, Typography, Card, Grid, Tooltip } from 'antd';
 import Rules from './Rules';
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 
 const { useBreakpoint } = Grid;
 export default function MenuGame() {
-  const { millonaire, loading, onAnnouncement, onChangeStatusGame, statusGame } = useMillonaireLanding();
+  const {
+    millonaire,
+    loading,
+    onAnnouncement,
+    onChangeStatusGame,
+    statusGame,
+    scores,
+    scoreUser,
+  } = useMillonaireLanding();
+  console.log('🚀 ~ file: MenuGame.tsx ~ line 16 ~ MenuGame ~ statusGame', statusGame);
   const screens = useBreakpoint();
-
+  const userExits = scores?.find((score) => score?.uid === scoreUser?.uid);
+  console.log('🚀 ~ file: MenuGame.tsx ~ line 18 ~ MenuGame ~ userExits', userExits);
   if (loading) return <Spin />;
 
   return (
@@ -50,13 +60,12 @@ export default function MenuGame() {
             </Typography.Title>
           </Space>
           <Space size={'middle'} direction='vertical' style={{ width: '100%' }}>
-            <Button
-              block
-              size='large'
-              disabled={statusGame === 'GAME_OVER' ? true : false}
-              onClick={() => onAnnouncement()}>
-              <Typography.Text strong>Jugar</Typography.Text>
-            </Button>
+            <Tooltip placement='top' title={userExits ? 'No puedes volver a jugar.' : null}>
+              <Button block size='large' disabled={userExits ? true : false} onClick={() => onAnnouncement()}>
+                <Typography.Text strong>Jugar</Typography.Text>
+              </Button>
+            </Tooltip>
+
             <Button block size='large' onClick={() => onChangeStatusGame('GAME_OVER')}>
               <Typography.Text strong>Ranking</Typography.Text>
             </Button>

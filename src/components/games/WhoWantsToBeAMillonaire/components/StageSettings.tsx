@@ -107,7 +107,11 @@ const StageSettings = () => {
             <Input value={stage.score} onChange={(e) => onChangeStage('score', e.target.value)} />
           </Form.Item>
           <Form.Item label='Es salvavidas'>
-            <Checkbox value={stage.lifeSaver} onChange={() => onChangeStage('lifeSaver', !stage.lifeSaver)} />
+            <Checkbox
+              defaultChecked={stage.lifeSaver}
+              value={stage.lifeSaver === true ? true : false}
+              onChange={() => onChangeStage('lifeSaver', !stage.lifeSaver)}
+            />
           </Form.Item>
         </>
       </Modal>

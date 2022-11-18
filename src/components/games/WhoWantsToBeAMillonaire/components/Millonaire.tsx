@@ -91,7 +91,7 @@ export default function Millonaire() {
                   width: '90%',
                 }}>
                 <Typography.Paragraph style={{ textAlign: 'center', fontSize: '20px' }}>
-                  {question.question}
+                  {question?.question}
                 </Typography.Paragraph>
               </Card>
             </Row>
