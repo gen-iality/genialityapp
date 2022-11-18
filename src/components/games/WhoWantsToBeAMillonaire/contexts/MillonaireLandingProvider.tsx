@@ -24,7 +24,6 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   //-----------------------------------CONTEXT--------------------------//
   const cEvent = useContext(CurrentEventContext);
   const cUser = useContext(CurrentEventUserContext);
-  console.log('🚀 ~ file: MillonaireLandingProvider.tsx ~ line 26 ~ MillonaireLandingProvider ~ cUser', cUser);
   //-----------------------------STATE---------------------------------//
   const [loading, setLoading] = useState(false);
   const [millonaire, setMillonaire] = useState<IMillonaire>(INITIAL_STATE_MILLONAIRE);
@@ -32,9 +31,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   const [statusGame, setStatusGame] = useState('NOT_STARTED');
   const [currentStage, setCurrentStage] = useState<IStages>(INITIAL_STATE_STAGE);
   const [stage, setStage] = useState<number>(1);
-  console.log('🚀 ~ file: MillonaireLandingProvider.tsx ~ line 39 ~ MillonaireLandingProvider ~ stage', stage);
   const [stages, setStages] = useState<IStages[]>([]);
-  console.log('🚀 ~ file: MillonaireLandingProvider.tsx ~ line 41 ~ MillonaireLandingProvider ~ stages', stages);
   const [questions, setQuestions] = useState<IQuestions[]>([]);
   const [question, setQuestion] = useState<IQuestions>({} as IQuestions);
   const [score, setScore] = useState<number>(0);
@@ -223,13 +220,14 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   };
 
   const onFinishedGame = () => {
+    const prevStage = stages.find((stageFind) => stageFind.stage === stage - 1) || INITIAL_STATE_STAGE;
     setLoading(true);
     setStartGame(false);
     setStatusGame('GAME_OVER');
     setStage(0);
     setCurrentStage(stagesReset!);
     setQuestion(questionReset);
-    saveScoreUser(eventId, currentUser.user.uid!, scoreUser);
+    saveScoreUser(eventId, currentUser.user.uid!, { ...scoreUser, score: String(prevStage.score) });
     saveStatusGameByUser(eventId, currentUser.user.uid!, 'GAME_OVER');
     setLoading(false);
   };
