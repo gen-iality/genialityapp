@@ -119,3 +119,15 @@ export const gridTextNotBreaking: React.CSSProperties = {
 export const gridText: React.CSSProperties = {
   fontSize: '16px',
 };
+
+/* Mobile */
+export const gridTextBreakingMobile: React.CSSProperties = {
+  overflowWrap: 'anywhere',
+  fontSize: '10px',
+};
+export const gridTextNotBreakingMobile: React.CSSProperties = {
+  fontSize: '10px',
+};
+export const gridTextMobile: React.CSSProperties = {
+  fontSize: '12px',
+};

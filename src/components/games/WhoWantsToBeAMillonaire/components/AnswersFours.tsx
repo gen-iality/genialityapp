@@ -4,6 +4,13 @@ import { useState } from 'react';
 import { IAnswers } from '../interfaces/Millonaire';
 const { Title } = Typography;
 
+const answerLetter: { 0: string; 1: string; 2: string; 3: string } = {
+  0: 'A',
+  1: 'B',
+  2: 'C',
+  3: 'D',
+};
+
 export default function AnswersFours() {
   const { answers, onChangeAnswerFour } = useMillonaireCMS();
   //  iscorret is only for one answer
@@ -22,10 +29,9 @@ export default function AnswersFours() {
       </Title>
       {answers.map((_, index) => {
         return (
-          <Form.Item
-            style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
-            label={`Respuesta ${index + 1}`}>
+          <Form.Item label={`Respuesta ${answerLetter[index]}`}>
             <Input
+              style={{ borderColor: answers[index]?.isCorrect === true ? '#52C41A' : '' }}
               value={answers[index]?.answer}
               onChange={(e) => onChangeAnswerFour(index, 'answer', e.target.value)}
             />
