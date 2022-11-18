@@ -345,6 +345,18 @@ iframe {
       padding: 24px 24px;
     }
   }
+  .ant-drawer-body::-webkit-scrollbar {
+    width: 5px;
+    /* Tamaño del scroll en vertical */
+    height: 5px;
+    /* Tamaño del scroll en horizontal */
+    display: block;
+    /* Ocultar scroll */
+  }
+  .ant-drawer-body::-webkit-scrollbar-thumb {
+    background: #dbdbdb65;
+    border-radius: 4px;
+  }
 }
 
 // Estilos para la caja de colores en reactQuill, modifica los dos primero colores

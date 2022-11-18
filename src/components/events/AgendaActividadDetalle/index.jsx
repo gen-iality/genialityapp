@@ -24,245 +24,248 @@ import DrawerBingo from '@components/games/bingo/components/DrawerBingo';
 import SharePhotoInLanding from '@/components/games/sharePhoto/views/SharePhotoInLanding';
 import WhereisInLanding from '@/components/games/whereIs/views/WhereIsInLanding';
 const { setHasOpenSurveys } = SurveyActions;
+import PlayMillonaire from '@/components/games/WhoWantsToBeAMillonaire/components/PlayMillonaire';
 const sharePhotoEventStatus = true;
 const whereIsEventStatus = true;
+const millonaireEventSatus = true;
 
-const AgendaActividadDetalle = props => {
-	let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
-	let [orderedHost, setOrderedHost] = useState([]);
-	let cSurveys = UseSurveysContext();
-	const [videoStyles, setVideoStyles] = useState(null);
-	const [videoButtonStyles, setVideoButtonStyles] = useState(null);
-	let [blockActivity, setblockActivity] = useState(false);
-	const [activity, setactivity] = useState('');
-	const cUser = UseCurrentUserContext();
-	let cEventUser = UseUserEvent();
-	const cEvent = UseEventContext();
-	const [openOrCloseModalDrawer, setOpenOrCloseModalDrawer] = useState(false);
-	const intl = useIntl();
-	{
-		Moment.locale(window.navigator.language);
-	}
+const AgendaActividadDetalle = (props) => {
+  let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
+  let [orderedHost, setOrderedHost] = useState([]);
+  let cSurveys = UseSurveysContext();
+  const [videoStyles, setVideoStyles] = useState(null);
+  const [videoButtonStyles, setVideoButtonStyles] = useState(null);
+  let [blockActivity, setblockActivity] = useState(false);
+  const [activity, setactivity] = useState('');
+  const cUser = UseCurrentUserContext();
+  let cEventUser = UseUserEvent();
+  const cEvent = UseEventContext();
+  const [openOrCloseModalDrawer, setOpenOrCloseModalDrawer] = useState(false);
+  const intl = useIntl();
+  {
+    Moment.locale(window.navigator.language);
+  }
 
-	useEffect(() => {
-		async function getActividad() {
-			return await AgendaApi.getOne(props.match.params.activity_id, cEvent.value._id);
-		}
+  useEffect(() => {
+    async function getActividad() {
+      return await AgendaApi.getOne(props.match.params.activity_id, cEvent.value._id);
+    }
 
-		function orderHost(hosts) {
-			hosts.sort(function(a, b) {
-				return a.order - b.order;
-			});
-			setOrderedHost(hosts);
-		}
+    function orderHost(hosts) {
+      hosts.sort(function(a, b) {
+        return a.order - b.order;
+      });
+      setOrderedHost(hosts);
+    }
 
-		getActividad().then(result => {
-			helperDispatch({ type: 'currentActivity', currentActivity: result });
-			setactivity(result);
-			orderHost(result.hosts);
-			cSurveys.set_current_activity(result);
-		});
+    getActividad().then((result) => {
+      helperDispatch({ type: 'currentActivity', currentActivity: result });
+      setactivity(result);
+      orderHost(result.hosts);
+      cSurveys.set_current_activity(result);
+    });
 
-		props.setTopBanner(false);
-		props.setVirtualConference(false);
+    props.setTopBanner(false);
+    props.setVirtualConference(false);
 
-		HandleOpenCloseMenuRigth(false);
-		if (props.socialzonetabs?.publicChat || props.socialzonetabs?.privateChat || props.socialzonetabs?.attendees) {
-			HandleOpenCloseMenuRigth(false);
-		} else {
-			HandleOpenCloseMenuRigth(true);
-		}
+    HandleOpenCloseMenuRigth(false);
+    if (props.socialzonetabs?.publicChat || props.socialzonetabs?.privateChat || props.socialzonetabs?.attendees) {
+      HandleOpenCloseMenuRigth(false);
+    } else {
+      HandleOpenCloseMenuRigth(true);
+    }
 
-		return () => {
-			props.setTopBanner(true);
-			props.setVirtualConference(true);
-			HandleOpenCloseMenuRigth(true);
-			helperDispatch({ type: 'currentActivity', currentActivity: null });
-			setactivity(null);
-		};
-	}, []);
+    return () => {
+      props.setTopBanner(true);
+      props.setVirtualConference(true);
+      HandleOpenCloseMenuRigth(true);
+      helperDispatch({ type: 'currentActivity', currentActivity: null });
+      setactivity(null);
+    };
+  }, []);
 
-	useEffect(() => {
-		let unSuscribe = () => {};
-		if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
-			cSurveys.set_current_activity(currentActivity);
+  useEffect(() => {
+    let unSuscribe = () => {};
+    if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
+      cSurveys.set_current_activity(currentActivity);
 
-			if (cEvent.value.type_event !== 'physicalEvent') {
-				const eventId = cEvent.value._id;
-				const activityId = props.match.params.activity_id;
+      if (cEvent.value.type_event !== 'physicalEvent') {
+        const eventId = cEvent.value._id;
+        const activityId = props.match.params.activity_id;
 
-				unSuscribe = checkinAttendeeInActivity(cEventUser.value, eventId, activityId);
-			}
-		}
+        unSuscribe = checkinAttendeeInActivity(cEventUser.value, eventId, activityId);
+      }
+    }
 
-		return () => unSuscribe();
-	}, [currentActivity, cEventUser.status]);
+    return () => unSuscribe();
+  }, [currentActivity, cEventUser.status]);
 
-	useEffect(() => {
-		if (chatAttendeChats === '4') {
-			const sharedProperties = {
-				position: 'fixed',
-				right: '0',
-				width: '170px',
-			};
+  useEffect(() => {
+    if (chatAttendeChats === '4') {
+      const sharedProperties = {
+        position: 'fixed',
+        right: '0',
+        width: '170px',
+      };
 
-			const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
+      const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
 
-			setVideoStyles({
-				...sharedProperties,
-				...verticalVideo,
-				zIndex: '100',
-				transition: '300ms',
-			});
+      setVideoStyles({
+        ...sharedProperties,
+        ...verticalVideo,
+        zIndex: '100',
+        transition: '300ms',
+      });
 
-			const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
+      const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
 
-			setVideoButtonStyles({
-				...sharedProperties,
-				...verticalVideoButton,
-				zIndex: '101',
-				cursor: 'pointer',
-				display: 'block',
-				height: '96px',
-			});
-		} else {
-			setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
-			setVideoButtonStyles({ display: 'none' });
-		}
-	}, [chatAttendeChats, isMobile]);
+      setVideoButtonStyles({
+        ...sharedProperties,
+        ...verticalVideoButton,
+        zIndex: '101',
+        cursor: 'pointer',
+        display: 'block',
+        height: '96px',
+      });
+    } else {
+      setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
+      setVideoButtonStyles({ display: 'none' });
+    }
+  }, [chatAttendeChats, isMobile]);
 
-	// VALIDAR ACTIVIDADES POR CODIGO
-	useEffect(() => {
-		if (cEvent.value && cUser.value) {
-			if (cEvent.value?._id == '61200dfb2c0e5301fa5e9d86') {
-				if (activitiesCode.includes(props.match.params.activity_id)) {
-					if (cEventUser.value) {
-						if (
-							codeActivity.includes(cEventUser.value?.properties.codigo) ||
-							cityValid.includes(cEventUser.value?.properties.ciudad)
-						) {
-							setblockActivity(false);
-						} else {
-							setblockActivity(true);
-						}
-					}
-				}
-			} else {
-				setblockActivity(false);
-			}
-		}
-	}, [cEvent.value, cEventUser.value, cUser.value]);
+  // VALIDAR ACTIVIDADES POR CODIGO
+  useEffect(() => {
+    if (cEvent.value && cUser.value) {
+      if (cEvent.value?._id == '61200dfb2c0e5301fa5e9d86') {
+        if (activitiesCode.includes(props.match.params.activity_id)) {
+          if (cEventUser.value) {
+            if (
+              codeActivity.includes(cEventUser.value?.properties.codigo) ||
+              cityValid.includes(cEventUser.value?.properties.ciudad)
+            ) {
+              setblockActivity(false);
+            } else {
+              setblockActivity(true);
+            }
+          }
+        }
+      } else {
+        setblockActivity(false);
+      }
+    }
+  }, [cEvent.value, cEventUser.value, cUser.value]);
 
-	// console.log('cEvent', cEvent);
+  // console.log('cEvent', cEvent);
 
-	return (
-		<div>
-			<div className=' container_agenda-information container-calendar2'>
-				<Card style={{ padding: '1 !important' }} className='agenda_information'>
-					{/* <HeaderColumnswithContext isVisible={true} /> */}
-					{!blockActivity ? (
-						<>
-							{props.match.params.activity_id === '61992d5f020bde260e068402' &&
-							cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
-								<Alert
-									showIcon
-									style={{
-										width: '100%',
-										marginTop: 40,
-										marginBottom: 40,
-										textAlign: 'center',
-										fontSize: '19px',
-									}}
-									message={
-										<>
-											{`Hola ${cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
-										</>
-									}
-									type='warning'
-								/>
-							) : (
-								<HCOActividad />
-							)}
-						</>
-					) : (
-						<>
-							<Row>
-								{/* <ImageComponentwithContext /> */}
-								<Alert
-									showIcon
-									style={{
-										width: '100%',
-										marginTop: 40,
-										marginBottom: 40,
-										textAlign: 'center',
-										fontSize: '19px',
-									}}
-									message={
-										<>
-											¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
-											<a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
-												https://iberofest.co/producto/edc/
-											</a>{' '}
-										</>
-									}
-									type='warning'
-								/>
-							</Row>
-						</>
-					)}
-					{cEvent.value?.bingo && (
-						<>
-							<Row align='middle' justify='center' style={{ padding: '10px' }}>
-								<Button
-									size='large'
-									type='primary'
-									onClick={() => {
-										setOpenOrCloseModalDrawer(true);
-									}}>
-									¡Jugar BINGO!
-								</Button>
-							</Row>
-							<DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
-						</>
-					)}
-					{sharePhotoEventStatus && (
-						<>
-							<Row align='middle' justify='center' style={{ padding: '10px' }}>
-								<SharePhotoInLanding eventId={cEvent.value._id} />
-							</Row>
-						</>
-					)}
-					{whereIsEventStatus && (
-						<Row align='middle' justify='center' style={{ padding: '10px' }}>
-							<WhereisInLanding />
-						</Row>
-					)}
-					<AditionalInformation orderedHost={orderedHost} />
-				</Card>
-			</div>
-			{/* Drawer encuestas */}
-			<SurveyDrawer colorFondo={cEvent.value.styles.toolbarDefaultBg} colorTexto={cEvent.value.styles.textMenu} />
-		</div>
-	);
+  return (
+    <div>
+      <div className=' container_agenda-information container-calendar2'>
+        <Card style={{ padding: '1 !important' }} className='agenda_information'>
+          {/* <HeaderColumnswithContext isVisible={true} /> */}
+          {!blockActivity ? (
+            <>
+              {props.match.params.activity_id === '61992d5f020bde260e068402' &&
+              cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
+                <Alert
+                  showIcon
+                  style={{
+                    width: '100%',
+                    marginTop: 40,
+                    marginBottom: 40,
+                    textAlign: 'center',
+                    fontSize: '19px',
+                  }}
+                  message={
+                    <>
+                      {`Hola ${cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
+                    </>
+                  }
+                  type='warning'
+                />
+              ) : (
+                <HCOActividad />
+              )}
+            </>
+          ) : (
+            <>
+              <Row>
+                {/* <ImageComponentwithContext /> */}
+                <Alert
+                  showIcon
+                  style={{
+                    width: '100%',
+                    marginTop: 40,
+                    marginBottom: 40,
+                    textAlign: 'center',
+                    fontSize: '19px',
+                  }}
+                  message={
+                    <>
+                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
+                      <a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
+                        https://iberofest.co/producto/edc/
+                      </a>{' '}
+                    </>
+                  }
+                  type='warning'
+                />
+              </Row>
+            </>
+          )}
+          {cEvent.value?.bingo && (
+            <>
+              <Row align='middle' justify='center' style={{ padding: '10px' }}>
+                <Button
+                  size='large'
+                  type='primary'
+                  onClick={() => {
+                    setOpenOrCloseModalDrawer(true);
+                  }}>
+                  ¡Jugar BINGO!
+                </Button>
+              </Row>
+              <DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
+            </>
+          )}
+          {sharePhotoEventStatus && (
+            <>
+              <Row align='middle' justify='center' style={{ padding: '10px' }}>
+                <SharePhotoInLanding eventId={cEvent.value._id} />
+              </Row>
+            </>
+          )}
+          {millonaireEventSatus && <PlayMillonaire />}
+          {whereIsEventStatus && (
+            <Row align='middle' justify='center' style={{ padding: '10px' }}>
+              <WhereisInLanding />
+            </Row>
+          )}
+          <AditionalInformation orderedHost={orderedHost} />
+        </Card>
+      </div>
+      {/* Drawer encuestas */}
+      <SurveyDrawer colorFondo={cEvent.value.styles.toolbarDefaultBg} colorTexto={cEvent.value.styles.textMenu} />
+    </div>
+  );
 };
 
-const mapStateToProps = state => ({
-	mainStageContent: state.stage.data.mainStage,
-	userInfo: state.user.data,
-	currentActivity: state.stage.data.currentActivity,
-	currentSurvey: state.survey.data.currentSurvey,
-	hasOpenSurveys: state.survey.data.hasOpenSurveys,
-	tabs: state.stage.data.tabs,
-	generalTabs: state.tabs.generalTabs,
-	permissions: state.permissions,
-	isVisible: state.survey.data.surveyVisible,
-	viewSocialZoneNetworking: state.spaceNetworkingReducer.view,
+const mapStateToProps = (state) => ({
+  mainStageContent: state.stage.data.mainStage,
+  userInfo: state.user.data,
+  currentActivity: state.stage.data.currentActivity,
+  currentSurvey: state.survey.data.currentSurvey,
+  hasOpenSurveys: state.survey.data.hasOpenSurveys,
+  tabs: state.stage.data.tabs,
+  generalTabs: state.tabs.generalTabs,
+  permissions: state.permissions,
+  isVisible: state.survey.data.surveyVisible,
+  viewSocialZoneNetworking: state.spaceNetworkingReducer.view,
 });
 
 const mapDispatchToProps = {
-	setTopBanner,
-	setVirtualConference,
-	setHasOpenSurveys,
+  setTopBanner,
+  setVirtualConference,
+  setHasOpenSurveys,
 };
 
 // let AgendaActividadDetalleWithContext = WithEviusContext(AgendaActividadDetalle);

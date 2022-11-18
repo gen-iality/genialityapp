@@ -13,9 +13,6 @@ import {
 export const useDrawerBingo = () => {
   const { value } = UseEventContext();
   const cUser = UseUserEvent();
-  console.log('cUser', cUser)
-  console.log('🚀 ~ file: useDrawerBingo.tsx ~ line 16 ~ useDrawerBingo ~ cUser', cUser);
-
   const [arrayLocalStorage, setArrayLocalStorage] = useState<number[]>([]);
   const [arrayDataBingo, setArrayDataBingo] = useState<RamdonBingoValue[]>([]);
   const [arrayDataBingoBallot, setArrayDataBingoBallot] = useState<string[]>([]);
