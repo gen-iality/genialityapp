@@ -9,6 +9,7 @@ const DrawerButtonsContainer = ({
   postBingoByUser,
   clearCarton,
   bingoData,
+  closedrawer,
 }: DrawerButtonsInterface) => {
   const [showDrawerChat, setshowDrawerChat] = useState<boolean>(false);
   const [showDrawerRules, setshowDrawerRules] = useState<boolean>(false);
@@ -21,6 +22,7 @@ const DrawerButtonsContainer = ({
         clearCarton={clearCarton}
         setshowDrawerChat={setshowDrawerChat}
         setshowDrawerRules={setshowDrawerRules}
+        closedrawer={closedrawer}
       />
       <DrawerRules showDrawerRules={showDrawerRules} setshowDrawerRules={setshowDrawerRules} bingoData={bingoData} />
       <DrawerChat showDrawerChat={showDrawerChat} setshowDrawerChat={setshowDrawerChat} />

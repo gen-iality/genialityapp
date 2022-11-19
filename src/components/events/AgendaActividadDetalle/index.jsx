@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import { useIntl } from 'react-intl';
-import { Row, Card, Alert, Button } from 'antd';
+import { Row, Card, Alert, Button, Space } from 'antd';
 import WithEviusContext from '../../../context/withContext';
 import { setTopBanner } from '../../../redux/topBanner/actions';
 import { AgendaApi } from '../../../helpers/request';
@@ -212,34 +212,27 @@ const AgendaActividadDetalle = (props) => {
               </Row>
             </>
           )}
-          {cEvent.value?.bingo && (
-            <>
-              <Row align='middle' justify='center' style={{ padding: '10px' }}>
-                <Button
-                  size='large'
-                  type='primary'
-                  onClick={() => {
-                    setOpenOrCloseModalDrawer(true);
-                  }}>
-                  ¡Jugar BINGO!
-                </Button>
-              </Row>
-              <DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
-            </>
-          )}
-          {sharePhotoEventStatus && (
-            <>
-              <Row align='middle' justify='center' style={{ padding: '10px' }}>
-                <SharePhotoInLanding eventId={cEvent.value._id} />
-              </Row>
-            </>
-          )}
-          {millonaireEventSatus && <PlayMillonaire />}
-          {whereIsEventStatus && (
-            <Row align='middle' justify='center' style={{ padding: '10px' }}>
-              <WhereisInLanding />
-            </Row>
-          )}
+          <div style={{ position: 'fixed', bottom: '8px', left: '50%', zIndex: '999', margin: '5% auto' }}>
+            <Space direction='vertical'>
+              {cEvent.value?.bingo && (
+                <>
+                  <Button
+                    size='large'
+                    type='primary'
+                    onClick={() => {
+                      setOpenOrCloseModalDrawer(true);
+                    }}>
+                    ¡Jugar BINGO!
+                  </Button>
+
+                  <DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
+                </>
+              )}
+              {sharePhotoEventStatus && <SharePhotoInLanding eventId={cEvent.value._id} />}
+              {millonaireEventSatus && <PlayMillonaire />}
+              {whereIsEventStatus && <WhereisInLanding />}
+            </Space>
+          </div>
           <AditionalInformation orderedHost={orderedHost} />
         </Card>
       </div>

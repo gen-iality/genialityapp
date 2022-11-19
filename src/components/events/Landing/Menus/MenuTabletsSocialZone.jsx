@@ -46,7 +46,7 @@ const MenuTabletsSocialZone = (props) => {
       </div>
 
       <Drawer
-        style={{ zIndex: '200' }}
+        /* style={{ zIndex: '200' }} */
         bodyStyle={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
         height={'90vh'}
         placement='bottom'

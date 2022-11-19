@@ -28,11 +28,9 @@ export default function DrawerMillonaire() {
   return (
     <>
       {visibilityControl.published && (
-        <Row align='middle' justify='center' style={{ padding: '10px' }}>
-          <Button size='large' type='primary' disabled={!visibilityControl.active} onClick={onChangeVisibilityDrawer}>
-            ¡Jugar Millonario!
-          </Button>
-        </Row>
+        <Button size='large' type='primary' disabled={!visibilityControl.active} onClick={onChangeVisibilityDrawer}>
+          ¡Jugar Millonario!
+        </Button>
       )}
       <Drawer
         closeIcon={<CloseOutlined style={{ color: '#FFFFFF' }} />}
