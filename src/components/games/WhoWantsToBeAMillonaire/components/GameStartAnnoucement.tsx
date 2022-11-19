@@ -1,4 +1,4 @@
-import { Space, Image, Typography, Button, Card, Row, Grid, Result } from 'antd';
+import { Space, Image, Typography, Button, Card, Row, Grid, Result, Modal } from 'antd';
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 const { useBreakpoint } = Grid;
 import Stages from './Stages';
@@ -6,6 +6,18 @@ export default function GameStartAnnoucement() {
   const { millonaire, visibilityControl, onStartGame, onChangeStatusGame } = useMillonaireLanding();
   const { name, appearance } = millonaire;
   const screens = useBreakpoint();
+
+  const startGame = () => {
+    Modal.confirm({
+      title: 'Estás a punto de iniciar el juego',
+      content: '',
+      type: 'confirm',
+      okType: 'primary',
+      okText: 'Jugar ahora',
+      onOk: () => onStartGame(),
+    });
+  };
+
   return (
     <Row
       align='middle'
@@ -30,12 +42,12 @@ export default function GameStartAnnoucement() {
             </Typography.Paragraph>
           }
           extra={
-            <Space>
+            <Space wrap>
               <Button
                 size='large'
                 disabled={visibilityControl.active === false}
                 type='primary'
-                onClick={() => onStartGame()}>
+                onClick={() => startGame()}>
                 Empezar
               </Button>
               <Button size='large' onClick={() => onChangeStatusGame('NOT_STARTED')}>
