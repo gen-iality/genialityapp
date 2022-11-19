@@ -2,7 +2,8 @@ import { Space, Image, Typography, Button, Card, Row, Grid, Result } from 'antd'
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 const { useBreakpoint } = Grid;
 import Stages from './Stages';
-export default function GameStartAnnoucement() {
+export default function GameAnnoucement() {
+  // lo iba crear para hacer la parte este de que mostrar que gano o perdio pero no me dio tiempo :(
   const { millonaire, visibilityControl, onStartGame, onChangeStatusGame } = useMillonaireLanding();
   const { name, appearance } = millonaire;
   const screens = useBreakpoint();
