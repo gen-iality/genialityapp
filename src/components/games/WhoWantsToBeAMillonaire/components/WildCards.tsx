@@ -21,7 +21,8 @@ export default function WildCards() {
       centered: true,
       title: '¿Está seguro que desea retirarse?',
       icon: <ExclamationCircleOutlined />,
-      content: 'Su puntaje final será el de la última etapa superada',
+      // content: 'Su puntaje final será el de la última etapa superada',
+      content: `Su puntaje final será de ${currentStage.stage === 1 ? 0 : prevScore} puntos`,
       okText: 'Retirarme',
       okType: 'danger',
       cancelText: 'Seguir jugando',
@@ -53,7 +54,8 @@ export default function WildCards() {
           shape='round'
           style={{ background: 'radial-gradient(129.07% 129.07% at 50% 56.98%, #120754 0%, #382485 100%)' }}
           onClick={() => showPropsConfirm()}>
-          <ExitRunIcon style={{ fontSize: '25px' }} />
+          {/* <ExitRunIcon style={{ fontSize: '25px' }} /> */}
+          {currentStage.stage === 1 && 'Retirarme'}
           {currentStage && currentStage.stage !== 1 && 'Retirarme con' + ' ' + prevScore + ' ' + 'puntos'}
         </Button>
         <Stages />
