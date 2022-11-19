@@ -4,8 +4,10 @@ import Stages from './Stages';
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 import ExitRunIcon from '@2fd/ant-design-icons/lib/ExitRun';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ButtonMillonaire } from '../interfaces/Millonaire';
 const { confirm } = Modal;
-export default function WildCards() {
+
+export default function WildCards({ isTitle }: ButtonMillonaire) {
   const {
     onFinishedGame,
     usedWildCards,
@@ -35,7 +37,7 @@ export default function WildCards() {
   return (
     <Row justify='center' align='middle'>
       <Space wrap>
-        {
+        {!isTitle && (
           <Button
             disabled={used50}
             type='primary'
@@ -47,18 +49,20 @@ export default function WildCards() {
             onClick={() => onFiftyOverFifty()}>
             50 / 50
           </Button>
-        }
-        <Button
-          type='primary'
-          size='large'
-          shape='round'
-          style={{ background: 'radial-gradient(129.07% 129.07% at 50% 56.98%, #120754 0%, #382485 100%)' }}
-          onClick={() => showPropsConfirm()}>
-          {/* <ExitRunIcon style={{ fontSize: '25px' }} /> */}
-          {currentStage.stage === 1 && 'Retirarme'}
-          {currentStage && currentStage.stage !== 1 && 'Retirarme con' + ' ' + prevScore + ' ' + 'puntos'}
-        </Button>
-        <Stages />
+        )}
+        {isTitle && (
+          <Button
+            type='primary'
+            size='large'
+            shape='round'
+            style={{ background: 'radial-gradient(129.07% 129.07% at 50% 56.98%, #52c41a 0%, #382485 100%)' }}
+            onClick={() => showPropsConfirm()}>
+            {/* <ExitRunIcon style={{ fontSize: '25px' }} /> */}
+            {currentStage.stage === 1 && 'Retirarme'}
+            {currentStage && currentStage.stage !== 1 && 'Retirarme con' + ' ' + prevScore + ' ' + 'puntos'}
+          </Button>
+        )}
+        {!isTitle && <Stages />}
       </Space>
     </Row>
   );

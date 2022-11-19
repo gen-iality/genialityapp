@@ -169,3 +169,7 @@ export interface TimerM {
   countdown: number;
   timer: number;
 }
+
+export interface ButtonMillonaire {
+  isTitle?: boolean;
+}
