@@ -58,7 +58,8 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   };
   const stagesReset = stages.find((stage) => stage.stage === 0) || INITIAL_STATE_STAGE;
   const questionReset = questions.find((question) => question.id === stagesReset?.question) as IQuestions;
-
+  const prevStage = stages.find((stageFind) => stageFind.stage === stage - 1) || INITIAL_STATE_STAGE;
+  const prevScore = prevStage.score || 0;
   //-------------USEEFECTS---------------------------------------//
 
   useEffect(() => {
@@ -227,7 +228,16 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     setStage(0);
     setCurrentStage(stagesReset!);
     setQuestion(questionReset);
-    saveScoreUser(eventId, currentUser.user.uid!, { ...scoreUser, score: String(prevStage.score) });
+    saveScoreUser(
+      eventId,
+      currentUser.user.uid!,
+      stage !== 1
+        ? { ...scoreUser, score: String(prevStage.score) }
+        : {
+            ...scoreUser,
+            score: String(0),
+          }
+    );
     saveStatusGameByUser(eventId, currentUser.user.uid!, 'GAME_OVER');
     setLoading(false);
   };
@@ -325,6 +335,8 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
         scoreUser,
         scores,
         usedWildCards,
+        prevStage,
+        prevScore,
         onChangeVisibilityDrawer,
         onStartGame,
         onFinishedGame,

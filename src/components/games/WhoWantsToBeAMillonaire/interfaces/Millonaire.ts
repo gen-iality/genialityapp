@@ -133,6 +133,8 @@ export interface TMillonaireContextPropLanding {
     usedCall: boolean;
     usedAudience: boolean;
   };
+  prevStage: IStages;
+  prevScore: number;
   onChangeVisibilityDrawer: () => void;
   onStartGame: () => void;
   onFinishedGame: () => void;

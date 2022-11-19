@@ -6,7 +6,15 @@ import ExitRunIcon from '@2fd/ant-design-icons/lib/ExitRun';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 const { confirm } = Modal;
 export default function WildCards() {
-  const { onFinishedGame, usedWildCards, onFiftyOverFifty, statusGame } = useMillonaireLanding();
+  const {
+    onFinishedGame,
+    usedWildCards,
+    onFiftyOverFifty,
+    statusGame,
+    stages,
+    prevScore,
+    currentStage,
+  } = useMillonaireLanding();
   const { used50 } = usedWildCards;
   const showPropsConfirm = () => {
     confirm({
@@ -22,6 +30,7 @@ export default function WildCards() {
       },
     });
   };
+
   return (
     <Row justify='center' align='middle'>
       <Space wrap>
@@ -45,6 +54,7 @@ export default function WildCards() {
           style={{ background: 'radial-gradient(129.07% 129.07% at 50% 56.98%, #120754 0%, #382485 100%)' }}
           onClick={() => showPropsConfirm()}>
           <ExitRunIcon style={{ fontSize: '25px' }} />
+          {currentStage && currentStage.stage !== 1 && 'Retirarme con' + ' ' + prevScore + ' ' + 'puntos'}
         </Button>
         <Stages />
       </Space>
