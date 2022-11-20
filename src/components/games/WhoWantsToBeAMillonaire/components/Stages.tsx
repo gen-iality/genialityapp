@@ -6,19 +6,28 @@ import { CloseOutlined } from '@ant-design/icons';
 import ProgressStarIcon from '@2fd/ant-design-icons/lib/ProgressStar';
 
 export default function Stages() {
-  const { stages, currentStage, stage } = useMillonaireLanding();
+  const { stages, currentStage, stage, statusGame } = useMillonaireLanding();
   const [isVisible, setIsVisible] = useState(false);
   const stagesOrderByStage = stages.sort((a, b) => b.stage - a.stage);
 
   return (
     <>
       <Button
-        type='primary'
+        block
+        type={statusGame === 'STARTED' ? 'primary' : 'default'}
         size='large'
-        shape='round'
-        style={{ background: 'radial-gradient(129.07% 129.07% at 50% 56.98%, #120754 0%, #382485 100%)' }}
+        shape={statusGame === 'STARTED' ? 'round' : 'default'}
+        style={
+          statusGame === 'STARTED'
+            ? { background: 'radial-gradient(129.07% 129.07% at 50% 56.98%, #120754 0%, #382485 100%)' }
+            : undefined
+        }
         onClick={() => setIsVisible(!isVisible)}>
-        Etapas
+        {statusGame === 'ANNOUNCEMENT' || statusGame === 'STARTED' ? (
+          'Etapas'
+        ) : (
+          <Typography.Text strong>Etapas</Typography.Text>
+        )}
       </Button>
       <Drawer
         className='editAnt'

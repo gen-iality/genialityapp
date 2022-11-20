@@ -14,6 +14,7 @@ import DrawerButtonsContainer from './DrawerButtonsContainer';
 import PrintCardBoard from './PrintCardBoard';
 import { useRef } from 'react';
 import PrintComponent from './PrintComponent';
+import { CloseOutlined } from '@ant-design/icons';
 const { useBreakpoint } = Grid;
 
 const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => {} }: DrawerBingoInterface) => {
@@ -67,6 +68,11 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
         />
       }
       visible={openOrClose}
+      closeIcon={
+        <Space align='center' style={{ width: '100%' }} wrap>
+          <CloseOutlined /> Cerrar
+        </Space>
+      }
       onClose={handleClose}
       width={'100vw'}
       destroyOnClose={true}>
@@ -126,6 +132,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
                 postBingoByUser={postBingoByUser}
                 clearCarton={clearCarton}
                 bingoData={bingoData}
+                closedrawer={handleClose}
               />
             </Col>
           </Row>

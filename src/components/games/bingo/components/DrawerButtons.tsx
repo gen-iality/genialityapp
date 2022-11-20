@@ -1,6 +1,6 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import { CommentOutlined, FileProtectOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Modal, Row, Typography } from 'antd';
+import { Button, Card, Col, Modal, Row, Space, Typography } from 'antd';
 import { useBingo } from '@/components/games/bingo/hooks/useBingo';
 import { DrawerButtonsInterface } from '../interfaces/bingo';
 
@@ -10,6 +10,7 @@ const DrawerButtons = ({
   clearCarton,
   setshowDrawerChat = () => {},
   setshowDrawerRules = () => {},
+  closedrawer,
 }: DrawerButtonsInterface) => {
   const showModalConfirm = () => {
     Modal.confirm({
@@ -23,15 +24,17 @@ const DrawerButtons = ({
   const { bingo } = useBingo();
   const bingoColor = bingo?.bingo_appearance.background_color;
   const validateLength = bingo?.dimensions.amount || 25;
+
   const singBingo = () => {
-    DispatchMessageService({
+    Modal.info({
+      centered: true,
+      title: '¡Genial!, has cantado bingo',
       type: 'success',
-      key: 'send',
-      msj: '📣 ¡BINGO!',
-      action: 'show',
-      /* ts-ignore */
-      additionalMessage: false,
+      content: 'Un administrador está revisando su cartón',
+      okText: 'Ok',
+      okType: 'primary',
     });
+
     postBingoByUser();
   };
 
@@ -51,15 +54,17 @@ const DrawerButtons = ({
               style={{
                 width: '150px',
                 height: '150px',
-                border: `10px solid #FF4D4F`,
+                border: `10px solid ${
+                  arrayLocalStorage.filter((item) => item === 1).length < validateLength ? '#CECECE' : '#FF4D4F'
+                }`,
                 boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)',
               }}
               disabled={arrayLocalStorage.filter((item) => item === 1).length < validateLength}
               type='default'>
-              <Typography.Text
-                strong={arrayLocalStorage.filter((item) => item === 1).length < validateLength ? false : true}>
-                ¡BINGO!
-              </Typography.Text>
+              <Space direction='vertical'>
+                <Typography.Text>Cantar</Typography.Text>
+                <Typography.Text strong={true}>¡BINGO!</Typography.Text>
+              </Space>
             </Button>
           </Row>
         </Col>
@@ -91,6 +96,15 @@ const DrawerButtons = ({
             size='large'
             block>
             Chat
+          </Button>
+        </Col>
+        <Col span={24}>
+          <Button
+            style={{ boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)' }}
+            onClick={() => closedrawer()}
+            size='large'
+            block>
+            Cerrar
           </Button>
         </Col>
       </Row>

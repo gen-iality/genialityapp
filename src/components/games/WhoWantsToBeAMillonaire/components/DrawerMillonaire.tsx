@@ -9,6 +9,7 @@ import { IRenderViewLanding } from '../interfaces/Millonaire';
 import Ranking from '../../common/Ranking';
 import UsersRanking from './UsersRanking';
 import { CloseOutlined } from '@ant-design/icons';
+import Stages from './Stages';
 export default function DrawerMillonaire() {
   const {
     isVisible,
@@ -28,13 +29,12 @@ export default function DrawerMillonaire() {
   return (
     <>
       {visibilityControl.published && (
-        <Row align='middle' justify='center' style={{ padding: '10px' }}>
-          <Button size='large' type='primary' disabled={!visibilityControl.active} onClick={onChangeVisibilityDrawer}>
-            ¡Jugar Millonario!
-          </Button>
-        </Row>
+        <Button size='large' type='primary' disabled={!visibilityControl.active} onClick={onChangeVisibilityDrawer}>
+          ¡Jugar Millonario!
+        </Button>
       )}
       <Drawer
+        title={statusGame === 'STARTED' && <WildCards isTitle={true} />}
         closeIcon={<CloseOutlined style={{ color: '#FFFFFF' }} />}
         headerStyle={{
           border: 'none',

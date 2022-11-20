@@ -133,6 +133,8 @@ export interface TMillonaireContextPropLanding {
     usedCall: boolean;
     usedAudience: boolean;
   };
+  prevStage: IStages;
+  prevScore: number;
   onChangeVisibilityDrawer: () => void;
   onStartGame: () => void;
   onFinishedGame: () => void;
@@ -166,4 +168,8 @@ export interface IVisibility {
 export interface TimerM {
   countdown: number;
   timer: number;
+}
+
+export interface ButtonMillonaire {
+  isTitle?: boolean;
 }

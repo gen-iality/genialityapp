@@ -1,24 +1,13 @@
 import { Button, Space, Modal, Spin, Row, Col, Image, Typography, Card, Grid, Tooltip } from 'antd';
 import Rules from './Rules';
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
-
+import Stages from './Stages';
 const { useBreakpoint } = Grid;
 export default function MenuGame() {
-  const {
-    millonaire,
-    loading,
-    onAnnouncement,
-    onChangeStatusGame,
-    statusGame,
-    scores,
-    scoreUser,
-  } = useMillonaireLanding();
-  console.log('🚀 ~ file: MenuGame.tsx ~ line 16 ~ MenuGame ~ statusGame', statusGame);
+  const { millonaire, loading, onAnnouncement, onChangeStatusGame, scores, scoreUser } = useMillonaireLanding();
   const screens = useBreakpoint();
   const userExits = scores?.find((score) => score?.uid === scoreUser?.uid);
-  console.log('🚀 ~ file: MenuGame.tsx ~ line 18 ~ MenuGame ~ userExits', userExits);
   if (loading) return <Spin />;
-
   return (
     <Row
       align='middle'
@@ -62,7 +51,7 @@ export default function MenuGame() {
           <Space size={'middle'} direction='vertical' style={{ width: '100%' }}>
             <Tooltip placement='top' title={userExits ? 'No puedes volver a jugar.' : null}>
               <Button block size='large' disabled={userExits ? true : false} onClick={() => onAnnouncement()}>
-                <Typography.Text strong>Jugar</Typography.Text>
+                <Typography.Text strong>{userExits ? 'Ya participantes' : 'Jugar'}</Typography.Text>
               </Button>
             </Tooltip>
 
@@ -70,6 +59,7 @@ export default function MenuGame() {
               <Typography.Text strong>Ranking</Typography.Text>
             </Button>
             <Rules rules={millonaire.rules} />
+            <Stages />
           </Space>
         </Row>
       </Card>
