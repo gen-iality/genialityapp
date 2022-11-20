@@ -28,7 +28,7 @@ export default function DrawerMillonaire() {
 
   return (
     <>
-      {visibilityControl.published && (
+      {visibilityControl?.published && (
         <Button size='large' type='primary' disabled={!visibilityControl.active} onClick={onChangeVisibilityDrawer}>
           ¡Jugar Millonario!
         </Button>
