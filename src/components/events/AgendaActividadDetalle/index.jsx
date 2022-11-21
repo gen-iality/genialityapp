@@ -212,8 +212,8 @@ const AgendaActividadDetalle = (props) => {
               </Row>
             </>
           )}
-          {/* <div style={{ position: 'fixed', bottom: '8px', left: '50%', zIndex: '999', margin: '5% auto' }}> */}
-          <div style={{ position: 'fixed', bottom: '20px', left: '50%', zIndex: '999', transform: "translate(-50%,0%)" }}>
+          <div
+						style={{ width: '100%', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Space direction='vertical' align='center'>
               {cEvent.value?.bingo && (
                 <>

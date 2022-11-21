@@ -47,7 +47,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   const currentUser = cUser?.value || null;
   const stagesInitial =
     currentStage.stage > 1 ? currentStage : stages?.find((stage) => stage.stage === 1) || INITIAL_STATE_STAGE;
-  const questionInitial = questions.find((question) => question.id === stagesInitial.question) as IQuestions;
+  const questionInitial = questions?.find((question) => question.id === stagesInitial.question) as IQuestions;
   const user = {
     name: currentUser?.properties?.names,
     uid: currentUser?.user?.uid,
@@ -56,9 +56,9 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     score: '0',
     //  email: currentUser.properties.email,
   };
-  const stagesReset = stages.find((stage) => stage.stage === 0) || INITIAL_STATE_STAGE;
-  const questionReset = questions.find((question) => question.id === stagesReset?.question) as IQuestions;
-  const prevStage = stages.find((stageFind) => stageFind.stage === stage - 1) || INITIAL_STATE_STAGE;
+  const stagesReset = stages?.find((stage) => stage.stage === 0) || INITIAL_STATE_STAGE;
+  const questionReset = questions?.find((question) => question.id === stagesReset?.question) as IQuestions;
+  const prevStage = stages?.find((stageFind) => stageFind.stage === stage - 1) || INITIAL_STATE_STAGE;
   const prevScore = prevStage.score || 0;
   //-------------USEEFECTS---------------------------------------//
 
@@ -173,7 +173,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
 
   const onGetProgressUser = async () => {
     setLoading(true);
-    if (questions.length > 0) {
+    if (questions?.length > 0) {
       Promise.all([
         getScoreUser(eventId, currentUser.user.uid!),
         getStageUser(eventId, currentUser.user.uid!),
