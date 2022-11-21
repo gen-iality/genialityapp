@@ -86,7 +86,7 @@ const Table = (props) => {
                     icon={extraFnIcon ? extraFnIcon : <SettingOutlined />}
                     type={extraFnType ? extraFnType : 'primary'}
                     size='small'
-                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                    /* disabled={!eventIsActive && window.location.toString().includes('eventadmin')} */
                   />
                 </Tooltip>
               </Col>
@@ -192,7 +192,7 @@ const Table = (props) => {
                     icon={<DeleteOutlined />}
                     type='danger'
                     size='small'
-                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                    /* disabled={!eventIsActive && window.location.toString().includes('eventadmin')} */
                   />
                 </Tooltip>
               </Col>

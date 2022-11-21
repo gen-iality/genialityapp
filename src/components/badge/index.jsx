@@ -1,10 +1,18 @@
 import { BadgeApi } from '../../helpers/request';
 import Header from '@/antdComponents/Header';
-import { Form, Row, Col, Button, Space, Modal, Select, Typography, message, Table } from 'antd';
+import { Form, Row, Col, Button, Space, Modal, Select, Typography, message, Table, Card, Tooltip } from 'antd';
 import { useState, useEffect, useRef } from 'react';
 
 const { Text, Link } = Typography;
-import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  PlusCircleOutlined,
+  SaveOutlined,
+  PrinterOutlined,
+  QrcodeOutlined,
+} from '@ant-design/icons';
 import ModalAdd from './components/ModalAdd';
 import { getInitialValues, saveBadge } from './services';
 import renderPrint from './utils/renderPrint';
@@ -99,18 +107,27 @@ export default function Index(props) {
       key: 'size',
     },
     {
-      title: <Button onClick={() => setIsVisible(!isVisible)} icon={<PlusOutlined />} />,
-
+      title: 'Opciones' /* <Button onClick={() => setIsVisible(!isVisible)} icon={<PlusOutlined />} /> */,
       key: 'action',
+      align: 'center',
       render: (_, record, index) => (
-        <Space size='middle'>
-          <Button onClick={() => actionEditField(record, index)} icon={<EditOutlined />}>
-            Editar
-          </Button>
-          <Button onClick={() => removeField(_)} icon={<DeleteOutlined />}>
-            Eliminar
-          </Button>
-        </Space>
+        <Row gutter={[8, 8]} wrap justify='center'>
+          <Col>
+            <Tooltip placement='topLeft' title='Editar'>
+              <Button
+                type='primary'
+                onClick={() => actionEditField(record, index)}
+                icon={<EditOutlined />}
+                size='small'
+              />
+            </Tooltip>
+          </Col>
+          <Col>
+            <Tooltip placement='topLeft' title='Eliminar'>
+              <Button onClick={() => removeField(_)} icon={<DeleteOutlined />} type='danger' size='small' />
+            </Tooltip>
+          </Col>
+        </Row>
       ),
     },
   ];
@@ -122,30 +139,67 @@ export default function Index(props) {
           ' Acontinuación podrás crear la escarapela para tu evento. Agrega los Campos o QR, edita el tamaño de letra de los campos o del QR'
         }
       />
+
       <Row justify='center' wrap gutter={[16, 16]}>
         <Col span={16}>
-          <Space style={{ marginBottom: 8 }}>
-            <Button type='primary' onClick={() => saveBadge(event, badges, message)} block>
-              Guardar
-            </Button>
-            {!qrExist && <Button onClick={addQR}>Agregar QR</Button>}
-            <Button type='primary' onClick={() => printBagde(ifrmPrint, badges)}>
-              Imprimir
-            </Button>
-          </Space>
-          <Table columns={columns} dataSource={badges} />
+          <Card hoverable={true} style={{ borderRadius: '20px' }}>
+            <Row gutter={[8]} justify='end'>
+              <Col>
+                <Button
+                  type='primary'
+                  size='middle'
+                  onClick={() => saveBadge(event, badges, message)}
+                  block
+                  icon={<SaveOutlined />}>
+                  Guardar
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  type='primary'
+                  size='middle'
+                  onClick={() => printBagde(ifrmPrint, badges)}
+                  icon={<PrinterOutlined />}>
+                  Imprimir
+                </Button>
+              </Col>
+              {!qrExist && (
+                <Col>
+                  <Button size='middle' onClick={addQR} icon={<QrcodeOutlined />}>
+                    Agregar QR
+                  </Button>
+                </Col>
+              )}
+              <Col>
+                <Button
+                  type='primary'
+                  size='middle'
+                  onClick={() => setIsVisible(!isVisible)}
+                  icon={<PlusCircleOutlined />}>
+                  Agregar
+                </Button>
+              </Col>
+            </Row>
+            <br />
+            <Table columns={columns} dataSource={badges} />
+          </Card>
         </Col>
 
         <Col span={8}>
-          <div
-            style={{
-              marginTop: '1rem',
-              border: '1px solid rgb(211, 211, 211)',
-              borderRadius: '5px',
-              padding: '10px',
-            }}>
-            {renderPrint(badges)}
-          </div>
+          <Card hoverable={true} style={{ borderRadius: '20px', height: '100%' }}>
+            <Typography.Title level={5}>Visualización de la escarapela</Typography.Title>
+            {badges.length > 0 && (
+              <div
+                style={{
+                  marginTop: '1rem',
+                  border: '1px solid rgb(211, 211, 211)',
+                  borderRadius: '5px',
+                  padding: '10px',
+                }}>
+                {renderPrint(badges)}
+              </div>
+            )}
+          </Card>
         </Col>
       </Row>
       <ModalAdd

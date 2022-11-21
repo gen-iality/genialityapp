@@ -32,7 +32,7 @@ const BallotDrawCard = ({
               <Title
                 key={pickedNumber.value}
                 className='animate__animated animate__backInUp'
-                level={4}
+                level={pickedNumber.value.length > 8 ? 5 : 4}
                 type='secondary'>
                 {pickedNumber.value}
               </Title>

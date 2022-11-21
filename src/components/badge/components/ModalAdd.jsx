@@ -1,14 +1,20 @@
 import { Form, Modal, Select, Button } from 'antd';
+
 const { Option } = Select;
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
+};
+
 export default function ModalAdd({ addField, isVisible, filterOptions, badges, fontSize, setIsVisible }) {
   return (
     <Modal
-      title='Agregar parametro'
+      title='Agregar parámetro'
       visible={isVisible}
       destroyOnClose
       footer={null}
       onCancel={() => setIsVisible(false)}>
-      <Form onFinish={addField}>
+      <Form onFinish={addField} {...formLayout}>
         <Form.Item label='Campo' name='id_properties' rules={[{ required: true }]}>
           <Select placeholder='Selecciona un campo'>
             {filterOptions.map((option, index) => (
@@ -32,7 +38,7 @@ export default function ModalAdd({ addField, isVisible, filterOptions, badges, f
         </Form.Item>
         <Form.Item>
           <Button type='primary' htmlType='submit'>
-            Agregar
+            Guardar
           </Button>
         </Form.Item>
       </Form>

@@ -1014,75 +1014,57 @@ class ListEventUser extends Component {
               </Title>
             </div>,
           ]}
-          style={{ top: 0, textAlign: 'center' }}
+          bodyStyle={
+            this.props.event.styles.event_image && {
+              background: `url(${this.props.event.styles.event_image}) no-repeat center`,
+              backgroundSize: 'contain',
+            }
+          }
+          style={{
+            top: 0,
+            textAlign: 'center',
+          }}
           width='100vw'>
-          <Row align='middle' justify='center' style={{ width: '80vw' }}>
-            <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
-              <Row align='middle'>
-                <Card
-                  bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
-                  cover={
-                    this.props.event.styles.event_image ? (
-                      <img
-                        style={{ objectFit: 'cover', width: '96vw' }}
-                        src={this.props.event.styles.event_image}
-                        alt='Logo evento'
-                      />
-                    ) : (
-                      ''
-                    )
-                  }></Card>
-              </Row>
+          <Row justify='center' align='middle' gutter={[24, 24]} style={{ height: '100%' }}>
+            <Col span={24}>
+              <Statistic
+                valueStyle={{ textAlign: 'center' }}
+                title={
+                  <Title level={3} style={{ textAlign: 'center' /* , color: '#b5b5b5' */ }}>
+                    Inscritos
+                  </Title>
+                }
+                value={inscritos || 0}
+              />
             </Col>
-            <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>
-              <Row align='middle'>
-                <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                  <Card bodyStyle={{}} style={{}} bordered={false}>
-                    <Statistic
-                      valueStyle={{ fontSize: '80px', textAlign: 'center' }}
-                      title={
-                        <Title level={2} style={{ textAlign: 'center', color: '#b5b5b5' }}>
-                          Inscritos
-                        </Title>
-                      }
-                      value={inscritos || 0}
-                    />
-                  </Card>
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                  <Card bodyStyle={{}} style={{}} bordered={false}>
-                    <Statistic
-                      valueStyle={{ fontSize: '80px', textAlign: 'center' }}
-                      title={
-                        <Title level={2} style={{ textAlign: 'center', color: '#b5b5b5' }}>
-                          Participantes
-                        </Title>
-                      }
-                      value={totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}
-                    />
-                  </Card>
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                  <Card bodyStyle={{}} style={{}} bordered={false}>
-                    <Statistic
-                      valueStyle={{ fontSize: '80px', textAlign: 'center' }}
-                      title={
-                        <Title level={2} style={{ textAlign: 'center', color: '#b5b5b5' }}>
-                          Asistencia por Coeficientes
-                        </Title>
-                      }
-                      value={
-                        totalCheckedInWithWeight +
-                        '/' +
-                        this.state.totalWithWeight +
-                        ' (' +
-                        Math.round((totalCheckedInWithWeight / this.state.totalWithWeight) * 100) +
-                        '%)'
-                      }
-                    />
-                  </Card>
-                </Col>
-              </Row>
+            <Col span={24}>
+              <Statistic
+                valueStyle={{ textAlign: 'center' }}
+                title={
+                  <Title level={3} style={{ textAlign: 'center' /* , color: '#b5b5b5' */ }}>
+                    Participantes
+                  </Title>
+                }
+                value={totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}
+              />
+            </Col>
+            <Col span={24}>
+              <Statistic
+                valueStyle={{ textAlign: 'center' }}
+                title={
+                  <Title level={3} style={{ textAlign: 'center' /* , color: '#b5b5b5' */ }}>
+                    Asistencia por Coeficientes
+                  </Title>
+                }
+                value={
+                  totalCheckedInWithWeight +
+                  '/' +
+                  this.state.totalWithWeight +
+                  ' (' +
+                  Math.round((totalCheckedInWithWeight / this.state.totalWithWeight) * 100) +
+                  '%)'
+                }
+              />
             </Col>
           </Row>
         </Drawer>

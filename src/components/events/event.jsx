@@ -40,6 +40,7 @@ import { featureBlockingListener, featureBlockingStatusSave } from '@/services/f
 import Bingo from '../games/bingo';
 import WhereIs from '../games/whereIs';
 import SharePhoto from '../games/sharePhoto';
+import WhoWantsToBeAMillonaire from '../games/WhoWantsToBeAMillonaire';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -305,6 +306,14 @@ class Event extends Component {
                 event={event}
                 updateEvent={this.updateEvent}
                 componentKey='bingo'
+              />
+              <Protected
+                path={`${match.url}/whoWantsToBeAMillonaire`}
+                component={WhoWantsToBeAMillonaire}
+                eventId={event._id}
+                event={event}
+                updateEvent={this.updateEvent}
+                componentKey='WhoWantsToBeAMillonaire'
               />
               <Protected
                 path={`${match.url}/whereIs`}
