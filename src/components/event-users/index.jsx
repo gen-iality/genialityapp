@@ -56,17 +56,20 @@ import { UsersPerEventOrActivity } from './utils/utils';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-const ModalWithLessonsInfo = ({show, onHidden, allActivities, attendee, currentUser}) => {
+const ModalWithLessonsInfo = ({ show, onHidden, allActivities, attendee, currentUser }) => {
   const [loaded, setLoaded] = useState(false);
   const [activities, setActivities] = useState([]);
 
   useEffect(async () => {
     if (!currentUser) return;
-    console.log(allActivities, 'xd', attendee)
+    console.log(allActivities, 'xd', attendee);
     if (allActivities.length == 0) return;
 
     const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await firestore.collection(`${activity._id}_event_attendees`).doc(currentUser._id).get();
+      const activity_attendee = await firestore
+        .collection(`${activity._id}_event_attendees`)
+        .doc(currentUser._id)
+        .get();
       if (activity_attendee.exists) {
         return activity;
       }
@@ -74,7 +77,7 @@ const ModalWithLessonsInfo = ({show, onHidden, allActivities, attendee, currentU
     });
     // Filter non-null result that means that the user attendees them
     const viewedActivities = (await Promise.all(existentActivities)).filter((item) => item !== null);
-    setActivities(viewedActivities.map((activity) => activity.name))
+    setActivities(viewedActivities.map((activity) => activity.name));
     setLoaded(true);
   }, [allActivities, attendee, currentUser]);
 
@@ -90,32 +93,39 @@ const ModalWithLessonsInfo = ({show, onHidden, allActivities, attendee, currentU
             header={<Text strong>Cursos vistos</Text>}
             // bordered
             dataSource={activities}
-            renderItem={(item) => <List.Item><CheckOutlined /> {item}</List.Item>}
+            renderItem={(item) => (
+              <List.Item>
+                <CheckOutlined /> {item}
+              </List.Item>
+            )}
           />
         );
         // return (activities.map((activity) => <p>{activity}</p>));
       }
-      return <p>Nada para mostrar</p>
+      return <p>Nada para mostrar</p>;
     }
 
-    return <p>Cargando...</p>
-  }
+    return <p>Cargando...</p>;
+  };
 
   return (
     <Modal centered footer={null} visible={show} closable={true} onCancel={onHidden}>
       <Space direction='vertical'>
-        <Content/>
+        <Content />
       </Space>
     </Modal>
   );
-}
+};
 
 const ColumnProgreso = ({ shownAll, item, allActivities, onOpen, updateAttendee, updateCurrentUser, ...props }) => {
   const [attendee, setAttendee] = useState([]);
   useEffect(async () => {
     // Get all existent activities, after will filter it
     const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await firestore.collection(`${activity._id}_event_attendees`).doc(item._id).get();
+      const activity_attendee = await firestore
+        .collection(`${activity._id}_event_attendees`)
+        .doc(item._id)
+        .get();
       if (activity_attendee.exists) {
         return activity_attendee.data();
       }
@@ -123,10 +133,10 @@ const ColumnProgreso = ({ shownAll, item, allActivities, onOpen, updateAttendee,
     });
     // Filter non-null result that means that the user attendees them
     const gotAttendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
-    setAttendee (gotAttendee);
+    setAttendee(gotAttendee);
   }, []);
 
-  if (!onOpen) onOpen = () => {}
+  if (!onOpen) onOpen = () => {};
 
   if (shownAll) {
     return (
@@ -138,10 +148,10 @@ const ColumnProgreso = ({ shownAll, item, allActivities, onOpen, updateAttendee,
         }}
       >
         {`${attendee.length || 0}/${allActivities.length || 0}`}
-     </Button>
+      </Button>
     );
   }
-  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
+  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>;
 };
 
 class ListEventUser extends Component {
@@ -278,7 +288,7 @@ class ListEventUser extends Component {
     extraFields = extraFields.sort((a, b) =>
       (a.order_weight && !b.order_weight) || (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
         ? -1
-        : 1
+        : 1,
     );
     return extraFields;
   };
@@ -441,7 +451,7 @@ class ListEventUser extends Component {
         });
       columns = [...columns, ...extraColumns];
       const { data: allActivities } = await AgendaApi.byEvent(this.props.event._id);
-      this.setState({ allActivities })
+      this.setState({ allActivities });
       const progressing = {
         title: 'Progreso',
         dataIndex: 'progress_id',
@@ -460,7 +470,7 @@ class ListEventUser extends Component {
             index={index}
             allActivities={allActivities}
           />
-        )
+        ),
       };
 
       const rol = {
@@ -526,13 +536,13 @@ class ListEventUser extends Component {
             Math.round(
               updatedAttendees.reduce(
                 (acc, item) => acc + (item.checkedin_at ? parseFloat(item.pesovoto ? item.pesovoto : 1) : 0),
-                0
-              ) * 100
+                0,
+              ) * 100,
             ) / 100;
           //total de pesos
           const totalWithWeight =
             Math.round(
-              updatedAttendees.reduce((acc, item) => acc + parseFloat(item.pesovoto ? item.pesovoto : 1), 0) * 100
+              updatedAttendees.reduce((acc, item) => acc + parseFloat(item.pesovoto ? item.pesovoto : 1), 0) * 100,
             ) / 100;
           this.setState({
             totalCheckedIn: totalCheckedIn,
@@ -617,7 +627,7 @@ class ListEventUser extends Component {
         },
         () => {
           //this.setState({ timeout: true, errorData: { message: error, status: 708 } });
-        }
+        },
       );
     } catch (error) {
       const errorData = handleRequestError(error);
@@ -867,7 +877,8 @@ class ListEventUser extends Component {
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size='small'
-            style={{ width: 90 }}>
+            style={{ width: 90 }}
+          >
             Search
           </Button>
           <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
@@ -922,7 +933,7 @@ class ListEventUser extends Component {
       if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
       const printBagdeUser = (...args) => {
         console.warn('printBagdeUser function was copied here but not its definition. F');
-      }
+      };
       printBagdeUser(this.ifrmPrint, badges, this.state.user);
     } else this.setState({ noBadge: true });
   };
@@ -967,7 +978,7 @@ class ListEventUser extends Component {
         <ModalWithLessonsInfo
           show={this.state.showModalOfProgress}
           onHidden={() => {
-            this.setState({showModalOfProgress: false})
+            this.setState({ showModalOfProgress: false });
           }}
           allActivities={this.state.allActivities}
           attendee={this.state.attendee}
@@ -1029,7 +1040,8 @@ class ListEventUser extends Component {
                 paddingRight: '20px',
                 textAlign: 'end',
                 borderRadius: '3px',
-              }}>
+              }}
+            >
               <strong> Última Sincronización: </strong> <FormattedDate value={lastUpdate} />{' '}
               <FormattedTime value={lastUpdate} />
             </div>
@@ -1042,7 +1054,8 @@ class ListEventUser extends Component {
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
                       color='lightgrey'
-                      icon={<UsergroupAddOutlined />}>
+                      icon={<UsergroupAddOutlined />}
+                    >
                       <strong>Inscritos: </strong>
                       <span style={{ fontSize: '13px' }}>{inscritos}</span>
                     </Tag>
@@ -1051,7 +1064,8 @@ class ListEventUser extends Component {
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
                       color='lightgrey'
-                      icon={<StarOutlined />}>
+                      icon={<StarOutlined />}
+                    >
                       <strong>Participantes: </strong>
                       <span style={{ fontSize: '13px' }}>
                         {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
@@ -1088,11 +1102,16 @@ class ListEventUser extends Component {
                   value={this.state.typeScanner}
                   defaultValue={this.state.typeScanner}
                   onChange={(e) => this.handleChange(e)}
-                  style={{ width: 220 }}>
+                  style={{ width: 220 }}
+                >
                   <Option value='scanner-qr'>Escanear QR</Option>
                   {fieldsForm.map((item, index) => {
                     if (item.type === 'checkInField')
-                      return <Option key={index} value='scanner-document'>Escanear {item.label}</Option>;
+                      return (
+                        <Option key={index} value='scanner-document'>
+                          Escanear {item.label}
+                        </Option>
+                      );
                   })}
                 </Select>
               </Col>
@@ -1111,11 +1130,13 @@ class ListEventUser extends Component {
                         ? ''
                         : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`,
                     state: { activityId },
-                  }}>
+                  }}
+                >
                   <Button
                     type='primary'
                     icon={<UploadOutlined />}
-                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                  >
                     Importar usuarios
                   </Button>
                 </Link>
@@ -1126,7 +1147,8 @@ class ListEventUser extends Component {
                   icon={<PlusCircleOutlined />}
                   size='middle'
                   onClick={this.addUser}
-                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                >
                   {'Agregar usuario'}
                 </Button>
               </Col>
@@ -1175,7 +1197,8 @@ class ListEventUser extends Component {
             </div>,
           ]}
           style={{ top: 0, textAlign: 'center' }}
-          width='100vw'>
+          width='100vw'
+        >
           <Row align='middle' justify='center' style={{ width: '80vw' }}>
             <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
               <Row align='middle'>
@@ -1191,7 +1214,8 @@ class ListEventUser extends Component {
                     ) : (
                       ''
                     )
-                  }></Card>
+                  }
+                ></Card>
               </Row>
             </Col>
             <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>
