@@ -67,7 +67,7 @@ export interface MainAgendaFormProps {
   savedFormData: FormDataType;
   agenda: AgendaType | null;
   setFormData: (x: FormDataType) => void;
-  previousFormData: FormDataType,
+  previousFormData: FormDataType;
   setShowPendingChangesModal: (b: boolean) => void;
 }
 
@@ -121,7 +121,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     if (agenda === null) return;
 
     const processedDate = processDateFromAgendaDocument(agenda);
-    console.log('processedDate', processedDate)
+    console.log('processedDate', processedDate);
 
     setFormData({
       ...previousFormData,
@@ -159,7 +159,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     savedFormData, // The order matter
     formdata,
     agendaContext.isPublished,
-    setShowPendingChangesModal
+    setShowPendingChangesModal,
   );
 
   /**
@@ -285,257 +285,253 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
   return (
     <>
-    { isLoaded ? (
-      <Row justify="center" wrap gutter={12}>
-        <Col span={20}>
-          {props.activityId && (
-          <ActivityTypeSelector/>
-          )}
-        </Col>
-        <Col span={20}>
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }}>
-                Nombre <label style={{ color: 'red' }}>*</label>
-              </label>
-            }
-            rules={[{ required: true, message: 'Nombre de la lección requerida' }]}
-          >
-            <Input
-              autoFocus
-              ref={nameInputRef}
-              type="text"
-              name="name"
-              value={formdata.name}
-              onChange={(value) => handleChangeFormData('name', value.target.value)}
-              placeholder="Nombre de la lección"
-            />
-          </Form.Item>
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }}>
-                Día <RequiredStar/>
-              </label>
-            }
-            rules={[{ required: true, message: 'La fecha es requerida' }]}
-          >
-            <SelectAntd
-              options={allDays}
-              value={formdata.date}
-              defaultValue={formdata.date}
-              onChange={(value) => handleChangeFormData('date', value)}
-            />
-          </Form.Item>
-          <Row wrap justify="center" gutter={[8, 8]}>
-            <Col span={12}>
-              <Form.Item
-                style={{ width: '100%' }}
-                label={
-                  <label style={{ marginTop: '2%' }}>
-                    Hora Inicio <RequiredStar/>
-                  </label>
-                }
-                rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
-              >
-                <TimePicker
-                  use12Hours
-                  format="h:mm a"
-                  allowClear={false}
+      {isLoaded ? (
+        <Row justify='center' wrap gutter={12}>
+          <Col span={20}>{props.activityId && <ActivityTypeSelector />}</Col>
+          <Col span={20}>
+            <Form.Item
+              label={
+                <label style={{ marginTop: '2%' }}>
+                  Nombre <label style={{ color: 'red' }}>*</label>
+                </label>
+              }
+              rules={[{ required: true, message: 'Nombre de la lección requerida' }]}
+            >
+              <Input
+                autoFocus
+                ref={nameInputRef}
+                type='text'
+                name='name'
+                value={formdata.name}
+                onChange={(value) => handleChangeFormData('name', value.target.value)}
+                placeholder='Nombre de la lección'
+              />
+            </Form.Item>
+            <Form.Item
+              label={
+                <label style={{ marginTop: '2%' }}>
+                  Día <RequiredStar />
+                </label>
+              }
+              rules={[{ required: true, message: 'La fecha es requerida' }]}
+            >
+              <SelectAntd
+                options={allDays}
+                value={formdata.date}
+                defaultValue={formdata.date}
+                onChange={(value) => handleChangeFormData('date', value)}
+              />
+            </Form.Item>
+            <Row wrap justify='center' gutter={[8, 8]}>
+              <Col span={12}>
+                <Form.Item
                   style={{ width: '100%' }}
-                  value={currentHourStart as any}
-                  onChange={(value) => handleChangeFormData('hour_start', value)}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                style={{ width: '100%' }}
-                label={
-                  <label style={{ marginTop: '2%' }}>
-                    Hora Fin <RequiredStar/>
-                  </label>
-                }
-                rules={[{ required: true, message: 'La hora final es requerida' }]}
-              >
-                <TimePicker
-                  use12Hours
+                  label={
+                    <label style={{ marginTop: '2%' }}>
+                      Hora Inicio <RequiredStar />
+                    </label>
+                  }
+                  rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
+                >
+                  <TimePicker
+                    use12Hours
+                    format='h:mm a'
+                    allowClear={false}
+                    style={{ width: '100%' }}
+                    value={currentHourStart as any}
+                    onChange={(value) => handleChangeFormData('hour_start', value)}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
                   style={{ width: '100%' }}
-                  allowClear={false}
-                  value={currentHourEnd as any}
-                  format="h:mm a"
-                  onChange={(value) => handleChangeFormData('hour_end', value)}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item label="Conferencista">
-            <Row wrap gutter={[8, 8]}>
-              <Col span={22}>
-                <Select
-                  isMulti
-                  id="hosts"
-                  isClearable
-                  styles={creatableStyles}
-                  onChange={(value: any) => handleChangeFormData('selectedHosts', value)}
-                  options={allHosts}
-                  value={formdata.selectedHosts}
-                />
-              </Col>
-              <Col span={1}>
-                <Button
-                  onClick={() => {
-                    // goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })
-                    setIsSpeakerModalShown(true);
-                    console.log('Open the speaker modal');
-                  }}
-                  title="Agregar conferencista"
-                  icon={<PlusOutlined />}
-                />
-              </Col>
-              <Col span={1}>
-                <Button
-                  onClick={() => goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })}
-                  icon={<SettingOutlined />}
-                  title="Configurar en otra página"
-                />
-              </Col>
-              {/* The speaker modal */}
-              <Modal
-                visible={isSpeakerModalShown}
-                onCancel={()=> setIsSpeakerModalShown(false)}
-                okButtonProps={{disabled: true}}
-              >
-                <Speaker
-                  eventID={props.event._id}
-                  matchUrl={props.matchUrl}
-                  onCreated={()=> {
-                    const loading = async () => {
-                      const incommingHosts = await SpeakersApi.byEvent(props.event._id);
-                      const hosts = handleSelect(incommingHosts);
-                      setAllHosts(hosts);
-                    }
-                    loading().then(() => console.log('hosts reloaded'));
-                    setIsSpeakerModalShown(false);
-                  }}
-                  justCreate />
-              </Modal>
-            </Row>
-          </Form.Item>
-          <Form.Item label="Espacio">
-            <Row wrap gutter={[8, 8]}>
-              <Col span={23}>
-                <SelectAntd
-                  value={formdata.space_id}
-                  onChange={(value) => handleChangeFormData('space_id', value)}>
-                  <Option value="">Seleccione un lugar/salón ...</Option>
-                  {allSpaces.map((space) => (
-                    <Option key={space.value} value={space.value}>{space.label}</Option>
-                  ))}
-                </SelectAntd>
-              </Col>
-              <Col span={1}>
-                <Link to={props.matchUrl.replace('agenda', 'espacios')}>
-                  <Button icon={<SettingOutlined />} />
-                </Link>
+                  label={
+                    <label style={{ marginTop: '2%' }}>
+                      Hora Fin <RequiredStar />
+                    </label>
+                  }
+                  rules={[{ required: true, message: 'La hora final es requerida' }]}
+                >
+                  <TimePicker
+                    use12Hours
+                    style={{ width: '100%' }}
+                    allowClear={false}
+                    value={currentHourEnd as any}
+                    format='h:mm a'
+                    onChange={(value) => handleChangeFormData('hour_end', value)}
+                  />
+                </Form.Item>
               </Col>
             </Row>
-          </Form.Item>
-          <Form.Item label="Categorías">
-            <Row wrap gutter={[8, 8]}>
-              <Col span={23}>
-                <Creatable
-                  isClearable
-                  isMulti
-                  styles={catStyles}
-                  onChange={onSelectedCategoryChange}
-                  onCreateOption={(value: string) => handlerCreateCategories(value, 'categories')}
-                  isDisabled={thisIsLoading.categories}
-                  isLoading={thisIsLoading.categories}
-                  options={allCategories}
-                  value={formdata.selectedCategories}
-                  placeholder="Sin categoría..."
-                />
-              </Col>
-              <Col span={1}>
-                <Button onClick={() => goSection(`${props.matchUrl}/categorias`)} icon={<SettingOutlined />} />
-              </Col>
-            </Row>
-          </Form.Item>
-          <Form.Item label="¿Tiene espacio físico?">
-            <Switch
-              checked={formdata.isPhysical}
-              checkedChildren="Sí"
-              unCheckedChildren="No"
-              onChange={(chosen) => handleChangeFormData('isPhysical', chosen)}
-            />
-          </Form.Item>
-          {formdata.isPhysical &&
-          <>
-          <Form.Item label="Longitud">
-            <Input
-              type="number"
-              name="length"
-              value={formdata.length}
-              onChange={(event) => handleChangeFormData('length', event.target.value)}
-              placeholder="Ej. 4.677027"
-            />
-          </Form.Item>
-          <Form.Item label="Latitud">
-            <Input
-              type="number"
-              name="latitude"
-              value={formdata.latitude}
-              onChange={(event) => handleChangeFormData('latitude', event.target.value)}
-              placeholder="Ej. -74.094086"
-            />
-          </Form.Item>
-          </>
-          }
-          <Form.Item label="Descripción">
-            <Space>
-              <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-              <Text type="secondary">
-                Esta información no es visible en la Agenda/Lección en versión Mobile.
-              </Text>
-            </Space>
-            <EviusReactQuill
-              name="description"
-              data={formdata.description}
-              handleChange={(value: string) => handleChangeReactQuill(value, 'description')}
-            />
-          </Form.Item>
-          <Form.Item label="Imagen">
-            <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
-              <Form.Item noStyle>
-                <p>
-                  Dimensiones:
-                  {' '}
-                  <b>
-                    <small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small>
-                  </b>
-                  {' '}
-                </p>
-                <p>
-                  <small>
-                    Se recomienda que la imagen debe tener dimensiones iguales (cuadradas) para su mejor
-                    funcionamiento
-                  </small>
-                </p>
-                <p>
-                  <small>La imagen tarda unos segundos en cargar</small>
-                </p>
-                <ImageUploaderDragAndDrop
-                  imageDataCallBack={handleImageChange}
-                  imageUrl={formdata.image}
-                  width="1080"
-                  height="1080"
-                />
-              </Form.Item>
-            </Card>
-          </Form.Item>
-          <BackTop />
-        </Col>
-      </Row> ) : ( <Loading /> ) }
+            <Form.Item label='Conferencista'>
+              <Row wrap gutter={[8, 8]}>
+                <Col span={22}>
+                  <Select
+                    isMulti
+                    id='hosts'
+                    isClearable
+                    styles={creatableStyles}
+                    onChange={(value: any) => handleChangeFormData('selectedHosts', value)}
+                    options={allHosts}
+                    value={formdata.selectedHosts}
+                  />
+                </Col>
+                <Col span={1}>
+                  <Button
+                    onClick={() => {
+                      // goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })
+                      setIsSpeakerModalShown(true);
+                      console.log('Open the speaker modal');
+                    }}
+                    title='Agregar conferencista'
+                    icon={<PlusOutlined />}
+                  />
+                </Col>
+                <Col span={1}>
+                  <Button
+                    onClick={() => goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })}
+                    icon={<SettingOutlined />}
+                    title='Configurar en otra página'
+                  />
+                </Col>
+                {/* The speaker modal */}
+                <Modal
+                  visible={isSpeakerModalShown}
+                  onCancel={() => setIsSpeakerModalShown(false)}
+                  okButtonProps={{ disabled: true }}
+                >
+                  <Speaker
+                    eventID={props.event._id}
+                    matchUrl={props.matchUrl}
+                    onCreated={() => {
+                      const loading = async () => {
+                        const incommingHosts = await SpeakersApi.byEvent(props.event._id);
+                        const hosts = handleSelect(incommingHosts);
+                        setAllHosts(hosts);
+                      };
+                      loading().then(() => console.log('hosts reloaded'));
+                      setIsSpeakerModalShown(false);
+                    }}
+                    justCreate
+                  />
+                </Modal>
+              </Row>
+            </Form.Item>
+            <Form.Item label='Espacio'>
+              <Row wrap gutter={[8, 8]}>
+                <Col span={23}>
+                  <SelectAntd value={formdata.space_id} onChange={(value) => handleChangeFormData('space_id', value)}>
+                    <Option value=''>Seleccione un lugar/salón ...</Option>
+                    {allSpaces.map((space) => (
+                      <Option key={space.value} value={space.value}>
+                        {space.label}
+                      </Option>
+                    ))}
+                  </SelectAntd>
+                </Col>
+                <Col span={1}>
+                  <Link to={props.matchUrl.replace('agenda', 'espacios')}>
+                    <Button icon={<SettingOutlined />} />
+                  </Link>
+                </Col>
+              </Row>
+            </Form.Item>
+            <Form.Item label='Categorías'>
+              <Row wrap gutter={[8, 8]}>
+                <Col span={23}>
+                  <Creatable
+                    isClearable
+                    isMulti
+                    styles={catStyles}
+                    onChange={onSelectedCategoryChange}
+                    onCreateOption={(value: string) => handlerCreateCategories(value, 'categories')}
+                    isDisabled={thisIsLoading.categories}
+                    isLoading={thisIsLoading.categories}
+                    options={allCategories}
+                    value={formdata.selectedCategories}
+                    placeholder='Sin categoría...'
+                  />
+                </Col>
+                <Col span={1}>
+                  <Button onClick={() => goSection(`${props.matchUrl}/categorias`)} icon={<SettingOutlined />} />
+                </Col>
+              </Row>
+            </Form.Item>
+            <Form.Item label='¿Tiene espacio físico?'>
+              <Switch
+                checked={formdata.isPhysical}
+                checkedChildren='Sí'
+                unCheckedChildren='No'
+                onChange={(chosen) => handleChangeFormData('isPhysical', chosen)}
+              />
+            </Form.Item>
+            {formdata.isPhysical && (
+              <>
+                <Form.Item label='Longitud'>
+                  <Input
+                    type='number'
+                    name='length'
+                    value={formdata.length}
+                    onChange={(event) => handleChangeFormData('length', event.target.value)}
+                    placeholder='Ej. 4.677027'
+                  />
+                </Form.Item>
+                <Form.Item label='Latitud'>
+                  <Input
+                    type='number'
+                    name='latitude'
+                    value={formdata.latitude}
+                    onChange={(event) => handleChangeFormData('latitude', event.target.value)}
+                    placeholder='Ej. -74.094086'
+                  />
+                </Form.Item>
+              </>
+            )}
+            <Form.Item label='Descripción'>
+              <Space>
+                <ExclamationCircleOutlined style={{ color: '#faad14' }} />
+                <Text type='secondary'>Esta información no es visible en la Agenda/Lección en versión Mobile.</Text>
+              </Space>
+              <EviusReactQuill
+                name='description'
+                data={formdata.description}
+                handleChange={(value: string) => handleChangeReactQuill(value, 'description')}
+              />
+            </Form.Item>
+            <Form.Item label='Imagen'>
+              <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
+                <Form.Item noStyle>
+                  <p>
+                    Dimensiones:{' '}
+                    <b>
+                      <small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small>
+                    </b>{' '}
+                  </p>
+                  <p>
+                    <small>
+                      Se recomienda que la imagen debe tener dimensiones iguales (cuadradas) para su mejor
+                      funcionamiento
+                    </small>
+                  </p>
+                  <p>
+                    <small>La imagen tarda unos segundos en cargar</small>
+                  </p>
+                  <ImageUploaderDragAndDrop
+                    imageDataCallBack={handleImageChange}
+                    imageUrl={formdata.image}
+                    width='1080'
+                    height='1080'
+                  />
+                </Form.Item>
+              </Card>
+            </Form.Item>
+            <BackTop />
+          </Col>
+        </Row>
+      ) : (
+        <Loading />
+      )}
     </>
   );
 }
