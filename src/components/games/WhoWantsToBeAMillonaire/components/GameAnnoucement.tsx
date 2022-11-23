@@ -1,11 +1,36 @@
 import { Space, Image, Typography, Button, Card, Row, Grid, Result } from 'antd';
-import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
+import { ClockCircleOutlined, FireOutlined, CloseCircleOutlined, PoweroffOutlined } from '@ant-design/icons';
 const { useBreakpoint } = Grid;
+import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 import Stages from './Stages';
+
+const CASES_ANNOUNCEMENT = {
+  TIME_OVER: {
+    icon: <ClockCircleOutlined />,
+    title: 'Se acabó el tiempo',
+    subTitle: 'Lo sentimos, se acabó el tiempo para responder la pregunta, ya no puedes continuar jugando',
+  },
+  WRONG_ANSWER: {
+    icon: <CloseCircleOutlined />,
+    title: 'Respuesta incorrecta',
+    subTitle: 'Lo sentimos, la respuesta que elegiste es incorrecta, ya no puedes continuar jugando',
+  },
+  RETIRED: {
+    icon: <PoweroffOutlined />,
+    title: 'Te retiraste',
+    subTitle: 'Lo sentimos, te retiraste del juego, ya no puedes continuar jugando',
+  },
+  WIN: {
+    icon: <FireOutlined />,
+    title: 'Felicidades',
+    subTitle: 'Felicidades, has ganado el juego, ya no puedes continuar jugando',
+  },
+};
+
 export default function GameAnnoucement() {
   // lo iba crear para hacer la parte este de que mostrar que gano o perdio pero no me dio tiempo :(
-  const { millonaire, visibilityControl, onStartGame, onChangeStatusGame } = useMillonaireLanding();
-  const { name, appearance } = millonaire;
+  const { onChangeStatusGame, statusGame } = useMillonaireLanding();
+
   const screens = useBreakpoint();
   return (
     <Row
@@ -22,27 +47,25 @@ export default function GameAnnoucement() {
           maxWidth: screens.xs ? '95vw' : '45vw',
         }}>
         <Result
-          icon={appearance.logo && <Image preview={false} src={appearance.logo} width={200} />}
-          title={<Typography.Title level={2}>{name}</Typography.Title>}
+          icon={CASES_ANNOUNCEMENT[statusGame as keyof typeof CASES_ANNOUNCEMENT].icon}
+          title={
+            <Typography.Title level={2}>
+              {CASES_ANNOUNCEMENT[statusGame as keyof typeof CASES_ANNOUNCEMENT].title}
+            </Typography.Title>
+          }
           subTitle={
             <Typography.Paragraph>
-              ¿Estas listo para iniciar? No olvides estar muy atento al tiempo que tienes por pregunta, en caso de que
-              el contador llegue a cero no podrás continuar jugando.
+              {CASES_ANNOUNCEMENT[statusGame as keyof typeof CASES_ANNOUNCEMENT].subTitle}
             </Typography.Paragraph>
           }
           extra={
             <Space>
-              <Button
-                size='large'
-                disabled={visibilityControl.active === false}
-                type='primary'
-                onClick={() => onStartGame()}>
-                Empezar
+              <Button size='large' type='primary' onClick={() => onChangeStatusGame('GAME_OVER')}>
+                Ir al Ranking
               </Button>
               <Button size='large' onClick={() => onChangeStatusGame('NOT_STARTED')}>
-                Volver
+                Ir al Menu
               </Button>
-              <Stages />
             </Space>
           }
         />

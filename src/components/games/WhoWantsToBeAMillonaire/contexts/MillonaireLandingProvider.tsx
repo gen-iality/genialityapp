@@ -50,6 +50,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   const questionInitial = questions.find((question) => question.id === stagesInitial.question) as IQuestions;
   const user = {
     name: currentUser?.properties?.names,
+    email: currentUser?.properties?.email,
     uid: currentUser?.user?.uid,
     imageProfile: currentUser?.user?.picture || '',
     index: stage,
@@ -105,8 +106,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   useEffect(() => {
     if (time === 0) {
       setStartGame(false);
-      setStatusGame('GAME_OVER');
-
+      setStatusGame('TIME_OVER');
       setCurrentStage(stagesReset!);
       setQuestion(questionReset);
       saveScoreUser(eventId, currentUser.user.uid!, scoreUser);
@@ -224,7 +224,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     const prevStage = stages.find((stageFind) => stageFind.stage === stage - 1) || INITIAL_STATE_STAGE;
     setLoading(true);
     setStartGame(false);
-    setStatusGame('GAME_OVER');
+    setStatusGame('RETIRED');
     setStage(0);
     setCurrentStage(stagesReset!);
     setQuestion(questionReset);
@@ -270,7 +270,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       setQuestion(questions.find((question) => question.id === newCurrentStage.question) as IQuestions);
       return;
     }
-    setStatusGame('GAME_OVER');
+    setStatusGame('WIN');
     setStage(0);
     setCurrentStage(stagesReset!);
     setQuestion(questionReset);
@@ -296,7 +296,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     saveStageUser(eventId, scoreUser.uid!, currentStage);
     if (answer.isCorrect === false) {
       setCurrentStage(INITIAL_STATE_STAGE);
-      setStatusGame('GAME_OVER');
+      setStatusGame('WRONG_ANSWER');
       saveStatusGameByUser(eventId, scoreUser.uid!, 'GAME_OVER');
       saveScoreUser(eventId, scoreUser.uid!, scoreUser);
       return;

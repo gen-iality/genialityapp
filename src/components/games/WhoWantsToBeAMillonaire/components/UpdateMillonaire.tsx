@@ -6,6 +6,7 @@ import QuestionBank from './QuestionBank';
 import React from 'react';
 import PlayMillonaireCMS from './PlayMillonaireCMS';
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
+import GeneratedData from './GeneratedData';
 export default function UpdateMillonaire() {
   const { tab } = useMillonaireCMS();
   return (
@@ -21,6 +22,9 @@ export default function UpdateMillonaire() {
       </Tabs.TabPane>
       <Tabs.TabPane tab='Jugar' key='4'>
         <PlayMillonaireCMS />
+      </Tabs.TabPane>
+      <Tabs.TabPane tab='Datos generados' key='5'>
+        <GeneratedData />
       </Tabs.TabPane>
     </Tabs>
   );

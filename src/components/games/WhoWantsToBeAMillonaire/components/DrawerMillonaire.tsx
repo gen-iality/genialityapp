@@ -9,6 +9,7 @@ import { IRenderViewLanding } from '../interfaces/Millonaire';
 import Ranking from '../../common/Ranking';
 import UsersRanking from './UsersRanking';
 import { CloseOutlined } from '@ant-design/icons';
+import GameAnnoucement from './GameAnnoucement';
 export default function DrawerMillonaire() {
   const {
     isVisible,
@@ -54,7 +55,7 @@ export default function DrawerMillonaire() {
         /*  title={<Typography.Title level={5}>{millonaire.name}</Typography.Title>} */
         footer={statusGame === 'STARTED' && <WildCards />}
         visible={isVisible}>
-        {RenderView[(statusGame as keyof IRenderViewLanding) || 'NOT_STARTED']}
+        {RenderView[statusGame as keyof IRenderViewLanding] || <GameAnnoucement />}
       </Drawer>
     </>
   );
