@@ -12,6 +12,8 @@ import {
   gridStyleImage_4x4,
   gridStyleImage_3x3,
   gridStyleText_3x3,
+  gridTextBreakingMobile,
+  gridTextNotBreakingMobile,
 } from '../constants/styleConstants';
 
 const { useBreakpoint } = Grid;
@@ -34,7 +36,7 @@ const BingoCard = forwardRef(
     }, []);
     const screens = useBreakpoint();
 
-    const LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED = 9;
+    const LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED = 6;
 
     const dialImage = bingo?.bingo_appearance?.dial_image;
     const dimensions = bingo?.dimensions;
@@ -42,20 +44,26 @@ const BingoCard = forwardRef(
     // funcion para determinar la cantidad de palabras en un string
     const determineNumberWords = (text: string) => {
       let splitText: string[] = text.split(' ');
+      /* console.log('splitText', splitText); */
       return splitText.length;
     };
     // funcion para determinar los estilos del texto en el carton
     const determineFontStyles = (text: string): React.CSSProperties => {
       let textLength = text.length;
       let numberOfWords = determineNumberWords(text);
+      /* console.log('==============================');
+      console.log('text', text);
+      console.log('textLength', textLength);
+      console.log('numberOfWords', numberOfWords);
+      console.log('=============================='); */
       if (textLength >= LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED && numberOfWords === 1) {
-        return gridTextBreaking;
+        return screens.xs ? gridTextBreakingMobile : gridTextBreaking;
       }
       if (textLength >= LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED && numberOfWords > 2) {
-        return gridTextBreaking;
+        return screens.xs ? gridTextBreakingMobile : gridTextBreaking;
       }
       if (textLength >= LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED && numberOfWords === 2) {
-        return gridTextNotBreaking;
+        return screens.xs ? gridTextNotBreakingMobile : gridTextNotBreaking;
       }
       return gridText;
     };
@@ -81,6 +89,7 @@ const BingoCard = forwardRef(
                   height={'100%'}
                   //   crossOrigin='anonymous'
                   preview={false}
+                  fallback={'https://via.placeholder.com/500/?text=Image not found!'}
                   style={{ objectFit: 'contain' }}
                   src={item?.carton_value?.value}
                   alt={item?.carton_value.value.toString()}></Image>
@@ -138,6 +147,7 @@ const BingoCard = forwardRef(
                   width={'100%'}
                   height={'100%'}
                   preview={false}
+                  fallback={'https://via.placeholder.com/500/?text=Image not found!'}
                   //  crossOrigin='anonymous'
                   style={{ objectFit: 'contain' }}
                   src={item?.carton_value?.value}
@@ -196,6 +206,7 @@ const BingoCard = forwardRef(
                   width={'100%'}
                   height={'100%'}
                   preview={false}
+                  fallback={'https://via.placeholder.com/500/?text=Image not found!'}
                   // crossOrigin='anonymous'
                   style={{ objectFit: 'contain' }}
                   src={item?.carton_value?.value}
