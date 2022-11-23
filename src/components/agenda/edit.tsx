@@ -11,10 +11,7 @@ import { RouterPrompt } from '@antdComponents/RoutePrompt';
 import { DispatchMessageService } from '@context/MessageService';
 
 import { handleRequestError } from '@helpers/utils';
-import {
-  AgendaApi,
-  DocumentsApi,
-} from '@helpers/request';
+import { AgendaApi, DocumentsApi } from '@helpers/request';
 import { firestore } from '@helpers/firebase';
 
 import Loading from '../profile/loading';
@@ -235,7 +232,7 @@ function AgendaEdit(props: AgendaEditProps) {
           await AgendaApi.editOne(builtInfo, edit, props.event._id);
 
           await Promise.all(
-            builtInfo.selected_document.map((selected) => DocumentsApi.editOne(data, selected, props.event._id))
+            builtInfo.selected_document.map((selected) => DocumentsApi.editOne(data, selected, props.event._id)),
           );
         } else {
           agenda = await AgendaApi.create(props.event._id, builtInfo);
@@ -443,13 +440,13 @@ function AgendaEdit(props: AgendaEditProps) {
                     <Row wrap gutter={12}>
                       <Col span={24}>
                         {currentActivityID && (
-                        <ActivityContentSelector
-                          activityId={currentActivityID}
-                          activityName={formdata.name}
-                          eventId={props.event._id}
-                          shouldLoad={currentTab === '2'}
-                          matchUrl={props.matchUrl}
-                        />
+                          <ActivityContentSelector
+                            activityId={currentActivityID}
+                            activityName={formdata.name}
+                            eventId={props.event._id}
+                            shouldLoad={currentTab === '2'}
+                            matchUrl={props.matchUrl}
+                          />
                         )}
                         <BackTop />
                       </Col>
