@@ -257,7 +257,7 @@ export const EventsApi = {
   metricsRegisterBydate: async (id, type, fechaInicial, fechaFinal) => {
     const token = await GetTokenUserFirebase();
     return await Actions.get(
-      `/api/events/${id}/metricsbydate/eventusers/?token=${token}&metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`
+      `/api/events/${id}/metricsbydate/eventusers/?token=${token}&metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`,
     );
   },
 
@@ -288,7 +288,7 @@ export const EventsApi = {
   },
   ofertsProduct: async (eventId, productId) => {
     return await Actions.get(
-      `api/events/${eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${productId}"}]`
+      `api/events/${eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${productId}"}]`,
     );
   },
   acceptOrRejectRequest: async (eventId, requestId, status) => {
@@ -306,7 +306,7 @@ export const EventsApi = {
       `api/events/${eventId}/eventusers${
         token ? `/?token=${token}` : '/'
       }&filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`,
-      true
+      true,
     );
   },
   recoveryPassword: async (eventId, url, email) => {
@@ -351,7 +351,7 @@ export const EventsApi = {
   requestUrlEmail: async (eventId, url, email) => {
     return await Actions.put(
       `/api/events/${eventId}/changeUserPassword?destination=${url}&firebase_password_change=true`,
-      email
+      email,
     );
   },
   signInWithEmailAndPassword: async (data) => {
@@ -361,7 +361,7 @@ export const EventsApi = {
     const token = await GetTokenUserFirebase();
     return await Actions.put(
       `/api/events/${eventId}/templateproperties/${idTemplate}/addtemplateporperties?token=${token}`,
-      {}
+      {},
     );
   },
 };
@@ -406,7 +406,7 @@ export const UsersApi = {
     const token = await GetTokenUserFirebase();
     return await Actions.get(
       `api/events/${event_id}/eventusers/${eventUser_id}/validate-attendee-data?token=${token}`,
-      true
+      true,
     );
   },
 
@@ -428,7 +428,7 @@ export const UsersApi = {
     return await Actions.post(
       `/api/events/${id}/adduserwithemailvalidation${token ? `/?token=${token}` : '/'}`,
       data,
-      true
+      true,
     );
   },
   deleteOne: async (user, id) => {
@@ -572,7 +572,7 @@ export const SurveysApi = {
   getByActivity: async (event, activity_id) => {
     const token = await GetTokenUserFirebase();
     return await Actions.getAll(
-      `/api/events/${event}/surveys/?token=${token}&indexby=activity_id&value=${activity_id}`
+      `/api/events/${event}/surveys/?token=${token}&indexby=activity_id&value=${activity_id}`,
     );
   },
   getOne: async (event, id) => {
@@ -887,7 +887,7 @@ export const RolAttApi = {
     /** Se discriminan estos dos rol id debido a que no se deben editar ni eliminar y aunque el back tiene dicha validacion en el componente CMS es dificil validar dicha accion ya que es un componente que se reutiliza varias veces y puede alterar la logica de otras funcionalidades, este arreglo es temporal mientras se estructura la logica para roles */
 
     const rollsByEventFiltered = rollsByEvent.filter(
-      (rol) => rol._id !== '5c1a59b2f33bd40bb67f2322' && rol._id !== '60e8a7e74f9fb74ccd00dc22'
+      (rol) => rol._id !== '5c1a59b2f33bd40bb67f2322' && rol._id !== '60e8a7e74f9fb74ccd00dc22',
     );
     return rollsByEventFiltered;
   },
@@ -1122,7 +1122,7 @@ export const OrganizationPlantillaApi = {
   putOne: async (event, templatepropertie) => {
     const token = await GetTokenUserFirebase();
     return await Actions.put(
-      `api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties?token=${token}`
+      `api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties?token=${token}`,
     );
   },
   deleteOne: async (template, organization) => {
@@ -1188,7 +1188,7 @@ export const Activity = {
     return await Actions.put(
       `/api/eventUsers/${eventUser_id}/checkinactivity/${activityId}?token=${token}`,
       { checkedin_type },
-      true
+      true,
     );
   },
   deleteCheckIn: async (eventUser_id, activityId) => {

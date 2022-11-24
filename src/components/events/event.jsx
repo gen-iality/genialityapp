@@ -10,6 +10,7 @@ import { fetchPermissions } from '../../redux/permissions/actions';
 import connect from 'react-redux/es/connect/connect';
 import ChatExport from './ChatExport/';
 import Espacios from '../espacios';
+import Herramientas from '../herramientas';
 import Menu from './shared/menu';
 import Datos from './datos';
 import TipoAsistentes from './tipoUsers';
@@ -226,7 +227,8 @@ class Event extends Component {
             background: '#1B1E28',
           }}
           width={250}
-          collapsed={collapsed}>
+          collapsed={collapsed}
+        >
           <Menu match={match} collapseMenu={this.collapseMenu} collapsed={collapsed} />
         </Sider>
         <Content className='column event-main' style={{ width: 500 }}>
@@ -236,7 +238,8 @@ class Event extends Component {
                 type='primary'
                 size='small'
                 target='_blank'
-                href={`${window.location.origin}/landing/${this.state.event._id}`}>
+                href={`${window.location.origin}/landing/${this.state.event._id}`}
+              >
                 Ir al curso
               </Button>
             </Col>

@@ -1,21 +1,21 @@
-import { CategoriesAgendaApi, eventTicketsApi, RolAttApi, SpacesApi, SpeakersApi } from "@helpers/request";
-import { handleSelect } from "@helpers/utils";
-import dayjs from "dayjs";
-import EventType from "../types/EventType";
-import SelectOptionType from "../types/SelectOptionType";
+import { CategoriesAgendaApi, eventTicketsApi, RolAttApi, SpacesApi, SpeakersApi } from '@helpers/request';
+import { handleSelect } from '@helpers/utils';
+import dayjs from 'dayjs';
+import EventType from '../types/EventType';
+import SelectOptionType from '../types/SelectOptionType';
 
 type FunctionSetter = (x: SelectOptionType[]) => void;
 
 type HookCallbackConfig = {
-  setTickets: FunctionSetter,
-  setDays: FunctionSetter,
-  setHosts: FunctionSetter,
-  setRoles: FunctionSetter,
-  setSpaces: FunctionSetter,
-  setCategories: FunctionSetter,
+  setTickets: FunctionSetter;
+  setDays: FunctionSetter;
+  setHosts: FunctionSetter;
+  setRoles: FunctionSetter;
+  setSpaces: FunctionSetter;
+  setCategories: FunctionSetter;
 };
 
-export default async function useLoadExtraAgendaData (event: EventType, callbacks: HookCallbackConfig) {
+export default async function useLoadExtraAgendaData(event: EventType, callbacks: HookCallbackConfig) {
   try {
     // NOTE: The tickets are not used
     const remoteTickets = await eventTicketsApi.getAll(event?._id);
