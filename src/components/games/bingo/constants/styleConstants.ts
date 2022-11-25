@@ -33,7 +33,7 @@ export const gridStyleImage_5x5: React.CSSProperties = {
 };
 // estilos para los valores en el carton 4x4
 export const gridStyleText_4x4: React.CSSProperties = {
-  width: '24%',
+  width: '22%',
   aspectRatio: '5/4',
   textAlign: 'center',
   cursor: 'pointer',
@@ -49,7 +49,7 @@ export const gridStyleText_4x4: React.CSSProperties = {
   position: 'relative',
 };
 export const gridStyleImage_4x4: React.CSSProperties = {
-  width: '24%',
+  width: '22%',
   aspectRatio: '5/4',
   textAlign: 'center',
   cursor: 'pointer',
@@ -66,7 +66,7 @@ export const gridStyleImage_4x4: React.CSSProperties = {
 };
 // estilos para los valores en el carton 3x3
 export const gridStyleText_3x3: React.CSSProperties = {
-  width: '30%',
+  width: '29%',
   aspectRatio: '5/4.2',
   textAlign: 'center',
   cursor: 'pointer',
@@ -82,7 +82,7 @@ export const gridStyleText_3x3: React.CSSProperties = {
   position: 'relative',
 };
 export const gridStyleImage_3x3: React.CSSProperties = {
-  width: '30%',
+  width: '29%',
   aspectRatio: '5/4.2',
   textAlign: 'center',
   cursor: 'pointer',
