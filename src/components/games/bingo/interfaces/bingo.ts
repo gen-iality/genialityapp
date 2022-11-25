@@ -197,6 +197,7 @@ export interface DrawerButtonsInterface {
   setshowDrawerChat?: (state: boolean) => void;
   setshowDrawerRules?: (state: boolean) => void;
   bingoData?: Bingo;
+  closedrawer: () => void;
 }
 export interface CurrentBallotValueInterface {
   ballotValue: PickedNumberInterface;

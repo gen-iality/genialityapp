@@ -9,22 +9,24 @@ import { IRenderViewLanding } from '../interfaces/Millonaire';
 import Ranking from '../../common/Ranking';
 import UsersRanking from './UsersRanking';
 import { CloseOutlined } from '@ant-design/icons';
+import Stages from './Stages';
 import GameAnnoucement from './GameAnnoucement';
+
 export default function DrawerMillonaire() {
-  const {
-    isVisible,
-    visibilityControl,
-    statusGame,
-    onChangeVisibilityDrawer,
-    millonaire,
-    startGame,
-  } = useMillonaireLanding();
-  const RenderView: IRenderViewLanding = {
-    NOT_STARTED: <MenuGame />,
-    STARTED: <Millonaire />,
-    GAME_OVER: <UsersRanking />,
-    ANNOUNCEMENT: <GameStartAnnoucement />,
-  };
+	const {
+		isVisible,
+		visibilityControl,
+		statusGame,
+		onChangeVisibilityDrawer,
+		millonaire,
+		startGame,
+	} = useMillonaireLanding();
+	const RenderView: IRenderViewLanding = {
+		NOT_STARTED: <MenuGame />,
+		STARTED: <Millonaire />,
+		GAME_OVER: <UsersRanking />,
+		ANNOUNCEMENT: <GameStartAnnoucement />,
+	};
 
   return (
     <>

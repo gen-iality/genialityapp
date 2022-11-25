@@ -33,7 +33,7 @@ export default function PlayMillonaireCMS() {
 
   return (
     <Row gutter={[16, 16]} style={{ padding: '40px' }}>
-      <Col>
+      <Col span={8}>
         <Card hoverable style={{ borderRadius: '20px' }}>
           <Form.Item
             tooltip='Controla la visibilidad del módulo para los asistentes'

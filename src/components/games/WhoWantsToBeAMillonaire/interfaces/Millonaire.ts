@@ -188,3 +188,7 @@ export interface IDataImport {
   'Respues D': string;
   'Respuesta correcta': string | number;
 }
+export interface ButtonMillonaire {
+  isTitle?: boolean;
+
+}

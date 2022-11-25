@@ -51,7 +51,7 @@ export default function MenuGame() {
           <Space size={'middle'} direction='vertical' style={{ width: '100%' }}>
             <Tooltip placement='top' title={userExits ? 'No puedes volver a jugar.' : null}>
               <Button block size='large' disabled={userExits ? true : false} onClick={() => onAnnouncement()}>
-                <Typography.Text strong>Jugar</Typography.Text>
+                <Typography.Text strong>{userExits ? 'Ya participaste' : 'Jugar'}</Typography.Text>
               </Button>
             </Tooltip>
 
