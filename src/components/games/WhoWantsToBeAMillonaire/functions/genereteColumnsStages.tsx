@@ -31,7 +31,7 @@ const GenerateColumnsStages = () => {
       dataIndex: 'lifeSaver',
       name: 'Salvavidas',
       render: (text: string, value: any, index: any) => {
-        return value.lifeSaver === true ? <Tag color='green'>Salvavidas</Tag> : <Tag color='red'>No Salvavidas</Tag>;
+        return value.lifeSaver === true ? <Tag color='green'>Si</Tag> : <Tag color='red'>No</Tag>;
       },
     },
     {

@@ -72,7 +72,7 @@ export default function PlayMillonaireCMS() {
           </Popconfirm>
         </Card>
       </Col>
-      <Col>
+      <Col span={16}>
         <Card hoverable style={{ borderRadius: '20px', width: '100%' }}>
           <Ranking scores={scoresOrdered} type={'points'} />
         </Card>
