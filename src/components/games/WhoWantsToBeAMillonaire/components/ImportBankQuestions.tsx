@@ -30,12 +30,12 @@ export default function ImportBankQuestions() {
         visible={isVisibleModalImport}
         onCancel={() => onActiveModalImport()}
         footer={[
-          <Checkbox
-            checked={preserveInformation}
-            value={preserveInformation}
-            onChange={(e) => setPreserveInformation(e.target.checked)}>
-            Conservar la información
-          </Checkbox>,
+          // <Checkbox
+          //   checked={preserveInformation}
+          //   value={preserveInformation}
+          //   onChange={(e) => setPreserveInformation(e.target.checked)}>
+          //   Conservar la información
+          // </Checkbox>,
           <Button onClick={() => onSaveDataImport()} loading={loading} disabled={enableSaveButton} type='primary'>
             Guardar
           </Button>,

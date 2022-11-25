@@ -67,7 +67,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
   const [laterStage, setLaterStage] = useState<IStages>(INITIAL_STATE_STAGE);
   const [visibilityControl, setVisibilityControl] = useState(INITIAL_STATE_VISIBILITY);
   const [importData, setImportData] = useState<IDataImport[]>([]);
-  const [preserveInformation, setPreserveInformation] = useState(false);
+  const [preserveInformation, setPreserveInformation] = useState(true);
   const [enableSaveButton, setEnableSaveButton] = useState(false);
   const [tab, setTab] = useState('1');
   //-------------------STATE-MODALS---------------------------------------//
