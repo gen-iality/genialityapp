@@ -15,7 +15,6 @@ export default function PrintComponent({
   bingoUsers: any[];
   isPrint?: boolean;
 }) {
-  console.log('bingos', bingo);
   return (
     <div
       style={{
