@@ -29,7 +29,7 @@ const CASES_ANNOUNCEMENT = {
 
 export default function GameAnnoucement() {
   // lo iba crear para hacer la parte este de que mostrar que gano o perdio pero no me dio tiempo :(
-  const { onChangeStatusGame, statusGame } = useMillonaireLanding();
+  const { onChangeStatusGame, statusGame, scoreUser } = useMillonaireLanding();
 
   const screens = useBreakpoint();
   return (
@@ -54,9 +54,12 @@ export default function GameAnnoucement() {
             </Typography.Title>
           }
           subTitle={
-            <Typography.Paragraph>
-              {CASES_ANNOUNCEMENT[statusGame as keyof typeof CASES_ANNOUNCEMENT].subTitle}
-            </Typography.Paragraph>
+            <>
+              <Typography.Paragraph>
+                {CASES_ANNOUNCEMENT[statusGame as keyof typeof CASES_ANNOUNCEMENT].subTitle}
+              </Typography.Paragraph>
+              <Typography.Title level={4}>Puntaje: {scoreUser.score}</Typography.Title>
+            </>
           }
           extra={
             <Space>

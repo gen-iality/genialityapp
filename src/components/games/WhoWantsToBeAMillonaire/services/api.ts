@@ -106,3 +106,13 @@ export const UpdateStageMillonaireApi = async (millonaireId: string, stageId: st
     return null;
   }
 };
+
+export const ImportDataMillonaireApi = async (millonaireId: string, data: any) => {
+  try {
+    const response = await WhoWantsToBeAMillonaireApi.createDataImport(millonaireId, data);
+    return response;
+  } catch (error) {
+    DispatchMessageService({ type: 'error', msj: 'Error al importar la informacion', action: 'show' });
+    return null;
+  }
+};

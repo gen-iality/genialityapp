@@ -110,6 +110,19 @@ export const saveStatusGameByUser = async (idEvent: string, idUser: string, stat
     .set({ status }, { merge: true });
 };
 
+export const saveTimePerStage = async (idEvent: string, idUser: string, idStage: string, timePerStage: any) => {
+  await firestore
+    .collection('dinamicas')
+    .doc('WhoWantsToBeAMillonaire')
+    .collection('events')
+    .doc(idEvent)
+    .collection('users')
+    .doc(idUser)
+    .collection('stages')
+    .doc(idStage)
+    .set({ ...timePerStage }, { merge: true });
+};
+
 export const getStatusGameByUser = async (idEvent: string, idUser: string) => {
   const snapshot = await firestore
     .collection('dinamicas')
@@ -168,6 +181,18 @@ export const deleteStatusStagesAndScoreAll = async (idEvent: string) => {
     .collection('events')
     .doc(idEvent)
     .collection('scores')
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    });
+  await firestore
+    .collection('dinamicas')
+    .doc('WhoWantsToBeAMillonaire')
+    .collection('events')
+    .doc(idEvent)
+    .collection('users')
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {

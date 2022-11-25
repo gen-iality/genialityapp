@@ -33,13 +33,13 @@ export default function CreateMillonaire() {
           onChange={(value) => onChangeMillonaire('numberOfQuestions', Number(value))}
           value={millonaire?.numberOfQuestions}>
           {VALUES_TOTAL_QUESTIONS.map((totalQuestion) => (
-            <Option key={'time--' + totalQuestion} disabled={totalQuestion !== 15} value={totalQuestion}>
+            <Option key={'time--' + totalQuestion} value={totalQuestion}>
               {totalQuestion}
             </Option>
           ))}
         </Select>
       </Form.Item>
-      <Form.Item label='Selecciona el tiempo para responder' name='timeForQuestions'>
+      {/* <Form.Item label='Selecciona el tiempo para responder' name='timeForQuestions'>
         <Select
           onChange={(value) => onChangeMillonaire('timeForQuestions', Number(value))}
           value={millonaire?.timeForQuestions}
@@ -54,7 +54,7 @@ export default function CreateMillonaire() {
             </Option>
           ))}
         </Select>
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item label='Reglas' name='rules'>
         <TextArea
           defaultValue={millonaire?.rules}

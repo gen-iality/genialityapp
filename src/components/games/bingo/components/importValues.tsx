@@ -20,6 +20,7 @@ const ImportValues = ({
   event,
   setEnableSaveButton,
   setImportData,
+  templateDataDefault,
 }: ImportValuesInterface) => {
   /* generate an array of column objects */
   const objectDataGenerator = (refstr: any) => {
@@ -112,7 +113,7 @@ const ImportValues = ({
     let cleanAttribute: string = '';
     let name: string | undefined = '';
     if (downloadWithTemplate === true) {
-      data = TemplateData;
+      data = templateDataDefault || TemplateData;
     } else {
       extraFields.forEach((extra) => {
         if (extra.name === '') return;

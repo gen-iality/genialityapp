@@ -16,6 +16,7 @@ import {
   saveStageUser,
   getStatusGameByUser,
   saveStatusGameByUser,
+  saveTimePerStage,
   deleteStatusStagesAndScoreAll,
 } from '../services/firebase';
 import { CurrentEventUserContext } from '@/context/eventUserContext';
@@ -293,6 +294,12 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       });
       return;
     }
+    saveTimePerStage(eventId, currentUser.user.uid!, currentStage.id!, {
+      ...currentStage,
+      question: question,
+      selectAnswer: answer,
+      time: question.timeForQuestion - time,
+    });
     saveStageUser(eventId, scoreUser.uid!, currentStage);
     if (answer.isCorrect === false) {
       setCurrentStage(INITIAL_STATE_STAGE);

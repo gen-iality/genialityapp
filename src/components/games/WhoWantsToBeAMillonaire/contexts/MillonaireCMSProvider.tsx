@@ -9,6 +9,7 @@ import {
   IAnswers,
   IModalVisible,
   IVisibility,
+  IDataImport,
 } from '../interfaces/Millonaire';
 import {
   INITIAL_STATE_MILLONAIRE,
@@ -19,6 +20,7 @@ import {
   INITIAL_STATE_MODAL_VISIBLE,
   INITIAL_STATE_VISIBILITY,
   INITIAL_ANSWER_TO_RENDER,
+  KEYSDATAIMPORT,
 } from '../constants/formData';
 import { DispatchMessageService } from '@/context/MessageService';
 import {
@@ -32,6 +34,7 @@ import {
   DeleteStageMillonairApi,
   UpdateQuestionMillonaireApi,
   UpdateStageMillonaireApi,
+  ImportDataMillonaireApi,
 } from '../services/api';
 
 import {
@@ -63,10 +66,14 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
   const [previusStage, setPreviusStage] = useState<IStages>(INITIAL_STATE_STAGE);
   const [laterStage, setLaterStage] = useState<IStages>(INITIAL_STATE_STAGE);
   const [visibilityControl, setVisibilityControl] = useState(INITIAL_STATE_VISIBILITY);
+  const [importData, setImportData] = useState<IDataImport[]>([]);
+  const [preserveInformation, setPreserveInformation] = useState(false);
+  const [enableSaveButton, setEnableSaveButton] = useState(false);
   const [tab, setTab] = useState('1');
   //-------------------STATE-MODALS---------------------------------------//
   const [isVisibleModalQuestion, setIsVisibleModalQuestion] = useState(false);
   const [isVisibleModalStage, setIsVisibleModalStage] = useState(false);
+  const [isVisibleModalImport, setIsVisibleModalImport] = useState(false);
   const [scores, setScores] = useState<Score[]>([] as Score[]);
 
   //-------------🚀 USEEFECTS 🚀---------------------------------------//
@@ -641,6 +648,10 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     }));
   };
 
+  const onActiveModalImport = () => {
+    setIsVisibleModalImport(!isVisibleModalImport);
+  };
+
   //-------------------------------------- FUNCIONALIDAD DE VISIBILIDAD DE LA DINAMICA --------------------------------------//
 
   //-------------------FUNCION PARA CAMBIAR EL ESTADO DE LA DINAMICA-------------------//
@@ -688,6 +699,177 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     setTab(key);
   };
 
+  //------------------------ 🚀 FUNCIONES DE DATOS 🚀 ------------------------//
+  const onHandleXlsx = (importData: IDataImport[]) => {
+    setImportData(importData);
+  };
+
+  const onSaveDataImport = async () => {
+    setLoading(true);
+    //ImportDataMillonaireApi
+    let tempArray = new Array();
+    const headerTitle = Object.keys(importData[0 as keyof typeof importData] || {});
+    const setCorrectHeader = (currentValue: string) => KEYSDATAIMPORT.includes(currentValue);
+    const isCorrectHeader = headerTitle.every(setCorrectHeader);
+    if (isCorrectHeader === false) {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'Error al verificar la data, verifique la estructura con el template',
+        action: 'show',
+      });
+      setLoading(false);
+      return;
+    }
+    importData.forEach((importItem) => {
+      const keys = Object.keys(importItem);
+      tempArray.push({
+        question: importItem[keys[0] as keyof typeof importItem],
+        timeForQuestion: importItem[keys[1] as keyof typeof importItem],
+        type: 'text',
+        answers: [
+          {
+            answer: importItem[keys[2] as keyof typeof importItem],
+            isCorrect:
+              importItem[keys[6] as keyof typeof importItem] === 'A' ||
+              importItem[keys[6] as keyof typeof importItem] === 1
+                ? true
+                : false,
+            type: 'text',
+            isTrueOrFalse: false,
+          },
+          {
+            answer: importItem[keys[3] as keyof typeof importItem],
+            isCorrect:
+              importItem[keys[6] as keyof typeof importItem] === 'B' ||
+              importItem[keys[6] as keyof typeof importItem] === 2
+                ? true
+                : false,
+            type: 'text',
+            isTrueOrFalse: false,
+          },
+          {
+            answer: importItem[keys[4] as keyof typeof importItem],
+            isCorrect:
+              importItem[keys[6] as keyof typeof importItem] === 'C' ||
+              importItem[keys[6] as keyof typeof importItem] === 3
+                ? true
+                : false,
+            type: 'text',
+            isTrueOrFalse: false,
+          },
+          {
+            answer: importItem[keys[5] as keyof typeof importItem],
+            isCorrect:
+              importItem[keys[6] as keyof typeof importItem] === 'D' ||
+              importItem[keys[6] as keyof typeof importItem] === 4
+                ? true
+                : false,
+            type: 'text',
+            isTrueOrFalse: false,
+          },
+        ],
+      });
+    });
+
+    const arraySendAdapter = tempArray.map((item) => {
+      return {
+        question: item.question,
+        time_limit: item.timeForQuestion,
+        type: item.type,
+        answers: item.answers.map((answer: IAnswers) => {
+          return {
+            answer: answer.answer,
+            is_correct: answer.isCorrect,
+            type: answer.type,
+            is_true_or_false: answer.isTrueOrFalse,
+          };
+        }),
+      };
+    });
+
+    if (tempArray.length === 0) {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'No hay datos para importar',
+        action: 'show',
+      });
+      setLoading(false);
+      return;
+    }
+    const arraySend = tempArray.filter(
+      (item) =>
+        item.question !== '' && item.answers.length !== 0 && item.timeForQuestion !== 0 && !isNaN(item.timeForQuestion)
+    );
+    if (arraySend.length === 0) {
+      DispatchMessageService({
+        type: 'error',
+        msj: 'No hay datos para importar o los tipos estan vacios',
+        action: 'show',
+      });
+      setLoading(false);
+      return;
+    }
+
+    const response = await ImportDataMillonaireApi(millonaire.id!, {
+      replace_questions: !preserveInformation,
+      questions: arraySendAdapter,
+    });
+    if (!response) {
+      setLoading(false);
+      return;
+    }
+    const questionResponseAdapter = response.success.map((item: any) => {
+      return {
+        id: item.id,
+        question: item.question,
+        timeForQuestion: item.time_limit,
+        type: item.type,
+        answers: item.answers.map((answer: any) => {
+          return {
+            id: answer.id,
+            answer: answer.answer,
+            isCorrect: answer.is_correct,
+            type: answer.type,
+            isTrueOrFalse: answer.is_true_or_false,
+          };
+        }),
+      };
+    });
+
+    // Guardar las preguntas que esten asociados al etapa
+    const questionsInStage: IQuestions[] = [];
+    millonaire.stages.forEach((stage) => {
+      // buscar las preguntas que esten asociadas a la etapa
+      const question = millonaire.questions.find((question) => question.id === stage.question);
+      if (question && question !== undefined) {
+        return questionsInStage.push(question);
+      }
+    });
+
+    preserveInformation === true &&
+      setMillonaire({
+        ...millonaire,
+        questions: [...millonaire.questions, ...questionResponseAdapter],
+      });
+
+    preserveInformation === false &&
+      setMillonaire({
+        ...millonaire,
+        questions: [...questionsInStage, ...questionResponseAdapter],
+      });
+
+    DispatchMessageService({
+      type: 'success',
+      msj: 'Datos importados correctamente',
+      action: 'show',
+    });
+
+    setLoading(false);
+
+    onActiveModalImport();
+    setEnableSaveButton(true);
+  };
+
   return (
     <MillonaireCMSContext.Provider
       value={{
@@ -712,6 +894,11 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         scores,
         tab,
         answers,
+        isVisibleModalImport,
+        enableSaveButton,
+        preserveInformation,
+        setImportData,
+        setPreserveInformation,
         onChangeAnswerFour,
         onChangeMillonaire,
         onChangeAppearance,
@@ -744,6 +931,10 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         onResetProgressAll,
         onChangeTab,
         onSaveAnswerFour,
+        onActiveModalImport,
+        onHandleXlsx,
+        onSaveDataImport,
+        setEnableSaveButton,
       }}>
       {children}
     </MillonaireCMSContext.Provider>

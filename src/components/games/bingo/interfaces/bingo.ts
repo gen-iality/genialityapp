@@ -104,6 +104,7 @@ export interface ImportValuesInterface {
   handleXls: (data: any) => any;
   extraFields: extraFields[];
   event: EventBingo;
+  templateDataDefault?: any[];
   setEnableSaveButton: (state: boolean) => void;
   setImportData: (data: any) => void;
 }
