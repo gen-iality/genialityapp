@@ -2,7 +2,7 @@ import { Divider, List, Typography, Button, Avatar } from 'antd';
 import { ReadFilled } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { useEventContext } from '@context/eventContext';
-import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '@helpers/request';
+import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi, ToolsApi } from '@helpers/request';
 
 const dataDuration = [
   {
@@ -25,6 +25,7 @@ const dataTooling = [
 const HostList = () => {
   const cEvent = useEventContext();
   const [speakers, setSpeakers] = useState([]);
+  const [tools, setTools] = useState([]);
 
   useEffect(() => {
     let speakersApi = [];
@@ -33,6 +34,16 @@ const HostList = () => {
       speakersApi = await SpeakersApi.byEvent(cEvent.value._id);
       console.log('900.speakers', speakersApi);
       setSpeakers(speakersApi);
+    })();
+  }, []);
+
+  useEffect(() => {
+    let toolsApi = [];
+
+    (async () => {
+      toolsApi = await ToolsApi.byEvent(cEvent.value._id);
+      console.log('900.tools', toolsApi);
+      setTools(toolsApi);
     })();
   }, []);
 
@@ -55,12 +66,13 @@ const HostList = () => {
       <List
         size='small'
         header={<h3>HERRAMIENTAS</h3>}
-        dataSource={dataTooling}
+        dataSource={tools}
         renderItem={(item) => (
           <List.Item>
             {
               <>
-                <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.title}</p>
+                <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.name_tool}</p>{' '}
+                {/* TODO: cambiar "name_tool" por name cuando en el backend se cambie por "name" */}
               </>
             }
           </List.Item>
