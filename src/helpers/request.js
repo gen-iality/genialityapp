@@ -971,6 +971,28 @@ export const SpacesApi = {
     return await Actions.create(`api/events/${event}/spaces?token=${token}`, data, true);
   },
 };
+
+export const ToolsApi = {
+  byEvent: async (event) => {
+    return await Actions.getAll(`api/events/${event}/tools`).then(({ data }) => data);
+  },
+  getOne: async (id, event) => {
+    return await Actions.get(`api/events/${event}/tools/`, id);
+  },
+  editOne: async (data, id, event) => {
+    const token = await GetTokenUserFirebase();
+    return await Actions.edit(`api/events/${event}/tools/${id}?token=${token}`, data, true);
+  },
+  deleteOne: async (id, event) => {
+    const token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/events/${event}/tools/${id}?token=${token}`, '', true);
+  },
+  create: async (data, event) => {
+    const token = await GetTokenUserFirebase();
+    return await Actions.create(`api/events/${event}/tools?token=${token}`, data, true);
+  },
+};
+
 export const CategoriesAgendaApi = {
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/categoryactivities`).then(({ data }) => data);
