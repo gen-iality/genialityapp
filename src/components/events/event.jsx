@@ -416,6 +416,13 @@ class Event extends Component {
                 componentKey='espacios'
               />
               <Protected
+                path={`${match.url}/herramientas`}
+                component={Herramientas}
+                matchUrl={match.url}
+                event={event}
+                componentKey='herramientas'
+              />
+              <Protected
                 path={`${match.url}/speakers`}
                 component={Speakers}
                 event={event}
