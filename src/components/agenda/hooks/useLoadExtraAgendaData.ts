@@ -1,4 +1,4 @@
-import { CategoriesAgendaApi, eventTicketsApi, RolAttApi, SpacesApi, SpeakersApi } from '@helpers/request';
+import { CategoriesAgendaApi, eventTicketsApi, RolAttApi, SpacesApi, ToolsApi, SpeakersApi } from '@helpers/request';
 import { handleSelect } from '@helpers/utils';
 import dayjs from 'dayjs';
 import EventType from '../types/EventType';
@@ -12,6 +12,7 @@ type HookCallbackConfig = {
   setHosts: FunctionSetter;
   setRoles: FunctionSetter;
   setSpaces: FunctionSetter;
+  setTools: FunctionSetter;
   setCategories: FunctionSetter;
 };
 
@@ -57,16 +58,19 @@ export default async function useLoadExtraAgendaData(event: EventType, callbacks
   const remoteHosts = await SpeakersApi.byEvent(event._id);
   const remoteRoles = await RolAttApi.byEvent(event._id);
   const remoteSpaces = await SpacesApi.byEvent(event._id);
+  const remoteTools = await ToolsApi.byEvent(event._id);
   const remoteCategories = await CategoriesAgendaApi.byEvent(event._id);
 
   // The object struct should be like [{ label, value }] for the Select components
   const newAllHosts = handleSelect(remoteHosts) || [];
   const newAllRoles = handleSelect(remoteRoles) || [];
   const newAllSpaces = handleSelect(remoteSpaces) || [];
+  const newAllTools = handleSelect(remoteTools) || [];
   const newAllCategories = handleSelect(remoteCategories) || [];
 
   callbacks.setHosts(newAllHosts);
   callbacks.setRoles(newAllRoles);
   callbacks.setSpaces(newAllSpaces);
+  callbacks.setTools(newAllTools);
   callbacks.setCategories(newAllCategories);
 }

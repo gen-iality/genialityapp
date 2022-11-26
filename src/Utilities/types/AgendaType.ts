@@ -30,6 +30,7 @@ export default interface AgendaType {
   key: any;
   requires_registration: boolean;
   host_ids: any[] | null;
+  tool_ids: any[] | null;
   length: string;
   latitude: string;
 }

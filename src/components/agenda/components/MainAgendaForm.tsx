@@ -51,6 +51,7 @@ export interface FormDataType {
   latitude: string;
   selectedCategories: SelectOptionType[];
   selectedHosts: SelectOptionType[];
+  selectedTools: SelectOptionType[];
   selectedRol: SelectOptionType[];
   selectedTickets: SelectOptionType[];
   selectedDocuments: SelectOptionType[];
@@ -79,6 +80,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });
   const [allDays, setAllDays] = useState<SelectOptionType[]>([]);
   const [allHosts, setAllHosts] = useState<SelectOptionType[]>([]);
+  const [allTools, setAllTools] = useState<SelectOptionType[]>([]);
   const [allSpaces, setAllSpaces] = useState<SelectOptionType[]>([]); // info.space_id loads this with data
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
@@ -94,6 +96,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const processDateFromAgendaDocument = useProcessDateFromAgendaDocument();
   const hourWithAdditionalMinutes = useHourWithAdditionalMinutes();
 
+  const hola = [[1], [2], [3], [4]];
+
   useEffect(() => {
     if (!props.event?._id) return;
 
@@ -102,6 +106,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
         setCategories: setAllCategories,
         setDays: setAllDays,
         setHosts: setAllHosts,
+        setTools: setAllTools,
         setRoles: setAllRoles,
         setSpaces: setAllSpaces,
         setTickets: setAllTickets,
@@ -138,9 +143,10 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       selectedDocuments: agenda.selected_document || [],
       selectedCategories: fieldsSelect(agenda.activity_categories_ids, allCategories) || [],
       selectedHosts: fieldsSelect(agenda.host_ids, allHosts) || [],
+      selectedTools: fieldsSelect(agenda.tool_ids, allTools) || [],
       selectedRol: fieldsSelect(agenda.access_restriction_rol_ids, allRoles) || [],
     });
-  }, [agenda, allCategories, allHosts, allRoles]);
+  }, [agenda, allCategories, allHosts, allRoles, allTools]);
 
   useEffect(() => {
     // Focus the first field
@@ -364,6 +370,27 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 </Form.Item>
               </Col>
             </Row>
+            <Form.Item label='Herramientas'>
+              <Row wrap gutter={[8, 8]}>
+                <Col span={23}>
+                  <Select
+                    isMulti
+                    id='tools'
+                    isClearable
+                    styles={creatableStyles}
+                    onChange={(value: any) => handleChangeFormData('selectedTools', value)}
+                    options={allTools}
+                    value={formdata.selectedTools}
+                    placeholder='Sin herramientas...'
+                  />
+                </Col>
+                <Col span={1}>
+                  <Link to={props.matchUrl.replace('agenda', 'herramientas')}>
+                    <Button icon={<SettingOutlined />} />
+                  </Link>
+                </Col>
+              </Row>
+            </Form.Item>
             <Form.Item label='Conferencista'>
               <Row wrap gutter={[8, 8]}>
                 <Col span={22}>

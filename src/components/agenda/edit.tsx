@@ -77,6 +77,7 @@ const initialInfoState: AgendaType = {
   key: '',
   requires_registration: false,
   host_ids: [],
+  tool_ids: [],
   length: '',
   latitude: '',
 };
@@ -95,6 +96,7 @@ const initialFormDataState = {
   image: '',
   selectedRol: [],
   selectedHosts: [],
+  selectedTools: [],
   selectedTickets: [],
   selectedDocuments: [],
   selectedCategories: [],
