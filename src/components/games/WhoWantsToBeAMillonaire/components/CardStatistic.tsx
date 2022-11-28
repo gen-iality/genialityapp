@@ -6,9 +6,10 @@ interface CardStatistic {
   title: React.ReactNode | string;
   value: valueType;
   suffix?: React.ReactNode;
+  precision?: number;
 }
 
-const CardStatistic = ({ title, value, suffix }: CardStatistic) => {
+const CardStatistic = ({ title, value, suffix, precision }: CardStatistic) => {
   return (
     <Card bodyStyle={{ padding: '10px' }} style={{ height: '100%' }}>
       <Statistic
@@ -18,6 +19,7 @@ const CardStatistic = ({ title, value, suffix }: CardStatistic) => {
         title={title}
         value={value}
         suffix={suffix}
+        precision={precision}
       />
     </Card>
   );

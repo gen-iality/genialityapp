@@ -28,32 +28,47 @@ export default function GeneratedData() {
   const avaregeTimePerStages = avaregeTime / millonaire.stages.length;
 
   const listStatistics = [
-    { id: 1, title: 'Etapas Totales', value: millonaire.stages.length, suffix: '' },
-    { id: 2, title: 'Participantes', value: scores.length, suffix: '' },
-    { id: 3, title: 'Puntaje promedio', value: avaregeScore, suffix: '' },
-    { id: 4, title: 'Puntaje máximo registrado', value: scoreMax, suffix: '' },
-    { id: 5, title: 'Puntaje mínimo registrado', value: scoreMin, suffix: '' },
-    { id: 6, title: 'Participantes con puntaje (0)', value: socoreLessThan0, suffix: '' },
-    { id: 7, title: 'Participantes con puntaje mayor a 0', value: socoreGreaterThan0, suffix: '' },
-    { id: 8, title: 'Fecha minima de finalizacion', value: new Date(minimunDate).toLocaleString(), suffix: '' },
-    { id: 9, title: 'Fecha maxima de finalizacion', value: new Date(maximunDate).toLocaleString(), suffix: '' },
+    { id: 1, title: 'Etapas Totales', value: millonaire.stages.length, suffix: '', precision: 0 },
+    { id: 2, title: 'Participantes', value: scores.length, suffix: '', precision: 0 },
+    { id: 3, title: 'Puntaje promedio', value: avaregeScore, suffix: '', precision: 2 },
+    { id: 4, title: 'Puntaje máximo registrado', value: scoreMax, suffix: '', precision: 0 },
+    { id: 5, title: 'Puntaje mínimo registrado', value: scoreMin, suffix: '', precision: 0 },
+    { id: 6, title: 'Participantes con puntaje (0)', value: socoreLessThan0, suffix: '', precision: 0 },
+    { id: 7, title: 'Participantes con puntaje mayor a 0', value: socoreGreaterThan0, suffix: '', precision: 0 },
+    {
+      id: 8,
+      title: 'Fecha minima de finalizacion',
+      value: new Date(minimunDate).toLocaleString(),
+      suffix: '',
+      precision: 0,
+    },
+    {
+      id: 9,
+      title: 'Fecha maxima de finalizacion',
+      value: new Date(maximunDate).toLocaleString(),
+      suffix: '',
+      precision: 0,
+    },
     {
       id: 10,
       title: 'Tiempo promedio de respuesta',
       value: avaregeTime,
       suffix: <small>s</small>,
+      precision: 2,
     },
     {
       id: 10,
       title: 'Tiempo total de respuesta',
       value: totalTime,
       suffix: <small>s</small>,
+      precision: 0,
     },
     {
       id: 10,
       title: 'Tiempo promedio por etapa',
       value: avaregeTimePerStages,
       suffix: <small>s</small>,
+      precision: 2,
     },
   ];
 
@@ -68,7 +83,12 @@ export default function GeneratedData() {
           <Row justify='space-around' gutter={[16, 16]}>
             {listStatistics.map((statistic) => (
               <Col xs={24} sm={24} md={12} lg={8} xl={6} xxl={6} key={statistic.id}>
-                <CardStatistic title={statistic.title} value={statistic.value} suffix={statistic.suffix} />
+                <CardStatistic
+                  title={statistic.title}
+                  value={statistic.value}
+                  suffix={statistic.suffix}
+                  precision={statistic.precision}
+                />
               </Col>
             ))}
           </Row>
