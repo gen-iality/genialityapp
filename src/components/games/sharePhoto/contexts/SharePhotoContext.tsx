@@ -50,7 +50,7 @@ export default function SharePhotoProvider(props: Props) {
 	const cUser = UseUserEvent();
 	// console.log(cUser);
 	// const cEvent = UseEventContext();
-	const eventId = cUser.value.event_id;
+	const eventId = cUser?.value?.event_id;
 
 	useEffect(() => {
 		if (eventId && sharePhoto === null) {
@@ -121,6 +121,7 @@ export default function SharePhotoProvider(props: Props) {
 	};
 
 	const listenSharePhoto = () => {
+		if (cUser?.value?.event_id === undefined) return () => {};
 		return service.listenSharePhoto(cUser.value.event_id, setSharePhoto);
 	};
 
