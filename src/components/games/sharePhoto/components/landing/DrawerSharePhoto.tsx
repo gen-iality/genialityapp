@@ -31,7 +31,7 @@ export default function DrawerSharePhoto(props: Props) {
 		// }
 	}, [sharePhoto]);
 
-	if (sharePhoto === null) return null;
+	if (!sharePhoto) return null;
 
 	return (
 		<>
@@ -39,7 +39,7 @@ export default function DrawerSharePhoto(props: Props) {
 				size='large'
 				type='primary'
 				onClick={handleOpen}
-				style={{ display: sharePhoto.published ? 'block' : 'none' }}>
+				style={{ display: sharePhoto?.published ? 'block' : 'none' }}>
 				Comparte tu foto
 			</Button>
 			<Drawer
