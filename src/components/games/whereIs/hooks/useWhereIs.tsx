@@ -13,7 +13,7 @@ export default function useWhereIs() {
 	const { whereIs, setWhereIs } = context;
 
 	useEffect(() => {
-		const eventId = cUser.value.event_id;
+		const eventId = cUser?.value?.event_id;
 		if (eventId && whereIs === null) {
 			getWhereIs(eventId);
 		}
