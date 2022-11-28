@@ -10,6 +10,7 @@ import {
   IModalVisible,
   IVisibility,
   IDataImport,
+  IParticipant,
 } from '../interfaces/Millonaire';
 import {
   INITIAL_STATE_MILLONAIRE,
@@ -42,6 +43,8 @@ import {
   getVisibilityControl,
   listenRanking,
   deleteStatusStagesAndScoreAll,
+  getParticipants,
+  listenParticipants,
 } from '../services/firebase';
 import createMillonaireAdapter from '../adapters/createMillonaireAdapter';
 import getMillonaireAdapter from '../adapters/getMillonaireAdapter';
@@ -69,6 +72,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
   const [importData, setImportData] = useState<IDataImport[]>([]);
   const [preserveInformation, setPreserveInformation] = useState(true);
   const [enableSaveButton, setEnableSaveButton] = useState(false);
+  const [participants, setParticipants] = useState<IParticipant[]>([]);
   const [tab, setTab] = useState('1');
   //-------------------STATE-MODALS---------------------------------------//
   const [isVisibleModalQuestion, setIsVisibleModalQuestion] = useState(false);
@@ -99,6 +103,22 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       unsubscribe && unsubscribe();
     };
   }, [eventId]);
+
+  // listen participants
+  useEffect(() => {
+    let unsubscribe: any;
+    if (eventId) {
+      unsubscribe = listenParticipants(eventId, (participants) => {
+        setParticipants(participants);
+      });
+    }
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, [eventId]);
+
+
+
 
   // useEffect(() => {
   //   getVisibility();
@@ -664,7 +684,10 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         action: 'show',
       });
     }
-    saveVisibilityControl(eventId, { ...visibilityControl, [name]: value }).then(() => {
+    saveVisibilityControl(eventId, {
+      ...visibilityControl, [name]: value,
+      resetProgress: false
+    }).then(() => {
       setVisibilityControl((prevState) => ({
         ...prevState,
         [name]: value,
@@ -690,7 +713,9 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
   //-------------------FUNCION PARA CAMBIAR EL ESTADO DE LA DINAMICA-------------------//
   const onResetProgressAll = async () => {
     setLoading(true);
+    await saveVisibilityControl(eventId, { ...visibilityControl, resetProgress: true })
     await deleteStatusStagesAndScoreAll(eventId);
+    await saveVisibilityControl(eventId, { ...visibilityControl, resetProgress: false })
     setLoading(false);
   };
 
@@ -870,6 +895,22 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     setEnableSaveButton(true);
   };
 
+  //------------------------ 🚀 FUNCIONES DE ESTADISTICAS 🚀 ------------------------//
+
+  const getDataAllUser = async () => {
+    if (eventId === undefined && eventId === '') {
+      return DispatchMessageService({
+        type: 'error',
+        msj: 'No se encontro el evento',
+        action: 'show',
+      });
+    }
+    const response = await getParticipants(eventId!);
+    if (response) {
+      setVisibilityControl(response as unknown as IVisibility);
+    }
+  };
+
   return (
     <MillonaireCMSContext.Provider
       value={{
@@ -897,6 +938,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
         isVisibleModalImport,
         enableSaveButton,
         preserveInformation,
+        participants,
         setImportData,
         setPreserveInformation,
         onChangeAnswerFour,

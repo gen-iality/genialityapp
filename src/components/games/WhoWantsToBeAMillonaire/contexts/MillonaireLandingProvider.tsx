@@ -1,8 +1,16 @@
 import MillonaireLandingContext from './MillonaireLandingContext';
 import { CurrentEventContext } from '@/context/eventContext';
 import React, { useContext, useEffect, useState } from 'react';
-import { IMillonaire, IQuestions, IEditModal, IStages, IAnswers, IVisibility } from '../interfaces/Millonaire';
-import { INITIAL_STATE_MILLONAIRE, INITIAL_STATE_STAGE, INITIAL_STATE_USED_WILDCARD } from '../constants/formData';
+import {
+  IMillonaire,
+  IQuestions,
+  IEditModal,
+  IStages,
+  IAnswers,
+  IVisibility,
+  IParticipant,
+} from '../interfaces/Millonaire';
+import { INITIAL_STATE_MILLONAIRE,INITIAL_STATE_PARTICIPANT, INITIAL_STATE_STAGE, INITIAL_STATE_USED_WILDCARD } from '../constants/formData';
 import { DispatchMessageService } from '@/context/MessageService';
 import { GetMillonaireAPi } from '../services/api';
 import getMillonaireAdapter from '../adapters/getMillonaireAdapter';
@@ -17,6 +25,8 @@ import {
   getStatusGameByUser,
   saveStatusGameByUser,
   saveTimePerStage,
+  saveParticipant,
+  getParticipant,
   deleteStatusStagesAndScoreAll,
 } from '../services/firebase';
 import { CurrentEventUserContext } from '@/context/eventUserContext';
@@ -41,6 +51,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
   const [time, setTime] = useState<number>(30);
   const [visibilityControl, setVisibilityControl] = useState<IVisibility>({} as IVisibility);
   const [usedWildCards, setUsedWildCards] = useState(INITIAL_STATE_USED_WILDCARD);
+  const [participant, setParticipant] = useState(INITIAL_STATE_PARTICIPANT);
   //-------------------STATE-MODALS---------------------------------------//
   const [isVisible, setIsVisible] = useState(false);
   //-------------------CONSTANTS---------------------------------------//
@@ -151,7 +162,31 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     };
   }, [eventId]);
 
+
+  useEffect(() => {
+    if(visibilityControl.resetProgress){
+      console.log("🚀 ~ file: MillonaireLandingProvider.tsx ~ line 168 ~ useEffect ~ visibilityControl", visibilityControl)
+      
+      onResetProgress();
+    }
+  }, [visibilityControl]);
+
   //--------------FUNCIONES-------------------------------------//
+
+  const onResetProgress = () => {
+    console.log('onResetProgress');
+    setStatusGame('NOT_STARTED');
+    setStage(stagesInitial.stage);
+    setCurrentStage(stagesInitial);
+    setScoreUser({
+      ...user,
+      score: '0',
+    });
+    setParticipant(INITIAL_STATE_PARTICIPANT);
+    setQuestion(questionInitial);
+    setUsedWildCards(INITIAL_STATE_USED_WILDCARD);
+  }
+
 
   const onGetMillonaire = async () => {
     setLoading(true);
@@ -179,9 +214,11 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
         getScoreUser(eventId, currentUser.user.uid!),
         getStageUser(eventId, currentUser.user.uid!),
         getStatusGameByUser(eventId, currentUser.user.uid!),
-      ]).then(([score, stage, statusGame]) => {
+        getParticipant(eventId, currentUser.user.uid!),
+      ]).then(([score, stage, statusGame, participant]) => {
         setScoreUser((score as Score) || ({} as Score));
         setCurrentStage((stage as IStages) || INITIAL_STATE_STAGE);
+        setParticipant((participant as IParticipant) || INITIAL_STATE_PARTICIPANT);
         if (statusGame && statusGame?.status === 'STARTED') {
           setStage(stage?.stage || 1);
           setQuestion(questions.find((question) => question.id === stage?.question) as IQuestions);
@@ -294,12 +331,33 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       });
       return;
     }
-    saveTimePerStage(eventId, currentUser.user.uid!, currentStage.id!, {
-      ...currentStage,
-      question: question,
-      selectAnswer: answer,
-      time: question.timeForQuestion - time,
-    });
+    
+    const dataParticipant = {
+    
+      ...participant,
+      name: String(currentUser.user.names),
+      email: String(currentUser.user.email),
+      score: Number(scoreUser.score),
+      time: Number(time),
+      uid: String(currentUser.user.uid),
+      stages: [
+        ...participant.stages,
+        {
+          stage: stage,
+          question: question.question,
+          answer: answer.answer,
+          time: question.timeForQuestion - time,
+          score: Number(scoreUser.score)
+        }
+      ]
+    }
+
+    console.log("🚀 ~ file: MillonaireLandingProvider.tsx ~ line 333 ~ onSaveAnswer ~ dataParticipant", dataParticipant, participant)
+    setParticipant(
+      dataParticipant
+    );
+  
+    saveParticipant(eventId, currentUser.user.uid!, dataParticipant);
     saveStageUser(eventId, scoreUser.uid!, currentStage);
     if (answer.isCorrect === false) {
       setCurrentStage(INITIAL_STATE_STAGE);

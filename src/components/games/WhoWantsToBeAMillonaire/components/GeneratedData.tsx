@@ -6,24 +6,26 @@ import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 const { Title } = Typography;
 
 export default function GeneratedData() {
-  const { scores, millonaire } = useMillonaireCMS();
-  const avaregeScore = scores.reduce((acc, score) => acc + Number(score.score), 0) / scores.length || 0;
-  const scoreMax = scores.reduce((acc, score) => (Number(score.score) > acc ? Number(score.score) : acc), 0);
-  const scoreMin = scores.reduce((acc, score) => (Number(score.score) < acc ? Number(score.score) : acc), 0);
+        
+ const { scores, millonaire,participants } = useMillonaireCMS();
+  const scoresParticipants = participants.map((participant) => participant.score);
+  const avaregeScore =  Math.round(scoresParticipants.reduce((acc, score) => acc + score, 0) / scoresParticipants.length);
+  const scoreMax = Math.max(...scoresParticipants);
+  const scoreMin = Math.min(...scoresParticipants);
   const socoreLessThan0 = scores.filter((score) => Number(score.score) < 0).length;
-  const socoreGreaterThan0 = scores.filter((score) => Number(score.score) > 0).length;
-  const minimunTime = scores.reduce(
-    (acc, score) => (Number(score.time.seconds) < acc ? Number(score.time.seconds) : acc),
-    0
-  );
-  const maximunTime = scores.reduce(
-    (acc, score) => (Number(score.time.seconds) > acc ? Number(score.time.seconds) : acc),
-    0
-  );
+  const socoreGreaterThan0 = scores.filter((score) => Number(score.score) > 0).length;  
+  const  minimunDate = new Date(Math.min(...participants.map((participant) => participant.time.seconds * 1000)));
+  const  maximunDate = new Date(Math.max(...participants.map((participant) => participant.time.seconds * 1000)));
+
+  //Tiempo total de juego  de todos los participantes
+  const totalTime = participants.reduce((acc, participant) => acc + participant.stages.reduce((acc, stage) => acc + stage.time, 0), 0);
+  const avaregeTime = totalTime / participants.length;
+  const avaregeTimePerStages = avaregeTime / millonaire.stages.length;
+
   return (
     <Row gutter={[16, 16]} style={{ padding: '40px' }}>
       <Col>
-        <Participants participants={scores} />
+        <Participants participants={participants} />
       </Col>
       <Col>
         <Card hoverable style={{ borderRadius: '20px' }}>
@@ -53,14 +55,25 @@ export default function GeneratedData() {
               <Statistic title='Cantidad de participantes con score mayor  0' value={socoreGreaterThan0} />
             </Col>
           </Row>
-          {/* <Row gutter={[16, 16]}>
+          <Row gutter={[16, 16]}>
             <Col>
-              <Statistic title='Tiempo minimo finalizado' value={new Date(minimunTime).toLocaleDateString()} />
+              <Statistic title='Fecha minima de finalizacion' value={new Date(minimunDate).toLocaleString()} />
             </Col>
             <Col>
-              <Statistic title='Tiempo maximo finalizado' value={new Date(maximunTime).toLocaleDateString()} />
+              <Statistic title='Tiempo maximo de finalizacion' value={new Date(maximunDate).toLocaleString()} />
             </Col>
-          </Row> */}
+          </Row>
+          <Row gutter={[16, 16]}>
+            <Col>
+              <Statistic title='Tiempo promedio de respuesta' value={avaregeTime + ' Segundos'} />
+            </Col>
+            <Col>
+              <Statistic title='Tiempo total de respuesta' value={totalTime + ' Segundos'} />
+            </Col>
+            <Col>
+              <Statistic title='Tiempo promedio por etapa' value={avaregeTimePerStages + ' Segundos'} />
+            </Col>
+          </Row>
         </Card>
       </Col>
     </Row>

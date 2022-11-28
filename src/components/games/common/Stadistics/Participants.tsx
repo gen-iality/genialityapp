@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Table, Typography } from 'antd';
 import * as XLSX from 'xlsx';
+import { IParticipant } from '../../WhoWantsToBeAMillonaire/interfaces/Millonaire';
 const { Text, Title } = Typography;
 
-export default function Participants({ participants }: { participants: any[] }) {
+export default function Participants({ participants }: { participants: IParticipant[] }) {
   const donwloadExcel = () => {
-    const headers = ['UID', 'Nombre Completo', 'Correo Electronico', 'Puntaje', 'Tiempo'];
+    const headers = ['UID', 'Nombre Completo', 'Correo Electronico', 'Puntaje', 'Fecha de finalización' , 'Tiempo promedio por pregunta', 'Tiempo total'];
     const data = participants.map((participant) => [
       participant.uid,
       participant.name,
       participant.email,
       participant.score,
       new Date(participant.time.seconds * 1000).toLocaleString(),
+      participant.stages.reduce((acc: number, stage: any) => acc + stage.time, 0) / participant.stages.length + ' segundos',
+      participant.stages.reduce((acc: number, stage: any) => acc + stage.time, 0) + ' segundos',
     ]);
     const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
     const wb = XLSX.utils.book_new();
@@ -39,11 +42,29 @@ export default function Participants({ participants }: { participants: any[] }) 
       render: (score: any) => <Text>{score ?? ''}</Text>,
     },
     {
-      title: 'Tiempo',
+      title: 'Fecha de finalización',
       dataIndex: 'time',
       key: 'time',
 
       render: (time: any) => <Text>{new Date(time.seconds * 1000).toLocaleString() ?? ''}</Text>,
+    },
+    {
+      title: 'Tiempo promedio de respuesta',
+      dataIndex: 'stages',
+      key: 'stages',
+      render: (stages: any) => {
+        const time = stages.reduce((acc: number, stage: any) => acc + stage.time, 0);
+        return <Text>{time / stages.length + ' Segundos' ?? ''}</Text>;
+      },
+    },
+    {
+      title: 'Tiempo total de juego',
+      dataIndex: 'stages',
+      key: 'stages',
+      render: (stages: any) => {
+        const time = stages.reduce((acc: number, stage: any) => acc + stage.time, 0);
+        return <Text>{time + ' Segundos' ?? ''}</Text>;
+      },
     },
     {
       title: 'UID',

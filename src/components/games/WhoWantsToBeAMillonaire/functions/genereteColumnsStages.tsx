@@ -6,7 +6,7 @@ import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 const { Text } = Typography;
 
 const GenerateColumnsStages = () => {
-  const { onDeleteStage, millonaire, onActionEditStage } = useMillonaireCMS();
+  const { onDeleteStage, millonaire, onActionEditStage, active } = useMillonaireCMS();
   const columns = [
     {
       title: 'Etapa',
@@ -49,22 +49,24 @@ const GenerateColumnsStages = () => {
         return (
           <Row gutter={[8, 8]}>
             <Col>
-              <Tooltip placement='topLeft' title='Editar'>
+              <Tooltip placement='topLeft' title={active ? 'No se puede eidtar por que la dinamica esta activa' :'Editar'}>
                 <Button
                   onClick={() => onActionEditStage(value, index)}
                   icon={<EditOutlined />}
                   type='primary'
                   size='small'
+                  disabled={active}
                 />
               </Tooltip>
             </Col>
             <Col>
-              <Tooltip placement='topLeft' title='Eliminar'>
+              <Tooltip placement='topLeft' title={active ? 'No se puede eliminar por que la dinamica esta activa': 'Eliminar'}>
                 <Button
                   key={`removeAction${index}`}
                   id={`removeAction${index}`}
                   icon={<DeleteOutlined />}
                   danger
+                  disabled={active}
                   size='small'
                   onClick={() => onDeleteStage(value)}
                 />

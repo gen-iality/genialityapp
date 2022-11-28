@@ -97,6 +97,15 @@ export const INITIAL_STATE_USED_WILDCARD = {
   usedAudience: false,
 };
 
+export const INITIAL_STATE_PARTICIPANT = {
+  name: '',
+  email: '',
+  score: 0,
+  time: 0,  
+  uid: '',
+  stages : [],
+};
+
 export const INITIAL_ANSWER_TO_RENDER = [
   {
     answer: '',

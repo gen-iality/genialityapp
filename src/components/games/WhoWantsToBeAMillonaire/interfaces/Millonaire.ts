@@ -81,6 +81,7 @@ export type TMillonaireContextProps = {
   isVisibleModalImport: boolean;
   enableSaveButton: boolean;
   preserveInformation: boolean;
+  participants: IParticipant[];
   setImportData: (data: any) => void;
   setPreserveInformation: (data: boolean) => void;
   onChangeMillonaire: (name: string, value: any) => void;
@@ -172,6 +173,8 @@ export interface IRenderViewLanding {
 export interface IVisibility {
   published: boolean;
   active: boolean;
+  //restablecer progreso
+  resetProgress: boolean;
 }
 
 export interface TimerM {
@@ -190,5 +193,21 @@ export interface IDataImport {
 }
 export interface ButtonMillonaire {
   isTitle?: boolean;
+}
 
+export interface IParticipant {
+  name: string;
+  email: string;
+  score: number;
+  time: number;
+  uid: string;
+  stages: IParticipantStage[];
+}
+
+export interface IParticipantStage {
+  stage: number;
+  score: number;
+  time: number;
+  question: string;
+  answer: string;
 }

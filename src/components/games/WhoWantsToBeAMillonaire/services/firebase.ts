@@ -1,4 +1,4 @@
-import { IStages, IVisibility } from './../interfaces/Millonaire';
+import { IStages, IVisibility, IParticipant } from './../interfaces/Millonaire';
 import { firestore } from '@/helpers/firebase';
 import firebase from 'firebase/compat';
 import { Score } from '../../common/Ranking/types';
@@ -123,6 +123,21 @@ export const saveTimePerStage = async (idEvent: string, idUser: string, idStage:
     .set({ ...timePerStage }, { merge: true });
 };
 
+export const getTimePerStage = async (idEvent: string, idUser: string, idStage: string) => {
+  const snapshot = await firestore
+    .collection('dinamicas')
+    .doc('WhoWantsToBeAMillonaire')
+    .collection('events')
+    .doc(idEvent)
+    .collection('users')
+    .doc(idUser)
+    .collection('stages')
+    .doc(idStage)
+    .get();
+  return snapshot.data();
+};
+
+
 export const getStatusGameByUser = async (idEvent: string, idUser: string) => {
   const snapshot = await firestore
     .collection('dinamicas')
@@ -192,7 +207,7 @@ export const deleteStatusStagesAndScoreAll = async (idEvent: string) => {
     .doc('WhoWantsToBeAMillonaire')
     .collection('events')
     .doc(idEvent)
-    .collection('users')
+    .collection('participants')
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -200,3 +215,52 @@ export const deleteStatusStagesAndScoreAll = async (idEvent: string) => {
       });
     });
 };
+
+export const saveParticipant = async (idEvent: string, idUser: string, participant: IParticipant) => {
+  await firestore
+    .collection('dinamicas')
+    .doc('WhoWantsToBeAMillonaire')
+    .collection('events')
+    .doc(idEvent)
+    .collection('participants')
+    .doc(idUser)
+    .set({...participant,
+      time: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+}
+
+export const getParticipant = async (idEvent: string, idUser: string) => {
+  const snapshot = await firestore
+    .collection('dinamicas')
+    .doc('WhoWantsToBeAMillonaire')
+    .collection('events')
+    .doc(idEvent)
+    .collection('participants')
+    .doc(idUser)
+    .get();
+  return snapshot.data();
+}
+export const getParticipants = async (idEvent: string) => {
+  const snapshot = await firestore
+    .collection('dinamicas')
+    .doc('WhoWantsToBeAMillonaire')
+    .collection('events')
+    .doc(idEvent)
+    .collection('participants')
+    .get();
+  return snapshot.docs.map((doc) => doc.data());
+}
+
+export const listenParticipants = (idEvent: string, callback: (participants: IParticipant[]) => void) => {
+  firestore
+    .collection('dinamicas')
+    .doc('WhoWantsToBeAMillonaire')
+    .collection('events')
+    .doc(idEvent)
+    .collection('participants')
+    .orderBy('time', 'desc')
+    .onSnapshot((snapshot) => {
+      const participants = snapshot.docs.map((doc) => doc.data()) as IParticipant[];
+      callback(participants);
+    });
+}
