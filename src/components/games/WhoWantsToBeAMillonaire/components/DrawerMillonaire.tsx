@@ -13,20 +13,20 @@ import Stages from './Stages';
 import GameAnnoucement from './GameAnnoucement';
 
 export default function DrawerMillonaire() {
-	const {
-		isVisible,
-		visibilityControl,
-		statusGame,
-		onChangeVisibilityDrawer,
-		millonaire,
-		startGame,
-	} = useMillonaireLanding();
-	const RenderView: IRenderViewLanding = {
-		NOT_STARTED: <MenuGame />,
-		STARTED: <Millonaire />,
-		GAME_OVER: <UsersRanking />,
-		ANNOUNCEMENT: <GameStartAnnoucement />,
-	};
+  const {
+    isVisible,
+    visibilityControl,
+    statusGame,
+    onChangeVisibilityDrawer,
+    millonaire,
+    startGame,
+  } = useMillonaireLanding();
+  const RenderView: IRenderViewLanding = {
+    NOT_STARTED: <MenuGame />,
+    STARTED: <Millonaire />,
+    GAME_OVER: <UsersRanking />,
+    ANNOUNCEMENT: <GameStartAnnoucement />,
+  };
 
   return (
     <>
@@ -54,7 +54,7 @@ export default function DrawerMillonaire() {
         }}
         width={'100vw'}
         onClose={onChangeVisibilityDrawer}
-        /*  title={<Typography.Title level={5}>{millonaire.name}</Typography.Title>} */
+        title={statusGame === 'STARTED' && <WildCards isTitle={true} />}
         footer={statusGame === 'STARTED' && <WildCards />}
         visible={isVisible}>
         {RenderView[statusGame as keyof IRenderViewLanding] || <GameAnnoucement />}

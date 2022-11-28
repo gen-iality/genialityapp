@@ -1,9 +1,21 @@
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
-import { Button, Card, Col, Form, Row, Switch, Popconfirm } from 'antd';
+import { Button, Card, Col, Form, Row, Switch, Popconfirm, Modal } from 'antd';
 import Ranking from '../../common/Ranking';
 
 export default function PlayMillonaireCMS() {
   const { published, active, onChangeVisibilityControl, scores, onResetProgressAll, millonaire } = useMillonaireCMS();
+
+  const showConfirmation = () => {
+    Modal.confirm({
+      title: '¿Estás seguro de que quieres reiniciar el progreso de todos los asistentes?',
+      content: 'Se borrarán todos los datos de participación y se reiniciarán las estadísticas registradas',
+      onOk: () => onResetProgressAll(),
+      okText: 'Si, Reiniciar',
+      cancelText: 'No, cancelar',
+      centered: true,
+      okButtonProps: { type: 'primary', danger: true },
+    });
+  };
 
   // const scoresOrder = scores.sort((a, b) => {
   //   if (a.score < b.score) {
@@ -59,17 +71,14 @@ export default function PlayMillonaireCMS() {
               disabled={millonaire.numberOfQuestions! > millonaire?.stages?.length}
             />
           </Form.Item>
-          <Popconfirm
-            title='¿Estás seguro de que quieres reiniciar el progreso de todos los asistentes?'
-            onConfirm={() => onResetProgressAll()}
-            okText='Si'
-            cancelText='No'>
-            <Form.Item
-              tooltip='Elimana todos los puntajes, progreso de los asistentes'
-              label={<label>Restablecer dinamica</label>}>
-              <Button disabled={!active}>Restablecer</Button>
-            </Form.Item>
-          </Popconfirm>
+
+          <Form.Item
+            tooltip='Elimana todos los puntajes, progreso de los asistentes'
+            label={<label>Restablecer dinamica</label>}>
+            <Button onClick={() => showConfirmation()} disabled={!active}>
+              Restablecer
+            </Button>
+          </Form.Item>
         </Card>
       </Col>
       <Col span={16}>

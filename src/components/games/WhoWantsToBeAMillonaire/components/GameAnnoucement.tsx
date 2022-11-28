@@ -1,13 +1,17 @@
-import { Space, Image, Typography, Button, Card, Row, Grid, Result } from 'antd';
+import { Space, Image, Typography, Button, Card, Row, Grid, Result, Tag } from 'antd';
 import { ClockCircleOutlined, FireOutlined, CloseCircleOutlined, PoweroffOutlined } from '@ant-design/icons';
-const { useBreakpoint } = Grid;
 import { useMillonaireLanding } from '../hooks/useMillonaireLanding';
 import Stages from './Stages';
+import ProgressClockIcon from '@2fd/ant-design-icons/lib/ProgressClock';
+import ProgressStarIcon from '@2fd/ant-design-icons/lib/ProgressStar';
+import ExitRunIcon from '@2fd/ant-design-icons/lib/ExitRun';
+import PartyPopperIcon from '@2fd/ant-design-icons/lib/PartyPopper';
+const { useBreakpoint } = Grid;
 
 const CASES_ANNOUNCEMENT = {
   TIME_OVER: {
-    icon: <ClockCircleOutlined />,
-    title: 'Se acabó el tiempo',
+    icon: <ProgressClockIcon />,
+    title: '¡Te quedaste sin tiempo!',
     subTitle: 'Lo sentimos, se acabó el tiempo para responder la pregunta, ya no puedes continuar jugando',
   },
   WRONG_ANSWER: {
@@ -16,12 +20,12 @@ const CASES_ANNOUNCEMENT = {
     subTitle: 'Lo sentimos, la respuesta que elegiste es incorrecta, ya no puedes continuar jugando',
   },
   RETIRED: {
-    icon: <PoweroffOutlined />,
-    title: 'Te retiraste',
+    icon: <ExitRunIcon />,
+    title: 'Tomaste la opción de retirarte',
     subTitle: 'Lo sentimos, te retiraste del juego, ya no puedes continuar jugando',
   },
   WIN: {
-    icon: <FireOutlined />,
+    icon: <PartyPopperIcon />,
     title: 'Felicidades',
     subTitle: 'Felicidades, has ganado el juego, ya no puedes continuar jugando',
   },
@@ -44,7 +48,7 @@ export default function GameAnnoucement() {
           border: 'none',
           backgroundColor: '#FFFFFFCC',
           backdropFilter: 'blur(8px)',
-          maxWidth: screens.xs ? '95vw' : '45vw',
+          width: screens.xs ? '95vw' : '45vw',
         }}>
         <Result
           icon={CASES_ANNOUNCEMENT[statusGame as keyof typeof CASES_ANNOUNCEMENT].icon}
@@ -58,7 +62,18 @@ export default function GameAnnoucement() {
               <Typography.Paragraph>
                 {CASES_ANNOUNCEMENT[statusGame as keyof typeof CASES_ANNOUNCEMENT].subTitle}
               </Typography.Paragraph>
-              <Typography.Title level={4}>Puntaje: {scoreUser.score}</Typography.Title>
+
+              <Typography.Title level={4}>
+                <Space>
+                  Puntaje:
+                  <Tag
+                    icon={<ProgressStarIcon style={{ fontSize: '20px' }} />}
+                    color='#FFB500'
+                    style={{ fontSize: '20px', padding: '10px 10px' }}>
+                    {scoreUser.score}
+                  </Tag>
+                </Space>
+              </Typography.Title>
             </>
           }
           extra={

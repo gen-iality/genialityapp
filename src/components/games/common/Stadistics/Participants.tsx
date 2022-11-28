@@ -1,19 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Table, Typography } from 'antd';
+import { Button, Card, Table, Tag, Typography } from 'antd';
 import * as XLSX from 'xlsx';
 import { IParticipant } from '../../WhoWantsToBeAMillonaire/interfaces/Millonaire';
 const { Text, Title } = Typography;
 
 export default function Participants({ participants }: { participants: IParticipant[] }) {
   const donwloadExcel = () => {
-    const headers = ['UID', 'Nombre Completo', 'Correo Electronico', 'Puntaje', 'Fecha de finalización' , 'Tiempo promedio por pregunta', 'Tiempo total'];
+    const headers = [
+      'UID',
+      'Nombre Completo',
+      'Correo Electronico',
+      'Puntaje',
+      'Fecha de finalización',
+      'Tiempo promedio por pregunta',
+      'Tiempo total',
+    ];
     const data = participants.map((participant) => [
       participant.uid,
       participant.name,
       participant.email,
       participant.score,
       new Date(participant.time.seconds * 1000).toLocaleString(),
-      participant.stages.reduce((acc: number, stage: any) => acc + stage.time, 0) / participant.stages.length + ' segundos',
+      participant.stages.reduce((acc: number, stage: any) => acc + stage.time, 0) / participant.stages.length +
+        ' segundos',
       participant.stages.reduce((acc: number, stage: any) => acc + stage.time, 0) + ' segundos',
     ]);
     const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
@@ -54,7 +63,7 @@ export default function Participants({ participants }: { participants: IParticip
       key: 'stages',
       render: (stages: any) => {
         const time = stages.reduce((acc: number, stage: any) => acc + stage.time, 0);
-        return <Text>{time / stages.length + ' Segundos' ?? ''}</Text>;
+        return <Text>{time / stages.length + 's' ?? ''}</Text>;
       },
     },
     {
@@ -63,14 +72,14 @@ export default function Participants({ participants }: { participants: IParticip
       key: 'stages',
       render: (stages: any) => {
         const time = stages.reduce((acc: number, stage: any) => acc + stage.time, 0);
-        return <Text>{time + ' Segundos' ?? ''}</Text>;
+        return <Tag color='blue'>{time + 's' ?? ''}</Tag>;
       },
     },
     {
       title: 'UID',
       dataIndex: 'uid',
       key: 'uid',
-      render: (uid: any) => <Text>{uid ?? ''}</Text>,
+      render: (uid: any) => <Text style={{ wordBreak: 'break-all' }}>{uid ?? ''}</Text>,
     },
   ];
   return (
@@ -82,7 +91,7 @@ export default function Participants({ participants }: { participants: IParticip
               Participantes
             </Title>
 
-            <Button type='primary' onClick={() => donwloadExcel()}>
+            <Button style={{ color: '#21A366' }} onClick={() => donwloadExcel()}>
               Descargar Excel
             </Button>
           </>
