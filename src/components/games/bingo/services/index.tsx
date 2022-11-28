@@ -179,7 +179,6 @@ export const listenBingoData = (eventID: string | undefined, setData: any, clear
         demonstratedBallots: [],
         startGame: false,
       };
-      console.log('Eyyy')
       if (doc.exists) {
         data = {
           bingoData: doc?.data()?.bingoData || [],
