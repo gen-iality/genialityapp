@@ -11,23 +11,27 @@ const { useBreakpoint } = Grid;
 const CASES_ANNOUNCEMENT = {
   TIME_OVER: {
     icon: <ProgressClockIcon />,
-    title: '¡Te quedaste sin tiempo!',
-    subTitle: 'Lo sentimos, se acabó el tiempo para responder la pregunta, ya no puedes continuar jugando',
+    title: '¡Se agotó el tiempo!',
+    subTitle:
+      'Lo sentimos, pero no contestaste la pregunta antes de que se agotara el tiempo, en otra ocasión será, sin embargo, no olvides revisar el ranking para saber cuál es tu posición.',
   },
   WRONG_ANSWER: {
     icon: <CloseCircleOutlined />,
-    title: 'Respuesta incorrecta',
-    subTitle: 'Lo sentimos, la respuesta que elegiste es incorrecta, ya no puedes continuar jugando',
+    title: '¡Respuesta Incorrecta!',
+    subTitle:
+      'Lo sentimos, pero no contestaste correctamente la pregunta, en otra ocasión será, sin embargo, no olvides revisar el ranking para saber cuál es tu posición.',
   },
   RETIRED: {
     icon: <ExitRunIcon />,
-    title: 'Tomaste la opción de retirarte',
-    subTitle: 'Lo sentimos, te retiraste del juego, ya no puedes continuar jugando',
+    title: '¡Te retiraste!',
+    subTitle:
+      'Hemos almacenado tu puntaje acumulado hasta la etapa anterior. No olvides revisar el ranking para saber cuál es tu posición.',
   },
   WIN: {
     icon: <PartyPopperIcon />,
-    title: 'Felicidades',
-    subTitle: 'Felicidades, has ganado el juego, ya no puedes continuar jugando',
+    title: '¡Felicitaciones!',
+    subTitle:
+      'Lograste superar todas las etapas, obtuviste el máximo puntaje. No olvides revisar el ranking para saber cuál es tu posición.',
   },
 };
 

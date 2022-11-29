@@ -33,8 +33,8 @@ export default function GeneratedData() {
     { id: 3, title: 'Puntaje promedio', value: avaregeScore, suffix: '', precision: 2 },
     { id: 4, title: 'Puntaje máximo registrado', value: scoreMax, suffix: '', precision: 0 },
     { id: 5, title: 'Puntaje mínimo registrado', value: scoreMin, suffix: '', precision: 0 },
-    { id: 6, title: 'Participantes con puntaje (0)', value: socoreLessThan0, suffix: '', precision: 0 },
-    { id: 7, title: 'Participantes con puntaje mayor a 0', value: socoreGreaterThan0, suffix: '', precision: 0 },
+    { id: 6, title: 'Participantes con puntaje cero', value: socoreLessThan0, suffix: '', precision: 0 },
+    { id: 7, title: 'Participantes con puntaje mayor a cero', value: socoreGreaterThan0, suffix: '', precision: 0 },
     {
       id: 8,
       title: 'Fecha minima de finalizacion',
@@ -54,7 +54,7 @@ export default function GeneratedData() {
       title: 'Tiempo promedio de respuesta',
       value: avaregeTime,
       suffix: <small>s</small>,
-      precision: 2,
+      precision: 1,
     },
     {
       id: 10,

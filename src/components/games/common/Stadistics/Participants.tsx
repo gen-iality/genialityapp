@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Table, Tag, Typography } from 'antd';
+import { Button, Card, ConfigProvider, Empty, Table, Tag, Typography } from 'antd';
 import * as XLSX from 'xlsx';
 import { IParticipant } from '../../WhoWantsToBeAMillonaire/interfaces/Millonaire';
 const { Text, Title } = Typography;
@@ -84,21 +84,23 @@ export default function Participants({ participants }: { participants: IParticip
   ];
   return (
     <Card hoverable style={{ borderRadius: '20px' }}>
-      <Table
-        title={() => (
-          <>
-            <Title level={3} style={{ textAlign: 'center' }}>
-              Participantes
-            </Title>
+      <ConfigProvider renderEmpty={() => <Empty description={'No hay participantes'} />}>
+        <Table
+          title={() => (
+            <>
+              <Title level={3} style={{ textAlign: 'center' }}>
+                Participantes
+              </Title>
 
-            <Button style={{ color: '#21A366' }} onClick={() => donwloadExcel()}>
-              Descargar Excel
-            </Button>
-          </>
-        )}
-        columns={columns}
-        dataSource={participants}
-      />
+              <Button style={{ color: '#21A366' }} onClick={() => donwloadExcel()}>
+                Descargar Excel
+              </Button>
+            </>
+          )}
+          columns={columns}
+          dataSource={participants}
+        />
+      </ConfigProvider>
     </Card>
   );
 }
