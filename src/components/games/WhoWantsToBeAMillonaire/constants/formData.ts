@@ -39,7 +39,7 @@ export const INITIAL_VALUES_DATA_CREATE = {
   rules: '',
 };
 
-export const VALUES_TOTAL_QUESTIONS = [15, 30, 45, 60, 75];
+export const VALUES_TOTAL_QUESTIONS = [15, 20, 25, 30];
 
 export const INITIAL_STATE_ANSWER = {
   answer: '',

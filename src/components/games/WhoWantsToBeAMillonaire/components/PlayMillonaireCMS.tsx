@@ -5,6 +5,8 @@ import Ranking from '../../common/Ranking';
 export default function PlayMillonaireCMS() {
   const { published, active, onChangeVisibilityControl, scores, onResetProgressAll, millonaire } = useMillonaireCMS();
 
+  const isNotAssigned = millonaire?.stages.find((stage) => stage.question === '');
+
   const showConfirmation = () => {
     Modal.confirm({
       title: '¿Estás seguro de que quieres reiniciar el progreso de todos los asistentes?',
@@ -48,7 +50,11 @@ export default function PlayMillonaireCMS() {
       <Col span={8}>
         <Card hoverable style={{ borderRadius: '20px' }}>
           <Form.Item
-            tooltip='Controla la visibilidad del módulo para los asistentes'
+            tooltip={
+              isNotAssigned
+                ? 'Debe asiganr todas las etapas '
+                : ' Controla la visibilidad del módulo para los asistentes'
+            }
             label={<label>Publicar dinámica</label>}>
             <Switch
               onChange={(checked) => onChangeVisibilityControl('published', checked)}
@@ -56,11 +62,15 @@ export default function PlayMillonaireCMS() {
               unCheckedChildren='No'
               checked={published}
               defaultChecked={published}
-              disabled={millonaire.numberOfQuestions! > millonaire?.stages?.length}
+              disabled={isNotAssigned || millonaire.questions.length < millonaire?.numberOfQuestions!}
             />
           </Form.Item>
           <Form.Item
-            tooltip='Abrir o cerrar la dinámica para que los asistentes puedan participar'
+            tooltip={
+              isNotAssigned
+                ? 'Debe asiganr todas las etapas '
+                : 'Abrir o cerrar la dinámica para que los asistentes puedan participar'
+            }
             label={<label>Abrir dinámica</label>}>
             <Switch
               onChange={(checked) => onChangeVisibilityControl('active', checked)}
@@ -68,7 +78,7 @@ export default function PlayMillonaireCMS() {
               unCheckedChildren='No'
               checked={active}
               defaultChecked={active}
-              disabled={millonaire.numberOfQuestions! > millonaire?.stages?.length}
+              disabled={isNotAssigned || millonaire.questions.length < millonaire?.numberOfQuestions!}
             />
           </Form.Item>
 

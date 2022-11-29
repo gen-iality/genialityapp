@@ -21,8 +21,11 @@ const GenerateColumnsStages = () => {
       dataIndex: 'question',
       name: 'Pregunta ID',
       render: (text: string, value: any, index: any) => {
-        const question = millonaire.questions.find((question) => question.id === value.question);
-        return question ? <Text>{question.question}</Text> : <Text type='danger'>No se encontró la pregunta</Text>;
+        if(value?.question) {
+          const question = millonaire?.questions?.find((question) => question?.id === value?.question );
+          return question ? <Text>{question.question}</Text> : <Text type='danger'>No se encontró la pregunta</Text>;
+        }
+        return <Text type='danger'>Debe asignar una pregunta</Text>;
       },
     },
     {
@@ -59,7 +62,7 @@ const GenerateColumnsStages = () => {
                 />
               </Tooltip>
             </Col>
-            <Col>
+            {/* <Col>
               <Tooltip placement='topLeft' title={active ? 'No se puede eliminar por que la dinamica esta activa': 'Eliminar'}>
                 <Button
                   key={`removeAction${index}`}
@@ -71,7 +74,7 @@ const GenerateColumnsStages = () => {
                   onClick={() => onDeleteStage(value)}
                 />
               </Tooltip>
-            </Col>
+            </Col> */}
           </Row>
         );
       },

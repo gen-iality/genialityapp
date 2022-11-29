@@ -32,12 +32,12 @@ const StageSettings = () => {
         <Space style={{ width: '100%' }} direction='vertical'>
           <Header
             title='Configuración de etapas'
-            addFn={
-              millonaire?.stages?.length >= millonaire.numberOfQuestions! ||
-              millonaire?.questions?.length >= millonaire.numberOfQuestions!
-                ? () => onActiveModalStage()
-                : null
-            }
+            // addFn={
+            //   millonaire?.stages?.length >= millonaire.numberOfQuestions! ||
+            //   millonaire?.questions?.length >= millonaire.numberOfQuestions!
+            //     ? () => onActiveModalStage()
+            //     : null
+            // }
           />
           <Table size='small' columns={columns} dataSource={millonaire.stages} />
         </Space>

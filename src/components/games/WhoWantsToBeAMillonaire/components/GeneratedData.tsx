@@ -8,22 +8,33 @@ const { Title } = Typography;
 
 export default function GeneratedData() {
   const { scores, millonaire, participants } = useMillonaireCMS();
-  const scoresParticipants = participants.map((participant) => participant.score);
-  const avaregeScore = Math.round(
-    scoresParticipants.reduce((acc, score) => acc + score, 0) / scoresParticipants.length
-  );
-  const scoreMax = Math.max(...scoresParticipants);
-  const scoreMin = Math.min(...scoresParticipants);
-  const socoreLessThan0 = scores.filter((score) => Number(score.score) < 0).length;
+  console.log('🚀 ~ file: GeneratedData.tsx:11 ~ GeneratedData ~ participants', participants);
+  const scoresParticipants = participants.length > 0 ? participants.map((participant) => participant.score) : [];
+  const avaregeScore =
+    scoresParticipants.length > 0
+      ? Math.round(scoresParticipants.reduce((acc, score) => acc + score, 0) / scoresParticipants.length)
+      : 0;
+  const scoreMax = participants.length > 0 ? Math.max(...scoresParticipants) : 0;
+  const scoreMin = participants.length > 0 ? Math.min(...scoresParticipants) : 0;
+  const socoreLessThan0 = scores.filter((score) => Number(score.score) === 0).length;
   const socoreGreaterThan0 = scores.filter((score) => Number(score.score) > 0).length;
-  const minimunDate = new Date(Math.min(...participants.map((participant) => participant.time.seconds * 1000)));
-  const maximunDate = new Date(Math.max(...participants.map((participant) => participant.time.seconds * 1000)));
+  const minimunDate =
+    participants.length > 0
+      ? new Date(Math.min(...participants.map((participant) => participant.time.seconds * 1000)))
+      : '';
+  const maximunDate =
+    participants.length > 0
+      ? new Date(Math.max(...participants.map((participant) => participant.time.seconds * 1000)))
+      : '';
 
   //Tiempo total de juego  de todos los participantes
-  const totalTime = participants.reduce(
-    (acc, participant) => acc + participant.stages.reduce((acc, stage) => acc + stage.time, 0),
-    0
-  );
+  const totalTime =
+    participants.length > 0
+      ? participants.reduce(
+          (acc, participant) => acc + participant.stages.reduce((acc, stage) => acc + stage.time, 0),
+          0
+        )
+      : 0;
   const avaregeTime = totalTime / participants.length;
   const avaregeTimePerStages = avaregeTime / millonaire.stages.length;
 
