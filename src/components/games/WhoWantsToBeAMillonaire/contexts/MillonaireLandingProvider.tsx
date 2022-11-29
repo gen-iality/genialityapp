@@ -10,7 +10,12 @@ import {
   IVisibility,
   IParticipant,
 } from '../interfaces/Millonaire';
-import { INITIAL_STATE_MILLONAIRE,INITIAL_STATE_PARTICIPANT, INITIAL_STATE_STAGE, INITIAL_STATE_USED_WILDCARD } from '../constants/formData';
+import {
+  INITIAL_STATE_MILLONAIRE,
+  INITIAL_STATE_PARTICIPANT,
+  INITIAL_STATE_STAGE,
+  INITIAL_STATE_USED_WILDCARD,
+} from '../constants/formData';
 import { DispatchMessageService } from '@/context/MessageService';
 import { GetMillonaireAPi } from '../services/api';
 import getMillonaireAdapter from '../adapters/getMillonaireAdapter';
@@ -162,11 +167,13 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     };
   }, [eventId]);
 
-
   useEffect(() => {
-    if(visibilityControl.resetProgress){
-      console.log("🚀 ~ file: MillonaireLandingProvider.tsx ~ line 168 ~ useEffect ~ visibilityControl", visibilityControl)
-      
+    if (visibilityControl.resetProgress) {
+      console.log(
+        '🚀 ~ file: MillonaireLandingProvider.tsx ~ line 168 ~ useEffect ~ visibilityControl',
+        visibilityControl
+      );
+
       onResetProgress();
     }
   }, [visibilityControl]);
@@ -185,8 +192,7 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     setParticipant(INITIAL_STATE_PARTICIPANT);
     setQuestion(questionInitial);
     setUsedWildCards(INITIAL_STATE_USED_WILDCARD);
-  }
-
+  };
 
   const onGetMillonaire = async () => {
     setLoading(true);
@@ -331,9 +337,8 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       });
       return;
     }
-    
+
     const dataParticipant = {
-    
       ...participant,
       name: String(currentUser.user.names),
       email: String(currentUser.user.email),
@@ -347,16 +352,12 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
           question: question.question,
           answer: answer.answer,
           time: question.timeForQuestion - time,
-          score: Number(scoreUser.score)
-        }
-      ]
-    }
+          score: Number(scoreUser.score),
+        },
+      ],
+    };
+    setParticipant(dataParticipant);
 
-    console.log("🚀 ~ file: MillonaireLandingProvider.tsx ~ line 333 ~ onSaveAnswer ~ dataParticipant", dataParticipant, participant)
-    setParticipant(
-      dataParticipant
-    );
-  
     saveParticipant(eventId, currentUser.user.uid!, dataParticipant);
     saveStageUser(eventId, scoreUser.uid!, currentStage);
     if (answer.isCorrect === false) {
