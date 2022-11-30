@@ -1,5 +1,5 @@
-import { Row, Card, Col, Typography, Statistic } from 'antd';
-import React from 'react';
+import { Row, Card, Col, Typography } from 'antd';
+
 import Participants from '../../common/Stadistics/Participants';
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 import CardStatistic from './CardStatistic';
@@ -8,7 +8,6 @@ const { Title } = Typography;
 
 export default function GeneratedData() {
   const { scores, millonaire, participants } = useMillonaireCMS();
-  console.log('🚀 ~ file: GeneratedData.tsx:11 ~ GeneratedData ~ participants', participants);
   const scoresParticipants = participants.length > 0 ? participants.map((participant) => participant.score) : [];
   const avaregeScore =
     scoresParticipants.length > 0
@@ -36,6 +35,7 @@ export default function GeneratedData() {
         )
       : 0;
   const avaregeTime = totalTime / participants.length;
+
   const avaregeTimePerStages = avaregeTime / millonaire.stages.length;
 
   const listStatistics = [
@@ -49,35 +49,35 @@ export default function GeneratedData() {
     {
       id: 8,
       title: 'Fecha minima de finalizacion',
-      value: new Date(minimunDate).toLocaleString(),
+      value: maximunDate !== '' ? new Date(minimunDate).toLocaleString() : '',
       suffix: '',
       precision: 0,
     },
     {
       id: 9,
       title: 'Fecha maxima de finalizacion',
-      value: new Date(maximunDate).toLocaleString(),
+      value: maximunDate !== '' ? new Date(maximunDate).toLocaleString() : '',
       suffix: '',
       precision: 0,
     },
     {
       id: 10,
-      title: 'Tiempo promedio de respuesta',
-      value: avaregeTime,
+      title: 'Tiempo promedio de por participante',
+      value: isNaN(avaregeTime) ? 0 : avaregeTime,
       suffix: <small>s</small>,
       precision: 1,
     },
     {
       id: 10,
       title: 'Tiempo total de respuesta',
-      value: totalTime,
+      value: isNaN(totalTime) ? 0 : totalTime,
       suffix: <small>s</small>,
       precision: 0,
     },
     {
       id: 10,
       title: 'Tiempo promedio por etapa',
-      value: avaregeTimePerStages,
+      value: isNaN(avaregeTimePerStages) ? 0 : avaregeTimePerStages,
       suffix: <small>s</small>,
       precision: 2,
     },

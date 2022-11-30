@@ -63,7 +63,7 @@ export default function Participants({ participants }: { participants: IParticip
       key: 'stages',
       render: (stages: any) => {
         const time = stages.reduce((acc: number, stage: any) => acc + stage.time, 0);
-        return <Text>{time / stages.length + 's' ?? ''}</Text>;
+        return <Text>{(time / stages.length).toFixed(2) + 's' ?? ''}</Text>;
       },
     },
     {
@@ -92,7 +92,7 @@ export default function Participants({ participants }: { participants: IParticip
                 Participantes
               </Title>
 
-              <Button style={{ color: '#21A366' }} onClick={() => donwloadExcel()}>
+              <Button disabled={participants.length === 0} style={{ color: '#21A366' }} onClick={() => donwloadExcel()}>
                 Descargar Excel
               </Button>
             </>

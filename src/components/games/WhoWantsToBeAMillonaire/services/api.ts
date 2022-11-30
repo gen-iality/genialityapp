@@ -29,7 +29,7 @@ export const GetMillonaireAPi = async (eventId: string) => {
 export const UpdateMillonaireApi = async (
   eventId: string,
   millonaireId: string,
-  data: { name: string; number_of_questions: number | null; rules?: string; time_for_question?: number }
+  data: { name: string; number_of_stages: number | null; rules?: string; time_for_question?: number }
 ) => {
   try {
     const response = await WhoWantsToBeAMillonaireApi.editOne(eventId, millonaireId, data);

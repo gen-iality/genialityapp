@@ -25,6 +25,7 @@ const StageSettings = () => {
     onActiveModalStage,
     onChangeTab,
   } = useMillonaireCMS();
+  console.log('🚀 ~ file: StageSettings.tsx:28 ~ StageSettings ~ previusStage', previusStage, laterStage, stage);
 
   return (
     <>
@@ -61,8 +62,10 @@ const StageSettings = () => {
             disabled={
               isEditStage
                 ? stage.stage === 1
-                  ? 0 >= Number(stage.score) || Number(laterStage.score) <= Number(stage.score)
-                  : Number(previusStage.score) >= Number(stage.score) || Number(laterStage.score) <= Number(stage.score)
+                  ? 0 >= Number(stage.score) || Number(laterStage.score) <= Number(stage.score) || stage.question === ''
+                  : Number(previusStage.score) >= Number(stage.score) ||
+                    Number(laterStage.score) <= Number(stage.score) ||
+                    stage.question === ''
                 : millonaire?.stages?.find((stageToFind) => Number(stageToFind.score) >= Number(stage.score))
             }
             loading={loading}

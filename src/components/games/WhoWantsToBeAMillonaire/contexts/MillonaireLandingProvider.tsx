@@ -127,6 +127,14 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
       setCurrentStage(stagesReset!);
       setQuestion(questionReset);
       saveScoreUser(eventId, currentUser.user.uid!, scoreUser);
+      saveParticipant(eventId, currentUser.user.uid!, {
+        ...participant,
+        name: currentUser?.properties?.names,
+        email: currentUser?.properties?.email,
+        uid: currentUser?.user?.uid,
+
+        score: Number(scoreUser.score),
+      });
       setScore(0);
       setStage(0);
       setQuestion(questionInitial);
@@ -134,15 +142,6 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     }
   }, [time]);
 
-  // useEffect(() => {
-  //   if (statusGame === 'GAME_OVER') {
-  //     getScore(eventId).then((res) => {
-  //       setScores((res as unknown) as Score[]);
-  //     });
-  //   }
-  // }, [statusGame]);
-
-  // listenerVisibilityControl
   useEffect(() => {
     let unsubscribe: any;
     if (eventId) {
@@ -169,11 +168,6 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
 
   useEffect(() => {
     if (visibilityControl.resetProgress) {
-      console.log(
-        '🚀 ~ file: MillonaireLandingProvider.tsx ~ line 168 ~ useEffect ~ visibilityControl',
-        visibilityControl
-      );
-
       onResetProgress();
     }
   }, [visibilityControl]);
@@ -237,13 +231,8 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
     setLoading(false);
   };
 
-  // const timeOutStartGame = setTimeout(() => {
-  //   onStartGame();
-  // }, 10000);
-
   const onAnnouncement = () => {
     setStatusGame('ANNOUNCEMENT');
-    // timeOutStartGame();
   };
 
   const onChangeStatusGame = (status: string) => {
@@ -282,6 +271,13 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
             score: String(0),
           }
     );
+    saveParticipant(eventId, currentUser.user.uid!, {
+      ...participant,
+      name: currentUser?.properties?.names,
+      email: currentUser?.properties?.email,
+      uid: currentUser?.user?.uid,
+      score: stage !== 1 ? Number(prevStage.score) : 0,
+    });
     saveStatusGameByUser(eventId, currentUser.user.uid!, 'GAME_OVER');
     setLoading(false);
   };
@@ -356,14 +352,15 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
         },
       ],
     };
-    setParticipant(dataParticipant);
 
-    saveParticipant(eventId, currentUser.user.uid!, dataParticipant);
     saveStageUser(eventId, scoreUser.uid!, currentStage);
     if (answer.isCorrect === false) {
       setCurrentStage(INITIAL_STATE_STAGE);
       setStatusGame('WRONG_ANSWER');
       saveStatusGameByUser(eventId, scoreUser.uid!, 'GAME_OVER');
+      setParticipant(dataParticipant);
+
+      saveParticipant(eventId, currentUser.user.uid!, dataParticipant);
       saveScoreUser(eventId, scoreUser.uid!, scoreUser);
       return;
     }
@@ -378,6 +375,9 @@ export default function MillonaireLandingProvider({ children }: { children: Reac
         score: String(currentStage.score),
       });
     }
+    setParticipant(dataParticipant);
+
+    saveParticipant(eventId, currentUser.user.uid!, { ...dataParticipant, score: currentStage.score });
     saveStatusGameByUser(eventId, scoreUser.uid, 'STARTED');
     onNextQuestion();
   };

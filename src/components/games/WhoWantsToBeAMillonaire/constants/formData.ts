@@ -34,7 +34,7 @@ export const VALUES_TIME_PER_ANSWERS = [
 ];
 export const INITIAL_VALUES_DATA_CREATE = {
   name: '',
-  numberOfQuestions: '',
+  numberOfQuestions: '15',
   timeForQuestions: '',
   rules: '',
 };
@@ -101,9 +101,9 @@ export const INITIAL_STATE_PARTICIPANT = {
   name: '',
   email: '',
   score: 0,
-  time: 0,  
+  time: 0,
   uid: '',
-  stages : [],
+  stages: [],
 };
 
 export const INITIAL_ANSWER_TO_RENDER = [

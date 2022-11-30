@@ -117,9 +117,6 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     };
   }, [eventId]);
 
-
-
-
   // useEffect(() => {
   //   getVisibility();
   // }, [millonaire.id]);
@@ -232,6 +229,8 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     const body = createMillonaireAdapter(millonaire);
     const response = await UpdateMillonaireApi(eventId, id!, body);
     if (response) {
+      const millonaireAdapter = getMillonaireAdapter(response);
+      setMillonaire(millonaireAdapter);
       DispatchMessageService({
         type: 'success',
         msj: 'Se actaulizaron los parametros correctamente',
@@ -630,8 +629,16 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       setPreviusStage(etapaAnterior);
     }
     const etapaPosterior = millonaire.stages.find((item) => item.stage === stage.stage + 1);
+    console.log('🚀 ~ file: MillonaireCMSProvider.tsx:632 ~ onActionEditStage ~ etapaPosterior', etapaPosterior);
     if (etapaPosterior) {
       setLaterStage(etapaPosterior);
+    } else {
+      setLaterStage({
+        stage: stage.stage + 1,
+        question: '',
+        lifeSaver: false,
+        score: stage.score * 100000,
+      });
     }
   };
 
@@ -685,8 +692,9 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
       });
     }
     saveVisibilityControl(eventId, {
-      ...visibilityControl, [name]: value,
-      resetProgress: false
+      ...visibilityControl,
+      [name]: value,
+      resetProgress: false,
     }).then(() => {
       setVisibilityControl((prevState) => ({
         ...prevState,
@@ -713,9 +721,9 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
   //-------------------FUNCION PARA CAMBIAR EL ESTADO DE LA DINAMICA-------------------//
   const onResetProgressAll = async () => {
     setLoading(true);
-    await saveVisibilityControl(eventId, { ...visibilityControl, resetProgress: true })
+    await saveVisibilityControl(eventId, { ...visibilityControl, resetProgress: true });
     await deleteStatusStagesAndScoreAll(eventId);
-    await saveVisibilityControl(eventId, { ...visibilityControl, resetProgress: false })
+    await saveVisibilityControl(eventId, { ...visibilityControl, resetProgress: false });
     setLoading(false);
   };
 
@@ -865,23 +873,31 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     const questionsInStage: IQuestions[] = [];
     millonaire.stages.forEach((stage) => {
       // buscar las preguntas que esten asociadas a la etapa
-      const question = millonaire.questions.find((question) => question.id === stage.question);
+      const question = millonaire?.questions?.find((question) => question?.id === stage?.question);
       if (question && question !== undefined) {
         return questionsInStage.push(question);
       }
     });
+    if (preserveInformation === true && millonaire.questions === undefined) {
+      setMillonaire({
+        ...millonaire,
+        questions: [...questionResponseAdapter],
+      });
+    }
 
-    preserveInformation === true &&
+    if (preserveInformation === true && millonaire.questions?.length > 0) {
       setMillonaire({
         ...millonaire,
         questions: [...millonaire.questions, ...questionResponseAdapter],
       });
+    }
 
-    preserveInformation === false &&
+    if (preserveInformation === false) {
       setMillonaire({
         ...millonaire,
         questions: [...questionsInStage, ...questionResponseAdapter],
       });
+    }
 
     DispatchMessageService({
       type: 'success',
@@ -907,7 +923,7 @@ export default function MillonaireCMSProvider({ children }: { children: React.Re
     }
     const response = await getParticipants(eventId!);
     if (response) {
-      setVisibilityControl(response as unknown as IVisibility);
+      setVisibilityControl((response as unknown) as IVisibility);
     }
   };
 

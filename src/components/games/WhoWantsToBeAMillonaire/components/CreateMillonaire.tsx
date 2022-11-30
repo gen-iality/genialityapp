@@ -18,7 +18,9 @@ export default function CreateMillonaire() {
             required
           />
         </Form.Item>
-        <Form.Item tooltip={'Las etapas representan el número de preguntas que debe superar un participante.'} label={<Typography.Text style={{ marginTop: '2%' }}>Cantidad de etapas</Typography.Text>}>
+        <Form.Item
+          tooltip={'Las etapas representan el número de preguntas que debe superar un participante.*'}
+          label={<Typography.Text style={{ marginTop: '2%' }}>Cantidad de etapas</Typography.Text>}>
           <Select
             defaultValue={isNewGame === true ? '' : millonaire?.numberOfQuestions}
             onChange={(value) => onChangeMillonaire('numberOfQuestions', Number(value))}
