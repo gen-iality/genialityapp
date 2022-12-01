@@ -5,7 +5,7 @@ export const gridStyleText_5x5: React.CSSProperties = {
   textAlign: 'center',
   cursor: 'pointer',
   marginRight: '4px',
-  backgroundColor: '#FFFFFF',
+  backgroundColor: '#FFFFFFCC',
   borderRadius: '5px',
   padding: '5px',
   display: 'flex',
@@ -21,7 +21,7 @@ export const gridStyleImage_5x5: React.CSSProperties = {
   textAlign: 'center',
   cursor: 'pointer',
   marginRight: '4px',
-  backgroundColor: '#FFFFFF',
+  backgroundColor: '#FFFFFFCC',
   borderRadius: '5px',
   padding: '0px',
   display: 'flex',
@@ -38,7 +38,7 @@ export const gridStyleText_4x4: React.CSSProperties = {
   textAlign: 'center',
   cursor: 'pointer',
   marginRight: '4px',
-  backgroundColor: '#FFFFFF',
+  backgroundColor: '#FFFFFFCC',
   borderRadius: '5px',
   padding: '5px',
   display: 'flex',
@@ -54,7 +54,7 @@ export const gridStyleImage_4x4: React.CSSProperties = {
   textAlign: 'center',
   cursor: 'pointer',
   marginRight: '4px',
-  backgroundColor: '#FFFFFF',
+  backgroundColor: '#FFFFFFCC',
   borderRadius: '5px',
   padding: '0px',
   display: 'flex',
@@ -62,7 +62,7 @@ export const gridStyleImage_4x4: React.CSSProperties = {
   alignItems: 'center',
   overflow: 'hidden',
   userSelect: 'none',
-  position: 'relative',
+  position: 'relative',  
 };
 // estilos para los valores en el carton 3x3
 export const gridStyleText_3x3: React.CSSProperties = {
@@ -71,7 +71,7 @@ export const gridStyleText_3x3: React.CSSProperties = {
   textAlign: 'center',
   cursor: 'pointer',
   marginRight: '4px',
-  backgroundColor: '#FFFFFF',
+  backgroundColor: '#FFFFFFCC',
   borderRadius: '5px',
   padding: '5px',
   display: 'flex',
@@ -87,7 +87,7 @@ export const gridStyleImage_3x3: React.CSSProperties = {
   textAlign: 'center',
   cursor: 'pointer',
   marginRight: '4px',
-  backgroundColor: '#FFFFFF',
+  backgroundColor: '#FFFFFFCC',
   borderRadius: '5px',
   padding: '0px',
   display: 'flex',
@@ -116,6 +116,10 @@ export const gridTextBreaking_5x5: React.CSSProperties = {
 export const gridTextNotBreaking_5x5: React.CSSProperties = {
   fontSize: '12px',
 };
+export const gridTextOnlyNumber_5x5: React.CSSProperties = {
+  fontSize: '25px',
+  fontVariant:'tabular-nums'
+}
 export const gridText_5x5: React.CSSProperties = {
   fontSize: '16px',
 };
@@ -128,6 +132,10 @@ export const gridTextBreakingMobile_5x5: React.CSSProperties = {
 export const gridTextNotBreakingMobile_5x5: React.CSSProperties = {
   fontSize: '10px',
 };
+export const gridTextOnlyNumberMobile_5x5: React.CSSProperties = {
+  fontSize: '14px',
+  fontVariant:'tabular-nums'
+}
 export const gridTextMobile_5x5: React.CSSProperties = {
   fontSize: '12px',
 };
@@ -135,11 +143,15 @@ export const gridTextMobile_5x5: React.CSSProperties = {
 // tamaño de la fuente para carton 4x4 --------------------------------------------------------
 export const gridTextBreaking_4x4: React.CSSProperties = {
   overflowWrap: 'anywhere',
-  fontSize: '12px',
+  fontSize: '14px',
 };
 export const gridTextNotBreaking_4x4: React.CSSProperties = {
-  fontSize: '12px',
+  fontSize: '14px',
 };
+export const gridTextOnlyNumber_4x4: React.CSSProperties = {
+  fontSize: '25px',
+  fontVariant:'tabular-nums'
+}
 export const gridText_4x4: React.CSSProperties = {
   fontSize: '16px',
 };
@@ -152,6 +164,10 @@ export const gridTextBreakingMobile_4x4: React.CSSProperties = {
 export const gridTextNotBreakingMobile_4x4: React.CSSProperties = {
   fontSize: '10px',
 };
+export const gridTextOnlyNumberMobile_4x4: React.CSSProperties = {
+  fontSize: '25px',
+  fontVariant:'tabular-nums'
+}
 export const gridTextMobile_4x4: React.CSSProperties = {
   fontSize: '12px',
 };
@@ -164,6 +180,10 @@ export const gridTextBreaking_3x3: React.CSSProperties = {
 export const gridTextNotBreaking_3x3: React.CSSProperties = {
   fontSize: '14px',
 };
+export const gridTextOnlyNumber_3x3: React.CSSProperties = {
+  fontSize: '45px',
+  fontVariant:'tabular-nums'
+}
 export const gridText_3x3: React.CSSProperties = {
   fontSize: '18px',
 };
@@ -176,6 +196,10 @@ export const gridTextBreakingMobile_3x3: React.CSSProperties = {
 export const gridTextNotBreakingMobile_3x3: React.CSSProperties = {
   fontSize: '12px',
 };
+export const gridTextOnlyNumberMobile_3x3: React.CSSProperties = {
+  fontSize: '30px',
+  fontVariant:'tabular-nums'
+}
 export const gridTextMobile_3x3: React.CSSProperties = {
   fontSize: '14px',
 };

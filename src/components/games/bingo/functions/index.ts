@@ -17,6 +17,12 @@ import {
   gridTextNotBreakingMobile_4x4,
   gridTextNotBreaking_4x4,
   gridText_4x4,
+  gridTextOnlyNumberMobile_4x4,
+  gridTextOnlyNumber_4x4,
+  gridTextOnlyNumber_3x3,
+  gridTextOnlyNumberMobile_3x3,
+  gridTextOnlyNumberMobile_5x5,
+  gridTextOnlyNumber_5x5,
 } from '../constants/styleConstants';
 
 export const orderedDemonstratedBallots = ({ demonstratedBallots }: BallotHistoryInterface) => {
@@ -73,6 +79,9 @@ export const determineFontStyles = (
       if (textLength >= LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED && numberOfWords === 2) {
         return screens.xs ? gridTextNotBreakingMobile_3x3 : gridTextNotBreaking_3x3;
       }
+      if (textLength <= 2){
+        return screens.xs ? gridTextOnlyNumberMobile_3x3 :gridTextOnlyNumber_3x3
+      }
       return gridText_3x3;
     case '4x4':
       if (textLength >= LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED && numberOfWords === 1) {
@@ -84,6 +93,9 @@ export const determineFontStyles = (
       if (textLength >= LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED && numberOfWords === 2) {
         return screens.xs ? gridTextNotBreakingMobile_4x4 : gridTextNotBreaking_4x4;
       }
+      if (textLength <= 2){
+        return screens.xs ? gridTextOnlyNumberMobile_4x4 :gridTextOnlyNumber_4x4
+      }
       return gridText_4x4;
     case '5x5':
       if (textLength >= LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED && numberOfWords === 1) {
@@ -94,6 +106,9 @@ export const determineFontStyles = (
       }
       if (textLength >= LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED && numberOfWords === 2) {
         return screens.xs ? gridTextNotBreakingMobile_5x5 : gridTextNotBreaking_5x5;
+      }
+      if (textLength <= 2){
+        return screens.xs ? gridTextOnlyNumberMobile_5x5 :gridTextOnlyNumber_5x5
       }
       return gridText_5x5;
     default:
