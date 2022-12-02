@@ -71,8 +71,7 @@ const HostList = () => {
           <List.Item>
             {
               <>
-                <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.name_tool}</p>{' '}
-                {/* TODO: cambiar "name_tool" por name cuando en el backend se cambie por "name" */}
+                <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.name}</p>{' '}
               </>
             }
           </List.Item>

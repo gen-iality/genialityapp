@@ -10,10 +10,10 @@ const Herramientas = (props) => {
   const columns = [
     {
       title: 'Nombre',
-      dataIndex: 'name_tool', // TODO: cambiar "name_tool" por name cuando en el backend se cambie por "name"
+      dataIndex: 'name',
       ellipsis: true,
-      sorter: (a, b) => a.name_tool.localeCompare(b.name_tool), // TODO: cambiar "name_tool" por name cuando en el backend se cambie por "name"
-      ...getColumnSearchProps('name_tool', columnsData), // TODO: cambiar "name_tool" por name cuando en el backend se cambie por "name"
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      ...getColumnSearchProps('name', columnsData),
     },
     {
       title: 'Fecha de creación',

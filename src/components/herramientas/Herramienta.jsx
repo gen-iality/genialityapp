@@ -33,8 +33,7 @@ const Herramienta = (props) => {
   };
 
   const onSubmit = async () => {
-    if (herramienta.name_tool) {
-      // TODO: cambiar "name_tool" por name cuando en el backend se cambie por "name"
+    if (herramienta.name) {
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
@@ -79,7 +78,7 @@ const Herramienta = (props) => {
   };
 
   const handleChange = (e) => {
-    setHerramienta({ ...herramienta, name_tool: e.target.value }); // TODO: cambiar "name_tool" por name cuando en el backend se cambie por "name"
+    setHerramienta({ ...herramienta, name: e.target.value });
   };
 
   const onRemoveId = () => {
@@ -144,7 +143,7 @@ const Herramienta = (props) => {
             rules={[{ required: true, message: 'El nombre es requerido' }]}
           >
             <Input
-              value={herramienta.name_tool} // TODO: cambiar "name_tool" por name cuando en el backend se cambie por "name"
+              value={herramienta.name}
               name={'name'}
               placeholder={'Nombre de la herramienta'}
               onChange={(e) => handleChange(e)}
