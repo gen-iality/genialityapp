@@ -469,6 +469,11 @@ export const BingoApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.get(`api/events/${eventId}/eventusers/bingocards?token=${token}`, true);
   },
+
+  getTemplates: async (format) => {
+    let token = await GetTokenUserFirebase()
+    return await Actions.get(`api/bingotemplates/format/${format}?token=${token}`, true)
+  }
 };
 
 export const WhoWantsToBeAMillonaireApi = {
