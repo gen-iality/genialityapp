@@ -27,6 +27,7 @@ export const useDrawerBingo = () => {
       names: '',
       email: '',
       id: '',
+      code: '',
       values: [
         {
           carton_value: {
@@ -169,6 +170,7 @@ export const useDrawerBingo = () => {
           email: cUser.value.properties.email,
           id: data._id,
           values: arrayDataBingo,
+          code: data.code,
         },
       ]);
     }

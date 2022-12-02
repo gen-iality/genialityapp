@@ -5,7 +5,7 @@ import AppsBoxIcon from '@2fd/ant-design-icons/lib/AppsBox';
 
 const { Title } = Typography;
 
-const DrawerHeader = ({ cardboardCode, backgroundColor, color }: DrawerHeaderInterface) => {
+const DrawerHeader = ({ cardboardCode, backgroundColor, color, code }: DrawerHeaderInterface) => {
   return (
     <Space>
       <AppsBoxIcon
@@ -27,6 +27,12 @@ const DrawerHeader = ({ cardboardCode, backgroundColor, color }: DrawerHeaderInt
         </Typography.Text>
         <Typography.Text strong style={{ fontSize: '14px' }}>
           {cardboardCode}
+        </Typography.Text>
+        <Typography.Text type='secondary' style={{ fontSize: '14px' }}>
+          Codigo de Cartoom
+        </Typography.Text>
+        <Typography.Text strong style={{ fontSize: '14px' }}>
+          {code}
         </Typography.Text>
       </Space>
     </Space>
