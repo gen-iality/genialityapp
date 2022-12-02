@@ -3,7 +3,14 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 import { Bingo, BingoGame, Template } from '../interfaces/bingo';
 import * as services from '../services';
 
-interface BingoContextType {}
+interface BingoContextType {
+	bingo: Bingo | null;
+	bingoGame: BingoGame | null;
+	templates: Template[];
+	templateSelected: Template | null;
+	loading: boolean;
+	chooseTemplate: (templateId: Template['_id']) => void;
+}
 
 export const BingoContext = createContext<BingoContextType>({} as BingoContextType);
 
@@ -30,7 +37,11 @@ export default function BingoProvider(props: Props) {
 
 	useEffect(() => {
 		if (bingo?.dimensions?.format && !templates.length) {
-			getTemplates();
+			getTemplates().then(templates => {
+				if (templates.length) {
+					setTemplateSelected(templates[0]);
+				}
+			});
 		}
 	}, [bingo]);
 
@@ -59,10 +70,24 @@ export default function BingoProvider(props: Props) {
 			if (!bingo?.dimensions?.format) return console.error('Bingo missed');
 			const templates = await services.getTemplates(bingo.dimensions.format);
 			setTemplates(templates as Template[]);
+			return templates;
 		} catch (error) {
 			console.error(error);
 		} finally {
 			setLoading(false);
+		}
+	};
+
+	const chooseTemplate = (templateId: Template['_id']) => {
+		try {
+			setLoading(true);
+			const template = templates.find(template => template._id === templateId);
+			if (!template) return console.error('Template missed');
+			setTemplateSelected(template);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setLoading(true);
 		}
 	};
 
@@ -76,7 +101,18 @@ export default function BingoProvider(props: Props) {
 		}
 	};
 
-	const values: BingoContextType = {};
+  const validateCardUserBingo = (userBallots: [], ballotsPlayed: [], template: Template) => {
+    
+  }
+
+	const values: BingoContextType = {
+		bingo,
+		bingoGame,
+		templates,
+		templateSelected,
+		loading,
+		chooseTemplate,
+	};
 
 	return <BingoContext.Provider value={values}>{props.children}</BingoContext.Provider>;
 }

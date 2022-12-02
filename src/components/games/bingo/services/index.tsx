@@ -236,7 +236,7 @@ export const listenBingoData = (eventID: string | undefined, setData: any, clear
 			};
 			if (doc.exists) {
 				data = {
-					template: null,
+					template: doc?.data()?.template || null,
 					bingoData: doc?.data()?.bingoData || [],
 					currentValue: doc?.data()?.currentValue || { type: '', value: '¡BINGO!' },
 					_id: doc?.id || '',

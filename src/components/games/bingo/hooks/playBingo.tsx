@@ -11,6 +11,7 @@ import {
 	PickedNumberInterface,
 	RestartGameInterface,
 	StartGameInterface,
+	Template,
 	ValidarBingoInterface,
 } from '../interfaces/bingo';
 import {
@@ -26,6 +27,7 @@ import {
 import { getCartonBingo } from '../services';
 import { bingoWinnerOrLoser } from '../functions';
 import { notification } from 'antd';
+import useBingoContext from './useBingoContext';
 
 const playBingo = () => {
 	const [bingoData, setBingoData] = useState<string[]>([]);
@@ -37,8 +39,9 @@ const playBingo = () => {
 	const [inputValidate, setInputValidate] = useState<string>('');
 	const [listValidate, setListValidate] = useState<BingoDataInterface[]>([]);
 	const [disableBallotDrawButton, setDisableBallotDrawButton] = useState<boolean>(false);
+	const { templateSelected } = useBingoContext();
 	let dataFirebaseBingoInitialState: DataFirebaseBingoInterface = {
-		template: null,
+		template: templateSelected,
 		bingoData: [],
 		currentValue: {
 			type: '',
@@ -116,13 +119,31 @@ const playBingo = () => {
 			ballotValue.push(ballot.ballot_value.value);
 		});
 		/* Checking if the user has all the ballots. */
-		if (ballotValueUser.length < dimensions.amount) {
+		// Here must be function validate
+		const template = templateSelected?.index_to_validate;
+		if (!template) return console.error('Template missed');
+
+		const getValuesToValidate = (template: Template['index_to_validate'], userBallots: any[]) => {
+			return template.map(value => userBallots[value]);
+		};
+
+		const valuesToValidate = getValuesToValidate(template, ballotValueUser);
+
+		console.log('ballotValueUser', ballotValueUser);
+		console.log('ballotValue', ballotValue);
+		console.log('valuesToValidate', valuesToValidate);
+    // TODO: Review
+		if (ballotValue.length < ballotValueUser.length) {
 			notification.error({ message: 'El usuario no tiene todas las balotas' });
-			return false;
+			// return false;
 		}
 
-		if (ballotValueUser.every((element: any) => ballotValue.includes(element))) {
-			const winnerConfig: BingoWinnerOrLoserInterface = {
+		const allValuesPlayed = valuesToValidate.every(value => ballotValue.includes(value));
+
+    console.log('allValuesPlayed', allValuesPlayed)
+
+    if (allValuesPlayed) {
+      const winnerConfig: BingoWinnerOrLoserInterface = {
 				title: `Feliciades el usuario ${user?.names} ha ganado el Bingo`,
 				type: 'success',
 				onOk: async () => {
@@ -135,8 +156,26 @@ const playBingo = () => {
 			};
 
 			bingoWinnerOrLoser(winnerConfig);
-			return true;
-		}
+      return true;
+    }
+
+
+		// if (ballotValueUser.every((element: any) => ballotValue.includes(element))) {
+		// 	const winnerConfig: BingoWinnerOrLoserInterface = {
+		// 		title: `Feliciades el usuario ${user?.names} ha ganado el Bingo`,
+		// 		type: 'success',
+		// 		onOk: async () => {
+		// 			if (!user?._id) return;
+		// 			await addWinnerBadgeToBingoNotification({
+		// 				event,
+		// 				notificationId: user?._id,
+		// 			});
+		// 		},
+		// 	};
+
+		// 	bingoWinnerOrLoser(winnerConfig);
+		// 	return true;
+		// }
 
 		const losserConfig: BingoWinnerOrLoserInterface = {
 			title: `El usuario ${user?.names} no ha ganado el Bingo`,
@@ -235,11 +274,11 @@ const playBingo = () => {
 			return;
 		}
 		console.log('Start BingoGame!');
-    // TODO: Choose Template
-    console.log('Choose template')
+		// TODO: Choose Template
+		console.log('Choose template');
 		if (!event?._id) return console.log('eventId missed');
 		createBingoGame(event._id, {
-			template: null,
+			template: templateSelected,
 			bingoData: dataFirebaseBingo?.bingoData,
 			currentValue: dataFirebaseBingo?.currentValue,
 			demonstratedBallots: dataFirebaseBingo?.demonstratedBallots,
@@ -261,8 +300,8 @@ const playBingo = () => {
 		console.log('End BingoGame!');
 		let dataFirebaseBingo = dataFirebaseBingoInitialState;
 		if (!event?._id) return console.log('eventId missed');
-		updateBingoGame(event._id, {
-			template: null,
+		createBingoGame(event._id, {
+			template: templateSelected,
 			bingoData: [],
 			currentValue: {
 				type: '',
@@ -271,6 +310,16 @@ const playBingo = () => {
 			demonstratedBallots: [],
 			startGame: true,
 		});
+		// updateBingoGame(event._id, {
+		// 	template: templateSelected,
+		// 	bingoData: [],
+		// 	currentValue: {
+		// 		type: '',
+		// 		value: '',
+		// 	},
+		// 	demonstratedBallots: [],
+		// 	startGame: true,
+		// });
 		// saveCurrentStateOfBingo({
 		// 	event,
 		// 	newList: [],
@@ -293,10 +342,10 @@ const playBingo = () => {
 	const restartBingo = ({ event, bingoValues }: RestartGameInterface) => {
 		let dataFirebaseBingo = dataFirebaseBingoInitialState;
 		if (!event?._id) return console.log('eventId missed');
-    // TODO: Choose Template
-    console.log('Choose template')
+		// TODO: Choose Template
+		console.log('Choose template');
 		updateBingoGame(event._id, {
-			template: null,
+			template: templateSelected,
 			bingoData: [],
 			currentValue: {
 				type: '',
