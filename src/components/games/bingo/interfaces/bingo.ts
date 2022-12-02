@@ -328,7 +328,9 @@ export interface DrawerRulesInterface {
 }
 
 export interface DimensionInterface {
-	format: '3x3' | '4x4' | '5x5';
-	amount: number;
-	minimun_values: number;
+	format: '3x3' | '4x4' | '5x5' | format;
+  amount: number;
+  minimun_values: number;
 }
+
+export type format = '3x3' | '4x4' | '5x5';

@@ -1,20 +1,16 @@
 import { Card, Col, Row, Typography, Grid, Image } from 'antd';
 import { forwardRef, useEffect } from 'react';
-import { BingoCardInterface, DimensionInterface } from '../interfaces/bingo';
 import {
-  gridStyleText_5x5,
+  gridStyleImage_3x3,
+  gridStyleImage_4x4,
   gridStyleImage_5x5,
   gridStyleSelected,
-  gridTextBreaking,
-  gridTextNotBreaking,
-  gridText,
-  gridStyleText_4x4,
-  gridStyleImage_4x4,
-  gridStyleImage_3x3,
   gridStyleText_3x3,
-  gridTextBreakingMobile,
-  gridTextNotBreakingMobile,
+  gridStyleText_4x4,
+  gridStyleText_5x5,
 } from '../constants/styleConstants';
+import { determineFontStyles } from '../functions';
+import { BingoCardInterface, DimensionInterface } from '../interfaces/bingo';
 
 const { useBreakpoint } = Grid;
 
@@ -36,37 +32,8 @@ const BingoCard = forwardRef(
     }, []);
     const screens = useBreakpoint();
 
-    const LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED = 6;
-
     const dialImage = bingo?.bingo_appearance?.dial_image;
     const dimensions = bingo?.dimensions;
-
-    // funcion para determinar la cantidad de palabras en un string
-    const determineNumberWords = (text: string) => {
-      let splitText: string[] = text.split(' ');
-      /* console.log('splitText', splitText); */
-      return splitText.length;
-    };
-    // funcion para determinar los estilos del texto en el carton
-    const determineFontStyles = (text: string): React.CSSProperties => {
-      let textLength = text.length;
-      let numberOfWords = determineNumberWords(text);
-      /* console.log('==============================');
-      console.log('text', text);
-      console.log('textLength', textLength);
-      console.log('numberOfWords', numberOfWords);
-      console.log('=============================='); */
-      if (textLength >= LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED && numberOfWords === 1) {
-        return screens.xs ? gridTextBreakingMobile : gridTextBreaking;
-      }
-      if (textLength >= LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED && numberOfWords > 2) {
-        return screens.xs ? gridTextBreakingMobile : gridTextBreaking;
-      }
-      if (textLength >= LONGITUDE_WHERE_VALIDATION_IS_TRIGGERED && numberOfWords === 2) {
-        return screens.xs ? gridTextNotBreakingMobile : gridTextNotBreaking;
-      }
-      return gridText;
-    };
 
     const renderGrid = (item: any, index: number) => {
       let format = dimensions?.format || '5x5';
@@ -79,7 +46,9 @@ const BingoCard = forwardRef(
               onClick={() => changeValueLocalStorage(index)}
               key={index}>
               {item?.carton_value.type === 'text' && (
-                <Typography.Text style={determineFontStyles(item?.carton_value?.value.toString())} strong>
+                <Typography.Text
+                  style={determineFontStyles(item?.carton_value?.value.toString(), format, screens)}
+                  strong>
                   {item?.carton_value?.value}
                 </Typography.Text>
               )}
@@ -138,7 +107,9 @@ const BingoCard = forwardRef(
               onClick={() => changeValueLocalStorage(index)}
               key={index}>
               {item?.carton_value.type === 'text' && (
-                <Typography.Text style={determineFontStyles(item?.carton_value?.value.toString())} strong>
+                <Typography.Text
+                  style={determineFontStyles(item?.carton_value?.value.toString(), format, screens)}
+                  strong>
                   {item?.carton_value?.value}
                 </Typography.Text>
               )}
@@ -197,7 +168,9 @@ const BingoCard = forwardRef(
               onClick={() => changeValueLocalStorage(index)}
               key={index}>
               {item?.carton_value.type === 'text' && (
-                <Typography.Text style={determineFontStyles(item?.carton_value?.value.toString())} strong>
+                <Typography.Text
+                  style={determineFontStyles(item?.carton_value?.value.toString(), format, screens)}
+                  strong>
                   {item?.carton_value?.value}
                 </Typography.Text>
               )}
