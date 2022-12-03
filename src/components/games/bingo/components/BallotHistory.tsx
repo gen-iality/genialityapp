@@ -1,6 +1,6 @@
 import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
 import { UseEventContext } from '@/context/eventContext';
-import { getCorrectColor, randomColor } from '@/helpers/utils';
+import { getCorrectColor } from '@/helpers/utils';
 import { Avatar, Badge, Card, Col, Image, Row, Space, Tag, Typography } from 'antd';
 import ReactPlayer from 'react-player';
 import { orderedDemonstratedBallots } from '../functions';
@@ -48,9 +48,10 @@ const BallotHistory = ({ demonstratedBallots = [], mediaUrl, renderingInCms }: B
         padding: renderingInCms ? '' : '5px',
       }}>
       <Space split={'-'} wrap>
-        {orderedDemonstratedBallots({ demonstratedBallots }).map((item: any) =>
+        {orderedDemonstratedBallots({ demonstratedBallots }).map((item: any, i) =>
           item?.value?.toString().length <= 2 ? (
             <Avatar
+              key={`${i}-demostratedballots`}
               style={{
                 boxShadow: 'inset 0px 0px 20px rgba(0, 0, 0, 0.25)',
                 backgroundColor: cEvent.value?.styles?.toolbarDefaultBg,
@@ -67,6 +68,7 @@ const BallotHistory = ({ demonstratedBallots = [], mediaUrl, renderingInCms }: B
             <>
               {item?.type === 'image' && (
                 <Image
+                  key={`${i}-demostratedballots`}
                   preview={{ mask: 'Ver', maskClassName: 'borderRadius' }}
                   style={{ borderRadius: '10px', objectFit: 'cover' }}
                   width={50}

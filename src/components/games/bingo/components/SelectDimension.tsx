@@ -75,8 +75,8 @@ const SelectDimension = (props: Props) => {
         <p>El cambio de dimensiones afectara las balotas de mas que haya introducido...</p>
       </Modal>
       <Row gutter={[32, 8]} align='middle' justify='space-between'>
-        {arrayDimensions.map(({ amount, format, image, minimun_values }) => (
-          <Col span={8} style={{ textAlign: 'center' }} onClick={() => showModal({ amount, format, minimun_values })}>
+        {arrayDimensions.map(({ amount, format, image, minimun_values }, i) => (
+          <Col key={`${i}-dimension-option`} span={8} style={{ textAlign: 'center' }} onClick={() => showModal({ amount, format, minimun_values })}>
             <Card
               style={{
                 userSelect: 'none',
