@@ -175,6 +175,7 @@ const ImportModal = ({
         event={event}
         setEnableSaveButton={(state) => setEnableSaveButton(state)}
         setImportData={setImportData}
+        
       />
     </Modal>
   );

@@ -29,7 +29,7 @@ export const GetMillonaireAPi = async (eventId: string) => {
 export const UpdateMillonaireApi = async (
   eventId: string,
   millonaireId: string,
-  data: { name: string; number_of_questions: number | null; rules?: string; time_for_question?: number }
+  data: { name: string; number_of_stages: number | null; rules?: string; time_for_question?: number }
 ) => {
   try {
     const response = await WhoWantsToBeAMillonaireApi.editOne(eventId, millonaireId, data);
@@ -103,6 +103,16 @@ export const UpdateStageMillonaireApi = async (millonaireId: string, stageId: st
     return response;
   } catch (error) {
     DispatchMessageService({ type: 'error', msj: 'Error al actualizar la etapa', action: 'show' });
+    return null;
+  }
+};
+
+export const ImportDataMillonaireApi = async (millonaireId: string, data: any) => {
+  try {
+    const response = await WhoWantsToBeAMillonaireApi.createDataImport(millonaireId, data);
+    return response;
+  } catch (error) {
+    DispatchMessageService({ type: 'error', msj: 'Error al importar la informacion', action: 'show' });
     return null;
   }
 };

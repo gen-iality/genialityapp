@@ -24,12 +24,12 @@ export default function DrawerSharePhoto(props: Props) {
 		setOpen(false);
 	};
 
-	useEffect(() => {
-		// if (sharePhoto !== null) {
-		// 	const unSubscribe = listenSharePhoto();
-		// 	return () => unSubscribe();
-		// }
-	}, [sharePhoto]);
+	// useEffect(() => {
+	// 	// if (sharePhoto !== null) {
+	// 	// 	const unSubscribe = listenSharePhoto();
+	// 	// 	return () => unSubscribe();
+	// 	// }
+	// }, [sharePhoto]);
 
 	if (!sharePhoto) return null;
 

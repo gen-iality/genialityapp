@@ -14,7 +14,7 @@ export default function useWhereIs() {
 
 	useEffect(() => {
 		const eventId = cUser?.value?.event_id;
-		if (eventId && whereIs === null) {
+		if (eventId && !whereIs) {
 			getWhereIs(eventId);
 		}
 		const unsubscribe = service.getWhereIsListener(eventId, setWhereIs);
@@ -26,7 +26,7 @@ export default function useWhereIs() {
 			setLoading(true);
 			const whereIs = await service.get(eventId);
 			setWhereIs(whereIs);
-			console.log(whereIs);
+			// console.log(whereIs);
 		} catch (error) {
 			console.log(error);
 		} finally {

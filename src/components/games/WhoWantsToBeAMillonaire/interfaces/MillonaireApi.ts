@@ -26,7 +26,7 @@ export interface IStageApi {
 export interface IMillonaireApi {
   _id: string;
   name: string;
-  number_of_questions: number;
+  number_of_stages: number;
   timeForQuestions?: number;
   rules?: string;
   event_id: string;
