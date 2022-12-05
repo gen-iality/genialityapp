@@ -38,7 +38,7 @@ export const getWhereIsListener = (
 		.doc(eventId)
 		.onSnapshot(doc => {
 			if (!doc.exists) {
-				console.log('Document doesnt exists yet');
+				// console.log('Document doesnt exists yet');
 			} else {
 				setWhereIs(prev => ({ ...prev, ...(doc.data() as WhereIs) }));
 			}
@@ -118,8 +118,8 @@ export const getScores = async (getScoreDto: GetScoreDto) => {
 };
 
 export const getScoresListener = (event_id: string, setScores: React.Dispatch<React.SetStateAction<Score[]>>) => {
-	console.log('Se inicializa el listener');
-	console.log(event_id);
+	// console.log('Se inicializa el listener');
+	// console.log(event_id);
 	const unsubscribe = firestore
 		.collection('whereIsByEvent')
 		.doc(event_id)

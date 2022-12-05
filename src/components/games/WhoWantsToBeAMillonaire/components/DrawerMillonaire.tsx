@@ -10,6 +10,8 @@ import Ranking from '../../common/Ranking';
 import UsersRanking from './UsersRanking';
 import { CloseOutlined } from '@ant-design/icons';
 import Stages from './Stages';
+import GameAnnoucement from './GameAnnoucement';
+
 export default function DrawerMillonaire() {
 	const {
 		isVisible,
@@ -28,19 +30,14 @@ export default function DrawerMillonaire() {
 
 	return (
 		<>
-			{visibilityControl?.active && (
-				<Button
-					size='large'
-					type='primary'
-					// disabled={!visibilityControl.active}
-					onClick={onChangeVisibilityDrawer}
-					style={{ display: visibilityControl?.published ? 'block' : 'none' }}>
-					{' '}
-					¡Jugar Millonario!
-				</Button>
+			{!!visibilityControl && visibilityControl?.published && (
+				<Row align='middle' justify='center' style={{ padding: '10px' }}>
+					<Button size='large' type='primary' disabled={!visibilityControl.active} onClick={onChangeVisibilityDrawer}>
+						¡Jugar Millonario!
+					</Button>
+				</Row>
 			)}
 			<Drawer
-				title={statusGame === 'STARTED' && <WildCards isTitle={true} />}
 				closeIcon={<CloseOutlined style={{ color: '#FFFFFF' }} />}
 				headerStyle={{
 					border: 'none',
@@ -57,10 +54,10 @@ export default function DrawerMillonaire() {
 				}}
 				width={'100vw'}
 				onClose={onChangeVisibilityDrawer}
-				/*  title={<Typography.Title level={5}>{millonaire.name}</Typography.Title>} */
+				title={statusGame === 'STARTED' && <WildCards isTitle={true} />}
 				footer={statusGame === 'STARTED' && <WildCards />}
 				visible={isVisible}>
-				{RenderView[(statusGame as keyof IRenderViewLanding) || 'NOT_STARTED']}
+				{RenderView[statusGame as keyof IRenderViewLanding] || <GameAnnoucement />}
 			</Drawer>
 		</>
 	);

@@ -37,7 +37,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
     bingoPrint,
   } = useDrawerBingo();
   const { bingo } = useBingo();
-  console.log(dataFirebaseBingo);
+  // console.log(dataFirebaseBingo);
 
   const handleClose = () => {
     setDemonstratedBallots([]);
@@ -66,6 +66,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
           cardboardCode={cardboardCode}
           backgroundColor={cEvent.value?.styles?.toolbarDefaultBg}
           color={cEvent.value?.styles?.textMenu}
+          code={bingoPrint[0]?.code}
         />
       }
       visible={openOrClose}
@@ -117,7 +118,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
                           {!!dataFirebaseBingo?.template?.image && (
                             <Image preview={false} src={dataFirebaseBingo?.template?.image} width={150} height={150} />
                           )}
-						  {!!dataFirebaseBingo?.template?.title && (
+                          {!!dataFirebaseBingo?.template?.title && (
                             <Typography.Text>{dataFirebaseBingo?.template?.title}</Typography.Text>
                           )}
                         </Space>

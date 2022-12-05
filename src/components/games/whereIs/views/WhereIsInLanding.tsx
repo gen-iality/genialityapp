@@ -26,7 +26,7 @@ const RenderView = (props: RenderViewProps) => {
 		},
 	};
 
-	if (player !== null) return views.results.component;
+	if (!player) return views.results.component;
 
 	return views[location.activeView].component;
 };

@@ -517,6 +517,10 @@ export const WhoWantsToBeAMillonaireApi = {
     let token = await GetTokenUserFirebase();
     return await Actions.put(`api/millionaires/${millonaireId}/stages/${stageId}?token=${token}`, data, true);
   },
+  createDataImport: async (millonaire, data) => {
+    let token = await GetTokenUserFirebase();
+    return await Actions.put(`api/millionaires/${millonaire}/import-questions?token=${token}`, data, true);
+  },
 };
 
 export const SharePhotoApi = {

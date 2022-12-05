@@ -6,7 +6,7 @@ import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 const { Text } = Typography;
 
 const GenerateColumnsQuestion = () => {
-  const { onDeleteQuestion, onActionEditQuestion } = useMillonaireCMS();
+  const { onDeleteQuestion, onActionEditQuestion, millonaire } = useMillonaireCMS();
   const columns = [
     {
       title: 'Pregunta',
@@ -70,6 +70,7 @@ const GenerateColumnsQuestion = () => {
       type: 'string',
       name: '',
       render: (text: string, value: any, index: any) => {
+        const isDisable = millonaire.stages.find((stage) => stage.question === value.id);
         return (
           <Row gutter={[8, 8]}>
             <Col>
@@ -83,13 +84,14 @@ const GenerateColumnsQuestion = () => {
               </Tooltip>
             </Col>
             <Col>
-              <Tooltip placement='topLeft' title='Eliminar'>
+              <Tooltip placement='topLeft' title={isDisable ? 'No se puede eliminar por que esta asociada': 'Eliminar' }>
                 <Button
                   key={`removeAction${index}`}
                   id={`removeAction${index}`}
                   icon={<DeleteOutlined />}
                   danger
                   size='small'
+                  disabled={isDisable}
                   onClick={() => onDeleteQuestion(value)}
                 />
               </Tooltip>
