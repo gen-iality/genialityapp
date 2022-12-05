@@ -23,6 +23,12 @@ export const useMillonaireCMS = () => {
     scores,
     tab,
     answers,
+    isVisibleModalImport,
+    enableSaveButton,
+    preserveInformation,
+    participants,
+    setImportData,
+    setPreserveInformation,
     onChangeAppearance,
     onChangeMillonaire,
     onSubmit,
@@ -54,6 +60,10 @@ export const useMillonaireCMS = () => {
     onChangeTab,
     onChangeAnswerFour,
     onSaveAnswerFour,
+    onActiveModalImport,
+    onHandleXlsx,
+    onSaveDataImport,
+    setEnableSaveButton,
   } = useContext(MillonaireCMSContext);
 
   return {
@@ -78,6 +88,12 @@ export const useMillonaireCMS = () => {
     tab,
     scores,
     answers,
+    isVisibleModalImport,
+    enableSaveButton,
+    preserveInformation,
+    participants,
+    setImportData,
+    setPreserveInformation,
     onChangeMillonaire,
     onChangeAppearance,
     onSubmit,
@@ -109,5 +125,9 @@ export const useMillonaireCMS = () => {
     onChangeTab,
     onChangeAnswerFour,
     onSaveAnswerFour,
+    onActiveModalImport,
+    onHandleXlsx,
+    onSaveDataImport,
+    setEnableSaveButton,
   };
 };

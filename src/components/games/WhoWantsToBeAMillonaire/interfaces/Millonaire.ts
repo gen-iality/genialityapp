@@ -78,6 +78,12 @@ export type TMillonaireContextProps = {
   scores: Score[];
   tab: string;
   answers: IAnswers[];
+  isVisibleModalImport: boolean;
+  enableSaveButton: boolean;
+  preserveInformation: boolean;
+  participants: IParticipant[];
+  setImportData: (data: any) => void;
+  setPreserveInformation: (data: boolean) => void;
   onChangeMillonaire: (name: string, value: any) => void;
   onChangeAppearance: (name: string, value: any) => void;
   onCreateMillonaire: () => void;
@@ -110,6 +116,10 @@ export type TMillonaireContextProps = {
   onChangeTab: (key: string) => void;
   onChangeAnswerFour: (key: number, name: string, value: string | boolean) => void;
   onSaveAnswerFour: () => void;
+  onActiveModalImport: () => void;
+  onHandleXlsx: (data: IDataImport[]) => void;
+  onSaveDataImport: () => void;
+  setEnableSaveButton: (data: boolean) => void;
 };
 
 export interface TMillonaireContextPropLanding {
@@ -163,6 +173,8 @@ export interface IRenderViewLanding {
 export interface IVisibility {
   published: boolean;
   active: boolean;
+  //restablecer progreso
+  resetProgress: boolean;
 }
 
 export interface TimerM {
@@ -170,6 +182,32 @@ export interface TimerM {
   timer: number;
 }
 
+export interface IDataImport {
+  Pregunta: string;
+  'Tiempo por pregunta': number;
+  'Respues A': string;
+  'Respues B': string;
+  'Respues C': string;
+  'Respues D': string;
+  'Respuesta correcta': string | number;
+}
 export interface ButtonMillonaire {
   isTitle?: boolean;
+}
+
+export interface IParticipant {
+  name: string;
+  email: string;
+  score: number;
+  time: number;
+  uid: string;
+  stages: IParticipantStage[];
+}
+
+export interface IParticipantStage {
+  stage: number;
+  score: number;
+  time: number;
+  question: string;
+  answer: string;
 }
