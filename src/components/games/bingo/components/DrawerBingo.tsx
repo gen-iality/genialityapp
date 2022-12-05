@@ -66,6 +66,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
 					cardboardCode={cardboardCode}
 					backgroundColor={cEvent.value?.styles?.toolbarDefaultBg}
 					color={cEvent.value?.styles?.textMenu}
+					code={bingoPrint[0]?.code}
 				/>
 			}
 			visible={openOrClose}

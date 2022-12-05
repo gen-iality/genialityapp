@@ -38,7 +38,11 @@ export default function PrintComponent({
                   <Descriptions.Item label={<Typography.Text type='secondary'>ID del Cartón</Typography.Text>}>
                     <Typography.Text strong>{userBingo.id}</Typography.Text>
                   </Descriptions.Item>
+                  <Descriptions.Item label={<Typography.Text type='secondary'>Codigo de bingo</Typography.Text>}>
+                    <Typography.Text strong>{userBingo.code}</Typography.Text>
+                  </Descriptions.Item>
                 </Descriptions>
+              
                 <Descriptions size='small' bordered column={2} layout='vertical'>
                   <Descriptions.Item label={<Typography.Text type='secondary'>Nombre</Typography.Text>}>
                     <Typography.Text strong>{userBingo?.names}</Typography.Text>

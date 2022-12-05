@@ -50,6 +50,7 @@ export interface BingoPrintProps {
 	email: string;
 	id: string;
 	values: RamdonBingoValue[];
+	code: string;
 }
 
 export interface RamdonBingoValue {
@@ -185,6 +186,7 @@ export interface BingoByUserInterface {
 	created_at: string;
 	name_owner: string;
 	bingo_card: any;
+	code: string;
 }
 
 export interface ValuesBingoCard {
@@ -218,6 +220,7 @@ export interface DrawerHeaderInterface {
 	cardboardCode: string;
 	backgroundColor: string;
 	color: string;
+	code?: string;
 }
 export interface DrawerButtonsInterface {
 	arrayLocalStorage: number[];
