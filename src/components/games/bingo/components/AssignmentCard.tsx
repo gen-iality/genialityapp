@@ -41,6 +41,7 @@ export default function AssignmentCard({ user, bingo, index }: any) {
               email: user?.properties?.email,
               id: user?.bingo_card?._id,
               values: user?.bingo_card?.values_bingo_card,
+              code: user?.bingo_card?.code,
             },
           ]}
           bingo={bingo}

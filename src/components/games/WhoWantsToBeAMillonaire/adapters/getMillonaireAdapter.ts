@@ -24,7 +24,7 @@ const getMillonaireAdapter = (data: IMillonaireApi) => {
 
   return {
     name: data.name,
-    numberOfQuestions: data.number_of_questions,
+    numberOfQuestions: data.number_of_stages,
     rules: data.rules || '',
     timeForQuestions: data.timeForQuestions || 30,
     id: data._id,

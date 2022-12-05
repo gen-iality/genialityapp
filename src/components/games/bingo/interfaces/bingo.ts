@@ -50,6 +50,7 @@ export interface BingoPrintProps {
 	email: string;
 	id: string;
 	values: RamdonBingoValue[];
+	code: string;
 }
 
 export interface RamdonBingoValue {
@@ -104,6 +105,7 @@ export interface ImportValuesInterface {
 	handleXls: (data: any) => any;
 	extraFields: extraFields[];
 	event: EventBingo;
+	templateDataDefault?: any[];
 	setEnableSaveButton: (state: boolean) => void;
 	setImportData: (data: any) => void;
 }
@@ -184,6 +186,7 @@ export interface BingoByUserInterface {
 	created_at: string;
 	name_owner: string;
 	bingo_card: any;
+	code: string;
 }
 
 export interface ValuesBingoCard {
@@ -217,6 +220,7 @@ export interface DrawerHeaderInterface {
 	cardboardCode: string;
 	backgroundColor: string;
 	color: string;
+	code?: string;
 }
 export interface DrawerButtonsInterface {
 	arrayLocalStorage: number[];
@@ -236,7 +240,7 @@ export interface BingoCardInterface {
 	arrayDataBingo: RamdonBingoValue[];
 	arrayLocalStorage: number[];
 	changeValueLocalStorage: (index: number) => void;
-	getBingoListener: () => any;
+	getBingoListener: () => () => any;
 	setOpenOrClose: (state: boolean) => void;
 	isPrint?: boolean;
 }
@@ -329,8 +333,8 @@ export interface DrawerRulesInterface {
 
 export interface DimensionInterface {
 	format: '3x3' | '4x4' | '5x5' | format;
-  amount: number;
-  minimun_values: number;
+	amount: number;
+	minimun_values: number;
 }
 
 export type format = '3x3' | '4x4' | '5x5';

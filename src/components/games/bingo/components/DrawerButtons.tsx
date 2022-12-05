@@ -29,8 +29,8 @@ export default function DrawerButtons({
 	};
 	const { bingo } = useBingo();
 	const bingoColor = bingo?.bingo_appearance.background_color;
-	const validateLength = template?.index_to_validate.length  || 25;
-  console.log(validateLength)
+	const validateLength = template?.index_to_validate.length || 25;
+	// console.log(validateLength)
 
 	const singBingo = () => {
 		Modal.info({

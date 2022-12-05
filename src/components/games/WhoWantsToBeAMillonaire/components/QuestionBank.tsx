@@ -9,7 +9,7 @@ import { VALUES_TIME_PER_ANSWERS } from '../constants/formData';
 import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Answers from './Answers';
 import CreateAnswers from './CreateAnswers';
-
+import ImportBankQuestions from './ImportBankQuestions';
 export default function QuestionBank() {
   const columns = generateColumnsQuestion();
   const {
@@ -33,7 +33,11 @@ export default function QuestionBank() {
     <>
       <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', height: '100%' }}>
         <Space style={{ width: '100%' }} direction='vertical'>
-          <Header title='Banco de preguntas' addFn={() => setIsVisibleModalQuestion(!isVisibleModalQuestion)} />
+          <Header
+            title='Banco de preguntas'
+            extra={<ImportBankQuestions />}
+            addFn={() => setIsVisibleModalQuestion(!isVisibleModalQuestion)}
+          />
           <Table size='small' columns={columns} dataSource={millonaire.questions} />
         </Space>
       </Card>
@@ -91,11 +95,7 @@ export default function QuestionBank() {
           <Form.Item label='Tiempo por pregunta'>
             <Select value={question.timeForQuestion} onChange={(e) => onChangeQuestion('timeForQuestion', String(e))}>
               {VALUES_TIME_PER_ANSWERS.map((timeForQuestion) => {
-                return (
-                  <Select.Option disabled={timeForQuestion.value !== 30} value={timeForQuestion.value}>
-                    {timeForQuestion.label}
-                  </Select.Option>
-                );
+                return <Select.Option value={timeForQuestion.value}>{timeForQuestion.label}</Select.Option>;
               })}
             </Select>
           </Form.Item>

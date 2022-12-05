@@ -43,9 +43,9 @@ export const useBingo = () => {
 		startGame: false,
 	});
 
-	useEffect(() => {
-		console.log('dataFirebaseBingo', dataFirebaseBingo);
-	}, []);
+	// useEffect(() => {
+	// 	console.log('dataFirebaseBingo', dataFirebaseBingo);
+	// }, []);
 	let [listUsers, setListUsers] = useState([]);
 	const [bingoPrint, setBingoPrint] = useState<BingoPrintProps[]>([
 		{
@@ -64,6 +64,7 @@ export const useBingo = () => {
 					},
 				},
 			],
+			code: '',
 		},
 	]);
 	const initialFormDataBingo = {
@@ -491,8 +492,11 @@ export const useBingo = () => {
 					email: user?.properties?.email,
 					id: user?.bingo_card?._id,
 					values: user?.bingo_card?.values_bingo_card,
+					bingo: user?.bingo_card?.bingo,
+					code: user?.bingo_card?.code,
 				};
 			});
+			console.log('🚀 ~ file: useBingo.tsx:494 ~ bingoPrintData ~ bingoPrintData', bingoPrintData);
 			setBingoPrint(bingoPrintData);
 			setListUsers(list);
 		} catch (err) {
