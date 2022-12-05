@@ -6,7 +6,7 @@ function useValideChangesInFormData(
   saved: FormDataType,
   modified: FormDataType,
   isPublished: boolean,
-  setWasChanged: (was: boolean) => void
+  setWasChanged: (was: boolean) => void,
 ) {
   const deepStateEqualityValidation = useDeepStateEqualityValidation();
   const valideChangesInFormData = () => {
@@ -24,6 +24,7 @@ function useValideChangesInFormData(
       length,
       latitude,
       selectedHosts,
+      selectedTools,
       isPhysical,
     } = modified;
 
@@ -43,6 +44,7 @@ function useValideChangesInFormData(
       length,
       latitude,
       selectedHosts,
+      selectedTools,
       isPhysical,
     };
 

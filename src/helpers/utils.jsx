@@ -10,16 +10,16 @@ export function GetIdEvent() {
 
 export function uniqueID() {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16),
   );
 }
 //Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
-export function fieldsSelect(options, list) {
-  if (Array.isArray(options)) {
-    const newOptions = options.map((option) => list.find(({ value }) => value === option));
+export function fieldsSelect(selected, allOptions) {
+  if (Array.isArray(selected)) {
+    const newOptions = allOptions.filter((option) => selected.includes(option.value));
     return newOptions[0] ? newOptions : [];
   } else {
-    const newOptions = list.find(({ value }) => value === options);
+    const newOptions = allOptions.find(({ value }) => value === selected);
     return newOptions ? newOptions : null;
   }
 }

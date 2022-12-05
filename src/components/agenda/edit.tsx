@@ -58,7 +58,7 @@ const initialInfoState: AgendaType = {
   datetime_end: null,
   space_id: '',
   image: '',
-  description: '<p><br></p>',
+  description: '',
   registration_message: '',
   capacity: 0,
   activity_categories_ids: [],
