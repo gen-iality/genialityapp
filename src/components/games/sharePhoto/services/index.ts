@@ -95,7 +95,7 @@ export const listenSharePhoto = (
 			if (doc.exists) {
 				setSharePhoto(doc.data() as SharePhoto);
 			} else {
-				console.log('No data yet');
+				// console.log('No data yet');
 			}
 		});
 	return unSubscribe;

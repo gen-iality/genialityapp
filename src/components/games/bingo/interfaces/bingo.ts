@@ -237,7 +237,7 @@ export interface BingoCardInterface {
 	arrayDataBingo: RamdonBingoValue[];
 	arrayLocalStorage: number[];
 	changeValueLocalStorage: (index: number) => void;
-	getBingoListener: () => any;
+	getBingoListener: () => () => any;
 	setOpenOrClose: (state: boolean) => void;
 	isPrint?: boolean;
 }

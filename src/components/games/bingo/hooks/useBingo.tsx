@@ -43,9 +43,9 @@ export const useBingo = () => {
 		startGame: false,
 	});
 
-	useEffect(() => {
-		console.log('dataFirebaseBingo', dataFirebaseBingo);
-	}, []);
+	// useEffect(() => {
+	// 	console.log('dataFirebaseBingo', dataFirebaseBingo);
+	// }, []);
 	let [listUsers, setListUsers] = useState([]);
 	const [bingoPrint, setBingoPrint] = useState<BingoPrintProps[]>([
 		{

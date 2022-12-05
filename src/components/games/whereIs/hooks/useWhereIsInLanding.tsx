@@ -20,7 +20,7 @@ export default function useWhereIsInLanding() {
 	const { whereIs } = useWhereIs();
 
 	useEffect(() => {
-		if (whereIs === null) return;
+		if (!whereIs) return;
 		const points = whereIs.points.map(point => ({ ...point, stroke: undefined, isFound: false }));
 		setWhereIsGame(prev => ({
 			...prev,

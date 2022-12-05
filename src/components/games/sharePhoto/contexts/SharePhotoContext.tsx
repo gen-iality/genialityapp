@@ -53,7 +53,7 @@ export default function SharePhotoProvider(props: Props) {
 	const eventId = cUser?.value?.event_id;
 
 	useEffect(() => {
-		if (eventId && sharePhoto === null) {
+		if (eventId && !sharePhoto) {
 			getSharePhoto();
 			getPosts();
 		}
@@ -129,7 +129,7 @@ export default function SharePhotoProvider(props: Props) {
 	const createPost = async (createPostDto: Omit<CreatePostDto, 'event_user_id' | 'picture' | 'user_name'>) => {
 		try {
 			setLoading(true);
-			if (sharePhoto === null || !sharePhoto._id) return;
+			if (!sharePhoto || !sharePhoto._id) return;
 			await service.addPost(
 				{
 					...createPostDto,
@@ -238,7 +238,7 @@ export default function SharePhotoProvider(props: Props) {
 	const getRanking = async () => {
 		try {
 			setLoading(true);
-			if (sharePhoto === null) return;
+			if (!sharePhoto) return;
 			// console.log('se ejecuta la query');
 			const scores = await service.getRanking(eventId, sharePhoto?.points_per_like);
 			setScores(scores);

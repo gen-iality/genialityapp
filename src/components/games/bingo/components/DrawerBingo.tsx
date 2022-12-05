@@ -37,7 +37,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
 		bingoPrint,
 	} = useDrawerBingo();
 	const { bingo } = useBingo();
-	console.log(dataFirebaseBingo);
+	// console.log(dataFirebaseBingo);
 
 	const handleClose = () => {
 		setDemonstratedBallots([]);
@@ -132,7 +132,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
 					<Row gutter={[16, 16]}>
 						<Col xs={24} sm={24} md={18} lg={18} xl={18} xxl={18} style={{}}>
 							<BingoCard
-                template={dataFirebaseBingo?.template}
+								template={dataFirebaseBingo?.template}
 								bingo={bingo}
 								arrayDataBingo={arrayDataBingo}
 								arrayLocalStorage={arrayLocalStorage}

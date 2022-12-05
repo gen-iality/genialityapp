@@ -33,7 +33,7 @@ export default function DrawerWhereIs(props: Props) {
 				size='large'
 				type='primary'
 				onClick={handleOpen}
-				style={{ display: whereIs !== null && whereIs?.published ? 'block' : 'none' }}>
+				style={{ display: !!whereIs && whereIs?.published ? 'block' : 'none' }}>
 				Buscando el elemento
 			</Button>
 			<Drawer
