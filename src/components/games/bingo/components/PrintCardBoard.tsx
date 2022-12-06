@@ -46,8 +46,9 @@ export default function PrintCardBoard({ bingoCardRef, cardboardCode }: { bingoC
         </Button> */}
       <Button loading={loading} disabled={loading} onClick={() => onHandlePrint()}>
         <Space split='/'>
-          <DownloadIcon />
-          <PrinterIcon />
+          Descargar cartón
+          {/* <DownloadIcon />
+          <PrinterIcon /> */}
         </Space>
       </Button>
     </Space>

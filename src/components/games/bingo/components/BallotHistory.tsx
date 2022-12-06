@@ -1,7 +1,7 @@
 import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
 import { UseEventContext } from '@/context/eventContext';
 import { getCorrectColor } from '@/helpers/utils';
-import { Avatar, Badge, Card, Col, Image, Row, Space, Tag, Typography } from 'antd';
+import { Avatar, Badge, Card, Col, Image, List, Row, Space, Tag, Typography } from 'antd';
 import ReactPlayer from 'react-player';
 import { orderedDemonstratedBallots } from '../functions';
 import { BallotHistoryInterface } from '../interfaces/bingo';
@@ -20,6 +20,11 @@ const BallotHistory = ({ demonstratedBallots = [], mediaUrl, renderingInCms }: B
       return 0;
     }
   };
+
+  console.log(
+    'orderedDemonstratedBallots({ demonstratedBallots })',
+    orderedDemonstratedBallots({ demonstratedBallots })
+  );
 
   return (
     <Card
@@ -47,42 +52,44 @@ const BallotHistory = ({ demonstratedBallots = [], mediaUrl, renderingInCms }: B
         overflowY: 'auto',
         padding: renderingInCms ? '' : '5px',
       }}>
-      <Space split={'-'} wrap>
-        {orderedDemonstratedBallots({ demonstratedBallots }).map((item: any, i) =>
-          item?.value?.toString().length <= 2 ? (
-            <Avatar
-              key={`${i}-demostratedballots`}
-              style={{
-                boxShadow: 'inset 0px 0px 20px rgba(0, 0, 0, 0.25)',
-                backgroundColor: cEvent.value?.styles?.toolbarDefaultBg,
-              }}>
-              <Typography.Text
-                strong
+      <List
+        dataSource={orderedDemonstratedBallots({ demonstratedBallots })}
+        renderItem={(item: any, i) => (
+          <List.Item>
+            {item?.value?.toString().length <= 2 ? (
+              <Avatar
+                key={`${i}-demostratedballots`}
                 style={{
-                  color: getCorrectColor(cEvent.value?.styles?.toolbarDefaultBg),
+                  boxShadow: 'inset 0px 0px 20px rgba(0, 0, 0, 0.25)',
+                  backgroundColor: cEvent.value?.styles?.toolbarDefaultBg,
                 }}>
-                {item?.value}
-              </Typography.Text>
-            </Avatar>
-          ) : (
-            <>
-              {item?.type === 'image' && (
-                <Image
-                  key={`${i}-demostratedballots`}
-                  preview={{ mask: 'Ver', maskClassName: 'borderRadius' }}
-                  style={{ borderRadius: '10px', objectFit: 'cover' }}
-                  width={50}
-                  height={50}
-                  src={item?.value}
-                  alt={item?.value}
-                />
-              )}
-              {item.type !== 'image' && <Tag>{item?.value}</Tag>}
-            </>
-          )
+                <Typography.Text
+                  strong
+                  style={{
+                    color: getCorrectColor(cEvent.value?.styles?.toolbarDefaultBg),
+                  }}>
+                  {item?.value}
+                </Typography.Text>
+              </Avatar>
+            ) : (
+              <>
+                {item?.type === 'image' && (
+                  <Image
+                    key={`${i}-demostratedballots`}
+                    preview={{ mask: 'Ver', maskClassName: 'borderRadius' }}
+                    style={{ borderRadius: '10px', objectFit: 'cover' }}
+                    width={50}
+                    height={50}
+                    src={item?.value}
+                    alt={item?.value}
+                  />
+                )}
+                {item.type !== 'image' && <Tag>{item?.value}</Tag>}
+              </>
+            )}
+          </List.Item>
         )}
-        {/* Aqui agregamos el listado de balotas que ya se mostraron*/}
-      </Space>
+      />
     </Card>
   );
 };
