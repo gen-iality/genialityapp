@@ -38,7 +38,16 @@ import { BingoApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
 import AssignmentCards from './components/AssignmentCards';
 import BingoProvider from './contexts/BingoContext';
-export default function index({ event }: { event: {} }) {
+
+export default function index(props: any) {
+	return (
+		<BingoProvider>
+			<BingoInCMS {...props} />
+		</BingoProvider>
+	);
+}
+
+function BingoInCMS({ event }: { event: {} }) {
 	const {
 		bingo,
 		isLoading,

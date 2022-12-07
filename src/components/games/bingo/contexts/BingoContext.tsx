@@ -10,6 +10,8 @@ interface BingoContextType {
 	templateSelected: Template | null;
 	loading: boolean;
 	chooseTemplate: (templateId: Template['_id']) => void;
+	dimensionChanged: () => void;
+	reloadBingo: () => void;
 }
 
 export const BingoContext = createContext<BingoContextType>({} as BingoContextType);
@@ -18,14 +20,19 @@ interface Props {
 	children: ReactNode;
 }
 
+const delay = (time: number = 1000) => new Promise(resolve => setTimeout(resolve, time));
+
 export default function BingoProvider(props: Props) {
 	const [bingo, setBingo] = useState<Bingo | null>(null);
 	const [bingoGame, setBingoGame] = useState<BingoGame | null>(null);
 	const [templates, setTemplates] = useState<Template[]>([] as Template[]);
 	const [templateSelected, setTemplateSelected] = useState<Template | null>(null);
 	const [loading, setLoading] = useState(false);
+	const [dimensionChange, setDimensionChange] = useState(false);
 	// Hooks
 	const cUser = UseUserEvent();
+
+	// console.log('context load');
 
 	const eventId = cUser?.value?.event_id;
 
@@ -37,19 +44,33 @@ export default function BingoProvider(props: Props) {
 
 	useEffect(() => {
 		if (bingo?.dimensions?.format && !templates.length) {
-			getTemplates().then(templates => {
+			getTemplates(bingo?.dimensions?.format).then(templates => {
 				if (templates.length) {
-					setTemplateSelected(templates[0]);
+					const defaultTemplate = templates.find(template => template.category === 'default');
+					if (defaultTemplate) {
+						setTemplateSelected(defaultTemplate);
+					} else {
+						setTemplateSelected(templates[0]);
+					}
 				}
 			});
 		}
 	}, [bingo]);
 
+	useEffect(() => {
+		// console.log('dimensionChange', dimensionChange);
+		delay().then(() => {
+			// console.log('Start reload dimensions');
+			reloadBingo();
+		});
+	}, [dimensionChange]);
+
 	// TODO: Just for test purposes - Remember to disabled in production
 	useEffect(() => {
-		console.log(templates);
-		console.log(bingo);
-	}, [templates, bingo]);
+		// console.log('templates', templates);
+		// console.log('bingo', bingo);
+		// console.log('bingo format', bingo?.dimensions?.format);
+	}, [templates, bingo, dimensionChange]);
 
 	const getBingo = async () => {
 		try {
@@ -57,6 +78,7 @@ export default function BingoProvider(props: Props) {
 			if (!eventId) return console.error('eventId missed');
 			const bingo = await services.getBingo(eventId);
 			setBingo(bingo as Bingo);
+			return bingo;
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -64,15 +86,34 @@ export default function BingoProvider(props: Props) {
 		}
 	};
 
-	const getTemplates = async () => {
+	const reloadBingo = async () => {
 		try {
 			setLoading(true);
-			if (!bingo?.dimensions?.format) return console.error('Bingo missed');
-			const templates = await services.getTemplates(bingo.dimensions.format);
-			setTemplates(templates as Template[]);
-			return templates;
+			const bingo = (await getBingo()) as Bingo;
+			await getTemplates(bingo.dimensions.format);
 		} catch (error) {
 			console.error(error);
+		} finally {
+			setLoading(false);
+			setDimensionChange(false);
+		}
+	};
+
+	const getTemplates = async (format: string) => {
+		try {
+			setLoading(true);
+			if (!bingo?.dimensions?.format) {
+				console.error('Bingo missed');
+				return [] as Template[];
+			}
+			const templates = (await services.getTemplates(format)) as Template[];
+			if (Array.isArray(templates)) {
+				setTemplates(templates);
+			}
+			return Array.isArray(templates) ? templates : [];
+		} catch (error) {
+			console.error(error);
+			return [];
 		} finally {
 			setLoading(false);
 		}
@@ -101,9 +142,11 @@ export default function BingoProvider(props: Props) {
 		}
 	};
 
-  const validateCardUserBingo = (userBallots: [], ballotsPlayed: [], template: Template) => {
-    
-  }
+	const validateCardUserBingo = (userBallots: [], ballotsPlayed: [], template: Template) => {};
+
+	const dimensionChanged = () => {
+		setDimensionChange(true);
+	};
 
 	const values: BingoContextType = {
 		bingo,
@@ -112,6 +155,8 @@ export default function BingoProvider(props: Props) {
 		templateSelected,
 		loading,
 		chooseTemplate,
+		dimensionChanged,
+		reloadBingo,
 	};
 
 	return <BingoContext.Provider value={values}>{props.children}</BingoContext.Provider>;
