@@ -18,11 +18,15 @@ const WinnersValidationCard = ({
   dimensions,
 }: WinnersValidationCardInterface) => {
   return (
-    <Card hoverable style={{ borderRadius: '20px', height: '100%' }}>
+    <Card
+      hoverable
+      bodyStyle={{ padding: '20px' }}
+      style={{ borderRadius: '20px', height: '100%', maxHeight: '400px', overflowY: 'auto' }}>
       <Tabs defaultActiveKey='1' centered>
         <TabPane tab='Solicitudes de bingo' key='1'>
           <ConfigProvider renderEmpty={() => <Empty description='No han gritado bingo' />}>
             <List
+              style={{ height: '100%', maxHeight: '200px', overflowY: 'auto' }}
               itemLayout='horizontal'
               dataSource={notifications}
               renderItem={(item: NotificationItemInterface, index: number) => (
@@ -61,8 +65,9 @@ const WinnersValidationCard = ({
         </TabPane>
         <Tabs.TabPane tab='Validador de cartones' key='2'>
           <Result
-            icon={<ListStatusIcon />}
-            title={<Title level={4}>Ingresa el codigo del Bingo</Title>}
+            style={{ padding: '24px 16px' }}
+            icon={' '}
+            title={<Title level={5}>Ingresa el codigo del Bingo</Title>}
             subTitle={
               <div style={{ paddingLeft: '50px', paddingRight: '50px' }}>
                 <Input required value={inputValidate} onChange={(e: any) => setInputValidate(e.target.value)} />

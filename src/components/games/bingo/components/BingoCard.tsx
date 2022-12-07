@@ -259,7 +259,7 @@ const BingoCard = forwardRef(
             <img
               style={{
                 width: '100%',
-                objectFit: 'cover',
+                objectFit: 'fill',
                 borderRadius: '20px 20px 0px 0px',
                 height: '80px',
               }}
@@ -281,6 +281,8 @@ const BingoCard = forwardRef(
                   ? bingo.bingo_appearance?.background_color
                   : '#333453',
                 backgroundImage: `url(${bingo?.bingo_appearance?.background_image})`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
                 borderRadius: '0px',
               }}>
               <Row gutter={[8, 8]} justify='center' align='middle'>
@@ -294,7 +296,7 @@ const BingoCard = forwardRef(
             <img
               style={{
                 width: '100%',
-                objectFit: 'cover',
+                objectFit: 'fill',
                 borderRadius: '0px 0px 20px 20px',
                 height: '60px',
               }}
