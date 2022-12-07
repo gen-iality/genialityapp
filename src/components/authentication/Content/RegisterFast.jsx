@@ -132,67 +132,72 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         autoComplete='on'
         layout='vertical'
         onFinish={onFinish}>
-        <Form.Item>
-          <ImgCrop rotate shape='round'>
-            <Upload
-              fileList={basicDataUser.picture || []}
-              accept='image/png,image/jpeg'
-              onChange={(info) => {
-                if (info.fileList.length > 0) {
-                  getBase64(info.file.originFileObj, (imageUrl) => setImageAvatar(imageUrl));
-                  HandleHookForm(null, 'picture', info.fileList);
-                } else {
-                  HandleHookForm(null, 'picture', null);
-                  setImageAvatar(null);
-                }
-              }}
-              onRemove={() => {
-                HandleHookForm(null, 'picture', null);
-              }}
-              customRequest={uploadImagedummyRequest}
-              multiple={false}
-              listType='picture'
-              maxCount={1}>
-              {!takingPhoto && (
-                <Space direction='vertical'>
-                  <Button
-                    type='primary'
-                    shape='circle'
-                    style={{
-                      height: !imageAvatar ? '120px' : '95px',
-                      width: !imageAvatar ? '120px' : '95px',
-                    }}>
-                    {!imageAvatar && <PictureOutlined style={{ fontSize: '50px' }} />}
-                    {imageAvatar && <Avatar src={imageAvatar} size={90} />}
-                  </Button>
-                  <>
-                    {intl.formatMessage({
-                      id: 'modal.label.photo',
-                      defaultMessage: 'Subir foto',
-                    })}
-                  </>
-                </Space>
+        {/* Condición para no mostrar la foto temporalmente */}
+        {false && (
+          <>
+            <Form.Item>
+              <ImgCrop rotate shape='round'>
+                <Upload
+                  fileList={basicDataUser.picture || []}
+                  accept='image/png,image/jpeg'
+                  onChange={(info) => {
+                    if (info.fileList.length > 0) {
+                      getBase64(info.file.originFileObj, (imageUrl) => setImageAvatar(imageUrl));
+                      HandleHookForm(null, 'picture', info.fileList);
+                    } else {
+                      HandleHookForm(null, 'picture', null);
+                      setImageAvatar(null);
+                    }
+                  }}
+                  onRemove={() => {
+                    HandleHookForm(null, 'picture', null);
+                  }}
+                  customRequest={uploadImagedummyRequest}
+                  multiple={false}
+                  listType='picture'
+                  maxCount={1}>
+                  {!takingPhoto && (
+                    <Space direction='vertical'>
+                      <Button
+                        type='primary'
+                        shape='circle'
+                        style={{
+                          height: !imageAvatar ? '120px' : '95px',
+                          width: !imageAvatar ? '120px' : '95px',
+                        }}>
+                        {!imageAvatar && <PictureOutlined style={{ fontSize: '50px' }} />}
+                        {imageAvatar && <Avatar src={imageAvatar} size={90} />}
+                      </Button>
+                      <>
+                        {intl.formatMessage({
+                          id: 'modal.label.photo',
+                          defaultMessage: 'Subir foto',
+                        })}
+                      </>
+                    </Space>
+                  )}
+                </Upload>
+              </ImgCrop>
+            </Form.Item>
+            {/* EN desktop el upload no toma fotos toca hacerlo por separado*/}
+            <Form.Item>
+              {takingPhoto && (
+                <div className='avatarCamera'>
+                  <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} isFullscreen={false} />
+                </div>
               )}
-            </Upload>
-          </ImgCrop>
-        </Form.Item>
-
-        {/* EN desktop el upload no toma fotos toca hacerlo por separado*/}
-        <Form.Item>
-          {takingPhoto && (
-            <div className='avatarCamera'>
-              <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} isFullscreen={false} />
-            </div>
-          )}
-          <Button
-            type='primary'
-            icon={takingPhoto ? <DeleteOutlined /> : <CameraOutlined />}
-            onClick={() => {
-              //setImageAvatar(null);
-              setTakingPhoto(!takingPhoto);
-            }}
-          />
-        </Form.Item>
+              <Button
+                type='primary'
+                icon={takingPhoto ? <DeleteOutlined /> : <CameraOutlined />}
+                onClick={() => {
+                  //setImageAvatar(null);
+                  setTakingPhoto(!takingPhoto);
+                }}
+              />
+            </Form.Item>
+          </>
+        )}
+        {/* FINAL Condición para no mostrar la foto temporalmente */}
 
         <Form.Item
           label={intl.formatMessage({

@@ -161,42 +161,46 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         {/* <Typography.Title level={4} type='secondary'>
                       Nueva organizacion
                     </Typography.Title> */}
-        <Form.Item>
-          <ImgCrop rotate shape='round'>
-            <Upload
-              accept='image/png,image/jpeg'
-              onChange={(file) => {
-                if (file.fileList.length > 0) {
-                  setImageAvatar(file.fileList);
-                } else {
-                  setImageAvatar(null);
+        {/* Condición para no mostrar la foto temporalmente */}
+        {false && (
+          <Form.Item>
+            <ImgCrop rotate shape='round'>
+              <Upload
+                accept='image/png,image/jpeg'
+                onChange={(file) => {
+                  if (file.fileList.length > 0) {
+                    setImageAvatar(file.fileList);
+                  } else {
+                    setImageAvatar(null);
+                  }
+                }}
+                customRequest={uploadImagedummyRequest}
+                multiple={false}
+                listType='picture'
+                maxCount={1}
+                fileList={imageAvatar}>
+                {
+                  <Button
+                    type='primary'
+                    shape='circle'
+                    style={{
+                      height: !imageAvatar ? '150px' : '95px',
+                      width: !imageAvatar ? '150px' : '95px',
+                    }}>
+                    <Space direction='vertical'>
+                      <PictureOutlined style={{ fontSize: '40px' }} />
+                      {intl.formatMessage({
+                        id: 'modal.label.photo',
+                        defaultMessage: 'Subir foto',
+                      })}
+                    </Space>
+                  </Button>
                 }
-              }}
-              customRequest={uploadImagedummyRequest}
-              multiple={false}
-              listType='picture'
-              maxCount={1}
-              fileList={imageAvatar}>
-              {
-                <Button
-                  type='primary'
-                  shape='circle'
-                  style={{
-                    height: !imageAvatar ? '150px' : '95px',
-                    width: !imageAvatar ? '150px' : '95px',
-                  }}>
-                  <Space direction='vertical'>
-                    <PictureOutlined style={{ fontSize: '40px' }} />
-                    {intl.formatMessage({
-                      id: 'modal.label.photo',
-                      defaultMessage: 'Subir foto',
-                    })}
-                  </Space>
-                </Button>
-              }
-            </Upload>
-          </ImgCrop>
-        </Form.Item>
+              </Upload>
+            </ImgCrop>
+          </Form.Item>
+        )}
+
         <Form.Item
           label={intl.formatMessage({
             id: 'modal.label.email',
