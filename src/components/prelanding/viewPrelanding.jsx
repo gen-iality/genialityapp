@@ -28,327 +28,342 @@ const { Content } = Layout;
 const { useBreakpoint } = Grid;
 
 const ViewPrelanding = ({ preview }) => {
-  const mobilePreview = preview ? preview : '';
-  const screens = useBreakpoint();
+	const mobilePreview = preview ? preview : '';
+	const screens = useBreakpoint();
 
-  //CONTEXTOS
-  const cEventContext = useContext(CurrentEventContext);
-  const cUser = useContext(CurrentUserContext);
-  const cEventUser = useContext(CurrentEventUserContext);
-  const { setIsPrelanding } = useHelper();
-  const [companies] = getEventsponsors(cEventContext?.value?._id);
+	//CONTEXTOS
+	const cEventContext = useContext(CurrentEventContext);
+	const cUser = useContext(CurrentUserContext);
+	const cEventUser = useContext(CurrentEventUserContext);
+	const { setIsPrelanding } = useHelper();
+	const [companies] = getEventsponsors(cEventContext?.value?._id);
 
-  //History
-  const history = useHistory();
+	//History
+	const history = useHistory();
 
-  //ESTADOS
-  const [loading, setLoading] = useState(false);
-  const [sections, setSections] = useState({});
+	//ESTADOS
+	const [loading, setLoading] = useState(false);
+	const [sections, setSections] = useState({});
 
-  // PERMITE VALIDAR SI EXISTE DESCRIPCION
-  const [description, setDescription] = useState([]);
-  //PERMITE VALIDAR SI EXISTE CONFERENCISTAS
-  const [speakers, setSpeakers] = useState([]);
-  //PERMITE VALIDAR SI EXISTEN ACTIVIDADES
-  const [agenda, setAgenda] = useState([]);
-  //PERMITE VALIDAR SI EXISTEN SPONSORS
-  const [sponsors, setSponsors] = useState([]);
+	// PERMITE VALIDAR SI EXISTE DESCRIPCION
+	const [description, setDescription] = useState([]);
+	//PERMITE VALIDAR SI EXISTE CONFERENCISTAS
+	const [speakers, setSpeakers] = useState([]);
+	//PERMITE VALIDAR SI EXISTEN ACTIVIDADES
+	const [agenda, setAgenda] = useState([]);
+	//PERMITE VALIDAR SI EXISTEN SPONSORS
+	const [sponsors, setSponsors] = useState([]);
 
-  //console.log('Event', cEventContext);
-  const cBanner = cEventContext.value?.styles?.banner_image;
-  const cFooter = cEventContext.value?.styles?.banner_footer;
-  const cContainerBgColor = cEventContext.value?.styles?.containerBgColor;
-  const cBackgroundImage = cEventContext.value?.styles?.BackgroundImage;
-  const bgColor = cEventContext.value?.styles?.toolbarDefaultBg;
-  const textColor = cEventContext.value?.styles?.textMenu;
+	// console.log('Event', cEventContext);
+	const cBanner = cEventContext.value?.styles?.banner_image;
+	const cFooter = cEventContext.value?.styles?.banner_footer;
+	const cContainerBgColor = cEventContext.value?.styles?.containerBgColor;
+	const cBackgroundImage = cEventContext.value?.styles?.BackgroundImage;
+	const bgColor = cEventContext.value?.styles?.toolbarDefaultBg;
+	const textColor = cEventContext.value?.styles?.textMenu;
 
-  //Validacion temporal para el evento audi
-  const idEvent = cEventContext.value?._id;
-  const shadow = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : '';
+	//Validacion temporal para el evento audi
+	const idEvent = cEventContext.value?._id;
+	const shadow = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : '';
 
-  //PERMITE INGRESAR A LA LANDING DEL EVENTO
-  useEffect(() => {
-    setIsPrelanding(true);
-    // window.sessionStorage.setItem('message', true);
-    if (!cEventContext.value) return;
-    //SE REMUEVE LA SESION EN EL EVENTO OBLIGANDO A UNIR AL USUARIO
-    if (window.sessionStorage.getItem('session') !== cEventContext.value?._id) {
-      window.sessionStorage.removeItem('session');
-    }
-    if (preview) return;
-    if (window.sessionStorage.getItem('session') === cEventContext.value?._id) {
-      history.replace(`/landing/${cEventContext.value?._id}`);
-    }
-  }, [cEventContext, cUser, cEventUser]);
+	//PERMITE INGRESAR A LA LANDING DEL EVENTO
+	useEffect(() => {
+		setIsPrelanding(true);
+		// window.sessionStorage.setItem('message', true);
+		if (!cEventContext.value) return;
+		//SE REMUEVE LA SESION EN EL EVENTO OBLIGANDO A UNIR AL USUARIO
+		if (window.sessionStorage.getItem('session') !== cEventContext.value?._id) {
+			window.sessionStorage.removeItem('session');
+		}
+		if (preview) return;
+		if (window.sessionStorage.getItem('session') === cEventContext.value?._id) {
+			// console.log(cEvent);
+			// console.log('cEventContext?.value?.redirect_activity', cEventContext?.value?.redirect_activity);
+			// console.log('!!cEventContext?.value?.redirect_activity', !!cEventContext?.value?.redirect_activity);
+			// console.log(
+			// 	"typeof cEventContext?.value?.redirect_activity === 'string'",
+			// 	typeof cEventContext?.value?.redirect_activity === 'string'
+			// );
+			// console.log(
+			// 	!!cEventContext?.value?.redirect_activity && typeof cEventContext?.value?.redirect_activity === 'string'
+			// );
+			if (!!cEventContext?.value?.redirect_activity && typeof cEventContext?.value?.redirect_activity === 'string') {
+				history.replace(`/landing/${cEventContext.value?._id}/activity/${cEventContext?.value?.redirect_activity}`);
+			} else {
+				history.replace(`/landing/${cEventContext?.value?._id}`);
+			}
+			// history.replace(`/landing/${cEventContext.value?._id}`);
+		}
+	}, [cEventContext, cUser, cEventUser]);
 
-  /**DYNAMIC STYLES */
-  // Estilos para el contenedor de bloques en desktop y mobile
-  const desktopBlockContainerStyle = {
-    paddingLeft: '160px',
-    paddingRight: '160px',
-    paddingTop: '40px',
-    paddingBottom: '40px',
-  };
-  const mobileBlockContainerStyle = {
-    paddingLeft: '10px',
-    paddingRight: '10px',
-    paddingTop: '40px',
-    paddingBottom: '40px',
-  };
-  // Estilos para el contenido del bloque en desktop y mobile
-  const desktopBlockContentStyle = {
-    padding: idEvent !== '6334782dc19fe2710a0b8753' ? '40px' : '0px',
-  };
-  const mobileBlockContentStyle = {
-    paddingLeft: '25px',
-    paddingRight: '25px',
-    paddingTop: '25px',
-    paddingBottom: '25px',
-  };
+	/**DYNAMIC STYLES */
+	// Estilos para el contenedor de bloques en desktop y mobile
+	const desktopBlockContainerStyle = {
+		paddingLeft: '160px',
+		paddingRight: '160px',
+		paddingTop: '40px',
+		paddingBottom: '40px',
+	};
+	const mobileBlockContainerStyle = {
+		paddingLeft: '10px',
+		paddingRight: '10px',
+		paddingTop: '40px',
+		paddingBottom: '40px',
+	};
+	// Estilos para el contenido del bloque en desktop y mobile
+	const desktopBlockContentStyle = {
+		padding: idEvent !== '6334782dc19fe2710a0b8753' ? '40px' : '0px',
+	};
+	const mobileBlockContentStyle = {
+		paddingLeft: '25px',
+		paddingRight: '25px',
+		paddingTop: '25px',
+		paddingBottom: '25px',
+	};
 
-  /// Script
+	/// Script
 
-  useInjectScript(scriptGoogleTagManagerAudi, idEvent, false);
-  useInjectScript(scriptTeadesAudi, idEvent, false);
-  useInjectScript(scriptTeadeBodyAudi, idEvent, true);
-  useScript('https://p.teads.tv/teads-fellow.js', idEvent);
-  // Funciones para el render
-  const obtenerOrder = (name) => {
-    if (sections) {
-      return sections && sections?.main_landing_blocks?.filter((section) => section.name == name)[0]?.index + 2;
-    } else {
-      return 2;
-    }
-  };
+	useInjectScript(scriptGoogleTagManagerAudi, idEvent, false);
+	useInjectScript(scriptTeadesAudi, idEvent, false);
+	useInjectScript(scriptTeadeBodyAudi, idEvent, true);
+	useScript('https://p.teads.tv/teads-fellow.js', idEvent);
+	// Funciones para el render
+	const obtenerOrder = name => {
+		if (sections) {
+			return sections && sections?.main_landing_blocks?.filter(section => section.name == name)[0]?.index + 2;
+		} else {
+			return 2;
+		}
+	};
 
-  const visibleSection = (name) => {
-    if (sections) {
-      return sections &&
-        sections?.main_landing_blocks?.filter((section) => section.name == name && section.status).length > 0
-        ? true
-        : false;
-    } else {
-      return false;
-    }
-  };
+	const visibleSection = name => {
+		if (sections) {
+			return sections &&
+				sections?.main_landing_blocks?.filter(section => section.name == name && section.status).length > 0
+				? true
+				: false;
+		} else {
+			return false;
+		}
+	};
 
-  const isVisibleCardSections = () => {
-    if (sections) {
-      return sections && sections?.main_landing_blocks?.filter((section) => section.status).length > 1 ? true : false;
-    } else {
-      return false;
-    }
-  };
+	const isVisibleCardSections = () => {
+		if (sections) {
+			return sections && sections?.main_landing_blocks?.filter(section => section.status).length > 1 ? true : false;
+		} else {
+			return false;
+		}
+	};
 
-  useEffect(() => {
-    if (!cEventContext.value) return;
-    setLoading(true);
-    obtainPreview();
-    async function obtainPreview() {
-      //OBTENENOS LAS SECCIONES DE PRELANDING
-      const previews = await EventsApi.getPreviews(cEventContext.value._id);
-      //SE ORDENAN LAS SECCIONES POR INDEX
-      const sections = previews?._id ? previews : SectionsPrelanding;
-      setSections(sections);
-      setLoading(false);
-    }
-  }, [cEventContext]);
-  //OBTENER  DATA DEL EVENTO PARA VALIDACIONES
-  useEffect(() => {
-    if (!cEventContext.value) return;
-    obtenerData();
-    async function obtenerData() {
-      const sectionsDescription = await EventsApi.getSectionsDescriptions(cEventContext?.value._id);
-      let speakers = await SpeakersApi.byEvent(cEventContext?.value._id);
-      const agenda = await AgendaApi.byEvent(cEventContext?.value._id);
-      const speakersFiltered = speakers.filter((speaker) => speaker.published || speaker.published == 'undefined');
-      const agendaConfig = await obtenerConfigActivity(cEventContext.value?._id, agenda.data);
-      const agendaFiltered = agendaConfig.filter(
-        (agendaCfg) => agendaCfg.isPublished || agendaCfg.isPublished == undefined
-      );
-      setDescription(sectionsDescription?.data || []);
-      setSpeakers(speakersFiltered || []);
-      setAgenda(agendaFiltered || []);
-    }
-  }, [cEventContext.value]);
+	useEffect(() => {
+		if (!cEventContext.value) return;
+		setLoading(true);
+		obtainPreview();
+		async function obtainPreview() {
+			//OBTENENOS LAS SECCIONES DE PRELANDING
+			const previews = await EventsApi.getPreviews(cEventContext.value._id);
+			//SE ORDENAN LAS SECCIONES POR INDEX
+			const sections = previews?._id ? previews : SectionsPrelanding;
+			setSections(sections);
+			setLoading(false);
+		}
+	}, [cEventContext]);
+	//OBTENER  DATA DEL EVENTO PARA VALIDACIONES
+	useEffect(() => {
+		if (!cEventContext.value) return;
+		obtenerData();
+		async function obtenerData() {
+			const sectionsDescription = await EventsApi.getSectionsDescriptions(cEventContext?.value._id);
+			let speakers = await SpeakersApi.byEvent(cEventContext?.value._id);
+			const agenda = await AgendaApi.byEvent(cEventContext?.value._id);
+			const speakersFiltered = speakers.filter(speaker => speaker.published || speaker.published == 'undefined');
+			const agendaConfig = await obtenerConfigActivity(cEventContext.value?._id, agenda.data);
+			const agendaFiltered = agendaConfig.filter(
+				agendaCfg => agendaCfg.isPublished || agendaCfg.isPublished == undefined
+			);
+			setDescription(sectionsDescription?.data || []);
+			setSpeakers(speakersFiltered || []);
+			setAgenda(agendaFiltered || []);
+		}
+	}, [cEventContext.value]);
 
-  useEffect(() => {
-    setSponsors(companies || []);
-  }, [companies]);
+	useEffect(() => {
+		setSponsors(companies || []);
+	}, [companies]);
 
-  return (
-    <Layout>
-      {(cEventContext.value?.styles?.show_banner === undefined ||
-        cEventContext.value?.styles?.show_banner === 'true') && (
-        <Row className='headerContainer'>
-          <Col span={24}>
-            <img src={cBanner}></img>
-          </Col>
-        </Row>
-      )}
-      <Content
-        style={{
-          backgroundColor: cContainerBgColor,
-          backgroundImage: `url(${cBackgroundImage})`,
-          backgroundAttachment: 'fixed',
-        }}>
-        {/**MODAL INSCRIPCION EN EL EVENTO*/}
-        <ModalPermission />
-        <Row
-          gutter={[0, idEvent !== '6334782dc19fe2710a0b8753' ? 16 : 0]}
-          style={screens.xs || mobilePreview === 'smartphone' ? mobileBlockContainerStyle : desktopBlockContainerStyle}>
-          <Col id='Franja de titulo' span={24}>
-            <Row>
-              <Col span={24}>
-                <InfoEvent paddingOff={true} preview={preview} />
-              </Col>
-            </Row>
-          </Col>
-          <Col id='Bloques del evento' span={24}>
-            <Row gutter={[0, idEvent !== '6334782dc19fe2710a0b8753' ? 16 : 0]} align='stretch' justify='center'>
-              <Col span={24} order={1}>
-                {isVisibleCardSections()
-                  ? shadow && (
-                      <Card
-                        bodyStyle={{ padding: screens.xs ? '10px' : '24px' }}
-                        style={{
-                          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                          borderRadius: '10px',
-                          color: textColor,
-                          backgroundColor: bgColor,
-                          border: 'none',
-                        }}>
-                        <Row justify='center' align='middle'>
-                          <MenuScrollBlock
-                            sections={sections && sections?.main_landing_blocks}
-                            vdescription={description}
-                            vspeakers={speakers}
-                            vactividades={agenda}
-                            vpatrocinadores={sponsors}
-                          />
-                        </Row>
-                      </Card>
-                    )
-                  : null}
-              </Col>
-              {visibleSection('Contador') && (
-                <Col order={obtenerOrder('Contador')} span={24}>
-                  <Card
-                    id='Contador_block'
-                    style={{
-                      boxShadow: shadow,
-                      height: 'auto',
-                      borderRadius: '20px',
-                      color: textColor,
-                      backgroundColor: bgColor,
-                      border: 'none',
-                    }}>
-                    <CountdownBlock />
-                  </Card>
-                </Col>
-              )}
-              {visibleSection('Descripción') && description.length > 0 && (
-                <Col order={obtenerOrder('Descripción')} span={24}>
-                  <Card
-                    id='Descripción_block'
-                    className='viewReactQuill'
-                    bodyStyle={
-                      screens.xs || mobilePreview === 'smartphone' ? mobileBlockContentStyle : desktopBlockContentStyle
-                    }
-                    style={{
-                      boxShadow: shadow,
-                      borderRadius: '20px',
-                      backgroundColor: bgColor,
-                      border: 'none',
-                    }}>
-                    <RenderSectios />
-                  </Card>
-                </Col>
-              )}
-              {visibleSection('Conferencistas') && speakers.length > 0 && (
-                <Col span={24} order={obtenerOrder('Conferencistas')}>
-                  <Card
-                    id='Conferencistas_block'
-                    bodyStyle={{
-                      height: '100%',
-                      padding: screens.xs || mobilePreview === 'smartphone' ? '10px' : '24px',
-                    }}
-                    style={{
-                      boxShadow: shadow,
-                      height: '450px',
-                      borderRadius: '20px',
-                      color: textColor,
-                      backgroundColor: bgColor,
-                      border: 'none',
-                    }}>
-                    <SpeakersBlock />
-                  </Card>
-                </Col>
-              )}
-              {visibleSection('Actividades') && agenda.length > 0 && (
-                <Col span={24} order={obtenerOrder('Actividades')}>
-                  <Card
-                    id='Actividades_block'
-                    bodyStyle={{ height: '100%' }}
-                    style={{
-                      boxShadow: shadow,
-                      height: '100%',
-                      borderRadius: '20px',
-                      color: textColor,
-                      backgroundColor: bgColor,
-                      border: 'none',
-                    }}>
-                    <ActivityBlock preview={mobilePreview} />
-                  </Card>
-                </Col>
-              )}
-              {visibleSection('Patrocinadores') && sponsors.length > 0 && (
-                <Col span={24} order={obtenerOrder('Patrocinadores')}>
-                  <Card
-                    id='Patrocinadores_block'
-                    style={{
-                      boxShadow: shadow,
-                      height: '100%',
-                      borderRadius: '20px',
-                      color: textColor,
-                      backgroundColor: bgColor,
-                      border: 'none',
-                    }}>
-                    <SponsorBlock sponsors={sponsors} />
-                  </Card>
-                </Col>
-              )}
-            </Row>
-          </Col>
-        </Row>
-        <>
-          {cFooter && (
-            <div style={{ textAlign: 'center' }}>
-              <img
-                alt='footer'
-                src={cFooter}
-                style={{ width: '100%', maxWidth: '100%', maxHeight: '255px', objectFit: 'cover' }}
-              />
-            </div>
-          )}
-        </>
-      </Content>
+	return (
+		<Layout>
+			{(cEventContext.value?.styles?.show_banner === undefined ||
+				cEventContext.value?.styles?.show_banner === 'true') && (
+				<Row className='headerContainer'>
+					<Col span={24}>
+						<img src={cBanner}></img>
+					</Col>
+				</Row>
+			)}
+			<Content
+				style={{
+					backgroundColor: cContainerBgColor,
+					backgroundImage: `url(${cBackgroundImage})`,
+					backgroundAttachment: 'fixed',
+				}}>
+				{/**MODAL INSCRIPCION EN EL EVENTO*/}
+				<ModalPermission />
+				<Row
+					gutter={[0, idEvent !== '6334782dc19fe2710a0b8753' ? 16 : 0]}
+					style={screens.xs || mobilePreview === 'smartphone' ? mobileBlockContainerStyle : desktopBlockContainerStyle}>
+					<Col id='Franja de titulo' span={24}>
+						<Row>
+							<Col span={24}>
+								<InfoEvent paddingOff={true} preview={preview} />
+							</Col>
+						</Row>
+					</Col>
+					<Col id='Bloques del evento' span={24}>
+						<Row gutter={[0, idEvent !== '6334782dc19fe2710a0b8753' ? 16 : 0]} align='stretch' justify='center'>
+							<Col span={24} order={1}>
+								{isVisibleCardSections()
+									? shadow && (
+											<Card
+												bodyStyle={{ padding: screens.xs ? '10px' : '24px' }}
+												style={{
+													boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+													borderRadius: '10px',
+													color: textColor,
+													backgroundColor: bgColor,
+													border: 'none',
+												}}>
+												<Row justify='center' align='middle'>
+													<MenuScrollBlock
+														sections={sections && sections?.main_landing_blocks}
+														vdescription={description}
+														vspeakers={speakers}
+														vactividades={agenda}
+														vpatrocinadores={sponsors}
+													/>
+												</Row>
+											</Card>
+									  )
+									: null}
+							</Col>
+							{visibleSection('Contador') && (
+								<Col order={obtenerOrder('Contador')} span={24}>
+									<Card
+										id='Contador_block'
+										style={{
+											boxShadow: shadow,
+											height: 'auto',
+											borderRadius: '20px',
+											color: textColor,
+											backgroundColor: bgColor,
+											border: 'none',
+										}}>
+										<CountdownBlock />
+									</Card>
+								</Col>
+							)}
+							{visibleSection('Descripción') && description.length > 0 && (
+								<Col order={obtenerOrder('Descripción')} span={24}>
+									<Card
+										id='Descripción_block'
+										className='viewReactQuill'
+										bodyStyle={
+											screens.xs || mobilePreview === 'smartphone' ? mobileBlockContentStyle : desktopBlockContentStyle
+										}
+										style={{
+											boxShadow: shadow,
+											borderRadius: '20px',
+											backgroundColor: bgColor,
+											border: 'none',
+										}}>
+										<RenderSectios />
+									</Card>
+								</Col>
+							)}
+							{visibleSection('Conferencistas') && speakers.length > 0 && (
+								<Col span={24} order={obtenerOrder('Conferencistas')}>
+									<Card
+										id='Conferencistas_block'
+										bodyStyle={{
+											height: '100%',
+											padding: screens.xs || mobilePreview === 'smartphone' ? '10px' : '24px',
+										}}
+										style={{
+											boxShadow: shadow,
+											height: '450px',
+											borderRadius: '20px',
+											color: textColor,
+											backgroundColor: bgColor,
+											border: 'none',
+										}}>
+										<SpeakersBlock />
+									</Card>
+								</Col>
+							)}
+							{visibleSection('Actividades') && agenda.length > 0 && (
+								<Col span={24} order={obtenerOrder('Actividades')}>
+									<Card
+										id='Actividades_block'
+										bodyStyle={{ height: '100%' }}
+										style={{
+											boxShadow: shadow,
+											height: '100%',
+											borderRadius: '20px',
+											color: textColor,
+											backgroundColor: bgColor,
+											border: 'none',
+										}}>
+										<ActivityBlock preview={mobilePreview} />
+									</Card>
+								</Col>
+							)}
+							{visibleSection('Patrocinadores') && sponsors.length > 0 && (
+								<Col span={24} order={obtenerOrder('Patrocinadores')}>
+									<Card
+										id='Patrocinadores_block'
+										style={{
+											boxShadow: shadow,
+											height: '100%',
+											borderRadius: '20px',
+											color: textColor,
+											backgroundColor: bgColor,
+											border: 'none',
+										}}>
+										<SponsorBlock sponsors={sponsors} />
+									</Card>
+								</Col>
+							)}
+						</Row>
+					</Col>
+				</Row>
+				<>
+					{cFooter && (
+						<div style={{ textAlign: 'center' }}>
+							<img
+								alt='footer'
+								src={cFooter}
+								style={{ width: '100%', maxWidth: '100%', maxHeight: '255px', objectFit: 'cover' }}
+							/>
+						</div>
+					)}
+				</>
+			</Content>
 
-      <BackTop>
-        <Avatar
-          shape='square'
-          icon={<ArrowUpOutlined className='animate__animated animate__bounce animate__slower animate__infinite' />}
-          size={50}
-          style={{
-            color: textColor,
-            backgroundColor: bgColor,
-            borderRadius: '8px',
-            boxShadow: shadow,
-            overflow: 'visible',
-          }}></Avatar>
-      </BackTop>
-    </Layout>
-  );
+			<BackTop>
+				<Avatar
+					shape='square'
+					icon={<ArrowUpOutlined className='animate__animated animate__bounce animate__slower animate__infinite' />}
+					size={50}
+					style={{
+						color: textColor,
+						backgroundColor: bgColor,
+						borderRadius: '8px',
+						boxShadow: shadow,
+						overflow: 'visible',
+					}}></Avatar>
+			</BackTop>
+		</Layout>
+	);
 };
 
 export default ViewPrelanding;

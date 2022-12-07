@@ -6,25 +6,28 @@ import { EventAccessAction } from './EventAccessAction';
 import useEventAccessAction from './useEventAccessAction';
 
 const EventAccessActionContainer = () => {
-  let cEvent = UseEventContext();
-  let cUser = UseCurrentUserContext();
-  let cEventUser = UseUserEvent();
+	let cEvent = UseEventContext();
+	let cUser = UseCurrentUserContext();
+	let cEventUser = UseUserEvent();
 
-  let attendee_status = () => {
-    let status = 'NO_USER';
-    status = cUser.value?._id ? 'WITH_USER' : status;
-    status = cUser.value?._id && cEventUser.value?._id ? 'WITH_ASSISTANT' : status;
-    return status;
-  };
+	let attendee_status = () => {
+		let status = 'NO_USER';
+		status = cUser.value?._id ? 'WITH_USER' : status;
+		status = cUser.value?._id && cEventUser.value?._id ? 'WITH_ASSISTANT' : status;
+		return status;
+	};
 
-  let current_attendee_status = attendee_status();
-  let event_access_type = recordTypeForThisEvent(cEvent)!;
-  let type_event = cEvent.value?.type_event;
+	let current_attendee_status = attendee_status();
+	let event_access_type = recordTypeForThisEvent(cEvent)!;
+	let type_event = cEvent.value?.type_event;
 
-  if (!type_event) return <> </>;
+	if (!type_event) return <> </>;
 
-  let eventAction: string = useEventAccessAction({ event_access_type, type_event, current_attendee_status });
+	let eventAction: string = useEventAccessAction({ event_access_type, type_event, current_attendee_status });
+	// console.log('event_access_type', event_access_type);
+	// console.log('type_event', type_event);
+	// console.log('current_attendee_status', current_attendee_status);
 
-  return <EventAccessAction eventAction={eventAction} />;
+	return <EventAccessAction eventAction={eventAction} />;
 };
 export default EventAccessActionContainer;
