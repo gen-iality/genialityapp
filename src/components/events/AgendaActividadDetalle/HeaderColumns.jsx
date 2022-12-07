@@ -22,12 +22,14 @@ import { CurrentEventUserContext } from '../../../context/eventUserContext';
 import { imageUtils } from '../../../Utilities/ImageUtils';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed';
+import DrawerBingo from '@/components/games/bingo/components/DrawerBingo';
 
 const HeaderColumns = (props) => {
   let { currentActivity } = useHelper();
   let cEvent = UseEventContext();
   let cEventUSer = useContext(CurrentEventUserContext);
   let [loading, setLoading] = useState(false);
+  const [openOrCloseModalDrawer, setOpenOrCloseModalDrawer] = useState(false);
   let {
     request,
     transmition,
@@ -67,7 +69,6 @@ const HeaderColumns = (props) => {
   useEffect(() => {
     if (currentActivity) {
       //SE SETEA EL CURRENTACTIVITY PARA DETECTAR SI LA TRANSMISION ES POR EVIUSMEET U OTRO
-
       // console.log('1. SE EJECUTA ESTO');
     }
     if (!currentActivity || typeActivity !== 'eviusMeet') return;
@@ -298,6 +299,27 @@ const HeaderColumns = (props) => {
               )}
           </Col>
         </div>
+      </Col>
+      <Col
+        xs={{ order: 4, span: 24 }}
+        sm={{ order: 4, span: 24 }}
+        md={{ order: 4, span: 24 }}
+        lg={{ order: 4, span: 24 }}
+        xl={{ order: 4, span: 24 }}>
+        {cEvent.value?.bingo && (
+          <Row justify='end' align='top'>
+            <Button
+              style={{ float: 'right' }}
+              size='large'
+              type='primary'
+              onClick={() => {
+                setOpenOrCloseModalDrawer(true);
+              }}>
+              ¡Jugar BINGO!
+            </Button>
+            <DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
+          </Row>
+        )}
       </Col>
     </Row>
   );
