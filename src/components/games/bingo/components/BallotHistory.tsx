@@ -21,10 +21,10 @@ const BallotHistory = ({ demonstratedBallots = [], mediaUrl, renderingInCms }: B
     }
   };
 
-  console.log(
+  /* console.log(
     'orderedDemonstratedBallots({ demonstratedBallots })',
     orderedDemonstratedBallots({ demonstratedBallots })
-  );
+  ); */
 
   return (
     <Card
@@ -52,7 +52,51 @@ const BallotHistory = ({ demonstratedBallots = [], mediaUrl, renderingInCms }: B
         overflowY: 'auto',
         padding: renderingInCms ? '' : '5px',
       }}>
-      <List
+      {demonstratedBallots.length > 0 ? (
+        <Space split={'-'} wrap>
+          {orderedDemonstratedBallots({ demonstratedBallots }).map((item: any) =>
+            item?.value?.toString().length <= 2 ? (
+              <Avatar
+                style={{
+                  boxShadow: 'inset 0px 0px 20px rgba(0, 0, 0, 0.25)',
+                  backgroundColor: cEvent.value?.styles?.toolbarDefaultBg,
+                }}>
+                <Typography.Text
+                  strong
+                  style={{
+                    color: getCorrectColor(cEvent.value?.styles?.toolbarDefaultBg),
+                  }}>
+                  {item?.value}
+                </Typography.Text>
+              </Avatar>
+            ) : (
+              <>
+                {item?.type === 'image' && (
+                  <Image
+                    preview={{ mask: 'Ver', maskClassName: 'borderRadius' }}
+                    style={{ borderRadius: '10px', objectFit: 'cover' }}
+                    width={50}
+                    height={50}
+                    src={item?.value}
+                    alt={item?.value}
+                  />
+                )}
+                {item.type !== 'image' && <Tag>{item?.value}</Tag>}
+              </>
+            )
+          )}
+          {/* Aqui agregamos el listado de balotas que ya se mostraron*/}
+        </Space>
+      ) : (
+        <Row style={{ height: '100%' }} justify='center' align='top'>
+          <Typography.Text style={{ width: '60%', textAlign: 'center' }}>
+            Aquí encontraras un listado con las balotas que ya fueron anunciadas para que puedas verificar en tu cartón,
+            sin embargo, ¡No te preocupes que tendrás realimentación permanente!
+          </Typography.Text>
+        </Row>
+      )}
+
+      {/*  <List
         dataSource={orderedDemonstratedBallots({ demonstratedBallots })}
         renderItem={(item: any, i) => (
           <List.Item>
@@ -89,7 +133,7 @@ const BallotHistory = ({ demonstratedBallots = [], mediaUrl, renderingInCms }: B
             )}
           </List.Item>
         )}
-      />
+      /> */}
     </Card>
   );
 };
