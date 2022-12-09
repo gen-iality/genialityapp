@@ -3,7 +3,7 @@ import axios from 'axios/index';
 const gCoreCLient = axios.create({
   //BASE URL WOWZA
   //baseURL: "https://api.cloud.wowza.com/api/v1.7/",
-  baseURL: 'https://api.gcdn.co/vp/api',
+  baseURL: 'https://​api.​gcore.​com/streaming',
   timeout: 5000,
   headers: {
     Authorization:
