@@ -57,7 +57,6 @@ const ImageComponent = (props) => {
             className='activity_image'
             style={{
               width: '100%',
-              height: '60vh',
               objectFit: 'cover',
             }}
             src={imageToShow}
