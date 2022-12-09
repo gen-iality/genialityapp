@@ -34,12 +34,21 @@ export default function BingoProvider(props: Props) {
 
 	// console.log('context load');
 
+
 	const eventId = cUser?.value?.event_id;
 
 	useEffect(() => {
+		console.log('bingoGame templateSelected Change')
+	}, [templateSelected])
+
+
+	useEffect(() => {
+		let unsubscribe: () => void
 		if (eventId && !bingo) {
 			getBingo();
+			unsubscribe = services.bingoGamelistener(eventId, setBingoGame)
 		}
+		return () => unsubscribe()
 	}, []);
 
 	useEffect(() => {
@@ -47,10 +56,14 @@ export default function BingoProvider(props: Props) {
 			getTemplates(bingo?.dimensions?.format).then(templates => {
 				if (templates.length) {
 					const defaultTemplate = templates.find(template => template.category === 'default');
-					if (defaultTemplate) {
-						setTemplateSelected(defaultTemplate);
+					if (!bingoGame) {
+						if (defaultTemplate) {
+							setTemplateSelected(defaultTemplate);
+						} else {
+							setTemplateSelected(templates[0]);
+						}
 					} else {
-						setTemplateSelected(templates[0]);
+						setTemplateSelected(bingoGame.template)
 					}
 				}
 			});
@@ -123,7 +136,8 @@ export default function BingoProvider(props: Props) {
 		try {
 			setLoading(true);
 			const template = templates.find(template => template._id === templateId);
-			if (!template) return console.error('Template missed');
+			if (!template) return console.error('Template missed')
+			console.log('bingoGame change template')
 			setTemplateSelected(template);
 		} catch (error) {
 			console.error(error);
@@ -142,7 +156,7 @@ export default function BingoProvider(props: Props) {
 		}
 	};
 
-	const validateCardUserBingo = (userBallots: [], ballotsPlayed: [], template: Template) => {};
+	const validateCardUserBingo = (userBallots: [], ballotsPlayed: [], template: Template) => { };
 
 	const dimensionChanged = () => {
 		setDimensionChange(true);

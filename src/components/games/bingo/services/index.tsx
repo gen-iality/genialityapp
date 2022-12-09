@@ -1,6 +1,6 @@
 import { BingoApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
-import { CreateBingoGameDto, SaveCurrentStateOfBingoInterface, UpdateBingoGameDto } from '../interfaces/bingo';
+import { BingoGame, CreateBingoGameDto, SaveCurrentStateOfBingoInterface, UpdateBingoGameDto } from '../interfaces/bingo';
 import { firestore } from '@/helpers/firebase';
 import firebase from 'firebase/compat';
 
@@ -220,6 +220,20 @@ export const listenBingoNotifications = (eventId: string, setData: any) => {
 
   return unSuscribe;
 };
+
+export const bingoGamelistener = (eventId: string, setBingoGame: React.Dispatch<React.SetStateAction<BingoGame | null>>) => {
+  return firestore
+    .collection('bingosByEvent')
+    .doc(eventId)
+    .onSnapshot((doc) => {
+      if (doc.exists) {
+        const bingoGame = doc.data() as BingoGame
+        setBingoGame(bingoGame)
+      } else {
+        setBingoGame(null)
+      }
+    })
+}
 
 export const listenBingoData = (eventID: string | undefined, setData: any, clearCarton?: any) => {
   const unSuscribe = firestore
