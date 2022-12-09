@@ -82,7 +82,7 @@ export default function DrawerButtons({
 						size='large'
 						block
 						disabled={arrayLocalStorage.filter(item => item === 1).length === 0}>
-						Limpiar carton
+						Limpiar cartón
 					</Button>
 				</Col>
 				<Col span={24}>

@@ -111,18 +111,29 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
                       </Col>
                     </Row>
                   </Tabs.TabPane>
-                  <Tabs.TabPane key='3' tab='Figura'>
-                    <Row align='middle' justify='center'>
-                      <Card bordered={false}>
-                        <Space direction='vertical' align='center'>
-                          {!!dataFirebaseBingo?.template?.image && (
-                            <Image preview={false} src={dataFirebaseBingo?.template?.image} width={150} height={150} />
-                          )}
-                          {!!dataFirebaseBingo?.template?.title && (
-                            <Typography.Text>{dataFirebaseBingo?.template?.title}</Typography.Text>
-                          )}
-                        </Space>
-                      </Card>
+                  <Tabs.TabPane key='3' tab='Figura' style={{minHeight:'200px'}}>
+                    <Row style={{height:'100%'}}  align='middle' justify='center'>
+                      {dataFirebaseBingo?.template ? (
+                        <Card bordered={false}>
+                          <Space direction='vertical' align='center'>
+                            {!!dataFirebaseBingo?.template?.image && (
+                              <Image
+                                preview={false}
+                                src={dataFirebaseBingo?.template?.image}
+                                width={150}
+                                height={150}
+                              />
+                            )}
+                            {!!dataFirebaseBingo?.template?.title && (
+                              <Typography.Text>{dataFirebaseBingo?.template?.title}</Typography.Text>
+                            )}
+                          </Space>
+                        </Card>
+                      ) : (
+                        <Typography.Paragraph style={{ width: '60%', textAlign: 'center', }}>
+                          ¡No pierdas el foco! en esta parte tendrás disponible la figura que se está jugando
+                        </Typography.Paragraph>
+                      )}
                     </Row>
                   </Tabs.TabPane>
                 </Tabs>
