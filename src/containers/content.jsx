@@ -24,6 +24,7 @@ import ModalNoRegister from '../components/authentication/ModalNoRegister';
 import BlockedEvent from '@/components/events/Landing/BlockedEvent';
 import ModalAuthAnonymous from '@/components/authentication/ModalAuthAnonymous';
 import ModalUpdate from '@/components/events/Landing/ModalUpdate';
+import BingoPresentation from '@/components/games/bingo/views/BingoPresentation';
 //Code splitting
 const Header = loadable(() => import('./header'));
 const Home = loadable(() => import('../pages/home'));
@@ -61,6 +62,7 @@ const ContentContainer = () => {
       <main className='main'>
         <Switch>
           <RouteContext path={['/landing/:event_id', '/event/:event_name']} component={Landing} />
+          <RouteContext path={'/bingo/:event_id/'} component={BingoPresentation} />
           {/*Ruta para ver resumen */}
           <PrivateRoute exact path='/myprofile/:tab' component={MainProfile} />
           {screens.xs ? (
