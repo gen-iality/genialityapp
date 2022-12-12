@@ -56,62 +56,62 @@ const ContentContainer = () => {
   return (
     <Router
       basename='/'
-      getUserConfirmation={() => {
+      getUserConfirmation={ () => {
         /* Empty callback to block the default browser prompt, it is necessary to be able to use in custon hook RouterPrompt */
-      }}>
+      } }>
       <main className='main'>
         <Switch>
-          <RouteContext path={['/landing/:event_id', '/event/:event_name']} component={Landing} />
-          <RouteContext path={'/bingo/:event_id/'} component={BingoPresentation} />
-          {/*Ruta para ver resumen */}
-          <PrivateRoute exact path='/myprofile/:tab' component={MainProfile} />
-          {screens.xs ? (
-            <Route exact path='/myprofile' render={() => <Redirect to='/myprofile/organization' />} />
+          <RouteContext path={ ['/landing/:event_id', '/event/:event_name'] } component={ Landing } />
+          <RouteContext path={ '/bingo/:event_id/' } component={ BingoPresentation } />
+          {/*Ruta para ver resumen */ }
+          <PrivateRoute exact path='/myprofile/:tab' component={ MainProfile } />
+          { screens.xs ? (
+            <Route exact path='/myprofile' render={ () => <Redirect to='/myprofile/organization' /> } />
           ) : (
-            <PrivateRoute exact path='/myprofile' component={MainProfile} />
-          )}
-          <PrivateRoute exact path='/myprofile' component={MainProfile} />
-          <Route path='/loginWithCode' component={LoginWithCode} />
-          <RouteContext exact path={'/:event_id'} component={ViewPrelanding} />
+            <PrivateRoute exact path='/myprofile' component={ MainProfile } />
+          ) }
+          <PrivateRoute exact path='/myprofile' component={ MainProfile } />
+          <Route path='/loginWithCode' component={ LoginWithCode } />
+          <RouteContext exact path={ '/:event_id' } component={ ViewPrelanding } />
 
-          <Route path='/social/:event_id' component={socialZone} />
-          {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
-          <Route path='/mentoriamastercard' render={() => <Redirect to='/landing/5ef49fd9c6c89039a14c6412' />} />
-          <Route path='/meetupsfenalco' render={() => <Redirect to='/landing/5f0622f01ce76d5550058c32' />} />
-          <Route path='/evento/tpgamers' render={() => <Redirect to='/landing/5f4e41d5eae9886d464c6bf4' />} />
-          <Route path='/notfound' component={NotFoundPage} />
-          <RouteContext path='/blockedEvent/:event_id' component={BlockedEvent} />
+          <Route path='/social/:event_id' component={ socialZone } />
+          {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/ }
+          <Route path='/mentoriamastercard' render={ () => <Redirect to='/landing/5ef49fd9c6c89039a14c6412' /> } />
+          <Route path='/meetupsfenalco' render={ () => <Redirect to='/landing/5f0622f01ce76d5550058c32' /> } />
+          <Route path='/evento/tpgamers' render={ () => <Redirect to='/landing/5f4e41d5eae9886d464c6bf4' /> } />
+          <Route path='/notfound' component={ NotFoundPage } />
+          <RouteContext path='/blockedEvent/:event_id' component={ BlockedEvent } />
           <PrivateRoute path='/create-event/:user?'>
             <NewEventProvider>
               <NewEvent />
             </NewEventProvider>
           </PrivateRoute>
-          <PrivateRoute path='/eventadmin/:event' component={Event} />
-          <PrivateRoute path='/orgadmin/:event' component={Event} />
-          <PrivateRoute path='/create-event' component={NewEvent} />
-          <RouteContext exact path='/organization/:id/events' component={EventOrganization} />
-          <RouteContext exact path='/organization/:id' component={EventOrganization} />
-          <PrivateRoute path='/admin/organization/:id' component={Organization} />
-          <PrivateRoute path='/noaccesstocms/:id/:withoutPermissions' component={NoMatchPage} />
-          <Route path='/terms' component={Terms} />
-          <Route path='/privacy' component={Privacy} />
-          <Route path='/policies' component={Policies} />
-          <Route path='/about' component={About} />
-          <Route path='/faqs' component={Faqs} />
-          {/* Ruta para realizar pruebas de consultas a firebase */}
-          <Route path='/queryTesting' component={QueryTesting} />
-          <Route path='/api/generatorQr/:id' component={QRedirect} />
-          <Route exact path='/transition/:event' component={Transition} />
-          <Route exact path='/eventfinished' component={EventFinished} />
+          <PrivateRoute path='/eventadmin/:event' component={ Event } />
+          <PrivateRoute path='/orgadmin/:event' component={ Event } />
+          <PrivateRoute path='/create-event' component={ NewEvent } />
+          <RouteContext exact path='/organization/:id/events' component={ EventOrganization } />
+          <RouteContext exact path='/organization/:id' component={ EventOrganization } />
+          <PrivateRoute path='/admin/organization/:id' component={ Organization } />
+          <PrivateRoute path='/noaccesstocms/:id/:withoutPermissions' component={ NoMatchPage } />
+          <Route path='/terms' component={ Terms } />
+          <Route path='/privacy' component={ Privacy } />
+          <Route path='/policies' component={ Policies } />
+          <Route path='/about' component={ About } />
+          <Route path='/faqs' component={ Faqs } />
+          {/* Ruta para realizar pruebas de consultas a firebase */ }
+          <Route path='/queryTesting' component={ QueryTesting } />
+          <Route path='/api/generatorQr/:id' component={ QRedirect } />
+          <Route exact path='/transition/:event' component={ Transition } />
+          <Route exact path='/eventfinished' component={ EventFinished } />
 
-          {/* <Route exact path='/' component={RedirectPortal} /> */}
+          {/* <Route exact path='/' component={RedirectPortal} /> */ }
 
           <Route
             path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
-            component={AppointmentAccept}
+            component={ AppointmentAccept }
           />
-          <RouteContext exact path='/' component={PageWithFooter} />
-          <Route component={NotFoundPage} />
+          <RouteContext exact path='/' component={ PageWithFooter } />
+          <Route component={ NotFoundPage } />
         </Switch>
       </main>
     </Router>
@@ -125,8 +125,8 @@ function QRedirect({ match }) {
 
 const RouteContext = ({ component: Component, ...rest }) => (
   <Route
-    {...rest}
-    render={(props) => (
+    { ...rest }
+    render={ (props) => (
       <CurrentEventProvider>
         <CurrentUserEventProvider>
           <CurrentUserProvider>
@@ -134,11 +134,14 @@ const RouteContext = ({ component: Component, ...rest }) => (
               <HelperContextProvider>
                 <SurveysProvider>
                   <Layout
-                    style={{
+                    style={ {
                       minHeight: '100vh',
-                    }}>
-                    <Header />
-                    <Component {...props} />
+                    } }>
+                    { console.log(props) }
+                    { props.location.pathname.split('/')[1] !== 'bingo' &&
+                      <Header />
+                    }
+                    <Component { ...props } />
                     <ModalAuth />
                     <ModalAuthAnonymous />
                     <ModalNoRegister />
@@ -150,14 +153,14 @@ const RouteContext = ({ component: Component, ...rest }) => (
           </CurrentUserProvider>
         </CurrentUserEventProvider>
       </CurrentEventProvider>
-    )}
+    ) }
   />
 );
 
 const RouteContextNoModal = ({ component: Component, ...rest }) => (
   <Route
-    {...rest}
-    render={(props) => (
+    { ...rest }
+    render={ (props) => (
       <CurrentEventProvider>
         <CurrentUserEventProvider>
           <CurrentUserProvider>
@@ -165,11 +168,11 @@ const RouteContextNoModal = ({ component: Component, ...rest }) => (
               <HelperContextProvider>
                 <SurveysProvider>
                   <Layout
-                    style={{
+                    style={ {
                       minHeight: '100vh',
-                    }}>
+                    } }>
                     <Header />
-                    <Component {...props} />
+                    <Component { ...props } />
                   </Layout>
                 </SurveysProvider>
               </HelperContextProvider>
@@ -177,7 +180,7 @@ const RouteContextNoModal = ({ component: Component, ...rest }) => (
           </CurrentUserProvider>
         </CurrentUserEventProvider>
       </CurrentEventProvider>
-    )}
+    ) }
   />
 );
 
@@ -185,8 +188,8 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   const cUser = UseCurrentUser();
   return (
     <Route
-      {...rest}
-      render={(props) => (
+      { ...rest }
+      render={ (props) => (
         <CurrentEventProvider>
           <CurrentUserEventProvider>
             <CurrentUserProvider>
@@ -194,19 +197,19 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
                 <HelperContextProvider>
                   <AgendaContextProvider>
                     <SurveysProvider>
-                      <Layout style={{ minHeight: '100vh' }}>
+                      <Layout style={ { minHeight: '100vh' } }>
                         <Header />
-                        {cUser.value ? (
-                          <Component {...props} />
+                        { cUser.value ? (
+                          <Component { ...props } />
                         ) : cUser.value == null && cUser.status == 'LOADED' ? (
                           <>
-                            <ModalAuth isPrivateRoute={true} />
+                            <ModalAuth isPrivateRoute={ true } />
 
                             <ForbiddenPage />
                           </>
                         ) : (
                           <Spin />
-                        )}
+                        ) }
                       </Layout>
                     </SurveysProvider>
                   </AgendaContextProvider>
@@ -215,7 +218,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
             </CurrentUserProvider>
           </CurrentUserEventProvider>
         </CurrentEventProvider>
-      )}
+      ) }
     />
   );
 };
