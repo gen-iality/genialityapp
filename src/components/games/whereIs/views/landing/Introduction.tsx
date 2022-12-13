@@ -23,11 +23,7 @@ export default function Introduction() {
       }
       subTitle={
         <Typography.Paragraph style={{ fontSize: screens.xs ? '16px' : '18px' }}>
-          El objetivo es que logres encontrar los logos de nuestros patrocinadores (FEC, Somos, Protección) que se
-          encuentran escondidos dentro del mapa de Piscilago en el menor tiempo posible. Cuando encuentres un logo debes
-          hacer clic para que se marque correctamente. Cuentas con 5 vidas para lograr el objetivo, perderás una vida en
-          el momento que selecciones una ubicación equivocada. tu tiempo final va a determinar tu posición en el
-          ranking. ¡Muchos éxitos en tu búsqueda!
+          El objetivo es que logres encontrar los 4 elementos que verás a continuación (LOGO DE LA CONVENCIÓN, LOGO CORONA, AVATAR, LOGO RENOVANDO) Corona en el menor tiempo posible. Cuando encuentres un logo debes hacer clic sobre él para que se marque correctamente. Cuentas con 5 vidas para lograr el objetivo, perderás una vida en el momento que des clic en el lugar equivocado. Tu tiempo final va a determinar tu posición en el ranking
         </Typography.Paragraph>
       }
       extra={
@@ -37,6 +33,7 @@ export default function Introduction() {
             <Space size={'large'}>
               {points.map((point) => (
                 <Image
+                  key={point.id}
                   src={point.image}
                   height={isMobile ? 60 : 80}
                   preview={false}
