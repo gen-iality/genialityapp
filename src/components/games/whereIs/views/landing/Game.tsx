@@ -57,7 +57,7 @@ export default function Game() {
 
 	return (
 		<div style={{ margin: 'auto 0', height: 'auto', width: '100%' }}>
-			<div style={{ overflow: 'auto' }}>
+			<div style={{ overflow: 'auto', height:'80vh' }}>
 				<Stage
 					height={game_image_height}
 					width={game_image_width}
