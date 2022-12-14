@@ -31,6 +31,13 @@ export default function PrintBingoCartonButton(props: Props) {
     content: () => bingoCardRef.current,
     documentTitle: `Bingo ID: ${cardboardCode}`,
     onAfterPrint: () => setLoading(false),
+    /* pageStyle: `@media print {
+      @page {
+        size: letter;
+        
+        
+      }
+    }`, */
   });
 
   const onHandlePrint = () => {
