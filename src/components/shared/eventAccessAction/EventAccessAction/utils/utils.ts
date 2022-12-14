@@ -59,6 +59,7 @@ export const assignStatusAccordingToAction = ({
 	//Validacion temporal para el evento audi
 	const idEvent = cEvent?._id;
 	const labelAudi: string = idEvent !== '6334782dc19fe2710a0b8753' ? 'Inscribirme al evento' : 'INSCRÍBETE';
+	const bingoExists = !!cEvent?.bingo || !!cEvent?.dynamics?.bingo
 
 	switch (eventAction) {
 		case 'ACTION_ONLY_EVENT_REGISTRATION':
@@ -90,8 +91,8 @@ export const assignStatusAccordingToAction = ({
 			buttonsAction = [
 				{ label: 'Iniciar sesión', action: () => helperDispatch({ type: 'showLogin', visible: true }) },
 				{ label: 'Inscribirme al evento', action: () => helperDispatch({ type: 'showRegister', visible: true }) },
-				{ label: 'Descargar cartón', action: () => helperDispatch({ type: 'showRegister', visible: true }) },
 			];
+			if (bingoExists) buttonsAction.push({ label: 'Descargar cartón', action: () => helperDispatch({ type: 'showRegister', visible: true }) },)
 
 			setButtonsActions(buttonsAction);
 			break;
@@ -99,8 +100,8 @@ export const assignStatusAccordingToAction = ({
 		case 'ACTION_REGISTER_FOR_THE_EVENT':
 			buttonsAction = [
 				{ label: 'Inscribirme al evento', action: () => handleChangeTypeModal('registerForTheEvent') },
-				{ label: 'Descargar cartón', action: () => handleChangeTypeModal('registerForTheEvent') },
 			];
+			if (bingoExists) buttonsAction.push({ label: 'Descargar cartón', action: () => handleChangeTypeModal('registerForTheEvent') })
 
 			setButtonsActions(buttonsAction);
 			break;
