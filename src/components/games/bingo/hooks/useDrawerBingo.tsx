@@ -73,7 +73,7 @@ export const useDrawerBingo = () => {
   useEffect(() => {
     const getBingo = async () => {
       setIsLoading(true);
-      const responseBingoCardsForTheUser = await getUserBingo(cUser.value._id);
+      const responseBingoCardsForTheUser = (await getUserBingo(cUser.value._id)) as BingoByUserInterface[];
       const responseBingoData = await GetBingo(value._id);
 
       if (responseBingoCardsForTheUser && responseBingoData) {
@@ -90,6 +90,28 @@ export const useDrawerBingo = () => {
       setArrayDataBingo([]);
     };
   }, []);
+
+  useEffect(() => {
+    if (!!cUser.value) {
+      const getBingo = async () => {
+        setIsLoading(true);
+        const responseBingoCardsForTheUser = (await getUserBingo(cUser.value._id)) as BingoByUserInterface[];
+
+        const responseBingoData = await GetBingo(value._id);
+
+        if (responseBingoCardsForTheUser && responseBingoData) {
+          setBingoData(responseBingoData);
+          distributionDataUser(responseBingoCardsForTheUser[0]);
+        }
+        setIsLoading(false);
+      };
+      getBingo();
+    } else {
+      setCardboardCode('');
+      setDemonstratedBallots([]);
+      setArrayDataBingo([]);
+    }
+  }, [cUser.value])
 
   useEffect(() => {
     return () => {
