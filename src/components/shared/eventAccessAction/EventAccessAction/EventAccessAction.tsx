@@ -61,7 +61,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 						<Button
 							key={`${index}-${button.label}`}
 							block
-							className={button.label === 'Ingresar al evento' ? 'animate__animated animate__tada' : ''}
+							className={button.label === 'Ingresar al evento' ? 'animate__animated animate__heartBeat animate__slower animate__repeat-3' : ''}
 							style={{
 								height: '48px',
 								padding: '6.4px 30px',
