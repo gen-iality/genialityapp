@@ -1,4 +1,4 @@
-import { Card, Col, Row, Typography, Grid, Image } from 'antd';
+import { Card, Col, Row, Typography, Grid, Image, Tag } from 'antd';
 import { forwardRef, useEffect } from 'react';
 import {
   gridStyleImage_3x3,
@@ -28,6 +28,7 @@ const BingoCard = forwardRef(
     setOpenOrClose,
     isPrint,
     template,
+    userBingoCode
   }: Props) => {
     useEffect(() => {
       const unSuscribe = getBingoListener();
@@ -287,7 +288,12 @@ const BingoCard = forwardRef(
               }}>
               <Row gutter={[8, 8]} justify='center' align='middle'>
                 {arrayDataBingo?.map((item, index) => renderGrid(item, index))}
+                
               </Row>
+              {isPrint &&
+             <Row align='middle' justify='center' style={{marginTop:'10px', marginBottom:'-10px'}}>
+              <Typography.Title level={4} style={{padding:'5px 10px', backgroundColor:'#FFFFFF', borderRadius:'10px'}}>Cartón: {userBingoCode}</Typography.Title>
+             </Row>}
             </Card>
           </Row>
         </Col>
