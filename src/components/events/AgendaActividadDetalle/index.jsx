@@ -25,6 +25,7 @@ import SharePhotoInLanding from '@/components/games/sharePhoto/views/SharePhotoI
 import WhereisInLanding from '@/components/games/whereIs/views/WhereIsInLanding';
 const { setHasOpenSurveys } = SurveyActions;
 import PlayMillonaire from '@/components/games/WhoWantsToBeAMillonaire/components/PlayMillonaire';
+import PrintBingoCartonButton from '@/components/games/bingo/components/PrintBingoCartonButton';
 const sharePhotoEventStatus = true;
 const whereIsEventStatus = true;
 const millonaireEventSatus = true;
@@ -52,7 +53,7 @@ const AgendaActividadDetalle = (props) => {
     }
 
     function orderHost(hosts) {
-      hosts.sort(function(a, b) {
+      hosts.sort(function (a, b) {
         return a.order - b.order;
       });
       setOrderedHost(hosts);
@@ -85,7 +86,7 @@ const AgendaActividadDetalle = (props) => {
   }, []);
 
   useEffect(() => {
-    let unSuscribe = () => {};
+    let unSuscribe = () => { };
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
       cSurveys.set_current_activity(currentActivity);
 
@@ -160,60 +161,60 @@ const AgendaActividadDetalle = (props) => {
   return (
     <div>
       <div className=' container_agenda-information container-calendar2'>
-        <Card style={{ padding: '1 !important' }} className='agenda_information'>
-          {/* <HeaderColumnswithContext isVisible={true} /> */}
-          {!blockActivity ? (
+        <Card style={ { padding: '1 !important' } } className='agenda_information'>
+          {/* <HeaderColumnswithContext isVisible={true} /> */ }
+          { !blockActivity ? (
             <>
-              {props.match.params.activity_id === '61992d5f020bde260e068402' &&
-              cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
+              { props.match.params.activity_id === '61992d5f020bde260e068402' &&
+                cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
                 <Alert
                   showIcon
-                  style={{
+                  style={ {
                     width: '100%',
                     marginTop: 40,
                     marginBottom: 40,
                     textAlign: 'center',
                     fontSize: '19px',
-                  }}
+                  } }
                   message={
                     <>
-                      {`Hola ${cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
+                      { `Hola ${cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO` }
                     </>
                   }
                   type='warning'
                 />
               ) : (
                 !openOrCloseModalDrawer && <HCOActividad />
-              )}
+              ) }
             </>
           ) : (
             <>
               <Row>
-                {/* <ImageComponentwithContext /> */}
+                {/* <ImageComponentwithContext /> */ }
                 <Alert
                   showIcon
-                  style={{
+                  style={ {
                     width: '100%',
                     marginTop: 40,
                     marginBottom: 40,
                     textAlign: 'center',
                     fontSize: '19px',
-                  }}
+                  } }
                   message={
                     <>
-                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
-                      <a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
+                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{ ' ' }
+                      <a style={ { color: '#3273dc' } } target='_blank' href='https://iberofest.co/producto/edc/'>
                         https://iberofest.co/producto/edc/
-                      </a>{' '}
+                      </a>{ ' ' }
                     </>
                   }
                   type='warning'
                 />
               </Row>
             </>
-          )}
+          ) }
           <div
-            style={{ width: '100%', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            style={ { width: '100%', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }>
             <Space direction='vertical' align='center'>
               {/* {cEvent.value?.bingo && (
 								<>
@@ -229,16 +230,17 @@ const AgendaActividadDetalle = (props) => {
 									<DrawerBingo openOrClose={openOrCloseModalDrawer} setOpenOrClose={setOpenOrCloseModalDrawer} />
 								</>
 							)} */}
-              {sharePhotoEventStatus && <SharePhotoInLanding eventId={cEvent.value._id} />}
-              {millonaireEventSatus && <PlayMillonaire />}
-              {whereIsEventStatus && <WhereisInLanding />}
+              { sharePhotoEventStatus && <SharePhotoInLanding eventId={ cEvent.value._id } /> }
+              { millonaireEventSatus && <PlayMillonaire /> }
+              { whereIsEventStatus && <WhereisInLanding /> }
+              {/* { <PrintBingoCartonButton /> } */}
             </Space>
           </div>
-          <AditionalInformation orderedHost={orderedHost} />
+          <AditionalInformation orderedHost={ orderedHost } />
         </Card>
       </div>
-      {/* Drawer encuestas */}
-      <SurveyDrawer colorFondo={cEvent.value.styles.toolbarDefaultBg} colorTexto={cEvent.value.styles.textMenu} />
+      {/* Drawer encuestas */ }
+      <SurveyDrawer colorFondo={ cEvent.value.styles.toolbarDefaultBg } colorTexto={ cEvent.value.styles.textMenu } />
     </div>
   );
 };

@@ -244,6 +244,7 @@ export interface BingoCardInterface {
   getBingoListener: () => () => any;
   setOpenOrClose: (state: boolean) => void;
   isPrint?: boolean;
+  userBingoCode?: string;
 }
 
 export interface PlayBingoHeaderInterface {

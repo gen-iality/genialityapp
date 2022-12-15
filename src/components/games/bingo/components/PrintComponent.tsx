@@ -23,9 +23,9 @@ export default function PrintComponent({
 			<div ref={bingoCardRef}>
 				{bingoUsers.map((userBingo: any) => {
 					return (
-						<div style={{ padding: '50px' }}>
+						<div style={{ padding: '50px 0px' }}>
 							<Space style={{ width: '100%', height: '100%' }} direction='vertical'>
-								<Descriptions
+								{/* <Descriptions
 									size='small'
 									bordered
 									column={1}
@@ -36,13 +36,12 @@ export default function PrintComponent({
 									}
 									layout='vertical'>
 									<Descriptions.Item label={<Typography.Text type='secondary'>ID del Cartón</Typography.Text>}>
-										{/* <Typography.Text strong>{userBingo.id}</Typography.Text> */}
+										
 										<Typography.Text strong>{userBingo.code}</Typography.Text>
 									</Descriptions.Item>
-									{/* <Descriptions.Item label={<Typography.Text type='secondary'>Codigo de carton</Typography.Text>}> */}
-									{/* </Descriptions.Item> */}
-								</Descriptions>
-
+									
+								</Descriptions> */}
+{/* 
 								<Descriptions size='small' bordered column={2} layout='vertical'>
 									<Descriptions.Item label={<Typography.Text type='secondary'>Nombre</Typography.Text>}>
 										<Typography.Text strong>{userBingo?.names}</Typography.Text>
@@ -50,7 +49,7 @@ export default function PrintComponent({
 									<Descriptions.Item label={<Typography.Text type='secondary'>Correo electrónico</Typography.Text>}>
 										<Typography.Text strong>{userBingo?.email}</Typography.Text>
 									</Descriptions.Item>
-								</Descriptions>
+								</Descriptions> */}
 								<BingoCard
 									bingo={bingo}
 									arrayDataBingo={userBingo.values}
@@ -59,6 +58,7 @@ export default function PrintComponent({
 									getBingoListener={() => {}}
 									setOpenOrClose={() => {}}
 									isPrint
+									userBingoCode={userBingo.code}
 								/>
 							</Space>
 						</div>

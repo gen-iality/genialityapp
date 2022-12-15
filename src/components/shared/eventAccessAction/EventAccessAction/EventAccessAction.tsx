@@ -1,4 +1,6 @@
+import PrintBingoCartonButton from '@/components/games/bingo/components/PrintBingoCartonButton';
 import { UseEventContext } from '@/context/eventContext';
+import { UseUserEvent } from '@/context/eventUserContext';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { Alert, Button, Space } from 'antd';
 import { useEffect, useState } from 'react';
@@ -12,8 +14,9 @@ import { assignStatusAccordingToAction } from './utils/utils';
 
 const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 	let cEvent = UseEventContext();
+	const cUser = UseUserEvent();
 	const history = useHistory();
-	const initialButtonsState = [{ label: 'INITIAL_STATE', action: () => {} }];
+	const initialButtonsState = [{ label: 'INITIAL_STATE', action: () => { } }];
 	const informativeMessagesState = [{ label: 'INITIAL_STATE' }];
 	const bgColor = cEvent?.value?.styles?.toolbarDefaultBg;
 	const textColor = cEvent?.value?.styles?.textMenu;
@@ -42,16 +45,6 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 			history,
 		};
 
-		// console.log('setButtonsActions', setButtonsActions);
-		// console.log('setInformativeMessage', setInformativeMessage);
-		// console.log('initialButtonsState', initialButtonsState);
-		// console.log('informativeMessagesState', informativeMessagesState);
-		// console.log('eventAction', eventAction);
-		// console.log('handleChangeTypeModal', handleChangeTypeModal);
-		// console.log('helperDispatch', helperDispatch);
-		// console.log('cEvent: cEvent.value', cEvent);
-		// console.log('history', history);
-
 		assignStatusAccordingToAction(assignStatusAccordingToActionParams);
 
 		return () => {
@@ -62,24 +55,30 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 
 	return (
 		<Space direction='vertical' style={{ width: '100%' }}>
-			{buttonsActions.map(button => (
+			{buttonsActions.map((button, index) => (
 				<>
 					{button.label !== 'INITIAL_STATE' && (
 						<Button
+							key={`${index}-${button.label}`}
 							block
+							className={button.label === 'Ingresar al evento' ? 'animate__animated animate__heartBeat animate__slower animate__repeat-3' : ''}
 							style={{
+								height: '48px',
+								padding: '6.4px 30px',
 								color: idEvent !== '6334782dc19fe2710a0b8753' ? bgColor : '#c55a95',
 								backgroundColor: textColor,
 								border: 'none',
 							}}
 							type='primary'
 							size='large'
-							onClick={button.action}>
+							onClick={button.action}
+						>
 							{button.label}
 						</Button>
 					)}
 				</>
 			))}
+			{!!cUser?.value && <PrintBingoCartonButton isInLanding={true} textColor={textColor} bgColor={bgColor} />}
 
 			{informativeMessages.map(message => (
 				<>{message.label !== 'INITIAL_STATE' && <Alert message={message.label} type='success' />}</>
