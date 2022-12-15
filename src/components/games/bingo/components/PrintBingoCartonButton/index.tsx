@@ -66,7 +66,7 @@ export default function PrintBingoCartonButton(props: Props) {
           type='primary'
           size='large'
         >
-          Descargar cartón
+          Imprimir cartón
         </Button>)}
       {!isInLanding && <PrintCardBoard bingoCardRef={bingoCardRef} cardboardCode={cardboardCode} />}
       <div style={{ display: 'none' }}>
