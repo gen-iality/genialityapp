@@ -78,7 +78,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 					)}
 				</>
 			))}
-			{!!cUser?.value && <PrintBingoCartonButton isInLanding={true} textColor={textColor} bgColor={bgColor} />}
+			{/* {!!cUser?.value && <PrintBingoCartonButton isInLanding={true} textColor={textColor} bgColor={bgColor} />} */}
 
 			{informativeMessages.map(message => (
 				<>{message.label !== 'INITIAL_STATE' && <Alert message={message.label} type='success' />}</>
