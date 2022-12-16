@@ -92,7 +92,7 @@ export const assignStatusAccordingToAction = ({
 				{ label: 'Iniciar sesión', action: () => helperDispatch({ type: 'showLogin', visible: true }) },
 				{ label: 'Inscribirme al evento', action: () => helperDispatch({ type: 'showRegister', visible: true }) },
 			];
-			if (bingoExists) buttonsAction.push({ label: 'Imprimir cartón', action: () => helperDispatch({ type: 'showRegister', visible: true }) },)
+			// if (bingoExists) buttonsAction.push({ label: 'Imprimir cartón', action: () => helperDispatch({ type: 'showRegister', visible: true }) },)
 
 			setButtonsActions(buttonsAction);
 			break;
@@ -101,7 +101,7 @@ export const assignStatusAccordingToAction = ({
 			buttonsAction = [
 				{ label: 'Inscribirme al evento', action: () => handleChangeTypeModal('registerForTheEvent') },
 			];
-			if (bingoExists) buttonsAction.push({ label: 'Imprimir cartón', action: () => handleChangeTypeModal('registerForTheEvent') })
+			// if (bingoExists) buttonsAction.push({ label: 'Imprimir cartón', action: () => handleChangeTypeModal('registerForTheEvent') })
 
 			setButtonsActions(buttonsAction);
 			break;
