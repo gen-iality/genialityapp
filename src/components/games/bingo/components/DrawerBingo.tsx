@@ -158,6 +158,7 @@ const DrawerBingo = ({ openOrClose = false, setOpenOrClose = (data: boolean) => 
               <DrawerButtonsContainer
                 template={dataFirebaseBingo?.template}
                 arrayLocalStorage={arrayLocalStorage}
+                demostratedBallots={demonstratedBallots}
                 postBingoByUser={postBingoByUser}
                 clearCarton={clearCarton}
                 bingoData={bingoData}

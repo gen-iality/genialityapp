@@ -12,6 +12,7 @@ interface Props extends DrawerButtonsInterface {
 export default function DrawerButtons({
 	template,
 	arrayLocalStorage,
+	demostratedBallots,
 	postBingoByUser,
 	clearCarton,
 	setshowDrawerChat = () => {},
@@ -29,8 +30,9 @@ export default function DrawerButtons({
 	};
 	const { bingo } = useBingo();
 	const bingoColor = bingo?.bingo_appearance.background_color;
-	const validateLength = template?.index_to_validate.length || 25;
-	// console.log(validateLength)
+	let validateLength = template?.index_to_validate.length || 25;
+	//sumar 1 al validateLength
+	validateLength++;
 
 	const singBingo = () => {
 		Modal.info({
@@ -52,7 +54,8 @@ export default function DrawerButtons({
 					<Row justify='center'>
 						<Button
 							className={
-								arrayLocalStorage.filter(item => item === 1).length < validateLength
+								//arrayLocalStorage.filter(item => item === 1).length < validateLength
+								demostratedBallots.length < validateLength
 									? ''
 									: 'animate__animated animate__heartBeat'
 							}
@@ -62,11 +65,13 @@ export default function DrawerButtons({
 								width: '150px',
 								height: '150px',
 								border: `10px solid ${
-									arrayLocalStorage.filter(item => item === 1).length < validateLength ? '#CECECE' : '#FF4D4F'
+									//arrayLocalStorage.filter(item => item === 1).length < validateLength ? '#CECECE' : '#FF4D4F'
+									demostratedBallots.length < validateLength ? '#CECECE' : '#FF4D4F'
 								}`,
 								boxShadow: ' 0px 4px 4px rgba(0, 0, 0, 0.25)',
 							}}
-							disabled={arrayLocalStorage.filter(item => item === 1).length < validateLength}
+							//disabled={arrayLocalStorage.filter(item => item === 1).length < validateLength}
+							disabled={demostratedBallots.length < validateLength}
 							type='default'>
 							<Space direction='vertical'>
 								<Typography.Text>Cantar</Typography.Text>

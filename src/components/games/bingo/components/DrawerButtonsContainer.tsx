@@ -6,11 +6,13 @@ import DrawerButtons from './DrawerButtons';
 
 interface Props extends DrawerButtonsInterface {
 	template?: Template | null;
+	demostratedBallots: string[];
 }
 
 const DrawerButtonsContainer = ({
 	template,
 	arrayLocalStorage,
+	demostratedBallots,
 	postBingoByUser,
 	clearCarton,
 	bingoData,
@@ -24,6 +26,7 @@ const DrawerButtonsContainer = ({
 			<DrawerButtons
 				template={template}
 				arrayLocalStorage={arrayLocalStorage}
+				demostratedBallots={demostratedBallots}
 				postBingoByUser={postBingoByUser}
 				clearCarton={clearCarton}
 				setshowDrawerChat={setshowDrawerChat}

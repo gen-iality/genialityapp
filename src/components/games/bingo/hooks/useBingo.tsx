@@ -447,17 +447,20 @@ export const useBingo = () => {
 		return unSuscribe;
 	}
 
-	const saveValueData = () => {
+	const saveValueData = async () => {
 		setLoading(true);
 
-		const response = createValueBingo(value._id, bingo!._id, valuesData);
+		const response = await createValueBingo(value._id, bingo!._id, valuesData); //value es el id del evento
 		if (!response) {
 			setLoading(false);
 			return;
 		}
 		setFormDataBingo({
 			...formDataBingo,
-			bingo_values: [...formDataBingo.bingo_values, { ...valuesData, id: value._id }],
+			bingo_values: [...formDataBingo.bingo_values, { 
+				...valuesData, 
+				id: response.bingo_values[response.bingo_values.length - 1].id 
+			}],
 		});
 		setValuesData({
 			carton_value: {

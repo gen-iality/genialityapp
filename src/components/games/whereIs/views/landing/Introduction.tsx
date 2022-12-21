@@ -1,53 +1,70 @@
-import { Button, Result, Grid, Typography, Space, Image } from 'antd';
-import { isMobile } from 'react-device-detect';
+import { Button, Result, Grid, Typography, Space, Image, Card, Row, Col, Spin } from 'antd';
+import useWhereIs from '../../hooks/useWhereIs';
 import useWhereIsInLanding from '../../hooks/useWhereIsInLanding';
 const { useBreakpoint } = Grid;
 
 export default function Introduction() {
-  const {
-    goTo,
-    whereIsGame: { points },
-  } = useWhereIsInLanding();
-  const handleStart = () => {
-    goTo('game');
-  };
-  const screens = useBreakpoint();
-  return (
-    <Result
-      style={{ padding: '16px' }}
-      icon={' '} // dejar el espacio en blanco para eliminar icono por defecto que trae el componente
-      title={
-        <Typography.Title level={screens.xs ? 3 : 1} style={{ letterSpacing: '0.1em' }}>
-          BUSCANDO EL ELEMENTO
-        </Typography.Title>
-      }
-      subTitle={
-        <Typography.Paragraph style={{ fontSize: screens.xs ? '16px' : '18px' }}>
-          El objetivo es que logres encontrar los 4 elementos que verás a continuación (LOGO DE LA CONVENCIÓN, LOGO CORONA, AVATAR, LOGO RENOVANDO) Corona en el menor tiempo posible. Cuando encuentres un logo debes hacer clic sobre él para que se marque correctamente. Cuentas con 5 vidas para lograr el objetivo, perderás una vida en el momento que des clic en el lugar equivocado. Tu tiempo final va a determinar tu posición en el ranking
-        </Typography.Paragraph>
-      }
-      extra={
-        <Space direction='vertical'>
-          <Space size={0} direction='vertical'>
-            <Typography.Text strong>Elementos a buscar</Typography.Text>
-            <Space size={'large'}>
-              {points.map((point) => (
-                <Image
-                  key={point.id}
-                  src={point.image}
-                  height={isMobile ? 60 : 80}
-                  preview={false}
-                  style={{
-                    filter: point.isFound ? 'grayscale(100%)' : '',
-                  }}
-                />
-              ))}
-            </Space>
-          </Space>
-          <Button onClick={handleStart} size='large' type='primary' style={{ letterSpacing: '0.1em' }}>
-            ¡Jugar!
-          </Button>
-        </Space>
-      }></Result>
-  );
+	const { whereIs } = useWhereIs();
+	const {
+		goTo,
+		whereIsGame: { points },
+	} = useWhereIsInLanding();
+	const handleStart = () => {
+		goTo('game');
+	};
+	const screens = useBreakpoint();
+
+	return (
+		<Result
+			style={{ padding: '16px' }}
+			icon={' '} // dejar el espacio en blanco para eliminar icono por defecto que trae el componente
+			title={
+				<Typography.Title level={screens.xs ? 3 : 1} style={{ letterSpacing: '0.1em' }}>
+					{whereIs?.title}
+				</Typography.Title>
+			}
+			subTitle={
+				<Typography.Paragraph style={{ fontSize: screens.xs ? '16px' : '18px' }}>
+					{whereIs?.instructions}
+				</Typography.Paragraph>
+			}
+			extra={
+				<Space size={'large'} direction='vertical'>
+					<Card
+						style={{ borderRadius: '15px' }}
+						headStyle={{ border: 'none' }}
+						title={
+							<Typography.Title style={{ textAlign: 'center' }} level={5}>
+								Elementos a buscar
+							</Typography.Title>
+						}>
+						<Row gutter={[8, 8]} justify='center'>
+							{points.map((point) => (
+								<Col>
+									<Image
+										src={point.image}
+										height={80}
+										preview={false}
+										fallback={'https://via.placeholder.com/500/?text=Sin imagen'}
+										style={{
+											filter: point.isFound ? 'grayscale(100%)' : '',
+											maxWidth: '100px',
+											objectFit: 'contain',
+										}}
+									/>
+								</Col>
+							))}
+						</Row>
+					</Card>
+					<Button
+						block={screens.xs ? true : false}
+						onClick={handleStart}
+						size='large'
+						type='primary'
+						style={{ letterSpacing: '0.1em', height: '48px' }}>
+						¡Jugar!
+					</Button>
+				</Space>
+			}></Result>
+	);
 }

@@ -3,7 +3,7 @@ import { UseEventContext } from '@/context/eventContext';
 import { getCorrectColor } from '@/helpers/utils';
 import { Avatar, Badge, Card, Col, Image, List, Row, Space, Tag, Typography } from 'antd';
 import ReactPlayer from 'react-player';
-import { orderedDemonstratedBallots } from '../functions';
+import { ballotsAnnounced, orderedDemonstratedBallots } from '../functions';
 import { BallotHistoryInterface } from '../interfaces/bingo';
 
 const { Title } = Typography;
@@ -11,15 +11,7 @@ const { Title } = Typography;
 const BallotHistory = ({ demonstratedBallots = [], mediaUrl, renderingInCms }: BallotHistoryInterface) => {
   const cEvent = UseEventContext();
 
-  const ballotsAnnounced = (numberBallots: number): string | number => {
-    if (numberBallots === 1) {
-      return `${numberBallots} balota`;
-    } else if (numberBallots > 1) {
-      return `${numberBallots} balotas`;
-    } else {
-      return 0;
-    }
-  };
+
 
   /* console.log(
     'orderedDemonstratedBallots({ demonstratedBallots })',

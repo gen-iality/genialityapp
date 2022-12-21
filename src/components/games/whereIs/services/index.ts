@@ -1,38 +1,105 @@
 import { DispatchMessageService } from '@/context/MessageService';
 import { firestore } from '@/helpers/firebase';
-import { Score } from '../../common/Ranking/RankingMyScore';
-import { CreatePlayerDto, Player, Point, WhereIs } from '../types';
+import { Score } from '../../common/Ranking/types';
+import {
+	CreatePlayerDto,
+	CreatePointDto,
+	CreateWhereIsDto,
+	Player,
+	Point,
+	UpdatePointDto,
+	UpdatePointsDto,
+	UpdateWhereIsDto,
+	WhereIs,
+} from '../types';
 import { fromPlayerToScore } from '../utils/fromPlayerToScore';
 
-export const get = async (eventId: string): Promise<WhereIs | null> => {
-	try {
-		const whereIs = await getWhereIs(eventId);
-		const points = await getWhereIsPoints(eventId);
-		if (whereIs === null) return null;
-		return { ...whereIs, points };
-	} catch (error) {
-		DispatchMessageService({
-			type: 'error',
-			msj: 'Error al obtener la dinamica',
-			action: 'show',
-		});
-		return null;
-	}
-};
+// export const get = async (eventId: string): Promise<WhereIs | null> => {
+// 	try {
+// 		const whereIs = await getWhereIs(eventId);
+// 		const points = await getWhereIsPoints(eventId);
+// 		if (whereIs === null) return null;
+// 		return { ...whereIs, points };
+// 	} catch (error) {
+// 		DispatchMessageService({
+// 			type: 'error',
+// 			msj: 'Error al obtener la dinamica',
+// 			action: 'show',
+// 		});
+// 		return null;
+// 	}
+// };
 
-export const getWhereIs = async (eventId: string) => {
+export const get = async (eventId: string) => {
 	const whereIsDoc = await firestore
 		.collection('whereIsByEvent')
 		.doc(eventId)
 		.get();
 	if (!whereIsDoc.exists) return null;
-	return whereIsDoc.data() as WhereIs;
+	return { _id: whereIsDoc.id, ...whereIsDoc.data() } as WhereIs;
 };
 
-export const getWhereIsListener = (
+export const create = async (createWhereIsDto: CreateWhereIsDto): Promise<WhereIs | null> => {
+	try {
+		const newWhereIs: Omit<WhereIs, '_id'> = {
+			event_id: createWhereIsDto.event_id,
+			title: createWhereIsDto.title,
+			created_at: new Date().toISOString(),
+			updated_at: new Date().toISOString(),
+			published: false,
+			instructions: '',
+			active: false,
+			lifes: 1,
+			game_image: '',
+			game_image_width: 0,
+			game_image_height: 0,
+		};
+		await firestore
+			.collection('whereIsByEvent')
+			.doc(createWhereIsDto.event_id)
+			.set(newWhereIs);
+		return await get(createWhereIsDto.event_id);
+	} catch (error) {
+		DispatchMessageService({ type: 'error', msj: 'Error al crear la dinamica', action: 'show' });
+		return null;
+	}
+};
+
+export const update = async (
+	// whereIsId: WhereIs['_id'],
 	eventId: string,
-	setWhereIs: React.Dispatch<React.SetStateAction<WhereIs | null>>
-) => {
+	updateWhereIsDto: UpdateWhereIsDto
+): Promise<WhereIs | null> => {
+	try {
+		const response = {
+			...updateWhereIsDto,
+			updated_at: new Date().toISOString(),
+		};
+		await firestore
+			.collection('whereIsByEvent')
+			.doc(eventId)
+			.update(response);
+		return await get(eventId);
+	} catch (error) {
+		DispatchMessageService({ type: 'error', msj: 'Error al actualizar la dinamica', action: 'show' });
+		return null;
+	}
+};
+
+export const remove = async (eventId: string) => {
+	try {
+		await firestore
+			.collection('whereIsByEvent')
+			.doc(eventId)
+			.delete();
+		return true;
+	} catch (error) {
+		DispatchMessageService({ type: 'error', msj: 'Error al eliminar la dinamica', action: 'show' });
+		return null;
+	}
+};
+
+export const listenWhereIs = (eventId: string, setWhereIs: React.Dispatch<React.SetStateAction<WhereIs | null>>) => {
 	const unsubscribe = firestore
 		.collection('whereIsByEvent')
 		.doc(eventId)
@@ -40,24 +107,96 @@ export const getWhereIsListener = (
 			if (!doc.exists) {
 				// console.log('Document doesnt exists yet');
 			} else {
-				setWhereIs(prev => ({ ...prev, ...(doc.data() as WhereIs) }));
+				setWhereIs(prev => ({ ...prev, ...({ _id: doc.id, ...doc.data() }) as WhereIs }));
 			}
 		});
 	return unsubscribe;
 };
 
-export const getWhereIsPoints = async (eventId: string): Promise<Point[]> => {
+// -------------- Points services ----------------- //
+export const getPoints = async (eventId: string): Promise<Point[]> => {
 	const pointsDoc = await firestore
 		.collection('whereIsByEvent')
 		.doc(eventId)
 		.collection('points')
 		.get();
 	if (pointsDoc.empty) return [];
-	const points = pointsDoc.docs.map(doc => doc.data());
+	const points = pointsDoc.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 	if (points === null) return [];
 	return points as Point[];
 };
 
+export const createPoint = async (createPointDto: CreatePointDto, eventId: string) => {
+	const newPoint: Omit<Point, 'id'> = {
+		...createPointDto,
+		created_at: new Date().toISOString(),
+		updated_at: new Date().toISOString(),
+	};
+	await firestore
+		.collection('whereIsByEvent')
+		.doc(eventId)
+		.collection('points')
+		.doc()
+		.set(newPoint);
+};
+
+export const createPoints = async (createPointsDto: CreatePointDto[], eventId: string) => {
+	await Promise.all(createPointsDto.map(async createPointDto => {
+		const newPoint: Omit<Point, 'id'> = {
+			...createPointDto,
+			created_at: new Date().toISOString(),
+			updated_at: new Date().toISOString(),
+		};
+		await firestore
+			.collection('whereIsByEvent')
+			.doc(eventId)
+			.collection('points')
+			.doc()
+			.set(newPoint);
+
+	}))
+};
+
+export const updatePoint = async (pointId: Point['id'], updatePointDto: UpdatePointDto, eventId: string) => {
+	const updatedPoint = {
+		...updatePointDto,
+		updated_at: new Date().toISOString(),
+	};
+	await firestore
+		.collection('whereIsByEvent')
+		.doc(eventId)
+		.collection('points')
+		.doc(pointId)
+		.update(updatedPoint);
+};
+
+export const updatePoints = async (updatePointsDto: UpdatePointsDto[], eventId: string) => {
+	await Promise.all(updatePointsDto.map(async updatePointDto => {
+		const { id, ...rest } = updatePointDto
+		const updatedPoint = {
+			...rest,
+			updated_at: new Date().toISOString(),
+		};
+		await firestore
+			.collection('whereIsByEvent')
+			.doc(eventId)
+			.collection('points')
+			.doc(id)
+			.update(updatedPoint);
+	}))
+};
+
+export const deletePoint = async (pointId: Point['id'], eventId: string) => {
+	await firestore
+		.collection('whereIsByEvent')
+		.doc(eventId)
+		.collection('points')
+		.doc(pointId)
+		.delete();
+	return true;
+};
+
+// -------------- Players services ----------------- //
 export const createPlayer = async (createPlayerDto: CreatePlayerDto) => {
 	try {
 		const { event_id, event_user_id, ...rest } = createPlayerDto;
