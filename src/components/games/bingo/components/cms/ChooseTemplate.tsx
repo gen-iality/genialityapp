@@ -52,7 +52,7 @@ export default function ChooseTemplate(props: Props) {
 	const screens = useBreakpoint();
 
 	useEffect(() => {
-		console.log(templates);
+		// console.log(templates);
 		const arrayDefaults = Array.isArray(templates) ? templates.filter(template => template.category === 'default') : [];
 		const arrayColumns = Array.isArray(templates) ? templates.filter(template => template.category === 'columns') : [];
 		const arrayRows = Array.isArray(templates) ? templates.filter(template => template.category === 'rows') : [];
