@@ -115,3 +115,14 @@ export const determineFontStyles = (
       return gridText_5x5;
   }
 };
+
+
+export const ballotsAnnounced = (numberBallots: number): string | number => {
+  if (numberBallots === 1) {
+    return `${numberBallots} balota`;
+  } else if (numberBallots > 1) {
+    return `${numberBallots} balotas`;
+  } else {
+    return 0;
+  }
+};
