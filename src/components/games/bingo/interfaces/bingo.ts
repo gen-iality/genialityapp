@@ -225,6 +225,7 @@ export interface DrawerHeaderInterface {
 }
 export interface DrawerButtonsInterface {
   arrayLocalStorage: number[];
+  demostratedBallots: string[];
   postBingoByUser: () => void;
   clearCarton: () => void;
   setshowDrawerChat?: (state: boolean) => void;
