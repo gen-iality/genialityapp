@@ -1,7 +1,10 @@
-import React from 'react';
+import WhereIsInCMS from './views/WhereIsInCMS';
 
-const WhereIs = () => {
-  return <p>Index for Where Is...</p>;
-};
+interface Props {
+	eventId: string;
+}
 
-export default WhereIs;
+export default function WhereIs(props: Props) {
+	const { eventId } = props;
+	return <WhereIsInCMS eventId={eventId} />;
+}

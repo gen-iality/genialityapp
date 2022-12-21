@@ -57,7 +57,7 @@ export default function Game() {
 
 	return (
 		<div style={{ margin: 'auto 0', height: 'auto', width: '100%' }}>
-			<div style={{ overflow: 'auto', height:'80vh' }}>
+			<div style={{ overflow: 'auto', height: 'calc(100vh - 90px)' }}>
 				<Stage
 					height={game_image_height}
 					width={game_image_width}
@@ -80,6 +80,7 @@ export default function Game() {
 								x={point.x}
 								y={point.y}
 								fill='transparent'
+								// fill='red' // Just for test purpouses
 								stroke={point.stroke}
 								radius={point.radius}
 								opacity={0.8}
