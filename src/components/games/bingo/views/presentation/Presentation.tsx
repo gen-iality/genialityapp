@@ -1,6 +1,7 @@
 import { UseEventContext } from '@/context/eventContext';
 import { getCorrectColor } from '@/helpers/utils';
 import { Badge, Card, Col, Image, Row, Space, Typography } from 'antd';
+import { ColProps } from 'antd/es/grid/col';
 import BallotHistoryContainer from '../../components/BallotHistoryContainer';
 import CurrentBallotValue from '../../components/CurrentBallotValue';
 import CardContainer from '../../components/presentation/CardContainer';
@@ -11,7 +12,7 @@ import { useDrawerBingo } from '../../hooks/useDrawerBingo';
 export default function Presentation() {
 	const { bingoGame } = useBingoPresentation();
 	const cEvent = UseEventContext();
-	const gridResponsive = {
+	const gridResponsive: ColProps = {
 		xs: 24,
 		sm: 24,
 		md: 24,
@@ -26,29 +27,35 @@ export default function Presentation() {
 					<Row gutter={[16, 16]} style={{ height: '100%' }}>
 						<Col span={24}>
 							<CardContainer title='Balotera'>
-								{!!bingoGame ? (
-									<CurrentBallotValue ballotValue={bingoGame?.currentValue} cEvent={cEvent} />
-								) : (
-									<p>Aun no empieza el bingo</p>
-								)}
+								<Row style={{ height: '100%' }} align='middle' justify='center'>
+									{!!bingoGame ? (
+										<CurrentBallotValue ballotValue={bingoGame?.currentValue} cEvent={cEvent} />
+									) : (
+										<p>Aun no empieza el bingo</p>
+									)}
+								</Row>
 							</CardContainer>
 						</Col>
 						<Col span={24}>
 							<CardContainer title='Figura'>
-								{!!bingoGame ? (
-									<Card bordered={false}>
-										<Space direction='vertical' align='center'>
-											{!!bingoGame?.template?.image && (
-												<Image preview={false} src={bingoGame?.template?.image} width={150} height={150} />
-											)}
-											{!!bingoGame?.template?.title && <Typography.Text>{bingoGame?.template?.title}</Typography.Text>}
-										</Space>
-									</Card>
-								) : (
-									<Typography.Paragraph style={{ width: '60%', textAlign: 'center' }}>
-										¡No pierdas el foco! en esta parte tendrás disponible la figura que se está jugando
-									</Typography.Paragraph>
-								)}
+								<Row style={{ height: '100%' }} align='middle' justify='center'>
+									{!!bingoGame ? (
+										<Card bordered={false}>
+											<Space direction='vertical' align='center'>
+												{!!bingoGame?.template?.image && (
+													<Image preview={false} src={bingoGame?.template?.image} width={150} height={150} />
+												)}
+												{!!bingoGame?.template?.title && (
+													<Typography.Text>{bingoGame?.template?.title}</Typography.Text>
+												)}
+											</Space>
+										</Card>
+									) : (
+										<Typography.Paragraph style={{ width: '60%', textAlign: 'center' }}>
+											¡No pierdas el foco! en esta parte tendrás disponible la figura que se está jugando
+										</Typography.Paragraph>
+									)}
+								</Row>
 							</CardContainer>
 						</Col>
 					</Row>
@@ -58,8 +65,8 @@ export default function Presentation() {
 						title='Historial de balotas'
 						extra={
 							<Badge
-								title={`${ballotsAnnounced(32)}`}
-								count={ballotsAnnounced(32)}
+								title={`${ballotsAnnounced(bingoGame?.demonstratedBallots?.length || 0)}`}
+								count={ballotsAnnounced(bingoGame?.demonstratedBallots?.length || 0)}
 								style={{
 									backgroundColor: '#517FD6',
 									color: getCorrectColor('#517FD6'),

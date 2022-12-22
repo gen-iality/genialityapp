@@ -21,6 +21,7 @@ import {
 	List,
 	Modal,
 	Avatar,
+	Collapse,
 } from 'antd';
 import Header from '../../../antdComponents/Header';
 import { useState, useEffect } from 'react';
@@ -146,7 +147,7 @@ function BingoInCMS({ event }: { event: {} }) {
 														<Input
 															name='name'
 															placeholder={'Titulo del Bingo'}
-															onChange={e => setFormDataBingo({ ...formDataBingo, name: e.target.value })}
+															onChange={(e) => setFormDataBingo({ ...formDataBingo, name: e.target.value })}
 															value={formDataBingo.name}
 														/>
 													</Form.Item>
@@ -173,7 +174,7 @@ function BingoInCMS({ event }: { event: {} }) {
 															wrap='hard'
 															name='regulation'
 															placeholder={'Reglamento del Bingo'}
-															onChange={e => setFormDataBingo({ ...formDataBingo, regulation: e.target.value })}
+															onChange={(e) => setFormDataBingo({ ...formDataBingo, regulation: e.target.value })}
 															value={formDataBingo.regulation}
 														/>
 													</Form.Item>
@@ -213,45 +214,52 @@ function BingoInCMS({ event }: { event: {} }) {
 										</Col>
 									</Row>
 								</Tabs.TabPane>
-								<Tabs.TabPane tab='Apariencia del cartón' key='2' disabled={dataFirebaseBingo?.startGame}>
-									<Row gutter={[16, 16]} style={{ padding: '40px' }}>
-										<Col span={24}>
-											<InputColor
-												color={formDataBingo.bingo_appearance.background_color!}
-												onChange={(color: any) =>
-													setFormDataBingo({
-														...formDataBingo,
-														bingo_appearance: {
-															...formDataBingo.bingo_appearance,
-															background_color: color.hex,
-														},
-													})
-												}
-											/>
-										</Col>
-										{formItemsApperance.map((item: any) => (
-											<Col span={8} key={item.name}>
-												<Form.Item label={item.label} name={item.name}>
-													<ImageUploaderDragAndDrop
-														imageDataCallBack={imgUrl =>
+								<Tabs.TabPane tab='Apariencia del bingo' key='2' disabled={dataFirebaseBingo?.startGame}>
+									<Collapse>
+										<Collapse.Panel header='Apariencia del cartón' key={'1'}>
+											<Row gutter={[16, 16]} style={{ padding: '40px' }}>
+												<Col span={24}>
+													<InputColor
+														color={formDataBingo.bingo_appearance.background_color!}
+														onChange={(color: any) =>
 															setFormDataBingo({
 																...formDataBingo,
 																bingo_appearance: {
 																	...formDataBingo.bingo_appearance,
-																	[item.name]: imgUrl,
+																	background_color: color.hex,
 																},
 															})
 														}
-														imageUrl={
-															formDataBingo.bingo_appearance[item.name as keyof typeof formDataBingo.bingo_appearance]
-														}
-														width={item.width}
-														height={item.height}
 													/>
-												</Form.Item>
-											</Col>
-										))}
-									</Row>
+												</Col>
+												{formItemsApperance.map((item: any) => (
+													<Col span={8} key={item.name}>
+														<Form.Item label={item.label} name={item.name}>
+															<ImageUploaderDragAndDrop
+																imageDataCallBack={(imgUrl) =>
+																	setFormDataBingo({
+																		...formDataBingo,
+																		bingo_appearance: {
+																			...formDataBingo.bingo_appearance,
+																			[item.name]: imgUrl,
+																		},
+																	})
+																}
+																imageUrl={
+																	formDataBingo.bingo_appearance[
+																		item.name as keyof typeof formDataBingo.bingo_appearance
+																	]
+																}
+																width={item.width}
+																height={item.height}
+															/>
+														</Form.Item>
+													</Col>
+												))}
+											</Row>
+										</Collapse.Panel>
+										<Collapse.Panel header='Apariencia de la vista extendida' key={'2'}></Collapse.Panel>
+									</Collapse>
 								</Tabs.TabPane>
 
 								<Tabs.TabPane tab='Asignación de cartones' key='3' disabled={dataFirebaseBingo?.startGame}>
