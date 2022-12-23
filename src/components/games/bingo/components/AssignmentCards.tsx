@@ -1,6 +1,6 @@
 import { CheckCircleOutlined, CloseCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Col, List, Row, Space, Typography } from 'antd';
-import { AssignmentCardsProps } from '../interfaces/bingo';
+import { AssignmentCardsProps, listUsers } from '../interfaces/bingo';
 import SearchUser from './SearchUser';
 import { useState, useEffect, useRef } from 'react';
 import AssignmentCard from './AssignmentCard';
@@ -16,19 +16,19 @@ const AssignmentCards = ({
   //bingoPrint,
 }: AssignmentCardsProps) => {
   const [keyboard, setKeyboard] = useState('');
-  const [searchData, setDataSearchData] = useState<any[]>([]);
+  const [searchData, setDataSearchData] = useState<listUsers[]>([]);
   const bingoCardRef = useRef();
 
   //Paginacion
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<listUsers[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
 
   const dataList = async(pageSize: number, page: number,) => {
-    console.log("DATA LIST", pageSize, page);
+    //console.log("DATA LIST", pageSize, page);
     const response = await getListUsersWithOrWithoutBingo(bingo.event_id, pageSize, page);
-    console.log("RESPONSE", response)
+    //console.log("RESPONSE", response)
     setData(response.data);
     setTotal(response.total);
     setPage(page);
@@ -38,27 +38,34 @@ const AssignmentCards = ({
   useEffect(() => {
     dataList(pageSize, page);
     onSubmit(keyboard);
-    // return () => {
-    //   setDataSearchData([]);
-    // };
+    setKeyboard('');
+    return () => {
+      setDataSearchData([]);
+    };
   }, [pageSize, page]);
 
   const onSubmit = (values: string) => {
-    // const userSearch = listUsers.filter(
-    //   (user) =>
-    //     user.properties.names.toLocaleLowerCase().includes(values.toLocaleLowerCase()) ||
-    //     user._id.includes(values) ||
-    //     user.properties.email.toLocaleLowerCase().includes(values.toLocaleLowerCase())
-    // );
-    // if (keyboard === '') {
-    //   setDataSearchData(listUsers);
-    // }
-    // setDataSearchData(userSearch);
+    const userSearch = data.filter(
+      (user) =>
+        user.properties.names.toLocaleLowerCase().includes(values.toLocaleLowerCase()) ||
+        user._id.includes(values) ||
+        user.properties.email.toLocaleLowerCase().includes(values.toLocaleLowerCase())
+    );
+    if (keyboard === '') {
+      setDataSearchData(data);
+    }
+    setDataSearchData(userSearch);
   };
   const handleChange = (event: any) => {
     setKeyboard(event.target.value);
   };
   
+  useEffect(() => {
+    onSubmit(keyboard);
+    return () => {
+      setDataSearchData([]);
+    };
+  }, [keyboard, data]);
 
   return (
     <Row gutter={[16, 16]} style={{ padding: '20px' }}>
@@ -91,19 +98,19 @@ const AssignmentCards = ({
           <br />
           {data.length > 0 && (
             <List
-              dataSource={data}
+              dataSource={keyboard.length >0 ? searchData : data}
               className='desplazar'
               style={{ marginTop: '10px', minHeight: '100%', maxHeight: '60vh', overflowY: 'scroll' }}
               pagination={{
                 current: page,
                 pageSize: pageSize,
                 onChange: async (page, pageSize) => {
-                  console.log("ONCHANGE", pageSize, page);
+                  //console.log("ONCHANGE", pageSize, page);
                   await dataList(pageSize, page);
                 },
                 showSizeChanger: true,
                 onShowSizeChange: async (page, pageSize) => {
-                  console.log("ONSHOWSIZECHANGE");
+                  //console.log("ONSHOWSIZECHANGE");
                   await dataList(pageSize, page);
                 },
                 total: total,

@@ -467,7 +467,7 @@ export const BingoApi = {
   },
   getListUsersWithOrWithoutBingo: async (eventId, numberItems, page) => {
     let token = await GetTokenUserFirebase();
-    return await Actions.get(`api/events/${eventId}/eventusers/bingocards?numberItems=${numberItems}&page=${page}?token=${token}`, true);
+    return await Actions.get(`api/events/${eventId}/eventusers/bingocards?numberItems=${numberItems}&page=${page}&token=${token}`, true);
   },
 
   getTemplates: async (format) => {
