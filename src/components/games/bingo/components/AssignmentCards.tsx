@@ -6,38 +6,59 @@ import { useState, useEffect, useRef } from 'react';
 import AssignmentCard from './AssignmentCard';
 import PrintComponent from './PrintComponent';
 import PrintCardBoard from './PrintCardBoard';
+import { getListUsersWithOrWithoutBingo} from '@/components/games/bingo/services';
 
-export default function AssignmentCards({
+const AssignmentCards = ({
   generateBingoForAllUsers,
   generateBingoForExclusiveUsers,
-  listUsers,
+  //listUsers,
   bingo,
-  bingoPrint,
-}: AssignmentCardsProps) {
+  //bingoPrint,
+}: AssignmentCardsProps) => {
   const [keyboard, setKeyboard] = useState('');
   const [searchData, setDataSearchData] = useState<any[]>([]);
   const bingoCardRef = useRef();
+
+  //Paginacion
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+
+  const dataList = async(pageSize: number, page: number,) => {
+    console.log("DATA LIST", pageSize, page);
+    const response = await getListUsersWithOrWithoutBingo(bingo.event_id, pageSize, page);
+    console.log("RESPONSE", response)
+    setData(response.data);
+    setTotal(response.total);
+    setPage(page);
+    setPageSize(pageSize);
+  }
+
+  useEffect(() => {
+    dataList(pageSize, page);
+    onSubmit(keyboard);
+    // return () => {
+    //   setDataSearchData([]);
+    // };
+  }, [pageSize, page]);
+
   const onSubmit = (values: string) => {
-    const userSearch = listUsers.filter(
-      (user) =>
-        user.properties.names.toLocaleLowerCase().includes(values.toLocaleLowerCase()) ||
-        user._id.includes(values) ||
-        user.properties.email.toLocaleLowerCase().includes(values.toLocaleLowerCase())
-    );
-    if (keyboard === '') {
-      setDataSearchData(listUsers);
-    }
-    setDataSearchData(userSearch);
+    // const userSearch = listUsers.filter(
+    //   (user) =>
+    //     user.properties.names.toLocaleLowerCase().includes(values.toLocaleLowerCase()) ||
+    //     user._id.includes(values) ||
+    //     user.properties.email.toLocaleLowerCase().includes(values.toLocaleLowerCase())
+    // );
+    // if (keyboard === '') {
+    //   setDataSearchData(listUsers);
+    // }
+    // setDataSearchData(userSearch);
   };
   const handleChange = (event: any) => {
     setKeyboard(event.target.value);
   };
-  useEffect(() => {
-    onSubmit(keyboard);
-    return () => {
-      setDataSearchData([]);
-    };
-  }, [keyboard, listUsers]);
+  
 
   return (
     <Row gutter={[16, 16]} style={{ padding: '20px' }}>
@@ -68,11 +89,25 @@ export default function AssignmentCards({
           <br />
           <SearchUser onSubmit={onSubmit} handleChange={handleChange} keyboard={keyboard} />
           <br />
-          {searchData.length > 0 && (
+          {data.length > 0 && (
             <List
-              dataSource={searchData}
+              dataSource={data}
               className='desplazar'
               style={{ marginTop: '10px', minHeight: '100%', maxHeight: '60vh', overflowY: 'scroll' }}
+              pagination={{
+                current: page,
+                pageSize: pageSize,
+                onChange: async (page, pageSize) => {
+                  console.log("ONCHANGE", pageSize, page);
+                  await dataList(pageSize, page);
+                },
+                showSizeChanger: true,
+                onShowSizeChange: async (page, pageSize) => {
+                  console.log("ONSHOWSIZECHANGE");
+                  await dataList(pageSize, page);
+                },
+                total: total,
+              }}
               renderItem={(user: any, index) => {
                 return <AssignmentCard user={user} key={index} bingo={bingo} />;
               }}
@@ -83,7 +118,7 @@ export default function AssignmentCards({
       {bingo.bingo_values.length >= bingo.dimensions.minimun_values && (
         <PrintComponent
           bingoCardRef={bingoCardRef}
-          bingoUsers={bingoPrint}
+          bingoUsers={data}
           bingo={bingo}
           cardboardCode='BingoCards'
           isPrint
@@ -94,3 +129,4 @@ export default function AssignmentCards({
     </Row>
   );
 }
+export default AssignmentCards;

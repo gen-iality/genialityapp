@@ -67,7 +67,7 @@ function BingoInCMS({ event }: { event: {} }) {
 		onCancelValueTable,
 		getBingoListenerNotifications,
 		changeBingoDimensionsNew,
-		onGetListUsersWithOrWithoutBingo,
+		// onGetListUsersWithOrWithoutBingo,
 		onGenerateBingoForExclusiveUsers,
 		onGenerateBingoForAllUsers,
 		dataNotifications,
@@ -101,7 +101,6 @@ function BingoInCMS({ event }: { event: {} }) {
 	useEffect(() => {
 		const unSubscribe = getBingoListenerNotifications();
 		const unSubscribe2 = getBingoListener();
-		onGetListUsersWithOrWithoutBingo();
 		return () => {
 			unSubscribe();
 			unSubscribe2();
@@ -258,9 +257,9 @@ function BingoInCMS({ event }: { event: {} }) {
 									<AssignmentCards
 										generateBingoForExclusiveUsers={onGenerateBingoForExclusiveUsers}
 										generateBingoForAllUsers={onGenerateBingoForAllUsers}
-										listUsers={listUsers}
+										//listUsers={listUsers}
 										bingo={bingo}
-										bingoPrint={bingoPrint}
+										//bingoPrint={bingoPrint}
 									/>
 								</Tabs.TabPane>
 
