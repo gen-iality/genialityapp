@@ -5,4 +5,5 @@ export interface Score {
   imageProfile: string;
   index: number;
   score: string;
+  created_at: Date | string;
 }
