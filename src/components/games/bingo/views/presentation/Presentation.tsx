@@ -78,8 +78,8 @@ export default function Presentation() {
 								title={`${ballotsAnnounced(bingoGame?.demonstratedBallots?.length || 0)}`}
 								count={ballotsAnnounced(bingoGame?.demonstratedBallots?.length || 0)}
 								style={{
-									backgroundColor: cEvent.value?.styles?.toolbarDefaultBg,
-									color: getCorrectColor(cEvent.value?.styles?.toolbarDefaultBg),
+									backgroundColor: cEvent.value?.styles?.toolbarDefaultBg || '#FFFFFF',
+									color: getCorrectColor(cEvent.value?.styles?.toolbarDefaultBg || '#000000'),
 								}}
 							/>
 						}>

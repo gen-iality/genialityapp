@@ -13,7 +13,7 @@ const BallotHistoryPresentation = ({ demonstratedBallots = [], mediaUrl }: Ballo
     'orderedDemonstratedBallots({ demonstratedBallots })',
     orderedDemonstratedBallots({ demonstratedBallots })
   ); */
-
+	if (!cEvent.value) return null
 	return (
 		<div
 			className='desplazar'
