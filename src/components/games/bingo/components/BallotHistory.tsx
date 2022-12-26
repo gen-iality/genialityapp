@@ -1,8 +1,7 @@
-import HCOActividad from '@/components/events/AgendaActividadDetalle/HOC_Actividad';
 import { UseEventContext } from '@/context/eventContext';
 import { getCorrectColor } from '@/helpers/utils';
 import { Avatar, Badge, Card, Col, Image, List, Row, Space, Tag, Typography } from 'antd';
-import ReactPlayer from 'react-player';
+
 import { ballotsAnnounced, orderedDemonstratedBallots } from '../functions';
 import { BallotHistoryInterface } from '../interfaces/bingo';
 

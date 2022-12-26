@@ -2,12 +2,11 @@ import { UseEventContext } from '@/context/eventContext';
 import { getCorrectColor } from '@/helpers/utils';
 import { Badge, Card, Col, Image, Row, Space, Typography } from 'antd';
 import { ColProps } from 'antd/es/grid/col';
-import BallotHistoryContainer from '../../components/BallotHistoryContainer';
 import CurrentBallotValue from '../../components/CurrentBallotValue';
+import BallotHistoryPresentation from '../../components/presentation/BallotHistoryPresentation';
 import CardContainer from '../../components/presentation/CardContainer';
 import { ballotsAnnounced } from '../../functions';
 import useBingoPresentation from '../../hooks/useBingoPresentation';
-import { useDrawerBingo } from '../../hooks/useDrawerBingo';
 
 export default function Presentation() {
 	const { bingoGame } = useBingoPresentation();
@@ -21,13 +20,24 @@ export default function Presentation() {
 		xxl: 12,
 	};
 	return (
-		<div style={{ height: '100vh', width: '100%', padding: '30px 40px', backgroundColor: '#F9FAFE' }}>
-			<Row gutter={[16, 16]} style={{ height: '100%', width: '100%' }}>
+		<div
+			style={{
+				height: '100vh',
+				overflowY: 'hidden',
+				width: '100%',
+				padding: '30px 40px',
+				backgroundColor: '#F9FAFE',
+				backgroundImage: `url(${cEvent?.value?.styles?.BackgroundImage})`,
+				backgroundPosition: 'center',
+				backgroundRepeat: 'no-repeat',
+				backgroundSize: 'cover',
+			}}>
+			<Row gutter={[16, 0]} style={{ height: '100%', width: '100%' }}>
 				<Col {...gridResponsive} style={{ height: '100%' }}>
-					<Row gutter={[16, 16]} style={{ height: '100%' }}>
+					<Row gutter={[0, 16]} style={{ height: '100%' }}>
 						<Col span={24}>
 							<CardContainer title='Balotera'>
-								<Row style={{ height: '100%' }} align='middle' justify='center'>
+								<Row style={{ height: '100%' }} align='top' justify='center'>
 									{!!bingoGame ? (
 										<CurrentBallotValue ballotValue={bingoGame?.currentValue} cEvent={cEvent} />
 									) : (
@@ -38,9 +48,9 @@ export default function Presentation() {
 						</Col>
 						<Col span={24}>
 							<CardContainer title='Figura'>
-								<Row style={{ height: '100%' }} align='middle' justify='center'>
+								<Row style={{ height: '100%' }} align='top' justify='center'>
 									{!!bingoGame ? (
-										<Card bordered={false}>
+										<Card bodyStyle={{ padding: '0px' }} bordered={false}>
 											<Space direction='vertical' align='center'>
 												{!!bingoGame?.template?.image && (
 													<Image preview={false} src={bingoGame?.template?.image} width={150} height={150} />
@@ -68,13 +78,13 @@ export default function Presentation() {
 								title={`${ballotsAnnounced(bingoGame?.demonstratedBallots?.length || 0)}`}
 								count={ballotsAnnounced(bingoGame?.demonstratedBallots?.length || 0)}
 								style={{
-									backgroundColor: '#517FD6',
-									color: getCorrectColor('#517FD6'),
+									backgroundColor: cEvent.value?.styles?.toolbarDefaultBg,
+									color: getCorrectColor(cEvent.value?.styles?.toolbarDefaultBg),
 								}}
 							/>
 						}>
 						{!!bingoGame ? (
-							<BallotHistoryContainer demonstratedBallots={bingoGame?.demonstratedBallots} />
+							<BallotHistoryPresentation demonstratedBallots={bingoGame?.demonstratedBallots} />
 						) : (
 							<p>Aun no empieza el bingo</p>
 						)}
