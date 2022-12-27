@@ -2,6 +2,7 @@ import Header from '@/antdComponents/Header';
 import { Form, Tabs } from 'antd';
 import TabResults from '../../components/cms/TabResults';
 import TabSetup from '../../components/cms/TabSetup';
+import TabData from '../../components/cms/TabData';
 import useSharePhoto from '../../hooks/useSharePhoto';
 import Loading from '@/components/profile/loading';
 interface Props {
@@ -51,6 +52,9 @@ export default function UpdateSharePhoto(props: Props) {
 				</Tabs.TabPane>
 				<Tabs.TabPane tab='Resultados' key='sharePhotoResultados'>
 					<TabResults sharePhoto={sharePhoto} />
+				</Tabs.TabPane>
+				<Tabs.TabPane tab='Datos generados' key='sharePhotoDatos'>
+					<TabData />
 				</Tabs.TabPane>
 			</Tabs>
 		</Form>
