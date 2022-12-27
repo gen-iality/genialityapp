@@ -8,13 +8,17 @@ export default function Participants({ participants }: { participants: Score[] }
   const donwloadExcel = () => {
     const headers = [
       'Nombre Completo',
+      'Correo',
       'Likes',
+      'Posición',
       'Fecha/Hora de creación'
     ];
 
     const data = participants.map((participant) => [
       participant.name,
+      participant.email,
       participant.score,
+      participant.index,
       new Date(participant.created_at).toLocaleString(),
     ]);
     
@@ -32,16 +36,28 @@ export default function Participants({ participants }: { participants: Score[] }
       render: (name: any) => <Text>{name ?? ''}</Text>,
     },
     {
+      title: 'Correo electronico',
+      dataIndex: 'email',
+      key: 'email',
+      render: (email: any) => <Text>{email ?? ''}</Text>,
+    },
+    {
       title: 'Puntaje',
       dataIndex: 'score',
       key: 'score',
       render: (score: any) => <Text>{score ?? ''}</Text>,
     },
     {
+      title: 'Posición',
+      dataIndex: 'index',
+      key: 'index',
+      render: (index: any) => <Text>{index ?? ''}</Text>,
+    },
+    {
       title: 'Fecha de creación',
       dataIndex: 'created_at',
       key: 'created_at',
-      render: (created_at: any) => <Text style={{ wordBreak: 'break-all' }}>{created_at ?? ''}</Text>,
+      render: (created_at: any) => <Text style={{ wordBreak: 'break-all' }}>{new Date(created_at).toLocaleString() ?? ''}</Text>,
     },
   ];
   return (
