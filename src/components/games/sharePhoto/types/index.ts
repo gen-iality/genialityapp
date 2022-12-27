@@ -24,6 +24,7 @@ export interface Post {
 	updated_at: Date | string;
 	event_user_id: string;
 	user_name: string;
+	email: string;
 	picture: string;
 	image: string;
 	thumb: string;
