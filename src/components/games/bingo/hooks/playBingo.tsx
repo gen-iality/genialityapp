@@ -129,9 +129,9 @@ const playBingo = () => {
 
 		const valuesToValidate = getValuesToValidate(template, ballotValueUser);
 
-		console.log('ballotValueUser', ballotValueUser);
-		console.log('ballotValue', ballotValue);
-		console.log('valuesToValidate', valuesToValidate);
+		// console.log('ballotValueUser', ballotValueUser);
+		// console.log('ballotValue', ballotValue);
+		// console.log('valuesToValidate', valuesToValidate);
     // TODO: Review
 		if (ballotValue.length < ballotValueUser.length) {
 			notification.error({ message: 'El usuario no tiene todas las balotas' });
@@ -140,7 +140,7 @@ const playBingo = () => {
 
 		const allValuesPlayed = valuesToValidate.every(value => ballotValue.includes(value));
 
-    console.log('allValuesPlayed', allValuesPlayed)
+    // console.log('allValuesPlayed', allValuesPlayed)
 
     if (allValuesPlayed) {
       const winnerConfig: BingoWinnerOrLoserInterface = {
@@ -273,9 +273,9 @@ const playBingo = () => {
 			});
 			return;
 		}
-		console.log('Start BingoGame!');
-		// TODO: Choose Template
-		console.log('Choose template');
+		// console.log('Start BingoGame!');
+		// // TODO: Choose Template
+		// console.log('Choose template');
 		if (!event?._id) return console.log('eventId missed');
 		createBingoGame(event._id, {
 			template: templateSelected,
@@ -297,7 +297,7 @@ const playBingo = () => {
 	};
 
 	const endBingo = ({ event, bingoValues }: EndGameInterface) => {
-		console.log('End BingoGame!');
+		// console.log('End BingoGame!');
 		let dataFirebaseBingo = dataFirebaseBingoInitialState;
 		if (!event?._id) return console.log('eventId missed');
 		createBingoGame(event._id, {
@@ -342,8 +342,8 @@ const playBingo = () => {
 	const restartBingo = ({ event, bingoValues }: RestartGameInterface) => {
 		let dataFirebaseBingo = dataFirebaseBingoInitialState;
 		if (!event?._id) return console.log('eventId missed');
-		// TODO: Choose Template
-		console.log('Choose template');
+		// // TODO: Choose Template
+		// console.log('Choose template');
 		updateBingoGame(event._id, {
 			template: templateSelected,
 			bingoData: [],

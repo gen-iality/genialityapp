@@ -1,10 +1,24 @@
-import BingoProvider from "../contexts/BingoContext";
-import Presentation from "./presentation/Presentation";
+import BingoPresentationContextProvider from '../contexts/BingoPresentationContext';
+import Presentation from './presentation/Presentation';
 
-export default function BingoPresentation() {
-  return (
-    <BingoProvider>
-      <Presentation />
-    </BingoProvider>
-  )
+interface Props {
+	history: any;
+	location: any;
+	match: {
+		isExact: boolean;
+		params: {
+			event_id: string;
+		};
+		path: string;
+		url: string;
+	};
+	staticContext: any;
+}
+
+export default function BingoPresentation(props: Props) {
+	return (
+		<BingoPresentationContextProvider eventId={props.match.params.event_id}>
+			<Presentation />
+		</BingoPresentationContextProvider>
+	);
 }

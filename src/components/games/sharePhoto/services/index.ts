@@ -324,14 +324,15 @@ export const getRanking = async (eventId: string, points_per_like: number) => {
 			})
 		)) as Post[];
 
-		const scores: Score[] = posts
-			.sort((b, a) => a.likes - b.likes)
+		const scores: Score[] = orderPosts(posts)
+			//.sort((b, a) => a.likes - b.likes)
 			.map((post, index) => ({
 				uid: post.id,
 				imageProfile: post.picture,
 				name: post.user_name,
 				index: index + 1,
 				score: `${post.likes * points_per_like}`,
+				created_at: post.created_at,
 			}));
 		// console.log(scores);
 		return scores;
@@ -366,7 +367,7 @@ export const listenRanking = (
 						} as Post;
 					})
 				).then(posts => {
-					const score = orderPosts(posts, 'likes').map((post, index) => postToScore(post, index, points_per_like));
+					const score = orderPosts(posts).map((post, index) => postToScore(post, index, points_per_like));
 					setScores(score);
 				});
 				// It update when a like is added or removed

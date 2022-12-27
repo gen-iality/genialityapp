@@ -21,9 +21,9 @@ export default function PrintComponent({
 				display: 'none',
 			}}>
 			<div ref={bingoCardRef}>
-				{bingoUsers.map((userBingo: any) => {
+				{bingoUsers.map((userBingo: any, index) => {
 					return (
-						<div style={{ padding: '50px 0px' }}>
+						<div key={index} style={{ padding: '50px 0px' }}>
 							<Space style={{ width: '100%', height: '100%' }} direction='vertical'>
 								{/* <Descriptions
 									size='small'
@@ -55,7 +55,7 @@ export default function PrintComponent({
 									arrayDataBingo={userBingo.values}
 									arrayLocalStorage={[]}
 									changeValueLocalStorage={() => {}}
-									getBingoListener={() => {}}
+									getBingoListener={() => ()=> {}}
 									setOpenOrClose={() => {}}
 									isPrint
 									userBingoCode={userBingo.code}

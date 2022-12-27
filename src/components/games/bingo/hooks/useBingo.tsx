@@ -485,27 +485,37 @@ export const useBingo = () => {
 		setLoading(false);
 	};
 	//List of users that have or haven't bingo
-	const onGetListUsersWithOrWithoutBingo = async () => {
-		let list = [];
-		try {
-			list = await getListUsersWithOrWithoutBingo(value._id);
-			const bingoPrintData = list.map((user: any) => {
-				return {
-					names: user?.properties?.names,
-					email: user?.properties?.email,
-					id: user?.bingo_card?._id,
-					values: user?.bingo_card?.values_bingo_card,
-					bingo: user?.bingo_card?.bingo,
-					code: user?.bingo_card?.code,
-				};
-			});
-			console.log('🚀 ~ file: useBingo.tsx:494 ~ bingoPrintData ~ bingoPrintData', bingoPrintData);
-			setBingoPrint(bingoPrintData);
-			setListUsers(list);
-		} catch (err) {
-			console.log(err, 'err');
-		}
-	};
+	// const onGetListUsersWithOrWithoutBingo = async (pageSize: number, page: number) => {
+	// 	let list = [];
+	// 	try {
+	// 		//agregar paginacion
+	// 		console.log("onGetListUsersWithOrWithoutBingo", { pageSize, page });
+	// 		list = await getListUsersWithOrWithoutBingo(value._id, pageSize, page);
+	// 		console.log("list", list);
+	// 		//list = await getListUsersWithOrWithoutBingo(value._id, pagination.page, pagination.pageSize);
+	// 		//list = await getListUsersWithOrWithoutBingo(value._id);
+	// 		setPageSize(list.data.length);
+	// 		setPage(list.current_page);
+	// 		setLastPage(list.last_page_url);
+	// 		setTotal(list.total);
+	// 		console.log('pagination use bingo', { pageSize, page, lastPage, total });
+	// 		const bingoPrintData = list.data.map((user: any) => {
+	// 			return {
+	// 				names: user?.properties?.names,
+	// 				email: user?.properties?.email,
+	// 				id: user?.bingo_card?._id,
+	// 				values: user?.bingo_card?.values_bingo_card,
+	// 				bingo: user?.bingo_card?.bingo,
+	// 				code: user?.bingo_card?.code,
+	// 			};
+	// 		});
+	// 		setBingoPrint(bingoPrintData);
+	// 		setListUsers(list.data);
+	// 		console.log('🚀 ~ file: useBingo.tsx:494 ~ bingoPrintData ~ bingoPrintData', bingoPrintData);
+	// 	} catch (err) {
+	// 		console.log(err, 'err');
+	// 	}
+	// };
 
 	//Generate bingo for all users
 	const onGenerateBingoForAllUsers = async () => {
@@ -620,7 +630,7 @@ export const useBingo = () => {
 		saveValueData,
 		changeBingoDimensionsNew,
 		onGenerateBingoForExclusiveUsers,
-		onGetListUsersWithOrWithoutBingo,
+		// onGetListUsersWithOrWithoutBingo,
 		onGenerateBingoForAllUsers,
 		listUsers,
 		setListUsers,

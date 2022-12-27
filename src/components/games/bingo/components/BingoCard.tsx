@@ -31,10 +31,12 @@ const BingoCard = forwardRef(
     userBingoCode
   }: Props) => {
     useEffect(() => {
-      const unSuscribe = getBingoListener();
-      return () => {
-        unSuscribe();
-      };
+      if(!!getBingoListener){
+        const unSuscribe = getBingoListener();
+          return () => {
+          unSuscribe();
+        };
+      }
     }, []);
     const screens = useBreakpoint();
     console.log();

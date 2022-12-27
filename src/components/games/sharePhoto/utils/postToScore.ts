@@ -7,4 +7,5 @@ export const postToScore = (post: Post, index: number, points_per_like: number):
 	name: post.user_name,
 	index: index + 1,
 	score: `${post.likes * points_per_like}`,
+	created_at: post.created_at,
 });
