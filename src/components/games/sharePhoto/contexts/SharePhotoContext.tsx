@@ -136,6 +136,7 @@ export default function SharePhotoProvider(props: Props) {
 					event_user_id: cUser.value._id,
 					picture: cUser.value.user.picture,
 					user_name: cUser.value.user.names,
+					email: cUser.value.user.email
 				},
 				cUser.value.event_id
 			);
