@@ -7,7 +7,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import withContext from '@context/withContext';
 
-import certificateImage from '../events/certificateImage';
+import certificateImage from '../events/certificateImageV2';
 
 // Estructura de boton para descargar certificados
 
@@ -59,7 +59,7 @@ class CertificadoLanding extends Component {
         tag: `user.${field.name}`,
         value: field.name,
         label: field.label,
-      })
+      }),
     );
 
     this.usersRef = firestore.collection(`${this.props.cEvent.value._id}_event_attendees`);
@@ -207,7 +207,8 @@ class CertificadoLanding extends Component {
               alignItems: 'center',
               display: 'flex',
               fontWeight: 'bold',
-            }}>
+            }}
+          >
             Debes estar registrado en el curso para poder descargar tu certificado{' '}
           </h1>
         )}
