@@ -90,7 +90,7 @@ const ModalWithLessonsInfo = ({ show, onHidden, allActivities, attendee, current
       if (activities.length) {
         return (
           <List
-            header={<Text strong>Cursos vistos</Text>}
+            header={<Text strong>Lecciones vistas</Text>}
             // bordered
             dataSource={activities}
             renderItem={(item) => (
