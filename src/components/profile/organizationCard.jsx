@@ -1,10 +1,13 @@
+import { useState, useEffect } from 'react';
 import { EyeOutlined, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Card, Space, Typography, Grid, Skeleton } from 'antd';
+import { OrganizationFuction } from '@helpers/request';
 import { truncate } from 'lodash-es';
 const { useBreakpoint } = Grid;
 
 const OrganizationCard = (props) => {
   const screens = useBreakpoint();
+  const [eventsLength, setEventsLength] = useState([]);
 
   const adminOrganization = () => {
     window.location.href = `${window.location.origin}/admin/organization/${props.data.id}/events`;
@@ -29,11 +32,22 @@ const OrganizationCard = (props) => {
     </span>
   );
 
+  const fetchItem = async () => {
+    const events = await OrganizationFuction.getEventsNextByOrg(props.data.id);
+    const eventsLength = events.length;
+    setEventsLength(eventsLength);
+  };
+
+  useEffect(() => {
+    fetchItem();
+  }, []);
+
   return (
     <Card
       actions={[actionAdmin, actionview]}
       style={{ borderRadius: '10px' }}
-      bodyStyle={{ minHeight: '200px', textAlign: 'center' }}>
+      bodyStyle={{ minHeight: '200px', textAlign: 'center' }}
+    >
       <Space size={8} direction='vertical' style={{ textAlign: 'center', width: '100%' }}>
         {props.data ? (
           <Avatar
@@ -45,6 +59,9 @@ const OrganizationCard = (props) => {
         )}
         <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ fontSize: '14px', lineHeight: '1.15rem' }}>
           {props.data?.name}
+        </Typography.Paragraph>
+        <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ fontSize: '14px', lineHeight: '1.15rem' }}>
+          Cursos: {eventsLength}
         </Typography.Paragraph>
       </Space>
     </Card>
