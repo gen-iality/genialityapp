@@ -62,6 +62,7 @@ const ModalAuth = (props) => {
   };
 
   useEffect(() => {
+    let unsubscribe;
     async function isModalVisible() {
       const typeEvent = recordTypeForThisEvent(cEvent);
       switch (typeEvent) {
@@ -87,7 +88,7 @@ const ModalAuth = (props) => {
     }
 
     async function isUserAuth() {
-      app.auth().onAuthStateChanged((user) => {
+      unsubscribe = app.auth().onAuthStateChanged((user) => {
         if (user) {
           setmodalVisible(false);
 
@@ -99,6 +100,8 @@ const ModalAuth = (props) => {
     }
 
     isUserAuth();
+
+    return () => { unsubscribe && unsubscribe() }
   }, [cEvent, cUser]);
 
   useEffect(() => {
