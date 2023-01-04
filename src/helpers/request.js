@@ -1320,6 +1320,13 @@ export const PositionsApi = {
       };
       return await Actions.create(`/api/positions/organization/${organizationId}`, data, true);
     },
+    getUsers: async (organizationId, positionId) => {
+      return await Actions.get(`api/positions/${positionId}/organization/${organizationId}/users`, true);
+    },
+    addUser: async (organizationId, positionId, userId) => {
+      const data = { user_id: userId };
+      return await Actions.post(`api/positions/${positionId}/organization/${organizationId}/users`, data, true);
+    },
   },
 };
 
