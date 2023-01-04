@@ -13,9 +13,10 @@ export function CurrentUserProvider({ children }) {
 
   //seteando con el auth al current user || falta eventUser
   useEffect(() => {
+    let unsubscribe;
     async function asyncdata() {
       try {
-        app.auth().onAuthStateChanged((user) => {
+        unsubscribe = app.auth().onAuthStateChanged((user) => {
           if (!user?.isAnonymous && user) {
             user.getIdToken().then(async function(idToken) {
               const lastSignInTime = (await user.getIdTokenResult()).authTime;
@@ -80,6 +81,7 @@ export function CurrentUserProvider({ children }) {
       }
     }
     asyncdata();
+    return () => { unsubscribe && unsubscribe() }
   }, []);
 
   return (
