@@ -1309,18 +1309,20 @@ export const PositionsApi = {
   },
   Organizations: {
     getAll: async (organizationId) => {
-      return await Actions.getAll(`/api/positions/organization/${organizationId}/positions`, true);
+      return await Actions.getAll(`/api/positions/organization/${organizationId}`, true);
     },
     getOne: async (organizationId, positionId) => {
-      return await Actions.get(`api/positions/organization/${organizationId}/positions/${positionId}`, true);
+      return await Actions.get(`api/positions/${positionId}/organization/${organizationId}`, true);
     },
     create: async (organizationId, positionName) => {
       const data = {
         position_name: positionName,
       };
-      return await Actions.create(`/api/positions/organization/${organizationId}/positions`, data, true);
+      return await Actions.create(`/api/positions/organization/${organizationId}`, data, true);
     },
   },
 };
 
 export default privateInstance;
+window.EventsApi = EventsApi;
+window.PositionsApi = PositionsApi;
