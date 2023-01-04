@@ -1286,4 +1286,41 @@ export const OrderFunctions = {
     return await Actions.post(`/api/orders`, data);
   },
 };
+
+// Endpoint for position handlering
+export const PositionsApi = {
+  getAll: async () => {
+    return await Actions.getAll('/api/positions', true);
+  },
+  getOne: async (positionId) => {
+    return await Actions.get(`api/positions/${positionId}`, true);
+  },
+  create: async (positionName) => {
+    const data = {
+      position_name: positionName,
+    };
+    return await Actions.create('/api/positions', data, true);
+  },
+  delete: async (positionId) => {
+    return await Actions.delete('api/positions/', positionId, true);
+  },
+  update: async (positionId, data) => {
+    return await Actions.put(`api/positions/${positionId}`, data, true);
+  },
+  Organizations: {
+    getAll: async (organizationId) => {
+      return await Actions.getAll(`/api/positions/organization/${organizationId}/positions`, true);
+    },
+    getOne: async (organizationId, positionId) => {
+      return await Actions.get(`api/positions/organization/${organizationId}/positions/${positionId}`, true);
+    },
+    create: async (organizationId, positionName) => {
+      const data = {
+        position_name: positionName,
+      };
+      return await Actions.create(`/api/positions/organization/${organizationId}/positions`, data, true);
+    },
+  },
+};
+
 export default privateInstance;
