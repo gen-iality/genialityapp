@@ -13,7 +13,6 @@ import {
   Divider,
   Skeleton,
   Menu,
-  Tag,
 } from 'antd';
 import {
   AppstoreFilled,
@@ -27,7 +26,7 @@ import OrganizationCard from './organizationCard';
 import NewCard from './newCard';
 import ExploreEvents from './exploreEvents';
 import withContext from '@context/withContext';
-import { EventsApi, TicketsApi, OrganizationApi, UsersApi } from '@helpers/request';
+import { EventsApi, TicketsApi, OrganizationApi } from '@helpers/request';
 import EventCard from '../shared/eventCard';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -59,7 +58,6 @@ const MainProfile = (props) => {
   const [eventsThatIHaveParticipatedIsLoading, setEventsThatIHaveParticipatedIsLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [content, setContent] = useState('ACCOUNT_ACTIVITY');
-  const [positionNames, setPositionNames] = useState([]);
 
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
@@ -159,14 +157,6 @@ const MainProfile = (props) => {
     if (!props?.cUser?.value?._id) {
       return;
     }
-
-    (async () => {
-      const profile = await UsersApi.getProfile(props?.cUser?.value?._id);
-      const names = (profile.positions || []).map((position) => position.position_name)
-      console.log('profile:', profile);
-      console.log('position names:', names);
-      setPositionNames(names);
-    })()
   }, [props?.cUser?.value]);
 
   useEffect(() => {
@@ -206,9 +196,6 @@ const MainProfile = (props) => {
             <Typography.Text type='secondary' style={{ fontSize: '16px', width: '220px', wordBreak: 'break-all' }}>
               {props?.cUser?.value?.email}
             </Typography.Text>
-            {positionNames.map((name) => (
-              <Tag color='pink'>{name}</Tag>
-            ))}
           </Space>
           <Col span={24}>
             <Menu style={{ border: 'none' }}>
