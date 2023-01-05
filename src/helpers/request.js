@@ -240,9 +240,12 @@ export const EventsApi = {
     const token = await GetTokenUserFirebase();
     return await Actions.edit(`/api/events/${id}?token=${token}`, data, true);
   },
-  deleteOne: async (id) => {
+  editItsPositions: async (id, positionIds) => {
+    const data = {
+      position_ids: positionIds,
+    };
     const token = await GetTokenUserFirebase();
-    return await Actions.delete(`/api/events/${id}/?token=${token}`, '', true);
+    return await Actions.put(`/api/events/${id}/positions?token=${token}`, data, true);
   },
   getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`, true);
@@ -1336,3 +1339,5 @@ export const PositionsApi = {
 export default privateInstance;
 window.EventsApi = EventsApi;
 window.PositionsApi = PositionsApi;
+window.OrganizationApi = OrganizationApi;
+window.TicketsApi = TicketsApi;
