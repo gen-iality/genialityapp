@@ -77,6 +77,7 @@ class General extends Component {
     this.nameInputRef = createRef();
     this.state = {
       event: this.props.event,
+      possiblePositions: [],
       optionForm: [],
       selectedOption: [],
       selectedOrganizer: {},
@@ -186,6 +187,7 @@ class General extends Component {
         categories,
         event
       );
+      const currentOrganization = await OrganizationApi.getOne(event.organizer_id)
       this.setState({
         categories,
         organizers,
@@ -194,6 +196,7 @@ class General extends Component {
         selectedOrganizer,
         selectedType,
         loading: false,
+        possiblePositions: currentOrganization.positions,
       });
       if (info.dates && info.dates.length > 0) {
         this.setState({ specificDates: true });
@@ -711,6 +714,7 @@ class General extends Component {
     if (this.state.loading) return <Loading />;
     const {
       event,
+      possiblePositions,
       categories,
       organizers,
       types,
@@ -764,6 +768,28 @@ class General extends Component {
                       placeholder={'Nombre del curso'}
                       value={event.name}
                       onChange={(e) => this.handleChange(e, 'name')}
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    label={
+                      <label style={{ marginTop: '2%' }}>
+                        Cargo <label style={{ color: 'gray' }}>(opcional)</label>
+                      </label>
+                    }
+                  >
+                    <Select
+                      mode="multiple"
+                      placeholder="Asigna un cargo para excluir"
+                      onChange={(values) => {
+                        console.log(values)
+                        EventsApi.editItsPositions(event._id, values)
+                      }}
+                      defaultValue={event.position_ids || []}
+                      options={(possiblePositions || []).map((position) => ({
+                        value: position._id,
+                        label: position.position_name,
+                      }))}
                     />
                   </Form.Item>
 
