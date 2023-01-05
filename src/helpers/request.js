@@ -1304,7 +1304,10 @@ export const PositionsApi = {
   delete: async (positionId) => {
     return await Actions.delete('api/positions/', positionId, true);
   },
-  update: async (positionId, data) => {
+  update: async (positionId, positionName) => {
+    const data = {
+      position_name: positionName,
+    };
     return await Actions.put(`api/positions/${positionId}`, data, true);
   },
   Organizations: {
