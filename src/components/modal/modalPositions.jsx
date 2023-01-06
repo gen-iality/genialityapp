@@ -181,7 +181,6 @@ function ModalPositions(props) {
                     Cursos asignados
                   </label>
                 }
-                rules={[{ required: true, message: 'El nombre es requerido' }]}
               >
                 <Select
                   mode='multiple'
