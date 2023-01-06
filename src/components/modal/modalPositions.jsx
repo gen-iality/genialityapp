@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { OrganizationApi, ToolsApi, PositionsApi } from '@helpers/request';
 import FormComponent from '../events/registrationForm/form';
-import { Modal, Row, Col, Form, Input } from 'antd';
+import { Modal, Row, Col, Form, Input, Select, Spin } from 'antd';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '@context/MessageService';
 import Header from '@antdComponents/Header';
@@ -15,37 +15,38 @@ const formLayout = {
 };
 
 function ModalPositions(props) {
-  const organizationId = props.organizationId;
   console.log('300. props.value', props.value);
+  const organizationId = props.organizationId;
+  const positionId = props.value?._id;
   const positionValue = props.value; //si viene null es porque se va a agregar un nuevo position
 
   const [position, setPosition] = useState({});
+  const [possibleEvents, setPossibleEvents] = useState([]);
 
-  console.log('300. ModalPositions', props);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     if (positionValue) {
       getOne();
+    } else {
+      form.setFieldsValue({ position_name: '', events_ids: [] });
     }
-  }, []);
 
-  /* const getOne = async () => {
-    const response = await PositionsApi.getOne(positionValue, organizationId);
-    const data = response.data.find((positions) => positions._id === positionValue);
-    setPosition(data);
-  }; */
+    OrganizationApi.events(organizationId).then((data) => {
+      console.log('300. OrganizationApi.events', data.data);
+      setPossibleEvents(data.data);
+    });
+  }, []);
 
   const getOne = async () => {
     const response = await PositionsApi.Organizations.getOne(organizationId, positionValue._id);
-
     const data = response;
     setPosition(data);
-    console.log('Aqui se obtiene el position');
+    form.setFieldsValue({ position_name: data.position_name, event_ids: data.event_ids });
   };
 
-  const onSubmit = async () => {
-    console.log('300. position', position);
-    if (position.position_name) {
+  const onSubmit = async (values) => {
+    if (values.position_name) {
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
@@ -55,10 +56,11 @@ function ModalPositions(props) {
 
       try {
         if (positionValue) {
-          console.log('Aquí se guardó el nombre de la posición cuando se aplica onSubmit');
-          await PositionsApi.update(positionValue._id, position.position_name);
+          await PositionsApi.update(positionValue._id, values.position_name);
+          await PositionsApi.Organizations.editItsEvents(organizationId, positionId, values.event_ids);
         } else {
-          await PositionsApi.Organizations.create(organizationId, position.position_name);
+          const data = await PositionsApi.Organizations.create(organizationId, values.position_name);
+          await PositionsApi.Organizations.editItsEvents(organizationId, data._id, values.event_ids);
         }
         props.closeOrOpenModalPositions();
         DispatchMessageService({
@@ -90,9 +92,9 @@ function ModalPositions(props) {
     }
   };
 
-  const handleChange = (e) => {
+  /* const handleChange = (e) => {
     setPosition({ ...position, position_name: e.target.value });
-  };
+  }; */
 
   const onRemoveId = () => {
     DispatchMessageService({
@@ -153,12 +155,14 @@ function ModalPositions(props) {
           marginTop: '30px',
         }}
       >
-        <Form onFinish={onSubmit} {...formLayout}>
+        <Form onFinish={onSubmit} {...formLayout} form={form}>
           <Header title={'Cargo'} back save form remove={onRemoveId} edit={positionValue} />
 
           <Row justify='center' wrap gutter={12}>
             <Col span={12}>
               <Form.Item
+                initialValue={position.position_name}
+                name={'position_name'}
                 label={
                   <label style={{ marginTop: '2%' }} className='label'>
                     Nombre del cargo <label style={{ color: 'red' }}>*</label>
@@ -166,11 +170,26 @@ function ModalPositions(props) {
                 }
                 rules={[{ required: true, message: 'El nombre es requerido' }]}
               >
-                <Input
-                  value={position.position_name}
-                  name={'name'}
-                  placeholder={'Nombre del cargo'}
-                  onChange={(e) => handleChange(e)}
+                <Input placeholder={'Nombre del cargo'} />
+              </Form.Item>
+
+              <Form.Item
+                initialValue={position.event_ids || []}
+                name={'event_ids'}
+                label={
+                  <label style={{ marginTop: '2%' }} className='label'>
+                    Cursos asignados
+                  </label>
+                }
+                rules={[{ required: true, message: 'El nombre es requerido' }]}
+              >
+                <Select
+                  mode='multiple'
+                  placeholder='Asigna los cursos al cargo'
+                  options={(possibleEvents || []).map((event) => ({
+                    value: event._id,
+                    label: event.name,
+                  }))}
                 />
               </Form.Item>
             </Col>

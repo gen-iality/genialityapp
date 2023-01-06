@@ -14,6 +14,13 @@ export const columns = (editModalPosition) => {
       sorter: (a, b) => a.position_name.localeCompare(b.position_name),
     },
     {
+      title: 'N° cursos asignados',
+      width: 300,
+      align: 'center',
+      ellipsis: true,
+      render: (position) => <span>{position.event_ids.length}</span>,
+    },
+    {
       title: 'Opción',
       dataIndex: 'index',
       /* align: 'center', */

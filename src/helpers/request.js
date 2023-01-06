@@ -1326,6 +1326,17 @@ export const PositionsApi = {
       };
       return await Actions.create(`/api/positions/organization/${organizationId}`, data, true);
     },
+    editItsEvents: async (organizationId, positionId, eventIds) => {
+      const data = {
+        event_ids: eventIds,
+      };
+      const token = await GetTokenUserFirebase();
+      return await Actions.put(
+        `/api/positions/${positionId}/organization/${organizationId}/events?token=${token}`,
+        data,
+        true,
+      );
+    },
     getUsers: async (organizationId, positionId) => {
       return await Actions.get(`api/positions/${positionId}/organization/${organizationId}/users`, true);
     },
