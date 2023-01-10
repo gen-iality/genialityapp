@@ -29,7 +29,7 @@ function ModalPositions(props) {
     if (positionValue) {
       getOne();
     } else {
-      form.setFieldsValue({ position_name: '', events_ids: [] });
+      form.setFieldsValue({ position_name: '', event_ids: [] });
     }
 
     OrganizationApi.events(organizationId).then((data) => {
@@ -156,7 +156,7 @@ function ModalPositions(props) {
         }}
       >
         <Form onFinish={onSubmit} {...formLayout} form={form}>
-          <Header title={'Cargo'} back save form remove={onRemoveId} edit={positionValue} />
+          <Header title={'Cargo'} save form remove={onRemoveId} edit={positionValue} />
 
           <Row justify='center' wrap gutter={12}>
             <Col span={12}>
@@ -165,7 +165,7 @@ function ModalPositions(props) {
                 name={'position_name'}
                 label={
                   <label style={{ marginTop: '2%' }} className='label'>
-                    Nombre del cargo <label style={{ color: 'red' }}>*</label>
+                    Nombre del cargo
                   </label>
                 }
                 rules={[{ required: true, message: 'El nombre es requerido' }]}
