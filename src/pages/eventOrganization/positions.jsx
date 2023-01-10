@@ -1,41 +1,35 @@
 import { useEffect, useState } from 'react';
-import { OrganizationApi, RolAttApi, EventsApi, AgendaApi, PositionsApi } from '@helpers/request';
-import { FormattedDate, FormattedTime } from 'react-intl';
-import { firestore } from '@helpers/firebase';
-/** export Excel */
-import { useHistory } from 'react-router-dom';
-import { Table, Button, Row, Col, Tag } from 'antd';
-import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { columns } from './tableColums/positionsTableColumns';
-import ModalPositions from '@components/modal/modalPositions';
-import dayjs from 'dayjs';
-import withContext from '@context/withContext';
-import { utils, writeFileXLSX } from 'xlsx';
-import Header from '@antdComponents/Header';
+import { PositionsApi } from '@helpers/request';
 
-//const positionsData = [{ position: 'Operador junior' }, { position: 'Operador senior' }];
+/** Antd imports */
+import { Table, Button, Row, Col } from 'antd';
+import { PlusCircleOutlined } from '@ant-design/icons';
+
+/** Components */
+import Header from '@antdComponents/Header';
+import ModalPositions from '@components/modal/modalPositions';
+import { columns } from './tableColums/positionsTableColumns';
+
+/** Context */
+import withContext from '@context/withContext';
 
 function OrgPositions(props) {
+  console.log('300. OrgPositions - props', props);
+
   const [positionsData, setPositionsData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  // const [searchText, setSearchText] = useState('');
-  //const [searchedColumn, setSearchedColumn] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [addOrEditPosition, setAddOrEditPosition] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState(null);
-  //const [editPosition, setEditPosition] = useState(false);
   const { _id: organizationId } = props.org;
-  //const history = useHistory();
-
-  console.log('300. OrgPositions - props', props);
 
   async function getOrgPositions() {
     const positions = await PositionsApi.Organizations.getAll(organizationId);
-    setPositionsData(positions);
     console.log('300. positions', positions);
+    setPositionsData(positions);
+    setIsLoading(false);
   }
 
   useEffect(() => {
-    //setTimeout(() => getOrgPositions(), 5000);
     getOrgPositions();
   }, [addOrEditPosition]);
 
@@ -53,21 +47,12 @@ function OrgPositions(props) {
   function editModalPosition(item) {
     setSelectedPosition(item);
     closeOrOpenModalPositions();
-    //setEditPosition(true);
   }
-
-  /* const columnsData = {
-    searchedColumn,
-    setSearchedColumn,
-    searchText,
-    setSearchText,
-  }; */
 
   return (
     <>
-      <Header title={'Cargos'} />
       {console.log('300. positionsData', positionsData)}
-
+      <Header title={'Cargos'} />
       <Table
         columns={columns(editModalPosition)}
         dataSource={positionsData}
@@ -91,7 +76,6 @@ function OrgPositions(props) {
           value={selectedPosition}
           closeOrOpenModalPositions={closeOrOpenModalPositions}
           organizationId={organizationId}
-          {...props}
         />
       )}
     </>
