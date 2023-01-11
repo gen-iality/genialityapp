@@ -54,7 +54,7 @@ export default function TabSetup(props: Props) {
           {/* Aqui deberia ir lo de controlar el estado publicado y abierto */}
         </Card>
       </Col>
-      <Col span={24}>
+      {/* <Col span={24}>
         <Card hoverable style={{ borderRadius: '20px' }} title='Instrucciones'>
           <Typography>
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Amet, cum sunt rerum similique, veritatis
@@ -63,7 +63,7 @@ export default function TabSetup(props: Props) {
             quaerat?
           </Typography>
         </Card>
-      </Col>
+      </Col> */}
     </Row>
   );
 }

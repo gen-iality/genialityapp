@@ -21,6 +21,7 @@ import {
 	List,
 	Modal,
 	Avatar,
+	Collapse,
 } from 'antd';
 import Header from '../../../antdComponents/Header';
 import { useState, useEffect } from 'react';
@@ -67,7 +68,7 @@ function BingoInCMS({ event }: { event: {} }) {
 		onCancelValueTable,
 		getBingoListenerNotifications,
 		changeBingoDimensionsNew,
-		onGetListUsersWithOrWithoutBingo,
+		// onGetListUsersWithOrWithoutBingo,
 		onGenerateBingoForExclusiveUsers,
 		onGenerateBingoForAllUsers,
 		dataNotifications,
@@ -101,7 +102,6 @@ function BingoInCMS({ event }: { event: {} }) {
 	useEffect(() => {
 		const unSubscribe = getBingoListenerNotifications();
 		const unSubscribe2 = getBingoListener();
-		onGetListUsersWithOrWithoutBingo();
 		return () => {
 			unSubscribe();
 			unSubscribe2();
@@ -146,7 +146,7 @@ function BingoInCMS({ event }: { event: {} }) {
 														<Input
 															name='name'
 															placeholder={'Titulo del Bingo'}
-															onChange={e => setFormDataBingo({ ...formDataBingo, name: e.target.value })}
+															onChange={(e) => setFormDataBingo({ ...formDataBingo, name: e.target.value })}
 															value={formDataBingo.name}
 														/>
 													</Form.Item>
@@ -173,7 +173,7 @@ function BingoInCMS({ event }: { event: {} }) {
 															wrap='hard'
 															name='regulation'
 															placeholder={'Reglamento del Bingo'}
-															onChange={e => setFormDataBingo({ ...formDataBingo, regulation: e.target.value })}
+															onChange={(e) => setFormDataBingo({ ...formDataBingo, regulation: e.target.value })}
 															value={formDataBingo.regulation}
 														/>
 													</Form.Item>
@@ -233,7 +233,7 @@ function BingoInCMS({ event }: { event: {} }) {
 											<Col span={8} key={item.name}>
 												<Form.Item label={item.label} name={item.name}>
 													<ImageUploaderDragAndDrop
-														imageDataCallBack={imgUrl =>
+														imageDataCallBack={(imgUrl) =>
 															setFormDataBingo({
 																...formDataBingo,
 																bingo_appearance: {
@@ -258,9 +258,9 @@ function BingoInCMS({ event }: { event: {} }) {
 									<AssignmentCards
 										generateBingoForExclusiveUsers={onGenerateBingoForExclusiveUsers}
 										generateBingoForAllUsers={onGenerateBingoForAllUsers}
-										listUsers={listUsers}
+										//listUsers={listUsers}
 										bingo={bingo}
-										bingoPrint={bingoPrint}
+										//bingoPrint={bingoPrint}
 									/>
 								</Tabs.TabPane>
 

@@ -344,9 +344,11 @@ export const addWinnerBadgeToBingoNotification = async ({
     .set({ hasWon: true }, { merge: true });
 };
 
-export const getListUsersWithOrWithoutBingo = async (eventId: string) => {
+export const getListUsersWithOrWithoutBingo = async (eventId: string, numberItems: number, page: number) => {
   try {
-    const response = await BingoApi.getListUsersWithOrWithoutBingo(eventId);
+    //console.log("getListUsersWithOrWithoutBingo", eventId, numberItems, page);
+    const response = await BingoApi.getListUsersWithOrWithoutBingo(eventId, numberItems, page);
+    //console.log("SERVICES", response);
     return response;
   } catch (error) {
     DispatchMessageService({ type: 'error', msj: 'Error al eliminar el dato', action: 'show' });

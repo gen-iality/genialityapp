@@ -5,7 +5,7 @@ const { Text } = Typography;
 
 const CurrentBallotValue = ({ ballotValue, cEvent }: CurrentBallotValueInterface) => {
   return (
-    <Card bordered={false} style={{ overflow: 'hidden' }}>
+    <Card bordered={false} style={{ overflow: 'hidden', backgroundColor:'transparent' }}>
       <Row justify='center' align='middle' style={{ height: '180px' }}>
         {ballotValue?.type === 'image' ? (
           <Image
@@ -43,6 +43,7 @@ const CurrentBallotValue = ({ ballotValue, cEvent }: CurrentBallotValueInterface
               </Avatar>
             ) : (
               <Text
+              strong
                 key={ballotValue.value}
                 className='animate__animated animate__backInLeft'
                 style={{

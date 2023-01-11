@@ -7,6 +7,9 @@ export const findScoreAndUpdate = (scores: Score[], scoreId: Post['id'], newScor
 	const scoreRest = scores.filter(score => score.uid !== scoreId);
 	const newScoreToUpdate = { ...scoreToUpdate, score: `${newScore}` };
 	return [...scoreRest, newScoreToUpdate]
-		.sort((a: Score, b: Score) => Number(b.score) - Number(a.score))
+		.sort((a: Score, b: Score) => Number(b.score) === Number(a.score) ? 
+			new Date(a.created_at).getTime() - new Date(b.created_at).getTime() 
+			: 
+			Number(b.score) - Number(a.score))
 		.map((score, index) => ({ ...score, index: index + 1 }));
 };

@@ -37,9 +37,9 @@ export default function BingoProvider(props: Props) {
 
 	const eventId = cUser?.value?.event_id;
 
-	useEffect(() => {
-		console.log('bingoGame templateSelected Change')
-	}, [templateSelected])
+	// useEffect(() => {
+	// 	console.log('bingoGame templateSelected Change')
+	// }, [templateSelected])
 
 
 	useEffect(() => {
@@ -78,12 +78,12 @@ export default function BingoProvider(props: Props) {
 		});
 	}, [dimensionChange]);
 
-	// TODO: Just for test purposes - Remember to disabled in production
-	useEffect(() => {
-		// console.log('templates', templates);
-		// console.log('bingo', bingo);
-		// console.log('bingo format', bingo?.dimensions?.format);
-	}, [templates, bingo, dimensionChange]);
+	// // TODO: Just for test purposes - Remember to disabled in production
+	// useEffect(() => {
+	// 	// console.log('templates', templates);
+	// 	// console.log('bingo', bingo);
+	// 	// console.log('bingo format', bingo?.dimensions?.format);
+	// }, [templates, bingo, dimensionChange]);
 
 	const getBingo = async () => {
 		try {
@@ -137,7 +137,7 @@ export default function BingoProvider(props: Props) {
 			setLoading(true);
 			const template = templates.find(template => template._id === templateId);
 			if (!template) return console.error('Template missed')
-			console.log('bingoGame change template')
+			// console.log('bingoGame change template')
 			setTemplateSelected(template);
 		} catch (error) {
 			console.error(error);

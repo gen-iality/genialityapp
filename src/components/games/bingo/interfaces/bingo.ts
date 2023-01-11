@@ -23,9 +23,9 @@ export interface CreateBingoProps {
 export interface AssignmentCardsProps {
   generateBingoForAllUsers: () => void;
   generateBingoForExclusiveUsers: () => void;
-  listUsers: listUsers[];
+  //listUsers: listUsers[];
   bingo: Bingo;
-  bingoPrint: BingoPrintProps[];
+  //bingoPrint: BingoPrintProps[];
 }
 export interface listUsers {
   bingo: boolean;
@@ -225,6 +225,7 @@ export interface DrawerHeaderInterface {
 }
 export interface DrawerButtonsInterface {
   arrayLocalStorage: number[];
+  demostratedBallots: string[];
   postBingoByUser: () => void;
   clearCarton: () => void;
   setshowDrawerChat?: (state: boolean) => void;

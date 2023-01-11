@@ -24,6 +24,7 @@ export interface Post {
 	updated_at: Date | string;
 	event_user_id: string;
 	user_name: string;
+	email: string;
 	picture: string;
 	image: string;
 	thumb: string;
@@ -61,4 +62,11 @@ export interface ListenLikesDto {
 export interface GetPostByTitleDto {
 	event_id: string;
 	title: string;
+}
+
+export interface IParticipant {
+	name: string;
+	//event_user_id: string;
+	score: number;
+	created_at: Date | string;
 }

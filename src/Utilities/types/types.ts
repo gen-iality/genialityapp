@@ -7,6 +7,9 @@ export type ImageUploaderDragAndDropType = {
   height: number | string | null;
   styles?: Object,
   hoverable?: boolean
+  compactMode?: boolean
+  bodyStyles?: React.CSSProperties
+  getDimensionsCallback?: (dimensions: { width: number, height: number }) => void
 };
 
 export type fieldsData = {
