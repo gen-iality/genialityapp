@@ -1,5 +1,5 @@
 import { useHistory } from 'react-router';
-import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty } from 'antd';
+import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Tag } from 'antd';
 import { ClockCircleOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 
 export const columns = (editModalPosition) => {
@@ -14,11 +14,31 @@ export const columns = (editModalPosition) => {
       sorter: (a, b) => a.position_name.localeCompare(b.position_name),
     },
     {
-      title: 'N° cursos asignados',
+      title: 'Cursos asignados',
+      //dataIndex: 'event_names',
       width: 300,
-      align: 'center',
+      //align: 'center',
       ellipsis: true,
-      render: (position) => <span>{position.event_ids.length}</span>,
+      //render: (position) => <Tag>{position.event_names}</Tag>,
+      render(position) {
+        return (
+          <>
+            {position.event_names?.map((eventName) => (
+              <Tag>{eventName}</Tag>
+            ))}
+          </>
+        );
+      },
+
+      /* render(record) {
+        return (
+          <>
+            {record.map((item, key) => (
+              <Tag key={key}>{item}</Tag>
+            ))}
+          </>
+        );
+      }, */
     },
     {
       title: 'Opción',

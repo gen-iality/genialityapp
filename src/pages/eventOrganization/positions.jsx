@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PositionsApi } from '@helpers/request';
+import { PositionsApi, OrganizationApi } from '@helpers/request';
 
 /** Antd imports */
 import { Table, Button, Row, Col } from 'antd';
@@ -14,22 +14,46 @@ import { columns } from './tableColums/positionsTableColumns';
 import withContext from '@context/withContext';
 
 function OrgPositions(props) {
-  console.log('300. OrgPositions - props', props);
+  console.log('300. Props - OrgPositions', props);
 
   const [positionsData, setPositionsData] = useState([]);
+  const [orgEventsData, setOrgEventsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [addOrEditPosition, setAddOrEditPosition] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState(null);
   const { _id: organizationId } = props.org;
 
   async function getOrgPositions() {
+    console.log('2. Antes de hacer petición de positions: ');
     const positions = await PositionsApi.Organizations.getAll(organizationId);
-    console.log('300. positions', positions);
+    console.log('2. positions', positions);
     setPositionsData(positions);
     setIsLoading(false);
   }
 
+  async function getOrgEvents() {
+    console.log('1. Antes de hacer petición de eventos: ');
+    const response = await OrganizationApi.events(organizationId);
+    const orgEvents = response.data;
+    console.log('1. orgEvents', orgEvents);
+    setOrgEventsData(orgEvents);
+    setIsLoading(false);
+
+    const positionData = positionsData.map((positionData) => {
+      const eventsFiltered = orgEventsData.filter((orgEvent) => positionData.event_ids.includes(orgEvent._id));
+      console.log('3. eventsFiltered', eventsFiltered);
+
+      return {
+        ...positionData,
+        event_names: eventsFiltered.map((eventFiltered) => eventFiltered.name),
+      };
+    });
+
+    setPositionsData(positionData);
+  }
+
   useEffect(() => {
+    getOrgEvents();
     getOrgPositions();
   }, [addOrEditPosition]);
 
