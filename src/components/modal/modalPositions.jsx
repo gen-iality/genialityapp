@@ -62,7 +62,9 @@ function ModalPositions(props) {
           const data = await PositionsApi.Organizations.create(organizationId, values.position_name);
           await PositionsApi.Organizations.editItsEvents(organizationId, data._id, values.event_ids);
         }
+
         props.closeOrOpenModalPositions();
+
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',

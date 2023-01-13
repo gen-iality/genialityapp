@@ -38,23 +38,11 @@ function OrgPositions(props) {
     console.log('1. orgEvents', orgEvents);
     setOrgEventsData(orgEvents);
     setIsLoading(false);
-
-    const positionData = positionsData.map((positionData) => {
-      const eventsFiltered = orgEventsData.filter((orgEvent) => positionData.event_ids.includes(orgEvent._id));
-      console.log('3. eventsFiltered', eventsFiltered);
-
-      return {
-        ...positionData,
-        event_names: eventsFiltered.map((eventFiltered) => eventFiltered.name),
-      };
-    });
-
-    setPositionsData(positionData);
   }
 
   useEffect(() => {
-    getOrgEvents();
     getOrgPositions();
+    getOrgEvents();
   }, [addOrEditPosition]);
 
   function closeOrOpenModalPositions() {
@@ -78,7 +66,7 @@ function OrgPositions(props) {
       {console.log('300. positionsData', positionsData)}
       <Header title={'Cargos'} />
       <Table
-        columns={columns(editModalPosition)}
+        columns={columns(editModalPosition, orgEventsData)}
         dataSource={positionsData}
         size='small'
         rowKey='index'
