@@ -15,7 +15,7 @@ export const columns = (editModalPosition, orgEventsData) => {
     {
       title: 'Cursos asignados',
       width: 800,
-      ellipsis: true,
+      //ellipsis: true,
       render(position) {
         return (
           <>
