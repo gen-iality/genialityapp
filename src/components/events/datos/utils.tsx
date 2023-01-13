@@ -66,7 +66,7 @@ const checkInFields = [
 ];
 
 // a little function to help us with reordering the result
-export const Reorder = (list, startIndex, endIndex) => {
+export const Reorder = (list: any, startIndex: any, endIndex: any) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -75,7 +75,7 @@ export const Reorder = (list, startIndex, endIndex) => {
 };
 
 const grid = 6;
-export const getItemStyle = (isDragging, draggableStyle) => {
+export const getItemStyle = (isDragging: any, draggableStyle: any) => {
   return {
     // some basic styles to make the items look a bit nicer
     userSelect: 'none',
@@ -91,13 +91,13 @@ export const getItemStyle = (isDragging, draggableStyle) => {
   };
 };
 
-export const getQuestionListStyle = (isDraggingOver) => ({
+export const getQuestionListStyle = (isDraggingOver: any) => ({
   background: isDraggingOver ? '#CA4FC4' : '',
   padding: 8,
   width: 350,
 });
 
-export const createFieldForCheckInPerDocument = async ({ value, checkInFieldsIds, save, remove }) => {
+export const createFieldForCheckInPerDocument = async ({ value, checkInFieldsIds, save, remove }: any) => {
   const saveCheckInField = async () => {
     checkInFields.map(async (checkInField) => {
       await save(checkInField);
@@ -135,7 +135,79 @@ export const createFieldForCheckInPerDocument = async ({ value, checkInFieldsIds
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        checkInFieldsIds.map(async (checkInFieldId) => {
+        checkInFieldsIds.map(async (checkInFieldId: any) => {
+          await remove(checkInFieldId, true);
+        });
+      },
+    });
+  }
+};
+
+
+// Logic to create the voting coefficient
+// TODO: pending copy for this instructions
+const voteWeightInstructions = [
+  'Si ya hay asistentes inscritos en el evento, se deberá actualizar la información de dicho campo.',
+  'Esta función está disponible solo para cédula de ciudadanía Colombiana.',
+  'Se requiere Lector de documentos.',
+  'Durante la inscripción se almacenará la información capturada del documento.',
+];
+
+const voteWeightFields = [
+  {
+    id: undefined,
+    name: 'voteWeight',
+    description: undefined,
+    label: 'Coeficiente',
+    unique: false,
+    mandatory: true,
+    options: undefined,
+    order_weight: undefined,
+    type: 'voteWeight',
+    visibleByAdmin: true,
+    visibleByContacts: undefined,
+  },
+];
+
+export const createFieldForAssembly = async ({ value, checkInByAssemblyFields, save, remove }: any) => {
+  const saveFieldForAssembly = async () => {
+    voteWeightFields.map(async (voteWeightField) => {
+      await save(voteWeightField);
+    });
+  };
+
+  if (value.target.checked) {
+    confirm({
+      title: `Al habilitar el checkIn por asamblea, recuerda que:`,
+      content: (
+        <List
+          size='small'
+          dataSource={voteWeightInstructions}
+          renderItem={(item, index) => (
+            <List.Item>
+              <Text>
+                {index + 1}. {item}
+              </Text>
+            </List.Item>
+          )}
+        />
+      ),
+      okText: 'Habilitar',
+      okType: 'primary',
+      cancelText: 'Cancelar',
+      onOk() {
+        saveFieldForAssembly();
+      },
+    });
+  } else {
+    confirm({
+      title: `¿Se deshabilitará el checkIn por asamblea estás seguro?`,
+      // content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Si',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        checkInByAssemblyFields.map(async (checkInFieldId: any) => {
           await remove(checkInFieldId, true);
         });
       },

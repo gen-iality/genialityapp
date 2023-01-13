@@ -21,7 +21,7 @@ import ModalCreateTemplate from '../../shared/modalCreateTemplate';
 import Header from '../../../antdComponents/Header';
 import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../../context/MessageService';
-import { createFieldForCheckInPerDocument } from './utils';
+import { createFieldForAssembly, createFieldForCheckInPerDocument } from './utils';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
@@ -44,6 +44,8 @@ class Datos extends Component {
       value: '',
       visibleModal: false,
       isEditTemplate: { status: false, datafields: [], template: null },
+      checkInByAssembly: false,
+      checkInByAssemblyFields: [],
     };
     this.eventId = this.props.eventId;
     this.html = document.querySelector('html');
@@ -78,6 +80,7 @@ class Datos extends Component {
       let fields = [];
       let fieldsReplace = [];
       let checkInFieldsIds = [];
+      const checkInByAssemblyFields = []
       if (
         (organizationId && !this.props.eventId && this.props.edittemplate) ||
         (organizationId && !this.props.eventId && !this.props.edittemplate)
@@ -94,6 +97,7 @@ class Datos extends Component {
         fields = this.updateIndex(fieldsReplace);
       } else if (!this.props.edittemplate) {
         this.setState({ checkInExists: false, checkInFieldsIds: [] });
+        this.setState({ checkInByAssembly: false, checkInByAssemblyFields: [] });
         fields = await EventFieldsApi.getAll(this.props.eventId);
         //Realizado con la finalidad de no mostrar la contraseña ni el avatar
         //Comentado la parte de password y contrasena para dejar habilitado solo en el administrador
@@ -109,6 +113,13 @@ class Datos extends Component {
           ) {
             checkInFieldsIds.push(field._id);
             this.setState({ checkInExists: true, checkInFieldsIds: checkInFieldsIds });
+          }
+          if (field.type === 'voteWeight') {
+            checkInByAssemblyFields.push(field._id)
+            this.setState({
+              checkInByAssembly: true,
+              checkInByAssemblyFields,
+            })
           }
         });
         fields = this.orderFieldsByWeight(fieldsReplace);
@@ -481,7 +492,7 @@ class Datos extends Component {
   };
 
   render() {
-    const { fields, modal, edit, info, value, checkInExists, checkInFieldsIds } = this.state;
+    const { fields, modal, edit, info, value, checkInExists, checkInFieldsIds, checkInByAssembly, checkInByAssemblyFields } = this.state;
     const columns = [
       {
         title: '',
@@ -709,6 +720,22 @@ class Datos extends Component {
                   }}
                   title={() => (
                     <Row justify='end' wrap gutter={[8, 8]}>
+                      <Col>
+                        <Checkbox
+                          name='checkInByAssembly'
+                          onChange={(value) =>
+                            createFieldForAssembly({
+                              value,
+                              checkInByAssemblyFields,
+                              save: this.saveField,
+                              remove: this.removeField,
+                            })
+                          }
+                          checked={checkInByAssembly}
+                          >
+                          CheckIn por asamblea
+                        </Checkbox>
+                      </Col>
                       <Col>
                         <Checkbox
                           name='checkInByDocument'
