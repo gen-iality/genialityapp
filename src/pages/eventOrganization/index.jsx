@@ -6,6 +6,7 @@ import OrganizationProfile from './profile';
 import Styles from '@components/App/styles';
 import OrgEvents from './events';
 import OrgMembers from './members';
+import OrgPositions from './positions';
 import MemberSettings from './memberSettings';
 import TemplateMemberSettings from './templateMemberSettings';
 import { Tag, Menu, Button, Layout } from 'antd';
@@ -28,6 +29,7 @@ import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteC
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage';
 
 function Organization(props) {
+  console.log('300. props - organization', props);
   const [organization, setOrganization] = useState({});
 
   const [isLoading, setIsLoading] = useState(true);
@@ -55,7 +57,8 @@ function Organization(props) {
             collapsed={collapseMenu}
             theme='dark'
             /* style={{ backgroundColor: '#fff' }} */
-            width={220}>
+            width={220}
+          >
             <Button
               type='primary'
               onClick={() => setCollapseMenu(!collapseMenu)}
@@ -85,15 +88,19 @@ function Organization(props) {
                 {'Miembros'}
                 <NavLink to={`${props.match.url}/members`} />
               </Menu.Item>
-              <Menu.Item key={'5'} icon={<UserSwitchOutlined />}>
+              <Menu.Item key={'5'} icon={<TeamOutlined />}>
+                {'Cargos'}
+                <NavLink to={`${props.match.url}/positions`} />
+              </Menu.Item>
+              <Menu.Item key={'6'} icon={<UserSwitchOutlined />}>
                 <small>{'Configuración de Miembros'}</small>
                 <NavLink to={`${props.match.url}/membersettings`} />
               </Menu.Item>
-              <Menu.Item key={'6'} icon={<ProjectOutlined />}>
+              <Menu.Item key={'7'} icon={<ProjectOutlined />}>
                 <small>{'Configuración de Plantillas'}</small>
                 <NavLink to={`${props.match.url}/templatesettings`} />
               </Menu.Item>
-              <Menu.Item key={'7'} icon={<MenuOutlined />}>
+              <Menu.Item key={'8'} icon={<MenuOutlined />}>
                 {'Menú Items'}
                 <NavLink to={`${props.match.url}/menuItems`} />
               </Menu.Item>
@@ -108,7 +115,8 @@ function Organization(props) {
                   <a
                     target='_blank'
                     href={`${window.location.origin}/organization/${organization._id}/events
-                        `}>
+                        `}
+                  >
                     {`Ir al landing de la organización: ${organization.name}`}
                   </a>
                 </Tag>
@@ -146,6 +154,13 @@ function Organization(props) {
                     component={OrgMembers}
                     org={organization}
                     componentKey='members'
+                  />
+                  <Protected
+                    exact
+                    path={`${props.match.url}/positions`}
+                    component={OrgPositions}
+                    org={organization}
+                    componentKey='positions'
                   />
                   <Protected
                     exact

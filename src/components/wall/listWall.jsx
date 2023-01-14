@@ -53,7 +53,7 @@ class WallList extends Component {
       post.id,
       this.props.cEvent.value._id,
       comment,
-      this.props.cUser.value
+      this.props.cUser.value,
     );
     // this.setState({ dataPost });
     this.innershowComments(post.id, post.comments + 1);
@@ -129,7 +129,7 @@ class WallList extends Component {
             // data = doc.data();
             const picture = await this.getDataUser(doc.data().author);
             return { ...doc.data(), id: doc.id, picture: picture };
-          })
+          }),
         );
 
         this.setState({ dataPost: dataPost });
@@ -187,7 +187,8 @@ class WallList extends Component {
                           user={this.props.cUser}
                         />
                       ),
-                    ]}>
+                    ]}
+                  >
                     <List.Item
                       key={item.id}
                       style={{ padding: '5px' }}
@@ -229,12 +230,14 @@ class WallList extends Component {
                                   onConfirm={() => this.innerDeletePost(item.id)}
                                   okText='Eliminar'
                                   okType='danger'
-                                  cancelText='Cancelar'>
+                                  cancelText='Cancelar'
+                                >
                                   <Button
                                     key='list-vertical-message'
                                     type='text'
                                     danger
-                                    icon={<DeleteOutlined style={{ marginRight: '2px', fontSize: '20px' }} />}>
+                                    icon={<DeleteOutlined style={{ marginRight: '2px', fontSize: '20px' }} />}
+                                  >
                                     Eliminar mi publicación
                                   </Button>
                                 </Popconfirm>
@@ -243,7 +246,8 @@ class WallList extends Component {
                             )}
                           </>
                         </Space>,
-                      ]}>
+                      ]}
+                    >
                       <List.Item.Meta
                         avatar={
                           item?.authorImage ? (
@@ -258,8 +262,9 @@ class WallList extends Component {
                         title={<span>{item.authorName}</span>}
                         description={
                           <div style={{ marginTop: '-10px' }}>
-                            <Tooltip title={dayjs(new Date(item.datePost.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
-                              <span>{dayjs(dayjs(new Date(item.datePost.toMillis()))).from(dayjs(new Date()))}</span>
+                            <Tooltip title={dayjs(new Date(item.datePost.toMillis())).format('DD-MM-YYYY HH:mm:ss')}>
+                              {/* <span>{dayjs(dayjs(new Date(item.datePost.toMillis()))).from(dayjs(new Date()))}</span> */}
+                              <span>{dayjs(new Date(item.datePost.toMillis())).format('DD-MM-YYYY HH:mm:ss')}</span>
                             </Tooltip>
                           </div>
                         }

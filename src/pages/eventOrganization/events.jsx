@@ -35,7 +35,7 @@ function OrgEvents(props) {
 
   return (
     <>
-      <Header title='Cursos' />
+      <Header title={'Cursos: ' + eventData?.length} />
       <Table
         columns={columns(goToEvent)}
         dataSource={eventData}
@@ -49,7 +49,8 @@ function OrgEvents(props) {
               <Button
                 type='primary'
                 icon={<PlusCircleOutlined />}
-                onClick={() => linkToTheMenuRouteS(`/create-event/${props.cUser?.value?._id}?orgId=${organizationId}`)}>
+                onClick={() => linkToTheMenuRouteS(`/create-event/${props.cUser?.value?._id}?orgId=${organizationId}`)}
+              >
                 {'Agregar'}
               </Button>
             </Col>

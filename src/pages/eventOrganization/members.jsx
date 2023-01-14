@@ -29,7 +29,11 @@ function OrgMembers(props) {
 
   async function getEventsStatisticsData() {
     const { data } = await OrganizationApi.getUsers(organizationId);
+    console.log('300. Usuarios de la organización: ', data);
     const { data: dataEvents } = await OrganizationApi.events(organizationId);
+    console.log('300. Cursos de la organización: ', dataEvents);
+    /* const { dataEjemplo } = await OrganizationApi.getEpecificUser(organizationId);
+    console.log('300. Trae información de : ', dataEjemplo); */
 
     const fieldsMembersData = [];
     // console.log('Array de OrgAPI - GetUsers', data);
@@ -48,7 +52,7 @@ function OrgMembers(props) {
         const eventId = dataEvents[indexEvent]._id;
         //const { data: dataEventUser } = await EventsApi.getEventUser(eventId, userId);
 
-        const thing = await EventsApi.getStatusRegister(eventId, email)
+        const thing = await EventsApi.getStatusRegister(eventId, email);
         if (thing.data.length === 0) continue;
         const eventUser = thing.data[0];
 
@@ -79,7 +83,9 @@ function OrgMembers(props) {
         _id: membersData._id,
         created_at: membersData.created_at,
         updated_at: membersData.updated_at,
-        position: membersData.rol.name,
+        role: membersData.rol.name,
+        position: membersData.positions?.name || 'Sin cargo',
+        picture: membersData.user.picture,
         // names: membersData?.user?.name || membersData?.user?.names,
         // email: membersData?.user?.email,
         stats: userActivities[membersData.account_id],
@@ -91,12 +97,15 @@ function OrgMembers(props) {
 
     dataEvents;
 
+    console.log('300. fieldsMembersData', fieldsMembersData);
+
     setMembersData(fieldsMembersData);
     setIsLoading(false);
   }
 
   async function getRoleList() {
     const roleListData = await RolAttApi.byEventRolsGeneral();
+    console.log('300. Roles? : ', roleListData);
     setRoleList(roleListData);
   }
 
@@ -105,7 +114,9 @@ function OrgMembers(props) {
     setLastUpdate(new Date());
     getRoleList();
     setExtraFields(props.org.user_properties);
+    console.log('props.org.user_properties', props.org.user_properties);
   }
+
   useEffect(() => {
     startingComponent();
   }, [props.org.user_properties]);
@@ -135,6 +146,7 @@ function OrgMembers(props) {
     setSelectedUser({});
     closeOrOpenModalMembers();
   }
+
   function editModalUser(item) {
     setSelectedUser(item);
     closeOrOpenModalMembers();
@@ -168,7 +180,7 @@ function OrgMembers(props) {
       </p>
 
       <Table
-        columns={columns(columnsData, editModalUser)}
+        columns={columns(columnsData, editModalUser, extraFields)}
         dataSource={membersData}
         size='small'
         rowKey='index'

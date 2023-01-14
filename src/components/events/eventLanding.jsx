@@ -57,6 +57,7 @@ class EventLanding extends Component {
         this.props.cEvent.value.description !== `<p class="ql-align-center"><br></p>` &&
         this.props.cEvent.value.description !== `<p class="ql-align-right"><br></p>` &&
         this.props.cEvent.value.description !== `<p class="ql-align-justify"><br></p>`) ||
+      this.props.cEvent.value ||
       ((this.props.cEvent.value.description === '<p><br></p>' ||
         this.props.cEvent.value.description === null ||
         this.props.cEvent.value.description === `<p class="ql-align-center"><br></p>` ||
@@ -73,26 +74,30 @@ class EventLanding extends Component {
     return (
       <div /* style={{ marginBottom: 12 }} */>
         {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
+        {console.log('this.props.cEvent.value', this.props.cEvent.value)}
 
         {this.props.cEvent.value && (
           <>
             <StudentSelfCourseProgress
               hasProgressLabel
               customTitle='Avance del curso'
-              activityFilter={a =>
+              activityFilter={(a) =>
                 ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
               }
             />
             <StudentSelfCourseProgress
               hasProgressLabel
               customTitle='Avance de exámenes'
-              activityFilter={a =>
+              activityFilter={(a) =>
                 [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
               }
             />
             <Card>
               <Typography.Text>Estado del curso:</Typography.Text>{' '}
-              <QuizApprovedStatus eventId={this.props.cEvent.value._id} approvedLink={`/landing/${this.props.cEvent.value._id}/certificate`} />
+              <QuizApprovedStatus
+                eventId={this.props.cEvent.value._id}
+                approvedLink={`/landing/${this.props.cEvent.value._id}/certificate`}
+              />
             </Card>
           </>
         )}
@@ -103,27 +108,13 @@ class EventLanding extends Component {
             /* bodyStyle={{ padding: '25px 5px' }} */
             bordered={true}
             style={
-              (this.props.cEvent.value.styles &&
+              this.props.cEvent.value.styles &&
               this.props.cEvent.value.styles.show_card_banner &&
               this.props.cEvent.value.styles.show_card_banner === true
                 ? { marginTop: '2%' }
-                : { marginTop: '0px' })
-            }>
-            {/* Si event video existe */}
-            {this.props.cEvent.value?.video_position == 'true' && this.props.cEvent.value.video && (
-              <div className='mediaplayer'>
-                <ReactPlayer
-                  width={'100%'}
-                  height={'100%'}
-                  style={{
-                    aspectRatio: '16/9',
-                    objectFit: 'cover',
-                  }}
-                  url={this.props.cEvent.value.video}
-                  controls
-                />
-              </div>
-            )}
+                : { marginTop: '0px' }
+            }
+          >
             {/*Lanzandome un nuevo diseno Sept 2022 */}
             <Row gutter={32}>
               <Col span={6}>
@@ -140,6 +131,21 @@ class EventLanding extends Component {
               </Col>
             </Row>
             {/* FIN Lanzandome un nuevo diseno Sept 2022 */}
+            {/* Si event video existe */}
+            {this.props.cEvent.value?.video_position == 'true' && this.props.cEvent.value.video && (
+              <div className='mediaplayer'>
+                <ReactPlayer
+                  width={'100%'}
+                  height={'100%'}
+                  style={{
+                    aspectRatio: '16/9',
+                    objectFit: 'cover',
+                  }}
+                  url={this.props.cEvent.value.video}
+                  controls
+                />
+              </div>
+            )}
 
             {this.props.cEvent.value.description !== '<p><br></p>' &&
             this.props.cEvent.value.description !== null &&

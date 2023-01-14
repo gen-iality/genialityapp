@@ -114,7 +114,7 @@ function fieldsAditional(extraFields) {
   if (extraFields) {
     const countFields = extraFields.filter(
       (field) =>
-        field.name !== 'names' && field.name !== 'email' && (field.type !== 'password' || field.name === 'contrasena')
+        field.name !== 'names' && field.name !== 'email' && (field.type !== 'password' || field.name === 'contrasena'),
     );
     return countFields.length;
   }
@@ -200,11 +200,11 @@ const FormRegister = ({
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [conditionals, setconditionals] = useState(
-    organization ? conditionalsOther : cEvent.value?.fields_conditions || []
+    organization ? conditionalsOther : cEvent.value?.fields_conditions || [],
   );
   const [eventUser, seteventUser] = useState(organization ? eventUserOther : cEventUser.value || {});
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
-    organization ? fields : cEvent.value?.user_properties || {}
+    organization ? fields : cEvent.value?.user_properties || {},
   );
   const buttonSubmit = useRef(null);
   const getCountries = async () => {
@@ -316,7 +316,7 @@ const FormRegister = ({
         ? cEventUser?.value?.properties
         : cUser.value
         ? cUser.value
-        : initialValuesGeneral
+        : initialValuesGeneral,
     );
   }, [cUser.value, cEventUser]);
 
@@ -584,7 +584,7 @@ const FormRegister = ({
                 cEvent?.value?.visibility === 'ANONYMOUS' && loginFirebaseAnonymous();
               } else {
                 window.location.replace(
-                  `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ? 1 : 4}`
+                  `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ? 1 : 4}`,
                 );
               }
             } else {
@@ -797,7 +797,8 @@ const FormRegister = ({
                 setareacodeselected(val);
                 //console.log(val);
               }}
-              placeholder='Código de area del pais'>
+              placeholder='Código de area del pais'
+            >
               {areaCode.map((code, key) => {
                 return (
                   <Option key={key} value={code.value}>
@@ -832,7 +833,8 @@ const FormRegister = ({
                 onChange={(val) => {
                   setareacodeselected(val);
                 }}
-                placeholder='Código de area del pais'>
+                placeholder='Código de area del pais'
+              >
                 {areaCode.map((code, key) => {
                   return (
                     <Option key={key} value={code.value}>
@@ -852,7 +854,8 @@ const FormRegister = ({
                 <div
                   dangerouslySetInnerHTML={{
                     __html: label,
-                  }}></div>
+                  }}
+                ></div>
               </div>
               <Divider />
             </>
@@ -889,7 +892,8 @@ const FormRegister = ({
                     form={form}
                     key={'l' + key}
                     htmlFor={key}
-                    initialValue={value}>
+                    initialValue={value}
+                  >
                     <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value ? value : false)}>
                       {mandatory ? (
                         <span>
@@ -916,12 +920,14 @@ const FormRegister = ({
                         header={intl.formatMessage({
                           id: 'registration.message.policy',
                         })}
-                        key='1'>
+                        key='1'
+                      >
                         <pre
                           dangerouslySetInnerHTML={{
                             __html: description,
                           }}
-                          style={{ whiteSpace: 'normal' }}></pre>
+                          style={{ whiteSpace: 'normal' }}
+                        ></pre>
                       </Panel>
                     </Collapse>
                   )}
@@ -964,7 +970,8 @@ const FormRegister = ({
                       },
                     ]
                   : []
-              }>
+              }
+            >
               <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload>
           );
@@ -1018,7 +1025,8 @@ const FormRegister = ({
                 }}
                 disabled={loading || countries.length === 0}
                 loading={loading}
-                placeholder='Seleccione un país'>
+                placeholder='Seleccione un país'
+              >
                 {countries.map((country) => {
                   return (
                     <Option key={country.iso2} value={country.name}>
@@ -1046,7 +1054,8 @@ const FormRegister = ({
                 }}
                 disabled={loading || regiones.length === 0}
                 loading={loading}
-                placeholder='Seleccione un región'>
+                placeholder='Seleccione un región'
+              >
                 {regiones.map((regiones) => {
                   return (
                     <Option key={regiones.iso2} value={regiones.name}>
@@ -1071,7 +1080,8 @@ const FormRegister = ({
                 onChange={(nameCity, aditionalData) => {
                   setCity({ name: nameCity, regionCode: aditionalData.key, inputName: name });
                 }}
-                placeholder='Seleccione una ciudad'>
+                placeholder='Seleccione una ciudad'
+              >
                 {cities.map((cityCode, key) => {
                   return (
                     <Option key={key} value={cityCode.name}>
@@ -1110,7 +1120,8 @@ const FormRegister = ({
                         ]
                       : []
                   }
-                  beforeUpload={beforeUpload}>
+                  beforeUpload={beforeUpload}
+                >
                   <Button type='primary' icon={<UploadOutlined />}>
                     {intl.formatMessage({
                       id: 'form.button.avatar',
@@ -1156,7 +1167,8 @@ const FormRegister = ({
                     rules={validations ? [{ required: false }] : [rule]}
                     key={'l' + key}
                     htmlFor={key}
-                    initialValue={value}>
+                    initialValue={value}
+                  >
                     {input}
                   </Form.Item>
 
@@ -1167,7 +1179,8 @@ const FormRegister = ({
                         header={intl.formatMessage({
                           id: 'registration.message.policy',
                         })}
-                        key='1'>
+                        key='1'
+                      >
                         <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
                       </Panel>
                     </Collapse>
@@ -1187,9 +1200,7 @@ const FormRegister = ({
     <>
       <Col xs={24} sm={22} md={24} lg={24} xl={24} style={center}>
         {!submittedForm ? (
-          <Card
-            bordered={false}
-            bodyStyle={textLeft}>
+          <Card bordered={false} bodyStyle={textLeft}>
             {eventUser !== undefined &&
               eventUser !== null &&
               eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
@@ -1229,7 +1240,8 @@ const FormRegister = ({
               }}
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
-              onValuesChange={valuesChange}>
+              onValuesChange={valuesChange}
+            >
               {/*cEvent.value?._id && cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
                 <Row justify={'center'} style={{ marginBottom: 30 }}>
                   <Card style={{ width: 700, margin: 'auto', background: '#F7C2C6' }}>
@@ -1278,7 +1290,8 @@ deberia ser solo la url de la imagen
                       overflowY: 'auto',
                       paddingRight: '0px',
                       borderRadius: '8px',
-                    }}>
+                    }}
+                  >
                     {fieldsAditional(extraFields) > 0 && (
                       <Typography.Title level={5}>
                         {intl.formatMessage({
@@ -1353,7 +1366,8 @@ deberia ser solo la url de la imagen
                           onClick={() => {
                             helperDispatch({ type: 'showLogin' });
                             setNotLoggedAndRegister(false);
-                          }}>
+                          }}
+                        >
                           {intl.formatMessage({
                             id: 'modal.title.login',
                             defaultMessage: 'Iniciar sesión',
@@ -1397,7 +1411,8 @@ deberia ser solo la url de la imagen
                         // RESTRICCIONES
                         // disabled={!eventIsActive}
                         type='primary'
-                        htmlType='submit'>
+                        htmlType='submit'
+                      >
                         {}
                         {isRegister(initialValues, cEventUser)
                           ? intl.formatMessage({ id: 'Button.signup' })
@@ -1418,7 +1433,8 @@ deberia ser solo la url de la imagen
                             style={{
                               marginLeft: 10,
                               marginTop: 10,
-                            }}>
+                            }}
+                          >
                             {option.text}
                           </Button>
                         ))}

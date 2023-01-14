@@ -112,7 +112,8 @@ function ModalMembers(props) {
           paddingTop: '0px',
           paddingBottom: '0px',
           marginTop: '30px',
-        }}>
+        }}
+      >
         <FormComponent
           conditionalsOther={[]}
           initialOtherValue={props.value}

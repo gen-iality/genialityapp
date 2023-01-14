@@ -77,6 +77,7 @@ class General extends Component {
     this.nameInputRef = createRef();
     this.state = {
       event: this.props.event,
+      possiblePositions: [],
       optionForm: [],
       selectedOption: [],
       selectedOrganizer: {},
@@ -186,6 +187,7 @@ class General extends Component {
         categories,
         event
       );
+      const currentOrganization = await OrganizationApi.getOne(event.organizer_id)
       this.setState({
         categories,
         organizers,
@@ -194,6 +196,7 @@ class General extends Component {
         selectedOrganizer,
         selectedType,
         loading: false,
+        possiblePositions: currentOrganization.positions,
       });
       if (info.dates && info.dates.length > 0) {
         this.setState({ specificDates: true });
@@ -518,6 +521,9 @@ class General extends Component {
       googleanlyticsid: event.googleanlyticsid || null,
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
+      is_external: event.is_external,
+      certification_description: event.certification_description,
+      validity_days: event.validity_days,
     };
 
     try {
@@ -711,6 +717,7 @@ class General extends Component {
     if (this.state.loading) return <Loading />;
     const {
       event,
+      possiblePositions,
       categories,
       organizers,
       types,
@@ -764,6 +771,28 @@ class General extends Component {
                       placeholder={'Nombre del curso'}
                       value={event.name}
                       onChange={(e) => this.handleChange(e, 'name')}
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    label={
+                      <label style={{ marginTop: '2%' }}>
+                        Cargo <label style={{ color: 'gray' }}>(opcional)</label>
+                      </label>
+                    }
+                  >
+                    <Select
+                      mode="multiple"
+                      placeholder="Asigna un cargo para excluir"
+                      onChange={(values) => {
+                        console.log(values)
+                        EventsApi.editItsPositions(event._id, values)
+                      }}
+                      defaultValue={event.position_ids || []}
+                      options={(possiblePositions || []).map((position) => ({
+                        value: position._id,
+                        label: position.position_name,
+                      }))}
                     />
                   </Form.Item>
 
@@ -1068,6 +1097,45 @@ class General extends Component {
                       </Col>
                     </Row>
                   </Card>
+
+                  <Form.Item label="¿Es evento externo?">
+                    <Checkbox
+                      checked={event.is_external}
+                      onChange={(e) => {
+                        this.handleChange(e.target.checked, 'is_external')
+                      }}
+                    />
+                  </Form.Item>
+
+                  {(event.is_external) && (
+                    <>
+                      <Form.Item
+                        label="Descripción de la certificación"
+                        >
+                        <Input
+                          value={event.certification_description}
+                          onChange={(e) => {
+                            this.handleChange(e, 'certification_description')
+                          }}
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        label="Días de vigencia"
+                        rules={[{
+                          required: true, message: "Necesario",
+                        }]}
+                      >
+                        <InputNumber
+                          min={1}
+                          value={event.validity_days}
+                          onChange={(e) => {
+                            this.handleChange(e, 'validity_days')
+                          }}
+                        />
+                      </Form.Item>
+                    </>
+                  )}
                 </Col>
               </Row>
               <BackTop />
