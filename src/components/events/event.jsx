@@ -17,6 +17,7 @@ import TipoAsistentes from './tipoUsers';
 import ConfirmacionRegistro from './registro/confirmacionRegistro';
 import ErrorServe from '../modal/serverError';
 import AgendaRoutes from '../agenda';
+import ModulePage from '../agenda/modulePage';
 import EmpresasRoutes from '../empresas';
 import TriviaRoutes from '../trivia';
 import DocumentsRoutes from '../documents';
@@ -281,6 +282,14 @@ class Event extends Component {
                 event={event}
                 updateEvent={this.updateEvent}
                 componentKey='agenda'
+              />
+              <Protected
+                path={`${match.url}/module`}
+                component={ModulePage}
+                eventId={event._id}
+                event={event}
+                updateEvent={this.updateEvent}
+                componentKey='module'
               />
               <Protected
                 path={`${match.url}/adminUsers`}
