@@ -19,6 +19,7 @@ export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType 
       image,
       length,
       latitude,
+      module_id,
     } = formdata;
 
     const {
@@ -59,6 +60,7 @@ export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType 
 
     return {
       name,
+      module_id,
       subtitle,
       bigmaker_meeting_id,
       datetime_start,
