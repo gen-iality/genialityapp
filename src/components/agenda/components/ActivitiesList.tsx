@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import { Divider, List, Typography, Button, Spin, Badge, Space } from 'antd';
+import { Divider, List, Typography, Button, Spin, Badge, Space, Collapse } from 'antd';
 import { ReadFilled, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
 import { Link } from 'react-router-dom';
@@ -20,6 +20,7 @@ import { getAnswersRef, getUserProgressRef, getQuestionsRef } from '@components/
 
 type TruncatedAgenda = {
   title: string;
+  module_name?: string;
   type?: ActivityType.ContentValue;
   timeString: string;
   link: string;
@@ -81,6 +82,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
           const result: TruncatedAgenda = {
             title: agenda.name,
+            module_name: agenda.module?.module_name,
             type: agenda.type?.name as ActivityType.ContentValue,
             timeString: dayjs(diff)
               .format('h:mm')
@@ -296,56 +298,105 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
         setActivitiesAttendee={setActivitiesAttendee}
       />
-      <List
-        size='small'
-        header={<h2>LECCIONES DEL CURSO</h2>}
-        bordered
-        dataSource={truncatedAgendaList}
-        renderItem={(item: TruncatedAgenda) => (
-          <item.RibbonComponent>
-            <List.Item className='shadow-box'>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                }}
-              >
-                <Link to={item.link}>
-                  <div>
-                    <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
-                    <span>{item.title}</span>
+      <Collapse>
+      {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name))).sort().map((moduleName, index) => (
+        <Collapse.Panel
+          header={moduleName ? `Módulo: ${moduleName}` : 'Sin módulo'}
+          key={index}
+          extra={`${truncatedAgendaList.filter((item) => item.module_name === moduleName).length} elemento(s)`}
+        >
+          <List
+            size='small'
+            header={<h2>LECCIONES DEL CURSO</h2>}
+            bordered
+            dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)}
+            renderItem={(item: TruncatedAgenda) => (
+              <item.RibbonComponent>
+                <List.Item className='shadow-box'>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                    <Link to={item.link}>
+                      <div>
+                        <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
+                        <span>{item.title}</span>
+                      </div>
+                    </Link>
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      <span style={{ marginRight: '.5em' }}>
+                        {item.ViewedStatusComponent && <item.ViewedStatusComponent />}
+                        {item.QuizProgressComponent && currentUser.value?._id && (
+                          <item.QuizProgressComponent userId={currentUser.value._id} isAnswersDeleted={isAnswersDeleted} />
+                        )}
+                        {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
+                          <item.DeleteSurveyAnswersButton
+                            userId={currentUser.value._id}
+                            onAnswersDeleted={(x: boolean) => setAnswersIsDeleted(x)}
+                          />
+                        )}
+                      </span>
+                      <Link to={item.link}>
+                        <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>
+                          {item.timeString}
+                        </span>
+                      </Link>
+                    </div>
                   </div>
-                </Link>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <span style={{ marginRight: '.5em' }}>
-                    {item.ViewedStatusComponent && <item.ViewedStatusComponent />}
-                    {item.QuizProgressComponent && currentUser.value?._id && (
-                      <item.QuizProgressComponent userId={currentUser.value._id} isAnswersDeleted={isAnswersDeleted} />
-                    )}
-                    {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
-                      <item.DeleteSurveyAnswersButton
-                        userId={currentUser.value._id}
-                        onAnswersDeleted={(x: boolean) => setAnswersIsDeleted(x)}
-                      />
-                    )}
-                  </span>
-                  <Link to={item.link}>
-                    <span
-                      style={{
-                        fontWeight: '100',
-                        fontSize: '1.2rem',
-                      }}
-                    >
-                      {item.timeString}
-                    </span>
-                  </Link>
-                </div>
-              </div>
-            </List.Item>
-          </item.RibbonComponent>
-        )}
-      />
+                </List.Item>
+              </item.RibbonComponent>
+            )}
+          />
+        </Collapse.Panel>
+      ))}
+      </Collapse>
+      {/* // <List
+      //   size='small'
+      //   header={<h2>LECCIONES DEL CURSO</h2>}
+      //   bordered
+      //   dataSource={truncatedAgendaList}
+      //   renderItem={(item: TruncatedAgenda) => (
+      //     <item.RibbonComponent>
+      //       <List.Item className='shadow-box'>
+      //         <div
+      //           style={{
+      //             display: 'flex',
+      //             justifyContent: 'space-between',
+      //             width: '100%',
+      //           }}
+      //         >
+      //           <Link to={item.link}>
+      //             <div>
+      //               <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
+      //               <span>{item.title}</span>
+      //             </div>
+      //           </Link>
+      //           <div style={{ display: 'flex', flexDirection: 'row' }}>
+      //             <span style={{ marginRight: '.5em' }}>
+      //               {item.ViewedStatusComponent && <item.ViewedStatusComponent />}
+      //               {item.QuizProgressComponent && currentUser.value?._id && (
+      //                 <item.QuizProgressComponent userId={currentUser.value._id} isAnswersDeleted={isAnswersDeleted} />
+      //               )}
+      //               {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
+      //                 <item.DeleteSurveyAnswersButton
+      //                   userId={currentUser.value._id}
+      //                   onAnswersDeleted={(x: boolean) => setAnswersIsDeleted(x)}
+      //                 />
+      //               )}
+      //             </span>
+      //             <Link to={item.link}>
+      //               <span
+      //                 style={{
+      //                   fontWeight: '100',
+      //                   fontSize: '1.2rem',
+      //                 }}
+      //               >
+      //                 {item.timeString}
+      //               </span>
+      //             </Link>
+      //           </div>
+      //         </div>
+      //       </List.Item>
+      //     </item.RibbonComponent>
+      //   )}
+      // /> */}
     </>
   );
 };
