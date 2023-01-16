@@ -157,10 +157,10 @@ export const createFieldForCheckInPerDocument = async ({
 // Logic to create the voting coefficient
 // TODO: pending copy for this instructions
 const voteWeightInstructions = [
+	'Se creará el campo "Coeficiente", se debe determinar su valor para cada asistente',
 	'Si ya hay asistentes inscritos en el evento, se deberá actualizar la información de dicho campo.',
-	'Esta función está disponible solo para cédula de ciudadanía Colombiana.',
-	'Se requiere Lector de documentos.',
-	'Durante la inscripción se almacenará la información capturada del documento.',
+	'Si el campo Coeficiente queda vacío o con valor 0 se tomará de forma automática con el valor de 1',
+	
 ];
 
 const voteWeightFields = [
@@ -198,7 +198,7 @@ export const createFieldForAssembly = async ({
 
 	if (value.target.checked) {
 		confirm({
-			title: `Al habilitar el checkIn por asamblea, recuerda que:`,
+			title: `Al habilitar el modo asamblea, recuerda que:`,
 			content: (
 				<List
 					size='small'
@@ -221,11 +221,11 @@ export const createFieldForAssembly = async ({
 		});
 	} else {
 		confirm({
-			title: `¿Se deshabilitará el checkIn por asamblea estás seguro?`,
+			title: `¿Está seguro que desea deshabilitar el modo asamblea?`,
 			// content: 'Una vez eliminado, no lo podrá recuperar',
-			okText: 'Si',
+			okText: 'Si, deshabilitar',
 			okType: 'danger',
-			cancelText: 'Cancelar',
+			cancelText: 'No, cancelar',
 			onOk() {
 				checkInByAssemblyFields.map(async (checkInFieldId: string) => {
 					await remove(checkInFieldId, true);
