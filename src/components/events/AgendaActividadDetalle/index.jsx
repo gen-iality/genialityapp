@@ -26,11 +26,14 @@ import WhereisInLanding from '@/components/games/whereIs/views/WhereIsInLanding'
 const { setHasOpenSurveys } = SurveyActions;
 import PlayMillonaire from '@/components/games/WhoWantsToBeAMillonaire/components/PlayMillonaire';
 import PrintBingoCartonButton from '@/components/games/bingo/components/PrintBingoCartonButton';
+import useActivityType from '@/context/activityType/hooks/useActivityType';
+import { disconnectUserPresenceInActivity, listenUserPresenceInActivity } from './utils';
 const sharePhotoEventStatus = true;
 const whereIsEventStatus = true;
 const millonaireEventSatus = true;
 
 const AgendaActividadDetalle = (props) => {
+  console.log(`I'm activity ${props}`)
   let { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
   let [orderedHost, setOrderedHost] = useState([]);
   let cSurveys = UseSurveysContext();
@@ -40,14 +43,24 @@ const AgendaActividadDetalle = (props) => {
   const [activity, setactivity] = useState('');
   const cUser = UseCurrentUserContext();
   let cEventUser = UseUserEvent();
+  // console.log('cUser', cUser)
   const cEvent = UseEventContext();
+  // console.log('activityId', props.match.params.activity_id)
+  const uid = cUser.value.uid
+  const activityId = props.match.params.activity_id
+  const eventId = cEvent.value._id
   const [openOrCloseModalDrawer, setOpenOrCloseModalDrawer] = useState(false);
   const intl = useIntl();
   {
     Moment.locale(window.navigator.language);
   }
-
+  
+  
   useEffect(() => {
+    if (!!activityId && !!eventId && !!uid) {
+      console.log('Presence function ')
+      listenUserPresenceInActivity(eventId, activityId, uid)
+    }
     async function getActividad() {
       return await AgendaApi.getOne(props.match.params.activity_id, cEvent.value._id);
     }
@@ -77,6 +90,7 @@ const AgendaActividadDetalle = (props) => {
     }
 
     return () => {
+      disconnectUserPresenceInActivity(eventId, activityId, uid)
       props.setTopBanner(true);
       props.setVirtualConference(true);
       HandleOpenCloseMenuRigth(true);
