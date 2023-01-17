@@ -2,7 +2,7 @@ import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import ImageComponentwithContext from './ImageComponent';
 import RenderComponent from './RenderComponent';
 
-const HCOActividad = ({ isBingo }) => {
+const HCOActividad = ({ isBingo = false }) => {
   let { currentActivity } = useHelper();
   const imageVisible = () => {
     if (

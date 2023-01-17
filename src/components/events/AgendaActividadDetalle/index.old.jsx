@@ -49,6 +49,8 @@ const AgendaActividadDetalle = (props) => {
   const uid = cUser.value.uid
   const activityId = props.match.params.activity_id
   const eventId = cEvent.value._id
+  console.log(cEvent)
+  // const isAssambleyMod = cEvent.value
   const [openOrCloseModalDrawer, setOpenOrCloseModalDrawer] = useState(false);
   const intl = useIntl();
   {
