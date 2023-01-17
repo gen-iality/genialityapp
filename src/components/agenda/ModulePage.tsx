@@ -37,6 +37,10 @@ function ModulePage(props: any) {
     }
   }, [currentEditingItem])
 
+  useEffect(() => {
+    console.log(columnsData)
+  }, [columnsData])
+
   const columns = [
     {
       title: 'Modulo',

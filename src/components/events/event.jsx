@@ -17,7 +17,7 @@ import TipoAsistentes from './tipoUsers';
 import ConfirmacionRegistro from './registro/confirmacionRegistro';
 import ErrorServe from '../modal/serverError';
 import AgendaRoutes from '../agenda';
-import ModulePage from '../agenda/modulePage';
+import ModulePage from '../agenda/ModulePage';
 import EmpresasRoutes from '../empresas';
 import TriviaRoutes from '../trivia';
 import DocumentsRoutes from '../documents';
