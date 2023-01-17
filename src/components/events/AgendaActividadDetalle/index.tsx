@@ -89,7 +89,7 @@ const AgendaActividadDetalle = (props: any) => {
 		}
 
 		return () => {
-			disconnectUserPresenceInActivity(eventId, activityId, uid);
+			!!isAssambleyMod && disconnectUserPresenceInActivity(eventId, activityId, uid);
 			props.setTopBanner(true);
 			props.setVirtualConference(true);
 			HandleOpenCloseMenuRigth(true);
