@@ -290,6 +290,50 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   if (isLoading) return <Spin />;
 
+  const ListThisActivities = (props: {
+    dataSource: any[],
+  }) => (
+    <List
+      size='small'
+      // header={<h2>LECCIONES DEL CURSO</h2>}
+      bordered
+      dataSource={props.dataSource}
+      renderItem={(item: TruncatedAgenda) => (
+        <item.RibbonComponent>
+          <List.Item className='shadow-box'>
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+              <Link to={item.link}>
+                <div>
+                  <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
+                  <span>{item.title}</span>
+                </div>
+              </Link>
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <span style={{ marginRight: '.5em' }}>
+                  {item.ViewedStatusComponent && <item.ViewedStatusComponent />}
+                  {item.QuizProgressComponent && currentUser.value?._id && (
+                    <item.QuizProgressComponent userId={currentUser.value._id} isAnswersDeleted={isAnswersDeleted} />
+                  )}
+                  {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
+                    <item.DeleteSurveyAnswersButton
+                      userId={currentUser.value._id}
+                      onAnswersDeleted={(x: boolean) => setAnswersIsDeleted(x)}
+                    />
+                  )}
+                </span>
+                <Link to={item.link}>
+                  <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>
+                    {item.timeString}
+                  </span>
+                </Link>
+              </div>
+            </div>
+          </List.Item>
+        </item.RibbonComponent>
+      )}
+    />
+  )
+
   return (
     <>
       <DeleteActivitiesTakenButton
@@ -299,104 +343,24 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         setActivitiesAttendee={setActivitiesAttendee}
       />
       <Collapse>
-      {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name))).sort().map((moduleName, index) => (
+      {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name))).filter((item) => item).sort().map((moduleName, index) => (
         <Collapse.Panel
           header={moduleName ? `Módulo: ${moduleName}` : 'Sin módulo'}
           key={index}
           extra={`${truncatedAgendaList.filter((item) => item.module_name === moduleName).length} elemento(s)`}
         >
-          <List
-            size='small'
-            header={<h2>LECCIONES DEL CURSO</h2>}
-            bordered
+          <ListThisActivities
             dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)}
-            renderItem={(item: TruncatedAgenda) => (
-              <item.RibbonComponent>
-                <List.Item className='shadow-box'>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                    <Link to={item.link}>
-                      <div>
-                        <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
-                        <span>{item.title}</span>
-                      </div>
-                    </Link>
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                      <span style={{ marginRight: '.5em' }}>
-                        {item.ViewedStatusComponent && <item.ViewedStatusComponent />}
-                        {item.QuizProgressComponent && currentUser.value?._id && (
-                          <item.QuizProgressComponent userId={currentUser.value._id} isAnswersDeleted={isAnswersDeleted} />
-                        )}
-                        {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
-                          <item.DeleteSurveyAnswersButton
-                            userId={currentUser.value._id}
-                            onAnswersDeleted={(x: boolean) => setAnswersIsDeleted(x)}
-                          />
-                        )}
-                      </span>
-                      <Link to={item.link}>
-                        <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>
-                          {item.timeString}
-                        </span>
-                      </Link>
-                    </div>
-                  </div>
-                </List.Item>
-              </item.RibbonComponent>
-            )}
           />
         </Collapse.Panel>
       ))}
       </Collapse>
-      {/* // <List
-      //   size='small'
-      //   header={<h2>LECCIONES DEL CURSO</h2>}
-      //   bordered
-      //   dataSource={truncatedAgendaList}
-      //   renderItem={(item: TruncatedAgenda) => (
-      //     <item.RibbonComponent>
-      //       <List.Item className='shadow-box'>
-      //         <div
-      //           style={{
-      //             display: 'flex',
-      //             justifyContent: 'space-between',
-      //             width: '100%',
-      //           }}
-      //         >
-      //           <Link to={item.link}>
-      //             <div>
-      //               <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
-      //               <span>{item.title}</span>
-      //             </div>
-      //           </Link>
-      //           <div style={{ display: 'flex', flexDirection: 'row' }}>
-      //             <span style={{ marginRight: '.5em' }}>
-      //               {item.ViewedStatusComponent && <item.ViewedStatusComponent />}
-      //               {item.QuizProgressComponent && currentUser.value?._id && (
-      //                 <item.QuizProgressComponent userId={currentUser.value._id} isAnswersDeleted={isAnswersDeleted} />
-      //               )}
-      //               {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
-      //                 <item.DeleteSurveyAnswersButton
-      //                   userId={currentUser.value._id}
-      //                   onAnswersDeleted={(x: boolean) => setAnswersIsDeleted(x)}
-      //                 />
-      //               )}
-      //             </span>
-      //             <Link to={item.link}>
-      //               <span
-      //                 style={{
-      //                   fontWeight: '100',
-      //                   fontSize: '1.2rem',
-      //                 }}
-      //               >
-      //                 {item.timeString}
-      //               </span>
-      //             </Link>
-      //           </div>
-      //         </div>
-      //       </List.Item>
-      //     </item.RibbonComponent>
-      //   )}
-      // /> */}
+
+      {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name))).filter((item) => !item).sort().map((moduleName, index) => (
+        <ListThisActivities
+          dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)}
+        />
+      ))}
     </>
   );
 };
