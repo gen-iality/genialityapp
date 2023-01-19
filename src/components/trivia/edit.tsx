@@ -39,7 +39,6 @@ import { DispatchMessageService } from '../../context/MessageService';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { DataAgendum, Question, State } from './types';
 import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
-// import { BORDER_STYLE } from 'html2canvas/dist/types/css/property-descriptors/border-style';
 
 const formLayout = {
 	labelCol: { span: 24 },
@@ -49,23 +48,6 @@ const formLayout = {
 const { Option, OptGroup } = Select;
 const { confirm } = Modal;
 const { Title } = Typography;
-
-// const BOOLEAN_IN_STRING = {
-// 	false: false,
-// 	true: true,
-// };
-
-// const parseStringBoolean = (value: string | boolean) => {
-// 	if (typeof value === 'string') {
-// 		if (value === 'true' || value === 'false') {
-// 			return BOOLEAN_IN_STRING[value];
-// 		} else {
-// 			return false;
-// 		}
-// 	} else {
-// 		return value;
-// 	}
-// };
 
 const parseStringNumber = (value: string | number) => {
 	if (typeof value === 'string') {
@@ -178,7 +160,7 @@ function TriviaEdit(props: any) {
 				survey: Update.survey,
 				show_horizontal_bar: Update.show_horizontal_bar || true,
 				graphyType: Update.graphyType ? Update.graphyType : 'y',
-				allow_vote_value_per_user: Update.allow_vote_value_per_user || 'false',
+				allow_vote_value_per_user: Update.allow_vote_value_per_user || false,
 				activity_id: Update.activity_id,
 				dataAgenda: dataAgenda.data,
 				points: Update.points ? Update.points : 1,
@@ -187,8 +169,8 @@ function TriviaEdit(props: any) {
 				win_Message: Update.win_Message ? Update.win_Message : '',
 				neutral_Message: Update.neutral_Message ? Update.neutral_Message : '',
 				lose_Message: Update.lose_Message ? Update.lose_Message : '',
-				ranking: Update.rankingVisible ? Update.rankingVisible : 'false',
-				displayGraphsInSurveys: Update.displayGraphsInSurveys ? Update.displayGraphsInSurveys : 'false',
+				ranking: Update.rankingVisible ? Update.rankingVisible : false,
+				displayGraphsInSurveys: Update.displayGraphsInSurveys ? Update.displayGraphsInSurveys : false,
 
 				minimumScore: Update.minimumScore ? Update.minimumScore : 0,
 			}));
@@ -582,8 +564,6 @@ function TriviaEdit(props: any) {
 	}
 
 	const closeModal = (info: Info, modalState: string) => {
-		// console.log('test:info', info);
-		// console.log('test:state', state);
 		const { question } = state;
 
 		// Condicional que actualiza el estado local
@@ -591,17 +571,12 @@ function TriviaEdit(props: any) {
 		if (Object.entries(info).length === 2) {
 			let { questionIndex, data } = info;
 			let updateQuestion = question;
-			// console.log('test:questionIndex', questionIndex);
-			// console.log('test:data', data);
 			setState((prev) => ({ ...prev, question: [] }));
 
 			// Se iteran las opciones y se asigna el texto para el tipo de pregunta
 			selectOptions.forEach((option) => {
 				if (data.type === option.value) data.type = option.text;
 			});
-
-			// console.log('test:question', question);
-			// console.log('test:updateQuestion', updateQuestion);
 
 			switch (modalState) {
 				case 'created':
@@ -641,18 +616,18 @@ function TriviaEdit(props: any) {
 	};
 
 	// Funcion para guardar en el estado el mensaje cuando se gana la encuesta
-	const onChangeWin = (e: any) => {
-		if (typeof e === 'string') return setState((prev) => ({ ...prev, win_Message: e }));
+	const onChangeWin = (content: string) => {
+		if (typeof content === 'string') return setState(prev => ({ ...prev, win_Message: content }));
 	};
 
 	// Funcion para guardar en el estado el mensaje neutral de la encuesta
-	const onChangeNeutral = (e: any) => {
-		if (typeof e === 'string') return setState((prev) => ({ ...prev, neutral_Message: e }));
+	const onChangeNeutral = (content: string) => {
+		if (typeof content === 'string') return setState(prev => ({ ...prev, neutral_Message: content }));
 	};
 
 	// Funcion para guardar en el estado el mensaje cuando se pierde la encuesta
-	const onChangeLose = (e: any) => {
-		if (typeof e === 'string') return setState((prev) => ({ ...prev, lose_Message: e }));
+	const onChangeLose = (content: string) => {
+		if (typeof content === 'string') return setState(prev => ({ ...prev, lose_Message: content }));
 	};
 
 	// Funcion usada para determinar el tiempo limite en segundos de la emcuesta
@@ -673,23 +648,19 @@ function TriviaEdit(props: any) {
 					return setState((prev) => ({ ...prev, allow_gradable_survey: true, allow_vote_value_per_user: false }));
 				setState((prev) => ({ ...prev, allow_gradable_survey: checked ? true : false }));
 				break;
-
 			case 'allow_vote_value_per_user':
-				if (checked && parseStringBoolean(allow_gradable_survey))
+				if (checked && parseStringBoolean(allow_gradable_survey)) {
 					return setState((prev) => ({ ...prev, allow_vote_value_per_user: true, allow_gradable_survey: false }));
-
+				} else {
+					return setState((prev) => ({ ...prev, allow_vote_value_per_user: checked }))
+				}
 				break;
-
 			case 'ranking':
 				setState((prev) => ({ ...prev, ranking: checked }));
-				// setState(prev => ({ ...prev, ranking: parseStringBoolean(ranking) }));
-				// this.setState({ allow_vote_value_per_user: state ? 'true' : 'false' });
 				break;
 			case 'displayGraphsInSurveys':
 				setState((prev) => ({ ...prev, displayGraphsInSurveys: checked }));
-				// setState(prev => ({ ...prev, displayGraphsInSurveys: parseStringBoolean(displayGraphsInSurveys) }));
 				break;
-
 			default:
 				break;
 		}
@@ -912,24 +883,6 @@ function TriviaEdit(props: any) {
 											</Select>
 										</Form.Item>
 										<Row justify='space-between' wrap gutter={[8, 8]}>
-											{/* <Col>
-                    <Form.Item label={'Permitir usuarios anónimos'}>
-                      <Switch
-                        name={'allow_anonymous_answers'}
-                        checked={allow_anonymous_answers === 'true' || allow_anonymous_answers === true}
-                        onChange={(checked) => setState({ allow_anonymous_answers: checked ? 'true' : 'false' })}
-                      />
-                    </Form.Item>
-                  </Col> */}
-											{/* <Col>
-                    <Form.Item label={'Publicar encuesta'}>
-                      <Switch
-                        name={'publish'}
-                        checked={publish === 'true' || publish === true}
-                        onChange={(checked) => setState({ publish: checked ? 'true' : 'false' })}
-                      />
-                    </Form.Item>
-                  </Col> */}
 											<Col>
 												<Form.Item label={'Mostrar gráficas en las encuestas'} name={'displayGraphsInSurveys'}>
 													<Switch
@@ -938,15 +891,6 @@ function TriviaEdit(props: any) {
 													/>
 												</Form.Item>
 											</Col>
-											{/* <Col>
-                          <Form.Item label={'Encuesta abierta'}>
-                            <Switch
-                              name={'openSurvey'}
-                              checked={openSurvey === 'true'}
-                              onChange={(checked) => setState({ openSurvey: checked ? 'true' : 'false' })}
-                            />
-                          </Form.Item>
-                        </Col> */}
 										</Row>
 										{parseStringBoolean(displayGraphsInSurveys) && (
 											<>
@@ -985,19 +929,9 @@ function TriviaEdit(props: any) {
 												</Form.Item>
 											</>
 										)}
-										{/* Is Global switch */}
-										{/* <Form.Item label={'Encuesta global (visible en todas las actividades)'} name={'isGlobal'}>
-											<Switch
-												checked={parseStringBoolean(isGlobal)}
-												onChange={checked => setState(prev => ({ ...prev, isGlobal: checked }))}
-											/>
-										</Form.Item> */}
-
-										{/* {!parseStringBoolean(isGlobal) && ( */}
-										{/* <> */}
 										<Form.Item label={'Relacionar esta encuesta a una actividad'} name={'activity_id'}>
 											<Select
-												defaultValue={activity_id}
+												defaultValue={(activity_id === '' || activity_id === null) ? 'globalMode' : activity_id }
 												value={activity_id}
 												onChange={(relation) => {
 													if (relation === 'globalMode') {
@@ -1016,9 +950,6 @@ function TriviaEdit(props: any) {
 												</OptGroup>
 											</Select>
 										</Form.Item>
-										{/* </> */}
-										{/* )} */}
-
 										<Form.Item label={'Permitir valor del voto por usuario'} name={'allow_vote_value_per_user'}>
 											<Switch
 												checked={parseStringBoolean(allow_vote_value_per_user)}
@@ -1064,9 +995,8 @@ function TriviaEdit(props: any) {
 														}>
 														{/* @ts-ignore */}
 														<ReactQuill
-															// name='initialMessage'
 															id={'initialMessage'}
-															value={state.initialMessage ?? undefined}
+															value={state.initialMessage || ''}
 															modules={toolbarEditor}
 															onChange={onChange}
 														/>
@@ -1074,9 +1004,8 @@ function TriviaEdit(props: any) {
 													<Form.Item label={'Mensaje pantalla final de la encuesta'}>
 														{/* @ts-ignore */}
 														<ReactQuill
-															// name={'neutral_Message'}
 															id={'neutral_Message'}
-															value={state.neutral_Message ?? undefined}
+															value={state.neutral_Message || ''}
 															modules={toolbarEditor}
 															onChange={onChangeNeutral}
 														/>
@@ -1084,9 +1013,8 @@ function TriviaEdit(props: any) {
 													<Form.Item label={'Mensaje al ganar'}>
 														{/* @ts-ignore */}
 														<ReactQuill
-															// name={'win_Message'}
 															id={'win_Message'}
-															value={state.win_Message ?? undefined}
+															value={state.win_Message || ''}
 															modules={toolbarEditor}
 															onChange={onChangeWin}
 														/>
@@ -1094,9 +1022,8 @@ function TriviaEdit(props: any) {
 													<Form.Item label={'Mensaje al perder'}>
 														{/* @ts-ignore */}
 														<ReactQuill
-															// name={'lose_Message'}
 															id={'lose_Message'}
-															value={state.lose_Message ?? undefined}
+															value={state.lose_Message || ''}
 															modules={toolbarEditor}
 															onChange={onChangeLose}
 														/>
