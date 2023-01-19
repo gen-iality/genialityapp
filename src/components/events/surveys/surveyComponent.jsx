@@ -19,10 +19,12 @@ import RealTimeSurveyListening from './functions/realTimeSurveyListening';
 import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
 import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
 import { sendCommunicationUser } from '@/components/agenda/surveyManager/services';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 // import { firestore, fireRealtime } from '../../../helpers/firebase';
 
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser, cEventUser } = props;
+  console.log('test:props-SurveyComponent', props)
   const cEvent = UseEventContext();
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
@@ -159,7 +161,7 @@ function SurveyComponent(props) {
 
   /* handler cuando la encuesta inicia, este sirve para retomar la encuesta donde vayan todos los demas usuarios */
   function onStartedSurvey(initialSurveyModel) {
-    if (surveyData.allow_gradable_survey === 'true') {
+    if (parseStringBoolean(surveyData.allow_gradable_survey)) {
       if (freezeGame === 'true') {
         initialSurveyModel.stopTimer();
         TimerAndMessageForTheNextQuestion(
@@ -183,7 +185,7 @@ function SurveyComponent(props) {
       onCurrentPageChanged.surveyModel.maxTimeToFinishPage - onCurrentPageChanged.options.oldCurrentPage.timeSpent;
     const status = onCurrentPageChanged.surveyModel.state;
 
-    if (surveyData.allow_gradable_survey === 'true') {
+    if (parseStringBoolean(surveyData.allow_gradable_survey)) {
       setShowOrHideSurvey(false);
       setFeedbackMessage({ icon: loaderIcon });
       if (status === 'running') {
@@ -208,19 +210,22 @@ function SurveyComponent(props) {
     onCurrentSurveyPageChanged();
   }, [onCurrentPageChanged]);
 
+  useEffect(() => {
+    console.log('test:surveyData', surveyData)
+  }, [surveyData])
+
   if (!surveyData) return 'Cargando...';
   return (
     <div>
-      {!showOrHideSurvey && surveyData.allow_gradable_survey === 'true' && (
+      {!showOrHideSurvey && parseStringBoolean(surveyData.allow_gradable_survey) && (
         <Result className='animate__animated animate__fadeIn' {...feedbackMessage} extra={null} />
       )}
 
       {//Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
       surveyData &&
-      (surveyData.allow_anonymous_answers === 'true' ||
-        surveyData.allow_anonymous_answers === true ||
-        surveyData.publish === 'true' ||
-        surveyData.publish === true) ? (
+      ( parseStringBoolean(surveyData.allow_anonymous_answers) ||
+        parseStringBoolean(surveyData.publish)
+      ) ? (
         <div style={{ display: showOrHideSurvey ? 'block' : 'none' }}>
           {initialSurveyModel && (
             <div className='animate__animated animate__backInUp notranslate'>

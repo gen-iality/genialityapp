@@ -1,6 +1,7 @@
 import { List, Button, Card, Tag, Result, Row, Col, Typography } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import ClipboardTextOff from '@2fd/ant-design-icons/lib/ClipboardTextOff';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
 const { Title } = Typography;
 
@@ -37,7 +38,11 @@ function SurveyCard(props) {
                 }}>
                 <List.Item key={survey._id}>
                   <List.Item.Meta
-                    title={<Title level={5}>{survey.name}</Title>}
+                    title={
+                      <Typography.Paragraph style={{ fontSize: '16px' }} strong>
+                        {survey.name}
+                      </Typography.Paragraph>
+                      }
                     style={{ textAlign: 'left' }}
                     description={
                       <Row>
@@ -70,7 +75,7 @@ function SurveyCard(props) {
                           {survey && (
                             <Col style={{ marginBottom: '3px' }}>
                               {' '}
-                              {survey.isOpened === 'true' || survey.isOpened === true ? (
+                              {!!parseStringBoolean(survey.isOpened) ? (
                                 <Tag icon={<CheckCircleOutlined />} color='green'>
                                   Abierta
                                 </Tag>
@@ -90,12 +95,11 @@ function SurveyCard(props) {
                                   (currentSurveyStatus &&
                                     currentSurveyStatus[survey._id] &&
                                     currentSurveyStatus[survey._id].surveyCompleted === 'completed') ||
-                                  survey.isOpened === 'false' ||
-                                  survey.isOpened === false
-                                    ? ' ghost'
-                                    : 'primary'
+                                    !parseStringBoolean(survey.isOpened)
+                                      ? ' ghost'
+                                      : 'primary'
                                 }
-                                className={`${survey.isOpened === 'true' &&
+                                className={`${parseStringBoolean(survey.isOpened) &&
                                   'animate__animated  animate__pulse animate__slower animate__infinite'}`}
                                 onClick={() => {
                                   handleClick(survey);
@@ -103,10 +107,10 @@ function SurveyCard(props) {
                                 {(currentSurveyStatus &&
                                   currentSurveyStatus[survey._id] &&
                                   currentSurveyStatus[survey._id].surveyCompleted === 'completed') ||
-                                survey.isOpened === 'false' ||
-                                survey.isOpened === false
-                                  ? 'Resultados'
-                                  : 'Ir a Encuesta'}
+                                  !parseStringBoolean(survey.isOpened)
+                                    ? 'Resultados'
+                                    : 'Ir a Encuesta'
+                                }
                               </Button>
                             </>
                           }

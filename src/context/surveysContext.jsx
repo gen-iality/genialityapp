@@ -3,6 +3,7 @@ import { listenSurveysData } from '../helpers/helperEvent';
 import InitSurveysCompletedListener from '../components/events/surveys/functions/initSurveyCompletedListener';
 import { UseEventContext } from './eventContext';
 import { UseCurrentUser } from './userContext';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 export const SurveysContext = React.createContext();
 
 //status: 'LOADING' | 'LOADED' | 'error'
@@ -15,6 +16,7 @@ let initialContextState = {
 };
 
 const reducer = (state, action) => {
+  console.log('test:action', action)
   let newState = state;
   let surveyChangedNew = null;
 
@@ -55,6 +57,8 @@ export function SurveysProvider({ children }) {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   const [state, dispatch] = useReducer(reducer, initialContextState);
+  console.log('test:state', state)
+  console.log('test:cEventContext', cEventContext)
 
   /** ACTION DISPACHERS **/
   function select_survey(survey) {
@@ -73,8 +77,8 @@ export function SurveysProvider({ children }) {
       return false;
     }
     return (
-      state.currentSurvey.isOpened === 'true' &&
-      state.currentSurvey.isPublished === 'true' &&
+      !!parseStringBoolean(state.currentSurvey.isOpened) &&
+      !!parseStringBoolean(state.currentSurvey.isPublished)&&
       attendeeAllReadyAnswered()
     );
   }
@@ -88,7 +92,8 @@ export function SurveysProvider({ children }) {
       !shouldDisplaySurvey() &&
       // state.currentSurvey.allow_gradable_survey === 'false' ||
       // state.currentSurvey.allow_gradable_survey === false ||
-      (state.currentSurvey.displayGraphsInSurveys === 'true' || state.currentSurvey.displayGraphsInSurveys === true)
+      !!parseStringBoolean(state.currentSurvey.displayGraphsInSurveys)
+      // (state.currentSurvey.displayGraphsInSurveys === 'true' || state.currentSurvey.displayGraphsInSurveys === true)
     );
   }
 
@@ -96,7 +101,7 @@ export function SurveysProvider({ children }) {
     if (!state.currentSurvey) {
       return false;
     }
-    return state.currentSurvey.isOpened === 'false';
+    return !parseStringBoolean(state.currentSurvey.isOpened);
   }
   function shouldDisplaySurveyAttendeeAnswered() {
     return !attendeeAllReadyAnswered();
@@ -114,16 +119,17 @@ export function SurveysProvider({ children }) {
     if (!state.currentSurvey) {
       return false;
     }
-    return state.currentSurvey.rankingVisible === 'true' || state.currentSurvey.rankingVisible === true;
+    return parseStringBoolean(state.currentSurvey.rankingVisible)
   }
 
   function surveysToBeListedByActivity() {
     let listOfSurveysFilteredByActivity;
+    console.log('test:state.surveys', state.surveys)
     if (state.currentActivity) {
       listOfSurveysFilteredByActivity =
         state.surveys &&
         state.surveys.filter(
-          (item) => item.activity_id === state.currentActivity._id || item.isGlobal === 'true' || item.isGlobal === true
+          (item) => item.activity_id === state.currentActivity._id || parseStringBoolean(item.isGlobal)
         );
     }
     return listOfSurveysFilteredByActivity;
@@ -180,6 +186,7 @@ export function SurveysProvider({ children }) {
 
 export function UseSurveysContext() {
   const contextsurveys = React.useContext(SurveysContext);
+  console.log('test:contextsurveys', contextsurveys)
   if (!contextsurveys) {
     throw new Error('eventContext debe estar dentro del proveedor');
   }
@@ -191,7 +198,7 @@ function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
   let shouldActivateSurvey = false;
   if (surveyChangedNew) {
     /** Se valida que el estado actual de la encuesta sea abierta y publicada */
-    if (surveyChangedNew.isOpened === 'true' && surveyChangedNew.isPublished === 'true') {
+    if (parseStringBoolean(surveyChangedNew.isOpened) && parseStringBoolean(surveyChangedNew.isPublished)) {
       /** Se filtran la encuestas por id del array de encuestas en el estado anterior versus el id de la encuesta que se actualizo recientemente */
       let surveyChangedPrevius = state.surveys.find((item) => item._id === surveyChangedNew._id);
       // newState['surveyResult'] = 'view';
@@ -199,8 +206,8 @@ function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
       /** Si la comparacion anterior da undefined es por la encuesta estaba abierta pero despublicada por ello se niega el surveyChanged, de lo contrario se valida que este cerrada o despublicada */
       if (
         !surveyChangedPrevius ||
-        surveyChangedPrevius.isOpened === 'false' ||
-        surveyChangedPrevius.isPublished === 'false'
+        !parseStringBoolean(surveyChangedPrevius.isOpened)||
+        !parseStringBoolean(surveyChangedPrevius.isPublished)
       ) {
         shouldActivateSurvey = true;
       }

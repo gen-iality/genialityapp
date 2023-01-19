@@ -29,6 +29,7 @@ const styleTabAttendes = {
 };
 
 let SocialZone = function(props) {
+  console.log('test:props', props)
   //contextos
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();

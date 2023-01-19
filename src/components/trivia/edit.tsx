@@ -36,6 +36,7 @@ import Loading from '../profile/loading';
 import { DispatchMessageService } from '../../context/MessageService';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { DataAgendum, Question, State } from './types';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 // import { BORDER_STYLE } from 'html2canvas/dist/types/css/property-descriptors/border-style';
 
 const formLayout = {
@@ -47,22 +48,22 @@ const { Option } = Select;
 const { confirm } = Modal;
 const { Title } = Typography;
 
-const BOOLEAN_IN_STRING = {
-	false: false,
-	true: true,
-};
+// const BOOLEAN_IN_STRING = {
+// 	false: false,
+// 	true: true,
+// };
 
-const parseStringBoolean = (value: string | boolean) => {
-	if (typeof value === 'string') {
-		if (value === 'true' || value === 'false') {
-			return BOOLEAN_IN_STRING[value];
-		} else {
-			return false;
-		}
-	} else {
-		return value;
-	}
-};
+// const parseStringBoolean = (value: string | boolean) => {
+// 	if (typeof value === 'string') {
+// 		if (value === 'true' || value === 'false') {
+// 			return BOOLEAN_IN_STRING[value];
+// 		} else {
+// 			return false;
+// 		}
+// 	} else {
+// 		return value;
+// 	}
+// };
 
 const parseStringNumber = (value: string | number) => {
 	if (typeof value === 'string') {
@@ -215,9 +216,17 @@ function TriviaEdit(props: any) {
 		setState(prev => ({ ...prev, question }));
 	};
 
-	// useEffect(() => {
-	// 	console.log('state', state);
-	// }, [state]);
+	useEffect(() => {
+		console.log('state', state);
+	}, [state]);
+
+	useEffect(() => {
+		console.log('state.isGlobal', state.isGlobal);
+	}, [state.isGlobal]);
+
+	useEffect(() => {
+		console.log('state.activity_id', state.activity_id);
+	}, [state.activity_id]);
 
 	//Funcion para guardar los datos a actualizar
 	const submit = async () => {
@@ -654,17 +663,17 @@ function TriviaEdit(props: any) {
 		//
 	};
 
-	const toggleSwitch = (variable: any, state: any) => {
+	const toggleSwitch = (variable: string, checked: any) => {
 		let { allow_gradable_survey, allow_vote_value_per_user, ranking, displayGraphsInSurveys } = state;
 		switch (variable) {
 			case 'allow_gradable_survey':
-				if (state && parseStringBoolean(allow_vote_value_per_user))
+				if (checked && parseStringBoolean(allow_vote_value_per_user))
 					return setState(prev => ({ ...prev, allow_gradable_survey: true, allow_vote_value_per_user: false }));
-				setState(prev => ({ ...prev, allow_gradable_survey: state ? true : false }));
+				setState(prev => ({ ...prev, allow_gradable_survey: checked ? true : false }));
 				break;
 
 			case 'allow_vote_value_per_user':
-				if (state && parseStringBoolean(allow_gradable_survey))
+				if (checked && parseStringBoolean(allow_gradable_survey))
 					return setState(prev => ({ ...prev, allow_vote_value_per_user: true, allow_gradable_survey: false }));
 
 				break;
@@ -674,7 +683,8 @@ function TriviaEdit(props: any) {
 				// this.setState({ allow_vote_value_per_user: state ? 'true' : 'false' });
 				break;
 			case 'displayGraphsInSurveys':
-				setState(prev => ({ ...prev, displayGraphsInSurveys: parseStringBoolean(displayGraphsInSurveys) }));
+				setState(prev => ({ ...prev, displayGraphsInSurveys: checked }));
+				// setState(prev => ({ ...prev, displayGraphsInSurveys: parseStringBoolean(displayGraphsInSurveys) }));
 				break;
 
 			default:
@@ -918,7 +928,7 @@ function TriviaEdit(props: any) {
                     </Form.Item>
                   </Col> */}
 											<Col>
-												<Form.Item label={'Mostar gráficas en las encuestas'} name={'displayGraphsInSurveys'}>
+												<Form.Item label={'Mostrar gráficas en las encuestas'} name={'displayGraphsInSurveys'}>
 													<Switch
 														checked={parseStringBoolean(displayGraphsInSurveys)}
 														onChange={checked => toggleSwitch('displayGraphsInSurveys', checked)}
@@ -958,23 +968,27 @@ function TriviaEdit(props: any) {
 											</>
 										)}
 										{/* Is Global switch */}
-										<Form.Item label={'Encuesta global (visible en todas las actividades)'} name={'isGlobal'}>
+										{/* <Form.Item label={'Encuesta global (visible en todas las actividades)'} name={'isGlobal'}>
 											<Switch
 												checked={parseStringBoolean(isGlobal)}
 												onChange={checked => setState(prev => ({ ...prev, isGlobal: checked }))}
 											/>
-										</Form.Item>
+										</Form.Item> */}
 
-										{!parseStringBoolean(isGlobal) && (
-											<>
+										{/* {!parseStringBoolean(isGlobal) && ( */}
+											{/* <> */}
 												<Form.Item label={'Relacionar esta encuesta a una actividad'} name={'activity_id'}>
 													<Select
 														defaultValue={activity_id}
 														value={activity_id}
 														onChange={relation => {
-															setState(prev => ({ ...prev, activity_id: relation }));
+															if (relation === 'globalMode') {
+																setState(prev => ({ ...prev, activity_id: relation, isGlobal: true }));
+															} else {
+																setState(prev => ({ ...prev, activity_id: relation, isGlobal: false }));
+															}
 														}}>
-														<Option value=''>{'No relacionar'}</Option>
+														<Option value='globalMode'>{'No relacionar'}</Option>
 														{dataAgenda.map((activity, key) => (
 															<Option key={key} value={activity._id}>
 																{activity.name}
@@ -982,8 +996,8 @@ function TriviaEdit(props: any) {
 														))}
 													</Select>
 												</Form.Item>
-											</>
-										)}
+											{/* </> */}
+										{/* )} */}
 
 										<Form.Item label={'Permitir valor del voto por usuario'} name={'allow_vote_value_per_user'}>
 											<Switch

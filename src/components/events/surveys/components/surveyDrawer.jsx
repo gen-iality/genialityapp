@@ -6,6 +6,7 @@ import { UseCurrentUser } from '../../../../context/userContext';
 import SurveyDetailPage from '../SurveyDetailPage';
 import RankingTrivia from '../rankingTrivia';
 import ThisRouteCanBeDisplayed from '../../Landing/helpers/thisRouteCanBeDisplayed';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
 function SurveyDrawer(props) {
   let cSurveys = UseSurveysContext();
@@ -40,7 +41,7 @@ function SurveyDrawer(props) {
           title={
             cSurveys.currentSurvey && cSurveys.currentSurvey?.allow_gradable_survey ? (
               <Space>
-                {cSurveys.currentSurvey.allow_gradable_survey === 'false' ? (
+                {!parseStringBoolean(cSurveys.currentSurvey.allow_gradable_survey) ? (
                   <PieChartOutlined
                     style={{
                       display: 'flex',
@@ -71,7 +72,7 @@ function SurveyDrawer(props) {
                 )}
                 <Space direction='vertical' size={-3}>
                   {cSurveys.currentSurvey?.name}
-                  {cSurveys.currentSurvey.allow_gradable_survey === 'true' && (
+                  {parseStringBoolean(cSurveys.currentSurvey.allow_gradable_survey) && (
                     <span style={{ fontSize: '12px', color: '#52c41a' }}>Calificable</span>
                   )}
                 </Space>
