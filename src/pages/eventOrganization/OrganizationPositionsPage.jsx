@@ -13,8 +13,8 @@ import { columns } from './tableColums/positionsTableColumns';
 /** Context */
 import withContext from '@context/withContext';
 
-function OrgPositions(props) {
-  console.log('300. Props - OrgPositions', props);
+function OrganizationPositionsPage(props) {
+  console.debug('OrganizationPositionsPage: Props - OrgPositions', { props });
 
   const [positionsData, setPositionsData] = useState([]);
   const [orgEventsData, setOrgEventsData] = useState([]);
@@ -24,20 +24,18 @@ function OrgPositions(props) {
   const { _id: organizationId } = props.org;
 
   async function getOrgPositions() {
-    console.log('2. Antes de hacer petición de positions: ');
     const positions = await PositionsApi.Organizations.getAll(organizationId);
-    console.log('2. positions', positions);
     setPositionsData(positions);
     setIsLoading(false);
+    console.debug('OrganizationPositionsPage: got positions', { positions });
   }
 
   async function getOrgEvents() {
-    console.log('1. Antes de hacer petición de eventos: ');
     const response = await OrganizationApi.events(organizationId);
     const orgEvents = response.data;
-    console.log('1. orgEvents', orgEvents);
     setOrgEventsData(orgEvents);
     setIsLoading(false);
+    console.debug('OrganizationPositionsPage: got orgEvents', { orgEvents });
   }
 
   useEffect(() => {
@@ -63,7 +61,6 @@ function OrgPositions(props) {
 
   return (
     <>
-      {console.log('300. positionsData', positionsData)}
       <Header title={'Cargos'} />
       <Table
         columns={columns(editModalPosition, orgEventsData)}
@@ -93,4 +90,4 @@ function OrgPositions(props) {
     </>
   );
 }
-export default withContext(OrgPositions);
+export default withContext(OrganizationPositionsPage);

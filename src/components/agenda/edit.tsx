@@ -52,6 +52,7 @@ export interface AgendaEditProps {
 
 const initialInfoState: AgendaType = {
   name: '',
+  module_id: undefined,
   subtitle: '',
   bigmaker_meeting_id: null,
   datetime_start: null,
@@ -84,6 +85,7 @@ const initialInfoState: AgendaType = {
 
 const initialFormDataState = {
   name: '',
+  module_id: undefined,
   // date: Moment(new Date()).format('YYYY-MM-DD')??new Date().,
   date: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
   space_id: '',
@@ -148,6 +150,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
         // Get the agenda document from current activity_id
         const agendaInfo: AgendaType = await AgendaApi.getOne(location.state.edit, props.event._id);
+        console.log('agendaInfo', agendaInfo);
 
         // Take the vimeo_id and save in info.
         const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
@@ -224,6 +227,7 @@ function AgendaEdit(props: AgendaEditProps) {
       agendaContext.setActivityName(formdata.name);
       try {
         const builtInfo = buildInfo();
+        console.debug('builtInfo final:', builtInfo);
         // setIsLoading(true);
         let agenda: AgendaType | null = null;
         if (location.state.edit || currentActivityID) {
