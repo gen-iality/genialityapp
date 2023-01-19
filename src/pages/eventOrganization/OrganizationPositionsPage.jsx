@@ -13,8 +13,8 @@ import { columns } from './tableColums/positionsTableColumns';
 /** Context */
 import withContext from '@context/withContext';
 
-function OrgPositions(props) {
-  console.debug('OrgPositions: Props - OrgPositions', { props });
+function OrganizationPositionsPage(props) {
+  console.debug('OrganizationPositionsPage: Props - OrgPositions', { props });
 
   const [positionsData, setPositionsData] = useState([]);
   const [orgEventsData, setOrgEventsData] = useState([]);
@@ -27,7 +27,7 @@ function OrgPositions(props) {
     const positions = await PositionsApi.Organizations.getAll(organizationId);
     setPositionsData(positions);
     setIsLoading(false);
-    console.debug('OrgPositions: got positions', { positions });
+    console.debug('OrganizationPositionsPage: got positions', { positions });
   }
 
   async function getOrgEvents() {
@@ -35,7 +35,7 @@ function OrgPositions(props) {
     const orgEvents = response.data;
     setOrgEventsData(orgEvents);
     setIsLoading(false);
-    console.debug('OrgPositions: got orgEvents', { orgEvents });
+    console.debug('OrganizationPositionsPage: got orgEvents', { orgEvents });
   }
 
   useEffect(() => {
@@ -90,4 +90,4 @@ function OrgPositions(props) {
     </>
   );
 }
-export default withContext(OrgPositions);
+export default withContext(OrganizationPositionsPage);

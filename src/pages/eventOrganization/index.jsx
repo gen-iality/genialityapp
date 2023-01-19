@@ -6,7 +6,7 @@ import OrganizationProfile from './profile';
 import Styles from '@components/App/styles';
 import OrgEvents from './events';
 import OrgMembers from './members';
-import OrgPositions from './positions';
+import OrganizationPositionsPage from './OrganizationPositionsPage';
 import MemberSettings from './memberSettings';
 import TemplateMemberSettings from './templateMemberSettings';
 import { Tag, Menu, Button, Layout } from 'antd';
@@ -158,7 +158,7 @@ function Organization(props) {
                   <Protected
                     exact
                     path={`${props.match.url}/positions`}
-                    component={OrgPositions}
+                    component={OrganizationPositionsPage}
                     org={organization}
                     componentKey='positions'
                   />
