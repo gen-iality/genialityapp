@@ -16,7 +16,6 @@ let initialContextState = {
 };
 
 const reducer = (state, action) => {
-  console.log('test:action', action)
   let newState = state;
   let surveyChangedNew = null;
 
@@ -53,12 +52,9 @@ const reducer = (state, action) => {
 };
 
 export function SurveysProvider({ children }) {
-  //  console.group('surveyContext');
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   const [state, dispatch] = useReducer(reducer, initialContextState);
-  console.log('test:state', state)
-  console.log('test:cEventContext', cEventContext)
 
   /** ACTION DISPACHERS **/
   function select_survey(survey) {
@@ -124,7 +120,6 @@ export function SurveysProvider({ children }) {
 
   function surveysToBeListedByActivity() {
     let listOfSurveysFilteredByActivity;
-    console.log('test:state.surveys', state.surveys)
     if (state.currentActivity) {
       listOfSurveysFilteredByActivity =
         state.surveys &&
@@ -156,13 +151,11 @@ export function SurveysProvider({ children }) {
     if (!cUser || !cUser.value) return;
 
     async function fetchSurveys() {
-      //  console.log('surveyContext', 'inicialize');
       listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
       InitSurveysCompletedListener(cUser, dispatch);
     }
     fetchSurveys();
   }, [cEventContext, cUser]);
-  //  console.groupEnd('surveyContext');
   return (
     <SurveysContext.Provider
       value={{
@@ -186,7 +179,6 @@ export function SurveysProvider({ children }) {
 
 export function UseSurveysContext() {
   const contextsurveys = React.useContext(SurveysContext);
-  console.log('test:contextsurveys', contextsurveys)
   if (!contextsurveys) {
     throw new Error('eventContext debe estar dentro del proveedor');
   }

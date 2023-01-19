@@ -531,13 +531,9 @@ function TriviaEdit(props: any) {
 
 	// Editar pregunta
 	const editQuestion = (questionId: string) => {
-		// console.log('test:questionId', questionId);
 		const { question } = state;
-		// console.log('test:question', question);
 		const questionIndex = question.findIndex((question) => question.id === questionId);
-		// console.log('test:questionIndex', questionIndex);
 		const currentQuestion = question.find((infoQuestion) => infoQuestion.id === questionId);
-		// console.log('test:currentQuestion', currentQuestion);
 		if (currentQuestion) {
 			setState((prev) => ({
 				...prev,

@@ -21,25 +21,16 @@ export function listenSurveysData(
   activity: any
   //visualizarEncuesta
 ) {
-  console.log('test:ListenSurveyData')
   firestore
     .collection('surveys')
     .where('eventId', '==', event_id)
-    // .where('isPublished', '==', 'true')
-    // .where('isPublished', '==', true)
     .onSnapshot((querySnapshot) => {
-      console.log('test:querySnapshot', querySnapshot)
-      console.log('test:querySnapshot.docs', querySnapshot.docs)
       const surveys = querySnapshot.docs.map(doc => ({ _id: doc.id, ...doc.data() }) as any)
       // That's must to do something when the survey change
       const changeInSurvey = changeInSurveyDocChanges(querySnapshot.docChanges());
       const  publishedSurveys = surveys.filter(survey => parseStringBoolean(survey.isPublished))
-      console.log('test:publishedSurveys', publishedSurveys)
-      console.log('test:changeInSurvey', changeInSurvey)
       dispatch({ type: 'data_loaded', payload: { publishedSurveys, changeInSurvey } });
-      //if (activity)
-      //publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser);
-    }, onError => console.log('myError:', onError));
+    }, onError => console.log('onError:', onError));
 }
 
 function changeInSurveyDocChanges(docChanges: any) {

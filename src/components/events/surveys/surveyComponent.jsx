@@ -24,7 +24,6 @@ import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser, cEventUser } = props;
-  console.log('test:props-SurveyComponent', props)
   const cEvent = UseEventContext();
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
@@ -209,10 +208,6 @@ function SurveyComponent(props) {
   useEffect(() => {
     onCurrentSurveyPageChanged();
   }, [onCurrentPageChanged]);
-
-  useEffect(() => {
-    console.log('test:surveyData', surveyData)
-  }, [surveyData])
 
   if (!surveyData) return 'Cargando...';
   return (

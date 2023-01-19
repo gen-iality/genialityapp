@@ -267,8 +267,6 @@ const FormEdit = (
     if (questionIndex === undefined) {
       try {
         SurveysApi.createQuestion(eventId, surveyId, exclude(dataValues)).then((res) => {
-          console.log('test:res', res)
-          console.log('test:exclude(dataValues)', exclude(dataValues))
           form.resetFields();
           closeModal({ questionIndex, data: exclude(dataValues) }, 'created');
           DispatchMessageService({

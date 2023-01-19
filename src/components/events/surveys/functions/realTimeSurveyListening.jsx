@@ -9,7 +9,6 @@ function RealTimeSurveyListening(idSurvey, currentUser, startingSurveyComponent)
     .doc(idSurvey)
     .onSnapshot(async (doc) => {
       let surveyRealTime = doc.data();
-      console.log('test:doc.data', doc.data())
 
       //revisando si estamos retomando la encuesta en alguna página particular
       if (currentUser && currentUser.value._id && surveyRealTime) {

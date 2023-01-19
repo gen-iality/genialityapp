@@ -14,8 +14,7 @@ import { UseSurveysContext } from '../../../context/surveysContext';
 const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
-  console.log('test:props-SurveyList', props)
-  let cSurveys = UseSurveysContext();
+  const cSurveys = UseSurveysContext();
   const { activity, setCurrentSurvey, setSurveyResult } = props;
 
   const currentUser = UseCurrentUser();

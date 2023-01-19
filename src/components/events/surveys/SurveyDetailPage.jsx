@@ -10,9 +10,7 @@ import { UseCurrentUser } from '../../../context/userContext';
 import { UseSurveysContext } from '../../../context/surveysContext';
 import { UseUserEvent } from '@context/eventUserContext';
 function SurveyDetailPage(props) {
-  console.log('test:props-SurveyDetailPage', props)
-  let cSurveys = UseSurveysContext();
-  console.log('test:cSurveys-SurveyDetailPage', cSurveys)
+  const cSurveys = UseSurveysContext();
   const currentUser = UseCurrentUser();
   const cEventUser = UseUserEvent();
   const [showSurveyTemporarily, setShowSurveyTemporarily] = useState(false);
