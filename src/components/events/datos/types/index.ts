@@ -19,24 +19,25 @@ export interface State {
 }
 
 export interface Field {
-  name:            string;
-  label:           string;
-  unique:          boolean;
-  mandatory:       boolean;
-  type:            string;
-  updated_at:      Date;
-  created_at:      Date;
-  _id:             string;
-  author:          null;
-  categories:      any[];
-  event_type:      null;
-  organiser:       null;
-  organizer:       null;
-  currency:        Currency;
-  tickets:         any[];
-  index:           number;
-  order_weight:    number;
-  visibleByAdmin?: boolean;
+  name:               string;
+  label:              string;
+  unique:             boolean;
+  mandatory:          boolean;
+  type:               string;
+  updated_at:         Date;
+  created_at:         Date;
+  _id:                string;
+  author:             null;
+  categories:         any[];
+  event_type:         null;
+  organiser:          null;
+  organizer:          null;
+  currency:           Currency;
+  tickets:            any[];
+  index:              number;
+  order_weight:       number;
+  visibleByAdmin?:    boolean;
+  visibleByContacts?: boolean;
 }
 
 export interface Currency {

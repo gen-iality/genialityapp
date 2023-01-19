@@ -1,9 +1,6 @@
-import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
-/* import { toast } from 'react-toastify'; */
-import { FormattedMessage, useIntl } from 'react-intl';
+import { Actions, EventFieldsApi, OrganizationPlantillaApi } from '../../../helpers/request';
 import DatosModal from './modal';
-import { Tabs, Table, Checkbox, Button, Select, Row, Col, Tooltip, Modal } from 'antd';
-import RelationField from './relationshipFields';
+import { Tabs, Table, Checkbox, Button, Row, Col, Tooltip, Modal } from 'antd';
 import {
 	EditOutlined,
 	DeleteOutlined,
@@ -14,27 +11,23 @@ import {
 } from '@ant-design/icons';
 // @ts-ignore
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
-// import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import { ColumnsType } from 'antd/lib/table';
+import { createFieldForAssembly, createFieldForCheckInPerDocument } from './utils';
+import { DispatchMessageService } from '../../../context/MessageService';
+import { Field, State } from './types';
+import { firestore } from '../../../helpers/firebase';
+import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
+import { useEffect, useState, Fragment } from 'react';
+import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import arrayMove from 'array-move';
 import CMS from '../../newComponent/CMS';
-import { firestore } from '../../../helpers/firebase';
-import ModalCreateTemplate from '../../shared/modalCreateTemplate';
 import Header from '../../../antdComponents/Header';
-import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
-import { DispatchMessageService } from '../../../context/MessageService';
-import { createFieldForAssembly, createFieldForCheckInPerDocument } from './utils';
-import { useHelper } from '@/context/helperContext/hooks/useHelper';
-
-const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
-const SortableItem = sortableElement((props: any) => <tr {...props} />);
-const SortableContainer = sortableContainer((props: any) => <tbody {...props} />);
-const { TabPane } = Tabs;
-const { Option } = Select;
+import ModalCreateTemplate from '../../shared/modalCreateTemplate';
 const { confirm } = Modal;
-import React, { useEffect, useState, Fragment } from 'react';
-import { Field, State } from './types';
-import { ColumnsType } from 'antd/lib/table';
-import { DocumentData, DocumentSnapshot, QuerySnapshot } from 'firebase/firestore';
+const { TabPane } = Tabs;
+const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
+const SortableContainer = sortableContainer((props: any) => <tbody {...props} />);
+const SortableItem = sortableElement((props: any) => <tr {...props} />);
 
 export default function Datos(props: any) {
 	const [state, setState] = useState<State>({
@@ -56,16 +49,8 @@ export default function Datos(props: any) {
 		checkInByAssemblyFields: [],
 		user_properties: [],
 	});
-
-	// useEffect(() => {
-	// 	console.log('state:', state);
-	// }, [state]);
-
 	const eventId = props.eventId;
 	const html = document.querySelector('html');
-	// const submitOrder = this.submitOrder.bind(this);
-	// const updateTable = this.updateTable.bind(this);
-	// const handlevisibleModal = this.handlevisibleModal.bind(this);
 	const organization = props.sendprops ? props.sendprops?.org : props.org;
 
 	useEffect(() => {
@@ -99,7 +84,7 @@ export default function Datos(props: any) {
 				//Realizado con la finalidad de no mostrar la contraseña ni el avatar
 				//Comentado la parte de password y contrasena para dejar habilitado solo en el administrador
 				fields.map((field: any) => {
-					if (/* field.name !== 'password' && field.name !== 'contrasena' &&  */ field.name !== 'avatar') {
+					if (field.name !== 'avatar') {
 						fieldsReplace.push(field);
 					}
 				});
@@ -112,7 +97,7 @@ export default function Datos(props: any) {
 				//Realizado con la finalidad de no mostrar la contraseña ni el avatar
 				//Comentado la parte de password y contrasena para dejar habilitado solo en el administrador
 				fields.map((field: any) => {
-					if (/* field.name !== 'password' && field.name !== 'contrasena' &&  */ field.name !== 'avatar') {
+					if (field.name !== 'avatar') {
 						fieldsReplace.push(field);
 					}
 					if (
@@ -136,10 +121,8 @@ export default function Datos(props: any) {
 				fields = orderFieldsByWeight(fieldsReplace);
 				fields = updateIndex(fieldsReplace);
 			}
-			//console.log('FIELDS==>', fields);
 			setState(prev => ({ ...prev, fields, loading: false }));
 		} catch (e) {
-			// showError(e, 'ERROR');
 			showError(e);
 		}
 	};
@@ -157,8 +140,7 @@ export default function Datos(props: any) {
 	};
 
 	//Guardar campo en el evento
-	const saveField = async (field: any) => {
-		/* console.log('FIELD==>', field); */
+	const saveField = async (field: Field, isEdit?: boolean) => {
 		DispatchMessageService({
 			type: 'loading',
 			key: 'loading',
@@ -166,16 +148,23 @@ export default function Datos(props: any) {
 			action: 'show',
 		});
 		try {
-			// let totaluser: firebase.firestore.QuerySnapshot<firebase.
       // @ts-ignore
 			let totaluser: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
 			const organizationId = organization?._id;
 			if (organizationId) {
-				if (state.edit) await props.editField(field._id || field.id, field, state.isEditTemplate, updateTable);
-				else await props.createNewField(field, state.isEditTemplate, updateTable);
+				if (state.edit || !!isEdit) {
+					// @ts-ignore
+					await props.editField(field._id || field.id, field, state.isEditTemplate, updateTable);
+				} else {
+					await props.createNewField(field, state.isEditTemplate, updateTable);
+				}
 			} else {
-				if (state.edit) await EventFieldsApi.editOne(field, field._id || field.id, eventId);
-				else await EventFieldsApi.createOne(field, eventId);
+				if (state.edit || !!isEdit) {
+					// @ts-ignore
+					await EventFieldsApi.editOne(field, field._id || field.id, eventId);
+				} else {
+					await EventFieldsApi.createOne(field, eventId);
+				}
 				totaluser = await firestore.collection(`${eventId}_event_attendees`).get();
 			}
 			if (totaluser?.docs?.length > 0 && field?.name == 'pesovoto') {
@@ -275,8 +264,6 @@ export default function Datos(props: any) {
 	};
 	//Borrar dato de la lista
 	const removeField = async (item: any, checkInFieldsDelete?: any) => {
-		// let self = this;
-
 		const onHandlerRemove = async () => {
 			try {
 				const organizationId = organization?._id;
@@ -327,26 +314,9 @@ export default function Datos(props: any) {
 			okType: 'danger',
 			cancelText: 'Cancelar',
 			onOk() {
-				//self.onHandlerRemove(loading, item);
 				onHandlerRemove();
 			},
 		});
-		/* try {
-      const organizationId = this?.organization?._id;
-      if (organizationId) {
-        await this.props.deleteField(this.state.deleteModal, this.state.isEditTemplate, this.updateTable);
-        this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
-      } else {
-        await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventId);
-        this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
-      }
-      await this.fetchFields();
-      setTimeout(() => {
-        this.setState({ message: {}, deleteModal: false });
-      }, 800);
-    } catch (e) {
-      this.showError(e);
-    } */
 	};
 
 	const closeDelete = () => {
@@ -376,35 +346,20 @@ export default function Datos(props: any) {
 			setState(prev => ({ ...prev, serverError: true, loader: false, errorData }));
 		}
 	};
-	//Funcion para cambiar el valor de los checkboxes
-	// useEffect(() => {
-	// 	// setState(prev => ({ ...prev, edit: true }));
-	// 	// const fieldCopy = { ...field };
-	// 	// fieldCopy[key] = !fieldCopy[key];
-	// 	// if (key2 != null) {
-	// 	// 	fieldCopy[key2] = fieldCopy[key2] == true ? false : fieldCopy[key2];
-	// 	// }
-	// 	// saveField(fieldCopy).then(resp => {
-	// 	// 	DispatchMessageService({
-	// 	// 		key: 'loading',
-	// 	// 		action: 'destroy',
-	// 	// 	});
-	// 	// 	DispatchMessageService({
-	// 	// 		type: 'success',
-	// 	// 		msj: 'Se ha editado correctamente el campo!',
-	// 	// 		action: 'show',
-	// 	// 	});
-	// 	// });
-	// }, [field, key, key2, saveField, DispatchMessageService]);
 
-	const changeCheckBoxEffect = async (field: any, key: any, key2 = null) => {
+	const changeCheckBoxEffect = async (field: Field, key: keyof typeof field, key2: keyof typeof field | null = null) => {
+		
 		try {
-			const fieldCopy = { ...field };
+			// This logic is for select just visible for contacts or visible for admin
+			let fieldCopy = { ...field };
+			// @ts-ignore
 			fieldCopy[key] = !fieldCopy[key];
 			if (key2 != null) {
+				// @ts-ignore
 				fieldCopy[key2] = fieldCopy[key2] == true ? false : fieldCopy[key2];
 			}
-			saveField(fieldCopy).then(resp => {
+			// This logic is for select just visible for contacts or visible for admin
+			saveField(fieldCopy, true).then(resp => {
 				DispatchMessageService({
 					key: 'loading',
 					action: 'destroy',
@@ -428,44 +383,9 @@ export default function Datos(props: any) {
 		}
 	};
 
-	const changeCheckBox = async (field: any, key: any, key2: any = null) => {
+	const changeCheckBox = async (field: Field, key: any, key2: any = null) => {
 		setState(prev => ({ ...prev, edit: true }));
-		changeCheckBoxEffect(field, key, key2);
-		// DispatchMessageService({
-		// 	type: 'loading',
-		// 	key: 'loading',
-		// 	msj: ' Por favor espere mientras se guarda la información...',
-		// 	action: 'show',
-		// });
-		// try {
-		// 	// setState({ edit: true }, () => {
-		// 	// 	field[key] = !field[key];
-		// 	// 	if (key2 != null) {
-		// 	// 		field[key2] = field[key2] == true ? false : field[key2];
-		// 	// 	}
-		// 	// 	saveField(field).then(resp => {
-		// 	// 		DispatchMessageService({
-		// 	// 			key: 'loading',
-		// 	// 			action: 'destroy',
-		// 	// 		});
-		// 	// 		DispatchMessageService({
-		// 	// 			type: 'success',
-		// 	// 			msj: 'Se ha editado correctamente el campo!',
-		// 	// 			action: 'show',
-		// 	// 		});
-		// 	// 	});
-		// 	// });
-		// } catch (e) {
-		// 	DispatchMessageService({
-		// 		key: 'loading',
-		// 		action: 'destroy',
-		// 	});
-		// 	DispatchMessageService({
-		// 		type: 'error',
-		// 		msj: 'El Campo no ha sido posible actualizarlo, intenta mas tarde',
-		// 		action: 'show',
-		// 	});
-		// }
+		await changeCheckBoxEffect(field, key, key2);
 	};
 	//Contenedor draggable
 	const DraggableContainer = (props: any) => (
@@ -535,17 +455,6 @@ export default function Datos(props: any) {
 			width: 180,
 			ellipsis: true,
 			sorter: (a: any, b: any) => a.label.localeCompare(b.label),
-			/* render (val, item) {
-          return (
-            <>
-              {
-                item.name !== 'contraseña' || item.name !== 'password' || item.name !== 'avatar' && (
-                  <>{item.name}</>
-                )
-              }
-            </>
-          )
-        } */
 		},
 		{
 			title: 'Tipo de dato',
@@ -610,7 +519,6 @@ export default function Datos(props: any) {
 						name='visibleByAdmin'
 						onChange={() => changeCheckBox(key, 'visibleByAdmin', 'visibleByContacts')}
 						checked={record}
-						/* disabled={key.name === 'contrasena' || key.type === 'password'} */
 					/>
 				) : (
 					<Checkbox checked />
@@ -625,7 +533,7 @@ export default function Datos(props: any) {
 				return (
 					<Row wrap gutter={[8, 8]}>
 						<Col>
-							{key.name !== 'email' /* && key.name !== 'contrasena' */ && (
+							{key.name !== 'email' && (
 								<Tooltip placement='topLeft' title='Editar'>
 									<Button
 										key={`editAction${key.index}`}
@@ -640,7 +548,7 @@ export default function Datos(props: any) {
 							)}
 						</Col>
 						<Col>
-							{key.name !== 'email' && key.name !== 'names' /* && key.name !== 'contrasena' */ && (
+							{key.name !== 'email' && key.name !== 'names' && (
 								<Tooltip placement='topLeft' title='Eliminar'>
 									<Button
 										key={`removeAction${key.index}`}
@@ -760,13 +668,6 @@ export default function Datos(props: any) {
 						</Fragment>
 					</TabPane>
 				)}
-
-				{/* {this.props.eventId && this.props.type != 'organization' && (
-          <TabPane tab='Campos Relacionados' key='2'>
-            <RelationField eventId={this.props.eventId} fields={fields} />
-          </TabPane>
-        )} */}
-
 				{props.type == 'organization' && (
 					<TabPane tab={props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
 						{state.isEditTemplate.status || props.type === 'configMembers' ? (
