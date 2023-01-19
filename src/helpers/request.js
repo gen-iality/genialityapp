@@ -240,9 +240,12 @@ export const EventsApi = {
     const token = await GetTokenUserFirebase();
     return await Actions.edit(`/api/events/${id}?token=${token}`, data, true);
   },
-  deleteOne: async (id) => {
+  editItsPositions: async (id, positionIds) => {
+    const data = {
+      position_ids: positionIds,
+    };
     const token = await GetTokenUserFirebase();
-    return await Actions.delete(`/api/events/${id}/?token=${token}`, '', true);
+    return await Actions.put(`/api/events/${id}/positions?token=${token}`, data, true);
   },
   getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`, true);
@@ -1286,4 +1289,118 @@ export const OrderFunctions = {
     return await Actions.post(`/api/orders`, data);
   },
 };
+
+// Endpoint for position handlering
+export const PositionsApi = {
+  getAll: async () => {
+    return await Actions.getAll('/api/positions', true);
+  },
+  getOne: async (positionId) => {
+    return await Actions.get(`api/positions/${positionId}`, true);
+  },
+  create: async (positionName) => {
+    const data = {
+      position_name: positionName,
+    };
+    return await Actions.create('/api/positions', data, true);
+  },
+  delete: async (positionId) => {
+    return await Actions.delete('api/positions/', positionId, true);
+  },
+  update: async (positionId, positionName) => {
+    const data = {
+      position_name: positionName,
+    };
+    return await Actions.put(`api/positions/${positionId}`, data, true);
+  },
+  Organizations: {
+    getAll: async (organizationId) => {
+      return await Actions.getAll(`/api/positions/organization/${organizationId}`, true);
+    },
+    getOne: async (organizationId, positionId) => {
+      return await Actions.get(`api/positions/${positionId}/organization/${organizationId}`, true);
+    },
+    create: async (organizationId, positionName) => {
+      const data = {
+        position_name: positionName,
+      };
+      return await Actions.create(`/api/positions/organization/${organizationId}`, data, true);
+    },
+    editItsEvents: async (organizationId, positionId, eventIds) => {
+      const data = {
+        event_ids: eventIds,
+      };
+      const token = await GetTokenUserFirebase();
+      return await Actions.put(
+        `/api/positions/${positionId}/organization/${organizationId}/events?token=${token}`,
+        data,
+        true,
+      );
+    },
+    getUsers: async (organizationId, positionId) => {
+      return await Actions.get(`api/positions/${positionId}/organization/${organizationId}/users`, true);
+    },
+    addUser: async (organizationId, positionId, userId) => {
+      const data = { user_id: userId };
+      return await Actions.post(`api/positions/${positionId}/organization/${organizationId}/users`, data, true);
+    },
+  },
+};
+
+// Endpoint for module handlering
+export const ModulesApi = {
+  getAll: async () => {
+    return await Actions.getAll('api/modules', true);
+  },
+  getOne: async (moduleId) => {
+    return await Actions.get(`api/modules/${moduleId}`, true);
+  },
+  create: async (moduleName, eventId) => {
+    const data = {
+      module_name: moduleName,
+      event_id: eventId || undefined,
+    };
+    return await Actions.create('/api/modules', data, true);
+  },
+  deleteOne: async (moduleId) => {
+    return await Actions.delete('api/modules/', moduleId, true);
+  },
+  update: async (moduleId, moduleName) => {
+    const data = {
+      module_name: moduleName,
+    };
+    return await Actions.put(`api/modules/${moduleId}`, data, true);
+  },
+  getActivities: async (moduleId) => {
+    return await Actions.get(`api/modules/${moduleId}/activities`, true);
+  },
+  setActivities: async (moduleId, activityIds) => {
+    const data = {
+      activity_ids: activityIds,
+    };
+    return await Actions.put(`api/modules/${moduleId}/activities`, data, true);
+  },
+  getModulesForActivity: async (activityId) => {
+    return await Actions.get(`api/modules/activity/${activityId}/modules`, true);
+  },
+  getModulesForNoActivity: async (eventId) => {
+    return await Actions.get(`api/modules/event/${eventId}/with-no-module/activities`, true);
+  },
+  byEvent: async (eventId, query) => {
+    console.log('byEvent', eventId, 'query', query);
+    return await Actions.get(`api/modules/event/${eventId}/modules`, true);
+  },
+  // createForThisEvent: async (event_id, moduleName) => {
+  //   const data = {
+  //     module_name: moduleName,
+  //   };
+  //   return await Actions.create('/api/modules', data, true);
+  // },
+}
+
 export default privateInstance;
+window.EventsApi = EventsApi;
+window.PositionsApi = PositionsApi;
+window.OrganizationApi = OrganizationApi;
+window.TicketsApi = TicketsApi;
+window.ModulesApi = ModulesApi;

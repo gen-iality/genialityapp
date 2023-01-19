@@ -7,7 +7,7 @@ import { Row, Col, Space, Typography, Button, Form, Input, InputRef, Switch, Car
 import { Select as SelectAntd } from 'antd';
 import { ExclamationCircleOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
 
-import { CategoriesAgendaApi, SpeakersApi } from '@helpers/request';
+import { CategoriesAgendaApi, SpeakersApi, ModulesApi } from '@helpers/request';
 import { fieldsSelect, handleRequestError, handleSelect } from '@helpers/utils';
 
 import Select from 'react-select';
@@ -40,6 +40,7 @@ const creatableStyles = { menu: (styles: object) => ({ ...styles, maxHeight: 'in
 
 export interface FormDataType {
   name: string;
+  module_id: string | undefined;
   date: string;
   description: string;
   space_id: string;
@@ -84,6 +85,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const [allSpaces, setAllSpaces] = useState<SelectOptionType[]>([]); // info.space_id loads this with data
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
+  const [allModules, setAllModules] = useState<any[]>([]);
   const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
   const [isNameInputFocused, setIsNameInputFocused] = useState(false);
 
@@ -102,6 +104,11 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     if (!props.event?._id) return;
 
     const loading = async () => {
+      // Get all available modules
+      const modules = await ModulesApi.byEvent(props.event._id);
+      setAllModules(modules);
+      console.debug('formdata.module_id:', formdata.module_id);
+
       useLoadExtraAgendaData(props.event, {
         setCategories: setAllCategories,
         setDays: setAllDays,
@@ -131,6 +138,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     setFormData({
       ...previousFormData,
       name: agenda.name,
+      module_id: agenda.module_id || undefined,
       date: processedDate.date,
       description: agenda.description,
       image: agenda.image,
@@ -311,6 +319,21 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 value={formdata.name}
                 onChange={(value) => handleChangeFormData('name', value.target.value)}
                 placeholder='Nombre de la lección'
+              />
+            </Form.Item>
+            <Form.Item
+              label="Módulo (opcional)"
+            >
+              <SelectAntd
+                options={allModules.map((module) => ({
+                  label: module.module_name,
+                  value: module._id,
+                }))}
+                value={formdata.module_id}
+                onChange={(value) => {
+                  console.debug('select module:', value);
+                  handleChangeFormData('module_id', value)
+                }}
               />
             </Form.Item>
             <Form.Item

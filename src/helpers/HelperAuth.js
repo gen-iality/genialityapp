@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { app, firestore } from './firebase';
 
 export async function GetTokenUserFirebase() {
+  // TODO: Just edit this line to say that it is important call to unsubscribe when any component is unmount...
   return new Promise((resolve, reject) => {
     app.auth().onAuthStateChanged(user => {
       if (user) {

@@ -58,6 +58,7 @@ const MainProfile = (props) => {
   const [eventsThatIHaveParticipatedIsLoading, setEventsThatIHaveParticipatedIsLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [content, setContent] = useState('ACCOUNT_ACTIVITY');
+
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
   const { helperDispatch } = useHelper();
@@ -151,6 +152,12 @@ const MainProfile = (props) => {
         setActiveTab('1');
     }
   }, []);
+
+  useEffect(() => {
+    if (!props?.cUser?.value?._id) {
+      return;
+    }
+  }, [props?.cUser?.value]);
 
   useEffect(() => {
     if (activeTab !== '2') return;
