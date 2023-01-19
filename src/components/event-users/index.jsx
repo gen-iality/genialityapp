@@ -985,7 +985,7 @@ class ListEventUser extends Component {
           currentUser={this.state.currentUser}
         />
         <Header
-          title={type == 'activity' ? 'Inscripción de ' + nameActivity : 'Inscripción de curso'}
+          title={type == 'activity' ? 'Inscripción de ' + nameActivity : ('Inscripción de curso' + `: ${this.props.event.name || 'sin título'}`)}
           titleToMergingOrAdaptIt={
             componentKey === 'activity-checkin'
               ? 'Check-in actividad: ' + nameActivity
