@@ -1,3 +1,4 @@
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 import SurveyAnswers from '../services/surveyAnswersService';
 
 function SavingResponseByUserId(surveyData, question, infoUser, eventUsers, voteWeight, infoOptionQuestion) {
@@ -10,7 +11,7 @@ function SavingResponseByUserId(surveyData, question, infoUser, eventUsers, vote
          uid: infoUser.value._id,
          email: infoUser.value.email,
          names: infoUser.value.names || infoUser.value.displayName,
-         voteValue: surveyData.allow_vote_value_per_user === 'true' && eventUsers.length > 0 && voteWeight,
+         voteValue: parseStringBoolean(surveyData.allow_vote_value_per_user) && eventUsers.length > 0 && voteWeight,
       },
       infoOptionQuestion
    );

@@ -28,6 +28,7 @@ import { Actions } from '../../helpers/request';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DispatchMessageService } from '../../context/MessageService';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
 const { Option } = Select;
 
@@ -164,7 +165,7 @@ const FormEdit = (
 
   useEffect(() => {
     setLoading(true);
-    let state = gradableSurvey === 'true' ? true : false;
+    let state = parseStringBoolean(gradableSurvey)
 
     setDefaultValues(valuesQuestion);
     setQuestionId(valuesQuestion.id);

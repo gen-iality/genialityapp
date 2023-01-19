@@ -1,5 +1,6 @@
 import { SurveysApi } from '../../../../helpers/request';
 import * as Survey from 'survey-react';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
 async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
   /** Este componente nos permite cargar datos de la encuesta seleccionada */
@@ -41,7 +42,7 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
   // Asigna textos al completar encuesta y al ver la encuesta vacia
   dataSurvey.completedHtml = 'Gracias por contestar!';
   //dataSurvey.questionsOnPageMode = 'singlePage';
-  if (dataSurvey.allow_gradable_survey === 'true' && dataSurvey.initialMessage) {
+  if (parseStringBoolean(dataSurvey.allow_gradable_survey) && dataSurvey.initialMessage) {
     // Permite mostrar el contador y asigna el tiempo limite de la encuesta y por pagina
     dataSurvey.showTimerPanel = 'top';
 
@@ -64,7 +65,7 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
 
   dataSurvey['questions'].forEach((page, index) => {
     let newPage = page;
-    newPage['isRequired'] = dataSurvey.allow_gradable_survey === 'true' ? false : true;
+    newPage['isRequired'] = !parseStringBoolean(dataSurvey.allow_gradable_survey);
     /** Se agrega la imagen a la pregunta */
     if (newPage?.image) {
       dataSurvey.pages[index] = {

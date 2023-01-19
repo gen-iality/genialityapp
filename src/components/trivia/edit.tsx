@@ -664,7 +664,7 @@ function TriviaEdit(props: any) {
 	};
 
 	const toggleSwitch = (variable: string, checked: any) => {
-		let { allow_gradable_survey, allow_vote_value_per_user, ranking, displayGraphsInSurveys } = state;
+		const { allow_gradable_survey, allow_vote_value_per_user, ranking, displayGraphsInSurveys } = state;
 		switch (variable) {
 			case 'allow_gradable_survey':
 				if (checked && parseStringBoolean(allow_vote_value_per_user))
@@ -679,7 +679,8 @@ function TriviaEdit(props: any) {
 				break;
 
 			case 'ranking':
-				setState(prev => ({ ...prev, ranking: parseStringBoolean(ranking) }));
+				setState(prev => ({ ...prev, ranking: checked }));
+				// setState(prev => ({ ...prev, ranking: parseStringBoolean(ranking) }));
 				// this.setState({ allow_vote_value_per_user: state ? 'true' : 'false' });
 				break;
 			case 'displayGraphsInSurveys':

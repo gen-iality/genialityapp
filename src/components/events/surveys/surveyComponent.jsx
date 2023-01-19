@@ -126,7 +126,7 @@ function SurveyComponent(props) {
     }
     let isLastPage = surveyModel.isLastPage;
 
-    if (surveyData.allow_gradable_survey === 'true') {
+    if (parseStringBoolean(surveyData.allow_gradable_survey)) {
       if (isLastPage) {
         setShowMessageOnComplete(false);
       }
@@ -135,7 +135,7 @@ function SurveyComponent(props) {
 
   async function registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId) {
     if (rankingPoints === undefined || rankingPoints === 0) return;
-    if (surveyData.allow_gradable_survey !== 'true') return;
+    if ( parseStringBoolean(surveyData.allow_gradable_survey)) return;
 
     //para guardar el score en el ranking
     totalPoints += rankingPoints;
@@ -162,7 +162,7 @@ function SurveyComponent(props) {
   /* handler cuando la encuesta inicia, este sirve para retomar la encuesta donde vayan todos los demas usuarios */
   function onStartedSurvey(initialSurveyModel) {
     if (parseStringBoolean(surveyData.allow_gradable_survey)) {
-      if (freezeGame === 'true') {
+      if (parseStringBoolean(freezeGame)) {
         initialSurveyModel.stopTimer();
         TimerAndMessageForTheNextQuestion(
           initialSurveyModel,

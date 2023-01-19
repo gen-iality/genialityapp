@@ -1,3 +1,5 @@
+import { parseStringBoolean } from "@/Utilities/parseStringBoolean";
+
 // Componente que se ejecuta antes del evento onComplete de la encuesta permite mostrar un texto con los puntos conseguidos
 function MessageWhenCompletingSurvey(survey, surveyData, totalPoints) {
   let totalQuestions = 0;
@@ -27,11 +29,11 @@ function MessageWhenCompletingSurvey(survey, surveyData, totalPoints) {
     if (correctAnswer) totalPoints += parseInt(question.points);
   });
 
-  if (surveyData.allow_gradable_survey === 'true') {
+  if (parseStringBoolean(surveyData.allow_gradable_survey)) {
     //const { minimumScore } = surveyData;
 
     let text = `Has obtenido ${totalPoints} de ${totalQuestions} puntos </br>`;
-    if (surveyData.hasMinimumScore === 'true') {
+    if (parseStringBoolean(surveyData.hasMinimumScore)) {
       text +=
         totalPoints >= surveyData.minimumScore
           ? `${surveyData.win_Message ? surveyData.win_Message : ''}`

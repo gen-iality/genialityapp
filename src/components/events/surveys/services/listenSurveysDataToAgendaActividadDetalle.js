@@ -1,3 +1,4 @@
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 import { firestore } from '../../../../helpers/firebase';
 
 function listenSurveysData(event, activity, currentUser, callback) {
@@ -26,19 +27,19 @@ function listenSurveysData(event, activity, currentUser, callback) {
       // Listado de encuestas publicadas del evento
       publishedSurveys = eventSurveys.filter(
          (survey) =>
-            (survey.isPublished === 'true' || survey.isPublished === true) &&
-            ((activity && survey.activity_id === activity._id) || survey.isGlobal === 'true')
+            (parseStringBoolean(survey.isPublished)) &&
+            ((activity && survey.activity_id === activity._id) ||  parseStringBoolean(survey.isGlobal))
       );
 
       // Cuando el currentUser se toma de redux sin una sesion corresponde a un objeto vacio
       if (Object.keys(currentUser).length === 0) {
          publishedSurveys = publishedSurveys.filter((item) => {
-            return item.allow_anonymous_answers !== 'false';
+            return parseStringBoolean(item.allow_anonymous_answers);
          });
       }
 
       const openSurveys = publishedSurveys.filter(
-         (survey) => survey.isOpened && (survey.isOpened == 'true' || survey.isOpened == true)
+         (survey) => survey.isOpened && (parseStringBoolean(survey.isOpened))
       );
 
       const hasOpenSurveys = openSurveys.length > 0 ? true : false;

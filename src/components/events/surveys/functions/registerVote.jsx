@@ -1,3 +1,4 @@
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 import GetResponsesIndex from './getResponsesIndex';
 import SavingResponseByUserId from './savingResponseByUserId';
 
@@ -25,7 +26,7 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
          let optionIndex = responseIndex;
 
          let infoOptionQuestion =
-            surveyData.allow_gradable_survey === 'true'
+            parseStringBoolean(surveyData.allow_gradable_survey)
                ? { optionQuantity, optionIndex, correctAnswer }
                : { optionQuantity, optionIndex };
 

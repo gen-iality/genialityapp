@@ -13,6 +13,7 @@ import { graphicsFrame } from './frame';
 
 import * as SurveyActions from '../../../redux/survey/actions';
 import { SurveysContext } from '../../../context/surveysContext';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
@@ -398,7 +399,7 @@ class Graphics extends Component {
               </>
             ))}
             <br />
-            {cSurveys.currentSurvey.showNoVotos && cSurveys.currentSurvey.showNoVotos === 'true' && (
+            {parseStringBoolean(cSurveys.currentSurvey.showNoVotos) && (
               <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
                 <div
                   style={{
