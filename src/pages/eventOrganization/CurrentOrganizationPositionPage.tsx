@@ -64,7 +64,8 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
 
   const deleteOrgUser = async (orgUser: any) => {
     console.debug('CurrentOrganizationPositionPage: deleteOrgUser', {orgUser})
-    alert('Todavía me falta implementar esto en Back-End ._.')
+    const position = await PositionsApi.Organizations.deleteUser(organizationId, positionId, orgUser.user._id)
+    console.debug('CurrentOrganizationPositionPage: deleteOrgUser', {position})
   }
 
   const loadPositionData = async () => {
@@ -99,7 +100,7 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
             id={`deleteAction${orgUser._id}`}
             type='primary'
             size='small'
-            onClick={(e) => deleteOrgUser(orgUser._id)}
+            onClick={(e) => deleteOrgUser(orgUser).finally(() => loadUsers())}
             icon={<DeleteOutlined />}
           />
         </Tooltip>
