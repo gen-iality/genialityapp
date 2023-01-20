@@ -26,7 +26,8 @@ export const columns = (editModalPosition, orgEventsData, currentUrl) => {
       },
     },
     {
-      title: 'Nominados',
+      title: 'Asignados',
+      width: 120,
       render: (position) => (
         <Link
           to={`${currentUrl}/${position._id}`}

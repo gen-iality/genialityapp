@@ -88,7 +88,7 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
 
   const columns: any[] = [
     {
-      title: 'Usuario',
+      title: 'Miembros',
       render: (orgUser: any) => <p>{orgUser.user.names}</p>
     },
     {
@@ -119,9 +119,11 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
 
   return (
     <>
-      <Header title={'Usuario en el cargo'} />
-      <Typography.Text strong>
-        {'La posición: '}
+      <Header
+        title={`Miembros en el cargo: ${currentPosition ? currentPosition.position_name : <Spin />}`}
+      />
+      <Typography.Text>
+        {'Agregue, edite y borre los miembros que están asignado al cargo de '}
         {currentPosition ? currentPosition.position_name : <Spin />}
       </Typography.Text>
       <Table
