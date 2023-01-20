@@ -9,8 +9,10 @@ import {
   Modal,
   Form,
   Select,
+  Tooltip,
 } from 'antd'
 import {
+  DeleteOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons'
 import Header from '@antdComponents/Header'
@@ -43,13 +45,6 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
   const organizationId: string = props.org._id;
   const positionId = props.match.params.positionId;
 
-  const columns: any[] = [
-    {
-      title: 'Usuario',
-      render: (orgUser: any) => <p>{orgUser.user.names}</p>
-    },
-  ]
-
   const openModal = () => setIsModalOpened(true)
   const closeModal = () => setIsModalOpened(false)
   
@@ -64,7 +59,12 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
       positionId,
       orgUserId,
     )
-    console.log('CurrentOrganizationPositionPage: addOrgUserToPosition', {result})
+    console.debug('CurrentOrganizationPositionPage: addOrgUserToPosition', {result})
+  }
+
+  const deleteOrgUser = async (orgUser: any) => {
+    console.debug('CurrentOrganizationPositionPage: deleteOrgUser', {orgUser})
+    alert('Todavía me falta implementar esto en Back-End ._.')
   }
 
   const loadPositionData = async () => {
@@ -84,6 +84,28 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
     setDataSource(users)
     console.debug('CurrentOrganizationPositionPage: loadUsers',  {gotUsers: users})
   }
+
+  const columns: any[] = [
+    {
+      title: 'Usuario',
+      render: (orgUser: any) => <p>{orgUser.user.names}</p>
+    },
+    {
+      title: 'Opciones',
+      width: 80,
+      render: (orgUser: any) => (
+        <Tooltip title='Borrar'>
+          <Button
+            id={`deleteAction${orgUser._id}`}
+            type='primary'
+            size='small'
+            onClick={(e) => deleteOrgUser(orgUser._id)}
+            icon={<DeleteOutlined />}
+          />
+        </Tooltip>
+      )
+    },
+  ]
 
   // Load all users for this position
   useEffect(() => {
@@ -135,11 +157,11 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
         <Form
           form={form}
           onFinish={(values: any) => {
-            console.log('CurrentOrganizationPositionPage: Form', {values})
+            console.debug('CurrentOrganizationPositionPage: Form', {values})
             setIsLoading(true)
             Promise.all(values.orgUsers.map(async (userId: string) => {
               await addOrgUserToPosition(userId)
-              console.log('CurrentOrganizationPositionPage: onFinish', {userId})
+              console.debug('CurrentOrganizationPositionPage: onFinish', {userId})
             })).finally(() => loadUsers().finally(() => setIsLoading(false)))
             closeModal()
           }}
