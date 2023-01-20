@@ -70,7 +70,7 @@ function OrganizationPositionsPage(props) {
     <>
       <Header title={'Cargos'} />
       <Table
-        columns={columns(editModalPosition, orgEventsData)}
+        columns={columns(editModalPosition, orgEventsData, props.path)}
         dataSource={positionsData}
         size='small'
         rowKey='index'

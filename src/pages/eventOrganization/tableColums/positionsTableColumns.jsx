@@ -1,9 +1,8 @@
-import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Tooltip, Button, Tag } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 
-export const columns = (editModalPosition, orgEventsData) => {
-  const history = useHistory();
+export const columns = (editModalPosition, orgEventsData, currentUrl) => {
   return [
     {
       title: 'Cargo',
@@ -28,8 +27,14 @@ export const columns = (editModalPosition, orgEventsData) => {
     },
     {
       title: 'Nominados',
-      dataIndex: 'users',
-      render: (users) => <p>{users.length} usuarios</p>
+      render: (position) => (
+        <Link
+          to={`${currentUrl}/${position._id}`}
+        >
+          {position.users.length}
+          {' usuarios'}
+        </Link>
+      )
     },
     {
       title: 'Opción',
