@@ -25,7 +25,14 @@ function OrganizationPositionsPage(props) {
 
   async function getOrgPositions() {
     const positions = await PositionsApi.Organizations.getAll(organizationId);
-    setPositionsData(positions);
+    const positionsWithUsers = await Promise.all(positions.map(async (position) => {
+      const users = await PositionsApi.Organizations.getUsers(organizationId, position._id);
+      return {
+        ...position,
+        users,
+      }
+    }))
+    setPositionsData(positionsWithUsers);
     setIsLoading(false);
     console.debug('OrganizationPositionsPage: got positions', { positions });
   }

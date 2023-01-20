@@ -15,7 +15,6 @@ export const columns = (editModalPosition, orgEventsData) => {
     {
       title: 'Cursos asignados',
       width: 800,
-      //ellipsis: true,
       render(position) {
         return (
           <>
@@ -26,6 +25,11 @@ export const columns = (editModalPosition, orgEventsData) => {
           </>
         );
       },
+    },
+    {
+      title: 'Nominados',
+      dataIndex: 'users',
+      render: (users) => <p>{users.length} usuarios</p>
     },
     {
       title: 'Opción',
@@ -40,11 +44,9 @@ export const columns = (editModalPosition, orgEventsData) => {
                 id={`editAction${index}`}
                 type='primary'
                 size='small'
-                onClick={(e) => {
-                  editModalPosition(item);
-                }}
+                onClick={(e) => editModalPosition(item)}
                 icon={<EditOutlined />}
-              ></Button>
+              />
             </Tooltip>
           </>
         );
