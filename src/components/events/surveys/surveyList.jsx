@@ -15,9 +15,11 @@ const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
   const cSurveys = UseSurveysContext();
+  console.log('test:cSurveys.currentSurveyStatus',cSurveys.currentSurveyStatus)
   const { activity, setCurrentSurvey, setSurveyResult } = props;
 
   const currentUser = UseCurrentUser();
+  console.log('test:currentUser',currentUser)
 
   const handleClick = (currentSurvey) => {
     cSurveys.select_survey(currentSurvey);

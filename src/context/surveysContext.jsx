@@ -179,6 +179,7 @@ export function SurveysProvider({ children }) {
 
 export function UseSurveysContext() {
   const contextsurveys = React.useContext(SurveysContext);
+  console.log('test:contextsurveys', contextsurveys)
   if (!contextsurveys) {
     throw new Error('eventContext debe estar dentro del proveedor');
   }

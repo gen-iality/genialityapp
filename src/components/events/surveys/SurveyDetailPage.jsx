@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Graphics from './graphics';
+import GraphicsRefactor from './graphicsRefactor';
 import SurveyComponent from './surveyComponent';
 import { Card, Result, Divider } from 'antd';
 import ClosedSurvey from './components/closedSurvey';
@@ -49,6 +50,11 @@ function SurveyDetailPage(props) {
         <>
           <Divider />
           <Graphics
+            idSurvey={cSurveys.currentSurvey._id}
+            eventId={cSurveys.currentSurvey.eventId}
+            operation='participationPercentage'
+          />
+          <GraphicsRefactor
             idSurvey={cSurveys.currentSurvey._id}
             eventId={cSurveys.currentSurvey.eventId}
             operation='participationPercentage'
