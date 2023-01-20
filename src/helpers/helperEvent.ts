@@ -34,6 +34,7 @@ export function listenSurveysData(
 }
 
 function changeInSurveyDocChanges(docChanges: any) {
+  console.log('test:docChanges', docChanges)
   let changeInSurvey = null;
   if (docChanges.length) {
     let lastChange = docChanges[docChanges.length - 1];
@@ -45,6 +46,7 @@ function changeInSurveyDocChanges(docChanges: any) {
       case 'modified':
       default:
         changeInSurvey = { ...lastChange.doc.data(), _id: lastChange.doc.id };
+        console.log('test:changeInSurvey', changeInSurvey)
         break;
     }
   }
@@ -137,8 +139,11 @@ export const GetGeneralTabsByEvent = (event_id: any, setgeneraltabs: any) => {
     .collection('events')
     .doc(event_id)
     .onSnapshot(function(eventSnapshot) {
+      // @ts-ignore
       if (eventSnapshot.exists) {
+        // @ts-ignore
         if (eventSnapshot.data().tabs !== undefined) {
+          // @ts-ignore
           setgeneraltabs(eventSnapshot.data().tabs);
         }
       }

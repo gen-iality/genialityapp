@@ -94,6 +94,7 @@ function SurveyComponent(props) {
 
   // Funcion para enviar la informacion de las respuestas
   async function sendData(surveyModel) {
+    console.log('test:surveyModel', surveyModel)
     setRankingPoints(null);
     const status = surveyModel.state;
 

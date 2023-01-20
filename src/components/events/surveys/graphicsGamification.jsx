@@ -33,12 +33,14 @@ class Graphics extends Component {
   //Aun no se valida si existe peso voto po lo cual no se llama en nunguna funcion importante
   percentPesoVoto = async () => {
     const { eventId } = this.props;
+    console.log('eventId', eventId)
 
     let totalPesoVoto = 0;
     let pesoVotoCheked = 0;
     let pointsPercent = [];
     let pointsList = [];
     const users = await Users.getUsers(eventId);
+    console.log('users', users)
 
     users.forEach(function(a) {
       if (a.checkedin_at) {
