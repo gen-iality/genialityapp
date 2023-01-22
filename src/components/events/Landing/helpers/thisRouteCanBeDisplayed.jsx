@@ -7,7 +7,7 @@ import Loading from '../../../profile/loading';
 import { useIntl } from 'react-intl';
 
 export function iAmRegisteredInThisEvent(cEventUser) {
-  if (!cEventUser) return;
+	if (!cEventUser) return;
 
   const { value, status } = cEventUser;
   if (!value && status === 'LOADING') return 'LOADING';
