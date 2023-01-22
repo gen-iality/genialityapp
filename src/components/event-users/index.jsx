@@ -991,8 +991,6 @@ class ListEventUser extends Component {
               ? 'Check-in actividad: ' + nameActivity
               : `Check-in evento: ${this.props.event?.name}`
           }
-          description={`Se muestran los primeros 50 usuarios, para verlos todos por favor descargar el excel o realizar una
-          búsqueda.`}
         />
 
         {disabledPersistence && (

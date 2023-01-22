@@ -1344,6 +1344,9 @@ export const PositionsApi = {
       const data = { user_id: userId };
       return await Actions.post(`api/positions/${positionId}/organization/${organizationId}/users`, data, true);
     },
+    deleteUser: async (organizationId, positionId, userId) => {
+      return await Actions.delete(`api/positions/${positionId}/organization/${organizationId}/users/`, userId, true);
+    }
   },
 };
 
