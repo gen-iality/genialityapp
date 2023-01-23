@@ -132,11 +132,11 @@ class UserModal extends Component {
         const onHandlerRemove = async () => {
           try {
             const token = await GetTokenUserFirebase();
-            !self.props.byActivity &&
-              (await Actions.delete(
-                `/api/events/${self.props.cEvent.value?._id}/eventusers`,
-                `${user._id}?token=${token}`
-              ));
+            // !self.props.byActivity &&
+            //   (await Actions.delete(
+            //     `/api/events/${self.props.cEvent.value?._id}/eventusers`,
+            //     `${user._id}?token=${token}`
+            //   ));
             // messages = { class: 'msg_warning', content: 'USER DELETED' };
             const selectedEventUserId = user._id;
 
