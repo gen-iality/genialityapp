@@ -4,6 +4,10 @@ export interface GraphicsState {
   dataSurvey:      DataSurvey | null;
   currentPage:     number;
   graphicsFrame:   GraphicsFrame;
+  currentChart: {
+    labels: string[],
+    dataValues: number[],
+  }
   chart:           Chart | null;
   chartCreated:    boolean;
   usersRegistered: number;

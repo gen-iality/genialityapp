@@ -4,7 +4,7 @@ import countAnswers from './counstAnswersService';
 
 const surveyAnswers = {
   // Servicio para registrar votos para un usuario logeado
-  registerWithUID: (surveyId, questionId, dataAnswer, counter) => {
+  registerWithUID: (surveyId: string, questionId: string, dataAnswer: any, counter: any) => {
     const { responseData, date, uid, email, names, voteValue } = dataAnswer;
     const { optionQuantity, optionIndex, correctAnswer } = counter;
     let data = {
@@ -17,6 +17,7 @@ const surveyAnswers = {
     };
 
     if (correctAnswer !== undefined) {
+      // @ts-ignore
       data['correctAnswer'] = correctAnswer;
     }
 
@@ -34,7 +35,7 @@ const surveyAnswers = {
       .set(data);
   },
   // Servicio para registrar votos para un usuario sin logeo
-  registerLikeGuest: async (surveyId, questionId, dataAnswer, counter) => {
+  registerLikeGuest: async (surveyId: string, questionId: string, dataAnswer: any, counter: any) => {
     const { responseData, date, uid } = dataAnswer;
     const { optionQuantity, optionIndex, correctAnswer } = counter;
 
@@ -73,7 +74,58 @@ const surveyAnswers = {
     });
   },
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
-  getAnswersQuestion: async (surveyId, questionId, eventId, updateData, operation) => {
+  getAnswersQuestion: async (surveyId: string, questionId: string, eventId: string, updateData: any, operation: string) => {
+    // eslint-disable-next-line no-unused-vars
+    let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
+    let options = dataSurvey.questions.find((question) => question.id === questionId);
+    let optionsIndex = dataSurvey.questions.findIndex((index) => index.id === questionId);
+    const realTimeRef = fireRealtime.ref(`surveys/${surveyId}/answer_count/${questionId}`);
+
+    realTimeRef.on('value', (listResponse) => {
+      if (listResponse.exists()) {
+        let result = [];
+        let total = 0;
+        result = listResponse.val();
+        switch (operation) {
+          case 'onlyCount':
+            Object.keys(result).map((item) => {
+              if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                if (parseInt(item) >= 0) {
+                  result[item] = [result[item]];
+                }
+              }
+            });
+            break;
+
+          case 'participationPercentage':
+            Object.keys(result).map((item) => {
+              if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                if (parseInt(item) >= 0) {
+                  total = total + result[item];
+                }
+              }
+            });
+
+            Object.keys(result).map((item) => {
+              if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                if (parseInt(item) >= 0) {
+                  const calcPercentage = Math.round((result[item] / total) * 100);
+                  result[item] = [result[item], calcPercentage];
+                }
+              }
+            });
+            break;
+
+          case 'registeredPercentage':
+            //result = result;
+            break;
+        }
+        console.log('test:getAnswersQuestion ', { result, options, optionsIndex })
+        updateData({ answer_count: result, options, optionsIndex });
+      }
+    });
+  },
+  listenAnswersQuestion: async (surveyId: string, questionId: string, eventId: string, updateData: any, operation: string) => {
     // eslint-disable-next-line no-unused-vars
     let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
     let options = dataSurvey.questions.find((question) => question.id === questionId);

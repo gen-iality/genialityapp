@@ -180,6 +180,7 @@ class Graphics extends Component {
 				porcentajevotos: porcentajeUsuarios,
 			},
 		});
+		console.log('graphics:state.resultVotos', this.state.resultVotos)
 
 		let formatterTitle = options.title;
 		this.setState({ titleQuestion: formatterTitle });
@@ -269,6 +270,7 @@ class Graphics extends Component {
 		} else {
 			// Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
 			chart.data.labels = generatedlabels;
+			console.log('totalPercentResponse', totalPercentResponse)
 			chart.data.datasets[0].data = Object.values(totalPercentResponse || []);
 			chart.options.title.text = formatterTitle;
 
