@@ -24,6 +24,13 @@ export default function ChartRender(props: Props) {
 	useEffect(() => {
 		if (canvasElement) {
 			const chartInstance = new Chart(canvasElement, CHART_TYPE[type]);
+			setChartInstance(chartInstance);
+		}
+	}, [canvasElement]);
+
+	useEffect(() => {
+		console.log({ dataValues, isMobile, labels });
+		if (chartInstance) {
 			chartInstance.data.labels = labels;
 			chartInstance.data.datasets[0].data = dataValues;
 			chartInstance.options = {
@@ -56,19 +63,9 @@ export default function ChartRender(props: Props) {
 				},
 				indexAxis: type === 'horizontal' ? 'y' : 'x',
 			};
-			setChartInstance(chartInstance)
-		}
-	}, [canvasElement]);
-
-	useEffect(() => {
-		console.log({dataValues, isMobile, labels})
-		if (chartInstance) {
-			console.log(`I'm hereeeeeeee`)
-			chartInstance.data.labels = labels;
-			chartInstance.data.datasets[0].data = dataValues;
 			chartInstance.update();
 		}
 	}, [dataValues, isMobile, labels]);
 
-	return <canvas ref={canvasRef} style={{ width: '100%', height: '400px' }} id='chart-render' />;
+	return <canvas className='chart-render' ref={canvasRef}  id='chart-render' />;
 }

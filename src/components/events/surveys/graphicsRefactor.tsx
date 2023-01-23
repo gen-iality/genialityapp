@@ -19,6 +19,7 @@ import ChartRender from './ChartRender';
 import { singularOrPluralString } from '@/Utilities/singularOrPluralString';
 import ProgressQuestionIcon from '@2fd/ant-design-icons/lib/ProgressQuestion';
 import { ALPHABET, COLORS_SETTINGS } from './chartsConfiguration';
+import { numberToAlphabet } from './utils/numberToAlphabet';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
@@ -144,20 +145,6 @@ function Graphics(props: any) {
 		let colorB = [];
 		let list: any[] = [];
 
-		/**
-		 * Given a number, return the letter of the alphabet that corresponds to that number
-		 * @returns The numberToLetterOfAlphabet function is returning the order of the alphabet that the
-		 * number is in.
-		 */
-		const numberToLetterOfAlphabet = (number: number) => {
-			const alphabet = ALPHABET;
-
-			let orderAlphabet = alphabet[number % alphabet.length];
-			if (number < 26) return orderAlphabet;
-
-			return orderAlphabet + number;
-		};
-
 		//Se iguala options.choices[a] a una cadena string dinamica para agregar la cantidad de votos de la respuesta
 		colorB = COLORS_SETTINGS.backgroundColor;
 		const colorsforGraphics = COLORS_SETTINGS.backgroundColor;
@@ -175,7 +162,7 @@ function Graphics(props: any) {
 				case 'participationPercentage':
 					generatedlabels[a] =
 						answer_count && answer_count[a]
-							? `${numberToLetterOfAlphabet(a)}  ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n `
+							? `${numberToAlphabet(a)}  ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n `
 							: '0 Votos';
 					break;
 			}
@@ -186,7 +173,7 @@ function Graphics(props: any) {
 				porcentaje: answer_count[a][1],
 				answer: options.choices[a],
 				option:
-					options.choices[a] == 'SI' || options.choices[a] == 'si' ? options.choices[a] : numberToLetterOfAlphabet(a),
+					options.choices[a] == 'SI' || options.choices[a] == 'si' ? options.choices[a] : numberToAlphabet(a),
 				color: colorB,
 			});
 			totalVotosUsuarios = totalVotosUsuarios + answer_count[a][0];
@@ -342,10 +329,10 @@ function Graphics(props: any) {
 
 	// 	/**
 	// 	 * Given a number, return the letter of the alphabet that corresponds to that number
-	// 	 * @returns The numberToLetterOfAlphabet function is returning the order of the alphabet that the
+	// 	 * @returns The numberToAlphabet function is returning the order of the alphabet that the
 	// 	 * number is in.
 	// 	 */
-	// 	const numberToLetterOfAlphabet = (number: number) => {
+	// 	const numberToAlphabet = (number: number) => {
 	// 		// @ts-ignore
 	// 		const alphabet = graphy.data.datasets[0].alphabet;
 
@@ -371,7 +358,7 @@ function Graphics(props: any) {
 	// 			case 'participationPercentage':
 	// 				generatedlabels[a] =
 	// 					answer_count && answer_count[a]
-	// 						? `${numberToLetterOfAlphabet(a)}  ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n `
+	// 						? `${numberToAlphabet(a)}  ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n `
 	// 						: '0 Votos';
 	// 				break;
 	// 		}
@@ -382,7 +369,7 @@ function Graphics(props: any) {
 	// 			porcentaje: answer_count[a][1],
 	// 			answer: options.choices[a],
 	// 			option:
-	// 				options.choices[a] == 'SI' || options.choices[a] == 'si' ? options.choices[a] : numberToLetterOfAlphabet(a),
+	// 				options.choices[a] == 'SI' || options.choices[a] == 'si' ? options.choices[a] : numberToAlphabet(a),
 	// 			color: colorB,
 	// 		});
 	// 		totalVotosUsuarios = totalVotosUsuarios + answer_count[a][0];
