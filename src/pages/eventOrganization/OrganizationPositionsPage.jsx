@@ -30,6 +30,7 @@ function OrganizationPositionsPage(props) {
       return {
         ...position,
         users,
+        key: position._id,
       }
     }))
     setPositionsData(positionsWithUsers);
