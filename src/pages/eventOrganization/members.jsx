@@ -1,55 +1,114 @@
+/** React's libraries */
 import { useEffect, useState } from 'react';
-import { OrganizationApi, RolAttApi, EventsApi, AgendaApi } from '@helpers/request';
 import { FormattedDate, FormattedTime } from 'react-intl';
-import { firestore } from '@helpers/firebase';
-/** export Excel */
 import { useHistory } from 'react-router-dom';
-import { Table, Button, Row, Col, Tag } from 'antd';
-import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { columns } from './tableColums/membersTableColumns';
-import ModalMembers from '@components/modal/modalMembers';
 import dayjs from 'dayjs';
-import withContext from '@context/withContext';
+
+/** export Excel */
 import { utils, writeFileXLSX } from 'xlsx';
+
+/** Antd imports */
+import { Table, Button, Row, Col, Tag, Spin } from 'antd';
+import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
+
+/** Components */
 import Header from '@antdComponents/Header';
+import ModalMembers from '@components/modal/modalMembers';
+import { columns } from './tableColums/membersTableColumns';
+
+/** Helpers and utils */
+import { OrganizationApi, RolAttApi, EventsApi, AgendaApi, PositionsApi } from '@helpers/request';
+import { firestore } from '@helpers/firebase';
+
+/** Context */
+import withContext from '@context/withContext';
+import { async } from 'ramda-adjunct';
 
 function OrgMembers(props) {
-  const [membersData, setMembersData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [lastUpdate, setLastUpdate] = useState();
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const [addOrEditUser, setAddOrEditUser] = useState(false);
-  const [extraFields, setExtraFields] = useState([]);
-  const [roleList, setRoleList] = useState([]);
-  const [selectedUser, setSelectedUser] = useState({});
-  const [editMember, setEditMember] = useState(false);
+  console.log('Props - OrgMembers (CMS) ->', props);
   const { _id: organizationId } = props.org;
   const history = useHistory();
 
-  async function getEventsStatisticsData() {
-    const { data } = await OrganizationApi.getUsers(organizationId);
-    console.log('300. Usuarios de la organización: ', data);
-    const { data: dataEvents } = await OrganizationApi.events(organizationId);
-    console.log('300. Cursos de la organización: ', dataEvents);
-    /* const { dataEjemplo } = await OrganizationApi.getEpecificUser(organizationId);
-    console.log('300. Trae información de : ', dataEjemplo); */
+  /** Data States */
+  const [membersData, setMembersData] = useState([]);
+  const [lastUpdate, setLastUpdate] = useState();
+  const [orgUsersList, setOrgUsersList] = useState([]);
+  const [orgEventsList, setOrgEventsList] = useState([]);
+  const [selectedUser, setSelectedUser] = useState({});
+  const [userActivities, setUserActivities] = useState({});
 
-    const fieldsMembersData = [];
-    // console.log('Array de OrgAPI - GetUsers', data);
-    // console.log('Array de OrgAPI - Events', dataEvents);
-    //console.log('Array de EventAPI - GetEventUser', dataEventUser);
-    const userActivities = {};
+  /** Flag States */
+  const [isLoading, setIsLoading] = useState(true);
+  const [isStaticsLoading, setIsStaticsLoading] = useState(true);
+  const [addOrEditUser, setAddOrEditUser] = useState(false);
+  const [editMember, setEditMember] = useState(false);
 
-    for (let indexOrganization = 0; indexOrganization < data.length; indexOrganization++) {
-      const userId = data[indexOrganization].account_id;
-      const email = data[indexOrganization].user.email;
+  /** Columns CMS States */
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const [extraFields, setExtraFields] = useState([]);
+
+  useEffect(
+    () => {
+      console.log('Efecto de startingComponent');
+      startingComponent();
+    },
+    [
+      /* props.org.user_properties */
+    ],
+  );
+
+  useEffect(() => {
+    console.log('Efecto de updateDataMembers');
+    updateDataMembers();
+  }, [orgUsersList, userActivities]);
+
+  useEffect(() => {
+    console.log('Efecto de getEventsStatisticsData');
+    async function interna() {
+      const userActivitiesData = await getEventsStatisticsData(orgUsersList, orgEventsList);
+      setUserActivities(userActivitiesData);
+    }
+
+    interna();
+  }, [orgUsersList, orgEventsList]);
+
+  useEffect(() => {
+    console.log('Incio de metodo setIsStaticsLoading');
+    console.log('userActivities', userActivities);
+
+    if (Object.keys(userActivities).length === 0) {
+      console.log('El objeto está vacio');
+    } else {
+      console.log('else - setIsStaticsLoading');
+      setIsStaticsLoading(false);
+    }
+  }, [userActivities]);
+
+  async function startingComponent() {
+    console.log('Inicio de función de startingComponent');
+    setLastUpdate(new Date());
+    await setFormFields();
+    await getOrgUsersList();
+    await getOrgEventsList();
+    console.log('Fin de función de startingComponent');
+  }
+
+  async function getEventsStatisticsData(orgUsersList, orgEventsList) {
+    console.log('2. Inicio - getEventsStatisticsData ');
+    const userActivitiesData = {};
+
+    for (let indexOrganization = 0; indexOrganization < orgUsersList.length; indexOrganization++) {
+      console.log('2. Inicio - primer for ');
+
+      const userId = orgUsersList[indexOrganization].account_id;
+      const email = orgUsersList[indexOrganization].user.email;
 
       let totalActividades = 0;
       let totalActividadesVistas = 0;
 
-      for (let indexEvent = 0; indexEvent < dataEvents.length; indexEvent++) {
-        const eventId = dataEvents[indexEvent]._id;
+      for (let indexEvent = 0; indexEvent < orgEventsList.length; indexEvent++) {
+        const eventId = orgEventsList[indexEvent]._id;
         //const { data: dataEventUser } = await EventsApi.getEventUser(eventId, userId);
 
         const thing = await EventsApi.getStatusRegister(eventId, email);
@@ -73,57 +132,105 @@ function OrgMembers(props) {
         totalActividades += activities.length;
         totalActividadesVistas += attendee.length;
       }
-      userActivities[userId] = `${totalActividadesVistas}/${totalActividades}`;
+      userActivitiesData[userId] = `${totalActividadesVistas}/${totalActividades}`;
+      console.log('2. userActivitiesData[userId]', userActivitiesData[userId]);
     }
 
-    // console.log(userActivities);
+    console.log('2. userActivitiesData', userActivitiesData);
 
-    data.map((membersData) => {
+    return userActivitiesData;
+  }
+
+  async function updateDataMembers() {
+    const fieldsMembersData = [];
+
+    console.log('1. orgUsersList', orgUsersList);
+
+    const positionList = await getPositionList();
+
+    orgUsersList?.map(async (orgUser) => {
+      console.log('Estado - Lista de cargos', positionList);
+
+      const position_name = positionList
+        .filter((position) => orgUser.properties.position_id === position.value)
+        .map((position) => position.label);
+
+      console.log('position_name', position_name);
+
+      /* const specificUser = await OrganizationApi.getEpecificUser(organizationId, orgUser._id);
+      console.log('specificUser', specificUser); */
+
       const properties = {
-        _id: membersData._id,
-        created_at: membersData.created_at,
-        updated_at: membersData.updated_at,
-        role: membersData.rol.name,
-        position: membersData.positions?.name || 'Sin cargo',
-        picture: membersData.user.picture,
+        _id: orgUser._id,
+        created_at: orgUser.created_at,
+        updated_at: orgUser.updated_at,
+        role: orgUser.rol.name,
+        picture: orgUser.user.picture,
+        position: position_name[0],
         // names: membersData?.user?.name || membersData?.user?.names,
         // email: membersData?.user?.email,
-        stats: userActivities[membersData.account_id],
-        ...membersData.properties,
+        stats: userActivities[orgUser.account_id],
+        ...orgUser.properties,
       };
 
       fieldsMembersData.push(properties);
     });
 
-    dataEvents;
+    //dataEvents;
 
-    console.log('300. fieldsMembersData', fieldsMembersData);
+    console.log('Variable - Miembros de la organización', fieldsMembersData);
 
     setMembersData(fieldsMembersData);
     setIsLoading(false);
   }
 
-  async function getRoleList() {
-    const roleListData = await RolAttApi.byEventRolsGeneral();
-    console.log('300. Roles? : ', roleListData);
-    setRoleList(roleListData);
+  async function getOrgUsersList() {
+    console.log('Inicio de petición getOrgUsersList');
+    const { data: orgUsers } = await OrganizationApi.getUsers(organizationId);
+    console.log('Petición de solicitud - Usuarios de la organización: ', orgUsers);
+    setOrgUsersList(orgUsers);
   }
 
-  function startingComponent() {
-    getEventsStatisticsData();
-    setLastUpdate(new Date());
-    getRoleList();
-    setExtraFields(props.org.user_properties);
-    console.log('props.org.user_properties', props.org.user_properties);
+  async function getOrgEventsList() {
+    console.log('Inicio de petición getOrgEventsList');
+    const { data: orgEvents } = await OrganizationApi.events(organizationId);
+    console.log('Petición de solicitud - Cursos de la organización: ', orgEvents);
+    setOrgEventsList(orgEvents);
   }
 
-  useEffect(() => {
-    startingComponent();
-  }, [props.org.user_properties]);
+  async function getPositionList() {
+    console.log('Inicio de petición getPositionList');
+    const positionListData = await PositionsApi.Organizations.getAll(organizationId);
+    console.log('Petición de solicitud - Lista de Cargos : ', positionListData);
 
-  function goToEvent(eventId) {
-    const url = `/eventadmin/${eventId}/agenda`;
-    history.replace({ pathname: url });
+    const positionsOptions = positionListData.map((position) => {
+      return {
+        label: position.position_name,
+        value: position._id,
+      };
+    });
+
+    return positionsOptions;
+  }
+
+  async function setFormFields() {
+    console.log('Inicio de función de setFormFields');
+    const positionList = await getPositionList();
+
+    const positionField = {
+      name: 'position_id',
+      label: 'Cargo',
+      unique: false,
+      index: 2,
+      mandatory: false,
+      order_weight: 3,
+      type: 'list',
+      options: positionList,
+      _id: { $oid: '614260d226e7862220497eac3' },
+    };
+
+    setExtraFields([...props.org.user_properties, positionField]);
+    console.log('Fin de función de setFormFields');
   }
 
   async function exportFile(e) {
@@ -145,6 +252,7 @@ function OrgMembers(props) {
   function addUser() {
     setSelectedUser({});
     closeOrOpenModalMembers();
+    setEditMember(false);
   }
 
   function editModalUser(item) {
@@ -162,6 +270,9 @@ function OrgMembers(props) {
 
   return (
     <>
+      {console.log('Aquí inicia el render de Members')}
+      {console.log('Estado de extraFields', extraFields)}
+      {console.log('Estado de isStaticsLoading', isStaticsLoading)}
       <Header
         title={'Miembros'}
         description={
@@ -180,12 +291,12 @@ function OrgMembers(props) {
       </p>
 
       <Table
-        columns={columns(columnsData, editModalUser, extraFields)}
+        columns={columns(columnsData, editModalUser, extraFields, userActivities, isStaticsLoading)}
         dataSource={membersData}
         size='small'
         rowKey='index'
         pagination={false}
-        loading={isLoading}
+        loading={isLoading || membersData.length === 0}
         scroll={{ x: 'auto' }}
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
@@ -204,19 +315,19 @@ function OrgMembers(props) {
           </Row>
         )}
       />
+
       {addOrEditUser && (
         <ModalMembers
-          handleModal={closeOrOpenModalMembers}
-          modal={addOrEditUser}
-          rolesList={roleList}
           extraFields={extraFields}
           value={selectedUser}
           editMember={editMember}
           closeOrOpenModalMembers={closeOrOpenModalMembers}
           organizationId={organizationId}
           startingComponent={startingComponent}
+          setIsLoading={setIsLoading}
         />
       )}
+      {console.log('Aquí termina el render de Members')}
     </>
   );
 }
