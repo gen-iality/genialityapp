@@ -23,27 +23,38 @@ import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 import { UseUserEvent } from '@/context/eventUserContext';
 // import { firestore, fireRealtime } from '../../../helpers/firebase';
 
-function SurveyComponent(props) {
+interface Props {
+  eventId: any
+  idSurvey: any
+  surveyLabel: any
+  operation: any
+  showListSurvey: any
+  currentUser: any
+  cEventUser : any
+  setShowSurveyTemporarily: any
+}
+
+function SurveyComponent(props: Props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser, cEventUser } = props;
   const cEvent = UseEventContext();
   const cUser = UseUserEvent()
   console.log('cUser', cUser)
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
-  const [surveyData, setSurveyData] = useState({});
-  const [rankingList, setRankingList] = useState([]); // Este estado se usa para gamification
-  const [feedbackMessage, setFeedbackMessage] = useState();
-  const [eventUsers, setEventUsers] = useState([]);
-  const [voteWeight, setVoteWeight] = useState(0);
-  const [freezeGame, setFreezeGame] = useState(false);
-  const [showMessageOnComplete, setShowMessageOnComplete] = useState(false);
-  const [timerPausa, setTimerPausa] = useState(null);
-  const [initialSurveyModel, setInitialSurveyModel] = useState(null);
-  const [rankingPoints, setRankingPoints] = useState(null);
-  const [fiftyfitfyused, setFiftyfitfyused] = useState(false);
-  let [totalPoints, setTotalPoints] = useState(0);
-  let [onCurrentPageChanged, setOnCurrentPageChanged] = useState(0);
-  let [showOrHideSurvey, setShowOrHideSurvey] = useState(true); // nos permite ocultar la siguiente pregunta antes de que pueda ser mostrada
+  const [surveyData, setSurveyData] = useState<any>({});
+  const [rankingList, setRankingList] = useState<any>([]); // Este estado se usa para gamification
+  const [feedbackMessage, setFeedbackMessage] = useState<any>();
+  const [eventUsers, setEventUsers] = useState<any>([]);
+  const [voteWeight, setVoteWeight] = useState<any>(0);
+  const [freezeGame, setFreezeGame] = useState<any>(false);
+  const [showMessageOnComplete, setShowMessageOnComplete] = useState<boolean>(false);
+  const [timerPausa, setTimerPausa] = useState<any>(null);
+  const [initialSurveyModel, setInitialSurveyModel] = useState<any>(null);
+  const [rankingPoints, setRankingPoints] = useState<any>(null);
+  const [fiftyfitfyused, setFiftyfitfyused] = useState<boolean>(false);
+  let [totalPoints, setTotalPoints] = useState<any>(0);
+  let [onCurrentPageChanged, setOnCurrentPageChanged] = useState<any>(0);
+  let [showOrHideSurvey, setShowOrHideSurvey] = useState<boolean>(true); // nos permite ocultar la siguiente pregunta antes de que pueda ser mostrada
   useEffect(() => {
     // asigna los colores del evento para la UI de la encuesta
     InternarlSurveyStyles(eventStyles);
@@ -65,7 +76,7 @@ function SurveyComponent(props) {
     }
   }, [initialSurveyModel, idSurvey, timerPausa]);
 
-  async function startingSurveyComponent(surveyRealTime) {
+  async function startingSurveyComponent(surveyRealTime: any) {
     setFreezeGame(surveyRealTime.freezeGame);
 
     let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyRealTime);
@@ -96,7 +107,7 @@ function SurveyComponent(props) {
   }
 
   // Funcion para enviar la informacion de las respuestas
-  async function sendData(surveyModel) {
+  async function sendData(surveyModel: any) {
     console.log('test:surveyModel', surveyModel)
     setRankingPoints(null);
     const status = surveyModel.state;
@@ -136,7 +147,7 @@ function SurveyComponent(props) {
     }
   }
 
-  async function registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId) {
+  async function registerRankingPoints(rankingPoints: any, surveyModel: any, surveyData: any, currentUser: any, eventId: any) {
     if (rankingPoints === undefined || rankingPoints === 0) return;
     if ( parseStringBoolean(surveyData.allow_gradable_survey)) return;
 
@@ -163,7 +174,7 @@ function SurveyComponent(props) {
   }
 
   /* handler cuando la encuesta inicia, este sirve para retomar la encuesta donde vayan todos los demas usuarios */
-  function onStartedSurvey(initialSurveyModel) {
+  function onStartedSurvey(initialSurveyModel: any) {
     if (parseStringBoolean(surveyData.allow_gradable_survey)) {
       if (parseStringBoolean(freezeGame)) {
         initialSurveyModel.stopTimer();
@@ -243,12 +254,12 @@ function SurveyComponent(props) {
               <Survey.Survey
                 className='notranslate'
                 model={initialSurveyModel}
-                onComplete={(surveyModel) => sendData(surveyModel, 'completed')}
-                onPartialSend={(surveyModel) => sendData(surveyModel, 'partial')}
-                onCompleting={(surveyModel) => MessageWhenCompletingSurvey(surveyModel, surveyData, totalPoints)}
+                onComplete={(surveyModel: any) => sendData(surveyModel, 'completed')}
+                onPartialSend={(surveyModel: any) => sendData(surveyModel, 'partial')}
+                onCompleting={(surveyModel: any) => MessageWhenCompletingSurvey(surveyModel, surveyData, totalPoints)}
                 onTimerPanelInfoText={TimeLimitPerQuestion}
                 onStarted={onStartedSurvey}
-                onCurrentPageChanged={(surveyModel, options) =>
+                onCurrentPageChanged={(surveyModel: any, options: any) =>
                   setOnCurrentPageChanged({ surveyModel, options }, setShowOrHideSurvey(true))
                 }
               />
@@ -265,7 +276,7 @@ function SurveyComponent(props) {
 }
 const mapDispatchToProps = {};
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
   currentSurveyStatus: state.survey.data.currentSurveyStatus,
 });
 

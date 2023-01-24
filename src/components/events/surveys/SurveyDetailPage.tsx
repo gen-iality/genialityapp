@@ -10,7 +10,7 @@ import ClosedSurvey from './components/closedSurvey';
 import { UseCurrentUser } from '../../../context/userContext';
 import { UseSurveysContext } from '../../../context/surveysContext';
 import { UseUserEvent } from '@context/eventUserContext';
-function SurveyDetailPage(props) {
+function SurveyDetailPage(props: any) {
 	const cSurveys = UseSurveysContext();
 	const currentUser = UseCurrentUser();
 	const cEventUser = UseUserEvent();
@@ -68,7 +68,7 @@ function SurveyDetailPage(props) {
 	);
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
 	isVisible: state.survey.data.surveyVisible,
 });
 

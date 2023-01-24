@@ -148,15 +148,18 @@ const surveyAnswers = {
 			.collection('answers')
 			.doc(questionId)
 			.collection('responses')
+			.orderBy('created','asc')
 			.onSnapshot(
 				snapshot => {
 					const answers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as VoteResponse);
-          const { dataValues, labels} = getAssemblyGraphicsData(answers)
+          const { dataValues, labels } = getAssemblyGraphicsData(answers)
+					const labelsToShow = labels.map(label => label.complete)
           setGraphicsData({
             dataValues,
-            labels
+            labels,
+						labelsToShow
           })
-          // console.log('test:listenAnswersQuestion', answers)
+          console.log('test:listenAnswersQuestion', answers)
 				},
 				onError => {
           console.log(onError)

@@ -35,6 +35,7 @@ function Graphics(props: any) {
 	const [graphicsData, setGraphicsData] = useState<GraphicsData>({
 		dataValues: [],
 		labels: [],
+		labelsToShow: [],
 	});
 	const [state, setState] = useState<GraphicsState>({
 		dataSurvey: null,
@@ -74,7 +75,7 @@ function Graphics(props: any) {
 				...prev,
 				dataSurvey,
 				usersRegistered: usersChecked,
-				totalUser: usersChecked,
+				totalUser: usersChecked.length,
 			}));
 			getGraphicType(dataSurvey.graphyType);
 			// mountChart();
@@ -112,8 +113,30 @@ function Graphics(props: any) {
 		}
 	};
 
-	const updateData = ({ options, answer_count, optionsIndex }: any) => {
-		console.log('Estoy en updateData');
+	interface UpdateDataProps {
+		options: Options;
+		answer_count: Array<number[]>;
+		optionsIndex: number;
+	}
+
+	interface Options {
+		title: string;
+		type: string;
+		choices: string[];
+		id: string;
+		image: null;
+		points: string;
+	}
+
+	interface List {
+		voto: number;
+		porcentaje: number;
+		answer: string;
+		option: string;
+		color: string;
+	}
+
+	const updateData = ({ options, answer_count, optionsIndex }: UpdateDataProps) => {
 		let totalPercentResponse = {};
 		//se realiza iteracion para calcular porcentaje
 		for (let i in answer_count) {
@@ -131,11 +154,11 @@ function Graphics(props: any) {
 		let generatedlabels: string[] = [];
 		let totalVotosUsuarios = 0;
 		let porcentaj_answer = 0;
-		let colorB = [];
-		let list: any[] = [];
+		let colorB = COLORS_SETTINGS.backgroundColor[0];
+		let list: List[] = [];
 
 		//Se iguala options.choices[a] a una cadena string dinamica para agregar la cantidad de votos de la respuesta
-		colorB = COLORS_SETTINGS.backgroundColor;
+
 		const colorsforGraphics = COLORS_SETTINGS.backgroundColor;
 
 		for (let a = 0; options.choices.length > a; a++) {
@@ -177,9 +200,7 @@ function Graphics(props: any) {
 
 		respuestadVotos = state.totalUser - totalVotosUsuarios;
 		respuestadVotos = respuestadVotos > 0 ? respuestadVotos : 0;
-		console.log('respuestadVotos', respuestadVotos);
-		// @ts-ignore
-		porcentajeUsuarios = respuestadVotos > 0 ? parseInt((respuestadVotos * 100) / this.state.totalUser) : 0;
+		porcentajeUsuarios = respuestadVotos > 0 ? (respuestadVotos * 100) / state.totalUser : 0;
 
 		setState(prev => ({
 			...prev,
@@ -192,8 +213,7 @@ function Graphics(props: any) {
 
 		let formatterTitle = options.title;
 		setState(prev => ({ ...prev, titleQuestion: formatterTitle }));
-		if (options.title && options.title.length > 70) formatterTitle = divideString(options.title);
-		// @ts-ignore
+		// if (options.title && options.title.length > 70) formatterTitle = divideString(options.title);
 		setState(prev => ({
 			...prev,
 			currentChart: {
@@ -202,10 +222,6 @@ function Graphics(props: any) {
 				labels: generatedlabels,
 			},
 		}));
-		// console.log('state.chart', state.chart);
-		// if (state.chart) {
-		// state.chart.update();
-		// }
 	};
 
 	const mountChart = () => {
@@ -232,7 +248,7 @@ function Graphics(props: any) {
 
 	useEffect(() => {
 		if (state.dataSurvey) {
-			getGraphicType(state.dataSurvey.graphyType)
+			getGraphicType(state.dataSurvey.graphyType);
 		}
 	}, [state.dataSurvey]);
 
@@ -247,7 +263,7 @@ function Graphics(props: any) {
 							<ChartRender
 								dataValues={graphicsData.dataValues}
 								isMobile={state.isMobile}
-								labels={graphicsData.labels}
+								labels={graphicsData.labelsToShow}
 								type={graphicType}
 							/>
 						) : (
@@ -273,7 +289,30 @@ function Graphics(props: any) {
 				<Card>
 					<Row gutter={[16, 16]}>
 						{/* Cards Questions */}
-						{state.dataVotos.map(votos => (
+						{isAssambley &&
+							graphicsData.labels.map(label => (
+								<Col key={label.complete} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
+									<Card bodyStyle={{ padding: '0px' }}>
+										<Space align='start'>
+											<Avatar size={80} shape='square' style={{ backgroundColor: `${label.color}` }}>
+												{label.letter}
+											</Avatar>
+											<Space style={{ padding: '5px' }} size={0} align='start' direction='vertical'>
+												<span style={{ fontWeight: '600' }}>{singularOrPluralString(label.quantity, 'Voto', 'Votos')}</span>
+												<Typography.Paragraph
+													style={{ color: '#808080', lineHeight: '1.25' }}
+													ellipsis={{ rows: 2, expandable: false, tooltip: label.question }}>
+													{label.question}
+												</Typography.Paragraph>
+											</Space>
+										</Space>
+										<span style={{ position: 'absolute', top: '5px', right: '10px', fontWeight: '600' }}>
+											{label.percentage} %
+										</span>
+									</Card>
+								</Col>
+							))}
+						{!isAssambley && state.dataVotos.map(votos => (
 							<Col key={votos?.option?.toUpperCase()} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
 								<Card bodyStyle={{ padding: '0px' }}>
 									<Space align='start'>

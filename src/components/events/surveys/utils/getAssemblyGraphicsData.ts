@@ -1,4 +1,7 @@
-import {  VoteResponse } from "../types";
+import { singularOrPluralString } from "@/Utilities/singularOrPluralString";
+import {  Label, VoteResponse } from "../types";
+import { getColor } from "./getColor";
+import { numberToAlphabet } from "./numberToAlphabet";
 
 
 export interface ResponseGroup {
@@ -23,7 +26,8 @@ const groupedVotes = (votes: VoteResponse[]) =>
 
 export const getAssemblyGraphicsData = (data: VoteResponse[]) => {
 	const votationGrouped = groupedVotes(data);
-	const votes = Object.keys(votationGrouped).map(key => ({
+	const votesKeys = Object.keys(votationGrouped)
+	const votes = votesKeys.map(key => ({
 		voteWeight: votationGrouped[key].voteWeight,
 		quantity: votationGrouped[key].quantity,
 	}));
@@ -34,7 +38,17 @@ export const getAssemblyGraphicsData = (data: VoteResponse[]) => {
 
 	const dataValues = votes.map(vote => (vote.voteWeight / totalVotesWeight) * 100);
 
-	const labels = votes.map(vote => `${vote.quantity} votos ${(vote.voteWeight / totalVotesWeight) * 100} %`);
+	const labels: Label[] = votes.map((vote, index) => ({
+		complete: `${singularOrPluralString(vote.quantity, 'voto', 'votos')} ${(vote.voteWeight / totalVotesWeight) * 100} %`,
+		question: votesKeys[index],
+		percentage: (vote.voteWeight / totalVotesWeight) * 100,
+		quantity: vote.quantity,
+		color: getColor(index),
+		letter: numberToAlphabet(index),
+	}));
+
+	console.log('test:getAssemblyGraphicsData', { dataValues, labels })
+
 
 	return { dataValues, labels };
 };

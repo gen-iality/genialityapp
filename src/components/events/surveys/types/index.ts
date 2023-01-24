@@ -279,8 +279,19 @@ export interface ResultVotos {
 
 export interface GraphicsData {
 	dataValues: number[]
-	labels: string[]
+	labels: Label[]
+	labelsToShow: string[]
 }
+
+export interface Label {
+  letter:     string;
+  color:      string;
+  complete:   string;
+  question:   string;
+  percentage: number;
+  quantity:   number;
+}
+
 
 export interface VoteResponse {
   id:         string;

@@ -5,7 +5,7 @@ import { setMainStage } from '../../../redux/stage/actions';
 import RankingTrivia from './rankingTrivia';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
-function SurveyDetail(props) {
+function SurveyDetail(props: any) {
   const handleClick = () => {
     const { unsetCurrentSurvey, setMainStage } = props;
     unsetCurrentSurvey();
@@ -28,7 +28,7 @@ function SurveyDetail(props) {
     </Card>
   );
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
   currentSurvey: state.survey.data.currentSurvey,
 });
 
