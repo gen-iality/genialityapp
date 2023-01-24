@@ -22,6 +22,7 @@ import { ALPHABET, COLORS_SETTINGS } from './chartsConfiguration';
 import { numberToAlphabet } from './utils/numberToAlphabet';
 import { divideString } from './utils/divideString';
 import { UseEventContext } from '@/context/eventContext';
+import useWindowSize from '@/hooks/useWindowSize';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
@@ -60,6 +61,21 @@ function Graphics(props: any) {
 			usuariosSinRespuesta: 0,
 		},
 	});
+
+	const windowSize = useWindowSize();
+
+	useEffect(() => {
+		if (window.screen.width < 800) {
+			setState(prev => ({ ...prev, isMobile: true }))
+		} else {
+			setState(prev => ({ ...prev, isMobile: false }))
+		}
+		if(window.screen.width < 1020) {
+			setState(prev => ({ ...prev, isTablet: true }))
+		} else {
+			setState(prev => ({ ...prev, isTablet: false }))
+		}
+	}, [windowSize]);
 
 	useEffect(() => {
 		console.log('isAssambley', isAssambley);
@@ -298,7 +314,9 @@ function Graphics(props: any) {
 												{label.letter}
 											</Avatar>
 											<Space style={{ padding: '5px' }} size={0} align='start' direction='vertical'>
-												<span style={{ fontWeight: '600' }}>{singularOrPluralString(label.quantity, 'Voto', 'Votos')}</span>
+												<span style={{ fontWeight: '600' }}>
+													{singularOrPluralString(label.quantity, 'Voto', 'Votos')}
+												</span>
 												<Typography.Paragraph
 													style={{ color: '#808080', lineHeight: '1.25' }}
 													ellipsis={{ rows: 2, expandable: false, tooltip: label.question }}>
@@ -312,28 +330,29 @@ function Graphics(props: any) {
 									</Card>
 								</Col>
 							))}
-						{!isAssambley && state.dataVotos.map(votos => (
-							<Col key={votos?.option?.toUpperCase()} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
-								<Card bodyStyle={{ padding: '0px' }}>
-									<Space align='start'>
-										<Avatar size={80} shape='square' style={{ backgroundColor: `${votos.color}` }}>
-											{votos?.option?.toUpperCase()}
-										</Avatar>
-										<Space style={{ padding: '5px' }} size={0} align='start' direction='vertical'>
-											<span style={{ fontWeight: '600' }}>{singularOrPluralString(votos.voto, 'Voto', 'Votos')}</span>
-											<Typography.Paragraph
-												style={{ color: '#808080', lineHeight: '1.25' }}
-												ellipsis={{ rows: 2, expandable: false, tooltip: votos.answer.split(':')[0] }}>
-												{votos.answer.split(':')[0]}
-											</Typography.Paragraph>
+						{!isAssambley &&
+							state.dataVotos.map(votos => (
+								<Col key={votos?.option?.toUpperCase()} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
+									<Card bodyStyle={{ padding: '0px' }}>
+										<Space align='start'>
+											<Avatar size={80} shape='square' style={{ backgroundColor: `${votos.color}` }}>
+												{votos?.option?.toUpperCase()}
+											</Avatar>
+											<Space style={{ padding: '5px' }} size={0} align='start' direction='vertical'>
+												<span style={{ fontWeight: '600' }}>{singularOrPluralString(votos.voto, 'Voto', 'Votos')}</span>
+												<Typography.Paragraph
+													style={{ color: '#808080', lineHeight: '1.25' }}
+													ellipsis={{ rows: 2, expandable: false, tooltip: votos.answer.split(':')[0] }}>
+													{votos.answer.split(':')[0]}
+												</Typography.Paragraph>
+											</Space>
 										</Space>
-									</Space>
-									<span style={{ position: 'absolute', top: '5px', right: '10px', fontWeight: '600' }}>
-										{votos.porcentaje}%
-									</span>
-								</Card>
-							</Col>
-						))}
+										<span style={{ position: 'absolute', top: '5px', right: '10px', fontWeight: '600' }}>
+											{votos.porcentaje}%
+										</span>
+									</Card>
+								</Col>
+							))}
 						{/* Card Users Without Answer */}
 						{parseStringBoolean(cSurveys.currentSurvey.showNoVotos) && (
 							<Col key={'usuariosSinRespuesta'} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
