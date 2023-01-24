@@ -473,7 +473,7 @@ export default function Datos(props: any) {
 						name='mandatory'
 						onChange={() => changeCheckBox(key, 'mandatory')}
 						checked={record}
-						disabled={key.type === 'checkInField'}
+						disabled={key.type === 'checkInField' || key.type === 'voteWeight'}
 					/>
 				) : (
 					<Checkbox checked />

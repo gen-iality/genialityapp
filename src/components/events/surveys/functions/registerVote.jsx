@@ -4,6 +4,7 @@ import SavingResponseByUserId from './savingResponseByUserId';
 
 // Componente que ejecuta el servicio para registar votos
 function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
+   console.log('test:RegisterVote -> voteWeight', voteWeight)
    // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
    let optionQuantity = 0;
    let correctAnswer = false;

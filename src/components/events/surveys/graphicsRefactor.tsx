@@ -21,13 +21,16 @@ import ProgressQuestionIcon from '@2fd/ant-design-icons/lib/ProgressQuestion';
 import { ALPHABET, COLORS_SETTINGS } from './chartsConfiguration';
 import { numberToAlphabet } from './utils/numberToAlphabet';
 import { divideString } from './utils/divideString';
+import { UseEventContext } from '@/context/eventContext';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
 function Graphics(props: any) {
 	console.log('props', props);
 	const { currentActivity, eventId, idSurvey, operation } = props;
+	const cEvent = UseEventContext()
 	const cSurveys = UseSurveysContext();
+	const isAssambley = cEvent.value.user_properties.some((property: any) => property.type === 'voteWeight');	
 	const [graphicType, setGraphicType] = useState<'horizontal' | 'vertical' | 'pie'>('vertical');
 	const [state, setState] = useState<GraphicsState>({
 		dataSurvey: null,
@@ -54,8 +57,8 @@ function Graphics(props: any) {
 	});
 
 	useEffect(() => {
-		console.log('state.resultVotos', state.resultVotos);
-	}, [state.resultVotos]);
+		console.log('isAssambley', isAssambley)
+	}, [isAssambley]);
 
 	const fetchSurveyData = async () => {
 		try {

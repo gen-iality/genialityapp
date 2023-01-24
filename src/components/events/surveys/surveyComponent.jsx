@@ -20,11 +20,14 @@ import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
 import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
 import { sendCommunicationUser } from '@/components/agenda/surveyManager/services';
 import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
+import { UseUserEvent } from '@/context/eventUserContext';
 // import { firestore, fireRealtime } from '../../../helpers/firebase';
 
 function SurveyComponent(props) {
   const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser, cEventUser } = props;
   const cEvent = UseEventContext();
+  const cUser = UseUserEvent()
+  console.log('cUser', cUser)
   const eventStyles = cEvent.value.styles;
   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
   const [surveyData, setSurveyData] = useState({});
@@ -89,7 +92,7 @@ function SurveyComponent(props) {
     UserGamification.getListPoints(eventId, setRankingList);
 
     //Se obtiene el EventUser para los casos que se necesite saber el peso voto
-    await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
+    await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight, cUser);
   }
 
   // Funcion para enviar la informacion de las respuestas

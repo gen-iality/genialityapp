@@ -331,6 +331,7 @@ class DatosModal extends Component {
                 info.name === 'picture' || info.name == 'email' || info.name == 'names'
                   ? true
                   : false ||
+                    info.type === 'voteWeight' ||
                     info.type === 'checkInField' ||
                     info.name === 'birthdate' ||
                     info.name === 'bloodtype' ||
@@ -377,7 +378,7 @@ class DatosModal extends Component {
               //name={`mandatory`}
               checked={info.mandatory}
               onChange={this.changeFieldCheck}
-              disabled={info.type === 'checkInField'}
+              disabled={info.type === 'checkInField' || info.type === 'voteWeight'}
             />
           </Form.Item>
           <Form.Item label={'Visible para Contactos'} htmlFor={`visibleByContactsModal`} name='visibleByContacts'>
@@ -388,6 +389,7 @@ class DatosModal extends Component {
               onChange={this.changeFieldCheckVisibleByContacts}
               disabled={
                 info.type === 'checkInField' ||
+                 info.type === 'voteWeight' ||
                 info.name === 'birthdate' ||
                 info.name === 'bloodtype' ||
                 info.name === 'gender'
