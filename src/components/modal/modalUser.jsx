@@ -223,7 +223,7 @@ class UserModal extends Component {
           resp = await UsersApi.editEventUser(
             snap,
             this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent,
-            this.props.value._id
+            this.props.value._id,
           );
         }
       }
@@ -233,7 +233,7 @@ class UserModal extends Component {
         respActivity = await Activity.Register(
           this.props.cEvent?.value?._id,
           resp?.data?.user?._id || resp?.user?._id,
-          this.props.activityId
+          this.props.activityId,
         );
       }
 
@@ -295,7 +295,8 @@ class UserModal extends Component {
             paddingTop: '0px',
             paddingBottom: '0px',
             marginTop: '30px',
-          }}>
+          }}
+        >
           {componentKey === 'event-checkin' || componentKey == 'activity-checkin' ? (
             <FormEnrollAttendeeToEvent
               fields={this.props.extraFields}
@@ -321,6 +322,7 @@ class UserModal extends Component {
               callback={this.saveUser}
               loadingregister={this.state.loadingregister}
               usedInCms={true}
+              editUser={this.props.edit}
             />
           )}
         </div>
