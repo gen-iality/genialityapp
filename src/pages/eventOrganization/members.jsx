@@ -50,7 +50,6 @@ function OrgMembers(props) {
 
   useEffect(
     () => {
-      console.log('Efecto de startingComponent');
       startingComponent();
     },
     [
@@ -59,12 +58,10 @@ function OrgMembers(props) {
   );
 
   useEffect(() => {
-    console.log('Efecto de updateDataMembers');
     updateDataMembers();
   }, [orgUsersList, userActivities]);
 
   useEffect(() => {
-    console.log('Efecto de getEventsStatisticsData');
     async function interna() {
       const userActivitiesData = await getEventsStatisticsData(orgUsersList, orgEventsList);
       setUserActivities(userActivitiesData);
@@ -74,9 +71,6 @@ function OrgMembers(props) {
   }, [orgUsersList, orgEventsList]);
 
   useEffect(() => {
-    console.log('Incio de metodo setIsStaticsLoading');
-    console.log('userActivities', userActivities);
-
     if (Object.keys(userActivities).length === 0) {
       console.log('El objeto está vacio');
     } else {
@@ -86,21 +80,16 @@ function OrgMembers(props) {
   }, [userActivities]);
 
   async function startingComponent() {
-    console.log('Inicio de función de startingComponent');
     setLastUpdate(new Date());
     await setFormFields();
     await getOrgUsersList();
     await getOrgEventsList();
-    console.log('Fin de función de startingComponent');
   }
 
   async function getEventsStatisticsData(orgUsersList, orgEventsList) {
-    console.log('2. Inicio - getEventsStatisticsData ');
     const userActivitiesData = {};
 
     for (let indexOrganization = 0; indexOrganization < orgUsersList.length; indexOrganization++) {
-      console.log('2. Inicio - primer for ');
-
       const userId = orgUsersList[indexOrganization].account_id;
       const email = orgUsersList[indexOrganization].user.email;
 
@@ -185,21 +174,18 @@ function OrgMembers(props) {
   }
 
   async function getOrgUsersList() {
-    console.log('Inicio de petición getOrgUsersList');
     const { data: orgUsers } = await OrganizationApi.getUsers(organizationId);
     console.log('Petición de solicitud - Usuarios de la organización: ', orgUsers);
     setOrgUsersList(orgUsers);
   }
 
   async function getOrgEventsList() {
-    console.log('Inicio de petición getOrgEventsList');
     const { data: orgEvents } = await OrganizationApi.events(organizationId);
     console.log('Petición de solicitud - Cursos de la organización: ', orgEvents);
     setOrgEventsList(orgEvents);
   }
 
   async function getPositionList() {
-    console.log('Inicio de petición getPositionList');
     const positionListData = await PositionsApi.Organizations.getAll(organizationId);
     console.log('Petición de solicitud - Lista de Cargos : ', positionListData);
 
@@ -214,7 +200,6 @@ function OrgMembers(props) {
   }
 
   async function setFormFields() {
-    console.log('Inicio de función de setFormFields');
     const positionList = await getPositionList();
 
     const positionField = {
@@ -230,7 +215,6 @@ function OrgMembers(props) {
     };
 
     setExtraFields([...props.org.user_properties, positionField]);
-    console.log('Fin de función de setFormFields');
   }
 
   async function exportFile(e) {
@@ -270,9 +254,6 @@ function OrgMembers(props) {
 
   return (
     <>
-      {console.log('Aquí inicia el render de Members')}
-      {console.log('Estado de extraFields', extraFields)}
-      {console.log('Estado de isStaticsLoading', isStaticsLoading)}
       <Header
         title={'Miembros'}
         description={
@@ -327,7 +308,6 @@ function OrgMembers(props) {
           setIsLoading={setIsLoading}
         />
       )}
-      {console.log('Aquí termina el render de Members')}
     </>
   );
 }
