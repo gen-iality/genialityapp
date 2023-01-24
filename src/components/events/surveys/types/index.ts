@@ -276,3 +276,24 @@ export interface ResultVotos {
   usuariosSinRespuesta: number;
   porcentajevotos:      number;
 }
+
+export interface GraphicsData {
+	dataValues: number[]
+	labels: string[]
+}
+
+export interface VoteResponse {
+  id:         string;
+  id_user:    string;
+  response:   string;
+  id_survey:  string;
+  user_email: string;
+  created:    CreatedVoteResponse;
+  voteWeight?: number;
+  user_name:  string;
+}
+
+export interface CreatedVoteResponse {
+  seconds:     number;
+  nanoseconds: number;
+}

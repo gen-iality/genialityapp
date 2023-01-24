@@ -14,7 +14,7 @@ import { graphicsFrame } from './framer';
 import * as SurveyActions from '../../../redux/survey/actions';
 import { UseSurveysContext } from '../../../context/surveysContext';
 import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
-import { GraphicsState } from './types';
+import { GraphicsData, GraphicsState } from './types';
 import ChartRender from './ChartRender';
 import { singularOrPluralString } from '@/Utilities/singularOrPluralString';
 import ProgressQuestionIcon from '@2fd/ant-design-icons/lib/ProgressQuestion';
@@ -28,10 +28,14 @@ const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 function Graphics(props: any) {
 	console.log('props', props);
 	const { currentActivity, eventId, idSurvey, operation } = props;
-	const cEvent = UseEventContext()
+	const cEvent = UseEventContext();
 	const cSurveys = UseSurveysContext();
-	const isAssambley = cEvent.value.user_properties.some((property: any) => property.type === 'voteWeight');	
+	const isAssambley = cEvent.value.user_properties.some((property: any) => property.type === 'voteWeight');
 	const [graphicType, setGraphicType] = useState<'horizontal' | 'vertical' | 'pie'>('vertical');
+	const [graphicsData, setGraphicsData] = useState<GraphicsData>({
+		dataValues: [],
+		labels: [],
+	});
 	const [state, setState] = useState<GraphicsState>({
 		dataSurvey: null,
 		currentPage: 1,
@@ -57,7 +61,7 @@ function Graphics(props: any) {
 	});
 
 	useEffect(() => {
-		console.log('isAssambley', isAssambley)
+		console.log('isAssambley', isAssambley);
 	}, [isAssambley]);
 
 	const fetchSurveyData = async () => {
@@ -215,10 +219,21 @@ function Graphics(props: any) {
 			updateData,
 			operation
 		);
+		if (isAssambley) {
+			SurveyAnswers.listenAnswersQuestion(
+				idSurvey,
+				state.dataSurvey.questions[state.currentPage - 1].id,
+				eventId,
+				setGraphicsData,
+				operation
+			);
+		}
 	};
 
 	useEffect(() => {
-		console.log('state.dataSurvey', state.dataSurvey);
+		if (state.dataSurvey) {
+			getGraphicType(state.dataSurvey.graphyType)
+		}
 	}, [state.dataSurvey]);
 
 	if (!state.dataSurvey) return null;
@@ -228,12 +243,21 @@ function Graphics(props: any) {
 			<Col span={24}>
 				<Card title={state.titleQuestion} headStyle={{ border: 'none' }}>
 					<Row gutter={[0, 8]} justify='center'>
-						<ChartRender
-							dataValues={state.currentChart.dataValues}
-							isMobile={state.isMobile}
-							labels={state.currentChart.labels}
-							type={graphicType}
-						/>
+						{isAssambley ? (
+							<ChartRender
+								dataValues={graphicsData.dataValues}
+								isMobile={state.isMobile}
+								labels={graphicsData.labels}
+								type={graphicType}
+							/>
+						) : (
+							<ChartRender
+								dataValues={state.currentChart.dataValues}
+								isMobile={state.isMobile}
+								labels={state.currentChart.labels}
+								type={graphicType}
+							/>
+						)}
 						<Col span={24}>
 							<Pagination
 								current={state.currentPage}
