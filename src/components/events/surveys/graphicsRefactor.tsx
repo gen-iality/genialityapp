@@ -264,7 +264,7 @@ function Graphics(props: any) {
 			{/* Graphic */}
 			<Col span={24}>
 				<Card title={state.titleQuestion} headStyle={{ border: 'none' }}>
-					<Row gutter={[0, 8]} justify='center'>
+					<Row gutter={[0, 0]} justify='center'>
 						{isAssambley ? (
 							<ChartRender
 								dataValues={graphicsData.dataValues}
@@ -357,39 +357,18 @@ function Graphics(props: any) {
 										title='Porcentaje de inscritos que no participaron en esta pregunta'
 										value={state.resultVotos.porcentajevotos}
 										precision={0}
-										valueStyle={{ color: '#3f8600' }}
+										valueStyle={{ color: '#1890FF' }}
 										suffix='%'
 									/>
-
-									{/* <Space align='start'>
-									<Avatar
-										icon={<ProgressQuestionIcon />}
-										size={80}
-										shape='square'
-										style={{ backgroundColor: '#9e9e9e' }}></Avatar>
-									<Space style={{ padding: '5px' }} size={0} align='start' direction='vertical'>
-										<span style={{ fontWeight: '600' }}>
-											{singularOrPluralString(state.resultVotos.usuariosSinRespuesta, 'Participante', 'Participantes')}
-										</span>
-										<Typography.Paragraph
-											style={{ color: '#808080', lineHeight: '1.25' }}
-											ellipsis={true && { rows: 2, expandable: false, symbol: 'more' }}>
-											Sin responder
-										</Typography.Paragraph>
-									</Space>
-								</Space>
-								<span style={{ position: 'absolute', top: '5px', right: '10px', fontWeight: '600' }}>
-									{state.resultVotos.porcentajevotos}%
-								</span> */}
 								</Card>
 							</Col>
 							<Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 								<Card>
 									<Statistic
 										title='Cantidad de inscritos que no participaron en esta pregunta'
-										value={state.resultVotos.usuariosSinRespuesta}
+										value={state.resultVotos.usuariosSinRespuesta + ' de ' + state.totalUser}
 										precision={0}
-										valueStyle={{ color: '#3f8600' }}
+										valueStyle={{ color: '#1890FF' }}
 										suffix={singularOrPluralString(
 											state.resultVotos.usuariosSinRespuesta,
 											'Participante',
