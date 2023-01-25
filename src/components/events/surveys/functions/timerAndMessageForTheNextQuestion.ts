@@ -11,7 +11,7 @@ function TimerAndMessageForTheNextQuestion(
    rankingPoints: any,
    freezeGame: any,
    setShowOrHideSurvey: any,
-   messageType: any,
+   messageType?: any,
 ) {
 
    // secondsToGo = secondsToGo ? secondsToGo : 0;

@@ -1,17 +1,18 @@
 import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 import { firestore } from '../../../../helpers/firebase';
 
-function listenSurveysData(event, activity, currentUser, callback) {
+function listenSurveysData(event: any, activity: any, currentUser: any, callback: any) {
    //Listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
    let $query = firestore.collection('surveys');
 
    //Filtro por evento
    if (event && event._id) {
+      // @ts-ignore
       $query = $query.where('eventId', '==', event._id);
    }
 
    $query.onSnapshot((surveySnapShot) => {
-      const eventSurveys = []; // Almacena el Snapshot de todas las encuestas del evento
+      const eventSurveys: any[] = []; // Almacena el Snapshot de todas las encuestas del evento
       let publishedSurveys = [];
 
       if (surveySnapShot.size === 0) {

@@ -3,7 +3,7 @@ import { firestore } from '../../../../helpers/firebase';
 export const SurveyPage = {
    // Obtiene la pagina actual de la encuesta
    // eslint-disable-next-line no-unused-vars
-   getCurrentPage: (surveyId, uid) => {
+   getCurrentPage: (surveyId: string, uid: string) => {
       return new Promise((resolve, reject) => {
          try {
             firestore
@@ -14,6 +14,7 @@ export const SurveyPage = {
                .get()
                .then((doc) => {
                   if (doc.exists) {
+                     // @ts-ignore
                      let { currentPageNo } = doc.data();
                      resolve(currentPageNo);
                   } else {
@@ -27,7 +28,7 @@ export const SurveyPage = {
    },
 
    // Actualiza la pagina actual de la encuesta
-   setCurrentPage: (surveyId, uid, currentPageNo) => {
+   setCurrentPage: (surveyId: string, uid: string, currentPageNo: string) => {
       return new Promise((resolve, reject) => {
          let metaData = { currentPageNo: currentPageNo};
          firestore
@@ -47,7 +48,7 @@ export const SurveyPage = {
 };
 
 export const Users = {
-   getUsers: async (eventId) => {
+   getUsers: async (eventId: string) => {
       const snapshot = await firestore.collection(`${eventId}_event_attendees`).get();
       return snapshot.docs.map((doc) => doc.data());
    },
