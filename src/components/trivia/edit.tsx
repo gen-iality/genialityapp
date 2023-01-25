@@ -226,7 +226,7 @@ function TriviaEdit(props: any) {
 				survey: state.survey,
 				show_horizontal_bar: parseStringBoolean(state.show_horizontal_bar),
 				graphyType: state.graphyType,
-				allow_vote_value_per_user: 'false',
+				allow_vote_value_per_user: false,
 				event_id: props.event._id,
 				activity_id: state.activity_id,
 				points: state.points ? Number(state.points) : 1,
@@ -237,16 +237,16 @@ function TriviaEdit(props: any) {
 				lose_Message: state.lose_Message,
 
 				// Survey Config
-				allow_anonymous_answers: 'false',
-				allow_gradable_survey: 'false',
+				allow_anonymous_answers: false,
+				allow_gradable_survey: false,
 				hasMinimumScore: false,
 				isGlobal: true,
 				showNoVotos: false,
 
 				//Survey state
 				freezeGame: parseStringBoolean(state.freezeGame),
-				open: 'false',
-				publish: 'false',
+				open: false,
+				publish: false,
 
 				minimumScore: 0,
 			};
