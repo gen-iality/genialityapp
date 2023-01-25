@@ -55,12 +55,12 @@ function SurveyDetailPage(props: any) {
 						eventId={cSurveys.currentSurvey.eventId}
 						operation='participationPercentage'
 					/>
-					<Divider />
+					{/* <Divider />
 					<Graphics
 						idSurvey={cSurveys.currentSurvey._id}
 						eventId={cSurveys.currentSurvey.eventId}
 						operation='participationPercentage'
-					/>
+					/> */}
 				</>
 			)}
 			{/* {cSurveys.surveyResult === 'closedSurvey' && <ClosedSurvey />} */}
