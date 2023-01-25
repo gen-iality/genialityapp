@@ -249,7 +249,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Dashboard de Asambleas',
+        name: 'Estadísticas de Asambleas',
         path: '/assembly-dashboard',
         key: 'estadisticas-asamblea',
         onClick: handleClick,
