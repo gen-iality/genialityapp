@@ -1,16 +1,15 @@
 /**
- * It takes a number, a singular string, and a plural string, and returns a string that is the number
- * and the singular or plural string, depending on the number
+ * It returns a string that is either singular or plural, depending on the value passed in
  * @param {number} value - The number to check
  * @param {string} singular - The singular version of the string.
  * @param {string} plural - The plural form of the word.
- * @returns A function that takes in a number, a singular string, and a plural string and returns a
- * string.
+ * @param {boolean} [withValue=true] - boolean = true
+ * @returns A function that takes in a number, a singular string, a plural string, and a boolean.
  */
-export const singularOrPluralString = (value:number, singular:string, plural:string) => {
+export const singularOrPluralString = (value:number, singular:string, plural:string, hideValue?:boolean ) => {
   if (value === 1) {
-    return `${value} ${singular}`;
+    return !hideValue ? `${value} ${singular}` : `${singular}`;
   } else {
-    return `${value} ${plural}`;
+    return !hideValue ? `${value} ${plural}` : `${plural}`;
   }
 };
