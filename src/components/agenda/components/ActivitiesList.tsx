@@ -104,7 +104,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   }
                 })();
               }, [cEventUserId]);
-              if (isTaken) return <Badge style={{ backgroundColor: '#339D25' }} count='Visto' />;
+              if (isTaken) return <Badge style={{ backgroundColor: '#339D25', marginRight: '3px' }} count='Visto' />;
               return <></>;
             },
             QuizProgressComponent: ({ userId, isAnswersDeleted }) => {
@@ -296,9 +296,17 @@ const ActivitiesList = (props: ActivitiesListProps) => {
       renderItem={(item: TruncatedAgenda) => (
         <item.RibbonComponent>
           <List.Item className='shadow-box'>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+                flexFlow: 'row wrap',
+              }}
+            >
               <Link to={item.link}>
-                <div>
+                <div style={{ fontSize: '1.2rem' }}>
                   <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
                   <span>{item.title}</span>
                 </div>
