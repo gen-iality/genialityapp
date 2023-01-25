@@ -56,14 +56,14 @@ function Graphics(props: any) {
 
 	useEffect(() => {
 		if (window.screen.width < 800) {
-			setState(prev => ({ ...prev, isMobile: true }));
+			setState((prev) => ({ ...prev, isMobile: true }));
 		} else {
-			setState(prev => ({ ...prev, isMobile: false }));
+			setState((prev) => ({ ...prev, isMobile: false }));
 		}
 		if (window.screen.width < 1020) {
-			setState(prev => ({ ...prev, isTablet: true }));
+			setState((prev) => ({ ...prev, isTablet: true }));
 		} else {
-			setState(prev => ({ ...prev, isTablet: false }));
+			setState((prev) => ({ ...prev, isTablet: false }));
 		}
 	}, [windowSize]);
 
@@ -73,11 +73,11 @@ function Graphics(props: any) {
 
 	const fetchSurveyData = async () => {
 		try {
-			setState(prev => ({ ...prev, loading: true }));
+			setState((prev) => ({ ...prev, loading: true }));
 			const dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 			const usersRegistered = await UsersApi.getAll(eventId);
 			const usersChecked = usersRegistered.data.filter((user: any) => !!user.checked_in);
-			setState(prev => ({
+			setState((prev) => ({
 				...prev,
 				dataSurvey,
 				usersRegistered: usersChecked,
@@ -88,7 +88,7 @@ function Graphics(props: any) {
 		} catch (error) {
 			console.log(error);
 		} finally {
-			setState(prev => ({ ...prev, loading: false }));
+			setState((prev) => ({ ...prev, loading: false }));
 		}
 	};
 
@@ -106,7 +106,7 @@ function Graphics(props: any) {
 
 	const setCurrentPage = (page: number, pageSize: number) => {
 		// console.log(page, pageSize);
-		setState(prev => ({ ...prev, currentPage: page }));
+		setState((prev) => ({ ...prev, currentPage: page }));
 	};
 
 	const getGraphicType = (graphyType: string) => {
@@ -195,7 +195,7 @@ function Graphics(props: any) {
 			});
 			totalVotosUsuarios = totalVotosUsuarios + answer_count[a][0];
 		}
-		setState(prev => ({
+		setState((prev) => ({
 			...prev,
 			dataVotos: list,
 		}));
@@ -208,7 +208,7 @@ function Graphics(props: any) {
 		respuestadVotos = respuestadVotos > 0 ? respuestadVotos : 0;
 		porcentajeUsuarios = respuestadVotos > 0 ? (respuestadVotos * 100) / state.totalUser : 0;
 
-		setState(prev => ({
+		setState((prev) => ({
 			...prev,
 			resultVotos: {
 				sumadVotacion: totalVotosUsuarios,
@@ -218,9 +218,9 @@ function Graphics(props: any) {
 		}));
 
 		let formatterTitle = options.title;
-		setState(prev => ({ ...prev, titleQuestion: formatterTitle }));
+		setState((prev) => ({ ...prev, titleQuestion: formatterTitle }));
 		// if (options.title && options.title.length > 70) formatterTitle = divideString(options.title);
-		setState(prev => ({
+		setState((prev) => ({
 			...prev,
 			currentChart: {
 				...prev.currentChart,
@@ -296,7 +296,7 @@ function Graphics(props: any) {
 					<Row gutter={[16, 16]}>
 						{/* Cards Questions */}
 						{isAssambley &&
-							graphicsData.labels.map(label => (
+							graphicsData.labels.map((label) => (
 								<Col key={label.complete} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
 									<Card bodyStyle={{ padding: '0px' }}>
 										<Space align='start'>
@@ -321,7 +321,7 @@ function Graphics(props: any) {
 								</Col>
 							))}
 						{!isAssambley &&
-							state.dataVotos.map(votos => (
+							state.dataVotos.map((votos) => (
 								<Col key={votos?.option?.toUpperCase()} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
 									<Card bodyStyle={{ padding: '0px' }}>
 										<Space align='start'>
@@ -347,9 +347,9 @@ function Graphics(props: any) {
 					</Row>
 				</Card>
 			</Col>
-			<Col span={24}>
-				<Card>
-					{parseStringBoolean(cSurveys.currentSurvey.showNoVotos) && (
+			{parseStringBoolean(cSurveys.currentSurvey.showNoVotos) && (
+				<Col span={24}>
+					<Card>
 						<Row gutter={[16, 16]}>
 							<Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 								<Card bodyStyle={{}}>
@@ -379,9 +379,9 @@ function Graphics(props: any) {
 								</Card>
 							</Col>
 						</Row>
-					)}
-				</Card>
-			</Col>
+					</Card>
+				</Col>
+			)}
 		</Row>
 	);
 }
