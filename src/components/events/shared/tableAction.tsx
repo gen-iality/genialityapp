@@ -1,4 +1,4 @@
-export default function TableAction({ ...props }) {
+export default function TableAction({ ...props }: any) {
   const { id, object, saveItem, editItem, removeNew, removeItem, discardChanges } = props;
   return (
     <td>

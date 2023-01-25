@@ -8,9 +8,8 @@ import {
   PrinterOutlined,
   RocketOutlined,
 } from '@ant-design/icons';
-import { ReactEventHandler, SyntheticEvent } from 'react';
-// TODO: Add type to onClick
-const handleClick = (e: any) => {
+
+const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
   if (!navigator.onLine) e.preventDefault();
 };
 

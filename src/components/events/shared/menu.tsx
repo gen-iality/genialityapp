@@ -11,7 +11,7 @@ import OpenInNewIcon from '@2fd/ant-design-icons/lib/OpenInNew';
 
 const { SubMenu } = Menu;
 
-const MenuConfig = (props) => {
+const MenuConfig = (props: any) => {
   const [controller, setcontroller] = useState({
     contentTab: true,
     generalTab: false,
@@ -28,7 +28,7 @@ const MenuConfig = (props) => {
 
   const eventId = props.match.params.event;
 
-  const eventOrganization = async (eventId) => {
+  const eventOrganization = async (eventId: string) => {
     const currentEvent = await EventsApi.getOne(eventId);
     const organizationId = currentEvent.organizer_id;
     setcontroller({ ...controller, organizationId });
@@ -40,7 +40,7 @@ const MenuConfig = (props) => {
     eventOrganization(splitted[2]);
   }, []);
 
-  const handleClick = (e) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (!navigator.onLine) e.preventDefault();
   };
   // cosole.log('Test request');
@@ -108,11 +108,11 @@ const MenuConfig = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
   permissions: state.permissions,
 });
 
-const renderMenuItems = (controller, props) => {
+const renderMenuItems = (controller: any, props: any) => {
   return (
     <>
       {MenuItems.map((item, index) => {

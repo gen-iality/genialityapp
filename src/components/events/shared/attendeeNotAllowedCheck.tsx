@@ -2,7 +2,7 @@ import { Alert, Tag, Button } from 'antd';
 import { AuthUrl } from '../../../helpers/constants';
 import { useIntl } from 'react-intl';
 
-const AttendeeNotAllowedCheck = (props) => {
+const AttendeeNotAllowedCheck = (props: any) => {
   let event = props.event;
   let currentUser = props.currentUser;
   let usuarioRegistrado = props.usuarioRegistrado;
