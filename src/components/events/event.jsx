@@ -41,6 +41,7 @@ import Bingo from '../games/bingo';
 import WhereIs from '../games/whereIs';
 import SharePhoto from '../games/sharePhoto';
 import WhoWantsToBeAMillonaire from '../games/WhoWantsToBeAMillonaire';
+import Assembly from '../assembly';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -439,6 +440,13 @@ class Event extends Component {
                 eventId={event._id}
                 event={event}
                 componentKey='dashboard'
+              />
+              <Protected
+                path={`${match.url}/assembly-dashboard`}
+                component={Assembly}
+                eventId={event._id}
+                event={event}
+                componentKey='estadisticas-asamblea'
               />
               <Protected
                 path={`${match.url}/badge`}

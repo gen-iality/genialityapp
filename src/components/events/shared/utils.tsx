@@ -8,7 +8,9 @@ import {
   PrinterOutlined,
   RocketOutlined,
 } from '@ant-design/icons';
-const handleClick = (e) => {
+import { ReactEventHandler, SyntheticEvent } from 'react';
+// TODO: Add type to onClick
+const handleClick = (e: any) => {
   if (!navigator.onLine) e.preventDefault();
 };
 
@@ -245,6 +247,12 @@ export const MenuItems = [
         name: 'Estadísticas del evento',
         path: '/dashboard',
         key: 'estadisticas-evento',
+        onClick: handleClick,
+      },
+      {
+        name: 'Dashboard de Asambleas',
+        path: '/assembly-dashboard',
+        key: 'estadisticas-asamblea',
         onClick: handleClick,
       },
     ],
