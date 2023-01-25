@@ -3,11 +3,11 @@ import { Row, Divider, List } from 'antd';
 import withContext from '../../../context/withContext';
 import UsersCard from '../../shared/usersCard';
 
-function RankingList(props) {
+function RankingList(props: any) {
   const { cEvent, cHelper } = props;
   const styles = cEvent.value.styles;
   const { gameRanking } = cHelper;
-  function formatName(name) {
+  function formatName(name: string) {
     const result = decodeURIComponent(name);
     return result;
   }

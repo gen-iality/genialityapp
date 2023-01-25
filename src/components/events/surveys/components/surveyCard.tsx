@@ -5,7 +5,7 @@ import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
 const { Title } = Typography;
 
-function SurveyCard(props) {
+function SurveyCard(props: any) {
   const { publishedSurveys, status, handleClick, currentSurveyStatus } = props;
 
   const headStyle = {
@@ -26,7 +26,7 @@ function SurveyCard(props) {
           className='asistente-list'
           dataSource={publishedSurveys}
           loading={status != 'LOADED'}
-          renderItem={(survey) => (
+          renderItem={(survey: any) => (
             <>
               <Card
                 className='card-agenda-desktop agendaHover efect-scale'
@@ -96,7 +96,7 @@ function SurveyCard(props) {
                                     currentSurveyStatus[survey._id] &&
                                     currentSurveyStatus[survey._id].surveyCompleted === 'completed') ||
                                     !parseStringBoolean(survey.isOpened)
-                                      ? ' ghost'
+                                      ? 'ghost'
                                       : 'primary'
                                 }
                                 className={`${parseStringBoolean(survey.isOpened) &&

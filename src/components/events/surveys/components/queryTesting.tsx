@@ -8,13 +8,14 @@ function QueryTesting() {
   /** /surveys/survey_id/answersbyquestion/question_id/responses/attendee_id */
   /** /surveys/survey_id/answersbyattendee/attendee_id/responses/question_id */
   /** /surveys/s1u2r3v4e5y6_7i8d/answersbyquestion/q1u2e3s4t5i6o7n8_9i0d/responses */
-  const [data, setData] = useState(null);
-  const [totalAveragedata, setTotalAverageData] = useState(null);
-  const [totalTime, setTotalTime] = useState(null);
-  const [validationStartTime, setValidationStartTime] = useState();
+  // const [data, setData] = useState(null);
+  const [data, setData] = useState<any[]>([]);
+  const [totalAveragedata, setTotalAverageData] = useState<number | null>(null);
+  const [totalTime, setTotalTime] = useState<number | null>(null);
+  const [validationStartTime, setValidationStartTime] = useState<moment.Moment | null>();
 
   /** Ingreso de datos a la DB */
-  function insertionInTheDatabase(insertions) {
+  function insertionInTheDatabase(insertions: any) {
     const firebaseRef = firestore
       .collection('surveys')
       .doc('s1u2r3v4e5y6_7i8d')
@@ -28,7 +29,7 @@ function QueryTesting() {
   }
 
   /** Listener que permite recuperar toda la data y guardarla en un array */
-  async function dataBaseListener() {
+  function dataBaseListener() {
     const firebaseRef = firestore
       .collection('surveys')
       .doc('s1u2r3v4e5y6_7i8d')
@@ -37,7 +38,7 @@ function QueryTesting() {
       .collection('responses');
 
     const unSuscribe = firebaseRef.onSnapshot((snapShot) => {
-      let dataTest = [];
+      let dataTest: any[] = [];
       snapShot.forEach((data) => {
         if (data.data()) {
           dataTest.push(data.data());
@@ -69,7 +70,7 @@ function QueryTesting() {
   }
 
   /** accion del formulario de antd que se ejecuta al hacer clic en el boton Realizar prueba */
-  const onFinish = (values) => {
+  const onFinish = (values: any) => {
     const { insertionNumber } = values;
     startTimer();
     for (let insertions = 0; insertions < insertionNumber; insertions++) {
@@ -80,7 +81,7 @@ function QueryTesting() {
   /** promedio por respuestas, como las respuestas se guardan con un campo answer de tipo number aqui se promedia esa data */
   function averagePerResponses() {
     if (data && data.length > 0) {
-      let average = data.reduce((sumTotal, rest) => {
+      let average = data.reduce((sumTotal: any, rest: any) => {
         return sumTotal + rest.answer;
       }, 0);
 
@@ -96,7 +97,8 @@ function QueryTesting() {
   useEffect(() => {
     const unSuscribe = dataBaseListener();
     startTimer();
-    return () => unSuscribe;
+    // This "unSuscribe" didn't have executing -> ()
+    return () => unSuscribe();
   }, []);
 
   /** Se ejecuta el promedio cada que el listener cambia, ademas cuando ya no se ejecuta el efecto se detiene el contador */

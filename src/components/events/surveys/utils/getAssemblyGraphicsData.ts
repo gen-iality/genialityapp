@@ -1,6 +1,7 @@
 import { singularOrPluralString } from "@/Utilities/singularOrPluralString";
 import {  Label, VoteResponse } from "../types";
 import { getColor } from "./getColor";
+import { numberDecimalToTwoDecimals } from "./numberDecimalToTwoDecimals";
 import { numberToAlphabet } from "./numberToAlphabet";
 
 
@@ -36,12 +37,12 @@ export const getAssemblyGraphicsData = (data: VoteResponse[]) => {
 
 	const totalVotesQty = votes.reduce((acc, vote) => acc + vote.quantity, 0);
 
-	const dataValues = votes.map(vote => (vote.voteWeight / totalVotesWeight) * 100);
+	const dataValues = votes.map(vote => numberDecimalToTwoDecimals((vote.voteWeight / totalVotesWeight) * 100));
 
 	const labels: Label[] = votes.map((vote, index) => ({
-		complete: `${singularOrPluralString(vote.quantity, 'voto', 'votos')} ${(vote.voteWeight / totalVotesWeight) * 100} %`,
+		complete: `${singularOrPluralString(vote.quantity, 'voto', 'votos')} ${numberDecimalToTwoDecimals((vote.voteWeight / totalVotesWeight) * 100)} %`,
 		question: votesKeys[index],
-		percentage: (vote.voteWeight / totalVotesWeight) * 100,
+		percentage: numberDecimalToTwoDecimals((vote.voteWeight / totalVotesWeight) * 100),
 		quantity: vote.quantity,
 		color: getColor(index),
 		letter: numberToAlphabet(index),

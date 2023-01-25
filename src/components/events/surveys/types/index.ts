@@ -3,7 +3,7 @@ import { Chart, ChartConfiguration } from "chart.js";
 export interface GraphicsState {
   dataSurvey:      DataSurvey | null;
   currentPage:     number;
-  graphicsFrame:   GraphicsFrame;
+  graphicsFrame:   GraphicsFrame | null;
   currentChart: {
     labels: string[],
     dataValues: number[],

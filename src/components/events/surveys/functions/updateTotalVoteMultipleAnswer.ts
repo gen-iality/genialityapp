@@ -1,8 +1,8 @@
-function updateTotalVoteMultipleAnswer(updateTotalVoteParameters, questionAnswerCount) {
+function updateTotalVoteMultipleAnswer(updateTotalVoteParameters: any, questionAnswerCount: any) {
   const { optionIndex, vote } = updateTotalVoteParameters;
 
   try {
-    optionIndex.forEach((element) => {
+    optionIndex.forEach((element: any) => {
       if (element >= 0) {
         questionAnswerCount[element] += vote;
       }

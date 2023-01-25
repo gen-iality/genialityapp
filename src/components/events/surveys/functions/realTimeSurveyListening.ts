@@ -1,7 +1,7 @@
 import { firestore } from '../../../../helpers/firebase';
 import { SurveyPage } from '../services/services';
 
-function RealTimeSurveyListening(idSurvey, currentUser, startingSurveyComponent) {
+function RealTimeSurveyListening(idSurvey: string, currentUser: any, startingSurveyComponent: any) {
   let currentPageNo = 0;
 
   firestore

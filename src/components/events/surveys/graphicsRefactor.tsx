@@ -1,33 +1,23 @@
-import { Component, Fragment, useCallback, useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
 import 'chartjs-plugin-datalabels';
-import { Pagination, Card, Button, Row, Col, Typography, Space, Avatar, Statistic } from 'antd';
-import { ArrowLeftOutlined, ArrowUpOutlined } from '@ant-design/icons';
-import Loading from './loading';
-
-import Chart, { ChartConfiguration } from 'chart.js/auto';
-
-import SurveyAnswers from './services/surveyAnswersService';
-import { SurveysApi, UsersApi } from '../../../helpers/request';
-import { graphicsFrame } from './framer';
-
-import * as SurveyActions from '../../../redux/survey/actions';
-import { UseSurveysContext } from '../../../context/surveysContext';
-import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
+import { COLORS_SETTINGS } from './chartsConfiguration';
+import { connect } from 'react-redux';
 import { GraphicsData, GraphicsState } from './types';
-import ChartRender from './ChartRender';
-import { singularOrPluralString } from '@/Utilities/singularOrPluralString';
-import ProgressQuestionIcon from '@2fd/ant-design-icons/lib/ProgressQuestion';
-import { ALPHABET, COLORS_SETTINGS } from './chartsConfiguration';
 import { numberToAlphabet } from './utils/numberToAlphabet';
-import { divideString } from './utils/divideString';
+import { Pagination, Card, Row, Col, Typography, Space, Avatar, Statistic } from 'antd';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
+import { singularOrPluralString } from '@/Utilities/singularOrPluralString';
+import { SurveysApi, UsersApi } from '../../../helpers/request';
+import { useEffect, useState } from 'react';
 import { UseEventContext } from '@/context/eventContext';
+import { UseSurveysContext } from '../../../context/surveysContext';
+import * as SurveyActions from '../../../redux/survey/actions';
+import ChartRender from './ChartRender';
+import SurveyAnswers from './services/surveyAnswersService';
 import useWindowSize from '@/hooks/useWindowSize';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
 function Graphics(props: any) {
-	console.log('props', props);
 	const { currentActivity, eventId, idSurvey, operation } = props;
 	const cEvent = UseEventContext();
 	const cSurveys = UseSurveysContext();
@@ -41,7 +31,7 @@ function Graphics(props: any) {
 	const [state, setState] = useState<GraphicsState>({
 		dataSurvey: null,
 		currentPage: 1,
-		graphicsFrame,
+		graphicsFrame: null,
 		currentChart: {
 			labels: [],
 			dataValues: [],
@@ -66,14 +56,14 @@ function Graphics(props: any) {
 
 	useEffect(() => {
 		if (window.screen.width < 800) {
-			setState((prev) => ({ ...prev, isMobile: true }));
+			setState(prev => ({ ...prev, isMobile: true }));
 		} else {
-			setState((prev) => ({ ...prev, isMobile: false }));
+			setState(prev => ({ ...prev, isMobile: false }));
 		}
 		if (window.screen.width < 1020) {
-			setState((prev) => ({ ...prev, isTablet: true }));
+			setState(prev => ({ ...prev, isTablet: true }));
 		} else {
-			setState((prev) => ({ ...prev, isTablet: false }));
+			setState(prev => ({ ...prev, isTablet: false }));
 		}
 	}, [windowSize]);
 
@@ -83,11 +73,11 @@ function Graphics(props: any) {
 
 	const fetchSurveyData = async () => {
 		try {
-			setState((prev) => ({ ...prev, loading: true }));
+			setState(prev => ({ ...prev, loading: true }));
 			const dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 			const usersRegistered = await UsersApi.getAll(eventId);
 			const usersChecked = usersRegistered.data.filter((user: any) => !!user.checked_in);
-			setState((prev) => ({
+			setState(prev => ({
 				...prev,
 				dataSurvey,
 				usersRegistered: usersChecked,
@@ -98,7 +88,7 @@ function Graphics(props: any) {
 		} catch (error) {
 			console.log(error);
 		} finally {
-			setState((prev) => ({ ...prev, loading: false }));
+			setState(prev => ({ ...prev, loading: false }));
 		}
 	};
 
@@ -116,7 +106,7 @@ function Graphics(props: any) {
 
 	const setCurrentPage = (page: number, pageSize: number) => {
 		// console.log(page, pageSize);
-		setState((prev) => ({ ...prev, currentPage: page }));
+		setState(prev => ({ ...prev, currentPage: page }));
 	};
 
 	const getGraphicType = (graphyType: string) => {
@@ -205,7 +195,7 @@ function Graphics(props: any) {
 			});
 			totalVotosUsuarios = totalVotosUsuarios + answer_count[a][0];
 		}
-		setState((prev) => ({
+		setState(prev => ({
 			...prev,
 			dataVotos: list,
 		}));
@@ -218,7 +208,7 @@ function Graphics(props: any) {
 		respuestadVotos = respuestadVotos > 0 ? respuestadVotos : 0;
 		porcentajeUsuarios = respuestadVotos > 0 ? (respuestadVotos * 100) / state.totalUser : 0;
 
-		setState((prev) => ({
+		setState(prev => ({
 			...prev,
 			resultVotos: {
 				sumadVotacion: totalVotosUsuarios,
@@ -228,9 +218,9 @@ function Graphics(props: any) {
 		}));
 
 		let formatterTitle = options.title;
-		setState((prev) => ({ ...prev, titleQuestion: formatterTitle }));
+		setState(prev => ({ ...prev, titleQuestion: formatterTitle }));
 		// if (options.title && options.title.length > 70) formatterTitle = divideString(options.title);
-		setState((prev) => ({
+		setState(prev => ({
 			...prev,
 			currentChart: {
 				...prev.currentChart,
@@ -306,7 +296,7 @@ function Graphics(props: any) {
 					<Row gutter={[16, 16]}>
 						{/* Cards Questions */}
 						{isAssambley &&
-							graphicsData.labels.map((label) => (
+							graphicsData.labels.map(label => (
 								<Col key={label.complete} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
 									<Card bodyStyle={{ padding: '0px' }}>
 										<Space align='start'>
@@ -331,7 +321,7 @@ function Graphics(props: any) {
 								</Col>
 							))}
 						{!isAssambley &&
-							state.dataVotos.map((votos) => (
+							state.dataVotos.map(votos => (
 								<Col key={votos?.option?.toUpperCase()} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
 									<Card bodyStyle={{ padding: '0px' }}>
 										<Space align='start'>
@@ -360,18 +350,18 @@ function Graphics(props: any) {
 			<Col span={24}>
 				<Card>
 					{parseStringBoolean(cSurveys.currentSurvey.showNoVotos) && (
-							<Row gutter={[16,16]}>
-								<Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-									<Card bodyStyle={{}}>
-										<Statistic
-											title='Porcentaje de inscritos que no participaron en esta pregunta'
-											value={state.resultVotos.porcentajevotos}
-											precision={0}
-											valueStyle={{ color: '#3f8600' }}
-											suffix='%'
-										/>
+						<Row gutter={[16, 16]}>
+							<Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+								<Card bodyStyle={{}}>
+									<Statistic
+										title='Porcentaje de inscritos que no participaron en esta pregunta'
+										value={state.resultVotos.porcentajevotos}
+										precision={0}
+										valueStyle={{ color: '#3f8600' }}
+										suffix='%'
+									/>
 
-										{/* <Space align='start'>
+									{/* <Space align='start'>
 									<Avatar
 										icon={<ProgressQuestionIcon />}
 										size={80}
@@ -391,26 +381,25 @@ function Graphics(props: any) {
 								<span style={{ position: 'absolute', top: '5px', right: '10px', fontWeight: '600' }}>
 									{state.resultVotos.porcentajevotos}%
 								</span> */}
-									</Card>
-								</Col>
-								<Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-									<Card>
-										<Statistic
-											title='Cantidad de inscritos que no participaron en esta pregunta'
-											value={state.resultVotos.usuariosSinRespuesta}
-											precision={0}
-											valueStyle={{ color: '#3f8600' }}
-											suffix={singularOrPluralString(
-												state.resultVotos.usuariosSinRespuesta,
-												'Participante',
-												'Participantes',
-												true
-											)}
-										/>
-									</Card>
-								</Col>
-							</Row>
-					
+								</Card>
+							</Col>
+							<Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+								<Card>
+									<Statistic
+										title='Cantidad de inscritos que no participaron en esta pregunta'
+										value={state.resultVotos.usuariosSinRespuesta}
+										precision={0}
+										valueStyle={{ color: '#3f8600' }}
+										suffix={singularOrPluralString(
+											state.resultVotos.usuariosSinRespuesta,
+											'Participante',
+											'Participantes',
+											true
+										)}
+									/>
+								</Card>
+							</Col>
+						</Row>
 					)}
 				</Card>
 			</Col>

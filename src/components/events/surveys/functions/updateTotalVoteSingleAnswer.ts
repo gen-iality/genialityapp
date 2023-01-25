@@ -1,4 +1,4 @@
-function updateTotalVoteSingleAnswer(updateTotalVoteParameters, questionAnswerCount) {
+function updateTotalVoteSingleAnswer(updateTotalVoteParameters: any, questionAnswerCount: any) {
    const { optionIndex, vote } = updateTotalVoteParameters;
 
    try {

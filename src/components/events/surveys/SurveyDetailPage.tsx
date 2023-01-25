@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import Graphics from './graphics';
+import Graphics from './graphics.old';
 import GraphicsRefactor from './graphicsRefactor';
 import SurveyComponent from './surveyComponent';
 import { Card, Result, Divider } from 'antd';

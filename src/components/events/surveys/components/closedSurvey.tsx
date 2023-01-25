@@ -5,7 +5,7 @@ import { SmileOutlined } from '@ant-design/icons';
 
 const { setSurveyResult } = surveysActions;
 
-function ClosedSurvey(props) {
+function ClosedSurvey(props: any) {
   const { currentSurvey, setSurveyResult } = props;
   return (
     <Card style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '80vh' }}>
@@ -25,7 +25,7 @@ function ClosedSurvey(props) {
     </Card>
   );
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
   currentSurvey: state.survey.data.currentSurvey,
 });
 const mapDispatchToProps = {

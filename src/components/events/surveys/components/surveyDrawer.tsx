@@ -8,7 +8,7 @@ import RankingTrivia from '../rankingTrivia';
 import ThisRouteCanBeDisplayed from '../../Landing/helpers/thisRouteCanBeDisplayed';
 import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
-function SurveyDrawer(props) {
+function SurveyDrawer(props: any) {
   let cSurveys = UseSurveysContext();
   let cUser = UseCurrentUser();
 

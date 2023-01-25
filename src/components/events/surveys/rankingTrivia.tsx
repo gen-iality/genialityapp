@@ -8,7 +8,7 @@ import { UseCurrentUser } from '../../../context/userContext';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import { UseEventContext } from '../../../context/eventContext';
 
-function RankingTrivia(props) {
+export default function RankingTrivia(props: any) {
   const { setGameRanking, setMyScore } = useHelper();
   let cSurveys = UseSurveysContext();
   let cUser = UseCurrentUser();
@@ -47,7 +47,7 @@ function RankingTrivia(props) {
   // }, [currentUser, currentSurvey]);
 
   useEffect(() => {
-    let unsubscribe;
+    let unsubscribe: Function;
     if (!(Object.keys(currentUser).length === 0)) {
       if (!currentSurvey) return;
       unsubscribe = firestore
@@ -87,7 +87,7 @@ function RankingTrivia(props) {
           /** Puntaje individual */
           const cUserId = cUser.value?._id;
           const filterForRankingUserId = positionScoresByScore.filter(
-            (rankingUsers) => rankingUsers.userId === cUserId
+            (rankingUsers: any) => rankingUsers.userId === cUserId
           );
 
           if (filterForRankingUserId?.length > 0) setMyScore(filterForRankingUserId);
@@ -100,7 +100,7 @@ function RankingTrivia(props) {
     };
   }, [currentSurvey, currentUser]);
 
-  const getDataUser = async (iduser) => {
+  const getDataUser = async (iduser: any) => {
     let user = await firestore
       .collection(`${currentEvent._id}_event_attendees`)
       .where('account_id', '==', iduser)
@@ -127,5 +127,3 @@ function RankingTrivia(props) {
     </>
   );
 }
-
-export default RankingTrivia;

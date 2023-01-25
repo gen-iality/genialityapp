@@ -1,6 +1,6 @@
 import { firestore } from '../../../../helpers/firebase';
 
-function SetCurrentUserSurveyStatus(surveyData, currentUser, status) {
+function SetCurrentUserSurveyStatus(surveyData: any, currentUser: any, status: any) {
    const surveyId = surveyData._id;
    const userId = currentUser.value._id;
    const firebaseRef = firestore

@@ -2,7 +2,7 @@ import { SurveysApi } from '../../../../helpers/request';
 import * as Survey from 'survey-react';
 import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
-async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
+async function LoadSelectedSurvey(eventId: string, idSurvey: string, surveyData: any) {
   /** Este componente nos permite cargar datos de la encuesta seleccionada */
 
   // Esto permite que el json pueda asignar el id a cada pregunta
@@ -63,7 +63,7 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
 
   if (dataSurvey['questions'] === undefined) return;
 
-  dataSurvey['questions'].forEach((page, index) => {
+  dataSurvey['questions'].forEach((page: any, index: number) => {
     let newPage = page;
     newPage['isRequired'] = !parseStringBoolean(dataSurvey.allow_gradable_survey);
     /** Se agrega la imagen a la pregunta */
@@ -83,7 +83,7 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
   });
 
   // Se excluyen las propiedades
-  const exclude = ({ survey, id, questions, ...rest }) => rest;
+  const exclude = ({ survey, id, questions, ...rest }: any) => rest;
 
   surveyData = exclude(dataSurvey);
   return surveyData;

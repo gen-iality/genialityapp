@@ -1,13 +1,13 @@
 import { parseStringBoolean } from "@/Utilities/parseStringBoolean";
 
 // Componente que se ejecuta antes del evento onComplete de la encuesta permite mostrar un texto con los puntos conseguidos
-function MessageWhenCompletingSurvey(survey, surveyData, totalPoints) {
+function MessageWhenCompletingSurvey(survey: any, surveyData: any, totalPoints: any) {
   let totalQuestions = 0;
 
   let questions = surveyData.pages;
 
   /** iteramos las preguntas para validar el puntaje total para la comparativa de puntaje ganado vs puntaje total */
-  questions.forEach((item) => {
+  questions.forEach((item: any) => {
     if (item.questions) {
       if (item.questions.length === 1 && item.questions[0]?.points) {
         totalQuestions += parseInt(item.questions[0]?.points);
@@ -24,7 +24,7 @@ function MessageWhenCompletingSurvey(survey, surveyData, totalPoints) {
 
   let textOnCompleted = survey.completedHtml;
 
-  survey.currentPage.questions.forEach((question) => {
+  survey.currentPage.questions.forEach((question: any) => {
     let correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
     if (correctAnswer) totalPoints += parseInt(question.points);
   });

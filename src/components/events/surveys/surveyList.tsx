@@ -13,7 +13,24 @@ import { UseSurveysContext } from '../../../context/surveysContext';
 
 const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
-function SurveyList(props) {
+// Props that I found when the component it's called
+interface Props {
+  activity: any
+  setCurrentSurvey: any
+  setSurveyResult: any
+  currentUser: any
+  eventUser: any
+  showSurvey: any
+  surveyLabel: any
+  forceCheckVoted: any
+  loading: any
+  eventSurveys: any
+  publishedSurveys: any
+  listOfEventSurveys: any
+  loadingSurveys: any
+}
+
+function SurveyList(props: any) {
   const cSurveys = UseSurveysContext();
   console.log('test:cSurveys.currentSurveyStatus',cSurveys.currentSurveyStatus)
   const { activity, setCurrentSurvey, setSurveyResult } = props;
@@ -21,7 +38,7 @@ function SurveyList(props) {
   const currentUser = UseCurrentUser();
   console.log('test:currentUser',currentUser)
 
-  const handleClick = (currentSurvey) => {
+  const handleClick = (currentSurvey: any) => {
     cSurveys.select_survey(currentSurvey);
   };
   return (
@@ -35,7 +52,7 @@ function SurveyList(props) {
   );
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
   activity: state.stage.data.currentActivity,
 });
 
