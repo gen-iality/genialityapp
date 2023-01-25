@@ -240,7 +240,7 @@ function TriviaEdit(props: any) {
 				allow_anonymous_answers: 'false',
 				allow_gradable_survey: 'false',
 				hasMinimumScore: false,
-				isGlobal: false,
+				isGlobal: true,
 				showNoVotos: false,
 
 				//Survey state
