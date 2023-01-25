@@ -25,8 +25,8 @@ type TruncatedAgenda = {
   timeString: string;
   link: string;
   ViewedStatusComponent?: FunctionComponent<{}>;
-  QuizProgressComponent?: FunctionComponent<{ userId: string, isAnswersDeleted: boolean, }>;
-  DeleteSurveyAnswersButton?: FunctionComponent<{ userId: string, onAnswersDeleted: (x: boolean) => void, }>;
+  QuizProgressComponent?: FunctionComponent<{ userId: string; isAnswersDeleted: boolean }>;
+  DeleteSurveyAnswersButton?: FunctionComponent<{ userId: string; onAnswersDeleted: (x: boolean) => void }>;
   RibbonComponent: FunctionComponent<{ children: any }>;
 };
 
@@ -154,10 +154,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               }
               return <></>;
             },
-            DeleteSurveyAnswersButton: ({
-              userId,
-              onAnswersDeleted,
-            }) => {
+            DeleteSurveyAnswersButton: ({ userId, onAnswersDeleted }) => {
               if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any))
                 return <></>;
 
@@ -290,9 +287,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   if (isLoading) return <Spin />;
 
-  const ListThisActivities = (props: {
-    dataSource: any[],
-  }) => (
+  const ListThisActivities = (props: { dataSource: any[] }) => (
     <List
       size='small'
       // header={<h2>LECCIONES DEL CURSO</h2>}
@@ -322,9 +317,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   )}
                 </span>
                 <Link to={item.link}>
-                  <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>
-                    {item.timeString}
-                  </span>
+                  <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>{item.timeString}</span>
                 </Link>
               </div>
             </div>
@@ -332,7 +325,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         </item.RibbonComponent>
       )}
     />
-  )
+  );
 
   return (
     <>
@@ -343,24 +336,26 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         setActivitiesAttendee={setActivitiesAttendee}
       />
       <Collapse>
-      {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name))).filter((item) => item).sort().map((moduleName, index) => (
-        <Collapse.Panel
-          header={moduleName ? `Módulo: ${moduleName}` : 'Sin módulo'}
-          key={index}
-          extra={`${truncatedAgendaList.filter((item) => item.module_name === moduleName).length} elemento(s)`}
-        >
-          <ListThisActivities
-            dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)}
-          />
-        </Collapse.Panel>
-      ))}
+        {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name)))
+          .filter((item) => item)
+          .sort()
+          .map((moduleName, index) => (
+            <Collapse.Panel
+              header={moduleName ? `Módulo: ${moduleName}` : 'Sin módulo'}
+              key={index}
+              extra={`${truncatedAgendaList.filter((item) => item.module_name === moduleName).length} elemento(s)`}
+            >
+              <ListThisActivities dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)} />
+            </Collapse.Panel>
+          ))}
       </Collapse>
 
-      {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name))).filter((item) => !item).sort().map((moduleName, index) => (
-        <ListThisActivities
-          dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)}
-        />
-      ))}
+      {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name)))
+        .filter((item) => !item)
+        .sort()
+        .map((moduleName, index) => (
+          <ListThisActivities dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)} />
+        ))}
     </>
   );
 };
