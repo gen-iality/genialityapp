@@ -14,6 +14,7 @@ import {
   Input,
   InputNumber,
   Switch,
+  Alert,
 } from 'antd'
 import { CerticationLogsApi, UsersApi, EventsApi } from '@helpers/request'
 
@@ -128,6 +129,10 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
     <Typography.Text>
       Agregue o edite el historial de certificaciones a un usuario de este curso
     </Typography.Text>
+
+    {!props.event.is_external && (
+      <Alert type="warning" message={<>¡Cuidado! este curso no ha sido configurado como <b>Curso Externo</b></>} />
+    )}
 
     {users.map((user) => (
       <Card key={user._id}>
