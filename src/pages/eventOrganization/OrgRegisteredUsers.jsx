@@ -1,74 +1,81 @@
 /** React's libraries */
 import { useEffect, useState } from 'react';
-import { FormattedDate, FormattedTime } from 'react-intl';
-import { useHistory } from 'react-router-dom';
 import dayjs from 'dayjs';
 
-/** export Excel */
-import { utils, writeFileXLSX } from 'xlsx';
-
 /** Antd imports */
-import { Table, Button, Row, Col, Tag, Spin } from 'antd';
-import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Table } from 'antd';
 
 /** Components */
 import Header from '@antdComponents/Header';
-import ModalMembers from '@components/modal/modalMembers';
 import { columns } from './tableColums/registeredTableColumns';
 
 /** Helpers and utils */
-import { OrganizationApi, RolAttApi, EventsApi, AgendaApi, PositionsApi } from '@helpers/request';
+import { OrganizationApi } from '@helpers/request';
 import { firestore } from '@helpers/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
 
 /** Context */
 import withContext from '@context/withContext';
-import { async } from 'ramda-adjunct';
 
 function OrgRegisteredUsers(props) {
   const { _id: organizationId } = props.org;
 
   const [usersSuscribedData, setUsersSuscribedData] = useState([]);
+  //const [orgEventsList, setOrgEventsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
 
-  const getRegisteredUsers = async (organizationId) => {
-    const userSuscribedData = [];
+  useEffect(() => {
+    getRegisteredUsers();
+  }, []);
 
+  function formattedRealDate(timestamp) {
+    console.log('timestamp', timestamp);
+
+    //const segundos = dayjs(timestamp);
+    const segundos = timestamp?.seconds;
+    console.log('segundos', segundos);
+
+    const formattedDate = dayjs.unix(segundos).format('YYYY-MM-DD');
+    console.log('formattedDate', formattedDate);
+
+    return formattedDate;
+  }
+
+  const getRegisteredUsers = async () => {
     const { data: orgEvents } = await OrganizationApi.events(organizationId);
     console.log('orgEvents', orgEvents);
 
-    /* const eventIdGeniality = '633c3faf6ddd2a144254b192';
-    const asistentes = firestore.collection(`${eventIdGeniality}_event_attendees`); */
-
-    orgEvents.map(async (orgEvent) => {
+    const inscritos = orgEvents.map(async (orgEvent) => {
       const asistentes = firestore.collection(`${orgEvent._id}_event_attendees`);
-      const querySnapshot = await getDocs(asistentes);
+      const querySnapshot = await asistentes.get();
+      const propertiesList = [];
+
       querySnapshot.forEach((doc) => {
+        console.log('doc.data()', doc.data());
         const properties = {
-          //checked_in: orgEvent.checked_in,
-          eventUser_name: doc.data().properties.names,
+          checkedin_at: formattedRealDate(doc.data()?.checkedin_at),
+          eventUser_name: doc.data()?.properties?.names,
+          eventUser_email: doc.data()?.properties?.email,
           event_name: orgEvent.name,
           created_at: orgEvent.created_at,
         };
 
         console.log('5. properties', properties);
-
-        userSuscribedData.push(properties);
-
-        console.log('6. userSuscribedData', userSuscribedData);
+        propertiesList.push(properties);
       });
+      return propertiesList;
     });
 
+    const userSuscribedData = (await Promise.all(inscritos)).flat();
+
+    console.log('Antes de hacer seteo');
+    console.log('7. userSuscribedData', userSuscribedData);
     setUsersSuscribedData(userSuscribedData);
     setIsLoading(false);
+    console.log('Despues de hacer seteo');
   };
-
-  useEffect(() => {
-    getRegisteredUsers(organizationId);
-  }, [organizationId]);
 
   const columnsData = {
     searchedColumn,
@@ -79,7 +86,7 @@ function OrgRegisteredUsers(props) {
 
   return (
     <>
-      {console.log('usersSuscribedData', usersSuscribedData)}
+      {console.log('8. usersSuscribedData', usersSuscribedData)}
       <Header title={'Inscritos'} description={'Se muestran los usuarios inscritos a los cursos de la organización'} />
 
       <Table
