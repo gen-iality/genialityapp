@@ -1,7 +1,12 @@
 import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 import { Row, Col, Switch } from 'antd';
 
-export default function SurveyItem({ survey, onChange }) {
+interface Props {
+  survey: any
+  onChange: any
+}
+
+export default function SurveyItem({ survey, onChange }: Props) {
   return (
     <Row style={{ padding: '8px 16px' }}>
       <Col xs={12} lg={8}>

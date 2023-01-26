@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { createElement, Fragment, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
@@ -33,8 +33,11 @@ const initialDataGeneral = {
   modal: false,
   create: false,
   valid: true,
+  uid: '',
+  id: '',
   serverError: false,
   showAdmin: false,
+  photo: '',
   showEventMenu: false,
   tabEvtType: true,
   tabEvtCat: true,
@@ -43,9 +46,18 @@ const initialDataGeneral = {
   modalVisible: false,
   tabModal: '1',
   anonimususer: false,
+  filterOpen: false
 };
 
-const Headers = (props) => {
+interface Props {
+  showMenu: any
+  loginInfo: any
+  cHelper: any
+  cEvent: any
+  cEventUser: any
+  cUser: any
+}
+const Headers = (props: Props) => {
   const { showMenu, loginInfo, cHelper, cEvent, cEventUser, cUser } = props;
   const { helperDispatch } = cHelper;
 
@@ -62,6 +74,7 @@ const Headers = (props) => {
   const [fixed, setFixed] = useState(false);
   const screens = useBreakpoint();
   let history = useHistory();
+  // TODO: Here there is an error
   const intl = useIntl();
   const openMenu = () => {
     setdataGeneral({
@@ -93,7 +106,8 @@ const Headers = (props) => {
     if (!value && status === 'LOADED') return setHeaderIsLoading(false), setdataGeneral(initialDataGeneral);
     if (!value) return;
 
-    setdataGeneral({
+    setdataGeneral(prev => ({
+      ...prev,
       name: value?.names || value?.name,
       userEvent: { ...value, properties: { names: value.names || value.name } },
       photo: value?.picture
@@ -103,7 +117,7 @@ const Headers = (props) => {
       id: value?.user?._id,
       user: true,
       anonimususer: value?.isAnonymous || false,
-    });
+    }));
     setHeaderIsLoading(false);
     // }
   }
@@ -113,7 +127,7 @@ const Headers = (props) => {
     return containtorganization ? 'organization' : 'landing';
   };
 
-  const userLogOut = (callBack) => {
+  const userLogOut = (callBack: any) => {
     const params = {
       user: cUser.value,
       setCurrentUser: cUser.setCurrentUser,
@@ -192,7 +206,7 @@ const Headers = (props) => {
   }, [cEvent]);
 
   useEffect(() => {
-    const onScroll = (e) => {
+    const onScroll = (e: any) => {
       const showHeaderFixed = window.scrollY > 64;
       fixed != showHeaderFixed && setFixed(showHeaderFixed);
     };
@@ -200,7 +214,7 @@ const Headers = (props) => {
   }, [fixed]);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <Header
         style={{
           position: 'sticky',
@@ -222,7 +236,7 @@ const Headers = (props) => {
                 <Col span={2} offset={3} data-target='navbarBasicExample'>
                   <span className='icon icon-menu' onClick={() => handleMenuEvent()}>
                     <Button style={zIndex} onClick={() => showDrawer()}>
-                      {React.createElement(dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                      {createElement(dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
                         className: 'trigger',
                         onClick: () => {
                           console.log('CERRAR');
@@ -328,7 +342,7 @@ const Headers = (props) => {
                 name={dataGeneral.name ? dataGeneral.name : ''}
                 userEvent={dataGeneral.userEvent}
                 eventId={dataGeneral.eventId}
-                logout={(callBack) => userLogOut(callBack)}
+                logout={(callBack: any) => userLogOut(callBack)}
                 openMenu={() => openMenu()}
                 loginInfo={loginInfo}
               />
@@ -343,7 +357,7 @@ const Headers = (props) => {
                   name={cUser.value?.names}
                   userEvent={dataGeneral.userEvent}
                   eventId={dataGeneral.eventId}
-                  logout={(callBack) => userLogOut(callBack)}
+                  logout={(callBack: any) => userLogOut(callBack)}
                   openMenu={() => console.log('openMenu')}
                   loginInfo={loginInfo}
                   anonimususer={true}
@@ -374,12 +388,12 @@ const Headers = (props) => {
         </div>
       )}
 
-      {dataGeneral.serverError && <ErrorServe errorData={errorData} />}
-    </React.Fragment>
+      {dataGeneral.serverError && <ErrorServe errorData={dataGeneral.serverError} />}
+    </Fragment>
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
   categories: state.categories.items,
   types: state.types.items,
   loginInfo: state.user.data,

@@ -18,6 +18,7 @@ interface Props extends BingoCardInterface {
   template?: Template | null;
 }
 
+// TODO: Resolve forwardRef must be receive two parameters
 const BingoCard = forwardRef(
   ({
     bingo,
