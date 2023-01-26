@@ -46,7 +46,7 @@ function changeInSurveyDocChanges(docChanges: any) {
       case 'modified':
       default:
         changeInSurvey = { ...lastChange.doc.data(), _id: lastChange.doc.id };
-        console.log('test:changeInSurvey', changeInSurvey)
+        // console.log('test:changeInSurvey', changeInSurvey)
         break;
     }
   }

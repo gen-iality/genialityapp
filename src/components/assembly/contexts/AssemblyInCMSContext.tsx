@@ -7,11 +7,13 @@ import * as services from '../services';
 interface AssemblyInCMSContextType {
 	attendeesChecked: number;
 	totalAttendees: number;
+	isAssemblyMood: boolean;
 }
 
-const assemblyInitialValue = {
+const assemblyInitialValue: AssemblyInCMSContextType = {
 	attendeesChecked: 0,
 	totalAttendees: 0,
+	isAssemblyMood: false,
 };
 
 export const AssemblyInCMSContext = createContext(assemblyInitialValue);
@@ -46,7 +48,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 				unsubscribeAttendees();
 			};
 		}
-		updateAttendees()
+		updateAttendees();
 	}, []);
 
 	// Effect to update attendees
@@ -69,6 +71,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 			value={{
 				attendeesChecked,
 				totalAttendees,
+				isAssemblyMood,
 			}}>
 			{props.children}
 		</AssemblyInCMSContext.Provider>
