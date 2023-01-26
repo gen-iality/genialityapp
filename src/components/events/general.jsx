@@ -522,8 +522,11 @@ class General extends Component {
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
       is_external: event.is_external,
-      certification_description: event.certification_description,
       validity_days: event.validity_days,
+      default_certification_description: event.default_certification_description,
+      default_certification_hours: event.default_certification_hours,
+      default_certification_entity: event.default_certification_entity,
+      default_certification_last_hours: event.default_certification_last_hours,
     };
 
     try {
@@ -1099,10 +1102,12 @@ class General extends Component {
                   </Card>
 
                   <Form.Item label="¿Es evento externo?">
-                    <Checkbox
+                    <Switch
+                      checkedChildren='Externo'
+                      unCheckedChildren='GEN.iality'
                       checked={event.is_external}
-                      onChange={(e) => {
-                        this.handleChange(e.target.checked, 'is_external')
+                      onChange={(checked) => {
+                        this.handleChange(checked, 'is_external')
                       }}
                     />
                   </Form.Item>
@@ -1110,27 +1115,62 @@ class General extends Component {
                   {(event.is_external) && (
                     <>
                       <Form.Item
-                        label="Descripción de la certificación"
+                        label="Descripción de la certificación (valor por defecto)"
                         >
                         <Input
-                          value={event.certification_description}
+                          value={event.default_certification_description}
                           onChange={(e) => {
-                            this.handleChange(e, 'certification_description')
+                            this.handleChange(e, 'default_certification_description')
                           }}
                         />
                       </Form.Item>
 
                       <Form.Item
-                        label="Días de vigencia"
+                        label="Días de vigencia (valor por defecto)"
                         rules={[{
                           required: true, message: "Necesario",
                         }]}
                       >
                         <InputNumber
                           min={1}
-                          value={event.validity_days}
+                          value={event.validity_days || 1}
                           onChange={(e) => {
                             this.handleChange(e, 'validity_days')
+                          }}
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        label="Horas de la certificación (valor por defecto)"
+                        >
+                        <InputNumber
+                          min={1}
+                          value={event.default_certification_hours || 1}
+                          onChange={(e) => {
+                            this.handleChange(e, 'default_certification_hours')
+                          }}
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        label="Entidad de la certificación (valor por defecto)"
+                        >
+                        <Input
+                          value={event.default_certification_entity}
+                          onChange={(e) => {
+                            this.handleChange(e, 'default_certification_entity')
+                          }}
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        label="Última horas de la certificación (valor por defecto)"
+                        >
+                        <InputNumber
+                          min={0}
+                          value={event.default_certification_last_hours || 0}
+                          onChange={(e) => {
+                            this.handleChange(e, 'default_certification_last_hours')
                           }}
                         />
                       </Form.Item>
