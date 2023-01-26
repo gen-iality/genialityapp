@@ -1,9 +1,9 @@
-import { Button, Card, Col, Collapse, Row, Space, Statistic, Switch, Tag, Timeline, Typography } from 'antd';
+import { Button, Card, Col, Collapse, Row, Space, Statistic, Typography } from 'antd';
 import AccountEyeIcon from '@2fd/ant-design-icons/lib/AccountEye';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import AssemblySurveyCard from '../components/AssemblySurveyCard';
-import { DownOutlined } from '@ant-design/icons';
+import { CaretDownOutlined} from '@ant-design/icons';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 
 export default function AssemblyInCMS() {
@@ -24,12 +24,12 @@ export default function AssemblyInCMS() {
 				</Col>
 				<Col span={24}>
 					<Card>
-						<Collapse expandIcon={({isActive})=>(<Button type='text' shape='circle' icon={<DownOutlined rotate={isActive ? 180 : 0} />}></Button>)} bordered={false} style={{backgroundColor:'#F9FAFE'}}>
+						<Collapse expandIcon={({isActive})=>(<Button type='text' shape='circle' icon={<CaretDownOutlined rotate={isActive ? 180 : 0} />}></Button>)} bordered={false} style={{backgroundColor:'#F9FAFE'}}>
 							<Collapse.Panel
 								key='1'
-								header={<Typography.Text style={{fontSize:'16px', fontWeight:'700', color:'#1B1E28' }}>Nombre de la actividad</Typography.Text>}
+								header={<Typography.Text style={{fontSize:'20px', fontWeight:'700', color:'#6F737C' }}>Nombre de la actividad</Typography.Text>}
 								extra={
-									<Space style={{fontSize:'16px', fontWeight:'700', color:'#1B1E28' }} size={'large'} wrap>
+									<Space style={{fontSize:'20px', fontWeight:'700', color:'#6F737C' }} size={'large'} wrap>
 										<Space>
 											<AccountGroupIcon />
 											<Typography.Text>5</Typography.Text>
