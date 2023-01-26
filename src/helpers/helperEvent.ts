@@ -34,7 +34,7 @@ export function listenSurveysData(
 }
 
 function changeInSurveyDocChanges(docChanges: any) {
-  console.log('test:docChanges', docChanges)
+  // console.log('test:docChanges', docChanges)
   let changeInSurvey = null;
   if (docChanges.length) {
     let lastChange = docChanges[docChanges.length - 1];

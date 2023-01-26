@@ -179,80 +179,91 @@ export interface ValueUserProperty {
 }
 
 
-export interface SurveysResponse {
-  data:  Survey[];
-  links: Links;
-  meta:  Meta;
-}
-
 export interface Survey {
-  _id:                       string;
-  survey:                    string;
-  show_horizontal_bar:       boolean;
-  graphyType:                GraphyType;
-  allow_vote_value_per_user: boolean | string;
-  event_id:                  string;
-  activity_id:               string | null;
-  points:                    number;
-  initialMessage:            null | string;
-  time_limit:                number;
-  win_Message:               null | string;
-  neutral_Message:           null | string;
-  lose_Message:              null | string;
-  allow_anonymous_answers:   boolean | string;
-  allow_gradable_survey:     boolean | string;
-  hasMinimumScore:           boolean | string;
-  isGlobal:                  boolean | string;
-  showNoVotos:               boolean | string;
-  freezeGame:                boolean;
-  open:                      boolean | string;
-  publish:                   boolean | string;
-  minimumScore:              number;
-  updated_at:                Date;
-  created_at:                Date;
-  questions?:                Question[];
-  displayGraphsInSurveys?:   boolean | string;
-  rankingVisible?:           boolean | string;
+  id:                       string;
+  account_id:               string;
+  checked_in:               boolean;
+  _id:                      string;
+  checkedin_type:           string;
+  printouts_history:        PrintoutsHistory[];
+  created_at:               At;
+  model_type?:              string;
+  checkedin_at:             At;
+  activityProperties:       ActivityProperty[];
+  event_id:                 string;
+  private_reference_number: string;
+  rol:                      Rol;
+  properties:               SurveyProperties;
+  printouts:                number;
+  rol_id:                   string;
+  printouts_at:             Date;
+  state_id:                 string;
+  user:                     User;
+  updated_at:               At;
 }
 
-export enum GraphyType {
-  Pie = "pie",
-  X = "x",
-  Y = "y",
+export interface ActivityProperty {
+  checkedin_type: string;
+  activity_id:    string;
+  checkedin_at:   Date;
+  checked_in:     boolean;
 }
 
-export interface Question {
-  title:               string;
-  type:                Type;
-  choices:             string[];
-  id:                  string;
-  image:               null;
-  points:              string;
-  correctAnswer?:      string;
-  correctAnswerIndex?: number;
+export interface At {
+  seconds:     number;
+  nanoseconds: number;
 }
 
-export enum Type {
-  Checkbox = "checkbox",
-  Radiogroup = "radiogroup",
+export interface PrintoutsHistory {
+  printouts_at: Date;
+  printouts:    number;
 }
 
-export interface Links {
-  first: string;
-  last:  string;
-  prev:  null;
-  next:  null;
+export interface SurveyProperties {
+  code:                 string;
+  typeRegister:         string;
+  email:                string;
+  names:                string;
+  voteWeight:           string;
+  rol_id:               string;
+  pesovoto?:            string;
+  uid?:                 string;
+  _id?:                 string;
+  created_at?:          Date;
+  password?:            string;
+  confirmation_code?:   string;
+  refresh_token?:       string;
+  updated_at?:          Date;
+  initial_token?:       string;
+  api_token?:           string;
+  numericoAVerQuePasa?: string;
 }
 
-export interface Meta {
-  current_page: number;
-  from:         number;
-  last_page:    number;
-  path:         string;
-  per_page:     number;
-  to:           number;
-  total:        number;
+export interface Rol {
+  guard_name: string;
+  created_at: Date;
+  name:       string;
+  type:       string;
+  updated_at: Date;
+  module:     string;
+  _id:        string;
 }
+
+export interface User {
+  names:             string;
+  created_at:        Date;
+  password:          string;
+  initial_token:     string;
+  api_token:         string;
+  _id:               string;
+  updated_at:        Date;
+  confirmation_code: string;
+  refresh_token:     string;
+  uid:               string;
+  email:             string;
+  picture:           string;
+}
+
 
 
 export type CardStatus = 'closed' | 'opened' | 'finished';
@@ -260,4 +271,80 @@ export type CardStatus = 'closed' | 'opened' | 'finished';
 export interface CardStatusProps {
 	label: string;
 	color: string;
+}
+
+
+export interface Attendee {
+  id:                       string;
+  account_id:               string;
+  checked_in:               boolean;
+  _id:                      string;
+  checkedin_type:           string;
+  printouts_history:        PrintoutsHistory[];
+  created_at:               At;
+  model_type:               string;
+  checkedin_at:             At;
+  activityProperties:       ActivityProperty[];
+  event_id:                 string;
+  private_reference_number: string;
+  rol:                      Rol;
+  properties:               AttendeeProperties;
+  printouts:                number;
+  rol_id:                   string;
+  printouts_at:             Date;
+  state_id:                 string;
+  user:                     User;
+  updated_at:               At;
+}
+
+export interface ActivityProperty {
+  checkedin_type: string;
+  activity_id:    string;
+  checkedin_at:   Date;
+  checked_in:     boolean;
+}
+
+export interface At {
+  seconds:     number;
+  nanoseconds: number;
+}
+
+export interface PrintoutsHistory {
+  printouts_at: Date;
+  printouts:    number;
+}
+
+export interface AttendeeProperties {
+  code:         string;
+  typeRegister: string;
+  email:        string;
+  names:        string;
+  voteWeight:   string;
+  rol_id:       string;
+  pesovoto:     string;
+}
+
+export interface Rol {
+  guard_name: string;
+  created_at: Date;
+  name:       string;
+  type:       string;
+  updated_at: Date;
+  module:     string;
+  _id:        string;
+}
+
+export interface User {
+  names:             string;
+  created_at:        Date;
+  password:          string;
+  initial_token:     string;
+  api_token:         string;
+  _id:               string;
+  updated_at:        Date;
+  confirmation_code: string;
+  refresh_token:     string;
+  uid:               string;
+  email:             string;
+  picture:           string;
 }
