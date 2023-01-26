@@ -348,3 +348,75 @@ export interface User {
   email:             string;
   picture:           string;
 }
+
+export interface ActivitiesResponse {
+  data:  Activity[];
+  links: Links;
+  meta:  Meta;
+}
+
+export interface Activity {
+  _id:                                string;
+  name:                               string;
+  subtitle:                           null;
+  image:                              null;
+  description:                        null | string;
+  capacity:                           number;
+  event_id:                           string;
+  datetime_end:                       string;
+  datetime_start:                     string;
+  date_start_zoom:                    Date;
+  date_end_zoom:                      Date;
+  updated_at:                         Date;
+  created_at:                         Date;
+  access_restriction_types_available: null;
+  activity_categories:                any[];
+  space:                              null;
+  hosts:                              any[];
+  type:                               Type | null;
+  access_restriction_roles:           any[];
+  bigmaker_meeting_id?:               null;
+  space_id?:                          null;
+  registration_message?:              null;
+  activity_categories_ids?:           Array<any[]>;
+  access_restriction_type?:           string;
+  access_restriction_rol_ids?:        any[];
+  has_date?:                          boolean;
+  meeting_id?:                        null;
+  vimeo_id?:                          null;
+  platform?:                          null;
+  start_url?:                         null;
+  join_url?:                          null;
+  requires_registration?:             boolean;
+  host_ids?:                          Array<any[]>;
+  length?:                            null;
+  latitude?:                          null;
+  selected_document?:                 any[];
+  role_attendee_ids?:                 Array<any[]>;
+  type_id?:                           string;
+}
+
+export interface Type {
+  "0":        null[];
+  _id:        string;
+  name:       string;
+  updated_at: Date;
+  created_at: Date;
+}
+
+export interface Links {
+  first: string;
+  last:  string;
+  prev:  null;
+  next:  null;
+}
+
+export interface Meta {
+  current_page: number;
+  from:         number;
+  last_page:    number;
+  path:         string;
+  per_page:     number;
+  to:           number;
+  total:        number;
+}

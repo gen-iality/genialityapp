@@ -1,4 +1,5 @@
-import { firestore } from '@/helpers/firebase';
+import { fireRealtime, firestore } from '@/helpers/firebase';
+import { AgendaApi } from '@/helpers/request';
 import { Attendee, Survey } from '../types';
 
 export const surveysListener = (
@@ -39,3 +40,14 @@ export const attendeesListener = (
 		}
 	});
 };
+
+export const getActivities = async (eventId: string) => {
+	const activities = await AgendaApi.byEvent(eventId)
+	return activities
+}
+
+export const listenQuorumByActivity = (eventId: string, activityId: string) => {
+	return fireRealtime.ref('userStatus/' + eventId + '/' + activityId).on('child_changed', snapshot => {
+		console.log(snapshot.numChildren())
+	})
+}
