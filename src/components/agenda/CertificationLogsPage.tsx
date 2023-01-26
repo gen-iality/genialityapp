@@ -184,8 +184,21 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
 
     {users.map((user) => (
       <Card key={user._id}>
-        <Typography.Text>{user.names}</Typography.Text>
-        <br />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between'
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            <Typography.Text strong>{user.names}</Typography.Text>
+            <p>Este usuario tiene {user.certification_logs.length} certificacion(es)</p>
+          </div>
         <Button
           type="primary"
           onClick={() => {
@@ -194,6 +207,7 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
             openModal()
           }}
         >Agregar certification</Button>
+        </div>
         <Table
           loading={isLoading}
           columns={columns}
