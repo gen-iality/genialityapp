@@ -17,6 +17,7 @@ import {
   Alert,
 } from 'antd'
 import { CerticationLogsApi, UsersApi, EventsApi } from '@helpers/request'
+import { DeleteOutlined } from '@ant-design/icons'
 
 type DefaultValue = {
   hours: number,
@@ -30,8 +31,16 @@ export interface CertificationLogsPageProps {
   event: any,
 }
 
+/**
+ * Create a page that requests for all users data to render an user list and their
+ * certification logs. Also, it enables to add a certification log via a new form
+ * in a Modal component. The default values are loaded from the current event data.
+ * 
+ * @param props CertificationLogsPageProps
+ * @returns React Component
+ */
 function CertificationLogsPage(props: CertificationLogsPageProps) {
-  const [columnsData, setColumnsData] = useState<any>({})
+  const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [defaultValue, setDefaultValue] = useState<DefaultValue>({} as DefaultValue);
   const [currentUserEditing, setCurrentUserEditing] = useState<null | any>(null);
@@ -50,15 +59,36 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
 
   const cancelModel = () => {
     form.resetFields();
-    // setCurrentEditingItem(null);
     closeModal();
   }
 
   const loadAllUsers = async () => {
+    setIsLoading(true)
     const result: any = await UsersApi.getAll(props.event._id)
     const allUsers = result.data.map((data: any) => data.user) as any[]
     setUsers(allUsers)
     console.log('allUsers:', allUsers)
+    setIsLoading(false)
+  }
+
+  const onFormFinish = (values: any) => {
+    if (!currentUserEditing?._id) {
+      alert('[Error :(] No se ha cargado información del usuario')
+      return
+    }
+
+    values.description = values.description || ''
+    values.entity = values.entity || ''
+    values.event_id = props.event._id
+    values.user_id = currentUserEditing._id
+
+    console.debug('form submits:', values)
+
+    CerticationLogsApi.create(values).then(() => {
+      closeModal()
+      form.resetFields()
+      loadAllUsers().then()
+    })
   }
 
   const columns = [
@@ -104,6 +134,24 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
       dataIndex: 'success',
       render: (success: boolean) => <Tag color={success ? 'green' : 'red'}>{success ? 'Exitoso' : 'Fallido'}</Tag>,
     },
+    {
+      key: 'option',
+      title: 'Opciones',
+      render: (certificationLog: any) => (
+        <Tooltip title="Eliminar certification">
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => {
+              setIsLoading(true)
+              CerticationLogsApi.deleteOne(certificationLog._id).finally(() => {
+                loadAllUsers().then()
+              })
+            }}
+          />
+        </Tooltip>
+      ),
+    },
   ]
 
   useEffect(() => {
@@ -147,6 +195,7 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
           }}
         >Agregar certification</Button>
         <Table
+          loading={isLoading}
           columns={columns}
           dataSource={user.certification_logs || []}
         />
@@ -164,25 +213,7 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
       <p>Editando usuario {currentUserEditing?.names || 'indefinido'}</p>
       <Form
         form={form}
-        onFinish={(values) => {
-          if (!currentUserEditing?._id) {
-            alert('[Error :(] No se ha cargado información del usuario')
-            return
-          }
-
-          values.description = values.description || ''
-          values.entity = values.entity || ''
-          values.event_id = props.event._id
-          values.user_id = currentUserEditing._id
-
-          console.debug('form submits:', values)
-
-          CerticationLogsApi.create(values).then(() => {
-            closeModal()
-            form.resetFields()
-            loadAllUsers().then()
-          })
-        }}
+        onFinish={onFormFinish}
       >
         <Form.Item label="Descripción" name="description" initialValue={defaultValue.description}>
           <Input />
