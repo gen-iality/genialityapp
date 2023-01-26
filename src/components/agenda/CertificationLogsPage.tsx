@@ -21,8 +21,8 @@ type DefaultValue = {
   hours: number,
   description: string,
   entity: string,
-  lastHours: string,
-  validityDays: string,
+  lastHours: number,
+  validityDays: number,
 }
 
 export interface CertificationLogsPageProps {
