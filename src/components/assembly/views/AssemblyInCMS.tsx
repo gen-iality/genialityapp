@@ -5,8 +5,7 @@ import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import AssemblySurveyCard from '../components/AssemblySurveyCard';
 
 export default function AssemblyInCMS() {
-
-	const arraySurveyExample = Array.from({ length: 4 })
+	const arraySurveyExample = Array.from({ length: 4 }).map((_, i) => ({ id: `surveyId:${i}` }));
 	return (
 		<div style={{ padding: '40px' }}>
 			<Row gutter={[16, 16]}>
@@ -44,14 +43,15 @@ export default function AssemblyInCMS() {
 									</Space>
 								}>
 								<Row gutter={[16, 16]}>
-									{arraySurveyExample.map((survey , index)=>(
+									{arraySurveyExample.map((survey, index) => (
 										<Col span={8}>
-										<AssemblySurveyCard
-											status={index === 0 ? 'closed': index === 1 ? 'opened': 'finished'}
-											title={`Encuesta ${index + 1}`}
-											extra={<Button type='primary' icon={<ChartBarIcon />}></Button>}
-										/>
-									</Col>
+											<AssemblySurveyCard
+												key={survey.id}
+												status={index === 0 ? 'closed' : index === 1 ? 'opened' : 'finished'}
+												title={`Encuesta ${index + 1}`}
+												extra={<Button type='primary' icon={<ChartBarIcon />}></Button>}
+											/>
+										</Col>
 									))}
 								</Row>
 							</Collapse.Panel>

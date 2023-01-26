@@ -179,7 +179,7 @@ export interface ValueUserProperty {
 }
 
 
-export interface AnswerResponse {
+export interface SurveysResponse {
   data:  Survey[];
   links: Links;
   meta:  Meta;
@@ -252,4 +252,12 @@ export interface Meta {
   per_page:     number;
   to:           number;
   total:        number;
+}
+
+
+export type CardStatus = 'closed' | 'opened' | 'finished';
+
+export interface CardStatusProps {
+	label: string;
+	color: string;
 }

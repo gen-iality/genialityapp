@@ -1,12 +1,13 @@
 import { Button, Card, Space, Tag } from 'antd';
+import { CardStatus, CardStatusProps } from '../types';
 
 interface props {
-	status: Status;
+	status: CardStatus;
 	title: React.ReactNode | string;
 	extra?: React.ReactNode | string;
 }
 
-const STATUS: Record<Status, StatusProps> = {
+const STATUS: Record<CardStatus, CardStatusProps> = {
 	closed: {
 		label: 'Cerrado',
 		color: 'red',
@@ -20,13 +21,6 @@ const STATUS: Record<Status, StatusProps> = {
 		color: 'orange',
 	},
 };
-
-export type Status = 'closed' | 'opened' | 'finished';
-
-export interface StatusProps {
-	label: string;
-	color: string;
-}
 
 const AssemblySurveyCard = (props: props) => {
 	const { status, title, extra } = props;
