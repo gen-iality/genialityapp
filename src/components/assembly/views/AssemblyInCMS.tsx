@@ -44,9 +44,8 @@ export default function AssemblyInCMS() {
 								}>
 								<Row gutter={[16, 16]}>
 									{arraySurveyExample.map((survey, index) => (
-										<Col span={8}>
+										<Col span={8} key={survey.id}>
 											<AssemblySurveyCard
-												key={survey.id}
 												status={index === 0 ? 'closed' : index === 1 ? 'opened' : 'finished'}
 												title={`Encuesta ${index + 1}`}
 												extra={<Button type='primary' icon={<ChartBarIcon />}></Button>}
