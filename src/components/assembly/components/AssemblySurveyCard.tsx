@@ -27,6 +27,7 @@ const AssemblySurveyCard = (props: props) => {
 
 	return (
 		<Card
+			hoverable
 			title={
 				<Space size={0} style={{ fontWeight: '500' }}>
 					<Tag color={STATUS[status].color}>{STATUS[status].label}</Tag>
