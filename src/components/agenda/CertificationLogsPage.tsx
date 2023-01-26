@@ -207,7 +207,7 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
         <Form.Item
           label="Fecha de vencimiento"
           name="approved_until_date"
-          initialValue={dayjs(Date.now())}
+          initialValue={dayjs(Date.now()).add(defaultValue.validityDays || 0, 'days')}
           rules={[{required: true, message: 'Fecha requerida'}]}
         >
           <DatePicker />
