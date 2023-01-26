@@ -1401,6 +1401,29 @@ export const ModulesApi = {
   // },
 }
 
+// Endpoint for module handlering
+export const CerticationLogsApi = {
+  getAll: async () => {
+    return await Actions.getAll('api/certification-logs', true);
+  },
+  getOne: async (certificationLogID) => {
+    return await Actions.get(`api/certification-logs/${certificationLogID}`, true);
+  },
+  create: async (data) => {
+    return await Actions.create('/api/certification-logs', data, true);
+  },
+  deleteOne: async (certificationLogID) => {
+    return await Actions.delete('api/certification-logs/', certificationLogID, true);
+  },
+  update: async (certificationLogID, data) => {
+    return await Actions.put(`api/certification-logs/${certificationLogID}`, data, true);
+  },
+  byEvent: async (eventId, query) => {
+    console.log('byEvent', eventId, 'query', query);
+    return await Actions.get(`api/certification-logs/event-certification-logs/${eventId}`, true);
+  },
+}
+
 export default privateInstance;
 window.EventsApi = EventsApi;
 window.PositionsApi = PositionsApi;
