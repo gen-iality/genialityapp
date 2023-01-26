@@ -11,7 +11,7 @@ export default function AssemblyInCMS() {
 	const { attendeesChecked, totalAttendees, isAssemblyMood, activities } = useAssemblyInCMS();
 	return (
 		<div style={{ padding: '40px' }}>
-			{!isAssemblyMood ? (
+			{isAssemblyMood ? (
 				<Row gutter={[16, 16]}>
 					<Col span={12}>
 						<Card>
