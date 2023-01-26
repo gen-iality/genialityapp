@@ -1430,3 +1430,6 @@ window.PositionsApi = PositionsApi;
 window.OrganizationApi = OrganizationApi;
 window.TicketsApi = TicketsApi;
 window.ModulesApi = ModulesApi;
+window.AgendaApi = AgendaApi;
+window.UsersApi = UsersApi;
+window.CerticationLogsApi = CerticationLogsApi;
