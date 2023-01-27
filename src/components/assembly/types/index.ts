@@ -180,91 +180,24 @@ export interface ValueUserProperty {
 
 
 export interface Survey {
-  id:                       string;
-  account_id:               string;
-  checked_in:               boolean;
-  _id:                      string;
-  checkedin_type:           string;
-  printouts_history:        PrintoutsHistory[];
-  created_at:               At;
-  model_type?:              string;
-  checkedin_at:             At;
-  activityProperties:       ActivityProperty[];
-  event_id:                 string;
-  private_reference_number: string;
-  rol:                      Rol;
-  properties:               SurveyProperties;
-  printouts:                number;
-  rol_id:                   string;
-  printouts_at:             Date;
-  state_id:                 string;
-  user:                     User;
-  updated_at:               At;
+  id:                      string;
+  isGlobal:                boolean | string;
+  isPublished:             boolean | string;
+  name:                    string;
+  hasMinimumScore:         boolean | string;
+  showNoVotos:             boolean | string;
+  isOpened:                boolean | string;
+  activity_id?:            string;
+  time_limit:              number;
+  displayGraphsInSurveys?: boolean | string;
+  rankingVisible?:         boolean | string;
+  eventId:                 string;
+  category:                string;
+  minimumScore:            number;
+  allow_anonymous_answers: boolean | string;
+  freezeGame:              boolean;
+  allow_gradable_survey:   boolean | string;
 }
-
-export interface ActivityProperty {
-  checkedin_type: string;
-  activity_id:    string;
-  checkedin_at:   Date;
-  checked_in:     boolean;
-}
-
-export interface At {
-  seconds:     number;
-  nanoseconds: number;
-}
-
-export interface PrintoutsHistory {
-  printouts_at: Date;
-  printouts:    number;
-}
-
-export interface SurveyProperties {
-  code:                 string;
-  typeRegister:         string;
-  email:                string;
-  names:                string;
-  voteWeight:           string;
-  rol_id:               string;
-  pesovoto?:            string;
-  uid?:                 string;
-  _id?:                 string;
-  created_at?:          Date;
-  password?:            string;
-  confirmation_code?:   string;
-  refresh_token?:       string;
-  updated_at?:          Date;
-  initial_token?:       string;
-  api_token?:           string;
-  numericoAVerQuePasa?: string;
-}
-
-export interface Rol {
-  guard_name: string;
-  created_at: Date;
-  name:       string;
-  type:       string;
-  updated_at: Date;
-  module:     string;
-  _id:        string;
-}
-
-export interface User {
-  names:             string;
-  created_at:        Date;
-  password:          string;
-  initial_token:     string;
-  api_token:         string;
-  _id:               string;
-  updated_at:        Date;
-  confirmation_code: string;
-  refresh_token:     string;
-  uid:               string;
-  email:             string;
-  picture:           string;
-}
-
-
 
 export type CardStatus = 'closed' | 'opened' | 'finished';
 

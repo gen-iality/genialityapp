@@ -1,6 +1,6 @@
 import { fireRealtime, firestore } from '@/helpers/firebase';
 import { AgendaApi } from '@/helpers/request';
-import { Attendee, Survey } from '../types';
+import { ActivitiesResponse, Attendee, Survey } from '../types';
 
 export const surveysListener = (
 	eventId: string,
@@ -9,12 +9,12 @@ export const surveysListener = (
 ) => {
 	return firestore
 		.collection('surveys')
-		.where('event_id', '==', eventId)
+		.where('eventId', '==', eventId)
 		.onSnapshot(snapshot => {
 			if (snapshot.empty) {
-				console.log('Docs empty');
+				console.log('surveysListener -> Docs empty');
 			} else {
-				console.log('There are docs');
+				console.log('surveysListener -> There are docs');
 				const surveysSnapshot = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Survey));
 				setSurveys(surveysSnapshot);
 				console.log('surveysListener -> ', surveys);
@@ -42,8 +42,8 @@ export const attendeesListener = (
 };
 
 export const getActivities = async (eventId: string) => {
-	const activities = await AgendaApi.byEvent(eventId)
-	return activities
+	const activities = (await AgendaApi.byEvent(eventId)) as ActivitiesResponse
+	return activities.data
 }
 
 export const listenQuorumByActivity = (eventId: string, activityId: string) => {

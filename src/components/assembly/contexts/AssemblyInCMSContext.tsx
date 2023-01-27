@@ -9,6 +9,7 @@ interface AssemblyInCMSContextType {
 	attendeesChecked: number;
 	isAssemblyMood: boolean;
 	totalAttendees: number;
+	surveys: Survey[]
 }
 
 const assemblyInitialValue: AssemblyInCMSContextType = {
@@ -16,6 +17,7 @@ const assemblyInitialValue: AssemblyInCMSContextType = {
 	attendeesChecked: 0,
 	isAssemblyMood: false,
 	totalAttendees: 0,
+	surveys: []
 };
 
 export const AssemblyInCMSContext = createContext(assemblyInitialValue);
@@ -42,6 +44,8 @@ export default function AssemblyInCMSProvider(props: Props) {
 		() => eventContext.value.user_properties.some(userProperty => userProperty.type === 'voteWeight'),
 		[eventContext.status]
 	);
+
+	console.log('surveys', surveys);
 
 	useEffect(() => {
 		// getAllSurveys();
@@ -92,6 +96,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 				attendeesChecked,
 				isAssemblyMood,
 				totalAttendees,
+				surveys,
 			}}>
 			{props.children}
 		</AssemblyInCMSContext.Provider>
