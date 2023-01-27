@@ -1,10 +1,13 @@
+import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { Button, Card, Space, Tag } from 'antd';
-import { CardStatus, CardStatusProps } from '../types';
+import { useEffect, useState } from 'react';
+import { CardStatus, CardStatusProps, Survey } from '../types';
 
-interface props {
-	status: CardStatus;
-	title: React.ReactNode | string;
-	extra?: React.ReactNode | string;
+interface Props {
+	survey: Survey;
+	// status: CardStatus;
+	// title: React.ReactNode | string;
+	// extra?: React.ReactNode | string;
 }
 
 const STATUS: Record<CardStatus, CardStatusProps> = {
@@ -22,8 +25,20 @@ const STATUS: Record<CardStatus, CardStatusProps> = {
 	},
 };
 
-const AssemblySurveyCard = (props: props) => {
-	const { status, title, extra } = props;
+export default function AssemblySurveyCard(props: Props) {
+	const { survey } = props;
+	const [status, setStatus] = useState<'closed' | 'opened' | 'finished'>('closed');
+	const [responses, setResponses] = useState([]);
+	
+	useEffect(() => {
+		if (survey.isOpened) {
+			setStatus('opened');
+		} else if (survey.isOpened && !!responses.length) {
+			setStatus('finished');
+		} else {
+			setStatus('closed');
+		}
+	}, [survey.isOpened, responses.length]);
 
 	return (
 		<Card
@@ -35,11 +50,11 @@ const AssemblySurveyCard = (props: props) => {
 			}
 			headStyle={{ border: 'none', fontSize: '14px' }}
 			bodyStyle={{ paddingTop: '0px' }}
-			extra={extra}
+			extra={<Button type='primary' icon={<ChartBarIcon />}></Button>}
 			actions={[]}>
-			<Card.Meta title={title} description={'aqui se supone van las fechas'} />
+			<Card.Meta title={survey.name} description={'aqui se supone van las fechas'} />
 		</Card>
 	);
-};
+}
 
-export default AssemblySurveyCard;
+AssemblySurveyCard;

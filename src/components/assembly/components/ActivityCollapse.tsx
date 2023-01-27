@@ -16,19 +16,16 @@ interface Props {
 }
 
 const arrows = {
-	up: <ArrowUpOutlined style={{color:'#52C41A'}} />,
-	down: <ArrowDownOutlined style={{color:'#FF4D4F'}} />,
-	none: <></>
-}
+	up: <ArrowUpOutlined style={{ color: '#52C41A' }} />,
+	down: <ArrowDownOutlined style={{ color: '#FF4D4F' }} />,
+	none: <></>,
+};
 
 export default function ActivityCollapse(props: Props) {
 	const { listenQuorum, totalAttendeesWeight } = useAssemblyInCMS();
 	const [surveys, setSurveys] = useState<Survey[]>([]);
 	const [quorum, setQuorum] = useState(0);
 	const [quorumLastChange, setQuorumLastChange] = useState<'none' | 'up' | 'down'>('none');
-	// const [attendeesOnline, setAttendeesOnline] = useState(0);
-	// const [attendeesVisited, setAttendeesVisited] = useState(0);
-	// const [attendeesOnlineWeight, setAttendeesOnlineWeight] = useState(0);
 	const [attendeesState, setAttendeesState] = useState({
 		online: 0,
 		visited: 0,
@@ -94,16 +91,13 @@ export default function ActivityCollapse(props: Props) {
 							value={quorum}
 							suffix='%'
 						/>
-						
 					</Space>
 				}>
 				<Row gutter={[16, 16]}>
 					{surveys.map((survey, index) => (
 						<Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={8} key={survey.id}>
 							<AssemblySurveyCard
-								status={index === 0 ? 'closed' : index === 1 ? 'opened' : 'finished'}
-								title={`Encuesta ${index + 1}`}
-								extra={<Button type='primary' icon={<ChartBarIcon />}></Button>}
+								survey={survey}
 							/>
 						</Col>
 					))}
