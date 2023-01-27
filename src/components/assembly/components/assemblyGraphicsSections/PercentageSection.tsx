@@ -3,19 +3,24 @@ import { Avatar, Card, Col, Row, Space, Typography } from 'antd';
 import React from 'react';
 
 export default function PercentageSection() {
+	// datos quemados solo para pruebas===================
 	const arrayExample = Array.from({ length: 8 });
+	function randomNumber() {
+		return Math.floor(Math.random() * 11);
+	}
+	//====================================================
 	return (
-		<Card style={{ height: '100%' }}>
+		<Card style={{ height: '100%', overflowY: 'auto' }}>
 			<Row gutter={[16, 16]}>
 				{arrayExample.map((item, index) => (
-					<Col key={index} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
+					<Col key={index} xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
 						<Card bodyStyle={{ padding: '0px' }}>
 							<Space align='start'>
 								<Avatar size={80} shape='square' style={{ backgroundColor: `${'#c4c4c4'}` }}>
 									{'A' + index}
 								</Avatar>
 								<Space style={{ padding: '5px' }} size={0} align='start' direction='vertical'>
-									<span style={{ fontWeight: '600' }}>{singularOrPluralString(5, 'Voto', 'Votos')}</span>
+									<span style={{ fontWeight: '600' }}>{singularOrPluralString(randomNumber(), 'Voto', 'Votos')}</span>
 									<Typography.Paragraph
 										style={{ color: '#808080', lineHeight: '1.25' }}
 										ellipsis={{ rows: 2, expandable: false, tooltip: 'Respuesta' }}>
