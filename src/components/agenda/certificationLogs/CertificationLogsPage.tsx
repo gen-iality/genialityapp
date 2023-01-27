@@ -35,9 +35,9 @@ export interface CertificationLogsPageProps {
 }
 
 /**
- * Create a page that requests for all users data to render an user list and their
- * certification logs. Also, it enables to add a certification log via a new form
- * in a Modal component. The default values are loaded from the current event data.
+ * Create a page that requests for all users data to render an list that shows the
+ * certification logs amount. Also, it enables to see the certification logs for an
+ * specify user.
  * 
  * @param props CertificationLogsPageProps
  * @returns React Component

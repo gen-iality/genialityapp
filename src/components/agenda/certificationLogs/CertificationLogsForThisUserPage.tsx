@@ -34,9 +34,9 @@ export interface CertificationLogsForThisUserPageProps {
 }
 
 /**
- * Create a page that requests for all users data to render an user list and their
- * certification logs. Also, it enables to add a certification log via a new form
- * in a Modal component. The default values are loaded from the current event data.
+ * Create a page that requests for one user data to render its certification logs.
+ * Also, it enables to add a certification log via a new form in a Modal component.
+ * The default values are loaded from the current event data.
  * 
  * @param props CertificationLogsByUsersPageProps
  * @returns React Component
@@ -176,7 +176,7 @@ function CertificationLogsForThisUserPage(props: CertificationLogsForThisUserPag
     <>
     <Typography.Title>Histório de certificaciones</Typography.Title>
     <Typography.Paragraph>
-      Agregue o edite el historial de certificaciones a un usuario de este curso
+      Agregue o edite el historial de certificaciones al usuario <strong>{currentUser?.names || 'desconocido'}</strong>
     </Typography.Paragraph>
 
     {!props.event.is_external && (
