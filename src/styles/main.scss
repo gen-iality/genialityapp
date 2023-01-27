@@ -484,6 +484,12 @@ iframe {
   }
 }
 
+.custom-statistic{
+  .ant-statistic-title {
+    margin-bottom: 0px !important;
+}
+}
+
 @import 'react-quill/dist/quill.snow.css';
 @import 'react-quill/dist/quill.bubble.css';
 

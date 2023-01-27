@@ -2,7 +2,7 @@ import AccountEyeIcon from '@2fd/ant-design-icons/lib/AccountEye';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { CaretDownOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, Row, Space, Typography } from 'antd';
+import { Button, Col, Collapse, Row, Space, Statistic, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { Activity, Survey } from '../types';
@@ -11,6 +11,7 @@ import AssemblySurveyCard from './AssemblySurveyCard';
 interface Props {
 	activity: Activity;
 	surveys: Survey[];
+	loading: boolean
 }
 
 export default function ActivityCollapse(props: Props) {
@@ -40,23 +41,14 @@ export default function ActivityCollapse(props: Props) {
 				key='1'
 				header={
 					<Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>
-						Nombre de la actividad
+						{props.activity.name}
 					</Typography.Text>
 				}
 				extra={
-					<Space style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }} size={'large'} wrap>
-						<Space>
-							<AccountGroupIcon />
-							<Typography.Text>{attendeesOnline}</Typography.Text>
-						</Space>
-						<Space>
-							<AccountEyeIcon />
-							<Typography.Text>{attendeesVisited}</Typography.Text>
-						</Space>
-						<Space>
-							Quórum
-							<Typography.Text>45%</Typography.Text>
-						</Space>
+					<Space className='custom-statistic' style={{ fontWeight: '700', color: '#6F737C' }} size={'large'} wrap>
+						<Statistic loading={props.loading} valueStyle={{fontSize:'18px', color: '#6F737C' }} title={'Visitas totales'} prefix={<AccountGroupIcon />} value={attendeesVisited} />
+						<Statistic loading={props.loading} valueStyle={{fontSize:'18px', color: '#6F737C' }} title={'Conectados'} prefix={<AccountEyeIcon />} value={attendeesOnline} />
+						<Statistic loading={props.loading} valueStyle={{fontSize:'18px', color: '#6F737C' }} title={'Quórum'} value={45} suffix='%' />
 					</Space>
 				}>
 				<Row gutter={[16, 16]}>

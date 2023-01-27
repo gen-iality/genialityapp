@@ -4,8 +4,7 @@ import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import ActivityCollapse from '../components/ActivityCollapse';
 
 export default function AssemblyInCMS() {
-	const { attendeesChecked, totalAttendees, isAssemblyMood, activities, surveys } = useAssemblyInCMS();
-
+	const { attendeesChecked, totalAttendees, isAssemblyMood, activities, surveys, loading } = useAssemblyInCMS();
 	if (!isAssemblyMood) {
 		return (
 			<div style={{ padding: '40px' }}>
@@ -28,12 +27,12 @@ export default function AssemblyInCMS() {
 			<Row gutter={[16, 16]}>
 				<Col span={12}>
 					<Card>
-						<Statistic title={'Inscritos / Registrados'} value={totalAttendees} />
+						<Statistic loading={loading} title={'Inscritos / Registrados'} value={totalAttendees} />
 					</Card>
 				</Col>
 				<Col span={12}>
 					<Card>
-						<Statistic title={'Asistencia / Checkeados'} value={attendeesChecked} />
+						<Statistic loading={loading} title={'Asistencia / Checkeados'} value={attendeesChecked} />
 					</Card>
 				</Col>
 				<Col span={24}>
@@ -49,7 +48,7 @@ export default function AssemblyInCMS() {
 							{!!activities.length &&
 								activities.map((activity) => (
 									<Col key={activity._id} span={24}>
-										<ActivityCollapse surveys={surveys} activity={activity} />
+										<ActivityCollapse surveys={surveys} activity={activity} loading={loading} />
 									</Col>
 								))}
 						</Row>
