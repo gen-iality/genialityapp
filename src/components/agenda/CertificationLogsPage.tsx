@@ -91,13 +91,15 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
       key: 'user',
       title: 'Usuario',
       dataIndex: 'user',
-      render: (user: any) => <>{user.names}</>
+      render: (user: any) => <>{user.names}</>,
+      sorter: true,
     },
     {
       key: 'hours',
       title: 'Horas de certificación',
       dataIndex: 'hours',
-      render: (hours: number) => <>{hours === undefined ? 'sin' : hours} horas</>
+      render: (hours: number) => <>{hours === undefined ? 'sin' : hours} horas</>,
+      sorter: (a: number, b: number) => (a || 0) - (b || 0),
     },
     {
       key: 'description',
@@ -109,31 +111,35 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
       key: 'entity',
       title: 'Entidad',
       dataIndex: 'entity',
-      render: (entity: string) => <>{entity}</>
+      render: (entity: string) => <>{entity}</>,
+      sorter: true,
     },
     {
       key: 'approved_from_date',
       title: 'Fecha de aprobación',
       dataIndex: 'approved_from_date',
-      render: (data: string) => <>{dayjs(data).format('DD/MM/YYYY')}</>
+      render: (data: string) => <>{dayjs(data).format('DD/MM/YYYY')}</>,
+      sorter: (a: string, b: string) => dayjs(a) - dayjs(b),
     },
     {
       key: 'approved_until_date',
       title: 'Fecha de vencimiento',
       dataIndex: 'approved_until_date',
-      render: (data: string) => <>{dayjs(data).format('DD/MM/YYYY')}</>
+      render: (data: string) => <>{dayjs(data).format('DD/MM/YYYY')}</>,
+      sorter: (a: string, b: string) => dayjs(a) - dayjs(b),
     },
     // {
     //   key: 'last_hours',
     //   title: <Tooltip title="No me preguntes, no sé qué es esto">Últimas horas</Tooltip>,
     //   dataIndex: 'last_hours',
-    //   render: (last_hours: number) => <>{last_hours} horas</>
+    //   render: (last_hours: number) => <>{last_hours} horas</>,
     // },
     {
       key: 'success',
       title: 'Exitoso',
       dataIndex: 'success',
       render: (success: boolean) => <Tag color={success ? 'green' : 'red'}>{success ? 'Exitoso' : 'Fallido'}</Tag>,
+      sorter: true,
     },
     {
       key: 'option',
