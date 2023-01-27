@@ -49,6 +49,7 @@ export const getActivities = async (eventId: string) => {
 interface UsersWhoHaveConnected {
 	isOnline: boolean;
 	lastChange: number;
+	voteWeight?: number;
 }
 
 export const listenQuorumByActivity = (
@@ -66,6 +67,12 @@ export const listenQuorumByActivity = (
 			}));
 			const usersWhoHaveConnectedQty = usersWhoHaveConnectedArray.length;
 			const usersOnline = usersWhoHaveConnectedArray.filter(user => user.isOnline === true);
+			const usersOnlineWeight = usersWhoHaveConnectedArray.reduce((acc, user) => {
+				if (user.isOnline) {
+					acc += user.voteWeight ? Number(user.voteWeight) : 1;
+				}
+				return acc;
+			}, 0);
 			const usersOnlineQty = usersOnline.length;
 			setAttendeesOnline(usersOnlineQty);
 			setAttendeesVisited(usersWhoHaveConnectedQty);

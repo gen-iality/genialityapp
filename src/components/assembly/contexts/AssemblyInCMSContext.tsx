@@ -41,6 +41,8 @@ export default function AssemblyInCMSProvider(props: Props) {
 	//
 	const [attendeesChecked, setAttendeesChecked] = useState(0);
 	const [totalAttendees, setTotalAttendees] = useState(0);
+	const [totalAttendeesWeight, setTotalAttendeesWeight] = useState(0);
+	const [loading, setLoading] = useState(true);
 	// Hooks
 	const eventContext = UseEventContext() as EventContext;
 	console.log('AssemblyInCMSContext:eventContext', eventContext);
@@ -69,6 +71,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 			};
 		}
 		updateAttendees();
+		setLoading(false)
 	}, []);
 
 	// Effect to update attendees
@@ -82,16 +85,26 @@ export default function AssemblyInCMSProvider(props: Props) {
 	const updateAttendees = () => {
 		const totalAttendees = attendees.length;
 		const attendeesChecked = attendees.filter(attendee => attendee.checked_in === true).length;
+		const totalAttendeesWeight = attendees.reduce((acc, attendee) => {
+			if (attendee.properties.voteWeight) {
+				acc += attendee.properties.voteWeight ? Number(attendee.properties.voteWeight) : 1;
+			}
+			return acc;
+		}, 0);
 		setTotalAttendees(totalAttendees);
 		setAttendeesChecked(attendeesChecked);
+		setTotalAttendeesWeight(totalAttendeesWeight);
 	};
 
 	const getActivities = async () => {
 		try {
+			setLoading(true)
 			const activities = await services.getActivities(eventId);
 			setActivities(activities);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setLoading(false)
 		}
 	};
 
