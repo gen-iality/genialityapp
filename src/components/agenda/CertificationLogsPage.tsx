@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import dayjs from 'dayjs'
 import {
   Modal,
@@ -15,6 +15,8 @@ import {
   InputNumber,
   Switch,
   Alert,
+  Space,
+  Select,
 } from 'antd'
 import { CerticationLogsApi, UsersApi, EventsApi } from '@helpers/request'
 import { DeleteOutlined } from '@ant-design/icons'
@@ -43,7 +45,6 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [defaultValue, setDefaultValue] = useState<DefaultValue>({} as DefaultValue);
-  const [currentUserEditing, setCurrentUserEditing] = useState<null | any>(null);
 
   const [isOpened, setIsOpened] = useState(false);
 
@@ -72,15 +73,9 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
   }
 
   const onFormFinish = (values: any) => {
-    if (!currentUserEditing?._id) {
-      alert('[Error :(] No se ha cargado información del usuario')
-      return
-    }
-
     values.description = values.description || ''
     values.entity = values.entity || ''
     values.event_id = props.event._id
-    values.user_id = currentUserEditing._id
 
     console.debug('form submits:', values)
 
@@ -92,6 +87,12 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
   }
 
   const columns = [
+    {
+      key: 'user',
+      title: 'Usuario',
+      dataIndex: 'user',
+      render: (user: any) => <>{user.names}</>
+    },
     {
       key: 'hours',
       title: 'Horas de certificación',
@@ -171,51 +172,38 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
     })
   }, [])
 
+  const allCertificationLog = useMemo(() => users
+    .map((user) => user.certification_logs.map((certificationLog: any) => ({...certificationLog, user}) ))
+    .flat(), [users])
+
   return (
     <>
-    <Typography.Title>Histório de certificaciones</Typography.Title>
-    <Typography.Text>
-      Agregue o edite el historial de certificaciones a un usuario de este curso
-    </Typography.Text>
+    <Space direction="vertical">
+      <Typography.Title>Histório de certificaciones</Typography.Title>
+      <Typography.Text>
+        Agregue o edite el historial de certificaciones a un usuario de este curso
+      </Typography.Text>
 
-    {!props.event.is_external && (
-      <Alert type="warning" message={<>¡Cuidado! este curso no ha sido configurado como <b>Curso Externo</b></>} />
-    )}
+      {!props.event.is_external && (
+        <Alert type="warning" message={<>¡Cuidado! este curso no ha sido configurado como <b>Curso Externo</b></>} />
+      )}
 
-    {users.map((user) => (
-      <Card key={user._id}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column'
-            }}
-          >
-            <Typography.Text strong>{user.names}</Typography.Text>
-            <p>Este usuario tiene {user.certification_logs.length} certificacion(es)</p>
-          </div>
-        <Button
-          type="primary"
-          onClick={() => {
-            setCurrentUserEditing(user)
-            form.resetFields()
-            openModal()
-          }}
-        >Agregar certification</Button>
-        </div>
-        <Table
-          loading={isLoading}
-          columns={columns}
-          dataSource={user.certification_logs || []}
-        />
-        <Divider />
-      </Card>
-    ))}
+      <Button
+        type="primary"
+        onClick={() => {
+          // setCurrentUserEditing(user)
+          form.resetFields()
+          openModal()
+        }}
+      >Agregar certification</Button>
+    </Space>
+
+    <Table
+      loading={isLoading}
+      columns={columns}
+      dataSource={allCertificationLog}
+    />
+
     <Modal
       visible={isOpened}
       onOk={() => {
@@ -224,11 +212,20 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
       onCancel={cancelModel}
       title="Agrega una certificación"
     >
-      <p>Editando usuario {currentUserEditing?.names || 'indefinido'}</p>
       <Form
         form={form}
         onFinish={onFormFinish}
       >
+        <Form.Item
+          label="Usuario"
+          name="user_id"
+          rules={[{required: true, message: '¿Quién?'}]}
+        >
+          <Select
+            options={users.map((user) => ({ label: user.names, value: user._id }))}
+          />
+        </Form.Item>
+
         <Form.Item label="Descripción" name="description" initialValue={defaultValue.description}>
           <Input />
         </Form.Item>
