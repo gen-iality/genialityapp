@@ -2,7 +2,7 @@ import { numberDecimalToTwoDecimals } from '@/Utilities/numberDecimalToTwoDecima
 import AccountEyeIcon from '@2fd/ant-design-icons/lib/AccountEye';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
-import { CaretDownOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Button, Col, Collapse, Row, Space, Statistic, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
@@ -13,6 +13,12 @@ interface Props {
 	activity: Activity;
 	surveys: Survey[];
 	loading: boolean;
+}
+
+const arrows = {
+	up: <ArrowUpOutlined style={{color:'#52C41A'}} />,
+	down: <ArrowDownOutlined style={{color:'#FF4D4F'}} />,
+	none: <></>
 }
 
 export default function ActivityCollapse(props: Props) {
@@ -83,10 +89,10 @@ export default function ActivityCollapse(props: Props) {
 						<Statistic
 							loading={props.loading}
 							valueStyle={{ fontSize: '18px', color: '#6F737C' }}
-							title={'Quórum'}
+							title={<>Quórum {arrows[quorumLastChange]}</>}
+							decimalSeparator=','
 							value={quorum}
 							suffix='%'
-							prefix={<>{quorumLastChange}</>}
 						/>
 						
 					</Space>
