@@ -50,6 +50,7 @@ const AgendaActividadDetalle = (props: any) => {
 	const activityId = props.match.params.activity_id;
 	const eventId = cEvent.value._id;
 	const isAssambleyMod = cEvent.value.user_properties.some((property: any) => property.type === 'voteWeight');	
+	const voteWeight = cEventUser.value.properties.voteWeight ? Number(cEventUser.value.properties.voteWeight) : 1
 	const intl = useIntl();
 	{
 		Moment.locale(window.navigator.language);
@@ -58,7 +59,7 @@ const AgendaActividadDetalle = (props: any) => {
 	useEffect(() => {
 		if (!!activityId && !!eventId && !!uid && !!isAssambleyMod) {
 			console.log('Presence function ');
-			listenUserPresenceInActivity(eventId, activityId, uid);
+			listenUserPresenceInActivity(eventId, activityId, uid, voteWeight);
 		}
 		async function getActividad() {
 			return await AgendaApi.getOne(props.match.params.activity_id, cEvent.value._id);
@@ -89,7 +90,7 @@ const AgendaActividadDetalle = (props: any) => {
 		}
 
 		return () => {
-			!!isAssambleyMod && disconnectUserPresenceInActivity(eventId, activityId, uid);
+			!!isAssambleyMod && disconnectUserPresenceInActivity(eventId, activityId, uid, voteWeight);
 			props.setTopBanner(true);
 			props.setVirtualConference(true);
 			HandleOpenCloseMenuRigth(true);
