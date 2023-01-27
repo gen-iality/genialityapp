@@ -28,6 +28,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 	const handleClose = () => setOpen(false);
 
 	useEffect(() => {
+		console.log('Test:', questions)
 		if (questions.length) {
 			const unsubscribe = listenAnswersQuestion(survey.id, questions[currentPage - 1].id, setGraphicsData);
 			return () => unsubscribe();
@@ -57,10 +58,10 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 					<Col style={{ height: '100%' }} span={12}>
 						<Row style={{ height: '100%' }} gutter={[16, 16]}>
 							<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
-								<PercentageSection />
+								<PercentageSection graphicsData={graphicsData} />
 							</Col>
 							<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
-								<ParticipationSection />
+								<ParticipationSection graphicsData={graphicsData} />
 							</Col>
 						</Row>
 					</Col>

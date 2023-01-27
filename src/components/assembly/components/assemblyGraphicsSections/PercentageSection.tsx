@@ -1,8 +1,15 @@
+import { GraphicsData } from '@/components/events/surveys/types';
 import { singularOrPluralString } from '@/Utilities/singularOrPluralString';
 import { Avatar, Card, Col, Row, Space, Typography } from 'antd';
 import React from 'react';
 
-export default function PercentageSection() {
+interface Props {
+	graphicsData: GraphicsData;
+}
+
+
+export default function PercentageSection(props: Props) {
+  const { graphicsData } = props;
 	// datos quemados solo para pruebas===================
 	const arrayExample = Array.from({ length: 8 });
 	function randomNumber() {

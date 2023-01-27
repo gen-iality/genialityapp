@@ -30,7 +30,6 @@ export default function AssemblySurveyCard(props: Props) {
 	const [status, setStatus] = useState<'closed' | 'opened' | 'finished'>('closed');
 	const [responses, setResponses] = useState([]);
 	const [questions, setQuestions] = useState<Question[]>([]);
-	
 
 	useEffect(() => {
 		if (!questions.length) {
@@ -43,7 +42,7 @@ export default function AssemblySurveyCard(props: Props) {
 			const questions = await getQuestionsBySurvey(props.survey.id);
 			setQuestions(questions);
 		} catch (error) {
-			console.log(questions);
+			console.log(error);
 		}
 	};
 	console.log('survey', survey);
@@ -68,7 +67,7 @@ export default function AssemblySurveyCard(props: Props) {
 			}
 			headStyle={{ border: 'none', fontSize: '14px' }}
 			bodyStyle={{ paddingTop: '0px' }}
-			extra={<AssemblyGraphicsDrawer survey={survey} questions={questions} />}
+			extra={<>{!!survey && !!questions.length && <AssemblyGraphicsDrawer survey={survey} questions={questions} />}</>}
 			actions={[]}>
 			<Card.Meta title={survey.name} description={'aqui se supone van las fechas'} />
 		</Card>
