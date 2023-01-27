@@ -1,6 +1,6 @@
 import { GraphicsData } from '@/components/events/surveys/types';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
-import { Button, Card, Col, Drawer, Pagination, PaginationProps, Row } from 'antd';
+import { Button, Col, Drawer, Pagination, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { Question, Survey } from '../types';
@@ -52,7 +52,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 				<Row gutter={[16, 16]} style={{ height: 'calc(100vh - 125px)' }}>
 					<Col style={{ height: '100%' }} span={12}>
 						<Row style={{ height: '100%' }} gutter={[16, 16]}>
-							<GraphicSection graphicsData={graphicsData} />
+							<GraphicSection graphicsData={graphicsData} id={survey.id} />
 						</Row>
 					</Col>
 					<Col style={{ height: '100%' }} span={12}>

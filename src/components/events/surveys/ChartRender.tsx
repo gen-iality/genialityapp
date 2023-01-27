@@ -3,6 +3,7 @@ import Chart from 'chart.js/auto';
 import { CHART_TYPE } from './chartsConfiguration';
 
 interface Props {
+	id?: string
 	labels: string[];
 	dataValues: number[];
 	type: 'horizontal' | 'vertical' | 'pie';
@@ -29,7 +30,20 @@ export default function ChartRender(props: Props) {
 	}, [canvasElement]);
 
 	useEffect(() => {
-		console.log({ dataValues, isMobile, labels });
+		// console.log({ dataValues, isMobile, labels });
+		updateChart();
+	}, [dataValues, isMobile, labels]);
+
+	useEffect(() => {
+		console.log('CHART->>', { canvasRef, canvasElement, chartInstance  })
+	}, []);
+
+	useEffect(() => {
+		// console.log({ dataValues, isMobile, labels });
+		updateChart();
+	}, []);
+
+	const updateChart = () => {
 		if (chartInstance) {
 			chartInstance.data.labels = labels;
 			chartInstance.data.datasets[0].data = dataValues;
@@ -65,7 +79,7 @@ export default function ChartRender(props: Props) {
 			};
 			chartInstance.update();
 		}
-	}, [dataValues, isMobile, labels]);
+	};
 
-	return <canvas className='chart-render' ref={canvasRef}  id='chart-render' />;
+	return <canvas className='chart-render' ref={canvasRef} id={props.id ? `chart-render-${props.id}` : 'chart-render'} />;
 }
