@@ -3,6 +3,7 @@ import { Button, Card, Col, Drawer, Pagination, PaginationProps, Row } from 'ant
 import { useState } from 'react';
 import GraphicSection from './assemblyGraphicsSections/GraphicSection';
 import ParticipationSection from './assemblyGraphicsSections/ParticipationSection';
+import PercentageSection from './assemblyGraphicsSections/PercentageSection';
 
 export default function AssemblyGraphicsDrawer() {
 	const [open, setOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function AssemblyGraphicsDrawer() {
 					<Col style={{ height: '100%' }} span={12}>
 						<Row style={{ height: '100%' }} gutter={[16, 16]}>
 							<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
-								<Card style={{ height: '100%' }}>Aqui van las respuestas con sus porcentajes</Card>
+								<PercentageSection />
 							</Col>
 							<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
 								<ParticipationSection />
