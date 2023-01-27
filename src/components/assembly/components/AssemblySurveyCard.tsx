@@ -2,12 +2,10 @@ import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { Button, Card, Space, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { CardStatus, CardStatusProps, Survey } from '../types';
+import AssemblyGraphicsDrawer from './AssemblyGraphicsDrawer';
 
 interface Props {
 	survey: Survey;
-	// status: CardStatus;
-	// title: React.ReactNode | string;
-	// extra?: React.ReactNode | string;
 }
 
 const STATUS: Record<CardStatus, CardStatusProps> = {
@@ -29,7 +27,7 @@ export default function AssemblySurveyCard(props: Props) {
 	const { survey } = props;
 	const [status, setStatus] = useState<'closed' | 'opened' | 'finished'>('closed');
 	const [responses, setResponses] = useState([]);
-	
+
 	useEffect(() => {
 		if (survey.isOpened) {
 			setStatus('opened');
@@ -50,7 +48,7 @@ export default function AssemblySurveyCard(props: Props) {
 			}
 			headStyle={{ border: 'none', fontSize: '14px' }}
 			bodyStyle={{ paddingTop: '0px' }}
-			extra={<Button type='primary' icon={<ChartBarIcon />}></Button>}
+			extra={<AssemblyGraphicsDrawer />}
 			actions={[]}>
 			<Card.Meta title={survey.name} description={'aqui se supone van las fechas'} />
 		</Card>
