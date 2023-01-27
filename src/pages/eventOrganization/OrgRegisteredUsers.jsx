@@ -55,7 +55,7 @@ function OrgRegisteredUsers(props) {
       querySnapshot.forEach((doc) => {
         console.log('doc.data()', doc.data());
         const properties = {
-          checkedin_at: formattedRealDate(doc.data()?.checkedin_at),
+          checkedin_at: doc.data()?.checkedin_at ? formattedRealDate(doc.data()?.checkedin_at) : 'Sin registro',
           eventUser_name: doc.data()?.properties?.names,
           eventUser_email: doc.data()?.properties?.email,
           event_name: orgEvent.name,
