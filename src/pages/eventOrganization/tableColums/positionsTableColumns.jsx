@@ -19,9 +19,12 @@ export const columns = (editModalPosition, orgEventsData, currentUrl) => {
       render(position) {
         return (
           <>
+            {console.log('5. position', position)}
+
+            {console.log('orgEventsData', orgEventsData)}
             {orgEventsData &&
               orgEventsData
-                .filter((orgEvent) => position.event_ids.includes(orgEvent._id))
+                .filter((orgEvent) => position.event_ids?.includes(orgEvent._id))
                 .map((event) => <Tag key={event._id}>{event.name}</Tag>)}
           </>
         );
@@ -32,13 +35,11 @@ export const columns = (editModalPosition, orgEventsData, currentUrl) => {
       title: 'Asignados',
       width: 120,
       render: (position) => (
-        <Link
-          to={`${currentUrl}/${position._id}`}
-        >
+        <Link to={`${currentUrl}/${position._id}`}>
           {position.users.length}
           {' usuarios'}
         </Link>
-      )
+      ),
     },
     {
       key: 'option',
