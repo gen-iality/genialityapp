@@ -1,8 +1,9 @@
 import { UseEventContext } from '@/context/eventContext';
 import { UseSurveysContext } from '@/context/surveysContext';
 import { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
-import { Activity, Attendee, EventContext, Survey } from '../types';
+import { Activity, Attendee, EventContext, Question, Survey } from '../types';
 import * as services from '../services';
+import { GraphicsData } from '@/components/events/surveys/types';
 
 interface AssemblyInCMSContextType {
 	activities: Activity[];
@@ -19,26 +20,19 @@ interface AssemblyInCMSContextType {
 				weight: number;
 			}>
 		>
-	) => // setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
-	// setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
-	// setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
-	void;
+	) => void;
+	listenAnswersQuestion: (
+		surveyId: string,
+		questionId: string,
+		setGraphicsData: React.Dispatch<React.SetStateAction<GraphicsData>>
+	) => () => void;
 	totalAttendeesWeight: number;
 	loading: boolean;
-	updateAttendees: () => void
+	updateAttendees: () => void;
+	getQuestionsBySurvey: (surveyId: string) => Promise<Question[]>;
 }
 
-const assemblyInitialValue: AssemblyInCMSContextType = {
-	activities: [],
-	attendeesChecked: 0,
-	isAssemblyMood: false,
-	totalAttendees: 0,
-	surveys: [],
-	listenQuorum: () => {},
-	totalAttendeesWeight: 0,
-	loading: true,
-	updateAttendees: () => {}
-};
+const assemblyInitialValue: AssemblyInCMSContextType = {} as AssemblyInCMSContextType;
 
 export const AssemblyInCMSContext = createContext(assemblyInitialValue);
 
@@ -76,7 +70,6 @@ export default function AssemblyInCMSProvider(props: Props) {
 			const unsubscribeAttendees = services.attendeesListener(eventId, attendees, setAttendees);
 			getActivities();
 			// TODO: Clean -> Just for test prouposes
-
 			// services.listenQuorumByActivity(eventId,)
 			return () => {
 				unsubscribeSurveys();
@@ -135,7 +128,25 @@ export default function AssemblyInCMSProvider(props: Props) {
 		// setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
 		// setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
 	) => {
-		return services.listenQuorumByActivity(eventId, activityId, setAttendeesState);
+		services.listenQuorumByActivity(eventId, activityId, setAttendeesState);
+	};
+
+	const listenAnswersQuestion = (
+		surveyId: string,
+		questionId: string,
+		setGraphicsData: React.Dispatch<React.SetStateAction<GraphicsData>>
+	) => {
+		return services.listenAnswersQuestion(surveyId, questionId, eventId, setGraphicsData);
+	};
+
+	const getQuestionsBySurvey = async (surveyId: string) => {
+		try {
+			const questions = await services.getQuestionsBySurvey(eventId, surveyId);
+			return questions
+		} catch (error) {
+			console.log(error);
+			return []
+		}
 	};
 
 	return (
@@ -150,6 +161,8 @@ export default function AssemblyInCMSProvider(props: Props) {
 				totalAttendeesWeight,
 				loading,
 				updateAttendees,
+				listenAnswersQuestion,
+				getQuestionsBySurvey,
 			}}>
 			{props.children}
 		</AssemblyInCMSContext.Provider>

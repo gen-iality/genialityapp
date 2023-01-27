@@ -1,15 +1,42 @@
+import { GraphicsData } from '@/components/events/surveys/types';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { Button, Card, Col, Drawer, Pagination, PaginationProps, Row } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
+import { Question, Survey } from '../types';
 import GraphicSection from './assemblyGraphicsSections/GraphicSection';
 import ParticipationSection from './assemblyGraphicsSections/ParticipationSection';
 import PercentageSection from './assemblyGraphicsSections/PercentageSection';
 
-export default function AssemblyGraphicsDrawer() {
+interface Props {
+	survey: Survey;
+	questions: Question[];
+}
+
+export default function AssemblyGraphicsDrawer(props: Props) {
+	const { survey, questions } = props;
+	const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [open, setOpen] = useState(false);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [graphicsData, setGraphicsData] = useState<GraphicsData>({
+		dataValues: [],
+		labels: [],
+		labelsToShow: [],
+	});
 
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
+
+	useEffect(() => {
+		if (questions.length) {
+			const unsubscribe = listenAnswersQuestion(survey.id, questions[currentPage - 1].id, setGraphicsData);
+			return () => unsubscribe();
+		}
+	}, [questions]);
+
+	const handleChangePage = (page: number, pageSize: number) => {
+		setCurrentPage(page);
+	};
 
 	return (
 		<>
@@ -17,14 +44,14 @@ export default function AssemblyGraphicsDrawer() {
 			<Drawer
 				visible={open}
 				width={'100vw'}
-				title={<Pagination total={50} />}
+				title={<Pagination current={currentPage} onChange={handleChangePage} total={questions.length} />}
 				extra={'Aqui va el Quórum'}
 				onClose={handleClose}
 				destroyOnClose>
 				<Row gutter={[16, 16]} style={{ height: 'calc(100vh - 125px)' }}>
 					<Col style={{ height: '100%' }} span={12}>
 						<Row style={{ height: '100%' }} gutter={[16, 16]}>
-							<GraphicSection />
+							<GraphicSection graphicsData={graphicsData} />
 						</Row>
 					</Col>
 					<Col style={{ height: '100%' }} span={12}>

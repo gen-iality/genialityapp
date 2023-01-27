@@ -1,6 +1,8 @@
+import { GraphicsData, VoteResponse } from '@/components/events/surveys/types';
+import { getAssemblyGraphicsData } from '@/components/events/surveys/utils/getAssemblyGraphicsData';
 import { fireRealtime, firestore } from '@/helpers/firebase';
-import { AgendaApi } from '@/helpers/request';
-import { ActivitiesResponse, Attendee, Survey } from '../types';
+import { AgendaApi, SurveysApi } from '@/helpers/request';
+import { ActivitiesResponse, Attendee, Question, Survey } from '../types';
 
 export const surveysListener = (
 	eventId: string,
@@ -102,3 +104,43 @@ export const listenQuorumByActivity = (
 		}
 	});
 };
+
+export const listenAnswersQuestion = (
+	surveyId: string,
+	questionId: string,
+	eventId: string,
+	setGraphicsData: React.Dispatch<React.SetStateAction<GraphicsData>>,
+) => {
+	return firestore
+		.collection('surveys')
+		.doc(surveyId)
+		.collection('answers')
+		.doc(questionId)
+		.collection('responses')
+		.orderBy('created','asc')
+		.onSnapshot(
+			snapshot => {
+				const answers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as VoteResponse);
+				const { dataValues, labels } = getAssemblyGraphicsData(answers)
+				const labelsToShow = labels.map(label => label.complete)
+				console.log('Heeeeeeeeeeeeeeeeeeeeeeey', dataValues,
+				labels,
+				labelsToShow)
+				setGraphicsData({
+					dataValues,
+					labels,
+					labelsToShow
+				})
+				// console.log('test:listenAnswersQuestion', answers)
+			},
+			onError => {
+				console.log(onError)
+			}
+		);
+}
+
+export const getQuestionsBySurvey = async (eventId: string, surveyId: string) => {
+	const response = await SurveysApi.getOne(eventId, surveyId)
+	// console.log(response.questions)
+	return response.questions as Question[]
+}

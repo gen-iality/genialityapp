@@ -1,7 +1,8 @@
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { Button, Card, Space, Tag } from 'antd';
 import { useEffect, useState } from 'react';
-import { CardStatus, CardStatusProps, Survey } from '../types';
+import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
+import { CardStatus, CardStatusProps, Question, Survey } from '../types';
 import AssemblyGraphicsDrawer from './AssemblyGraphicsDrawer';
 
 interface Props {
@@ -25,8 +26,27 @@ const STATUS: Record<CardStatus, CardStatusProps> = {
 
 export default function AssemblySurveyCard(props: Props) {
 	const { survey } = props;
+	const { getQuestionsBySurvey } = useAssemblyInCMS();
 	const [status, setStatus] = useState<'closed' | 'opened' | 'finished'>('closed');
 	const [responses, setResponses] = useState([]);
+	const [questions, setQuestions] = useState<Question[]>([]);
+	
+
+	useEffect(() => {
+		if (!questions.length) {
+			getQuestions();
+		}
+	}, []);
+
+	const getQuestions = async () => {
+		try {
+			const questions = await getQuestionsBySurvey(props.survey.id);
+			setQuestions(questions);
+		} catch (error) {
+			console.log(questions);
+		}
+	};
+	console.log('survey', survey);
 
 	useEffect(() => {
 		if (survey.isOpened) {
@@ -48,7 +68,7 @@ export default function AssemblySurveyCard(props: Props) {
 			}
 			headStyle={{ border: 'none', fontSize: '14px' }}
 			bodyStyle={{ paddingTop: '0px' }}
-			extra={<AssemblyGraphicsDrawer />}
+			extra={<AssemblyGraphicsDrawer survey={survey} questions={questions} />}
 			actions={[]}>
 			<Card.Meta title={survey.name} description={'aqui se supone van las fechas'} />
 		</Card>

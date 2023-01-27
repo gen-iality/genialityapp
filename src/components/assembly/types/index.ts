@@ -353,3 +353,13 @@ export interface Meta {
   to:           number;
   total:        number;
 }
+
+
+export interface Question {
+  title:   string;
+  type:    string;
+  choices: string[];
+  id:      string;
+  image:   null | string;
+  points:  string;
+}
