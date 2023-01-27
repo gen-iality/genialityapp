@@ -24,7 +24,7 @@ export const columns = (editModalPosition, orgEventsData, currentUrl) => {
             {console.log('orgEventsData', orgEventsData)}
             {orgEventsData &&
               orgEventsData
-                .filter((orgEvent) => position.event_ids?.includes(orgEvent._id))
+                .filter((orgEvent) => (position.event_ids || []).includes(orgEvent._id))
                 .map((event) => <Tag key={event._id}>{event.name}</Tag>)}
           </>
         );
