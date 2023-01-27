@@ -18,7 +18,7 @@ import ConfirmacionRegistro from './registro/confirmacionRegistro';
 import ErrorServe from '../modal/serverError';
 import AgendaRoutes from '../agenda';
 import ModulePage from '../agenda/ModulePage';
-import CertificationLogsPage from '../agenda/CertificationLogsPage';
+import CertificationLogsPage from '../agenda/certificationLogs/CertificationLogsPage';
 import EmpresasRoutes from '../empresas';
 import TriviaRoutes from '../trivia';
 import DocumentsRoutes from '../documents';
