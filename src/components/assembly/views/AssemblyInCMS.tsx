@@ -3,6 +3,7 @@ import { ReloadOutlined } from '@ant-design/icons';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import AssemblyActivityCollapse from '../components/AssemblyActivityCollapse';
 import AssemblyStatisticCard from '../components/AssemblyStatisticCard';
+import AssemblyGraphicsDrawer from '../components/AssemblyGraphicsDrawer';
 
 interface StatisticsAssembly {
 	loading: boolean;
@@ -60,6 +61,7 @@ export default function AssemblyInCMS() {
 					</Card>
 				</Col>
 			</Row>
+			<AssemblyGraphicsDrawer/>
 		</div>
 	);
 }
