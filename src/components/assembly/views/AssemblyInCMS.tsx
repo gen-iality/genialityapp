@@ -36,8 +36,8 @@ export default function AssemblyInCMS() {
 	return (
 		<div style={{ padding: '40px' }}>
 			<Row gutter={[16, 16]}>
-				{statistics.map(({ loading, title, value }) => (
-					<Col span={12}>
+				{statistics.map(({ loading, title, value }, index) => (
+					<Col span={12} key={`${title}-${index}`}>
 						<AssemblyStatisticCard loading={loading} title={title} value={value} />
 					</Col>
 				))}
