@@ -122,12 +122,12 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
       dataIndex: 'approved_until_date',
       render: (data: string) => <>{dayjs(data).format('DD/MM/YYYY')}</>
     },
-    {
-      key: 'last_hours',
-      title: <Tooltip title="No me preguntes, no sé qué es esto">Últimas horas</Tooltip>,
-      dataIndex: 'last_hours',
-      render: (last_hours: number) => <>{last_hours} horas</>
-    },
+    // {
+    //   key: 'last_hours',
+    //   title: <Tooltip title="No me preguntes, no sé qué es esto">Últimas horas</Tooltip>,
+    //   dataIndex: 'last_hours',
+    //   render: (last_hours: number) => <>{last_hours} horas</>
+    // },
     {
       key: 'success',
       title: 'Exitoso',
@@ -263,14 +263,14 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
           <DatePicker />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           label="Última horas"
           name="last_hours"
           initialValue={defaultValue.lastHours}
           rules={[{required: true, message: 'Valor requerido'}]}
         >
           <InputNumber min={0} />
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
     </>
