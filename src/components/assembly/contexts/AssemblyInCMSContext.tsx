@@ -25,6 +25,7 @@ interface AssemblyInCMSContextType {
 	void;
 	totalAttendeesWeight: number;
 	loading: boolean;
+	updateAttendees: () => void
 }
 
 const assemblyInitialValue: AssemblyInCMSContextType = {
@@ -36,6 +37,7 @@ const assemblyInitialValue: AssemblyInCMSContextType = {
 	listenQuorum: () => {},
 	totalAttendeesWeight: 0,
 	loading: true,
+	updateAttendees: () => {}
 };
 
 export const AssemblyInCMSContext = createContext(assemblyInitialValue);
@@ -57,7 +59,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 	const [loading, setLoading] = useState(true);
 	// Hooks
 	const eventContext = UseEventContext() as EventContext;
-	console.log('AssemblyInCMSContext:eventContext', eventContext);
+	// console.log('AssemblyInCMSContext:eventContext', eventContext);
 	// Constants
 	const eventId = eventContext.idEvent;
 	const isAssemblyMood = useMemo(
@@ -65,7 +67,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 		[eventContext.status]
 	);
 
-	console.log('surveys', surveys);
+	// console.log('surveys', surveys);
 
 	useEffect(() => {
 		// getAllSurveys();
@@ -91,7 +93,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 		if (!!attendees.length) {
 			updateAttendees();
 		}
-		console.log({ attendeesChecked, totalAttendees });
+		// console.log({ attendeesChecked, totalAttendees });
 	}, [attendees]);
 
 	const updateAttendees = () => {
@@ -147,6 +149,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 				listenQuorum,
 				totalAttendeesWeight,
 				loading,
+				updateAttendees,
 			}}>
 			{props.children}
 		</AssemblyInCMSContext.Provider>

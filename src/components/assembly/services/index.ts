@@ -12,12 +12,12 @@ export const surveysListener = (
 		.where('eventId', '==', eventId)
 		.onSnapshot(snapshot => {
 			if (snapshot.empty) {
-				console.log('surveysListener -> Docs empty');
+				// console.log('surveysListener -> Docs empty');
 			} else {
-				console.log('surveysListener -> There are docs');
+				// console.log('surveysListener -> There are docs');
 				const surveysSnapshot = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Survey));
 				setSurveys(surveysSnapshot);
-				console.log('surveysListener -> ', surveys);
+				// console.log('surveysListener -> ', surveys);
 			}
 		});
 };
@@ -29,14 +29,14 @@ export const attendeesListener = (
 ) => {
 	return firestore.collection(`${eventId}_event_attendees`).onSnapshot(snapshot => {
 		if (snapshot.empty) {
-			console.log('Docs empty');
+			// console.log('Docs empty');
 		} else {
-			console.log('There are docs');
+			// console.log('There are docs');
 			// if (!attendees.length) {
 			const attendeesSnapshot = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Attendee));
 			setAttendees(attendeesSnapshot);
 			// }
-			console.log('attendeesListener -> ', attendees);
+			// console.log('attendeesListener -> ', attendees);
 		}
 	});
 };
