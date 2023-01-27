@@ -84,6 +84,10 @@ const RenderComponent = (props) => {
   }, [currentActivity, props.cEvent]);
 
   useEffect(() => {
+    console.log('currentActivity', currentActivity)
+  }, [currentActivity])
+
+  useEffect(() => {
     if (chatAttendeChats === '4') {
       setRenderGame('game');
     } else {
@@ -241,7 +245,7 @@ const RenderComponent = (props) => {
 
   return (
     <>
-      {props.isBingo === undefined && <HeaderColumnswithContext isVisible={true} activityState={activityState} />}
+      {!props.isBingo && <HeaderColumnswithContext isVisible={true} activityState={activityState} />}
       {RenderizarComponente(platform, activityState, renderGame)}
     </>
   );
