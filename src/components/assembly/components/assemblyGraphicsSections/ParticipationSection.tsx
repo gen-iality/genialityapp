@@ -8,11 +8,16 @@ export default function ParticipationSection() {
     <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
       <Card bodyStyle={{}}>
         <Statistic
-          title='Porcentaje de inscritos que no participaron en esta pregunta'
-          value={40}
+          title='Cantidad de inscritos que participaron en esta pregunta'
+          value={15}
           precision={0}
           valueStyle={{ color: '#1890FF' }}
-          suffix='%'
+          suffix={singularOrPluralString(
+            15,
+            'Participante',
+            'Participantes',
+            true
+          )}
         />
       </Card>
     </Col>
@@ -20,7 +25,7 @@ export default function ParticipationSection() {
       <Card>
         <Statistic
           title='Cantidad de inscritos que no participaron en esta pregunta'
-          value={15 + ' de ' + 25}
+          value={5}
           precision={0}
           valueStyle={{ color: '#1890FF' }}
           suffix={singularOrPluralString(

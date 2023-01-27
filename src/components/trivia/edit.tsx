@@ -864,7 +864,7 @@ function TriviaEdit(props: any) {
 								</Form.Item>
 								{state.idSurvey && (
 									<>
-										<Form.Item label={'Tiempo límite en segundos por pregunta'} name={'time_limit'}>
+										<Form.Item label={'Tiempo límite de respuesta por pregunta'} name={'time_limit'}>
 											<Select
 												defaultValue={time_limit}
 												value={time_limit}
@@ -916,7 +916,7 @@ function TriviaEdit(props: any) {
 													</Select>
 												</Form.Item>
 												<Form.Item
-													label={'Mostrar porcentaje de participantes sin votar en las gráficas'}
+													label={'Mostrar índice de participación en las gráficas'}
 													name={'showNoVotos'}>
 													<Switch
 														checked={parseStringBoolean(showNoVotos)}
@@ -925,7 +925,7 @@ function TriviaEdit(props: any) {
 												</Form.Item>
 											</>
 										)}
-										<Form.Item label={'Relacionar esta encuesta a una actividad'} name={'activity_id'}>
+										<Form.Item label={'Limitar la encuesta a una única actividad'} name={'activity_id'}>
 											<Select
 												defaultValue={(activity_id === '' || activity_id === null) ? 'globalMode' : activity_id }
 												value={activity_id}
@@ -946,7 +946,7 @@ function TriviaEdit(props: any) {
 												</OptGroup>
 											</Select>
 										</Form.Item>
-										<Form.Item label={'Permitir valor del voto por usuario'} name={'allow_vote_value_per_user'}>
+										<Form.Item label={'Tener en cuenta los coeficientes de participación'} name={'allow_vote_value_per_user'}>
 											<Switch
 												checked={parseStringBoolean(allow_vote_value_per_user)}
 												onChange={(checked) => toggleSwitch('allow_vote_value_per_user', checked)}

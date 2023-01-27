@@ -292,7 +292,7 @@ function Graphics(props: any) {
 			</Col>
 			{/* Cards */}
 			<Col span={24}>
-				<Card>
+				<Card headStyle={{border:'none'}} bodyStyle={{paddingTop:'0px'}} title={`Conteo de votos`}>
 					<Row gutter={[16, 16]}>
 						{/* Cards Questions */}
 						{isAssambley &&
@@ -349,24 +349,29 @@ function Graphics(props: any) {
 			</Col>
 			{parseStringBoolean(cSurveys.currentSurvey.showNoVotos) && (
 				<Col span={24}>
-					<Card>
+					<Card headStyle={{border:'none'}} bodyStyle={{paddingTop:'0px'}} title={`Participación`}>
 						<Row gutter={[16, 16]}>
-							<Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+							<Col order={1} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 								<Card bodyStyle={{}}>
 									<Statistic
-										title='Porcentaje de inscritos que no participaron en esta pregunta'
-										value={state.resultVotos.porcentajevotos}
+										title='Cantidad de inscritos que participaron en esta pregunta'
+										value={state.totalUser - state.resultVotos.usuariosSinRespuesta }
 										precision={0}
 										valueStyle={{ color: '#1890FF' }}
-										suffix='%'
+										suffix={singularOrPluralString(
+											state.totalUser - state.resultVotos.usuariosSinRespuesta,
+											'Participante',
+											'Participantes',
+											true
+										)}
 									/>
 								</Card>
 							</Col>
-							<Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+							<Col order={2} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 								<Card>
 									<Statistic
 										title='Cantidad de inscritos que no participaron en esta pregunta'
-										value={state.resultVotos.usuariosSinRespuesta + ' de ' + state.totalUser}
+										value={state.resultVotos.usuariosSinRespuesta}
 										precision={0}
 										valueStyle={{ color: '#1890FF' }}
 										suffix={singularOrPluralString(

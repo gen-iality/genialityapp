@@ -4,18 +4,20 @@ import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import AssemblyActivityCollapse from '../components/AssemblyActivityCollapse';
 import AssemblyStatisticCard from '../components/AssemblyStatisticCard';
 // import AssemblyGraphicsDrawer from '../components/AssemblyGraphicsDrawer';
-
+import AccountMultipleCheckIcon from "@2fd/ant-design-icons/lib/AccountMultipleCheck";
+import ClipboardListIcon from "@2fd/ant-design-icons/lib/ClipboardList";
 interface StatisticsAssembly {
 	loading: boolean;
 	title: React.ReactNode | string;
 	value: number | string;
+	icon: React.ReactNode;
 }
 
 export default function AssemblyInCMS() {
 	const { attendeesChecked, totalAttendees, isAssemblyMood, activities, surveys, loading } = useAssemblyInCMS();
 	const statistics: StatisticsAssembly[] = [
-		{ loading: loading, title: 'Inscritos en el evento', value: totalAttendees },
-		{ loading: loading, title: 'Asistieron', value: attendeesChecked },
+		{ loading: loading, title: 'Inscritos en el evento', value: totalAttendees, icon: <ClipboardListIcon /> },
+		{ loading: loading, title: 'Chequeados en el evento', value: attendeesChecked, icon: <AccountMultipleCheckIcon /> },
 	];
 	if (!isAssemblyMood) {
 		return (
@@ -36,9 +38,9 @@ export default function AssemblyInCMS() {
 	return (
 		<div style={{ padding: '40px' }}>
 			<Row gutter={[16, 16]}>
-				{statistics.map(({ loading, title, value }, index) => (
+				{statistics.map(({ loading, title, value, icon }, index) => (
 					<Col span={12} key={`${title}-${index}`}>
-						<AssemblyStatisticCard loading={loading} title={title} value={value} />
+						<AssemblyStatisticCard loading={loading} title={title} value={value} icon={icon} />
 					</Col>
 				))}
 				<Col span={24}>
