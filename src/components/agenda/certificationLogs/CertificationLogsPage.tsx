@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import dayjs from 'dayjs'
 import {
   Modal,
@@ -15,7 +15,10 @@ import {
   InputNumber,
   Switch,
   Alert,
+  Space,
+  Select,
 } from 'antd'
+import type { ColumnsType } from 'antd/es/table'
 import { CerticationLogsApi, UsersApi, EventsApi } from '@helpers/request'
 import { DeleteOutlined } from '@ant-design/icons'
 
@@ -32,9 +35,9 @@ export interface CertificationLogsPageProps {
 }
 
 /**
- * Create a page that requests for all users data to render an user list and their
- * certification logs. Also, it enables to add a certification log via a new form
- * in a Modal component. The default values are loaded from the current event data.
+ * Create a page that requests for all users data to render an list that shows the
+ * certification logs amount. Also, it enables to see the certification logs for an
+ * specify user.
  * 
  * @param props CertificationLogsPageProps
  * @returns React Component
@@ -43,7 +46,6 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [defaultValue, setDefaultValue] = useState<DefaultValue>({} as DefaultValue);
-  const [currentUserEditing, setCurrentUserEditing] = useState<null | any>(null);
 
   const [isOpened, setIsOpened] = useState(false);
 
@@ -72,15 +74,9 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
   }
 
   const onFormFinish = (values: any) => {
-    if (!currentUserEditing?._id) {
-      alert('[Error :(] No se ha cargado información del usuario')
-      return
-    }
-
     values.description = values.description || ''
     values.entity = values.entity || ''
     values.event_id = props.event._id
-    values.user_id = currentUserEditing._id
 
     console.debug('form submits:', values)
 
@@ -91,12 +87,20 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
     })
   }
 
-  const columns = [
+  const columns: ColumnsType<any> = [
+    {
+      key: 'user',
+      title: 'Usuario',
+      dataIndex: 'user',
+      render: (user: any) => <>{user.names}</>,
+      sorter: true,
+    },
     {
       key: 'hours',
       title: 'Horas de certificación',
       dataIndex: 'hours',
-      render: (hours: number) => <>{hours === undefined ? 'sin' : hours} horas</>
+      render: (hours: number) => <>{hours === undefined ? 'sin' : hours} horas</>,
+      sorter: (a: number, b: number) => (a || 0) - (b || 0),
     },
     {
       key: 'description',
@@ -108,31 +112,35 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
       key: 'entity',
       title: 'Entidad',
       dataIndex: 'entity',
-      render: (entity: string) => <>{entity}</>
+      render: (entity: string) => <>{entity}</>,
+      sorter: true,
     },
     {
       key: 'approved_from_date',
       title: 'Fecha de aprobación',
       dataIndex: 'approved_from_date',
-      render: (data: string) => <>{dayjs(data).format('DD/MM/YYYY')}</>
+      render: (data: string) => <>{dayjs(data).format('DD/MM/YYYY')}</>,
+      sorter: (a: string, b: string) => dayjs(a) - dayjs(b),
     },
     {
       key: 'approved_until_date',
       title: 'Fecha de vencimiento',
       dataIndex: 'approved_until_date',
-      render: (data: string) => <>{dayjs(data).format('DD/MM/YYYY')}</>
+      render: (data: string) => <>{dayjs(data).format('DD/MM/YYYY')}</>,
+      sorter: (a: string, b: string) => dayjs(a) - dayjs(b),
     },
-    {
-      key: 'last_hours',
-      title: <Tooltip title="No me preguntes, no sé qué es esto">Últimas horas</Tooltip>,
-      dataIndex: 'last_hours',
-      render: (last_hours: number) => <>{last_hours} horas</>
-    },
+    // {
+    //   key: 'last_hours',
+    //   title: <Tooltip title="No me preguntes, no sé qué es esto">Últimas horas</Tooltip>,
+    //   dataIndex: 'last_hours',
+    //   render: (last_hours: number) => <>{last_hours} horas</>,
+    // },
     {
       key: 'success',
       title: 'Exitoso',
       dataIndex: 'success',
       render: (success: boolean) => <Tag color={success ? 'green' : 'red'}>{success ? 'Exitoso' : 'Fallido'}</Tag>,
+      sorter: true,
     },
     {
       key: 'option',
@@ -171,51 +179,38 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
     })
   }, [])
 
+  const allCertificationLog = useMemo(() => users
+    .map((user) => user.certification_logs.map((certificationLog: any) => ({...certificationLog, user}) ))
+    .flat(), [users])
+
   return (
     <>
-    <Typography.Title>Histório de certificaciones</Typography.Title>
-    <Typography.Text>
-      Agregue o edite el historial de certificaciones a un usuario de este curso
-    </Typography.Text>
+    <Space direction="vertical">
+      <Typography.Title>Histório de certificaciones</Typography.Title>
+      <Typography.Text>
+        Agregue o edite el historial de certificaciones a un usuario de este curso
+      </Typography.Text>
 
-    {!props.event.is_external && (
-      <Alert type="warning" message={<>¡Cuidado! este curso no ha sido configurado como <b>Curso Externo</b></>} />
-    )}
+      {!props.event.is_external && (
+        <Alert type="warning" message={<>¡Cuidado! este curso no ha sido configurado como <b>Curso Externo</b></>} />
+      )}
 
-    {users.map((user) => (
-      <Card key={user._id}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column'
-            }}
-          >
-            <Typography.Text strong>{user.names}</Typography.Text>
-            <p>Este usuario tiene {user.certification_logs.length} certificacion(es)</p>
-          </div>
-        <Button
-          type="primary"
-          onClick={() => {
-            setCurrentUserEditing(user)
-            form.resetFields()
-            openModal()
-          }}
-        >Agregar certification</Button>
-        </div>
-        <Table
-          loading={isLoading}
-          columns={columns}
-          dataSource={user.certification_logs || []}
-        />
-        <Divider />
-      </Card>
-    ))}
+      <Button
+        type="primary"
+        onClick={() => {
+          // setCurrentUserEditing(user)
+          form.resetFields()
+          openModal()
+        }}
+      >Agregar certification</Button>
+    </Space>
+
+    <Table
+      loading={isLoading}
+      columns={columns}
+      dataSource={allCertificationLog}
+    />
+
     <Modal
       visible={isOpened}
       onOk={() => {
@@ -224,11 +219,20 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
       onCancel={cancelModel}
       title="Agrega una certificación"
     >
-      <p>Editando usuario {currentUserEditing?.names || 'indefinido'}</p>
       <Form
         form={form}
         onFinish={onFormFinish}
       >
+        <Form.Item
+          label="Usuario"
+          name="user_id"
+          rules={[{required: true, message: '¿Quién?'}]}
+        >
+          <Select
+            options={users.map((user) => ({ label: user.names, value: user._id }))}
+          />
+        </Form.Item>
+
         <Form.Item label="Descripción" name="description" initialValue={defaultValue.description}>
           <Input />
         </Form.Item>
@@ -263,14 +267,14 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
           <DatePicker />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           label="Última horas"
           name="last_hours"
           initialValue={defaultValue.lastHours}
           rules={[{required: true, message: 'Valor requerido'}]}
         >
           <InputNumber min={0} />
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
     </>

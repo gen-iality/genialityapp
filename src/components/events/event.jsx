@@ -18,7 +18,9 @@ import ConfirmacionRegistro from './registro/confirmacionRegistro';
 import ErrorServe from '../modal/serverError';
 import AgendaRoutes from '../agenda';
 import ModulePage from '../agenda/ModulePage';
-import CertificationLogsPage from '../agenda/CertificationLogsPage';
+import CertificationLogsPage from '../agenda/certificationLogs/CertificationLogsPage';
+import CertificationLogsByUsersPage from '../agenda/certificationLogs/CertificationLogsByUsersPage';
+import CertificationLogsForThisUserPage from '../agenda/certificationLogs/CertificationLogsForThisUserPage';
 import EmpresasRoutes from '../empresas';
 import TriviaRoutes from '../trivia';
 import DocumentsRoutes from '../documents';
@@ -299,6 +301,22 @@ class Event extends Component {
                 event={event}
                 updateEvent={this.updateEvent}
                 componentKey='certification-logs'
+              />
+              <Protected
+                path={`${match.url}/certification-logs-by-users/:userId`}
+                component={CertificationLogsForThisUserPage}
+                eventId={event._id}
+                event={event}
+                updateEvent={this.updateEvent}
+                componentKey='certification-logs-for-this-user'
+              />
+              <Protected
+                path={`${match.url}/certification-logs-by-users`}
+                component={CertificationLogsByUsersPage}
+                eventId={event._id}
+                event={event}
+                updateEvent={this.updateEvent}
+                componentKey='certification-logs-by-users'
               />
               <Protected
                 path={`${match.url}/adminUsers`}

@@ -1163,17 +1163,17 @@ class General extends Component {
                         />
                       </Form.Item>
 
-                      <Form.Item
-                        label="Última horas de la certificación (valor por defecto)"
-                        >
-                        <InputNumber
-                          min={0}
-                          value={event.default_certification_last_hours || 0}
-                          onChange={(e) => {
-                            this.handleChange(e, 'default_certification_last_hours')
-                          }}
-                        />
-                      </Form.Item>
+                      {/* // <Form.Item
+                      //   label="Última horas de la certificación (valor por defecto)"
+                      //   >
+                      //   <InputNumber
+                      //     min={0}
+                      //     value={event.default_certification_last_hours || 0}
+                      //     onChange={(e) => {
+                      //       this.handleChange(e, 'default_certification_last_hours')
+                      //     }}
+                      //   />
+                      // </Form.Item> */}
                     </>
                   )}
                 </Col>
