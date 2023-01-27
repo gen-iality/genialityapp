@@ -2,9 +2,20 @@ import { Button, Card, Col, Result, Row, Space, Statistic } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import ActivityCollapse from '../components/ActivityCollapse';
+import AssemblyStatisticCard from '../components/AssemblyStatisticCard';
+
+interface StatisticsAssembly {
+	loading: boolean;
+	title: React.ReactNode | string;
+	value: number | string;
+}
 
 export default function AssemblyInCMS() {
 	const { attendeesChecked, totalAttendees, isAssemblyMood, activities, surveys, loading } = useAssemblyInCMS();
+	const statistics: StatisticsAssembly[] = [
+		{ loading: loading, title: 'Inscritos en el evento', value: totalAttendees },
+		{ loading: loading, title: 'Asistieron', value: attendeesChecked },
+	];
 	if (!isAssemblyMood) {
 		return (
 			<div style={{ padding: '40px' }}>
@@ -21,20 +32,14 @@ export default function AssemblyInCMS() {
 			</div>
 		);
 	}
-
 	return (
 		<div style={{ padding: '40px' }}>
 			<Row gutter={[16, 16]}>
-				<Col span={12}>
-					<Card style={{ fontWeight: '700', color: '#6F737C' }}>
-						<Statistic loading={loading} title={'Inscritos'} value={totalAttendees} />
-					</Card>
-				</Col>
-				<Col span={12}>
-					<Card>
-						<Statistic loading={loading} title={'Asistieron'} value={attendeesChecked} />
-					</Card>
-				</Col>
+				{statistics.map(({ loading, title, value }) => (
+					<Col span={12}>
+						<AssemblyStatisticCard loading={loading} title={title} value={value} />
+					</Col>
+				))}
 				<Col span={24}>
 					<Card
 						headStyle={{ border: 'none' }}
