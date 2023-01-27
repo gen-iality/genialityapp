@@ -10,12 +10,6 @@ interface Props {
 
 export default function PercentageSection(props: Props) {
   const { graphicsData } = props;
-	// datos quemados solo para pruebas===================
-	const arrayExample = Array.from({ length: 8 });
-	function randomNumber() {
-		return Math.floor(Math.random() * 11);
-	}
-	//====================================================
 	return (
 		<Card style={{ height: '100%', overflowY: 'auto' }}>
 			<Row gutter={[16, 16]}>
