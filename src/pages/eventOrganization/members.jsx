@@ -155,7 +155,7 @@ function OrgMembers(props) {
         updated_at: orgUser.updated_at,
         role: orgUser.rol.name,
         picture: orgUser.user.picture,
-        position: orgUser.position.position_name,
+        position: orgUser.position?.position_name || 'Sin cargo',
         // names: membersData?.user?.name || membersData?.user?.names,
         // email: membersData?.user?.email,
         stats: userActivities[orgUser.account_id],
