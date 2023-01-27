@@ -1,7 +1,7 @@
 import { Button, Card, Col, Result, Row, Space, Statistic } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
-import ActivityCollapse from '../components/ActivityCollapse';
+import AssemblyActivityCollapse from '../components/AssemblyActivityCollapse';
 import AssemblyStatisticCard from '../components/AssemblyStatisticCard';
 
 interface StatisticsAssembly {
@@ -53,7 +53,7 @@ export default function AssemblyInCMS() {
 							{!!activities.length &&
 								activities.map((activity) => (
 									<Col key={activity._id} span={24}>
-										<ActivityCollapse surveys={surveys} activity={activity} loading={loading} />
+										<AssemblyActivityCollapse surveys={surveys} activity={activity} loading={loading} />
 									</Col>
 								))}
 						</Row>

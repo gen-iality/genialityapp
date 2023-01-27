@@ -21,7 +21,7 @@ const arrows = {
 	none: <></>,
 };
 
-export default function ActivityCollapse(props: Props) {
+export default function AssemblyActivityCollapse(props: Props) {
 	const { listenQuorum, totalAttendeesWeight } = useAssemblyInCMS();
 	const [surveys, setSurveys] = useState<Survey[]>([]);
 	const [quorum, setQuorum] = useState(0);
