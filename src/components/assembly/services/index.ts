@@ -55,9 +55,16 @@ interface UsersWhoHaveConnected {
 export const listenQuorumByActivity = (
 	eventId: string,
 	activityId: string,
-	setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
-	setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
-	setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
+	setAttendeesState: React.Dispatch<
+		React.SetStateAction<{
+			online: number;
+			visited: number;
+			weight: number;
+		}>
+	>
+	// setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
+	// setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
+	// setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
 ) => {
 	fireRealtime.ref('userStatus/' + eventId + '/' + activityId).on('value', snapshot => {
 		const usersWhoHaveConnectedObject: Record<string, UsersWhoHaveConnected> | null = snapshot.val();
@@ -75,13 +82,23 @@ export const listenQuorumByActivity = (
 				return acc;
 			}, 0);
 			const usersOnlineQty = usersOnline.length;
-			setAttendeesOnline(usersOnlineQty);
-			setAttendeesVisited(usersWhoHaveConnectedQty);
-			setAttendeesOnlineWeight(usersOnlineWeight)
+			setAttendeesState({
+				online: usersOnlineQty,
+				visited: usersWhoHaveConnectedQty,
+				weight: usersOnlineWeight,
+			});
+			// setAttendeesOnline(usersOnlineQty);
+			// setAttendeesVisited(usersWhoHaveConnectedQty);
+			// setAttendeesOnlineWeight(usersOnlineWeight)
 		} else {
-			setAttendeesOnline(0)
-			setAttendeesVisited(0)
-			setAttendeesOnlineWeight(0)
+			// setAttendeesOnline(0)
+			// setAttendeesVisited(0)
+			// setAttendeesOnlineWeight(0)
+			setAttendeesState({
+				online: 0,
+				visited: 0,
+				weight: 0,
+			});
 		}
 	});
 };

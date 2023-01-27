@@ -19,12 +19,18 @@ export default function ActivityCollapse(props: Props) {
 	const { listenQuorum, totalAttendeesWeight } = useAssemblyInCMS();
 	const [surveys, setSurveys] = useState<Survey[]>([]);
 	const [quorum, setQuorum] = useState(0);
-	const [attendeesOnline, setAttendeesOnline] = useState(0);
-	const [attendeesVisited, setAttendeesVisited] = useState(0);
-	const [attendeesOnlineWeight, setAttendeesOnlineWeight] = useState(0);
+	const [quorumLastChange, setQuorumLastChange] = useState<'none' | 'up' | 'down'>('none');
+	// const [attendeesOnline, setAttendeesOnline] = useState(0);
+	// const [attendeesVisited, setAttendeesVisited] = useState(0);
+	// const [attendeesOnlineWeight, setAttendeesOnlineWeight] = useState(0);
+	const [attendeesState, setAttendeesState] = useState({
+		online: 0,
+		visited: 0,
+		weight: 0,
+	});
 
 	useEffect(() => {
-		listenQuorum(props.activity._id, setAttendeesOnline, setAttendeesVisited, setAttendeesOnlineWeight);
+		listenQuorum(props.activity._id, setAttendeesState);
 	}, []);
 
 	useEffect(() => {
@@ -33,9 +39,16 @@ export default function ActivityCollapse(props: Props) {
 	}, [props.surveys, props.activity]);
 
 	useEffect(() => {
-		const quorum = numberDecimalToTwoDecimals((attendeesOnlineWeight / totalAttendeesWeight) * 100);
-		setQuorum(quorum);
-	}, [totalAttendeesWeight, attendeesOnlineWeight]);
+		const quorum = numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
+		setQuorum(prev => {
+			if (prev > quorum) {
+				setQuorumLastChange('down');
+			} else {
+				setQuorumLastChange('up');
+			}
+			return quorum;
+		});
+	}, [totalAttendeesWeight, attendeesState.weight]);
 
 	return (
 		<Collapse
@@ -58,14 +71,14 @@ export default function ActivityCollapse(props: Props) {
 							valueStyle={{ fontSize: '18px', color: '#6F737C' }}
 							title={'Visitas totales'}
 							prefix={<AccountGroupIcon />}
-							value={attendeesVisited}
+							value={attendeesState.visited}
 						/>
 						<Statistic
 							loading={props.loading}
 							valueStyle={{ fontSize: '18px', color: '#6F737C' }}
 							title={'Conectados'}
 							prefix={<AccountEyeIcon />}
-							value={attendeesOnline}
+							value={attendeesState.online}
 						/>
 						<Statistic
 							loading={props.loading}
@@ -73,7 +86,9 @@ export default function ActivityCollapse(props: Props) {
 							title={'Quórum'}
 							value={quorum}
 							suffix='%'
+							prefix={<>{quorumLastChange}</>}
 						/>
+						
 					</Space>
 				}>
 				<Row gutter={[16, 16]}>

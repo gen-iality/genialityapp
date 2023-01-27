@@ -12,12 +12,19 @@ interface AssemblyInCMSContextType {
 	surveys: Survey[];
 	listenQuorum: (
 		activityId: Activity['_id'],
-		setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
-		setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
-		setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
-	) => void;
-	totalAttendeesWeight: number
-	loading: boolean
+		setAttendeesState: React.Dispatch<
+			React.SetStateAction<{
+				online: number;
+				visited: number;
+				weight: number;
+			}>
+		>
+	) => // setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
+	// setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
+	// setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
+	void;
+	totalAttendeesWeight: number;
+	loading: boolean;
 }
 
 const assemblyInitialValue: AssemblyInCMSContextType = {
@@ -76,7 +83,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 			};
 		}
 		updateAttendees();
-		setLoading(false)
+		setLoading(false);
 	}, []);
 
 	// Effect to update attendees
@@ -103,23 +110,30 @@ export default function AssemblyInCMSProvider(props: Props) {
 
 	const getActivities = async () => {
 		try {
-			setLoading(true)
+			setLoading(true);
 			const activities = await services.getActivities(eventId);
 			setActivities(activities);
 		} catch (error) {
 			console.log(error);
 		} finally {
-			setLoading(false)
+			setLoading(false);
 		}
 	};
 
 	const listenQuorum = async (
 		activityId: Activity['_id'],
-		setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
-		setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
-		setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
+		setAttendeesState: React.Dispatch<
+			React.SetStateAction<{
+				online: number;
+				visited: number;
+				weight: number;
+			}>
+		>
+		// setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
+		// setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
+		// setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
 	) => {
-		return services.listenQuorumByActivity(eventId, activityId, setAttendeesOnline, setAttendeesVisited, setAttendeesOnlineWeight);
+		return services.listenQuorumByActivity(eventId, activityId, setAttendeesState);
 	};
 
 	return (
