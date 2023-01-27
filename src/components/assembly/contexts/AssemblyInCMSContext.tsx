@@ -15,6 +15,8 @@ interface AssemblyInCMSContextType {
 		setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
 		setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>
 	) => void;
+	totalAttendeesWeight: number
+	loading: boolean
 }
 
 const assemblyInitialValue: AssemblyInCMSContextType = {
@@ -24,6 +26,8 @@ const assemblyInitialValue: AssemblyInCMSContextType = {
 	totalAttendees: 0,
 	surveys: [],
 	listenQuorum: () => {},
+	totalAttendeesWeight: 0,
+	loading: true,
 };
 
 export const AssemblyInCMSContext = createContext(assemblyInitialValue);
@@ -125,6 +129,8 @@ export default function AssemblyInCMSProvider(props: Props) {
 				totalAttendees,
 				surveys,
 				listenQuorum,
+				totalAttendeesWeight,
+				loading,
 			}}>
 			{props.children}
 		</AssemblyInCMSContext.Provider>
