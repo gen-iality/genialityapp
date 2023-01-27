@@ -18,6 +18,7 @@ import {
   Space,
   Select,
 } from 'antd'
+import type { ColumnsType } from 'antd/es/table'
 import { CerticationLogsApi, UsersApi, EventsApi } from '@helpers/request'
 import { DeleteOutlined } from '@ant-design/icons'
 
@@ -86,7 +87,7 @@ function CertificationLogsPage(props: CertificationLogsPageProps) {
     })
   }
 
-  const columns = [
+  const columns: ColumnsType<any> = [
     {
       key: 'user',
       title: 'Usuario',
