@@ -1,7 +1,7 @@
+import { numberDecimalToTwoDecimals } from "@/Utilities/numberDecimalToTwoDecimals";
 import { singularOrPluralString } from "@/Utilities/singularOrPluralString";
 import {  Label, VoteResponse } from "../types";
 import { getColor } from "./getColor";
-import { numberDecimalToTwoDecimals } from "./numberDecimalToTwoDecimals";
 import { numberToAlphabet } from "./numberToAlphabet";
 
 

@@ -13,7 +13,8 @@ interface AssemblyInCMSContextType {
 	listenQuorum: (
 		activityId: Activity['_id'],
 		setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
-		setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>
+		setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
+		setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
 	) => void;
 	totalAttendeesWeight: number
 	loading: boolean
@@ -115,9 +116,10 @@ export default function AssemblyInCMSProvider(props: Props) {
 	const listenQuorum = async (
 		activityId: Activity['_id'],
 		setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
-		setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>
+		setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
+		setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
 	) => {
-		return services.listenQuorumByActivity(eventId, activityId, setAttendeesOnline, setAttendeesVisited);
+		return services.listenQuorumByActivity(eventId, activityId, setAttendeesOnline, setAttendeesVisited, setAttendeesOnlineWeight);
 	};
 
 	return (

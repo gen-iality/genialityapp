@@ -56,7 +56,8 @@ export const listenQuorumByActivity = (
 	eventId: string,
 	activityId: string,
 	setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
-	setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>
+	setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
+	setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
 ) => {
 	fireRealtime.ref('userStatus/' + eventId + '/' + activityId).on('value', snapshot => {
 		const usersWhoHaveConnectedObject: Record<string, UsersWhoHaveConnected> | null = snapshot.val();
@@ -76,8 +77,11 @@ export const listenQuorumByActivity = (
 			const usersOnlineQty = usersOnline.length;
 			setAttendeesOnline(usersOnlineQty);
 			setAttendeesVisited(usersWhoHaveConnectedQty);
+			setAttendeesOnlineWeight(usersOnlineWeight)
 		} else {
-			setAttendeesOnline(0);
+			setAttendeesOnline(0)
+			setAttendeesVisited(0)
+			setAttendeesOnlineWeight(0)
 		}
 	});
 };
