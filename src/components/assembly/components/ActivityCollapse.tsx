@@ -4,6 +4,7 @@ import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { CaretDownOutlined } from '@ant-design/icons';
 import { Button, Col, Collapse, Row, Space, Typography } from 'antd';
 import { useEffect, useState } from 'react';
+import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { Activity, Survey } from '../types';
 import AssemblySurveyCard from './AssemblySurveyCard';
 
@@ -13,7 +14,15 @@ interface Props {
 }
 
 export default function ActivityCollapse(props: Props) {
+	const { listenQuorum } = useAssemblyInCMS();
 	const [surveys, setSurveys] = useState<Survey[]>([]);
+	const [quorum, setQuorum] = useState(0);
+	const [attendeesOnline, setAttendeesOnline] = useState(0);
+	const [attendeesVisited, setAttendeesVisited] = useState(0);
+
+	useEffect(() => {
+		listenQuorum(props.activity._id, setAttendeesOnline, setAttendeesVisited);
+	}, []);
 
 	useEffect(() => {
 		const surveys = props.surveys.filter(survey => survey.activity_id === props.activity._id);
@@ -38,11 +47,11 @@ export default function ActivityCollapse(props: Props) {
 					<Space style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }} size={'large'} wrap>
 						<Space>
 							<AccountGroupIcon />
-							<Typography.Text>5</Typography.Text>
+							<Typography.Text>{attendeesOnline}</Typography.Text>
 						</Space>
 						<Space>
 							<AccountEyeIcon />
-							<Typography.Text>15</Typography.Text>
+							<Typography.Text>{attendeesVisited}</Typography.Text>
 						</Space>
 						<Space>
 							Quórum

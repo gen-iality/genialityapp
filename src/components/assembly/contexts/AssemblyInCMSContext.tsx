@@ -9,7 +9,12 @@ interface AssemblyInCMSContextType {
 	attendeesChecked: number;
 	isAssemblyMood: boolean;
 	totalAttendees: number;
-	surveys: Survey[]
+	surveys: Survey[];
+	listenQuorum: (
+		activityId: Activity['_id'],
+		setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
+		setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>
+	) => void;
 }
 
 const assemblyInitialValue: AssemblyInCMSContextType = {
@@ -17,7 +22,8 @@ const assemblyInitialValue: AssemblyInCMSContextType = {
 	attendeesChecked: 0,
 	isAssemblyMood: false,
 	totalAttendees: 0,
-	surveys: []
+	surveys: [],
+	listenQuorum: () => {},
 };
 
 export const AssemblyInCMSContext = createContext(assemblyInitialValue);
@@ -89,6 +95,14 @@ export default function AssemblyInCMSProvider(props: Props) {
 		}
 	};
 
+	const listenQuorum = async (
+		activityId: Activity['_id'],
+		setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
+		setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>
+	) => {
+		return services.listenQuorumByActivity(eventId, activityId, setAttendeesOnline, setAttendeesVisited);
+	};
+
 	return (
 		<AssemblyInCMSContext.Provider
 			value={{
@@ -97,6 +111,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 				isAssemblyMood,
 				totalAttendees,
 				surveys,
+				listenQuorum,
 			}}>
 			{props.children}
 		</AssemblyInCMSContext.Provider>

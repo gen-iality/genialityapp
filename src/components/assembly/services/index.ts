@@ -33,8 +33,8 @@ export const attendeesListener = (
 		} else {
 			console.log('There are docs');
 			// if (!attendees.length) {
-				const attendeesSnapshot = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Attendee));
-				setAttendees(attendeesSnapshot);
+			const attendeesSnapshot = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Attendee));
+			setAttendees(attendeesSnapshot);
 			// }
 			console.log('attendeesListener -> ', attendees);
 		}
@@ -42,12 +42,35 @@ export const attendeesListener = (
 };
 
 export const getActivities = async (eventId: string) => {
-	const activities = (await AgendaApi.byEvent(eventId)) as ActivitiesResponse
-	return activities.data
+	const activities = (await AgendaApi.byEvent(eventId)) as ActivitiesResponse;
+	return activities.data;
+};
+
+interface UsersWhoHaveConnected {
+	isOnline: boolean;
+	lastChange: number;
 }
 
-export const listenQuorumByActivity = (eventId: string, activityId: string) => {
-	return fireRealtime.ref('userStatus/' + eventId + '/' + activityId).on('child_changed', snapshot => {
-		console.log(snapshot.numChildren())
-	})
-}
+export const listenQuorumByActivity = (
+	eventId: string,
+	activityId: string,
+	setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
+	setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>
+) => {
+	fireRealtime.ref('userStatus/' + eventId + '/' + activityId).on('value', snapshot => {
+		const usersWhoHaveConnectedObject: Record<string, UsersWhoHaveConnected> | null = snapshot.val();
+		if (!!usersWhoHaveConnectedObject) {
+			const usersWhoHaveConnectedArray = Object.keys(usersWhoHaveConnectedObject).map(userId => ({
+				id: userId,
+				...usersWhoHaveConnectedObject[userId],
+			}));
+			const usersWhoHaveConnectedQty = usersWhoHaveConnectedArray.length;
+			const usersOnline = usersWhoHaveConnectedArray.filter(user => user.isOnline === true);
+			const usersOnlineQty = usersOnline.length;
+			setAttendeesOnline(usersOnlineQty);
+			setAttendeesVisited(usersWhoHaveConnectedQty);
+		} else {
+			setAttendeesOnline(0);
+		}
+	});
+};
