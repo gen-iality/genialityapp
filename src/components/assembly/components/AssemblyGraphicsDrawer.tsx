@@ -19,34 +19,34 @@ interface Props {
 
 export default function AssemblyGraphicsDrawer(props: Props) {
 	const { survey, questions, open, handleClose, initialQuestion } = props;
-	// const { listenAnswersQuestion } = useAssemblyInCMS();
+	const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [currentPage, setCurrentPage] = useState(1);
 	// const [loading, setLoading] = useState(true);
 	const [questionSelected, setQuestionSelected] = useState(initialQuestion);
-	// const [graphicsData, setGraphicsData] = useState<GraphicsData>({
-	// 	dataValues: [],
-	// 	labels: [],
-	// 	labelsToShow: [],
-	// });
+	const [graphicsData, setGraphicsData] = useState<GraphicsData>({
+		dataValues: [],
+		labels: [],
+		labelsToShow: [],
+	});
 
-	// useEffect(() => {
-	// 	const unsubscribe = listenAnswersQuestion(survey.id, questionSelected, setGraphicsData);
-	// 	return () => unsubscribe();
-	// }, []);
+	useEffect(() => {
+		const unsubscribe = listenAnswersQuestion(survey.id, questionSelected, setGraphicsData);
+		return () => unsubscribe();
+	}, [questionSelected]);
 
 	const handleChangePage = (page: number, pageSize: number) => {
-		console.log('AssemblyGraphicsDrawer: questions page', page);
+		// console.log('AssemblyGraphicsDrawer: questions page', page);
 		setCurrentPage(page);
 		setQuestionSelected(questions[page - 1].id);
 	};
 
-	useEffect(() => {
-		const timerCleaner = setTimeout(() => {
-			// setCurrentPage(1);
-			console.log('AssemblyGraphicsDrawer: questions executing')
-		}, 500);
-		return () => clearTimeout(timerCleaner);
-	}, []);
+	// useEffect(() => {
+	// 	const timerCleaner = setTimeout(() => {
+	// 		// setCurrentPage(1);
+	// 		console.log('AssemblyGraphicsDrawer: questions executing')
+	// 	}, 500);
+	// 	return () => clearTimeout(timerCleaner);
+	// }, []);
 
 
 	// useEffect(() => {
@@ -56,6 +56,10 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 	// useEffect(() => {
 	// 	console.log('AssemblyGraphicsDrawer: questions', loading);
 	// }, [loading]);
+
+	// useEffect(() => {
+	// 	console.log('AssemblyGraphicsDrawer: questionSelected', questionSelected);
+	// }, [questionSelected]);
 
 	return (
 		<Drawer
@@ -76,16 +80,16 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 				<Col style={{ height: '100%' }} span={12}>
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
 						{/* {loading ? <Loading /> : <GraphicSection graphicsData={graphicsData} id={survey.id} />} */}
-						<GraphicSection survey={survey} questionSelectedId={questionSelected} />
+						<GraphicSection survey={survey} questionSelectedId={questionSelected} graphicsData={graphicsData} />
 					</Row>
 				</Col>
 				<Col style={{ height: '100%' }} span={12}>
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
 						<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
-							{/* <PercentageSection graphicsData={graphicsData} /> */}
+							<PercentageSection graphicsData={graphicsData} />
 						</Col>
 						<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
-							{/* <ParticipationSection graphicsData={graphicsData} /> */}
+							<ParticipationSection graphicsData={graphicsData} />
 						</Col>
 					</Row>
 				</Col>

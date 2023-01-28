@@ -9,28 +9,29 @@ import { Survey } from '../../types';
 interface Props {
 	survey: Survey;
 	questionSelectedId: string;
-	// graphicsData: GraphicsData;
+	graphicsData: GraphicsData;
 }
 
 export default function GraphicSection(props: Props) {
-	const { survey, questionSelectedId } = props;
-	const { listenAnswersQuestion } = useAssemblyInCMS();
+	const { survey, questionSelectedId, graphicsData } = props;
+	// const { survey, questionSelectedId } = props;
+	// const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [graphicType, setGraphicType] = useState<'horizontal' | 'vertical' | 'pie'>('pie');
-	const [graphicsData, setGraphicsData] = useState<GraphicsData>({
-		dataValues: [],
-		labels: [],
-		labelsToShow: [],
-	});
-	// console.log('graphicsData', graphicsData);
+	// const [graphicsData, setGraphicsData] = useState<GraphicsData>({
+	// 	dataValues: [],
+	// 	labels: [],
+	// 	labelsToShow: [],
+	// });
+	// // console.log('graphicsData', graphicsData);
 
-	useEffect(() => {
-		const unsubscribe = listenAnswersQuestion(survey.id, questionSelectedId, setGraphicsData);
-		return () => unsubscribe();
-	}, []);
+	// useEffect(() => {
+	// 	const unsubscribe = listenAnswersQuestion(survey.id, questionSelectedId, setGraphicsData);
+	// 	return () => unsubscribe();
+	// }, []);
 
-	useEffect(() => {
-		console.log('AssemblyGraphicsDrawer: questions', survey.id, survey.name, graphicsData);
-	}, [graphicsData]);
+	// useEffect(() => {
+	// 	console.log('AssemblyGraphicsDrawer: questions', survey.id, survey.name, graphicsData);
+	// }, [graphicsData]);
 
 	return (
 		<Card style={{ height: '100%', width: '100%' }}>
