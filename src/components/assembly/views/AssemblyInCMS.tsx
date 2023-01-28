@@ -3,7 +3,6 @@ import { ReloadOutlined } from '@ant-design/icons';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import AssemblyActivityCollapse from '../components/AssemblyActivityCollapse';
 import AssemblyStatisticCard from '../components/AssemblyStatisticCard';
-// import AssemblyGraphicsDrawer from '../components/AssemblyGraphicsDrawer';
 import AccountMultipleCheckIcon from "@2fd/ant-design-icons/lib/AccountMultipleCheck";
 import ClipboardListIcon from "@2fd/ant-design-icons/lib/ClipboardList";
 interface StatisticsAssembly {
@@ -14,7 +13,7 @@ interface StatisticsAssembly {
 }
 
 export default function AssemblyInCMS() {
-	const { attendeesChecked, totalAttendees, isAssemblyMood, activities, surveys, loading } = useAssemblyInCMS();
+	const { attendeesChecked, totalAttendees, isAssemblyMood, activities, surveys, loading, getActivities } = useAssemblyInCMS();
 	const statistics: StatisticsAssembly[] = [
 		{ loading: loading, title: 'Inscritos en el evento', value: totalAttendees, icon: <ClipboardListIcon /> },
 		{ loading: loading, title: 'Chequeados en el evento', value: attendeesChecked, icon: <AccountMultipleCheckIcon /> },
@@ -48,7 +47,7 @@ export default function AssemblyInCMS() {
 						headStyle={{ border: 'none' }}
 						bodyStyle={{ paddingTop: '0px' }}
 						extra={
-							<Button type='primary' icon={<ReloadOutlined />}>
+							<Button type='primary' icon={<ReloadOutlined />} onClick={getActivities}>
 								Actualizar
 							</Button>
 						}>

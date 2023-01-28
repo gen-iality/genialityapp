@@ -1,5 +1,4 @@
 import { UseEventContext } from '@/context/eventContext';
-import { UseSurveysContext } from '@/context/surveysContext';
 import { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
 import { Activity, Attendee, EventContext, Question, Survey } from '../types';
 import * as services from '../services';
@@ -30,6 +29,7 @@ interface AssemblyInCMSContextType {
 	loading: boolean;
 	updateAttendees: () => void;
 	getQuestionsBySurvey: (surveyId: string) => Promise<Question[]>;
+	getActivities: () => Promise<void>
 }
 
 const assemblyInitialValue: AssemblyInCMSContextType = {} as AssemblyInCMSContextType;
@@ -41,19 +41,17 @@ interface Props {
 }
 
 export default function AssemblyInCMSProvider(props: Props) {
-	// State
 	// Lists
 	const [surveys, setSurveys] = useState<Survey[]>([]);
 	const [attendees, setAttendees] = useState<Attendee[]>([]);
 	const [activities, setActivities] = useState<Activity[]>([]);
-	//
+	// State
 	const [attendeesChecked, setAttendeesChecked] = useState(0);
 	const [totalAttendees, setTotalAttendees] = useState(0);
 	const [totalAttendeesWeight, setTotalAttendeesWeight] = useState(0);
 	const [loading, setLoading] = useState(true);
 	// Hooks
 	const eventContext = UseEventContext() as EventContext;
-	// console.log('AssemblyInCMSContext:eventContext', eventContext);
 	// Constants
 	const eventId = eventContext.idEvent;
 	const isAssemblyMood = useMemo(
@@ -142,10 +140,10 @@ export default function AssemblyInCMSProvider(props: Props) {
 	const getQuestionsBySurvey = async (surveyId: string) => {
 		try {
 			const questions = await services.getQuestionsBySurvey(eventId, surveyId);
-			return questions
+			return questions;
 		} catch (error) {
 			console.log(error);
-			return []
+			return [];
 		}
 	};
 
@@ -163,6 +161,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 				updateAttendees,
 				listenAnswersQuestion,
 				getQuestionsBySurvey,
+				getActivities,
 			}}>
 			{props.children}
 		</AssemblyInCMSContext.Provider>
