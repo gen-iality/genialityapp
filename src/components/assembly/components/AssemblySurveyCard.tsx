@@ -30,6 +30,10 @@ export default function AssemblySurveyCard(props: Props) {
 	const [status, setStatus] = useState<'closed' | 'opened' | 'finished'>('closed');
 	const [responses, setResponses] = useState([]);
 	const [questions, setQuestions] = useState<Question[]>([]);
+	const [open, setOpen] = useState(false);
+
+	const handleOpen = () => setOpen(true);
+	const handleClose = () => setOpen(false);
 
 	useEffect(() => {
 		if (!questions.length) {
@@ -40,12 +44,12 @@ export default function AssemblySurveyCard(props: Props) {
 	const getQuestions = async () => {
 		try {
 			const questions = await getQuestionsBySurvey(props.survey.id);
+			// console.log('AssemblySurveyCard: questions', questions);
 			setQuestions(questions);
 		} catch (error) {
 			console.log(error);
 		}
 	};
-	console.log('survey', survey);
 
 	useEffect(() => {
 		if (survey.isOpened) {
@@ -58,20 +62,29 @@ export default function AssemblySurveyCard(props: Props) {
 	}, [survey.isOpened, responses.length]);
 
 	return (
-		<Card
-			hoverable
-			title={
-				<Space size={0} style={{ fontWeight: '500' }}>
-					<Tag color={STATUS[status].color}>{STATUS[status].label}</Tag>
-				</Space>
-			}
-			headStyle={{ border: 'none', fontSize: '14px' }}
-			bodyStyle={{ paddingTop: '0px' }}
-			extra={<>{!!survey && !!questions.length && <AssemblyGraphicsDrawer survey={survey} questions={questions} />}</>}
-			actions={[]}>
-			<Card.Meta title={survey.name} description={'aqui se supone van las fechas'} />
-		</Card>
+		<>
+			<Card
+				hoverable
+				title={
+					<Space size={0} style={{ fontWeight: '500' }}>
+						<Tag color={STATUS[status].color}>{STATUS[status].label}</Tag>
+					</Space>
+				}
+				headStyle={{ border: 'none', fontSize: '14px' }}
+				bodyStyle={{ paddingTop: '0px' }}
+				extra={<Button type='primary' onClick={handleOpen} icon={<ChartBarIcon />}></Button>}
+				actions={[]}>
+				<Card.Meta title={survey.name} description={'aqui se supone van las fechas'} />
+			</Card>
+			{!!survey && !!questions.length && open && (
+				<AssemblyGraphicsDrawer
+					open={open}
+					survey={survey}
+					questions={questions}
+					handleClose={handleClose}
+					initialQuestion={questions[0].id}
+				/>
+			)}
+		</>
 	);
 }
-
-AssemblySurveyCard;

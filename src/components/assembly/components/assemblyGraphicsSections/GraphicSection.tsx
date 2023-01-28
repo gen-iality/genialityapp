@@ -1,28 +1,46 @@
 import { Card } from 'antd';
-import { useState } from 'react';
-import ChartRender from '@/components/events/surveys/ChartRender';
+import { useEffect, useState } from 'react';
+// import ChartRender from '@/components/events/surveys/ChartRender';
 import { GraphicsData } from '@/components/events/surveys/types';
+import ChartRender from '../ChartRender';
+import useAssemblyInCMS from '../../hooks/useAssemblyInCMS';
+import { Survey } from '../../types';
 
 interface Props {
-	id: string;
-	graphicsData: GraphicsData;
+	survey: Survey;
+	questionSelectedId: string;
+	// graphicsData: GraphicsData;
 }
 
 export default function GraphicSection(props: Props) {
-	const { graphicsData, id } = props;
+	const { survey, questionSelectedId } = props;
+	const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [graphicType, setGraphicType] = useState<'horizontal' | 'vertical' | 'pie'>('pie');
-	console.log('graphicsData', graphicsData);
+	const [graphicsData, setGraphicsData] = useState<GraphicsData>({
+		dataValues: [],
+		labels: [],
+		labelsToShow: [],
+	});
+	// console.log('graphicsData', graphicsData);
+
+	useEffect(() => {
+		const unsubscribe = listenAnswersQuestion(survey.id, questionSelectedId, setGraphicsData);
+		return () => unsubscribe();
+	}, []);
+
+	useEffect(() => {
+		console.log('AssemblyGraphicsDrawer: questions', survey.id, survey.name, graphicsData);
+	}, [graphicsData]);
+
 	return (
 		<Card style={{ height: '100%', width: '100%' }}>
-			{!!graphicsData.dataValues.length && (
-				<ChartRender
-					id={id}
-					dataValues={graphicsData.dataValues}
-					isMobile={false}
-					labels={graphicsData.labelsToShow}
-					type={graphicType}
-				/>
-			)}
+			<ChartRender
+				// id={id}
+				dataValues={graphicsData.dataValues}
+				isMobile={false}
+				labels={graphicsData.labelsToShow}
+				type={graphicType}
+			/>
 		</Card>
 	);
 }

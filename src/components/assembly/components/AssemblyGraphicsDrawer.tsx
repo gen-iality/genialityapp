@@ -1,4 +1,5 @@
 import { GraphicsData } from '@/components/events/surveys/types';
+import Loading from '@/components/profile/loading';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { Button, Col, Drawer, Pagination, Row } from 'antd';
 import { useEffect, useState } from 'react';
@@ -9,64 +10,86 @@ import ParticipationSection from './assemblyGraphicsSections/ParticipationSectio
 import PercentageSection from './assemblyGraphicsSections/PercentageSection';
 
 interface Props {
+	initialQuestion: string;
 	survey: Survey;
 	questions: Question[];
+	open: boolean;
+	handleClose: () => void;
 }
 
 export default function AssemblyGraphicsDrawer(props: Props) {
-	const { survey, questions } = props;
-	const { listenAnswersQuestion } = useAssemblyInCMS();
-	const [open, setOpen] = useState(false);
+	const { survey, questions, open, handleClose, initialQuestion } = props;
+	// const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [currentPage, setCurrentPage] = useState(1);
-	const [graphicsData, setGraphicsData] = useState<GraphicsData>({
-		dataValues: [],
-		labels: [],
-		labelsToShow: [],
-	});
+	// const [loading, setLoading] = useState(true);
+	const [questionSelected, setQuestionSelected] = useState(initialQuestion);
+	// const [graphicsData, setGraphicsData] = useState<GraphicsData>({
+	// 	dataValues: [],
+	// 	labels: [],
+	// 	labelsToShow: [],
+	// });
 
-	const handleOpen = () => setOpen(true);
-	const handleClose = () => setOpen(false);
-
-	useEffect(() => {
-		console.log('Test:', questions)
-		if (questions.length) {
-			const unsubscribe = listenAnswersQuestion(survey.id, questions[currentPage - 1].id, setGraphicsData);
-			return () => unsubscribe();
-		}
-	}, [questions]);
+	// useEffect(() => {
+	// 	const unsubscribe = listenAnswersQuestion(survey.id, questionSelected, setGraphicsData);
+	// 	return () => unsubscribe();
+	// }, []);
 
 	const handleChangePage = (page: number, pageSize: number) => {
+		console.log('AssemblyGraphicsDrawer: questions page', page);
 		setCurrentPage(page);
+		setQuestionSelected(questions[page - 1].id);
 	};
 
+	useEffect(() => {
+		const timerCleaner = setTimeout(() => {
+			// setCurrentPage(1);
+			console.log('AssemblyGraphicsDrawer: questions executing')
+		}, 500);
+		return () => clearTimeout(timerCleaner);
+	}, []);
+
+
+	// useEffect(() => {
+	// 	console.log('AssemblyGraphicsDrawer: questions', survey.id, survey.name, graphicsData);
+	// }, [graphicsData]);
+
+	// useEffect(() => {
+	// 	console.log('AssemblyGraphicsDrawer: questions', loading);
+	// }, [loading]);
+
 	return (
-		<>
-			<Button type='primary' onClick={handleOpen} icon={<ChartBarIcon />}></Button>
-			<Drawer
-				visible={open}
-				width={'100vw'}
-				title={<Pagination current={currentPage} onChange={handleChangePage} total={questions.length} />}
-				extra={'Aqui va el Quórum'}
-				onClose={handleClose}
-				destroyOnClose>
-				<Row gutter={[16, 16]} style={{ height: 'calc(100vh - 125px)' }}>
-					<Col style={{ height: '100%' }} span={12}>
-						<Row style={{ height: '100%' }} gutter={[16, 16]}>
-							<GraphicSection graphicsData={graphicsData} id={survey.id} />
-						</Row>
-					</Col>
-					<Col style={{ height: '100%' }} span={12}>
-						<Row style={{ height: '100%' }} gutter={[16, 16]}>
-							<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
-								<PercentageSection graphicsData={graphicsData} />
-							</Col>
-							<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
-								<ParticipationSection graphicsData={graphicsData} />
-							</Col>
-						</Row>
-					</Col>
-				</Row>
-			</Drawer>
-		</>
+		<Drawer
+			visible={open}
+			width={'100vw'}
+			title={
+				<Pagination
+					current={currentPage}
+					onChange={handleChangePage}
+					total={questions.length * 10}
+					defaultCurrent={1}
+				/>
+			}
+			extra={'Aqui va el Quórum'}
+			onClose={handleClose}
+			destroyOnClose>
+			<Row gutter={[16, 16]} style={{ height: 'calc(100vh - 125px)' }}>
+				<Col style={{ height: '100%' }} span={12}>
+					<Row style={{ height: '100%' }} gutter={[16, 16]}>
+						{/* {loading ? <Loading /> : <GraphicSection graphicsData={graphicsData} id={survey.id} />} */}
+						<GraphicSection survey={survey} questionSelectedId={questionSelected} />
+					</Row>
+				</Col>
+				<Col style={{ height: '100%' }} span={12}>
+					<Row style={{ height: '100%' }} gutter={[16, 16]}>
+						<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
+							{/* <PercentageSection graphicsData={graphicsData} /> */}
+						</Col>
+						<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
+							{/* <ParticipationSection graphicsData={graphicsData} /> */}
+						</Col>
+					</Row>
+				</Col>
+			</Row>
+		</Drawer>
 	);
 }
