@@ -48,7 +48,6 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 	// 	return () => clearTimeout(timerCleaner);
 	// }, []);
 
-
 	// useEffect(() => {
 	// 	console.log('AssemblyGraphicsDrawer: questions', survey.id, survey.name, graphicsData);
 	// }, [graphicsData]);
@@ -64,7 +63,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 	return (
 		<Drawer
 			visible={open}
-			width={'100vw'}
+			width={'100%'}
 			title={
 				<Pagination
 					current={currentPage}
@@ -73,17 +72,17 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 					defaultCurrent={1}
 				/>
 			}
-			extra={'Aqui va el Quórum'}
+			extra={''}
 			onClose={handleClose}
 			destroyOnClose>
 			<Row gutter={[16, 16]} style={{ height: 'calc(100vh - 125px)' }}>
-				<Col style={{ height: '100%' }} span={12}>
+				<Col style={{ height: '100%' }} span={12} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
 						{/* {loading ? <Loading /> : <GraphicSection graphicsData={graphicsData} id={survey.id} />} */}
 						<GraphicSection survey={survey} questionSelectedId={questionSelected} graphicsData={graphicsData} />
 					</Row>
 				</Col>
-				<Col style={{ height: '100%' }} span={12}>
+				<Col style={{ height: '100%' }} span={12} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
 						<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
 							<PercentageSection graphicsData={graphicsData} />

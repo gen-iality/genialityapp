@@ -1,9 +1,8 @@
 import { numberDecimalToTwoDecimals } from '@/Utilities/numberDecimalToTwoDecimals';
 import AccountEyeIcon from '@2fd/ant-design-icons/lib/AccountEye';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
-import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { ArrowDownOutlined, ArrowUpOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, Row, Space, Statistic, Typography } from 'antd';
+import { Button, Col, Collapse, Row, Space, Statistic, Typography, Grid } from 'antd';
 import { useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { Activity, Survey } from '../types';
@@ -14,6 +13,8 @@ interface Props {
 	surveys: Survey[];
 	loading: boolean;
 }
+
+const { useBreakpoint } = Grid;
 
 const arrows = {
 	up: <ArrowUpOutlined style={{ color: '#52C41A' }} />,
@@ -31,19 +32,20 @@ export default function AssemblyActivityCollapse(props: Props) {
 		visited: 0,
 		weight: 0,
 	});
+	const screens = useBreakpoint();
 
 	useEffect(() => {
 		listenQuorum(props.activity._id, setAttendeesState);
 	}, []);
 
 	useEffect(() => {
-		const surveys = props.surveys.filter(survey => survey.activity_id === props.activity._id);
+		const surveys = props.surveys.filter((survey) => survey.activity_id === props.activity._id);
 		setSurveys(surveys);
 	}, [props.surveys, props.activity]);
 
 	useEffect(() => {
 		const quorum = numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
-		setQuorum(prev => {
+		setQuorum((prev) => {
 			if (prev > quorum) {
 				setQuorumLastChange('down');
 			} else {
@@ -68,37 +70,65 @@ export default function AssemblyActivityCollapse(props: Props) {
 					</Typography.Text>
 				}
 				extra={
-					<Space className='custom-statistic' style={{ fontWeight: '700', color: '#6F737C' }} size={'large'} wrap>
-						<Statistic
-							loading={props.loading}
-							valueStyle={{ fontSize: '18px', color: '#6F737C' }}
-							title={'Visitas totales'}
-							prefix={<AccountGroupIcon />}
-							value={attendeesState.visited}
-						/>
-						<Statistic
-							loading={props.loading}
-							valueStyle={{ fontSize: '18px', color: '#6F737C' }}
-							title={'Conectados'}
-							prefix={<AccountEyeIcon />}
-							value={attendeesState.online}
-						/>
-						<Statistic
-							loading={props.loading}
-							valueStyle={{ fontSize: '18px', color: '#6F737C' }}
-							title={<>Quórum {arrows[quorumLastChange]}</>}
-							decimalSeparator=','
-							value={quorum}
-							suffix='%'
-						/>
-					</Space>
+					/** se esconde en mobile */
+					!screens.xs && (
+						<Space className='custom-statistic' style={{ fontWeight: '700', color: '#6F737C' }} size={'large'} wrap>
+							<Statistic
+								loading={props.loading}
+								valueStyle={{ fontSize: '18px', color: '#6F737C' }}
+								title={'Visitas totales'}
+								prefix={<AccountGroupIcon />}
+								value={attendeesState.visited}
+							/>
+							<Statistic
+								loading={props.loading}
+								valueStyle={{ fontSize: '18px', color: '#6F737C' }}
+								title={'Conectados'}
+								prefix={<AccountEyeIcon />}
+								value={attendeesState.online}
+							/>
+							<Statistic
+								loading={props.loading}
+								valueStyle={{ fontSize: '18px', color: '#6F737C' }}
+								title={<>Quórum {arrows[quorumLastChange]}</>}
+								decimalSeparator=','
+								value={quorum}
+								suffix='%'
+							/>
+						</Space>
+					)
 				}>
 				<Row gutter={[16, 16]}>
+					{/** solo sale en mobile */
+					screens.xs && (
+						<Space className='custom-statistic' style={{ fontWeight: '700', color: '#6F737C' }} size={'large'} wrap>
+							<Statistic
+								loading={props.loading}
+								valueStyle={{ fontSize: '18px', color: '#6F737C' }}
+								title={'Visitas totales'}
+								prefix={<AccountGroupIcon />}
+								value={attendeesState.visited}
+							/>
+							<Statistic
+								loading={props.loading}
+								valueStyle={{ fontSize: '18px', color: '#6F737C' }}
+								title={'Conectados'}
+								prefix={<AccountEyeIcon />}
+								value={attendeesState.online}
+							/>
+							<Statistic
+								loading={props.loading}
+								valueStyle={{ fontSize: '18px', color: '#6F737C' }}
+								title={<>Quórum {arrows[quorumLastChange]}</>}
+								decimalSeparator=','
+								value={quorum}
+								suffix='%'
+							/>
+						</Space>
+					)}
 					{surveys.map((survey, index) => (
 						<Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={8} key={survey.id}>
-							<AssemblySurveyCard
-								survey={survey}
-							/>
+							<AssemblySurveyCard survey={survey} />
 						</Col>
 					))}
 				</Row>

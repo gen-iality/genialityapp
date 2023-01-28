@@ -1,4 +1,4 @@
-import { Card } from 'antd';
+import { Card, Row, Grid } from 'antd';
 import { useEffect, useState } from 'react';
 // import ChartRender from '@/components/events/surveys/ChartRender';
 import { GraphicsData } from '@/components/events/surveys/types';
@@ -12,11 +12,14 @@ interface Props {
 	graphicsData: GraphicsData;
 }
 
+const {useBreakpoint} = Grid
+
 export default function GraphicSection(props: Props) {
 	const { survey, questionSelectedId, graphicsData } = props;
 	// const { survey, questionSelectedId } = props;
 	// const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [graphicType, setGraphicType] = useState<'horizontal' | 'vertical' | 'pie'>('pie');
+	const screens = useBreakpoint()
 	// const [graphicsData, setGraphicsData] = useState<GraphicsData>({
 	// 	dataValues: [],
 	// 	labels: [],
@@ -35,13 +38,15 @@ export default function GraphicSection(props: Props) {
 
 	return (
 		<Card style={{ height: '100%', width: '100%' }}>
-			<ChartRender
-				// id={id}
-				dataValues={graphicsData.dataValues}
-				isMobile={false}
-				labels={graphicsData.labelsToShow}
-				type={graphicType}
-			/>
+			<Row align='middle' justify='center'>
+				<ChartRender
+					// id={id}
+					dataValues={graphicsData.dataValues}
+					isMobile={screens.xs ? true : false}
+					labels={graphicsData.labelsToShow}
+					type={graphicType}
+				/>
+			</Row>
 		</Card>
 	);
 }

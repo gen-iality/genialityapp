@@ -1,10 +1,10 @@
-import { Button, Card, Col, Result, Row, Space, Statistic } from 'antd';
+import { Button, Card, Col, Grid, Result, Row } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import AssemblyActivityCollapse from '../components/AssemblyActivityCollapse';
 import AssemblyStatisticCard from '../components/AssemblyStatisticCard';
-import AccountMultipleCheckIcon from "@2fd/ant-design-icons/lib/AccountMultipleCheck";
-import ClipboardListIcon from "@2fd/ant-design-icons/lib/ClipboardList";
+import AccountMultipleCheckIcon from '@2fd/ant-design-icons/lib/AccountMultipleCheck';
+import ClipboardListIcon from '@2fd/ant-design-icons/lib/ClipboardList';
 interface StatisticsAssembly {
 	loading: boolean;
 	title: React.ReactNode | string;
@@ -12,15 +12,26 @@ interface StatisticsAssembly {
 	icon: React.ReactNode;
 }
 
+const { useBreakpoint } = Grid;
+
 export default function AssemblyInCMS() {
-	const { attendeesChecked, totalAttendees, isAssemblyMood, activities, surveys, loading, getActivities } = useAssemblyInCMS();
+	const screens = useBreakpoint();
+	const {
+		attendeesChecked,
+		totalAttendees,
+		isAssemblyMood,
+		activities,
+		surveys,
+		loading,
+		getActivities,
+	} = useAssemblyInCMS();
 	const statistics: StatisticsAssembly[] = [
 		{ loading: loading, title: 'Inscritos en el evento', value: totalAttendees, icon: <ClipboardListIcon /> },
 		{ loading: loading, title: 'Chequeados en el evento', value: attendeesChecked, icon: <AccountMultipleCheckIcon /> },
 	];
 	if (!isAssemblyMood) {
 		return (
-			<div style={{ padding: '40px' }}>
+			<div style={{ padding: screens.xs ? '10px' : '40px' }}>
 				<Row>
 					<Col span={24}>
 						<Card>
@@ -35,10 +46,10 @@ export default function AssemblyInCMS() {
 		);
 	}
 	return (
-		<div style={{ padding: '40px' }}>
+		<div style={{ padding: screens.xs ? '10px' : '40px' }}>
 			<Row gutter={[16, 16]}>
 				{statistics.map(({ loading, title, value, icon }, index) => (
-					<Col span={12} key={`${title}-${index}`}>
+					<Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12} key={`${title}-${index}`}>
 						<AssemblyStatisticCard loading={loading} title={title} value={value} icon={icon} />
 					</Col>
 				))}

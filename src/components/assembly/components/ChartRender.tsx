@@ -25,7 +25,7 @@ export default function ChartRender(props: Props) {
 	useEffect(() => {
 		if (canvasElement) {
 			const chartInstance = new Chart(canvasElement, CHART_TYPE[type]);
-      chartInstance.update()
+			chartInstance.update();
 			setChartInstance(chartInstance);
 		}
 	}, [canvasElement]);
@@ -89,7 +89,7 @@ export default function ChartRender(props: Props) {
 
 	return (
 		<canvas
-			className='chart-render'
+			className='chart-render-cms'
 			ref={canvasRef}
 			// id={props.id ? `chart-render-${props.id}` : 'chart-render'}
 		/>
