@@ -17,7 +17,7 @@ import TipoAsistentes from './tipoUsers';
 import ConfirmacionRegistro from './registro/confirmacionRegistro';
 import ErrorServe from '../modal/serverError';
 import AgendaRoutes from '../agenda';
-import ModulePage from '../agenda/ModulePage';
+import ModulePage from '../agenda/ModulePageV2';
 import CertificationLogsPage from '../agenda/certificationLogs/CertificationLogsPage';
 import CertificationLogsByUsersPage from '../agenda/certificationLogs/CertificationLogsByUsersPage';
 import CertificationLogsForThisUserPage from '../agenda/certificationLogs/CertificationLogsForThisUserPage';
