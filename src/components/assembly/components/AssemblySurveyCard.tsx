@@ -81,7 +81,8 @@ export default function AssemblySurveyCard(props: Props) {
 				bodyStyle={{ paddingTop: '0px' }}
 				extra={<Button type='primary' onClick={handleOpen} icon={<ChartBarIcon />}></Button>}
 				actions={[]}>
-				<Card.Meta title={survey.name} description={'aqui se supone van las fechas'} />
+				{/* <Card.Meta title={survey.name} description={'aqui se supone van las fechas'} /> */}
+				<Card.Meta title={survey.name} />
 			</Card>
 			{!!survey && !!questions.length && open && (
 				<AssemblyGraphicsDrawer

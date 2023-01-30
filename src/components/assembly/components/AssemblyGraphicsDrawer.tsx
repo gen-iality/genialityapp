@@ -19,6 +19,7 @@ interface Props {
 }
 
 export default function AssemblyGraphicsDrawer(props: Props) {
+	// const { survey, questions, open, handleClose, initialQuestion } = props;
 	const { survey, questions, open, handleClose, initialQuestion, graphicType } = props;
 	const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [currentPage, setCurrentPage] = useState(1);
@@ -29,11 +30,12 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 		labels: [],
 		labelsToShow: [],
 	});
+	// const [graphicType, setGraphicType] = useState<GraphicType>('pie');
 
 	useEffect(() => {
 		const unsubscribe = listenAnswersQuestion(survey.id, questionSelected, setGraphicsData, setResponses);
 		return () => unsubscribe();
-	}, [questionSelected]);
+	}, [questionSelected, graphicType]);
 
 	const handleChangePage = (page: number, pageSize: number) => {
 		// console.log('AssemblyGraphicsDrawer: questions page', page);
@@ -81,10 +83,12 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
 						{/* {loading ? <Loading /> : <GraphicSection graphicsData={graphicsData} id={survey.id} />} */}
 						<GraphicSection
+							graphicType={graphicType}
+							// setGraphicType={setGraphicType}
 							survey={survey}
 							questionSelectedId={questionSelected}
 							graphicsData={graphicsData}
-							graphicType={graphicType}
+							// graphicType={graphicType}
 						/>
 					</Row>
 				</Col>

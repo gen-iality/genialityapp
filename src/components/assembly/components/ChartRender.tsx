@@ -33,7 +33,7 @@ export default function ChartRender(props: Props) {
 	useEffect(() => {
 		// console.log({ dataValues, isMobile, labels });
 		updateChart();
-	}, [dataValues, isMobile, labels]);
+	}, [dataValues, isMobile, labels, type]);
 
 	useEffect(() => {
 		console.log('CHART->>', { canvasRef, canvasElement, chartInstance });
