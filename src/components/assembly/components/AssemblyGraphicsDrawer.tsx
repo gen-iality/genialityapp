@@ -45,7 +45,6 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 	return (
 		<Drawer
 			visible={open}
-			open={open}
 			width={'100%'}
 			title={
 				<Pagination
@@ -67,7 +66,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
 						<GraphicSection
 							graphicType={graphicType}
-							question={questions[currentPage]}
+							question={questions[currentPage - 1]}
 							// setGraphicType={setGraphicType}
 							survey={survey}
 							questionSelectedId={questionSelected}
