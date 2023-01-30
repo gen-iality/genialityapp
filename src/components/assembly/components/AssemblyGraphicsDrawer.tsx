@@ -1,7 +1,7 @@
 import { GraphicsData, VoteResponse } from '@/components/events/surveys/types';
 import Loading from '@/components/profile/loading';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
-import { Button, Col, Drawer, Pagination, Row } from 'antd';
+import { Button, Col, Drawer, Pagination, Row, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { GraphicType, Question, Survey } from '../types';
@@ -15,7 +15,7 @@ interface Props {
 	questions: Question[];
 	open: boolean;
 	handleClose: () => void;
-	graphicType: GraphicType
+	graphicType: GraphicType;
 }
 
 export default function AssemblyGraphicsDrawer(props: Props) {
@@ -38,34 +38,14 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 	}, [questionSelected, graphicType]);
 
 	const handleChangePage = (page: number, pageSize: number) => {
-		// console.log('AssemblyGraphicsDrawer: questions page', page);
 		setCurrentPage(page);
 		setQuestionSelected(questions[page - 1].id);
 	};
 
-	// useEffect(() => {
-	// 	const timerCleaner = setTimeout(() => {
-	// 		// setCurrentPage(1);
-	// 		console.log('AssemblyGraphicsDrawer: questions executing')
-	// 	}, 500);
-	// 	return () => clearTimeout(timerCleaner);
-	// }, []);
-
-	// useEffect(() => {
-	// 	console.log('AssemblyGraphicsDrawer: questions', survey.id, survey.name, graphicsData);
-	// }, [graphicsData]);
-
-	// useEffect(() => {
-	// 	console.log('AssemblyGraphicsDrawer: questions', loading);
-	// }, [loading]);
-
-	// useEffect(() => {
-	// 	console.log('AssemblyGraphicsDrawer: questionSelected', questionSelected);
-	// }, [questionSelected]);
-
 	return (
 		<Drawer
 			visible={open}
+			open={open}
 			width={'100%'}
 			title={
 				<Pagination
@@ -78,12 +58,16 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 			extra={''}
 			onClose={handleClose}
 			destroyOnClose>
+			<Row></Row>
 			<Row gutter={[16, 16]} style={{ height: 'calc(100vh - 125px)' }}>
+				<Col xs={24}>
+					<Typography.Title level={4}>{survey.name}</Typography.Title>
+				</Col>
 				<Col style={{ height: '100%' }} span={12} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
-						{/* {loading ? <Loading /> : <GraphicSection graphicsData={graphicsData} id={survey.id} />} */}
 						<GraphicSection
 							graphicType={graphicType}
+							question={questions[currentPage]}
 							// setGraphicType={setGraphicType}
 							survey={survey}
 							questionSelectedId={questionSelected}
