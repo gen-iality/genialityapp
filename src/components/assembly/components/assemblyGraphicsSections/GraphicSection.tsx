@@ -65,13 +65,13 @@ export default function GraphicSection(props: Props) {
 					// onChange={handleGraphicType}
 				/> */}
 				{!graphicsData.dataValues?.length && <Result title='No hay graficas para mostrar aun'></Result>}
-				{!!graphicsData.dataValues?.length && <ChartRender
+				<ChartRender
 					// id={id}
 					dataValues={graphicsData.dataValues}
 					isMobile={screens.xs ? true : false}
 					labels={graphicsData.labelsToShow}
 					type={graphicType}
-				/>}
+				/>
 			</Row>
 		</Card>
 	);
