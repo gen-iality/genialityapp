@@ -2,7 +2,7 @@ import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { Button, Card, Space, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
-import { CardStatus, CardStatusProps, Question, Survey } from '../types';
+import { CardStatus, CardStatusProps, GraphicType, GraphicTypeResponse, Question, Survey } from '../types';
 import AssemblyGraphicsDrawer from './AssemblyGraphicsDrawer';
 
 interface Props {
@@ -24,27 +24,34 @@ const STATUS: Record<CardStatus, CardStatusProps> = {
 	},
 };
 
+const GRAPHIC_TYPE: Record<GraphicTypeResponse, GraphicType> = {
+	x: 'horizontal',
+	y: 'vertical',
+	pie: 'pie',
+};
+
 export default function AssemblySurveyCard(props: Props) {
 	const { survey } = props;
-	const { getQuestionsBySurvey } = useAssemblyInCMS();
+	const { getAdditionalDataBySurvey } = useAssemblyInCMS();
 	const [status, setStatus] = useState<'closed' | 'opened' | 'finished'>('closed');
 	const [responses, setResponses] = useState([]);
 	const [questions, setQuestions] = useState<Question[]>([]);
 	const [open, setOpen] = useState(false);
+	const [graphicType, setGraphicType] = useState<'horizontal' | 'vertical' | 'pie'>('pie');
 
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 
 	useEffect(() => {
 		if (!questions.length) {
-			getQuestions();
+			getAdditionalData();
 		}
 	}, []);
 
-	const getQuestions = async () => {
+	const getAdditionalData = async () => {
 		try {
-			const questions = await getQuestionsBySurvey(props.survey.id);
-			// console.log('AssemblySurveyCard: questions', questions);
+			const { questions, graphicType } = await getAdditionalDataBySurvey(props.survey.id);
+			setGraphicType(GRAPHIC_TYPE[graphicType]);
 			setQuestions(questions);
 		} catch (error) {
 			console.log(error);
@@ -78,6 +85,7 @@ export default function AssemblySurveyCard(props: Props) {
 			</Card>
 			{!!survey && !!questions.length && open && (
 				<AssemblyGraphicsDrawer
+					graphicType={graphicType}
 					open={open}
 					survey={survey}
 					questions={questions}

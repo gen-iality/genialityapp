@@ -363,3 +363,8 @@ export interface Question {
   image:   null | string;
   points:  string;
 }
+
+
+export type GraphicTypeResponse = 'x' | 'y' | 'pie'
+
+export type GraphicType = 'horizontal' | 'vertical' | 'pie'

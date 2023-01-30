@@ -1,6 +1,6 @@
 import { UseEventContext } from '@/context/eventContext';
 import { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
-import { Activity, Attendee, EventContext, Question, Survey } from '../types';
+import { Activity, Attendee, EventContext, GraphicTypeResponse, Question, Survey } from '../types';
 import * as services from '../services';
 import { GraphicsData, VoteResponse } from '@/components/events/surveys/types';
 
@@ -29,8 +29,8 @@ interface AssemblyInCMSContextType {
 	totalAttendeesWeight: number;
 	loading: boolean;
 	updateAttendees: () => void;
-	getQuestionsBySurvey: (surveyId: string) => Promise<Question[]>;
-	getActivities: () => Promise<void>
+	getAdditionalDataBySurvey: (surveyId: string) => Promise<{ questions: Question[]; graphicType: GraphicTypeResponse }>;
+	getActivities: () => Promise<void>;
 }
 
 const assemblyInitialValue: AssemblyInCMSContextType = {} as AssemblyInCMSContextType;
@@ -139,13 +139,13 @@ export default function AssemblyInCMSProvider(props: Props) {
 		return services.listenAnswersQuestion(surveyId, questionId, eventId, setGraphicsData, setResponses);
 	};
 
-	const getQuestionsBySurvey = async (surveyId: string) => {
+	const getAdditionalDataBySurvey = async (surveyId: string) => {
 		try {
-			const questions = await services.getQuestionsBySurvey(eventId, surveyId);
-			return questions;
+			const { questions, graphicType } = await services.getAdditionalDataBySurvey(eventId, surveyId);
+			return { questions, graphicType };
 		} catch (error) {
 			console.log(error);
-			return [];
+			return { questions: [], graphicType: 'pie' } as { questions: Question[]; graphicType: GraphicTypeResponse };
 		}
 	};
 
@@ -162,7 +162,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 				loading,
 				updateAttendees,
 				listenAnswersQuestion,
-				getQuestionsBySurvey,
+				getAdditionalDataBySurvey,
 				getActivities,
 			}}>
 			{props.children}

@@ -2,7 +2,7 @@ import { GraphicsData, VoteResponse } from '@/components/events/surveys/types';
 import { getAssemblyGraphicsData } from '@/components/events/surveys/utils/getAssemblyGraphicsData';
 import { fireRealtime, firestore } from '@/helpers/firebase';
 import { AgendaApi, SurveysApi } from '@/helpers/request';
-import { ActivitiesResponse, Attendee, Question, Survey } from '../types';
+import { ActivitiesResponse, Attendee, GraphicTypeResponse, Question, Survey } from '../types';
 
 export const surveysListener = (
 	eventId: string,
@@ -125,9 +125,6 @@ export const listenAnswersQuestion = (
 				if (setResponses) setResponses(answers)
 				const { dataValues, labels } = getAssemblyGraphicsData(answers)
 				const labelsToShow = labels.map(label => label.complete)
-				// console.log('Heeeeeeeeeeeeeeeeeeeeeeey', dataValues,
-				// labels,
-				// labelsToShow)
 				setGraphicsData({
 					dataValues,
 					labels,
@@ -141,8 +138,8 @@ export const listenAnswersQuestion = (
 		);
 }
 
-export const getQuestionsBySurvey = async (eventId: string, surveyId: string) => {
+// export const getQuestionsBySurvey = async (eventId: string, surveyId: string) => {
+export const getAdditionalDataBySurvey = async (eventId: string, surveyId: string) => {
 	const response = await SurveysApi.getOne(eventId, surveyId)
-	// console.log(response.questions)
-	return response.questions as Question[]
+	return { questions: response.questions as Question[], graphicType: (response.graphyType ? response.graphyType : 'pie') as GraphicTypeResponse }
 }

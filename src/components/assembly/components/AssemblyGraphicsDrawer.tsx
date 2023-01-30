@@ -4,7 +4,7 @@ import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { Button, Col, Drawer, Pagination, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
-import { Question, Survey } from '../types';
+import { GraphicType, Question, Survey } from '../types';
 import GraphicSection from './assemblyGraphicsSections/GraphicSection';
 import ParticipationSection from './assemblyGraphicsSections/ParticipationSection';
 import PercentageSection from './assemblyGraphicsSections/PercentageSection';
@@ -15,10 +15,11 @@ interface Props {
 	questions: Question[];
 	open: boolean;
 	handleClose: () => void;
+	graphicType: GraphicType
 }
 
 export default function AssemblyGraphicsDrawer(props: Props) {
-	const { survey, questions, open, handleClose, initialQuestion } = props;
+	const { survey, questions, open, handleClose, initialQuestion, graphicType } = props;
 	const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [currentPage, setCurrentPage] = useState(1);
 	const [responses, setResponses] = useState<VoteResponse[]>([]);
@@ -79,7 +80,12 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 				<Col style={{ height: '100%' }} span={12} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
 						{/* {loading ? <Loading /> : <GraphicSection graphicsData={graphicsData} id={survey.id} />} */}
-						<GraphicSection survey={survey} questionSelectedId={questionSelected} graphicsData={graphicsData} />
+						<GraphicSection
+							survey={survey}
+							questionSelectedId={questionSelected}
+							graphicsData={graphicsData}
+							graphicType={graphicType}
+						/>
 					</Row>
 				</Col>
 				<Col style={{ height: '100%' }} span={12} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
