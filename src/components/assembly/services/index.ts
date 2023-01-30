@@ -110,6 +110,7 @@ export const listenAnswersQuestion = (
 	questionId: string,
 	eventId: string,
 	setGraphicsData: React.Dispatch<React.SetStateAction<GraphicsData>>,
+	setResponses?: React.Dispatch<React.SetStateAction<VoteResponse[]>>
 ) => {
 	return firestore
 		.collection('surveys')
@@ -121,11 +122,12 @@ export const listenAnswersQuestion = (
 		.onSnapshot(
 			snapshot => {
 				const answers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as VoteResponse);
+				if (setResponses) setResponses(answers)
 				const { dataValues, labels } = getAssemblyGraphicsData(answers)
 				const labelsToShow = labels.map(label => label.complete)
-				console.log('Heeeeeeeeeeeeeeeeeeeeeeey', dataValues,
-				labels,
-				labelsToShow)
+				// console.log('Heeeeeeeeeeeeeeeeeeeeeeey', dataValues,
+				// labels,
+				// labelsToShow)
 				setGraphicsData({
 					dataValues,
 					labels,

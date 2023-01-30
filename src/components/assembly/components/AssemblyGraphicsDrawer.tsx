@@ -1,4 +1,4 @@
-import { GraphicsData } from '@/components/events/surveys/types';
+import { GraphicsData, VoteResponse } from '@/components/events/surveys/types';
 import Loading from '@/components/profile/loading';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { Button, Col, Drawer, Pagination, Row } from 'antd';
@@ -21,7 +21,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 	const { survey, questions, open, handleClose, initialQuestion } = props;
 	const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [currentPage, setCurrentPage] = useState(1);
-	// const [loading, setLoading] = useState(true);
+	const [responses, setResponses] = useState<VoteResponse[]>([]);
 	const [questionSelected, setQuestionSelected] = useState(initialQuestion);
 	const [graphicsData, setGraphicsData] = useState<GraphicsData>({
 		dataValues: [],
@@ -30,7 +30,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 	});
 
 	useEffect(() => {
-		const unsubscribe = listenAnswersQuestion(survey.id, questionSelected, setGraphicsData);
+		const unsubscribe = listenAnswersQuestion(survey.id, questionSelected, setGraphicsData, setResponses);
 		return () => unsubscribe();
 	}, [questionSelected]);
 
@@ -88,7 +88,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 							<PercentageSection graphicsData={graphicsData} />
 						</Col>
 						<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
-							<ParticipationSection graphicsData={graphicsData} />
+							<ParticipationSection graphicsData={graphicsData} responses={responses} />
 						</Col>
 					</Row>
 				</Col>

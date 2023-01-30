@@ -2,7 +2,7 @@ import { UseEventContext } from '@/context/eventContext';
 import { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
 import { Activity, Attendee, EventContext, Question, Survey } from '../types';
 import * as services from '../services';
-import { GraphicsData } from '@/components/events/surveys/types';
+import { GraphicsData, VoteResponse } from '@/components/events/surveys/types';
 
 interface AssemblyInCMSContextType {
 	activities: Activity[];
@@ -23,7 +23,8 @@ interface AssemblyInCMSContextType {
 	listenAnswersQuestion: (
 		surveyId: string,
 		questionId: string,
-		setGraphicsData: React.Dispatch<React.SetStateAction<GraphicsData>>
+		setGraphicsData: React.Dispatch<React.SetStateAction<GraphicsData>>,
+		setResponses?: React.Dispatch<React.SetStateAction<VoteResponse[]>>
 	) => () => void;
 	totalAttendeesWeight: number;
 	loading: boolean;
@@ -132,9 +133,10 @@ export default function AssemblyInCMSProvider(props: Props) {
 	const listenAnswersQuestion = (
 		surveyId: string,
 		questionId: string,
-		setGraphicsData: React.Dispatch<React.SetStateAction<GraphicsData>>
+		setGraphicsData: React.Dispatch<React.SetStateAction<GraphicsData>>,
+		setResponses?: React.Dispatch<React.SetStateAction<VoteResponse[]>>
 	) => {
-		return services.listenAnswersQuestion(surveyId, questionId, eventId, setGraphicsData);
+		return services.listenAnswersQuestion(surveyId, questionId, eventId, setGraphicsData, setResponses);
 	};
 
 	const getQuestionsBySurvey = async (surveyId: string) => {
