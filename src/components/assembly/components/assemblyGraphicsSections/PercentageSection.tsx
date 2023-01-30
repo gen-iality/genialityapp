@@ -12,7 +12,7 @@ export default function PercentageSection(props: Props) {
   const { graphicsData } = props;
 	return (
 		<Card style={{ height: '100%', overflowY: 'auto' }}>
-			<Row gutter={[16, 16]}>
+			<Row gutter={[16, 16]} justify='center'>
 				{!graphicsData.dataValues?.length && <Result title='No hay respuestas para mostrar aun'></Result>}
 				{!!graphicsData.dataValues?.length && graphicsData.labels.map(({color, letter, question, percentage, quantity}) => (
 					<Col key={question} xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
