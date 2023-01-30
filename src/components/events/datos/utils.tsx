@@ -215,8 +215,9 @@ export const createFieldForAssembly = async ({
 			okText: 'Habilitar',
 			okType: 'primary',
 			cancelText: 'Cancelar',
-			onOk() {
-				saveFieldForAssembly();
+			onOk: async () => {
+				await saveFieldForAssembly();
+				window.location.reload()
 			},
 		});
 	} else {
@@ -226,9 +227,10 @@ export const createFieldForAssembly = async ({
 			okText: 'Si, deshabilitar',
 			okType: 'danger',
 			cancelText: 'No, cancelar',
-			onOk() {
+			onOk: async () => {
 				checkInByAssemblyFields.map(async (checkInFieldId: string) => {
 					await remove(checkInFieldId, true);
+					window.location.reload()
 				});
 			},
 		});

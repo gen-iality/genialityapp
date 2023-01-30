@@ -1,6 +1,6 @@
 import { GraphicsData } from '@/components/events/surveys/types';
 import { singularOrPluralString } from '@/Utilities/singularOrPluralString';
-import { Avatar, Card, Col, Row, Space, Typography } from 'antd';
+import { Avatar, Card, Col, Result, Row, Space, Typography } from 'antd';
 import React from 'react';
 
 interface Props {
@@ -13,7 +13,8 @@ export default function PercentageSection(props: Props) {
 	return (
 		<Card style={{ height: '100%', overflowY: 'auto' }}>
 			<Row gutter={[16, 16]}>
-				{graphicsData.labels.map(({color, letter, question, percentage, quantity}) => (
+				{!graphicsData.dataValues?.length && <Result title='No hay respuestas para mostrar aun'></Result>}
+				{!!graphicsData.dataValues?.length && graphicsData.labels.map(({color, letter, question, percentage, quantity}) => (
 					<Col key={question} xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
 						<Card bodyStyle={{ padding: '0px' }}>
 							<Space align='start'>

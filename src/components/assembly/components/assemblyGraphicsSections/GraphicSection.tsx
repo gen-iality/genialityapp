@@ -62,16 +62,16 @@ export default function GraphicSection(props: Props) {
 						{ value: 'vertical', icon: <BarChartOutlined /> },
 					]}
 					value={graphicType as string}
-					onChange={handleGraphicType}
+					// onChange={handleGraphicType}
 				/> */}
-				{!graphicsData.dataValues?.length && <Result title='Aun no hay respuestas' ></Result>}
-				<ChartRender
+				{!graphicsData.dataValues?.length && <Result title='No hay graficas para mostrar aun'></Result>}
+				{!!graphicsData.dataValues?.length && <ChartRender
 					// id={id}
 					dataValues={graphicsData.dataValues}
 					isMobile={screens.xs ? true : false}
 					labels={graphicsData.labelsToShow}
 					type={graphicType}
-				/>
+				/>}
 			</Row>
 		</Card>
 	);
