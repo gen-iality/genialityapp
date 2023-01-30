@@ -6,6 +6,7 @@ import OrganizationProfile from './profile';
 import Styles from '@components/App/styles';
 import OrgEvents from './events';
 import OrgMembers from './members';
+import OrgRegisteredUsers from './OrgRegisteredUsers';
 import OrganizationPositionsPage from './OrganizationPositionsPage';
 import CurrentOrganizationPositionPage from './CurrentOrganizationPositionPage';
 import MemberSettings from './memberSettings';
@@ -93,15 +94,19 @@ function Organization(props) {
                 {'Cargos'}
                 <NavLink to={`${props.match.url}/positions`} />
               </Menu.Item>
-              <Menu.Item key={'6'} icon={<UserSwitchOutlined />}>
+              <Menu.Item key={'6'} icon={<TeamOutlined />}>
+                {'Inscritos'}
+                <NavLink to={`${props.match.url}/registered`} />
+              </Menu.Item>
+              <Menu.Item key={'7'} icon={<UserSwitchOutlined />}>
                 <small>{'Configuración de Miembros'}</small>
                 <NavLink to={`${props.match.url}/membersettings`} />
               </Menu.Item>
-              <Menu.Item key={'7'} icon={<ProjectOutlined />}>
+              <Menu.Item key={'8'} icon={<ProjectOutlined />}>
                 <small>{'Configuración de Plantillas'}</small>
                 <NavLink to={`${props.match.url}/templatesettings`} />
               </Menu.Item>
-              <Menu.Item key={'8'} icon={<MenuOutlined />}>
+              <Menu.Item key={'9'} icon={<MenuOutlined />}>
                 {'Menú Items'}
                 <NavLink to={`${props.match.url}/menuItems`} />
               </Menu.Item>
@@ -169,6 +174,13 @@ function Organization(props) {
                     component={CurrentOrganizationPositionPage}
                     org={organization}
                     componentKey='current-positions'
+                  />
+                  <Protected
+                    exact
+                    path={`${props.match.url}/registered/`}
+                    component={OrgRegisteredUsers}
+                    org={organization}
+                    componentKey='members'
                   />
                   <Protected
                     exact

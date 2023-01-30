@@ -1,18 +1,20 @@
 import { useHistory } from 'react-router';
-import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty } from 'antd';
+import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin } from 'antd';
 import { ClockCircleOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
+import { useEffect, useState } from 'react';
 
-export const columns = (columnsData, editModalUser, extraFields) => {
+export const columns = (columnsData, editModalUser, extraFields, userActivities, isStaticsLoading) => {
   const history = useHistory();
-  let columns = [];
+  const [columns, setColumns] = useState([]);
+  const [progressing, setProgressing] = useState({});
 
   if (!extraFields) return [];
 
   const dynamicColumns = extraFields.map((extraField) => {
     return {
       title: extraField.label,
-      dataIndex: extraField.name,
+      dataIndex: extraField.name === 'position_id' ? 'position' : extraField.name,
       ellipsis: true,
       sorter: (a, b) => a[extraField.name]?.length - b[extraField.name]?.length,
       ...membersGetColumnSearchProps(extraField.name, columnsData),
@@ -32,7 +34,6 @@ export const columns = (columnsData, editModalUser, extraFields) => {
               placement='top'
               content={() => (
                 <>
-                  {console.log('item', item)}
                   {item.picture ? (
                     <Image key={'img' + item._id} width={200} height={200} src={item.picture} />
                   ) : (
@@ -56,23 +57,6 @@ export const columns = (columnsData, editModalUser, extraFields) => {
     ellipsis: true,
     /* sorter: (a, b) => a.role?.localeCompare(b.role), */
     ...membersGetColumnSearchProps('role', columnsData),
-  };
-
-  const position = {
-    title: 'Cargo',
-    dataIndex: 'position',
-    width: 350,
-    /* align: 'center', */
-    ellipsis: true,
-    /* sorter: (a, b) => a.position?.localeCompare(b.position), */
-    ...membersGetColumnSearchProps('position', columnsData),
-  };
-
-  const progressing = {
-    title: 'Progreso',
-    dataIndex: 'progress',
-    ellipsis: true,
-    render: (text, item) => <div>{item.stats}</div>,
   };
 
   const created_at = {
@@ -135,14 +119,35 @@ export const columns = (columnsData, editModalUser, extraFields) => {
     },
   };
 
-  columns = [picture, ...dynamicColumns];
+  useEffect(() => {
+    const progressingColumn = {
+      title: isStaticsLoading ? (
+        <>
+          Progreso <Spin />
+        </>
+      ) : (
+        'Progreso'
+      ),
+      dataIndex: 'progress',
+      ellipsis: true,
+      align: 'center',
+      render: (text, item) => <div>{item.stats}</div>,
+    };
 
-  columns.push(role);
-  columns.push(position);
-  columns.push(progressing);
-  columns.push(created_at);
-  columns.push(updated_at);
-  columns.push(editOption);
+    setProgressing(progressingColumn);
+  }, [userActivities]);
+
+  useEffect(() => {
+    const newColumns = [picture, ...dynamicColumns];
+
+    newColumns.push(role);
+    newColumns.push(progressing);
+    newColumns.push(created_at);
+    newColumns.push(updated_at);
+    newColumns.push(editOption);
+
+    setColumns(newColumns);
+  }, [progressing]);
 
   return columns;
 };

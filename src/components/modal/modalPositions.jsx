@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { OrganizationApi, ToolsApi, PositionsApi } from '@helpers/request';
-import FormComponent from '../events/registrationForm/form';
 import { Modal, Row, Col, Form, Input, Select, Spin } from 'antd';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '@context/MessageService';

@@ -5,6 +5,7 @@ import { EditOutlined } from '@ant-design/icons';
 export const columns = (editModalPosition, orgEventsData, currentUrl) => {
   return [
     {
+      key: 'position',
       title: 'Cargo',
       dataIndex: 'position_name',
       width: 300,
@@ -12,11 +13,15 @@ export const columns = (editModalPosition, orgEventsData, currentUrl) => {
       sorter: (a, b) => a.position_name.localeCompare(b.position_name),
     },
     {
+      key: 'course',
       title: 'Cursos asignados',
       width: 800,
       render(position) {
         return (
           <>
+            {console.log('5. position', position)}
+
+            {console.log('orgEventsData', orgEventsData)}
             {orgEventsData &&
               orgEventsData
                 .filter((orgEvent) => (position.event_ids || []).includes(orgEvent._id))
@@ -26,18 +31,18 @@ export const columns = (editModalPosition, orgEventsData, currentUrl) => {
       },
     },
     {
+      key: 'assigned',
       title: 'Asignados',
       width: 120,
       render: (position) => (
-        <Link
-          to={`${currentUrl}/${position._id}`}
-        >
+        <Link to={`${currentUrl}/${position._id}`}>
           {position.users.length}
           {' usuarios'}
         </Link>
-      )
+      ),
     },
     {
+      key: 'option',
       title: 'Opción',
       dataIndex: 'index',
       fixed: 'right',
