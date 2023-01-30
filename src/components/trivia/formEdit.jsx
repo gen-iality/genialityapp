@@ -28,6 +28,7 @@ import { Actions } from '../../helpers/request';
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { DispatchMessageService } from '../../context/MessageService';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
 const { Option } = Select;
 
@@ -164,7 +165,7 @@ const FormEdit = (
 
   useEffect(() => {
     setLoading(true);
-    let state = gradableSurvey === 'true' ? true : false;
+    let state = parseStringBoolean(gradableSurvey)
 
     setDefaultValues(valuesQuestion);
     setQuestionId(valuesQuestion.id);
@@ -265,7 +266,7 @@ const FormEdit = (
     const exclude = ({ questionOptions, ...rest }) => rest;
     if (questionIndex === undefined) {
       try {
-        SurveysApi.createQuestion(eventId, surveyId, exclude(dataValues)).then(() => {
+        SurveysApi.createQuestion(eventId, surveyId, exclude(dataValues)).then((res) => {
           form.resetFields();
           closeModal({ questionIndex, data: exclude(dataValues) }, 'created');
           DispatchMessageService({
@@ -527,7 +528,7 @@ const FormEdit = (
                                     },
                                   ]}
                                   noStyle>
-                                  <Input placeholder='Asingar Respuesta' style={{ width: '100%' }} />
+                                  <Input placeholder='Asignar Respuesta' style={{ width: '100%' }} />
                                 </Form.Item>
                                 {fields.length > 2 ? (
                                   <MinusCircleOutlined

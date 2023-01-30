@@ -4,6 +4,7 @@ import { firestore, fireRealtime } from '../../../helpers/firebase';
 import SurveyItem from './surveyItem';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { sendCommunicationOpen } from './services';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 export default class SurveyManager extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +43,7 @@ export default class SurveyManager extends Component {
 
       // Listado de encuestas publicadas del evento
       publishedSurveys = eventSurveys.filter(
-        (survey) => survey.activity_id === activity_id || survey.isGlobal === 'true'
+        (survey) => survey.activity_id === activity_id || parseStringBoolean(survey.isGlobal)
       );
 
       this.setState({ publishedSurveys, loading: true });
@@ -66,7 +67,7 @@ export default class SurveyManager extends Component {
   handleChange = async (survey_id, data) => {
     const result = await this.updateSurvey(survey_id, data);
     const canSendComunications = this.props.canSendComunications;
-    if (canSendComunications && canSendComunications === true && data.isOpened === 'true') {
+    if (canSendComunications && canSendComunications === true && parseStringBoolean(data.isOpened)) {
       await sendCommunicationOpen(survey_id);
     }
     if (result && result.state === 'updated') {

@@ -66,7 +66,7 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 
 	const [drawerPreviewVisible, setDrawerPreviewVisible] = useState(false);
 
-	console.log(dataSource);
+	// console.log(dataSource);
 
 	const cEvent = useContext(CurrentEventContext);
 	const history = useHistory();
@@ -80,7 +80,7 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 		async function obtainPreview() {
 			//OBTENENOS LAS SECCIONES DE PRELANDING
 			const previews = await EventsApi.getPreviews(cEvent.value._id);
-			console.log('previews', previews);
+			// console.log('previews', previews);
 			//SE ORDENAN LAS SECCIONES POR INDEX
 			const sections = previews?._id ? previews : SectionsPrelanding;
 			const { speakers, agenda, description } = await obtenerData(cEvent);
@@ -312,12 +312,12 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 								</Button>
 							</Space>
 						</Col>
-						<Col span={24}>
+						{/* <Col span={24}>
 							<Typography.Title level={5}>Redirigir a actividad</Typography.Title>
 						</Col>
 						<Col span={24}>
 							<Switch defaultChecked onChange={onChange} />
-						</Col>
+						</Col> */}
 					</Row>
 				</Card>
 			</Col>
