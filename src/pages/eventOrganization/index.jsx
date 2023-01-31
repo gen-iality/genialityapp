@@ -9,6 +9,7 @@ import OrgMembers from './members';
 import OrgRegisteredUsers from './OrgRegisteredUsers';
 import OrganizationPositionsPage from './OrganizationPositionsPage';
 import CurrentOrganizationPositionPage from './CurrentOrganizationPositionPage';
+import CurrentOrganizationPositionCertificationUserPage from './CurrentOrganizationPositionCertificationUserPage';
 import MemberSettings from './memberSettings';
 import TemplateMemberSettings from './templateMemberSettings';
 import { Tag, Menu, Button, Layout } from 'antd';
@@ -174,6 +175,13 @@ function Organization(props) {
                     component={CurrentOrganizationPositionPage}
                     org={organization}
                     componentKey='current-positions'
+                  />
+                  <Protected
+                    exact
+                    path={`${props.match.url}/positions/:positionId/user/:userId`}
+                    component={CurrentOrganizationPositionCertificationUserPage}
+                    org={organization}
+                    componentKey='current-positions-certification-user'
                   />
                   <Protected
                     exact
