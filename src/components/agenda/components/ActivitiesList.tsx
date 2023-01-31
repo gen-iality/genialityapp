@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useMemo } from 'react';
 import { Divider, List, Typography, Button, Spin, Badge, Space, Collapse } from 'antd';
 import { ReadFilled, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
@@ -21,6 +21,7 @@ import { getAnswersRef, getUserProgressRef, getQuestionsRef } from '@components/
 type TruncatedAgenda = {
   title: string;
   module_name?: string;
+  module_order?: number,
   type?: ActivityType.ContentValue;
   timeString: string;
   link: string;
@@ -83,6 +84,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
           const result: TruncatedAgenda = {
             title: agenda.name,
             module_name: agenda.module?.module_name,
+            module_order: agenda.module?.order || 0,
             type: agenda.type?.name as ActivityType.ContentValue,
             timeString: dayjs(diff)
               .format('h:mm')
@@ -335,6 +337,42 @@ const ActivitiesList = (props: ActivitiesListProps) => {
     />
   );
 
+  const ModuledActivity: FunctionComponent<{
+    list: TruncatedAgenda[],
+    render: (name: string) => any,
+  }> = (props) => {
+    const moduleNames = useMemo(() => {
+      const uniqueNames = Array.from(
+        new Set(props.list.map((item) => item.module_name))
+      ).filter((item) => item !== undefined) as string[]
+
+      const sorttedNames = uniqueNames.map((name) => {
+        const data = props.list.find((item) => item.module_name == name)
+        if (!data) return {name, order: 0}
+        return {
+          name,
+          order: data.module_order,
+        }
+      }).sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map((item) => item.name)
+      return sorttedNames
+    }, [props.list]);
+
+    return (
+      <>
+      {moduleNames.map((name: string, index: number) => (
+        <Collapse.Panel
+          header={`Módulo: ${name}`}
+          key={index}
+          extra={`${props.list.filter((item) => item.module_name === name).length} elemento(s)`}
+        >
+          {props.render(name)}
+        </Collapse.Panel>
+      ))}
+      </>
+    )
+  }
+
   return (
     <>
       <DeleteActivitiesTakenButton
@@ -344,25 +382,17 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         setActivitiesAttendee={setActivitiesAttendee}
       />
       <Collapse>
-        {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name)))
-          .filter((item) => item)
-          .sort()
-          .map((moduleName, index) => (
-            <Collapse.Panel
-              header={moduleName ? `Módulo: ${moduleName}` : 'Sin módulo'}
-              key={index}
-              extra={`${truncatedAgendaList.filter((item) => item.module_name === moduleName).length} elemento(s)`}
-            >
-              <ListThisActivities dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)} />
-            </Collapse.Panel>
-          ))}
+        <ModuledActivity
+          list={truncatedAgendaList}
+          render={(moduleName) => <ListThisActivities dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)} />}
+        />
       </Collapse>
 
       {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name)))
         .filter((item) => !item)
         .sort()
         .map((moduleName, index) => (
-          <ListThisActivities dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)} />
+          <ListThisActivities key={index} dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)} />
         ))}
     </>
   );
