@@ -145,10 +145,12 @@ function CurrentOrganizationPositionCertificationUserPage(props: CurrentOrganiza
         dataIndex: 'certification',
         render: (certification: any) => {
           let lema = 'Vencido'
-          if ((certification?.approved_until_date || 0) > dayjs(Date.now())) {
-            lema = 'Vigente'
+          if (certification?.approved_until_date) {
+            if ((dayjs(certification?.approved_until_date)) > dayjs(Date.now())) {
+              lema = 'Vigente'
+            }
           }
-          return (<>{lema} [buggie]</>)
+          return (<>{lema}</>)
         },
       },
       {
