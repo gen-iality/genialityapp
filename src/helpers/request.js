@@ -1441,6 +1441,9 @@ export const CerticationsApi = {
   update: async (certificationID, data) => {
     return await Actions.put(`api/certifications/${certificationID}`, data, true);
   },
+  getByUserAndEvent: async (userId, eventId) => {
+    return await Actions.getAll(`api/certifications?user_id=${userId}&event_id=${eventId}`, true);
+  },
 }
 
 export default privateInstance;
