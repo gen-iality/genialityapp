@@ -52,7 +52,9 @@ export default function GraphicSection(props: Props) {
 	// console.log({ graphicType });
 
 	return (
-		<Card style={{ height: '100%', width: '100%' }}>
+		<Card style={{ height: '100%', width: '100%' }} headStyle={{ border: 'none' }}
+		bodyStyle={{ paddingTop: '0px' }}
+		title={<div className='animate__animated animate__fadeInLeft' key={question?.title}> {question?.title} </div>}>
 			<Row align='middle' justify='center'>
 				{/* @ts-ignore */}
 				{/* <Segmented
@@ -65,9 +67,9 @@ export default function GraphicSection(props: Props) {
 					value={graphicType as string}
 					// onChange={handleGraphicType}
 				/> */}
-				{question?.title && <Typography.Text style={{fontSize:'18px', fontWeight:'700'}}>{question?.title}</Typography.Text>}
+				{/* {question?.title && <Typography.Text style={{fontSize:'18px', fontWeight:'700'}}>{question?.title}</Typography.Text>} */}
 				{!graphicsData.dataValues?.length && <Result title='No hay graficas para mostrar aun'></Result>}
-				<div style={{ visibility: !graphicsData.dataValues?.length ? 'hidden' : 'visible' }}>
+				<div style={{ visibility: !graphicsData.dataValues?.length ? 'hidden' : 'visible', height:'100%', width:'100%', display:'flex', alignItems: 'center', justifyContent: 'center' }}>
 					<ChartRender
 						// id={id}
 						dataValues={graphicsData.dataValues}

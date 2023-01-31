@@ -53,7 +53,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 			}
 			extra={
 				<Space split='|'>
-					<Typography.Text type='secondary' >Preguntas</Typography.Text>
+					<Typography.Text type='secondary'>Preguntas</Typography.Text>
 					<Pagination
 					current={currentPage}
 					onChange={handleChangePage}
@@ -64,6 +64,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 				
 			}
 			onClose={handleClose}
+			bodyStyle={{backgroundColor:'#F9FAFE'}}
 			destroyOnClose>
 			<Row gutter={[16, 16]} style={{ height: 'calc(100vh - 125px)' }}>
 				<Col style={{ height: '100%' }} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
