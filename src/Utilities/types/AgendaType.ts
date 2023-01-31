@@ -5,7 +5,7 @@
 export default interface AgendaType {
   _id?: string;
   module_id: string | undefined;
-  module?: { _id: string, event_id?: string, module_name: string, },
+  module?: { _id: string, event_id?: string, module_name: string, order?: number },
   name: string;
   subtitle: string;
   bigmaker_meeting_id: any;

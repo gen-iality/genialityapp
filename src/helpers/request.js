@@ -1368,9 +1368,10 @@ export const ModulesApi = {
   deleteOne: async (moduleId) => {
     return await Actions.delete('api/modules/', moduleId, true);
   },
-  update: async (moduleId, moduleName) => {
+  update: async (moduleId, moduleName, order) => {
     const data = {
       module_name: moduleName,
+      order: (order || 0),
     };
     return await Actions.put(`api/modules/${moduleId}`, data, true);
   },
