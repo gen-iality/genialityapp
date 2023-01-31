@@ -67,7 +67,7 @@ export default function GraphicSection(props: Props) {
 				/> */}
 				{question?.title && <Typography.Title level={4}>{question?.title}</Typography.Title>}
 				{!graphicsData.dataValues?.length && <Result title='No hay graficas para mostrar aun'></Result>}
-				<div style={{ display: !graphicsData.dataValues?.length ? 'none' : 'block' }}>
+				<div style={{ visibility: !graphicsData.dataValues?.length ? 'hidden' : 'visible' }}>
 					<ChartRender
 						// id={id}
 						dataValues={graphicsData.dataValues}
