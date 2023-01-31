@@ -1,8 +1,65 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Modal, Form, Input, Button, Table, Space, Typography, Tooltip } from 'antd';
 import { ModulesApi } from '@helpers/request';
 import { ColumnsType } from 'antd/lib/table';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+
+import { MenuOutlined } from '@ant-design/icons'
+
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
+import './ModulePage.css'
+
+interface DraggableBodyRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  index: number;
+  moveRow: (dragIndex: number, hoverIndex: number) => void;
+}
+
+const type = 'DraggableBodyRow';
+
+const DraggableBodyRow = ({
+  index,
+  moveRow,
+  className,
+  style,
+  ...restProps
+}: DraggableBodyRowProps) => {
+  const ref = useRef<HTMLTableRowElement>(null);
+  const [{ isOver, dropClassName }, drop] = useDrop({
+    accept: type,
+    collect: (monitor: any) => {
+      const { index: dragIndex } = monitor.getItem() || {};
+      if (dragIndex === index) {
+        return {};
+      }
+      return {
+        isOver: monitor.isOver(),
+        dropClassName: dragIndex < index ? ' drop-over-downward' : ' drop-over-upward',
+      };
+    },
+    drop: (item: { index: number }) => {
+      moveRow(item.index, index);
+    },
+  });
+  const [, drag] = useDrag({
+    type,
+    item: { index },
+    collect: (monitor: any) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+  drop(drag(ref));
+
+  return (
+    <tr
+      ref={ref}
+      className={`${className}${isOver ? dropClassName : ''}`}
+      style={{ cursor: 'move', ...style }}
+      {...restProps}
+    />
+  );
+};
 
 function ModulePage(props: any) {
   const [columnsData, setColumnsData] = useState<ColumnsType<any>>([]);
@@ -28,8 +85,9 @@ function ModulePage(props: any) {
   };
   
   const loadAllModules = async () => {
-    const modules = await ModulesApi.byEvent(props.event._id)
-    setDataSource(modules)
+    const modules: any[] = await ModulesApi.byEvent(props.event._id)
+    const data = modules.sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+    setDataSource(data)
   }
 
   const onFormFinish = (values: any) => {
@@ -52,8 +110,37 @@ function ModulePage(props: any) {
     }
   }
 
+  const sortDataSource = (oldIndex: number, newIndex: number) => {
+    const currentDataSource = [...dataSource.slice()]; // redundant?
+    if (oldIndex !== newIndex) {
+      const item = currentDataSource.splice(oldIndex, 1)[0]
+      currentDataSource.splice(newIndex, 0, item)
+      console.log('Sorted items: ', currentDataSource);
+      // setDataSource(currentDataSource);
+
+      // Update the order
+      // currentDataSource.forEach((module: any, index: number) => {
+      //   ModulesApi.update(module._id, module.module_name, index).then()
+      // })
+      ModulesApi.update(dataSource[oldIndex]._id, dataSource[oldIndex].module_name, newIndex).then()
+      ModulesApi.update(dataSource[newIndex]._id, dataSource[newIndex].module_name, oldIndex).then()
+    }
+    return currentDataSource
+  }
+
+  const moveRow = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      setDataSource(sortDataSource(dragIndex, hoverIndex));
+    },
+    [dataSource],
+  );
+
   useEffect(() => {
     const columns: ColumnsType = [
+      {
+        key: 'sort',
+        render: () => <MenuOutlined />
+      },
       {
         key: 'name',
         title: 'Module',
@@ -107,10 +194,26 @@ function ModulePage(props: any) {
         </Typography.Text>
         <Button type="primary" onClick={openModal}>Agregar módulo</Button>
       </Space>
-      <Table
-        columns={columnsData}
-        dataSource={dataSource}
-      />
+      <DndProvider backend={HTML5Backend}>
+        <Table
+          pagination={false}
+          columns={columnsData}
+          dataSource={dataSource}
+          rowKey="index"
+          components={{
+            body: {
+              row: DraggableBodyRow,
+            },
+          }}
+          onRow={(_, index) => {
+            const attr = {
+              index,
+              moveRow,
+            };
+            return attr as React.HTMLAttributes<any>;
+          }}
+        />
+      </DndProvider>
       <Modal
         visible={isOpened}
         title={currentEditingItem === null ? 'Agregar nuevo modulo' : 'Editar módulo'}
