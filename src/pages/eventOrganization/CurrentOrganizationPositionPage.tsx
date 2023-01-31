@@ -1,4 +1,5 @@
 import { useState, useEffect, FunctionComponent, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Table,
   Row,
@@ -32,6 +33,7 @@ export interface CurrentOrganizationPositionPageProps {
     params: {
       positionId: string,
     },
+    url: string,
   },
 }
 
@@ -138,12 +140,14 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
         title: 'Certificaciones',
         width: 100,
         render: (orgUser: any) => (
-          <CertificationTag
-            value={orgUser.user.certifications.length}
-            total={allPositionEvents.length}
-          >
-          {orgUser.user.certifications.length} de {allPositionEvents.length}
-          </CertificationTag>
+          <Link to={`${props.match.url}/user/${orgUser.account_id}`}>
+            <CertificationTag
+              value={orgUser.user.certifications.length}
+              total={allPositionEvents.length}
+            >
+            {orgUser.user.certifications.length} de {allPositionEvents.length}
+            </CertificationTag>
+          </Link>
         ),
       },
       {
