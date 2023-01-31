@@ -1,7 +1,5 @@
 import { GraphicsData, VoteResponse } from '@/components/events/surveys/types';
-import Loading from '@/components/profile/loading';
-import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
-import { Button, Col, Drawer, Pagination, Row, Statistic, Typography } from 'antd';
+import { Col, Drawer, Pagination, Row, Space, Typography } from 'antd';
 import { ReactNode, useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { GraphicType, Question, Survey } from '../types';
@@ -48,22 +46,27 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 			visible={open}
 			width={'100%'}
 			title={
-				<Pagination
+				<Space split='|'>
+					<Typography.Text strong>{survey.name}</Typography.Text>
+					{quorumComponent}
+				</Space>
+			}
+			extra={
+				<Space split='|'>
+					<Typography.Text type='secondary' >Preguntas</Typography.Text>
+					<Pagination
 					current={currentPage}
 					onChange={handleChangePage}
 					total={questions.length * 10}
 					defaultCurrent={1}
 				/>
+				</Space>
+				
 			}
-			extra={quorumComponent}
 			onClose={handleClose}
 			destroyOnClose>
-			<Row></Row>
 			<Row gutter={[16, 16]} style={{ height: 'calc(100vh - 125px)' }}>
-				<Col xs={24}>
-					<Typography.Title level={4}>{survey.name}</Typography.Title>
-				</Col>
-				<Col style={{ height: '100%' }} span={12} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+				<Col style={{ height: '100%' }} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
 						<GraphicSection
 							graphicType={graphicType}
@@ -76,7 +79,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 						/>
 					</Row>
 				</Col>
-				<Col style={{ height: '100%' }} span={12} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+				<Col style={{ height: '100%' }} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
 						<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
 							<PercentageSection graphicsData={graphicsData} />

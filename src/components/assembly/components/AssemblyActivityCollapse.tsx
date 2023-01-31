@@ -2,7 +2,7 @@ import { numberDecimalToTwoDecimals } from '@/Utilities/numberDecimalToTwoDecima
 import AccountEyeIcon from '@2fd/ant-design-icons/lib/AccountEye';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import { ArrowDownOutlined, ArrowUpOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, Row, Space, Statistic, Typography, Grid } from 'antd';
+import { Button, Col, Collapse, Row, Space, Statistic, Typography, Grid, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { Activity, Survey } from '../types';
@@ -39,13 +39,13 @@ export default function AssemblyActivityCollapse(props: Props) {
 	}, []);
 
 	useEffect(() => {
-		const surveys = props.surveys.filter(survey => survey.activity_id === props.activity._id);
+		const surveys = props.surveys.filter((survey) => survey.activity_id === props.activity._id);
 		setSurveys(surveys);
 	}, [props.surveys, props.activity]);
 
 	useEffect(() => {
 		const quorum = numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
-		setQuorum(prev => {
+		setQuorum((prev) => {
 			if (prev > quorum) {
 				setQuorumLastChange('down');
 			} else {
@@ -131,14 +131,9 @@ export default function AssemblyActivityCollapse(props: Props) {
 							<AssemblySurveyCard
 								survey={survey}
 								quorumComponent={
-									<Statistic
-										loading={props.loading}
-										valueStyle={{ fontSize: '18px', color: '#6F737C' }}
-										title={<>Quórum {arrows[quorumLastChange]}</>}
-										decimalSeparator=','
-										value={quorum}
-										suffix='%'
-									/>
+									<Tag color={quorum > 50 ? 'success':'default'}>
+										Quórum {quorum + ' %'}
+									</Tag>
 								}
 							/>
 						</Col>

@@ -65,7 +65,7 @@ export default function GraphicSection(props: Props) {
 					value={graphicType as string}
 					// onChange={handleGraphicType}
 				/> */}
-				{question?.title && <Typography.Title level={4}>{question?.title}</Typography.Title>}
+				{question?.title && <Typography.Text style={{fontSize:'18px', fontWeight:'700'}}>{question?.title}</Typography.Text>}
 				{!graphicsData.dataValues?.length && <Result title='No hay graficas para mostrar aun'></Result>}
 				<ChartRender
 					// id={id}
