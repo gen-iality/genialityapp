@@ -14,7 +14,7 @@ interface Props {
 	questionSelectedId: string;
 	graphicsData: GraphicsData;
 	graphicType: GraphicType;
-	question: Question
+	question: Question;
 	// setGraphicType: React.Dispatch<React.SetStateAction<GraphicType>>;
 }
 
@@ -67,13 +67,15 @@ export default function GraphicSection(props: Props) {
 				/> */}
 				{question?.title && <Typography.Title level={4}>{question?.title}</Typography.Title>}
 				{!graphicsData.dataValues?.length && <Result title='No hay graficas para mostrar aun'></Result>}
-				<ChartRender
-					// id={id}
-					dataValues={graphicsData.dataValues}
-					isMobile={screens.xs ? true : false}
-					labels={graphicsData.labelsToShow}
-					type={graphicType}
-				/>
+				<div style={{ display: !graphicsData.dataValues?.length ? 'none' : 'block' }}>
+					<ChartRender
+						// id={id}
+						dataValues={graphicsData.dataValues}
+						isMobile={screens.xs ? true : false}
+						labels={graphicsData.labelsToShow}
+						type={graphicType}
+					/>
+				</div>
 			</Row>
 		</Card>
 	);
