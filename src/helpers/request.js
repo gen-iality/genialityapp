@@ -1401,7 +1401,7 @@ export const ModulesApi = {
   // },
 }
 
-// Endpoint for module handlering
+// Endpoint for certification logs handlering
 export const CerticationLogsApi = {
   getAll: async () => {
     return await Actions.getAll('api/certification-logs', true);
@@ -1424,6 +1424,25 @@ export const CerticationLogsApi = {
   },
 }
 
+// Endpoints for certifications handlering
+export const CerticationsApi = {
+  getAll: async (organizationId) => {
+    return await Actions.getAll(`api/certifications/${organizationId}`, true);
+  },
+  getOne: async (certificationID) => {
+    return await Actions.get(`api/certifications/${certificationID}`, true);
+  },
+  create: async (data) => {
+    return await Actions.create('/api/certifications', data, true);
+  },
+  deleteOne: async (certificationID) => {
+    return await Actions.delete('api/certifications/', certificationID, true);
+  },
+  update: async (certificationID, data) => {
+    return await Actions.put(`api/certifications/${certificationID}`, data, true);
+  },
+}
+
 export default privateInstance;
 window.EventsApi = EventsApi;
 window.PositionsApi = PositionsApi;
@@ -1433,3 +1452,4 @@ window.ModulesApi = ModulesApi;
 window.AgendaApi = AgendaApi;
 window.UsersApi = UsersApi;
 window.CerticationLogsApi = CerticationLogsApi;
+window.CerticationsApi = CerticationsApi;
