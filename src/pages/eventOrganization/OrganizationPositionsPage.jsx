@@ -82,7 +82,7 @@ function OrganizationPositionsPage(props) {
           <Row wrap justify='end' gutter={[8, 8]}>
             <Col>
               <Button type='primary' icon={<PlusCircleOutlined />} onClick={addPosition}>
-                {'Agregar'}
+                {'Agregar cargo'}
               </Button>
             </Col>
           </Row>

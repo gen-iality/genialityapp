@@ -177,8 +177,14 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
       </Typography.Paragraph>
 
       <Typography.Paragraph>
-        Este cargo requiere {allPositionEvents.length} certificaciones
+        Este cargo requiere {allPositionEvents.length} certificaciones.
       </Typography.Paragraph>
+
+      <Typography.Paragraph style={{color: 'red'}}>
+        TODO: Es necesario filtrar los eventos por <code>event.is_external</code> porque son los que
+        tienen certificación (en diseño).
+      </Typography.Paragraph>
+
       <Table
         columns={columns}
         dataSource={dataSource}
