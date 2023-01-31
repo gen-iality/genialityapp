@@ -39,13 +39,13 @@ export default function AssemblyActivityCollapse(props: Props) {
 	}, []);
 
 	useEffect(() => {
-		const surveys = props.surveys.filter((survey) => survey.activity_id === props.activity._id);
+		const surveys = props.surveys.filter(survey => survey.activity_id === props.activity._id);
 		setSurveys(surveys);
 	}, [props.surveys, props.activity]);
 
 	useEffect(() => {
 		const quorum = numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
-		setQuorum((prev) => {
+		setQuorum(prev => {
 			if (prev > quorum) {
 				setQuorumLastChange('down');
 			} else {
@@ -128,7 +128,19 @@ export default function AssemblyActivityCollapse(props: Props) {
 					)}
 					{surveys.map((survey, index) => (
 						<Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={8} key={survey.id}>
-							<AssemblySurveyCard survey={survey} />
+							<AssemblySurveyCard
+								survey={survey}
+								quorumComponent={
+									<Statistic
+										loading={props.loading}
+										valueStyle={{ fontSize: '18px', color: '#6F737C' }}
+										title={<>Quórum {arrows[quorumLastChange]}</>}
+										decimalSeparator=','
+										value={quorum}
+										suffix='%'
+									/>
+								}
+							/>
 						</Col>
 					))}
 				</Row>

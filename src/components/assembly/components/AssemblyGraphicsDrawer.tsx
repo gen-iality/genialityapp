@@ -1,8 +1,8 @@
 import { GraphicsData, VoteResponse } from '@/components/events/surveys/types';
 import Loading from '@/components/profile/loading';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
-import { Button, Col, Drawer, Pagination, Row, Typography } from 'antd';
-import { useEffect, useState } from 'react';
+import { Button, Col, Drawer, Pagination, Row, Statistic, Typography } from 'antd';
+import { ReactNode, useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { GraphicType, Question, Survey } from '../types';
 import GraphicSection from './assemblyGraphicsSections/GraphicSection';
@@ -16,11 +16,12 @@ interface Props {
 	open: boolean;
 	handleClose: () => void;
 	graphicType: GraphicType;
+	quorumComponent: ReactNode;
 }
 
 export default function AssemblyGraphicsDrawer(props: Props) {
 	// const { survey, questions, open, handleClose, initialQuestion } = props;
-	const { survey, questions, open, handleClose, initialQuestion, graphicType } = props;
+	const { survey, questions, open, handleClose, initialQuestion, graphicType, quorumComponent } = props;
 	const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [currentPage, setCurrentPage] = useState(1);
 	const [responses, setResponses] = useState<VoteResponse[]>([]);
@@ -54,7 +55,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 					defaultCurrent={1}
 				/>
 			}
-			extra={''}
+			extra={quorumComponent}
 			onClose={handleClose}
 			destroyOnClose>
 			<Row></Row>

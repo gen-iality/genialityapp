@@ -1,12 +1,13 @@
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { Button, Card, Space, Tag } from 'antd';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { CardStatus, CardStatusProps, GraphicType, GraphicTypeResponse, Question, Survey } from '../types';
 import AssemblyGraphicsDrawer from './AssemblyGraphicsDrawer';
 
 interface Props {
 	survey: Survey;
+	quorumComponent: ReactNode;
 }
 
 const STATUS: Record<CardStatus, CardStatusProps> = {
@@ -31,7 +32,7 @@ const GRAPHIC_TYPE: Record<GraphicTypeResponse, GraphicType> = {
 };
 
 export default function AssemblySurveyCard(props: Props) {
-	const { survey } = props;
+	const { survey, quorumComponent } = props;
 	const { getAdditionalDataBySurvey } = useAssemblyInCMS();
 	const [status, setStatus] = useState<'closed' | 'opened' | 'finished'>('closed');
 	const [responses, setResponses] = useState([]);
@@ -86,6 +87,7 @@ export default function AssemblySurveyCard(props: Props) {
 			</Card>
 			{!!survey && !!questions.length && open && (
 				<AssemblyGraphicsDrawer
+					quorumComponent={quorumComponent}
 					graphicType={graphicType}
 					open={open}
 					survey={survey}
