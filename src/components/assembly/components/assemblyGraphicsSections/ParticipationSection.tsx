@@ -16,9 +16,9 @@ export default function ParticipationSection(props: Props) {
 	const participationInQuestion = responses.length;
 	const noParticipationInQuestion = attendeesChecked - participationInQuestion;
 	return (
-		<Card style={{ height: '100%' }}>
+		<Card style={{ height: '100%' }} headStyle={{border:'none'}} bodyStyle={{paddingTop:'0px'}} title={`Participación`}>
 			<Row gutter={[16, 16]}>
-				<Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+				<Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 					<Card bodyStyle={{}}>
 						<Statistic
 							title='Cantidad de inscritos que participaron en esta pregunta'
@@ -29,7 +29,7 @@ export default function ParticipationSection(props: Props) {
 						/>
 					</Card>
 				</Col>
-				<Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+				<Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 					<Card>
 						<Statistic
 							title='Cantidad de inscritos que no participaron en esta pregunta'

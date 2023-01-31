@@ -118,28 +118,53 @@ export const listenAnswersQuestion = (
 		.collection('answers')
 		.doc(questionId)
 		.collection('responses')
-		.orderBy('created','asc')
+		.orderBy('created', 'asc')
 		.onSnapshot(
 			snapshot => {
-				const answers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as VoteResponse);
-				if (setResponses) setResponses(answers)
-				const { dataValues, labels } = getAssemblyGraphicsData(answers)
-				const labelsToShow = labels.map(label => label.complete)
+				const answers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as VoteResponse));
+				if (setResponses) setResponses(answers);
+				const { dataValues, labels } = getAssemblyGraphicsData(answers);
+				const labelsToShow = labels.map(label => label.complete);
 				setGraphicsData({
 					dataValues,
 					labels,
-					labelsToShow
-				})
+					labelsToShow,
+				});
 				// console.log('test:listenAnswersQuestion', answers)
 			},
 			onError => {
-				console.log(onError)
+				console.log(onError);
 			}
 		);
-}
+};
 
 // export const getQuestionsBySurvey = async (eventId: string, surveyId: string) => {
 export const getAdditionalDataBySurvey = async (eventId: string, surveyId: string) => {
-	const response = await SurveysApi.getOne(eventId, surveyId)
-	return { questions: response.questions as Question[], graphicType: (response.graphyType ? response.graphyType : 'pie') as GraphicTypeResponse }
-}
+	const response = await SurveysApi.getOne(eventId, surveyId);
+	return {
+		questions: response.questions as Question[],
+		graphicType: (response.graphyType ? response.graphyType : 'pie') as GraphicTypeResponse,
+	};
+};
+
+export const getCountResponses = (
+	surveyId: string,
+	questionId: string,
+	setResponses: React.Dispatch<React.SetStateAction<VoteResponse[]>>
+) => {
+	return firestore
+		.collection('surveys')
+		.doc(surveyId)
+		.collection('answers')
+		.doc(questionId)
+		.collection('responses')
+		.onSnapshot(
+			snapshot => {
+				const answers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as VoteResponse));
+				if (setResponses) setResponses(answers);
+			},
+			onError => {
+				console.log(onError);
+			}
+		);
+};

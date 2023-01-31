@@ -1,8 +1,6 @@
 import { GraphicsData, VoteResponse } from '@/components/events/surveys/types';
-import Loading from '@/components/profile/loading';
-import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
-import { Button, Col, Drawer, Pagination, Row } from 'antd';
-import { useEffect, useState } from 'react';
+import { Col, Drawer, Pagination, Row, Space, Typography } from 'antd';
+import { ReactNode, useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { GraphicType, Question, Survey } from '../types';
 import GraphicSection from './assemblyGraphicsSections/GraphicSection';
@@ -15,12 +13,13 @@ interface Props {
 	questions: Question[];
 	open: boolean;
 	handleClose: () => void;
-	graphicType: GraphicType
+	graphicType: GraphicType;
+	quorumComponent: ReactNode;
 }
 
 export default function AssemblyGraphicsDrawer(props: Props) {
 	// const { survey, questions, open, handleClose, initialQuestion } = props;
-	const { survey, questions, open, handleClose, initialQuestion, graphicType } = props;
+	const { survey, questions, open, handleClose, initialQuestion, graphicType, quorumComponent } = props;
 	const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [currentPage, setCurrentPage] = useState(1);
 	const [responses, setResponses] = useState<VoteResponse[]>([]);
@@ -38,52 +37,41 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 	}, [questionSelected, graphicType]);
 
 	const handleChangePage = (page: number, pageSize: number) => {
-		// console.log('AssemblyGraphicsDrawer: questions page', page);
 		setCurrentPage(page);
 		setQuestionSelected(questions[page - 1].id);
 	};
-
-	// useEffect(() => {
-	// 	const timerCleaner = setTimeout(() => {
-	// 		// setCurrentPage(1);
-	// 		console.log('AssemblyGraphicsDrawer: questions executing')
-	// 	}, 500);
-	// 	return () => clearTimeout(timerCleaner);
-	// }, []);
-
-	// useEffect(() => {
-	// 	console.log('AssemblyGraphicsDrawer: questions', survey.id, survey.name, graphicsData);
-	// }, [graphicsData]);
-
-	// useEffect(() => {
-	// 	console.log('AssemblyGraphicsDrawer: questions', loading);
-	// }, [loading]);
-
-	// useEffect(() => {
-	// 	console.log('AssemblyGraphicsDrawer: questionSelected', questionSelected);
-	// }, [questionSelected]);
 
 	return (
 		<Drawer
 			visible={open}
 			width={'100%'}
 			title={
-				<Pagination
+				<Space split='|'>
+					<Typography.Text strong>{survey.name}</Typography.Text>
+					{quorumComponent}
+				</Space>
+			}
+			extra={
+				<Space split='|'>
+					<Typography.Text type='secondary'>Preguntas</Typography.Text>
+					<Pagination
 					current={currentPage}
 					onChange={handleChangePage}
 					total={questions.length * 10}
 					defaultCurrent={1}
 				/>
+				</Space>
+				
 			}
-			extra={''}
 			onClose={handleClose}
+			bodyStyle={{backgroundColor:'#F9FAFE'}}
 			destroyOnClose>
 			<Row gutter={[16, 16]} style={{ height: 'calc(100vh - 125px)' }}>
-				<Col style={{ height: '100%' }} span={12} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+				<Col style={{ height: '100%' }} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
-						{/* {loading ? <Loading /> : <GraphicSection graphicsData={graphicsData} id={survey.id} />} */}
 						<GraphicSection
 							graphicType={graphicType}
+							question={questions[currentPage - 1]}
 							// setGraphicType={setGraphicType}
 							survey={survey}
 							questionSelectedId={questionSelected}
@@ -92,7 +80,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 						/>
 					</Row>
 				</Col>
-				<Col style={{ height: '100%' }} span={12} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+				<Col style={{ height: '100%' }} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
 					<Row style={{ height: '100%' }} gutter={[16, 16]}>
 						<Col style={{ height: 'calc(50% - 10px)' }} span={24}>
 							<PercentageSection graphicsData={graphicsData} />

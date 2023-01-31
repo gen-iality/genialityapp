@@ -2,7 +2,7 @@ import { numberDecimalToTwoDecimals } from '@/Utilities/numberDecimalToTwoDecima
 import AccountEyeIcon from '@2fd/ant-design-icons/lib/AccountEye';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import { ArrowDownOutlined, ArrowUpOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, Row, Space, Statistic, Typography, Grid } from 'antd';
+import { Button, Col, Collapse, Row, Space, Statistic, Typography, Grid, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { Activity, Survey } from '../types';
@@ -128,7 +128,14 @@ export default function AssemblyActivityCollapse(props: Props) {
 					)}
 					{surveys.map((survey, index) => (
 						<Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={8} key={survey.id}>
-							<AssemblySurveyCard survey={survey} />
+							<AssemblySurveyCard
+								survey={survey}
+								quorumComponent={
+									<Tag color={quorum > 50 ? 'success':'default'}>
+										Quórum {quorum + ' %'}
+									</Tag>
+								}
+							/>
 						</Col>
 					))}
 				</Row>

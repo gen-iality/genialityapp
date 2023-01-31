@@ -31,6 +31,11 @@ interface AssemblyInCMSContextType {
 	updateAttendees: () => void;
 	getAdditionalDataBySurvey: (surveyId: string) => Promise<{ questions: Question[]; graphicType: GraphicTypeResponse }>;
 	getActivities: () => Promise<void>;
+	getCountResponses: (
+		surveyId: string,
+		questionId: string,
+		setResponses: React.Dispatch<React.SetStateAction<any[]>>
+	) => () => void
 }
 
 const assemblyInitialValue: AssemblyInCMSContextType = {} as AssemblyInCMSContextType;
@@ -149,6 +154,14 @@ export default function AssemblyInCMSProvider(props: Props) {
 		}
 	};
 
+	const getCountResponses = (
+		surveyId: string,
+		questionId: string,
+		setResponses: React.Dispatch<React.SetStateAction<VoteResponse[]>>
+	) => {
+		return services.getCountResponses(surveyId, questionId, setResponses);
+	};
+
 	return (
 		<AssemblyInCMSContext.Provider
 			value={{
@@ -164,6 +177,7 @@ export default function AssemblyInCMSProvider(props: Props) {
 				listenAnswersQuestion,
 				getAdditionalDataBySurvey,
 				getActivities,
+				getCountResponses,
 			}}>
 			{props.children}
 		</AssemblyInCMSContext.Provider>

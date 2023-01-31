@@ -1,12 +1,14 @@
+import { VoteResponse } from '@/components/events/surveys/types';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { Button, Card, Space, Tag } from 'antd';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { CardStatus, CardStatusProps, GraphicType, GraphicTypeResponse, Question, Survey } from '../types';
 import AssemblyGraphicsDrawer from './AssemblyGraphicsDrawer';
 
 interface Props {
 	survey: Survey;
+	quorumComponent: ReactNode;
 }
 
 const STATUS: Record<CardStatus, CardStatusProps> = {
@@ -31,10 +33,10 @@ const GRAPHIC_TYPE: Record<GraphicTypeResponse, GraphicType> = {
 };
 
 export default function AssemblySurveyCard(props: Props) {
-	const { survey } = props;
-	const { getAdditionalDataBySurvey } = useAssemblyInCMS();
+	const { survey, quorumComponent } = props;
+	const { getAdditionalDataBySurvey, getCountResponses } = useAssemblyInCMS();
 	const [status, setStatus] = useState<'closed' | 'opened' | 'finished'>('closed');
-	const [responses, setResponses] = useState([]);
+	const [responses, setResponses] = useState<VoteResponse[]>([]);
 	const [questions, setQuestions] = useState<Question[]>([]);
 	const [open, setOpen] = useState(false);
 	const [graphicType, setGraphicType] = useState<'horizontal' | 'vertical' | 'pie'>('pie');
@@ -47,6 +49,13 @@ export default function AssemblySurveyCard(props: Props) {
 			getAdditionalData();
 		}
 	}, []);
+
+	useEffect(() => {
+		if (questions[0]?.id) {
+			const unsubscribe = getCountResponses(survey.id, questions[0].id, setResponses);
+			return () => unsubscribe();
+		}
+	}, [questions]);
 
 	const getAdditionalData = async () => {
 		try {
@@ -61,7 +70,7 @@ export default function AssemblySurveyCard(props: Props) {
 	useEffect(() => {
 		if (survey.isOpened) {
 			setStatus('opened');
-		} else if (survey.isOpened && !!responses.length) {
+		} else if (!survey.isOpened && !!responses.length) {
 			setStatus('finished');
 		} else {
 			setStatus('closed');
@@ -86,6 +95,7 @@ export default function AssemblySurveyCard(props: Props) {
 			</Card>
 			{!!survey && !!questions.length && open && (
 				<AssemblyGraphicsDrawer
+					quorumComponent={quorumComponent}
 					graphicType={graphicType}
 					open={open}
 					survey={survey}
