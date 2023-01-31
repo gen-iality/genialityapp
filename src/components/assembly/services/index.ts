@@ -158,7 +158,6 @@ export const getCountResponses = (
 		.collection('answers')
 		.doc(questionId)
 		.collection('responses')
-		.orderBy('created', 'asc')
 		.onSnapshot(
 			snapshot => {
 				const answers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as VoteResponse));
