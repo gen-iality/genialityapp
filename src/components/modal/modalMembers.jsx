@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { OrganizationApi } from '@helpers/request';
+import { OrganizationApi, PositionsApi } from '@helpers/request';
 import FormComponent from '../events/registrationForm/form';
 import { Modal } from 'antd';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -77,13 +77,16 @@ function ModalMembers(props) {
 
   async function saveUser(values) {
     setLoadingregister(true);
-    let resp;
 
+    let resp;
     const body = { properties: values };
+
     if (props.editMember) {
       resp = await OrganizationApi.editUser(organizationId, userId, values);
+      await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);
     } else {
       resp = await OrganizationApi.saveUser(organizationId, body);
+      await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);
     }
 
     if (resp._id) {
@@ -92,8 +95,9 @@ function ModalMembers(props) {
         msj: `Usuario ${props.editMember ? 'editado ' : 'agregado'} correctamente`,
         action: 'show',
       });
-      props.startingComponent();
+      props.setIsLoading(true);
       props.closeOrOpenModalMembers();
+      props.startingComponent();
     } else {
       DispatchMessageService({
         type: 'error',
@@ -123,6 +127,7 @@ function ModalMembers(props) {
           options={options}
           callback={saveUser}
           loadingregister={loadingregister}
+          editUser={props.editMember}
         />
       </div>
     </Modal>

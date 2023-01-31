@@ -33,7 +33,10 @@ const InfoEvent = () => {
         backgroundColor: cEvent.value.styles.toolbarDefaultBg,
       }}
       title={
-        <Typography.Title level={2} style={{ color: cEvent.value.styles.textMenu }}>
+        <Typography.Title
+          level={2}
+          style={{ color: cEvent.value.styles.textMenu, fontSize: '2.5rem', whiteSpace: 'normal' }}
+        >
           {cEvent.value.name}
         </Typography.Title>
       }
@@ -45,7 +48,8 @@ const InfoEvent = () => {
             onClick={() => handleChangeTypeModal('registerForTheEvent')}
             type='primary'
             size='large'
-            disabled={!eventIsActive}>
+            disabled={!eventIsActive}
+          >
             {intl.formatMessage({
               id: 'Button.signup',
               defaultMessage: 'Inscribirme al curso',
@@ -78,7 +82,7 @@ const InfoEvent = () => {
       //     </Space>
       //   </Space>
       // }
-      ></PageHeader>
+    ></PageHeader>
   );
 };
 

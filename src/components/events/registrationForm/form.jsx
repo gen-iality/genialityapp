@@ -159,6 +159,7 @@ const FormRegister = ({
   HandleHookForm = () => {},
   setvalidateEventUser = () => {},
   validateEventUser,
+  editUser,
 }) => {
   const intl = useIntl();
   const cEvent = useEventContext();
@@ -751,7 +752,12 @@ const FormRegister = ({
           : '';
         //VISIBILIDAD DE CAMPOS
         const visible =
-          (initialValues?.email && name == 'email') || (initialValues?.names && name == 'names') ? true : false;
+          (initialValues?.email && name == 'email') ||
+          (initialValues?.names && name == 'names') ||
+          (initialOtherValue?.email && name == 'email') //||
+            ? //(initialOtherValue?.names && name == 'names')
+              true
+            : false;
         const validations =
           (type === 'region' && regiones.length == 0) ||
           (type === 'country' && countries.length == 0) ||
@@ -1238,7 +1244,7 @@ const FormRegister = ({
                   // regexp: 'malo',
                 },
               }}
-              initialValues={initialValues}
+              initialValues={organization ? initialOtherValue : initialValues}
               onFinishFailed={showGeneralMessage}
               onValuesChange={valuesChange}
             >
@@ -1251,35 +1257,51 @@ const FormRegister = ({
               )*/}
               <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
                 <Col span={24}>
-                  <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
-                    <Typography.Title level={5}>
-                      {intl.formatMessage({
-                        id: 'title.user_data',
-                        defaultMessage: 'Datos del usuario',
-                      })}
-                    </Typography.Title>
-                    {/* Revisar bien que valor usamos para picture ahorita guarda todo un objeto de tipo file que no tiene sentido
-deberia ser solo la url de la imagen 
-*/}{' '}
-                    {console.log('initialValues', initialValues, cUser)}
-                    <Comment
-                      avatar={
-                        initialValues.picture ? (
-                          <Avatar
-                            src={
-                              initialValues?.picture[0]?.thumbUrl ||
-                              initialValues?.picture[0]?.url ||
-                              initialValues?.picture
-                            }
-                          />
-                        ) : cUser?.value?.picture ? (
-                          cUser?.value?.picture
-                        ) : null
-                      }
-                      author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
-                      content={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>}
-                    />
-                  </Card>
+                  {editUser && (
+                    <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
+                      <Typography.Title level={5}>
+                        {intl.formatMessage({
+                          id: 'title.user_data',
+                          defaultMessage: 'Datos del usuario',
+                        })}
+                      </Typography.Title>
+                      {/* Revisar bien que valor usamos para picture ahorita guarda todo un objeto de tipo file que no tiene sentido deberia ser solo la url de la imagen */}
+                      {console.log('initialValues', initialValues, cUser)}
+                      {organization ? (
+                        <Comment
+                          avatar={initialOtherValue.picture ? <Avatar src={initialOtherValue?.picture} /> : null}
+                          author={
+                            <Typography.Text style={{ fontSize: '18px' }}>{initialOtherValue?.names}</Typography.Text>
+                          }
+                          content={
+                            <Typography.Text style={{ fontSize: '18px' }}>{initialOtherValue?.email}</Typography.Text>
+                          }
+                        />
+                      ) : (
+                        <Comment
+                          avatar={
+                            initialValues.picture ? (
+                              <Avatar
+                                src={
+                                  initialValues?.picture[0]?.thumbUrl ||
+                                  initialValues?.picture[0]?.url ||
+                                  initialValues?.picture
+                                }
+                              />
+                            ) : cUser?.value?.picture ? (
+                              cUser?.value?.picture
+                            ) : null
+                          }
+                          author={
+                            <Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>
+                          }
+                          content={
+                            <Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>
+                          }
+                        />
+                      )}
+                    </Card>
+                  )}
                 </Col>
                 <Col span={24}>
                   <Card
@@ -1292,7 +1314,7 @@ deberia ser solo la url de la imagen
                       borderRadius: '8px',
                     }}
                   >
-                    {fieldsAditional(extraFields) > 0 && (
+                    {fieldsAditional(extraFields) > 0 && editUser && (
                       <Typography.Title level={5}>
                         {intl.formatMessage({
                           id: 'modal.title.registerevent',
