@@ -1444,6 +1444,19 @@ export const CerticationsApi = {
   getByUserAndEvent: async (userId, eventId) => {
     return await Actions.getAll(`api/certifications?user_id=${userId}&event_id=${eventId}`, true);
   },
+  /**
+   * Requests all the certifications for an specify position events and (maybe) an user
+   * @param {string} positionId The position ID
+   * @param {string} [userId] The user ID
+   * @returns A certification list for this position and (maybe) this user
+   */
+  getByPositionAndMaybeUser: async (positionId, userId) => {
+    let url = `api/certifications/by-position/${positionId}`
+    if (userId) {
+      url = `${url}?user_id=${userId}`
+    }
+    return await Actions.getAll(url, true)
+  }
 }
 
 export default privateInstance;
