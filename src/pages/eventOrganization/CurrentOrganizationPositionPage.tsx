@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FunctionComponent, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Table,
   Row,
@@ -10,6 +11,7 @@ import {
   Form,
   Select,
   Tooltip,
+  Tag,
 } from 'antd'
 import {
   DeleteOutlined,
@@ -20,8 +22,10 @@ import Header from '@antdComponents/Header'
 // API
 import {
   PositionsApi,
+  EventsApi,
   OrganizationApi,
-} from '@helpers/request';
+} from '@helpers/request'
+import type { ColumnsType } from 'antd/lib/table'
 
 export interface CurrentOrganizationPositionPageProps {
   org: any,
@@ -29,13 +33,34 @@ export interface CurrentOrganizationPositionPageProps {
     params: {
       positionId: string,
     },
+    url: string,
   },
 }
 
+const CertificationTag: FunctionComponent<{value: number, total: number}> = (props) => {
+  const color = useMemo(() => {
+    if (props.total === 0) return 'gray'
+    if (props.value == props.total) return 'green'
+    if (props.value / props.total > 0.7) return 'lime'
+    if (props.value / props.total > 0.5) return 'gold'
+    if (props.value / props.total > 0.3) return 'orange'
+    return 'red'
+  }, [props])
+  return (
+    <Tag
+      color={color}
+    >
+      {props.children}
+    </Tag>
+  )
+}
+
 function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageProps) {
+  const [dataSource, setDataSource] = useState<any[]>([]);
+  const [columns, setColumns] = useState<ColumnsType<any>>([]);
   const [currentPosition, setCurrentPosition] = useState<any | null>(null);
   const [allOrgUsers, setAllOrgUsers] = useState<any[]>([]);
-  const [dataSource, setDataSource] = useState<any[]>([]);
+  const [allPositionEvents, setAllPositionEvents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [isModalOpened, setIsModalOpened] = useState(false);
@@ -86,28 +111,6 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
     console.debug('CurrentOrganizationPositionPage: loadUsers',  {gotUsers: users})
   }
 
-  const columns: any[] = [
-    {
-      title: 'Miembros',
-      render: (orgUser: any) => <p>{orgUser.user.names}</p>
-    },
-    {
-      title: 'Opciones',
-      width: 80,
-      render: (orgUser: any) => (
-        <Tooltip title='Borrar'>
-          <Button
-            id={`deleteAction${orgUser._id}`}
-            type='primary'
-            size='small'
-            onClick={(e) => deleteOrgUser(orgUser).finally(() => loadUsers())}
-            icon={<DeleteOutlined />}
-          />
-        </Tooltip>
-      )
-    },
-  ]
-
   // Load all users for this position
   useEffect(() => {
     setIsLoading(true)
@@ -117,15 +120,75 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
     loadUsers().finally(() => setIsLoading(false))
   }, [])
 
+  useEffect(() => {
+    if (!currentPosition) return
+
+    // Get all the events for this position
+    const allEventIds = (currentPosition.event_ids || [])
+    Promise.all(
+      allEventIds.map(async (eventId: string) => (await EventsApi.getOne(eventId))),
+    ).then((events: any[]) => setAllPositionEvents(events))
+  }, [currentPosition])
+
+  useEffect(() => {
+    const newColumns: ColumnsType = [
+      {
+        title: 'Miembros',
+        render: (orgUser: any) => <p>{orgUser.user.names}</p>
+      },
+      {
+        title: 'Certificaciones',
+        width: 100,
+        render: (orgUser: any) => (
+          <Link to={`${props.match.url}/user/${orgUser.account_id}`}>
+            <CertificationTag
+              value={orgUser.user.certifications.length}
+              total={allPositionEvents.length}
+            >
+            {orgUser.user.certifications.length} de {allPositionEvents.length}
+            </CertificationTag>
+          </Link>
+        ),
+      },
+      {
+        title: 'Opciones',
+        width: 80,
+        render: (orgUser: any) => (
+          <Tooltip title='Borrar'>
+            <Button
+              id={`deleteAction${orgUser._id}`}
+              type='primary'
+              size='small'
+              onClick={(e) => deleteOrgUser(orgUser).finally(() => loadUsers())}
+              icon={<DeleteOutlined />}
+            />
+          </Tooltip>
+        )
+      },
+    ]
+
+    setColumns(newColumns)
+  }, [allPositionEvents])
+
   return (
     <>
       <Header
         title={`Miembros en el cargo: ${currentPosition ? currentPosition.position_name : <Spin />}`}
       />
-      <Typography.Text>
+      <Typography.Paragraph>
         {'Agregue, edite y borre los miembros que están asignado al cargo de '}
         {currentPosition ? currentPosition.position_name : <Spin />}
-      </Typography.Text>
+      </Typography.Paragraph>
+
+      <Typography.Paragraph>
+        Este cargo requiere {allPositionEvents.length} certificaciones.
+      </Typography.Paragraph>
+
+      <Typography.Paragraph style={{color: 'red'}}>
+        TODO: Es necesario filtrar los eventos por <code>event.is_external</code> porque son los que
+        tienen certificación (en diseño).
+      </Typography.Paragraph>
+
       <Table
         columns={columns}
         dataSource={dataSource}
@@ -138,7 +201,7 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
           <Row wrap justify='end' gutter={[8, 8]}>
             <Col>
               <Button type='primary' icon={<PlusCircleOutlined />} onClick={onAddOrganizationUser}>
-                {'Agregar'}
+                {'Agregar usuario'}
               </Button>
             </Col>
           </Row>

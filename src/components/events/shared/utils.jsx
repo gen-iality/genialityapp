@@ -61,18 +61,6 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: 'Histórico de certificaciones',
-        path: '/certification-logs',
-        key: 'certification-logs',
-        onClick: handleClick,
-      },
-      {
-        name: 'Histórico de certificaciones por usuarios',
-        path: '/certification-logs-by-users',
-        key: 'certification-logs-by-users',
-        onClick: handleClick,
-      },
-      {
         name: 'Aliados',
         path: '/empresas',
         key: 'empresas',
