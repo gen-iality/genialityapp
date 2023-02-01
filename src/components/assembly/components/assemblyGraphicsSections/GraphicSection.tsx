@@ -1,4 +1,4 @@
-import { Card, Row, Grid, Segmented, Result, Typography } from 'antd';
+import { Card, Row, Grid, Result, Typography } from 'antd';
 // import { useEffect, useState } from 'react';
 // import ChartRender from '@/components/events/surveys/ChartRender';
 import { GraphicsData } from '@/components/events/surveys/types';
