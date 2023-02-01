@@ -337,9 +337,9 @@ const ActivitiesList = (props: ActivitiesListProps) => {
     />
   );
 
-  const ModuledActivity: FunctionComponent<{
+  const ModuledActivityHOC: FunctionComponent<{
     list: TruncatedAgenda[],
-    render: (name: string) => any,
+    render: (nameToFilter: string) => any,
   }> = (props) => {
     const moduleNames = useMemo(() => {
       const uniqueNames = Array.from(
@@ -359,7 +359,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
     }, [props.list]);
 
     return (
-      <>
+      <Collapse>
       {moduleNames.map((name: string, index: number) => (
         <Collapse.Panel
           header={`Módulo: ${name}`}
@@ -369,7 +369,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
           {props.render(name)}
         </Collapse.Panel>
       ))}
-      </>
+      </Collapse>
     )
   }
 
@@ -381,19 +381,17 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
         setActivitiesAttendee={setActivitiesAttendee}
       />
-      <Collapse>
-        <ModuledActivity
-          list={truncatedAgendaList}
-          render={(moduleName) => <ListThisActivities dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)} />}
-        />
-      </Collapse>
+      <ModuledActivityHOC
+        list={truncatedAgendaList}
+        render={(nameToFilter) => (
+          <ListThisActivities dataSource={truncatedAgendaList.filter((item) => item.module_name === nameToFilter)} />
+        )}
+      />
 
-      {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name)))
-        .filter((item) => !item)
-        .sort()
-        .map((moduleName, index) => (
-          <ListThisActivities key={index} dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)} />
-        ))}
+      {/* Without modules: */}
+      <ListThisActivities
+        dataSource={truncatedAgendaList.filter((item) => item.module_name === undefined)}
+      />
     </>
   );
 };
