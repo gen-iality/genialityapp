@@ -3,7 +3,7 @@ import { changeSurveyStatus } from '@/services/surveys';
 import { SurveyStatus } from '@/types/survey';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
-import { Button, Card, Comment, Modal, Space, Statistic, Tag, Tooltip } from 'antd';
+import { Button, Card, Col, Comment, Modal, Row, Space, Statistic, Tag, Tooltip } from 'antd';
 import moment from 'moment';
 import 'moment/locale/es';
 import { ReactNode, useEffect, useState } from 'react';
@@ -142,8 +142,9 @@ export default function AssemblySurveyCard(props: Props) {
 						</Tag>
 					</Tooltip>
 				}
+				style={{ height: '100%' }}
 				headStyle={{ border: 'none', fontSize: '14px' }}
-				bodyStyle={{ paddingTop: '0px' }}
+				bodyStyle={{ paddingTop: '0px', paddingBottom:'10px' }}
 				extra={
 					<Space>
 						<Button type='primary' onClick={handleOpen} icon={<ChartBarIcon />}></Button>
@@ -152,28 +153,48 @@ export default function AssemblySurveyCard(props: Props) {
 				actions={[]}>
 				{/* <Card.Meta title={survey.name} description={'aqui se supone van las fechas'} /> */}
 				<Card.Meta title={survey.name} />
-				<Space>
-					<Card bordered={false} bodyStyle={{ padding: '0px 10px' }}>
-						{/* <Comment author='Inició el' datetime={<span> {'2023-02-02 9:44:33'} </span>} content={'Quórum 85%'} /> */}
-						{survey.openedQuorum !== undefined && survey.openedTimestamp !== undefined && (
+				<Row>
+					<Col span={12}>
+						{survey.openedQuorum !== undefined && survey.openedTimestamp !== undefined ? (
 							<Comment
 								author='Inició el'
-								datetime={<span> {new Date(survey.openedTimestamp).toISOString()} </span>}
+								datetime={
+									<Space size={2} wrap>
+										<span>{moment(survey.openedTimestamp).format('ll.')}</span>
+										<span>{moment(survey.openedTimestamp).format('LT')}</span>
+									</Space>
+								}
 								content={`Quórum ${survey.openedQuorum}%`}
 							/>
-						)}
-					</Card>
-					<Card bordered={false} bodyStyle={{ padding: '0px 10px' }}>
-						{/* <Comment author='Finalizó el' datetime={<span> {'2023-02-02 9:44:33'} </span>} content={'Quórum 85%'} /> */}
-						{survey.closedQuorum !== undefined && survey.closedTimestamp !== undefined && (
+						) : (
 							<Comment
-								author='Finalizó el'
-								datetime={<span> {new Date(survey.closedTimestamp).toISOString()} </span>}
-								content={`Quórum ${survey.closedQuorum}%`}
+								author='Inició el'
+								datetime={<span style={{ fontSize: '14px', letterSpacing: '1px' }}> --- -, ---- --:-- -- </span>}
+								content={`Quórum --%`}
 							/>
 						)}
-					</Card>
-				</Space>
+					</Col>
+					<Col span={12}>
+						{survey.closedQuorum !== undefined && survey.closedTimestamp !== undefined ? (
+							<Comment
+								author='Finalizó el'
+								datetime={
+									<Space size={2} wrap>
+										<span>{moment(survey.closedTimestamp).format('ll.')}</span>
+										<span>{moment(survey.closedTimestamp).format('LT')}</span>
+									</Space>
+								}
+								content={`Quórum ${survey.closedQuorum}%`}
+							/>
+						) : (
+							<Comment
+								author='Finalizó el'
+								datetime={<span style={{ fontSize: '14px', letterSpacing: '1px' }}> --- -, ---- --:-- -- </span>}
+								content={`Quórum --%`}
+							/>
+						)}
+					</Col>
+				</Row>
 			</Card>
 			{!!survey && !!questions.length && open && (
 				<AssemblyGraphicsDrawer
