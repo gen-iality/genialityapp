@@ -1,4 +1,6 @@
 import { VoteResponse } from '@/components/events/surveys/types';
+import { changeSurveyStatus } from '@/services/surveys';
+import { SurveyStatus } from '@/types/survey';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { Button, Card, Comment, Modal, Space, Statistic, Tag, Tooltip } from 'antd';
@@ -51,6 +53,7 @@ export default function AssemblySurveyCard(props: Props) {
 	const [questions, setQuestions] = useState<Question[]>([]);
 	const [open, setOpen] = useState(false);
 	const [graphicType, setGraphicType] = useState<'horizontal' | 'vertical' | 'pie'>('pie');
+	const [loading, setLoading] = useState(false);
 
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
@@ -88,13 +91,31 @@ export default function AssemblySurveyCard(props: Props) {
 		}
 	}, [survey.isOpened, responses.length]);
 
-	const statusChange = () => {
+	const handleChangeStatus = async () => {
+		let payload: SurveyStatus = {} as SurveyStatus;
+		let title: string = '';
+		let content: string = '';
+		if (status === 'closed') {
+			payload = {
+				isOpened: true,
+			};
+			title = 'Abrir encuesta';
+			content = '¿Estas seguro de abrir la encuesta?';
+		}
+		if (status === 'opened') {
+			payload = {
+				isOpened: false,
+			};
+			title = 'Cerrar encuesta';
+			content = '¿Estas seguro de cerrar la encuesta?';
+		}
 		Modal.confirm({
-			title: '',
-			content: '',
+			title,
+			content,
 			cancelText: 'Cancelar',
 			okText: 'Aceptar',
-			onOk: () => {
+			onOk: async () => {
+				await changeSurveyStatus(survey.id, payload, survey.eventId, survey.activity_id, setLoading);
 				console.log('cambia el estado');
 			},
 		});
@@ -106,7 +127,7 @@ export default function AssemblySurveyCard(props: Props) {
 				title={
 					<Tooltip title={STATUS[status].tooltip}>
 						<Tag
-							onClick={() => statusChange()}
+							onClick={() => handleChangeStatus()}
 							style={{ cursor: STATUS[status].cursor, fontWeight: '500' }}
 							icon={STATUS[status].icon}
 							color={STATUS[status].color}>
