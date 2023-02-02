@@ -47,7 +47,7 @@ export default function SurveyManager(props: Props) {
 				</Col>
 			</Row>
 			{publishedSurveys.map(survey => (
-				<SurveyItem key={`survey-${survey.id}`} survey={survey} onChange={handleChange} />
+				<SurveyItem key={`survey-${survey.id}`} survey={survey} onChange={handleChange} loading={loading} />
 			))}
 		</Card>
 	);
