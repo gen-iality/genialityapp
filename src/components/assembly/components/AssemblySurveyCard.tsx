@@ -91,6 +91,10 @@ export default function AssemblySurveyCard(props: Props) {
 		}
 	}, [survey.isOpened, responses.length]);
 
+	useEffect(() => {
+		console.log({ survey });
+	}, [survey]);
+
 	const handleChangeStatus = async () => {
 		let payload: SurveyStatus = {} as SurveyStatus;
 		let title: string = '';
@@ -110,7 +114,7 @@ export default function AssemblySurveyCard(props: Props) {
 			content = '¿Estas seguro de cerrar la encuesta?';
 		}
 		if (status === 'finished') {
-			return
+			return;
 		}
 		Modal.confirm({
 			title,
@@ -150,10 +154,24 @@ export default function AssemblySurveyCard(props: Props) {
 				<Card.Meta title={survey.name} />
 				<Space>
 					<Card bordered={false} bodyStyle={{ padding: '0px 10px' }}>
-						<Comment author='Inició el' datetime={<span> {'2023-02-02 9:44:33'} </span>} content={'Quórum 85%'} />
+						{/* <Comment author='Inició el' datetime={<span> {'2023-02-02 9:44:33'} </span>} content={'Quórum 85%'} /> */}
+						{survey.openedQuorum !== undefined && survey.openedTimestamp !== undefined && (
+							<Comment
+								author='Inició el'
+								datetime={<span> {new Date(survey.openedTimestamp).toISOString()} </span>}
+								content={`Quórum ${survey.openedQuorum}%`}
+							/>
+						)}
 					</Card>
 					<Card bordered={false} bodyStyle={{ padding: '0px 10px' }}>
-						<Comment author='Finalizó el' datetime={<span> {'2023-02-02 9:44:33'} </span>} content={'Quórum 85%'} />
+						{/* <Comment author='Finalizó el' datetime={<span> {'2023-02-02 9:44:33'} </span>} content={'Quórum 85%'} /> */}
+						{survey.closedQuorum !== undefined && survey.closedTimestamp !== undefined && (
+							<Comment
+								author='Finalizó el'
+								datetime={<span> {new Date(survey.closedTimestamp).toISOString()} </span>}
+								content={`Quórum ${survey.closedQuorum}%`}
+							/>
+						)}
 					</Card>
 				</Space>
 			</Card>

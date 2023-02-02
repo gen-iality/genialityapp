@@ -1,3 +1,4 @@
+import { SurveyInFirestore } from "@/types/survey";
 import React, { CSSProperties } from "react";
 
 export interface EventContext {
@@ -181,25 +182,26 @@ export interface ValueUserProperty {
 }
 
 
-export interface Survey {
-  id:                      string;
-  isGlobal:                boolean | string;
-  isPublished:             boolean | string;
-  name:                    string;
-  hasMinimumScore:         boolean | string;
-  showNoVotos:             boolean | string;
-  isOpened:                boolean | string;
-  activity_id?:            string;
-  time_limit:              number;
-  displayGraphsInSurveys?: boolean | string;
-  rankingVisible?:         boolean | string;
-  eventId:                 string;
-  category:                string;
-  minimumScore:            number;
-  allow_anonymous_answers: boolean | string;
-  freezeGame:              boolean;
-  allow_gradable_survey:   boolean | string;
-}
+export interface Survey extends SurveyInFirestore {}
+// export interface Survey {
+//   id:                      string;
+//   isGlobal:                boolean | string;
+//   isPublished:             boolean | string;
+//   name:                    string;
+//   hasMinimumScore:         boolean | string;
+//   showNoVotos:             boolean | string;
+//   isOpened:                boolean | string;
+//   activity_id?:            string;
+//   time_limit:              number;
+//   displayGraphsInSurveys?: boolean | string;
+//   rankingVisible?:         boolean | string;
+//   eventId:                 string;
+//   category:                string;
+//   minimumScore:            number;
+//   allow_anonymous_answers: boolean | string;
+//   freezeGame:              boolean;
+//   allow_gradable_survey:   boolean | string;
+// }
 
 export type CardStatus = 'closed' | 'opened' | 'finished';
 
