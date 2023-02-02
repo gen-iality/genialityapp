@@ -32,7 +32,7 @@ export interface SurveyInRealtimeDatabase {
 
 export type SurveyStatusLabel = 'unpublished' | 'published' | 'unopened' | 'opened' | 'closed' | 'finished';
 
-export type SurveyStatus = { isPublished: boolean } | { isOpened: boolean };
+export type SurveyStatus = { isPublished?: boolean, isOpened?: boolean };
 
 export type SurveyStatusDto =
 	| { isPublished: boolean; publishedTimestamp: number }

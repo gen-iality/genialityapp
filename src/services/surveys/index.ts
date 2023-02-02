@@ -46,33 +46,35 @@ export const changeSurveyStatus = async (
 	setLoading?: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
 	try {
+		let statusToUpdated: SurveyStatusDto = {} as SurveyStatusDto;
+		console.log({ status });
 		// Update status in firebase realtime database & firestore database
 		if (setLoading) setLoading(true);
 		// const { isOpened, isPublished } = status;
-		if (status.isOpened) {
-			const statusToUpdated: SurveyStatusDto = {
-				...(isOpened && {
-					isOpened,
-					openedTimestamp: new Date().getTime(),
-				}),
+		if (Object.keys(status).includes('isOpened') && status.isOpened !== undefined) {
+			statusToUpdated = {
+				isOpened: status.isOpened,
+				openedTimestamp: new Date().getTime(),
 			};
 		}
-		if (status.isPublished) {
-			const statusToUpdated: SurveyStatusDto = {
-				...(isPublished && {
-					isPublished,
-					publishedTimestamp: new Date().getTime(),
-				}),
+		if (Object.keys(status).includes('isPublished') && status.isPublished !== undefined) {
+			statusToUpdated = {
+				isPublished: status.isPublished,
+				publishedTimestamp: new Date().getTime(),
 			};
+		}
+		console.log('Realtime',`events/general/surveys/${surveyId}`)
+		console.log('Firestore',`surveys/${surveyId}`)
+		if (Object.keys(statusToUpdated).length) {
+			await Promise.all([
+				fireRealtime.ref(`events/general/surveys/${surveyId}`).update(statusToUpdated),
+				firestore
+					.collection('surveys')
+					.doc(surveyId)
+					.update(statusToUpdated),
+			]);
 		}
 
-		await Promise.all([
-			fireRealtime.ref(`events/general/surveys/${surveyId}`).update(status),
-			firestore
-				.collection('surveys')
-				.doc(surveyId)
-				.update(status),
-		]);
 		DispatchMessageService({
 			type: 'success',
 			msj: 'Encuesta actualizada',
