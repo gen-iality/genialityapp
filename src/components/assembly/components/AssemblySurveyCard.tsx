@@ -91,10 +91,6 @@ export default function AssemblySurveyCard(props: Props) {
 		}
 	}, [survey.isOpened, responses.length]);
 
-	useEffect(() => {
-		console.log({ survey });
-	}, [survey]);
-
 	const handleChangeStatus = async () => {
 		let payload: SurveyStatus = {} as SurveyStatus;
 		let title: string = '';
@@ -123,7 +119,6 @@ export default function AssemblySurveyCard(props: Props) {
 			okText: 'Aceptar',
 			onOk: async () => {
 				await changeSurveyStatus(survey.id, payload, survey.eventId, survey.activity_id, setLoading);
-				console.log('cambia el estado');
 			},
 		});
 	};

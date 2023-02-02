@@ -31,23 +31,12 @@ export default function ChartRender(props: Props) {
 	}, [canvasElement]);
 
 	useEffect(() => {
-		// console.log({ dataValues, isMobile, labels });
 		updateChart();
 	}, [dataValues, isMobile, labels, type]);
 
 	useEffect(() => {
-		console.log('CHART->>', { canvasRef, canvasElement, chartInstance });
-	}, [canvasRef, canvasElement, chartInstance, dataValues]);
-
-	useEffect(() => {
-		// console.log({ dataValues, isMobile, labels });
 		updateChart();
 	}, []);
-
-	// useEffect(() => {
-	// 	// console.log({ dataValues, isMobile, labels });
-	// 	updateChart();
-	// }, []);
 
 	const updateChart = () => {
 		if (chartInstance) {

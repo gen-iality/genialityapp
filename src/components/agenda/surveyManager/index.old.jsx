@@ -82,7 +82,6 @@ export default class SurveyManager extends Component {
 
 	render() {
 		const { publishedSurveys } = this.state;
-		console.log('This is');
 		return (
 			<Card title='Gestor de encuestas'>
 				{publishedSurveys.length > 0 ? (

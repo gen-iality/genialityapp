@@ -65,20 +65,14 @@ export default function AssemblyInCMSProvider(props: Props) {
 		[eventContext.status]
 	);
 
-	// console.log('surveys', surveys);
-
 	useEffect(() => {
-		// getAllSurveys();
 		if (eventId) {
 			const unsubscribeSurveys = services.surveysListener(eventId, surveys, setSurveys);
 			const unsubscribeAttendees = services.attendeesListener(eventId, attendees, setAttendees);
 			getActivities();
-			// TODO: Clean -> Just for test prouposes
-			// services.listenQuorumByActivity(eventId,)
 			return () => {
 				unsubscribeSurveys();
 				unsubscribeAttendees();
-				// TODO: Clean -> Just for test prouposes
 			};
 		}
 		updateAttendees();
@@ -90,7 +84,6 @@ export default function AssemblyInCMSProvider(props: Props) {
 		if (!!attendees.length) {
 			updateAttendees();
 		}
-		// console.log({ attendeesChecked, totalAttendees });
 	}, [attendees]);
 
 	const updateAttendees = () => {
@@ -128,9 +121,6 @@ export default function AssemblyInCMSProvider(props: Props) {
 				weight: number;
 			}>
 		>
-		// setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
-		// setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
-		// setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
 	) => {
 		services.listenQuorumByActivity(eventId, activityId, setAttendeesState);
 	};
