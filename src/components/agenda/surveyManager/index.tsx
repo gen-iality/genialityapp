@@ -21,7 +21,7 @@ export default function SurveyManager(props: Props) {
 	}, []);
 
 	const handleChange = async (surveyId: SurveyInFirestore['id'], surveyStatus: SurveyStatus) => {
-		await changeSurveyStatus(surveyId, surveyStatus, setLoading);
+		await changeSurveyStatus(surveyId, surveyStatus, props.event_id, props.activity_id, setLoading);
 	};
 
 	// if (loading) return <Loading />;

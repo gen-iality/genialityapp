@@ -16,8 +16,10 @@ export interface SurveyInFirestore {
 	activity_id: string;
 	freezeGame: boolean;
 	minimumScore: number;
-	publishedTimestamp?: number;
+	openedQuorum?: number;
 	openedTimestamp?: number;
+	closedTimestamp?: number;
+	closedQuorum?: number;
 }
 
 export interface SurveyInRealtimeDatabase {
@@ -26,7 +28,6 @@ export interface SurveyInRealtimeDatabase {
 	isPublished: boolean;
 	isOpened: boolean;
 	name: string;
-	publishedTimestamp?: number;
 	openedTimestamp?: number;
 }
 
@@ -35,5 +36,13 @@ export type SurveyStatusLabel = 'unpublished' | 'published' | 'unopened' | 'open
 export type SurveyStatus = { isPublished?: boolean, isOpened?: boolean };
 
 export type SurveyStatusDto =
-	| { isPublished: boolean; publishedTimestamp: number }
-	| { isOpened: boolean; openedTimestamp: number };
+	| { isPublished: boolean }
+	| { isOpened: boolean; openedTimestamp?: number; openedQuorum?: number }
+	| { isOpened: boolean; closedTimestamp?: number; closedQuorum?: number };
+
+
+export interface UsersWhoHaveConnected {
+	isOnline: boolean;
+	lastChange: number;
+	voteWeight?: number;
+}
