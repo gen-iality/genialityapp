@@ -1,4 +1,4 @@
-import { Card, Row, Grid, Result, Typography } from 'antd';
+import { Card, Row, Grid, Result, Typography, Radio } from 'antd';
 import { GraphicsData } from '@/components/events/surveys/types';
 import ChartRender from '../ChartRender';
 // import useAssemblyInCMS from '../../hooks/useAssemblyInCMS';
@@ -22,12 +22,39 @@ export default function GraphicSection(props: Props) {
 	const screens = useBreakpoint();
 
 	return (
-		<Card style={{ height: '100%', width: '100%' }} headStyle={{ border: 'none' }}
-		bodyStyle={{ paddingTop: '0px' }}
-		title={<div className='animate__animated animate__fadeInLeft' key={question?.title}> {question?.title} </div>}>
+		<Card
+			style={{ height: '100%', width: '100%' }}
+			headStyle={{ border: 'none' }}
+			bodyStyle={{ paddingTop: '0px' }}
+			title={
+				<div className='animate__animated animate__fadeInLeft' key={question?.title}>
+					{question?.title}
+				</div>
+			}
+			extra={
+				<Radio.Group buttonStyle='solid' value={'y'}>
+					<Radio.Button value='y'>
+						<BarChartOutlined rotate={90} />
+					</Radio.Button>
+					<Radio.Button value='x'>
+						<BarChartOutlined />
+					</Radio.Button>
+					<Radio.Button value='pie'>
+						<PieChartOutlined />
+					</Radio.Button>
+				</Radio.Group>
+			}>
 			<Row align='middle' justify='center'>
 				{!graphicsData.dataValues?.length && <Result title='No hay graficas para mostrar aun'></Result>}
-				<div style={{ visibility: !graphicsData.dataValues?.length ? 'hidden' : 'visible', height:'100%', width:'100%', display:'flex', alignItems: 'center', justifyContent: 'center' }}>
+				<div
+					style={{
+						visibility: !graphicsData.dataValues?.length ? 'hidden' : 'visible',
+						height: '100%',
+						width: '100%',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}>
 					<ChartRender
 						dataValues={graphicsData.dataValues}
 						isMobile={screens.xs ? true : false}
