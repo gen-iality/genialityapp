@@ -25,11 +25,12 @@
 //   height: 50vh;
 // }
 .ChatEviusLan {
+  border: none;
   position: absolute;
   top: 20%;
   left: 0;
   width: 100%;
-  height: calc(100vh - 180px) !important;
+  height: 78% !important;
   min-width: 347px;
   z-index: 999999999;
   margin-left: 4px;

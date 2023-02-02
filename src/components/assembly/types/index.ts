@@ -1,3 +1,5 @@
+import React, { CSSProperties } from "react";
+
 export interface EventContext {
   status:    string;
   value:     Value;
@@ -204,6 +206,9 @@ export type CardStatus = 'closed' | 'opened' | 'finished';
 export interface CardStatusProps {
 	label: string;
 	color: string;
+  icon?: React.ReactNode;
+  cursor: CSSProperties['cursor'];
+  tooltip: string | React.ReactNode;
 }
 
 

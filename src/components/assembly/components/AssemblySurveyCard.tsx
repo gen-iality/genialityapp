@@ -1,6 +1,9 @@
 import { VoteResponse } from '@/components/events/surveys/types';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
-import { Button, Card, Space, Tag } from 'antd';
+import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import { Button, Card, Comment, Modal, Space, Statistic, Tag, Tooltip } from 'antd';
+import moment from 'moment';
+import 'moment/locale/es';
 import { ReactNode, useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { CardStatus, CardStatusProps, GraphicType, GraphicTypeResponse, Question, Survey } from '../types';
@@ -15,14 +18,22 @@ const STATUS: Record<CardStatus, CardStatusProps> = {
 	closed: {
 		label: 'Cerrado',
 		color: 'red',
+		icon: <LockOutlined />,
+		cursor: 'pointer',
+		tooltip: 'Click para abrir la encuesta',
 	},
 	opened: {
 		label: 'Abierto',
 		color: 'green',
+		icon: <UnlockOutlined />,
+		cursor: 'pointer',
+		tooltip: 'Click para cerrar la encuesta',
 	},
 	finished: {
 		label: 'Finalizado',
 		color: 'orange',
+		cursor: 'default',
+		tooltip: 'Esta encuesta ya fue contestada',
 	},
 };
 
@@ -77,21 +88,50 @@ export default function AssemblySurveyCard(props: Props) {
 		}
 	}, [survey.isOpened, responses.length]);
 
+	const statusChange = () => {
+		Modal.confirm({
+			title: '',
+			content: '',
+			cancelText: 'Cancelar',
+			okText: 'Aceptar',
+			onOk: () => {
+				console.log('cambia el estado');
+			},
+		});
+	};
+
 	return (
 		<>
 			<Card
-				hoverable
 				title={
-					<Space size={0} style={{ fontWeight: '500' }}>
-						<Tag color={STATUS[status].color}>{STATUS[status].label}</Tag>
-					</Space>
+					<Tooltip title={STATUS[status].tooltip}>
+						<Tag
+							onClick={() => statusChange()}
+							style={{ cursor: STATUS[status].cursor, fontWeight: '500' }}
+							icon={STATUS[status].icon}
+							color={STATUS[status].color}>
+							{STATUS[status].label}
+						</Tag>
+					</Tooltip>
 				}
 				headStyle={{ border: 'none', fontSize: '14px' }}
 				bodyStyle={{ paddingTop: '0px' }}
-				extra={<Button type='primary' onClick={handleOpen} icon={<ChartBarIcon />}></Button>}
+				extra={
+					<Space>
+						<Button type='primary' onClick={handleOpen} icon={<ChartBarIcon />}></Button>
+					</Space>
+				}
 				actions={[]}>
 				{/* <Card.Meta title={survey.name} description={'aqui se supone van las fechas'} /> */}
 				<Card.Meta title={survey.name} />
+				<Space>
+					<Card bordered={false} bodyStyle={{ padding: '0px 10px' }}>
+						<Comment author='Inició el' datetime={<span> {'2023-02-02 9:44:33'} </span>} content={'Quórum 85%'} />
+					</Card>
+					<Card bordered={false} bodyStyle={{ padding: '0px 10px' }}>
+						<Comment author='Finalizó el' datetime={<span> {'2023-02-02 9:44:33'} </span>} content={'Quórum 85%'} />
+					</Card>
+				</Space>
 			</Card>
 			{!!survey && !!questions.length && open && (
 				<AssemblyGraphicsDrawer
