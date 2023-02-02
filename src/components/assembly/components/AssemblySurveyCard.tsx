@@ -109,6 +109,9 @@ export default function AssemblySurveyCard(props: Props) {
 			title = 'Cerrar encuesta';
 			content = '¿Estas seguro de cerrar la encuesta?';
 		}
+		if (status === 'finished') {
+			return
+		}
 		Modal.confirm({
 			title,
 			content,
