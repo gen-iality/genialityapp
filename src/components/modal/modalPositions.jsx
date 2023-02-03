@@ -6,6 +6,8 @@ import { DispatchMessageService } from '@context/MessageService';
 import Header from '@antdComponents/Header';
 import { handleRequestError } from '@helpers/utils';
 
+import Loading from '@components/loaders/loading';
+
 const { confirm } = Modal;
 
 const formLayout = {
@@ -22,11 +24,14 @@ function ModalPositions(props) {
   const [position, setPosition] = useState({});
   const [possibleEvents, setPossibleEvents] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (positionValue) {
-      getOne();
+      setIsLoading(true)
+      getOne().finally(() => setIsLoading(false))
     } else {
       form.setFieldsValue({ position_name: '', event_ids: [] });
     }
@@ -156,6 +161,15 @@ function ModalPositions(props) {
           marginTop: '30px',
         }}
       >
+        {isLoading ? (
+          <>
+            {/**
+            I am finding for a Loading component, but I get be lazy to find the Loading that
+            has a circle and it's turning 🔄
+            */}
+            <Loading />
+          </>
+        ) : (
         <Form onFinish={onSubmit} {...formLayout} form={form}>
           <Header title={'Cargo'} save form remove={onRemoveId} edit={positionValue} />
 
@@ -195,6 +209,7 @@ function ModalPositions(props) {
             </Col>
           </Row>
         </Form>
+        )}
       </div>
     </Modal>
   );
