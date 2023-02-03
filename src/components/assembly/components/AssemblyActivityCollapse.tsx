@@ -2,7 +2,7 @@ import { numberDecimalToTwoDecimals } from '@/Utilities/numberDecimalToTwoDecima
 import AccountEyeIcon from '@2fd/ant-design-icons/lib/AccountEye';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import { ArrowDownOutlined, ArrowUpOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, Row, Space, Statistic, Typography, Grid, Tag } from 'antd';
+import { Button, Col, Collapse, Row, Space, Statistic, Typography, Grid, Tag, Result, Card } from 'antd';
 import { useEffect, useState } from 'react';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { Activity, Survey } from '../types';
@@ -55,7 +55,7 @@ export default function AssemblyActivityCollapse(props: Props) {
 				return quorum;
 			});
 		} else {
-			setQuorum(0)
+			setQuorum(0);
 		}
 	}, [totalAttendeesWeight, attendeesState.weight]);
 
@@ -130,18 +130,28 @@ export default function AssemblyActivityCollapse(props: Props) {
 							/>
 						</Space>
 					)}
-					{surveys.map((survey, index) => (
-						<Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={8} key={survey.id}>
-							<AssemblySurveyCard
-								survey={survey}
-								quorumComponent={
-									<Tag color={quorum > 50 ? 'success':'default'}>
-										Quórum {quorum + ' %'}
-									</Tag>
-								}
-							/>
+					{!!surveys.length ? (
+						surveys.map((survey, index) => (
+							<Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={8} key={survey.id}>
+								<AssemblySurveyCard
+									survey={survey}
+									quorumComponent={<Tag color={quorum > 50 ? 'success' : 'default'}>Quórum {quorum + ' %'}</Tag>}
+								/>
+							</Col>
+						))
+					) : (
+						<Col span={24}>
+							<Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{padding:'5px'}}>
+								<Result
+								style={{padding:'10px'}}
+									icon=' '
+									title='No tienes encuestas publicadas para esta actividad '
+									subTitle='Dirígete al módulo de encuestas para publicarlas'
+									extra={<Button type='primary' size='large'>Ir a encuestas</Button>}
+								/>
+							</Card>
 						</Col>
-					))}
+					)}
 				</Row>
 			</Collapse.Panel>
 		</Collapse>
