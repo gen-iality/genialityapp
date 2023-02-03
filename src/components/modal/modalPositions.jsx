@@ -117,34 +117,24 @@ function ModalPositions(props) {
         okText: 'Borrar',
         okType: 'danger',
         cancelText: 'Cancelar',
-        onOk() {
-          const onHandlerRemove = async () => {
-            try {
-              await PositionsApi.delete(positionValue._id);
-              props.closeOrOpenModalPositions();
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              });
-              //history.push(`${props.matchUrl}/positions`);
-            } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              });
-            }
-          };
-          onHandlerRemove();
+        onOk: async () => {
+          try {
+            await PositionsApi.delete(positionValue._id);
+            props.closeOrOpenModalPositions();
+            DispatchMessageService({ key: 'loading', action: 'destroy' });
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
+            });
+          } catch (e) {
+            DispatchMessageService({ key: 'loading', action: 'destroy' });
+            DispatchMessageService({
+              type: 'error',
+              msj: handleRequestError(e).message,
+              action: 'show',
+            });
+          }
         },
       });
     }
@@ -171,31 +161,23 @@ function ModalPositions(props) {
           </>
         ) : (
         <Form onFinish={onSubmit} {...formLayout} form={form}>
-          <Header title={'Cargo'} save form remove={onRemoveId} edit={positionValue} />
+          <Header title="Cargo" save form remove={onRemoveId} edit={positionValue} />
 
           <Row justify='center' wrap gutter={12}>
-            <Col span={12}>
+            <Col>
               <Form.Item
                 initialValue={position.position_name}
-                name={'position_name'}
-                label={
-                  <label style={{ marginTop: '2%' }} className='label'>
-                    Nombre del cargo
-                  </label>
-                }
+                name="position_name"
+                label="Nombre del cargo"
                 rules={[{ required: true, message: 'El nombre es requerido' }]}
               >
-                <Input placeholder={'Nombre del cargo'} />
+                <Input placeholder="Nombre del cargo" />
               </Form.Item>
 
               <Form.Item
                 initialValue={position.event_ids || []}
-                name={'event_ids'}
-                label={
-                  <label style={{ marginTop: '2%' }} className='label'>
-                    Cursos asignados
-                  </label>
-                }
+                name="event_ids"
+                label="Cursos asignados"
               >
                 <Select
                   mode='multiple'
