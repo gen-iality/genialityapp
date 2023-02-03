@@ -137,7 +137,6 @@ const RouteContext = ({ component: Component, ...rest }) => (
                     style={ {
                       minHeight: '100vh',
                     } }>
-                    { console.log(props) }
                     { props.location.pathname.split('/')[1] !== 'bingo' &&
                       <Header />
                     }

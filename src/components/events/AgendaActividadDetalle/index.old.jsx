@@ -60,7 +60,6 @@ const AgendaActividadDetalle = (props) => {
   
   useEffect(() => {
     if (!!activityId && !!eventId && !!uid) {
-      console.log('Presence function ')
       listenUserPresenceInActivity(eventId, activityId, uid)
     }
     async function getActividad() {

@@ -58,7 +58,6 @@ const AgendaActividadDetalle = (props: any) => {
 
 	useEffect(() => {
 		if (!!activityId && !!eventId && !!uid && !!isAssambleyMod) {
-			console.log('Presence function ');
 			listenUserPresenceInActivity(eventId, activityId, uid, voteWeight);
 		}
 		async function getActividad() {
