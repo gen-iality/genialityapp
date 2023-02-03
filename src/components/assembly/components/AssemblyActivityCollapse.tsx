@@ -1,9 +1,11 @@
+import { UseEventContext } from '@/context/eventContext';
 import { numberDecimalToTwoDecimals } from '@/Utilities/numberDecimalToTwoDecimals';
 import AccountEyeIcon from '@2fd/ant-design-icons/lib/AccountEye';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import { ArrowDownOutlined, ArrowUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Button, Col, Collapse, Row, Space, Statistic, Typography, Grid, Tag, Result, Card } from 'antd';
 import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { Activity, Survey } from '../types';
 import AssemblySurveyCard from './AssemblySurveyCard';
@@ -33,20 +35,22 @@ export default function AssemblyActivityCollapse(props: Props) {
 		weight: 0,
 	});
 	const screens = useBreakpoint();
+	const history = useHistory();
+	const cEvent = UseEventContext();
 
 	useEffect(() => {
 		listenQuorum(props.activity._id, setAttendeesState);
 	}, []);
 
 	useEffect(() => {
-		const surveys = props.surveys.filter((survey) => survey.activity_id === props.activity._id);
+		const surveys = props.surveys.filter(survey => survey.activity_id === props.activity._id);
 		setSurveys(surveys);
 	}, [props.surveys, props.activity]);
 
 	useEffect(() => {
 		if (!!attendeesState.weight || !!totalAttendeesWeight) {
 			const quorum = numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
-			setQuorum((prev) => {
+			setQuorum(prev => {
 				if (prev > quorum) {
 					setQuorumLastChange('down');
 				} else {
@@ -141,13 +145,20 @@ export default function AssemblyActivityCollapse(props: Props) {
 						))
 					) : (
 						<Col span={24}>
-							<Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{padding:'5px'}}>
+							<Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '5px' }}>
 								<Result
-								style={{padding:'10px'}}
+									style={{ padding: '10px' }}
 									icon=' '
 									title='No tienes encuestas publicadas para esta actividad '
 									subTitle='Dirígete al módulo de encuestas para publicarlas'
-									extra={<Button type='primary' size='large'>Ir a encuestas</Button>}
+									extra={
+										<Button
+											onClick={() => history.push(`/eventadmin/${cEvent.idEvent}/trivia`)}
+											type='primary'
+											size='large'>
+											Ir a encuestas
+										</Button>
+									}
 								/>
 							</Card>
 						</Col>
