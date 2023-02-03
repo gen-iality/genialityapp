@@ -117,10 +117,10 @@ class EventLanding extends Component {
           >
             {/*Lanzandome un nuevo diseno Sept 2022 */}
             <Row gutter={32}>
-              <Col span={6}>
+              <Col sm={24} md={6} style={{ width: '100%', padding: '0 5px' }}>
                 <HostList />
               </Col>
-              <Col span={18}>
+              <Col sm={24} md={18} style={{ padding: '0 5px' }}>
                 <div className='activities-main-list'>
                   <ActivitiesList
                     eventId={this.props.cEvent.value?._id}

@@ -1368,9 +1368,10 @@ export const ModulesApi = {
   deleteOne: async (moduleId) => {
     return await Actions.delete('api/modules/', moduleId, true);
   },
-  update: async (moduleId, moduleName) => {
+  update: async (moduleId, moduleName, order) => {
     const data = {
       module_name: moduleName,
+      order: (order || 0),
     };
     return await Actions.put(`api/modules/${moduleId}`, data, true);
   },
@@ -1401,9 +1402,71 @@ export const ModulesApi = {
   // },
 }
 
+// Endpoint for certification logs handlering
+export const CerticationLogsApi = {
+  getAll: async () => {
+    return await Actions.getAll('api/certification-logs', true);
+  },
+  getOne: async (certificationLogID) => {
+    return await Actions.get(`api/certification-logs/${certificationLogID}`, true);
+  },
+  create: async (data) => {
+    return await Actions.create('/api/certification-logs', data, true);
+  },
+  deleteOne: async (certificationLogID) => {
+    return await Actions.delete('api/certification-logs/', certificationLogID, true);
+  },
+  update: async (certificationLogID, data) => {
+    return await Actions.put(`api/certification-logs/${certificationLogID}`, data, true);
+  },
+  byEvent: async (eventId, query) => {
+    console.log('byEvent', eventId, 'query', query);
+    return await Actions.get(`api/certification-logs/event-certification-logs/${eventId}`, true);
+  },
+}
+
+// Endpoints for certifications handlering
+export const CerticationsApi = {
+  getAll: async (organizationId) => {
+    return await Actions.getAll(`api/certifications/${organizationId}`, true);
+  },
+  getOne: async (certificationID) => {
+    return await Actions.get(`api/certifications/${certificationID}`, true);
+  },
+  create: async (data) => {
+    return await Actions.create('/api/certifications', data, true);
+  },
+  deleteOne: async (certificationID) => {
+    return await Actions.delete('api/certifications/', certificationID, true);
+  },
+  update: async (certificationID, data) => {
+    return await Actions.put(`api/certifications/${certificationID}`, data, true);
+  },
+  getByUserAndEvent: async (userId, eventId) => {
+    return await Actions.getAll(`api/certifications?user_id=${userId}&event_id=${eventId}`, true);
+  },
+  /**
+   * Requests all the certifications for an specify position events and (maybe) an user
+   * @param {string} positionId The position ID
+   * @param {string} [userId] The user ID
+   * @returns A certification list for this position and (maybe) this user
+   */
+  getByPositionAndMaybeUser: async (positionId, userId) => {
+    let url = `api/certifications/by-position/${positionId}`
+    if (userId) {
+      url = `${url}?user_id=${userId}`
+    }
+    return await Actions.getAll(url, true)
+  }
+}
+
 export default privateInstance;
 window.EventsApi = EventsApi;
 window.PositionsApi = PositionsApi;
 window.OrganizationApi = OrganizationApi;
 window.TicketsApi = TicketsApi;
 window.ModulesApi = ModulesApi;
+window.AgendaApi = AgendaApi;
+window.UsersApi = UsersApi;
+window.CerticationLogsApi = CerticationLogsApi;
+window.CerticationsApi = CerticationsApi;

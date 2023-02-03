@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useMemo } from 'react';
 import { Divider, List, Typography, Button, Spin, Badge, Space, Collapse } from 'antd';
 import { ReadFilled, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
@@ -21,12 +21,13 @@ import { getAnswersRef, getUserProgressRef, getQuestionsRef } from '@components/
 type TruncatedAgenda = {
   title: string;
   module_name?: string;
+  module_order?: number,
   type?: ActivityType.ContentValue;
   timeString: string;
   link: string;
   ViewedStatusComponent?: FunctionComponent<{}>;
-  QuizProgressComponent?: FunctionComponent<{ userId: string, isAnswersDeleted: boolean, }>;
-  DeleteSurveyAnswersButton?: FunctionComponent<{ userId: string, onAnswersDeleted: (x: boolean) => void, }>;
+  QuizProgressComponent?: FunctionComponent<{ userId: string; isAnswersDeleted: boolean }>;
+  DeleteSurveyAnswersButton?: FunctionComponent<{ userId: string; onAnswersDeleted: (x: boolean) => void }>;
   RibbonComponent: FunctionComponent<{ children: any }>;
 };
 
@@ -83,6 +84,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
           const result: TruncatedAgenda = {
             title: agenda.name,
             module_name: agenda.module?.module_name,
+            module_order: agenda.module?.order || 0,
             type: agenda.type?.name as ActivityType.ContentValue,
             timeString: dayjs(diff)
               .format('h:mm')
@@ -104,7 +106,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   }
                 })();
               }, [cEventUserId]);
-              if (isTaken) return <Badge style={{ backgroundColor: '#339D25' }} count='Visto' />;
+              if (isTaken) return <Badge style={{ backgroundColor: '#339D25', marginRight: '3px' }} count='Visto' />;
               return <></>;
             },
             QuizProgressComponent: ({ userId, isAnswersDeleted }) => {
@@ -154,10 +156,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               }
               return <></>;
             },
-            DeleteSurveyAnswersButton: ({
-              userId,
-              onAnswersDeleted,
-            }) => {
+            DeleteSurveyAnswersButton: ({ userId, onAnswersDeleted }) => {
               if (![activityContentValues.quizing, activityContentValues.survey].includes(agenda.type?.name as any))
                 return <></>;
 
@@ -290,9 +289,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   if (isLoading) return <Spin />;
 
-  const ListThisActivities = (props: {
-    dataSource: any[],
-  }) => (
+  const ListThisActivities = (props: { dataSource: any[] }) => (
     <List
       size='small'
       // header={<h2>LECCIONES DEL CURSO</h2>}
@@ -301,9 +298,17 @@ const ActivitiesList = (props: ActivitiesListProps) => {
       renderItem={(item: TruncatedAgenda) => (
         <item.RibbonComponent>
           <List.Item className='shadow-box'>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+                flexFlow: 'row wrap',
+              }}
+            >
               <Link to={item.link}>
-                <div>
+                <div style={{ fontSize: '1.2rem' }}>
                   <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
                   <span>{item.title}</span>
                 </div>
@@ -322,9 +327,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   )}
                 </span>
                 <Link to={item.link}>
-                  <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>
-                    {item.timeString}
-                  </span>
+                  <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>{item.timeString}</span>
                 </Link>
               </div>
             </div>
@@ -332,7 +335,43 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         </item.RibbonComponent>
       )}
     />
-  )
+  );
+
+  const ModuledActivityHOC: FunctionComponent<{
+    list: TruncatedAgenda[],
+    render: (nameToFilter: string) => any,
+  }> = (props) => {
+    const moduleNames = useMemo(() => {
+      const uniqueNames = Array.from(
+        new Set(props.list.map((item) => item.module_name))
+      ).filter((item) => item !== undefined) as string[]
+
+      const sorttedNames = uniqueNames.map((name) => {
+        const data = props.list.find((item) => item.module_name == name)
+        if (!data) return {name, order: 0}
+        return {
+          name,
+          order: data.module_order,
+        }
+      }).sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map((item) => item.name)
+      return sorttedNames
+    }, [props.list]);
+
+    return (
+      <Collapse>
+      {moduleNames.map((name: string, index: number) => (
+        <Collapse.Panel
+          header={`Módulo: ${name}`}
+          key={index}
+          extra={`${props.list.filter((item) => item.module_name === name).length} elemento(s)`}
+        >
+          {props.render(name)}
+        </Collapse.Panel>
+      ))}
+      </Collapse>
+    )
+  }
 
   return (
     <>
@@ -342,25 +381,17 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
         setActivitiesAttendee={setActivitiesAttendee}
       />
-      <Collapse>
-      {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name))).filter((item) => item).sort().map((moduleName, index) => (
-        <Collapse.Panel
-          header={moduleName ? `Módulo: ${moduleName}` : 'Sin módulo'}
-          key={index}
-          extra={`${truncatedAgendaList.filter((item) => item.module_name === moduleName).length} elemento(s)`}
-        >
-          <ListThisActivities
-            dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)}
-          />
-        </Collapse.Panel>
-      ))}
-      </Collapse>
+      <ModuledActivityHOC
+        list={truncatedAgendaList}
+        render={(nameToFilter) => (
+          <ListThisActivities dataSource={truncatedAgendaList.filter((item) => item.module_name === nameToFilter)} />
+        )}
+      />
 
-      {Array.from(new Set(truncatedAgendaList.map((item) => item.module_name))).filter((item) => !item).sort().map((moduleName, index) => (
-        <ListThisActivities
-          dataSource={truncatedAgendaList.filter((item) => item.module_name === moduleName)}
-        />
-      ))}
+      {/* Without modules: */}
+      <ListThisActivities
+        dataSource={truncatedAgendaList.filter((item) => item.module_name === undefined)}
+      />
     </>
   );
 };

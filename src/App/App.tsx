@@ -1,4 +1,5 @@
 import './App.less';
+import dayjs from 'dayjs'
 import loadable from '@loadable/component';
 import { useCurrentUser } from './../context/userContext';
 
@@ -23,3 +24,6 @@ const App = () => {
 };
 
 export default App;
+
+// @ts-expect-error
+window.dayjs = dayjs

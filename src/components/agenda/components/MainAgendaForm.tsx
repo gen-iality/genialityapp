@@ -321,19 +321,21 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 placeholder='Nombre de la lección'
               />
             </Form.Item>
-            <Form.Item
-              label="Módulo (opcional)"
-            >
+            <Form.Item label='Módulo (opcional)' initialValue={null}>
               <SelectAntd
-                options={allModules.map((module) => ({
-                  label: module.module_name,
-                  value: module._id,
-                }))}
+                options={[
+                  { label: 'Seleccionar...', value: null },
+                  ...allModules.map((module) => ({
+                    label: module.module_name,
+                    value: module._id,
+                  })),
+                ]}
                 value={formdata.module_id}
                 onChange={(value) => {
                   console.debug('select module:', value);
-                  handleChangeFormData('module_id', value)
+                  handleChangeFormData('module_id', value);
                 }}
+                placeholder='Seleccionar...'
               />
             </Form.Item>
             <Form.Item
