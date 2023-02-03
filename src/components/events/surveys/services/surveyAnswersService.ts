@@ -16,7 +16,7 @@ const surveyAnswers = {
 			user_email: email,
 			user_name: names,
 			id_survey: surveyId,
-			voteWeight: Number(voteWeight) || 0,
+			voteWeight: Number(voteWeight) || 1,
 		};
 
 		if (correctAnswer !== undefined) {
@@ -150,7 +150,9 @@ const surveyAnswers = {
 			.onSnapshot(
 				snapshot => {
 					const answers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as VoteResponse);
+					console.log({ answers })
           const { dataValues, labels } = getAssemblyGraphicsData(answers)
+					console.log({ dataValues, labels })
 					const labelsToShow = labels.map(label => label.complete)
           setGraphicsData({
             dataValues,
