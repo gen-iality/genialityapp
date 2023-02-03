@@ -2,7 +2,7 @@ import { VoteResponse } from '@/components/events/surveys/types';
 import { changeSurveyStatus } from '@/services/surveys';
 import { SurveyStatus } from '@/types/survey';
 import ChartBarIcon from '@2fd/ant-design-icons/lib/ChartBar';
-import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import { LoadingOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Comment, Modal, Row, Space, Statistic, Tag, Tooltip } from 'antd';
 import moment from 'moment';
 import 'moment/locale/es';
@@ -37,6 +37,13 @@ const STATUS: Record<CardStatus, CardStatusProps> = {
 		cursor: 'default',
 		tooltip: 'Esta encuesta ya fue contestada',
 	},
+	loading:{
+		label:'Cargando...',
+		color: 'blue',
+		icon: <LoadingOutlined />,
+		cursor: 'progress',
+		tooltip: 'Cargando estado...' 
+	}
 };
 
 const GRAPHIC_TYPE: Record<GraphicTypeResponse, GraphicType> = {
@@ -48,7 +55,7 @@ const GRAPHIC_TYPE: Record<GraphicTypeResponse, GraphicType> = {
 export default function AssemblySurveyCard(props: Props) {
 	const { survey, quorumComponent } = props;
 	const { getAdditionalDataBySurvey, getCountResponses } = useAssemblyInCMS();
-	const [status, setStatus] = useState<'closed' | 'opened' | 'finished'>('closed');
+	const [status, setStatus] = useState<'closed' | 'opened' | 'finished' | 'loading'>('loading');
 	const [responses, setResponses] = useState<VoteResponse[]>([]);
 	const [questions, setQuestions] = useState<Question[]>([]);
 	const [open, setOpen] = useState(false);
@@ -109,7 +116,7 @@ export default function AssemblySurveyCard(props: Props) {
 			title = 'Cerrar encuesta';
 			content = '¿Estas seguro de cerrar la encuesta?';
 		}
-		if (status === 'finished') {
+		if (status === 'finished' || status === 'loading') {
 			return;
 		}
 		Modal.confirm({

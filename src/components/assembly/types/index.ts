@@ -203,7 +203,7 @@ export interface Survey extends SurveyInFirestore {}
 //   allow_gradable_survey:   boolean | string;
 // }
 
-export type CardStatus = 'closed' | 'opened' | 'finished';
+export type CardStatus = 'closed' | 'opened' | 'finished' | 'loading';
 
 export interface CardStatusProps {
 	label: string;
