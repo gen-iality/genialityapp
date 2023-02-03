@@ -137,10 +137,17 @@ export const getQuorumByActivity = async (eventId: string, activityId: string) =
 		const totalAttendeesWeight = attendees.reduce((acc, attendee) => {
 			if (attendee.properties.voteWeight) {
 				acc += attendee.properties.voteWeight ? Number(attendee.properties.voteWeight) : 1;
+			} else {
+				acc += 1
 			}
 			return acc;
 		}, 0);
-		return numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
+		if (!attendeesState.weight || !totalAttendeesWeight) {
+			return 0
+		} else {
+			const quorum = numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
+			return quorum;
+		}
 	}
 	return 0
 };

@@ -82,9 +82,9 @@ export default function AssemblyInCMSProvider(props: Props) {
 
 	// Effect to update attendees
 	useEffect(() => {
-		if (!!attendees.length) {
+		// if (!!attendees.length) {
 			updateAttendees();
-		}
+		// }
 	}, [attendees]);
 
 	const updateAttendees = () => {
@@ -93,6 +93,8 @@ export default function AssemblyInCMSProvider(props: Props) {
 		const totalAttendeesWeight = attendees.reduce((acc, attendee) => {
 			if (attendee.properties.voteWeight) {
 				acc += attendee.properties.voteWeight ? Number(attendee.properties.voteWeight) : 1;
+			} else {
+				acc += 1
 			}
 			return acc;
 		}, 0);

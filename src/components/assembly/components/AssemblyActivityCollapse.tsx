@@ -48,7 +48,9 @@ export default function AssemblyActivityCollapse(props: Props) {
 	}, [props.surveys, props.activity]);
 
 	useEffect(() => {
-		if (!!attendeesState.weight || !!totalAttendeesWeight) {
+		if (!attendeesState.weight || !totalAttendeesWeight) {
+			setQuorum(0);
+		} else {
 			const quorum = numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
 			setQuorum(prev => {
 				if (prev > quorum) {
@@ -58,8 +60,6 @@ export default function AssemblyActivityCollapse(props: Props) {
 				}
 				return quorum;
 			});
-		} else {
-			setQuorum(0);
 		}
 	}, [totalAttendeesWeight, attendeesState.weight]);
 
