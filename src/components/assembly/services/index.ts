@@ -142,7 +142,8 @@ export const getAdditionalDataBySurvey = async (eventId: string, surveyId: strin
 export const getCountResponses = (
 	surveyId: string,
 	questionId: string,
-	setResponses: React.Dispatch<React.SetStateAction<VoteResponse[]>>
+	setResponses: React.Dispatch<React.SetStateAction<VoteResponse[]>>,
+	setLoading?: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
 	return firestore
 		.collection('surveys')
@@ -154,6 +155,7 @@ export const getCountResponses = (
 			snapshot => {
 				const answers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as VoteResponse));
 				if (setResponses) setResponses(answers);
+				if (setLoading) setLoading(false)
 			},
 			onError => {
 				console.log(onError);

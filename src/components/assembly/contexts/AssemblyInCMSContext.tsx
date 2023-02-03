@@ -34,7 +34,8 @@ interface AssemblyInCMSContextType {
 	getCountResponses: (
 		surveyId: string,
 		questionId: string,
-		setResponses: React.Dispatch<React.SetStateAction<any[]>>
+		setResponses: React.Dispatch<React.SetStateAction<any[]>>,
+		setLoading?: React.Dispatch<React.SetStateAction<boolean>>
 	) => () => void
 }
 
@@ -147,9 +148,10 @@ export default function AssemblyInCMSProvider(props: Props) {
 	const getCountResponses = (
 		surveyId: string,
 		questionId: string,
-		setResponses: React.Dispatch<React.SetStateAction<VoteResponse[]>>
+		setResponses: React.Dispatch<React.SetStateAction<VoteResponse[]>>,
+		setLoading?: React.Dispatch<React.SetStateAction<boolean>>
 	) => {
-		return services.getCountResponses(surveyId, questionId, setResponses);
+		return services.getCountResponses(surveyId, questionId, setResponses, setLoading);
 	};
 
 	return (

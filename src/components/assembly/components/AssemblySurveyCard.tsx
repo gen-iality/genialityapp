@@ -37,13 +37,13 @@ const STATUS: Record<CardStatus, CardStatusProps> = {
 		cursor: 'default',
 		tooltip: 'Esta encuesta ya fue contestada',
 	},
-	loading:{
-		label:'Cargando...',
+	loading: {
+		label: 'Cargando...',
 		color: 'blue',
 		icon: <LoadingOutlined />,
 		cursor: 'progress',
-		tooltip: 'Cargando estado...' 
-	}
+		tooltip: 'Cargando estado...',
+	},
 };
 
 const GRAPHIC_TYPE: Record<GraphicTypeResponse, GraphicType> = {
@@ -60,7 +60,7 @@ export default function AssemblySurveyCard(props: Props) {
 	const [questions, setQuestions] = useState<Question[]>([]);
 	const [open, setOpen] = useState(false);
 	const [graphicType, setGraphicType] = useState<'horizontal' | 'vertical' | 'pie'>('pie');
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
@@ -73,30 +73,37 @@ export default function AssemblySurveyCard(props: Props) {
 
 	useEffect(() => {
 		if (questions[0]?.id) {
-			const unsubscribe = getCountResponses(survey.id, questions[0].id, setResponses);
+			const unsubscribe = getCountResponses(survey.id, questions[0].id, setResponses, setLoading);
 			return () => unsubscribe();
 		}
 	}, [questions]);
 
 	const getAdditionalData = async () => {
 		try {
+			setLoading(true)
 			const { questions, graphicType } = await getAdditionalDataBySurvey(props.survey.id);
 			setGraphicType(GRAPHIC_TYPE[graphicType]);
 			setQuestions(questions);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setLoading(false)
 		}
 	};
 
 	useEffect(() => {
-		if (survey.isOpened) {
-			setStatus('opened');
-		} else if (!survey.isOpened && !!responses.length) {
-			setStatus('finished');
+		if (loading && !responses.length) {
+			setStatus('loading');
 		} else {
-			setStatus('closed');
+			if (survey.isOpened) {
+				setStatus('opened');
+			} else if (!survey.isOpened && !!responses.length) {
+				setStatus('finished');
+			} else {
+				setStatus('closed');
+			}
 		}
-	}, [survey.isOpened, responses.length]);
+	}, [survey.isOpened, responses.length, loading]);
 
 	const handleChangeStatus = async () => {
 		let payload: SurveyStatus = {} as SurveyStatus;
