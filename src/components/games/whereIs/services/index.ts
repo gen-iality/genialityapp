@@ -266,7 +266,6 @@ export const getScoresListener = (event_id: string, setScores: React.Dispatch<Re
 		.onSnapshot(
 			playersDoc => {
 				if (playersDoc.empty) {
-					console.log('playersDoc is empty');
 				} else {
 					const players = playersDoc.docs.map(doc => doc.data()) as Player[];
 					const playersFinished = players.filter(player => player.isFinish === true);

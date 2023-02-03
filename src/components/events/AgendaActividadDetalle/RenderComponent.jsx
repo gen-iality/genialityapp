@@ -84,10 +84,6 @@ const RenderComponent = (props) => {
   }, [currentActivity, props.cEvent]);
 
   useEffect(() => {
-    console.log('currentActivity', currentActivity)
-  }, [currentActivity])
-
-  useEffect(() => {
     if (chatAttendeChats === '4') {
       setRenderGame('game');
     } else {

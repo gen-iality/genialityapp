@@ -67,10 +67,6 @@ function Graphics(props: any) {
 		}
 	}, [windowSize]);
 
-	useEffect(() => {
-		console.log('isAssambley', isAssambley);
-	}, [isAssambley]);
-
 	const fetchSurveyData = async () => {
 		try {
 			setState((prev) => ({ ...prev, loading: true }));
@@ -185,7 +181,6 @@ function Graphics(props: any) {
 					break;
 			}
 			porcentaj_answer = answer_count[a][1];
-
 			list.push({
 				voto: answer_count[a][0],
 				porcentaje: answer_count[a][1],
@@ -231,9 +226,7 @@ function Graphics(props: any) {
 	};
 
 	const mountChart = () => {
-		console.log('mount -> state.dataSurvey', state.dataSurvey);
 		if (!state.dataSurvey) return;
-		console.log(`I'm in mountChart`);
 		SurveyAnswers.getAnswersQuestion(
 			idSurvey,
 			state.dataSurvey.questions[state.currentPage - 1].id,
@@ -296,8 +289,8 @@ function Graphics(props: any) {
 					<Row gutter={[16, 16]}>
 						{/* Cards Questions */}
 						{isAssambley &&
-							graphicsData.labels.map((label) => (
-								<Col key={label.complete} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
+							graphicsData.labels.map((label, index) => (
+								<Col key={`card-question-${index}`} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
 									<Card bodyStyle={{ padding: '0px' }}>
 										<Space align='start'>
 											<Avatar size={80} shape='square' style={{ backgroundColor: `${label.color}` }}>
@@ -321,8 +314,9 @@ function Graphics(props: any) {
 								</Col>
 							))}
 						{!isAssambley &&
-							state.dataVotos.map((votos) => (
-								<Col key={votos?.option?.toUpperCase()} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
+							state.dataVotos.map((votos, index) => (
+								<Col key={`card-no-response-${index}`} xs={24} sm={24} md={12} lg={8} xl={8} xxl={6}>
+									{console.log({ votos })}
 									<Card bodyStyle={{ padding: '0px' }}>
 										<Space align='start'>
 											<Avatar size={80} shape='square' style={{ backgroundColor: `${votos.color}` }}>
