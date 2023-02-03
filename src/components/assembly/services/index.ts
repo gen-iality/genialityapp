@@ -12,14 +12,19 @@ export const surveysListener = (
 	return firestore
 		.collection('surveys')
 		.where('eventId', '==', eventId)
+		.where('isPublished', '==', true)
 		.onSnapshot(snapshot => {
 			if (snapshot.empty) {
-				// console.log('surveysListener -> Docs empty');
 			} else {
-				// console.log('surveysListener -> There are docs');
 				const surveysSnapshot = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Survey));
-				setSurveys(surveysSnapshot);
-				// console.log('surveysListener -> ', surveys);
+				const surveysFiltered = surveysSnapshot.filter(survey => {
+					if (survey.allow_vote_value_per_user) {
+						return !!survey.allow_vote_value_per_user
+					} else {
+						return false
+					}
+				})
+				setSurveys(surveysFiltered);
 			}
 		});
 };
@@ -31,14 +36,10 @@ export const attendeesListener = (
 ) => {
 	return firestore.collection(`${eventId}_event_attendees`).onSnapshot(snapshot => {
 		if (snapshot.empty) {
-			// console.log('Docs empty');
 		} else {
-			// console.log('There are docs');
-			// if (!attendees.length) {
 			const attendeesSnapshot = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Attendee));
 			setAttendees(attendeesSnapshot);
-			// }
-			// console.log('attendeesListener -> ', attendees);
+			
 		}
 	});
 };
@@ -64,9 +65,6 @@ export const listenQuorumByActivity = (
 			weight: number;
 		}>
 	>
-	// setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
-	// setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
-	// setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
 ) => {
 	fireRealtime.ref('userStatus/' + eventId + '/' + activityId).on('value', snapshot => {
 		const usersWhoHaveConnectedObject: Record<string, UsersWhoHaveConnected> | null = snapshot.val();
@@ -89,13 +87,7 @@ export const listenQuorumByActivity = (
 				visited: usersWhoHaveConnectedQty,
 				weight: usersOnlineWeight,
 			});
-			// setAttendeesOnline(usersOnlineQty);
-			// setAttendeesVisited(usersWhoHaveConnectedQty);
-			// setAttendeesOnlineWeight(usersOnlineWeight)
 		} else {
-			// setAttendeesOnline(0)
-			// setAttendeesVisited(0)
-			// setAttendeesOnlineWeight(0)
 			setAttendeesState({
 				online: 0,
 				visited: 0,
@@ -130,7 +122,6 @@ export const listenAnswersQuestion = (
 					labels,
 					labelsToShow,
 				});
-				// console.log('test:listenAnswersQuestion', answers)
 			},
 			onError => {
 				console.log(onError);
@@ -138,7 +129,6 @@ export const listenAnswersQuestion = (
 		);
 };
 
-// export const getQuestionsBySurvey = async (eventId: string, surveyId: string) => {
 export const getAdditionalDataBySurvey = async (eventId: string, surveyId: string) => {
 	const response = await SurveysApi.getOne(eventId, surveyId);
 	return {
@@ -150,7 +140,8 @@ export const getAdditionalDataBySurvey = async (eventId: string, surveyId: strin
 export const getCountResponses = (
 	surveyId: string,
 	questionId: string,
-	setResponses: React.Dispatch<React.SetStateAction<VoteResponse[]>>
+	setResponses: React.Dispatch<React.SetStateAction<VoteResponse[]>>,
+	setLoading?: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
 	return firestore
 		.collection('surveys')
@@ -162,6 +153,7 @@ export const getCountResponses = (
 			snapshot => {
 				const answers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as VoteResponse));
 				if (setResponses) setResponses(answers);
+				if (setLoading) setLoading(false)
 			},
 			onError => {
 				console.log(onError);

@@ -270,7 +270,6 @@ class Graphics extends Component {
 		} else {
 			// Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
 			chart.data.labels = generatedlabels;
-			console.log('totalPercentResponse', totalPercentResponse)
 			chart.data.datasets[0].data = Object.values(totalPercentResponse || []);
 			chart.options.title.text = formatterTitle;
 

@@ -1,6 +1,4 @@
-import { Card, Row, Grid, Result, Typography } from 'antd';
-// import { useEffect, useState } from 'react';
-// import ChartRender from '@/components/events/surveys/ChartRender';
+import { Card, Row, Grid, Result, Typography, Radio, RadioChangeEvent } from 'antd';
 import { GraphicsData } from '@/components/events/surveys/types';
 import ChartRender from '../ChartRender';
 // import useAssemblyInCMS from '../../hooks/useAssemblyInCMS';
@@ -14,64 +12,58 @@ interface Props {
 	questionSelectedId: string;
 	graphicsData: GraphicsData;
 	graphicType: GraphicType;
+	setGraphicType: React.Dispatch<React.SetStateAction<GraphicType>>;
 	question: Question;
-	// setGraphicType: React.Dispatch<React.SetStateAction<GraphicType>>;
 }
 
 const { useBreakpoint } = Grid;
 
 export default function GraphicSection(props: Props) {
-	// const { survey, questionSelectedId, graphicsData, graphicType, setGraphicType } = props;
-	const { survey, questionSelectedId, graphicsData, graphicType, question } = props;
-	// console.log(survey)
-	// const { survey, questionSelectedId } = props;
-	// const { listenAnswersQuestion } = useAssemblyInCMS();
-	// const [value, setValue] = useState<GraphicType>('pie');
-	// const [graphicType, setGraphicType] = useState<GraphicType>('pie');
+	const { survey, questionSelectedId, graphicsData, graphicType, question, setGraphicType } = props;
 	const screens = useBreakpoint();
 
-	// const handleGraphicType = (value: SegmentedValue) => {
-	// 	console.log(value);
-	// 	setGraphicType(value as GraphicType);
-	// };
-	// const [graphicsData, setGraphicsData] = useState<GraphicsData>({
-	// 	dataValues: [],
-	// 	labels: [],
-	// 	labelsToShow: [],
-	// });
-	// // console.log('graphicsData', graphicsData);
+	const handleGraphicType = (e: RadioChangeEvent) => {
+		// console.log(e.target.value as GraphicType)
+		setGraphicType(e.target.value as GraphicType)
+	}
 
-	// useEffect(() => {
-	// 	const unsubscribe = listenAnswersQuestion(survey.id, questionSelectedId, setGraphicsData);
-	// 	return () => unsubscribe();
-	// }, []);
-
-	// useEffect(() => {
-	// 	console.log('AssemblyGraphicsDrawer: questions', survey.id, survey.name, graphicsData);
-	// }, [graphicsData]);
-	// console.log({ graphicType });
 
 	return (
-		<Card style={{ height: '100%', width: '100%' }} headStyle={{ border: 'none' }}
-		bodyStyle={{ paddingTop: '0px' }}
-		title={<div className='animate__animated animate__fadeInLeft' key={question?.title}> {question?.title} </div>}>
+		<Card
+			style={{ height: '100%', width: '100%' }}
+			headStyle={{ border: 'none' }}
+			bodyStyle={{ paddingTop: '0px' }}
+			title={
+				<div className='animate__animated animate__fadeInLeft' key={question?.title}>
+					{question?.title}
+				</div>
+			}
+			// extra={
+			// 	<Radio.Group buttonStyle='solid' value={graphicType} onChange={handleGraphicType}>
+			// 		<Radio.Button value='vertical'>
+			// 			<BarChartOutlined rotate={90} />
+			// 		</Radio.Button>
+			// 		<Radio.Button value='horizontal'>
+			// 			<BarChartOutlined />
+			// 		</Radio.Button>
+			// 		<Radio.Button value='pie'>
+			// 			<PieChartOutlined />
+			// 		</Radio.Button>
+			// 	</Radio.Group>
+			// }
+		>
 			<Row align='middle' justify='center'>
-				{/* @ts-ignore */}
-				{/* <Segmented
-					// title='Tipo de grafica'
-					options={[
-						{ value: 'pie', icon: <PieChartOutlined /> },
-						{ value: 'horizontal', icon: <BarChartOutlined rotate={90} /> },
-						{ value: 'vertical', icon: <BarChartOutlined /> },
-					]}
-					value={graphicType as string}
-					// onChange={handleGraphicType}
-				/> */}
-				{/* {question?.title && <Typography.Text style={{fontSize:'18px', fontWeight:'700'}}>{question?.title}</Typography.Text>} */}
 				{!graphicsData.dataValues?.length && <Result title='No hay graficas para mostrar aun'></Result>}
-				<div style={{ visibility: !graphicsData.dataValues?.length ? 'hidden' : 'visible', height:'100%', width:'100%', display:'flex', alignItems: 'center', justifyContent: 'center' }}>
+				<div
+					style={{
+						visibility: !graphicsData.dataValues?.length ? 'hidden' : 'visible',
+						height: '100%',
+						width: '100%',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}>
 					<ChartRender
-						// id={id}
 						dataValues={graphicsData.dataValues}
 						isMobile={screens.xs ? true : false}
 						labels={graphicsData.labelsToShow}

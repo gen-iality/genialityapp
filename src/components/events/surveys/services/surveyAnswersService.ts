@@ -9,7 +9,6 @@ const surveyAnswers = {
 	registerWithUID: (surveyId: string, questionId: string, dataAnswer: any, counter: any) => {
 		const { responseData, date, uid, email, names, voteWeight } = dataAnswer;
 		const { optionQuantity, optionIndex, correctAnswer } = counter;
-		console.log('test:registerWithUID -> voteWeight', voteWeight);
 		const data = {
 			response: responseData || '',
 			created: date,
@@ -130,7 +129,6 @@ const surveyAnswers = {
 						//result = result;
 						break;
 				}
-				console.log('test:getAnswersQuestion ', { result, options, optionsIndex });
 				updateData({ answer_count: result, options, optionsIndex });
 			}
 		});
@@ -159,7 +157,6 @@ const surveyAnswers = {
             labels,
 						labelsToShow
           })
-          console.log('test:listenAnswersQuestion', answers)
 				},
 				onError => {
           console.log(onError)

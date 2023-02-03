@@ -12,7 +12,6 @@ interface Props {
 export default function ParticipationSection(props: Props) {
 	const { graphicsData, responses } = props;
 	const { totalAttendees, attendeesChecked } = useAssemblyInCMS();
-	console.log({ graphicsData });
 	const participationInQuestion = responses.length;
 	const noParticipationInQuestion = attendeesChecked - participationInQuestion;
 	return (

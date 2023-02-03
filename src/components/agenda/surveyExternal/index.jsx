@@ -58,6 +58,7 @@ export default class SurveyExternal extends Component {
 
   render() {
     const { publishedSurveys } = this.state;
+    console.log('Heyyyyyyyyyyyy!')
     return (
       <Card title='Gestor de encuestas externas'>
         {this.props.isExternal ? (

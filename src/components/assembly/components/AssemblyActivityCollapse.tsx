@@ -1,9 +1,11 @@
+import { UseEventContext } from '@/context/eventContext';
 import { numberDecimalToTwoDecimals } from '@/Utilities/numberDecimalToTwoDecimals';
 import AccountEyeIcon from '@2fd/ant-design-icons/lib/AccountEye';
 import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
 import { ArrowDownOutlined, ArrowUpOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, Row, Space, Statistic, Typography, Grid, Tag } from 'antd';
+import { Button, Col, Collapse, Row, Space, Statistic, Typography, Grid, Tag, Result, Card } from 'antd';
 import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import useAssemblyInCMS from '../hooks/useAssemblyInCMS';
 import { Activity, Survey } from '../types';
 import AssemblySurveyCard from './AssemblySurveyCard';
@@ -33,26 +35,32 @@ export default function AssemblyActivityCollapse(props: Props) {
 		weight: 0,
 	});
 	const screens = useBreakpoint();
+	const history = useHistory();
+	const cEvent = UseEventContext();
 
 	useEffect(() => {
 		listenQuorum(props.activity._id, setAttendeesState);
 	}, []);
 
 	useEffect(() => {
-		const surveys = props.surveys.filter((survey) => survey.activity_id === props.activity._id);
+		const surveys = props.surveys.filter(survey => survey.activity_id === props.activity._id);
 		setSurveys(surveys);
 	}, [props.surveys, props.activity]);
 
 	useEffect(() => {
-		const quorum = numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
-		setQuorum((prev) => {
-			if (prev > quorum) {
-				setQuorumLastChange('down');
-			} else {
-				setQuorumLastChange('up');
-			}
-			return quorum;
-		});
+		if (!attendeesState.weight || !totalAttendeesWeight) {
+			setQuorum(0);
+		} else {
+			const quorum = numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
+			setQuorum(prev => {
+				if (prev > quorum) {
+					setQuorumLastChange('down');
+				} else {
+					setQuorumLastChange('up');
+				}
+				return quorum;
+			});
+		}
 	}, [totalAttendeesWeight, attendeesState.weight]);
 
 	return (
@@ -126,18 +134,35 @@ export default function AssemblyActivityCollapse(props: Props) {
 							/>
 						</Space>
 					)}
-					{surveys.map((survey, index) => (
-						<Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={8} key={survey.id}>
-							<AssemblySurveyCard
-								survey={survey}
-								quorumComponent={
-									<Tag color={quorum > 50 ? 'success':'default'}>
-										Quórum {quorum + ' %'}
-									</Tag>
-								}
-							/>
+					{!!surveys.length ? (
+						surveys.map((survey, index) => (
+							<Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={8} key={survey.id}>
+								<AssemblySurveyCard
+									survey={survey}
+									quorumComponent={<Tag color={quorum > 50 ? 'success' : 'default'}>Quórum {quorum + ' %'}</Tag>}
+								/>
+							</Col>
+						))
+					) : (
+						<Col span={24}>
+							<Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '5px' }}>
+								<Result
+									style={{ padding: '10px' }}
+									icon=' '
+									title='No tienes encuestas publicadas para esta actividad '
+									subTitle='Dirígete al módulo de encuestas para publicarlas'
+									extra={
+										<Button
+											onClick={() => history.push(`/eventadmin/${cEvent.idEvent}/trivia`)}
+											type='primary'
+											size='large'>
+											Ir a encuestas
+										</Button>
+									}
+								/>
+							</Card>
 						</Col>
-					))}
+					)}
 				</Row>
 			</Collapse.Panel>
 		</Collapse>

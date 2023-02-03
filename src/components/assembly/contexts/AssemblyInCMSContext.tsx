@@ -34,7 +34,8 @@ interface AssemblyInCMSContextType {
 	getCountResponses: (
 		surveyId: string,
 		questionId: string,
-		setResponses: React.Dispatch<React.SetStateAction<any[]>>
+		setResponses: React.Dispatch<React.SetStateAction<any[]>>,
+		setLoading?: React.Dispatch<React.SetStateAction<boolean>>
 	) => () => void
 }
 
@@ -65,20 +66,14 @@ export default function AssemblyInCMSProvider(props: Props) {
 		[eventContext.status]
 	);
 
-	// console.log('surveys', surveys);
-
 	useEffect(() => {
-		// getAllSurveys();
 		if (eventId) {
 			const unsubscribeSurveys = services.surveysListener(eventId, surveys, setSurveys);
 			const unsubscribeAttendees = services.attendeesListener(eventId, attendees, setAttendees);
 			getActivities();
-			// TODO: Clean -> Just for test prouposes
-			// services.listenQuorumByActivity(eventId,)
 			return () => {
 				unsubscribeSurveys();
 				unsubscribeAttendees();
-				// TODO: Clean -> Just for test prouposes
 			};
 		}
 		updateAttendees();
@@ -87,10 +82,9 @@ export default function AssemblyInCMSProvider(props: Props) {
 
 	// Effect to update attendees
 	useEffect(() => {
-		if (!!attendees.length) {
+		// if (!!attendees.length) {
 			updateAttendees();
-		}
-		// console.log({ attendeesChecked, totalAttendees });
+		// }
 	}, [attendees]);
 
 	const updateAttendees = () => {
@@ -99,6 +93,8 @@ export default function AssemblyInCMSProvider(props: Props) {
 		const totalAttendeesWeight = attendees.reduce((acc, attendee) => {
 			if (attendee.properties.voteWeight) {
 				acc += attendee.properties.voteWeight ? Number(attendee.properties.voteWeight) : 1;
+			} else {
+				acc += 1
 			}
 			return acc;
 		}, 0);
@@ -128,9 +124,6 @@ export default function AssemblyInCMSProvider(props: Props) {
 				weight: number;
 			}>
 		>
-		// setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
-		// setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
-		// setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
 	) => {
 		services.listenQuorumByActivity(eventId, activityId, setAttendeesState);
 	};
@@ -157,9 +150,10 @@ export default function AssemblyInCMSProvider(props: Props) {
 	const getCountResponses = (
 		surveyId: string,
 		questionId: string,
-		setResponses: React.Dispatch<React.SetStateAction<VoteResponse[]>>
+		setResponses: React.Dispatch<React.SetStateAction<VoteResponse[]>>,
+		setLoading?: React.Dispatch<React.SetStateAction<boolean>>
 	) => {
-		return services.getCountResponses(surveyId, questionId, setResponses);
+		return services.getCountResponses(surveyId, questionId, setResponses, setLoading);
 	};
 
 	return (

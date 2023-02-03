@@ -15,11 +15,12 @@ interface Props {
 	handleClose: () => void;
 	graphicType: GraphicType;
 	quorumComponent: ReactNode;
+	setGraphicType: React.Dispatch<React.SetStateAction<GraphicType>>;
 }
 
 export default function AssemblyGraphicsDrawer(props: Props) {
 	// const { survey, questions, open, handleClose, initialQuestion } = props;
-	const { survey, questions, open, handleClose, initialQuestion, graphicType, quorumComponent } = props;
+	const { survey, questions, open, handleClose, initialQuestion, graphicType, quorumComponent, setGraphicType } = props;
 	const { listenAnswersQuestion } = useAssemblyInCMS();
 	const [currentPage, setCurrentPage] = useState(1);
 	const [responses, setResponses] = useState<VoteResponse[]>([]);
@@ -72,7 +73,7 @@ export default function AssemblyGraphicsDrawer(props: Props) {
 						<GraphicSection
 							graphicType={graphicType}
 							question={questions[currentPage - 1]}
-							// setGraphicType={setGraphicType}
+							setGraphicType={setGraphicType}
 							survey={survey}
 							questionSelectedId={questionSelected}
 							graphicsData={graphicsData}

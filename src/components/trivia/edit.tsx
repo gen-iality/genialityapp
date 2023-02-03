@@ -39,6 +39,8 @@ import { DispatchMessageService } from '../../context/MessageService';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { DataAgendum, Question, State } from './types';
 import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
+import { SurveyStatus } from '@/types/survey';
+import { changeSurveyStatus } from '@/services/surveys';
 
 const formLayout = {
 	labelCol: { span: 24 },
@@ -110,7 +112,7 @@ function TriviaEdit(props: any) {
 	const changeInput = (e: any) => {
 		const { name } = e.target;
 		const { value } = e.target;
-		setState((prev) => ({ ...prev, [name]: value }));
+		setState(prev => ({ ...prev, [name]: value }));
 	};
 
 	useEffect(() => {
@@ -119,7 +121,7 @@ function TriviaEdit(props: any) {
 
 	const fetchData = useCallback(async () => {
 		if (props.location.state.new) {
-			setState((prev) => ({
+			setState(prev => ({
 				...prev,
 				isLoading: false,
 			}));
@@ -138,7 +140,7 @@ function TriviaEdit(props: any) {
 			const dataAgenda = await AgendaApi.byEvent(props.event._id);
 
 			//Se envian al estado para poderlos utilizar en el markup
-			setState((prev) => ({
+			setState(prev => ({
 				...prev,
 				isLoading: false,
 				idSurvey: Update._id,
@@ -179,7 +181,7 @@ function TriviaEdit(props: any) {
 		} else {
 			const dataAgenda = await AgendaApi.byEvent(props.event._id);
 			/* console.log(dataAgenda, 'dataAgenda'); */
-			setState((prev) => ({
+			setState(prev => ({
 				...prev,
 				dataAgenda: dataAgenda.data as DataAgendum[],
 			}));
@@ -191,26 +193,26 @@ function TriviaEdit(props: any) {
 
 		const question: Question[] = [];
 		for (const prop in Update.questions) {
-			selectOptions.forEach((option) => {
+			selectOptions.forEach(option => {
 				if (Update.questions[prop].type === option.value) Update.questions[prop].type = option.text;
 			});
 
 			question.push(Update.questions[prop]);
 		}
-		setState((prev) => ({ ...prev, question }));
+		setState(prev => ({ ...prev, question }));
 	};
 
-	useEffect(() => {
-		console.log('state', state);
-	}, [state]);
+	// useEffect(() => {
+	// 	console.log('state', state);
+	// }, [state]);
 
-	useEffect(() => {
-		console.log('state.isGlobal', state.isGlobal);
-	}, [state.isGlobal]);
+	// useEffect(() => {
+	// 	console.log('state.isGlobal', state.isGlobal);
+	// }, [state.isGlobal]);
 
-	useEffect(() => {
-		console.log('state.activity_id', state.activity_id);
-	}, [state.activity_id]);
+	// useEffect(() => {
+	// 	console.log('state.activity_id', state.activity_id);
+	// }, [state.activity_id]);
 
 	//Funcion para guardar los datos a actualizar
 	const submit = async () => {
@@ -226,7 +228,7 @@ function TriviaEdit(props: any) {
 				survey: state.survey,
 				show_horizontal_bar: parseStringBoolean(state.show_horizontal_bar),
 				graphyType: state.graphyType,
-				allow_vote_value_per_user: false,
+				allow_vote_value_per_user: state.allow_vote_value_per_user,
 				event_id: props.event._id,
 				activity_id: state.activity_id,
 				points: state.points ? Number(state.points) : 1,
@@ -262,6 +264,7 @@ function TriviaEdit(props: any) {
 						// Survey Config
 						allow_anonymous_answers: data.allow_anonymous_answers,
 						allow_gradable_survey: data.allow_gradable_survey,
+						allow_vote_value_per_user: data.allow_vote_value_per_user,
 						hasMinimumScore: data.hasMinimumScore,
 						isGlobal: data.isGlobal,
 						showNoVotos: data.showNoVotos,
@@ -277,7 +280,7 @@ function TriviaEdit(props: any) {
 					{ eventId: props.event._id, name: save.survey, category: 'none' }
 				);
 
-				setState((prev) => ({ ...prev, idSurvey }));
+				setState(prev => ({ ...prev, idSurvey }));
 				DispatchMessageService({
 					key: 'loading',
 					action: 'destroy',
@@ -390,6 +393,7 @@ function TriviaEdit(props: any) {
 							//Survey config
 							allow_anonymous_answers: data.allow_anonymous_answers,
 							allow_gradable_survey: data.allow_gradable_survey,
+							allow_vote_value_per_user: data.allow_vote_value_per_user,
 							hasMinimumScore: data.hasMinimumScore,
 							isGlobal: data.isGlobal,
 							showNoVotos: data.showNoVotos,
@@ -419,7 +423,7 @@ function TriviaEdit(props: any) {
 						action: 'show',
 					});
 				})
-				.catch((err) => {
+				.catch(err => {
 					DispatchMessageService({
 						type: 'error',
 						msj: 'Ha ocurrido un inconveniente',
@@ -469,7 +473,7 @@ function TriviaEdit(props: any) {
 	const addNewQuestion = () => {
 		let uid = generateUUID();
 		// @ts-ignore
-		setState((prev) => ({ ...prev, visibleModal: true, currentQuestion: { id: uid } }));
+		setState(prev => ({ ...prev, visibleModal: true, currentQuestion: { id: uid } }));
 	};
 
 	// -------------------- Funciones para los servicios -----------------------------------
@@ -497,11 +501,11 @@ function TriviaEdit(props: any) {
 			onOk() {
 				const onHandlerRemove = async () => {
 					try {
-						SurveysApi.deleteQuestion(event._id, _id, questionIndex).then((response) => {
+						SurveysApi.deleteQuestion(event._id, _id, questionIndex).then(response => {
 							// Se actualiza el estado local, borrando la pregunta de la tabla
 							let newListQuestion = question.filter((infoQuestion: any) => infoQuestion.id !== questionId);
 
-							setState((prev) => ({ ...prev, question: newListQuestion }));
+							setState(prev => ({ ...prev, question: newListQuestion }));
 							DispatchMessageService({
 								key: 'loading',
 								action: 'destroy',
@@ -532,10 +536,10 @@ function TriviaEdit(props: any) {
 	// Editar pregunta
 	const editQuestion = (questionId: string) => {
 		const { question } = state;
-		const questionIndex = question.findIndex((question) => question.id === questionId);
-		const currentQuestion = question.find((infoQuestion) => infoQuestion.id === questionId);
+		const questionIndex = question.findIndex(question => question.id === questionId);
+		const currentQuestion = question.find(infoQuestion => infoQuestion.id === questionId);
 		if (currentQuestion) {
-			setState((prev) => ({
+			setState(prev => ({
 				...prev,
 				visibleModal: true,
 				currentQuestion: {
@@ -548,7 +552,7 @@ function TriviaEdit(props: any) {
 	};
 
 	const sendForm = () => {
-		setState((prev) => ({ ...prev, confirmLoading: true }));
+		setState(prev => ({ ...prev, confirmLoading: true }));
 		if (formEditRef.current) {
 			formEditRef.current.submit();
 		}
@@ -567,33 +571,33 @@ function TriviaEdit(props: any) {
 		if (Object.entries(info).length === 2) {
 			let { questionIndex, data } = info;
 			let updateQuestion = question;
-			setState((prev) => ({ ...prev, question: [] }));
+			setState(prev => ({ ...prev, question: [] }));
 
 			// Se iteran las opciones y se asigna el texto para el tipo de pregunta
-			selectOptions.forEach((option) => {
+			selectOptions.forEach(option => {
 				if (data.type === option.value) data.type = option.text;
 			});
 
 			switch (modalState) {
 				case 'created':
 					updateQuestion.push(data);
-					setState((prev) => ({ ...prev, question: updateQuestion }));
+					setState(prev => ({ ...prev, question: updateQuestion }));
 					break;
 
 				case 'updated':
 					updateQuestion.splice(questionIndex, 1, data);
-					setState((prev) => ({ ...prev, question: updateQuestion }));
+					setState(prev => ({ ...prev, question: updateQuestion }));
 					break;
 
 				default:
 					break;
 			}
 		}
-		setState((prev) => ({ ...prev, visibleModal: false, currentQuestion: null, confirmLoading: false }));
+		setState(prev => ({ ...prev, visibleModal: false, currentQuestion: null, confirmLoading: false }));
 	};
 
 	const toggleConfirmLoading = () => {
-		setState((prev) => ({ ...prev, confirmLoading: false }));
+		setState(prev => ({ ...prev, confirmLoading: false }));
 	};
 	// ---------------------------------------------------------------------------------------
 
@@ -601,13 +605,13 @@ function TriviaEdit(props: any) {
 
 	const onChange = (e: any) => {
 		// Este es para el editor de texto enriquecido. El mensaje para la pagina principal de la encuesta
-		if (typeof e === 'string') return setState((prev) => ({ ...prev, initialMessage: e }));
+		if (typeof e === 'string') return setState(prev => ({ ...prev, initialMessage: e }));
 
 		// Este es para el input de los puntos de la encuesta
 		const { value } = e.target;
 		const reg = /^-?\d*(\.\d*)?$/;
 		if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
-			setState((prev) => ({ ...prev, points: value }));
+			setState(prev => ({ ...prev, points: value }));
 		}
 	};
 
@@ -631,7 +635,7 @@ function TriviaEdit(props: any) {
 		var reg = new RegExp('^\\d+$');
 		const { value } = e.target;
 		if (reg.test(value)) {
-			setState((prev) => ({ ...prev, time_limit: value }));
+			setState(prev => ({ ...prev, time_limit: value }));
 		}
 		//
 	};
@@ -641,21 +645,21 @@ function TriviaEdit(props: any) {
 		switch (variable) {
 			case 'allow_gradable_survey':
 				if (checked && parseStringBoolean(allow_vote_value_per_user))
-					return setState((prev) => ({ ...prev, allow_gradable_survey: true, allow_vote_value_per_user: false }));
-				setState((prev) => ({ ...prev, allow_gradable_survey: checked ? true : false }));
+					return setState(prev => ({ ...prev, allow_gradable_survey: true, allow_vote_value_per_user: false }));
+				setState(prev => ({ ...prev, allow_gradable_survey: checked ? true : false }));
 				break;
 			case 'allow_vote_value_per_user':
 				if (checked && parseStringBoolean(allow_gradable_survey)) {
-					return setState((prev) => ({ ...prev, allow_vote_value_per_user: true, allow_gradable_survey: false }));
+					return setState(prev => ({ ...prev, allow_vote_value_per_user: true, allow_gradable_survey: false }));
 				} else {
-					return setState((prev) => ({ ...prev, allow_vote_value_per_user: checked }))
+					return setState(prev => ({ ...prev, allow_vote_value_per_user: checked }));
 				}
 				break;
 			case 'ranking':
-				setState((prev) => ({ ...prev, ranking: checked }));
+				setState(prev => ({ ...prev, ranking: checked }));
 				break;
 			case 'displayGraphsInSurveys':
-				setState((prev) => ({ ...prev, displayGraphsInSurveys: checked }));
+				setState(prev => ({ ...prev, displayGraphsInSurveys: checked }));
 				break;
 			default:
 				break;
@@ -707,6 +711,19 @@ function TriviaEdit(props: any) {
 				onHandlerRemove();
 			},
 		});
+	};
+	const [surveyStatusLoading, setSurveyStatusLoading] = useState(false)
+
+	const handleChangeSurveyStatus = async (status: SurveyStatus) => {
+		await changeSurveyStatus(state.idSurvey, status, props.event._id, state.activity_id, setSurveyStatusLoading);
+		if (Object.keys(status).includes('isPublished') && status.isPublished !== undefined) {
+			const publish = status.isPublished
+			setState(prev => ({ ...prev, publish }));
+		}
+		if (Object.keys(status).includes('isOpened') && status.isOpened !== undefined) {
+			const openSurvey = status.isOpened
+			setState(prev => ({ ...prev, openSurvey }));
+		}
 	};
 
 	const {
@@ -827,7 +844,9 @@ function TriviaEdit(props: any) {
 											checked={parseStringBoolean(publish)}
 											checkedChildren='Sí'
 											unCheckedChildren='No'
-											onChange={(checked) => setState((prev) => ({ ...prev, publish: checked }))}
+											// onChange={checked => setState(prev => ({ ...prev, publish: checked }))}
+											onChange={checked => handleChangeSurveyStatus({ isPublished: checked })}
+											loading={surveyStatusLoading}
 										/>
 									</Form.Item>
 								</Col>
@@ -837,7 +856,8 @@ function TriviaEdit(props: any) {
 											checked={parseStringBoolean(openSurvey)}
 											checkedChildren='Sí'
 											unCheckedChildren='No'
-											onChange={(checked) => setState((prev) => ({ ...prev, openSurvey: checked }))}
+											onChange={checked => handleChangeSurveyStatus({ isOpened: checked })}
+											loading={surveyStatusLoading}
 										/>
 									</Form.Item>
 								</Col>
@@ -868,8 +888,8 @@ function TriviaEdit(props: any) {
 											<Select
 												defaultValue={time_limit}
 												value={time_limit}
-												onChange={(time) => {
-													setState((prev) => ({ ...prev, time_limit: time }));
+												onChange={time => {
+													setState(prev => ({ ...prev, time_limit: time }));
 												}}>
 												{surveyTimeOptions.map((values, key) => (
 													<Option key={key} value={values.value}>
@@ -883,7 +903,7 @@ function TriviaEdit(props: any) {
 												<Form.Item label={'Mostrar gráficas en las encuestas'} name={'displayGraphsInSurveys'}>
 													<Switch
 														checked={parseStringBoolean(displayGraphsInSurveys)}
-														onChange={(checked) => toggleSwitch('displayGraphsInSurveys', checked)}
+														onChange={checked => toggleSwitch('displayGraphsInSurveys', checked)}
 													/>
 												</Form.Item>
 											</Col>
@@ -893,7 +913,7 @@ function TriviaEdit(props: any) {
 												<Form.Item label={'Elegir tipo de gráfica'} name={'graphyType'}>
 													<Select
 														defaultValue={state.graphyType}
-														onChange={(graphy) => setState((prev) => ({ ...prev, graphyType: graphy }))}>
+														onChange={graphy => setState(prev => ({ ...prev, graphyType: graphy }))}>
 														<OptGroup label={'Barras'}>
 															<Option value='y'>
 																<Space>
@@ -909,31 +929,29 @@ function TriviaEdit(props: any) {
 														<OptGroup label={'Circular'}>
 															<Option value='pie'>
 																<Space>
-																<PieChartOutlined /> Torta
+																	<PieChartOutlined /> Torta
 																</Space>
 															</Option>
 														</OptGroup>
 													</Select>
 												</Form.Item>
-												<Form.Item
-													label={'Mostrar índice de participación en las gráficas'}
-													name={'showNoVotos'}>
+												<Form.Item label={'Mostrar índice de participación en las gráficas'} name={'showNoVotos'}>
 													<Switch
 														checked={parseStringBoolean(showNoVotos)}
-														onChange={(checked) => setState((prev) => ({ ...prev, showNoVotos: checked }))}
+														onChange={checked => setState(prev => ({ ...prev, showNoVotos: checked }))}
 													/>
 												</Form.Item>
 											</>
 										)}
 										<Form.Item label={'Limitar la encuesta a una única actividad'} name={'activity_id'}>
 											<Select
-												defaultValue={(activity_id === '' || activity_id === null) ? 'globalMode' : activity_id }
+												defaultValue={activity_id === '' || activity_id === null ? 'globalMode' : activity_id}
 												value={activity_id}
-												onChange={(relation) => {
+												onChange={relation => {
 													if (relation === 'globalMode') {
-														setState((prev) => ({ ...prev, activity_id: relation, isGlobal: true }));
+														setState(prev => ({ ...prev, activity_id: relation, isGlobal: true }));
 													} else {
-														setState((prev) => ({ ...prev, activity_id: relation, isGlobal: false }));
+														setState(prev => ({ ...prev, activity_id: relation, isGlobal: false }));
 													}
 												}}>
 												<Option value='globalMode'>{'Global'}</Option>
@@ -946,16 +964,18 @@ function TriviaEdit(props: any) {
 												</OptGroup>
 											</Select>
 										</Form.Item>
-										<Form.Item label={'Tener en cuenta los coeficientes de participación'} name={'allow_vote_value_per_user'}>
+										<Form.Item
+											label={'Tener en cuenta los coeficientes de participación'}
+											name={'allow_vote_value_per_user'}>
 											<Switch
 												checked={parseStringBoolean(allow_vote_value_per_user)}
-												onChange={(checked) => toggleSwitch('allow_vote_value_per_user', checked)}
+												onChange={checked => toggleSwitch('allow_vote_value_per_user', checked)}
 											/>
 										</Form.Item>
 										<Form.Item label={'Encuesta calificable'} name={'allow_gradable_survey'}>
 											<Switch
 												checked={parseStringBoolean(allow_gradable_survey)}
-												onChange={(checked) => {
+												onChange={checked => {
 													toggleSwitch('allow_gradable_survey', checked);
 													if (parseStringBoolean(ranking)) {
 														toggleSwitch('ranking', checked);
@@ -968,13 +988,13 @@ function TriviaEdit(props: any) {
 												<Form.Item label={'Habilitar ranking'} name={'ranking'}>
 													<Switch
 														checked={parseStringBoolean(ranking)}
-														onChange={(checked) => toggleSwitch('ranking', checked)}
+														onChange={checked => toggleSwitch('ranking', checked)}
 													/>
 												</Form.Item>
 												<Form.Item label={'Requiere puntaje mínimo para aprobar'} name={'hasMinimumScore'}>
 													<Switch
 														checked={parseStringBoolean(hasMinimumScore)}
-														onChange={(checked) => setState((prev) => ({ ...prev, hasMinimumScore: checked }))}
+														onChange={checked => setState(prev => ({ ...prev, hasMinimumScore: checked }))}
 													/>
 												</Form.Item>
 												{parseStringBoolean(hasMinimumScore) && (
@@ -1048,9 +1068,9 @@ function TriviaEdit(props: any) {
 											onOk={sendForm}
 											destroyOnClose={true}
 											// onCancel={closeModal}
-											onCancel={() => setState((prev) => ({ ...prev, visibleModal: false }))}
+											onCancel={() => setState(prev => ({ ...prev, visibleModal: false }))}
 											footer={[
-												<Button key='back' onClick={() => setState((prev) => ({ ...prev, visibleModal: false }))}>
+												<Button key='back' onClick={() => setState(prev => ({ ...prev, visibleModal: false }))}>
 													Cancelar
 												</Button>,
 												<Button
@@ -1080,7 +1100,7 @@ function TriviaEdit(props: any) {
 													closeModal={closeModal}
 													toggleConfirmLoading={toggleConfirmLoading}
 													gradableSurvey={allow_gradable_survey}
-													unmountForm={() => setState((prev) => ({ ...prev, currentQuestion: null }))}
+													unmountForm={() => setState(prev => ({ ...prev, currentQuestion: null }))}
 												/>
 											</>
 										</Modal>

@@ -107,14 +107,11 @@ function SurveyComponent(props: Props) {
 
 	// Funcion para enviar la informacion de las respuestas
 	async function sendData(surveyModel: any) {
-		console.log('test:surveyModel', surveyModel);
 		setRankingPoints(null);
 		const status = surveyModel.state;
 
 		SetCurrentUserSurveyStatus(surveyData, currentUser, status);
 		if (status === 'completed') {
-			/* console.log('test envio de comunicaciones ---se ejecuta'); */
-
 			props.setShowSurveyTemporarily(true);
 			let canSendComunications = cEvent?.value?.sms_notification;
 			let eventUserId = cEventUser?.value?._id;

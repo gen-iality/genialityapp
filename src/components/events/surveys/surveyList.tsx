@@ -32,11 +32,9 @@ interface Props {
 
 function SurveyList(props: any) {
   const cSurveys = UseSurveysContext();
-  console.log('test:cSurveys.currentSurveyStatus',cSurveys.currentSurveyStatus)
   const { activity, setCurrentSurvey, setSurveyResult } = props;
 
   const currentUser = UseCurrentUser();
-  console.log('test:currentUser',currentUser)
 
   const handleClick = (currentSurvey: any) => {
     cSurveys.select_survey(currentSurvey);

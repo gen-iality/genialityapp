@@ -2,8 +2,6 @@ import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 import SurveyAnswers from '../services/surveyAnswersService';
 
 function SavingResponseByUserId(surveyData: any, question: any, infoUser: any, eventUsers: any, voteWeight: string | number, infoOptionQuestion: any) {
-   console.log('test:SavingResponseByUserId -> voteWeight', voteWeight)
-   console.log('test:SavingResponseByUserId -> voteWeight', typeof voteWeight)
    SurveyAnswers.registerWithUID(
       surveyData._id,
       question.id,

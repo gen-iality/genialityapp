@@ -47,9 +47,6 @@ export const getAssemblyGraphicsData = (data: VoteResponse[]) => {
 		color: getColor(index),
 		letter: numberToAlphabet(index),
 	}));
-
-	console.log('test:getAssemblyGraphicsData', { dataValues, labels })
-
-
+	
 	return { dataValues, labels };
 };
