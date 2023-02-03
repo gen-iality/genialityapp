@@ -44,15 +44,19 @@ export default function AssemblyActivityCollapse(props: Props) {
 	}, [props.surveys, props.activity]);
 
 	useEffect(() => {
-		const quorum = numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
-		setQuorum((prev) => {
-			if (prev > quorum) {
-				setQuorumLastChange('down');
-			} else {
-				setQuorumLastChange('up');
-			}
-			return quorum;
-		});
+		if (!!attendeesState.weight || !!totalAttendeesWeight) {
+			const quorum = numberDecimalToTwoDecimals((attendeesState.weight / totalAttendeesWeight) * 100);
+			setQuorum((prev) => {
+				if (prev > quorum) {
+					setQuorumLastChange('down');
+				} else {
+					setQuorumLastChange('up');
+				}
+				return quorum;
+			});
+		} else {
+			setQuorum(0)
+		}
 	}, [totalAttendeesWeight, attendeesState.weight]);
 
 	return (
