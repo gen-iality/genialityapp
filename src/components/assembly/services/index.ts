@@ -12,6 +12,7 @@ export const surveysListener = (
 	return firestore
 		.collection('surveys')
 		.where('eventId', '==', eventId)
+		.where('isPublished', '==', true)
 		.onSnapshot(snapshot => {
 			if (snapshot.empty) {
 			} else {
