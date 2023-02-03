@@ -34,6 +34,14 @@ export default function ChartRender(props: Props) {
 		updateChart();
 	}, [dataValues, isMobile, labels, type]);
 
+	// useEffect(() => {
+	// 	if (canvasElement) {
+	// 		const chartInstance = new Chart(canvasElement, CHART_TYPE[type]);
+	// 		setChartInstance(chartInstance);
+	// 		chartInstance.update();
+	// 	}
+	// }, [type]);
+
 	useEffect(() => {
 		updateChart();
 	}, []);

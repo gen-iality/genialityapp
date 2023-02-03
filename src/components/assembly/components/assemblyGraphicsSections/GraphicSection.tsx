@@ -1,4 +1,4 @@
-import { Card, Row, Grid, Result, Typography, Radio } from 'antd';
+import { Card, Row, Grid, Result, Typography, Radio, RadioChangeEvent } from 'antd';
 import { GraphicsData } from '@/components/events/surveys/types';
 import ChartRender from '../ChartRender';
 // import useAssemblyInCMS from '../../hooks/useAssemblyInCMS';
@@ -12,14 +12,21 @@ interface Props {
 	questionSelectedId: string;
 	graphicsData: GraphicsData;
 	graphicType: GraphicType;
+	setGraphicType: React.Dispatch<React.SetStateAction<GraphicType>>;
 	question: Question;
 }
 
 const { useBreakpoint } = Grid;
 
 export default function GraphicSection(props: Props) {
-	const { survey, questionSelectedId, graphicsData, graphicType, question } = props;
+	const { survey, questionSelectedId, graphicsData, graphicType, question, setGraphicType } = props;
 	const screens = useBreakpoint();
+
+	const handleGraphicType = (e: RadioChangeEvent) => {
+		// console.log(e.target.value as GraphicType)
+		setGraphicType(e.target.value as GraphicType)
+	}
+
 
 	return (
 		<Card
@@ -31,19 +38,20 @@ export default function GraphicSection(props: Props) {
 					{question?.title}
 				</div>
 			}
-			extra={
-				<Radio.Group buttonStyle='solid' value={'y'}>
-					<Radio.Button value='y'>
-						<BarChartOutlined rotate={90} />
-					</Radio.Button>
-					<Radio.Button value='x'>
-						<BarChartOutlined />
-					</Radio.Button>
-					<Radio.Button value='pie'>
-						<PieChartOutlined />
-					</Radio.Button>
-				</Radio.Group>
-			}>
+			// extra={
+			// 	<Radio.Group buttonStyle='solid' value={graphicType} onChange={handleGraphicType}>
+			// 		<Radio.Button value='vertical'>
+			// 			<BarChartOutlined rotate={90} />
+			// 		</Radio.Button>
+			// 		<Radio.Button value='horizontal'>
+			// 			<BarChartOutlined />
+			// 		</Radio.Button>
+			// 		<Radio.Button value='pie'>
+			// 			<PieChartOutlined />
+			// 		</Radio.Button>
+			// 	</Radio.Group>
+			// }
+		>
 			<Row align='middle' justify='center'>
 				{!graphicsData.dataValues?.length && <Result title='No hay graficas para mostrar aun'></Result>}
 				<div

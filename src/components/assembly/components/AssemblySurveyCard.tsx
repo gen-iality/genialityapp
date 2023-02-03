@@ -139,7 +139,7 @@ export default function AssemblySurveyCard(props: Props) {
 				}
 				style={{ height: '100%' }}
 				headStyle={{ border: 'none', fontSize: '14px' }}
-				bodyStyle={{ paddingTop: '0px', paddingBottom:'10px' }}
+				bodyStyle={{ paddingTop: '0px', paddingBottom: '10px' }}
 				extra={
 					<Space>
 						<Button type='primary' onClick={handleOpen} icon={<ChartBarIcon />}></Button>
@@ -193,6 +193,7 @@ export default function AssemblySurveyCard(props: Props) {
 			</Card>
 			{!!survey && !!questions.length && open && (
 				<AssemblyGraphicsDrawer
+					setGraphicType={setGraphicType}
 					quorumComponent={quorumComponent}
 					graphicType={graphicType}
 					open={open}
