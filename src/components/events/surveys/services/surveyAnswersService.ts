@@ -16,7 +16,7 @@ const surveyAnswers = {
 			user_email: email,
 			user_name: names,
 			id_survey: surveyId,
-			voteWeight: Number(voteWeight) || 0,
+			voteWeight: Number(voteWeight) || 1,
 		};
 
 		if (correctAnswer !== undefined) {
