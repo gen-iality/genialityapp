@@ -3,6 +3,7 @@ export interface SurveyInFirestore {
 	hasMinimumScore: boolean;
 	isOpened: boolean;
 	allow_gradable_survey: boolean;
+	allow_vote_value_per_user?: boolean;
 	time_limit: number;
 	isPublished: boolean;
 	displayGraphsInSurveys: boolean;

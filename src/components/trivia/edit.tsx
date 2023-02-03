@@ -228,7 +228,7 @@ function TriviaEdit(props: any) {
 				survey: state.survey,
 				show_horizontal_bar: parseStringBoolean(state.show_horizontal_bar),
 				graphyType: state.graphyType,
-				allow_vote_value_per_user: false,
+				allow_vote_value_per_user: state.allow_vote_value_per_user,
 				event_id: props.event._id,
 				activity_id: state.activity_id,
 				points: state.points ? Number(state.points) : 1,
@@ -264,6 +264,7 @@ function TriviaEdit(props: any) {
 						// Survey Config
 						allow_anonymous_answers: data.allow_anonymous_answers,
 						allow_gradable_survey: data.allow_gradable_survey,
+						allow_vote_value_per_user: data.allow_vote_value_per_user,
 						hasMinimumScore: data.hasMinimumScore,
 						isGlobal: data.isGlobal,
 						showNoVotos: data.showNoVotos,
@@ -392,6 +393,7 @@ function TriviaEdit(props: any) {
 							//Survey config
 							allow_anonymous_answers: data.allow_anonymous_answers,
 							allow_gradable_survey: data.allow_gradable_survey,
+							allow_vote_value_per_user: data.allow_vote_value_per_user,
 							hasMinimumScore: data.hasMinimumScore,
 							isGlobal: data.isGlobal,
 							showNoVotos: data.showNoVotos,

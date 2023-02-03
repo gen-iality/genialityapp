@@ -17,7 +17,14 @@ export const surveysListener = (
 			if (snapshot.empty) {
 			} else {
 				const surveysSnapshot = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Survey));
-				setSurveys(surveysSnapshot);
+				const surveysFiltered = surveysSnapshot.filter(survey => {
+					if (survey.allow_vote_value_per_user) {
+						return !!survey.allow_vote_value_per_user
+					} else {
+						return false
+					}
+				})
+				setSurveys(surveysFiltered);
 			}
 		});
 };
@@ -58,9 +65,6 @@ export const listenQuorumByActivity = (
 			weight: number;
 		}>
 	>
-	// setAttendeesOnline: React.Dispatch<React.SetStateAction<number>>,
-	// setAttendeesVisited: React.Dispatch<React.SetStateAction<number>>,
-	// setAttendeesOnlineWeight: React.Dispatch<React.SetStateAction<number>>
 ) => {
 	fireRealtime.ref('userStatus/' + eventId + '/' + activityId).on('value', snapshot => {
 		const usersWhoHaveConnectedObject: Record<string, UsersWhoHaveConnected> | null = snapshot.val();
@@ -83,13 +87,7 @@ export const listenQuorumByActivity = (
 				visited: usersWhoHaveConnectedQty,
 				weight: usersOnlineWeight,
 			});
-			// setAttendeesOnline(usersOnlineQty);
-			// setAttendeesVisited(usersWhoHaveConnectedQty);
-			// setAttendeesOnlineWeight(usersOnlineWeight)
 		} else {
-			// setAttendeesOnline(0)
-			// setAttendeesVisited(0)
-			// setAttendeesOnlineWeight(0)
 			setAttendeesState({
 				online: 0,
 				visited: 0,
@@ -131,7 +129,6 @@ export const listenAnswersQuestion = (
 		);
 };
 
-// export const getQuestionsBySurvey = async (eventId: string, surveyId: string) => {
 export const getAdditionalDataBySurvey = async (eventId: string, surveyId: string) => {
 	const response = await SurveysApi.getOne(eventId, surveyId);
 	return {
