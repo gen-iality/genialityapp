@@ -1314,44 +1314,6 @@ export const PositionsApi = {
     return await Actions.put(`api/positions/${positionId}`, data, true);
   },
   Organizations: {
-    /**
-     * Returns all the position by a given organization ID.
-     * @param {string} organizationId The Organization ID
-     * @returns all positions by organization
-     * @deprecated use PositionsApi.getAllByOrganization instead
-     */
-    getAll: async (organizationId) => {
-      return await Actions.getAll(`/api/positions/organization/${organizationId}`, true);
-    },
-    /**
-     * Returns a position by a given organization ID.
-     * @param {string} organizationId The organization ID
-     * @param {string} positionId The position ID
-     * @returns a position by organization
-     * @deprecated use PositionsApi.getOneByOrganization instead
-     */
-    getOne: async (organizationId, positionId) => {
-      return await Actions.get(`api/positions/${positionId}/organization/${organizationId}`, true);
-    },
-    /**
-     * Update the position's events
-     * @param {string} organizationId The Organization ID
-     * @param {string} positionId The position ID
-     * @param {string[]} eventIds The event IDs
-     * @returns a updated position object
-     * @deprecated use PositionsApi.update instead
-     */
-    editItsEvents: async (organizationId, positionId, eventIds) => {
-      const data = {
-        event_ids: eventIds,
-      };
-      const token = await GetTokenUserFirebase();
-      return await Actions.put(
-        `/api/positions/${positionId}/organization/${organizationId}/events?token=${token}`,
-        data,
-        true,
-      );
-    },
     getUsers: async (organizationId, positionId) => {
       return await Actions.get(`api/positions/${positionId}/organization/${organizationId}/users`, true);
     },
