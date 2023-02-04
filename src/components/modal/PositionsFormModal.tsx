@@ -7,7 +7,7 @@ import Header from '@antdComponents/Header'
 import { handleRequestError } from '@helpers/utils'
 
 import Loading from '@components/loaders/loading'
-import { PositionResponseType } from '@Utilities/types/PositionType'
+import { PositionRequestType, PositionResponseType } from '@Utilities/types/PositionType'
 
 const { confirm } = Modal
 
@@ -105,16 +105,19 @@ function PositionsFormModal(props: PositionsFormModalProps) {
   }, [organizationId])
 
   const onSubmit = async (values: PositionsFormFields) => {
+    const data: PositionRequestType = {
+      ...values,
+      organization_id: organizationId,
+    }
+
     try {
       let updatedPosition
       if (handler.currentPosition) {
         updatedPosition = handler.currentPosition
-        await PositionsApi.update(handler.currentPosition._id, values.position_name)
+        await PositionsApi.update(handler.currentPosition._id, data)
       } else {
-        updatedPosition = await PositionsApi.Organizations.create(organizationId, values.position_name)
+        updatedPosition = await PositionsApi.create(data)
       }
-
-      await PositionsApi.Organizations.editItsEvents(organizationId, updatedPosition._id, values.event_ids)
 
       DispatchMessageService({
         key: 'loading',

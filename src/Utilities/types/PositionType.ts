@@ -3,13 +3,16 @@
  * 
  * I KNOW that we have to use the camelCase
  */
-export interface PositionResponseType {
-  _id: string,
+export interface PositionRequestType {
   position_name: string,
   event_ids: string[],
   organization_id: string,
   organization?: any,
   events?: any[],
+}
+
+export interface PositionResponseType extends PositionRequestType {
+  _id: string,
 }
 
 export default interface PositionType {
