@@ -1295,6 +1295,9 @@ export const PositionsApi = {
   getAll: async () => {
     return await Actions.getAll('/api/positions', true);
   },
+  getAllByOrganization: async (organizationId) => {
+    return await Actions.getAll(`/api/positions?organization_id=${organizationId}`, true);
+  },
   getOne: async (positionId) => {
     return await Actions.get(`api/positions/${positionId}`, true);
   },
@@ -1314,6 +1317,12 @@ export const PositionsApi = {
     return await Actions.put(`api/positions/${positionId}`, data, true);
   },
   Organizations: {
+    /**
+     * Returns all the position by a given organization ID.
+     * @param {string} organizationId The Organization ID
+     * @returns all positions by organization
+     * @deprecated use PositionsApi.getAllByOrganization instead
+     */
     getAll: async (organizationId) => {
       return await Actions.getAll(`/api/positions/organization/${organizationId}`, true);
     },

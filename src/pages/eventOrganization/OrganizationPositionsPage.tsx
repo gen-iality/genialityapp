@@ -25,7 +25,7 @@ function OrganizationPositionsPage(props: { path: string, org: { _id: string } }
 
   async function getOrgPositions() {
     setIsLoading(true)
-    const positions: PositionResponseType[] = await PositionsApi.Organizations.getAll(organizationId)
+    const positions: PositionResponseType[] = await PositionsApi.getAllByOrganization(organizationId)
     const positionsWithUsers = await Promise.all(positions.map(async (position) => {
       const users: any[] = await PositionsApi.Organizations.getUsers(organizationId, position._id)
       return {

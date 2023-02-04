@@ -186,7 +186,7 @@ function OrgMembers(props) {
   }
 
   async function getPositionList() {
-    const positionListData = await PositionsApi.Organizations.getAll(organizationId);
+    const positionListData = await PositionsApi.getAllByOrganization(organizationId);
     console.log('Petición de solicitud - Lista de Cargos : ', positionListData);
 
     const positionsOptions = positionListData.map((position) => {
