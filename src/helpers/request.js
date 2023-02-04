@@ -1295,48 +1295,25 @@ export const PositionsApi = {
   getAll: async () => {
     return await Actions.getAll('/api/positions', true);
   },
+  getAllByOrganization: async (organizationId) => {
+    return await Actions.getAll(`/api/positions?organization_id=${organizationId}`, true);
+  },
   getOne: async (positionId) => {
     return await Actions.get(`api/positions/${positionId}`, true);
   },
-  create: async (positionName) => {
-    const data = {
-      position_name: positionName,
-    };
+  getOneByOrganization: async (positionId, organizationId) => {
+    return await Actions.get(`api/positions/${positionId}?organization_id=${organizationId}`, true);
+  },
+  create: async (data) => {
     return await Actions.create('/api/positions', data, true);
   },
   delete: async (positionId) => {
     return await Actions.delete('api/positions/', positionId, true);
   },
-  update: async (positionId, positionName) => {
-    const data = {
-      position_name: positionName,
-    };
+  update: async (positionId, data) => {
     return await Actions.put(`api/positions/${positionId}`, data, true);
   },
   Organizations: {
-    getAll: async (organizationId) => {
-      return await Actions.getAll(`/api/positions/organization/${organizationId}`, true);
-    },
-    getOne: async (organizationId, positionId) => {
-      return await Actions.get(`api/positions/${positionId}/organization/${organizationId}`, true);
-    },
-    create: async (organizationId, positionName) => {
-      const data = {
-        position_name: positionName,
-      };
-      return await Actions.create(`/api/positions/organization/${organizationId}`, data, true);
-    },
-    editItsEvents: async (organizationId, positionId, eventIds) => {
-      const data = {
-        event_ids: eventIds,
-      };
-      const token = await GetTokenUserFirebase();
-      return await Actions.put(
-        `/api/positions/${positionId}/organization/${organizationId}/events?token=${token}`,
-        data,
-        true,
-      );
-    },
     getUsers: async (organizationId, positionId) => {
       return await Actions.get(`api/positions/${positionId}/organization/${organizationId}/users`, true);
     },
