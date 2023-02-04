@@ -1301,19 +1301,16 @@ export const PositionsApi = {
   getOne: async (positionId) => {
     return await Actions.get(`api/positions/${positionId}`, true);
   },
-  create: async (positionName) => {
-    const data = {
-      position_name: positionName,
-    };
+  getOneByOrganization: async (positionId, organizationId) => {
+    return await Actions.get(`api/positions/${positionId}?organization_id=${organizationId}`, true);
+  },
+  create: async (data) => {
     return await Actions.create('/api/positions', data, true);
   },
   delete: async (positionId) => {
     return await Actions.delete('api/positions/', positionId, true);
   },
-  update: async (positionId, positionName) => {
-    const data = {
-      position_name: positionName,
-    };
+  update: async (positionId, data) => {
     return await Actions.put(`api/positions/${positionId}`, data, true);
   },
   Organizations: {
@@ -1326,15 +1323,24 @@ export const PositionsApi = {
     getAll: async (organizationId) => {
       return await Actions.getAll(`/api/positions/organization/${organizationId}`, true);
     },
+    /**
+     * Returns a position by a given organization ID.
+     * @param {string} organizationId The organization ID
+     * @param {string} positionId The position ID
+     * @returns a position by organization
+     * @deprecated use PositionsApi.getOneByOrganization instead
+     */
     getOne: async (organizationId, positionId) => {
       return await Actions.get(`api/positions/${positionId}/organization/${organizationId}`, true);
     },
-    create: async (organizationId, positionName) => {
-      const data = {
-        position_name: positionName,
-      };
-      return await Actions.create(`/api/positions/organization/${organizationId}`, data, true);
-    },
+    /**
+     * Update the position's events
+     * @param {string} organizationId The Organization ID
+     * @param {string} positionId The position ID
+     * @param {string[]} eventIds The event IDs
+     * @returns a updated position object
+     * @deprecated use PositionsApi.update instead
+     */
     editItsEvents: async (organizationId, positionId, eventIds) => {
       const data = {
         event_ids: eventIds,
