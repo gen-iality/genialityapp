@@ -14,16 +14,20 @@ import positionsTableColumns from './tableColums/positionsTableColumns'
 import withContext from '@context/withContext'
 import { PositionResponseType } from '@Utilities/types/PositionType'
 
-function OrganizationPositionsPage(props: { path: string, org: { _id: string } }) {
+interface Props {
+  path: string,
+  org: { _id: string },
+}
+
+function OrganizationPositionsPage(props: Props) {
   const [positionsData, setPositionsData] = useState<any[]>([])
   const [orgEventsData, setOrgEventsData] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [addOrEditPosition, setAddOrEditPosition] = useState(false)
   const { _id: organizationId } = props.org
 
   const modalHandler = PositionsFormModal.usePositionsFormModal()
 
-  async function getOrgPositions() {
+  async function requestAllPositions() {
     setIsLoading(true)
     const positions: PositionResponseType[] = await PositionsApi.getAllByOrganization(organizationId)
     const positionsWithUsers = await Promise.all(positions.map(async (position) => {
@@ -39,7 +43,7 @@ function OrganizationPositionsPage(props: { path: string, org: { _id: string } }
     console.debug('OrganizationPositionsPage: got positions', { positions })
   }
 
-  async function getOrgEvents() {
+  async function requestOrgEvents() {
     setIsLoading(true)
     const response = await OrganizationApi.events(organizationId)
     const orgEvents = response.data
@@ -49,8 +53,8 @@ function OrganizationPositionsPage(props: { path: string, org: { _id: string } }
   }
 
   useEffect(() => {
-    getOrgPositions()
-    getOrgEvents()
+    requestAllPositions()
+    requestOrgEvents()
   }, [modalHandler.isOpened])
 
   return (
