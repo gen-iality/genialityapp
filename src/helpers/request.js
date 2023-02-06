@@ -1296,13 +1296,13 @@ export const PositionsApi = {
     return await Actions.getAll('/api/positions', true);
   },
   getAllByOrganization: async (organizationId) => {
-    return await Actions.getAll(`/api/positions?organization_id=${organizationId}`, true);
+    return await Actions.getAll(`/api/positions?organization_id=${organizationId || ''}`, true);
   },
   getOne: async (positionId) => {
     return await Actions.get(`api/positions/${positionId}`, true);
   },
   getOneByOrganization: async (positionId, organizationId) => {
-    return await Actions.get(`api/positions/${positionId}?organization_id=${organizationId}`, true);
+    return await Actions.get(`api/positions/${positionId}?organization_id=${organizationId || ''}`, true);
   },
   create: async (data) => {
     return await Actions.create('/api/positions', data, true);
