@@ -49,6 +49,8 @@ const ModalAuth = (props) => {
   } = useHelper();
   const cEvent = UseEventContext();
   const cUser = UseCurrentUser();
+  const isCustomPassword = cEvent?.value?.is_custom_password_label
+  const customPasswordLabel = cEvent?.value?.custom_password_label
   const [modalVisible, setmodalVisible] = useState(false);
   const [msjError, setmsjError] = useState('');
   const intl = useIntl();
@@ -116,7 +118,7 @@ const ModalAuth = (props) => {
   const DetecError = (code) => {
     switch (code) {
       case 'auth/wrong-password':
-        setmsjError(intl.formatMessage({ id: 'auth.error.wrongPassword' }));
+        setmsjError(isCustomPassword ? `El dato es incorrecto` : intl.formatMessage({ id: 'auth.error.wrongPassword' }));
         break;
       case 'auth/user-not-found':
         setmsjError(intl.formatMessage({ id: 'auth.error.userNotFound' }));
@@ -242,7 +244,36 @@ const ModalAuth = (props) => {
                   prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
                 />
               </Form.Item>
-              {useEventWithCedula(cEvent.value).isArkmed ? (
+              {isCustomPassword && (
+                <Form.Item
+                  label={customPasswordLabel || intl.formatMessage({
+                    id: 'modal.label.password',
+                    defaultMessage: 'Contraseña',
+                  })}
+                  name='password'
+                  style={{ marginBottom: '15px', textAlign: 'left' }}
+                  rules={[
+                    {
+                      required: true,
+                      message: `Ingrese su ${customPasswordLabel}` || intl.formatMessage({
+                        id: 'modal.rule.required.password',
+                        defaultMessage: 'Ingrese una contraseña',
+                      }),
+                    },
+                  ]}>
+                  <Input.Password
+                    disabled={loading}
+                    size='large'
+                    placeholder={customPasswordLabel || intl.formatMessage({
+                      id: 'modal.label.password',
+                      defaultMessage: 'Contraseña',
+                    })}
+                    prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                  />
+                </Form.Item>
+              )}
+              {!isCustomPassword && useEventWithCedula(cEvent.value).isArkmed && (
                 <Form.Item
                   label={intl.formatMessage({
                     id: 'modal.label.cedula',
@@ -270,7 +301,8 @@ const ModalAuth = (props) => {
                     iconRender={<IdcardOutlined />}
                   />
                 </Form.Item>
-              ) : (
+              )}
+              {!isCustomPassword && !useEventWithCedula(cEvent.value).isArkmed && (
                 <Form.Item
                   label={intl.formatMessage({
                     id: 'modal.label.password',
@@ -307,7 +339,7 @@ const ModalAuth = (props) => {
                     id={'forgotpassword'}
                     type='secondary'
                     style={{ float: 'right', cursor: 'pointer' }}>
-                    {intl.formatMessage({
+                    {isCustomPassword ? `Olvide mi ${customPasswordLabel}` : intl.formatMessage({
                       id: 'modal.option.restore',
                       defaultMessage: 'Olvidé mi contraseña',
                     })}
