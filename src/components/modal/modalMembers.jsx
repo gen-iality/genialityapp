@@ -83,10 +83,14 @@ function ModalMembers(props) {
 
     if (props.editMember) {
       resp = await OrganizationApi.editUser(organizationId, userId, values);
-      await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);
+      if (values.position_id) {
+        await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);
+      }
     } else {
       resp = await OrganizationApi.saveUser(organizationId, body);
-      await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);
+      if (values.position_id) {
+        await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);
+      }
     }
 
     if (resp._id) {
