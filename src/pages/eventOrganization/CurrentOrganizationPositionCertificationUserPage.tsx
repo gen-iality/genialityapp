@@ -1,4 +1,4 @@
-import { EventsApi, PositionsApi, UsersApi, CerticationsApi } from '@helpers/request'
+import { EventsApi, PositionsApi, UsersApi, CerticationsApi } from '@helpers/request';
 import {
   Typography,
   Table,
@@ -15,28 +15,27 @@ import {
   InputNumber,
   Input,
   DatePicker,
-} from 'antd'
-import Header from '@antdComponents/Header'
-import { ColumnsType } from 'antd/lib/table'
-import {
-  useState,
-  useEffect,
-} from 'react'
-import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import dayjs from 'dayjs'
+} from 'antd';
+import Header from '@antdComponents/Header';
+import { ColumnsType } from 'antd/lib/table';
+import { useState, useEffect } from 'react';
+import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 
 export interface CurrentOrganizationPositionCertificationUserPageProps {
-  org: any,
+  org: any;
   match: {
     params: {
-      positionId: string,
-      userId: string,
-    },
-    url: string,
-  },
+      positionId: string;
+      userId: string;
+    };
+    url: string;
+  };
 }
 
-function CurrentOrganizationPositionCertificationUserPage(props: CurrentOrganizationPositionCertificationUserPageProps) {
+function CurrentOrganizationPositionCertificationUserPage(
+  props: CurrentOrganizationPositionCertificationUserPageProps,
+) {
   const [columns, setColumns] = useState<ColumnsType<any>>([]);
   const [allPositionEvents, setAllPositionEvents] = useState<any[]>([]);
   const [allEvents, setAllEvents] = useState<any[]>([]);
@@ -48,79 +47,74 @@ function CurrentOrganizationPositionCertificationUserPage(props: CurrentOrganiza
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmiting, setIsSubmiting] = useState(false);
 
-  const [form] = Form.useForm()
+  const [form] = Form.useForm();
 
   const organizationId: string = props.org._id;
   const positionId = props.match.params.positionId;
   const userId = props.match.params.userId;
 
-  const openModal = () => setIsModalOpened(true)
-  const closeModal = () => setIsModalOpened(false)
+  const openModal = () => setIsModalOpened(true);
+  const closeModal = () => setIsModalOpened(false);
 
   const loadData = async () => {
-    const user = await UsersApi.getProfile(userId)
+    const user = await UsersApi.getProfile(userId);
     setCurrentUser(user);
 
-    const position = await PositionsApi.getOne(positionId)
-    setCurrentPosition(position)
-    console.debug('CurrentOrganizationPositionPage: loadPositionData',  {position})
+    const position = await PositionsApi.getOne(positionId);
+    setCurrentPosition(position);
+    console.debug('CurrentOrganizationPositionPage: loadPositionData', { position });
 
-    const certifications = await CerticationsApi.getByPositionAndMaybeUser(position._id, user._id)
+    const certifications = await CerticationsApi.getByPositionAndMaybeUser(position._id, user._id);
 
-    const allEventIds = (position.event_ids || [])
-    const events = await Promise.all(
-      allEventIds.map(async (eventId: string) => (await EventsApi.getOne(eventId))),
-    )
-    setAllEvents(events)
-    setAllPositionEvents(events.map((event) => {
-      const filteredCertification = certifications
-        .find((certification: any) => certification.event_id === event._id)
-      return {
-        ...event,
-        certification: filteredCertification,
-      }
-    }))
-  }
+    const allEventIds = position.event_ids || [];
+    const events = await Promise.all(allEventIds.map(async (eventId: string) => await EventsApi.getOne(eventId)));
+    setAllEvents(events);
+    setAllPositionEvents(
+      events.map((event) => {
+        const filteredCertification = certifications.find((certification: any) => certification.event_id === event._id);
+        return {
+          ...event,
+          certification: filteredCertification,
+        };
+      }),
+    );
+  };
 
   const onFormFinish = (values: any) => {
     if (!currentUser) {
-      alert('No se ha cargado el usuario con anterioridad')
-      return
+      alert('No se ha cargado el usuario con anterioridad');
+      return;
     }
-    values['user_id'] = currentUser._id
-    console.debug('form submit', {values})
+    values['user_id'] = currentUser._id;
+    console.debug('form submit', { values });
 
-    setIsSubmiting(true)
+    setIsSubmiting(true);
     CerticationsApi.create(values).finally(() => {
-      setIsSubmiting(false)
-      setIsLoading(true)
-      loadData().finally(() => setIsLoading(false))
-    })
-  }
+      setIsSubmiting(false);
+      setIsLoading(true);
+      loadData().finally(() => setIsLoading(false));
+    });
+  };
 
   // Load all users for this position
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
 
-    loadData().finally(() => setIsLoading(false))
-  }, [])
+    loadData().finally(() => setIsLoading(false));
+  }, []);
 
   useEffect(() => {
     const newColumns: ColumnsType = [
       {
         title: 'Certificación de',
-        render: (event: any) => <p>{event.name}</p>
+        render: (event: any) => <p>{event.name}</p>,
       },
       {
         title: 'Estado',
         width: 100,
         dataIndex: 'certification',
         render: (certification: any) => (
-          <Tag
-            color={certification?.success ? 'green' : 'red'}
-          >
-            {certification?.success ? 'pasado' : 'fallido'}
-          </Tag>
+          <Tag color={certification?.success ? 'green' : 'red'}>{certification?.success ? 'pasado' : 'fallido'}</Tag>
         ),
       },
       {
@@ -128,7 +122,11 @@ function CurrentOrganizationPositionCertificationUserPage(props: CurrentOrganiza
         width: 100,
         dataIndex: 'certification',
         render: (certification: any) => (
-          <>{certification?.approved_from_date ? dayjs(certification?.approved_from_date).format('DD/MM/YYYY') : 'sin fecha'}</>
+          <>
+            {certification?.approved_from_date
+              ? dayjs(certification?.approved_from_date).format('DD/MM/YYYY')
+              : 'sin fecha'}
+          </>
         ),
       },
       {
@@ -136,7 +134,11 @@ function CurrentOrganizationPositionCertificationUserPage(props: CurrentOrganiza
         width: 100,
         dataIndex: 'certification',
         render: (certification: any) => (
-          <>{certification?.approved_until_date ? dayjs(certification?.approved_until_date).format('DD/MM/YYYY') : 'sin fecha'}</>
+          <>
+            {certification?.approved_until_date
+              ? dayjs(certification?.approved_until_date).format('DD/MM/YYYY')
+              : 'sin fecha'}
+          </>
         ),
       },
       {
@@ -144,13 +146,13 @@ function CurrentOrganizationPositionCertificationUserPage(props: CurrentOrganiza
         width: 100,
         dataIndex: 'certification',
         render: (certification: any) => {
-          let lema = 'Vencido'
+          let lema = 'Vencido';
           if (certification?.approved_until_date) {
-            if ((dayjs(certification?.approved_until_date)) > dayjs(Date.now())) {
-              lema = 'Vigente'
+            if (dayjs(certification?.approved_until_date) > dayjs(Date.now())) {
+              lema = 'Vigente';
             }
           }
-          return (<>{lema}</>)
+          return <>{lema}</>;
         },
       },
       {
@@ -166,29 +168,27 @@ function CurrentOrganizationPositionCertificationUserPage(props: CurrentOrganiza
               icon={<DeleteOutlined />}
             />
           </Tooltip>
-        )
+        ),
       },
-    ]
+    ];
 
-    setColumns(newColumns)
-  }, [allPositionEvents])
+    setColumns(newColumns);
+  }, [allPositionEvents]);
 
   return (
     <>
       <Header
-        title={`Certificados de ${currentUser ? currentUser.names : <Spin />} en el cargo de ${currentPosition ? currentPosition.position_name : <Spin />}`}
+        title={`Certificados de ${currentUser ? currentUser.names : <Spin />} en el cargo de ${
+          currentPosition ? currentPosition.position_name : <Spin />
+        }`}
       />
-      <Typography.Paragraph>
-        Estos son los certificados de dicho usuario.
-      </Typography.Paragraph>
+      <Typography.Paragraph>Estos son los certificados de dicho usuario.</Typography.Paragraph>
 
-      <Typography.Paragraph>
-        Este cargo requiere {allPositionEvents.length} certificaciones.
-      </Typography.Paragraph>
+      <Typography.Paragraph>Este cargo requiere {allPositionEvents.length} certificaciones.</Typography.Paragraph>
 
-      <Typography.Paragraph style={{color: 'red'}}>
-        TODO: Es necesario filtrar los eventos por <code>event.is_external</code> porque son los que
-        tienen certificación (en diseño).
+      <Typography.Paragraph style={{ color: 'red' }}>
+        TODO: Es necesario filtrar los eventos por <code>event.is_external</code> porque son los que tienen
+        certificación (en diseño).
       </Typography.Paragraph>
 
       <Table
@@ -203,16 +203,16 @@ function CurrentOrganizationPositionCertificationUserPage(props: CurrentOrganiza
           <Row wrap justify='end' gutter={[8, 8]}>
             <Col>
               <Button
-                type="primary"
+                type='primary'
                 icon={<PlusCircleOutlined />}
                 onClick={() => {
-                  form.resetFields()
-                  openModal()
+                  form.resetFields();
+                  openModal();
                 }}
               >
                 Agregar certificación
               </Button>
-              {(isSubmiting) && <Spin />}
+              {isSubmiting && <Spin />}
             </Col>
           </Row>
         )}
@@ -222,60 +222,39 @@ function CurrentOrganizationPositionCertificationUserPage(props: CurrentOrganiza
         visible={isModalOpened}
         title={`Agrega una certificación a este usuario: ${currentUser?.names}`}
         onOk={() => {
-          form.submit()
-          closeModal()
+          form.submit();
+          closeModal();
         }}
         onCancel={() => closeModal()}
       >
         <Form form={form} onFinish={onFormFinish}>
-          <Form.Item
-            name="event_id"
-            label="Curso a dar certificación"
-            rules={[{required: true, message: "Esto"}]}
-          >
-            <Select
-              options={allEvents.map((event) => ({ label: event.name, value: event._id }))}
-            />
+          <Form.Item name='event_id' label='Curso a dar certificación' rules={[{ required: true, message: 'Esto' }]}>
+            <Select options={allEvents.map((event) => ({ label: event.name, value: event._id }))} />
           </Form.Item>
-          <Form.Item
-            name="success"
-            label="Exitoso"
-          >
+          <Form.Item name='success' label='Exitoso'>
             <Switch />
           </Form.Item>
-          <Form.Item
-            name="description"
-            label="Descripción"
-            rules={[{required: true, message: "Ah!"}]}
-          >
+          <Form.Item name='description' label='Descripción' rules={[{ required: true, message: 'Ah!' }]}>
             <Input />
           </Form.Item>
-          <Form.Item
-            name="hours"
-            label="Horas"
-            rules={[{required: true, message: "Ah!"}]}
-          >
+          <Form.Item name='hours' label='Horas' rules={[{ required: true, message: 'Ah!' }]}>
             <InputNumber min={1} />
           </Form.Item>
-          <Form.Item
-            name="entity"
-            label="Entidad"
-            rules={[{required: true, message: "Ah!"}]}
-          >
+          <Form.Item name='entity' label='Entidad' rules={[{ required: true, message: 'Ah!' }]}>
             <Input />
           </Form.Item>
           <Form.Item
-            name="approved_from_date"
-            label="Hora de aprobación"
-            rules={[{required: true, message: 'Cuándo!'}]}
+            name='approved_from_date'
+            label='Hora de aprobación'
+            rules={[{ required: true, message: 'Cuándo!' }]}
             initialValue={dayjs(Date.now())}
           >
             <DatePicker />
           </Form.Item>
           <Form.Item
-            name="approved_until_date"
-            label="Hora de vencimiento"
-            rules={[{required: true, message: 'Cuándo!'}]}
+            name='approved_until_date'
+            label='Hora de vencimiento'
+            rules={[{ required: true, message: 'Cuándo!' }]}
             initialValue={dayjs(Date.now())}
           >
             <DatePicker />
