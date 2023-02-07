@@ -140,15 +140,6 @@ function OrgMembers(props) {
     orgUsersList?.map(async (orgUser) => {
       console.log('Estado - Lista de cargos', positionList);
 
-      const position_name = positionList
-        .filter((position) => orgUser.properties.position_id === position.value)
-        .map((position) => position.label);
-
-      console.log('position_name', position_name);
-
-      /* const specificUser = await OrganizationApi.getEpecificUser(organizationId, orgUser._id);
-      console.log('specificUser', specificUser); */
-
       const properties = {
         _id: orgUser._id,
         created_at: orgUser.created_at,
@@ -156,16 +147,13 @@ function OrgMembers(props) {
         role: orgUser.rol.name,
         picture: orgUser.user.picture,
         position: orgUser.position?.position_name || 'Sin cargo',
-        // names: membersData?.user?.name || membersData?.user?.names,
-        // email: membersData?.user?.email,
+        position_id: orgUser.position?._id || null,
         stats: userActivities[orgUser.account_id],
         ...orgUser.properties,
       };
 
       fieldsMembersData.push(properties);
     });
-
-    //dataEvents;
 
     console.log('Variable - Miembros de la organización', fieldsMembersData);
 
