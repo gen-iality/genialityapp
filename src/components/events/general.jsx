@@ -50,6 +50,7 @@ import TypeEvent from '../shared/typeEvent/TypeEvent';
 import AccessTypeCard from '../shared/accessTypeCard/AccessTypeCard';
 import { AccessTypeCardData } from '../shared/accessTypeCard/accesTypeCardData/accesTypeCardData';
 import ActivityRedirectForm from '../shared/ActivityRedirectForm';
+import CustomPasswordLabel from './CustomPasswordLabel';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -108,6 +109,8 @@ class General extends Component {
 			tabActive: '1',
 			iMustBlockAFunctionality: false,
 			iMustValidate: true,
+			isCustomPasswordLabel: this.props.event?.is_custom_password_label ||  false,
+      customPasswordLabel: this.props.event?.custom_password_label || '',
 		};
 		this.specificDates = this.specificDates.bind(this);
 		this.submit = this.submit.bind(this);
@@ -237,6 +240,12 @@ class General extends Component {
 	}
 
 	//*********** FUNCIONES DEL FORMULARIO
+	// isCustomPasswordLabel => boolean
+  // customPasswordLabel => string
+  handleChangeCustomPassword = (isCustomPasswordLabel, customPasswordLabel) => {
+    // console.log(this.state)
+    this.setState({ isCustomPasswordLabel, customPasswordLabel })
+  }
 
 	googleanlyticsid = e => {
 		const { name, value } = e.target;
@@ -518,6 +527,8 @@ class General extends Component {
 			where_it_run: event.where_it_run || 'InternalEvent',
 			url_external: event.url_external || '',
 			success_message: event.success_message || '',
+			is_custom_password_label: this.state.isCustomPasswordLabel || false, 
+      custom_password_label: this.state.customPasswordLabel || 'Contraseña'
 		};
 
 		try {
@@ -872,6 +883,12 @@ class General extends Component {
 											initialState={this.props.event?.redirect_activity}
 										/>
 									)}
+
+									<CustomPasswordLabel
+                    isCustomPasswordLabel={this.state.isCustomPasswordLabel}
+                    customPasswordLabel={this.state.customPasswordLabel}
+                    handleChangeCustomPassword={this.handleChangeCustomPassword}
+                  />
 
 									{!cUser?.plan && (
 										<Form.Item label={'Especificar fechas'}>

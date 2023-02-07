@@ -29,6 +29,8 @@ function getBase64(img, callback) {
 const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
+  const isCustomPassword = cEvent?.value?.is_custom_password_label
+  const customPasswordLabel = cEvent?.value?.custom_password_label
   const [takingPhoto, setTakingPhoto] = useState(false);
   const [imageAvatar, setImageAvatar] = useState(null);
   const [form] = Form.useForm();
@@ -78,24 +80,26 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
     },
   ];
 
-  const rulePassword = [
-    {
-      required: true,
-      message: intl.formatMessage({
-        id: 'register.rule.password.message',
-        defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
-      }),
-    },
-    {
-      type: 'string',
-      min: 6,
-      max: 18,
-      message: intl.formatMessage({
-        id: 'register.rule.password.message2',
-        defaultMessage: 'La contraseña debe tener entre 6 a 18 caracteres',
-      }),
-    },
-  ];
+  const rulePassword = (isCustomPassword, customPasswordLabel) => {
+    return [
+      {
+        required: true,
+        message: isCustomPassword ? `Ingrese su ${customPasswordLabel}` : intl.formatMessage({
+          id: 'register.rule.password.message',
+          defaultMessage: 'Ingrese una contraseña para su cuenta en Evius',
+        }),
+      },
+      {
+        type: 'string',
+        min: 6,
+        max: 18,
+        message: intl.formatMessage({
+          id: 'register.rule.password.message2',
+          defaultMessage: 'La contraseña debe tener entre 6 a 18 caracteres',
+        }),
+      },
+    ];
+  }
 
   const ruleCedula = [
     { required: true, message: 'Ingrese una cedula para su cuenta en Evius' },
@@ -216,7 +220,29 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
-        {useEventWithCedula(cEvent.value).isArkmed ? (
+        {isCustomPassword && (
+          <Form.Item
+            label={customPasswordLabel || intl.formatMessage({
+              id: 'modal.label.password',
+              defaultMessage: 'Contraseña',
+            })}
+            name='password'
+            hasFeedback
+            style={{ marginBottom: '10px', textAlign: 'left' }}
+            rules={rulePassword(isCustomPassword, customPasswordLabel)}>
+            <Input.Password
+              onChange={(e) => HandleHookForm(e, 'password')}
+              type='password'
+              size='large'
+              placeholder={customPasswordLabel || intl.formatMessage({
+                id: 'modal.label.password',
+                defaultMessage: 'Contraseña',
+              })}
+              prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+            />
+          </Form.Item>
+        )}
+        {!isCustomPassword && useEventWithCedula(cEvent.value).isArkmed && (
           <Form.Item
             label={intl.formatMessage({
               id: 'modal.label.cedula',
@@ -235,7 +261,8 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
               prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>
-        ) : (
+       )}
+       {!isCustomPassword && !useEventWithCedula(cEvent.value).isArkmed && (
           <Form.Item
             label={intl.formatMessage({
               id: 'modal.label.password',
@@ -244,7 +271,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             name='password'
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={rulePassword}>
+            rules={rulePassword(isCustomPassword, customPasswordLabel)}>
             <Input.Password
               onChange={(e) => HandleHookForm(e, 'password')}
               type='password'
