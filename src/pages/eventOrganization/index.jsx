@@ -75,13 +75,13 @@ function Organization(props) {
               theme='dark'
               //inlineCollapsed={collapseMenu}
             >
-              <Menu.Item key={'1'} icon={<ScheduleOutlined />}>
-                {'Cursos'}
-                <NavLink to={`${props.match.url}/events`} />
-              </Menu.Item>
-              <Menu.Item key={'2'} icon={<BarsOutlined />}>
+              <Menu.Item key={'1'} icon={<BarsOutlined />}>
                 {'Información'}
                 <NavLink to={`${props.match.url}/information`} />
+              </Menu.Item>
+              <Menu.Item key={'2'} icon={<ScheduleOutlined />}>
+                {'Cursos'}
+                <NavLink to={`${props.match.url}/events`} />
               </Menu.Item>
               <Menu.Item key={'3'} icon={<SketchOutlined />}>
                 {'Apariencia'}
