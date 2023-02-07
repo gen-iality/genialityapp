@@ -1,8 +1,11 @@
 import { useHistory } from 'react-router';
-import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin } from 'antd';
+import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin, Tag } from 'antd';
 import { ClockCircleOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
 import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 export const columns = (columnsData) => {
   const columns = [];
@@ -56,6 +59,35 @@ export const columns = (columnsData) => {
     }, */
   };
 
+  const validity_date = {
+    key: 'validity_date',
+    title: 'Estado de vigencia',
+    dataIndex: 'validity_date',
+    align: 'center',
+    ellipsis: true,
+    sorter: (a, b) => a.validity_date.localeCompare(b.validity_date),
+    ...membersGetColumnSearchProps('validity_date', columnsData),
+    render(val, item) {
+      if (item.validity_date === null) {
+        return <>{<Tag color='blue'>{`Sin certificado`}</Tag>}</>; //TODO: Utilizar la función traductora.
+      } else {
+        const actualDate = dayjs(new Date());
+        const finishDate = dayjs(item.validity_date);
+        const vigencia = finishDate.diff(actualDate, 'day');
+
+        return (
+          <>
+            {
+              <Tag color={vigencia > 10 ? 'green' : vigencia < 10 && vigencia > 0 ? 'orange' : 'red'}>
+                {`${vigencia} días`}
+              </Tag>
+            }
+          </>
+        );
+      }
+    },
+  };
+
   const created_at = {
     key: 'created_at',
     title: 'Creado',
@@ -72,6 +104,7 @@ export const columns = (columnsData) => {
   columns.push(checkedin_at);
   columns.push(name);
   columns.push(email);
+  columns.push(validity_date);
   columns.push(course);
   columns.push(created_at);
   return columns;

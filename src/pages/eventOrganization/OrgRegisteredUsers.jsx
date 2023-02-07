@@ -10,7 +10,7 @@ import Header from '@antdComponents/Header';
 import { columns } from './tableColums/registeredTableColumns';
 
 /** Helpers and utils */
-import { OrganizationApi } from '@helpers/request';
+import { OrganizationApi, CerticationsApi } from '@helpers/request';
 import { firestore } from '@helpers/firebase';
 
 /** Context */
@@ -31,15 +31,8 @@ function OrgRegisteredUsers(props) {
   }, []);
 
   function formattedRealDate(timestamp) {
-    console.log('timestamp', timestamp);
-
-    //const segundos = dayjs(timestamp);
     const segundos = timestamp?.seconds;
-    console.log('segundos', segundos);
-
     const formattedDate = dayjs.unix(segundos).format('YYYY-MM-DD');
-    console.log('formattedDate', formattedDate);
-
     return formattedDate;
   }
 
@@ -47,34 +40,46 @@ function OrgRegisteredUsers(props) {
     const { data: orgEvents } = await OrganizationApi.events(organizationId);
     console.log('orgEvents', orgEvents);
 
-    const inscritos = orgEvents.map(async (orgEvent) => {
-      const asistentes = firestore.collection(`${orgEvent._id}_event_attendees`);
-      const querySnapshot = await asistentes.get();
-      const propertiesList = [];
+    const totalRegistered = (
+      await Promise.all(
+        orgEvents.map(async (orgEvent) => {
+          const asistentes = firestore.collection(`${orgEvent._id}_event_attendees`);
+          const querySnapshot = await asistentes.get();
+          console.log('querySnapshot', querySnapshot);
 
-      querySnapshot.forEach((doc) => {
-        console.log('doc.data()', doc.data());
-        const properties = {
-          checkedin_at: doc.data()?.checkedin_at ? formattedRealDate(doc.data()?.checkedin_at) : 'Sin registro',
-          eventUser_name: doc.data()?.properties?.names,
-          eventUser_email: doc.data()?.properties?.email,
-          event_name: orgEvent.name,
-          created_at: orgEvent.created_at,
-        };
+          const certificationsByEvent = await CerticationsApi.getByUserAndEvent(null, orgEvent._id);
+          console.log('1. certificationsByEvent', certificationsByEvent);
 
-        console.log('5. properties', properties);
-        propertiesList.push(properties);
-      });
-      return propertiesList;
-    });
+          const registeredByEvent = querySnapshot.docs.map((doc) => {
+            const infoEventUser = doc.data();
+            const properties = {
+              checkedin_at: infoEventUser?.checkedin_at
+                ? formattedRealDate(infoEventUser?.checkedin_at)
+                : 'Sin registro',
+              eventUser_name: infoEventUser?.properties?.names,
+              eventUser_email: infoEventUser?.properties?.email,
+              validity_date: null,
+              event_name: orgEvent.name,
+              created_at: orgEvent.created_at,
+            };
 
-    const userSuscribedData = (await Promise.all(inscritos)).flat();
+            const userCertification = certificationsByEvent.find(
+              (certificationByEvent) => certificationByEvent.user_id === infoEventUser?.account_id,
+            );
+            console.log('1. certification', userCertification);
+            properties.validity_date = userCertification ? userCertification.approved_until_date : null;
 
-    console.log('Antes de hacer seteo');
-    console.log('7. userSuscribedData', userSuscribedData);
-    setUsersSuscribedData(userSuscribedData);
+            return properties;
+          });
+
+          return registeredByEvent;
+        }),
+      )
+    ).flat();
+
+    console.log('totalRegistered', totalRegistered);
+    setUsersSuscribedData(totalRegistered);
     setIsLoading(false);
-    console.log('Despues de hacer seteo');
   };
 
   const columnsData = {

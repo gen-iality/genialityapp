@@ -1296,13 +1296,13 @@ export const PositionsApi = {
     return await Actions.getAll('/api/positions', true);
   },
   getAllByOrganization: async (organizationId) => {
-    return await Actions.getAll(`/api/positions?organization_id=${organizationId}`, true);
+    return await Actions.getAll(`/api/positions?organization_id=${organizationId || ''}`, true);
   },
   getOne: async (positionId) => {
     return await Actions.get(`api/positions/${positionId}`, true);
   },
   getOneByOrganization: async (positionId, organizationId) => {
-    return await Actions.get(`api/positions/${positionId}?organization_id=${organizationId}`, true);
+    return await Actions.get(`api/positions/${positionId}?organization_id=${organizationId || ''}`, true);
   },
   create: async (data) => {
     return await Actions.create('/api/positions', data, true);
@@ -1323,7 +1323,7 @@ export const PositionsApi = {
     },
     deleteUser: async (organizationId, positionId, userId) => {
       return await Actions.delete(`api/positions/${positionId}/organization/${organizationId}/users/`, userId, true);
-    }
+    },
   },
 };
 
@@ -1348,7 +1348,7 @@ export const ModulesApi = {
   update: async (moduleId, moduleName, order) => {
     const data = {
       module_name: moduleName,
-      order: (order || 0),
+      order: order || 0,
     };
     return await Actions.put(`api/modules/${moduleId}`, data, true);
   },
@@ -1377,7 +1377,7 @@ export const ModulesApi = {
   //   };
   //   return await Actions.create('/api/modules', data, true);
   // },
-}
+};
 
 // Endpoint for certification logs handlering
 export const CerticationLogsApi = {
@@ -1400,7 +1400,7 @@ export const CerticationLogsApi = {
     console.log('byEvent', eventId, 'query', query);
     return await Actions.get(`api/certification-logs/event-certification-logs/${eventId}`, true);
   },
-}
+};
 
 // Endpoints for certifications handlering
 export const CerticationsApi = {
@@ -1420,7 +1420,7 @@ export const CerticationsApi = {
     return await Actions.put(`api/certifications/${certificationID}`, data, true);
   },
   getByUserAndEvent: async (userId, eventId) => {
-    return await Actions.getAll(`api/certifications?user_id=${userId}&event_id=${eventId}`, true);
+    return await Actions.getAll(`api/certifications?user_id=${userId || ''}&event_id=${eventId || ''}`, true);
   },
   /**
    * Requests all the certifications for an specify position events and (maybe) an user
@@ -1429,13 +1429,13 @@ export const CerticationsApi = {
    * @returns A certification list for this position and (maybe) this user
    */
   getByPositionAndMaybeUser: async (positionId, userId) => {
-    let url = `api/certifications/by-position/${positionId}`
+    let url = `api/certifications/by-position/${positionId}`;
     if (userId) {
-      url = `${url}?user_id=${userId}`
+      url = `${url}?user_id=${userId}`;
     }
-    return await Actions.getAll(url, true)
-  }
-}
+    return await Actions.getAll(url, true);
+  },
+};
 
 export default privateInstance;
 window.EventsApi = EventsApi;
