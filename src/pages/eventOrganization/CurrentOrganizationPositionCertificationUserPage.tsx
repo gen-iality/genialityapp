@@ -107,18 +107,22 @@ function CurrentOrganizationPositionCertificationUserPage(
     const newColumns: ColumnsType = [
       {
         title: 'Certificación de',
-        render: (event: any) => <p>{event.name}</p>,
+        render: (event: any) => <span>{event.name}</span>,
       },
       {
-        title: 'Estado',
+        title: 'Estado de aprobación',
+        align: 'center',
         width: 100,
         dataIndex: 'certification',
         render: (certification: any) => (
-          <Tag color={certification?.success ? 'green' : 'red'}>{certification?.success ? 'pasado' : 'fallido'}</Tag>
+          <Tag color={certification?.success ? 'green' : 'red'}>
+            {certification?.success ? 'Aprobado' : 'No aprobado'}
+          </Tag>
         ),
       },
       {
-        title: 'Fecha aprobación',
+        title: 'Fecha de emisión',
+        align: 'center',
         width: 100,
         dataIndex: 'certification',
         render: (certification: any) => (
@@ -130,7 +134,8 @@ function CurrentOrganizationPositionCertificationUserPage(
         ),
       },
       {
-        title: 'Fecha vencimiento',
+        title: 'Fecha de vencimiento',
+        align: 'center',
         width: 100,
         dataIndex: 'certification',
         render: (certification: any) => (
@@ -142,17 +147,22 @@ function CurrentOrganizationPositionCertificationUserPage(
         ),
       },
       {
-        title: '¿Vencido?',
+        title: 'Estado de vigencia',
+        align: 'center',
         width: 100,
         dataIndex: 'certification',
         render: (certification: any) => {
-          let lema = 'Vencido';
+          let lema = 'Inactivo';
           if (certification?.approved_until_date) {
             if (dayjs(certification?.approved_until_date) > dayjs(Date.now())) {
-              lema = 'Vigente';
+              lema = 'Activo';
             }
           }
-          return <>{lema}</>;
+          return (
+            <>
+              <Tag color={lema === 'Inactivo' ? 'red' : 'green'}>{lema}</Tag>
+            </>
+          );
         },
       },
       {
@@ -220,7 +230,7 @@ function CurrentOrganizationPositionCertificationUserPage(
 
       <Modal
         visible={isModalOpened}
-        title={`Agrega una certificación a este usuario: ${currentUser?.names}`}
+        title={`Agrega una certificación a usuario: ${currentUser?.names}`}
         onOk={() => {
           form.submit();
           closeModal();
@@ -245,7 +255,7 @@ function CurrentOrganizationPositionCertificationUserPage(
           </Form.Item>
           <Form.Item
             name='approved_from_date'
-            label='Hora de aprobación'
+            label='Fecha de aprobación'
             rules={[{ required: true, message: 'Cuándo!' }]}
             initialValue={dayjs(Date.now())}
           >
@@ -253,7 +263,7 @@ function CurrentOrganizationPositionCertificationUserPage(
           </Form.Item>
           <Form.Item
             name='approved_until_date'
-            label='Hora de vencimiento'
+            label='Fecha de vencimiento'
             rules={[{ required: true, message: 'Cuándo!' }]}
             initialValue={dayjs(Date.now())}
           >
