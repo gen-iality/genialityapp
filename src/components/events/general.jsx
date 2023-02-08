@@ -3,19 +3,19 @@ import { Component, createRef } from 'react';
  * This solution is distributed as is:
  * https://github.com/react-component/picker/issues/123#issuecomment-728755491
  */
- import dayjs from 'dayjs';
- import advancedFormat from 'dayjs/plugin/advancedFormat';
- import customParseFormat from 'dayjs/plugin/customParseFormat';
- import localeData from 'dayjs/plugin/localeData';
- import weekday from 'dayjs/plugin/weekday';
- import weekOfYear from 'dayjs/plugin/weekOfYear';
- import weekYear from 'dayjs/plugin/weekYear';
- dayjs.extend(customParseFormat);
- dayjs.extend(advancedFormat);
- dayjs.extend(weekday);
- dayjs.extend(localeData);
- dayjs.extend(weekOfYear);
- dayjs.extend(weekYear);
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localeData from 'dayjs/plugin/localeData';
+import weekday from 'dayjs/plugin/weekday';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import weekYear from 'dayjs/plugin/weekYear';
+dayjs.extend(customParseFormat);
+dayjs.extend(advancedFormat);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
+dayjs.extend(weekOfYear);
+dayjs.extend(weekYear);
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, PlansApi, TypesApi } from '@helpers/request';
 import ErrorServe from '../modal/serverError';
@@ -185,9 +185,9 @@ class General extends Component {
         organizers,
         types,
         categories,
-        event
+        event,
       );
-      const currentOrganization = await OrganizationApi.getOne(event.organizer_id)
+      const currentOrganization = await OrganizationApi.getOne(event.organizer_id);
       this.setState({
         categories,
         organizers,
@@ -766,7 +766,8 @@ class General extends Component {
                         Nombre <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
-                    rules={[{ required: true, message: 'El nombre es requerido' }]}>
+                    rules={[{ required: true, message: 'El nombre es requerido' }]}
+                  >
                     <Input
                       ref={this.nameInputRef}
                       autoFocus={true}
@@ -785,11 +786,11 @@ class General extends Component {
                     }
                   >
                     <Select
-                      mode="multiple"
-                      placeholder="Asigna un cargo para excluir"
+                      mode='multiple'
+                      placeholder='Asigna un cargo para excluir'
                       onChange={(values) => {
-                        console.log(values)
-                        EventsApi.editItsPositions(event._id, values)
+                        console.log(values);
+                        EventsApi.editItsPositions(event._id, values);
                       }}
                       defaultValue={event.position_ids || []}
                       options={(possiblePositions || []).map((position) => ({
@@ -804,12 +805,14 @@ class General extends Component {
                       <Select
                         name={'homeSelectedScreen'}
                         value={event.homeSelectedScreen}
-                        onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}>
+                        onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}
+                      >
                         <Option value={null}>Banner de inicio</Option>
                         <Option
                           value={
                             event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.ProfileScreen
                             ? event.app_configuration.ProfileScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -817,13 +820,15 @@ class General extends Component {
                         <Option
                           value={
                             event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.name : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.CalendarScreen
                             ? event.app_configuration.CalendarScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}>
+                          value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}
+                        >
                           {event.app_configuration.NewsScreen
                             ? event.app_configuration.NewsScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -833,7 +838,8 @@ class General extends Component {
                             event.app_configuration.EventPlaceScreen
                               ? event.app_configuration.EventPlaceScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.EventPlaceScreen
                             ? event.app_configuration.EventPlaceScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -841,13 +847,15 @@ class General extends Component {
                         <Option
                           value={
                             event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.name : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.SpeakerScreen
                             ? event.app_configuration.SpeakerScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}>
+                          value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}
+                        >
                           {event.app_configuration.SurveyScreen
                             ? event.app_configuration.SurveyScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -855,13 +863,15 @@ class General extends Component {
                         <Option
                           value={
                             event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.name : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.DocumentsScreen
                             ? event.app_configuration.DocumentsScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}>
+                          value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}
+                        >
                           {event.app_configuration.WallScreen
                             ? event.app_configuration.WallScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -872,7 +882,8 @@ class General extends Component {
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}>
+                          value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}
+                        >
                           {event.app_configuration.FaqsScreen
                             ? event.app_configuration.FaqsScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -1020,12 +1031,7 @@ class General extends Component {
                     />
                   </Form.Item>
 
-                  <Form.Item
-                    label={
-                      <label style={{ marginTop: '2%' }}>
-                        Imagen general - miniatura del curso
-                      </label>
-                    }>
+                  <Form.Item label={<label style={{ marginTop: '2%' }}>Imagen general - miniatura del curso</label>}>
                     <ImageUploaderDragAndDrop
                       imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
                       imageUrl={image}
@@ -1074,7 +1080,7 @@ class General extends Component {
                                   publicChat: checked,
                                 },
                               },
-                              async () => await this.upsertTabs()
+                              async () => await this.upsertTabs(),
                             )
                           }
                         />
@@ -1093,7 +1099,7 @@ class General extends Component {
                                   privateChat: checked,
                                 },
                               },
-                              async () => await this.upsertTabs()
+                              async () => await this.upsertTabs(),
                             )
                           }
                         />
@@ -1101,64 +1107,61 @@ class General extends Component {
                     </Row>
                   </Card>
 
-                  <Form.Item label="¿Es evento externo?">
+                  <Form.Item label='¿Es evento externo?'>
                     <Switch
                       checkedChildren='Externo'
                       unCheckedChildren='GEN.iality'
                       checked={event.is_external}
                       onChange={(checked) => {
-                        this.handleChange(checked, 'is_external')
+                        this.handleChange(checked, 'is_external');
                       }}
                     />
                   </Form.Item>
 
-                  {(event.is_external) && (
+                  {event.is_external && (
                     <>
-                      <Form.Item
-                        label="Descripción de la certificación (valor por defecto)"
-                        >
+                      <Form.Item label='Descripción de la certificación (valor por defecto)'>
                         <Input
                           value={event.default_certification_description}
                           onChange={(e) => {
-                            this.handleChange(e, 'default_certification_description')
+                            this.handleChange(e, 'default_certification_description');
                           }}
                         />
                       </Form.Item>
 
                       <Form.Item
-                        label="Días de vigencia (valor por defecto)"
-                        rules={[{
-                          required: true, message: "Necesario",
-                        }]}
+                        label='Días de vigencia (valor por defecto)'
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Necesario',
+                          },
+                        ]}
                       >
                         <InputNumber
                           min={1}
                           value={event.validity_days || 1}
                           onChange={(e) => {
-                            this.handleChange(e, 'validity_days')
+                            this.handleChange(e, 'validity_days');
                           }}
                         />
                       </Form.Item>
 
-                      <Form.Item
-                        label="Horas de la certificación (valor por defecto)"
-                        >
+                      <Form.Item label='Horas de la certificación (valor por defecto)'>
                         <InputNumber
                           min={1}
                           value={event.default_certification_hours || 1}
                           onChange={(e) => {
-                            this.handleChange(e, 'default_certification_hours')
+                            this.handleChange(e, 'default_certification_hours');
                           }}
                         />
                       </Form.Item>
 
-                      <Form.Item
-                        label="Entidad de la certificación (valor por defecto)"
-                        >
+                      <Form.Item label='Entidad de la certificación (valor por defecto)'>
                         <Input
                           value={event.default_certification_entity}
                           onChange={(e) => {
-                            this.handleChange(e, 'default_certification_entity')
+                            this.handleChange(e, 'default_certification_entity');
                           }}
                         />
                       </Form.Item>
@@ -1193,7 +1196,8 @@ class General extends Component {
                             ) : (
                               ''
                             )
-                          }>
+                          }
+                        >
                           <div
                             style={{
                               border: '1px solid #D3D3D3',
@@ -1201,7 +1205,8 @@ class General extends Component {
                               padding: '10px',
                               cursor: 'pointer',
                               minHeight: '170px',
-                            }}>
+                            }}
+                          >
                             <Space direction='vertical'>
                               <div onClick={() => this.changetypeEvent(0)}>
                                 <Text strong>Cursos Público con Registro</Text>
@@ -1227,7 +1232,8 @@ class General extends Component {
                                           allow_register: true,
                                         },
                                       })
-                                    }>
+                                    }
+                                  >
                                     Registro sin autenticación de usuario (Beta)
                                   </Checkbox>
                                 </>
@@ -1244,7 +1250,8 @@ class General extends Component {
                             ) : (
                               ''
                             )
-                          }>
+                          }
+                        >
                           <div
                             /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(1)}
@@ -1254,7 +1261,8 @@ class General extends Component {
                               padding: '10px',
                               cursor: 'pointer',
                               minHeight: '170px',
-                            }}>
+                            }}
+                          >
                             <Space direction='vertical'>
                               <Text strong>Cursos Público sin Registro</Text>
                               <Divider />
@@ -1278,7 +1286,8 @@ class General extends Component {
                             ) : (
                               ''
                             )
-                          }>
+                          }
+                        >
                           <div
                             /* className='cards-type-information'  */
                             onClick={() => this.changetypeEvent(2)}
@@ -1288,7 +1297,8 @@ class General extends Component {
                               padding: '10px',
                               cursor: 'pointer',
                               minHeight: '170px',
-                            }}>
+                            }}
+                          >
                             <Space direction='vertical'>
                               <Text strong>Cursos privado por invitación</Text>
                               <Divider />
