@@ -60,6 +60,7 @@ import {
   disabledStartDate,
 } from '@Utilities/disableTimeAndDatePickerInEventDate';
 import { CurrentUserContext } from '@context/userContext';
+import { CardSelector } from './CardSelector';
 
 dayjs.locale('es');
 const { Title, Text } = Typography;
@@ -115,7 +116,7 @@ class General extends Component {
         checked: false,
         permissions: 'public',
       },
-      typeEvent: 0,
+      typeEventPermit: 0,
       image: this.props.event.picture,
       iMustBlockAFunctionality: false,
       iMustValidate: true,
@@ -229,13 +230,13 @@ class General extends Component {
       this.state.event.allow_register
     ) {
       //Evento Público con Registro
-      this.setState({ typeEvent: 0 });
+      this.setState({ typeEventPermit: 0 });
     } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
       //Cursos Público sin Registro
-      this.setState({ typeEvent: 1 });
+      this.setState({ typeEventPermit: 1 });
     } else {
       //Cursos privado con Invitación
-      this.setState({ typeEvent: 2 });
+      this.setState({ typeEventPermit: 2 });
     }
 
     if (this.nameInputRef.current) this.nameInputRef.current.focus();
@@ -678,7 +679,7 @@ class General extends Component {
 
   //Esto es para la configuración de autenticación. Nuevo flujo de Login, cambiar los campos internamente
   changetypeEvent = (value) => {
-    this.setState({ typeEvent: value });
+    this.setState({ typeEventPermit: value });
     if (value === 0) {
       //Cursos Público con Registro
       this.setState({
@@ -1184,140 +1185,60 @@ class General extends Component {
               <BackTop />
             </Tabs.TabPane>
             <Tabs.TabPane tab='Tipos de acceso' key='2'>
-              <Row justify='center' wrap gutter={[8, 8]}>
-                <Col span={16}>
-                  <Form.Item label={''}>
-                    <Row gutter={[16, 16]} wrap>
-                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge
-                          count={
-                            this.state.typeEvent === 0 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
-                            ) : (
-                              ''
-                            )
-                          }
-                        >
-                          <div
-                            style={{
-                              border: '1px solid #D3D3D3',
-                              borderRadius: '5px',
-                              padding: '10px',
-                              cursor: 'pointer',
-                              minHeight: '170px',
-                            }}
-                          >
-                            <Space direction='vertical'>
-                              <div onClick={() => this.changetypeEvent(0)}>
-                                <Text strong>Cursos Público con Registro</Text>
-                                <Divider />
-                                <Text type='secondary'>
-                                  <ul>
-                                    <li>Tiene registro para todos.</li>
-                                    <br />
-                                    <li>Tiene inicio de sesión para todos.</li>
-                                  </ul>
-                                </Text>
-                              </div>
-                              {this.state.typeEvent === 0 && (
-                                <>
-                                  <Divider />
-                                  <Checkbox
-                                    defaultChecked={this.state.event.visibility === 'ANONYMOUS'}
-                                    onChange={(e) =>
-                                      this.setState({
-                                        event: {
-                                          ...this.state.event,
-                                          visibility: e.target.checked === true ? 'ANONYMOUS' : 'PUBLIC',
-                                          allow_register: true,
-                                        },
-                                      })
-                                    }
-                                  >
-                                    Registro sin autenticación de usuario (Beta)
-                                  </Checkbox>
-                                </>
-                              )}
-                            </Space>
-                          </div>
-                        </Badge>
-                      </Col>
-                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge
-                          count={
-                            this.state.typeEvent === 1 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
-                            ) : (
-                              ''
-                            )
-                          }
-                        >
-                          <div
-                            /* className='cards-type-information'  */
-                            onClick={() => this.changetypeEvent(1)}
-                            style={{
-                              border: '1px solid #D3D3D3',
-                              borderRadius: '5px',
-                              padding: '10px',
-                              cursor: 'pointer',
-                              minHeight: '170px',
-                            }}
-                          >
-                            <Space direction='vertical'>
-                              <Text strong>Cursos Público sin Registro</Text>
-                              <Divider />
-                              <Text type='secondary'>
-                                {/* Solo se mostrará el inicio de sesión. Quedará como anónimo */}
-                                <ul>
-                                  <li>Quedará como anónimo.</li>
-                                  <br />
-                                  <li>No tendrá inicio de sesión ni registro.</li>
-                                </ul>
-                              </Text>
-                            </Space>
-                          </div>
-                        </Badge>
-                      </Col>
-                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge
-                          count={
-                            this.state.typeEvent === 2 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
-                            ) : (
-                              ''
-                            )
-                          }
-                        >
-                          <div
-                            /* className='cards-type-information'  */
-                            onClick={() => this.changetypeEvent(2)}
-                            style={{
-                              border: '1px solid #D3D3D3',
-                              borderRadius: '5px',
-                              padding: '10px',
-                              cursor: 'pointer',
-                              minHeight: '170px',
-                            }}
-                          >
-                            <Space direction='vertical'>
-                              <Text strong>Cursos privado por invitación</Text>
-                              <Divider />
-                              <Text type='secondary'>
-                                {/* Solo se podra acceder por invitación. No tendra inicio de sesión ni registro */}
-                                <ul>
-                                  <li>Sólo se podrá acceder por invitación.</li>
-                                  <br />
-                                  <li>Sólo se mostrará el inicio de sesión.</li>
-                                </ul>
-                              </Text>
-                            </Space>
-                          </div>
-                        </Badge>
-                      </Col>
-                    </Row>
-                  </Form.Item>
-                </Col>
-              </Row>
+              {console.log('this.state.typeEventPermit', this.state.typeEventPermit)}
+              {console.log('this.state.event', this.state.event)}
+              <CardSelector
+                selected={this.state.typeEventPermit.toString()}
+                options={[
+                  {
+                    id: '0',
+                    title: 'Curso Público con Registro',
+                    body: (
+                      <ul>
+                        <li>Tiene registro para todos.</li>
+                        <br />
+                        <li>Tiene inicio de sesión para todos.</li>
+                      </ul>
+                    ),
+                    checkbox: {
+                      text: 'Registro sin autenticación de usuario (Beta)',
+                      onCheck: (checked) => {
+                        this.setState({
+                          event: {
+                            ...this.state.event,
+                            visibility: checked === true ? 'ANONYMOUS' : 'PUBLIC',
+                            allow_register: true,
+                          },
+                        });
+                      },
+                      initialCheck: this.state.event.visibility === 'ANONYMOUS',
+                    },
+                  },
+                  {
+                    id: '1',
+                    title: 'Curso Público sin Registro',
+                    body: (
+                      <ul>
+                        <li>Quedará como anónimo.</li>
+                        <br />
+                        <li>Sólo se mostrará el inicio de sesión.</li>
+                      </ul>
+                    ),
+                  },
+                  {
+                    id: '2',
+                    title: 'Curso privado por invitación',
+                    body: (
+                      <ul>
+                        <li>Sólo se podrá acceder por invitación.</li>
+                        <br />
+                        <li>Tiene inicio de sesión para todos.</li>
+                      </ul>
+                    ),
+                  },
+                ]}
+                onSelected={(selected) => this.changetypeEvent(Number.parseInt(selected))}
+              />
             </Tabs.TabPane>
           </Tabs>
           {serverError && <ErrorServe errorData={errorData} />}
