@@ -185,7 +185,7 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
       </Typography.Paragraph>
 
       <Typography.Paragraph style={{color: 'red'}}>
-        TODO: Es necesario filtrar los eventos por <code>event.is_external</code> porque son los que
+        TODO: Es necesario filtrar los eventos por <code>event.is_certification</code> porque son los que
         tienen certificación (en diseño).
       </Typography.Paragraph>
 

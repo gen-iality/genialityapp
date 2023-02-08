@@ -521,7 +521,7 @@ class General extends Component {
       googleanlyticsid: event.googleanlyticsid || null,
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
-      is_external: event.is_external,
+      is_certification: event.is_certification,
       validity_days: event.validity_days,
       default_certification_description: event.default_certification_description,
       default_certification_hours: event.default_certification_hours,
@@ -1105,14 +1105,14 @@ class General extends Component {
                     <Switch
                       checkedChildren='Externo'
                       unCheckedChildren='GEN.iality'
-                      checked={event.is_external}
+                      checked={event.is_certification}
                       onChange={(checked) => {
-                        this.handleChange(checked, 'is_external')
+                        this.handleChange(checked, 'is_certification')
                       }}
                     />
                   </Form.Item>
 
-                  {(event.is_external) && (
+                  {(event.is_certification) && (
                     <>
                       <Form.Item
                         label="Descripción de la certificación (valor por defecto)"
