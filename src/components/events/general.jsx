@@ -1101,9 +1101,9 @@ class General extends Component {
                     </Row>
                   </Card>
 
-                  <Form.Item label="¿Es evento externo?">
+                  <Form.Item label="¿Es curso de certificación?">
                     <Switch
-                      checkedChildren='Externo'
+                      checkedChildren='Certificación'
                       unCheckedChildren='GEN.iality'
                       checked={event.is_certification}
                       onChange={(checked) => {
