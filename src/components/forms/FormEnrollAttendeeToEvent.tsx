@@ -94,7 +94,8 @@ const FormEnrollAttendeeToEvent = ({
             layout='vertical'
             onFinish={saveAttendee}
             onFinishFailed={showGeneralMessage}
-            onValuesChange={assigningConditionsToFields}>
+            onValuesChange={assigningConditionsToFields}
+          >
             <Row style={textLeft}>
               <Col span={24}>
                 <Card bodyStyle={textLeft} style={cardStyles}>
@@ -179,7 +180,8 @@ const FormEnrollAttendeeToEvent = ({
                           icon={icon}
                           style={{
                             ...styles,
-                          }}>
+                          }}
+                        >
                           {text ? text : buttonText}
                         </Button>
 
@@ -190,7 +192,8 @@ const FormEnrollAttendeeToEvent = ({
                               key={'option-' + option.text}
                               icon={option.icon}
                               onClick={() => option.action(attendee._id)}
-                              type={option.type}>
+                              type={option.type}
+                            >
                               {option.text}
                             </Button>
                           ))}
