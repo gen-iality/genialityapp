@@ -658,6 +658,7 @@ export const OrganizationApi = {
     const data = resp.data.map((item) => {
       return {
         _id: item._id,
+        rol: item.rol,
         id: item.organization?._id,
         name: item.organization?.name,
         styles: item.organization?.styles,
