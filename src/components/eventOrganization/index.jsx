@@ -8,24 +8,20 @@ import ModalAuth from '../authentication/ModalAuth';
 import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
 import {
   EditOutlined,
-  FacebookOutlined,
-  GlobalOutlined,
-  InstagramOutlined,
-  LeftOutlined,
-  RightOutlined,
 } from '@ant-design/icons';
 import Loading from '../profile/loading';
 
 const { Title, Text, Paragraph } = Typography;
+
 class EventOrganization extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      events: [],
-      eventsOld: [],
+      upcomingEvents: [],
+      lastEvents: [],
       organization: null,
       orgId: null,
-      loading: true,
+      isLoading: true,
       view: false,
     };
   }
@@ -33,10 +29,10 @@ class EventOrganization extends Component {
   componentDidMount() {
     const orgId = this.props.match.params.id;
     if (orgId) {
-      this.fetchItem(orgId).then((respuesta) =>
+      this.fetchItem(orgId).then(() =>
         this.setState({
           orgId,
-          loading: false,
+          isLoading: false,
         })
       );
     }
@@ -44,31 +40,26 @@ class EventOrganization extends Component {
   //Obtener los datos necesarios de la organización
   fetchItem = async (orgId) => {
     const events = await OrganizationFuction.getEventsNextByOrg(orgId);
-    const proximos = [];
-    const pasados = [];
-    const fechaActual = dayjs();
-    events.map((event) => {
-      if (dayjs(event.datetime_from).isAfter(fechaActual)) {
-        proximos.push(event);
+    const upcomingEvents = [];
+    const lastEvents = [];
+    const currentDateNow = dayjs();
+    events.forEach((event) => {
+      if (dayjs(event.datetime_from).isAfter(currentDateNow)) {
+        upcomingEvents.push(event);
       } else {
-        pasados.push(event);
+        lastEvents.push(event);
       }
     });
 
     const organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
     if (events) {
       this.setState({
-        events: proximos,
-        eventsOld: pasados,
+        upcomingEvents,
+        lastEvents,
         organization,
-        loading: false,
+        isLoading: false,
       });
     }
-  };
-
-  handleView = () => {
-    const ver = this.state.view;
-    this.setState({ view: !ver });
   };
 
   render() {
@@ -77,9 +68,10 @@ class EventOrganization extends Component {
         style={{
           backgroundImage: `url(${this.state.organization?.styles?.BackgroundImage})`,
           backgroundColor: `${this.state.organization?.styles?.containerBgColor || '#FFFFFF'}`,
-        }}>
+        }}
+      >
         <ModalLoginHelpers />
-        {!this.state.loading && this.state.orgId ? (
+        {!this.state.isLoading && this.state.orgId ? (
           <>
             {/* BANNER */}
             {this.state.organization !== null && (
@@ -101,7 +93,8 @@ class EventOrganization extends Component {
                 paddingRight: '5vw',
                 paddingBottom: '5vw',
                 paddingTop: '0.5vw',
-              }}>
+              }}
+            >
               {this.state.organization && (
                 <Row
                   gutter={[10, 10]}
@@ -111,7 +104,8 @@ class EventOrganization extends Component {
                     backgroundColor: '#FFFFFF',
                     padding: '10px',
                     borderRadius: '20px',
-                  }}>
+                  }}
+                >
                   <Col xs={24} sm={24} md={24} lg={8} xl={4} xxl={4}>
                     <Row justify={'start'}>
                       <Image
@@ -125,8 +119,8 @@ class EventOrganization extends Component {
                         preview={{ maskClassName: 'roundedMask' }}
                         src={this.state.organization?.styles?.event_image || 'error'}
                         fallback='http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image'
-                        width={'100%'}
-                        height={'100%'}
+                        width='100%'
+                        height='100%'
                       />
                     </Row>
                   </Col>
@@ -138,7 +132,8 @@ class EventOrganization extends Component {
                           marginBottom: '-15px',
                           fontSize: '20px',
                           cursor: 'pointer',
-                        }}>
+                        }}
+                      >
                         <Button type='text' icon={<EditOutlined />}>
                           Administrar
                         </Button>
@@ -156,9 +151,14 @@ class EventOrganization extends Component {
                         ellipsis={{
                           rows: 3,
                           expandable: true,
-                          symbol: <span style={{ color: '#2D7FD6', fontSize: '12px' }}>Ver más</span>,
-                        }}>
-                        {this.state.organization.description ? this.state.organization.description : ''}
+                          symbol: (
+                            <span style={{ color: '#2D7FD6', fontSize: '12px' }}>
+                              Ver más
+                            </span>
+                          ),
+                        }}
+                      >
+                        {this.state.organization?.description || ''}
                       </Paragraph>
                     </Space>
                   </Col>
@@ -170,13 +170,14 @@ class EventOrganization extends Component {
                   backgroundColor: '#FFFFFF',
                   padding: '20px',
                   borderRadius: '20px',
-                }}>
-                <Badge offset={[60, 22]} count={`${this.state.events.length} Cursos`}>
+                }}
+              >
+                <Badge offset={[60, 22]} count={`${this.state.upcomingEvents.length} Cursos`}>
                   <Title level={2}>Próximos</Title>
                 </Badge>
                 <Row gutter={[16, 16]}>
-                  {this.state.events && this.state.events.length > 0 ? (
-                    this.state.events.map((event, index) => (
+                  {this.state.upcomingEvents?.length > 0 ? (
+                    this.state.upcomingEvents.map((event, index) => (
                       <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <EventCard
                           bordered={false}
@@ -194,7 +195,8 @@ class EventOrganization extends Component {
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                      }}>
+                      }}
+                    >
                       <Empty description='No hay cursos próximos agendados' />
                     </div>
                   )}
@@ -207,13 +209,14 @@ class EventOrganization extends Component {
                   backgroundColor: '#FFFFFF',
                   padding: '20px',
                   borderRadius: '20px',
-                }}>
-                <Badge offset={[60, 22]} count={`${this.state.eventsOld.length} Cursos`}>
+                }}
+              >
+                <Badge offset={[60, 22]} count={`${this.state.lastEvents.length} Cursos`}>
                   <Title level={2}>Pasados</Title>
                 </Badge>
                 <Row gutter={[16, 16]}>
-                  {this.state.eventsOld && this.state.eventsOld.length > 0 ? (
-                    this.state.eventsOld.map((event, index) => (
+                  {this.state.lastEvents?.length > 0 ? (
+                    this.state.lastEvents.map((event, index) => (
                       <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <EventCard
                           bordered={false}
@@ -231,7 +234,8 @@ class EventOrganization extends Component {
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                      }}>
+                      }}
+                    >
                       <Empty description='No hay cursos pasados' />
                     </div>
                   )}
