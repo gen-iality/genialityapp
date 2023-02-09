@@ -65,7 +65,11 @@ export const columns = (columnsData) => {
     dataIndex: 'validity_date',
     align: 'center',
     ellipsis: true,
-    sorter: (a, b) => a.validity_date.localeCompare(b.validity_date),
+    sorter: (a, b) => {
+      if (a.validity_date === null) return -1
+      if (b.validity_date === null) return 1
+      return a.validity_date - b.validity_date || 1
+    },
     ...membersGetColumnSearchProps('validity_date', columnsData),
     render(val, item) {
       if (item.validity_date === null) {
