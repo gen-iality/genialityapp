@@ -20,7 +20,7 @@ import { useUserEvent } from '@context/eventUserContext';
 const { Step } = Steps;
 const { Title } = Typography;
 
-const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }: any) => {
+const RegisterUserAndEventUserAnonymous = ({ screens, stylePaddingMobile, stylePaddingDesktop }: any) => {
   const intl = useIntl();
   const cEvent = useEventContext();
   const cEventUser = useUserEvent();
@@ -96,4 +96,4 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
   );
 };
 
-export default RegisterUserAndEventUser;
+export default RegisterUserAndEventUserAnonymous;
