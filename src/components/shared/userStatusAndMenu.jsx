@@ -37,6 +37,7 @@ const UserStatusAndMenu = (props) => {
   const logout = props.logout;
   const [visible, setVisible] = useState(true);
   const [isSomeAdminUser, setIsSomeAdminUser] = useState(false)
+  const [isAtOrganizationLanding, setIsAtOrganizationLanding] = useState(false)
   const intl = useIntl();
 
   function linkToTheMenuRouteS(menuRoute) {
@@ -50,6 +51,16 @@ const UserStatusAndMenu = (props) => {
       setIsSomeAdminUser(someAdmin)      
     })
   }, [])
+
+  useEffect(() => {
+    // Why do I have to do that bro
+    const path = props.match?.path || ''
+    if (path.startsWith('/organization') && path.endsWith('/events')) {
+      setIsAtOrganizationLanding(true)
+    } else {
+      setIsAtOrganizationLanding(false)
+    }
+  }, [props.match])
 
   useEffect(() => {
     if (props.eventId && props.eventId == '60cb7c70a9e4de51ac7945a2') setVisible(false);
@@ -98,14 +109,14 @@ const UserStatusAndMenu = (props) => {
             <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
           </Menu.Item>
         )}
-        {visible && (
+        {visible && !isAtOrganizationLanding && (
           <Menu.Item
             icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
             <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
           </Menu.Item>
         )}
-        {visible && isSomeAdminUser && (
+        {(visible && isSomeAdminUser || visible && !isAtOrganizationLanding) && (
           <Menu.Item
             icon={<HexagonMultipleOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => {
