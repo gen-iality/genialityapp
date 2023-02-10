@@ -68,7 +68,7 @@ function CurrentOrganizationPositionCertificationUserPage(
 
     const allEventIds = position.event_ids || [];
     const events = await Promise.all(allEventIds.map(async (eventId: string) => await EventsApi.getOne(eventId)));
-    setAllEvents(events);
+    setAllEvents(events.filter((event) => event.is_certification));
     setAllPositionEvents(
       events.map((event) => {
         const filteredCertification = certifications.find((certification: any) => certification.event_id === event._id);
@@ -195,11 +195,6 @@ function CurrentOrganizationPositionCertificationUserPage(
       <Typography.Paragraph>Estos son los certificados de dicho usuario.</Typography.Paragraph>
 
       <Typography.Paragraph>Este cargo requiere {allPositionEvents.length} certificaciones.</Typography.Paragraph>
-
-      <Typography.Paragraph style={{ color: 'red' }}>
-        TODO: Es necesario filtrar los eventos por <code>event.is_certification</code> porque son los que tienen
-        certificación (en diseño).
-      </Typography.Paragraph>
 
       <Table
         columns={columns}
