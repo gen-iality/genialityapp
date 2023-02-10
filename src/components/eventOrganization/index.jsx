@@ -104,7 +104,7 @@ const EventOrganization = (props) => {
       }}
     >
       <ModalLoginHelpers />
-      <RegisterMemberFromOrganizationUserModal
+      {/* <RegisterMemberFromOrganizationUserModal
         organization={organization}
         orgMember={organizationUser}
         user={cUser.value}
@@ -113,7 +113,7 @@ const EventOrganization = (props) => {
         onRegister={() => {
           console.log('registed')
         }}
-      />
+      />*/}
 
       {!isLoading && orgId ? (
         <>
