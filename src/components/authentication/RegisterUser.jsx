@@ -9,6 +9,8 @@ import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '@context/MessageService';
 import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 import { OrganizationApi } from '@helpers/request';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrganization, defaultPositionId }) => {
   const intl = useIntl();
@@ -286,16 +288,18 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
 
         {/*Inicio cambios rápidos */}
         <div>
-          <Form.Item label='Indicativo' name='indicative' rules={[{ required: true, message: 'Falta el indicativo' }]}>
-            <Input />
-          </Form.Item>
-
           <Form.Item
             label='Numero de contacto'
             name='number_cel'
             rules={[{ required: true, message: 'Falta el numero de contacto' }]}
           >
-            <Input />
+            <PhoneInput
+              placeholder='Número'
+              // value={null}
+              // onChange={() => {
+              //   return false;
+              // }}
+            />
           </Form.Item>
 
           <Form.Item label='País' name='country' rules={[{ required: true, message: 'Falta el país' }]}>
