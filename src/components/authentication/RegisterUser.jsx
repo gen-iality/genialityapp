@@ -299,6 +299,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
           >
             <PhoneInput
               placeholder='Número'
+              defaultCountry='CO'
               // value={null}
               // onChange={() => {
               //   return false;
