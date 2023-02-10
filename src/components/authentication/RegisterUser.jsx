@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload, Alert } from 'antd';
+import { Form, Input, Button, Space, Upload, Alert, Select } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { app } from '@helpers/firebase';
@@ -8,6 +8,7 @@ import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '@context/MessageService';
 import { uploadImagedummyRequest } from '@Utilities/imgUtils';
+import { OrganizationApi } from '@helpers/request';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
@@ -85,14 +86,30 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
     };
 
     try {
-      const resp = await createNewUser(newValues);
-      if (resp == 1) {
+      const response = await createNewUser(newValues);
+      console.log('response', response);
+      if (response._id) {
         // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
+
         app
           .auth()
           .signInWithEmailAndPassword(newValues.email, newValues.password)
-          .then((login) => {
+          .then(async (login) => {
+            //registrarlo en la organización
             if (login) {
+              let data = {
+                properties: {
+                  names: newValues.names || newValues.name,
+                  email: newValues.email,
+                },
+              };
+              let organization_quemada = '62a915954e1452197604901b';
+              await OrganizationApi.saveUser(organization_quemada, data);
+
+              let cargo_quemado = '63b63f0c7fd60e3c84646d12';
+              let id_usuario_quemado = response._id;
+              await PositionsApi.Organizations.addUser(organization_quemada, cargo_quemado, id_usuario_quemado);
+
               //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
               if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
                 handleChangeTypeModal('loginSuccess');
@@ -149,6 +166,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
       });
     }
   };
+
   return (
     <>
       {' '}
@@ -157,7 +175,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         form={form}
         autoComplete='off'
         layout='vertical'
-        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
+      >
         <Form.Item>
           <ImgCrop rotate shape='round'>
             <Upload
@@ -173,7 +192,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
               multiple={false}
               listType='picture'
               maxCount={1}
-              fileList={imageAvatar}>
+              fileList={imageAvatar}
+            >
               {
                 <Button
                   type='primary'
@@ -181,7 +201,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
                   style={{
                     height: !imageAvatar ? '150px' : '95px',
                     width: !imageAvatar ? '150px' : '95px',
-                  }}>
+                  }}
+                >
                   <Space direction='vertical'>
                     <PictureOutlined style={{ fontSize: '40px' }} />
                     {intl.formatMessage({
@@ -202,7 +223,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           name='email'
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleEmail}>
+          rules={ruleEmail}
+        >
           <Input
             type='email'
             size='large'
@@ -218,7 +240,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           name='password'
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={rulePassword}>
+          rules={rulePassword}
+        >
           <Input.Password
             type='password'
             size='large'
@@ -237,7 +260,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           name='names'
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleName}>
+          rules={ruleName}
+        >
           <Input
             type='text'
             size='large'
@@ -248,13 +272,85 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
+
+        {/*Inicio cambios rápidos */}
+        <div>
+          <Form.Item label='Indicativo' name='indicative' rules={[{ required: true, message: 'Falta el indicativo' }]}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label='Numero de contacto'
+            name='number_cel'
+            rules={[{ required: true, message: 'Falta el numero de contacto' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item label='País' name='country' rules={[{ required: true, message: 'Falta el país' }]}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item label='Ciudad' name='city' rules={[{ required: true, message: 'Falta la ciudad' }]}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label='Perfil profesional'
+            name='professional_profile'
+            rules={[{ required: true, message: 'Falta el perfil pofesional' }]}
+          >
+            <Select
+              options={[
+                {
+                  value: 'specialist_doctor',
+                  label: 'Médico especialista',
+                },
+                {
+                  value: 'resident',
+                  label: 'Residente',
+                },
+                {
+                  value: 'general_doctor',
+                  label: 'Médico general',
+                },
+                { value: 'professional_from_another_health_area', label: 'Profesional de otra área de a salud' },
+                { value: 'medical_student', label: 'Estudiante de medicina' },
+                { value: 'comercial_sample', label: 'Muestra comercial' },
+                { value: 'others', label: 'Otros' },
+              ]}
+            ></Select>
+          </Form.Item>
+
+          <Form.Item
+            label='Especialidad'
+            name='speciality'
+            rules={[{ required: true, message: 'Falta la especialidad' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label='Cédula'
+            name='email'
+            rules={[
+              { required: true, message: 'Falta el numero de identificación' },
+              // { type: 'number', message: 'Solo númerico' },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </div>
+        {/* finalización campos rapidos */}
+
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
             id={'submitButton'}
             htmlType='submit'
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size='large'>
+            size='large'
+          >
             {intl.formatMessage({
               id: 'modal.label.create_user',
               defaultMessage: 'Crear cuenta de usuario',
