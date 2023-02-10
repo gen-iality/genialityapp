@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 
 import { Modal, Form, Input, Button, Card, Alert } from 'antd';
 
@@ -22,12 +22,23 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberF
   props,
 ) => {
   const { organization, orgMember, user, visible, onRegister } = props;
+  console.log('props', props);
 
   const [isModalOpened, setIsModalOpened] = useState(visible);
 
   const [form] = Form.useForm<FormOrganizationUser>();
 
-  const onFormSubmit = (values: FormOrganizationUser) => {
+  useEffect(() => {
+    if (visible && !isModalOpened) {
+      setIsModalOpened(true);
+    }
+  }, [visible]);
+
+  const closeModal = () => {
+    setIsModalOpened(false);
+  };
+
+  const onFormSubmit = async (values: FormOrganizationUser) => {
     if (!organization?._id) {
       Modal.error({
         title: 'No ha cargado la organización',
@@ -40,29 +51,33 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberF
 
     let data: any = {};
 
+    console.log('1. user', user);
+
     if (user) {
-      // Take data from the user, I think
-      // some data are: user.names, user.email
       data = {
-        // ...
-      }; // TODO: fill that data for the organization user
+        properties: {
+          names: user.names,
+          email: user.email,
+        },
+      };
       console.log('Register Organization User from current user');
     } else {
-      // Take data from the form
       const { name, email } = values;
-      // TODO: do the register
-      data = {}; // TODO: fill that data for the organization user
+      data = {
+        properties: {
+          names: name,
+          email: email,
+        },
+      };
       console.log('Register Organization User', data);
     }
 
-    if (onRegister) {
-      onRegister(data);
-    }
-
-    // OrganizationApi.saveUser(organization._id, data)
-    //   .finally(() => {
-    //     setIsModalOpened(false)
-    //   })
+    OrganizationApi.saveUser(organization._id, data).finally(() => {
+      if (onRegister) {
+        onRegister(data);
+      }
+      setIsModalOpened(false);
+    });
   };
 
   if (orgMember) {
@@ -79,28 +94,34 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberF
   }
 
   return (
-    <Modal
-      visible={isModalOpened}
-      title='Registrarse como miembro de esta organización'
-      okText='Inscribirse'
-      onOk={() => form.submit()}
-    >
-      <Form form={form} onFinish={onFormSubmit}>
-        {user ? (
-          <Alert message='No se requieren más datos' />
-        ) : (
-          <>
-            <Form.Item label='Nombre' name='name' rules={[{ required: true, message: 'Falta el nombre' }]}>
-              <Input />
-            </Form.Item>
+    <>
+      {console.log('render isModalOpened', isModalOpened)}
+      {console.log('render user', user)}
 
-            <Form.Item label='Correo' name='email' rules={[{ required: true, message: 'Falta el correo' }]}>
-              <Input />
-            </Form.Item>
-          </>
-        )}
-      </Form>
-    </Modal>
+      <Modal
+        visible={isModalOpened}
+        title='Registrarse como miembro de esta organización'
+        okText='Inscribirse'
+        onOk={() => form.submit()}
+        onCancel={closeModal}
+      >
+        <Form form={form} onFinish={onFormSubmit}>
+          {user ? (
+            <Alert message='No se requieren más datos' />
+          ) : (
+            <>
+              <Form.Item label='Nombre' name='name' rules={[{ required: true, message: 'Falta el nombre' }]}>
+                <Input />
+              </Form.Item>
+
+              <Form.Item label='Correo' name='email' rules={[{ required: true, message: 'Falta el correo' }]}>
+                <Input />
+              </Form.Item>
+            </>
+          )}
+        </Form>
+      </Modal>
+    </>
   );
 };
 
