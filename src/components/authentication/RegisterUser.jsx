@@ -336,7 +336,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             name='identification_card'
             rules={[
               { required: true, message: 'Falta el número de identificación' },
-              // { type: 'number', message: 'Solo númerico' },
+              { pattern: /\d+/g, message: 'Sólo números' },
             ]}
           >
             <Input />
@@ -347,7 +347,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             rules={[{required: true, message: 'Acéptalo'}]}
           >
             <Checkbox>
-              He leído y acepto los términos y condiciones. Acepto y manifiesto bajo la gravedad de juramento.
+              He leído y acepto los <a href="https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2FACE_Politica_Tratamiento_Datos.pdf?alt=media&token=fba112af-ed54-405b-9695-25a2827afd2b" target="_blank">términos y condiciones</a>. Acepto y manifiesto bajo la gravedad de juramento.
             </Checkbox>
           </Form.Item>
 
