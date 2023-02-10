@@ -43,7 +43,7 @@ const createNewUser = async (props) => {
         });
       setOpenOrCloseTheModalFeedback(true);
       sendDataFinished();*/
-        return 1;
+        return response;
       }
     } catch (e) {
       //PERMITE VALIDAR CUANDO EL EMAIL ES INCORRECTO

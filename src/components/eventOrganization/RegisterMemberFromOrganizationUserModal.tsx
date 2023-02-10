@@ -37,7 +37,7 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberF
     if (visible && !isModalOpened) {
       setIsModalOpened(true);
     }
-  }, [visible]);
+  }, [visible, isModalOpened]);
 
   const closeModal = () => {
     setIsModalOpened(false);

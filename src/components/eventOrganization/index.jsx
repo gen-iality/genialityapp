@@ -41,16 +41,21 @@ const EventOrganization = (props) => {
     console.log('cUser.value', cUser.value);
     console.log('organization', organization);
     if (cUser.value || !organization) return;
-    const { visibility, allow_register } = organization;
+    // const { visibility, allow_register } = organization;
     if (!cUser.value && organization) {
       // helperDispatch({ type: 'showLogin', visible: true });
       helperDispatch({ type: 'showRegister', visible: true });
     }
+  }, [cUser.value, organization]);
+
+  useEffect(() => {
+    if (!organization) return;
+    const { visibility, allow_register } = organization;
     if (visibility === 'PUBLIC' && allow_register) {
       //helperDispatch({ type: 'showRegister', visible: true });
       setIsVisibleRegister(true);
     }
-  }, [cUser.value, organization]);
+  }, [organizationUser, organization]);
 
   useEffect(() => {
     if (!cUser.value) return;
@@ -99,13 +104,13 @@ const EventOrganization = (props) => {
     >
       {console.log('isVisibleRegister', isVisibleRegister)}
       <ModalLoginHelpers />
-      <RegisterMemberFromOrganizationUserModal
+      {/* <RegisterMemberFromOrganizationUserModal
         organization={organization}
         orgMember={organizationUser}
         user={cUser.value}
         visible={isVisibleRegister}
         //onRegister={}
-      />
+      /> */}
 
       {!isLoading && orgId ? (
         <>
