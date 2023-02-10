@@ -40,13 +40,18 @@ const EventOrganization = (props) => {
   useEffect(() => {
     console.log('cUser.value', cUser.value);
     console.log('organization', organization);
-    if (cUser.value || !organization) return;
+    if (cUser.value || !organization || !orgId) return;
     // const { visibility, allow_register } = organization;
     if (!cUser.value && organization) {
       // helperDispatch({ type: 'showLogin', visible: true });
-      helperDispatch({ type: 'showRegister', visible: true });
+      helperDispatch({
+        type: 'showRegister',
+        visible: true,
+        idOrganization: orgId,
+        defaultPositionId: '63b63f0c7fd60e3c84646d12',
+      });
     }
-  }, [cUser.value, organization]);
+  }, [cUser.value, organization, orgId]);
 
   useEffect(() => {
     if (!organization) return
