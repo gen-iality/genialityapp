@@ -344,18 +344,20 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
 
           <Form.Item
            name="t&c"
-            label="He leído y acepto los términos y condiciones. Acepto y manifiesto bajo la gravedad de juramento."
             rules={[{required: true, message: 'Acéptalo'}]}
           >
-            <Checkbox />
+            <Checkbox>
+              He leído y acepto los términos y condiciones. Acepto y manifiesto bajo la gravedad de juramento.
+            </Checkbox>
           </Form.Item>
 
           <Form.Item
             name="iampro"
-            label="Que soy profesional del la salud y por lo tanto beneficiario directo de la información digital que se me ofrecerá. Manifiesto que la presente autorización me fue solicitada y puesta de presente antes de entregar mis datos y que la suscribo de forma libre y voluntaria ya que este evento es exclusivo para profesionales de la salud."
             rules={[{required: true, message: 'Acéptalo'}]}
           >
-            <Checkbox />
+            <Checkbox>
+              Que soy profesional del la salud y por lo tanto beneficiario directo de la información digital que se me ofrecerá. Manifiesto que la presente autorización me fue solicitada y puesta de presente antes de entregar mis datos y que la suscribo de forma libre y voluntaria ya que este evento es exclusivo para profesionales de la salud.
+            </Checkbox>
           </Form.Item>
         </div>
         {/* finalización campos rapidos */}
