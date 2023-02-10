@@ -11,6 +11,10 @@ import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 import { OrganizationApi } from '@helpers/request';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
+import countryOptions from '@components/eventOrganization/listOptions/countryOptions';
+import cityOptions from '@components/eventOrganization/listOptions/cityOptions';
+import professionalProfilOptions from '@components/eventOrganization/listOptions/professionalProfileOptions';
+import specialistOptions from '@components/eventOrganization/listOptions/specialistOptions';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrganization, defaultPositionId }) => {
   const intl = useIntl();
@@ -107,22 +111,22 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
               };
 
               if (idOrganization) {
-                console.log('RegisterUser: has idOrganization', {idOrganization})
+                console.log('RegisterUser: has idOrganization', { idOrganization });
 
                 await OrganizationApi.saveUser(idOrganization, data);
 
                 let userId = response._id;
 
                 if (defaultPositionId) {
-                  console.log('RegisterUser: has default position Id', {defaultPositionId})
+                  console.log('RegisterUser: has default position Id', { defaultPositionId });
                   await PositionsApi.Organizations.addUser(idOrganization, defaultPositionId, userId);
                 } else {
-                  console.warn('RegisterUser: missing default position ID, not problem')
+                  console.warn('RegisterUser: missing default position ID, not problem');
                 }
               } else {
-                console.log('RegisterUser: missing organization ID, not problem')
+                console.log('RegisterUser: missing organization ID, not problem');
               }
-              
+
               //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
               if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
                 handleChangeTypeModal('loginSuccess');
@@ -303,11 +307,11 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
           </Form.Item>
 
           <Form.Item label='País' name='country' rules={[{ required: true, message: 'Falta el país' }]}>
-            <Input />
+            <Select options={countryOptions}></Select>
           </Form.Item>
 
           <Form.Item label='Ciudad' name='city' rules={[{ required: true, message: 'Falta la ciudad' }]}>
-            <Input />
+            <Select options={cityOptions}></Select>
           </Form.Item>
 
           <Form.Item
@@ -315,26 +319,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             name='professional_profile'
             rules={[{ required: true, message: 'Falta el perfil pofesional' }]}
           >
-            <Select
-              options={[
-                {
-                  value: 'specialist_doctor',
-                  label: 'Médico especialista',
-                },
-                {
-                  value: 'resident',
-                  label: 'Residente',
-                },
-                {
-                  value: 'general_doctor',
-                  label: 'Médico general',
-                },
-                { value: 'professional_from_another_health_area', label: 'Profesional de otra área de a salud' },
-                { value: 'medical_student', label: 'Estudiante de medicina' },
-                { value: 'comercial_sample', label: 'Muestra comercial' },
-                { value: 'others', label: 'Otros' },
-              ]}
-            ></Select>
+            <Select options={professionalProfilOptions}></Select>
           </Form.Item>
 
           <Form.Item
@@ -342,14 +327,14 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             name='speciality'
             rules={[{ required: true, message: 'Falta la especialidad' }]}
           >
-            <Input />
+            <Select options={specialistOptions}></Select>
           </Form.Item>
 
           <Form.Item
             label='Cédula'
-            name='email'
+            name='identification_card'
             rules={[
-              { required: true, message: 'Falta el numero de identificación' },
+              { required: true, message: 'Falta el número de identificación' },
               // { type: 'number', message: 'Solo númerico' },
             ]}
           >
