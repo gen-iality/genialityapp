@@ -13,6 +13,9 @@ import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutli
 import CalendarCheckOutlineIcon from '@2fd/ant-design-icons/lib/CalendarCheckOutline';
 import HexagonMultipleOutlineIcon from '@2fd/ant-design-icons/lib/HexagonMultipleOutline';
 import LogoutIcon from '@2fd/ant-design-icons/lib/Logout';
+
+import { OrganizationApi } from '@helpers/request'
+
 const MenuStyle = {
   flex: 1,
   textAlign: 'right',
@@ -33,11 +36,32 @@ const UserStatusAndMenu = (props) => {
   const name = props.name;
   const logout = props.logout;
   const [visible, setVisible] = useState(true);
+  const [isSomeAdminUser, setIsSomeAdminUser] = useState(false)
+  const [isAtOrganizationLanding, setIsAtOrganizationLanding] = useState(false)
   const intl = useIntl();
 
   function linkToTheMenuRouteS(menuRoute) {
     window.location.href = `${window.location.origin}${menuRoute}`;
   }
+
+  useEffect(() => {
+    OrganizationApi.mine().then((data) => {
+      const someAdmin = data.some((orgUser) => orgUser.rol?.type === 'admin')
+      console.log('organization user has some admin rol?', someAdmin)
+      setIsSomeAdminUser(someAdmin)      
+    })
+  }, [])
+
+  useEffect(() => {
+    // Why do I have to do that bro
+    const path = props.match?.path || ''
+    if (path.startsWith('/organization') && path.endsWith('/events')) {
+      setIsAtOrganizationLanding(true)
+    } else {
+      setIsAtOrganizationLanding(false)
+    }
+  }, [props.match])
+
   useEffect(() => {
     if (props.eventId && props.eventId == '60cb7c70a9e4de51ac7945a2') setVisible(false);
   }, [props.eventId]);
@@ -85,14 +109,14 @@ const UserStatusAndMenu = (props) => {
             <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
           </Menu.Item>
         )}
-        {visible && (
+        {visible && !isAtOrganizationLanding && (
           <Menu.Item
             icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
             <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
           </Menu.Item>
         )}
-        {visible && (
+        {(visible && isSomeAdminUser || visible && !isAtOrganizationLanding) && (
           <Menu.Item
             icon={<HexagonMultipleOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => {
