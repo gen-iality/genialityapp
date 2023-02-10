@@ -4,6 +4,7 @@ export type HelperAction = {
   currentAuthScreen?: string;
   visible?: boolean;
   idOrganization?: string;
+  defaultPositionId?: string;
   organization?: string;
   logo?: string;
   currentActivity?: object;

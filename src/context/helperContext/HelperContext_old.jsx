@@ -111,10 +111,11 @@ export const HelperContextProvider = ({ children }) => {
 
   const [authModalState, authModalDispatch] = useReducer(authModalReducer, initialState);
 
-  const HandleControllerLoginVisible = ({ visible = false, idOrganization = '', organization = '', logo = '' }) => {
+  const HandleControllerLoginVisible = ({ visible = false, idOrganization = '', organization = '', logo = '', defaultPositionId=undefined }) => {
     setcontrollerLoginVisible({
       visible,
       idOrganization,
+      defaultPositionId,
       organization,
       logo,
     });

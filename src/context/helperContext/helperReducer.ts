@@ -38,6 +38,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
           idOrganization: action.idOrganization,
           organization: action.organization,
           logo: action.logo,
+          defaultPositionId: action.defaultPositionId,
         },
       };
 
@@ -50,6 +51,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
           idOrganization: action.idOrganization,
           organization: action.organization,
           logo: action.logo,
+          defaultPositionId: action.defaultPositionId,
         },
       };
 
