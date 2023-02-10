@@ -10,7 +10,7 @@ import { DispatchMessageService } from '@context/MessageService';
 import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 import { OrganizationApi } from '@helpers/request';
 
-const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
+const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrganization, defaultPositionId }) => {
   const intl = useIntl();
   const { handleChangeTypeModal } = useHelper();
   const [errorEmail, setErrorEmail] = useState(false);
@@ -103,13 +103,24 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
                   email: newValues.email,
                 },
               };
-              let organization_quemada = '62a915954e1452197604901b';
-              await OrganizationApi.saveUser(organization_quemada, data);
 
-              let cargo_quemado = '63b63f0c7fd60e3c84646d12';
-              let id_usuario_quemado = response._id;
-              await PositionsApi.Organizations.addUser(organization_quemada, cargo_quemado, id_usuario_quemado);
+              if (idOrganization) {
+                console.log('RegisterUser: has idOrganization', {idOrganization})
 
+                await OrganizationApi.saveUser(idOrganization, data);
+
+                let userId = response._id;
+
+                if (defaultPositionId) {
+                  console.log('RegisterUser: has default position Id', {defaultPositionId})
+                  await PositionsApi.Organizations.addUser(idOrganization, defaultPositionId, userId);
+                } else {
+                  console.warn('RegisterUser: missing default position ID, not problem')
+                }
+              } else {
+                console.log('RegisterUser: missing organization ID, not problem')
+              }
+              
               //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
               if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
                 handleChangeTypeModal('loginSuccess');

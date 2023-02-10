@@ -399,6 +399,8 @@ const ModalAuth = (props) => {
                     screens={screens}
                     stylePaddingMobile={stylePaddingMobile}
                     stylePaddingDesktop={stylePaddingDesktop}
+                    idOrganization={controllerLoginVisible.idOrganization} // New!
+                    defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
                   />
                 ) : (
                   <RegisterUserAndEventUser
