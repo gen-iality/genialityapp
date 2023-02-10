@@ -15,27 +15,20 @@ export interface RegisterMemberFromOrganizationUserModalProps {
   user?: any;
   visible?: boolean;
   organization: any;
+  setVisible: (x: boolean) => void,
   onRegister?: (orgUserData: any) => void;
 }
 
 const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberFromOrganizationUserModalProps> = (
   props,
 ) => {
-  const { organization, orgMember, user, visible, onRegister } = props;
-  console.log('props', props);
+  const { organization, orgMember, user, visible, onRegister, setVisible } = props;
 
-  const [isModalOpened, setIsModalOpened] = useState(visible);
 
   const [form] = Form.useForm<FormOrganizationUser>();
 
-  useEffect(() => {
-    if (visible && !isModalOpened) {
-      setIsModalOpened(true);
-    }
-  }, [visible, isModalOpened]);
-
   const closeModal = () => {
-    setIsModalOpened(false);
+    setVisible(false);
   };
 
   const onFormSubmit = async (values: FormOrganizationUser) => {
@@ -44,14 +37,12 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberF
         title: 'No ha cargado la organización',
         content: 'No se ha cargado la información de la organización aún',
         icon: <WarningOutlined />,
-        onOk: () => setIsModalOpened(false),
+        onOk: () => setVisible(false),
       });
       return;
     }
 
     let data: any = {};
-
-    console.log('1. user', user);
 
     if (user) {
       data = {
@@ -76,17 +67,17 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberF
       if (onRegister) {
         onRegister(data);
       }
-      setIsModalOpened(false);
+      setVisible(false);
     });
   };
 
   if (orgMember) {
     return (
       <Modal
-        visible={isModalOpened}
+        visible={visible}
         title='Usuario ya inscrito'
-        onOk={() => setIsModalOpened(false)}
-        onCancel={() => setIsModalOpened(false)}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
       >
         El usuario ya está inscrito como miembro
       </Modal>
@@ -95,11 +86,8 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberF
 
   return (
     <>
-      {console.log('render isModalOpened', isModalOpened)}
-      {console.log('render user', user)}
-
       <Modal
-        visible={isModalOpened}
+        visible={visible}
         title='Registrarse como miembro de esta organización'
         okText='Inscribirse'
         onOk={() => form.submit()}

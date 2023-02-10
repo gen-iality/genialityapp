@@ -35,7 +35,7 @@ const EventOrganization = (props) => {
     if (orgId) {
       fetchItem(orgId).then(() => setIsLoading(false));
     }
-  }, []);
+  }, [orgId]);
 
   useEffect(() => {
     console.log('cUser.value', cUser.value);
@@ -50,21 +50,21 @@ const EventOrganization = (props) => {
 
   useEffect(() => {
     if (!organization) return
+    if (!cUser.value) return
     const { visibility, allow_register } = organization;
+    console.log('organization access', { visibility, allow_register })
     if (visibility === 'PUBLIC' && allow_register) {
       //helperDispatch({ type: 'showRegister', visible: true });
       setIsVisibleRegister(true);
     }
-  }, [organizationUser, organization])
+  }, [organizationUser, organization, cUser.value])
 
   useEffect(() => {
     if (!cUser.value) return;
     if (!orgId) return;
 
     OrganizationApi.getMeUser(orgId).then(({ data }) => {
-      console.log('8. data', { data });
       const [orgUser] = data;
-      console.log('8. orgUser', orgUser);
 
       setOrganizationUser(orgUser);
       console.debug('EventOrganization member rol:', orgUser?.rol);
@@ -72,7 +72,7 @@ const EventOrganization = (props) => {
     });
   }, [cUser.value, orgId]);
 
-  //Obtener los datos necesarios de la organización
+  // Obtener los datos necesarios de la organización
   const fetchItem = async (orgId) => {
     const events = await OrganizationFuction.getEventsNextByOrg(orgId);
     const _upcomingEvents = [];
@@ -102,14 +102,16 @@ const EventOrganization = (props) => {
         backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
       }}
     >
-      {console.log('isVisibleRegister', isVisibleRegister)}
       <ModalLoginHelpers />
       <RegisterMemberFromOrganizationUserModal
         organization={organization}
         orgMember={organizationUser}
         user={cUser.value}
         visible={isVisibleRegister}
-        //onRegister={}
+        setVisible={(b) => setIsVisibleRegister(b)}
+        onRegister={() => {
+          console.log('registed')
+        }}
       />
 
       {!isLoading && orgId ? (
