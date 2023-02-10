@@ -123,7 +123,7 @@ function QRedirect({ match }) {
 const RouteContext = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={props => (
+    render={(props) => (
       <CurrentEventProvider>
         <CurrentUserEventProvider>
           <CurrentUserProvider>
@@ -157,7 +157,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={props => (
+      render={(props) => (
         <CurrentEventProvider>
           <CurrentUserEventProvider>
             <CurrentUserProvider>

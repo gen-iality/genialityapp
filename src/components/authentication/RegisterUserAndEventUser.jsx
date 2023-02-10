@@ -310,7 +310,8 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
               prev();
             }}
             size='large'
-            style={{ margin: '0 8px' }}>
+            style={{ margin: '0 8px' }}
+          >
             {intl.formatMessage({
               id: 'register.button.previous',
               defaultMessage: 'Anterior',
@@ -332,7 +333,8 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
                     type='primary'
                     onClick={() => {
                       next();
-                    }}>
+                    }}
+                  >
                     {current > 0
                       ? intl.formatMessage({
                           id: 'register.button.finalize',
@@ -372,7 +374,8 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                   onClick={() => helperDispatch({ type: 'showLogin' })}
-                  type='link'>
+                  type='link'
+                >
                   {validationGeneral.component}
                 </Button>
               ) : (
