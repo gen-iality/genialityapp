@@ -51,6 +51,7 @@ const EventOrganization = (props) => {
   useEffect(() => {
     if (!organization) return
     if (!cUser.value) return
+    if (organizationUser) return
     const { visibility, allow_register } = organization;
     console.log('organization access', { visibility, allow_register })
     if (visibility === 'PUBLIC' && allow_register) {
