@@ -127,7 +127,7 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
     const allEventIds = (currentPosition.event_ids || [])
     Promise.all(
       allEventIds.map(async (eventId: string) => (await EventsApi.getOne(eventId))),
-    ).then((events: any[]) => setAllPositionEvents(events))
+    ).then((events: any[]) => setAllPositionEvents(events.filter((event) => event.is_certification)))
   }, [currentPosition])
 
   useEffect(() => {
@@ -182,11 +182,6 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
 
       <Typography.Paragraph>
         Este cargo requiere {allPositionEvents.length} certificaciones.
-      </Typography.Paragraph>
-
-      <Typography.Paragraph style={{color: 'red'}}>
-        TODO: Es necesario filtrar los eventos por <code>event.is_certification</code> porque son los que
-        tienen certificación (en diseño).
       </Typography.Paragraph>
 
       <Table

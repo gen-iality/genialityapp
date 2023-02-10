@@ -10,6 +10,7 @@ import {
   Tabs,
   Typography,
   Grid,
+  Tag,
   Divider,
   Skeleton,
   Menu,
@@ -41,6 +42,8 @@ import { featureBlockingListener } from '@/services/featureBlocking/featureBlock
 import eventCard from '../shared/eventCard';
 import QuizzesProgress from '../quiz/QuizzesProgress';
 
+import { CerticationsApi } from '@helpers/request';
+
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -58,6 +61,8 @@ const MainProfile = (props) => {
   const [eventsThatIHaveParticipatedIsLoading, setEventsThatIHaveParticipatedIsLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [content, setContent] = useState('ACCOUNT_ACTIVITY');
+
+  const [allCertifications, setAllCertifications] = useState([]);
 
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
@@ -154,9 +159,8 @@ const MainProfile = (props) => {
   }, []);
 
   useEffect(() => {
-    if (!props?.cUser?.value?._id) {
-      return;
-    }
+    if (!props?.cUser?.value?._id) return;
+    CerticationsApi.getByUserAndEvent(props.cUser.value._id).then(setAllCertifications)
   }, [props?.cUser?.value]);
 
   useEffect(() => {
@@ -535,6 +539,61 @@ const MainProfile = (props) => {
                     <QuizzesProgress eventId={event._id} userId={props?.cUser?.value?._id} />
                     </>
                   ))
+                )}
+              </TabPane>
+              <TabPane tab='Certificaciones' key='6'>
+                {!(props?.cUser?.value?._id) ? (
+                  <Loading />
+                ) : (
+                  <>
+                  {allCertifications.map((c) => (
+                    <Card
+                      key={c._id}
+                      title={(
+                        <>
+                        {'Certificación del '}
+                        {dayjs(c.approved_from_date).format('DD/MM/YYYY')}
+                        </>
+                      )}
+                      extra={(
+                        <Tag
+                          color={c.success ? 'red' : 'green'}
+                        >
+                          {c.success ? 'Aprobado' : 'Pailas'}
+                        </Tag>
+                      )}
+                    >
+                      {c.entity && (
+                        <Typography.Paragraph>
+                          {`Entidad: ${c.entity}`}
+                        </Typography.Paragraph>
+                      )}
+                      {c.description && (
+                        <Typography.Paragraph>
+                          {c.description}
+                        </Typography.Paragraph>
+                      )}
+                      {c.hours !== undefined && (
+                        <Typography.Paragraph>
+                          {c.hours || 0} Horas
+                        </Typography.Paragraph>
+                      )}
+                      {c.approved_until_date  ? (
+                        <Tag
+                          color={dayjs(Date.now()).isAfter(dayjs(c.approved_until_date)) ? 'gray' : 'green'}
+                        >
+                          {(dayjs(Date.now()).isAfter(dayjs(c.approved_until_date))) ? (
+                            <>Vencido</>
+                          ) : (
+                            <>Vigente hasta {dayjs(c.approved_until_date).format('DD/MM/YYYY')}</>
+                          )}
+                        </Tag>
+                      ): (
+                        <Tag color="red">Vencido</Tag>
+                      )}
+                    </Card>
+                  ))}
+                  </>
                 )}
               </TabPane>
             </Tabs>
