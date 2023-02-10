@@ -343,8 +343,9 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
           </Form.Item>
 
           <Form.Item
-           name="t&c"
+            name="t&c"
             rules={[{required: true, message: 'Acéptalo'}]}
+            valuePropName="checked"
           >
             <Checkbox>
               He leído y acepto los <a href="https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2FACE_Politica_Tratamiento_Datos.pdf?alt=media&token=fba112af-ed54-405b-9695-25a2827afd2b" target="_blank">términos y condiciones</a>. Acepto y manifiesto bajo la gravedad de juramento.
@@ -354,6 +355,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
           <Form.Item
             name="iampro"
             rules={[{required: true, message: 'Acéptalo'}]}
+            valuePropName="checked"
           >
             <Checkbox>
               Que soy profesional del la salud y por lo tanto beneficiario directo de la información digital que se me ofrecerá. Manifiesto que la presente autorización me fue solicitada y puesta de presente antes de entregar mis datos y que la suscribo de forma libre y voluntaria ya que este evento es exclusivo para profesionales de la salud.
