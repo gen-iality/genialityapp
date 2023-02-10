@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload, Alert, Select } from 'antd';
+import { Form, Input, Button, Space, Upload, Alert, Select, Checkbox } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import createNewUser from './ModalsFunctions/createNewUser';
 import { app } from '@helpers/firebase';
@@ -355,6 +355,22 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             ]}
           >
             <Input />
+          </Form.Item>
+
+          <Form.Item
+           name="t&c"
+            label="He leído y acepto los términos y condiciones. Acepto y manifiesto bajo la gravedad de juramento."
+            rules={[{required: true, message: 'Acéptalo'}]}
+          >
+            <Checkbox />
+          </Form.Item>
+
+          <Form.Item
+            name="iampro"
+            label="Que soy profesional del la salud y por lo tanto beneficiario directo de la información digital que se me ofrecerá. Manifiesto que la presente autorización me fue solicitada y puesta de presente antes de entregar mis datos y que la suscribo de forma libre y voluntaria ya que este evento es exclusivo para profesionales de la salud."
+            rules={[{required: true, message: 'Acéptalo'}]}
+          >
+            <Checkbox />
           </Form.Item>
         </div>
         {/* finalización campos rapidos */}
