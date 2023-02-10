@@ -10,7 +10,7 @@ type FormOrganizationUser = {
   email: string;
 };
 
-export interface RegisterMemberFromOrganizationUserModalProps {
+export interface Props {
   orgMember?: any;
   user?: any;
   visible?: boolean;
@@ -19,7 +19,7 @@ export interface RegisterMemberFromOrganizationUserModalProps {
   onRegister?: (orgUserData: any) => void;
 }
 
-const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberFromOrganizationUserModalProps> = (
+const RegisterMemberFromOrganizationUserModal: FunctionComponent<Props> = (
   props,
 ) => {
   const { organization, orgMember, user, visible, onRegister, setVisible } = props;
