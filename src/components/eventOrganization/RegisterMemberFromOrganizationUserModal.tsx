@@ -1,9 +1,14 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
-import { Modal, Form, Input, Button, Card, Alert } from 'antd';
+import { Modal, Form, Input, Button, Card, Alert, Select } from 'antd';
 
 import { WarningOutlined } from '@ant-design/icons';
 import { OrganizationApi } from '@helpers/request';
+import countryOptions from './listOptions/countryOptions';
+import cityOptions from './listOptions/cityOptions';
+import professionalProfilOptions from './listOptions/professionalProfileOptions';
+import indicativeCountryOptions from './listOptions/indicativeCountryOptions';
+import specialistOptions from './listOptions/specialistOptions';
 
 type FormOrganizationUser = {
   name: string;
@@ -103,6 +108,54 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<Props> = (
               </Form.Item>
 
               <Form.Item label='Correo' name='email' rules={[{ required: true, message: 'Falta el correo' }]}>
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                label='Indicativo'
+                name='indicative'
+                rules={[{ required: true, message: 'Falta el indicativo' }]}
+              >
+                <Select options={indicativeCountryOptions}></Select>
+              </Form.Item>
+
+              <Form.Item
+                label='Numero de contacto'
+                name='number_cel'
+                rules={[{ required: true, message: 'Falta el numero de contacto' }]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item label='País' name='country' rules={[{ required: true, message: 'Falta el país' }]}>
+                <Select options={countryOptions}></Select>
+              </Form.Item>
+
+              <Form.Item label='Ciudad' name='city' rules={[{ required: true, message: 'Falta la ciudad' }]}>
+                <Select options={cityOptions}></Select>
+              </Form.Item>
+
+              <Form.Item
+                label='Perfil profesional'
+                name='professional_profile'
+                rules={[{ required: true, message: 'Falta el perfil pofesional' }]}
+              >
+                <Select options={professionalProfilOptions}></Select>
+              </Form.Item>
+
+              <Form.Item
+                label='Especialidad'
+                name='speciality'
+                rules={[{ required: true, message: 'Falta la especialidad' }]}
+              >
+                <Select options={specialistOptions}></Select>
+              </Form.Item>
+
+              <Form.Item
+                label='Cédula'
+                name='identification_card'
+                rules={[{ required: true, message: 'Falta el número de identificación' }]}
+              >
                 <Input />
               </Form.Item>
             </>
