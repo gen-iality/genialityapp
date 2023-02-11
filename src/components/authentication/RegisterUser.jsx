@@ -69,7 +69,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
 
   const [form] = Form.useForm();
   const [proProfile, setProProfile] = useState();
-  const [isThisColombia, setIsThisColombia] = useState(false);
+  const [isThisColombia, setIsThisColombia] = useState(true);
   const [imageAvatar, setImageAvatar] = useState(null);
   const [modalInfo, setModalInfo] = useState(null);
   const [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
@@ -78,13 +78,13 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
 
   useEffect(() => {
     if (['specialist_doctor', 'resident'].includes(proProfile)) {
-      setSpecialistOptions(mainSpecialistOptions)
+      setSpecialistOptions(mainSpecialistOptions);
     } else if (['professional_from_another_health_area'].includes(proProfile)) {
-      setSpecialistOptions(otherHealthAreaOptions)
+      setSpecialistOptions(otherHealthAreaOptions);
     } else {
-      setSpecialistOptions([])
+      setSpecialistOptions([]);
     }
-  }, [proProfile])
+  }, [proProfile]);
 
   function resetFields() {
     form.resetFields();
@@ -327,20 +327,13 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             label='País'
             name='country'
             rules={[{ required: true, message: 'Falta el país' }]}
-            initialValue="Colombia"
+            initialValue='Colombia'
           >
-            <Select
-              options={countryOptions}
-              onChange={(value) => setIsThisColombia(value === 'Colombia')}
-            />
+            <Select options={countryOptions} onChange={(value) => setIsThisColombia(value === 'Colombia')} />
           </Form.Item>
 
           <Form.Item label='Ciudad' name='city' rules={[{ required: true, message: 'Falta la ciudad' }]}>
-            {isThisColombia ? (
-              <Select options={cityOptions} />
-            ) : (
-              <Input />
-            )}
+            {isThisColombia ? <Select options={cityOptions} /> : <Input />}
           </Form.Item>
 
           <Form.Item

@@ -44,26 +44,41 @@ const EventOrganization = (props) => {
     // const { visibility, allow_register } = organization;
     if (!cUser.value && organization) {
       // helperDispatch({ type: 'showLogin', visible: true });
+
+      let positionId = null;
+      switch (orgId) {
+        //case id -> Organizazión Geniality
+        case '62a915954e1452197604901b':
+          //position id -> Cargo de Gerente
+          positionId = '63b63f0c7fd60e3c84646d12';
+          break;
+        //case id -> Organizazión ACE (Asociación Colombiana de Endocrinología)
+        case '638bb28da8363054b34c97d3':
+          //position id -> Cargo de Estudiante
+          positionId = '63e6eb9ea61616444d1a3b62';
+          break;
+      }
+      console.log('5. positionId', positionId, 'orgId', orgId);
       helperDispatch({
         type: 'showRegister',
         visible: true,
         idOrganization: orgId,
-        defaultPositionId: '63b63f0c7fd60e3c84646d12',
+        defaultPositionId: positionId,
       });
     }
   }, [cUser.value, organization, orgId]);
 
   useEffect(() => {
-    if (!organization) return
-    if (!cUser.value) return
-    if (organizationUser) return
+    if (!organization) return;
+    if (!cUser.value) return;
+    if (organizationUser) return;
     const { visibility, allow_register } = organization;
-    console.log('organization access', { visibility, allow_register })
+    console.log('organization access', { visibility, allow_register });
     if (visibility === 'PUBLIC' && allow_register) {
       //helperDispatch({ type: 'showRegister', visible: true });
       setIsVisibleRegister(true);
     }
-  }, [organizationUser, organization, cUser.value])
+  }, [organizationUser, organization, cUser.value]);
 
   useEffect(() => {
     if (!cUser.value) return;
