@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Space, Upload, Alert, Select, Checkbox } from 'antd';
 import ImgCrop from 'antd-img-crop';
@@ -14,7 +14,8 @@ import 'react-phone-number-input/style.css';
 import countryOptions from '@components/eventOrganization/listOptions/countryOptions';
 import cityOptions from '@components/eventOrganization/listOptions/cityOptions';
 import professionalProfilOptions from '@components/eventOrganization/listOptions/professionalProfileOptions';
-import specialistOptions from '@components/eventOrganization/listOptions/specialistOptions';
+import mainSpecialistOptions from '@components/eventOrganization/listOptions/mainSpecialistOptions';
+import otherHealthAreaOptions from '@components/eventOrganization/listOptions/otherHealthAreaOptions';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrganization, defaultPositionId }) => {
   const intl = useIntl();
@@ -68,9 +69,22 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
 
   const [form] = Form.useForm();
   const [proProfile, setProProfile] = useState();
+  const [isThisColombia, setIsThisColombia] = useState(false);
   const [imageAvatar, setImageAvatar] = useState(null);
   const [modalInfo, setModalInfo] = useState(null);
   const [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
+
+  const [specialistOptions, setSpecialistOptions] = useState([]);
+
+  useEffect(() => {
+    if (['specialist_doctor', 'resident'].includes(proProfile)) {
+      setSpecialistOptions(mainSpecialistOptions)
+    } else if (['professional_from_another_health_area'].includes(proProfile)) {
+      setSpecialistOptions(otherHealthAreaOptions)
+    } else {
+      setSpecialistOptions([])
+    }
+  }, [proProfile])
 
   function resetFields() {
     form.resetFields();
@@ -309,12 +323,24 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             />
           </Form.Item>
 
-          <Form.Item label='País' name='country' rules={[{ required: true, message: 'Falta el país' }]}>
-            <Select options={countryOptions}></Select>
+          <Form.Item
+            label='País'
+            name='country'
+            rules={[{ required: true, message: 'Falta el país' }]}
+            initialValue="Colombia"
+          >
+            <Select
+              options={countryOptions}
+              onChange={(value) => setIsThisColombia(value === 'Colombia')}
+            />
           </Form.Item>
 
           <Form.Item label='Ciudad' name='city' rules={[{ required: true, message: 'Falta la ciudad' }]}>
-            <Select options={cityOptions}></Select>
+            {isThisColombia ? (
+              <Select options={cityOptions} />
+            ) : (
+              <Input />
+            )}
           </Form.Item>
 
           <Form.Item
@@ -330,17 +356,17 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             />
           </Form.Item>
 
-          {['specialist_doctor', 'resident'].includes(proProfile) && (
+          {specialistOptions.length > 0 && (
             <Form.Item
               label='Especialidad'
               name='speciality'
               rules={[{ required: true, message: 'Falta la especialidad' }]}
             >
-              <Select options={specialistOptions}></Select>
+              <Select options={specialistOptions} />
             </Form.Item>
           )}
 
-          <Form.Item
+          {/* <Form.Item
             label='Cédula'
             name='identification_card'
             rules={[
@@ -349,7 +375,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             ]}
           >
             <Input />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item name='t&c' rules={[{ required: true, message: 'Acéptalo' }]} valuePropName='checked'>
             <Checkbox>
