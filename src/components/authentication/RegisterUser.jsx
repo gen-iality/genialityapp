@@ -365,7 +365,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             </Form.Item>
           )}
 
-          <Form.Item
+          {/* <Form.Item
             label='Cédula'
             name='identification_card'
             rules={[
@@ -374,7 +374,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             ]}
           >
             <Input />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item
             name="t&c"
