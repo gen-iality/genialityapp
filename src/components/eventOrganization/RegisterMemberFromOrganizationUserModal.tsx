@@ -8,7 +8,7 @@ import countryOptions from './listOptions/countryOptions';
 import cityOptions from './listOptions/cityOptions';
 import professionalProfilOptions from './listOptions/professionalProfileOptions';
 import indicativeCountryOptions from './listOptions/indicativeCountryOptions';
-import specialistOptions from './listOptions/specialistOptions';
+import mainSpecialistOptions from './listOptions/mainSpecialistOptions';
 
 type FormOrganizationUser = {
   name: string;
@@ -148,7 +148,7 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<Props> = (
                 name='speciality'
                 rules={[{ required: true, message: 'Falta la especialidad' }]}
               >
-                <Select options={specialistOptions}></Select>
+                <Select options={mainSpecialistOptions}></Select>
               </Form.Item>
 
               <Form.Item
