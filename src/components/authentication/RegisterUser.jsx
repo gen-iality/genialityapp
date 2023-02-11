@@ -75,12 +75,16 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
   const [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
 
   const [specialistOptions, setSpecialistOptions] = useState([]);
+  const [tAndC, setTAndC] = useState(false);
+  const [labelABC, setLabelABC] = useState('Especialidad');
 
   useEffect(() => {
     if (['specialist_doctor', 'resident'].includes(proProfile)) {
       setSpecialistOptions(mainSpecialistOptions);
+      setLabelABC('Especialidad')
     } else if (['professional_from_another_health_area'].includes(proProfile)) {
       setSpecialistOptions(otherHealthAreaOptions);
+      setLabelABC('Área')
     } else {
       setSpecialistOptions([]);
     }
@@ -92,6 +96,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
   }
 
   const onFinishCreateNewUser = async (values) => {
+    if (!tAndC) {
+      alert('Debes aceptar los términos y condiciones')
+      return
+    }
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -351,7 +359,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
 
           {specialistOptions.length > 0 && (
             <Form.Item
-              label='Especialidad'
+              label={labelABC}
               name='speciality'
               rules={[{ required: true, message: 'Falta la especialidad' }]}
             >
@@ -370,8 +378,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             <Input />
           </Form.Item> */}
 
-          <Form.Item name='t&c' rules={[{ required: true, message: 'Acéptalo' }]} valuePropName='checked'>
-            <Checkbox>
+          <Form.Item name='t&c' rules={[{ required: true, message: 'Acepta los términos y condiciones' }]} valuePropName='checked'>
+            <Checkbox
+              onChange={(x) => setTAndC(x.target.checked)}
+            >
               He leído y acepto los{' '}
               <a
                 href='https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2FACE_Politica_Tratamiento_Datos.pdf?alt=media&token=fba112af-ed54-405b-9695-25a2827afd2b'
@@ -383,7 +393,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             </Checkbox>
           </Form.Item>
 
-          <Form.Item name='iampro' rules={[{ required: true, message: 'Acéptalo' }]} valuePropName='checked'>
+          <Form.Item name='iampro' rules={[{ required: true, message: 'Es importante esto' }]} valuePropName='checked'>
             <Checkbox>
               Que soy profesional del la salud y por lo tanto beneficiario directo de la información digital que se me
               ofrecerá. Manifiesto que la presente autorización me fue solicitada y puesta de presente antes de entregar
