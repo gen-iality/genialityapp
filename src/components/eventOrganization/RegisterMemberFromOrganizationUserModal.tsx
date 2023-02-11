@@ -8,7 +8,7 @@ import countryOptions from './listOptions/countryOptions';
 import cityOptions from './listOptions/cityOptions';
 import professionalProfilOptions from './listOptions/professionalProfileOptions';
 import indicativeCountryOptions from './listOptions/indicativeCountryOptions';
-import specialistOptions from './listOptions/specialistOptions';
+import mainSpecialistOptions from './listOptions/mainSpecialistOptions';
 
 type FormOrganizationUser = {
   name: string;
@@ -20,15 +20,12 @@ export interface Props {
   user?: any;
   visible?: boolean;
   organization: any;
-  setVisible: (x: boolean) => void,
+  setVisible: (x: boolean) => void;
   onRegister?: (orgUserData: any) => void;
 }
 
-const RegisterMemberFromOrganizationUserModal: FunctionComponent<Props> = (
-  props,
-) => {
+const RegisterMemberFromOrganizationUserModal: FunctionComponent<Props> = (props) => {
   const { organization, orgMember, user, visible, onRegister, setVisible } = props;
-
 
   const [form] = Form.useForm<FormOrganizationUser>();
 
@@ -148,7 +145,7 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<Props> = (
                 name='speciality'
                 rules={[{ required: true, message: 'Falta la especialidad' }]}
               >
-                <Select options={specialistOptions}></Select>
+                <Select options={mainSpecialistOptions}></Select>
               </Form.Item>
 
               <Form.Item
