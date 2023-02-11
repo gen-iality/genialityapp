@@ -15,6 +15,7 @@ import countryOptions from '@components/eventOrganization/listOptions/countryOpt
 import cityOptions from '@components/eventOrganization/listOptions/cityOptions';
 import professionalProfilOptions from '@components/eventOrganization/listOptions/professionalProfileOptions';
 import mainSpecialistOptions from '@components/eventOrganization/listOptions/mainSpecialistOptions';
+import otherHealthAreaOptions from '@components/eventOrganization/listOptions/otherHealthAreaOptions';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrganization, defaultPositionId }) => {
   const intl = useIntl();
@@ -77,8 +78,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
   useEffect(() => {
     if (['specialist_doctor', 'resident'].includes(proProfile)) {
       setSpecialistOptions(mainSpecialistOptions)
-    } else if ([].includes(proProfile)) {
-      setSpecialistOptions(mainSpecialistOptions)
+    } else if (['professional_from_another_health_area'].includes(proProfile)) {
+      setSpecialistOptions(otherHealthAreaOptions)
     } else {
       setSpecialistOptions([])
     }
