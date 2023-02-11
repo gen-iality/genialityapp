@@ -336,7 +336,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
 
           <Form.Item label='Ciudad' name='city' rules={[{ required: true, message: 'Falta la ciudad' }]}>
             {isThisColombia ? (
-              <Select options={cityOptions}></Select>
+              <Select options={cityOptions} />
             ) : (
               <Input />
             )}
@@ -361,7 +361,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
               name='speciality'
               rules={[{ required: true, message: 'Falta la especialidad' }]}
             >
-              <Select options={specialistOptions}></Select>
+              <Select options={specialistOptions} />
             </Form.Item>
           )}
 
