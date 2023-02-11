@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Space, Upload, Alert, Select, Checkbox } from 'antd';
 import ImgCrop from 'antd-img-crop';
@@ -14,7 +14,7 @@ import 'react-phone-number-input/style.css';
 import countryOptions from '@components/eventOrganization/listOptions/countryOptions';
 import cityOptions from '@components/eventOrganization/listOptions/cityOptions';
 import professionalProfilOptions from '@components/eventOrganization/listOptions/professionalProfileOptions';
-import specialistOptions from '@components/eventOrganization/listOptions/specialistOptions';
+import mainSpecialistOptions from '@components/eventOrganization/listOptions/mainSpecialistOptions';
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrganization, defaultPositionId }) => {
   const intl = useIntl();
@@ -71,6 +71,18 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
   const [imageAvatar, setImageAvatar] = useState(null);
   const [modalInfo, setModalInfo] = useState(null);
   const [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
+
+  const [specialistOptions, setSpecialistOptions] = useState([]);
+
+  useEffect(() => {
+    if (['specialist_doctor', 'resident'].includes(proProfile)) {
+      setSpecialistOptions(mainSpecialistOptions)
+    } else if ([].includes(proProfile)) {
+      setSpecialistOptions(mainSpecialistOptions)
+    } else {
+      setSpecialistOptions([])
+    }
+  }, [proProfile])
 
   function resetFields() {
     form.resetFields();
@@ -329,7 +341,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             />
           </Form.Item>
 
-          {['specialist_doctor', 'resident'].includes(proProfile) && (
+          {specialistOptions.length > 0 && (
             <Form.Item
               label='Especialidad'
               name='speciality'
