@@ -69,6 +69,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
 
   const [form] = Form.useForm();
   const [proProfile, setProProfile] = useState();
+  const [isThisColombia, setIsThisColombia] = useState(false);
   const [imageAvatar, setImageAvatar] = useState(null);
   const [modalInfo, setModalInfo] = useState(null);
   const [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
@@ -321,12 +322,24 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             />
           </Form.Item>
 
-          <Form.Item label='País' name='country' rules={[{ required: true, message: 'Falta el país' }]}>
-            <Select options={countryOptions}></Select>
+          <Form.Item
+            label='País'
+            name='country'
+            rules={[{ required: true, message: 'Falta el país' }]}
+            initialValue="Colombia"
+          >
+            <Select
+              options={countryOptions}
+              onChange={(value) => setIsThisColombia(value === 'Colombia')}
+            />
           </Form.Item>
 
           <Form.Item label='Ciudad' name='city' rules={[{ required: true, message: 'Falta la ciudad' }]}>
-            <Select options={cityOptions}></Select>
+            {isThisColombia ? (
+              <Select options={cityOptions}></Select>
+            ) : (
+              <Input />
+            )}
           </Form.Item>
 
           <Form.Item
