@@ -67,6 +67,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
   ];
 
   const [form] = Form.useForm();
+  const [proProfile, setProProfile] = useState();
   const [imageAvatar, setImageAvatar] = useState(null);
   const [modalInfo, setModalInfo] = useState(null);
   const [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
@@ -320,16 +321,23 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             name='professional_profile'
             rules={[{ required: true, message: 'Falta el perfil pofesional' }]}
           >
-            <Select options={professionalProfilOptions}></Select>
+            <Select
+              options={professionalProfilOptions}
+              onChange={(value) => {
+                setProProfile(value)
+              }}
+            />
           </Form.Item>
 
-          <Form.Item
-            label='Especialidad'
-            name='speciality'
-            rules={[{ required: true, message: 'Falta la especialidad' }]}
-          >
-            <Select options={specialistOptions}></Select>
-          </Form.Item>
+          {['specialist_doctor', 'resident'].includes(proProfile) && (
+            <Form.Item
+              label='Especialidad'
+              name='speciality'
+              rules={[{ required: true, message: 'Falta la especialidad' }]}
+            >
+              <Select options={specialistOptions}></Select>
+            </Form.Item>
+          )}
 
           <Form.Item
             label='Cédula'
