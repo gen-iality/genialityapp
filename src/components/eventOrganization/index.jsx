@@ -45,18 +45,9 @@ const EventOrganization = (props) => {
     if (!cUser.value && organization) {
       // helperDispatch({ type: 'showLogin', visible: true });
 
-      let positionId = null;
-      switch (orgId) {
-        //case id -> Organizazión Geniality
-        case '62a915954e1452197604901b':
-          //position id -> Cargo de Gerente
-          positionId = '63b63f0c7fd60e3c84646d12';
-          break;
-        //case id -> Organizazión ACE (Asociación Colombiana de Endocrinología)
-        case '638bb28da8363054b34c97d3':
-          //position id -> Cargo de Estudiante
-          positionId = '63e6eb9ea61616444d1a3b62';
-          break;
+      let positionId;
+      if (organization.default_position_id) {
+        positionId = organization.default_position_id
       }
       console.log('5. positionId', positionId, 'orgId', orgId);
       helperDispatch({
