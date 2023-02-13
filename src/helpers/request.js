@@ -739,6 +739,10 @@ export const OrganizationApi = {
     const token = await GetTokenUserFirebase();
     return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=false&token=${token}`, data);
   },
+  editDefaultPosition: async (organizationId, positionId) => {
+    const data = { position_id: positionId }
+    return await Actions.put(`/api/organizations/${organizationId}/default-position`, data)
+  },
 };
 export const BadgeApi = {
   create: async (data) => {
