@@ -75,7 +75,6 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
   const [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
 
   const [specialistOptions, setSpecialistOptions] = useState([]);
-  const [tAndC, setTAndC] = useState(false);
   const [labelABC, setLabelABC] = useState('Especialidad');
 
   useEffect(() => {
@@ -96,10 +95,6 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
   }
 
   const onFinishCreateNewUser = async (values) => {
-    if (!tAndC) {
-      alert('Debes aceptar los términos y condiciones')
-      return
-    }
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -378,10 +373,21 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             <Input />
           </Form.Item> */}
 
-          <Form.Item name='t&c' rules={[{ required: true, message: 'Acepta los términos y condiciones' }]} valuePropName='checked'>
-            <Checkbox
-              onChange={(x) => setTAndC(x.target.checked)}
-            >
+          <Form.Item
+            name='t&c'
+            rules={[
+              {
+                required: true,
+                message: 'Acepta los términos y condiciones',
+                validator: (_, value) => {
+                  if (!value) return Promise.reject()
+                  return Promise.resolve()
+                },
+              },
+            ]}
+            valuePropName='checked'
+          >
+            <Checkbox>
               He leído y acepto los{' '}
               <a
                 href='https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2FACE_Politica_Tratamiento_Datos.pdf?alt=media&token=fba112af-ed54-405b-9695-25a2827afd2b'
