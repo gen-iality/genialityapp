@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { PositionsApi, OrganizationApi } from '@helpers/request'
 
 /** Antd imports */
-import { Table, Button, Row, Col } from 'antd'
+import { Table, Button, Row, Col, Radio } from 'antd'
 import { PlusCircleOutlined } from '@ant-design/icons'
 
 /** Components */
@@ -16,7 +16,7 @@ import { PositionResponseType } from '@Utilities/types/PositionType'
 
 interface Props {
   path: string,
-  org: { _id: string },
+  org: { _id: string, default_position_id?: string | null },
 }
 
 function OrganizationPositionsPage(props: Props) {
@@ -52,16 +52,33 @@ function OrganizationPositionsPage(props: Props) {
     console.debug('OrganizationPositionsPage: got orgEvents', { orgEvents })
   }
 
+  const onDefaultPositionChange = async (positionId: string) => {
+    console.log('default position changed to', positionId)
+    OrganizationApi.editDefaultPosition(organizationId, positionId)
+  }
+
   useEffect(() => {
     requestAllPositions()
     requestOrgEvents()
   }, [modalHandler.isOpened])
 
   return (
-    <>
+    <Radio.Group
+      onChange={(e) => {
+        const positionId = e.target.value
+        onDefaultPositionChange(positionId)
+      }}
+      defaultValue={props.org.default_position_id}
+    >
       <Header title="Cargos" />
       <Table
-        columns={positionsTableColumns(modalHandler.open, orgEventsData, props.path)}
+        columns={
+          positionsTableColumns(
+            modalHandler.open,
+            orgEventsData,
+            props.path,
+          )
+        }
         dataSource={positionsData}
         size="small"
         rowKey="index"
@@ -86,7 +103,7 @@ function OrganizationPositionsPage(props: Props) {
         handler={modalHandler}
         organizationId={organizationId}
       />
-    </>
+    </Radio.Group>
   )
 }
 export default withContext(OrganizationPositionsPage)

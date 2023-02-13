@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Tooltip, Button, Tag } from 'antd'
+import { Tooltip, Button, Tag, Radio } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 
 import { ColumnsType } from 'antd/es/table'
@@ -16,6 +16,12 @@ export default function positionsTableColumns(
   currentUrl: string,
 ) {
   const columns: ColumnsType<PositionResponseRowType> = [
+    {
+      key: 'default',
+      title: 'Por defecto',
+      width: 50,
+      render: (_, item) => <Radio value={item._id} />
+    },
     {
       key: 'position',
       title: 'Cargo',
