@@ -335,8 +335,17 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             <Select options={countryOptions} onChange={(value) => setIsThisColombia(value === 'Colombia')} />
           </Form.Item>
 
-          <Form.Item label='Ciudad' name='city' rules={[{ required: true, message: 'Falta la ciudad' }]}>
-            {isThisColombia ? <Select options={cityOptions} /> : <Input />}
+          <Form.Item
+            label='Ciudad'
+            name='city'
+            rules={[{ required: true, message: 'Falta la ciudad' }]}
+            initialValue={isThisColombia ? 'Bogotá' : ''}
+          >
+            {isThisColombia ? (
+              <Select options={cityOptions} />
+            ) : (
+              <Input />
+            )}
           </Form.Item>
 
           <Form.Item
