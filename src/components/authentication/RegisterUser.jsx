@@ -399,7 +399,20 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop, idOrga
             </Checkbox>
           </Form.Item>
 
-          <Form.Item name='iampro' rules={[{ required: true, message: 'Es importante esto' }]} valuePropName='checked'>
+          <Form.Item
+            name='iampro'
+            rules={[
+              {
+                required: true,
+                message: 'Es importante que esto sea evidenciado',
+                validator: (_, value) => {
+                  if (!value) return Promise.reject()
+                  return Promise.resolve()
+                },
+              },
+            ]}
+            valuePropName='checked'
+          >
             <Checkbox>
               Que soy profesional del la salud y por lo tanto beneficiario directo de la información digital que se me
               ofrecerá. Manifiesto que la presente autorización me fue solicitada y puesta de presente antes de entregar
