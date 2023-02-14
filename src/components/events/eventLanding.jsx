@@ -21,6 +21,7 @@ class EventLanding extends Component {
       onPage: 'event',
       activityId: null,
       activityDetail: null,
+      thereAreQuizingOrSurveys: false,
     };
     this.onChangePage = this.onChangePage.bind(this);
   }
@@ -80,7 +81,7 @@ class EventLanding extends Component {
           <>
             <StudentSelfCourseProgress
               hasProgressLabel
-              customTitle='Avance del curso'
+              customTitle='Avance'
               activityFilter={(a) =>
                 ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
               }
@@ -92,9 +93,13 @@ class EventLanding extends Component {
                 [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
               }
             />
-            <Card>
+            {console.log('this.state.thereAreQuizingOrSurveys', this.state.thereAreQuizingOrSurveys)}
+            <Card style={{ display: this.state.thereAreQuizingOrSurveys ? 'block' : 'none' }}>
               <Typography.Text>Estado del curso:</Typography.Text>{' '}
               <QuizApprovedStatus
+                thereAreExam={(param) => {
+                  this.setState({ thereAreQuizingOrSurveys: param });
+                }}
                 eventId={this.props.cEvent.value._id}
                 approvedLink={`/landing/${this.props.cEvent.value._id}/certificate`}
               />
