@@ -13,19 +13,14 @@ import { Spin, Typography } from 'antd';
 type CurrentEventAttendees = any; // TODO: define this type and move to @Utilities/types/
 
 export interface StudentSelfCourseProgressProps {
-  progressType: 'circle' | 'block',
-  hasProgressLabel?: boolean,
-  activityFilter?: (a: AgendaType) => boolean,
-  customTitle?: string,
-};
+  progressType: 'circle' | 'block';
+  hasProgressLabel?: boolean;
+  activityFilter?: (a: AgendaType) => boolean;
+  customTitle?: string;
+}
 
 function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
-  const {
-    progressType,
-    hasProgressLabel = false,
-    activityFilter = (a: AgendaType) => true,
-    customTitle,
-  } = props;
+  const { progressType, hasProgressLabel = false, activityFilter = (a: AgendaType) => true, customTitle } = props;
 
   const cEventContext = useEventContext();
   const cEventUser = useUserEvent();
@@ -55,34 +50,31 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
       // Filter existent activities and set the state
       setActivitiesAttendee(
         // Promises don't bite :)
-        (await Promise.all(existentActivities)).filter((item) => !!item)
+        (await Promise.all(existentActivities)).filter((item) => !!item),
       );
     };
     loadData().then(() => setIsLoading(false));
   }, [cEventContext.value, cEventUser.value]);
 
-  const progressPercentValue: number = useMemo(() => (
-    Math.round(((activitiesAttendee.length || 0) / (allActivities.length || 0)) * 100)
-  ), [activitiesAttendee, allActivities]);
+  const progressPercentValue: number = useMemo(
+    () => Math.round(((activitiesAttendee.length || 0) / (allActivities.length || 0)) * 100),
+    [activitiesAttendee, allActivities],
+  );
 
-  const progressStats = useMemo(() => (
-    isLoading ? <Spin/> : `${activitiesAttendee.length || 0}/${allActivities.length || 0}`
-  ), [isLoading, activitiesAttendee, allActivities]);
+  const progressStats = useMemo(
+    () => (isLoading ? <Spin /> : `${activitiesAttendee.length || 0}/${allActivities.length || 0}`),
+    [isLoading, activitiesAttendee, allActivities],
+  );
 
   if (allActivities.length === 0) {
-    return (
-      <span>
-        <Typography.Text strong>{customTitle}:</Typography.Text>
-        <Typography.Text> sin datos</Typography.Text>
-      </span>
-    );
+    return null;
   }
 
   return (
     <CourseProgress
       title={customTitle}
       hasLabel={hasProgressLabel}
-      stats={progressStats || <Spin/>}
+      stats={progressStats || <Spin />}
       percentValue={progressPercentValue}
       type={progressType}
     />
