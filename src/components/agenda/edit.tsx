@@ -15,7 +15,7 @@ import { AgendaApi, DocumentsApi } from '@helpers/request';
 import { firestore } from '@helpers/firebase';
 
 import Loading from '../profile/loading';
-import RoomController from './roomManager/controller';
+import RoomController from './roomManager/RoomController';
 import Service from './roomManager/service';
 
 import TipeOfActivity from './typeActivity';
