@@ -18,7 +18,7 @@ export default function RoomController() {
   const [columnsData, setColumnsData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  const [columns, setColumns] = useState([])
+  const [columns, setColumns] = useState<any[]>([])
 
   const agendaContext = useContext(AgendaContext);
   const {
@@ -27,7 +27,7 @@ export default function RoomController() {
   } = agendaContext;
 
   const requestGames = async() => {
-    const newAvailableGames = [];
+    const newAvailableGames: any[] = [];
     const docRef = firestore.collection('gamesAvailable');
     const querySnapshot = await docRef.get() // async does not bite)))
 
@@ -42,9 +42,9 @@ export default function RoomController() {
     setIsLoading(false);
   }
 
-  const updateStatusOfGame = (status, gameId, allGames) => {
+  const updateStatusOfGame = (status: boolean, gameId: string, allGames: any[]) => {
     console.debug('allGames', allGames)
-    const newData = allGames.map((game) => {
+    const newData = allGames.map((game: any) => {
       if (game.id === gameId) return { ...game, showGame: status };
       else return { ...game };
     });
@@ -54,7 +54,9 @@ export default function RoomController() {
   }
 
   // We need to load the game list
-  useEffect(() => requestGames(), [])
+  useEffect(() => {
+    requestGames()
+  }, [])
 
   // If the games status changes, we have to update the config
   useEffect(() => agendaContext.saveConfig(), [isGamesActived])
@@ -66,11 +68,11 @@ export default function RoomController() {
   }, [availableGames])
 
   useEffect(() => {
-    const newColumns = [
+    const newColumns: any[] = [
       {
         key: 'logo',
         title: 'Logo',
-        render: (item) => (
+        render: (value: any, item: any) => (
           <Row gutter={8}>
             <Col>
               <Popover
@@ -104,7 +106,7 @@ export default function RoomController() {
         key: 'visibility',
         title: 'Visible',
         dataIndex: 'showGame',
-        render(_, item) {
+        render(value: any, item: any) {
           return (
             <Switch
               checkedChildren="Sí"
