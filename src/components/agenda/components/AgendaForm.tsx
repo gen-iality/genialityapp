@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs'
 
-import { Card, Col, Form, FormInstance, Row, Space, TimePicker, Typography } from 'antd'
+import { Card, Col, Form, FormInstance, InputRef, Row, Space, TimePicker, Typography } from 'antd'
 
 import {
   Select,
@@ -8,15 +8,16 @@ import {
   InputNumber,
 } from 'antd'
 
-import * as React from 'react';
-import { FunctionComponent, useEffect, useState } from 'react';
-import { CategoriesAgendaApi, ModulesApi, SpacesApi, SpeakersApi, ToolsApi } from '@helpers/request';
-import AgendaType from '@Utilities/types/AgendaType';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import EviusReactQuill from '@components/shared/eviusReactQuill';
-import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
-import { DispatchMessageService } from '@context/MessageService';
-import BackTop from '@antdComponents/BackTop';
+import * as React from 'react'
+import { FunctionComponent, useEffect, useRef, useState } from 'react'
+import { CategoriesAgendaApi, ModulesApi, SpacesApi, SpeakersApi, ToolsApi } from '@helpers/request'
+import AgendaType from '@Utilities/types/AgendaType'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import EviusReactQuill from '@components/shared/eviusReactQuill'
+import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop'
+import { DispatchMessageService } from '@context/MessageService'
+import BackTop from '@antdComponents/BackTop'
+import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 
 export interface FormValues {
   name: string,
@@ -32,13 +33,14 @@ export interface FormValues {
   activity_categories_ids: string[],
   description: string,
   image?: string,
+  vimeo_id?: string,
 }
 
 interface IAgendaFormProps {
   form: FormInstance<FormValues>,
   activityId?: string,
   event?: any,
-  agenda?: AgendaType,
+  agenda?: AgendaType | null,
 }
 
 const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
@@ -49,15 +51,17 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
   const [allCategories, setAllCategories] = useState<any[]>([])
   const [allTools, setAllTools] = useState<any[]>([])
 
-  const handleImageChange = (file: any) => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras carga la imagen...',
-      action: 'show',
-    });
-    props.form.setFieldsValue({image: file})
-  };
+  const [isFocused, setIsFocused] = useState(false)
+
+  const ref = useRef<InputRef>(null)
+
+  useEffect(() => {
+    if (ref.current && !isFocused) {
+      ref.current.focus()
+      setIsFocused(true)
+      window.scrollTo(0, 0)
+    }
+  }, [ref.current, isFocused])
 
   useEffect(() => {
     if (!props.event?._id) return
@@ -134,9 +138,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
   return (
     <Row justify="center" wrap gutter={12}>
       <Col span={20}>
-        {props.activityId && (
-          <>Aquí va el componente que selecciona el tipo de contenido</>
-        )}
+        {props.activityId && <ActivityTypeSelector />}
       </Col>
       <Col span={20}>
         <Form.Item
@@ -144,7 +146,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
           name="name"
           rules={[{ required: true, message: 'Nombre de la lección requerida' }]}
         >
-          <Input autoFocus placeholder="Nombre de la lección" />
+          <Input autoFocus ref={ref} placeholder="Nombre de la lección" />
         </Form.Item>
         <Form.Item
           label="Módulo (opcional)"
@@ -232,38 +234,67 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
         <Form.Item
           label="Descripción"
           name="description"
+          getValueProps={(value) => ({
+            data: value || '',
+            handleChange: (description: string) => {
+              props.form.setFieldsValue({ description })
+            },
+          })}
+          extra={(
+            <Space>
+              <ExclamationCircleOutlined style={{ color: '#faad14' }} />
+              <Typography.Text type="secondary">Esta información no es visible en la Agenda/Lección en versión Mobile.</Typography.Text>
+            </Space>
+          )}
         >
-          <Space>
-            <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-            <Typography.Text type="secondary">Esta información no es visible en la Agenda/Lección en versión Mobile.</Typography.Text>
-          </Space>
-          {/* <EviusReactQuill /> */}
+          {/*
+          If THERE IS problem with this component, comment `getValueProps` at
+          the `Form.Item` component, and uncomment the next commented code, please
+          */}
+          <EviusReactQuill
+            // handleChange={(description: string) => {
+            //   props.form.setFieldsValue({ description })
+            // }}
+            // data={props.form.getFieldValue('description') || ''}
+          />
         </Form.Item>
-        <Form.Item
-          label="Imagen"
-          name="image"
-        >
+        <Form.Item label="Imagen">
           <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
-            <Form.Item noStyle>
-              <p>
-                Dimensiones:
-                {' '}
-                <b>
-                  <small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small>
-                </b>{' '}
-              </p>
-              <p>
-                <small>
-                  Se recomienda que la imagen debe tener dimensiones iguales (cuadradas) para su mejor
-                  funcionamiento
-                </small>
-              </p>
-              <p>
-                <small>La imagen tarda unos segundos en cargar</small>
-              </p>
+            <p>
+              Dimensiones:
+              {' '}
+              <b>
+                <small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small>
+              </b>{' '}
+            </p>
+            <p>
+              <small>
+                Se recomienda que la imagen debe tener dimensiones iguales (cuadradas) para su mejor
+                funcionamiento
+              </small>
+            </p>
+            <p>
+              <small>La imagen tarda unos segundos en cargar</small>
+            </p>
+            <Form.Item
+              noStyle
+              name="image"
+              getValueProps={(value) => ({
+                imageUrl: value,
+                imageDataCallBack: (image: string) => {
+                  DispatchMessageService({
+                    type: 'loading',
+                    key: 'loading',
+                    msj: 'Por favor espere mientras carga la imagen...',
+                    action: 'show',
+                  })
+                  props.form.setFieldsValue({ image })
+                },
+              })}
+            >
               <ImageUploaderDragAndDrop
-                imageDataCallBack={handleImageChange}
-                imageUrl={props.form.getFieldValue('image')}
+                // imageDataCallBack={handleImageChange}
+                // imageUrl={props.form.getFieldValue('image')}
                 width="1080"
                 height="1080"
               />
@@ -273,7 +304,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
         <BackTop />
       </Col>
     </Row>
-  );
-};
+  )
+}
 
-export default AgendaForm;
+export default AgendaForm
