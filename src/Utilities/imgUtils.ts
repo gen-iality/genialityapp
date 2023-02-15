@@ -29,7 +29,7 @@ export function readUrlImg({ files, setImage }: any) {
  * @param {string} imageUrl -
  * https://images.unsplash.com/photo-1558981852-426c6c22a060?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&
  */
-export const handleImageName = (imageUrl: string) => {
+export const handleImageName = (imageUrl?: string) => {
   if (imageUrl && typeof imageUrl === 'string') {
     const url = new URL(imageUrl);
     const name = url.pathname.split('/');

@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 
 export type ImageUploaderDragAndDropType = {
-  imageDataCallBack: (file: object | null) => void;
-  imageUrl: string;
+  imageDataCallBack?: (file: object | null) => void;
+  imageUrl?: string;
   width: number | string;
   height: number | string;
 };
