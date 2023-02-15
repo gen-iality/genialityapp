@@ -21,10 +21,12 @@ import { getAnswersRef, getUserProgressRef, getQuestionsRef } from '@components/
 type TruncatedAgenda = {
   title: string;
   module_name?: string;
-  module_order?: number,
+  module_order?: number;
   type?: ActivityType.ContentValue;
   timeString: string;
   link: string;
+  host_picture: string;
+  name_host: string;
   ViewedStatusComponent?: FunctionComponent<{}>;
   QuizProgressComponent?: FunctionComponent<{ userId: string; isAnswersDeleted: boolean }>;
   DeleteSurveyAnswersButton?: FunctionComponent<{ userId: string; onAnswersDeleted: (x: boolean) => void }>;
@@ -72,6 +74,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
       setTruncatedAgendaList([
         ...agendaList.map((agenda) => {
+          console.log('1000. agenda', agenda);
           // Logic here
           let diff = Math.floor(Math.random() * 60 * 60);
 
@@ -90,6 +93,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               .format('h:mm')
               .concat(' min'),
             link: `/landing/${eventId}/activity/${agenda._id}`,
+            host_picture: agenda.hosts[0]?.image,
+            name_host: agenda.hosts[0]?.name,
             ViewedStatusComponent: () => {
               const [isTaken, setIsTaken] = useState(false);
               useEffect(() => {
@@ -307,12 +312,31 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 flexFlow: 'row wrap',
               }}
             >
-              <Link to={item.link}>
-                <div style={{ fontSize: '1.2rem' }}>
-                  <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
-                  <span>{item.title}</span>
+              <div
+                style={{
+                  display: 'flex',
+                  flexFlow: 'row wrap',
+                }}
+              >
+                {item.host_picture && (
+                  <img style={{ width: '6rem', paddingRight: '25px' }} src={item.host_picture}></img>
+                )}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    flexFlow: 'column wrap',
+                  }}
+                >
+                  <span>{item.name_host}</span>
+                  <Link to={item.link}>
+                    <div style={{ fontSize: '1.2rem' }}>
+                      <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
+                      <span>{item.title}</span>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
+              </div>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <span style={{ marginRight: '.5em' }}>
                   {item.ViewedStatusComponent && <item.ViewedStatusComponent />}
@@ -338,40 +362,42 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   );
 
   const ModuledActivityHOC: FunctionComponent<{
-    list: TruncatedAgenda[],
-    render: (nameToFilter: string) => any,
+    list: TruncatedAgenda[];
+    render: (nameToFilter: string) => any;
   }> = (props) => {
     const moduleNames = useMemo(() => {
-      const uniqueNames = Array.from(
-        new Set(props.list.map((item) => item.module_name))
-      ).filter((item) => item !== undefined) as string[]
+      const uniqueNames = Array.from(new Set(props.list.map((item) => item.module_name))).filter(
+        (item) => item !== undefined,
+      ) as string[];
 
-      const sorttedNames = uniqueNames.map((name) => {
-        const data = props.list.find((item) => item.module_name == name)
-        if (!data) return {name, order: 0}
-        return {
-          name,
-          order: data.module_order,
-        }
-      }).sort((a, b) => (a.order || 0) - (b.order || 0))
-        .map((item) => item.name)
-      return sorttedNames
+      const sorttedNames = uniqueNames
+        .map((name) => {
+          const data = props.list.find((item) => item.module_name == name);
+          if (!data) return { name, order: 0 };
+          return {
+            name,
+            order: data.module_order,
+          };
+        })
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map((item) => item.name);
+      return sorttedNames;
     }, [props.list]);
 
     return (
       <Collapse>
-      {moduleNames.map((name: string, index: number) => (
-        <Collapse.Panel
-          header={`Módulo: ${name}`}
-          key={index}
-          extra={`${props.list.filter((item) => item.module_name === name).length} elemento(s)`}
-        >
-          {props.render(name)}
-        </Collapse.Panel>
-      ))}
+        {moduleNames.map((name: string, index: number) => (
+          <Collapse.Panel
+            header={`Módulo: ${name}`}
+            key={index}
+            extra={`${props.list.filter((item) => item.module_name === name).length} elemento(s)`}
+          >
+            {props.render(name)}
+          </Collapse.Panel>
+        ))}
       </Collapse>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -389,9 +415,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
       />
 
       {/* Without modules: */}
-      <ListThisActivities
-        dataSource={truncatedAgendaList.filter((item) => item.module_name === undefined)}
-      />
+      <ListThisActivities dataSource={truncatedAgendaList.filter((item) => item.module_name === undefined)} />
     </>
   );
 };

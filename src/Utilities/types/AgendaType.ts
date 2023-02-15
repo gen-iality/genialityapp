@@ -5,7 +5,7 @@
 export default interface AgendaType {
   _id?: string;
   module_id: string | undefined;
-  module?: { _id: string, event_id?: string, module_name: string, order?: number },
+  module?: { _id: string; event_id?: string; module_name: string; order?: number };
   name: string;
   subtitle: string;
   bigmaker_meeting_id: any;
@@ -29,6 +29,7 @@ export default interface AgendaType {
   start_url: any;
   join_url: any;
   name_host: any;
+  hosts: any[];
   key: any;
   requires_registration: boolean;
   host_ids: any[] | null;
