@@ -50,6 +50,31 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
     statusFields: false,
   });
 
+  useEffect(() => {
+    if (validateEventUser.statusFields) {
+      setValidationGeneral({
+        ...validationGeneral,
+        loading: true,
+        status: false,
+      });
+      handleSubmit();
+    }
+  }, [validateEventUser.statusFields]);
+
+  useEffect(() => {
+    if (current == 0) {
+      ValidateGeneralFields();
+    }
+  }, [basicDataUser, dataEventUser, current]);
+
+  useEffect(() => {
+    if (currentAuthScreen === 'login') setCurrent(0);
+
+    return () => {
+      setCurrent(0);
+    };
+  }, [currentAuthScreen]);
+
   const hookValidations = (status, textError) => {
     setValidationGeneral({
       status: status,
@@ -111,11 +136,9 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
     },
   ];
 
-  const handleValidateAccountEvius = async () => {
+  const handleValidateAccountGeniality = async () => {
     try {
-      const validateEmail = await UsersApi.validateEmail({
-        email: basicDataUser.email,
-      });
+      const validateEmail = await UsersApi.validateEmail({ email: basicDataUser.email });
       console.log(validateEmail, 'validateEmail');
       if (validateEmail?.message === 'Email valid') {
         setValidationGeneral({
@@ -230,7 +253,7 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
         status: false,
       });
 
-      handleValidateAccountEvius();
+      handleValidateAccountGeniality();
     } else if (current == 1) {
       setvalidateEventUser({
         status: true,
@@ -238,17 +261,6 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
       });
     }
   };
-
-  useEffect(() => {
-    if (validateEventUser.statusFields) {
-      setValidationGeneral({
-        ...validationGeneral,
-        loading: true,
-        status: false,
-      });
-      handleSubmit();
-    }
-  }, [validateEventUser.statusFields]);
 
   const prev = () => {
     setCurrent(current - 1);
@@ -289,20 +301,6 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
       setbuttonStatus(true);
     }
   };
-
-  useEffect(() => {
-    if (current == 0) {
-      ValidateGeneralFields();
-    }
-  }, [basicDataUser, dataEventUser, current]);
-
-  useEffect(() => {
-    if (currentAuthScreen === 'login') setCurrent(0);
-
-    return () => {
-      setCurrent(0);
-    };
-  }, [currentAuthScreen]);
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
