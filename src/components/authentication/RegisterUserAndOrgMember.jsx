@@ -27,7 +27,14 @@ import { DispatchMessageService } from '@context/MessageService';
 
 const { Step } = Steps;
 
-const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
+const RegisterUserAndOrgMember = ({
+  screens,
+  stylePaddingMobile,
+  stylePaddingDesktop,
+  idOrganization,
+  defaultPositionId,
+}) => {
+  console.log('idOrganization', idOrganization);
   const intl = useIntl();
   const { helperDispatch, currentAuthScreen } = useHelper();
 
@@ -206,10 +213,16 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
         ...dataOrgMember,
       };
 
+      if (idOrganization) {
+        console.log('RegisterUser: has idOrganization', { idOrganization });
+      } else {
+        console.log('RegisterUser: missing organization ID, not problem');
+      }
+
       const propertiesUser = { properties: { ...dataUser } };
       try {
-        const respUser = await OrganizationApi.saveUser(orgId, propertiesUser);
-        if (respUser && respUser._id) {
+        const respUser = await OrganizationApi.saveUser(idOrganization, propertiesUser);
+        if (respUser && respUser.account_id) {
           setValidationGeneral({
             status: false,
             loading: false,
