@@ -18,6 +18,7 @@ import {
   Row,
   Switch,
   Modal,
+  BackTop,
 } from 'antd'
 
 import Header from '@antdComponents/Header'
@@ -28,12 +29,13 @@ import Loading from '../profile/loading'
 import { Redirect, useHistory, useLocation } from 'react-router'
 
 import AgendaContext from '@context/AgendaContext'
-import { AgendaApi } from '@helpers/request'
+import { AgendaApi, DocumentsApi } from '@helpers/request'
 import AgendaType from '@Utilities/types/AgendaType'
 import AgendaForm, { FormValues } from './components/AgendaForm'
 import dayjs from 'dayjs'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import useDeleteActivity from './hooks/useDeleteActivity'
+import AgendaDocumentForm from './components/AgendaDocumentForm'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -66,6 +68,10 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
   const [currentTab, setCurrentTab] = useState('1')
   const [isNeededConfirmRedirection, setIsNeededConfirmRedirection] = useState(false)
 
+  // TODO: Fix type of this in the Agenda Document selector component,
+  //       it will need a string[], not else
+  const [selectedDocuments, setSelectedDocuments] = useState<any[]>([])
+
   const [currentAgenda, setCurrentAgenda] = useState<AgendaType | undefined>()
 
   const [savedForm, setSavedForm] = useState<any>({})
@@ -93,6 +99,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
     values.datetime_start = values.date + ' ' + dayjs(values.hour_start).format('HH:mm')
     values.datetime_end = values.date + ' ' + dayjs(values.hour_end).format('HH:mm')
 
+    values.selected_document = selectedDocuments
+
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -105,7 +113,14 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       const activityId = location.state?.edit || currentAgenda?._id
       await AgendaApi.editOne(values, activityId, props.event._id)
       console.log('agenda edited')
-      // TODO: update the selected document
+      
+      const payloadForDocument = {
+        activity_id: location.state?.edit || currentAgenda?._id,
+      }
+      console.log('will save', values.selected_document.length, 'documents')
+      await Promise.all(
+        values.selected_document.map((selected) => DocumentsApi.editOne(payloadForDocument, selected, props.event._id)),
+      );
     } else {
       _agenda = await AgendaApi.create(props.event._id, values)
       setCurrentAgenda(_agenda)
@@ -150,6 +165,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       agenda.vimeo_id = vimeo_id
 
       setCurrentAgenda(agenda)
+
+      setSelectedDocuments(agenda.selected_document || [])
 
       const fields = agenda as unknown as FormValues
       form.setFieldsValue({ ...fields })
@@ -283,6 +300,24 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
               event={props.event}
               agenda={currentAgenda}
             />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab='Documentos' key='5'>
+            <Row justify='center' wrap gutter={12}>
+              <Col span={20}>
+                <Form.Item>
+                  <AgendaDocumentForm
+                    eventId={props.event._id}
+                    selectedDocuments={selectedDocuments}
+                    onSelectedDocuments={(changed) => {
+                      console.log('document update:', changed)
+                      setSelectedDocuments(changed)
+                    }}
+                    matchUrl={props.matchUrl}
+                  />
+                </Form.Item>
+                <BackTop />
+              </Col>
+            </Row>
           </Tabs.TabPane>
         </Tabs>
       )}

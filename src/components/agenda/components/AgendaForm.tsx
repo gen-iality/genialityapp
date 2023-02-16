@@ -34,6 +34,7 @@ export interface FormValues {
   description: string,
   image?: string,
   vimeo_id?: string,
+  selected_document?: string[],
 }
 
 interface IAgendaFormProps {
