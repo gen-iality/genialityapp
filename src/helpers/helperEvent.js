@@ -1,13 +1,23 @@
 import { firestore } from './firebase';
 import { EventFieldsApi } from './request';
 
-//METODO PARA SABER SI ESTA EN EL HOME DE GENIALITY O EN UN CURSO
+//METODO PARA SABER SI SE ESTÁ POSICIONADO EN EL HOME DE GENIALITY
 export function isHome() {
-  const isHome = window.location.pathname.includes('/landing');
+  const isHome = window.location.pathname.includes('/landing') || window.location.pathname.includes('/organization');
   if (isHome) {
     return false;
   } else {
     return true;
+  }
+}
+
+//METODO PARA SABER SI SE ESTÁ POSICIONADO EN LA LANDING DEL EVENTO
+export function isEvent() {
+  const isEvent = window.location.pathname.includes('/landing');
+  if (isEvent) {
+    return true;
+  } else {
+    return false;
   }
 }
 

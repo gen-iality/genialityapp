@@ -15,9 +15,11 @@ import { useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
 import { useEventContext } from '@context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';
-import { isHome, useEventWithCedula } from '@helpers/helperEvent';
+import { isEvent, isHome, useEventWithCedula } from '@helpers/helperEvent';
 import { useCurrentUser } from '@context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import RegisterUserAndOrgMember from './RegisterUserAndOrgMember';
+import { isOrganization } from '@helpers/helperOrg';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -394,20 +396,37 @@ const ModalAuth = (props) => {
                   paddingBottom: '0px',
                 }}
               >
-                {isHome() ? (
-                  <RegisterUser
-                    screens={screens}
-                    stylePaddingMobile={stylePaddingMobile}
-                    stylePaddingDesktop={stylePaddingDesktop}
-                    idOrganization={controllerLoginVisible.idOrganization} // New!
-                    defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
-                  />
-                ) : (
-                  <RegisterUserAndEventUser
-                    screens={screens}
-                    stylePaddingMobile={stylePaddingMobile}
-                    stylePaddingDesktop={stylePaddingDesktop}
-                  />
+                {isHome() && (
+                  <>
+                    {console.log('Is Home Register - RegisterUser')}
+                    <RegisterUser
+                      screens={screens}
+                      stylePaddingMobile={stylePaddingMobile}
+                      stylePaddingDesktop={stylePaddingDesktop}
+                      idOrganization={controllerLoginVisible.idOrganization} // New!
+                      defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
+                    />
+                  </>
+                )}
+                {isEvent() && (
+                  <>
+                    {console.log('Is Event Register - RegisterUserAndEventUser')}
+                    <RegisterUserAndEventUser
+                      screens={screens}
+                      stylePaddingMobile={stylePaddingMobile}
+                      stylePaddingDesktop={stylePaddingDesktop}
+                    />
+                  </>
+                )}
+                {isOrganization() && (
+                  <>
+                    {console.log('Is Organization Register - RegisterUserAndOrgMember')}
+                    <RegisterUserAndOrgMember
+                      screens={screens}
+                      stylePaddingMobile={stylePaddingMobile}
+                      stylePaddingDesktop={stylePaddingDesktop}
+                    />
+                  </>
                 )}
               </div>
             </TabPane>
