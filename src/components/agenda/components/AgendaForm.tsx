@@ -19,6 +19,8 @@ import { DispatchMessageService } from '@context/MessageService'
 import BackTop from '@antdComponents/BackTop'
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 
+import { hourWithAdditionalMinutes } from '../hooks/useHourWithAdditionalMinutes'
+
 export interface FormValues {
   name: string,
   module_id: string,
@@ -179,6 +181,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             <Form.Item
               label="Hora inicio"
               name="hour_start"
+              initialValue={hourWithAdditionalMinutes(0)}
               rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
             >
               <TimePicker use12Hours format="h:mm a" allowClear={false} style={{ width: '100%' }} />
@@ -188,6 +191,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             <Form.Item
               label="Hora fin"
               name="hour_end"
+              initialValue={hourWithAdditionalMinutes(19)}
               rules={[{ required: true, message: 'La hora final es requerida' }]}
             >
               <TimePicker use12Hours format="h:mm a" allowClear={false} style={{ width: '100%' }} />
