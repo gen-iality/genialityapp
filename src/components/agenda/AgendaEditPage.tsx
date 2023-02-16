@@ -68,9 +68,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
   const [currentTab, setCurrentTab] = useState('1')
   const [isNeededConfirmRedirection, setIsNeededConfirmRedirection] = useState(false)
 
-  // TODO: Fix type of this in the Agenda Document selector component,
-  //       it will need a string[], not else
-  const [selectedDocuments, setSelectedDocuments] = useState<any[]>([])
+  const [selectedDocuments, setSelectedDocuments] = useState<string[]>([])
 
   const [currentAgenda, setCurrentAgenda] = useState<AgendaType | undefined>()
 
@@ -98,7 +96,6 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
     // Fix the datetime values
     values.datetime_start = values.date + ' ' + dayjs(values.hour_start).format('HH:mm')
     values.datetime_end = values.date + ' ' + dayjs(values.hour_end).format('HH:mm')
-
     values.selected_document = selectedDocuments
 
     DispatchMessageService({
@@ -117,9 +114,9 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       const payloadForDocument = {
         activity_id: location.state?.edit || currentAgenda?._id,
       }
-      console.log('will save', values.selected_document.length, 'documents')
+      console.log('will save', selectedDocuments.length, 'selectedDocuments:', values.selected_document)
       await Promise.all(
-        values.selected_document.map((selected) => DocumentsApi.editOne(payloadForDocument, selected, props.event._id)),
+        selectedDocuments.map((selected) => DocumentsApi.editOne(payloadForDocument, selected, props.event._id)),
       );
     } else {
       _agenda = await AgendaApi.create(props.event._id, values)
@@ -144,7 +141,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
     }
 
     DispatchMessageService({ msj: 'Información guardada correctamente!', type: 'success', action: 'show' })
-  }, [])
+  }, [selectedDocuments])
 
   /**
    * Load the activity data from the location prop `edit` if this contains an ID.
@@ -159,6 +156,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
 
       // Get the agenda document from current activity_id
       const agenda: AgendaType = await AgendaApi.getOne(activityId, eventId)
+      setSelectedDocuments(agenda.selected_document || [])
 
       // Take the vimeo_id and save in info.
       const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : ''
@@ -166,9 +164,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
 
       setCurrentAgenda(agenda)
 
-      setSelectedDocuments(agenda.selected_document || [])
-
       const fields = agenda as unknown as FormValues
+      fields.selected_document = fields.selected_document || []
       form.setFieldsValue({ ...fields })
       setSavedForm(form.getFieldsValue())
       console.log('agendaInfo', agenda)
@@ -179,7 +176,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       setIsEditing(true)
       console.log('this agenda data is from editing status')
     }
-  }, [])
+  }, [location, cAgenda, setSelectedDocuments, setCurrentAgenda, form, setSavedForm, setIsEditing])
 
   /**
    * Handle the removing of an activity.
@@ -194,7 +191,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       msj: 'Por favor espere mientras borra la información...',
       action: 'show',
     })
-    if (location.state?.edit && currentAgenda) {
+    if (currentAgenda) {
       Modal.confirm({
         title: '¿Está seguro de eliminar la información?',
         icon: <ExclamationCircleOutlined />,
@@ -210,7 +207,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         },
       })
     }
-  }, [])
+  }, [currentAgenda, setShouldRedirect])
 
   useEffect(() => {
     setIsLoading(true)
@@ -220,7 +217,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
     return () => {
       cAgenda.setActivityEdit(null)
     }
-  }, [props.event])
+  }, [props.event, cAgenda])
 
   useEffect(() => {
     cAgenda.saveConfig()
@@ -233,7 +230,6 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       form={form}
       onFinish={(values) => onFinish(values, true)}
       onValuesChange={(changedValue, values) => {
-        console.log('onValuesChange', changedValue, values, savedForm)
         if (Object.keys({}).length === 0) {
           setSavedForm(values) // First updating
           setIsNeededConfirmRedirection(true)
