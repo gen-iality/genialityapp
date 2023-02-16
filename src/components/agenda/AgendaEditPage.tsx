@@ -36,6 +36,7 @@ import dayjs from 'dayjs'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import useDeleteActivity from './hooks/useDeleteActivity'
 import AgendaDocumentForm from './components/AgendaDocumentForm'
+import ActivityContentSelector from './activityType/ActivityContentSelector'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -297,24 +298,44 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
               agenda={currentAgenda}
             />
           </Tabs.TabPane>
-          <Tabs.TabPane tab='Documentos' key='5'>
-            <Row justify='center' wrap gutter={12}>
-              <Col span={20}>
-                <Form.Item>
-                  <AgendaDocumentForm
-                    eventId={props.event._id}
-                    selectedDocuments={selectedDocuments}
-                    onSelectedDocuments={(changed) => {
-                      console.log('document update:', changed)
-                      setSelectedDocuments(changed)
-                    }}
-                    matchUrl={props.matchUrl}
-                  />
-                </Form.Item>
-                <BackTop />
-              </Col>
-            </Row>
-          </Tabs.TabPane>
+          {isEditing && (
+            <>
+              <Tabs.TabPane tab='Contenido' key='2'>
+                <Row wrap gutter={12}>
+                  <Col span={24}>
+                    {currentAgenda?._id && (
+                      <ActivityContentSelector
+                        activityId={currentAgenda?._id}
+                        activityName={currentAgenda.name}
+                        eventId={props.event._id}
+                        shouldLoad={currentTab === '2'}
+                        matchUrl={props.matchUrl}
+                      />
+                    )}
+                    <BackTop />
+                  </Col>
+                </Row>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab='Documentos' key='5'>
+                <Row justify='center' wrap gutter={12}>
+                  <Col span={20}>
+                    <Form.Item>
+                      <AgendaDocumentForm
+                        eventId={props.event._id}
+                        selectedDocuments={selectedDocuments}
+                        onSelectedDocuments={(changed) => {
+                          console.log('document update:', changed)
+                          setSelectedDocuments(changed)
+                        }}
+                        matchUrl={props.matchUrl}
+                      />
+                    </Form.Item>
+                    <BackTop />
+                  </Col>
+                </Row>
+              </Tabs.TabPane>
+            </>
+          )}
         </Tabs>
       )}
     </Form>
