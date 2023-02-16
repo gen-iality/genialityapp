@@ -24,9 +24,9 @@ export function listenSurveysData(
     .collection('surveys')
     .where('eventId', '==', event_id)
     .where('isPublished', '==', 'true')
-    .onSnapshot(querySnapshot => {
+    .onSnapshot((querySnapshot) => {
       const eventSurveys = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         eventSurveys.push({ ...doc.data(), _id: doc.id });
       });
 
@@ -62,12 +62,12 @@ export function publishedSurveysByActivity(currentActivity, eventSurveys, curren
   if (currentActivity !== null) {
     // Listado de encuestas publicadas del curso
     publishedSurveys = eventSurveys.filter(
-      survey =>
+      (survey) =>
         (survey.isPublished === 'true' || survey.isPublished === true) &&
         ((currentActivity && survey.activity_id === currentActivity._id) || survey.isGlobal === 'true'),
     );
     if (!currentUser || Object.keys(currentUser).length === 0) {
-      publishedSurveys = publishedSurveys.filter(item => {
+      publishedSurveys = publishedSurveys.filter((item) => {
         return item.allow_anonymous_answers !== 'false';
       });
     }
@@ -83,7 +83,7 @@ export const monitorNewChatMessages = (event, user) => {
     .collection('eventchats/' + event._id + '/userchats/' + user.uid + '/' + 'chats/')
     .onSnapshot(function(querySnapshot) {
       let data;
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         data = doc.data();
         if (data.newMessages) {
           totalNewMessages += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
@@ -95,7 +95,7 @@ export const monitorNewChatMessages = (event, user) => {
 };
 
 //obtener propiedades del curso
-export const getProperties = async event => {
+export const getProperties = async (event) => {
   const properties = await EventFieldsApi.getAll(event._id);
   let propertiesdata;
   if (properties.length > 0) {
@@ -151,7 +151,7 @@ export const GetGeneralTabsByEvent = (event_id, setgeneraltabs) => {
     });
 };
 
-export const useEventWithCedula = event => {
+export const useEventWithCedula = (event) => {
   let label = 'Contraseña';
   let isArkmed = false;
 
