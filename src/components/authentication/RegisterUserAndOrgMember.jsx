@@ -13,10 +13,12 @@ import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfi
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
 import FormComponent from '../events/registrationForm/form';
+
+/** External functions imports */
 import createNewUser from './ModalsFunctions/createNewUser';
 
 /** Helpers and utils imports */
-import { UsersApi } from '@helpers/request';
+import { OrganizationApi, UsersApi } from '@helpers/request';
 
 /** Context imports */
 import { useHelper } from '@context/helperContext/hooks/useHelper';
@@ -27,7 +29,6 @@ const { Step } = Steps;
 
 const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
-  const cEvent = useEventContext();
   const { helperDispatch, currentAuthScreen } = useHelper();
 
   const [current, setCurrent] = useState(0);
@@ -37,21 +38,21 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
     password: '',
     picture: '',
   });
-  const [dataEventUser, setdataEventUser] = useState({});
+  const [dataOrgMember, setDataOrgMember] = useState({});
   const [buttonStatus, setbuttonStatus] = useState(true);
   const [validationGeneral, setValidationGeneral] = useState({
     status: false,
     textError: '',
     loading: false,
   });
-  const [validateEventUser, setvalidateEventUser] = useState({
+  const [validateOrgMember, setValidateOrgMember] = useState({
     status: false,
     textError: '',
     statusFields: false,
   });
 
   useEffect(() => {
-    if (validateEventUser.statusFields) {
+    if (validateOrgMember.statusFields) {
       setValidationGeneral({
         ...validationGeneral,
         loading: true,
@@ -59,13 +60,13 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
       });
       handleSubmit();
     }
-  }, [validateEventUser.statusFields]);
+  }, [validateOrgMember.statusFields]);
 
   useEffect(() => {
     if (current == 0) {
       ValidateGeneralFields();
     }
-  }, [basicDataUser, dataEventUser, current]);
+  }, [basicDataUser, dataOrgMember, current]);
 
   useEffect(() => {
     if (currentAuthScreen === 'login') setCurrent(0);
@@ -102,8 +103,8 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
         });
       }
     } else {
-      setdataEventUser({
-        ...dataEventUser,
+      setDataOrgMember({
+        ...dataOrgMember,
         [FieldName]: value,
       });
     }
@@ -120,11 +121,11 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
       content: (
         <FormComponent
           hookValidations={hookValidations}
-          dataEventUser={dataEventUser}
+          dataOrgMember={dataOrgMember}
           basicDataUser={basicDataUser}
           HandleHookForm={HandleHookForm}
-          validateEventUser={validateEventUser}
-          setvalidateEventUser={setvalidateEventUser}
+          validateOrgMember={validateOrgMember}
+          setValidateOrgMember={setValidateOrgMember}
         />
       ),
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
@@ -159,7 +160,7 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
           }),
           component: intl.formatMessage({
             id: 'modal.feedback.title.errorlink',
-            defaultMessage: 'iniciar sesión',
+            defaultMessage: 'inicia sesión',
           }),
         });
       } else if (err?.response?.data?.errors?.email[0] === 'email no es un correo válido') {
@@ -186,7 +187,7 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
 
   const handleSubmit = () => {
     setCurrent(current + 1);
-    const SaveUserEvius = new Promise((resolve, reject) => {
+    const SaveGenialityUser = new Promise((resolve, reject) => {
       async function CreateAccount() {
         const resp = await createNewUser(basicDataUser);
         resolve(resp);
@@ -195,30 +196,31 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
       CreateAccount();
     });
 
-    async function createEventUser() {
+    async function createOrgMember() {
       const clonBasicDataUser = { ...basicDataUser };
       delete clonBasicDataUser.password;
       delete clonBasicDataUser.picture;
 
-      const datauser = {
+      const dataUser = {
         ...clonBasicDataUser,
-        ...dataEventUser,
+        ...dataOrgMember,
       };
 
-      const propertiesuser = { properties: { ...datauser } };
+      const propertiesUser = { properties: { ...dataUser } };
       try {
-        const respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id);
+        const respUser = await OrganizationApi.saveUser(orgId, propertiesUser);
         if (respUser && respUser._id) {
           setValidationGeneral({
             status: false,
             loading: false,
             textError: intl.formatMessage({
-              id: 'text_error.successfully_registered',
-              defaultMessage: 'Te has inscrito correctamente a este curso',
+              // REVISAR: No se debería llamar TextError, si el texto es una respuesta afirmativa.
+              id: 'text_error.organization_successfully_registered',
+              defaultMessage: 'Te has inscrito correctamente a esta organización',
             }),
           });
           setbasicDataUser({});
-          setdataEventUser({});
+          setDataOrgMember({});
         }
       } catch (err) {
         DispatchMessageService({
@@ -229,12 +231,12 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
       }
     }
 
-    SaveUserEvius.then((resp) => {
+    SaveGenialityUser.then((resp) => {
       if (resp) {
-        createEventUser();
+        createOrgMember();
       } else {
         setValidationGeneral({
-          status: false,
+          status: false, // REVISAR: ¿Debe ser true, para que pueda salir la alerta?
           loading: false,
           textError: intl.formatMessage({
             id: 'text_error.error_creating_user',
@@ -255,7 +257,7 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
 
       handleValidateAccountGeniality();
     } else if (current == 1) {
-      setvalidateEventUser({
+      setValidateOrgMember({
         status: true,
         textError: '',
       });
@@ -304,6 +306,7 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+      {console.log('buttonStatus', buttonStatus)}
       <Steps current={current} responsive={false}>
         {steps.map((item) => (
           <Step key={item.title} icon={item.icon} />
@@ -381,7 +384,7 @@ const RegisterUserAndOrgMember = ({ screens, stylePaddingMobile, stylePaddingDes
               {validationGeneral.component ? (
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
-                  onClick={() => helperDispatch({ type: 'showLogin' })}
+                  onClick={() => helperDispatch({ type: 'showLogin' })} // REVISAR: Al parecer no está funcionando el dispatch
                   type='link'
                 >
                   {validationGeneral.component}
