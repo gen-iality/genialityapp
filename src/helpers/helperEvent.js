@@ -3,7 +3,8 @@ import { EventFieldsApi } from './request';
 
 //METODO PARA SABER SI SE ESTÁ POSICIONADO EN EL HOME DE GENIALITY
 export function isHome() {
-  const isHome = window.location.pathname.includes('/landing') || window.location.pathname.includes('/organization');
+  const isHome =
+    window.location.pathname.startsWith('/landing') || window.location.pathname.startsWith('/organization');
   if (isHome) {
     return false;
   } else {
@@ -13,7 +14,7 @@ export function isHome() {
 
 //METODO PARA SABER SI SE ESTÁ POSICIONADO EN LA LANDING DEL EVENTO
 export function isEvent() {
-  const isEvent = window.location.pathname.includes('/landing');
+  const isEvent = window.location.pathname.startsWith('/landing');
   if (isEvent) {
     return true;
   } else {
