@@ -158,7 +158,9 @@ const FormRegister = ({
   dataEventUser = {},
   HandleHookForm = () => {},
   setvalidateEventUser = () => {},
+  setValidateOrgMember = () => {},
   validateEventUser,
+  validateOrgMember,
   editUser,
 }) => {
   const intl = useIntl();
@@ -328,6 +330,12 @@ const FormRegister = ({
   }, [validateEventUser?.status, validateEventUser?.statusFields]);
 
   useEffect(() => {
+    if (validateOrgMember?.status) {
+      buttonSubmit?.current?.click();
+    }
+  }, [validateOrgMember?.status, validateOrgMember?.statusFields]);
+
+  useEffect(() => {
     const formType = !cEventUser.value?._id ? 'register' : 'transfer';
     setFormMessage(FormTags(formType));
     setSubmittedForm(false);
@@ -365,6 +373,12 @@ const FormRegister = ({
       ...validateEventUser,
       statusFields: false,
     });
+
+    setValidateOrgMember({
+      ...validateOrgMember,
+      statusFields: false,
+    });
+
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
       setGeneralFormErrorMessageVisible(false);
@@ -384,6 +398,12 @@ const FormRegister = ({
         statusFields: true,
         status: false,
       });
+
+      validateOrgMember({
+        statusFields: true,
+        status: false,
+      });
+
       return;
     }
 
@@ -674,6 +694,7 @@ const FormRegister = ({
   };
 
   const updateFieldsVisibility = (conditionals, allFields) => {
+    console.log('extraFieldsOriginal', extraFieldsOriginal);
     let newExtraFields = [...extraFieldsOriginal];
 
     newExtraFields = newExtraFields.filter((field) => {

@@ -57,6 +57,16 @@ const RegisterUserAndOrgMember = ({
     textError: '',
     statusFields: false,
   });
+  const [organization, setOrganization] = useState({});
+
+  useEffect(() => {
+    async function getOrganization() {
+      const response = await OrganizationApi.getOne(idOrganization);
+      console.log('response', response);
+      setOrganization(response);
+    }
+    getOrganization();
+  }, []);
 
   useEffect(() => {
     if (validateOrgMember.statusFields) {
@@ -126,14 +136,24 @@ const RegisterUserAndOrgMember = ({
     {
       title: 'Second',
       content: (
-        <FormComponent
-          hookValidations={hookValidations}
-          dataOrgMember={dataOrgMember}
-          basicDataUser={basicDataUser}
-          HandleHookForm={HandleHookForm}
-          validateOrgMember={validateOrgMember}
-          setValidateOrgMember={setValidateOrgMember}
-        />
+        <>
+          {console.log('basicDataUser', basicDataUser)}
+          {console.log('dataOrgMember', dataOrgMember)}
+          {console.log('organization', organization)}
+          {console.log('organization.user_properties', organization.user_properties)}
+          <FormComponent
+            hookValidations={hookValidations}
+            dataOrgMember={dataOrgMember}
+            basicDataUser={basicDataUser}
+            HandleHookForm={HandleHookForm}
+            validateOrgMember={validateOrgMember}
+            setValidateOrgMember={setValidateOrgMember}
+            organization={organization}
+            initialOtherValue={{}}
+            conditionalsOther={[]}
+            fields={organization.user_properties}
+          />
+        </>
       ),
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
     },
@@ -212,12 +232,6 @@ const RegisterUserAndOrgMember = ({
         ...clonBasicDataUser,
         ...dataOrgMember,
       };
-
-      if (idOrganization) {
-        console.log('RegisterUser: has idOrganization', { idOrganization });
-      } else {
-        console.log('RegisterUser: missing organization ID, not problem');
-      }
 
       const propertiesUser = { properties: { ...dataUser } };
       try {
