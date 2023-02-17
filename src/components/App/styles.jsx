@@ -446,7 +446,7 @@ class Styles extends Component {
             {stylesIsLoading ? (
               <Loading />
             ) : (
-              <Col span={12}>
+              <Col sm={20} md={12}>
                 {this.state.colorDrawer.map((item, key) => (
                   <div key={key}>
                     {item.editIsVisible && (
