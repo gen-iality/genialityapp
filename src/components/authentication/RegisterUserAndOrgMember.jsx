@@ -103,28 +103,10 @@ const RegisterUserAndOrgMember = ({
   };
 
   const HandleHookForm = (e, FieldName, picture) => {
-    let value = '';
-    if (FieldName === 'picture') {
-      value = picture;
-    } else {
-      value = e.target.value;
-    }
+    const value = FieldName === 'picture' ? picture : e.target.value;
 
-    if (current === 0) {
-      if (FieldName === 'picture') {
-        setbasicDataUser({ ...basicDataUser, [FieldName]: picture });
-      } else {
-        setbasicDataUser({
-          ...basicDataUser,
-          [FieldName]: value,
-        });
-      }
-    } else {
-      setDataOrgMember({
-        ...dataOrgMember,
-        [FieldName]: value,
-      });
-    }
+    const setter = current === 0 ? setbasicDataUser : setDataOrgMember;
+    setter((previous) => ({ ...previous, [FieldName]: value }));
   };
 
   const steps = [
