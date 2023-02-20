@@ -7,6 +7,7 @@ import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import DynamicFormItem from './DynamicFormItem';
 import { IDynamicFieldProps } from './types';
+import useCheckFileSize from './useCheckFileSize';
 import useMandatoryRule from './useMandatoryRule';
 
 interface IDynamicFileUploaderFieldProps extends IDynamicFieldProps {
@@ -30,18 +31,11 @@ const DynamicFileUploaderField: React.FunctionComponent<IDynamicFileUploaderFiel
     return splittedUrl[splittedUrl.length - 1]
   }, [])
 
+  const checkFileSize = useCheckFileSize()
+
   const handleBeforeUpload = useCallback((file: RcFile) => {
-    const isLt5M = file.size / 1024 / 1024 < 5;
-    if (!isLt5M) {
-      DispatchMessageService({
-        type: 'error',
-        // TODO: use intl here
-        msj: 'Image must smaller than 5MB!',
-        action: 'show',
-      })
-    }
-    return isLt5M ? true : false
-  }, [])
+    return checkFileSize(file)
+  }, [checkFileSize])
 
   const initialValue = useMemo(() => {
     const fileList: any[] = []
