@@ -39,6 +39,15 @@ export default {
   },
   4: {
     _id: 'id',
+    index: 4,
+    label: 'Departamento',
+    mandatory: true,
+    name: 'departamento',
+    order_weight: 5,
+    type: 'region',
+  },
+  5: {
+    _id: 'id',
     index: 5,
     label: 'Ciudad',
     mandatory: true,
@@ -47,16 +56,17 @@ export default {
     type: 'city',
     unique: false,
   },
-  5: {
+  6: {
     _id: 'id',
     index: 6,
     label: 'Perfil Profesional',
     mandatory: true,
     name: 'perfilProfesional',
+    options: [{ label: 'pro1', value: 'p1' }, { label: 'pro2', value: 'p2' }],
     order_weight: 7,
     type: 'list',
   },
-  6: {
+  7: {
     _id: 'id',
     index: 7,
     label: 'Especialidad',
@@ -66,7 +76,7 @@ export default {
     order_weight: 8,
     type: 'list',
   },
-  7: {
+  8: {
     _id: 'id',
     index: 8,
     label: 'Terminos y condiciones',
@@ -74,15 +84,6 @@ export default {
     name: 'terminosYCondiciones',
     order_weight: 9,
     type: 'boolean',
-  },
-  8: {
-    _id: 'id',
-    index: 4,
-    label: 'Departamento',
-    mandatory: true,
-    name: 'departamento',
-    order_weight: 5,
-    type: 'region',
   },
   9: {
     _id: 'id',
@@ -106,6 +107,7 @@ export default {
     mandatory: true,
     name: 'campoDeSeleccionMultiple',
     type: 'multiplelist',
+    options: [{ label: 'op11xx', value: '11x' }, { label: 'op22xx', value: '22x' }],
   },
   12: {
     _id: 'id',
@@ -149,5 +151,11 @@ export default {
     label: 'Campo código de area sin telefono',
     name: 'campoCodigoDeAreaSinTelefono',
     type: 'onlyCodearea',
+  },
+  19: {
+    _id: 'id',
+    label: 'Tu foto',
+    name: 'tufoto',
+    type: 'avatar',
   }
 }
