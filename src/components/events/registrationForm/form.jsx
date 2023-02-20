@@ -1,6 +1,11 @@
+/** React's libraries imports */
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '@helpers/request';
-import FormTags, { setSuccessMessageInRegisterForm } from './constants';
+import ReactSelect from 'react-select';
+import { useIntl } from 'react-intl';
+import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
+import { connect } from 'react-redux';
+
+/** Antd imports */
 import {
   Collapse,
   Form,
@@ -20,22 +25,28 @@ import {
   Avatar,
 } from 'antd';
 import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
-import ReactSelect from 'react-select';
-import { useIntl } from 'react-intl';
 import ImgCrop from 'antd-img-crop';
 
-import { areaCode } from '@helpers/constants';
+/** Components imports */
 import TypeRegister from '../../tickets/typeRegister';
 import { ButtonPayment } from './payRegister';
-import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
-import { connect } from 'react-redux';
+
+/** External functions and constants imports */
+import FormTags, { setSuccessMessageInRegisterForm } from './constants';
+
+/** Helpers and utils imports */
+import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '@helpers/request';
+import { areaCode } from '@helpers/constants';
+import { app } from '@helpers/firebase';
+import { countryApi } from '@helpers/request';
+
+/** Context imports */
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useUserEvent } from '@context/eventUserContext';
 import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
-import { app } from '@helpers/firebase';
 import { DispatchMessageService } from '@context/MessageService';
-import { countryApi } from '@helpers/request';
+
 /**TODO::ocaciona error en ios */
 
 const { Option } = Select;
@@ -176,39 +187,56 @@ const FormRegister = ({
     helperDispatch,
     // eventIsActive,
   } = useHelper();
+  const [form] = Form.useForm();
+
+  // Estado de carga para obtener los datos de pais, región y ciudad del formulario
+  const [loading, setLoading] = useState(false);
+
+  // Estados del evento - ¿Será necesario este estado? - ¿const cEvent = useEventContext()?
+  const [event, setEvent] = useState(null);
+
+  // Estado de los datos iniciales del usuario. ¿Se usará solo para el Modal?
+  const [initialValues, setinitialValues] = useState({});
+
+  // Estados de campos dinámicos
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
+  const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
+    organization ? fields : cEvent.value?.user_properties || {},
+  );
+
+  // Estados relacionados al formulario
   const [submittedForm, setSubmittedForm] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
   const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
   const [formMessage, setFormMessage] = useState({});
-  // const [password, setPassword] = useState('');
-  const [event, setEvent] = useState(null);
-  const [loggedurl, setLogguedurl] = useState(null);
+
+  // Estados relacionados a los campos del formulario
   const [imageAvatar, setImageAvatar] = useState(null);
-  // eslint-disable-next-line prefer-const
-  let [ImgUrl, setImgUrl] = useState('');
-  const [typeRegister, setTypeRegister] = useState('pay');
-  const [payMessage, setPayMessage] = useState(false);
-  const [form] = Form.useForm();
   const [areacodeselected, setareacodeselected] = useState('+57');
-  const [numberareacode, setnumberareacode] = useState(null);
-  const [fieldCode, setFieldCode] = useState(null);
-  const [initialValues, setinitialValues] = useState({});
   const [country, setCountry] = useState({ name: '', countryCode: '', inputName: '' });
   const [region, setRegion] = useState({ name: '', regionCode: '', inputName: '' });
   const [city, setCity] = useState({ name: '', regionCode: '', inputName: '' });
   const [countries, setCountries] = useState([]);
   const [regiones, setRegiones] = useState([]);
   const [cities, setCities] = useState([]);
-  const [loading, setLoading] = useState(false);
+
+  // Estados no usados
+  const [loggedurl, setLogguedurl] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+  // const [password, setPassword] = useState('');
+  const [payMessage, setPayMessage] = useState(false);
+  const [fieldCode, setFieldCode] = useState(null);
+
+  // Estados que no creo que sean necesarios. ¿o si? -> Convertirlos a variables sin necesidad de estados
+  const [eventUser, seteventUser] = useState(organization ? eventUserOther : cEventUser.value || {});
+  // eslint-disable-next-line prefer-const
+  let [ImgUrl, setImgUrl] = useState('');
+  const [typeRegister, setTypeRegister] = useState('pay');
+  const [numberareacode, setnumberareacode] = useState(null);
   const [conditionals, setconditionals] = useState(
     organization ? conditionalsOther : cEvent.value?.fields_conditions || [],
   );
-  const [eventUser, seteventUser] = useState(organization ? eventUserOther : cEventUser.value || {});
-  const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
-    organization ? fields : cEvent.value?.user_properties || {},
-  );
+
   const buttonSubmit = useRef(null);
   const getCountries = async () => {
     setLoading(true);
@@ -694,6 +722,7 @@ const FormRegister = ({
   };
 
   const updateFieldsVisibility = (conditionals, allFields) => {
+    console.log('conditionals', conditionals);
     console.log('extraFieldsOriginal', extraFieldsOriginal);
     let newExtraFields = [...extraFieldsOriginal];
 
