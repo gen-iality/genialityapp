@@ -31,3 +31,8 @@ export interface IDynamicFieldData {
   visibleByAdmin?: boolean,
   options?: { label: string, value: string }[]
 }
+
+export interface IDynamicFieldProps {
+  fieldData: IDynamicFieldData,
+  allInitialValues?: any,
+}
