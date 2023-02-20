@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
+import PhoneInput from 'react-phone-number-input';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 
@@ -36,7 +37,6 @@ import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 
 /** Helpers and utils imports */
 import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '@helpers/request';
-import { areaCode } from '@helpers/constants';
 import { app } from '@helpers/firebase';
 import { countryApi } from '@helpers/request';
 
@@ -212,7 +212,6 @@ const FormRegister = ({
 
   // Estados relacionados a los campos del formulario
   const [imageAvatar, setImageAvatar] = useState(null);
-  const [areacodeselected, setareacodeselected] = useState('+57');
   const [country, setCountry] = useState({ name: '', countryCode: '', inputName: '' });
   const [region, setRegion] = useState({ name: '', regionCode: '', inputName: '' });
   const [city, setCity] = useState({ name: '', regionCode: '', inputName: '' });
@@ -232,7 +231,6 @@ const FormRegister = ({
   // eslint-disable-next-line prefer-const
   let [ImgUrl, setImgUrl] = useState('');
   const [typeRegister, setTypeRegister] = useState('pay');
-  const [numberareacode, setnumberareacode] = useState(null);
   const [conditionals, setconditionals] = useState(
     organization ? conditionalsOther : cEvent.value?.fields_conditions || [],
   );
@@ -377,21 +375,6 @@ const FormRegister = ({
   }, [cEventUser.value, initialValues, conditionals, cEvent.value?._id]);
 
   useEffect(() => {
-    if (!extraFields) return;
-    const codeareafield = extraFields.filter((field) => field.type == 'codearea');
-    if (codeareafield[0]) {
-      const phonenumber =
-        eventUser && codeareafield[0] && eventUser['properties'] ? eventUser['properties'][codeareafield[0].name] : '';
-      const codeValue = eventUser && eventUser['properties'] ? eventUser['properties']['code'] : '';
-      setFieldCode(codeareafield[0].name);
-      if (phonenumber && numberareacode == null) {
-        const splitphone = phonenumber.toString().split(' ');
-        setareacodeselected(codeValue);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
   }, [currentAuthScreen, typeModal]);
@@ -437,10 +420,6 @@ const FormRegister = ({
 
     if (values['email']) {
       values['email'] = values['email'].toLowerCase();
-    }
-
-    if (areacodeselected) {
-      values['code'] = areacodeselected;
     }
 
     //OBTENER RUTA ARCHIVOS FILE
@@ -680,13 +659,6 @@ const FormRegister = ({
     form.setFieldsValue(initialValues);
   }, [initialValues]);
 
-  useEffect(() => {
-    if (areacodeselected) {
-      //form.setFieldsValue({ ...form.getFieldsValue, code: areacodeselected });
-      HandleHookForm({ target: { value: areacodeselected } }, 'code', null);
-    }
-  }, [areacodeselected]);
-
   const ValidateEmptyFields = (allValues) => {
     // if (allValues.picture == '') {
     //   delete allValues.picture;
@@ -843,64 +815,7 @@ const FormRegister = ({
         );
 
         if (type === 'codearea') {
-          const prefixSelector = (
-            <Select
-              showSearch
-              optionFilterProp='children'
-              style={{ fontSize: '12px', width: 150 }}
-              value={areacodeselected}
-              onChange={(val) => {
-                setareacodeselected(val);
-                //console.log(val);
-              }}
-              placeholder='Código de area del pais'
-            >
-              {areaCode.map((code, key) => {
-                return (
-                  <Option key={key} value={code.value}>
-                    {`${code.label} (${code.value})`}
-                  </Option>
-                );
-              })}
-            </Select>
-          );
-          input = (
-            <Input
-              addonBefore={prefixSelector}
-              //onChange={(e) => setnumberareacode(e.target.value)}
-              defaultvalue={value?.toString().split()[2]}
-              name={name}
-              //required={mandatory}
-              type='number'
-              // key={key}
-              style={{ width: '100%' }}
-              placeholder='Numero de telefono'
-            />
-          );
-        }
-
-        if (type === 'onlyCodearea') {
-          input = (
-            <Form.Item initialValue={areacodeselected} name={name} noStyle>
-              <Select
-                showSearch
-                optionFilterProp='children'
-                style={{ width: '100%' }}
-                onChange={(val) => {
-                  setareacodeselected(val);
-                }}
-                placeholder='Código de area del pais'
-              >
-                {areaCode.map((code, key) => {
-                  return (
-                    <Option key={key} value={code.value}>
-                      {`${code.label} (${code.value})`}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          );
+          input = <PhoneInput placeholder='Número' defaultCountry='CO' international />;
         }
 
         if (type === 'tituloseccion') {
@@ -1209,7 +1124,6 @@ const FormRegister = ({
               {type !== 'tituloseccion' && (
                 <>
                   <Form.Item
-                    // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
                     // style={eventUserId && hideFields}
                     noStyle={visible}
                     hidden={visible}
