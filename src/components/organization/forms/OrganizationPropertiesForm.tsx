@@ -103,6 +103,7 @@ interface IOrganizationPropertiesFormProps {
   onProperyChange: (propertyName: string, propertyValue: any) => void,
   otherFields?: DynamicField[],
   // initialOtherValues: let us set our initial values for
+  onSubmit?: (values: any) => void,
 }
 
 const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertiesFormProps> = (props) => {
@@ -208,6 +209,7 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
   const onFinish = useCallback((values: FormValuesType) => {
     setIsSubmiting(true)
     console.debug('form will submit:', { values })
+    props.onSubmit && props.onSubmit(values)
     setIsSubmiting(false)
   }, [])
 
