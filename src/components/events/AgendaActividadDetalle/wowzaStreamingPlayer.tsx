@@ -116,15 +116,97 @@ function WowzaStreamingPlayer(props: Props) {
 						<JitsiMeeting
 							domain='meet.evius.co'
 							roomName={activity?._id}
+							invitees={[]}
 							configOverwrite={{
+								disableInviteFunctions: true,
+								// dynamicBrandingUrl:
+								// 	'https://github.com/jitsi/jitsi-meet/blob/master/resources/custom-theme/custom-theme.json',
 								readOnlyName: true,
+								disablePolls: true,
+								disableReactions: true,
+								disableReactionsModeration: true,
+								// enableClosePage: true,
+								defaultLanguage: 'es',
+								disableProfile: true,
+								// hideConferenceTimer: true,
+								hideConferenceSubject: true,
+								// startSilent: true,
+								// screenshotCapture: {
+								// 	//  Enables the screensharing capture feature.
+								// 	enabled: true,
+
+								// 	//  The mode for the screenshot capture feature.
+								// 	//  Can be either 'recording' - screensharing screenshots are taken
+								// 	//  only when the recording is also on,
+								// 	//  or 'always' - screensharing screenshots are always taken.
+								// 	mode: 'recording',
+								// },
+								disabledNotifications: [
+									'notify.chatMessages', // shown when receiving chat messages while the chat window is closed
+								],
+								toolbarButtons: [
+									'hangup',
+									// 'desktop',  // Optional
+									'microphone',
+									'camera',
+									// 'chat',  // Optional
+									// 'raisehand',  // Optional
+									'participants-pane',
+									'tileview',
+									'settings',
+									'fullscreen',
+									// 'feedback',
+									//    'closedcaptions',
+									//    'download',
+									//    'embedmeeting',
+									//    'etherpad',
+									//    'filmstrip',
+									//    'help',
+									//    'highlight',
+									//    'invite',
+									//    'linktosalesforce',
+									//    'livestreaming',
+									//    'noisesuppression',
+									//    'profile',
+									//    'recording',
+									//    'security',
+									//    'select-background',
+									//    'shareaudio',
+									// 'sharedvideo',
+									//    'shortcuts',
+									//    'stats',
+									//    'toggle-camera',
+									//    'videoquality',
+									//    'whiteboard',
+								],
+
+								// welcomePage: {
+								// 	// Whether to disable welcome page. In case it's disabled a random room
+								// 	// will be joined when no room is specified.
+								// 	disabled: false,
+								// 	// If set,landing page will redirect to this URL.
+								// 	customUrl: '',
+								// },
 							}}
+							// interfaceConfigOverwrite={{
+							// 	BRAND_WATERMARK_LINK: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+							// 	DEFAULT_WELCOME_PAGE_LOGO_URL:
+							// 		'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+							// 	SHOW_BRAND_WATERMARK: true,
+							// }}
 							userInfo={{
 								displayName: eventUser?.value?.user?.names,
 								email: eventUser?.value?.user?.email,
 							}}
-							getIFrameRef={iframeRef => {
-								iframeRef.style.height = '600px';
+							getIFrameRef={wrapperRef => {
+								wrapperRef.style.height = '600px';
+								wrapperRef.lang = 'es';
+								const iframeRef = wrapperRef.children[0];
+								console.log(iframeRef);
+								if (iframeRef instanceof HTMLIFrameElement) {
+									// iframeRef.src = '';
+									// iframeRef.contentWindow?.location.reload();
+								}
 							}}
 							onApiReady={externalApi => {
 								// externalApi.

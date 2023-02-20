@@ -34,6 +34,8 @@ const GoToMeet = (props: GoToMeetProps) => {
     [props.activityId, user, dataLive],
   );
 
+    // TODO: Change link
+  
   /* console.debug('GoToMeet:props:', props); */
 
   return (

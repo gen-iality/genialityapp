@@ -11,6 +11,7 @@ const GoToEviusMeet = (props: any) => {
   const urlReunion = `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rol=1`;
   const urlEviusTransmision = `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rtmp=${dataLive?.push_url}&rol=1`;
   /* console.log('TYPE==>', props); */
+  console.log('Component, are you?')
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       <Card.Meta
