@@ -138,6 +138,7 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             onValueChange={onValueChange}
+            noSubmitButton
           />
         </Card>
       )}

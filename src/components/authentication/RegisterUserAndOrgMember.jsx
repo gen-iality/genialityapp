@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
 /** Antd imports */
-import { Steps, Button, Alert } from 'antd';
+import { Steps, Button, Alert, Form } from 'antd';
 import { ScheduleOutlined } from '@ant-design/icons';
 import { LoadingOutlined } from '@ant-design/icons';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
@@ -37,6 +37,7 @@ const RegisterUserAndOrgMember = ({
 }) => {
   console.log('idOrganization', idOrganization);
   const intl = useIntl();
+  const [form] = Form.useForm();
   const { helperDispatch, currentAuthScreen } = useHelper();
 
   const [current, setCurrent] = useState(0);
@@ -126,6 +127,7 @@ const RegisterUserAndOrgMember = ({
       content: (
         <>
           <OrganizationPropertiesForm
+            form={form}
             basicDataUser={basicDataUser}
             orgMember={dataOrgMember}
             onProperyChange={() => {}}
@@ -289,6 +291,7 @@ const RegisterUserAndOrgMember = ({
 
       handleValidateAccountGeniality();
     } else if (current == 1) {
+      form.submit();
       setValidateOrgMember({
         status: true,
         textError: '',
