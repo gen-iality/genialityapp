@@ -7,8 +7,8 @@ import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import DynamicFormItem from './DynamicFormItem';
 import { IDynamicFieldProps } from './types';
-import useCheckFileSize from './useCheckFileSize';
-import useMandatoryRule from './useMandatoryRule';
+import useCheckFileSize from './hooks/useCheckFileSize';
+import useMandatoryRule from './hooks/useMandatoryRule';
 
 interface IDynamicFileUploaderFieldProps extends IDynamicFieldProps {
 }

@@ -2,7 +2,7 @@ import { Input } from 'antd'
 import * as React from 'react'
 import DynamicFormItem from './DynamicFormItem'
 import { IDynamicFieldProps } from './types'
-import useMandatoryRule from './useMandatoryRule'
+import useMandatoryRule from './hooks/useMandatoryRule'
 
 interface IDynamicLongTextFieldProps extends IDynamicFieldProps {
 }
