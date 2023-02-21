@@ -6,13 +6,10 @@
 // React stuffs
 import * as React from 'react'
 import {
-  FunctionComponent,
   useState,
   useEffect,
   useCallback,
-  useRef,
   useMemo,
-  ReactNode,
 } from 'react'
 
 // Ant Design stuffs
@@ -20,29 +17,27 @@ import {
   Button,
   Form,
   Col,
-  Row,
   Card,
   Typography,
-  Input,
   Divider,
-  Checkbox,
-  Collapse,
-  Select,
-  Upload,
 } from 'antd'
 
 // API methods
 import { UsersApi, TicketsApi, EventsApi, EventFieldsApi, countryApi } from '@helpers/request'
 
-import { areaCode } from '@helpers/constants'
 import { LoadingOutlined, UploadOutlined } from '@ant-design/icons'
-import { Rule, ValidateErrorEntity } from 'rc-field-form/lib/interface'
+import { ValidateErrorEntity } from 'rc-field-form/lib/interface'
 import { useIntl } from 'react-intl'
 
-import ReactSelect from 'react-select'
-import { DispatchMessageService } from '@context/MessageService'
-import { RcFile, UploadFile } from 'antd/lib/upload/interface'
-import ImgCrop from 'antd-img-crop'
+import { IDynamicFieldData } from '../../dynamic-fields/types'
+import DynamicTextField from '../..//dynamic-fields/DynamicTextField'
+import DynamicLongTextField from '../..//dynamic-fields/DynamicLongTextField'
+import DynamicMultipleListField from '../..//dynamic-fields/DynamicMultipleListField'
+import DynamicFileUploaderField from '@components/dynamic-fields/DynamicFileUploaderField'
+import DynamicAvatarUploaderField from '@components/dynamic-fields/DynamicAvatarUploaderField'
+import DynamicSelectField from '@components/dynamic-fields/DynamicSelectField'
+import DynamicPhoneInputField from '@components/dynamic-fields/DynamicPhoneInputField'
+import DynamicBooleanField from '@components/dynamic-fields/DynamicBooleanField'
 
 const {
   Text,
@@ -61,39 +56,6 @@ const textLeftStyle: any = {
   padding: '10px',
 }
 
-// This type should be used in the options written in helpers/constants.jsx
-type FieldType = 'text'
-  | 'country'
-  | 'region'
-  | 'city'
-  | 'longtext'
-  | 'email'
-  | 'number'
-  | 'list'
-  | 'multiplelist'
-  | 'date'
-  | 'boolean'
-  | 'file'
-  | 'complex'
-  | 'tituloseccion'
-  | 'password'
-  | 'multiplelisttable'
-  | 'codearea'
-  | 'onlyCodearea'
-  | 'avatar' // Is it new?
-
-type DynamicField = {
-  type?: FieldType,
-  props?: any,
-  name: string,
-  label: string,
-  mandatory: boolean,
-  description?: string,
-  labelPosition: any, // NOTE: Check this
-  visibleByAdmin?: boolean,
-  options?: { label: string, value: string }[]
-}
-
 type FormValuesType = any
 
 interface IOrganizationPropertiesFormProps {
@@ -101,7 +63,7 @@ interface IOrganizationPropertiesFormProps {
   orgMember: any,
   organization: any,
   onProperyChange: (propertyName: string, propertyValue: any) => void,
-  otherFields?: DynamicField[],
+  otherFields?: IDynamicFieldData[],
   // initialOtherValues: let us set our initial values for
   onSubmit?: (values: any) => void,
 }
@@ -115,7 +77,7 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
 
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmiting, setIsSubmiting] = useState(false)
-  const [dynamicFields, setDynamicFields] = useState<DynamicField[]>(
+  const [dynamicFields, setDynamicFields] = useState<IDynamicFieldData[]>(
     props.organization.user_properties || otherFields
   )
   // This state will be used for the form
@@ -188,24 +150,6 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
     setIsLoading(false)
   }
 
-  const getFilenameFromURL = useCallback((url: any) => {
-    if (typeof url !== 'string') return null
-    const splittedUrl = url.split('/')
-    return splittedUrl[splittedUrl.length - 1]
-  }, [])
-
-  const handleBeforeUpload = useCallback((file: RcFile) => {
-    const isLt5M = file.size / 1024 / 1024 < 5;
-    if (!isLt5M) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Image must smaller than 5MB!',
-        action: 'show',
-      })
-    }
-    return isLt5M ? true : false
-  }, [])
-
   const onFinish = useCallback((values: FormValuesType) => {
     setIsSubmiting(true)
     console.debug('form will submit:', { values })
@@ -227,68 +171,15 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
     // TODO: update field visibility
   }, [props.onProperyChange])
 
-  /**
-   * Count the fields that are different to common organization user fields
-   */
-  const dynamicFieldsLength: number = useMemo(() => (
-    dynamicFields
-      .filter((field) => (
-        !['names', 'email'].includes(field.name)
-        && (field.type !== 'password' || field.name === 'contrasena')
-      )).length
-  ), [dynamicFields])
-
   const Fields = useMemo(() => dynamicFields.map((field, index) => {
     if (field.visibleByAdmin) return
     if (['contrasena', 'password'].includes(field.name)) return
 
     const {
       type = 'text',
-      props = {},
-      name,
       label,
       mandatory,
-      description,
-      labelPosition,
-      options = [],
     } = field
-
-    const target: string = name
-
-    const value = initialValues[target]
-
-    const requiredFieldErrorMessage = intl.formatMessage({ id: 'form.field.required' })
-
-    // visible
-
-    /**
-     * Active the validation for region, country or city if there are data.
-     */
-    const isAciveValidations = 
-      type === 'region' ? allRegions.length === 0 :
-      type === 'country' ? allCountries.length === 0 :
-      type === 'city' ? allCities.length === 0 :
-      false
-    
-    /**
-     * It is hidden if the name is email or names.
-     */
-    const isHiddenField =
-      initialValues?.email ? name === 'email' :
-      initialValues?.names ? name === 'names' :
-      false
-    
-    // With this we know if the form item is required
-    const requirementRule: Rule = {
-      required: ['names', 'email'].includes(name) || mandatory || type === 'password',
-      type: (type === 'email' ? 'email' : undefined),
-      pattern: type === 'password' ? new RegExp(/^[A-Za-z0-9_-]{8,}$/) : undefined,
-      message: (
-        type === 'password'
-        ? 'Mínimo 8 caracteres con letras y números, no se permiten caracteres especiales'
-        : 'Es un campo necesario'
-      ),
-    }
 
     // This is simple
     if (type === 'tituloseccion') {
@@ -302,419 +193,119 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
       )
     }
 
-    // Medium simple, because that we return only
     if (type === 'boolean') {
-      const requirementRule: Rule = {
-        required: mandatory,
-        validator: (rule, value) => {
-          if (mandatory) {
-            return value === true
-              ? Promise.resolve()
-              : Promise.reject(requiredFieldErrorMessage)
-          } else {
-            return value == true || value == false || value == '' || value == undefined
-              ? Promise.resolve()
-              : Promise.reject(requiredFieldErrorMessage)
-          }
-        },
-      }
+      return <DynamicBooleanField fieldData={field} allInitialValues={initialValues} />
+    }
 
+    if (type === 'longtext') {
+      return <DynamicLongTextField fieldData={field} allInitialValues={initialValues} />
+    }
+
+    if (type === 'multiplelist') {
+      return <DynamicMultipleListField fieldData={field} allInitialValues={initialValues} />
+    }
+
+    if (type === 'file') {
+      return <DynamicFileUploaderField fieldData={field} allInitialValues={initialValues} />
+    }
+
+    if (type === 'avatar') {
+      return <DynamicAvatarUploaderField form={form} fieldData={field} allInitialValues={initialValues} />
+    }
+
+    if (type === 'country') {
       return (
-        <div key={`div ${index}`}>
-          <Form.Item
-            valuePropName="checked"
-            name={name}
-            rules={[requirementRule]}
-            key={`item ${index}`}
-            initialValue={value}
-          >
-            <Checkbox
-              {...props}
-              key={index}
-              name={name}
-              defaultChecked={!!value}
-            >
-              {mandatory ? (
-                <span>
-                  <span style={{ color: 'red' }}>*</span>
-                  {' '}
-                  <strong>{label}</strong>
-                </span>
-              ) : (
-                label
-              )}
-            </Checkbox>
-          </Form.Item>
-
-          {description && description.length < 500 && <p>{description}</p>}
-          {description && description.length > 500 && (
-            <Collapse defaultActiveKey={['0']} style={{ marginBottom: '15px' }}>
-              <Collapse.Panel
-                key='1'
-                header={intl.formatMessage({
-                  id: 'registration.message.policy',
-                })}
-              >
-                <pre
-                  dangerouslySetInnerHTML={{
-                    __html: description,
-                  }}
-                  style={{ whiteSpace: 'normal' }}
-                ></pre>
-              </Collapse.Panel>
-            </Collapse>
+        <DynamicSelectField
+          fieldData={field}
+          allInitialValues={initialValues}
+          isLoading={isLoading}
+          onChange={(value, option) => {
+            if (Array.isArray(option)) {
+              [option] = option
+            }
+            console.debug('chosen country:', {option})
+            requestAllRegionsByCountry(option.key)
+            setLastSelectedCountry(option.key) // I dont like using external state...
+          }}
+          items={allCountries}
+          placeholder="Seleccione un país"
+          transformOption={(country) => (
+            {
+              label: country.name,
+              value: country.iso2,
+              key: country.iso2,
+            }
           )}
-        </div>
+        />
       )
     }
 
-    let CurrentDynamicField: ReactNode
-
-    switch (type) {
-      case 'codearea': {
-        CurrentDynamicField = (
-          <Input
-            addonBefore={(
-              <Form.Item noStyle name="code">
-                <Select
-                  showSearch
-                  filterOption={searchInSelectComponent}
-                  optionFilterProp="children"
-                  style={{ fontSize: '12px', width: 150 }}
-                  placeholder="Código de area del pais"
-                  options={areaCode.map((code) => ({
-                    label: `${code.label} (${code.value})`,
-                    value: code.value,
-                  }))}
-                />
-              </Form.Item>
-            )}
-            defaultValue={value?.toString().split()[2]}
-            type='number'
-            style={{ width: '100%' }}
-            placeholder='Numero de telefono'
-          />
-        )
-        break;
-      }
-      case 'onlyCodearea': {
-        CurrentDynamicField = (
-          <Select
-            showSearch
-            optionFilterProp="children"
-            filterOption={searchInSelectComponent}
-            style={{ width: '100%' }}
-            onChange={(value) => {
-              // form.setFieldsValue({ code: value })
-            }}
-            placeholder='Código de area del pais'
-            options={areaCode.map((code) => ({
-              label: `${code.label} (${code.value})`,
-              value: code.value,
-            }))}
-          />
-        )
-        break;
-      }
-      case 'multiplelisttable': {
-        requirementRule.transform = (value) => {
-          const transformed = value.map((item: any) => item.value)
-          console.debug('transformed', transformed)
-          return transformed
-        }
-        requirementRule.validator = (_, value) => {
-          if (value.length > 0) return Promise.resolve()
-          return Promise.reject(`${name} is empty`)
-        }
-        // TODO: read the documentation of ReactSelect to know how is the props
-        //       to set value and get changes
-        // NOTE: it can crash 
-        CurrentDynamicField = (
-          <ReactSelect
-            isMulti
-            options={options}
-          />
-        )
-        break;
-      }
-      case 'longtext': {
-        CurrentDynamicField = (
-          <Input.TextArea
-            rows={4}
-            autoSize={{ minRows: 3, maxRows: 25 }}
-          />
-        )
-        break;
-      }
-      case 'multiplelist': {
-        if (options.length === 0) {
-          CurrentDynamicField = (
-            <Text>No hay opciones para selecciona</Text>
-          )
-        } else {
-          // requirementRule.transform = (value) => {
-          //   console.log('transform:', value)
-          //   return value
-          // }
-          // NOTE: this rule additional stuffs should be in the requirementRule
-          //       definition, no here
-          requirementRule.validator = (_, value) => {
-            if (value.length > 0) return Promise.resolve()
-            return Promise.reject(`${name} is empty`)
-          }
-          CurrentDynamicField = (
-            <Checkbox.Group
-              options={options}
-              // defaultValue={value}
-              // onChange={(checkedValues) => {
-              //   value = JSON.stringify(checkedValues);
-              // }}
-            />
-          )
-        }
-        break;
-      }
-      case 'file': {
-        requirementRule.transform = (value: any) => {
-          return value.fileList[0].name
-        }
-        CurrentDynamicField = (
-          <Upload
-            accept="application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx"
-            action="https://api.evius.co/api/files/upload/"
-            multiple={false}
-            listType="text"
-            beforeUpload={handleBeforeUpload}
-            // defaultFileList={
-            //   value
-            //     ? [
-            //         {
-            //           name: typeof value == 'string' ? getFilenameFromURL(value) : null,
-            //           url: typeof value == 'string' ? value : null,
-            //         },
-            //       ]
-            //     : []
-            // }
-          >
-            <Button icon={<UploadOutlined />}>Subir</Button>
-          </Upload>
-        )
-        break;
-      }
-      case 'list': {
-        // NOTE: the feature of unique by user is not implement yet
-        CurrentDynamicField = (
-          <Select
-            style={{ width: '100%' }}
-            options={[
-              { label: 'Seleccionar...', value: '' },
-              ...options.map((option) => (
-                {
-                  label: option.label,
-                  value: option.value,
-                }
-              ))
-            ]}
-          />
-        )
-        break;
-      }
-      case 'country': {
-        CurrentDynamicField = (
-          <Select
-            showSearch
-            optionFilterProp="children"
-            filterOption={searchInSelectComponent}
-            style={{ width: '100%' }}
-            disabled={isLoading || allCountries.length === 0}
-            loading={isLoading}
-            placeholder="Seleccione un país"
-            options={allCountries.map((country) => (
-              {
-                label: country.name,
-                value: country.iso2,
-                key: country.iso2,
-              }
-            ))}
-            onChange={(value, option) => {
-              if (Array.isArray(option)) {
-                [option] = option
-              }
-              console.debug('chosen country:', {option})
-              requestAllRegionsByCountry(option.key)
-              setLastSelectedCountry(option.key) // I dont like using external state...
-            }}
-          />
-        )
-        break;
-      }
-      case 'region': {
-        CurrentDynamicField = (
-          <Select
-            showSearch
-            filterOption={searchInSelectComponent}
-            optionFilterProp="children"
-            style={{ width: '100%' }}
-            disabled={isLoading || allRegions.length === 0}
-            loading={isLoading}
-            placeholder="Seleccione una región"
-            options={allRegions.map((region) => (
-              {
-                label: region.name,
-                value: region.name,
-                key: region.iso2,
-              }
-            ))}
-            onChange={(value, option) => {
-              console.debug('chosen region:', {option, lastSelectedCountry})
-              requestAllCitiesByCountryRegion(lastSelectedCountry, (option as unknown as any).key)
-            }}
-          />
-        )
-        break;
-      }
-      case 'city': {
-        CurrentDynamicField = (
-          <Select
-            showSearch
-            optionFilterProp="children"
-            filterOption={searchInSelectComponent}
-            loading={isLoading}
-            style={{ width: '100%' }}
-            disabled={isLoading || allCities.length === 0}
-            onChange={(value, option) => {
-              // setCity({ name: value, regionCode: option.key, inputName: name });
-            }}
-            placeholder="Seleccione una ciudad"
-            options={allCities.map((city) => (
-              {
-                label: city.name,
-                value: city.name,
-                key: city.iso2 ?? city.id,
-              }
-            ))}
-          />
-        )
-        break;
-      }
-      case 'avatar': {
-        const imageUrl = [{ url: value }]
-        requirementRule.transform = (value: any) => {
-          console.info('wanna validate', {value})
-          return value.fileList[0].name
-        }
-        requirementRule.validator = (_, value) => {
-          console.log('???', value, _)
-          return Promise.resolve()
-        }
-        CurrentDynamicField = (
-          <ImgCrop
-            rotate
-            shape="round"
-            // onModalOk={(file) => {
-            //   console.log({file})
-            //   form.setFieldsValue({ [name]: file })
-            // }}
-          >
-            <Upload
-              action="https://api.evius.co/api/files/upload/"
-              accept="image/png,image/jpeg"
-              onChange={(file) => {
-                console.log('file changed', {file})
-                form.setFieldsValue({ [name]: file })
-              }}
-              multiple={false}
-              listType="picture"
-              maxCount={1}
-              onRemove={(file) => {
-                console.log('remove', {file})
-                form.setFieldsValue({ [name]: undefined })
-              }}
-              // defaultFileList={
-              //   value
-              //     ? [
-              //         {
-              //           name: typeof value == 'string' ? getFilenameFromURL(value) : null,
-              //           url: typeof value == 'string' ? value : null,
-              //         },
-              //       ]
-              //     : []
-              // }
-              beforeUpload={handleBeforeUpload}
-            >
-              <Button type='primary' icon={<UploadOutlined />}>
-                {intl.formatMessage({
-                  id: 'form.button.avatar',
-                  defaultMessage: 'Subir imagen de perfil',
-                })}
-              </Button>
-            </Upload>
-          </ImgCrop>
-        )
-        break;
-      }
-      default: {
-        CurrentDynamicField = (
-          <Input
-            {...props}
-            addonBefore={
-              labelPosition === 'izquierda' && (
-                <span>
-                  {mandatory && <span style={{ color: 'red' }}>* </span>}
-                  <strong>{label}</strong>
-                </span>
-              )
+    if (type === 'region') {
+      return (
+        <DynamicSelectField
+          fieldData={field}
+          allInitialValues={initialValues}
+          isLoading={isLoading}
+          onChange={(value, option) => {
+            console.debug('chosen region:', {option, lastSelectedCountry})
+            requestAllCitiesByCountryRegion(lastSelectedCountry, (option as unknown as any).key)
+          }}
+          items={allRegions}
+          placeholder="Seleccione una región"
+          transformOption={(region) => (
+            {
+              label: region.name,
+              value: region.name,
+              key: region.iso2,
             }
-            type={type}
-            // defaultValue={value}
-          />
-        )
-      }
+          )}
+        />
+      )
     }
 
-    return (
-      <div key={`item ${index}`}>
-        {isHiddenField && <code>hidden {name}</code>}
-        <>
-          {type}
-          {':'}
-          {name}
-          {JSON.stringify(requirementRule)}
-          <br />
-        </>
-        <Form.Item
-          noStyle={isHiddenField}
-          hidden={isHiddenField}
-          valuePropName="value"
-          label={
-            label
-            // (labelPosition !== 'izquierda' || !labelPosition)
-            //   ? label
-            //   : '' && (labelPosition !== 'arriba' || !labelPosition)
-          }
-          name={name}
-          rules={isAciveValidations ? [{ required: false }] : [requirementRule]}
-          key={`item ${index}`}
-          initialValue={value}
-        >
-          {CurrentDynamicField}
-        </Form.Item>
+    if (type === 'city') {
+      return (
+        <DynamicSelectField
+          fieldData={field}
+          allInitialValues={initialValues}
+          isLoading={isLoading}
+          onChange={(value, option) => {}}
+          items={allCities}
+          placeholder="Seleccione una ciudad"
+          transformOption={(city) => (
+            {
+              label: city.name,
+              value: city.name,
+              key: city.iso2 ?? city.id,
+            }
+          )}
+        />
+      )
+    }
 
-        {description && description.length < 500 && <p>{description}</p>}
-        {description && description.length > 500 && (
-          <Collapse defaultActiveKey={['0']} style={{ marginBottom: '15px' }}>
-            <Collapse.Panel
-              key='1'
-              header={intl.formatMessage({
-                id: 'registration.message.policy',
-              })}
-            >
-              <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
-            </Collapse.Panel>
-          </Collapse>
-        )}
-      </div>
-    )
+    if (type === 'list') {
+      // NOTE: the feature of unique by user is not implement yet
+      return (
+        <DynamicSelectField
+          fieldData={field}
+          allInitialValues={initialValues}
+          afterTransformOptions={(options) => [
+            { label: 'Seleccionar...', value: '' },
+            ...options,
+          ]}
+        />
+      )
+    }
+
+    if (type === 'codearea') {
+      return <DynamicPhoneInputField fieldData={field} allInitialValues={initialValues} />
+    }
+
+    if (type === 'multiplelisttable') {
+      return <DynamicMultipleListField fieldData={field} allInitialValues={initialValues} />
+    }
+
+    return <DynamicTextField fieldData={field} allInitialValues={initialValues} />
 
   }), [dynamicFields, allCountries, allRegions, allCities, isLoading, lastSelectedCountry, setLastSelectedCountry])
 
