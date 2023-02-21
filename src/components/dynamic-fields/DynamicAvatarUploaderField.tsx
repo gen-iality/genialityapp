@@ -9,8 +9,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 import DynamicFormItem from './DynamicFormItem'
 import { IDynamicFieldProps } from './types'
-import useCheckFileSize from './useCheckFileSize'
-import useMandatoryRule from './useMandatoryRule'
+import useCheckFileSize from './hooks/useCheckFileSize'
+import useMandatoryRule from './hooks/useMandatoryRule'
 
 interface IDynamicAvatarUploaderFieldProps extends IDynamicFieldProps {
   form: FormInstance

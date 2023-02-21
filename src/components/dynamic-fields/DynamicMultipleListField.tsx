@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import DynamicFormItem from './DynamicFormItem';
 import { IDynamicFieldProps } from './types';
-import useMandatoryRule from './useMandatoryRule';
+import useMandatoryRule from './hooks/useMandatoryRule';
 
 interface IDynamicMultipleListFieldProps extends IDynamicFieldProps {
 }

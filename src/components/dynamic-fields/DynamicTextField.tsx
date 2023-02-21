@@ -5,7 +5,7 @@ import { IDynamicFieldProps } from './types'
 import DynamicFormItem from './DynamicFormItem'
 import { useEffect, useMemo, useState } from 'react'
 import { Input } from 'antd'
-import useMandatoryRule from './useMandatoryRule'
+import useMandatoryRule from './hooks/useMandatoryRule'
 
 
 export interface IDynamicTextFieldProps extends IDynamicFieldProps {
