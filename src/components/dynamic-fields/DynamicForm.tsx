@@ -151,6 +151,14 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
             console.debug('chosen country:', {option})
             requestAllRegionsByCountry(option.key)
             setLastSelectedCountry(option.key) // I dont like using external state...
+
+            // Sometimes, the admin did not add region, then the city type may get be blocked.
+            // To solve this, we check if there are a region type, if not, then we request
+            // all the cities for this country
+            if (!dynamicFields.some((field) => field.type === 'region')) {
+              console.log('no field of region type found, get all cities anyway')
+              requestAllCitiesByCountryRegion(option.key)
+            }
           }}
           items={allCountries}
           placeholder="Seleccione un país"
