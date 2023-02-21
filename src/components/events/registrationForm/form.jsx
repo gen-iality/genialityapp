@@ -167,6 +167,7 @@ const FormRegister = ({
   errorRegisterUser,
   basicDataUser = {},
   dataEventUser = {},
+  dataOrgMember = {},
   HandleHookForm = () => {},
   setvalidateEventUser = () => {},
   setValidateOrgMember = () => {},
@@ -328,7 +329,7 @@ const FormRegister = ({
     if (basicDataUser || basicDataUser) {
       initialValuesGeneral = {
         ...basicDataUser,
-        ...dataEventUser,
+        ...dataOrgMember,
       };
     }
     console.log('initialValues2', initialValuesGeneral, cUser, cEventUser);
@@ -876,14 +877,6 @@ const FormRegister = ({
                       )}
                     </Checkbox>
                   </Form.Item>
-                  {cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                    <Row style={{ marginTop: 20 }}>
-                      {' '}
-                      <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
-                        <PlayCircleOutlined /> Ver términos y condiciones
-                      </a>
-                    </Row>
-                  )}
                   {description && description.length < 500 && <p>{description}</p>}
                   {description && description.length > 500 && (
                     <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
@@ -1171,30 +1164,6 @@ const FormRegister = ({
       <Col xs={24} sm={22} md={24} lg={24} xl={24} style={center}>
         {!submittedForm ? (
           <Card bordered={false} bodyStyle={textLeft}>
-            {eventUser !== undefined &&
-              eventUser !== null &&
-              eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
-              cEvent.value?._id &&
-              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
-                  <strong>Te invitamos a realizar el pago para poder participar en las pujas.</strong>
-                </Row>
-              )}
-            {eventUser !== undefined &&
-              eventUser !== null &&
-              eventUser.rol_id == '60e8a8b7f6817c280300dc23' &&
-              cEvent.value?._id &&
-              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
-                  <strong>Ya eres un asistente pago</strong>
-                </Row>
-              )}
-            {eventUser !== undefined &&
-              eventUser !== null &&
-              eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
-              cEvent.value?._id &&
-              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
-
             <Form
               form={form}
               layout='vertical'
@@ -1212,13 +1181,6 @@ const FormRegister = ({
               onFinishFailed={showGeneralMessage}
               onValuesChange={valuesChange}
             >
-              {/*cEvent.value?._id && cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                <Row justify={'center'} style={{ marginBottom: 30 }}>
-                  <Card style={{ width: 700, margin: 'auto', background: '#F7C2C6' }}>
-                    <InfoCircleOutlined /> Una vez registrado para acceder a la puja de obras debes realizar la donación
-                  </Card>
-                </Row>
-              )*/}
               <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
                 <Col span={24}>
                   {editUser && (
