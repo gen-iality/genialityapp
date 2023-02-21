@@ -127,11 +127,11 @@ AssignmentCardsProps) => {
 					bingoCardRef={bingoCardRef}
 					bingoUsers={(keyboard.length > 0 ? searchData : data).map((user: any) => {
 						return {
-							code: user.bingo_card.code,
-              email: user.properties.email,
-              id: user.bingo_card.event_user_id,
-              names: user.properties.names,
-              values: user.bingo_card.values_bingo_card
+							code: user?.bingo_card?.code,
+              email: user?.properties?.email,
+              id: user?.bingo_card?.event_user_id,
+              names: user?.properties?.names,
+              values: user?.bingo_card?.values_bingo_card
 						};
 					})}
 					bingo={bingo}
