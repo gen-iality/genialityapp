@@ -1,6 +1,8 @@
-import { Card, Transfer } from 'antd';
+import { Card, Grid, Transfer } from 'antd';
 import { TransferDirection } from 'antd/lib/transfer';
 import React, { useState } from 'react';
+
+const { useBreakpoint } = Grid;
 
 const TOOLBAR_KEYS = [
 	'camera',
@@ -38,7 +40,7 @@ const TOOLBAR_KEYS = [
 	'whiteboard',
 ];
 
-const transferValues = TOOLBAR_KEYS.map(key => ({ key, label: key }));
+const transferValues = TOOLBAR_KEYS.map((key) => ({ key, label: key }));
 
 const DEFAULT_TOOLBAR_OPTIONS = [
 	'hangup',
@@ -58,6 +60,7 @@ interface Props {
 export default function Toolbar(props: Props) {
 	const [targetKeys, setTargetKeys] = useState(props.values || DEFAULT_TOOLBAR_OPTIONS);
 	const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+	const screens = useBreakpoint();
 
 	const onChange = (nextTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
 		if (props.onChange) props.onChange(nextTargetKeys);
@@ -69,16 +72,20 @@ export default function Toolbar(props: Props) {
 	};
 
 	return (
-		<Card title='Toolbar de reunión'>
-			<Transfer
-				dataSource={transferValues}
-				titles={['Activado', 'Desactivado']}
-				targetKeys={targetKeys}
-				selectedKeys={selectedKeys}
-				onChange={onChange}
-				onSelectChange={onSelectChange}
-				render={item => item.label}
-			/>
-		</Card>
+		<Transfer
+			dataSource={transferValues}
+			showSelectAll={false}
+			titles={['Desactivados', 'Activos']}
+			listStyle={{
+				borderRadius: '5px',
+				width: screens.xs ? 135 : 300,
+				height: screens.xs ? 225 : 300,
+			}}
+			targetKeys={targetKeys}
+			selectedKeys={selectedKeys}
+			onChange={onChange}
+			onSelectChange={onSelectChange}
+			render={(item) => item.label}
+		/>
 	);
 }

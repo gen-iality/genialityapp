@@ -1,6 +1,8 @@
-import { Card } from 'antd';
+import { Card, Grid } from 'antd';
 import Transfer, { TransferDirection } from 'antd/lib/transfer';
 import React, { useState } from 'react';
+
+const { useBreakpoint } = Grid;
 
 const NOTIFICATIONS = [
 	'connection.CONNFAIL', // shown when the connection fails,
@@ -71,7 +73,7 @@ const NOTIFICATIONS = [
 	'transcribing.failedToStart', // shown when transcribing fails to start
 ];
 
-const transferValues = NOTIFICATIONS.map(key => ({ key, label: key }));
+const transferValues = NOTIFICATIONS.map((key) => ({ key, label: key }));
 
 const DEFAULT_DISABLE_NOTIFICATIONS = ['notify.chatMessages', 'notify.disconnected'];
 
@@ -83,6 +85,7 @@ interface Props {
 export default function Notifications(props: Props) {
 	const [targetKeys, setTargetKeys] = useState(props.values || DEFAULT_DISABLE_NOTIFICATIONS);
 	const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+	const screens = useBreakpoint();
 
 	const onChange = (nextTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
 		if (props.onChange) props.onChange(nextTargetKeys);
@@ -94,16 +97,21 @@ export default function Notifications(props: Props) {
 	};
 
 	return (
-		<Card title='Notificaciones de reunión'>
-			<Transfer
-				dataSource={transferValues}
-				titles={['Activos', 'Desactivadoss']}
-				targetKeys={targetKeys}
-				selectedKeys={selectedKeys}
-				onChange={onChange}
-				onSelectChange={onSelectChange}
-				render={item => item.label}
-			/>
-		</Card>
+		<Transfer
+			dataSource={transferValues}
+			showSelectAll={false}
+			titles={['Desactivados', 'Activos']}
+			listStyle={{
+				borderRadius: '5px',
+				width: screens.xs ? 135 : 300,
+				height: screens.xs ? 225 : 300,
+			}}
+			targetKeys={targetKeys}
+			selectedKeys={selectedKeys}
+			onChange={onChange}
+			onSelectChange={onSelectChange}
+			render={(item) => item.label}
+			showSearch
+		/>
 	);
 }

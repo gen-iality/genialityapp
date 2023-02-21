@@ -1,10 +1,11 @@
-import { Button, Card, Col, Form, Modal, Row, Switch, Tabs } from 'antd';
+import { Button, Card, Col, Form, List, Modal, Row, Switch, Tabs, Grid } from 'antd';
 import { useEffect, useState } from 'react';
 import { firestore } from '@/helpers/firebase';
 import { UseEventContext } from '@/context/eventContext';
 import Notifications from './eviusMeet/Notifications';
 import Toolbar from './eviusMeet/Toolbar';
 
+const { useBreakpoint } = Grid;
 interface MeetConfig {
 	openMeet: boolean;
 	config: {
@@ -53,8 +54,8 @@ const CONFIG_OPTIONS = [
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.disableInviteFunctions}
-				onChange={checked =>
-					props.setMeetConfig(prev => ({ ...prev, config: { ...prev.config, disableInviteFunctions: checked } }))
+				onChange={(checked) =>
+					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disableInviteFunctions: checked } }))
 				}
 			/>
 		),
@@ -66,8 +67,8 @@ const CONFIG_OPTIONS = [
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.enableWelcomePage}
-				onChange={checked =>
-					props.setMeetConfig(prev => ({ ...prev, config: { ...prev.config, enableWelcomePage: checked } }))
+				onChange={(checked) =>
+					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, enableWelcomePage: checked } }))
 				}
 			/>
 		),
@@ -79,8 +80,8 @@ const CONFIG_OPTIONS = [
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.readOnlyName}
-				onChange={checked =>
-					props.setMeetConfig(prev => ({ ...prev, config: { ...prev.config, readOnlyName: checked } }))
+				onChange={(checked) =>
+					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, readOnlyName: checked } }))
 				}
 			/>
 		),
@@ -92,8 +93,8 @@ const CONFIG_OPTIONS = [
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.disablePolls}
-				onChange={checked =>
-					props.setMeetConfig(prev => ({ ...prev, config: { ...prev.config, disablePolls: checked } }))
+				onChange={(checked) =>
+					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disablePolls: checked } }))
 				}
 			/>
 		),
@@ -105,8 +106,8 @@ const CONFIG_OPTIONS = [
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.disableReactions}
-				onChange={checked =>
-					props.setMeetConfig(prev => ({ ...prev, config: { ...prev.config, disableReactions: checked } }))
+				onChange={(checked) =>
+					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disableReactions: checked } }))
 				}
 			/>
 		),
@@ -118,8 +119,8 @@ const CONFIG_OPTIONS = [
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.disableReactionsModeration}
-				onChange={checked =>
-					props.setMeetConfig(prev => ({ ...prev, config: { ...prev.config, disableReactionsModeration: checked } }))
+				onChange={(checked) =>
+					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disableReactionsModeration: checked } }))
 				}
 			/>
 		),
@@ -131,8 +132,8 @@ const CONFIG_OPTIONS = [
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.disableProfile}
-				onChange={checked =>
-					props.setMeetConfig(prev => ({ ...prev, config: { ...prev.config, disableProfile: checked } }))
+				onChange={(checked) =>
+					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disableProfile: checked } }))
 				}
 			/>
 		),
@@ -144,8 +145,8 @@ const CONFIG_OPTIONS = [
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.hideConferenceTimer}
-				onChange={checked =>
-					props.setMeetConfig(prev => ({ ...prev, config: { ...prev.config, hideConferenceTimer: checked } }))
+				onChange={(checked) =>
+					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, hideConferenceTimer: checked } }))
 				}
 			/>
 		),
@@ -157,8 +158,8 @@ const CONFIG_OPTIONS = [
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.hideConferenceSubject}
-				onChange={checked =>
-					props.setMeetConfig(prev => ({ ...prev, config: { ...prev.config, hideConferenceSubject: checked } }))
+				onChange={(checked) =>
+					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, hideConferenceSubject: checked } }))
 				}
 			/>
 		),
@@ -170,8 +171,8 @@ const CONFIG_OPTIONS = [
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.screenshotCapture}
-				onChange={checked =>
-					props.setMeetConfig(prev => ({ ...prev, config: { ...prev.config, screenshotCapture: checked } }))
+				onChange={(checked) =>
+					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, screenshotCapture: checked } }))
 				}
 			/>
 		),
@@ -190,6 +191,7 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 	const [meetConfig, setMeetConfig] = useState<MeetConfig>(INITIAL_MEET_CONFIG);
 	const [loading, setLoading] = useState(false);
 	const [open, setOpen] = useState(false);
+	const screens = useBreakpoint();
 
 	useEffect(() => {
 		const unsubscribe = firestore
@@ -197,7 +199,7 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 			.doc(eventId)
 			.collection('activities')
 			.doc(activityId)
-			.onSnapshot(snapshot => {
+			.onSnapshot((snapshot) => {
 				const data = snapshot.data();
 				if (data && Object.keys(data).includes('meetConfig')) {
 					setMeetConfig(data.meetConfig);
@@ -252,35 +254,55 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 					</Button>
 				)}
 				<Modal
+					width={700}
 					visible={open}
 					onCancel={handleCloseModal}
 					onOk={handleOpenMeeting}
 					confirmLoading={loading}
-					okText='Iniciar'
-					title='Abrir reunion para asistentes'>
+					bodyStyle={{ height: '70vh' }}
+					okText='Iniciar'>
 					<Row>
 						<Col xs={24}>
-							<Card title='Opciones de reunión'>
-								<Row>
-									<Tabs>
-										<Tabs.TabPane tab='General' key='item-general'>
-											<Form>
-												{CONFIG_OPTIONS.map(option => (
-													<Col key={option.key} xs={12}>
-														<Form.Item label={option.label}>{option.element({ meetConfig, setMeetConfig })}</Form.Item>
-													</Col>
-												))}
-											</Form>
-										</Tabs.TabPane>
-										<Tabs.TabPane tab='Notificaciones' key='item-notifications'>
-											<Notifications />
-										</Tabs.TabPane>
-										<Tabs.TabPane tab='Toolbar' key='item-toolbar'>
-											<Toolbar />
-										</Tabs.TabPane>
-									</Tabs>
-								</Row>
-							</Card>
+							<Tabs>
+								<Tabs.TabPane
+									className={!screens.xs ? 'desplazar' : ''}
+									style={{ height: '60vh', overflowY: 'auto' }}
+									tab='General'
+									key='item-general'>
+									<Form layout='vertical'>
+									<Card bordered={false}>
+									<List
+											size='small'
+											dataSource={CONFIG_OPTIONS}
+											renderItem={(option) => (
+												<List.Item
+												style={{padding:'0px'}}
+													key={option.key}
+													extra={<Form.Item style={{margin:'10px'}} >{option.element({ meetConfig, setMeetConfig })}</Form.Item>}>
+													<List.Item.Meta title={option.label} />
+												</List.Item>
+											)}
+										/>
+									</Card>
+									</Form>
+								</Tabs.TabPane>
+								<Tabs.TabPane tab='Notificaciones' key='item-notifications'>
+									<Row align='middle' justify='center'>
+										<Notifications onChange={(list) =>
+												setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disabledNotifications: list } }))
+											} />
+									</Row>
+								</Tabs.TabPane>
+								<Tabs.TabPane tab='Toolbar' key='item-toolbar'>
+									<Row align='middle' justify='center'>
+										<Toolbar
+											onChange={(list) =>
+												setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, toolbarButtons: list } }))
+											}
+										/>
+									</Row>
+								</Tabs.TabPane>
+							</Tabs>
 						</Col>
 					</Row>
 				</Modal>
