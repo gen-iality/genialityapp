@@ -28,6 +28,7 @@ const DynamicTextField: React.FunctionComponent<IDynamicTextFieldProps> = (props
     name,
     label,
     labelPosition,
+    props: secondProps,
   } = fieldData
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
@@ -64,7 +65,7 @@ const DynamicTextField: React.FunctionComponent<IDynamicTextFieldProps> = (props
       initialValue={allInitialValues[name]}
     >
       <Input
-        {...props}
+        {...secondProps}
         addonBefore={
           labelPosition === 'izquierda' && (
             <span>
