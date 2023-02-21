@@ -240,7 +240,7 @@ const RenderComponent = (props: any) => {
 				case 'only':
 					return (
 						<>
-							{console.log({ meetingId, currentActivity })}
+							{/* {console.log({ meetingId, currentActivity })} */}
 							<WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
 							<GameDrawer />
 						</>

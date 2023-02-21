@@ -6,7 +6,7 @@ import Notifications from './eviusMeet/Notifications';
 import Toolbar from './eviusMeet/Toolbar';
 
 const { useBreakpoint } = Grid;
-interface MeetConfig {
+export interface MeetConfig {
 	openMeet: boolean;
 	config: {
 		disableInviteFunctions: boolean;
