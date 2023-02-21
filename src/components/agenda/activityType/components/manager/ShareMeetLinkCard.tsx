@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, Modal, Row, Switch } from 'antd';
+import { Button, Card, Col, Form, Modal, Row, Switch, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
 import { firestore } from '@/helpers/firebase';
 import { UseEventContext } from '@/context/eventContext';
@@ -188,52 +188,52 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 	const activityId = props.activityId;
 	const eventId = eventContext?.idEvent;
 	const [meetConfig, setMeetConfig] = useState<MeetConfig>(INITIAL_MEET_CONFIG);
+	const [loading, setLoading] = useState(false);
 	const [open, setOpen] = useState(false);
 
-	const getMeetConfig = async (eventId: string, activityId: string) => {
-		try {
-			const activitySnapshot = await firestore
-				.collection('events')
-				.doc(eventId)
-				.collection('activities')
-				.doc(activityId)
-				.get();
-			const data = activitySnapshot.data();
-			console.log({ data });
-			if (data && Object.keys(data).includes('meetConfig')) {
-				console.log({ meetConfigInFb: data.meetConfig });
-			}
-		} catch (error) {
-		} finally {
-		}
-	};
+	useEffect(() => {
+		const unsubscribe = firestore
+			.collection('events')
+			.doc(eventId)
+			.collection('activities')
+			.doc(activityId)
+			.onSnapshot(snapshot => {
+				const data = snapshot.data();
+				if (data && Object.keys(data).includes('meetConfig')) {
+					setMeetConfig(data.meetConfig);
+				}
+			});
+		return () => unsubscribe();
+	}, []);
 
-	const updateMeeting = async (eventId: string, activityId: string) => {
+	const updateMeeting = async (eventId: string, activityId: string, status: boolean) => {
 		try {
+			// console.log(`events/${eventId}/activities/${activityId}`);
+			setLoading(true);
 			await firestore
 				.collection('events')
 				.doc(eventId)
 				.collection('activities')
 				.doc(activityId)
-				.set({ meetConfig }, { merge: true });
+				.update({ meetConfig: { ...meetConfig, openMeet: status } });
 		} catch (error) {
+			console.log(error);
 		} finally {
-			getMeetConfig(eventId, activityId);
+			setLoading(false);
 		}
 	};
 
-	useEffect(() => {
-		console.log({ meetConfig });
-	}, [meetConfig]);
+	const handleOpenModal = () => setOpen(true);
 
-	useEffect(() => {
-		if (!!eventId && !!activityId) {
-			getMeetConfig(eventId, activityId);
-		}
-	}, [eventId, activityId]);
+	const handleCloseModal = () => setOpen(false);
 
-	const handleOpenMeeting = () => {
-		console.log({ meetConfig });
+	const handleOpenMeeting = async () => {
+		await updateMeeting(eventId, activityId, true);
+		handleCloseModal();
+	};
+
+	const handleCloseMeeting = async () => {
+		await updateMeeting(eventId, activityId, false);
 	};
 
 	if (!meetConfig) return null;
@@ -241,51 +241,50 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 	return (
 		<>
 			<Card>
-				<Button color='' onClick={() => setOpen(true)}>
-					Iniciar reunión
-				</Button>
+				{!meetConfig.openMeet && (
+					<Button color='' onClick={handleOpenModal}>
+						Iniciar reunión
+					</Button>
+				)}
+				{!!meetConfig.openMeet && (
+					<Button color='' onClick={handleCloseMeeting} loading={loading}>
+						Finalizar reunión
+					</Button>
+				)}
 				<Modal
 					visible={open}
-					onCancel={() => setOpen(false)}
+					onCancel={handleCloseModal}
 					onOk={handleOpenMeeting}
+					confirmLoading={loading}
 					okText='Iniciar'
 					title='Abrir reunion para asistentes'>
 					<Row>
 						<Col xs={24}>
 							<Card title='Opciones de reunión'>
-								<Form>
-									<Row>
-										{CONFIG_OPTIONS.map(option => (
-											<Col key={option.key} xs={12}>
-												<Form.Item label={option.label}>{option.element({ meetConfig, setMeetConfig })}</Form.Item>
-											</Col>
-										))}
-									</Row>
-								</Form>
+								<Row>
+									<Tabs>
+										<Tabs.TabPane tab='General' key='item-general'>
+											<Form>
+												{CONFIG_OPTIONS.map(option => (
+													<Col key={option.key} xs={12}>
+														<Form.Item label={option.label}>{option.element({ meetConfig, setMeetConfig })}</Form.Item>
+													</Col>
+												))}
+											</Form>
+										</Tabs.TabPane>
+										<Tabs.TabPane tab='Notificaciones' key='item-notifications'>
+											<Notifications />
+										</Tabs.TabPane>
+										<Tabs.TabPane tab='Toolbar' key='item-toolbar'>
+											<Toolbar />
+										</Tabs.TabPane>
+									</Tabs>
+								</Row>
 							</Card>
 						</Col>
 					</Row>
 				</Modal>
 			</Card>
-			{/* <Card title='Opciones de reunión'>
-				<Form>
-					{CONFIG_OPTIONS.map(option => (
-						<Form.Item key={option.key} label={option.label}>
-							{option.element({ meetConfig, setMeetConfig })}
-						</Form.Item>
-					))}
-				</Form>
-			</Card>
-			<Toolbar
-				values={meetConfig.config.toolbarButtons}
-				onChange={list => setMeetConfig(prev => ({ ...prev, config: { ...prev.config, toolbarButtons: [...list] } }))}
-			/>
-			<Notifications
-				values={meetConfig.config.disabledNotifications}
-				onChange={list =>
-					setMeetConfig(prev => ({ ...prev, config: { ...prev.config, disabledNotifications: [...list] } }))
-				}
-			/> */}
 		</>
 	);
 }
