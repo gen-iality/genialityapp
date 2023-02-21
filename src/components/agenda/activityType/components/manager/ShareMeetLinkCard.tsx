@@ -5,7 +5,7 @@ import { UseEventContext } from '@/context/eventContext';
 import Notifications from './eviusMeet/Notifications';
 import Toolbar from './eviusMeet/Toolbar';
 
-interface MeetConfig {
+export interface MeetConfig {
 	openMeet: boolean;
 	config: {
 		disableInviteFunctions: boolean;

@@ -4,6 +4,7 @@ import RenderComponent from './RenderComponent';
 
 const HCOActividad = ({ isBingo = false }) => {
   let { currentActivity } = useHelper();
+  console.log({ currentActivity })
   const imageVisible = () => {
     if (
       ((currentActivity?.habilitar_ingreso == '' ||
