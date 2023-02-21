@@ -46,7 +46,7 @@ const internalOrExternalEvent = ({ cEvent, history }: internalOrExternalEventInt
 		title: EXTERNAL_REDIRECT_COPYS[withURL].title,
 		content: EXTERNAL_REDIRECT_COPYS[withURL].content,
 		onOk() {
-			if (cEvent?.url_external) {
+			if (cEvent?.url_external && cEvent.where_it_run === 'ExternalEvent') {
 				window.open(cEvent?.url_external, '_blank');
 			} else {
 				return

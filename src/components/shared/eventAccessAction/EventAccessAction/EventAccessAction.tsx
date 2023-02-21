@@ -35,17 +35,25 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 	let { handleChangeTypeModal, helperDispatch } = useHelper();
 
 	useEffect(() => {
-		if (idEvent) {
+		if (idEvent && !Object.keys(eventData).length) {
 			const unsubscribe = firestore
 				.collection('events')
 				.doc(idEvent)
 				.onSnapshot(snapshot => {
 					const data = snapshot.data();
-					setEventData(data)
+					if (!!data && Object.keys(data).includes('_id')) {
+						setEventData(data);
+					} else {
+						setEventData(cEvent.value)
+					}
 				});
 			return () => unsubscribe();
 		}
 	}, []);
+
+	useEffect(() => {
+		console.log({ eventData, cEvent })
+	}, [eventData, cEvent])
 
 	useEffect(() => {
 		const assignStatusAccordingToActionParams = {
@@ -56,7 +64,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 			eventAction,
 			handleChangeTypeModal,
 			helperDispatch,
-			cEvent: eventData,
+			cEvent: eventData || cEvent,
 			history,
 		};
 
