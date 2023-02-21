@@ -19,6 +19,7 @@ interface IDynamicFormProps {
   form: FormInstance,
   dynamicFields: IDynamicFieldData[],
   initialValues: FormValuesType,
+  noSubmitButton?: boolean,
   onFinish: (values: FormValuesType) => void,
   onFinishFailed?: (errorInfo: ValidateErrorEntity<FormValuesType>) => void,
   onValueChange?: (changedValues: any, values: FormValuesType) => void,
@@ -29,6 +30,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     form,
     initialValues,
     dynamicFields,
+    noSubmitButton,
     onFinish,
     onFinishFailed = () => {},
     onValueChange = () => {},
@@ -252,9 +254,11 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     >
       {Fields.filter((field) => !!field)}
 
-      <Form.Item>
-        <Button htmlType="submit">Enviar</Button>
-      </Form.Item>
+      {!noSubmitButton && (
+        <Form.Item>
+          <Button htmlType="submit">Enviar</Button>
+        </Form.Item>
+      )}
     </Form>
   );
 };
