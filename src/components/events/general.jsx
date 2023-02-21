@@ -534,6 +534,10 @@ class General extends Component {
 		try {
 			if (event._id) {
 				const info = await EventsApi.editOne(data, event._id);
+				await firestore
+					.collection('events')
+					.doc(event._id)
+					.update(info);
 				this.props.updateEvent(info);
 				self.setState({ loading: false });
 				DispatchMessageService({

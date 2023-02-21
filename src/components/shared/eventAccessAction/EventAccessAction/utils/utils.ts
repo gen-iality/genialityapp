@@ -5,6 +5,26 @@ import {
 	internalOrExternalEventInterface,
 } from '../../interfaces/interfaces';
 
+type Status = 'withURL' | 'noURL';
+
+type CopyStatus = Record<Status, Copy>;
+
+interface Copy {
+	title: string;
+	content: string;
+}
+
+const EXTERNAL_REDIRECT_COPYS: CopyStatus = {
+	withURL: {
+		title: 'Estás abandonando Evius',
+		content: 'Esto es debido a que el evento se llevara a cabo en otro sitio web',
+	},
+	noURL: {
+		title: 'El evento aún no ha comenzado',
+		content: 'Asegúrate de estar atento a las actualizaciones y no te pierdas ningún detalle.',
+	},
+};
+
 const internalOrExternalEvent = ({ cEvent, history }: internalOrExternalEventInterface) => {
 	const { confirm } = Modal;
 
@@ -12,33 +32,27 @@ const internalOrExternalEvent = ({ cEvent, history }: internalOrExternalEventInt
 		//The user's session is saved for the current event
 		window.sessionStorage.setItem('session', cEvent?._id);
 
-		// console.log(cEvent)
-		// console.log('cEvent?.redirect_activity', cEvent?.redirect_activity);
-		// console.log('!!cEvent?.redirect_activity', !!cEvent?.redirect_activity);
-		// console.log(
-		// 	"typeof cEvent?.redirect_activity === 'string'",
-		// 	typeof cEvent?.redirect_activity === 'string'
-		// );
-		// console.log(
-		// 	"(!!cEvent?.redirect_activity && typeof cEvent?.redirect_activity === 'string')",
-		// 	!!cEvent?.redirect_activity && typeof cEvent?.redirect_activity === 'string'
-		// );
 		if (!!cEvent?.redirect_activity && typeof cEvent?.redirect_activity === 'string') {
 			history.replace(`/landing/${cEvent?._id}/activity/${cEvent?.redirect_activity}`);
 		} else {
 			history.replace(`/landing/${cEvent?._id}`);
 		}
-		// history.replace(`/landing/${cEvent?._id}`);
 		return;
 	}
 
+	const withURL: Status = !!cEvent?.url_external ? 'withURL' : 'noURL';
+
 	confirm({
-		title: 'Estás abandonando Evius',
-		content: 'Esto es debido a que el evento se llevara a cabo en otro sitio web',
+		title: EXTERNAL_REDIRECT_COPYS[withURL].title,
+		content: EXTERNAL_REDIRECT_COPYS[withURL].content,
 		onOk() {
-			window.open(cEvent?.url_external, '_blank');
+			if (cEvent?.url_external) {
+				window.open(cEvent?.url_external, '_blank');
+			} else {
+				return
+			}
 		},
-		onCancel() { },
+		onCancel() {},
 	});
 };
 
@@ -59,7 +73,7 @@ export const assignStatusAccordingToAction = ({
 	//Validacion temporal para el evento audi
 	const idEvent = cEvent?._id;
 	const labelAudi: string = idEvent !== '6334782dc19fe2710a0b8753' ? 'Inscribirme al evento' : 'INSCRÍBETE';
-	const bingoExists = !!cEvent?.bingo || !!cEvent?.dynamics?.bingo
+	const bingoExists = !!cEvent?.bingo || !!cEvent?.dynamics?.bingo;
 
 	switch (eventAction) {
 		case 'ACTION_ONLY_EVENT_REGISTRATION':
@@ -81,9 +95,7 @@ export const assignStatusAccordingToAction = ({
 
 		case 'ACTION_ENTER_THE_EVENT':
 			// Here goes the logic for button 'Ingresar al evento'
-			buttonsAction = [
-				{ label: 'Ingresar al evento', action: () => internalOrExternalEvent({ cEvent, history }) },
-			];
+			buttonsAction = [{ label: 'Ingresar al evento', action: () => internalOrExternalEvent({ cEvent, history }) }];
 			setButtonsActions(buttonsAction);
 			break;
 
@@ -98,9 +110,7 @@ export const assignStatusAccordingToAction = ({
 			break;
 
 		case 'ACTION_REGISTER_FOR_THE_EVENT':
-			buttonsAction = [
-				{ label: 'Inscribirme al evento', action: () => handleChangeTypeModal('registerForTheEvent') },
-			];
+			buttonsAction = [{ label: 'Inscribirme al evento', action: () => handleChangeTypeModal('registerForTheEvent') }];
 			// if (bingoExists) buttonsAction.push({ label: 'Imprimir cartón', action: () => handleChangeTypeModal('registerForTheEvent') })
 
 			setButtonsActions(buttonsAction);

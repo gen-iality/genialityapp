@@ -2,6 +2,7 @@ import PrintBingoCartonButton from '@/components/games/bingo/components/PrintBin
 import { UseEventContext } from '@/context/eventContext';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
+import { firestore } from '@/helpers/firebase';
 import { Alert, Button, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -16,10 +17,11 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 	let cEvent = UseEventContext();
 	const cUser = UseUserEvent();
 	const history = useHistory();
-	const initialButtonsState = [{ label: 'INITIAL_STATE', action: () => { } }];
+	const initialButtonsState = [{ label: 'INITIAL_STATE', action: () => {} }];
 	const informativeMessagesState = [{ label: 'INITIAL_STATE' }];
 	const bgColor = cEvent?.value?.styles?.toolbarDefaultBg;
 	const textColor = cEvent?.value?.styles?.textMenu;
+	const [eventData, setEventData] = useState<any>({});
 
 	//Validacion temporal para el evento audi
 	const idEvent = cEvent?.value?._id;
@@ -33,6 +35,19 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 	let { handleChangeTypeModal, helperDispatch } = useHelper();
 
 	useEffect(() => {
+		if (idEvent) {
+			const unsubscribe = firestore
+				.collection('events')
+				.doc(idEvent)
+				.onSnapshot(snapshot => {
+					const data = snapshot.data();
+					setEventData(data)
+				});
+			return () => unsubscribe();
+		}
+	}, []);
+
+	useEffect(() => {
 		const assignStatusAccordingToActionParams = {
 			setButtonsActions,
 			setInformativeMessage,
@@ -41,7 +56,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 			eventAction,
 			handleChangeTypeModal,
 			helperDispatch,
-			cEvent: cEvent.value,
+			cEvent: eventData,
 			history,
 		};
 
@@ -51,7 +66,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 			setInformativeMessage(informativeMessagesState);
 			setButtonsActions(initialButtonsState);
 		};
-	}, [eventAction]);
+	}, [eventAction, eventData]);
 
 	return (
 		<Space direction='vertical' style={{ width: '100%' }}>
@@ -61,7 +76,11 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 						<Button
 							key={`${index}-${button.label}`}
 							block
-							className={button.label === 'Ingresar al evento' ? 'animate__animated animate__heartBeat animate__slower animate__repeat-3' : ''}
+							className={
+								button.label === 'Ingresar al evento'
+									? 'animate__animated animate__heartBeat animate__slower animate__repeat-3'
+									: ''
+							}
 							style={{
 								height: '48px',
 								padding: '6.4px 30px',
@@ -71,8 +90,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 							}}
 							type='primary'
 							size='large'
-							onClick={button.action}
-						>
+							onClick={button.action}>
 							{button.label}
 						</Button>
 					)}
