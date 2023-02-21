@@ -148,12 +148,6 @@ export default {
   },
   18: {
     _id: 'id',
-    label: 'Campo código de area sin telefono',
-    name: 'campoCodigoDeAreaSinTelefono',
-    type: 'onlyCodearea',
-  },
-  19: {
-    _id: 'id',
     label: 'Tu foto',
     name: 'tufoto',
     type: 'avatar',
