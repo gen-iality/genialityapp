@@ -19,6 +19,7 @@ interface IDynamicFormProps {
   form: FormInstance,
   dynamicFields: IDynamicFieldData[],
   initialValues: FormValuesType,
+  noSubmitButton?: boolean,
   onFinish: (values: FormValuesType) => void,
   onFinishFailed?: (errorInfo: ValidateErrorEntity<FormValuesType>) => void,
   onValueChange?: (changedValues: any, values: FormValuesType) => void,
@@ -29,6 +30,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     form,
     initialValues,
     dynamicFields,
+    noSubmitButton,
     onFinish,
     onFinishFailed = () => {},
     onValueChange = () => {},
@@ -151,6 +153,14 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
             console.debug('chosen country:', {option})
             requestAllRegionsByCountry(option.key)
             setLastSelectedCountry(option.key) // I dont like using external state...
+
+            // Sometimes, the admin did not add region, then the city type may get be blocked.
+            // To solve this, we check if there are a region type, if not, then we request
+            // all the cities for this country
+            if (!dynamicFields.some((field) => field.type === 'region')) {
+              console.log('no field of region type found, get all cities anyway')
+              requestAllCitiesByCountryRegion(option.key)
+            }
           }}
           items={allCountries}
           placeholder="Seleccione un país"
@@ -244,9 +254,11 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     >
       {Fields.filter((field) => !!field)}
 
-      <Form.Item>
-        <Button htmlType="submit">Enviar</Button>
-      </Form.Item>
+      {!noSubmitButton && (
+        <Form.Item>
+          <Button htmlType="submit">Enviar</Button>
+        </Form.Item>
+      )}
     </Form>
   );
 };
