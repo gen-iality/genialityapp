@@ -1,6 +1,6 @@
 import { Rule } from 'antd/lib/form'
 import { useEffect, useState, useCallback } from 'react'
-import { IDynamicFieldData } from './types'
+import { IDynamicFieldData } from '../../dynamic-fields/types'
 
 /**
  * This should be in the hook, and it should use intl
