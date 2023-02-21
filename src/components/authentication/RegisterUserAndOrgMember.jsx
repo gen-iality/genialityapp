@@ -24,6 +24,7 @@ import { OrganizationApi, UsersApi } from '@helpers/request';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useEventContext } from '@context/eventContext';
 import { DispatchMessageService } from '@context/MessageService';
+import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm';
 
 const { Step } = Steps;
 
@@ -109,6 +110,11 @@ const RegisterUserAndOrgMember = ({
     setter((previous) => ({ ...previous, [FieldName]: value }));
   };
 
+  const onSubmit = (values) => {
+    setDataOrgMember(values);
+    handleSubmit();
+  };
+
   const steps = [
     {
       title: 'First',
@@ -119,7 +125,14 @@ const RegisterUserAndOrgMember = ({
       title: 'Second',
       content: (
         <>
-          {console.log('basicDataUser', basicDataUser)}
+          <OrganizationPropertiesForm
+            basicDataUser={basicDataUser}
+            orgMember={dataOrgMember}
+            onProperyChange={() => {}}
+            organization={organization}
+            onSubmit={onSubmit}
+          />
+          {/*  {console.log('basicDataUser', basicDataUser)}
           {console.log('dataOrgMember', dataOrgMember)}
           {console.log('organization', organization)}
           {console.log('organization.user_properties', organization.user_properties)}
@@ -134,7 +147,7 @@ const RegisterUserAndOrgMember = ({
             initialOtherValue={{}}
             conditionalsOther={[]}
             fields={organization.user_properties}
-          />
+          /> */}
         </>
       ),
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
@@ -206,7 +219,7 @@ const RegisterUserAndOrgMember = ({
     });
 
     async function createOrgMember() {
-      const clonBasicDataUser = { ...basicDataUser };
+      /* const clonBasicDataUser = { ...basicDataUser };
       delete clonBasicDataUser.password;
       delete clonBasicDataUser.picture;
 
@@ -215,9 +228,19 @@ const RegisterUserAndOrgMember = ({
         ...dataOrgMember,
       };
 
-      const propertiesUser = { properties: { ...dataUser } };
+      const propertiesOrgMember = { properties: { ...dataUser } }; */
+
+      ////////////////////////////////
+
+      const propertiesOrgMember = { properties: { ...basicDataUser, ...dataOrgMember } };
+      delete propertiesOrgMember.password;
+      delete propertiesOrgMember.picture;
+
+      console.log('propertiesOrgMember', propertiesOrgMember);
+      console.log('Organization', organization);
+
       try {
-        const respUser = await OrganizationApi.saveUser(idOrganization, propertiesUser);
+        const respUser = await OrganizationApi.saveUser(idOrganization, propertiesOrgMember);
         if (respUser && respUser.account_id) {
           setValidationGeneral({
             status: false,
