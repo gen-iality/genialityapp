@@ -127,9 +127,9 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
 
   return (
     <Col xs={24} sm={22} md={24} lg={24} xl={24} style={centerStyle}>
-      {isSubmiting && form === undefined ? (
+      {isSubmiting ? (
         <LoadingOutlined style={{ fontSize: '50px' }} />
-      ) : (
+      ) : form && (
         <Card bordered={false} bodyStyle={textLeftStyle}>
           <DynamicForm
             form={form}
