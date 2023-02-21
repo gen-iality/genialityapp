@@ -302,6 +302,7 @@ const FormRegister = ({
     }
     setLoading(false);
   };
+
   const getCitiesByCountry = async (country) => {
     setLoading(true);
     try {
@@ -313,6 +314,7 @@ const FormRegister = ({
     }
     setLoading(false);
   };
+
   useEffect(() => {
     getCountries();
     return () => {
@@ -329,7 +331,7 @@ const FormRegister = ({
     if (basicDataUser || basicDataUser) {
       initialValuesGeneral = {
         ...basicDataUser,
-        ...dataOrgMember,
+        ...dataEventUser,
       };
     }
     console.log('initialValues2', initialValuesGeneral, cUser, cEventUser);
@@ -656,6 +658,7 @@ const FormRegister = ({
       }
     }
   };
+
   useEffect(() => {
     form.setFieldsValue(initialValues);
   }, [initialValues]);
@@ -746,6 +749,7 @@ const FormRegister = ({
     const url = window.location.pathname;
     return url.includes('/landing/') ? true : false;
   }
+
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
@@ -816,7 +820,16 @@ const FormRegister = ({
         );
 
         if (type === 'codearea') {
-          input = <PhoneInput placeholder='Número' defaultCountry='CO' international />;
+          input = (
+            <PhoneInput
+              placeholder={intl.formatMessage({
+                id: 'form.phoneInput.placeholder',
+                defaultMessage: 'Ingrese número de contacto',
+              })}
+              defaultCountry='CO'
+              international
+            />
+          );
         }
 
         if (type === 'tituloseccion') {
