@@ -36,3 +36,8 @@ export interface IDynamicFieldProps {
   fieldData: IDynamicFieldData,
   allInitialValues?: any,
 }
+
+export type DynamicFieldOptionsType = {
+  value: FieldType,
+  label: string,
+}
