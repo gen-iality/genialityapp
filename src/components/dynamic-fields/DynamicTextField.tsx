@@ -37,8 +37,8 @@ const DynamicTextField: React.FunctionComponent<IDynamicTextFieldProps> = (props
   const {basicRule, setCondiction} = useMandatoryRule(fieldData, errorMessage)
 
   const isHiddenField = useMemo(() => (
-      allInitialValues?.email ? name === 'email' :
-      allInitialValues?.names ? name === 'names' :
+      (allInitialValues?.email && name === 'email') ||
+      (allInitialValues?.names && name === 'names') ||
       false
   ), [allInitialValues])
 
