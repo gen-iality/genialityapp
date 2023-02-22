@@ -82,7 +82,8 @@ const DrawerProfile = (props) => {
         closable={true}
         onClose={() => props.setViewPerfil({ view: false, perfil: null })}
         width={'52vh'}
-        bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
+        bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}
+      >
         <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '10px' }}>
           <Col span={24}>
             <Typography.Paragraph>
@@ -102,7 +103,8 @@ const DrawerProfile = (props) => {
                 }}
                 type='text'
                 size='middle'
-                style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}>
+                style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}
+              >
                 {props.cEvent.value.visibility === 'PUBLIC' && (
                   <>{intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })}</>
                 )}
@@ -114,7 +116,8 @@ const DrawerProfile = (props) => {
           <Col
             className='asistente-list' //agrega el estilo a la barra de scroll
             span={24}
-            style={{ marginTop: '20px', height: '50vh', maxHeight: '50vh', overflowY: 'auto' }}>
+            style={{ marginTop: '20px', height: '50vh', maxHeight: '50vh', overflowY: 'auto' }}
+          >
             {(!userSelected || !userPropertiesProfile) && (
               <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>
             )}
@@ -140,7 +143,7 @@ const DrawerProfile = (props) => {
                           item?.type !== 'codearea'
                             ? userSelected.properties[item?.name]
                             : '(+' + userSelected.properties['code'] + ')' + userSelected.properties[item?.name],
-                          item
+                          item,
                         )}
                       />
                     </List.Item>
