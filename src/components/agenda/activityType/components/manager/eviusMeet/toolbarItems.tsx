@@ -19,7 +19,7 @@ export const toolbarItems = [
 	{ key: 'livestreaming', icon: <></>, label: 'Transmisión en vivo' },
 	{ key: 'microphone', icon: <></>, label: 'Micrófono' },
 	{ key: 'noisesuppression', icon: <></>, label: 'Supresión de ruido' },
-	{ key: 'participants-pane icon: <></>,', label: 'Participantes-pa' },
+	{ key: 'participants-pane', icon: <></>, label: 'Participantes' },
 	{ key: 'profile', icon: <></>, label: 'Perfil' },
 	{ key: 'raisehand', icon: <></>, label: 'Levantar la mano' },
 	{ key: 'recording', icon: <></>, label: 'Grabación' },
