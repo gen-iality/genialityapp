@@ -20,7 +20,7 @@ export interface MeetConfig {
 		hideConferenceTimer: boolean;
 		hideConferenceSubject: boolean;
 		screenshotCapture: boolean;
-		disabledNotifications: string[];
+		notifications: string[];
 		toolbarButtons: string[];
 	};
 }
@@ -38,7 +38,37 @@ const INITIAL_MEET_CONFIG = {
 		hideConferenceTimer: false,
 		hideConferenceSubject: true,
 		screenshotCapture: false,
-		disabledNotifications: ['notify.chatMessages', 'notify.disconnected'],
+		notifications: [
+			'connection.CONNFAIL',
+			'dialog.micNotSendingData',
+			'dialog.serviceUnavailable',
+			'dialog.sessTerminated',
+			'dialog.sessionRestarted',
+			'dialOut.statusMessage',
+			'notify.chatMessages',
+			'notify.disconnected',
+			'notify.connectedOneMember',
+			'notify.connectedTwoMembers',
+			'notify.leftOneMember',
+			'notify.leftTwoMembers',
+			'notify.connectedThreePlusMembers',
+			'notify.leftThreePlusMembers',
+			'notify.grantedTo',
+			'notify.hostAskedUnmute',
+			'notify.invitedOneMember',
+			'notify.invitedThreePlusMembers',
+			'notify.invitedTwoMembers',
+			'notify.mutedRemotelyTitle',
+			'notify.mutedTitle',
+			'notify.newDeviceAudioTitle',
+			'notify.newDeviceCameraTitle',
+			'notify.raisedHand',
+			'notify.startSilentTitle',
+			'notify.videoMutedRemotelyTitle',
+			'toolbar.noAudioSignalTitle',
+			'toolbar.noisyAudioInputTitle',
+			'toolbar.talkWhileMutedPopup',
+		],
 		toolbarButtons: ['hangup', 'microphone', 'camera', 'participants-pane', 'tileview', 'settings', 'fullscreen'],
 	},
 };
@@ -158,16 +188,16 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 										</Card>
 									</Form>
 								</Tabs.TabPane>
-								<Tabs.TabPane tab='Notificaciones' key='item-notifications'>
+								{/* <Tabs.TabPane tab='Notificaciones' key='item-notifications'>
 									<Row align='middle' justify='center'>
 										<Notifications
-											values={meetConfig.config.disabledNotifications}
+											values={meetConfig.config.notifications}
 											onChange={list =>
-												setMeetConfig(prev => ({ ...prev, config: { ...prev.config, disabledNotifications: list } }))
+												setMeetConfig(prev => ({ ...prev, config: { ...prev.config, notifications: list } }))
 											}
 										/>
 									</Row>
-								</Tabs.TabPane>
+								</Tabs.TabPane> */}
 								<Tabs.TabPane tab='Toolbar' key='item-toolbar'>
 									<Row align='middle' justify='center'>
 										<Toolbar
