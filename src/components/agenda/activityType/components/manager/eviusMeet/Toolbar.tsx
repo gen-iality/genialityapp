@@ -49,7 +49,7 @@ export default function Toolbar(props: Props) {
 			selectedKeys={selectedKeys}
 			onChange={onChange}
 			onSelectChange={onSelectChange}
-			render={item => item.label}
+			render={item => item.render}
 			showSearch
 			locale={{
 				itemsUnit: 'opciones',
