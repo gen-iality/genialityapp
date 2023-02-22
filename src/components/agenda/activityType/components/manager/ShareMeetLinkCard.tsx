@@ -1,9 +1,10 @@
-import { Button, Card, Col, Form, List, Modal, Row, Switch, Tabs, Grid } from 'antd';
+import { Button, Card, Col, Form, List, Modal, Row, Tabs, Grid } from 'antd';
 import { useEffect, useState } from 'react';
 import { firestore } from '@/helpers/firebase';
 import { UseEventContext } from '@/context/eventContext';
 import Notifications from './eviusMeet/Notifications';
 import Toolbar from './eviusMeet/Toolbar';
+import { generalItems } from './eviusMeet/generalItems';
 
 const { useBreakpoint } = Grid;
 export interface MeetConfig {
@@ -29,143 +30,23 @@ const INITIAL_MEET_CONFIG = {
 	config: {
 		disableInviteFunctions: false,
 		enableWelcomePage: false,
-		readOnlyName: false,
+		readOnlyName: true,
 		disablePolls: false,
 		disableReactions: false,
 		disableReactionsModeration: false,
-		disableProfile: false,
+		disableProfile: true,
 		hideConferenceTimer: false,
-		hideConferenceSubject: false,
+		hideConferenceSubject: true,
 		screenshotCapture: false,
 		disabledNotifications: ['notify.chatMessages', 'notify.disconnected'],
 		toolbarButtons: ['hangup', 'microphone', 'camera', 'participants-pane', 'tileview', 'settings', 'fullscreen'],
 	},
 };
 
-interface ElementProps {
+export interface ElementProps {
 	meetConfig: MeetConfig;
 	setMeetConfig: React.Dispatch<React.SetStateAction<MeetConfig>>;
 }
-
-const CONFIG_OPTIONS = [
-	{
-		key: 'disableInviteFunctions',
-		label: 'Desactivar opción de invitar',
-		element: (props: ElementProps) => (
-			<Switch
-				checked={props.meetConfig.config.disableInviteFunctions}
-				onChange={(checked) =>
-					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disableInviteFunctions: checked } }))
-				}
-			/>
-		),
-		value: 'config.disableInviteFunctions',
-	},
-	{
-		key: 'enableWelcomePage',
-		label: 'enableWelcomePage', // este debe ser false en todo momento para los participamntes dentro de evius
-		element: (props: ElementProps) => (
-			<Switch
-				checked={props.meetConfig.config.enableWelcomePage}
-				onChange={(checked) =>
-					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, enableWelcomePage: checked } }))
-				}
-			/>
-		),
-		value: 'config.enableWelcomePage',
-	},
-	{
-		key: 'readOnlyName',
-		label: 'readOnlyName', // este debe ser true en todo momento para los participamntes dentro de evius 
-		element: (props: ElementProps) => (
-			<Switch
-				checked={props.meetConfig.config.readOnlyName}
-				onChange={(checked) =>
-					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, readOnlyName: checked } }))
-				}
-			/>
-		),
-		value: 'config.readOnlyName',
-	},
-	{
-		key: 'disablePolls',
-		label: 'Desactivar encuestas',
-		element: (props: ElementProps) => (
-			<Switch
-				checked={props.meetConfig.config.disablePolls}
-				onChange={(checked) =>
-					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disablePolls: checked } }))
-				}
-			/>
-		),
-		value: 'config.disablePolls',
-	},
-	{
-		key: 'disableReactions',
-		label: 'Deshabilitar reacciones',
-		element: (props: ElementProps) => (
-			<Switch
-				checked={props.meetConfig.config.disableReactions}
-				onChange={(checked) =>
-					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disableReactions: checked } }))
-				}
-			/>
-		),
-		value: 'config.disableReactions',
-	},
-	{
-		key: 'disableReactionsModeration',
-		label: 'Reacciones siempre silenciadas',
-		element: (props: ElementProps) => (
-			<Switch
-				checked={props.meetConfig.config.disableReactionsModeration}
-				onChange={(checked) =>
-					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disableReactionsModeration: checked } }))
-				}
-			/>
-		),
-		value: 'config.disableReactionsModeration',
-	},
-	{
-		key: 'disableProfile',
-		label: 'disableProfile', // este debe ser true en todo momento para los participamntes dentro de evius
-		element: (props: ElementProps) => (
-			<Switch
-				checked={props.meetConfig.config.disableProfile}
-				onChange={(checked) =>
-					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disableProfile: checked } }))
-				}
-			/>
-		),
-		value: 'config.disableProfile',
-	},
-	{
-		key: 'hideConferenceTimer',
-		label: 'Ocultar el temporizador de conferencia',
-		element: (props: ElementProps) => (
-			<Switch
-				checked={props.meetConfig.config.hideConferenceTimer}
-				onChange={(checked) =>
-					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, hideConferenceTimer: checked } }))
-				}
-			/>
-		),
-		value: 'config.hideConferenceTimer',
-	},
-	{
-		key: 'hideConferenceSubject',
-		label: 'hideConferenceSubject', // este debe ser true en todo momento para los participamntes dentro de evius
-		element: (props: ElementProps) => (
-			<Switch
-				checked={props.meetConfig.config.hideConferenceSubject}
-				onChange={(checked) =>
-					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, hideConferenceSubject: checked } }))
-				}
-			/>
-		),
-		value: 'config.hideConferenceSubject',
-	},
-];
 
 export interface ShareMeetLinkCardProps {
 	activityId: string;
@@ -186,7 +67,7 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 			.doc(eventId)
 			.collection('activities')
 			.doc(activityId)
-			.onSnapshot((snapshot) => {
+			.onSnapshot(snapshot => {
 				const data = snapshot.data();
 				if (data && Object.keys(data).includes('meetConfig')) {
 					setMeetConfig(data.meetConfig);
@@ -257,34 +138,42 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 									tab='General'
 									key='item-general'>
 									<Form layout='vertical'>
-									<Card bordered={false}>
-									<List
-											size='small'
-											dataSource={CONFIG_OPTIONS}
-											renderItem={(option) => (
-												<List.Item
-												style={{padding:'0px'}}
-													key={option.key}
-													extra={<Form.Item style={{margin:'10px'}} >{option.element({ meetConfig, setMeetConfig })}</Form.Item>}>
-													<List.Item.Meta title={option.label} />
-												</List.Item>
-											)}
-										/>
-									</Card>
+										<Card bordered={false}>
+											<List
+												size='small'
+												dataSource={generalItems}
+												renderItem={option => (
+													<List.Item
+														style={{ padding: '0px' }}
+														key={option.key}
+														extra={
+															<Form.Item style={{ margin: '10px' }}>
+																{option.element({ meetConfig, setMeetConfig })}
+															</Form.Item>
+														}>
+														<List.Item.Meta title={option.label} />
+													</List.Item>
+												)}
+											/>
+										</Card>
 									</Form>
 								</Tabs.TabPane>
 								<Tabs.TabPane tab='Notificaciones' key='item-notifications'>
 									<Row align='middle' justify='center'>
-										<Notifications onChange={(list) =>
-												setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, disabledNotifications: list } }))
-											} />
+										<Notifications
+											values={meetConfig.config.disabledNotifications}
+											onChange={list =>
+												setMeetConfig(prev => ({ ...prev, config: { ...prev.config, disabledNotifications: list } }))
+											}
+										/>
 									</Row>
 								</Tabs.TabPane>
 								<Tabs.TabPane tab='Toolbar' key='item-toolbar'>
 									<Row align='middle' justify='center'>
 										<Toolbar
-											onChange={(list) =>
-												setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, toolbarButtons: list } }))
+											values={meetConfig.config.toolbarButtons}
+											onChange={list =>
+												setMeetConfig(prev => ({ ...prev, config: { ...prev.config, toolbarButtons: list } }))
 											}
 										/>
 									</Row>

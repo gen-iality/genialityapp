@@ -1,46 +1,9 @@
-import { Card, Grid, Transfer } from 'antd';
+import { Grid, Transfer } from 'antd';
 import { TransferDirection } from 'antd/lib/transfer';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { toolbarItems } from './toolbarItems';
 
 const { useBreakpoint } = Grid;
-
-const TOOLBAR_KEYS = [
-	'camera',
-	'chat',
-	'closedcaptions',
-	'desktop',
-	'download',
-	'embedmeeting',
-	'etherpad',
-	'feedback',
-	'filmstrip',
-	'fullscreen',
-	'hangup',
-	'help',
-	'highlight',
-	'invite',
-	'linktosalesforce',
-	'livestreaming',
-	'microphone',
-	'noisesuppression',
-	'participants-pane',
-	'profile',
-	'raisehand',
-	'recording',
-	'security',
-	'select-background',
-	'settings',
-	'shareaudio',
-	'sharedvideo',
-	'shortcuts',
-	'stats',
-	'tileview',
-	'toggle-camera',
-	'videoquality',
-	'whiteboard',
-];
-
-const transferValues = TOOLBAR_KEYS.map((key) => ({ key, label: key }));
 
 const DEFAULT_TOOLBAR_OPTIONS = [
 	'hangup',
@@ -73,7 +36,7 @@ export default function Toolbar(props: Props) {
 
 	return (
 		<Transfer
-			dataSource={transferValues}
+			dataSource={toolbarItems}
 			oneWay
 			showSelectAll={false}
 			titles={['Desactivados', 'Activos']}
@@ -86,8 +49,14 @@ export default function Toolbar(props: Props) {
 			selectedKeys={selectedKeys}
 			onChange={onChange}
 			onSelectChange={onSelectChange}
-			render={(item) => item.label}
+			render={item => item.label}
 			showSearch
+			locale={{
+				itemsUnit: 'opciones',
+				itemUnit: 'opción',
+				notFoundContent: '',
+				searchPlaceholder: 'Buscar...',
+			}}
 		/>
 	);
 }
