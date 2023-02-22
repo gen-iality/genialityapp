@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import DynamicFormItem from './DynamicFormItem';
 import { IDynamicFieldProps } from './types';
 import useMandatoryRule from './hooks/useMandatoryRule';
+import { FormattedMessage } from 'react-intl';
 
 interface IDynamicMultipleListFieldProps extends IDynamicFieldProps {
 }
@@ -38,7 +39,10 @@ const DynamicMultipleListField: React.FunctionComponent<IDynamicMultipleListFiel
   if (options.length === 0) {
     return (
       <Typography.Text>
-        No hay opciones para selecciona
+        <FormattedMessage
+          id="form.option.empty"
+          defaultMessage="No hay opciones para selecciona"
+        />
       </Typography.Text>
     )
   }

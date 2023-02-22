@@ -5,7 +5,7 @@ import { FormInstance, Rule } from 'antd/lib/form'
 import { RcFile } from 'antd/lib/upload'
 import * as React from 'react'
 import { useCallback, useMemo } from 'react'
-import { useIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import DynamicFormItem from './DynamicFormItem'
 import { IDynamicFieldProps } from './types'
 import useCheckFileSize from './hooks/useCheckFileSize'
@@ -26,7 +26,6 @@ const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploader
 
   const { name } = fieldData
 
-  const intl = useIntl()
   const { basicRule } = useMandatoryRule(fieldData)
 
   const getFilenameFromURL = useCallback((url: any) => {
@@ -69,7 +68,6 @@ const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploader
           action="https://api.evius.co/api/files/upload/"
           accept="image/png,image/jpeg"
           onChange={(info: UploadChangeParam<UploadFile<unknown>>) => {
-            console.log('onChange...', info)
             const [file] = info.fileList
             if (file && file.status === 'done') {
               console.debug('uploaded at', file.response)
@@ -91,10 +89,10 @@ const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploader
           beforeUpload={handleBeforeUpload}
         >
           <Button type='primary' icon={<UploadOutlined />}>
-            {intl.formatMessage({
-              id: 'form.button.avatar',
-              defaultMessage: 'Subir imagen de perfil',
-            })}
+            <FormattedMessage
+              id="form.button.avatar"
+              defaultMessage="Subir imagen de perfil"
+            />
           </Button>
         </Upload>
       </ImgCrop>

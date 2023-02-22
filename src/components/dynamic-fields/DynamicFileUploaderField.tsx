@@ -4,6 +4,7 @@ import { FormInstance } from 'antd/lib/form';
 import { RcFile } from 'antd/lib/upload';
 import * as React from 'react';
 import { useCallback, useMemo } from 'react';
+import { FormattedMessage } from 'react-intl';
 import DynamicFormItem from './DynamicFormItem';
 import { IDynamicFieldProps } from './types';
 import useCheckFileSize from './hooks/useCheckFileSize';
@@ -64,7 +65,6 @@ const DynamicFileUploaderField: React.FunctionComponent<IDynamicFileUploaderFiel
         listType="text"
         beforeUpload={handleBeforeUpload}
         onChange={(info: UploadChangeParam<UploadFile<unknown>>) => {
-          console.log('onChange...', info)
           const [file] = info.fileList
           if (file && file.status === 'done') {
             console.debug('uploaded at', file.response)
@@ -77,7 +77,12 @@ const DynamicFileUploaderField: React.FunctionComponent<IDynamicFileUploaderFiel
           }
         }}
       >
-        <Button icon={<UploadOutlined />}>Subir archivo</Button>
+        <Button icon={<UploadOutlined />}>
+          <FormattedMessage
+            id="form.button.upload-file"
+            defaultMessage="Subir archivo"
+          />
+        </Button>
       </Upload>
     </DynamicFormItem>
   );

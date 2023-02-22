@@ -3,6 +3,7 @@ import { Button, Divider, Form, FormInstance } from 'antd';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import DynamicAvatarUploaderField from './DynamicAvatarUploaderField';
 import DynamicBooleanField from './DynamicBooleanField';
 import DynamicFileUploaderField from './DynamicFileUploaderField';
@@ -256,7 +257,12 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
 
       {!noSubmitButton && (
         <Form.Item>
-          <Button htmlType="submit">Enviar</Button>
+          <Button htmlType="submit">
+            <FormattedMessage
+              id="form.button.send"
+              defaultMessage="Enviar"
+            />
+          </Button>
         </Form.Item>
       )}
     </Form>
