@@ -406,14 +406,20 @@ const FormRegister = ({
   };
 
   const onFinish = async (values) => {
+    console.log('onFinish - Values', values);
+    console.log('onFinish - initialValues', initialValues);
+
     values = { ...initialValues, ...values };
+    console.log('onFinish - initialValues + values', values);
+
+    console.log('onFinish - basicDataUser', basicDataUser);
     if (Object.keys(basicDataUser).length > 0) {
       setvalidateEventUser({
         statusFields: true,
         status: false,
       });
 
-      validateOrgMember({
+      setValidateOrgMember({
         statusFields: true,
         status: false,
       });
@@ -421,8 +427,8 @@ const FormRegister = ({
       return;
     }
 
-    if (values['email']) {
-      values['email'] = values['email'].toLowerCase();
+    if (values.email) {
+      values.email = values.email.toLowerCase();
     }
 
     //OBTENER RUTA ARCHIVOS FILE
@@ -445,10 +451,14 @@ const FormRegister = ({
     } else {
       delete values.picture;
     }
+
     if (callback) {
+      console.log('5. Esto se ejecuta?');
       callback(values);
     } else {
+      console.log('5. Esto se ejecuta?');
       const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
+      console.log('5. data', data);
       if (data.length == 0 || cEventUser.value) {
         setSectionPermissions({ view: false, ticketview: false });
         // values.password = password;
