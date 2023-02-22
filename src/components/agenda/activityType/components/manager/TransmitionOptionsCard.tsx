@@ -18,6 +18,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     type,
   } = props;
 
+  console.log({ type })
   const [isDeleting, setIsDeleting] = useState(false);
   const {
     is,

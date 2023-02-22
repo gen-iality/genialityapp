@@ -24,8 +24,9 @@ const GoToMeet = (props: GoToMeetProps) => {
 
   const user = UseCurrentUser();
 
+  // `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rol=1`),
   const urlReunion = useMemo(() => (
-    `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rol=1`),
+    `https://meet.evius.co/${props.activityId}`),
     [props.activityId, user, dataLive],
   );
 
@@ -34,6 +35,8 @@ const GoToMeet = (props: GoToMeetProps) => {
     [props.activityId, user, dataLive],
   );
 
+    // TODO: Change link
+  
   /* console.debug('GoToMeet:props:', props); */
 
   return (
