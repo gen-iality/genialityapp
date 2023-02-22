@@ -168,7 +168,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
           transformOption={(country) => (
             {
               label: country.name,
-              value: country.iso2,
+              value: country.name,
               key: country.iso2,
             }
           )}
