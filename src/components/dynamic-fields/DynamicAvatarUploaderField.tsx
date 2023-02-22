@@ -1,16 +1,16 @@
 import { UploadOutlined } from '@ant-design/icons'
-import { DispatchMessageService } from '@context/MessageService'
 import { Button, Upload } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import { FormInstance, Rule } from 'antd/lib/form'
 import { RcFile } from 'antd/lib/upload'
 import * as React from 'react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useIntl } from 'react-intl'
 import DynamicFormItem from './DynamicFormItem'
 import { IDynamicFieldProps } from './types'
 import useCheckFileSize from './hooks/useCheckFileSize'
 import useMandatoryRule from './hooks/useMandatoryRule'
+import { UploadChangeParam, UploadFile } from 'antd/lib/upload/interface'
 
 interface IDynamicAvatarUploaderFieldProps extends IDynamicFieldProps {
   form: FormInstance
@@ -25,8 +25,6 @@ const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploader
   } = props
 
   const { name } = fieldData
-
-  const [rules, setRules] = useState<Rule[]>([])
 
   const intl = useIntl()
   const { basicRule } = useMandatoryRule(fieldData)
@@ -57,25 +55,10 @@ const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploader
     return fileList
   }, [allInitialValues, name])
 
-  // Clone the basic rule and inject a validator method
-  useEffect(() => {
-    const newRule: Rule = { ...basicRule }
-    newRule.transform = (value: any) => {
-      console.info('wanna validate', {value})
-      return value.fileList[0].name
-    }
-    newRule.validator = (_, value) => {
-      console.log('???', value, _)
-      return Promise.resolve()
-    }
-    setRules([newRule])
-    console.log('update rules')
-  }, [basicRule])
-
   return (
     <DynamicFormItem
       fieldData={fieldData}
-      rules={rules}
+      rules={[basicRule]}
       initialValue={initialValue}
     >
       <ImgCrop
@@ -85,9 +68,18 @@ const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploader
         <Upload
           action="https://api.evius.co/api/files/upload/"
           accept="image/png,image/jpeg"
-          onChange={(file) => {
-            console.log('file changed', {file})
-            form.setFieldsValue({ [name]: file })
+          onChange={(info: UploadChangeParam<UploadFile<unknown>>) => {
+            console.log('onChange...', info)
+            const [file] = info.fileList
+            if (file && file.status === 'done') {
+              console.debug('uploaded at', file.response)
+              if (form) {
+                console.log('form update', fieldData.name, 'to', file.response)
+                form.setFieldsValue({
+                  [fieldData.name]: file.response,
+                })
+              }
+            }
           }}
           multiple={false}
           listType="picture"
