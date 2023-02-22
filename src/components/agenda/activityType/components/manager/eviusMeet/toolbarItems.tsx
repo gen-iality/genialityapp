@@ -33,7 +33,7 @@ export const toolbarItems = [
 	{ key: 'tileview', icon: <></>, label: 'tileview' },
 	{ key: 'toggle-camera icon: <></>,', label: 'toggle' },
 	{ key: 'videoquality', icon: <></>, label: 'videoquality' },
-	{ key: 'whiteboard', icon: <></>, label: 'whiteboard' },
+	/* { key: 'whiteboard', icon: <></>, label: 'whiteboard' }, */
 ].map(({ key, label, icon }) => ({
 	key,
 	render: (
