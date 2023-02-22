@@ -185,12 +185,7 @@ const DrawerProfile = (props) => {
                     <List.Item>
                       <List.Item.Meta
                         title={item?.label}
-                        description={formatDataToString(
-                          item?.type !== 'codearea'
-                            ? userSelected.properties[item?.name]
-                            : '(+' + userSelected.properties['code'] + ')' + userSelected.properties[item?.name],
-                          item,
-                        )}
+                        description={formatDataToString(userSelected.properties[item?.name], item)}
                       />
                     </List.Item>
                   )
