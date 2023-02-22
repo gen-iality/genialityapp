@@ -39,6 +39,7 @@ import DynamicSelectField from '@components/dynamic-fields/DynamicSelectField'
 import DynamicPhoneInputField from '@components/dynamic-fields/DynamicPhoneInputField'
 import DynamicBooleanField from '@components/dynamic-fields/DynamicBooleanField'
 import DynamicForm from '@components/dynamic-fields/DynamicForm'
+import { FormInstance } from 'antd/es/form/Form'
 
 const {
   Text,
@@ -67,6 +68,7 @@ interface IOrganizationPropertiesFormProps {
   otherFields?: IDynamicFieldData[],
   // initialOtherValues: let us set our initial values for
   onSubmit?: (values: any) => void,
+  form?: FormInstance,
 }
 
 const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertiesFormProps> = (props) => {
@@ -75,15 +77,15 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
   } = props
 
   const intl = useIntl()
+  const [newForm] = Form.useForm<FormValuesType>()
 
   const [isSubmiting, setIsSubmiting] = useState(false)
+  const [form, setForm] = useState<FormInstance | undefined>(props.form);
   const [dynamicFields, setDynamicFields] = useState<IDynamicFieldData[]>(
     props.organization.user_properties || otherFields
   )
   // This state will be used for the form
   const [initialValues, setInitialValues] = useState<FormValuesType>({})
-
-  const [form] = Form.useForm<FormValuesType>()
 
   const onFinish = useCallback((values: FormValuesType) => {
     setIsSubmiting(true)
@@ -99,7 +101,7 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
   const onValueChange = useCallback((changedValues: any, values: FormValuesType) => {
     console.info(changedValues)
     // TODO: validate empty fields here
-    for (let key in changedValues) {
+    for (const key in changedValues) {
       const value: any = changedValues[key]
       props.onProperyChange(key, value)
     }
@@ -115,11 +117,19 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
     ))
   }, [props.basicDataUser])
 
+  useEffect(() => {
+    if(props.form) {
+      setForm(props.form);
+    } else {
+      setForm(newForm);
+    }
+  }, [props.form])
+
   return (
     <Col xs={24} sm={22} md={24} lg={24} xl={24} style={centerStyle}>
       {isSubmiting ? (
         <LoadingOutlined style={{ fontSize: '50px' }} />
-      ) : (
+      ) : form && (
         <Card bordered={false} bodyStyle={textLeftStyle}>
           <DynamicForm
             form={form}
@@ -128,6 +138,7 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             onValueChange={onValueChange}
+            noSubmitButton
           />
         </Card>
       )}

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
 /** Antd imports */
-import { Steps, Button, Alert } from 'antd';
+import { Steps, Button, Alert, Form } from 'antd';
 import { ScheduleOutlined } from '@ant-design/icons';
 import { LoadingOutlined } from '@ant-design/icons';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
@@ -24,6 +24,7 @@ import { OrganizationApi, UsersApi } from '@helpers/request';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useEventContext } from '@context/eventContext';
 import { DispatchMessageService } from '@context/MessageService';
+import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm';
 
 const { Step } = Steps;
 
@@ -36,6 +37,7 @@ const RegisterUserAndOrgMember = ({
 }) => {
   console.log('idOrganization', idOrganization);
   const intl = useIntl();
+  const [form] = Form.useForm();
   const { helperDispatch, currentAuthScreen } = useHelper();
 
   const [current, setCurrent] = useState(0);
@@ -109,6 +111,11 @@ const RegisterUserAndOrgMember = ({
     setter((previous) => ({ ...previous, [FieldName]: value }));
   };
 
+  const onSubmit = (values) => {
+    setDataOrgMember(values);
+    handleSubmit();
+  };
+
   const steps = [
     {
       title: 'First',
@@ -119,7 +126,15 @@ const RegisterUserAndOrgMember = ({
       title: 'Second',
       content: (
         <>
-          {console.log('basicDataUser', basicDataUser)}
+          <OrganizationPropertiesForm
+            form={form}
+            basicDataUser={basicDataUser}
+            orgMember={dataOrgMember}
+            onProperyChange={() => {}}
+            organization={organization}
+            onSubmit={onSubmit}
+          />
+          {/*  {console.log('basicDataUser', basicDataUser)}
           {console.log('dataOrgMember', dataOrgMember)}
           {console.log('organization', organization)}
           {console.log('organization.user_properties', organization.user_properties)}
@@ -134,7 +149,7 @@ const RegisterUserAndOrgMember = ({
             initialOtherValue={{}}
             conditionalsOther={[]}
             fields={organization.user_properties}
-          />
+          /> */}
         </>
       ),
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
@@ -206,7 +221,7 @@ const RegisterUserAndOrgMember = ({
     });
 
     async function createOrgMember() {
-      const clonBasicDataUser = { ...basicDataUser };
+      /* const clonBasicDataUser = { ...basicDataUser };
       delete clonBasicDataUser.password;
       delete clonBasicDataUser.picture;
 
@@ -215,9 +230,19 @@ const RegisterUserAndOrgMember = ({
         ...dataOrgMember,
       };
 
-      const propertiesUser = { properties: { ...dataUser } };
+      const propertiesOrgMember = { properties: { ...dataUser } }; */
+
+      ////////////////////////////////
+
+      const propertiesOrgMember = { properties: { ...basicDataUser, ...dataOrgMember } };
+      delete propertiesOrgMember.password;
+      delete propertiesOrgMember.picture;
+
+      console.log('propertiesOrgMember', propertiesOrgMember);
+      console.log('Organization', organization);
+
       try {
-        const respUser = await OrganizationApi.saveUser(idOrganization, propertiesUser);
+        const respUser = await OrganizationApi.saveUser(idOrganization, propertiesOrgMember);
         if (respUser && respUser.account_id) {
           setValidationGeneral({
             status: false,
@@ -266,6 +291,7 @@ const RegisterUserAndOrgMember = ({
 
       handleValidateAccountGeniality();
     } else if (current == 1) {
+      form.submit();
       setValidateOrgMember({
         status: true,
         textError: '',

@@ -3,8 +3,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
 import PhoneInput from 'react-phone-number-input';
-import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
-import { connect } from 'react-redux';
 
 /** Antd imports */
 import {
@@ -163,7 +161,6 @@ const FormRegister = ({
   callback,
   options,
   loadingregister,
-  setSectionPermissions,
   errorRegisterUser,
   basicDataUser = {},
   dataEventUser = {},
@@ -302,6 +299,7 @@ const FormRegister = ({
     }
     setLoading(false);
   };
+
   const getCitiesByCountry = async (country) => {
     setLoading(true);
     try {
@@ -313,6 +311,7 @@ const FormRegister = ({
     }
     setLoading(false);
   };
+
   useEffect(() => {
     getCountries();
     return () => {
@@ -329,7 +328,7 @@ const FormRegister = ({
     if (basicDataUser || basicDataUser) {
       initialValuesGeneral = {
         ...basicDataUser,
-        ...dataOrgMember,
+        ...dataEventUser,
       };
     }
     console.log('initialValues2', initialValuesGeneral, cUser, cEventUser);
@@ -404,14 +403,20 @@ const FormRegister = ({
   };
 
   const onFinish = async (values) => {
+    console.log('onFinish - Values', values);
+    console.log('onFinish - initialValues', initialValues);
+
     values = { ...initialValues, ...values };
+    console.log('onFinish - initialValues + values', values);
+
+    console.log('onFinish - basicDataUser', basicDataUser);
     if (Object.keys(basicDataUser).length > 0) {
       setvalidateEventUser({
         statusFields: true,
         status: false,
       });
 
-      validateOrgMember({
+      setValidateOrgMember({
         statusFields: true,
         status: false,
       });
@@ -419,8 +424,8 @@ const FormRegister = ({
       return;
     }
 
-    if (values['email']) {
-      values['email'] = values['email'].toLowerCase();
+    if (values.email) {
+      values.email = values.email.toLowerCase();
     }
 
     //OBTENER RUTA ARCHIVOS FILE
@@ -443,12 +448,15 @@ const FormRegister = ({
     } else {
       delete values.picture;
     }
+
     if (callback) {
+      console.log('5. Esto se ejecuta?');
       callback(values);
     } else {
+      console.log('5. Esto se ejecuta?');
       const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
+      console.log('5. data', data);
       if (data.length == 0 || cEventUser.value) {
-        setSectionPermissions({ view: false, ticketview: false });
         // values.password = password;
 
         // values.files = fileSave
@@ -656,6 +664,7 @@ const FormRegister = ({
       }
     }
   };
+
   useEffect(() => {
     form.setFieldsValue(initialValues);
   }, [initialValues]);
@@ -746,6 +755,7 @@ const FormRegister = ({
     const url = window.location.pathname;
     return url.includes('/landing/') ? true : false;
   }
+
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
@@ -816,7 +826,16 @@ const FormRegister = ({
         );
 
         if (type === 'codearea') {
-          input = <PhoneInput placeholder='Número' defaultCountry='CO' international />;
+          input = (
+            <PhoneInput
+              placeholder={intl.formatMessage({
+                id: 'form.phoneInput.placeholder',
+                defaultMessage: 'Ingrese número de contacto',
+              })}
+              defaultCountry='CO'
+              international
+            />
+          );
         }
 
         if (type === 'tituloseccion') {
@@ -1401,8 +1420,4 @@ const FormRegister = ({
   );
 };
 
-const mapDispatchToProps = {
-  setSectionPermissions,
-};
-
-export default connect(null, mapDispatchToProps)(FormRegister);
+export default FormRegister;
