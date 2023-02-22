@@ -23,19 +23,11 @@ import {
   Typography,
   Avatar,
 } from 'antd';
-import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 import ImgCrop from 'antd-img-crop';
 
-/** Components imports */
-import TypeRegister from '../../tickets/typeRegister';
-import { ButtonPayment } from './payRegister';
-
-/** External functions and constants imports */
-import FormTags, { setSuccessMessageInRegisterForm } from './constants';
-
 /** Helpers and utils imports */
-import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '@helpers/request';
-import { app } from '@helpers/firebase';
+import { EventFieldsApi } from '@helpers/request';
 import { countryApi } from '@helpers/request';
 
 /** Context imports */
@@ -49,7 +41,7 @@ import { DispatchMessageService } from '@context/MessageService';
 
 const { Option } = Select;
 const { Panel } = Collapse;
-const { TextArea, Password } = Input;
+const { TextArea } = Input;
 
 const textLeft = {
   textAlign: 'left',
@@ -176,15 +168,7 @@ const FormRegister = ({
   const cEvent = useEventContext();
   const cEventUser = useUserEvent();
   const cUser = useCurrentUser();
-  const {
-    currentAuthScreen,
-    typeModal,
-    eventPrivate,
-    handleChangeTypeModal,
-    setRegister,
-    helperDispatch,
-    // eventIsActive,
-  } = useHelper();
+  const { currentAuthScreen, typeModal, helperDispatch } = useHelper();
   const [form] = Form.useForm();
 
   // Estado de carga para obtener los datos de pais, región y ciudad del formulario
@@ -206,7 +190,6 @@ const FormRegister = ({
   const [submittedForm, setSubmittedForm] = useState(false);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
   const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
-  const [formMessage, setFormMessage] = useState({});
 
   // Estados relacionados a los campos del formulario
   const [imageAvatar, setImageAvatar] = useState(null);
@@ -217,18 +200,10 @@ const FormRegister = ({
   const [regiones, setRegiones] = useState([]);
   const [cities, setCities] = useState([]);
 
-  // Estados no usados
-  const [loggedurl, setLogguedurl] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
-  // const [password, setPassword] = useState('');
-  const [payMessage, setPayMessage] = useState(false);
-  const [fieldCode, setFieldCode] = useState(null);
-
   // Estados que no creo que sean necesarios. ¿o si? -> Convertirlos a variables sin necesidad de estados
   const [eventUser, seteventUser] = useState(organization ? eventUserOther : cEventUser.value || {});
   // eslint-disable-next-line prefer-const
   let [ImgUrl, setImgUrl] = useState('');
-  const [typeRegister, setTypeRegister] = useState('pay');
   const [conditionals, setconditionals] = useState(
     organization ? conditionalsOther : cEvent.value?.fields_conditions || [],
   );
@@ -362,19 +337,6 @@ const FormRegister = ({
   }, [validateOrgMember?.status, validateOrgMember?.statusFields]);
 
   useEffect(() => {
-    const formType = !cEventUser.value?._id ? 'register' : 'transfer';
-    setFormMessage(FormTags(formType));
-    setSubmittedForm(false);
-    hideConditionalFieldsToDefault(conditionals, cEventUser);
-
-    !organization && getEventData(eventId);
-    form.resetFields();
-    if (window.fbq) {
-      window.fbq('track', 'CompleteRegistration');
-    }
-  }, [cEventUser.value, initialValues, conditionals, cEvent.value?._id]);
-
-  useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
   }, [currentAuthScreen, typeModal]);
@@ -394,12 +356,6 @@ const FormRegister = ({
     setTimeout(() => {
       setGeneralFormErrorMessageVisible(false);
     }, 4000);
-  };
-
-  //Funcion para traer los datos del event para obtener la variable validateEmail y enviarla al estado
-  const getEventData = async (eventId) => {
-    const data = await EventsApi.getOne(cEvent.value?._id);
-    setEvent(data);
   };
 
   const onFinish = async (values) => {
@@ -452,216 +408,6 @@ const FormRegister = ({
     if (callback) {
       console.log('5. Esto se ejecuta?');
       callback(values);
-    } else {
-      console.log('5. Esto se ejecuta?');
-      const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
-      console.log('5. data', data);
-      if (data.length == 0 || cEventUser.value) {
-        // values.password = password;
-
-        // values.files = fileSave
-
-        setGeneralFormErrorMessageVisible(false);
-        setNotLoggedAndRegister(false);
-
-        const key = 'registerUserService';
-
-        // message.loading({ content: !eventUserId ? "Registrando usuario" : "Realizando transferencia", key }, 10);
-        DispatchMessageService({
-          type: 'loading',
-          key: 'loading',
-          msj: intl.formatMessage({ id: 'registration.message.loading' }),
-          duration: 10,
-          action: 'show',
-        });
-
-        const registerBody = { ...values };
-        const eventUserBody = {
-          properties: { ...values, typeRegister: typeRegister },
-        };
-
-        const textMessage = {};
-        textMessage.key = key;
-        let eventUserId;
-
-        if (eventUserId) {
-          try {
-            await TicketsApi.transferToUser(cEvent.value?._id, eventUserId, registerBody);
-            // textMessage.content = "Transferencia realizada";
-            textMessage.content = formMessage.successMessage;
-            setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
-
-            setSubmittedForm(true);
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: textMessage,
-              action: 'show',
-            });
-            setTimeout(() => {
-              closeModal({
-                status: 'sent_transfer',
-                message: 'Transferencia hecha',
-              });
-            }, 4000);
-          } catch (err) {
-            // textMessage.content = "Error... Intentalo mas tarde";
-            textMessage.content = formMessage.errorMessage;
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'error',
-              msj: textMessage,
-              action: 'show',
-            });
-          }
-        } else {
-          try {
-            let resp = undefined;
-            switch (typeModal) {
-              case 'registerForTheEvent':
-                const registerForTheEventData = await UsersApi.createOne(eventUserBody, cEvent.value?._id);
-                resp = registerForTheEventData;
-
-                break;
-
-              case 'update':
-                const updateData = await UsersApi.editEventUser(eventUserBody, cEvent.value?._id, cEventUser.value._id);
-                resp = updateData;
-                break;
-
-              default:
-                resp = await UsersApi.createUser(registerBody, cEvent.value?._id);
-
-                break;
-            }
-
-            // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
-            // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
-            //
-            const camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
-            UpdateTakenOptionInTakeableList(camposConOpcionTomada, values, cEvent.value?._id);
-
-            if (resp && resp._id) {
-              setSuccessMessageInRegisterForm(resp.status);
-              cEventUser.setUpdateUser(true);
-              handleChangeTypeModal(null);
-              textMessage.content = 'Usuario ' + formMessage.successMessage;
-
-              const $msg =
-                organization == 1
-                  ? ''
-                  : event.registration_message ||
-                    `Fuiste registrado al curso  ${values.email || ''}, revisa tu correo para confirmar.`;
-
-              setSuccessMessage($msg);
-
-              setSubmittedForm(true);
-              DispatchMessageService({
-                type: 'success',
-                msj: intl.formatMessage({ id: 'registration.message.created' }),
-                action: 'show',
-              });
-
-              //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
-              //todo el proceso de logueo depende del token en la url por eso se recarga la página
-              if (!cEvent?.value?.validateEmail && resp._id) {
-                const loginFirebase = async () => {
-                  app
-                    .auth()
-                    .signInWithEmailAndPassword(resp.email || resp.properties.email, values.password)
-                    .then((response) => {
-                      if (response.user) {
-                        cEventUser.setUpdateUser(true);
-                        handleChangeTypeModal(null);
-                        setSubmittedForm(false);
-                        switch (typeModal) {
-                          case 'registerForTheEvent':
-                            setRegister(2);
-                            break;
-
-                          case 'update':
-                            setRegister(4);
-                            break;
-                        }
-                        // }
-                      } else {
-                        // setErrorLogin(true); -> setErrorLogin is undefined
-                      }
-                    });
-                };
-                cEvent?.value?.visibility !== 'ANONYMOUS' && loginFirebase();
-                const loginFirebaseAnonymous = async () => {
-                  app
-                    .auth()
-                    .signInAnonymously()
-                    .then((user) => {
-                      if (user) {
-                        cEventUser.setUpdateUser(true);
-                        handleChangeTypeModal(null);
-                        setSubmittedForm(false);
-                        switch (typeModal) {
-                          case 'registerForTheEvent':
-                            setRegister(2);
-                            break;
-
-                          case 'update':
-                            setRegister(4);
-                            break;
-                        }
-                        // }
-                      }
-                    });
-                };
-                cEvent?.value?.visibility === 'ANONYMOUS' && loginFirebaseAnonymous();
-              } else {
-                window.location.replace(
-                  `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ? 1 : 4}`,
-                );
-              }
-            } else {
-              if (typeRegister == 'free') {
-                const msg =
-                  intl.formatMessage({
-                    id: 'registration.already.registered',
-                  }) +
-                  ' ' +
-                  intl.formatMessage({
-                    id: 'registration.message.success.subtitle',
-                  });
-
-                textMessage.content = msg;
-
-                setSuccessMessage(msg);
-                // Retorna un mensaje en caso de que ya se encuentre registrado el correo
-                setNotLoggedAndRegister(true);
-                DispatchMessageService({
-                  type: 'success',
-                  msj: msg,
-                  action: 'show',
-                });
-              } else {
-                setPayMessage(true);
-              }
-            }
-          } catch (err) {
-            textMessage.content = formMessage.errorMessage;
-            textMessage.key = key;
-            DispatchMessageService({
-              type: 'error',
-              msj: textMessage,
-              action: 'show',
-            });
-          }
-        }
-      } else {
-        setNotLoggedAndRegister(true);
-      }
     }
   };
 
@@ -732,11 +478,6 @@ const FormRegister = ({
       return (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition;
     });
     setExtraFields(newExtraFields);
-  };
-
-  const hideConditionalFieldsToDefault = (conditionals, eventUser) => {
-    const allFields = eventUser && eventUser['properties'] ? eventUser['properties'] : [];
-    updateFieldsVisibility(conditionals, allFields);
   };
 
   const beforeUpload = (file) => {
