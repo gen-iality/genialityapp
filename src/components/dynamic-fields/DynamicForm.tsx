@@ -133,7 +133,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     }
 
     if (type === 'file') {
-      return <DynamicFileUploaderField fieldData={field} allInitialValues={initialValues} />
+      return <DynamicFileUploaderField form={form} fieldData={field} allInitialValues={initialValues} />
     }
 
     if (type === 'avatar') {
