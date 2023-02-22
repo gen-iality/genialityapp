@@ -74,6 +74,7 @@ export default function Toolbar(props: Props) {
 	return (
 		<Transfer
 			dataSource={transferValues}
+			oneWay
 			showSelectAll={false}
 			titles={['Desactivados', 'Activos']}
 			listStyle={{
@@ -86,6 +87,7 @@ export default function Toolbar(props: Props) {
 			onChange={onChange}
 			onSelectChange={onSelectChange}
 			render={(item) => item.label}
+			showSearch
 		/>
 	);
 }

@@ -100,6 +100,7 @@ export default function Notifications(props: Props) {
 		<Transfer
 			dataSource={transferValues}
 			showSelectAll={false}
+			oneWay
 			titles={['Desactivados', 'Activos']}
 			listStyle={{
 				borderRadius: '5px',

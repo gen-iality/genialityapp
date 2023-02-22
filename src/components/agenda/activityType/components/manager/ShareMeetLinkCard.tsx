@@ -50,7 +50,7 @@ interface ElementProps {
 const CONFIG_OPTIONS = [
 	{
 		key: 'disableInviteFunctions',
-		label: 'disableInviteFunctions',
+		label: 'Desactivar opción de invitar',
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.disableInviteFunctions}
@@ -63,7 +63,7 @@ const CONFIG_OPTIONS = [
 	},
 	{
 		key: 'enableWelcomePage',
-		label: 'enableWelcomePage',
+		label: 'enableWelcomePage', // este debe ser false en todo momento para los participamntes dentro de evius
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.enableWelcomePage}
@@ -76,7 +76,7 @@ const CONFIG_OPTIONS = [
 	},
 	{
 		key: 'readOnlyName',
-		label: 'readOnlyName',
+		label: 'readOnlyName', // este debe ser true en todo momento para los participamntes dentro de evius 
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.readOnlyName}
@@ -89,7 +89,7 @@ const CONFIG_OPTIONS = [
 	},
 	{
 		key: 'disablePolls',
-		label: 'disablePolls',
+		label: 'Desactivar encuestas',
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.disablePolls}
@@ -102,7 +102,7 @@ const CONFIG_OPTIONS = [
 	},
 	{
 		key: 'disableReactions',
-		label: 'disableReactions',
+		label: 'Deshabilitar reacciones',
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.disableReactions}
@@ -115,7 +115,7 @@ const CONFIG_OPTIONS = [
 	},
 	{
 		key: 'disableReactionsModeration',
-		label: 'disableReactionsModeration',
+		label: 'Reacciones siempre silenciadas',
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.disableReactionsModeration}
@@ -128,7 +128,7 @@ const CONFIG_OPTIONS = [
 	},
 	{
 		key: 'disableProfile',
-		label: 'disableProfile',
+		label: 'disableProfile', // este debe ser true en todo momento para los participamntes dentro de evius
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.disableProfile}
@@ -141,7 +141,7 @@ const CONFIG_OPTIONS = [
 	},
 	{
 		key: 'hideConferenceTimer',
-		label: 'hideConferenceTimer',
+		label: 'Ocultar el temporizador de conferencia',
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.hideConferenceTimer}
@@ -154,7 +154,7 @@ const CONFIG_OPTIONS = [
 	},
 	{
 		key: 'hideConferenceSubject',
-		label: 'hideConferenceSubject',
+		label: 'hideConferenceSubject', // este debe ser true en todo momento para los participamntes dentro de evius
 		element: (props: ElementProps) => (
 			<Switch
 				checked={props.meetConfig.config.hideConferenceSubject}
@@ -164,19 +164,6 @@ const CONFIG_OPTIONS = [
 			/>
 		),
 		value: 'config.hideConferenceSubject',
-	},
-	{
-		key: 'screenshotCapture',
-		label: 'screenshotCapture',
-		element: (props: ElementProps) => (
-			<Switch
-				checked={props.meetConfig.config.screenshotCapture}
-				onChange={(checked) =>
-					props.setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, screenshotCapture: checked } }))
-				}
-			/>
-		),
-		value: 'config.screenshotCapture',
 	},
 ];
 
