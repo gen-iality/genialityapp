@@ -3,8 +3,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
 import PhoneInput from 'react-phone-number-input';
-import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
-import { connect } from 'react-redux';
 
 /** Antd imports */
 import {
@@ -163,7 +161,6 @@ const FormRegister = ({
   callback,
   options,
   loadingregister,
-  setSectionPermissions,
   errorRegisterUser,
   basicDataUser = {},
   dataEventUser = {},
@@ -460,7 +457,6 @@ const FormRegister = ({
       const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
       console.log('5. data', data);
       if (data.length == 0 || cEventUser.value) {
-        setSectionPermissions({ view: false, ticketview: false });
         // values.password = password;
 
         // values.files = fileSave
@@ -1424,8 +1420,4 @@ const FormRegister = ({
   );
 };
 
-const mapDispatchToProps = {
-  setSectionPermissions,
-};
-
-export default connect(null, mapDispatchToProps)(FormRegister);
+export default FormRegister;
