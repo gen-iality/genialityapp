@@ -47,7 +47,7 @@ export function RenderEviusMeet(props: RenderEviusMeetProps) {
 	}, [eventId, activityId]);
 
 	if (loading) return <Loading />;
-	if (!meetConfig) return <p>Algo salio mal</p>;
+	if (!meetConfig) return <Result title={'La reunión aún no ha comenzado'} />;
 	if (!!meetConfig && !meetConfig.openMeet) return <Result title={'La reunión aún no ha comenzado'} />;
 	if (!!meetConfig && !!meetConfig.openMeet)
 		return (

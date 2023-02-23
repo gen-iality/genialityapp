@@ -38,7 +38,7 @@ const RenderComponent = (props: any) => {
 	const { currentActivity, chatAttendeChats, HandleChatOrAttende, HandlePublicPrivate, helperDispatch } = useHelper();
 
 	async function listeningStateMeetingRoom(event_id: string, activity_id: string) {
-		console.log({ activity_id });
+		// console.log({ activity_id });
 		if (!fnCiclo) {
 			let tempactivty = currentActivity;
 			firestore
