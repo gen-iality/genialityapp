@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import WOWZAPlayer from '../../livetransmision/WOWZAPlayer';
 import { CurrentUserContext } from '../../../context/userContext';
-import { Grid } from 'antd';
+import { Grid, Result } from 'antd';
 import AgendaContext from '../../../context/AgendaContext';
 import { CurrentEventUserContext } from '../../../context/eventUserContext';
 import { getLiveStreamStatus } from '../../../adaptors/gcoreStreamingApi';
@@ -48,7 +48,7 @@ export function RenderEviusMeet(props: RenderEviusMeetProps) {
 
 	if (loading) return <Loading />;
 	if (!meetConfig) return <p>Algo salio mal</p>;
-	if (!!meetConfig && !meetConfig.openMeet) return <p>La actividad aun no ha empezado</p>;
+	if (!!meetConfig && !meetConfig.openMeet) return <Result title={'La reunión aún no ha comenzado'} />;
 	if (!!meetConfig && !!meetConfig.openMeet)
 		return (
 			<JitsiMeeting
