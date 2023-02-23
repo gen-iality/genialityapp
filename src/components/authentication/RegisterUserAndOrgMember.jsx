@@ -108,7 +108,7 @@ const RegisterUserAndOrgMember = ({
     const value = FieldName === 'picture' ? picture : e.target.value;
 
     const setter = current === 0 ? setbasicDataUser : setDataOrgMember;
-    setter((previous) => ({ ...previous, [FieldName]: value }));
+    setbasicDataUser((previous) => ({ ...previous, [FieldName]: value }));
   };
 
   const onSubmit = (values) => {
@@ -130,7 +130,9 @@ const RegisterUserAndOrgMember = ({
             form={form}
             basicDataUser={basicDataUser}
             orgMember={dataOrgMember}
-            onProperyChange={() => {}}
+            onProperyChange={(propertyName, propertyValue) => {
+              setDataOrgMember((previous) => ({ ...previous, [propertyName]: propertyValue }))
+              }}
             organization={organization}
             onSubmit={onSubmit}
           />
@@ -292,10 +294,12 @@ const RegisterUserAndOrgMember = ({
       handleValidateAccountGeniality();
     } else if (current == 1) {
       form.submit();
+      handleSubmit();
       setValidateOrgMember({
         status: true,
         textError: '',
       });
+
     }
   };
 
@@ -341,6 +345,8 @@ const RegisterUserAndOrgMember = ({
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+    {console.log('dataOrgMember', dataOrgMember)}
+    {console.log('basicDataUser', basicDataUser)}
       {console.log('buttonStatus', buttonStatus)}
       <Steps current={current} responsive={false}>
         {steps.map((item) => (

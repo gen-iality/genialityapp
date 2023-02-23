@@ -123,7 +123,7 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
     } else {
       setForm(newForm);
     }
-  }, [props.form])
+  }, [props.form, newForm])
 
   return (
     <Col xs={24} sm={22} md={24} lg={24} xl={24} style={centerStyle}>
