@@ -191,6 +191,10 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
               key: country.iso2,
             }
           )}
+          afterTransformOptions={(options) => [
+            { label: 'Seleccionar...', value: '' },
+            ...options,
+          ]}
         />
       )
     }
@@ -215,6 +219,10 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
               key: region.iso2,
             }
           )}
+          afterTransformOptions={(options) => [
+            { label: 'Seleccionar...', value: '' },
+            ...options,
+          ]}
         />
       )
     }
@@ -236,6 +244,10 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
               key: city.iso2 ?? city.id,
             }
           )}
+          afterTransformOptions={(options) => [
+            { label: 'Seleccionar...', value: '' },
+            ...options,
+          ]}
         />
       )
     }
