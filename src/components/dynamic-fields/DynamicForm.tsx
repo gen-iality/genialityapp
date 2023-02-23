@@ -234,7 +234,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     }
 
     if (type === 'codearea') {
-      return <DynamicPhoneInputField fieldData={field} allInitialValues={initialValues} />
+      return <DynamicPhoneInputField form={form} fieldData={field} allInitialValues={initialValues} />
     }
 
     if (type === 'multiplelisttable') {
