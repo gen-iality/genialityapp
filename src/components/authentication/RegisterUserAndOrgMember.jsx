@@ -41,13 +41,13 @@ const RegisterUserAndOrgMember = ({
   const { helperDispatch, currentAuthScreen } = useHelper();
 
   const [current, setCurrent] = useState(0);
-  const [basicDataUser, setbasicDataUser] = useState({
+  const [basicDataUser, setBasicDataUser] = useState({
     names: '',
     email: '',
     password: '',
     picture: '',
   });
-  const [dataOrgMember, setDataOrgMember] = useState({});
+  const [dataOrgMember, setDataOrgMember] = useState(undefined); // object | undefined
   const [buttonStatus, setbuttonStatus] = useState(true);
   const [validationGeneral, setValidationGeneral] = useState({
     status: false,
@@ -58,19 +58,17 @@ const RegisterUserAndOrgMember = ({
   const [organization, setOrganization] = useState({});
 
   useEffect(() => {
-    async function getOrganization() {
-      const response = await OrganizationApi.getOne(idOrganization);
+    OrganizationApi.getOne(idOrganization).then((response) => {
       console.log('response', response);
       setOrganization(response);
-    }
-    getOrganization();
+    });
   }, [])
 
   useEffect(() => {
     if (current == 0) {
       ValidateGeneralFields();
     }
-  }, [basicDataUser, dataOrgMember, current]);
+  }, [basicDataUser, current]);
 
   useEffect(() => {
     if (currentAuthScreen === 'login') setCurrent(0);
@@ -92,7 +90,7 @@ const RegisterUserAndOrgMember = ({
   const HandleHookForm = (e, FieldName, picture) => {
     const value = FieldName === 'picture' ? picture : e.target.value;
 
-    setbasicDataUser((previous) => ({
+    setBasicDataUser((previous) => ({
       ...previous,
       [FieldName]: value,
     }));
@@ -100,11 +98,13 @@ const RegisterUserAndOrgMember = ({
 
   const onSubmit = (values) => {
     setDataOrgMember(values);
-    // For testing
-    setTimeout(() => {
-      handleSubmit();
-    }, 3000);
   };
+
+  useEffect(() => {
+    if (dataOrgMember !== undefined) {
+      handleSubmit();
+    }
+  }, [dataOrgMember])
 
   const steps = [
     {
@@ -118,9 +118,6 @@ const RegisterUserAndOrgMember = ({
         <OrganizationPropertiesForm
           form={form}
           basicDataUser={basicDataUser}
-          onProperyChange={(propertyName, propertyValue) => {
-            setDataOrgMember((previous) => ({ ...previous, [propertyName]: propertyValue }))
-            }}
           organization={organization}
           onSubmit={onSubmit}
           noSubmitButton={true}
@@ -184,7 +181,6 @@ const RegisterUserAndOrgMember = ({
   };
 
   const handleSubmit = () => {
-    console.log(dataOrgMember)
     setCurrent(current + 1);
 
     async function createAccount() {
@@ -214,8 +210,8 @@ const RegisterUserAndOrgMember = ({
               defaultMessage: 'Te has inscrito correctamente a esta organización',
             }),
           });
-          setbasicDataUser({});
-          setDataOrgMember({});
+          setBasicDataUser({});
+          setDataOrgMember(undefined);
         }
       } catch (err) {
         DispatchMessageService({
