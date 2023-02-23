@@ -135,6 +135,7 @@ const RegisterUserAndOrgMember = ({
               }}
             organization={organization}
             onSubmit={onSubmit}
+            noSubmitButton={true}
           />
           {/*  {console.log('basicDataUser', basicDataUser)}
           {console.log('dataOrgMember', dataOrgMember)}
