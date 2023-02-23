@@ -120,6 +120,14 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
   }, [props.basicDataUser])
 
   useEffect(() => {
+    // Update all fields from the initial values - this can delete last values
+    if (form) {
+      console.log('(re)set all the form fields')
+      form.setFieldsValue(initialValues)
+    }
+  }, [form, initialValues])
+
+  useEffect(() => {
     if(props.form) {
       setForm(props.form);
     } else {
