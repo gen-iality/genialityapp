@@ -25,11 +25,15 @@ export interface IDynamicFieldData {
   props?: any,
   name: string,
   label: string,
-  mandatory: boolean,
+  mandatory?: boolean,
   description?: string,
-  labelPosition: any, // NOTE: Check this
+  labelPosition?: any, // NOTE: Check this
   visibleByAdmin?: boolean,
-  options?: { label: string, value: string }[]
+  options?: { label: string, value: string }[],
+  dependency?: {
+    fieldName: string,
+    triggerValues: string[],
+  },
 }
 
 export interface IDynamicFieldProps {
