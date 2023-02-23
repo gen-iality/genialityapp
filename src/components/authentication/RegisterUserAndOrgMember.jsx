@@ -215,30 +215,15 @@ const RegisterUserAndOrgMember = ({
   };
 
   const handleSubmit = () => {
+    console.log(dataOrgMember)
     setCurrent(current + 1);
-    const SaveGenialityUser = new Promise((resolve, reject) => {
-      async function CreateAccount() {
-        const resp = await createNewUser(basicDataUser);
-        resolve(resp);
-      }
 
-      CreateAccount();
-    });
+    async function createAccount() {
+      const resp = await createNewUser(basicDataUser);
+      return resp;
+    }
 
     async function createOrgMember() {
-      /* const clonBasicDataUser = { ...basicDataUser };
-      delete clonBasicDataUser.password;
-      delete clonBasicDataUser.picture;
-
-      const dataUser = {
-        ...clonBasicDataUser,
-        ...dataOrgMember,
-      };
-
-      const propertiesOrgMember = { properties: { ...dataUser } }; */
-
-      ////////////////////////////////
-
       const propertiesOrgMember = { properties: { ...basicDataUser, ...dataOrgMember } };
       delete propertiesOrgMember.password;
       delete propertiesOrgMember.picture;
@@ -272,7 +257,7 @@ const RegisterUserAndOrgMember = ({
       }
     }
 
-    SaveGenialityUser.then((resp) => {
+    createAccount().then((resp) => {
       if (resp) {
         createOrgMember();
       } else {
