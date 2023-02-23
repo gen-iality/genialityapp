@@ -48,7 +48,7 @@ const RegisterUserAndOrgMember = ({
     picture: '',
   });
   const [dataOrgMember, setDataOrgMember] = useState(undefined); // object | undefined
-  const [buttonStatus, setbuttonStatus] = useState(true);
+  const [buttonStatus, setButtonStatus] = useState(true);
   const [validationGeneral, setValidationGeneral] = useState({
     status: false,
     textError: '',
@@ -57,34 +57,13 @@ const RegisterUserAndOrgMember = ({
 
   const [organization, setOrganization] = useState({});
 
-  useEffect(() => {
-    OrganizationApi.getOne(idOrganization).then((response) => {
-      console.log('response', response);
-      setOrganization(response);
-    });
-  }, [])
-
-  useEffect(() => {
-    if (current == 0) {
-      ValidateGeneralFields();
-    }
-  }, [basicDataUser, current]);
-
-  useEffect(() => {
-    if (currentAuthScreen === 'login') setCurrent(0);
-
-    return () => {
-      setCurrent(0);
-    };
-  }, [currentAuthScreen]);
-
   const hookValidations = (status, textError) => {
     setValidationGeneral({
       status: status,
       textError: textError,
       loading: false,
     });
-    setbuttonStatus(status);
+    setButtonStatus(status);
   };
 
   const HandleHookForm = (e, FieldName, picture) => {
@@ -99,12 +78,6 @@ const RegisterUserAndOrgMember = ({
   const onSubmit = (values) => {
     setDataOrgMember(values);
   };
-
-  useEffect(() => {
-    if (dataOrgMember !== undefined) {
-      handleSubmit();
-    }
-  }, [dataOrgMember])
 
   const steps = [
     {
@@ -262,7 +235,7 @@ const RegisterUserAndOrgMember = ({
 
   const goTopreviousStep = () => {
     setCurrent(current - 1);
-    setbuttonStatus(false);
+    setButtonStatus(false);
   };
 
   function validateEmail(email) {
@@ -277,7 +250,7 @@ const RegisterUserAndOrgMember = ({
         basicDataUser.password.length >= 6 &&
         basicDataUser.password.length <= 18
       ) {
-        setbuttonStatus(false);
+        setButtonStatus(false);
         setValidationGeneral({
           ...validationGeneral,
           loading: false,
@@ -296,9 +269,36 @@ const RegisterUserAndOrgMember = ({
         });
       }
     } else {
-      setbuttonStatus(true);
+      setButtonStatus(true);
     }
   };
+
+  useEffect(() => {
+    if (dataOrgMember !== undefined) {
+      handleSubmit();
+    }
+  }, [dataOrgMember])
+
+  useEffect(() => {
+    OrganizationApi.getOne(idOrganization).then((response) => {
+      console.log('response', response);
+      setOrganization(response);
+    });
+  }, [])
+
+  useEffect(() => {
+    if (current == 0) {
+      ValidateGeneralFields();
+    }
+  }, [basicDataUser, current]);
+
+  useEffect(() => {
+    if (currentAuthScreen === 'login') setCurrent(0);
+
+    return () => {
+      setCurrent(0);
+    };
+  }, [currentAuthScreen]);
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
