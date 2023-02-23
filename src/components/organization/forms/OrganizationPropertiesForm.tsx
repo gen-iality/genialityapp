@@ -63,7 +63,7 @@ type FormValuesType = any
 interface IOrganizationPropertiesFormProps {
   basicDataUser: object,
   organization: any,
-  onProperyChange: (propertyName: string, propertyValue: any) => void,
+  onProperyChange?: (propertyName: string, propertyValue: any) => void,
   otherFields?: IDynamicFieldData[],
   // initialOtherValues: let us set our initial values for
   onSubmit?: (values: any) => void,
@@ -104,7 +104,7 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
     // TODO: validate empty fields here
     for (const key in changedValues) {
       const value: any = changedValues[key]
-      props.onProperyChange(key, value)
+      props.onProperyChange && props.onProperyChange(key, value)
     }
     // TODO: update field visibility
   }, [props.onProperyChange])
