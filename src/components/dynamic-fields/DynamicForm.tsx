@@ -112,7 +112,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     // This is simple
     if (type === 'tituloseccion') {
       return (
-        <div key={`g ${index}`}>
+        <div key={`item ${index}`}>
           <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
             <div dangerouslySetInnerHTML={{ __html: label }}></div>
           </div>
@@ -122,28 +122,29 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     }
 
     if (type === 'boolean') {
-      return <DynamicBooleanField fieldData={field} allInitialValues={initialValues} />
+      return <DynamicBooleanField key={`item ${index}`} fieldData={field} allInitialValues={initialValues} />
     }
 
     if (type === 'longtext') {
-      return <DynamicLongTextField fieldData={field} allInitialValues={initialValues} />
+      return <DynamicLongTextField key={`item ${index}`} fieldData={field} allInitialValues={initialValues} />
     }
 
     if (type === 'multiplelist') {
-      return <DynamicMultipleListField fieldData={field} allInitialValues={initialValues} />
+      return <DynamicMultipleListField key={`item ${index}`} fieldData={field} allInitialValues={initialValues} />
     }
 
     if (type === 'file') {
-      return <DynamicFileUploaderField form={form} fieldData={field} allInitialValues={initialValues} />
+      return <DynamicFileUploaderField key={`item ${index}`} form={form} fieldData={field} allInitialValues={initialValues} />
     }
 
     if (type === 'avatar') {
-      return <DynamicAvatarUploaderField form={form} fieldData={field} allInitialValues={initialValues} />
+      return <DynamicAvatarUploaderField key={`item ${index}`} form={form} fieldData={field} allInitialValues={initialValues} />
     }
 
     if (type === 'country') {
       return (
         <DynamicSelectField
+          key={`item ${index}`}
           fieldData={field}
           allInitialValues={initialValues}
           isLoading={isLoading}
@@ -179,6 +180,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     if (type === 'region') {
       return (
         <DynamicSelectField
+          key={`item ${index}`}
           fieldData={field}
           allInitialValues={initialValues}
           isLoading={isLoading}
@@ -202,6 +204,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     if (type === 'city') {
       return (
         <DynamicSelectField
+          key={`item ${index}`}
           fieldData={field}
           allInitialValues={initialValues}
           isLoading={isLoading}
@@ -223,6 +226,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
       // NOTE: the feature of unique by user is not implement yet
       return (
         <DynamicSelectField
+          key={`item ${index}`}
           fieldData={field}
           allInitialValues={initialValues}
           afterTransformOptions={(options) => [
@@ -234,14 +238,14 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     }
 
     if (type === 'codearea') {
-      return <DynamicPhoneInputField form={form} fieldData={field} allInitialValues={initialValues} />
+      return <DynamicPhoneInputField key={`item ${index}`} form={form} fieldData={field} allInitialValues={initialValues} />
     }
 
     if (type === 'multiplelisttable') {
-      return <DynamicMultipleListField fieldData={field} allInitialValues={initialValues} />
+      return <DynamicMultipleListField key={`item ${index}`} fieldData={field} allInitialValues={initialValues} />
     }
 
-    return <DynamicTextField fieldData={field} allInitialValues={initialValues} />
+    return <DynamicTextField key={`item ${index}`} fieldData={field} allInitialValues={initialValues} />
 
   }), [dynamicFields, allCountries, allRegions, allCities, isLoading, lastSelectedCountry, setLastSelectedCountry])
   
