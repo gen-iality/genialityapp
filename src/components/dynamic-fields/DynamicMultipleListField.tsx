@@ -29,7 +29,7 @@ const DynamicMultipleListField: React.FunctionComponent<IDynamicMultipleListFiel
   useEffect(() => {
     const newRule: Rule = { ...basicRule }
     newRule.validator = (_, value) => {
-      if (value.length > 0) return Promise.resolve()
+      if (value && value.length > 0) return Promise.resolve()
       return Promise.reject(`${name} is empty`)
     }
     setRules([newRule])
