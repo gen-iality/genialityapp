@@ -2,7 +2,7 @@ import { countryApi } from '@helpers/request';
 import { Button, Divider, Form, FormInstance } from 'antd';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import * as React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import DynamicAvatarUploaderField from './DynamicAvatarUploaderField';
 import DynamicBooleanField from './DynamicBooleanField';
@@ -44,6 +44,8 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
   const [allRegions, setAllRegions] = useState<any[]>([])
   // Same with the cities
   const [allCities, setAllCities] = useState<any[]>([])
+
+  const [wasFormChanged, setWasFormChanged] = useState(true)
 
   const requestAllCountries = useCallback(async () => {
     setIsLoading(true)
@@ -107,7 +109,23 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
       type = 'text',
       label,
       mandatory,
+      dependency,
+      name,
     } = field
+
+    if (dependency) {
+      setWasFormChanged(false)
+      const { fieldName, triggerValues } = dependency
+      const currentValue = form.getFieldValue(fieldName)
+      console.log('dependency', { dependency, currentValue })
+      if (fieldName && !triggerValues.includes(currentValue)) {
+        console.log(`field ${name} was hidden because depend of ${fieldName}`)
+        console.debug('the value', currentValue, 'is not in', triggerValues)
+        return <Fragment key={`field ${index}`} />
+      } else {
+        console.debug('will render the field', name)
+      }
+    }
 
     // This is simple
     if (type === 'tituloseccion') {
@@ -247,7 +265,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
 
     return <DynamicTextField key={`item ${index}`} fieldData={field} allInitialValues={initialValues} />
 
-  }), [dynamicFields, allCountries, allRegions, allCities, isLoading, lastSelectedCountry, setLastSelectedCountry])
+  }), [dynamicFields, allCountries, allRegions, allCities, isLoading, lastSelectedCountry, setLastSelectedCountry, wasFormChanged])
   
   return (
     <Form
@@ -255,7 +273,11 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
       layout="vertical"
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
-      onValuesChange={onValueChange}
+      onValuesChange={(...args) => {
+        setWasFormChanged(true)
+        console.log('setWasFormChanged called')
+        onValueChange(...args)
+      }}
     >
       {Fields.filter((field) => !!field)}
 
