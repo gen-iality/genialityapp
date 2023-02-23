@@ -1,4 +1,17 @@
-export default {
+import { IDynamicFieldData } from '@components/dynamic-fields/types'
+
+type ExtraSampleType = {
+  _id: string,
+  index?: number
+  order_weight?: number,
+  unique?: boolean,
+}
+
+type SampleType = {
+  [k: number]: IDynamicFieldData & ExtraSampleType,
+}
+
+const sample: SampleType = {
   0: {
     _id: 'id',
     index: 0,
@@ -153,3 +166,5 @@ export default {
     type: 'avatar',
   }
 }
+
+export default sample
