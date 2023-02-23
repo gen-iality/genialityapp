@@ -242,7 +242,7 @@ const RegisterUserAndOrgMember = ({
     });
   };
 
-  const next = () => {
+  const goToNextStep = () => {
     if (current == 0) {
       setValidationGeneral({
         ...validationGeneral,
@@ -264,7 +264,7 @@ const RegisterUserAndOrgMember = ({
       }
   };
 
-  const prev = () => {
+  const goTopreviousStep = () => {
     setCurrent(current - 1);
     setbuttonStatus(false);
   };
@@ -320,7 +320,7 @@ const RegisterUserAndOrgMember = ({
           <Button
             onClick={() => {
               hookValidations(false, '');
-              prev();
+              goTopreviousStep();
             }}
             size='large'
             style={{ margin: '0 8px' }}
@@ -344,9 +344,7 @@ const RegisterUserAndOrgMember = ({
                     disabled={buttonStatus}
                     size='large'
                     type='primary'
-                    onClick={() => {
-                      next();
-                    }}
+                    onClick={goToNextStep}
                   >
                     {current > 0
                       ? intl.formatMessage({
