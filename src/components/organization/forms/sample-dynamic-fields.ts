@@ -1,4 +1,17 @@
-export default {
+import { IDynamicFieldData } from '@components/dynamic-fields/types'
+
+type ExtraSampleType = {
+  _id: string,
+  index?: number
+  order_weight?: number,
+  unique?: boolean,
+}
+
+type SampleType = {
+  [k: number]: IDynamicFieldData & ExtraSampleType,
+}
+
+const sample: SampleType = {
   0: {
     _id: 'id',
     index: 0,
@@ -151,5 +164,30 @@ export default {
     label: 'Tu foto',
     name: 'tufoto',
     type: 'avatar',
-  }
+  },
+  19: {
+    _id: 'id',
+    index: 0,
+    label: 'Campo dependencia',
+    name: 'main-field',
+    type: 'list',
+    options: [
+      { label: 'Activo', value: 'active' },
+      { label: 'Temporal', value: 'temporal' },
+      { label: 'Desactivado', value: 'deactive' },
+    ]
+  },
+  20: {
+    _id: 'id',
+    index: 0,
+    label: 'Campo que depende',
+    name: 'second-field',
+    type: 'text',
+    dependency: {
+      fieldName: 'main-field',
+      triggerValues: ['active', 'temporal']
+    },
+  },
 }
+
+export default sample
