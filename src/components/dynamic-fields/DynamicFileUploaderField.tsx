@@ -1,27 +1,28 @@
 import { UploadOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '@context/MessageService';
 import { Button, Upload } from 'antd';
-import { Rule } from 'antd/lib/form';
+import { FormInstance } from 'antd/lib/form';
 import { RcFile } from 'antd/lib/upload';
 import * as React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
+import { FormattedMessage } from 'react-intl';
 import DynamicFormItem from './DynamicFormItem';
 import { IDynamicFieldProps } from './types';
 import useCheckFileSize from './hooks/useCheckFileSize';
 import useMandatoryRule from './hooks/useMandatoryRule';
+import { UploadChangeParam, UploadFile } from 'antd/lib/upload/interface';
 
 interface IDynamicFileUploaderFieldProps extends IDynamicFieldProps {
+  form?: FormInstance,
 }
 
 const DynamicFileUploaderField: React.FunctionComponent<IDynamicFileUploaderFieldProps> = (props) => {
   const {
     fieldData,
+    form,
     allInitialValues,
   } = props
 
   const { name } = fieldData
-
-  const [rules, setRules] = useState<Rule[]>([])
 
   const { basicRule } = useMandatoryRule(fieldData)
 
@@ -51,20 +52,10 @@ const DynamicFileUploaderField: React.FunctionComponent<IDynamicFileUploaderFiel
     return fileList
   }, [allInitialValues, name])
 
-  // Clone the basic rule and inject a validator method
-  useEffect(() => {
-    const newRule: Rule = { ...basicRule }
-    newRule.transform = (value: any) => {
-      return value.fileList[0].name
-    }
-    setRules([newRule])
-    console.log('update rules')
-  }, [basicRule])
-
   return (
     <DynamicFormItem
       fieldData={fieldData}
-      rules={rules}
+      rules={[basicRule]}
       initialValue={initialValue}
     >
       <Upload
@@ -73,8 +64,25 @@ const DynamicFileUploaderField: React.FunctionComponent<IDynamicFileUploaderFiel
         multiple={false}
         listType="text"
         beforeUpload={handleBeforeUpload}
+        onChange={(info: UploadChangeParam<UploadFile<unknown>>) => {
+          const [file] = info.fileList
+          if (file && file.status === 'done') {
+            console.debug('uploaded at', file.response)
+            if (form) {
+              console.log('form update', fieldData.name, 'to', file.response)
+              form.setFieldsValue({
+                [fieldData.name]: file.response,
+              })
+            }
+          }
+        }}
       >
-        <Button icon={<UploadOutlined />}>Subir archivo</Button>
+        <Button icon={<UploadOutlined />}>
+          <FormattedMessage
+            id="form.button.upload-file"
+            defaultMessage="Subir archivo"
+          />
+        </Button>
       </Upload>
     </DynamicFormItem>
   );

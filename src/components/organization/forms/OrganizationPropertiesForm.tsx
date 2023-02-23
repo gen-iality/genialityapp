@@ -69,10 +69,12 @@ interface IOrganizationPropertiesFormProps {
   // initialOtherValues: let us set our initial values for
   onSubmit?: (values: any) => void,
   form?: FormInstance,
+  noSubmitButton?: boolean,
 }
 
 const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertiesFormProps> = (props) => {
   const {
+    noSubmitButton,
     otherFields = []
   } = props
 
@@ -132,13 +134,13 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
       ) : form && (
         <Card bordered={false} bodyStyle={textLeftStyle}>
           <DynamicForm
+            noSubmitButton={noSubmitButton}
             form={form}
             dynamicFields={dynamicFields}
             initialValues={initialValues}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             onValueChange={onValueChange}
-            noSubmitButton
           />
         </Card>
       )}

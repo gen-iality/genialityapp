@@ -3,6 +3,7 @@ import { Button, Divider, Form, FormInstance } from 'antd';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import DynamicAvatarUploaderField from './DynamicAvatarUploaderField';
 import DynamicBooleanField from './DynamicBooleanField';
 import DynamicFileUploaderField from './DynamicFileUploaderField';
@@ -133,7 +134,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     }
 
     if (type === 'file') {
-      return <DynamicFileUploaderField fieldData={field} allInitialValues={initialValues} />
+      return <DynamicFileUploaderField form={form} fieldData={field} allInitialValues={initialValues} />
     }
 
     if (type === 'avatar') {
@@ -167,7 +168,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
           transformOption={(country) => (
             {
               label: country.name,
-              value: country.iso2,
+              value: country.name,
               key: country.iso2,
             }
           )}
@@ -233,7 +234,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     }
 
     if (type === 'codearea') {
-      return <DynamicPhoneInputField fieldData={field} allInitialValues={initialValues} />
+      return <DynamicPhoneInputField form={form} fieldData={field} allInitialValues={initialValues} />
     }
 
     if (type === 'multiplelisttable') {
@@ -256,7 +257,12 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
 
       {!noSubmitButton && (
         <Form.Item>
-          <Button htmlType="submit">Enviar</Button>
+          <Button htmlType="submit">
+            <FormattedMessage
+              id="form.button.send"
+              defaultMessage="Enviar"
+            />
+          </Button>
         </Form.Item>
       )}
     </Form>

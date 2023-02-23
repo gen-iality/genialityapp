@@ -1,5 +1,5 @@
 import { Component, createRef } from 'react';
-import { typeInputs } from '@helpers/constants';
+import { dynamicFieldOptions } from '@components/dynamic-fields/constants';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row } from 'antd';
 import { DispatchMessageService } from '@context/MessageService';
@@ -305,8 +305,7 @@ class DatosModal extends Component {
             name='type'
             rules={[{ required: true, message: 'Seleccione un tipo de dato válido' }]}>
             <Select
-              defaultValue={typeInputs}
-              options={typeInputs}
+              options={dynamicFieldOptions}
               disabled={info.name === 'picture' || info.name == 'email' || info.name == 'names' ? true : false}
               onChange={(value) => this.handleChange({ target: { name: 'type', value: value } })}></Select>
           </Form.Item>

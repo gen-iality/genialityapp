@@ -55,7 +55,7 @@ const DynamicTextField: React.FunctionComponent<IDynamicTextFieldProps> = (props
     const newRule: Rule = { ...basicRule }
     newRule.type = (type === 'email' ? 'email' : undefined)
     setRules([newRule])
-  }, [basicRule])
+  }, [basicRule, type])
 
   return (
     <DynamicFormItem

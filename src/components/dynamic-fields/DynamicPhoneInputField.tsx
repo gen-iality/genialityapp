@@ -1,3 +1,4 @@
+import { FormInstance } from 'antd/lib/form'
 import * as React from 'react'
 import { useIntl } from 'react-intl'
 import PhoneInput from 'react-phone-number-input'
@@ -6,12 +7,14 @@ import useMandatoryRule from './hooks/useMandatoryRule'
 import { IDynamicFieldProps } from './types'
 
 interface IDynamicPhoneInputFieldProps extends IDynamicFieldProps {
+  form?: FormInstance,
   placeholder?: string,
   defaultCountry?: string,
 }
 
 const DynamicPhoneInputField: React.FunctionComponent<IDynamicPhoneInputFieldProps> = (props) => {
   const {
+    form,
     fieldData,
     allInitialValues,
     placeholder = "Phone number",
@@ -35,6 +38,13 @@ const DynamicPhoneInputField: React.FunctionComponent<IDynamicPhoneInputFieldPro
           id: 'form.phone',
           defaultMessage: placeholder,
         })}
+        onChange={(phone) => {
+          if (phone && form) {
+            form.setFieldsValue({
+              [name]: phone,
+            })
+          }
+        }}
         defaultCountry={defaultCountry as unknown as any}
         international
       />

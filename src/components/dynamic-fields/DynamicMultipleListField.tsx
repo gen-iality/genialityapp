@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import DynamicFormItem from './DynamicFormItem';
 import { IDynamicFieldProps } from './types';
 import useMandatoryRule from './hooks/useMandatoryRule';
+import { FormattedMessage } from 'react-intl';
 
 interface IDynamicMultipleListFieldProps extends IDynamicFieldProps {
 }
@@ -28,7 +29,7 @@ const DynamicMultipleListField: React.FunctionComponent<IDynamicMultipleListFiel
   useEffect(() => {
     const newRule: Rule = { ...basicRule }
     newRule.validator = (_, value) => {
-      if (value.length > 0) return Promise.resolve()
+      if (value && value.length > 0) return Promise.resolve()
       return Promise.reject(`${name} is empty`)
     }
     setRules([newRule])
@@ -38,7 +39,10 @@ const DynamicMultipleListField: React.FunctionComponent<IDynamicMultipleListFiel
   if (options.length === 0) {
     return (
       <Typography.Text>
-        No hay opciones para selecciona
+        <FormattedMessage
+          id="form.option.empty"
+          defaultMessage="No hay opciones para selecciona"
+        />
       </Typography.Text>
     )
   }
