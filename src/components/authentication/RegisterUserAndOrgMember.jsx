@@ -18,7 +18,7 @@ import FormComponent from '../events/registrationForm/form';
 import createNewUser from './ModalsFunctions/createNewUser';
 
 /** Helpers and utils imports */
-import { OrganizationApi, UsersApi } from '@helpers/request';
+import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request';
 
 /** Context imports */
 import { useHelper } from '@context/helperContext/hooks/useHelper';
@@ -246,6 +246,8 @@ const RegisterUserAndOrgMember = ({
 
       try {
         const respUser = await OrganizationApi.saveUser(idOrganization, propertiesOrgMember);
+        console.log('RegisterUser: has default position Id', { defaultPositionId });
+        await PositionsApi.Organizations.addUser(idOrganization, defaultPositionId, respUser.account_id);
         if (respUser && respUser.account_id) {
           setValidationGeneral({
             status: false,
