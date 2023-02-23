@@ -54,11 +54,7 @@ const RegisterUserAndOrgMember = ({
     textError: '',
     loading: false,
   });
-  const [validateOrgMember, setValidateOrgMember] = useState({
-    status: false,
-    textError: '',
-    statusFields: false,
-  });
+
   const [organization, setOrganization] = useState({});
 
   useEffect(() => {
@@ -68,18 +64,7 @@ const RegisterUserAndOrgMember = ({
       setOrganization(response);
     }
     getOrganization();
-  }, []);
-
-  useEffect(() => {
-    if (validateOrgMember.statusFields) {
-      setValidationGeneral({
-        ...validationGeneral,
-        loading: true,
-        status: false,
-      });
-      handleSubmit();
-    }
-  }, [validateOrgMember.statusFields]);
+  }, [])
 
   useEffect(() => {
     if (current == 0) {
@@ -107,8 +92,10 @@ const RegisterUserAndOrgMember = ({
   const HandleHookForm = (e, FieldName, picture) => {
     const value = FieldName === 'picture' ? picture : e.target.value;
 
-    const setter = current === 0 ? setbasicDataUser : setDataOrgMember;
-    setbasicDataUser((previous) => ({ ...previous, [FieldName]: value }));
+    setbasicDataUser((previous) => ({
+      ...previous,
+      [FieldName]: value,
+    }));
   };
 
   const onSubmit = (values) => {
@@ -128,34 +115,16 @@ const RegisterUserAndOrgMember = ({
     {
       title: 'Second',
       content: (
-        <>
-          <OrganizationPropertiesForm
-            form={form}
-            basicDataUser={basicDataUser}
-            onProperyChange={(propertyName, propertyValue) => {
-              setDataOrgMember((previous) => ({ ...previous, [propertyName]: propertyValue }))
-              }}
-            organization={organization}
-            onSubmit={onSubmit}
-            noSubmitButton={true}
-          />
-          {/*  {console.log('basicDataUser', basicDataUser)}
-          {console.log('dataOrgMember', dataOrgMember)}
-          {console.log('organization', organization)}
-          {console.log('organization.user_properties', organization.user_properties)}
-          <FormComponent
-            hookValidations={hookValidations}
-            dataOrgMember={dataOrgMember}
-            basicDataUser={basicDataUser}
-            HandleHookForm={HandleHookForm}
-            validateOrgMember={validateOrgMember}
-            setValidateOrgMember={setValidateOrgMember}
-            organization={organization}
-            initialOtherValue={{}}
-            conditionalsOther={[]}
-            fields={organization.user_properties}
-          /> */}
-        </>
+        <OrganizationPropertiesForm
+          form={form}
+          basicDataUser={basicDataUser}
+          onProperyChange={(propertyName, propertyValue) => {
+            setDataOrgMember((previous) => ({ ...previous, [propertyName]: propertyValue }))
+            }}
+          organization={organization}
+          onSubmit={onSubmit}
+          noSubmitButton={true}
+        />
       ),
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
     },
@@ -286,11 +255,11 @@ const RegisterUserAndOrgMember = ({
         form.validateFields().then(() => {
           console.log('Validate Fields');
           form.submit();
-          // handleSubmit();
-          // setValidateOrgMember({
-          //   status: true,
-          //   textError: '',
-          // });
+          setValidationGeneral((previous) => ({
+            ...previous,
+            loading: true,
+            status: false,
+          }));
         }).catch((error) => console.log(error));
       }
   };
