@@ -14,11 +14,12 @@ export default function useMandatoryRule(fieldData: IDynamicFieldData, errorMess
   const [secondMandatory, setSecondMandatory] = useState(false)
 
   const setCondiction = useCallback((newCondiction: boolean) => {
+    console.log('change the second mandatory to', newCondiction)
     setSecondMandatory(newCondiction);
-  }, [basicRule])
+  }, [basicRule, setSecondMandatory])
 
   useEffect(() => {
-    setPrimaryMandatory(fieldData.mandatory)
+    setPrimaryMandatory(!!fieldData.mandatory)
     console.debug('set required rule from mandatory value', { mandatory: fieldData.mandatory })
   }, [fieldData.mandatory])
 
