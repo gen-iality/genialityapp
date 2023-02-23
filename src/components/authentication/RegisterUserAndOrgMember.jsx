@@ -113,7 +113,10 @@ const RegisterUserAndOrgMember = ({
 
   const onSubmit = (values) => {
     setDataOrgMember(values);
-    handleSubmit();
+    // For testing
+    setTimeout(() => {
+      handleSubmit();
+    }, 3000);
   };
 
   const steps = [
@@ -129,7 +132,6 @@ const RegisterUserAndOrgMember = ({
           <OrganizationPropertiesForm
             form={form}
             basicDataUser={basicDataUser}
-            orgMember={dataOrgMember}
             onProperyChange={(propertyName, propertyValue) => {
               setDataOrgMember((previous) => ({ ...previous, [propertyName]: propertyValue }))
               }}
@@ -299,11 +301,11 @@ const RegisterUserAndOrgMember = ({
         form.validateFields().then(() => {
           console.log('Validate Fields');
           form.submit();
-          handleSubmit();
-          setValidateOrgMember({
-            status: true,
-            textError: '',
-          });
+          // handleSubmit();
+          // setValidateOrgMember({
+          //   status: true,
+          //   textError: '',
+          // });
         }).catch((error) => console.log(error));
       }
   };

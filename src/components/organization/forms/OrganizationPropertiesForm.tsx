@@ -62,7 +62,6 @@ type FormValuesType = any
 
 interface IOrganizationPropertiesFormProps {
   basicDataUser: object,
-  orgMember: any,
   organization: any,
   onProperyChange: (propertyName: string, propertyValue: any) => void,
   otherFields?: IDynamicFieldData[],
