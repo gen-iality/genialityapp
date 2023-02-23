@@ -296,13 +296,15 @@ const RegisterUserAndOrgMember = ({
 
       handleValidateAccountGeniality();
     } else if (current == 1) {
+        form.validateFields().then(() => {
+          console.log('Validate Fields');
       form.submit();
       handleSubmit();
       setValidateOrgMember({
         status: true,
         textError: '',
       });
-
+        }).catch((error) => console.log(error));
     }
   };
 
