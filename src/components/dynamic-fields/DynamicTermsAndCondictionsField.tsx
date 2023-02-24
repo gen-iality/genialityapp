@@ -56,6 +56,12 @@ const DynamicTermsAndCondictionsField: React.FunctionComponent<IDynamicTermsAndC
     return newFieldData
   }, [fieldData])
 
+  const TTCC = () => (
+    <Typography.Text>
+      Acepta que he leído y entendido los <Typography.Link target="_blank" href={link || '#'}>términos y condiciones</Typography.Link>.
+    </Typography.Text>
+  )
+
   return (
     <DynamicFormItem
       fieldData={fieldDataWithoutLabel}
@@ -72,12 +78,10 @@ const DynamicTermsAndCondictionsField: React.FunctionComponent<IDynamicTermsAndC
           <span>
             <span style={{ color: 'red' }}>*</span>
             {' '}
-            <strong>{label}</strong>
+            <strong><TTCC /></strong>
           </span>
         ) : (
-          <Typography.Text>
-            Acepta que he leído y entendido los <Typography.Link target="_blank" href={link || '#'}>términos y condiciones</Typography.Link>.
-          </Typography.Text>
+          <TTCC />
         )}
       </Checkbox>
     </DynamicFormItem>
