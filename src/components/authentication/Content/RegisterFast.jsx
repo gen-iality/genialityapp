@@ -233,7 +233,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
           <Form.Item
             label={intl.formatMessage({
               id: 'modal.label.password',
-              defaultMessage: 'Contraseña',
+              defaultMessage: 'Documento de identidad', // TODO: Antes contraseña
             })}
             name='password'
             hasFeedback
@@ -245,7 +245,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
               size='large'
               placeholder={intl.formatMessage({
                 id: 'modal.label.password',
-                defaultMessage: 'Contraseña',
+                defaultMessage: 'Documento de identidad', // TODO: Antes contraseña
               })}
               prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
