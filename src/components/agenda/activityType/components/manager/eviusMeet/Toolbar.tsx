@@ -1,6 +1,6 @@
 import { Card, Form, List, Switch } from 'antd';
 // import { TransferDirection } from 'antd/lib/transfer';
-import { useState } from 'react';
+import React, { cloneElement, useState } from 'react';
 import { toolbarItems } from './toolbarItems';
 
 // const { useBreakpoint } = Grid;
@@ -63,7 +63,7 @@ export default function Toolbar(props: Props) {
 									/>
 								</Form.Item>
 							}>
-							<List.Item.Meta avatar={option.icon} title={option.label} />
+							<List.Item.Meta avatar={cloneElement(option.icon, { style: { fontSize: '24px' } })} title={option.label} />
 						</List.Item>
 					)}
 				/>

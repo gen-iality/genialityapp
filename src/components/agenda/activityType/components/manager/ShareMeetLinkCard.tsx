@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, List, Modal, Row, Tabs, Grid } from 'antd';
+import { Button, Card, Col, Form, List, Modal, Row, Tabs, Grid, Popconfirm } from 'antd';
 import { useEffect, useState } from 'react';
 import { firestore } from '@/helpers/firebase';
 import { UseEventContext } from '@/context/eventContext';
@@ -11,7 +11,12 @@ export interface MeetConfig {
 	openMeet: boolean;
 	config: {
 		disableInviteFunctions: boolean;
-		enableWelcomePage: boolean;
+		// enableWelcomePage: boolean;
+		welcomePage: {
+			disabled: boolean;
+			customUrl: string;
+		};
+		enableClosePage: boolean;
 		readOnlyName: boolean;
 		disablePolls: boolean;
 		disableReactions: boolean;
@@ -25,11 +30,15 @@ export interface MeetConfig {
 	};
 }
 
-const INITIAL_MEET_CONFIG = {
+const INITIAL_MEET_CONFIG: MeetConfig = {
 	openMeet: false,
 	config: {
 		disableInviteFunctions: false,
-		enableWelcomePage: false,
+		welcomePage: {
+			disabled: true,
+			customUrl: 'https://evius.co',
+		},
+		enableClosePage: false,
 		readOnlyName: true,
 		disablePolls: false,
 		disableReactions: false,
@@ -69,7 +78,7 @@ const INITIAL_MEET_CONFIG = {
 			'toolbar.noisyAudioInputTitle',
 			'toolbar.talkWhileMutedPopup',
 		],
-		toolbarButtons: ['hangup', 'microphone', 'camera', 'participants-pane', 'tileview', 'settings', 'fullscreen'],
+		toolbarButtons: ['microphone', 'camera', 'participants-pane', 'tileview', 'settings', 'fullscreen', 'raisehand', 'toggle-camera'],
 	},
 };
 
@@ -112,14 +121,16 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 
 	const updateMeeting = async (eventId: string, activityId: string, status: boolean) => {
 		try {
-			// console.log(`events/${eventId}/activities/${activityId}`);
+			console.log(`events/${eventId}/activities/${activityId}`);
+			const newMeetConfig = status ? { ...meetConfig, openMeet: status } : INITIAL_MEET_CONFIG;
+
 			setLoading(true);
 			await firestore
 				.collection('events')
 				.doc(eventId)
 				.collection('activities')
 				.doc(activityId)
-				.update({ meetConfig: { ...meetConfig, openMeet: status } });
+				.update({ meetConfig: newMeetConfig });
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -151,9 +162,11 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 					</Button>
 				)}
 				{!!meetConfig.openMeet && (
-					<Button color='' onClick={handleCloseMeeting} loading={loading}>
-						Finalizar reunión
-					</Button>
+					<Popconfirm onConfirm={handleCloseMeeting} title='¿Esta seguro que desea finalizar la reunión?' okText='Finalizar' cancelText='Cancelar'>
+						<Button color='' loading={loading}>
+							Finalizar reunión
+						</Button>
+					</Popconfirm>
 				)}
 				<Modal
 					width={700}
