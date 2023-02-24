@@ -1,4 +1,4 @@
-import { Checkbox } from 'antd';
+import { Checkbox, Typography } from 'antd';
 import { Rule } from 'antd/lib/form';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
@@ -7,10 +7,10 @@ import DynamicFormItem from './DynamicFormItem';
 import useMandatoryRule from './hooks/useMandatoryRule';
 import { IDynamicFieldProps } from './types';
 
-interface IDynamicBooleanFieldProps extends IDynamicFieldProps {
+interface IDynamicTermsAndCondictionsFieldProps extends IDynamicFieldProps {
 }
 
-const DynamicBooleanField: React.FunctionComponent<IDynamicBooleanFieldProps> = (props) => {
+const DynamicTermsAndCondictionsField: React.FunctionComponent<IDynamicTermsAndCondictionsFieldProps> = (props) => {
   const {
     fieldData,
     allInitialValues,
@@ -20,6 +20,7 @@ const DynamicBooleanField: React.FunctionComponent<IDynamicBooleanFieldProps> = 
     name,
     mandatory,
     label,
+    link,
     props: secondProps,
   } = fieldData
   
@@ -74,11 +75,13 @@ const DynamicBooleanField: React.FunctionComponent<IDynamicBooleanFieldProps> = 
             <strong>{label}</strong>
           </span>
         ) : (
-          label
+          <Typography.Text>
+            Acepta que he leído y entendido los <Typography.Link target="_blank" href={link || '#'}>términos y condiciones</Typography.Link>.
+          </Typography.Text>
         )}
       </Checkbox>
     </DynamicFormItem>
   )
 };
 
-export default DynamicBooleanField;
+export default DynamicTermsAndCondictionsField;
