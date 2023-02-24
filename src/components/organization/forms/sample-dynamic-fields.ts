@@ -188,6 +188,14 @@ const sample: SampleType = {
       triggerValues: ['active', 'temporal']
     },
   },
+  21: {
+    _id: 'id',
+    index: 0,
+    label: 'Terminos y condiciones - label',
+    name: 'tt_cc',
+    type: 'TTCC',
+    link: 'https://beta.geniality.com.co/tc'
+  },
 }
 
 export default sample

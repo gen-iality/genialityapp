@@ -18,6 +18,7 @@ export type FieldType = 'text'
   | 'codearea'
   | 'onlyCodearea'
   | 'avatar' // Is it new?
+  | 'TTCC' // Terms and condictions
 
 
 export interface IDynamicFieldData {
@@ -36,6 +37,7 @@ export interface IDynamicFieldData {
     fieldName: string,
     triggerValues: string[],
   },
+  link?: string,
 }
 
 export interface IDynamicFieldProps {

@@ -57,7 +57,11 @@ export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
           .includes(value.toLowerCase())
       : '',
   render: (text) =>
-    columnsData.searchedColumn === dataIndex ? (
+    typeof text === 'undefined' ? (
+      'N/A'
+    ) : typeof text === 'boolean' ? (
+      text ? 'Aceptado' : 'No Aceptado'
+    ) : columnsData.searchedColumn === dataIndex ? (
       <Highlighter
         highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
         searchWords={[columnsData.searchText]}

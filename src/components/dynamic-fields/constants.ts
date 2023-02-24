@@ -24,5 +24,6 @@ export const dynamicFieldOptions: (DynamicFieldOptionsType | EmptyOptionType)[] 
   { value: 'password', label: 'Password' },
   { value: 'multiplelisttable', label: 'Selección multiple con buscar' },
   { value: 'codearea', label: 'Código de área para números' },
+  { value: 'TTCC', label: 'Términos y condiciones' },
   /* { value: 'avatar', label: 'Imagen de perfil' }, */
 ];
