@@ -1,4 +1,4 @@
-import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification, Typography } from 'antd';
+import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification, Typography, Modal } from 'antd';
 import { useCurrentUser } from '@context/userContext';
 import { formatDataToString } from '@helpers/utils';
 
@@ -14,17 +14,22 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
+import { UsersApi } from '@helpers/request';
+import { DispatchMessageService } from '@context/MessageService';
+import FormComponent from '../registrationForm/form';
 
 const DrawerProfile = (props) => {
   const cUser = useCurrentUser();
   const cEvent = useEventContext();
   const cEventUser = useUserEvent();
-  const { propertiesProfile, requestSend, handleChangeTypeModal } = useHelper();
+  const { propertiesProfile, requestSend } = useHelper();
   const [userSelected, setUserSelected] = useState();
   const [isMycontact, setIsMyContact] = useState();
   const [isMe, setIsMe] = useState(false);
   const [send, setSend] = useState(false);
   const [userPropertiesProfile, setUserPropertiesProfile] = useState();
+  const [openModal, setOpenModal] = useState(false);
+
   const intl = useIntl();
 
   useEffect(() => {
@@ -46,14 +51,56 @@ const DrawerProfile = (props) => {
         setUserPropertiesProfile(propertiesProfile?.propertiesUserPerfil);
       }
     }
-  }, [props.profileuser, cEventUser.value]);
+  }, [props.profileuser, cEventUser.value, userSelected]);
   const haveRequestUser = (user) => {
     //console.log("HEPERVALUE==>",requestSend,user)
     return haveRequest(user, requestSend, 1);
   };
 
+  function closeOrOpenModal() {
+    setOpenModal((prevState) => {
+      return !prevState;
+    });
+  }
+
+  async function updateEventUser(values) {
+    const eventUserBody = {
+      properties: { ...values },
+    };
+
+    const resp = await UsersApi.editEventUser(eventUserBody, cEvent.value?._id, cEventUser.value._id);
+
+    if (resp._id) {
+      DispatchMessageService({
+        type: 'success',
+        msj: `Usuario editado correctamente`,
+        action: 'show',
+      });
+      cEventUser.setUpdateUser(true);
+      setOpenModal(false);
+    } else {
+      DispatchMessageService({
+        type: 'error',
+        msj: `No fue posible editar el Usuario`,
+        action: 'show',
+      });
+    }
+  }
+
   return (
     <>
+      {openModal && (
+        <Modal zIndex={1} closable footer={false} visible={true} onCancel={() => closeOrOpenModal()}>
+          <div
+            style={{
+              padding: '0px',
+              marginTop: '30px',
+            }}
+          >
+            <FormComponent callback={updateEventUser} />
+          </div>
+        </Modal>
+      )}
       <Drawer
         title={
           <Space>
@@ -77,12 +124,13 @@ const DrawerProfile = (props) => {
             )}
           </Space>
         }
-        zIndex={5000}
+        zIndex={0}
         visible={props.viewPerfil}
         closable={true}
         onClose={() => props.setViewPerfil({ view: false, perfil: null })}
         width={'52vh'}
-        bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
+        bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}
+      >
         <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '10px' }}>
           <Col span={24}>
             <Typography.Paragraph>
@@ -97,12 +145,12 @@ const DrawerProfile = (props) => {
             <Col span={24}>
               <Button
                 onClick={() => {
-                  props.setViewPerfil({ view: false, perfil: userSelected });
-                  handleChangeTypeModal('update');
+                  setOpenModal(true);
                 }}
                 type='text'
                 size='middle'
-                style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}>
+                style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}
+              >
                 {props.cEvent.value.visibility === 'PUBLIC' && (
                   <>{intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })}</>
                 )}
@@ -114,7 +162,8 @@ const DrawerProfile = (props) => {
           <Col
             className='asistente-list' //agrega el estilo a la barra de scroll
             span={24}
-            style={{ marginTop: '20px', height: '50vh', maxHeight: '50vh', overflowY: 'auto' }}>
+            style={{ marginTop: '20px', height: '50vh', maxHeight: '50vh', overflowY: 'auto' }}
+          >
             {(!userSelected || !userPropertiesProfile) && (
               <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>
             )}
@@ -136,12 +185,7 @@ const DrawerProfile = (props) => {
                     <List.Item>
                       <List.Item.Meta
                         title={item?.label}
-                        description={formatDataToString(
-                          item?.type !== 'codearea'
-                            ? userSelected.properties[item?.name]
-                            : '(+' + userSelected.properties['code'] + ')' + userSelected.properties[item?.name],
-                          item
-                        )}
+                        description={formatDataToString(userSelected.properties[item?.name], item)}
                       />
                     </List.Item>
                   )

@@ -6,6 +6,7 @@ import OrganizationProfile from './profile';
 import Styles from '@components/App/styles';
 import OrgEvents from './events';
 import OrgMembers from './members';
+import OrganizationPropertiesIsolatedPage from './OrganizationPropertiesIsolatedPage'
 import OrgRegisteredUsers from './OrgRegisteredUsers';
 import OrganizationPositionsPage from './OrganizationPositionsPage';
 import CurrentOrganizationPositionPage from './CurrentOrganizationPositionPage';
@@ -24,6 +25,7 @@ import {
   UserSwitchOutlined,
   ProjectOutlined,
   MenuOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 
 import MenuLanding from '@components/menuLanding/index';
@@ -90,6 +92,10 @@ function Organization(props) {
               <Menu.Item key={'4'} icon={<TeamOutlined />}>
                 {'Miembros'}
                 <NavLink to={`${props.match.url}/members`} />
+              </Menu.Item>
+              <Menu.Item key={'4.1'} icon={<DeleteOutlined />}>
+                Organization Properties
+                <NavLink to={`${props.match.url}/organization-properties`} />
               </Menu.Item>
               <Menu.Item key={'5'} icon={<TeamOutlined />}>
                 {'Cargos'}
@@ -161,6 +167,13 @@ function Organization(props) {
                     component={OrgMembers}
                     org={organization}
                     componentKey='members'
+                  />
+                  <Protected
+                    exact
+                    path={`${props.match.url}/organization-properties`}
+                    component={OrganizationPropertiesIsolatedPage}
+                    org={organization}
+                    componentKey='organization-properties'
                   />
                   <Protected
                     exact
