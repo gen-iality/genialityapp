@@ -1,8 +1,7 @@
 import { Card, Form, List, Switch } from 'antd';
 // import { TransferDirection } from 'antd/lib/transfer';
 import { useState } from 'react';
-import { toolbarItems as tItems } from './toolbarItems';
-// import { toolbarItems } from './toolbarItems';
+import { toolbarItems } from './toolbarItems';
 
 // const { useBreakpoint } = Grid;
 
@@ -15,9 +14,6 @@ const DEFAULT_TOOLBAR_OPTIONS = [
 	'settings',
 	'fullscreen',
 ];
-
-const toolbarItems = tItems.map(({ key }) => ({ key, label: key, icon: <></> }));
-
 interface Props {
 	values?: string[];
 	onChange?: (list: string[]) => void;
@@ -67,7 +63,7 @@ export default function Toolbar(props: Props) {
 									/>
 								</Form.Item>
 							}>
-							<List.Item.Meta title={option.label} />
+							<List.Item.Meta avatar={option.icon} title={option.label} />
 						</List.Item>
 					)}
 				/>
