@@ -1,15 +1,33 @@
-import { Link, useHistory } from 'react-router-dom';
-import { Tooltip, Typography, Row, Col, Button } from 'antd';
-import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useEventContext } from '@context/eventContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { Link, useHistory } from 'react-router-dom'
+import { Tooltip, Typography, Row, Col, Button } from 'antd'
+import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { FunctionComponent, MouseEventHandler } from 'react'
 
-const { Title } = Typography;
+const { Title, Text } = Typography
 
-const Header = (props) => {
-  const history = useHistory();
-  //const cUser = useCurrentUser();
-  const { eventIsActive } = useHelper();
+interface HeaderProps {
+  title: string,
+  titleTooltip?: string,
+  addUrl?: string
+  addFn?: MouseEventHandler<HTMLElement>,
+  edit?: boolean,
+  remove: MouseEventHandler<HTMLElement>,
+  save?: boolean,
+  saveMethod: MouseEventHandler<HTMLElement>,
+  saveName?: string,
+  back?: boolean,
+  form?: boolean,
+  extra?: any,
+  description?: string,
+  loadingSave?: boolean,
+  saveNameIcon?: boolean,
+  customBack?: string,
+}
+
+const Header: FunctionComponent<HeaderProps> = (props) => {
+  const history = useHistory()
+  const { eventIsActive } = useHelper()
   const {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado
@@ -29,26 +47,28 @@ const Header = (props) => {
     customBack,
     /* listLenght,
     messageHeaderAlert, */
-  } = props;
+  } = props
 
   return (
     <>
       <Title level={4}>
         {(back || customBack) && (
-          <Tooltip placement='bottomLeft' title={'Atrás'}>
+          <Tooltip placement="bottomLeft" title="Atrás">
             <ArrowLeftOutlined
-              id='goBack'
+              id="goBack"
               onClick={() => (customBack ? history.push(customBack) : history.goBack())}
               style={{ marginRight: '10px' }}
             />
           </Tooltip>
         )}
-        <Tooltip placement='bottomLeft' title={titleTooltip}>
+        <Tooltip placement="bottomLeft" title={titleTooltip}>
           {title}
         </Tooltip>
       </Title>
       {!eventIsActive && window.location.toString().includes('eventadmin') && (
-        <Typography.Text style={{ color: 'red' }}>Tu curso se encuentra bloqueado</Typography.Text>
+        <Text style={{ color: 'red' }}>
+          Tu curso se encuentra bloqueado
+        </Text>
       )}
       {description && <p>{description}</p>}
       <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
@@ -57,22 +77,24 @@ const Header = (props) => {
           {addUrl && (
             <Link to={addUrl}>
               <Button
-                type='primary'
+                type="primary"
                 icon={<PlusCircleOutlined />}
-                size='middle'
-                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
-                {'Agregar'}
+                size="middle"
+                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+              >
+                Agregar
               </Button>
             </Link>
           )}
           {addFn && (
             <Button
-              type='primary'
+              type="primary"
               icon={<PlusCircleOutlined />}
-              size='middle'
+              size="middle"
               onClick={addFn}
-              disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
-              {'Agregar'}
+              disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+            >
+              Agregar
             </Button>
           )}
         </Col>
@@ -80,9 +102,9 @@ const Header = (props) => {
           {save && (
             <Button
               onClick={saveMethod}
-              type={'primary'}
+              type="primary"
               icon={saveNameIcon && !edit ? <PlusCircleOutlined /> : <SaveOutlined />} //Condición momentanea hasta que se le coloque otra funcionalidad ó texto ó sea necesario otro icono
-              size='middle'
+              size="middle"
               htmlType={form ? 'submit' : 'button'}
               loading={loadingSave}
               disabled={!eventIsActive && window.location.toString().includes('eventadmin') ? true : loadingSave}>
@@ -93,19 +115,20 @@ const Header = (props) => {
         <Col>
           {edit && (
             <Button
-              id='removeHeader'
+              id="removeHeader"
               onClick={remove}
-              type='link'
+              type="link"
               danger
               icon={<DeleteOutlined />}
-              disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
-              {'Eliminar'}
+              disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+            >
+              Eliminar
             </Button>
           )}
         </Col>
       </Row>
     </>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
