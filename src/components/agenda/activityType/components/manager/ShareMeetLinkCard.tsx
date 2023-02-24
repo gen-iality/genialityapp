@@ -106,6 +106,10 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 		return () => unsubscribe();
 	}, []);
 
+	useEffect(() => {
+		console.log({ meetConfig });
+	}, [meetConfig]);
+
 	const updateMeeting = async (eventId: string, activityId: string, status: boolean) => {
 		try {
 			// console.log(`events/${eventId}/activities/${activityId}`);
@@ -198,15 +202,19 @@ export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
 										/>
 									</Row>
 								</Tabs.TabPane> */}
-								<Tabs.TabPane tab='Toolbar' key='item-toolbar'>
-									<Row align='middle' justify='center'>
-										<Toolbar
-											values={meetConfig.config.toolbarButtons}
-											onChange={list =>
-												setMeetConfig(prev => ({ ...prev, config: { ...prev.config, toolbarButtons: list } }))
-											}
-										/>
-									</Row>
+								<Tabs.TabPane
+									className={!screens.xs ? 'desplazar' : ''}
+									style={{ height: '60vh', overflowY: 'auto' }}
+									tab='Toolbar'
+									key='item-toolbar'>
+									{/* <Row align='middle' justify='center'> */}
+									<Toolbar
+										values={meetConfig.config.toolbarButtons}
+										onChange={list =>
+											setMeetConfig(prev => ({ ...prev, config: { ...prev.config, toolbarButtons: list } }))
+										}
+									/>
+									{/* </Row> */}
 								</Tabs.TabPane>
 							</Tabs>
 						</Col>
