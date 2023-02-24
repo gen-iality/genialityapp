@@ -377,6 +377,10 @@ export const NewEventProvider = ({ children }) => {
               let template = !templateId && true;
               if (templateId) {
                 template = await EventsApi.createTemplateEvent(result._id, templateId);
+                await firestore
+										.collection('events')
+										.doc(result._id)
+										.update(template);
               }
               if (template) {
                 const data = {

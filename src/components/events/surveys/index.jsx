@@ -8,6 +8,7 @@ import { Card } from 'antd';
 import * as SurveyActions from '../../../redux/survey/actions';
 import withContext from '../../../context/withContext';
 import { GetTokenUserFirebase } from '../../../helpers/HelperAuth';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
@@ -83,8 +84,8 @@ class SurveyForm extends Component {
       // Listado de encuestas publicadas del evento
       publishedSurveys = eventSurveys.filter(
         (survey) =>
-          (survey.isPublished === 'true' || survey.isPublished === true) &&
-          ((activity && survey.activity_id === activity._id) || survey.isGlobal === 'true')
+          (parseStringBoolean(survey.isPublished)) &&
+          ((activity && survey.activity_id === activity._id) || parseStringBoolean(survey.isGlobal))
       );
 
       this.setState(

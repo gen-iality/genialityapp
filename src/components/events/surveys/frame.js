@@ -68,7 +68,7 @@ const colorBars = {
   ],
 };
 
-const alphabet = {
+export const alphabet = {
   alphabet: [
     'A',
     'B',

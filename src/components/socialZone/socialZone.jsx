@@ -28,11 +28,11 @@ const styleTabAttendes = {
   borderRadius: '10px',
 };
 
-let SocialZone = function(props) {
+const SocialZone = function(props) {
   //contextos
-  let cEvent = UseEventContext();
-  let cUser = UseCurrentUser();
-  let {
+  const cEvent = UseEventContext();
+  const cUser = UseCurrentUser();
+  const {
     attendeeList,
     HandleChatOrAttende,
     chatAttendeChats,
@@ -41,11 +41,11 @@ let SocialZone = function(props) {
     tabsGenerals,
   } = useHelper();
   const [currentUser, setCurrentUser] = useState(null);
-  let [busqueda, setBusqueda] = useState(null);
-  let [strAttende, setstrAttende] = useState();
-  let [isFiltered, setIsFiltered] = useState(false);
-  let busquedaRef = useRef();
-  let history = useHistory();
+  const [busqueda, setBusqueda] = useState(null);
+  const [strAttende, setstrAttende] = useState();
+  const [isFiltered, setIsFiltered] = useState(false);
+  const busquedaRef = useRef();
+  const history = useHistory();
   const [typeEvent, settypeEvent] = useState();
   const [countAttendeesOnline, SetCountAttendeesOnline] = useState(0);
 

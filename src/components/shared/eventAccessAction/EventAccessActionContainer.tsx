@@ -24,9 +24,6 @@ const EventAccessActionContainer = () => {
 	if (!type_event) return <> </>;
 
 	let eventAction: string = useEventAccessAction({ event_access_type, type_event, current_attendee_status });
-	// console.log('event_access_type', event_access_type);
-	// console.log('type_event', type_event);
-	// console.log('current_attendee_status', current_attendee_status);
 
 	return <EventAccessAction eventAction={eventAction} />;
 };

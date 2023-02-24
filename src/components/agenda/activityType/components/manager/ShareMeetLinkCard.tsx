@@ -1,67 +1,239 @@
-import { Button, Card, Input, Space, Tooltip, Typography } from 'antd';
-import { CopyFilled } from '@ant-design/icons';
-import { useContext } from 'react';
-import AgendaContext from '@context/AgendaContext';
+import { Button, Card, Col, Form, List, Modal, Row, Tabs, Grid, Popconfirm } from 'antd';
+import { useEffect, useState } from 'react';
+import { firestore } from '@/helpers/firebase';
+import { UseEventContext } from '@/context/eventContext';
+import Notifications from './eviusMeet/Notifications';
+import Toolbar from './eviusMeet/Toolbar';
+import { generalItems } from './eviusMeet/generalItems';
+
+const { useBreakpoint } = Grid;
+export interface MeetConfig {
+	openMeet: boolean;
+	config: {
+		disableInviteFunctions: boolean;
+		// enableWelcomePage: boolean;
+		welcomePage: {
+			disabled: boolean;
+			customUrl: string;
+		};
+		enableClosePage: boolean;
+		readOnlyName: boolean;
+		disablePolls: boolean;
+		disableReactions: boolean;
+		disableReactionsModeration: boolean;
+		disableProfile: boolean;
+		hideConferenceTimer: boolean;
+		hideConferenceSubject: boolean;
+		screenshotCapture: boolean;
+		notifications: string[];
+		toolbarButtons: string[];
+	};
+}
+
+const INITIAL_MEET_CONFIG: MeetConfig = {
+	openMeet: false,
+	config: {
+		disableInviteFunctions: false,
+		welcomePage: {
+			disabled: true,
+			customUrl: 'https://evius.co',
+		},
+		enableClosePage: false,
+		readOnlyName: true,
+		disablePolls: false,
+		disableReactions: false,
+		disableReactionsModeration: false,
+		disableProfile: true,
+		hideConferenceTimer: false,
+		hideConferenceSubject: true,
+		screenshotCapture: false,
+		notifications: [
+			'connection.CONNFAIL',
+			'dialog.micNotSendingData',
+			'dialog.serviceUnavailable',
+			'dialog.sessTerminated',
+			'dialog.sessionRestarted',
+			'dialOut.statusMessage',
+			'notify.chatMessages',
+			'notify.disconnected',
+			'notify.connectedOneMember',
+			'notify.connectedTwoMembers',
+			'notify.leftOneMember',
+			'notify.leftTwoMembers',
+			'notify.connectedThreePlusMembers',
+			'notify.leftThreePlusMembers',
+			'notify.grantedTo',
+			'notify.hostAskedUnmute',
+			'notify.invitedOneMember',
+			'notify.invitedThreePlusMembers',
+			'notify.invitedTwoMembers',
+			'notify.mutedRemotelyTitle',
+			'notify.mutedTitle',
+			'notify.newDeviceAudioTitle',
+			'notify.newDeviceCameraTitle',
+			'notify.raisedHand',
+			'notify.startSilentTitle',
+			'notify.videoMutedRemotelyTitle',
+			'toolbar.noAudioSignalTitle',
+			'toolbar.noisyAudioInputTitle',
+			'toolbar.talkWhileMutedPopup',
+		],
+		toolbarButtons: ['microphone', 'camera', 'participants-pane', 'tileview', 'settings', 'fullscreen', 'raisehand', 'toggle-camera'],
+	},
+};
+
+export interface ElementProps {
+	meetConfig: MeetConfig;
+	setMeetConfig: React.Dispatch<React.SetStateAction<MeetConfig>>;
+}
 
 export interface ShareMeetLinkCardProps {
-  activityId: string,
-};
+	activityId: string;
+}
 
-const CardShareLinkEviusMeet = (props: ShareMeetLinkCardProps) => {
-  const { copyToClipboard } = useContext(AgendaContext);
-  return (
-    <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
-      <Card.Meta
-        title={
-          <Typography.Text style={{ fontSize: '20px' }} strong>
-            Enlaces para participantes
-          </Typography.Text>
-        }
-        description={
-          'Puedes compartir estos enlaces a las personas que participaran en tu reunión, ten en cuenta que los hosts pueden administrar la sala de reuniones, personalizarla e incluso finalizarla'
-        }
-      />
-      <br />
-      <Space direction='vertical' style={{ width: '100%' }}>
-        <Space direction='vertical' style={{ width: '100%' }}>
-          <Typography.Text>Enlace para host</Typography.Text>
-          <Input.Group compact>
-            <Input
-              style={{ width: 'calc(100% - 31px)' }}
-              disabled
-              value={`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=1`} /* value={linkRolProductor} */
-            />
-            <Tooltip title='Copiar productor url'>
-              <Button
-                onClick={() =>
-                  copyToClipboard(`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=1`)
-                }
-                icon={<CopyFilled style={{ color: '#0089FF' }} />}
-              />
-            </Tooltip>
-          </Input.Group>
-        </Space>
-        <Space direction='vertical' style={{ width: '100%' }}>
-          <Typography.Text>Enlace para speakers</Typography.Text>
-          <Input.Group compact>
-            <Input
-              style={{ width: 'calc(100% - 31px)' }}
-              disabled
-              value={`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=2`} /* value={linkRolProductor} */
-            />
-            <Tooltip title='Copiar speaker url'>
-              <Button
-                onClick={() =>
-                  copyToClipboard(`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=2`)
-                }
-                icon={<CopyFilled style={{ color: '#0089FF' }} />}
-              />
-            </Tooltip>
-          </Input.Group>
-        </Space>
-      </Space>
-    </Card>
-  );
-};
+export default function CardShareLinkEviusMeet(props: ShareMeetLinkCardProps) {
+	const eventContext = UseEventContext();
+	const activityId = props.activityId;
+	const eventId = eventContext?.idEvent;
+	const [meetConfig, setMeetConfig] = useState<MeetConfig>(INITIAL_MEET_CONFIG);
+	const [loading, setLoading] = useState(false);
+	const [open, setOpen] = useState(false);
+	const screens = useBreakpoint();
 
-export default CardShareLinkEviusMeet;
+	useEffect(() => {
+		const unsubscribe = firestore
+			.collection('events')
+			.doc(eventId)
+			.collection('activities')
+			.doc(activityId)
+			.onSnapshot(snapshot => {
+				const data = snapshot.data();
+				if (data && Object.keys(data).includes('meetConfig')) {
+					setMeetConfig(data.meetConfig);
+				}
+			});
+		return () => unsubscribe();
+	}, []);
+
+	useEffect(() => {
+		console.log({ meetConfig });
+	}, [meetConfig]);
+
+	const updateMeeting = async (eventId: string, activityId: string, status: boolean) => {
+		try {
+			console.log(`events/${eventId}/activities/${activityId}`);
+			const newMeetConfig = status ? { ...meetConfig, openMeet: status } : INITIAL_MEET_CONFIG;
+
+			setLoading(true);
+			await firestore
+				.collection('events')
+				.doc(eventId)
+				.collection('activities')
+				.doc(activityId)
+				.update({ meetConfig: newMeetConfig });
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const handleOpenModal = () => setOpen(true);
+
+	const handleCloseModal = () => setOpen(false);
+
+	const handleOpenMeeting = async () => {
+		await updateMeeting(eventId, activityId, true);
+		handleCloseModal();
+	};
+
+	const handleCloseMeeting = async () => {
+		await updateMeeting(eventId, activityId, false);
+	};
+
+	if (!meetConfig) return null;
+
+	return (
+		<>
+			<Card>
+				{!meetConfig.openMeet && (
+					<Button color='' onClick={handleOpenModal}>
+						Iniciar reunión
+					</Button>
+				)}
+				{!!meetConfig.openMeet && (
+					<Popconfirm onConfirm={handleCloseMeeting} title='¿Esta seguro que desea finalizar la reunión?' okText='Finalizar' cancelText='Cancelar'>
+						<Button color='' loading={loading}>
+							Finalizar reunión
+						</Button>
+					</Popconfirm>
+				)}
+				<Modal
+					width={700}
+					visible={open}
+					onCancel={handleCloseModal}
+					onOk={handleOpenMeeting}
+					confirmLoading={loading}
+					bodyStyle={{ height: '70vh' }}
+					okText='Iniciar'>
+					<Row>
+						<Col xs={24}>
+							<Tabs>
+								<Tabs.TabPane
+									className={!screens.xs ? 'desplazar' : ''}
+									style={{ height: '60vh', overflowY: 'auto' }}
+									tab='General'
+									key='item-general'>
+									<Form layout='vertical'>
+										<Card bordered={false}>
+											<List
+												size='small'
+												dataSource={generalItems}
+												renderItem={option => (
+													<List.Item
+														style={{ padding: '0px' }}
+														key={option.key}
+														extra={
+															<Form.Item style={{ margin: '10px' }}>
+																{option.element({ meetConfig, setMeetConfig })}
+															</Form.Item>
+														}>
+														<List.Item.Meta title={option.label} />
+													</List.Item>
+												)}
+											/>
+										</Card>
+									</Form>
+								</Tabs.TabPane>
+								{/* <Tabs.TabPane tab='Notificaciones' key='item-notifications'>
+									<Row align='middle' justify='center'>
+										<Notifications
+											values={meetConfig.config.notifications}
+											onChange={list =>
+												setMeetConfig(prev => ({ ...prev, config: { ...prev.config, notifications: list } }))
+											}
+										/>
+									</Row>
+								</Tabs.TabPane> */}
+								<Tabs.TabPane
+									className={!screens.xs ? 'desplazar' : ''}
+									style={{ height: '60vh', overflowY: 'auto' }}
+									tab='Toolbar'
+									key='item-toolbar'>
+									{/* <Row align='middle' justify='center'> */}
+									<Toolbar
+										values={meetConfig.config.toolbarButtons}
+										onChange={list =>
+											setMeetConfig(prev => ({ ...prev, config: { ...prev.config, toolbarButtons: list } }))
+										}
+									/>
+									{/* </Row> */}
+								</Tabs.TabPane>
+							</Tabs>
+						</Col>
+					</Row>
+				</Modal>
+			</Card>
+		</>
+	);
+}
