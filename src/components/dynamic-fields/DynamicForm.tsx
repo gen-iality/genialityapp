@@ -12,6 +12,7 @@ import DynamicMultipleListField from './DynamicMultipleListField';
 import DynamicPhoneInputField from './DynamicPhoneInputField';
 import DynamicSelectField from './DynamicSelectField';
 import DynamicTextField from './DynamicTextField';
+import DynamicTermsAndCondictionsField from './DynamicTermsAndCondictionsField';
 import { IDynamicFieldData } from './types';
 
 type FormValuesType = any
@@ -273,6 +274,10 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
 
     if (type === 'multiplelisttable') {
       return <DynamicMultipleListField key={`item ${index}`} fieldData={field} allInitialValues={initialValues} />
+    }
+
+    if (type === 'TTCC') {
+      return <DynamicTermsAndCondictionsField key={`item ${index}`} fieldData={field} allInitialValues={initialValues} />
     }
 
     return <DynamicTextField key={`item ${index}`} fieldData={field} allInitialValues={initialValues} />
