@@ -28,6 +28,8 @@ export interface IDynamicFieldData {
   mandatory?: boolean,
   description?: string,
   labelPosition?: any, // NOTE: Check this
+  justonebyattendee?: boolean,
+  visibleByContacts?: boolean,
   visibleByAdmin?: boolean,
   options?: { label: string, value: string }[],
   dependency?: {
