@@ -62,9 +62,8 @@ type FormValuesType = any
 
 interface IOrganizationPropertiesFormProps {
   basicDataUser: object,
-  orgMember: any,
   organization: any,
-  onProperyChange: (propertyName: string, propertyValue: any) => void,
+  onProperyChange?: (propertyName: string, propertyValue: any) => void,
   otherFields?: IDynamicFieldData[],
   // initialOtherValues: let us set our initial values for
   onSubmit?: (values: any) => void,
@@ -105,7 +104,7 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
     // TODO: validate empty fields here
     for (const key in changedValues) {
       const value: any = changedValues[key]
-      props.onProperyChange(key, value)
+      props.onProperyChange && props.onProperyChange(key, value)
     }
     // TODO: update field visibility
   }, [props.onProperyChange])
@@ -120,12 +119,20 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
   }, [props.basicDataUser])
 
   useEffect(() => {
+    // Update all fields from the initial values - this can delete last values
+    if (form) {
+      console.log('(re)set all the form fields')
+      form.setFieldsValue(initialValues)
+    }
+  }, [form, initialValues])
+
+  useEffect(() => {
     if(props.form) {
       setForm(props.form);
     } else {
       setForm(newForm);
     }
-  }, [props.form])
+  }, [props.form, newForm])
 
   return (
     <Col xs={24} sm={22} md={24} lg={24} xl={24} style={centerStyle}>
