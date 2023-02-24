@@ -234,6 +234,7 @@ const EventOrganization = (props) => {
                   upcomingEvents.map((event, index) => (
                     <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                       <EventCard
+                        noDates
                         bordered={false}
                         key={event._id}
                         event={event}
@@ -273,6 +274,7 @@ const EventOrganization = (props) => {
                   lastEvents.map((event, index) => (
                     <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                       <EventCard
+                        noDates
                         bordered={false}
                         key={event._id}
                         event={event}
