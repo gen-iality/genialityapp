@@ -108,7 +108,7 @@ class EventCard extends Component {
                 <Link to={`/landing/${event._id}`}>
                 <Space size={1} direction='vertical'>
                   <span style={{ fontSize: '12px' }}>
-                    {this.props.noDates && <Space>
+                    {!this.props.noDates && <Space>
                       <i className='fas fa-calendar-alt' />
                       <time dateTime={event.datetime_from}>{dayjs(event.datetime_from).format('DD MMM YYYY')}</time>
                       {'-'}
