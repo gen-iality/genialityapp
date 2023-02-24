@@ -1,7 +1,7 @@
 import { Component, createRef } from 'react';
 import { dynamicFieldOptions } from '@components/dynamic-fields/constants';
 import CreatableSelect from 'react-select/lib/Creatable';
-import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row } from 'antd';
+import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row, Divider } from 'antd';
 import { DispatchMessageService } from '@context/MessageService';
 
 const html = document.querySelector('html');
@@ -395,40 +395,45 @@ class DatosModal extends Component {
                 placeholder="Escribe el nombre, en base de datos, exacto del otro campo"
               />
             </Form.Item>
-            <CreatableSelect
-              components={{ DropdownIndicator: null }}
-              inputValue={inputValue}
-              isClearable
-              isMulti
-              menuIsOpen={false}
-              onChange={this.changeDependencies}
-              onInputChange={this.handleInputChange}
-              onKeyDown={(e) => {
-                this.handleKeyDownDependent(e);
-              }}
-              placeholder='Escribe la opción y presiona Enter o Tab...'
-              value={(info?.dependency?.triggerValues || []).map(createOption)}
-              required={true}
-            />
+            <Form.Item name="triggerValues" label="Valores exactos">
+              <CreatableSelect
+                components={{ DropdownIndicator: null }}
+                inputValue={inputValue}
+                isClearable
+                isMulti
+                menuIsOpen={false}
+                onChange={this.changeDependencies}
+                onInputChange={this.handleInputChange}
+                onKeyDown={(e) => {
+                  this.handleKeyDownDependent(e);
+                }}
+                placeholder='Escribe la opción y presiona Enter o Tab...'
+                value={(info?.dependency?.triggerValues || []).map(createOption)}
+                required={true}
+              />
+            </Form.Item>
+            <Divider />
             </>
           )}
 
           {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
-            <CreatableSelect
-              components={{ DropdownIndicator: null }}
-              inputValue={inputValue}
-              isClearable
-              isMulti
-              menuIsOpen={false}
-              onChange={this.changeOption}
-              onInputChange={this.handleInputChange}
-              onKeyDown={(e) => {
-                this.handleKeyDown(e);
-              }}
-              placeholder='Escribe la opción y presiona Enter o Tab...x'
-              value={info?.options}
-              required={true}
-            />
+            <Form.Item name="options" label="Optiones">
+              <CreatableSelect
+                components={{ DropdownIndicator: null }}
+                inputValue={inputValue}
+                isClearable
+                isMulti
+                menuIsOpen={false}
+                onChange={this.changeOption}
+                onInputChange={this.handleInputChange}
+                onKeyDown={(e) => {
+                  this.handleKeyDown(e);
+                }}
+                placeholder='Escribe la opción y presiona Enter o Tab...x'
+                value={info?.options}
+                required={true}
+              />
+            </Form.Item>
           )}
 
           {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
