@@ -296,6 +296,7 @@ class DatosModal extends Component {
     values.dependency = values.dependency || {}
     values.dependency.fieldName = info.dependency?.fieldName || ''
     values.dependency.triggerValues = info.dependency?.triggerValues || []
+    values.link = info.link
     this.setState({ loading: true });
     if (info.type !== 'list' && info.type !== 'multiplelist') delete info.options;
 
@@ -444,8 +445,29 @@ class DatosModal extends Component {
                 onChange={this.changeFieldjustonebyattendee}>
                 Solo una opción por usuario (cuando un asistente selecciona una opción esta desaparece del listado)
               </Checkbox>
+              <Divider />
             </Form.Item>
           )}
+
+          {(info.type === 'TTCC') && (
+            <Form.Item name='link' label="Enlace para los términos y condiciones">
+            <Input
+              value={info.link}
+              onChange={(e) => {
+                const value = e.target.value
+                this.setState((previous) => {
+                  const newState = { ...previous }
+                  newState.info = newState.info || {}
+                  newState.info.link = value
+                  return newState
+                })
+              }}
+              placeholder="Enlace (esto depende el tipo de campo)"
+            />
+            <Divider />
+          </Form.Item>
+          )}
+
           <Form.Item
             label={'Obligatorio'}
             initialValue={info.mandatory || false}
