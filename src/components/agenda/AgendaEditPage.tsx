@@ -296,6 +296,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
               activityId={cAgenda.activityEdit}
               event={props.event}
               agenda={currentAgenda}
+              matchUrl={props.matchUrl}
             />
           </Tabs.TabPane>
           {isEditing && (
