@@ -21,7 +21,7 @@ import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 
 import { hourWithAdditionalMinutes } from '../hooks/useHourWithAdditionalMinutes'
 import Speaker from '@components/speakers/speaker'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 export interface FormValues {
   name: string,
@@ -208,14 +208,22 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item
-          label="Herramientas"
-          name="tool_ids"
-        >
-          <Select
-            options={allTools}
-            mode="multiple"
-          />
+        <Form.Item label="Herramientas">
+          <Row wrap gutter={[8, 8]}>
+            <Col span={23}>
+              <Form.Item name="tool_ids">
+                <Select
+                  options={allTools}
+                  mode="multiple"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={1}>
+              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'herramientas')}>
+                <Button icon={<SettingOutlined />} />
+              </Link>}
+            </Col>
+          </Row>
         </Form.Item>
         <Form.Item label="Conferencias">
           <Row wrap gutter={[8, 8]}>
@@ -264,26 +272,42 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
           </Row>
         </Form.Item>
 
-        <Form.Item
-          label="Espacios"
-          name="space_id"
-        >
-          <Select
-            options={[
-              { label: 'Seleccionar', value: null },
-              ...allSpaces,
-            ]}
-          />
+        <Form.Item label="Espacios">
+          <Row wrap gutter={[8, 8]}>
+            <Col span={23}>
+              <Form.Item name="space_id">
+                <Select
+                  options={[
+                    { label: 'Seleccionar', value: null },
+                    ...allSpaces,
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={1}>
+              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'espacios')}>
+                <Button icon={<SettingOutlined />} />
+              </Link>}
+            </Col>
+          </Row>
         </Form.Item>
-        <Form.Item
-          label="Categorías"
-          name="activity_categories_ids"
-        >
-          <Select
-            options={allCategories}
-            mode="multiple"
-          />
+
+        <Form.Item label="Categorías">
+          <Row wrap gutter={[8, 8]}>
+            <Col span={23}>
+              <Form.Item name="activity_categories_ids">
+                <Select
+                  options={allCategories}
+                  mode="multiple"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={1}>
+              <Button onClick={() => goSection(`${props.matchUrl}/categorias`)} icon={<SettingOutlined />} />
+            </Col>
+          </Row>
         </Form.Item>
+
         <Form.Item
           label="Descripción"
           name="description"
