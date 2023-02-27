@@ -291,15 +291,23 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             </Col>
           </Row>
         </Form.Item>
-        <Form.Item
-          label="Categorías"
-          name="activity_categories_ids"
-        >
-          <Select
-            options={allCategories}
-            mode="multiple"
-          />
+
+        <Form.Item label="Categorías">
+          <Row wrap gutter={[8, 8]}>
+            <Col span={23}>
+              <Form.Item name="activity_categories_ids">
+                <Select
+                  options={allCategories}
+                  mode="multiple"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={1}>
+              <Button onClick={() => goSection(`${props.matchUrl}/categorias`)} icon={<SettingOutlined />} />
+            </Col>
+          </Row>
         </Form.Item>
+
         <Form.Item
           label="Descripción"
           name="description"
