@@ -33,7 +33,7 @@ const Faqs = (props) => {
   return (
     <CMS
       API={FaqsApi}
-      eventId={props.event._id}
+      eventId={props.event?._id}
       title={'Preguntas frecuentes'}
       titleTooltip={'Agregue o edite las Preguntas frecuentes que se muestran en la aplicación'}
       addUrl={{
