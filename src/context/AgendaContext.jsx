@@ -406,7 +406,7 @@ export const AgendaContextProvider = ({ children }) => {
         setVimeoId,
         name_host,
         setNameHost,
-        avalibleGames,
+        avalibleGames, // availableGames*
         setAvailableGames,
         isPublished,
         setIsPublished,

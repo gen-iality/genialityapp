@@ -10,12 +10,14 @@ const { Title } = Typography;
 export interface ActivityTypeModalLayoutProps extends ModalWrapperUIProps {
   somethingWasSelected: boolean,
   render: () => ReactNode,
+  hideSelectButton?: boolean,
 };
 
 function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {
   const {
     render,
     somethingWasSelected,
+    hideSelectButton,
     // Inheret
     title,
     onClose = () => {},
@@ -46,13 +48,15 @@ function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
         <Row justify='end' gutter={[8, 8]}>
           <Col>
-            <Button
-              disabled={!somethingWasSelected}
-              type='primary'
-              onClick={handleSelectButton}
-            >
-              Seleccionar
-            </Button>
+            {!hideSelectButton && (
+              <Button
+                disabled={!somethingWasSelected}
+                type='primary'
+                onClick={handleSelectButton}
+              >
+                Seleccionar
+              </Button>
+            )}
           </Col>
         </Row>
       </Footer>

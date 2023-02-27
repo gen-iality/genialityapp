@@ -52,7 +52,7 @@ const ImageUploaderDragAndDrop = ({
 
           const imagenUrl = await uploadImageData(file.originFileObj);
           setImage(imagenUrl);
-          imageDataCallBack(imagenUrl);
+          imageDataCallBack && imageDataCallBack(imagenUrl);
           setIsUploading(false);
           break;
 
@@ -65,7 +65,7 @@ const ImageUploaderDragAndDrop = ({
           await deleteFireStorageData(image);
           setImage(null);
           setIsUploading(false);
-          imageDataCallBack(null);
+          imageDataCallBack && imageDataCallBack(null);
           break;
 
         default:

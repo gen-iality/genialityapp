@@ -15,7 +15,7 @@ import { AgendaApi, DocumentsApi } from '@helpers/request';
 import { firestore } from '@helpers/firebase';
 
 import Loading from '../profile/loading';
-import RoomController from './roomManager/controller';
+import RoomController from './roomManager/RoomController';
 import Service from './roomManager/service';
 
 import TipeOfActivity from './typeActivity';
@@ -111,7 +111,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
+  // const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
 
   const [loadedAgenda, setLoadedAgenda] = useState<AgendaType | null>(null);
@@ -121,10 +121,10 @@ function AgendaEdit(props: AgendaEditProps) {
   /**
    * This states are used as config, I think...
    */
-  const [chat, setChat] = useState<boolean>(false);
-  const [surveys, setSurveys] = useState<boolean>(false);
-  const [games, setGames] = useState<boolean>(false);
-  const [attendees, setAttendees] = useState<boolean>(false);
+  // const [chat, setChat] = useState<boolean>(false);
+  // const [surveys, setSurveys] = useState<boolean>(false);
+  // const [games, setGames] = useState<boolean>(false);
+  // const [attendees, setAttendees] = useState<boolean>(false);
 
   const agendaContext = useContext(AgendaContext);
 
@@ -187,7 +187,7 @@ function AgendaEdit(props: AgendaEditProps) {
   //       had its own implementation of saveConfig. So confusing!
   useEffect(() => {
     saveConfig();
-  }, [attendees, games, surveys, chat, avalibleGames, agendaContext.isPublished]);
+  }, [agendaContext.isPublished]);
 
   const validateRoom = async () => {
     const activityId = agendaContext.activityEdit;
@@ -206,11 +206,11 @@ function AgendaEdit(props: AgendaEditProps) {
         setLoadedAgenda(loadedAgenda);
       }
 
-      setAvalibleGames(configuration.avalibleGames || []);
-      setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
-      setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);
-      setGames(configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false);
-      setAttendees(configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false);
+      // setAvalibleGames(configuration.avalibleGames || []);
+      // setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
+      // setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);
+      // setGames(configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false);
+      // setAttendees(configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false);
     }
   };
 
@@ -297,54 +297,8 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
-  const handleGamesSelected = async (status: string, itemId: string, listOfGames: any[]) => {
-    if (status === 'newOrUpdate') {
-      agendaContext.setAvailableGames(listOfGames);
-      setAvalibleGames(listOfGames);
-      // await saveConfig(); // did by useEffect (avalibleGames)
-    } else {
-      const newData: object[] = listOfGames.map((items) => {
-        if (items.id === itemId) return { ...items, showGame: status };
-        else return { ...items };
-      });
-      agendaContext.setAvailableGames(newData);
-      setAvalibleGames(newData);
-      // await saveConfig(); // did by useEffect (avalibleGames)
-    }
-  };
-
   const handleDocumentChange = (value: any) => {
     setFormData((previous) => ({ ...previous, selectedDocuments: value || [] }));
-  };
-
-  // Encargado de gestionar los tabs de la video conferencia
-  const handleTabsController = (e: any, tab: string) => {
-    const valueTab = e;
-    const { chat, surveys, games, attendees } = agendaContext;
-    const tabs = { chat, surveys, games, attendees };
-
-    switch (tab) {
-      case 'chat':
-        tabs.chat = valueTab;
-        agendaContext.setChat(valueTab);
-        setChat(valueTab);
-        break;
-      case 'surveys':
-        tabs.surveys = valueTab;
-        agendaContext.setSurveys(valueTab);
-        setSurveys(valueTab);
-        break;
-      case 'games':
-        tabs.games = valueTab;
-        agendaContext.setGames(valueTab);
-        setGames(valueTab);
-        break;
-      case 'attendees':
-        tabs.attendees = valueTab;
-        agendaContext.setAttendees(valueTab);
-        setAttendees(valueTab);
-        break;
-    }
   };
 
   // Método para guarda la información de la configuración
@@ -461,10 +415,7 @@ function AgendaEdit(props: AgendaEditProps) {
                   <TabPane tab='Juegos' key='3'>
                     <Row justify='center' wrap gutter={12}>
                       <Col span={20}>
-                        <RoomController
-                          handleGamesSelected={handleGamesSelected}
-                          handleTabsController={handleTabsController}
-                        />
+                        <RoomController />
                         <BackTop />
                       </Col>
                     </Row>
