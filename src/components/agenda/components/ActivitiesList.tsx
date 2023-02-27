@@ -320,14 +320,14 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 }}
               >
                 {item.host_picture && (
-                  <img style={{ width: '6rem', borderRadius: '50%' }} src={item.host_picture}></img>
+                  <img style={{ width: '6rem', borderRadius: '50%', marginRight: '1em' }} src={item.host_picture}></img>
                 )}
                 <div
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-start',
                     flexFlow: 'column wrap',
-                    paddingLeft: '25px',
+                    //paddingLeft: '25px',
                   }}
                 >
                   <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
