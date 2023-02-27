@@ -344,7 +344,7 @@ function AgendaEdit(props: AgendaEditProps) {
           customBack={props.matchUrl}
           title={formdata.name ? `Actividad - ${formdata.name}` : 'Actividad'}
           saveName={location.state.edit || currentActivityID ? '' : 'Crear'}
-          edit={location.state.edit || currentActivityID}
+          edit={location.state.edit || currentActivityID || undefined}
           extra={
             isEditing && (
               <Form.Item label='Publicar' labelCol={{ span: 14 }}>
