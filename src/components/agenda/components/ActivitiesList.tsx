@@ -316,21 +316,23 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 style={{
                   display: 'flex',
                   flexFlow: 'row wrap',
+                  alignItems: 'center',
                 }}
               >
                 {item.host_picture && (
-                  <img style={{ width: '6rem', paddingRight: '25px' }} src={item.host_picture}></img>
+                  <img style={{ width: '6rem', borderRadius: '50%' }} src={item.host_picture}></img>
                 )}
                 <div
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-start',
                     flexFlow: 'column wrap',
+                    paddingLeft: '25px',
                   }}
                 >
-                  <span>{item.name_host}</span>
+                  <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
                   <Link to={item.link}>
-                    <div style={{ fontSize: '1.2rem' }}>
+                    <div style={{ fontSize: '1.6rem' }}>
                       <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
                       <span>{item.title}</span>
                     </div>
