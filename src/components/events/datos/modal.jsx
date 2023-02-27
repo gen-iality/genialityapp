@@ -1,7 +1,7 @@
 import { Component, createRef } from 'react';
-import { typeInputs } from '@helpers/constants';
+import { dynamicFieldOptions } from '@components/dynamic-fields/constants';
 import CreatableSelect from 'react-select/lib/Creatable';
-import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row } from 'antd';
+import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row, Divider } from 'antd';
 import { DispatchMessageService } from '@context/MessageService';
 
 const html = document.querySelector('html');
@@ -105,6 +105,7 @@ class DatosModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isDependent: false,
       info: {
         name: '',
         mandatory: false,
@@ -115,6 +116,10 @@ class DatosModal extends Component {
         type: '',
         options: [],
         justonebyattendee: false,
+        dependency: {
+          fieldName: '',
+          triggerValues: [],
+        },
       },
       valid: true,
       loading: false,
@@ -153,7 +158,8 @@ class DatosModal extends Component {
   };
 
   validForm = () => {
-    const { name, label, type, options } = this.state.info;
+    const { isDependent } = this.state
+    const { name, label, type, options, dependency } = this.state.info;
     let valid = !(name.length > 0 && label.length > 0 && type !== '');
     if (type === 'list') {
       valid = !(!valid && options && options.length > 0);
@@ -161,14 +167,29 @@ class DatosModal extends Component {
         this.setState({ info: { ...this.state.info, options: [] } });
       }
     }
+    if (isDependent) {
+      if (!dependency || !dependency.fieldName) {
+        valid = false
+      }
+      if (!dependency || (dependency.triggerValues || []).length === 0) {
+        valid = false
+      }
+    }
     this.setState({ valid });
   };
-  //Cambiar mandatory del campo del curso o lista
+  //Cambiar justonebyattendee del campo del curso o lista
   changeFieldjustonebyattendee = () => {
     this.setState((prevState) => {
       return { info: { ...this.state.info, justonebyattendee: !prevState.info.justonebyattendee } };
     });
   };
+
+  changeFieldAsDependent = (e) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      isDependent: e.target.checked,
+    }));
+  }
 
   //Cambiar mandatory del campo del curso o lista
   changeFieldCheck = () => {
@@ -198,24 +219,56 @@ class DatosModal extends Component {
     this.setState({ info: { ...this.state.info, options: option } }, this.validForm);
   };
 
+  changeDependencies = (triggerValues) => {
+    console.log('changeDependencies', triggerValues)
+    this.setState((previous) => {
+      const newState = { ...previous }
+      newState.inputValue = ''
+      newState.info = newState.info || {}
+      newState.info.dependency = newState.info.dependency || {}
+      newState.info.dependency.triggerValues = triggerValues.map((item) => item.value)
+      return newState;
+    }, this.validForm)
+  };
+
+  checkIfEnter = (event) => {
+    if (event.keyCode === 9 || event.keyCode === 13) {
+      return true
+    }
+    return false
+  }
+
   //funciona pra crear datos predeterminados
 
   handleKeyDown = (event) => {
     const { inputValue } = this.state;
     const value = inputValue;
     if (!value) return;
-    switch (event.keyCode) {
-      case 9:
-      case 13:
-        this.setState({
-          inputValue: '',
-          info: { ...this.state.info, options: [...(this.state.info?.options || []), createOption(value)] },
-        });
-        event.preventDefault();
-        break;
-      // eslint-disable-next-line no-empty
-      default: {
-      }
+    if (this.checkIfEnter(event)) {
+      this.setState({
+        inputValue: '',
+        info: { ...this.state.info, options: [...(this.state.info?.options || []), createOption(value)] },
+      });
+      event.preventDefault();
+    }
+  };
+
+  handleKeyDownDependent = (event) => {
+    const { inputValue } = this.state;
+    const value = inputValue;
+    if (!value) return;
+    if (this.checkIfEnter(event)) {
+      console.log('handleKeyDownDependent Enter:', value)
+      this.setState((previous) => {
+        const newState = { ...previous }
+        newState.inputValue = ''
+        newState.info = newState.info || {}
+        newState.info.dependency = newState.info.dependency || {}
+        newState.info.dependency.triggerValues = newState.info.dependency.triggerValues || []
+        newState.info.dependency.triggerValues.push(value)
+        return newState;
+      });
+      event.preventDefault();
     }
   };
 
@@ -240,6 +293,10 @@ class DatosModal extends Component {
     values.visibleByAdmin = info?.visibleByAdmin;
     values.visibleByContacts = info.visibleByContacts;
     values.description = info.description;
+    values.dependency = values.dependency || {}
+    values.dependency.fieldName = info.dependency?.fieldName || ''
+    values.dependency.triggerValues = info.dependency?.triggerValues || []
+    values.link = info.link
     this.setState({ loading: true });
     if (info.type !== 'list' && info.type !== 'multiplelist') delete info.options;
 
@@ -267,7 +324,7 @@ class DatosModal extends Component {
     }
   };
   render() {
-    const { inputValue, info, valid, loading } = this.state;
+    const { inputValue, info, valid, loading, isDependent } = this.state;
     const { edit } = this.props;
 
     return (
@@ -305,28 +362,79 @@ class DatosModal extends Component {
             name='type'
             rules={[{ required: true, message: 'Seleccione un tipo de dato válido' }]}>
             <Select
-              defaultValue={typeInputs}
-              options={typeInputs}
+              options={dynamicFieldOptions}
               disabled={info.name === 'picture' || info.name == 'email' || info.name == 'names' ? true : false}
               onChange={(value) => this.handleChange({ target: { name: 'type', value: value } })}></Select>
           </Form.Item>
 
+          {/* Mark this field as dependent */}
+          <Form.Item name='isDependent'>
+            <Checkbox
+              name={`isDependent`}
+              checked={(isDependent || info?.dependency?.fieldName)}
+              onChange={this.changeFieldAsDependent}
+            >
+              Marca este campo como dependiente de otro campo
+            </Checkbox>
+          </Form.Item>
+
+          {(isDependent || info?.dependency?.fieldName) && (
+            <>
+            <Form.Item name='fieldName'>
+              <Input
+                value={info.dependency?.fieldName}
+                onChange={(e) => {
+                  const value = e.target.value
+                  this.setState((previous) => {
+                    const newState = { ...previous }
+                    newState.info = newState.info || {}
+                    newState.info.dependency = newState.info.dependency || {}
+                    newState.info.dependency.fieldName = value
+                    return newState
+                  })
+                }}
+                placeholder="Escribe el nombre, en base de datos, exacto del otro campo"
+              />
+            </Form.Item>
+            <Form.Item name="triggerValues" label="Valores exactos">
+              <CreatableSelect
+                components={{ DropdownIndicator: null }}
+                inputValue={inputValue}
+                isClearable
+                isMulti
+                menuIsOpen={false}
+                onChange={this.changeDependencies}
+                onInputChange={this.handleInputChange}
+                onKeyDown={(e) => {
+                  this.handleKeyDownDependent(e);
+                }}
+                placeholder='Escribe la opción y presiona Enter o Tab...'
+                value={(info?.dependency?.triggerValues || []).map(createOption)}
+                required={true}
+              />
+            </Form.Item>
+            <Divider />
+            </>
+          )}
+
           {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
-            <CreatableSelect
-              components={{ DropdownIndicator: null }}
-              inputValue={inputValue}
-              isClearable
-              isMulti
-              menuIsOpen={false}
-              onChange={this.changeOption}
-              onInputChange={this.handleInputChange}
-              onKeyDown={(e) => {
-                this.handleKeyDown(e);
-              }}
-              placeholder='Escribe la opción y presiona Enter o Tab...x'
-              value={info?.options}
-              required={true}
-            />
+            <Form.Item name="options" label="Optiones">
+              <CreatableSelect
+                components={{ DropdownIndicator: null }}
+                inputValue={inputValue}
+                isClearable
+                isMulti
+                menuIsOpen={false}
+                onChange={this.changeOption}
+                onInputChange={this.handleInputChange}
+                onKeyDown={(e) => {
+                  this.handleKeyDown(e);
+                }}
+                placeholder='Escribe la opción y presiona Enter o Tab...x'
+                value={info?.options}
+                required={true}
+              />
+            </Form.Item>
           )}
 
           {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
@@ -337,8 +445,29 @@ class DatosModal extends Component {
                 onChange={this.changeFieldjustonebyattendee}>
                 Solo una opción por usuario (cuando un asistente selecciona una opción esta desaparece del listado)
               </Checkbox>
+              <Divider />
             </Form.Item>
           )}
+
+          {(info.type === 'TTCC') && (
+            <Form.Item name='link' label="Enlace para los términos y condiciones">
+            <Input
+              value={info.link}
+              onChange={(e) => {
+                const value = e.target.value
+                this.setState((previous) => {
+                  const newState = { ...previous }
+                  newState.info = newState.info || {}
+                  newState.info.link = value
+                  return newState
+                })
+              }}
+              placeholder="Enlace (esto depende el tipo de campo)"
+            />
+            <Divider />
+          </Form.Item>
+          )}
+
           <Form.Item
             label={'Obligatorio'}
             initialValue={info.mandatory || false}

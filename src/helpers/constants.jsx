@@ -103,28 +103,7 @@ export const rolPermissions = {
     name: 'Metricas del curso',
   },
 };
-export const typeInputs = [
-  { value: '', label: 'Seleccione una opción' },
-  { value: 'text', label: 'Texto' },
-  { value: 'country', label: 'Pais ' },
-  { value: 'region', label: 'Region ' },
-  { value: 'city', label: 'Ciudad ' },
-  { value: 'longtext', label: 'Texto largo' },
-  { value: 'email', label: 'Correo' },
-  { value: 'number', label: 'Numérico' },
-  { value: 'list', label: 'Lista opciones' },
-  { value: 'multiplelist', label: 'Selección multiple' },
-  { value: 'date', label: 'Fecha (DD/MM/YYYY)' },
-  { value: 'boolean', label: 'Si/No' },
-  { value: 'file', label: 'Archivo' },
-  { value: 'complex', label: 'JSON' },
-  { value: 'tituloseccion', label: 'Titulo para indicar campos relacionados' },
-  { value: 'password', label: 'Password' },
-  { value: 'multiplelisttable', label: 'Selección multiple con buscar' },
-  { value: 'codearea', label: 'Código de área para números' },
-  { value: 'onlyCodearea', label: 'Código de área sin teléfono' },
-  /* { value: 'avatar', label: 'Imagen de perfil' }, */
-];
+
 export const toolbarEditor = {
   toolbar: [
     [{ font: [] }],

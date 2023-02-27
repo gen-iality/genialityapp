@@ -218,46 +218,7 @@ const EventOrganization = (props) => {
                 </Col>
               </Row>
             )}
-            {/* Lista de cursos próximos */}
-            <div
-              style={{
-                backgroundColor: '#FFFFFF',
-                padding: '20px',
-                borderRadius: '20px',
-              }}
-            >
-              <Badge offset={[60, 22]} count={`${upcomingEvents.length} Cursos`}>
-                <Title level={2}>Próximos</Title>
-              </Badge>
-              <Row gutter={[16, 16]}>
-                {upcomingEvents?.length > 0 ? (
-                  upcomingEvents.map((event, index) => (
-                    <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
-                      <EventCard
-                        bordered={false}
-                        key={event._id}
-                        event={event}
-                        action={{ name: 'Ver', url: `landing/${event._id}` }}
-                      />
-                    </Col>
-                  ))
-                ) : (
-                  <div
-                    style={{
-                      height: '250px',
-                      width: '100%',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Empty description='No hay cursos próximos agendados' />
-                  </div>
-                )}
-              </Row>
-            </div>
-            <Divider />
-            {/* Lista de cursos pasados */}
+            {/* Lista de cursos pasados -> 'Disponibles' */}
             <div
               style={{
                 backgroundColor: '#FFFFFF',
@@ -266,13 +227,14 @@ const EventOrganization = (props) => {
               }}
             >
               <Badge offset={[60, 22]} count={`${lastEvents.length} Cursos`}>
-                <Title level={2}>Pasados</Title>
+                <Title level={2}>Disponibles</Title>
               </Badge>
               <Row gutter={[16, 16]}>
                 {lastEvents?.length > 0 ? (
                   lastEvents.map((event, index) => (
                     <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                       <EventCard
+                        noDates
                         bordered={false}
                         key={event._id}
                         event={event}
@@ -291,6 +253,46 @@ const EventOrganization = (props) => {
                     }}
                   >
                     <Empty description='No hay cursos pasados' />
+                  </div>
+                )}
+              </Row>
+            </div>
+            <Divider />
+            {/* Lista de cursos próximos */}
+            <div
+              style={{
+                backgroundColor: '#FFFFFF',
+                padding: '20px',
+                borderRadius: '20px',
+              }}
+            >
+              <Badge offset={[60, 22]} count={`${upcomingEvents.length} Cursos`}>
+                <Title level={2}>Próximos</Title>
+              </Badge>
+              <Row gutter={[16, 16]}>
+                {upcomingEvents?.length > 0 ? (
+                  upcomingEvents.map((event, index) => (
+                    <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
+                      <EventCard
+                        noDates
+                        bordered={false}
+                        key={event._id}
+                        event={event}
+                        action={{ name: 'Ver', url: `landing/${event._id}` }}
+                      />
+                    </Col>
+                  ))
+                ) : (
+                  <div
+                    style={{
+                      height: '250px',
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Empty description='No hay cursos próximos agendados' />
                   </div>
                 )}
               </Row>
