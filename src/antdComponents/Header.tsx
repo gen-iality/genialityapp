@@ -11,10 +11,10 @@ interface HeaderProps {
   titleTooltip?: string,
   addUrl?: string
   addFn?: MouseEventHandler<HTMLElement>,
-  edit?: boolean,
+  edit?: string,
   remove: MouseEventHandler<HTMLElement>,
   save?: boolean,
-  saveMethod: MouseEventHandler<HTMLElement>,
+  saveMethod?: MouseEventHandler<HTMLElement>,
   saveName?: string,
   back?: boolean,
   form?: boolean,
