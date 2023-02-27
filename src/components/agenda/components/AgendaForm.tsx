@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs'
 
-import { Card, Col, Form, FormInstance, InputRef, Row, Space, TimePicker, Typography } from 'antd'
+import { Button, Card, Col, Form, FormInstance, InputRef, Modal, Row, Space, TimePicker, Typography } from 'antd'
 
 import {
   Select,
@@ -9,10 +9,10 @@ import {
 } from 'antd'
 
 import * as React from 'react'
-import { FunctionComponent, useEffect, useRef, useState } from 'react'
+import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react'
 import { CategoriesAgendaApi, ModulesApi, SpacesApi, SpeakersApi, ToolsApi } from '@helpers/request'
 import AgendaType from '@Utilities/types/AgendaType'
-import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { ExclamationCircleOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons'
 import EviusReactQuill from '@components/shared/eviusReactQuill'
 import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 import { DispatchMessageService } from '@context/MessageService'
@@ -20,6 +20,8 @@ import BackTop from '@antdComponents/BackTop'
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 
 import { hourWithAdditionalMinutes } from '../hooks/useHourWithAdditionalMinutes'
+import Speaker from '@components/speakers/speaker'
+import { useHistory } from 'react-router-dom'
 
 export interface FormValues {
   name: string,
@@ -41,6 +43,7 @@ export interface FormValues {
 
 interface IAgendaFormProps {
   form: FormInstance<FormValues>,
+  matchUrl?: string,
   activityId?: string,
   event?: any,
   agenda?: AgendaType | null,
@@ -56,7 +59,14 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
 
   const [isFocused, setIsFocused] = useState(false)
 
+  const [isSpeakerModalOpened, setIsSpeakerModalOpened] = useState(false)
+
   const ref = useRef<InputRef>(null)
+  const history = useHistory()
+
+  const goSection = useCallback((path: string, state?: any) => {
+    history.push(path, state);
+  }, [])
 
   useEffect(() => {
     if (ref.current && !isFocused) {
@@ -207,15 +217,53 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             mode="multiple"
           />
         </Form.Item>
-        <Form.Item
-          label="Conferencias"
-          name="host_ids"
-        >
-          <Select
-            options={allHosts}
-            mode="multiple"
-          />
+        <Form.Item label="Conferencias">
+          <Row wrap gutter={[8, 8]}>
+            <Col span={22}>
+              <Form.Item name="host_ids">
+                <Select options={allHosts} mode="multiple" />
+              </Form.Item>
+            </Col>
+            <Col span={1}>
+              <Button
+                onClick={() => setIsSpeakerModalOpened(true)}
+                title='Agregar conferencista'
+                icon={<PlusOutlined />}
+              />
+            </Col>
+            <Col span={1}>
+              <Button
+                onClick={() => props.matchUrl && goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })}
+                icon={<SettingOutlined />}
+                title='Configurar en otra página'
+              />
+            </Col>
+            {/* The speaker modal */}
+            <Modal
+              visible={isSpeakerModalOpened}
+              onCancel={() => setIsSpeakerModalOpened(false)}
+              okButtonProps={{ disabled: true }}
+            >
+              <Speaker
+                eventID={props.event._id}
+                matchUrl={props.matchUrl}
+                onCreated={() => {
+                  const loading = async () => {
+                    const incommingHosts = await SpeakersApi.byEvent(props.event._id)
+                    setAllHosts(incommingHosts.map((host: any) => ({
+                      value: host._id,
+                      label: host.name,
+                    })))
+                  };
+                  loading().then(() => console.log('hosts reloaded'))
+                  setIsSpeakerModalOpened(false);
+                }}
+                justCreate
+              />
+            </Modal>
+          </Row>
         </Form.Item>
+
         <Form.Item
           label="Espacios"
           name="space_id"
