@@ -141,7 +141,7 @@ class NewEvent extends Component {
           alignItems: 'center',
           height: '100vh',
           width: '100vw',
-          backgroundColor: '#ECF2F7',
+          backgroundColor: '#FCEAD9',
         }}>
         <Row justify='center' className='newEvent' style={{ transition: 'all 1.5s ease-out' }}>
           {/* Items del paso a paso */}
