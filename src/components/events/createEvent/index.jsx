@@ -6,7 +6,7 @@ import { ContactsOutlined, PictureOutlined, ScheduleOutlined } from '@ant-design
 import { DispatchMessageService } from '@context/MessageService';
 /*vistas de paso a paso */
 
-import Informacion from './newEvent/informacion';
+import InitialNewEventFormSection from './newEvent/InitialNewEventFormSection';
 import Apariencia from './newEvent/apariencia';
 import EventAccessTypeSection from './newEvent/EventAccessTypeSection';
 /*vista de resultado de la creacion de un curso */
@@ -75,7 +75,7 @@ class NewEvent extends Component {
   obtainContent = (step) => {
     switch (step.title) {
       case 'Información':
-        return <Informacion orgId={this.state.orgId} currentUser={this.state.currentUser} />;
+        return <InitialNewEventFormSection orgId={this.state.orgId} currentUser={this.state.currentUser} />;
       case 'Apariencia':
         return <Apariencia currentUser={this.state.currentUser} />;
       /* case 'Transmisión':
