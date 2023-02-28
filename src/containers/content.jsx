@@ -31,7 +31,7 @@ const Home = loadable(() => import('../pages/home'));
 const Landing = loadable(() => import('../components/events/Landing/landing'));
 const Transition = loadable(() => import('../components/shared/Animate_Img/index'));
 /* const Events = loadable(() => import('../components/events')); */
-const NewEvent = loadable(() => import('../components/events/createEvent/index'));
+const NewEventPage = loadable(() => import('../components/events/createEvent/NewEventPage'));
 /* const MyProfile = loadable(() => import('../components/profile/index_old')); */
 /* const Purchase = loadable(() => import('../components/profile/purchase_old')); */
 /* const EventEdit = loadable(() => import('../components/profile/events_old')); */
@@ -80,12 +80,12 @@ const ContentContainer = () => {
           <RouteContext path='/blockedEvent/:event_id' component={BlockedEvent} />
           <PrivateRoute path='/create-event/:user?'>
             <NewEventProvider>
-              <NewEvent />
+              <NewEventPage />
             </NewEventProvider>
           </PrivateRoute>
           <PrivateRoute path='/eventadmin/:event' component={Event} />
           <PrivateRoute path='/orgadmin/:event' component={Event} />
-          <PrivateRoute path='/create-event' component={NewEvent} />
+          <PrivateRoute path='/create-event' component={NewEventPage} />
           <RouteContext exact path='/organization/:id/events' component={EventOrganization} />
           <RouteContext exact path='/organization/:id' component={EventOrganization} />
           <PrivateRoute path='/admin/organization/:id' component={Organization} />
