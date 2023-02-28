@@ -169,7 +169,13 @@ class Datos extends Component {
                 firestore
                   .collection(`${this.eventId}_event_attendees`)
                   .doc(doc.id)
-                  .set(datos);
+                  .set(datos).finally(() => {
+                    // Update the fields state from the new edited field
+                    this.setState((previous) => ({
+                      ...previous,
+                      fields: previous.fields.map((_field) => (_field._id === field._id) ? field : _field),
+                    }))
+                  });
               });
             }
           });
