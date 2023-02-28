@@ -8,7 +8,7 @@ import { DispatchMessageService } from '@context/MessageService';
 
 import Informacion from './newEvent/informacion';
 import Apariencia from './newEvent/apariencia';
-import AccessType from './newEvent/accessTypeEvent';
+import EventAccessTypeSection from './newEvent/EventAccessTypeSection';
 /*vista de resultado de la creacion de un curso */
 import { cNewEventContext } from '@context/newEventContext';
 const { Step } = Steps;
@@ -81,7 +81,7 @@ class NewEvent extends Component {
       /* case 'Transmisión':
         return <Tranmitir currentUser={this.state.currentUser} />;*/
       case 'Tipo de acceso':
-        return <AccessType />;
+        return <EventAccessTypeSection />;
     }
   };
   /*Funciones para navegar en el paso a paso */

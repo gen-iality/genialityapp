@@ -2,7 +2,7 @@ import { CheckCircleFilled } from '@ant-design/icons';
 import { Badge, Card, Col, Divider, Row, Space, Typography, Checkbox } from 'antd';
 import { useContextNewEvent } from '@context/newEventContext';
 
-const AccessTypeEvent = () => {
+const EventAccessTypeSection = () => {
   /**
    * accessType === 0 -> Publico con registro obligatorio
    * accessType === 1 -> Publico sin registro obligatorio
@@ -107,4 +107,4 @@ const AccessTypeEvent = () => {
   );
 };
 
-export default AccessTypeEvent;
+export default EventAccessTypeSection;
