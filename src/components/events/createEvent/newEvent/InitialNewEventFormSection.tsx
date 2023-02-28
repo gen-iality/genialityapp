@@ -18,7 +18,7 @@ import { CalendarOutlined } from '@ant-design/icons'
 import 'react-day-picker/lib/style.css'
 import { useContextNewEvent } from '@context/newEventContext'
 import { PlansApi } from '@helpers/request'
-import ModalOrgListCreate from './modalOrgListCreate'
+import ModalOrgListCreate from './ModalOrgListCreate'
 /**
  * This solution is distributed as is:
  * https://github.com/react-component/picker/issues/123#issuecomment-728755491
