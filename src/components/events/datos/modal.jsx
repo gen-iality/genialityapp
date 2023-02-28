@@ -105,6 +105,8 @@ class DatosModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      inputValue: '',
+      inputValueDependency: '',
       isDependent: false,
       info: {
         name: '',
@@ -214,6 +216,9 @@ class DatosModal extends Component {
   handleInputChange = (inputValue) => {
     this.setState({ inputValue });
   };
+  handleInputChangeDependency = (inputValueDependency) => {
+    this.setState({ inputValueDependency });
+  };
 
   changeOption = (option) => {
     this.setState({ info: { ...this.state.info, options: option } }, this.validForm);
@@ -223,7 +228,7 @@ class DatosModal extends Component {
     console.log('changeDependencies', triggerValues)
     this.setState((previous) => {
       const newState = { ...previous }
-      newState.inputValue = ''
+      newState.inputValueDependency = ''
       newState.info = newState.info || {}
       newState.info.dependency = newState.info.dependency || {}
       newState.info.dependency.triggerValues = triggerValues.map((item) => item.value)
@@ -254,14 +259,14 @@ class DatosModal extends Component {
   };
 
   handleKeyDownDependent = (event) => {
-    const { inputValue } = this.state;
-    const value = inputValue;
+    const { inputValueDependency } = this.state;
+    const value = inputValueDependency;
     if (!value) return;
     if (this.checkIfEnter(event)) {
       console.log('handleKeyDownDependent Enter:', value)
       this.setState((previous) => {
         const newState = { ...previous }
-        newState.inputValue = ''
+        newState.inputValueDependency = ''
         newState.info = newState.info || {}
         newState.info.dependency = newState.info.dependency || {}
         newState.info.dependency.triggerValues = newState.info.dependency.triggerValues || []
@@ -324,7 +329,7 @@ class DatosModal extends Component {
     }
   };
   render() {
-    const { inputValue, info, valid, loading, isDependent } = this.state;
+    const { inputValue, inputValueDependency, info, valid, loading, isDependent } = this.state;
     const { edit } = this.props;
 
     return (
@@ -399,12 +404,12 @@ class DatosModal extends Component {
             <Form.Item name="triggerValues" label="Valores exactos">
               <CreatableSelect
                 components={{ DropdownIndicator: null }}
-                inputValue={inputValue}
+                inputValue={inputValueDependency}
                 isClearable
                 isMulti
                 menuIsOpen={false}
                 onChange={this.changeDependencies}
-                onInputChange={this.handleInputChange}
+                onInputChange={this.handleInputChangeDependency}
                 onKeyDown={(e) => {
                   this.handleKeyDownDependent(e);
                 }}
