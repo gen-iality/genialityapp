@@ -144,16 +144,29 @@ class Datos extends Component {
     });
     try {
       let totaluser = {};
-      const organizationId = this?.organization?._id;
+      const organizationId = this.organization?._id;
       if (organizationId) {
-        if (this.state.edit)
+        if (this.state.edit) {
           await this.props.editField(field._id || field.id, field, this.state.isEditTemplate, this.updateTable);
-        else await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
+        } else {
+          await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
+        } 
       } else {
-        if (this.state.edit) await EventFieldsApi.editOne(field, field._id || field.id, this.eventId);
-        else await EventFieldsApi.createOne(field, this.eventId);
+        if (this.state.edit) {
+          await EventFieldsApi.editOne(field, field._id || field.id, this.eventId);
+        } else {
+          await EventFieldsApi.createOne(field, this.eventId);
+        }
         totaluser = await firestore.collection(`${this.eventId}_event_attendees`).get();
       }
+
+      // Update the fields state from the new edited field
+      this.setState((previous) => ({
+        ...previous,
+        fields: previous.fields.map((_field) => (_field._id === field._id) ? field : _field),
+      }))
+      this.closeModal2() // To force clean the form by destroying the Modal
+
       if (totaluser?.docs?.length > 0 && field?.name == 'pesovoto') {
         firestore
           .collection(`${this.eventId}_event_attendees`)
@@ -169,13 +182,7 @@ class Datos extends Component {
                 firestore
                   .collection(`${this.eventId}_event_attendees`)
                   .doc(doc.id)
-                  .set(datos).finally(() => {
-                    // Update the fields state from the new edited field
-                    this.setState((previous) => ({
-                      ...previous,
-                      fields: previous.fields.map((_field) => (_field._id === field._id) ? field : _field),
-                    }))
-                  });
+                  .set(datos);
               });
             }
           });
