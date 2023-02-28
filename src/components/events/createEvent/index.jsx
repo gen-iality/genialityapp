@@ -7,7 +7,6 @@ import { DispatchMessageService } from '@context/MessageService';
 /*vistas de paso a paso */
 
 import InitialNewEventFormSection from './newEvent/InitialNewEventFormSection';
-import Apariencia from './newEvent/apariencia';
 import EventAccessTypeSection from './newEvent/EventAccessTypeSection';
 /*vista de resultado de la creacion de un curso */
 import { cNewEventContext } from '@context/newEventContext';
@@ -39,14 +38,6 @@ class NewEvent extends Component {
           title: 'Tipo de acceso',
           icon: <ContactsOutlined />,
         },
-        /*{
-          title: 'Apariencia',
-          icon: <PictureOutlined />,
-        },*/
-        /* {
-          title: 'Transmisión',
-          icon: <VideoCameraOutlined />,
-        },*/
       ],
       loading: false,
     };
@@ -76,10 +67,6 @@ class NewEvent extends Component {
     switch (step.title) {
       case 'Información':
         return <InitialNewEventFormSection orgId={this.state.orgId} currentUser={this.state.currentUser} />;
-      case 'Apariencia':
-        return <Apariencia currentUser={this.state.currentUser} />;
-      /* case 'Transmisión':
-        return <Tranmitir currentUser={this.state.currentUser} />;*/
       case 'Tipo de acceso':
         return <EventAccessTypeSection />;
     }
