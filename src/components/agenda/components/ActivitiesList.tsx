@@ -298,11 +298,17 @@ const ActivitiesList = (props: ActivitiesListProps) => {
     <List
       size='small'
       // header={<h2>LECCIONES DEL CURSO</h2>}
-      bordered
+      //bordered
       dataSource={props.dataSource}
       renderItem={(item: TruncatedAgenda) => (
         <item.RibbonComponent>
           <List.Item className='shadow-box'>
+            {item.host_picture && (
+              <img
+                style={{ width: '6rem', height: '6rem', borderRadius: '50%', marginRight: '1rem' }}
+                src={item.host_picture}
+              ></img>
+            )}
             <div
               style={{
                 display: 'flex',
@@ -315,29 +321,19 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               <div
                 style={{
                   display: 'flex',
-                  flexFlow: 'row wrap',
-                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  flexFlow: 'column wrap',
+                  marginRight: '1rem',
+                  //paddingLeft: '25px',
                 }}
               >
-                {item.host_picture && (
-                  <img style={{ width: '6rem', borderRadius: '50%', marginRight: '1em' }} src={item.host_picture}></img>
-                )}
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    flexFlow: 'column wrap',
-                    //paddingLeft: '25px',
-                  }}
-                >
-                  <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
-                  <Link to={item.link}>
-                    <div style={{ fontSize: '1.6rem' }}>
-                      <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
-                      <span>{item.title}</span>
-                    </div>
-                  </Link>
-                </div>
+                <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
+                <Link to={item.link}>
+                  <div style={{ fontSize: '1.6rem' }}>
+                    <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
+                    <span>{item.title}</span>
+                  </div>
+                </Link>
               </div>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <span style={{ marginRight: '.5em' }}>
@@ -353,7 +349,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   )}
                 </span>
                 <Link to={item.link}>
-                  <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>{item.timeString}</span>
+                  {/* <span style={{ fontWeight: '100', fontSize: '1.2rem' }}>{item.timeString}</span> */}
                 </Link>
               </div>
             </div>
