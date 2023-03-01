@@ -7,6 +7,9 @@ import { Actions } from '@helpers/request';
 
 const { Title } = Typography;
 
+/**
+ * @deprecated nothing uses this component
+ */
 class DragDrop extends Component {
   constructor(props) {
     super(props);

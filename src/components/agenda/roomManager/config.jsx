@@ -125,7 +125,7 @@ export default function RoomConfig(props) {
                 }}>
                 <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => setPlatform(e)}>
                   <Option value='wowza'>
-                    Evius streaming <Typography.Text type='secondary'>(recomendado)</Typography.Text>
+                    GEN streaming <Typography.Text type='secondary'>(recomendado)</Typography.Text>
                   </Option>
                   <Option value='vimeo'>Vimeo</Option>
                 </Select>
@@ -154,7 +154,7 @@ export default function RoomConfig(props) {
                     actions={[
                       <Radio checked={transmition === 'EviusMeet'} onChange={(e) => setTransmition('EviusMeet')} />,
                     ]}>
-                    <List.Item.Meta title={<b>Evius meet</b>} />
+                    <List.Item.Meta title={<b>GEN Meet</b>} />
                   </List.Item>
                   <List.Item
                     style={{
@@ -186,7 +186,7 @@ export default function RoomConfig(props) {
                   <Col span={16}>
                     <Typography.Title level={3}>
                       {'Crea una transmisión con '}{' '}
-                      {transmition === 'EviusMeet' ? 'todo el poder de EVIUS' : transmition}{' '}
+                      {transmition === 'EviusMeet' ? 'todo el poder de GEN.iality' : transmition}{' '}
                     </Typography.Title>
                     <Typography.Text type='secondary'>
                       <ul>

@@ -400,9 +400,9 @@ section.landing {
   }
 }
 
-.ant-comment-avatar {
+/* .ant-comment-avatar {
   // margin-right: 0px !important;
-}
+} */
 
 // Estilos del editor
 
@@ -459,8 +459,18 @@ section.landing {
   padding-left: 0.5em !important;
 }
 
-.ql-container.ql-snow,
+/* ql-container.ql-snow,
 .ql-bubble {
+  font-family: $family-sans-serif !important;
+  min-height: auto;
+} */
+
+.ql-container.ql-bubble {
+  font-family: $family-sans-serif !important;
+  min-height: auto;
+}
+
+.ql-container.ql-snow {
   font-family: $family-sans-serif !important;
   min-height: 150px;
 }

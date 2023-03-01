@@ -1,6 +1,9 @@
 import { Modal } from 'antd';
 import { Component } from 'react';
 
+/**
+ * @deprecated its parent is deprecated too
+ */
 export default class ModalRelation extends Component {
   constructor(props) {
     super(props);

@@ -138,7 +138,8 @@ class Speakers extends Component {
           onClick={() => this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)}
           key={'sp' + speaker._id}
           data-target='#myModal'
-          aria-haspopup='true'>
+          aria-haspopup='true'
+        >
           Ver más...
         </Button>
       );
@@ -179,7 +180,8 @@ class Speakers extends Component {
                                 borderRadius: '5px',
                                 backgroundColor: '#FFFFFF',
                                 boxSizing: 'border-box',
-                              }}>
+                              }}
+                            >
                               <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
                             </div>
                             {speakersWithCategory[category.order].map((speaker, key) => (
@@ -200,7 +202,7 @@ class Speakers extends Component {
                                             speaker.name,
                                             speaker.profession,
                                             speaker.description,
-                                            speaker.category
+                                            speaker.category,
                                           );
                                         }
                                       }}
@@ -228,7 +230,8 @@ class Speakers extends Component {
                                           />
                                         )
                                       }
-                                      actions={speaker.description && [this.btnViewMore(speaker)]}>
+                                      actions={speaker.description && [this.btnViewMore(speaker)]}
+                                    >
                                       <Meta
                                         /* title={[
                                           <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
@@ -249,10 +252,12 @@ class Speakers extends Component {
                                         description={[
                                           <div
                                             key={'speaker-description  ' + key}
-                                            style={{ minHeight: '100px', textAlign: 'center' }}>
+                                            style={{ minHeight: '100px', textAlign: 'center' }}
+                                          >
                                             <Title
                                               level={4}
-                                              style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
+                                              style={{ color: this.props.cEvent.value?.styles?.textMenu }}
+                                            >
                                               {speaker.name}
                                             </Title>
                                             <Paragraph style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
@@ -298,7 +303,7 @@ class Speakers extends Component {
                             speaker.name,
                             speaker.profession,
                             speaker.description,
-                            speaker.category
+                            speaker.category,
                           );
                         }
                       }}
@@ -326,7 +331,8 @@ class Speakers extends Component {
                           />
                         )
                       }
-                      actions={speaker.description && [this.btnViewMore(speaker)]}>
+                      actions={speaker.description && [this.btnViewMore(speaker)]}
+                    >
                       <Meta
                         description={[
                           <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
@@ -362,7 +368,8 @@ class Speakers extends Component {
           width={1000}
           visible={this.state.modalVisible}
           onCancel={() => this.setModalVisible(false)}
-          footer={null}>
+          footer={null}
+        >
           <Row>
             {/* Imagen del conferencista */}
 
@@ -377,9 +384,9 @@ class Speakers extends Component {
             {/* Descripción del conferencista */}
             <Col flex='1 1 600px'>
               <span>
-                <b>{infoSpeaker.nombre}</b>
+                <b style={{ color: this.props.cEvent.value?.styles?.textMenu }}>{infoSpeaker.nombre}</b>
               </span>
-              <p>
+              <p style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
                 <span>
                   <b>{infoSpeaker.cargo}</b>
                 </span>
@@ -388,6 +395,7 @@ class Speakers extends Component {
                 <Row justify='center'>
                   <Col span={24} id='img-description'>
                     <ReactQuill
+                      style={{ color: this.props.cEvent.value?.styles?.textMenu }}
                       value={infoSpeaker.descripcion}
                       readOnly={true}
                       className='hide-toolbar ql-toolbar'

@@ -23,6 +23,7 @@ import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { DispatchMessageService } from '@context/MessageService';
 import { createFieldForCheckInPerDocument } from './utils';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
+import DynamicFieldCreationForm from '../../dynamic-fields/DynamicFieldCreationForm'
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -144,16 +145,29 @@ class Datos extends Component {
     });
     try {
       let totaluser = {};
-      const organizationId = this?.organization?._id;
+      const organizationId = this.organization?._id;
       if (organizationId) {
-        if (this.state.edit)
+        if (this.state.edit) {
           await this.props.editField(field._id || field.id, field, this.state.isEditTemplate, this.updateTable);
-        else await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
+        } else {
+          await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
+        } 
       } else {
-        if (this.state.edit) await EventFieldsApi.editOne(field, field._id || field.id, this.eventId);
-        else await EventFieldsApi.createOne(field, this.eventId);
+        if (this.state.edit) {
+          await EventFieldsApi.editOne(field, field._id || field.id, this.eventId);
+        } else {
+          await EventFieldsApi.createOne(field, this.eventId);
+        }
         totaluser = await firestore.collection(`${this.eventId}_event_attendees`).get();
       }
+
+      // Update the fields state from the new edited field
+      this.setState((previous) => ({
+        ...previous,
+        fields: previous.fields.map((_field) => (_field._id === field._id) ? field : _field),
+      }))
+      this.closeModal2() // To force clean the form by destroying the Modal
+
       if (totaluser?.docs?.length > 0 && field?.name == 'pesovoto') {
         firestore
           .collection(`${this.eventId}_event_attendees`)
@@ -716,7 +730,13 @@ class Datos extends Component {
                     footer={false}
                     onCancel={this.closeModal2}
                     okText={'Guardar'}>
-                    <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} />
+                    {/* <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} /> */}
+                    <DynamicFieldCreationForm
+                      onCancel={this.closeModal2}
+                      dataToEdit={info}
+                      isEditing={edit}
+                      onSave={this.saveField}  
+                    />
                   </Modal>
                 )}
               </Fragment>
@@ -789,8 +809,15 @@ class Datos extends Component {
                       title={edit ? 'Editar dato' : 'Agregar dato'}
                       footer={false}
                       onCancel={this.closeModal2}
-                      cancelText={'Cancelar'}>
-                      <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} />
+                      cancelText={'Cancelar'}
+                    >
+                      {/* <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} /> */}
+                      <DynamicFieldCreationForm
+                        onCancel={this.closeModal2}
+                        dataToEdit={info}
+                        isEditing={edit}
+                        onSave={this.saveField}  
+                      />
                     </Modal>
                   )}
                 </Fragment>

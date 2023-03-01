@@ -1,6 +1,6 @@
 import { Component, createRef } from 'react';
 import { dynamicFieldOptions } from '@components/dynamic-fields/constants';
-import CreatableSelect from 'react-select/lib/Creatable';
+import { Creatable as CreatableSelect } from 'react-select';
 import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row, Divider } from 'antd';
 import { DispatchMessageService } from '@context/MessageService';
 
@@ -99,12 +99,17 @@ const extraInputs = {
   ],
 };
 
+/**
+ * @deprecated use DynamicFieldCreationForm instead
+ */
 class DatosModal extends Component {
   formRef = createRef();
 
   constructor(props) {
     super(props);
     this.state = {
+      inputValue: '',
+      inputValueDependency: '',
       isDependent: false,
       info: {
         name: '',
@@ -214,6 +219,9 @@ class DatosModal extends Component {
   handleInputChange = (inputValue) => {
     this.setState({ inputValue });
   };
+  handleInputChangeDependency = (inputValueDependency) => {
+    this.setState({ inputValueDependency });
+  };
 
   changeOption = (option) => {
     this.setState({ info: { ...this.state.info, options: option } }, this.validForm);
@@ -223,10 +231,10 @@ class DatosModal extends Component {
     console.log('changeDependencies', triggerValues)
     this.setState((previous) => {
       const newState = { ...previous }
-      newState.inputValue = ''
+      newState.inputValueDependency = ''
       newState.info = newState.info || {}
       newState.info.dependency = newState.info.dependency || {}
-      newState.info.dependency.triggerValues = triggerValues.map((item) => item.value)
+      newState.info.dependency.triggerValues = triggerValues
       return newState;
     }, this.validForm)
   };
@@ -254,20 +262,21 @@ class DatosModal extends Component {
   };
 
   handleKeyDownDependent = (event) => {
-    const { inputValue } = this.state;
-    const value = inputValue;
+    const { inputValueDependency } = this.state;
+    const value = inputValueDependency;
     if (!value) return;
     if (this.checkIfEnter(event)) {
       console.log('handleKeyDownDependent Enter:', value)
       this.setState((previous) => {
         const newState = { ...previous }
-        newState.inputValue = ''
+        newState.inputValueDependency = ''
         newState.info = newState.info || {}
         newState.info.dependency = newState.info.dependency || {}
         newState.info.dependency.triggerValues = newState.info.dependency.triggerValues || []
         newState.info.dependency.triggerValues.push(value)
         return newState;
       });
+      this.forceUpdate()
       event.preventDefault();
     }
   };
@@ -324,7 +333,7 @@ class DatosModal extends Component {
     }
   };
   render() {
-    const { inputValue, info, valid, loading, isDependent } = this.state;
+    const { inputValue, inputValueDependency, info, valid, loading, isDependent } = this.state;
     const { edit } = this.props;
 
     return (
@@ -399,17 +408,16 @@ class DatosModal extends Component {
             <Form.Item name="triggerValues" label="Valores exactos">
               <CreatableSelect
                 components={{ DropdownIndicator: null }}
-                inputValue={inputValue}
+                inputValue={inputValueDependency}
                 isClearable
                 isMulti
                 menuIsOpen={false}
                 onChange={this.changeDependencies}
-                onInputChange={this.handleInputChange}
-                onKeyDown={(e) => {
-                  this.handleKeyDownDependent(e);
-                }}
+                onInputChange={this.handleInputChangeDependency}
+                onKeyDown={(e) => this.handleKeyDownDependent(e)}
                 placeholder='Escribe la opción y presiona Enter o Tab...'
-                value={(info?.dependency?.triggerValues || []).map(createOption)}
+                defaultValue={(info?.dependency?.triggerValues ?? []).map(createOption)}
+                value={(info?.dependency?.triggerValues ?? []).map(createOption)}
                 required={true}
               />
             </Form.Item>
@@ -427,11 +435,9 @@ class DatosModal extends Component {
                 menuIsOpen={false}
                 onChange={this.changeOption}
                 onInputChange={this.handleInputChange}
-                onKeyDown={(e) => {
-                  this.handleKeyDown(e);
-                }}
+                onKeyDown={(e) => this.handleKeyDown(e)}
                 placeholder='Escribe la opción y presiona Enter o Tab...x'
-                value={info?.options}
+                defaultValue={info?.options}
                 required={true}
               />
             </Form.Item>

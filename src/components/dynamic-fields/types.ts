@@ -22,6 +22,7 @@ export type FieldType = 'text'
 
 
 export interface IDynamicFieldData {
+  _id?: string,
   type?: FieldType,
   props?: any,
   name: string,
