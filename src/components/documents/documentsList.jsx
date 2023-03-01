@@ -82,6 +82,8 @@ class DocumentsList extends Component {
     const { documentDates, data, loading } = this.state;
     const { files } = this.props;
 
+    console.log('props', this.props);
+
     return (
       <div>
         {console.log('documentDates', documentDates, columns, loading)}
@@ -89,107 +91,144 @@ class DocumentsList extends Component {
           <Table dataSource={documentDates} columns={columns} loading={loading} />
         ) : (
           // <div>{documentDates.map(item => JSON.stringify(item))}</div>
-          <Card bodyStyle={{ backgroundColor: this.props.colors.backgroundColor }} style={{ textAlign: 'left' }}>
-            <List
-              itemLayout='horizontal'
-              size='small'
-              //Se traen los datos del state
-              dataSource={data}
-              //se mapean los datos del array data
-              renderItem={item => (
-                <a href={item.file} rel='noopener noreferrer' target='_blank'>
-                  <List.Item
-                    className='shadow-box'
-                    key={item._id}
-                    //boton de descarga
-                    actions={[
-                      <a key={'itemDoc' + item._id} target='_blank' href={item.file} download rel='noopener noreferrer'>
-                        {item.type == 'folder' ? (
-                          ''
-                        ) : (
-                          <IconText
-                            text={
-                              <Typography.Text style={{ color: this.props.colors.texto }}>Descargar</Typography.Text>
-                            }
-                            icon={<DownloadOutlined style={{ color: this.props.colors.texto }} />}
-                          />
-                        )}
-                      </a>,
-                      // <a
-                      //     href={ApiGoogleDocuments + encodeURIComponent(item.file)}
-                      //     target="_blank"
-                      //     style={{ wordBreak: "break-word" }}
-                      // >
-                      //     <IconText
-                      //         text="Previsualizar"
-                      //         icon={EyeOutlined}
-                      //     />
-                      // </a>
-                    ]}
-                  >
-                    <List.Item.Meta
-                      style={{ marginRight: '10%', fontSize: '20px' }}
-                      avatar={
-                        item.type == 'folder' ? (
-                          <FolderOutlined style={{ color: this.props.colors.texto }} />
-                        ) : (
-                          <FileTextOutlined style={{ color: this.props.colors.texto }} />
-                        )
-                      }
-                      title={
-                        item.title ? (
-                          <span style={{ fontSize: '20px', color: this.props.colors.texto }}> {item.title} </span>
-                        ) : (
-                          <span style={{ fontSize: '20px', color: this.props.colors.texto }}> {item.name} </span>
-                        )
-                      }
-                    />
-                  </List.Item>
-                  {files &&
-                    files
-                      .filter(file => file.father_id == item._id)
-                      .map((files, key) => (
-                        <List.Item
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            width: '100%',
-                          }}
-                          key={key}
-                          actions={[
-                            <a
-                              key={'itemDoc' + files._id}
-                              target='_blank'
-                              href={files.file}
-                              download
-                              rel='noopener noreferrer'
-                            >
-                              {files.type == 'folder' ? (
-                                <DownOutlined />
-                              ) : (
-                                <IconText
-                                  text={
-                                    <Typography.Text style={{ color: this.props.colors.texto }}>
-                                      Descargar
-                                    </Typography.Text>
-                                  }
-                                  icon={<DownloadOutlined style={{ color: this.props.colors.texto }} />}
-                                />
-                              )}
-                            </a>,
-                          ]}
+          <>
+            {console.log('1. data', data)}
+            <Card //bodyStyle={{ backgroundColor: this.props.colors.backgroundColor }}
+              style={{ textAlign: 'left' }}
+            >
+              <List
+                itemLayout='horizontal'
+                size='small'
+                //Se traen los datos del state
+                dataSource={data}
+                //se mapean los datos del array data
+                renderItem={(item) => (
+                  <a href={item.file} rel='noopener noreferrer' target='_blank'>
+                    <List.Item
+                      className='shadow-box'
+                      key={item._id}
+                      //boton de descarga
+                      actions={[
+                        <a
+                          key={'itemDoc' + item._id}
+                          target='_blank'
+                          href={item.file}
+                          download
+                          rel='noopener noreferrer'
                         >
-                          <List.Item.Meta
-                            style={{ marginRight: '10%' }}
-                            avatar={files.type == 'folder' ? <FolderOutlined /> : <FileTextOutlined />}
-                            title={files.title ? files.title : files.name}
-                          />
-                        </List.Item>
-                      ))}
-                </a>
-              )}
-            />
-          </Card>
+                          {item.type == 'folder' ? (
+                            ''
+                          ) : (
+                            <IconText
+                              text={
+                                <Typography.Text //style={{ color: this.props.colors.texto }}
+                                >
+                                  Descargar
+                                </Typography.Text>
+                              }
+                              icon={
+                                <DownloadOutlined //style={{ color: this.props.colors.texto }}
+                                />
+                              }
+                            />
+                          )}
+                        </a>,
+                        // <a
+                        //     href={ApiGoogleDocuments + encodeURIComponent(item.file)}
+                        //     target="_blank"
+                        //     style={{ wordBreak: "break-word" }}
+                        // >
+                        //     <IconText
+                        //         text="Previsualizar"
+                        //         icon={EyeOutlined}
+                        //     />
+                        // </a>
+                      ]}
+                    >
+                      <List.Item.Meta
+                        style={{ marginRight: '10%', fontSize: '20px' }}
+                        avatar={
+                          item.type == 'folder' ? (
+                            <FolderOutlined //style={{ color: this.props.colors.texto }}
+                            />
+                          ) : (
+                            <FileTextOutlined //style={{ color: this.props.colors.texto }}
+                            />
+                          )
+                        }
+                        title={
+                          item.title ? (
+                            <span
+                              style={{
+                                fontSize: '20px', //color: this.props.colors.texto
+                              }}
+                            >
+                              {' '}
+                              {item.title}{' '}
+                            </span>
+                          ) : (
+                            <span
+                              style={{
+                                fontSize: '20px', //color: this.props.colors.texto
+                              }}
+                            >
+                              {' '}
+                              {item.name}{' '}
+                            </span>
+                          )
+                        }
+                      />
+                    </List.Item>
+                    {files &&
+                      files
+                        .filter((file) => file.father_id == item._id)
+                        .map((files, key) => (
+                          <List.Item
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              width: '100%',
+                            }}
+                            key={key}
+                            actions={[
+                              <a
+                                key={'itemDoc' + files._id}
+                                target='_blank'
+                                href={files.file}
+                                download
+                                rel='noopener noreferrer'
+                              >
+                                {files.type == 'folder' ? (
+                                  <DownOutlined />
+                                ) : (
+                                  <IconText
+                                    text={
+                                      <Typography.Text //style={{ color: this.props.colors.texto }}
+                                      >
+                                        Descargar
+                                      </Typography.Text>
+                                    }
+                                    icon={
+                                      <DownloadOutlined //style={{ color: this.props.colors.texto }}
+                                      />
+                                    }
+                                  />
+                                )}
+                              </a>,
+                            ]}
+                          >
+                            <List.Item.Meta
+                              style={{ marginRight: '10%' }}
+                              avatar={files.type == 'folder' ? <FolderOutlined /> : <FileTextOutlined />}
+                              title={files.title ? files.title : files.name}
+                            />
+                          </List.Item>
+                        ))}
+                  </a>
+                )}
+              />
+            </Card>
+          </>
         )}
       </div>
     );
