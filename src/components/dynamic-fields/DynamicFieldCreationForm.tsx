@@ -8,7 +8,7 @@ import {
 } from 'react'
 
 import { dynamicFieldOptions } from '@components/dynamic-fields/constants';
-import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row, Divider } from 'antd';
+import { Checkbox, Form, Input, Select, InputNumber, Button, Row, Divider } from 'antd';
 import { DispatchMessageService } from '@context/MessageService';
 import { FieldType, IDynamicFieldData } from '@components/dynamic-fields/types';
 import { Rule } from 'antd/lib/form';
@@ -159,8 +159,6 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
   const [form] = Form.useForm<IDynamicFieldDataWithAux>()
 
   const onFinish = (values: IDynamicFieldDataWithAux) => {
-    console.log('submit', values)
-
     setIsLoading(true)
 
     const field: IDynamicFieldData = {
@@ -280,7 +278,20 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
           <Input placeholder="Escribe el nombre, en base de datos, exacto del otro campo" />
         </Form.Item>
 
-        <Form.Item name="triggerValues" label="Valores exactos">
+        <Form.Item
+          name="triggerValues"
+          label="Valores exactos"
+          rules={[
+            {
+              required: true,
+              message: 'Al menos un valor',
+              validator: (_, ones?: any[], ) => {
+                if (!ones || ones.length === 0) return Promise.reject('triggerValues')
+                return Promise.resolve()
+              }
+            }
+          ]}
+        >
           <Select
             mode="tags"
             open={false}
