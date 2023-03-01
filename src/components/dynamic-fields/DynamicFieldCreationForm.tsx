@@ -233,7 +233,7 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         initialValue={dataToEdit?.name}
       >
         <Input
-          placeholder="Ej: Celular"
+          placeholder="Ej: Teléfono"
           onChange={(e) => {
             const { value } = e.target
             form.setFieldsValue({
