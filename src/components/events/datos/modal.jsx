@@ -1,7 +1,7 @@
 import { Component, createRef } from 'react';
 import { dynamicFieldOptions } from '@components/dynamic-fields/constants';
-import CreatableSelect from 'react-select/lib/Creatable';
-import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row } from 'antd';
+import { Creatable as CreatableSelect } from 'react-select';
+import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row, Divider } from 'antd';
 import { DispatchMessageService } from '@context/MessageService';
 
 const html = document.querySelector('html');
@@ -105,6 +105,8 @@ class DatosModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      inputValue: '',
+      inputValueDependency: '',
       isDependent: false,
       info: {
         name: '',
@@ -214,6 +216,9 @@ class DatosModal extends Component {
   handleInputChange = (inputValue) => {
     this.setState({ inputValue });
   };
+  handleInputChangeDependency = (inputValueDependency) => {
+    this.setState({ inputValueDependency });
+  };
 
   changeOption = (option) => {
     this.setState({ info: { ...this.state.info, options: option } }, this.validForm);
@@ -223,10 +228,10 @@ class DatosModal extends Component {
     console.log('changeDependencies', triggerValues)
     this.setState((previous) => {
       const newState = { ...previous }
-      newState.inputValue = ''
+      newState.inputValueDependency = ''
       newState.info = newState.info || {}
       newState.info.dependency = newState.info.dependency || {}
-      newState.info.dependency.triggerValues = triggerValues.map((item) => item.value)
+      newState.info.dependency.triggerValues = triggerValues
       return newState;
     }, this.validForm)
   };
@@ -254,20 +259,21 @@ class DatosModal extends Component {
   };
 
   handleKeyDownDependent = (event) => {
-    const { inputValue } = this.state;
-    const value = inputValue;
+    const { inputValueDependency } = this.state;
+    const value = inputValueDependency;
     if (!value) return;
     if (this.checkIfEnter(event)) {
       console.log('handleKeyDownDependent Enter:', value)
       this.setState((previous) => {
         const newState = { ...previous }
-        newState.inputValue = ''
+        newState.inputValueDependency = ''
         newState.info = newState.info || {}
         newState.info.dependency = newState.info.dependency || {}
         newState.info.dependency.triggerValues = newState.info.dependency.triggerValues || []
         newState.info.dependency.triggerValues.push(value)
         return newState;
       });
+      this.forceUpdate()
       event.preventDefault();
     }
   };
@@ -296,6 +302,7 @@ class DatosModal extends Component {
     values.dependency = values.dependency || {}
     values.dependency.fieldName = info.dependency?.fieldName || ''
     values.dependency.triggerValues = info.dependency?.triggerValues || []
+    values.link = info.link
     this.setState({ loading: true });
     if (info.type !== 'list' && info.type !== 'multiplelist') delete info.options;
 
@@ -323,7 +330,7 @@ class DatosModal extends Component {
     }
   };
   render() {
-    const { inputValue, info, valid, loading, isDependent } = this.state;
+    const { inputValue, inputValueDependency, info, valid, loading, isDependent } = this.state;
     const { edit } = this.props;
 
     return (
@@ -395,40 +402,42 @@ class DatosModal extends Component {
                 placeholder="Escribe el nombre, en base de datos, exacto del otro campo"
               />
             </Form.Item>
-            <CreatableSelect
-              components={{ DropdownIndicator: null }}
-              inputValue={inputValue}
-              isClearable
-              isMulti
-              menuIsOpen={false}
-              onChange={this.changeDependencies}
-              onInputChange={this.handleInputChange}
-              onKeyDown={(e) => {
-                this.handleKeyDownDependent(e);
-              }}
-              placeholder='Escribe la opción y presiona Enter o Tab...'
-              value={(info?.dependency?.triggerValues || []).map(createOption)}
-              required={true}
-            />
+            <Form.Item name="triggerValues" label="Valores exactos">
+              <CreatableSelect
+                components={{ DropdownIndicator: null }}
+                inputValue={inputValueDependency}
+                isClearable
+                isMulti
+                menuIsOpen={false}
+                onChange={this.changeDependencies}
+                onInputChange={this.handleInputChangeDependency}
+                onKeyDown={(e) => this.handleKeyDownDependent(e)}
+                placeholder='Escribe la opción y presiona Enter o Tab...'
+                defaultValue={(info?.dependency?.triggerValues ?? []).map(createOption)}
+                value={(info?.dependency?.triggerValues ?? []).map(createOption)}
+                required={true}
+              />
+            </Form.Item>
+            <Divider />
             </>
           )}
 
           {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
-            <CreatableSelect
-              components={{ DropdownIndicator: null }}
-              inputValue={inputValue}
-              isClearable
-              isMulti
-              menuIsOpen={false}
-              onChange={this.changeOption}
-              onInputChange={this.handleInputChange}
-              onKeyDown={(e) => {
-                this.handleKeyDown(e);
-              }}
-              placeholder='Escribe la opción y presiona Enter o Tab...x'
-              value={info?.options}
-              required={true}
-            />
+            <Form.Item name="options" label="Optiones">
+              <CreatableSelect
+                components={{ DropdownIndicator: null }}
+                inputValue={inputValue}
+                isClearable
+                isMulti
+                menuIsOpen={false}
+                onChange={this.changeOption}
+                onInputChange={this.handleInputChange}
+                onKeyDown={(e) => this.handleKeyDown(e)}
+                placeholder='Escribe la opción y presiona Enter o Tab...x'
+                defaultValue={info?.options}
+                required={true}
+              />
+            </Form.Item>
           )}
 
           {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
@@ -439,8 +448,29 @@ class DatosModal extends Component {
                 onChange={this.changeFieldjustonebyattendee}>
                 Solo una opción por usuario (cuando un asistente selecciona una opción esta desaparece del listado)
               </Checkbox>
+              <Divider />
             </Form.Item>
           )}
+
+          {(info.type === 'TTCC') && (
+            <Form.Item name='link' label="Enlace para los términos y condiciones">
+            <Input
+              value={info.link}
+              onChange={(e) => {
+                const value = e.target.value
+                this.setState((previous) => {
+                  const newState = { ...previous }
+                  newState.info = newState.info || {}
+                  newState.info.link = value
+                  return newState
+                })
+              }}
+              placeholder="Enlace (esto depende el tipo de campo)"
+            />
+            <Divider />
+          </Form.Item>
+          )}
+
           <Form.Item
             label={'Obligatorio'}
             initialValue={info.mandatory || false}

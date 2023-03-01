@@ -7,7 +7,7 @@ const { useBreakpoint } = Grid;
 
 const OrganizationCard = (props) => {
   const screens = useBreakpoint();
-  const [eventsLength, setEventsLength] = useState([]);
+  const [eventsLength, setEventsLength] = useState(0);
 
   const adminOrganization = () => {
     window.location.href = `${window.location.origin}/admin/organization/${props.data.id}/events`;

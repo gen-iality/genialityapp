@@ -73,6 +73,9 @@ export interface MainAgendaFormProps {
   setShowPendingChangesModal: (b: boolean) => void;
 }
 
+/**
+ * @deprecated This component is deprecated, use `AgendaForm` instead, but use it under `AgendaEditPage`.
+ */
 function MainAgendaForm(props: MainAgendaFormProps) {
   const { agendaContext, formdata, savedFormData, agenda, setFormData, setShowPendingChangesModal } = props;
   const { previousFormData } = props;

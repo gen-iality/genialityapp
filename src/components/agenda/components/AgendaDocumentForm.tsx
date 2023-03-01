@@ -7,8 +7,8 @@ import Document from '@components/documents/Document';
 
 export interface AgendaDocumentForm {
   eventId: string,
-  selectedDocuments: SelectOptionType[],
-  onSelectedDocuments?: (changed: SelectOptionType[]) => void,
+  selectedDocuments: string[],
+  onSelectedDocuments?: (changed: string[]) => void,
   matchUrl?: string,
 };
 

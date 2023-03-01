@@ -141,6 +141,7 @@ function OrgMembers(props) {
       console.log('Estado - Lista de cargos', positionList);
 
       const properties = {
+        ...orgUser.properties,
         _id: orgUser._id,
         created_at: orgUser.created_at,
         updated_at: orgUser.updated_at,
@@ -149,7 +150,6 @@ function OrgMembers(props) {
         position: orgUser.position?.position_name || 'Sin cargo',
         position_id: orgUser.position?._id || null,
         stats: userActivities[orgUser.account_id],
-        ...orgUser.properties,
       };
 
       fieldsMembersData.push(properties);
