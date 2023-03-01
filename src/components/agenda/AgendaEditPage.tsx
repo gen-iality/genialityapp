@@ -93,6 +93,11 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
    * @param changePathWithoutSaving If the path should be changed.
    */
   const onFinish = useCallback(async (values: FormValues, changePathWithoutSaving: boolean) => {
+    if (currentTab !== '1') {
+      setCurrentTab('1')
+      setTimeout(() => form.submit(), 2000)
+      return
+    }
     console.log('form submiting:', { values })
     // Fix the datetime values
     values.datetime_start = values.date + ' ' + dayjs(values.hour_start).format('HH:mm')
