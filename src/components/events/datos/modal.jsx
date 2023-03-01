@@ -1,6 +1,6 @@
 import { Component, createRef } from 'react';
 import { dynamicFieldOptions } from '@components/dynamic-fields/constants';
-import CreatableSelect from 'react-select/lib/Creatable';
+import { Creatable as CreatableSelect } from 'react-select';
 import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row, Divider } from 'antd';
 import { DispatchMessageService } from '@context/MessageService';
 
@@ -231,7 +231,7 @@ class DatosModal extends Component {
       newState.inputValueDependency = ''
       newState.info = newState.info || {}
       newState.info.dependency = newState.info.dependency || {}
-      newState.info.dependency.triggerValues = triggerValues.map((item) => item.value)
+      newState.info.dependency.triggerValues = triggerValues
       return newState;
     }, this.validForm)
   };
@@ -273,6 +273,7 @@ class DatosModal extends Component {
         newState.info.dependency.triggerValues.push(value)
         return newState;
       });
+      this.forceUpdate()
       event.preventDefault();
     }
   };
@@ -410,11 +411,10 @@ class DatosModal extends Component {
                 menuIsOpen={false}
                 onChange={this.changeDependencies}
                 onInputChange={this.handleInputChangeDependency}
-                onKeyDown={(e) => {
-                  this.handleKeyDownDependent(e);
-                }}
+                onKeyDown={(e) => this.handleKeyDownDependent(e)}
                 placeholder='Escribe la opción y presiona Enter o Tab...'
-                value={(info?.dependency?.triggerValues || []).map(createOption)}
+                defaultValue={(info?.dependency?.triggerValues ?? []).map(createOption)}
+                value={(info?.dependency?.triggerValues ?? []).map(createOption)}
                 required={true}
               />
             </Form.Item>
@@ -432,11 +432,9 @@ class DatosModal extends Component {
                 menuIsOpen={false}
                 onChange={this.changeOption}
                 onInputChange={this.handleInputChange}
-                onKeyDown={(e) => {
-                  this.handleKeyDown(e);
-                }}
+                onKeyDown={(e) => this.handleKeyDown(e)}
                 placeholder='Escribe la opción y presiona Enter o Tab...x'
-                value={info?.options}
+                defaultValue={info?.options}
                 required={true}
               />
             </Form.Item>
