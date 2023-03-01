@@ -31,6 +31,8 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   const [selectedType, setSelectedType] = useState<ActivityType.GeneralTypeValue | undefined>(undefined);
   const [widget, setWidget] = useState<ActivityType.CardUI | ActivityType.FormUI | undefined>(undefined);
 
+  const [written, setWritten] = useState('')
+
   const {
     activityType,
     activityContentType,
@@ -65,11 +67,13 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   const handleCloseModal = (success: boolean = false) => {
     console.debug('modal is hidden', success ? 'successfully' : 'failurely');
     setIsModalShown(false);
+    setContentSource(written);
   };
 
   const handleInput = (text: string) => {
     console.debug('text will:', text);
-    setContentSource(text);
+    setWritten(text)
+    // setContentSource(text);
   };
 
   if (!activityType) {
