@@ -5,6 +5,9 @@ import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import Modal from './modalRelation';
 
+/**
+ * @deprecated nobody uses this
+ */
 class RelationshipFields extends Component {
   constructor(props) {
     super(props);
