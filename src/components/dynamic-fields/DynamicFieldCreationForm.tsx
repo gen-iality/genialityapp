@@ -16,15 +16,16 @@ import { Rule } from 'antd/lib/form';
 
 const { TextArea } = Input;
 
-interface IDynamicFieldDataWithID extends IDynamicFieldData {
-  _id: string,
+interface IDynamicFieldDataWithAux extends IDynamicFieldData {
+  fieldName: string,
+  triggerValues: string[],
 }
 
 interface IDynamicFieldCreationFormProps {
   isEditing?: boolean,
-  dataToEdit?: IDynamicFieldDataWithID,
+  dataToEdit?: IDynamicFieldData,
   onCancel?: () => void,
-  onSave?: (data: any) => void,
+  onSave?: (data: IDynamicFieldData) => void,
 }
 
 
@@ -137,13 +138,6 @@ const generateFieldNameForLabel = (value: string) => {
   return generatedFieldName;
 }
 
-const checkIfEnter = (event: React.KeyboardEvent<HTMLDivElement>) => {
-  if (event.keyCode === 9 || event.keyCode === 13) {
-    return true
-  }
-  return false
-}
-
 const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps> = (props) => {
   const {
     isEditing,
@@ -152,8 +146,7 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
     dataToEdit,
   } = props
 
-  const [inputValue, setInputValue] = useState('')
-  const [inputValueDependency, setInputValueDependency] = useState('')
+  const [info, setInfo] = useState<IDynamicFieldData>({} as IDynamicFieldData)
   const [isDependent, setIsDependent] = useState(false)
   const [currentFieldType, setCurrentFieldType] = useState<FieldType | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(false)
@@ -163,20 +156,66 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
     message: 'Este campo es obligatorio',
   }])
 
-  const [fieldName, setFieldName] = useState('')
+  const [form] = Form.useForm<IDynamicFieldDataWithAux>()
 
-  const [form] = Form.useForm<IDynamicFieldDataWithID>()
-
-  const onFinish = (values: IDynamicFieldDataWithID) => {
+  const onFinish = (values: IDynamicFieldDataWithAux) => {
     console.log('submit', values)
+
+    setIsLoading(true)
+
+    const field: IDynamicFieldData = {
+      ...info,
+      label: values.label,
+      name: values.name,
+      dependency: {
+        fieldName: values.fieldName,
+        triggerValues: values.triggerValues,
+      },
+      description: values.description,
+      justonebyattendee: !!values.justonebyattendee,
+      labelPosition: values.labelPosition,
+      link: values.link,
+      mandatory: !!values.mandatory,
+      options: values.options && values.options.map((option) => {
+        if (typeof option === 'string' || (typeof option.label !== 'string' && typeof option.value !== 'string')) {
+          return {
+            label: option.toString(),
+            value: option.toString(),
+          }
+        }
+        return option
+      }),
+      props: values.props,
+      type: values.type,
+      visibleByAdmin: !!values.visibleByAdmin,
+      visibleByContacts: !!values.visibleByContacts,
+    }
+
+    console.debug('send', field)
+    onSave(field)
+
+    setInfo((previous) => ({ ...previous, ...values }))
+
+    form.resetFields()
+
+    setIsLoading(false)    
   }
 
   useEffect(() => {
     // Load data to the form if it is required
     if (dataToEdit && isEditing) {
+      setInfo(dataToEdit)
+
       form.setFieldsValue(dataToEdit)
       setCurrentFieldType(dataToEdit.type)
-      setFieldName(dataToEdit.name)
+
+      if (dataToEdit.dependency && dataToEdit.dependency.fieldName) {
+        form.setFieldsValue({ fieldName: dataToEdit.dependency.fieldName })
+      }
+
+      if (dataToEdit.dependency && dataToEdit.dependency.triggerValues) {
+        form.setFieldsValue({ triggerValues: dataToEdit.dependency.triggerValues })
+      }
     }
   }, [])
 
