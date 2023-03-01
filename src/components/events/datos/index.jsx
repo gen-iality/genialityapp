@@ -23,6 +23,7 @@ import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { DispatchMessageService } from '@context/MessageService';
 import { createFieldForCheckInPerDocument } from './utils';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
+import DynamicFieldCreationForm from '../../dynamic-fields/DynamicFieldCreationForm'
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -729,7 +730,13 @@ class Datos extends Component {
                     footer={false}
                     onCancel={this.closeModal2}
                     okText={'Guardar'}>
-                    <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} />
+                    {/* <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} /> */}
+                    <DynamicFieldCreationForm
+                      onCancel={this.closeModal2}
+                      dataToEdit={info}
+                      isEditing={edit}
+                      onSave={this.saveField}  
+                    />
                   </Modal>
                 )}
               </Fragment>
@@ -802,8 +809,15 @@ class Datos extends Component {
                       title={edit ? 'Editar dato' : 'Agregar dato'}
                       footer={false}
                       onCancel={this.closeModal2}
-                      cancelText={'Cancelar'}>
-                      <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} />
+                      cancelText={'Cancelar'}
+                    >
+                      {/* <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} /> */}
+                      <DynamicFieldCreationForm
+                        onCancel={this.closeModal2}
+                        dataToEdit={info}
+                        isEditing={edit}
+                        onSave={this.saveField}  
+                      />
                     </Modal>
                   )}
                 </Fragment>

@@ -99,6 +99,9 @@ const extraInputs = {
   ],
 };
 
+/**
+ * @deprecated use DynamicFieldCreationForm instead
+ */
 class DatosModal extends Component {
   formRef = createRef();
 
