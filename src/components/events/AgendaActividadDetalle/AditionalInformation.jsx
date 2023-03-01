@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
-import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row, Grid, Space } from 'antd';
+import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row, Grid, Space, Result } from 'antd';
 import WithEviusContext from '@context/withContext';
 import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
@@ -9,6 +9,7 @@ import ModalSpeaker from '../modalSpeakers';
 import DocumentsList from '../../documents/documentsList';
 import { UserOutlined } from '@ant-design/icons';
 import ReactQuill from 'react-quill';
+import ClipboardTextOffIcon from '@2fd/ant-design-icons/lib/ClipboardTextOff';
 const { TabPane } = Tabs;
 const { Title } = Typography;
 const { useBreakpoint } = Grid;
@@ -44,19 +45,30 @@ const AditionalInformation = (props) => {
             }
             key='description'
           >
-            <Row justify='center'>
-              <Col span={24} id='img-description'>
-                {currentActivity?.description && (
-                  <ReactQuill
-                    value={currentActivity?.description}
-                    readOnly={true}
-                    className='hide-toolbar ql-toolbar'
-                    theme='bubble'
-                  />
-                )}
-              </Col>
-            </Row>
-            <br />
+            {currentActivity?.description !== '<p><br></p>' ? (
+              <Row justify='center'>
+                <Col span={24} id='img-description'>
+                  {currentActivity?.description && (
+                    <ReactQuill
+                      value={currentActivity?.description}
+                      readOnly={true}
+                      className='hide-toolbar ql-toolbar'
+                      theme='bubble'
+                    />
+                  )}
+                </Col>
+              </Row>
+            ) : (
+              <Card style={{ borderRadius: '10px', padding: '0px' }}>
+                <Result
+                  style={{ padding: '0px' }}
+                  icon={<ClipboardTextOffIcon />}
+                  title='Aún no se ha publicado una descripción'
+                />
+              </Card>
+            )}
+
+            {/* <br /> */}
             {(currentActivity !== null && currentActivity.hosts.length === 0) ||
             props.cEvent.value._id === '601470367711a513cc7061c2' ? (
               <div></div>
