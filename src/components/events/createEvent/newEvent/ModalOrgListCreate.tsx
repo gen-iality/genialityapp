@@ -76,7 +76,7 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
     if (cUser.value || modalListOrgIsVisible) {
       obtainOrganizations()
     }
-  }, [cUser.value, modalListOrgIsVisible])
+  }, [cUser.value, modalListOrgIsVisible, orgId])
 
   return (
     <Modal
