@@ -18,7 +18,7 @@ const AditionalInformation = (props) => {
   const { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useHelper();
   const intl = useIntl();
   const [activeTab, setActiveTab] = useState('description');
-  const [idSpeaker, setIdSpeaker] = useState(false);
+  const [idSpeaker, setIdSpeaker] = useState(null);
   const screens = useBreakpoint();
 
   function handleChangeLowerTabs(tab) {
@@ -115,7 +115,12 @@ const AditionalInformation = (props) => {
                             )}
                           />
                           {idSpeaker ? (
-                            <ModalSpeaker showModal eventId={props.cEvent.value._id} speakerId={idSpeaker} />
+                            <ModalSpeaker
+                              showModal
+                              eventId={props.cEvent.value._id}
+                              speakerId={idSpeaker}
+                              setIdSpeaker={setIdSpeaker}
+                            />
                           ) : (
                             <></>
                           )}

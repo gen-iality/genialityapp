@@ -19,6 +19,7 @@ const ModalSpeakers = (props) => {
   function clearStates() {
     setSpeakers({});
     setModalVisible(false);
+    props.setIdSpeaker(null);
   }
 
   return (
