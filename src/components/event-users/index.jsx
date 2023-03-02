@@ -371,7 +371,7 @@ class ListEventUser extends Component {
 
       let columns = [];
       const checkInColumn = {
-        title: 'Ingreso',
+        title: 'Fecha de ingreso',
         dataIndex: 'checkedin_at',
         key: 'checkedin_at',
         width: '120px',
