@@ -390,7 +390,7 @@ class MenuLanding extends Component {
             <Row gutter={[8, 8]} wrap>
               {Object.keys(this.state.menu).map((key, index) => (
                 <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
-                  <Card title={this.state.menu[key].name} bordered={true} style={{ maxHeight: '350px' }}>
+                  <Card title={this.state.menu[key].name} bordered style={{ maxHeight: '350px' }}>
                     {(this.state.menu[key].section === 'networking' ||
                       this.state.menu[key].section === 'interviews' ||
                       this.state.menu[key].section === 'my_sesions') &&

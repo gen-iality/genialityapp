@@ -110,10 +110,10 @@ class UserRegistration extends Component {
       );
     return (
       <Spin tip='Cargando...' size='large'>
-        <Skeleton.Input style={{ width: 600 }} active={true} size='default' />
+        <Skeleton.Input style={{ width: 600 }} active size='default' />
         <Skeleton active></Skeleton>
         <Skeleton active></Skeleton>
-        <Skeleton.Input style={{ width: 200 }} active={true} size='default' />
+        <Skeleton.Input style={{ width: 200 }} active size='default' />
       </Spin>
     );
   }

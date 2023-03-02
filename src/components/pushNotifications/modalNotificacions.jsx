@@ -99,7 +99,7 @@ const ModalNotifications = (props) => {
       centered
       footer={null}
       zIndex={1000}
-      closable={true}
+      closable
       visible={modalSendNotificationVisible}
       onCancel={() => {
         setModalSendNotificationVisible(false);

@@ -36,7 +36,7 @@ function SurveyDrawer(props) {
       {validationsToOpenTheDrawer() && (
         <Drawer
           zIndex={1000}
-          destroyOnClose={true}
+          destroyOnClose
           title={
             cSurveys.currentSurvey && cSurveys.currentSurvey?.allow_gradable_survey ? (
               <Space>
@@ -98,7 +98,7 @@ function SurveyDrawer(props) {
           bodyStyle={{ padding: '10px' }}
           closeIcon={<CloseOutlined style={{ fontSize: '24px' }} />}
           placement='right'
-          // closable={true}
+          // closable
           visible={cSurveys.shouldDisplaysurveyAssignedToThisActivity() && cUser.value !== null}
           onClose={closeDrawer}
           width={window.screen.width >= 768 ? (rankingVisible === false ? '100%' : '70%') : '100%'}

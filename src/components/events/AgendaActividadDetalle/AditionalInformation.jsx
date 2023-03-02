@@ -51,7 +51,7 @@ const AditionalInformation = (props) => {
                   {currentActivity?.description && (
                     <ReactQuill
                       value={currentActivity?.description}
-                      readOnly={true}
+                      readOnly
                       className='hide-toolbar ql-toolbar'
                       theme='bubble'
                     />
@@ -116,7 +116,7 @@ const AditionalInformation = (props) => {
                             )}
                           />
                           {idSpeaker ? (
-                            <ModalSpeaker showModal={true} eventId={props.cEvent.value._id} speakerId={idSpeaker} />
+                            <ModalSpeaker showModal eventId={props.cEvent.value._id} speakerId={idSpeaker} />
                           ) : (
                             <></>
                           )}

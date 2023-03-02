@@ -27,7 +27,7 @@ function TemplateMemberSettings(props) {
           eventId={organizationId}
           org={organization}
           url={props.match.url}
-          edittemplate={true}
+          edittemplate
           createNewField={async (fields, template, updateTable) => {
             const fieldsNew = Array.from(template.datafields || []);
             fieldsNew.push(fields);

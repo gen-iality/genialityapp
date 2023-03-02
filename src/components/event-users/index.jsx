@@ -109,7 +109,7 @@ const ModalWithLessonsInfo = ({ show, onHidden, allActivities, attendee, current
   };
 
   return (
-    <Modal centered footer={null} visible={show} closable={true} onCancel={onHidden}>
+    <Modal centered footer={null} visible={show} closable onCancel={onHidden}>
       <Space direction='vertical'>
         <Content />
       </Space>

@@ -50,10 +50,10 @@ const MenuTabletsSocialZone = (props) => {
         bodyStyle={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
         height="90vh"
         placement='bottom'
-        closable={true}
+        closable
         onClose={() => setisDrawerVisible(!isDrawerVisible)}
         visible={isDrawerVisible}
-        maskClosable={true}
+        maskClosable
         className='drawerMobile'>
         <SocialZone
           totalMessages={props.totalNewMessages}
@@ -61,7 +61,7 @@ const MenuTabletsSocialZone = (props) => {
           tab={1}
           generalTabs={props.generalTabs}
           currentActivity={props.currentActivity}
-          mobile={true}
+          mobile
         />
       </Drawer>
     </>

@@ -45,7 +45,7 @@ function GameDrawer(props) {
     <>
       <Drawer
         zIndex={1000}
-        destroyOnClose={true}
+        destroyOnClose
         title={
           <Row gutter={8}>
             <Col>

@@ -362,7 +362,7 @@ class DatosModal extends Component {
             <Input
               type='text'
               placeholder={'Nombre del campo en base de datos'}
-              disabled={true}
+              disabled
               //onChange={this.handleChange}
             />
           </Form.Item>
@@ -419,7 +419,7 @@ class DatosModal extends Component {
                 placeholder='Escribe la opción y presiona Enter o Tab...'
                 defaultValue={(info?.dependency?.triggerValues ?? []).map(createOption)}
                 value={(info?.dependency?.triggerValues ?? []).map(createOption)}
-                required={true}
+                required
               />
             </Form.Item>
             <Divider />
@@ -438,7 +438,7 @@ class DatosModal extends Component {
                 onKeyDown={(e) => this.handleKeyDown(e)}
                 placeholder='Escribe la opción y presiona Enter o Tab...x'
                 defaultValue={info?.options}
-                required={true}
+                required
               />
             </Form.Item>
           )}

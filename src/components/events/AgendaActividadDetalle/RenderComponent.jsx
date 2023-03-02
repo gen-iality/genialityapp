@@ -106,7 +106,7 @@ const RenderComponent = (props) => {
             return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext willStartSoon={true} />;
+            return <ImageComponentwithContext willStartSoon />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
@@ -130,7 +130,7 @@ const RenderComponent = (props) => {
             return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext willStartSoon={true} />;
+            return <ImageComponentwithContext willStartSoon />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
@@ -154,7 +154,7 @@ const RenderComponent = (props) => {
             return <DolbyCard />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext willStartSoon={true} />;
+            return <ImageComponentwithContext willStartSoon />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
@@ -188,7 +188,7 @@ const RenderComponent = (props) => {
             return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
             ) : (
-              <ImageComponentwithContext willStartSoon={true} />
+              <ImageComponentwithContext willStartSoon />
             );
 
           case 'ended_meeting_room':
@@ -229,7 +229,7 @@ const RenderComponent = (props) => {
   return (
     <>
       {' '}
-      <HeaderColumnswithContext isVisible={true} activityState={activityState} />
+      <HeaderColumnswithContext isVisible activityState={activityState} />
       {RenderizarComponente(platform, activityState, renderGame)}
     </>
   );

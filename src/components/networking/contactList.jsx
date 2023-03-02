@@ -98,7 +98,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
                   //   )
                   // }
                   style={{ width: '100%', textAlign: 'left' }}
-                  bordered={true}
+                  bordered
                 >
                   <Meta
                     avatar={

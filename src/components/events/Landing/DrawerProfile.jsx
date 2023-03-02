@@ -90,7 +90,7 @@ const DrawerProfile = (props) => {
   return (
     <>
       {openModal && (
-        <Modal zIndex={1} closable visible={true} onCancel={() => closeOrOpenModal()}>
+        <Modal zIndex={1} closable visible onCancel={() => closeOrOpenModal()}>
           <div
             style={{
               padding: '0px',
@@ -126,7 +126,7 @@ const DrawerProfile = (props) => {
         }
         zIndex={0}
         visible={props.viewPerfil}
-        closable={true}
+        closable
         onClose={() => props.setViewPerfil({ view: false, perfil: null })}
         width="52vh"
         bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}

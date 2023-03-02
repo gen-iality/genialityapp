@@ -33,7 +33,7 @@ const HtmlActivity: FunctionComponent<HtmlActivityProps> = () => {
 
   return (
     <>
-      <HeaderColumnswithContext isVisible={true} activityState={activityState} />
+      <HeaderColumnswithContext isVisible activityState={activityState} />
       <div ref={ref} style={{ width: '100%' }} />
     </>
   );

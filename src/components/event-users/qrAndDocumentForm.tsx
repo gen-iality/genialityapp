@@ -31,7 +31,7 @@ function QrAndDocumentForm({
     >
       {typeScanner === 'scanner-qr' ? (
         <>
-          <Tabs defaultValue='1' destroyInactiveTabPane={true}>
+          <Tabs defaultValue='1' destroyInactiveTabPane>
             <TabPane
               tab={
                 <>

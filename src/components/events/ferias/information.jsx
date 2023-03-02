@@ -68,7 +68,7 @@ function feriaInformation(props) {
                               window.open(`${props.companyDetail.pagweb}`, '_blank');
                             }}
                             target='_blank'>
-                            <Text style={{ width: '35vh' }} ellipsis={true}>
+                            <Text style={{ width: '35vh' }} ellipsis>
                               {props.companyDetail.webpage}
                             </Text>
                           </a>

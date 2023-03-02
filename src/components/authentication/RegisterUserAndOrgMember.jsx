@@ -93,7 +93,7 @@ const RegisterUserAndOrgMember = ({
           basicDataUser={basicDataUser}
           organization={organization}
           onSubmit={onSubmit}
-          noSubmitButton={true}
+          noSubmitButton
         />
       ),
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,

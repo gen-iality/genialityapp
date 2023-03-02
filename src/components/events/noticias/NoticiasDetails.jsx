@@ -100,7 +100,7 @@ const NoticiasDetails = (props) => {
                         >
                           <ReactQuill
                             value={noticia.description_short}
-                            readOnly={true}
+                            readOnly
                             className='hide-toolbar ql-toolbar'
                             theme='bubble'
                           />
@@ -114,7 +114,7 @@ const NoticiasDetails = (props) => {
                         >
                           <ReactQuill
                             value={noticia.description_complete}
-                            readOnly={true}
+                            readOnly
                             className='hide-toolbar ql-toolbar'
                             theme='bubble'
                           />

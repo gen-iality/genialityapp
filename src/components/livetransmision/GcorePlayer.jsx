@@ -69,8 +69,8 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
             {console.log('ESTE ES EL TIPO DE ACTIVIDAD', typeActivity)}
             <ReactPlayer
               style={{ aspectRatio: '16/9' }}
-              playing={true}
-              loop={true}
+              playing
+              loop
               width='100%'
               height={'100%'}
               url={platformurl}

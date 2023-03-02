@@ -60,7 +60,7 @@
        <div onClick={() => onSelect()} style={borderStyles}>
        <Card
            loading={!isLoaded}
-           hoverable={true}
+           hoverable
            style={cardStyles}
            cover={
              <img

@@ -884,7 +884,7 @@ class TriviaEdit extends Component {
               <Loading />
             ) : (
               <>
-                <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
+                <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
                   {this.state.isUserUnconsciousReloading && <Spin/> }
                   <Form.Item
                     label={
@@ -1145,7 +1145,7 @@ class TriviaEdit extends Component {
                 </Card>
                 {this.state.idSurvey && (
                   <>
-                    <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
+                    <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
                       <Header title="Preguntas" addFn={this.addNewQuestion} />
 
                       <Table dataSource={question} columns={columns} />

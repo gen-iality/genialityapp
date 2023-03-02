@@ -60,7 +60,7 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
     <Modal
       width={700}
       // bodyStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      closable={true}
+      closable
       onCancel={() => handleModal(false)}
       visible={visible}
       footer={null}

@@ -171,7 +171,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
                           <Component {...props} />
                         ) : cUser.value == null && cUser.status == 'LOADED' ? (
                           <>
-                            <ModalAuth isPrivateRoute={true} />
+                            <ModalAuth isPrivateRoute />
 
                             <ForbiddenPage />
                           </>

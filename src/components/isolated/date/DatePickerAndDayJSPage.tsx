@@ -32,7 +32,7 @@ export function DatePickerAndDayJSPage (props: IDatePickerAndDayJSPageProps) {
     <>
     <Space>
       <DatePicker
-        inputReadOnly={true}
+        inputReadOnly
         // disabled={false}
         style={{ width: '100%' }}
         value={dayjs(dateStart) as any}

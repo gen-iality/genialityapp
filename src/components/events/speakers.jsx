@@ -397,7 +397,7 @@ class Speakers extends Component {
                     <ReactQuill
                       style={{ color: this.props.cEvent.value?.styles?.textMenu }}
                       value={infoSpeaker.descripcion}
-                      readOnly={true}
+                      readOnly
                       className='hide-toolbar ql-toolbar'
                       theme='bubble'
                     />
@@ -434,7 +434,7 @@ class Speakers extends Component {
                         <Col span={24} id='img-description'>
                           <ReactQuill
                             value={activities.description}
-                            readOnly={true}
+                            readOnly
                             className='hide-toolbar ql-toolbar'
                             theme='bubble'
                           />

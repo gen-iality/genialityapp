@@ -55,7 +55,7 @@ const OrganizationCard = (props) => {
             src={props.data?.styles?.event_image || 'https://via.placeholder.com/500.png/50D3C9/FFFFFF?text=Image'}
           />
         ) : (
-          <Skeleton.Avatar active={true} size={100} shape='circle' />
+          <Skeleton.Avatar active size={100} shape='circle' />
         )}
         <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ fontSize: '14px', lineHeight: '1.15rem' }}>
           {props.data?.name}

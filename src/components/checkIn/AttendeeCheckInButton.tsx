@@ -61,7 +61,7 @@ const AttendeeCheckInButton = ({
   return (
     <>
       {_id && (
-        <Button loading={loading} size='small' type='primary' block={true} onClick={saveAttemdeeCheckIn}>
+        <Button loading={loading} size='small' type='primary' block onClick={saveAttemdeeCheckIn}>
           CheckIn físico
         </Button>
       )}

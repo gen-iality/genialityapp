@@ -33,7 +33,7 @@ function RichTextComponentField(rawProps) {
   }, [formItemProps.required, maxLength]);
 
   return (
-    <Field name={name} validate={validate} onPaste={true}>
+    <Field name={name} validate={validate} onPaste>
       {({ field, form, meta }) => {
         const fieldError = meta.touched && meta.error;
 

@@ -69,7 +69,7 @@ class Faqs extends Component {
                   <Col span={24} id='img-informative'>
                     <ReactQuill
                       value={faqs.content}
-                      readOnly={true}
+                      readOnly
                       className='hide-toolbar ql-toolbar'
                       theme='bubble'
                     />

@@ -262,7 +262,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
         headStyle={{ border: 'none' }}
         style={{ width: 600, textAlign: 'left', borderRadius: '10px' }}
         bodyStyle={{ paddingTop: '0px' }}
-        bordered={true}
+        bordered
         extra={
           <Popconfirm
             title='¿Desea cancelar/eliminar esta cita?'

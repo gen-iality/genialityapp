@@ -357,7 +357,7 @@ class ZoomComponent extends Component {
                     event={event}
                     currentUser={this.props.userEntered}
                     activity={activity}
-                    availableSurveysBar={true}
+                    availableSurveysBar
                     style={{ zIndex: 9999, width: '99vw', height: '100%' }}
                     mountCurrentSurvey={this.mountCurrentSurvey}
                     unMountCurrentSurvey={this.unMountCurrentSurvey}

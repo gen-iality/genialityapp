@@ -79,7 +79,7 @@ class Test extends Component {
       <Fragment>
         <ComponentTest
           testData='prueba de dato'
-          validate={true}
+          validate
           event={this.props.event}
           currentUser={this.state.currentUser}
           usuarioRegistrado={this.state.currentUser}

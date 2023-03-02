@@ -24,7 +24,7 @@ const MenuTablets = () => {
         placement='left'
         onClose={() => setisOpen(!isOpen)}
         visible={isOpen}
-        maskClosable={true}
+        maskClosable
         bodyStyle={{
           padding: '0px',
           backgroundColor:
@@ -43,7 +43,7 @@ const MenuTablets = () => {
           )}
         </Row>
 
-        <MenuEvent isMobile={true} />
+        <MenuEvent isMobile />
       </Drawer>
     </>
   );

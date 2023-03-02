@@ -326,7 +326,7 @@ const Headers = (props) => {
                   logout={(callBack) => userLogOut(callBack)}
                   openMenu={() => console.log('openMenu')}
                   loginInfo={loginInfo}
-                  anonimususer={true}
+                  anonimususer
                 />
               )
             )}
@@ -343,10 +343,10 @@ const Headers = (props) => {
           <Drawer
             className='hiddenMenuMobile_Landing'
             title='Administrar curso'
-            maskClosable={true}
+            maskClosable
             bodyStyle={{ padding: '0px' }}
             placement='left'
-            closable={true}
+            closable
             onClose={() => onClose()}
             visible={dataGeneral.showEventMenu}
           >

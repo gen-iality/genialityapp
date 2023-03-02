@@ -8,7 +8,7 @@ import { useTable, usePagination, useRowSelect } from 'react-table';
  data={[]}
  loading={loading}
  onFetchData={this.fetchData}
- showPaginationTop={true}
+ showPaginationTop
  pages={pages}
  defaultPageSize={pageSize}
  className="-highlight"} props 

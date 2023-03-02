@@ -339,7 +339,7 @@ class Preview extends Component {
           title='Por favor ingrese la contraseña para los asistentes'
           icon={<ExclamationCircleOutlined />}
           footer={null}
-          destroyOnClose={true}
+          destroyOnClose
           visible={this.state.showModal}
         >
           {this.content()}

@@ -503,7 +503,7 @@ class CheckAgenda extends Component {
             extraFields={this.state.eventFields}
             spacesEvent={this.state.spacesEvent}
             edit={this.state.edit}
-            byActivity={true}
+            byActivity
             activityId={this.state.agendaID}
             updateView={this.cargarUsuarios}
             checkinActivity={this.checkIn}

@@ -110,7 +110,7 @@ const StreamingActivity = (props) => {
 
   return (
     <>
-      <HeaderColumnswithContext isVisible={true} activityState={activityState} />
+      <HeaderColumnswithContext isVisible activityState={activityState} />
       {ViewTypeStreaming(activityState)}
     </>
   )

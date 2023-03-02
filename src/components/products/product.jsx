@@ -293,7 +293,7 @@ class Product extends Component {
               /* align='center' */
               width='120px'
               dataIndex='by'
-              ellipsis={true}
+              ellipsis
               sorter={(a, b) => a.by?.localeCompare(b.by)}
             />
             <Column
@@ -303,7 +303,7 @@ class Product extends Component {
               width='120px'
               dataIndex='price'
               render={(data, prod) => <div>$ {prod.price}</div>}
-              ellipsis={true}
+              ellipsis
             />
             <Column
               title='Opciones'

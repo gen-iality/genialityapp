@@ -46,7 +46,7 @@ const surveyNotification = () => {
         zIndex={1000}
         title='Basic drawer'
         placement='right'
-        closable={true}
+        closable
         onClose={() => clearStates()}
         visible={drawerVisible}></Drawer>
     </>

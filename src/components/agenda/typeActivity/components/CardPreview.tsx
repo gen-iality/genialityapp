@@ -75,14 +75,14 @@ const CardPreview = (props: any) => {
           <>
             {visibleReactPlayer && (
               <ReactPlayer
-                playing={true}
-                loop={true}
+                playing
+                loop
                 onDuration={props.type === 'Video' ? handleDuration : undefined}
                 style={{ objectFit: 'cover', aspectRatio: '16/9' }}
                 width='100%'
                 height='100%'
                 url={urlVideo}
-                controls={true}
+                controls
                 // onStart={() => {
                 //   setErrorOcurred(false);
                 //   setErrorMessage('');

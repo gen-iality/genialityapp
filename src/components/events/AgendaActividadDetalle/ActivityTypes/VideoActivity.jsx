@@ -21,7 +21,7 @@ const VideoActivity = () => {
 
   return (
     <>
-      <HeaderColumnswithContext isVisible={true} activityState={activityState}/>
+      <HeaderColumnswithContext isVisible activityState={activityState}/>
         <div className='mediaplayer' style={{ aspectRatio: '16/9' }}>
           {isItAnFrame ? (
             <iframe

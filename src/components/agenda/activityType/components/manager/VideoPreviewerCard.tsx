@@ -89,14 +89,14 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
             {visibleReactPlayer && (
               // @ts-expect-error
               <ReactPlayer
-                playing={true}
-                loop={true}
+                playing
+                loop
                 onDuration={props.type === TypeDisplayment.VIDEO ? handleDuration : undefined}
                 style={{ objectFit: 'cover', aspectRatio: '16/9' }}
                 width='100%'
                 height='100%'
                 url={urlVideo}
-                controls={true}
+                controls
                 onError={(e) => {
                   if (props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.TRANSMISSION) {
                     setErrorOcurred(true);

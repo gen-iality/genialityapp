@@ -31,7 +31,7 @@ const ModalCreateTemplate = (props) => {
       centered
       footer={null}
       zIndex={1000}
-      closable={true}
+      closable
       onCancel={() => props.handlevisibleModal()}
       visible={props.visible}
     >

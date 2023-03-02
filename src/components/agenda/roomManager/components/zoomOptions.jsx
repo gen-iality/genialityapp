@@ -10,7 +10,7 @@ export default function ZoomOptions({ hasVideoconference, select_host_manual, ha
             name='select_host_manual'
             onChange={(e) => handleChange(e, 'select_host_manual')}
           >
-            <Option value={true}>Si</Option>
+            <Option value>Si</Option>
             <Option value={false}>No</Option>
           </Select>
         </Form.Item>

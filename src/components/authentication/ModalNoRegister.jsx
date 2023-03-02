@@ -52,7 +52,7 @@ const ModalNoRegister = (props) => {
         </Space>,
       ]}
       zIndex={1000}
-      closable={true}
+      closable
       visible={whenToOpenTheModal()}
     >
       <Result

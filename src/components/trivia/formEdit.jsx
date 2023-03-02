@@ -776,7 +776,7 @@ const FormEdit = (
                           <p>Este tipo de pregunta permite al usuario seleccionar un valor en un rango proporcionado, basado en un valor mínimo y un máximo.</p>
                           <Form.Item
                             label={<Text type='secondary'>Descripción de la valuación máxima</Text>}
-                            required={true}
+                            required
                           >
                             <Input
                               value={maxRateDescription}
@@ -789,7 +789,7 @@ const FormEdit = (
                           {/* The max value */}
                           <Form.Item
                             label={<Text type='secondary'>Valor máxima</Text>}
-                            required={true}
+                            required
                           >
                             <InputNumber
                               // style={{ maxWidth: '5em' }}
@@ -804,7 +804,7 @@ const FormEdit = (
                           {/* The min rate description in this question kind */}
                           <Form.Item
                             label={<Text type='secondary'>Descripción de la valuación mínima</Text>}
-                            required={true}
+                            required
                           >
                             <Input
                               value={minRateDescription}
@@ -817,7 +817,7 @@ const FormEdit = (
                           {/* The min value */}
                           <Form.Item
                             label={<Text type='secondary'>Valor mínima</Text>}
-                            required={true}
+                            required
                           >
                             <InputNumber
                               // style={{ maxWidth: '5em' }}
@@ -833,7 +833,7 @@ const FormEdit = (
                           {allowGradableSurvey && (
                             <Form.Item
                               label={<Text type='secondary'>Valoración correcta</Text>}
-                              required={true}
+                              required
                             >
                               <InputNumber
                                 // style={{ maxWidth: '5em' }}

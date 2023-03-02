@@ -128,7 +128,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
                   data={pendingAgenda}
                   fetching={fetching}
                   setFetching={setFetching}
-                  meSended={true}
+                  meSended
                 />
               ))
             ) : (
@@ -204,7 +204,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
 
   return (
     <Row justify='center' style={{ marginBottom: '20px' }}>
-      <Card style={{ width: 600, textAlign: 'left' }} bordered={true}>
+      <Card style={{ width: 600, textAlign: 'left' }} bordered>
         <div style={{ marginBottom: '10px' }}>{meSended ? 'Solicitud de cita a: ' : 'Solicitud de cita por: '}</div>
         <Meta
           avatar={<Avatar>{data.name ? data.name.charAt(0).toUpperCase() : '-'}</Avatar>}

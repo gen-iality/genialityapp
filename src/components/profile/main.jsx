@@ -194,7 +194,7 @@ const MainProfile = (props) => {
                 )}
               </>
             ) : (
-              <Skeleton.Avatar active={true} size={150} shape='circle' />
+              <Skeleton.Avatar active size={150} shape='circle' />
             )}
             <Typography.Text style={{ fontSize: '20px', width: '250px', overflowWrap: 'anywhere' }}>
               {props?.cUser?.value?.names || props?.cUser?.value?.displayName || props?.cUser?.value?.name}

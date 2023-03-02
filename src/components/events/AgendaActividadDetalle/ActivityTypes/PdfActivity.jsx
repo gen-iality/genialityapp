@@ -51,7 +51,7 @@ const PdfActivity = () => {
 
   return (
     <>
-      <HeaderColumnswithContext isVisible={true} activityState={activityState} />
+      <HeaderColumnswithContext isVisible activityState={activityState} />
       <a href={pdfURL} target='blank'>Descargar PDF</a>
       <Document file={pdfURL} onLoadSuccess={onDocumentLoadSuccess}>
         <Page pageNumber={pageNumber} width={600} />

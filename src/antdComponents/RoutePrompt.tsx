@@ -117,7 +117,7 @@ export function RouterPrompt({
     <Modal
       visible={showPrompt}
       onCancel={handleCancel}
-      closable={true}
+      closable
       centered
       footer={[
         save && (

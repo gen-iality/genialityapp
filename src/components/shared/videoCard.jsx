@@ -83,8 +83,8 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
       ) : (
         <Badge.Ribbon text={videoDuration(parseInt(duration))}>
           <Card
-            bordered={true}
-            hoverable={true}
+            bordered
+            hoverable
             bodyStyle={{ padding: '10px 8px 10px 8px' }}
             style={{ width: '100%', borderRadius: '8px' }}
             cover={

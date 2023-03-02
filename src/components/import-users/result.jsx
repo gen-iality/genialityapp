@@ -183,9 +183,9 @@ class Result extends Component {
                     pagination
                     /* scroll={{ x: 2500 }} auto*/
                   >
-                    <Column title={extraFields[0].name} dataIndex={extraFields[0].name} ellipsis={true} />
-                    <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis={true} />
-                    <Column title='Estado' dataIndex='status' ellipsis={true} />
+                    <Column title={extraFields[0].name} dataIndex={extraFields[0].name} ellipsis />
+                    <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis />
+                    <Column title='Estado' dataIndex='status' ellipsis />
                   </Table>
                 </Spin>
               </TabPane>
@@ -197,9 +197,9 @@ class Result extends Component {
                   pagination
                   /* scroll={{ x: 2500 }}  auto*/
                 >
-                  <Column title={extraFields[0].name} dataIndex={extraFields[0].name} ellipsis={true} />
-                  <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis={true} />
-                  <Column title='Estado' dataIndex='status' ellipsis={true} />
+                  <Column title={extraFields[0].name} dataIndex={extraFields[0].name} ellipsis />
+                  <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis />
+                  <Column title='Estado' dataIndex='status' ellipsis />
                 </Table>
               </TabPane>
             </Tabs>

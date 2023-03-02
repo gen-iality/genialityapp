@@ -90,7 +90,7 @@ const FormEnrollAttendeeToEvent = ({
         <Card>
           <Form
             form={form}
-            scrollToFirstError={true}
+            scrollToFirstError
             layout='vertical'
             onFinish={saveAttendee}
             onFinishFailed={showGeneralMessage}

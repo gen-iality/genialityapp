@@ -45,7 +45,7 @@ function QuizActivity(props) {
 
   return (
     <>
-      <HeaderColumnswithContext isVisible={true} activityState={activityState} />
+      <HeaderColumnswithContext isVisible activityState={activityState} />
       {activityState?.meeting_id ? (
         <SurveyDetailPage surveyId={activityState.meeting_id} />
       ) : (

@@ -22,10 +22,10 @@ const InteractiveZone = () => {
       <Drawer
         height={450}
         placement={this.state.placementBottom}
-        closable={true}
+        closable
         onClose={this.onClose}
         visible={this.state.visibleChat}
-        maskClosable={true}
+        maskClosable
         className='drawerMobile'>
         <SocialZone
           updateChat={this.state.updateChat}

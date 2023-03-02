@@ -13,7 +13,7 @@ const MeetingActivity = (props) => {
 
   return (
     <>
-      <HeaderColumnswithContext isVisible={true} activityState={activityState} />
+      <HeaderColumnswithContext isVisible activityState={activityState} />
       <MeetingPlayer activity={currentActivity} />
     </>
   )

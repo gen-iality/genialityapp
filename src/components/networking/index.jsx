@@ -551,7 +551,7 @@ class ListEventUser extends Component {
                             marginBottom: '2%',
                             textAlign: 'left',
                           }}
-                          bordered={true}
+                          bordered
                         >
                           <Meta
                             avatar={

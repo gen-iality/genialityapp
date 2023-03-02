@@ -27,7 +27,7 @@ const ModalPermission = (props) => {
       centered
       footer={null}
       zIndex={1000}
-      closable={true}
+      closable
       onCancel={() => handleChangeTypeModal(null)}
       visible={typeModal == 'register' || typeModal == 'update' || typeModal === 'registerForTheEvent'}
     >

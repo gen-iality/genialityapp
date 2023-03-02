@@ -771,7 +771,7 @@ class General extends Component {
                   >
                     <Input
                       ref={this.nameInputRef}
-                      autoFocus={true}
+                      autoFocus
                       name="name"
                       placeholder={'Nombre del curso'}
                       value={event.name}
@@ -956,7 +956,7 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Fecha inicio'}>
                             <DatePicker
-                              inputReadOnly={true}
+                              inputReadOnly
                               //RESTRICIONES
                               // disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
                               disabled={iMustBlockAFunctionality}
@@ -970,7 +970,7 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Hora inicio'}>
                             <TimePicker
-                              inputReadOnly={true}
+                              inputReadOnly
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               value={dayjs(event.hour_start)}
@@ -985,7 +985,7 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Fecha fin'}>
                             <DatePicker
-                              inputReadOnly={true}
+                              inputReadOnly
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               value={dayjs(event.date_end)}
@@ -997,7 +997,7 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Hora fin'}>
                             <TimePicker
-                              inputReadOnly={true}
+                              inputReadOnly
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               value={dayjs(event.hour_end)}
@@ -1023,7 +1023,7 @@ class General extends Component {
                       selectedOptions={selectedOrganizer}
                       selectOption={this.selectOrganizer}
                       options={organizers}
-                      required={true}
+                      required
                     />
                   </Form.Item>
 

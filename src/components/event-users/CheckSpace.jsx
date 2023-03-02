@@ -200,7 +200,7 @@ class CheckSpace extends Component {
                           ref={this.txtInput}
                           value={this.state.newCC}
                           onChange={this.changeCC}
-                          autoFocus={true}
+                          autoFocus
                         />
                         {gunMsj && (
                           <div className='msg'>
