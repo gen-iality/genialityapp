@@ -370,6 +370,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                   <TimePicker
                     use12Hours
                     format='h:mm a'
+                    allowClear={false}
                     style={{ width: '100%' }}
                     value={currentHourStart as any}
                     onChange={(value) => handleChangeFormData('hour_start', value)}
@@ -389,6 +390,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                   <TimePicker
                     use12Hours
                     style={{ width: '100%' }}
+                    allowClear={false}
                     value={currentHourEnd as any}
                     format='h:mm a'
                     onChange={(value) => handleChangeFormData('hour_end', value)}

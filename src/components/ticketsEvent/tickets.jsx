@@ -56,6 +56,7 @@ const Tickets = (props) => {
         columns={columns}
         key="_id"
         editPath={`${props.matchUrl}/ticket`}
+        pagination={false}
         actions
         search
         setColumnsData={setColumnsData}

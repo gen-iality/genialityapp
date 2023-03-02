@@ -323,6 +323,7 @@ function AgendaEdit(props: AgendaEditProps) {
       <Form onFinish={() => submit(true)} {...formLayout}>
         <RouterPrompt
           save
+          form={false}
           when={showPendingChangesModal}
           title="Tienes cambios sin guardar."
           description="¿Qué deseas hacer?"

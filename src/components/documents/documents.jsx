@@ -28,6 +28,7 @@ const Documents = ( props ) => {
       columns={columns}
       key="_id"
       editPath={`${props.matchUrl}/document`}
+      pagination={false}
       actions
       downloadFile
       search

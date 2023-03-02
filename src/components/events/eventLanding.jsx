@@ -116,6 +116,7 @@ class EventLanding extends Component {
           <Card
             className="event-description"
             /* bodyStyle={{ padding: '25px 5px' }} */
+            bordered={false}
             style={
               this.props.cEvent.value.styles &&
               this.props.cEvent.value.styles.show_card_banner &&

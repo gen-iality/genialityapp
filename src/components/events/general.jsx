@@ -494,8 +494,7 @@ class General extends Component {
       address: event.address,
       has_date: event.has_date === 'true' || !!event.has_date,
       allow_register: event.allow_register,
-      allow_detail_calendar:
-        event.allow_detail_calendar === 'true' || !!event.allow_detail_calendar,
+      allow_detail_calendar: event.allow_detail_calendar === 'true' || !!event.allow_detail_calendar,
       enable_language: event.enable_language === 'true' || !!event.enable_language,
       homeSelectedScreen: event.homeSelectedScreen,
       visibility: event.visibility ? event.visibility : 'PRIVATE',
@@ -956,6 +955,7 @@ class General extends Component {
                               // disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
+                              allowClear={false}
                               value={dayjs(event.date_start)}
                               format="DD/MM/YYYY"
                               onChange={(value) => this.changeDate(value, 'date_start')}
@@ -965,12 +965,14 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label="Hora inicio">
                             <TimePicker
-                              inputReadOnly
+                              showNow={false}
+                              inputReadOnly={true}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
+                              allowClear={false}
                               value={dayjs(event.hour_start)}
                               use12Hours
-                              format='h:mm a'
+                              format="h:mm a"
                               onChange={(value) => this.changeDate(value, 'hour_start')}
                             />
                           </Form.Item>
@@ -983,6 +985,7 @@ class General extends Component {
                               inputReadOnly
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
+                              allowClear={false}
                               value={dayjs(event.date_end)}
                               format="DD/MM/YYYY"
                               onChange={(value) => this.changeDate(value, 'date_end')}
@@ -992,12 +995,14 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label="Hora fin">
                             <TimePicker
-                              inputReadOnly
+                              showNow={false}
+                              inputReadOnly={true}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
+                              allowClear={false}
                               value={dayjs(event.hour_end)}
                               use12Hours
-                              format='h:mm a'
+                              format="h:mm a"
                               onChange={(value) => this.changeDate(value, 'hour_end')}
                             />
                           </Form.Item>
@@ -1015,6 +1020,7 @@ class General extends Component {
                   <Form.Item>
                     <SelectInput
                       name="Organizado por:"
+                      isMulti={false}
                       selectedOptions={selectedOrganizer}
                       selectOption={this.selectOrganizer}
                       options={organizers}

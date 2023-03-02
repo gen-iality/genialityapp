@@ -41,8 +41,9 @@ const PopoverInfoUser = (props) => {
   }, [props.item.iduser]);
 
   return (
-    <Skeleton avatar active>
+    <Skeleton loading={false} avatar active>
       <Card
+        bordered={false}
         style={{ width: '300px', padding: '0', color: 'black' }}
         actions={
           containtNetworking && [

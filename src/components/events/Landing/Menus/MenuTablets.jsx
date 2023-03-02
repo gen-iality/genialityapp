@@ -22,6 +22,7 @@ const MenuTablets = () => {
         zIndex={1000}
         title={cEvent.value.name}
         placement="left"
+        closable={false}
         onClose={() => setisOpen(!isOpen)}
         visible={isOpen}
         maskClosable
@@ -31,7 +32,8 @@ const MenuTablets = () => {
             cEvent.value.styles && cEvent.value.styles.toolbarDefaultBg
               ? cEvent.value.styles.toolbarDefaultBg
               : 'white',
-        }}>
+        }}
+      >
         <Row justify="center">
           {cEvent.value.styles && cEvent.value.styles.event_image && (
             <Image

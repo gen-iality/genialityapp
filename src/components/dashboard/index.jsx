@@ -683,6 +683,7 @@ class DashboardEvent extends Component {
                 )}
                 {!this.state.printButton && (
                   <Table
+                    pagination={false}
                     loading={this.state.loadingMetrics}
                     columns={this.columnsMail}
                     dataSource={this.state.mailsDetails}

@@ -411,6 +411,7 @@ const Document = (props) => {
                 rules={[{ required: true, message: 'El archivo es requerido' }]}
               >
                 <Upload
+                  multiple={false}
                   name="file"
                   type="file"
                   fileList={documentList}

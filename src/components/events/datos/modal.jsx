@@ -413,6 +413,7 @@ class DatosModal extends Component {
                 inputValue={inputValueDependency}
                 isClearable
                 isMulti
+                menuIsOpen={false}
                 onChange={this.changeDependencies}
                 onInputChange={this.handleInputChangeDependency}
                 onKeyDown={(e) => this.handleKeyDownDependent(e)}
@@ -433,6 +434,7 @@ class DatosModal extends Component {
                 inputValue={inputValue}
                 isClearable
                 isMulti
+                menuIsOpen={false}
                 onChange={this.changeOption}
                 onInputChange={this.handleInputChange}
                 onKeyDown={(e) => this.handleKeyDown(e)}

@@ -89,7 +89,7 @@ const ImageUploaderDragAndDrop = ({
       <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', textAlign: 'center' }}>
         <Dragger {...draggerprops}>
           {image ? (
-            <Image alt="preview" src={image} />
+            <Image preview={false} alt="preview" src={image} />
           ) : (
             <>
               <p className="ant-upload-drag-icon">

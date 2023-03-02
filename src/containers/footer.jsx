@@ -14,6 +14,7 @@ const Footer = () => {
                 GENIALITY
               </Typography.Title>
             }
+            bordered={false}
           >
             <List.Item style={{ border: 'none' }}>
               <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
@@ -44,6 +45,7 @@ const Footer = () => {
                 Ayuda
               </Typography.Title>
             }
+            bordered={false}
           >
             <List.Item style={{ border: 'none' }}>
               <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
@@ -64,6 +66,7 @@ const Footer = () => {
                 Legal
               </Typography.Title>
             }
+            bordered={false}
           >
             <List.Item style={{ border: 'none' }}>
               <Link to="/terms" style={{ color: '#fff' }}>

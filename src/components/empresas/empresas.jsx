@@ -71,7 +71,7 @@ function Empresas({ event, match }) {
             {
               ...company,
             },
-            { merge: true }
+            { merge: true },
           );
       }
       DispatchMessageService({
@@ -204,7 +204,8 @@ function Empresas({ event, match }) {
                   to={{
                     pathname: `${match.url}/crear`,
                     state: { edit: value },
-                  }}>
+                  }}
+                >
                   <Button icon={<EditOutlined />} type="primary" size="small" />
                 </Link>
               </Tooltip>
@@ -288,6 +289,7 @@ function Empresas({ event, match }) {
         locale={tableLocale}
         dataSource={companyList}
         columns={companyColumns}
+        pagination={false}
         rowKey="index"
         size="small"
         components={{

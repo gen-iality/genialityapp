@@ -35,6 +35,7 @@ const TipoAsistentes = (props) => {
         }}
         columns={columns}
         editPath={`${props.matchUrl}/tipoAsistente`}
+        pagination={false}
         actions
       />
     </Fragment>

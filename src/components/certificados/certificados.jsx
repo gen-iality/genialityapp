@@ -55,6 +55,7 @@ const Certificados = (props) => {
       columns={columns}
       key="_id"
       editPath={`${props.matchUrl}/certificado`}
+      pagination={false}
       actions
       search
       setColumnsData={setColumnsData}

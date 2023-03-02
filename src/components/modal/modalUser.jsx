@@ -282,7 +282,7 @@ class UserModal extends Component {
     const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr);
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
-      <Modal closable onCancel={() => this.props.handleModal()} visible>
+      <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible>
         <div
           // className="asistente-list"
           style={{

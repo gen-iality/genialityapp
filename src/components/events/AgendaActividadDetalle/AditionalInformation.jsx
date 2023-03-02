@@ -34,7 +34,7 @@ const AditionalInformation = (props) => {
   }
 
   return (
-    <Card bodyStyle={{ margin: '0', padding: '0px' }}>
+    <Card bordered={false} bodyStyle={{ margin: '0', padding: '0px' }}>
       <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={handleChangeLowerTabs}>
         {
           <TabPane

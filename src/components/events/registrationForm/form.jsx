@@ -608,9 +608,7 @@ const FormRegister = ({
           } else {
             rule = {
               validator: (_, value) =>
-                value || !value || value == '' || value == undefined
-                  ? Promise.resolve()
-                  : Promise.reject(textoError),
+                value || !value || value == '' || value == undefined ? Promise.resolve() : Promise.reject(textoError),
             };
           }
           return (
@@ -681,7 +679,8 @@ const FormRegister = ({
           input = (
             <Upload
               accept="application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx"
-              action='https://api.evius.co/api/files/upload/'
+              action="https://api.evius.co/api/files/upload/"
+              multiple={false}
               listType="text"
               beforeUpload={beforeUpload}
               defaultFileList={
@@ -826,6 +825,7 @@ const FormRegister = ({
                   onChange={(file) => {
                     setImageAvatar(file);
                   }}
+                  multiple={false}
                   listType="picture"
                   maxCount={1}
                   defaultFileList={
@@ -917,7 +917,7 @@ const FormRegister = ({
     <>
       <Col xs={24} sm={22} md={24} lg={24} xl={24} style={center}>
         {!submittedForm ? (
-          <Card bodyStyle={textLeft}>
+          <Card bordered={false} bodyStyle={textLeft}>
             <Form
               form={form}
               layout="vertical"

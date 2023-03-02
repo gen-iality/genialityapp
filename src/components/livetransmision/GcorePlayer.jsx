@@ -10,17 +10,17 @@ import { Grid } from 'antd';
 const { useBreakpoint } = Grid;
 
 function GcorePlayer({ meeting_id, thereIsConnection }) {
-
   const screens = useBreakpoint();
 
-  const defaultVideo = 'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2Fgeniality-loading-streaming.mp4?alt=media&token=97dc8cbf-dc80-477d-862c-6be0eeb11076';
+  const defaultVideo =
+    'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2Fgeniality-loading-streaming.mp4?alt=media&token=97dc8cbf-dc80-477d-862c-6be0eeb11076';
 
   const { typeActivity, activityEdit } = useContext(AgendaContext);
   const userContext = useContext(CurrentUserContext);
 
-  const [ platformurl, setPlatformurl ] = useState(defaultVideo);
-  const [ visibleReactPlayer, setVisibleReactPlayer ] = useState(false);
-  const [ conected, setConected ] = useState('No');
+  const [platformurl, setPlatformurl] = useState(defaultVideo);
+  const [visibleReactPlayer, setVisibleReactPlayer] = useState(false);
+  const [conected, setConected] = useState('No');
 
   useEffect(() => {
     if (!meeting_id) return;
@@ -54,7 +54,7 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
     return () => {
       setPlatformurl(null);
     };
-  }, [ meeting_id, thereIsConnection, typeActivity ]);
+  }, [meeting_id, thereIsConnection, typeActivity]);
 
   return (
     <>
@@ -63,23 +63,26 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
           <>
             <ReactPlayer
               style={{ aspectRatio: '16/9' }}
+              muted={false}
               playing
               loop
-              width='100%'
+              width="100%"
               height="100%"
               url={platformurl}
+              controls={false}
             />
           </>
         ) : conected == 'Yes' ? (
           <>
             <iframe
               style={screens.xs ? { aspectRatio: '10/20' } : { aspectRatio: '16/9' }}
-              width='100%'
-              height='100%'
+              width="100%"
+              height="100%"
               src={platformurl}
               frameBorder="0"
-              allow='autoplay; encrypted-media'
-              allowFullScreen></iframe>
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+            ></iframe>
           </>
         ) : (
           <Spin />

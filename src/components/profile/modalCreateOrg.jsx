@@ -54,7 +54,8 @@ const ModalCreateOrg = (props) => {
       onCancel={() => {
         props.setModalCreateOrgIsVisible(false);
         resetFields();
-      }}>
+      }}
+    >
       <Form onFinish={saveNewOrganization} form={form} autoComplete="off" layout="vertical">
         <Typography.Title level={4} type="secondary">
           Nueva organizacion
@@ -74,6 +75,7 @@ const ModalCreateOrg = (props) => {
                   setImageAvatar(null);
                 }
               }}
+              multiple={false}
               listType="picture"
               maxCount={1}
               fileList={imageAvatar}
@@ -104,7 +106,8 @@ const ModalCreateOrg = (props) => {
             htmlType="submit"
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size="large">
+            size="large"
+          >
             Crear organizacion
           </Button>
         </Form.Item>

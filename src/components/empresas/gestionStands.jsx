@@ -333,6 +333,7 @@ const Stands = (props) => {
                 Agregar
               </Button>
             }
+            bordered={false}
           >
             <Table columns={columns} dataSource={standsList} pagination={false} rowKey="_id" />
 

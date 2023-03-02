@@ -15,7 +15,7 @@ const EditInformation = ({ cUser }) => {
     picture === 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y' ? null : picture;
 
   const [imageAvatar, setImageAvatar] = useState(
-    validateDefaultPicture ? [{ url: validateDefaultPicture }] : validateDefaultPicture
+    validateDefaultPicture ? [{ url: validateDefaultPicture }] : validateDefaultPicture,
   );
   const [sendRecovery, setSendRecovery] = useState(null);
   const [userDataSentSuccessfullyOrWrongly, setUserDataSentSuccessfullyOrWrongly] = useState('initial');
@@ -44,7 +44,7 @@ const EditInformation = ({ cUser }) => {
       `${intl.formatMessage({
         id: 'modal.restore.alert.passwordRequest',
         defaultMessage: 'Actualizando informacion.',
-      })}`
+      })}`,
     );
 
     const nuewUserPicture = await uploadNewUserPicture();
@@ -62,14 +62,14 @@ const EditInformation = ({ cUser }) => {
           `${intl.formatMessage({
             id: 'modal.restore.alert.passwordSuccess',
             defaultMessage: 'Se ha actualizado la información satisfactoriamente',
-          })}`
+          })}`,
         );
         setUserDataSentSuccessfullyOrWrongly(true);
       } catch (error) {
         console.error(
           `%c📌debugger start, element Selected : error📌`,
           'font-family:calibri; background-color:#0be881; color: #1e272e; font-size:16px; border-radius:5px; margin:5px; padding:2px;border: 5px #fff; border-style: solid dashed',
-          error
+          error,
         );
         setIsLoading(false);
         setUserDataSentSuccessfullyOrWrongly(false);
@@ -77,7 +77,7 @@ const EditInformation = ({ cUser }) => {
           `${intl.formatMessage({
             id: 'modal.restore.alert.passwordError',
             defaultMessage: 'Error al actualizar la informacion',
-          })}`
+          })}`,
         );
       }
     }, 1000);
@@ -109,6 +109,7 @@ const EditInformation = ({ cUser }) => {
                   }
                 }}
                 customRequest={uploadImagedummyRequest}
+                multiple={false}
                 listType="picture"
                 maxCount={1}
                 fileList={imageAvatar}

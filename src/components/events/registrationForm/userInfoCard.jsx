@@ -96,7 +96,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         setSuccessMessage(
           Object.entries(initialValues).length > 0
             ? `Actualización de datos exitosa`
-            : `Fuiste registrado al curso con el correo ${values.email}, revisa tu correo para confirmar.`
+            : `Fuiste registrado al curso con el correo ${values.email}, revisa tu correo para confirmar.`,
         );
 
         setSubmittedForm(true);
@@ -320,8 +320,9 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       if (type === 'file') {
         input = (
           <Upload
-            action='https://api.evius.co/api/files/upload/'
+            action="https://api.evius.co/api/files/upload/"
             onChange={showRequest}
+            multiple={false}
             listType="text"
             beforeUpload={beforeUpload}
           >

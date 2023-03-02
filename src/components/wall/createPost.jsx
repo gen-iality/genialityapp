@@ -34,7 +34,8 @@ const Editor = ({ onSubmit, submitting, value, loadingsave, errimage, errNote, r
           style={{ background: loadingsave ? 'white' : '#333F44' }}
           htmlType="submit"
           loading={submitting}
-          type="primary">
+          type="primary"
+        >
           Enviar
         </Button>
       )}
@@ -115,7 +116,7 @@ class CreatePost extends Component {
             showInfo: false,
             visible: false,
             keyList: Date.now(),
-          })
+          }),
         );
         //this.setState({ showInfo: false, visible: false, keyList: Date.now(),value:'' });
         // Reset formulario
@@ -247,6 +248,8 @@ class CreatePost extends Component {
                   <Upload
                     type="file"
                     accept="image/*"
+                    multiple={false}
+                    showUploadList={false}
                     onChange={(e) => this.previewImage(e)}
                   >
                     <Button type="primary" icon={<CloudUploadOutlined />}>
@@ -259,7 +262,8 @@ class CreatePost extends Component {
                       style={{ marginLeft: '3%' }}
                       onClick={(e) => {
                         this.setState({ hidden: true }, this.setModal2Visible(true));
-                      }}>
+                      }}
+                    >
                       <CameraOutlined />
                     </Button>
                   </Space>
@@ -283,10 +287,12 @@ class CreatePost extends Component {
                           type="primary"
                           onClick={(e) => {
                             this.setState({ hidden: false }, this.setModal2Visible(false));
-                          }}>
+                          }}
+                        >
                           Listo usar esta
                         </Button>,
-                      ]}>
+                      ]}
+                    >
                       <CameraFeed getImage={this.getImage} sendFile={this.uploadImage} />
                     </Modal>
                   </div>

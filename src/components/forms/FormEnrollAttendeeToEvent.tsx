@@ -87,7 +87,7 @@ const FormEnrollAttendeeToEvent = ({
   return (
     <div style={center}>
       <Col xs={24} sm={22} md={24} lg={24} xl={24}>
-        <Card>
+        <Card bordered={false}>
           <Form
             form={form}
             scrollToFirstError

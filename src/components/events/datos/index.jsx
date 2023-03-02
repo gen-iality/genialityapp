@@ -23,7 +23,7 @@ import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { DispatchMessageService } from '@context/MessageService';
 import { createFieldForCheckInPerDocument } from './utils';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-import DynamicFieldCreationForm from '../../dynamic-fields/DynamicFieldCreationForm'
+import DynamicFieldCreationForm from '../../dynamic-fields/DynamicFieldCreationForm';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -68,7 +68,7 @@ class Datos extends Component {
     extraFields = extraFields.sort((a, b) =>
       (a.order_weight && !b.order_weight) || (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
         ? -1
-        : 1
+        : 1,
     );
     return extraFields;
   };
@@ -150,7 +150,7 @@ class Datos extends Component {
           await this.props.editField(field._id || field.id, field, this.state.isEditTemplate, this.updateTable);
         } else {
           await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
-        } 
+        }
       } else {
         if (this.state.edit) {
           await EventFieldsApi.editOne(field, field._id || field.id, this.eventId);
@@ -163,9 +163,9 @@ class Datos extends Component {
       // Update the fields state from the new edited field
       this.setState((previous) => ({
         ...previous,
-        fields: previous.fields.map((_field) => (_field._id === field._id) ? field : _field),
-      }))
-      this.closeModal2() // To force clean the form by destroying the Modal
+        fields: previous.fields.map((_field) => (_field._id === field._id ? field : _field)),
+      }));
+      this.closeModal2(); // To force clean the form by destroying the Modal
 
       if (totaluser?.docs?.length > 0 && field?.name == 'pesovoto') {
         firestore
@@ -678,6 +678,7 @@ class Datos extends Component {
                 <Table
                   columns={columns}
                   dataSource={fields}
+                  pagination={false}
                   rowKey="index"
                   size="small"
                   components={{
@@ -726,6 +727,7 @@ class Datos extends Component {
                   <Modal
                     visible={modal}
                     title={edit ? 'Editar dato' : 'Agregar dato'}
+                    footer={false}
                     onCancel={this.closeModal2}
                     okText="Guardar"
                   >
@@ -734,7 +736,7 @@ class Datos extends Component {
                       onCancel={this.closeModal2}
                       dataToEdit={info}
                       isEditing={edit}
-                      onSave={this.saveField}  
+                      onSave={this.saveField}
                     />
                   </Modal>
                 )}
@@ -758,7 +760,8 @@ class Datos extends Component {
                               this.setState({
                                 isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] },
                               })
-                            }>
+                            }
+                          >
                             Volver a plantillas
                           </Button>
                         )}
@@ -774,6 +777,7 @@ class Datos extends Component {
                   <Table
                     columns={columns}
                     dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
+                    pagination={false}
                     rowKey="index"
                     size="small"
                     components={{
@@ -806,6 +810,7 @@ class Datos extends Component {
                     <Modal
                       visible={modal}
                       title={edit ? 'Editar dato' : 'Agregar dato'}
+                      footer={false}
                       onCancel={this.closeModal2}
                       cancelText="Cancelar"
                     >
@@ -814,7 +819,7 @@ class Datos extends Component {
                         onCancel={this.closeModal2}
                         dataToEdit={info}
                         isEditing={edit}
-                        onSave={this.saveField}  
+                        onSave={this.saveField}
                       />
                     </Modal>
                   )}
@@ -838,6 +843,7 @@ class Datos extends Component {
                       },
                     });
                   }}
+                  pagination={false}
                   actions
                 />
               )}

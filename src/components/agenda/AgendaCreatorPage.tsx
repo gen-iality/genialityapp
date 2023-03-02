@@ -160,7 +160,7 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
                 initialValue={hourWithAdditionalMinutes(0)}
                 rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
               >
-                <TimePicker use12Hours format="h:mm a" style={{ width: '100%' }} />
+                <TimePicker use12Hours format="h:mm a" allowClear={false} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={12}>

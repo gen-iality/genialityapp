@@ -42,6 +42,7 @@ function OrgEvents(props) {
         loading={isLoading}
         size="small"
         rowKey="index"
+        pagination={false}
         title={() => (
           <Row wrap justify="end" gutter={[8, 8]}>
             <Col>

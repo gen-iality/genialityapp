@@ -41,6 +41,7 @@ const Herramientas = (props) => {
       columns={columns}
       key="_id"
       editPath={`${props.matchUrl}/herramienta`}
+      pagination={false}
       actions
       search
       setColumnsData={setColumnsData}

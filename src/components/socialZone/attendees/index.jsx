@@ -118,9 +118,11 @@ const AttendeList = function(props) {
 
   return (
     <InfiniteScroll
+      initialLoad={false}
       pageStart={0}
       loadMore={() => handleInfiniteOnLoad()}
       hasMore={!loading && hasMore}
+      useWindow={false}
     >
       <List
         itemLayout="horizontal"

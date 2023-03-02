@@ -95,6 +95,7 @@ const Home = () => {
                       return (
                         <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
                           <EventCard
+                            bordered={false}
                             key={key}
                             event={event}
                             action={{

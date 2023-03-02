@@ -235,6 +235,7 @@ const EventOrganization = (props) => {
                     <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                       <EventCard
                         noDates
+                        bordered={false}
                         key={event._id}
                         event={event}
                         action={{ name: 'Ver', url: `landing/${event._id}` }}
@@ -274,6 +275,7 @@ const EventOrganization = (props) => {
                     <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                       <EventCard
                         noDates
+                        bordered={false}
                         key={event._id}
                         event={event}
                         action={{ name: 'Ver', url: `landing/${event._id}` }}

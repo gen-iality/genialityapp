@@ -187,8 +187,9 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
       <Table
         columns={columns}
         dataSource={dataSource}
-        size="small"
-        rowKey="index"
+        size='small'
+        rowKey='index'
+        pagination={false}
         loading={isLoading}
         scroll={{ x: 'auto' }}
         title={() => (

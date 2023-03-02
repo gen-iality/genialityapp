@@ -347,6 +347,7 @@ const Informacion = (props) => {
                       <span>de</span>
                     </div>
                     <TimePicker
+                      allowClear={false}
                       use12Hours
                       value={dayjs(selectedHours.from)}
                       onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours })}
@@ -359,6 +360,7 @@ const Informacion = (props) => {
                       <span>a</span>
                     </div>
                     <TimePicker
+                      allowClear={false}
                       use12Hours
                       value={dayjs(selectedHours.at)}
                       onChange={(hours) => changeSelectHours({ ...selectedHours, at: hours })}

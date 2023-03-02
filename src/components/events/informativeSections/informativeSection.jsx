@@ -132,6 +132,7 @@ class InformativeSection extends Component {
           <div className="site-card-border-less-wrapper" style={{ marginTop: 35 }}>
             <Card
               title={informativeSection.name || 'clasificación'}
+              bordered={false}
               style={{ backgroundColor: 'transparent', margin: 'auto' }}
             >
               {this.props.cEvent.value._id !== '611c285104f5d97d1b0f5ed2' && markup && Parser(markup)}

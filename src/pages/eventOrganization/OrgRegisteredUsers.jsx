@@ -100,6 +100,7 @@ function OrgRegisteredUsers(props) {
         dataSource={usersSuscribedData}
         size="small"
         rowKey="index"
+        pagination={false}
         loading={isLoading}
         scroll={{ x: 'auto' }}
       />

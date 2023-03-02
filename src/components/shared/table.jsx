@@ -8,7 +8,8 @@ import { useTable, usePagination, useRowSelect } from 'react-table';
  data={[]}
  loading={loading}
  onFetchData={this.fetchData}
- showPaginationTop
+ showPaginationTop={true}
+ showPaginationBottom={false}
  pages={pages}
  defaultPageSize={pageSize}
  className="-highlight"} props 
@@ -50,7 +51,7 @@ export default function EviusTable(props) {
     },
     usePagination,
     useRowSelect,
-    keyHooks
+    keyHooks,
   );
 
   return (
@@ -78,7 +79,8 @@ export default function EviusTable(props) {
                   onRowClick && onRowClick(row);
                 }}
                 key={keyrow}
-                className="ant-table-row nt-table-row-level-0">
+                className="ant-table-row nt-table-row-level-0"
+              >
                 {row.cells.map((cell, keycell) => {
                   return <td key={keycell}>{cell.render('Cell')}</td>;
                 })}
@@ -123,7 +125,8 @@ export default function EviusTable(props) {
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
-          }}>
+          }}
+        >
           {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}

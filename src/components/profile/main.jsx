@@ -360,6 +360,7 @@ const MainProfile = (props) => {
                                   <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                                     <EventCard
                                       isAdmin
+                                      bordered={false}
                                       event={event}
                                       action={{ name: 'Ver', url: `landing/${event._id}` }}
                                       right={[
@@ -398,6 +399,7 @@ const MainProfile = (props) => {
                                   <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                                     <EventCard
                                       moreDetails
+                                      bordered={false}
                                       event={event}
                                       action={{ name: 'Ver', url: `landing/${event._id}` }}
                                       blockedEvent={
@@ -480,6 +482,7 @@ const MainProfile = (props) => {
                         <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                           <EventCard
                             isAdmin
+                            bordered={false}
                             event={event}
                             // action={{ name: 'Ver', url: `landing/${event._id}` }}
                             right={[
@@ -513,6 +516,7 @@ const MainProfile = (props) => {
                           <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                             <EventCard
                               moreDetails
+                              bordered={false}
                               event={event}
                               action={{ name: 'Ver', url: `landing/${event._id}` }}
                               blockedEvent={

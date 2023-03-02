@@ -196,6 +196,7 @@ function ModulePage(props: any) {
       </Space>
       <DndProvider backend={HTML5Backend}>
         <Table
+          pagination={false}
           columns={columnsData}
           dataSource={dataSource}
           rowKey="index"

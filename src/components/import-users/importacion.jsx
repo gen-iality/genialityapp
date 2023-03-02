@@ -162,6 +162,7 @@ const Importacion = (props) => {
             onChange={(e) => handleXlsFile(e.fileList[0])}
             onDrop={(e) => handleXlsFile(e.fileList[0])}
             customRequest={uploadImagedummyRequest}
+            multiple={false}
             accept=".xls,.xlsx"
             style={{ margin: '0 15px', padding: '0 !important' }}
           >

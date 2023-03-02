@@ -171,6 +171,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
                 }
               }}
               customRequest={uploadImagedummyRequest}
+              multiple={false}
               listType="picture"
               maxCount={1}
               fileList={imageAvatar}

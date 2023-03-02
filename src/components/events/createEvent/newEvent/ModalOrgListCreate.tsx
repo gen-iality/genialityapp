@@ -167,6 +167,7 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                         setImageAvatar(null)
                       }
                     }}
+                    multiple={false}
                     listType="picture"
                     maxCount={1}
                     fileList={imageAvatar}

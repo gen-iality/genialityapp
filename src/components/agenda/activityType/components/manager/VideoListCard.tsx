@@ -76,6 +76,7 @@ const VideoListCard = (props: any) => {
               </Button>
             </div>
           }
+          bordered={false}
           dataSource={props.videos}
           renderItem={(item: any) => (
             <List.Item
@@ -146,6 +147,7 @@ const VideoListCard = (props: any) => {
                 avatar={
                   <Image
                     style={{ borderRadius: '5px', objectFit: 'cover' }}
+                    preview={false}
                     width={150}
                     height={100}
                     src={item.image || 'error'}

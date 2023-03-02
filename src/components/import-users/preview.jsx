@@ -77,7 +77,8 @@ class Preview extends Component {
               message: 'La contraseña debe tener entre 6 a 18 caracteres',
             },
           ]}
-          hasFeedback>
+          hasFeedback
+        >
           <Input.Password />
         </Form.Item>
 
@@ -105,7 +106,8 @@ class Preview extends Component {
                 return Promise.reject(new Error('¡Las constraseñas no coinciden!'));
               },
             }),
-          ]}>
+          ]}
+        >
           <Input.Password />
         </Form.Item>
 
@@ -115,7 +117,8 @@ class Preview extends Component {
               onClick={() => {
                 Modal.destroyAll();
                 this.setState({ showModal: false, showMessage: true });
-              }}>
+              }}
+            >
               Cancelar
             </Button>
             <Button
@@ -124,7 +127,8 @@ class Preview extends Component {
               onClick={() => {
                 Modal.destroyAll();
                 this.setState({ showMessage: false });
-              }}>
+              }}
+            >
               Continuar
             </Button>
           </Space>
@@ -257,7 +261,8 @@ class Preview extends Component {
                   this.state.genericPassword === false
                     ? { borderColor: '#2593FC', borderStyle: 'solid', borderWidth: '4px', borderRadius: '6px' }
                     : {}
-                }>
+                }
+              >
                 <Card
                   style={{ cursor: 'pointer' }}
                   onClick={() => this.setState({ genericPassword: false, password: null })}
@@ -288,7 +293,8 @@ class Preview extends Component {
                   this.state.genericPassword
                     ? { borderColor: '#2593FC', borderStyle: 'solid', borderWidth: '4px', borderRadius: '6px' }
                     : {}
-                }>
+                }
+              >
                 <Card
                   style={{ cursor: 'pointer' }}
                   onClick={() => this.setState({ genericPassword: true, showModal: true })}
@@ -331,7 +337,8 @@ class Preview extends Component {
           disabled={this.state.genericPassword && (this.state.password === '' || this.state.password === null)}
           onClick={() => {
             this.props.importUsers(list, this.state.password);
-          }}>
+          }}
+        >
           Finalizar
         </Button>
 
@@ -340,6 +347,7 @@ class Preview extends Component {
           icon={<ExclamationCircleOutlined />}
           footer={null}
           destroyOnClose
+          closable={false}
           visible={this.state.showModal}
         >
           {this.content()}

@@ -41,6 +41,7 @@ const ListVideoCard = () => {
                   return (
                     <Col key={index} xs={0} sm={0} md={24} lg={8} xl={8}>
                       <VideoCard
+                        bordered={false}
                         key={cEvent.value._id}
                         event={cEvent.value}
                         action={{ name: 'Ver', url: `landing/${cEvent.value._id}` }}

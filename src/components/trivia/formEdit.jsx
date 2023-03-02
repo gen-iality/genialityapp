@@ -78,7 +78,7 @@ const columns = [
 
 const FormEdit = (
   { valuesQuestion, eventId, surveyId, closeModal, toggleConfirmLoading, gradableSurvey, unmountForm },
-  ref
+  ref,
 ) => {
   const [defaultValues, setDefaultValues] = useState({});
   const [questionId, setQuestionId] = useState('');
@@ -124,10 +124,10 @@ const FormEdit = (
   }, []);
 
   const editRankingCorrectAnswer = (index, value) => {
-    const newRecord = [ ...rankingCorrectAnswers ];
+    const newRecord = [...rankingCorrectAnswers];
     newRecord[index] = value;
     setRankingCorrectAnswers(newRecord);
-  }
+  };
 
   /**
    * Build a fake correct answer index for the ranking type.
@@ -192,7 +192,7 @@ const FormEdit = (
   useEffect(() => {
     setLoading(true);
     const state = gradableSurvey === 'true' ? true : false;
-    console.log('valuesQuestion', valuesQuestion)
+    console.log('valuesQuestion', valuesQuestion);
 
     setDefaultValues(valuesQuestion);
     setQuestionId(valuesQuestion.id);
@@ -273,29 +273,23 @@ const FormEdit = (
    * @returns {number[]}
    */
   const sortChoicesByRanking = (choices, ranking) => {
-    const pairs = choices.map((value, i) => ({ value, r: ranking[i], }))
-    console.debug('pairs', pairs)
+    const pairs = choices.map((value, i) => ({ value, r: ranking[i] }));
+    console.debug('pairs', pairs);
     const result = pairs.sort((a, b) => {
-        if (a.r === undefined)
-            return -1;
-        if (b.r === undefined)
-            return 1;
-        if (a.r === undefined && b.r === undefined)
-            return 0;
-        if (a.r > b.r)
-            return 1;
-        if (a.r < b.r)
-            return -1;
-        if (a.r === b.r)
-            return 0;                          
+      if (a.r === undefined) return -1;
+      if (b.r === undefined) return 1;
+      if (a.r === undefined && b.r === undefined) return 0;
+      if (a.r > b.r) return 1;
+      if (a.r < b.r) return -1;
+      if (a.r === b.r) return 0;
     });
-    
+
     console.debug(choices);
     console.debug();
     console.debug(ranking);
     console.debug();
     console.debug(result);
-    
+
     return result.map((r) => r.value);
   };
 
@@ -341,7 +335,7 @@ const FormEdit = (
           values['correctAnswer'] = values.choices && searchWithMultipleIndex(values.choices, correctAnswerIndex);
           values['correctAnswerIndex'] = correctAnswerIndex;
           break;
-        
+
         case 'ranking':
           // TODO: implement that. Take in mind the order defined in `rankingCorrectAnswers`
           const sortted = sortChoicesByRanking(values.choices, rankingCorrectAnswers);
@@ -349,13 +343,13 @@ const FormEdit = (
           values['correctAnswer'] = sortted;
           values['correctAnswerIndex'] = correctAnswerIndex;
           break;
-        
+
         case 'rating':
           values['isRequired'] = true;
           values['correctAnswer'] = ratingCorrectAnswer;
           values['correctAnswerIndex'] = correctAnswerIndex;
           break;
-        
+
         case 'matrix':
           values['correctAnswer'] = likertScaleData?.values || [];
           values['isRequired'] = true;
@@ -475,7 +469,8 @@ const FormEdit = (
                         {
                           validator: fieldValidation,
                         },
-                      ]}>
+                      ]}
+                    >
                       <Input />
                     </Form.Item>
                   ) : (
@@ -489,7 +484,8 @@ const FormEdit = (
                           {
                             validator: fieldValidation,
                           },
-                        ]}>
+                        ]}
+                      >
                         <Select placeholder="Seleccione una Opcion" onChange={handleFunction}>
                           {field.selectOptions.map((option, index) =>
                             option.text ? (
@@ -500,12 +496,12 @@ const FormEdit = (
                               <Option key={`quantity${index}`} value={option}>
                                 {option}
                               </Option>
-                            )
+                            ),
                           )}
                         </Select>
                       </Form.Item>
                     )
-                  )
+                  ),
                 )}
               </div>
             ) : (
@@ -521,7 +517,8 @@ const FormEdit = (
                         {
                           validator: fieldValidation,
                         },
-                      ]}>
+                      ]}
+                    >
                       <Input />
                     </Form.Item>
                   ) : (
@@ -535,7 +532,8 @@ const FormEdit = (
                           {
                             validator: fieldValidation,
                           },
-                        ]}>
+                        ]}
+                      >
                         <Select placeholder="Seleccione una Opción" onChange={handleFunction}>
                           {field.selectOptions.map((option, index) =>
                             option.text ? (
@@ -546,12 +544,12 @@ const FormEdit = (
                               <Option key={`quantity${index}`} value={option}>
                                 {option}
                               </Option>
-                            )
+                            ),
                           )}
                         </Select>
                       </Form.Item>
                     )
-                  )
+                  ),
                 )}
               </div>
             )}
@@ -559,6 +557,7 @@ const FormEdit = (
               <Form.Item key="img" name="image" label="Imagen">
                 <Space direction="horizontal">
                   <Upload
+                    multiple={false}
                     accept="image/png, image/jpeg"
                     name="logo"
                     listType="picture"
@@ -589,7 +588,8 @@ const FormEdit = (
                         <Divider />
                         <Table dataSource={dataSource} columns={columns} pagination={false} size="small" />
                       </div>
-                    }>
+                    }
+                  >
                     <QuestionCircleOutlined style={{ color: '#faad14', marginRight: '10px' }} />
                   </Tooltip>
                 </Space>
@@ -626,16 +626,22 @@ const FormEdit = (
               {(fields, { add, remove }) => {
                 return (
                   <>
-                  <style>
-                    {`
+                    <style>
+                      {`
                     .abc-ranking, .abc-ranking > .ant-space-item { width: 100%; }
                     .abc-rating, .abc-rating > .ant-space-item, .abc-rating > .ant-space-item > .ant-space-vertical { width: 100%; }
                     `}
-                  </style>
+                    </style>
                     <Space
                       direction="horizontal"
-                      className={questionType === 'ranking' ? 'abc-ranking' : questionType === 'rating' ? 'abc-ranking' : undefined}
-                      style={questionType === 'ranking' ? {width: '100%'} : undefined}
+                      className={
+                        questionType === 'ranking'
+                          ? 'abc-ranking'
+                          : questionType === 'rating'
+                          ? 'abc-ranking'
+                          : undefined
+                      }
+                      style={questionType === 'ranking' ? { width: '100%' } : undefined}
                     >
                       {questionType === 'radiogroup' ? (
                         <Radio.Group
@@ -647,6 +653,7 @@ const FormEdit = (
                           {fields.map((field, index) => (
                             <Form.Item
                               label={<Text type="secondary">Respuesta {index + 1}</Text>}
+                              required={false}
                               key={field.key}
                             >
                               <Radio value={index} style={{ width: '100%' }}>
@@ -663,7 +670,8 @@ const FormEdit = (
                                       validator: fieldValidation,
                                     },
                                   ]}
-                                  noStyle>
+                                  noStyle
+                                >
                                   <Input placeholder="Asingar respuesta" style={{ width: '100%' }} />
                                 </Form.Item>
                                 {fields.length > 2 ? (
@@ -687,6 +695,7 @@ const FormEdit = (
                           {fields.map((field, index) => (
                             <Form.Item
                               label={<Text type="secondary">Respuesta {index + 1}</Text>}
+                              required={false}
                               key={field.key}
                             >
                               <Checkbox value={index} style={{ width: '100%' }}>
@@ -703,7 +712,8 @@ const FormEdit = (
                                       validator: fieldValidation,
                                     },
                                   ]}
-                                  noStyle>
+                                  noStyle
+                                >
                                   <Input placeholder="Asingar respuesta" style={{ width: '100%' }} />
                                 </Form.Item>
                                 {fields.length > 2 ? (
@@ -718,66 +728,63 @@ const FormEdit = (
                           ))}
                         </Checkbox.Group>
                       ) : questionType === 'ranking' ? (
-                        <Space direction="vertical" style={{width: '100%'}}>
+                        <Space direction="vertical" style={{ width: '100%' }}>
                           <p>Este tipo de pregunta permite al usuario ordenar elementos en una lista proporcionada.</p>
                           <p>Orden de las opciones:</p>
-                        {fields.map((field, index) => (
-                          <Form.Item
-                            label={<Text type="secondary">Opción</Text>}
-                            key={field.key}
-                          >
-                            <Space direction="horizontal" key={`space_${field.key}`}>
-                            {allowGradableSurvey && (
-                              <InputNumber
-                                value={rankingCorrectAnswers[index] || ''} // Value
-                                onChange={(e) => editRankingCorrectAnswer(index, e)}
-                                placeholder='#orden'
-                                style={{ maxWidth: '5em' }}
-                              />
-                            )}
-                            <Form.Item
-                              {...field}
-                              noStyle
-                              style={{width: '100%'}}
-                              validateTrigger={['onChange', 'onBlur']}
-                              rules={[
-                                {
-                                  required: true,
-                                  whitespace: true,
-                                  message: `Por favor ingresa la opción ${index + 1}`,
-                                },
-                                {
-                                  validator: fieldValidation,
-                                },
-                              ]}
-                            >
-                              <Input placeholder="Asingar opción" style={{ width: '100%' }} />
+                          {fields.map((field, index) => (
+                            <Form.Item label={<Text type="secondary">Opción</Text>} required={false} key={field.key}>
+                              <Space direction="horizontal" key={`space_${field.key}`}>
+                                {allowGradableSurvey && (
+                                  <InputNumber
+                                    value={rankingCorrectAnswers[index] || ''} // Value
+                                    onChange={(e) => editRankingCorrectAnswer(index, e)}
+                                    placeholder="#orden"
+                                    style={{ maxWidth: '5em' }}
+                                  />
+                                )}
+                                <Form.Item
+                                  {...field}
+                                  noStyle
+                                  style={{ width: '100%' }}
+                                  validateTrigger={['onChange', 'onBlur']}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      whitespace: true,
+                                      message: `Por favor ingresa la opción ${index + 1}`,
+                                    },
+                                    {
+                                      validator: fieldValidation,
+                                    },
+                                  ]}
+                                >
+                                  <Input placeholder="Asingar opción" style={{ width: '100%' }} />
+                                </Form.Item>
+                              </Space>
+                              {fields.length > 1 ? (
+                                <MinusCircleOutlined
+                                  onClick={() => {
+                                    remove(field.name);
+                                    // Delete its ranking
+                                    const newRankingCorrectAnswers = [...rankingCorrectAnswers];
+                                    newRankingCorrectAnswers.splice(index, 1);
+                                    setRankingCorrectAnswers(newRankingCorrectAnswers);
+                                    buildFakeCorrectAnswerIndexForRankingType(fields.length - 1);
+                                  }}
+                                />
+                              ) : null}
                             </Form.Item>
-                            </Space>
-                            {fields.length > 1 ? (
-                              <MinusCircleOutlined
-                                onClick={() => {
-                                  remove(field.name);
-                                  // Delete its ranking
-                                  const newRankingCorrectAnswers = [...rankingCorrectAnswers];
-                                  newRankingCorrectAnswers.splice(index, 1);
-                                  setRankingCorrectAnswers(newRankingCorrectAnswers);
-                                  buildFakeCorrectAnswerIndexForRankingType(fields.length - 1);
-                                }}
-                              />
-                            ) : null}
-                          </Form.Item>
-                        ))}
+                          ))}
                           <p>Si es calificable, la respuesta correcta será acorde al orden asignado a cada opción.</p>
                         </Space>
                       ) : questionType === 'rating' ? (
-                        <Space direction="vertical" style={{width: '100%'}}>
+                        <Space direction="vertical" style={{ width: '100%' }}>
                           {/* The max rate description in this question kind */}
-                          <p>Este tipo de pregunta permite al usuario seleccionar un valor en un rango proporcionado, basado en un valor mínimo y un máximo.</p>
-                          <Form.Item
-                            label={<Text type="secondary">Descripción de la valuación máxima</Text>}
-                            required
-                          >
+                          <p>
+                            Este tipo de pregunta permite al usuario seleccionar un valor en un rango proporcionado,
+                            basado en un valor mínimo y un máximo.
+                          </p>
+                          <Form.Item label={<Text type="secondary">Descripción de la valuación máxima</Text>} required>
                             <Input
                               value={maxRateDescription}
                               onChange={(e) => setMaxRateDescription(e.target.value)}
@@ -787,10 +794,7 @@ const FormEdit = (
                           </Form.Item>
 
                           {/* The max value */}
-                          <Form.Item
-                            label={<Text type="secondary">Valor máxima</Text>}
-                            required
-                          >
+                          <Form.Item label={<Text type="secondary">Valor máxima</Text>} required>
                             <InputNumber
                               // style={{ maxWidth: '5em' }}
                               value={rateMax}
@@ -802,10 +806,7 @@ const FormEdit = (
                           </Form.Item>
 
                           {/* The min rate description in this question kind */}
-                          <Form.Item
-                            label={<Text type="secondary">Descripción de la valuación mínima</Text>}
-                            required
-                          >
+                          <Form.Item label={<Text type="secondary">Descripción de la valuación mínima</Text>} required>
                             <Input
                               value={minRateDescription}
                               onChange={(e) => setMinRateDescription(e.target.value)}
@@ -815,10 +816,7 @@ const FormEdit = (
                           </Form.Item>
 
                           {/* The min value */}
-                          <Form.Item
-                            label={<Text type="secondary">Valor mínima</Text>}
-                            required
-                          >
+                          <Form.Item label={<Text type="secondary">Valor mínima</Text>} required>
                             <InputNumber
                               // style={{ maxWidth: '5em' }}
                               value={rateMin}
@@ -826,15 +824,12 @@ const FormEdit = (
                               placeholder="Valor de la valuación mínima"
                               style={{ width: '100%' }}
                               min={0}
-                              />
+                            />
                           </Form.Item>
 
                           {/* The correct answer */}
                           {allowGradableSurvey && (
-                            <Form.Item
-                              label={<Text type="secondary">Valoración correcta</Text>}
-                              required
-                            >
+                            <Form.Item label={<Text type="secondary">Valoración correcta</Text>} required>
                               <InputNumber
                                 // style={{ maxWidth: '5em' }}
                                 value={ratingCorrectAnswer || ''}
@@ -842,24 +837,24 @@ const FormEdit = (
                                 placeholder="Valoración correcta"
                                 style={{ width: '100%' }}
                                 min={0}
-                                />
-                                <p>Si marca como evaluable, este valor será usado como respuesta correcta.</p>
+                              />
+                              <p>Si marca como evaluable, este valor será usado como respuesta correcta.</p>
                             </Form.Item>
                           )}
                         </Space>
-                      ) :  questionType === 'matrix' ? (
+                      ) : questionType === 'matrix' ? (
                         <Space direction="vertical">
-                        <p>Este tipo de pregunta representa una escala psicométrica que mide el grado en que el encuestado está de acuerdo o en desacuerdo con cada consulta.</p>
-                        <LikertScaleEditor
-                          source={likertScaleData || {}}
-                          onEdit={(x) => setLikertScaleData(x)}
-                        />
+                          <p>
+                            Este tipo de pregunta representa una escala psicométrica que mide el grado en que el
+                            encuestado está de acuerdo o en desacuerdo con cada consulta.
+                          </p>
+                          <LikertScaleEditor source={likertScaleData || {}} onEdit={(x) => setLikertScaleData(x)} />
                         </Space>
                       ) : (
                         <p>Tipo desconocido</p>
                       )}
                     </Space>
-                    {(fields.length < 15 && questionType !== 'rating') && (
+                    {fields.length < 15 && questionType !== 'rating' && (
                       <Form.Item>
                         <Button
                           type="dashed"
@@ -869,7 +864,8 @@ const FormEdit = (
                               // Only for ranking
                               buildFakeCorrectAnswerIndexForRankingType(fields.length + 1);
                             }
-                          }}>
+                          }}
+                        >
                           <PlusOutlined /> Agregar otra {questionType === 'ranking' ? 'opción' : 'respuesta'}
                         </Button>
                       </Form.Item>

@@ -234,6 +234,7 @@ function SpeakersList(props) {
             row: DraggableBodyRow,
           },
         }}
+        pagination={false}
       />
     </div>
   );

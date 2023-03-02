@@ -18,7 +18,6 @@ import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import './RegisterFast.css';
 
-
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
@@ -150,6 +149,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
                 HandleHookForm(null, 'picture', null);
               }}
               customRequest={uploadImagedummyRequest}
+              multiple={false}
               listType="picture"
               maxCount={1}
             >
@@ -161,7 +161,8 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
                     style={{
                       height: !imageAvatar ? '120px' : '95px',
                       width: !imageAvatar ? '120px' : '95px',
-                    }}>
+                    }}
+                  >
                     {!imageAvatar && <PictureOutlined style={{ fontSize: '50px' }} />}
                     {imageAvatar && <Avatar src={imageAvatar} size={90} />}
                   </Button>

@@ -9,19 +9,19 @@ import { useEffect, useState } from 'react';
  * This solution is distributed as is:
  * https://github.com/react-component/picker/issues/123#issuecomment-728755491
  */
- import dayjs from 'dayjs';
- import advancedFormat from 'dayjs/plugin/advancedFormat';
- import customParseFormat from 'dayjs/plugin/customParseFormat';
- import localeData from 'dayjs/plugin/localeData';
- import weekday from 'dayjs/plugin/weekday';
- import weekOfYear from 'dayjs/plugin/weekOfYear';
- import weekYear from 'dayjs/plugin/weekYear';
- dayjs.extend(customParseFormat);
- dayjs.extend(advancedFormat);
- dayjs.extend(weekday);
- dayjs.extend(localeData);
- dayjs.extend(weekOfYear);
- dayjs.extend(weekYear);
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localeData from 'dayjs/plugin/localeData';
+import weekday from 'dayjs/plugin/weekday';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import weekYear from 'dayjs/plugin/weekYear';
+dayjs.extend(customParseFormat);
+dayjs.extend(advancedFormat);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
+dayjs.extend(weekOfYear);
+dayjs.extend(weekYear);
 import { deleteFireStorageData } from '@Utilities/deleteFireStorageData';
 import { countryApi } from '@helpers/request';
 /**TODO::ocaciona error en ios */
@@ -164,7 +164,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               onChange={(val) => {
                 areacodeselected = val;
               }}
-              placeholder="Código de area del pais">
+              placeholder="Código de area del pais"
+            >
               {areaCode.map((code: any, key: any) => {
                 return (
                   <Option key={key} value={code.value}>
@@ -199,7 +200,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               onChange={(val) => {
                 onlyAreacodeselected = val;
               }}
-              placeholder="Código de area del pais">
+              placeholder="Código de area del pais"
+            >
               {areaCode.map((code: any, key: any) => {
                 return (
                   <Option key={key} value={code.value}>
@@ -219,7 +221,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               <div
                 dangerouslySetInnerHTML={{
                   __html: label,
-                }}></div>
+                }}
+              ></div>
             </div>
             <Divider />
           </>
@@ -260,9 +263,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
         } else {
           rule = {
             validator: (_: any, value: any) =>
-              value || !value || value == '' || value == undefined
-                ? Promise.resolve()
-                : Promise.reject(textoError),
+              value || !value || value == '' || value == undefined ? Promise.resolve() : Promise.reject(textoError),
           };
         }
 
@@ -300,12 +301,14 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       header={intl.formatMessage({
                         id: 'registration.message.policy',
                       })}
-                      key="1">
+                      key="1"
+                    >
                       <pre
                         dangerouslySetInnerHTML={{
                           __html: description,
                         }}
-                        style={{ whiteSpace: 'normal' }}></pre>
+                        style={{ whiteSpace: 'normal' }}
+                      ></pre>
                     </Panel>
                   </Collapse>
                 )}
@@ -343,6 +346,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               accept="application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx"
               action={`${ApiUrl}/api/files/upload/`}
               maxCount={1}
+              multiple={false}
               listType="text"
               beforeUpload={beforeUpload}
               onRemove={async (file: any) => {
@@ -359,7 +363,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       },
                     ]
                   : []
-              }>
+              }
+            >
               <>
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined style={{ color: '#009fd9' }} />
@@ -405,7 +410,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               }}
               disabled={loading || countries.length === 0}
               loading={loading}
-              placeholder="Seleccione un país">
+              placeholder="Seleccione un país"
+            >
               {countries.map((country: any) => {
                 return (
                   <Option key={country.iso2} value={country.name}>
@@ -430,7 +436,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               }}
               disabled={loading || regiones.length === 0}
               loading={loading}
-              placeholder="Seleccione un región">
+              placeholder="Seleccione un región"
+            >
               {regiones.map((regiones: any) => {
                 return (
                   <Option key={regiones.iso2} value={regiones.name}>
@@ -455,7 +462,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               onChange={(nameCity, aditionalData: any) => {
                 setCity({ name: nameCity, regionCode: aditionalData.key, inputName: name });
               }}
-              placeholder="Seleccione una ciudad">
+              placeholder="Seleccione una ciudad"
+            >
               {cities.map((cityCode: any, key: any) => {
                 return (
                   <Option key={key} value={cityCode.name}>
@@ -481,6 +489,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                 onChange={(file) => {
                   // setImageAvatar(file);
                 }}
+                multiple={false}
                 listType="picture"
                 maxCount={1}
                 // @ts-ignore: Unreachable code error
@@ -559,7 +568,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       header={intl.formatMessage({
                         id: 'registration.message.policy',
                       })}
-                      key="1">
+                      key="1"
+                    >
                       <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
                     </Panel>
                   </Collapse>

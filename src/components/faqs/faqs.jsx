@@ -43,6 +43,7 @@ const Faqs = (props) => {
       columns={columns}
       key="_id"
       editPath={`${props.matchUrl}/faq`}
+      pagination={false}
       actions
       search
       setColumnsData={setColumnsData}

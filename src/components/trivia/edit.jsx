@@ -1157,6 +1157,7 @@ class TriviaEdit extends Component {
                           textAlign: 'center',
                         }}
                         visible={visibleModal}
+                        maskClosable={false}
                         onOk={this.sendForm}
                         onCancel={this.closeModal}
                         footer={[

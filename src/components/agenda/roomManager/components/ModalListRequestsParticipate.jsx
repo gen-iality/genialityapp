@@ -72,6 +72,7 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
         <Col>
           <Transfer
             pagination={{ pageSize: 7 }}
+            showSelectAll={false}
             oneWay
             listStyle={{
               borderRadius: '5px',

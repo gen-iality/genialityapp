@@ -242,7 +242,7 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
       </Form.Item>
 
       <Form.Item name="name" initialValue={dataToEdit?.name}>
-        <Input placeholder="Nombre del campo en base de datos" />
+        <Input disabled={false} placeholder="Nombre del campo en base de datos" />
       </Form.Item>
 
       <Form.Item
@@ -294,6 +294,7 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         >
           <Select
             mode="tags"
+            open={false}
             placeholder="Escribe la opción y presiona Enter o Tab..."
             aria-required
           />
@@ -308,6 +309,7 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         <Form.Item name="options" label="Opciones">
           <Select
             mode="tags"
+            open={false}
             placeholder="Escribe la opción y presiona Enter o Tab..."
             aria-required
           />
