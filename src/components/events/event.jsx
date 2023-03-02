@@ -492,7 +492,7 @@ class Event extends Component {
                 path={`${match.url}/timetracking`}
                 component={TimeTrackingRoutes}
                 event={this.state.event}
-                componentKey={'timetracking'}
+                componentKey="timetracking"
               />
               {/* Este componente se muestra si una ruta no coincide */}
               <Protected

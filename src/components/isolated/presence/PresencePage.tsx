@@ -38,7 +38,7 @@ export function PresencePage (props: IPresencePageProps) {
         debuglog={GLOG}
         errorlog={GERROR}
         realtimeDB={fireRealtime}
-        collectionId={'paco'}
+        collectionId="paco"
       />
     </div>
   );

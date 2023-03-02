@@ -207,7 +207,7 @@ class SendRsvp extends Component {
             form
             save
             saveMethod={() => this.setState({ modal: true })}
-            saveName={'Enviar'}
+            saveName="Enviar"
           />
 
           <Row justify='center' wrap gutter={8}>
@@ -217,7 +217,7 @@ class SendRsvp extends Component {
               <Col span={14}>
                 <Form.Item label={`Asunto del correo (Por defecto será el nombre del curso)`}>
                   <Input
-                    name={'subject'}
+                    name="subject"
                     placeholder={'Escribe aquí el asunto del correo'}
                     onChange={(e) => this.handleChange(e)}
                     value={this.state.rsvp.subject}
@@ -382,12 +382,12 @@ class SendRsvp extends Component {
           <Modal
             visible={this.state.modal}
             onCancel={this.closeModal}
-            title={'Confirmación'}
+            title="$1"
             onOk={this.submit}
             okButtonProps={{ disabled: this.state.disabled }}
             confirmLoading={this.state.disabled}
-            cancelText={'Cancelar'}
-            okText={'Enviar'}
+            cancelText="Cancelar"
+            okText="Enviar"
           >
             <p>
               Se van a enviar {this.state.selection === 'Todos' ? 'a todos las' : this.state.selection.length}{' '}

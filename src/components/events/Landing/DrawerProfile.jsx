@@ -128,7 +128,7 @@ const DrawerProfile = (props) => {
         visible={props.viewPerfil}
         closable={true}
         onClose={() => props.setViewPerfil({ view: false, perfil: null })}
-        width={'52vh'}
+        width="52vh"
         bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}
       >
         <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '10px' }}>

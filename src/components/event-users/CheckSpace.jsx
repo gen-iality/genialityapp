@@ -194,9 +194,9 @@ class CheckSpace extends Component {
                         </>
                       }
                       key='2'>
-                      <Form.Item label={'Código'}>
+                      <Form.Item label="$1">
                         <Input
-                          name={'searchCC'}
+                          name="searchCC"
                           ref={this.txtInput}
                           value={this.state.newCC}
                           onChange={this.changeCC}

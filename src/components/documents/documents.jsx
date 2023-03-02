@@ -19,7 +19,7 @@ const Documents = ( props ) => {
     <CMS 
       API={DocumentsApi}
       eventId={props.event._id}
-      title={'Documentos'}
+      title="Documentos"
       titleTooltip={'Agregue o edite los Documentos que se muestran en la aplicación'}
       addUrl={{
         pathname: `${props.matchUrl}/document`,

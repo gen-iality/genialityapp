@@ -256,7 +256,7 @@ function AddProduct(props) {
 
   return (
     <Form {...formLayout} onFinish={saveProduct}>
-      <Header title={'Producto'} back save form edit={props.match.params.id} remove={remove} />
+      <Header title="Producto" back save form edit={props.match.params.id} remove={remove} />
       <Row justify='center' wrap gutter={12}>
         {props.match.params.id && isLoading ? (
           <Loading />
@@ -273,7 +273,7 @@ function AddProduct(props) {
               <Input
                 value={name}
                 placeholder='Nombre del producto'
-                name={'name'}
+                name="name"
                 onChange={(e) => changeInput(e, 'name')}
               />
               {error != null && error.name && (
@@ -284,7 +284,7 @@ function AddProduct(props) {
               <Input
                 value={creator}
                 placeholder='Nombre del autor, creador o descripción corta'
-                name={'creator'}
+                name="creator"
                 onChange={(e) => changeInput(e, 'creator')}
               />
               {error != null && error.creator && <small style={{ color: 'red' }}>Este campo es requerido</small>}
@@ -295,7 +295,7 @@ function AddProduct(props) {
                   Descripción <label style={{ color: 'red' }}>*</label>
                 </label>
               }>
-              <EviusReactQuill data={description} id={'descriptionProduct'} handleChange={changeDescription} />
+              <EviusReactQuill data={description} id="descriptionProduct" handleChange={changeDescription} />
               {error != null && error.description && (
                 <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
               )}
@@ -307,7 +307,7 @@ function AddProduct(props) {
               <Input
                 value={price}
                 placeholder='Valor del producto'
-                name={'price'}
+                name="price"
                 onChange={(e) => changeInput(e, 'price')}
               />{' '}
             </Form.Item>

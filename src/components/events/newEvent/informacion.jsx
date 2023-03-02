@@ -146,7 +146,7 @@ const Informacion = (props) => {
             Nombre del curso <span className='text-color'>*</span>
           </Text>
           <Input
-            name={'name'}
+            name="name"
             value={valueInputs['name'] || ''}
             onChange={(e) => handleInput(e, 'name')}
             placeholder='Nombre del curso'
@@ -171,7 +171,7 @@ const Informacion = (props) => {
                 </Link>
               </Text>
               <Input.TextArea
-                id={'description'}
+                id="description"
                 value={valueInputs['description'] || ''}
                 onChange={(e) => handleInput(e, 'description')}></Input.TextArea>
               {containsError('description') && (
@@ -237,14 +237,14 @@ const Informacion = (props) => {
                 onCancel={() => changeOrganization(false)}
               >
                 {!createOrganizationF && (
-                  <Row style={{ marginBottom: 10 }} justify={'end'}>
+                  <Row style={{ marginBottom: 10 }} justify="end">
                     <Button onClick={() => newOrganization(true)}>
                       <PlusCircleOutlined /> Agregar
                     </Button>
                   </Row>
                 )}
                 {createOrganizationF && (
-                  <Row style={{ marginBottom: 10 }} justify={'end'}>
+                  <Row style={{ marginBottom: 10 }} justify="end">
                     <Button onClick={() => newOrganization(false)}>Ver organizaciones</Button>
                   </Row>
                 )}
@@ -298,7 +298,7 @@ const Informacion = (props) => {
                         </Form.Item>
                       )}
                       {loadingAdd && (
-                        <Row justify={'center'}>
+                        <Row justify="center">
                           <Spin />
                         </Row>
                       )}

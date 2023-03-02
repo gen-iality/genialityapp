@@ -114,7 +114,7 @@ function UsersCard(props) {
                 HandleChatOrAttende('1');
                 HandlePublicPrivate('private');
               }}>
-              <Tooltip title={'Chatear'}>
+              <Tooltip title="Chatear">
                 <MessageTwoTone style={{ fontSize: '24px' }} />
               </Tooltip>
             </a>
@@ -286,7 +286,7 @@ function UsersCard(props) {
           onClick={() => {
             setGameData(props.item);
           }}>
-          <Tooltip title={'Jugar'}>
+          <Tooltip title="Jugar">
             <GamepadVariantOutline style={{ fontSize: '32px', color: '#178BF7' }} />
           </Tooltip>
         </a>

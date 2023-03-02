@@ -83,7 +83,7 @@ export const ButtonPayment = ({ eventId, user }) => {
   return (
     <>
       {
-        <Row style={{ width: '100%' }} justify={'center'}>
+        <Row style={{ width: '100%' }} justify="center">
           <form
             style={{ width: '170px' }}
             method='post'

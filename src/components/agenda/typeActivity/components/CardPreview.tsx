@@ -151,7 +151,7 @@ const CardPreview = (props: any) => {
         props.type === 'reunión' && (
           <img
             style={{ objectFit: 'cover' }}
-            height={'250px'}
+            height="250px"
             src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b'
           />
         )

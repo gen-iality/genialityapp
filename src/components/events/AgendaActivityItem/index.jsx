@@ -154,7 +154,7 @@ function AgendaActivityItem(props) {
             {/* card de agenda en mobile */}
             <Badge.Ribbon
               className='animate__animated animate__bounceIn animate__delay-2s'
-              placement={'end'}
+              placement="end"
               style={{ height: 'auto', paddingRight: '15px' }}
               color={item.habilitar_ingreso == 'open_meeting_room' ? 'red' : 'transparent'}
               text={

@@ -294,7 +294,7 @@ const Certificado = (props) => {
   return (
     <Form onFinish={onSubmit} {...formLayout}>
       <Header
-        title={'Certificado'}
+        title="Certificado"
         description={
           <>
             <ExclamationOutlined
@@ -345,7 +345,7 @@ const Certificado = (props) => {
               >
                 <Input
                   value={certificado.name}
-                  name={'name'}
+                  name="name"
                   placeholder={'Nombre del certificado'}
                   onChange={(e) => handleChange(e)}
                 />
@@ -353,7 +353,7 @@ const Certificado = (props) => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={'Rol'}
+                label="Rol"
                 /* label={
                   <label style={{ marginTop: '2%' }} className='label'>
                     Rol <label style={{ color: 'red' }}>*</label>
@@ -362,7 +362,7 @@ const Certificado = (props) => {
                 rules={[{ required: true, message: 'El rol es requerido' }]} */
               >
                 <Select
-                  name={'rol'}
+                  name="rol"
                   onChange={(e) => {
                     onChangeRol(e);
                   }}
@@ -416,7 +416,7 @@ const Certificado = (props) => {
             </Col>
           </Row>
 
-          <Form.Item label={'Certificado'}>
+          <Form.Item label="Certificado">
             <EviusReactQuill name='content' data={certificado.content} handleChange={chgTxt} />
           </Form.Item>
         </Col>

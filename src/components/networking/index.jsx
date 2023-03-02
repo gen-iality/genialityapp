@@ -382,7 +382,7 @@ class ListEventUser extends Component {
                       id='searchInput'
                       placeholder={''}
                       data={usersFiltered}
-                      kind={'user'}
+                      kind="user"
                       event={this.props.cEvent.value._id}
                       searchResult={this.searchResult}
                       users={this.state.users}
@@ -402,7 +402,7 @@ class ListEventUser extends Component {
                         <FilterNetworking
                           id='filterSector'
                           properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'participacomo'}
+                          filterProperty="participacomo"
                           handleSelect={this.handleSelectFilter}
                         />
                       </Form.Item>
@@ -412,7 +412,7 @@ class ListEventUser extends Component {
                         <FilterNetworking
                           id='filterSector'
                           properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'sector'}
+                          filterProperty="sector"
                           handleSelect={this.handleSelectFilter}
                         />
                       </Form.Item>
@@ -428,7 +428,7 @@ class ListEventUser extends Component {
                         <FilterNetworking
                           id='filterSector'
                           properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'participascomo'}
+                          filterProperty="participascomo"
                           handleSelect={this.handleSelectFilter}
                         />
                       </Form.Item>
@@ -438,7 +438,7 @@ class ListEventUser extends Component {
                         <FilterNetworking
                           id='filterSector'
                           properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'tipodeparticipante'}
+                          filterProperty="tipodeparticipante"
                           handleSelect={this.handleSelectFilter}
                         />
                       </Form.Item>
@@ -454,7 +454,7 @@ class ListEventUser extends Component {
                         <FilterNetworking
                           id='filterSector'
                           properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'participacomo'}
+                          filterProperty="participacomo"
                           handleSelect={this.handleSelectFilter}
                         />
                       </Form.Item>
@@ -464,7 +464,7 @@ class ListEventUser extends Component {
                         <FilterNetworking
                           id='filterSector'
                           properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'queproductooservicioofreces'}
+                          filterProperty="queproductooservicioofreces"
                           handleSelect={this.handleSelectFilter}
                         />
                       </Form.Item>
@@ -480,7 +480,7 @@ class ListEventUser extends Component {
                         <FilterNetworking
                           id='filterSector'
                           properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'asistecomo'}
+                          filterProperty="asistecomo"
                           handleSelect={this.handleSelectFilter}
                         />
                       </Form.Item>
@@ -490,7 +490,7 @@ class ListEventUser extends Component {
                         <FilterNetworking
                           id='filterSector'
                           properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'sector'}
+                          filterProperty="sector"
                           handleSelect={this.handleSelectFilter}
                         />
                       </Form.Item>

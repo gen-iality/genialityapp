@@ -136,7 +136,7 @@ const Ticket = (props) => {
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title={'Ticket'} back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header title="Ticket" back save form remove={onRemoveId} edit={locationState.edit} />
 
       <Row justify='center' wrap gutter={18}>
         <Col>
@@ -149,7 +149,7 @@ const Ticket = (props) => {
             rules={[{ required: true, message: 'El título es requerido' }]}
           >
             <Input
-              name={'title'}
+              name="title"
               placeholder={'Título del ticket'}
               value={ticket.title}
               onChange={(e) => handleInputChange(e)}
@@ -157,7 +157,7 @@ const Ticket = (props) => {
           </Form.Item>
           <Form.Item label={'Permiso de enviar respuestas'}>
             <Switch
-              name={'allowed_to_vote'}
+              name="allowed_to_vote"
               checked={ticket.allowed_to_vote}
               checkedChildren='Sí'
               unCheckedChildren='No'

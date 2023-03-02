@@ -255,7 +255,7 @@ function Empresas({ event, match }) {
   return (
     <div>
       <Header
-        title={'Empresas'}
+        title="Empresas"
         titleTooltip={'Agregue o edite las Empresas que se muestran en la aplicación'}
         addUrl={{
           pathname: `${match.url}/crear`,
@@ -275,7 +275,7 @@ function Empresas({ event, match }) {
             </Col>
             <Col>
               <Link to={`${match.url}/configuration`}>
-                <Button type='primary' icon={<SettingOutlined />} id={'configuration'}>
+                <Button type='primary' icon={<SettingOutlined />} id="configuration">
                   {'Configuración'}
                 </Button>
               </Link>

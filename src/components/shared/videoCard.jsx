@@ -34,15 +34,15 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
       {forma === 'horizontal' ? (
         <div className='animate__animated animate__fadeIn'>
           <Card
-            className={'horizontal'}
+            className="horizontal"
             bordered={bordered}
             loading={loading}
             style={{ width: '100%' }}
             cover={
               <ReactPlayer
                 style={{ paddingTop: '2px' }}
-                width={'160px'}
-                height={'100px'}
+                width="160px"
+                height="100px"
                 url={activity.video}
                 onDuration={handleDuration}
               />
@@ -91,7 +91,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
               <ReactPlayer
                 /* light={duration !== 0 ? true : false} */
                 width={'100%'}
-                height={'150px'}
+                height="150px"
                 url={activity.video}
                 onDuration={handleDuration}
               />

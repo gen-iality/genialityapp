@@ -8,7 +8,7 @@ const ProfileAttende = () => {
     <div className='ant-list ant-list-split ant-list-bordered'>
       <List.Item>
         <List.Item.Meta
-          title={'Nombre'}
+          title="Nombre"
           description={formatDataToString(
             propertiesOtherprofile.properties.name
               ? propertiesOtherprofile.properties.name
@@ -19,7 +19,7 @@ const ProfileAttende = () => {
 
       <List.Item>
         <List.Item.Meta
-          title={'Celular'}
+          title="Celular"
           description={formatDataToString(
             propertiesOtherprofile.properties.celular ? propertiesOtherprofile.properties.celular : 'No registra'
           )}
@@ -32,7 +32,7 @@ const ProfileAttende = () => {
 
       <List.Item>
         <List.Item.Meta
-          title={'Edad'}
+          title="Edad"
           description={formatDataToString(
             propertiesOtherprofile.properties.age ? propertiesOtherprofile.properties.age : 'No registra'
           )}

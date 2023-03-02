@@ -33,7 +33,7 @@ const News = (props) => {
     <CMS
       API={NewsFeed}
       eventId={props.event._id}
-      title={'Noticias'}
+      title="Noticias"
       titleTooltip={'Agregue o edite las Noticias que se muestran en la aplicación'}
       addUrl={{
         pathname: `${props.match.url}/new`,

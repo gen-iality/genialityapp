@@ -63,9 +63,9 @@ const ReportList = (props) => {
         noRemove
         extraPath={`${props.url}/checkin`}
         extraPathIcon={<RightOutlined />}
-        extraPathTitle={'Detalle'}
+        extraPathTitle="Detalle"
         exportData
-        fileName={'CheckInActivity'}
+        fileName="CheckInActivity"
       />
     </div>
   );

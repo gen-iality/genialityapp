@@ -84,14 +84,14 @@ const Configuration = (props) => {
 
   return !loadingData ? (
     <>
-      <Header title={'Configuración'} back save saveMethod={saveConfiguration} />
+      <Header title="$1" back save saveMethod={saveConfiguration} />
       <Row justify='center' wrap gutter={12}>
         <Col span={16}>
           <p>Habilitar puja</p>
           <Switch checked={checkSubasta} onChange={onChange} />
           <br /> <br />
           <p>Mensaje a mostrar al deshabilitar</p>
-          <ReactQuill id={'messageF'} value={messageF} modules={toolbarEditor} onChange={changeMessage} />
+          <ReactQuill id="messageF" value={messageF} modules={toolbarEditor} onChange={changeMessage} />
         </Col>
       </Row>
     </>

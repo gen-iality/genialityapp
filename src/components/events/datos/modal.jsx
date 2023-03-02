@@ -346,17 +346,17 @@ class DatosModal extends Component {
           {...formLayout} // rest data
         >
           {/* Campo oculto  con el id del mismo para poder editar un campo a recolectar para una organización */}
-          <Form.Item hidden initialValue={this.props.info?._id} name={'id'}>
+          <Form.Item hidden initialValue={this.props.info?._id} name="id">
             <Input name='label' type='text' />
           </Form.Item>
           <Form.Item
             initialValue={this.props.info?.label}
             //value={info?.label + 'h' || 'value'}
             label={'Nombre campo'}
-            name={'label'}
+            name="label"
             rules={[{ required: true }]}
           >
-            <Input name={'label'} type='text' placeholder={'Ej: Celular'} onChange={this.handleChange} />
+            <Input name="label" type='text' placeholder={'Ej: Celular'} onChange={this.handleChange} />
           </Form.Item>
           <Form.Item name='name' initialValue={this.props.info?.name}>
             <Input
@@ -381,7 +381,7 @@ class DatosModal extends Component {
           {/* Mark this field as dependent */}
           <Form.Item name='isDependent'>
             <Checkbox
-              name={`isDependent`}
+              name="isDependent"
               checked={(isDependent || info?.dependency?.fieldName)}
               onChange={this.changeFieldAsDependent}
             >
@@ -448,7 +448,7 @@ class DatosModal extends Component {
           {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
             <Form.Item name='justonebyattendee'>
               <Checkbox
-                name={`justonebyattendee`}
+                name="justonebyattendee"
                 checked={info.justonebyattendee}
                 onChange={this.changeFieldjustonebyattendee}
               >
@@ -478,37 +478,37 @@ class DatosModal extends Component {
           )}
 
           <Form.Item
-            label={'Obligatorio'}
+            label="Obligatorio"
             initialValue={info.mandatory || false}
-            htmlFor={`mandatoryModal`}
+            htmlFor="mandatoryModal"
             name='mandatory'>
             <Checkbox
-              id={`mandatoryModal`}
-              //name={`mandatory`}
+              id="mandatoryModal"
+              //name="mandatory"
               checked={info.mandatory}
               onChange={this.changeFieldCheck}
             />
           </Form.Item>
-          <Form.Item label={'Visible para Contactos'} htmlFor={`visibleByContactsModal`} name='visibleByContacts'>
+          <Form.Item label={'Visible para Contactos'} htmlFor="visibleByContactsModal" name='visibleByContacts'>
             <Checkbox
-              id={`visibleByContactsModal`}
-              name={`visibleByContacts`}
+              id="visibleByContactsModal"
+              name="visibleByContacts"
               checked={info?.visibleByContacts}
               onChange={this.changeFieldCheckVisibleByContacts}
             />
           </Form.Item>
-          <Form.Item label={'Visible para Admin'} htmlFor={`visibleByAdminModal`} name='visibleByAdmin'>
+          <Form.Item label={'Visible para Admin'} htmlFor="visibleByAdminModal" name='visibleByAdmin'>
             <Checkbox
-              id={`visibleByAdminModal`}
-              name={`visibleByAdmin`}
+              id="visibleByAdminModal"
+              name="visibleByAdmin"
               checked={info.visibleByAdmin}
               onChange={this.changeFieldCheckVisibleByAdmin}
             />
           </Form.Item>
-          <Form.Item label={'Descripción'} name='description'>
+          <Form.Item label="$1" name='description'>
             <TextArea
               placeholder={'Descripción corta'}
-              name={'description'}
+              name="description"
               value={info.description || ''}
               onChange={this.handleChange}
             />
@@ -516,7 +516,7 @@ class DatosModal extends Component {
           <Form.Item label={'Posición / Orden'} name='order_weight'>
             <InputNumber
               min={0}
-              name={'order_weight'}
+              name="order_weight"
               placeholder='1'
               value={info.order_weight}
               onChange={(value) => this.handleChange({ target: { name: 'order_weight', value: value } })}

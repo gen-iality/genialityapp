@@ -273,7 +273,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             {
               <>
                 <Form.Item
-                  valuePropName={'checked'}
+                  valuePropName="checked"
                   name={name}
                   rules={[rule]}
                   key={'l' + key}

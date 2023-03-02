@@ -76,11 +76,11 @@ function InvitationsList(props) {
         noRemove
         extraPath={`${match.url}/detail`}
         extraPathIcon={<BarsOutlined />}
-        extraPathTitle={'Detalle'}
+        extraPathTitle="Detalle"
         extraPathUpdate={<ReloadOutlined />}
         extraPathUpdateTitle={'Actualizar métricas'}
         exportData
-        fileName={'ComunicacionesEnviadas'}
+        fileName="ComunicacionesEnviadas"
         titleTable={
           <Row gutter={[8, 8]} wrap>
             <Col>

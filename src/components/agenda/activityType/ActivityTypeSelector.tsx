@@ -71,7 +71,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
     ) : (
     <Row>
       <Col span={2}>
-        <WarningOutlined width={'auto'} />
+        <WarningOutlined width="auto" />
       </Col>
       <Col span={14}>
         <p>Todavía no has definido el tipo de actividad</p>

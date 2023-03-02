@@ -287,7 +287,7 @@ const Stands = (props) => {
 
   return (
     <div>
-      <Header title={'Configuración'} back />
+      <Header title="$1" back />
 
       <Row justify='center' wrap gutter={12}>
         <Col span={20}>

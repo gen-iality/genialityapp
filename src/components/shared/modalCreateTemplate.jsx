@@ -47,7 +47,7 @@ const ModalCreateTemplate = (props) => {
             <Spin />
           ) : (
             <Button
-              id={'submitButton'}
+              id="submitButton"
               htmlType='submit'
               block
               style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}

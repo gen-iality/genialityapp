@@ -414,7 +414,7 @@ const Document = (props) => {
               >
                 <Upload
                   multiple={false}
-                  name={'file'}
+                  name="file"
                   type='file'
                   fileList={documentList}
                   defaultValue={documentList}
@@ -442,7 +442,7 @@ const Document = (props) => {
               rules={[{ required: true, message: 'El título es requerido' }]}
             >
               <Input
-                name={'title'}
+                name="title"
                 placeholder={folder ? 'Título de la carpeta' : 'Título del documento'}
                 value={document.title}
                 onChange={(e) => handleChange(e)}

@@ -32,7 +32,7 @@ const Herramientas = (props) => {
     <CMS
       API={ToolsApi}
       eventId={props.event._id}
-      title={'Herramientas'}
+      title="Herramientas"
       titleTooltip={'Agregue o edite las herramientas que se muestran en la aplicación'}
       addUrl={{
         pathname: `${props.matchUrl}/herramienta`,

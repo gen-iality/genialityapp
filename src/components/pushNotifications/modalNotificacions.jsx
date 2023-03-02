@@ -110,7 +110,7 @@ const ModalNotifications = (props) => {
           Enviar notificación push
         </Typography.Title>
         <Form.Item
-          label={'Mensaje'}
+          label="Mensaje"
           name='notificationMessage'
           style={{ marginBottom: '10px' }}
           rules={[{ required: true, message: 'Ingrese un mensaje!' }]}
@@ -119,7 +119,7 @@ const ModalNotifications = (props) => {
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
-            id={'submitButton'}
+            id="submitButton"
             htmlType='submit'
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}

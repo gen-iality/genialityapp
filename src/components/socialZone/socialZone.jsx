@@ -156,7 +156,7 @@ const SocialZone = (props) => {
                             ref={busquedaRef}
                             autoFocus
                             type='text'
-                            name={'name'}
+                            name="name"
                             onChange={handleChange}
                             placeholder='Buscar participante...'
                           />

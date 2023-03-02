@@ -316,7 +316,7 @@ const WowzaStreamingPanel = ({
           </Col>
           <Col span={14}>
             <Tabs defaultActiveKey='1'>
-              <Tabs.TabPane tab={'Datos'} key='1'>
+              <Tabs.TabPane tab="Datos" key='1'>
                 <Typography.Text type='secondary'>
                   Nombre:
                   <br />
@@ -376,7 +376,7 @@ const WowzaStreamingPanel = ({
               </Tabs.TabPane>
               {/* { transmition === 'EviusMeet' && ( */}
               {livestreamStatus?.state !== 'stopped' && (
-                <Tabs.TabPane tab={'RTMP'} key='2'>
+                <Tabs.TabPane tab="RTMP" key='2'>
                   {livestreamStatus?.state === 'started' ? (
                     <>
                       <Typography.Text>

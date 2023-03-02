@@ -92,9 +92,9 @@ class Ranking extends Component {
 
     return (
       <Fragment>
-        <Header title={'Ranking'} back />
+        <Header title="Ranking" back />
 
-        <Table header={columns} list={listOfUserResponse} pagination={false} exportData fileName={`Ranking`} />
+        <Table header={columns} list={listOfUserResponse} pagination={false} exportData fileName="Ranking" />
       </Fragment>
     );
   }

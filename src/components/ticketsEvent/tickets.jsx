@@ -47,7 +47,7 @@ const Tickets = (props) => {
       <CMS
         API={eventTicketsApi}
         eventId={props.event._id}
-        title={'Tickets'}
+        title="Tickets"
         titleTooltip={'Agregue o edite los Tickets que se muestran en la aplicación'}
         addUrl={{
           pathname: `${props.matchUrl}/ticket`,

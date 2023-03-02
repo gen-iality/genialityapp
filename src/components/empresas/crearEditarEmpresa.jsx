@@ -283,7 +283,7 @@ function CrearEditarEmpresa(props) {
         return (
           <Form onReset={handleReset} onSubmitCapture={handleSubmit} {...formLayout}>
             <Header
-              title={'Empresa'}
+              title="Empresa"
               form
               back
               save

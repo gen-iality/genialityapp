@@ -211,7 +211,7 @@ const MainProfile = (props) => {
                   showContent('ACCOUNT_ACTIVITY');
                   screens.xs && showSider();
                 }}
-                key={'actividad'}
+                key="actividad"
                 icon={<CarryOutOutlined style={{ fontSize: '18px' }} />}
               >
                 Lección en GEN.iality
@@ -222,7 +222,7 @@ const MainProfile = (props) => {
                   showContent('EDIT_INFORMATION');
                   screens.xs && showSider();
                 }}
-                key={'editarInfo'}
+                key="editarInfo"
                 icon={<EditOutlined style={{ fontSize: '18px' }} />}
               >
                 Editar mi información
@@ -233,7 +233,7 @@ const MainProfile = (props) => {
                   showContent('CHANGE_PASSWORD');
                   screens.xs && showSider();
                 }}
-                key={'cambiarPassword'}
+                key="cambiarPassword"
                 icon={<LockOutlined style={{ fontSize: '18px' }} />}
               >
                 Cambiar contraseña
@@ -364,7 +364,7 @@ const MainProfile = (props) => {
                                       event={event}
                                       action={{ name: 'Ver', url: `landing/${event._id}` }}
                                       right={[
-                                        <div key={'admin'}>
+                                        <div key="admin">
                                           <Link to={`/eventadmin/${event._id}`}>
                                             <Space>
                                               <SettingOutlined />
@@ -486,7 +486,7 @@ const MainProfile = (props) => {
                             event={event}
                             // action={{ name: 'Ver', url: `landing/${event._id}` }}
                             right={[
-                              <div key={'admin'}>
+                              <div key="admin">
                                 <Link to={`/eventadmin/${event._id}`}>
                                   <Space>
                                     <SettingOutlined />

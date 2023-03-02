@@ -15,7 +15,7 @@ export default function FilterNetWorking({ properties, filterProperty, handleSel
   return (
     <Select
       style={{ textAlign: 'left' }}
-      size={'middle'}
+      size="middle"
       onChange={handleSelect}
       placeholder={`Seleccione ${filterProperty}`}
       defaultValue=''>

@@ -161,7 +161,7 @@ const Faq = (props) => {
           >
             <Input
               value={faq && faq.title}
-              name={'title'}
+              name="title"
               placeholder={'Título de la pregunta frecuente'}
               onChange={(e) => handleChange(e)}
             />
@@ -177,7 +177,7 @@ const Faq = (props) => {
             <ReactQuill
               id='faqContent'
               value={(faq && faq.content) || ''}
-              name={'content'}
+              name="content"
               onChange={HandleQuillEditorChange}
               modules={toolbarEditor}
             />

@@ -130,7 +130,7 @@ const Espacio = (props) => {
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title={'Espacio'} back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header title="Espacio" back save form remove={onRemoveId} edit={locationState.edit} />
 
       <Row justify='center' wrap gutter={12}>
         <Col span={12}>
@@ -144,7 +144,7 @@ const Espacio = (props) => {
           >
             <Input
               value={espacio.name}
-              name={'name'}
+              name="name"
               placeholder={'Nombre del espacio'}
               onChange={(e) => handleChange(e)}
             />

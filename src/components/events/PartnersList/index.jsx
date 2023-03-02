@@ -7,7 +7,7 @@ function PartnerItemList({ company, handleOpenPartnerDetail, companyId }) {
         <Row gutter={[8, 8]} /* justify='center'  */ align='middle'>
           <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
             <div className='img-contact'>
-              <img width={'200px'} src={company.list_image ? company.list_image : 'error'} />
+              <img width="200px" src={company.list_image ? company.list_image : 'error'} />
             </div>
           </Col>
           <Col

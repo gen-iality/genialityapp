@@ -259,7 +259,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               return (
                 <Badge.Ribbon
                   className='animate__animated animate__bounceIn animate__delay-2s'
-                  placement={'end'}
+                  placement="end"
                   style={{ height: 'auto', padding: '3px', top: -5, lineHeight: '10px' }}
                   color={isLive ? 'red' : 'transparent'}
                   text={

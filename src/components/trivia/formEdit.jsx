@@ -556,7 +556,7 @@ const FormEdit = (
               </div>
             )}
             <>
-              <Form.Item key={`img`} name={'image'} label={'Imagen'}>
+              <Form.Item key="img" name="image" label="Imagen">
                 <Space direction='horizontal'>
                   <Upload
                     multiple={false}
@@ -623,7 +623,7 @@ const FormEdit = (
               )}
             </>
 
-            <Form.List name={`choices`}>
+            <Form.List name="choices">
               {(fields, { add, remove }) => {
                 return (
                   <>

@@ -32,7 +32,7 @@ const Espacios = (props) => {
     <CMS
       API={SpacesApi}
       eventId={props.event._id}
-      title={'Espacios'}
+      title="Espacios"
       titleTooltip={'Agregue o edite los Espacios que se muestran en la aplicación'}
       addUrl={{
         pathname: `${props.matchUrl}/espacio`,

@@ -285,7 +285,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                 {permission() && (
                   <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                     {!loadingSave ? (
-                      <Button block type={'primary'} onClick={saveValue}>
+                      <Button block type="primary" onClick={saveValue}>
                         Ofrecer
                       </Button>
                     ) : (
@@ -293,7 +293,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                     )}
                     <Alert
                       showIcon
-                      type={'success'}
+                      type="success"
                       style={{ marginTop: 20, marginBottom: 30 }}
                       message={
                         'Al hacer esta puja estás aceptando nuestros términos y condiciones y adquieres el compromiso de pago por el valor ofertado, en caso que ningún otro participante realice una puja por un monto superior.'

@@ -197,7 +197,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         <>
         {(!contentSource) && (<Alert type='info' message='Cargando contenido...'/>)}
         <QuizCMS
-          title={'Evaluación'}
+          title="$1"
           activityId={activityEdit}
           event={eventContext.value}
           matchUrl={props.matchUrl}
@@ -222,7 +222,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         <>
         {(!contentSource) && (<Alert type='info' message='Cargando contenido...'/>)}
         <SurveyCMS
-          title={'Encuesta'}
+          title="Encuesta"
           activityId={activityEdit}
           event={eventContext.value}
           matchUrl={props.matchUrl}

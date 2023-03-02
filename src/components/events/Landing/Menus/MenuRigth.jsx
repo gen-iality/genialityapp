@@ -34,7 +34,7 @@ const MenuRigth = (props) => {
       <>
         {(props.generalTabs?.publicChat || props.generalTabs?.privateChat || props.generalTabs?.attendees) && (
           <Menu.Item
-            id={'openMenu'}
+            id="openMenu"
             // className='animate__animated animate__headShake animate__slower animate__infinite'
             key='0'
             icon={

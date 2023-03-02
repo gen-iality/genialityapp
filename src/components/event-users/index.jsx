@@ -217,7 +217,7 @@ class ListEventUser extends Component {
     return (
       <Tooltip placement='topLeft' title='Editar'>
         <Button
-          type={'primary'}
+          type="primary"
           icon={<EditOutlined />}
           size='small'
           onClick={() => this.openEditModalUser(item)}

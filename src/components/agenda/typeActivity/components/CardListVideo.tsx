@@ -83,7 +83,7 @@ const CardListVideo = (props: any) => {
               actions={
                 item?.status === 'ready'
                   ? [
-                      <Tooltip color={'green'} title='Asignar a esta lección'>
+                      <Tooltip color="green" title='Asignar a esta lección'>
                         <Button
                           size='large'
                           icon={
@@ -131,7 +131,7 @@ const CardListVideo = (props: any) => {
                         }}
                         okText='Si'
                         cancelText='No'>
-                        <Tooltip color={'red'} title='Eliminar video'>
+                        <Tooltip color="red" title='Eliminar video'>
                           <Button
                             danger
                             size='large'

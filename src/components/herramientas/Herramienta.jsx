@@ -130,7 +130,7 @@ const Herramienta = (props) => {
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title={'Herramienta'} back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header title="Herramienta" back save form remove={onRemoveId} edit={locationState.edit} />
 
       <Row justify='center' wrap gutter={12}>
         <Col span={12}>
@@ -144,7 +144,7 @@ const Herramienta = (props) => {
           >
             <Input
               value={herramienta.name}
-              name={'name'}
+              name="name"
               placeholder={'Nombre de la herramienta'}
               onChange={(e) => handleChange(e)}
             />

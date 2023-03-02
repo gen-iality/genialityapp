@@ -150,7 +150,7 @@ const TipoAsistente = (props) => {
             rules={[{ required: true, message: 'El nombre es requerido' }]}
           >
             <Input
-              name={'name'}
+              name="name"
               placeholder={'Nombre del rol'}
               value={tipoAsistente?.name}
               onChange={(e) => handleInputChange(e)}

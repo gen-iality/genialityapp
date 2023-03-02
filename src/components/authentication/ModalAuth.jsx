@@ -311,7 +311,7 @@ const ModalAuth = (props) => {
                   <Typography.Text
                     onClick={() => handleChangeTypeModal('recover')}
                     underline
-                    id={'forgotpassword'}
+                    id="forgotpassword"
                     type='secondary'
                     style={{ float: 'right', cursor: 'pointer' }}
                   >
@@ -345,7 +345,7 @@ const ModalAuth = (props) => {
               {!loading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
                   <Button
-                    id={'loginButton'}
+                    id="loginButton"
                     htmlType='submit'
                     block
                     style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}

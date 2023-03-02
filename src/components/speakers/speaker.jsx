@@ -280,11 +280,11 @@ function Speaker(props) {
         edit={state.edit && !justCreate}
         remove={remove}
         extra={
-          <Form.Item label={'Visible'} labelCol={{ span: 13 }}>
+          <Form.Item label="Visible" labelCol={{ span: 13 }}>
             <Switch
               checkedChildren='Sí'
               unCheckedChildren='No'
-              name={'published'}
+              name="published"
               checked={data.published}
               onChange={(checked) =>
                 setData({
@@ -314,16 +314,16 @@ function Speaker(props) {
               <Input
                 value={data.name}
                 placeholder='Nombre del conferencista'
-                name={'name'}
+                name="name"
                 onChange={(e) => handleChange(e)}
               />
             </Form.Item>
 
-            <Form.Item label={'Ocupación'}>
+            <Form.Item label="$1">
               <Input
                 value={data.profession}
                 placeholder='Ocupación del conferencista'
-                name={'profession'}
+                name="profession"
                 onChange={(e) => handleChange(e)}
               />
             </Form.Item>
@@ -339,21 +339,21 @@ function Speaker(props) {
             </Form.Item>
 
             {event && event?.organizer?.type_event == 'Misiones' && (
-              <Form.Item label={'Teléfono'} name={'phone'}>
+              <Form.Item label="phone" name="phone">
                 <Input
                   addonBefore={prefixSelector}
                   //onChange={(e) => setnumberareacode(e.target.value)}
                   value={data?.phone || ''}
                   //required={mandatory}
                   type='number'
-                  key={'tel'}
+                  key="tel"
                   style={{ width: '100%' }}
                   placeholder='Numero de telefono'
                 />
               </Form.Item>
             )}
 
-            <Form.Item label={'Descripción'}>
+            <Form.Item label="$1">
               <>
                 {!showDescription_activity ? (
                   <Button
@@ -391,7 +391,7 @@ function Speaker(props) {
               {showDescription_activity && (
                 <EviusReactQuill
                   id='description'
-                  name={'description'}
+                  name="description"
                   data={data.description}
                   handleChange={chgTxt}
                   style={{ marginTop: '5px' }}

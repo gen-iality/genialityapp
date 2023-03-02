@@ -162,7 +162,7 @@ const EventOrganization = (props) => {
                 }}
               >
                 <Col xs={24} sm={24} md={24} lg={8} xl={4} xxl={4}>
-                  <Row justify={'start'}>
+                  <Row justify="start">
                     <Image
                       style={{
                         borderRadius: '20px',

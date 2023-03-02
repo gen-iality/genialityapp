@@ -120,7 +120,7 @@ const Table = (props) => {
                     style={{ backgroundColor: '#00C851', borderColor: '#00C851' }}
                     onClick={() => updateMails(item._id)}
                     icon={extraPathUpdate}
-                    type={'primary'}
+                    type="primary"
                     size='small'
                   />
                 </Tooltip>

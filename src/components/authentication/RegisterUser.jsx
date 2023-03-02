@@ -256,7 +256,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
-            id={'submitButton'}
+            id="submitButton"
             htmlType='submit'
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}

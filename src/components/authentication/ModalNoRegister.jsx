@@ -34,7 +34,7 @@ const ModalNoRegister = (props) => {
       bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
       centered
       footer={[
-        <Space wrap key={'options'}>
+        <Space wrap key="options">
           <Button
             onClick={() => {
               window.location.href = `${window.location.origin}`;

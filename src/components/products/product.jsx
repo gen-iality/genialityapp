@@ -195,7 +195,7 @@ class Product extends Component {
     return (
       <div>
         <Header
-          title={'Producto'}
+          title="Producto"
           titleTooltip={'Agregue o edite los Productos que se muestran en la aplicación'}
           addFn={this.newProduct}
           extra={
@@ -211,7 +211,7 @@ class Product extends Component {
                 </Button>
               </Col>
               <Col>
-                <Button type='primary' icon={<SettingOutlined />} onClick={this.configuration} id={'configuration'}>
+                <Button type='primary' icon={<SettingOutlined />} onClick={this.configuration} id="configuration">
                   {'Configuración'}
                 </Button>
               </Col>

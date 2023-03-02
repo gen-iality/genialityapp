@@ -235,12 +235,12 @@ class CheckAgenda extends Component {
   editcomponent = (text, item, index) => {
     return (
       <Tooltip placement='topLeft' title='Editar'>
-        <Button type={'primary'} icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
+        <Button type="primary" icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
       </Tooltip>
 
       /* <span
         className='icon has-text-grey action_pointer'
-        data-tooltip={'Editar'}
+        data-tooltip="Editar"
         // eslint-disable-next-line no-unused-vars
         onClick={(e) => {
           // console.log('EDIT USER==>', item);

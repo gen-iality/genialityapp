@@ -731,7 +731,7 @@ class Datos extends Component {
                     title={edit ? 'Editar dato' : 'Agregar dato'}
                     footer={false}
                     onCancel={this.closeModal2}
-                    okText={'Guardar'}
+                    okText="Guardar"
                   >
                     {/* <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} /> */}
                     <DynamicFieldCreationForm
@@ -813,7 +813,7 @@ class Datos extends Component {
                       title={edit ? 'Editar dato' : 'Agregar dato'}
                       footer={false}
                       onCancel={this.closeModal2}
-                      cancelText={'Cancelar'}
+                      cancelText="Cancelar"
                     >
                       {/* <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} /> */}
                       <DynamicFieldCreationForm

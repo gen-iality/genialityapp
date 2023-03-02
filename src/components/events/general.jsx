@@ -772,7 +772,7 @@ class General extends Component {
                     <Input
                       ref={this.nameInputRef}
                       autoFocus={true}
-                      name={'name'}
+                      name="name"
                       placeholder={'Nombre del curso'}
                       value={event.name}
                       onChange={(e) => this.handleChange(e, 'name')}
@@ -804,7 +804,7 @@ class General extends Component {
                   {event.app_configuration && (
                     <Form.Item label={'¿Qué módulo desea observar en el inicio?'}>
                       <Select
-                        name={'homeSelectedScreen'}
+                        name="homeSelectedScreen"
                         value={event.homeSelectedScreen}
                         onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}
                       >
@@ -896,7 +896,7 @@ class General extends Component {
                   {/* <Form.Item label={'Tipo de curso'}>
                     <Select
                       defaultValue={event.type_event}
-                      name={'type_event'}
+                      name="type_event"
                       onChange={(e) => this.handleChange(e, 'type_event')}
                     >
                       <Option value=''>Seleccionar...</Option>
@@ -910,7 +910,7 @@ class General extends Component {
                     <Form.Item label={'Plataforma streaming del curso'}>
                       <Select
                         defaultValue={event.event_platform}
-                        name={'event_platform'}
+                        name="event_platform"
                         onChange={(e) => this.handleChange(e, 'event_platform')}
                       >
                         <Option value="">Seleccionar...</Option>
@@ -926,16 +926,16 @@ class General extends Component {
                     <>
                       <Form.Item label={'Dirección'}>
                         <Input
-                          name={'address'}
+                          name="address"
                           placeholder={'¿Cuál es la dirección del curso?'}
                           value={event.address}
                           onChange={(e) => this.handleChange(e, 'address')}
                         />
                       </Form.Item>
 
-                      <Form.Item label={'Lugar'}>
+                      <Form.Item label="Lugar">
                         <Input
-                          name={'venue'}
+                          name="venue"
                           placeholder={'Nombre del lugar del curso'}
                           value={event.venue}
                           onChange={(e) => this.handleChange(e, 'venue')}
@@ -1020,7 +1020,7 @@ class General extends Component {
                   )}
 
                   <Form.Item label={'Descripción'}>
-                    <EviusReactQuill name={'description'} data={event.description} handleChange={this.chgTxt} />
+                    <EviusReactQuill name="description" data={event.description} handleChange={this.chgTxt} />
                   </Form.Item>
 
                   <Form.Item>
@@ -1045,7 +1045,7 @@ class General extends Component {
 
                   <Form.Item label={'Vídeo promocional'}>
                     <Input
-                      name={'video'}
+                      name="video"
                       placeholder={'www.ejemplo.com/watch?v=oK88Stdw0DI'}
                       value={event.video}
                       onChange={(e) => this.handleChange(e, 'video')}
@@ -1054,7 +1054,7 @@ class General extends Component {
 
                   <Form.Item label={'Posición del video'}>
                     <Switch
-                      name={'video_position'}
+                      name="video_position"
                       checked={event.video_position === true || event.video_position === 'true'}
                       checkedChildren='Arriba'
                       unCheckedChildren='Abajo'

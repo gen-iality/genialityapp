@@ -77,19 +77,19 @@ function Organization(props) {
               theme='dark'
               //inlineCollapsed={collapseMenu}
             >
-              <Menu.Item key={'1'} icon={<BarsOutlined />}>
+              <Menu.Item key="1" icon={<BarsOutlined />}>
                 {'Información'}
                 <NavLink to={`${props.match.url}/information`} />
               </Menu.Item>
-              <Menu.Item key={'2'} icon={<ScheduleOutlined />}>
+              <Menu.Item key="2" icon={<ScheduleOutlined />}>
                 {'Cursos'}
                 <NavLink to={`${props.match.url}/events`} />
               </Menu.Item>
-              <Menu.Item key={'3'} icon={<SketchOutlined />}>
+              <Menu.Item key="3" icon={<SketchOutlined />}>
                 {'Apariencia'}
                 <NavLink to={`${props.match.url}/appearance`} />
               </Menu.Item>
-              <Menu.Item key={'4'} icon={<TeamOutlined />}>
+              <Menu.Item key="4" icon={<TeamOutlined />}>
                 {'Miembros'}
                 <NavLink to={`${props.match.url}/members`} />
               </Menu.Item>
@@ -97,23 +97,23 @@ function Organization(props) {
                 Organization Properties
                 <NavLink to={`${props.match.url}/organization-properties`} />
               </Menu.Item> */}
-              <Menu.Item key={'5'} icon={<TeamOutlined />}>
+              <Menu.Item key="5" icon={<TeamOutlined />}>
                 {'Cargos'}
                 <NavLink to={`${props.match.url}/positions`} />
               </Menu.Item>
-              <Menu.Item key={'6'} icon={<TeamOutlined />}>
+              <Menu.Item key="6" icon={<TeamOutlined />}>
                 {'Inscritos'}
                 <NavLink to={`${props.match.url}/registered`} />
               </Menu.Item>
-              <Menu.Item key={'7'} icon={<UserSwitchOutlined />}>
+              <Menu.Item key="7" icon={<UserSwitchOutlined />}>
                 <small>{'Configuración de Miembros'}</small>
                 <NavLink to={`${props.match.url}/membersettings`} />
               </Menu.Item>
-              <Menu.Item key={'8'} icon={<ProjectOutlined />}>
+              <Menu.Item key="8" icon={<ProjectOutlined />}>
                 <small>{'Configuración de Plantillas'}</small>
                 <NavLink to={`${props.match.url}/templatesettings`} />
               </Menu.Item>
-              <Menu.Item key={'9'} icon={<MenuOutlined />}>
+              <Menu.Item key="9" icon={<MenuOutlined />}>
                 {'Menú Items'}
                 <NavLink to={`${props.match.url}/menuItems`} />
               </Menu.Item>

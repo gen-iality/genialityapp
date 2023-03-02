@@ -358,7 +358,7 @@ const ChatExport = ({ eventId, event }) => {
           remove={remove}
           extraFn={blockUser}
           extraFnTitle={'Bloquear usuarios'}
-          extraFnType={'ghost'}
+          extraFnType="ghost"
           extraFnIcon={<AccountCancel />}
           titleTable={
             <Row gutter={[8, 8]} wrap>
@@ -406,7 +406,7 @@ const ChatExport = ({ eventId, event }) => {
           actions
           extraFn={blockUser}
           extraFnTitle={'Desbloquear usuario'}
-          extraFnType={'ghost'}
+          extraFnType="ghost"
           extraFnIcon={<Account />}
           exportData
           fileName={'Usuarios bloqueados'}

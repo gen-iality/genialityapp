@@ -608,13 +608,13 @@ const myPlan = ({ cUser }) => {
   };
 
   return (
-    <Tabs defaultActiveKey={'plan'}>
+    <Tabs defaultActiveKey="plan">
       <Tabs.TabPane
         tab={intl.formatMessage({
           id: 'my_plan',
           defaultMessage: 'Mi plan',
         })}
-        key={'plan'}
+        key="plan"
       >
         <Row gutter={[12, 12]} wrap>
           <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
@@ -715,7 +715,7 @@ const myPlan = ({ cUser }) => {
           id: 'my_plan.billings',
           defaultMessage: 'Facturaciones',
         })}
-        key={'bills'}
+        key="bills"
       >
         <Table dataSource={bills} columns={columnsBills} scroll={{ x: 'auto' }} loading={loadingBill} />
       </Tabs.TabPane>
@@ -724,7 +724,7 @@ const myPlan = ({ cUser }) => {
           id: 'my_plan.notifications',
           defaultMessage: 'Notificaciones',
         })}
-        key={'notifications'}
+        key="notifications"
       >
         <Table dataSource={notifications} columns={columns} scroll={{ x: 'auto' }} loading={loadingNotification} />
       </Tabs.TabPane>
@@ -733,7 +733,7 @@ const myPlan = ({ cUser }) => {
           id: 'my_plan.better.plan',
           defaultMessage: 'Mejorar plan',
         })}
-        key={'plan2'}
+        key="plan2"
       >
         {plans
           .filter((plan1) => plan1?._id !== plan?._id)

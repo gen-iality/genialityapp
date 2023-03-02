@@ -275,7 +275,7 @@ class WallList extends Component {
                       {item.urlImage && (
                         <Image
                           width={'100%'}
-                          // height={'400px'}
+                          // height="400px"
                           style={{
                             display: 'block',
                             margin: '0 auto',

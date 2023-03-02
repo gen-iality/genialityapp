@@ -46,7 +46,7 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
         <>
           {connectionStatus ? (
             <Alert
-              key={'success'}
+              key="success"
               className='animate__animated animate__fadeInDown'
               style={placement === 'top' ? positionTop : positionBotton}
               message={
@@ -61,7 +61,7 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
             />
           ) : (
             <Alert
-              key={'warning'}
+              key="warning"
               className='animate__animated animate__fadeInDown'
               style={placement === 'top' ? positionTop : positionBotton}
               message={
