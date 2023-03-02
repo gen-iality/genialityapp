@@ -262,7 +262,6 @@ class General extends Component {
     const valueData = e?.target?.value;
 
     const targetData = e?.target;
-    // console.log(e.target);
     if (targetData !== null || targetData !== undefined || targetData !== '') {
       let value = e;
       if (typeof valueData === 'string') {

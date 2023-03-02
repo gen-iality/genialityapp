@@ -67,7 +67,6 @@ const WowzaStreamingPanel = ({
   const [ timerId, setTimerId ] = useState(null);
 
   const queryClient = useQueryClient();
-  // console.log('innerRender', meeting_id);
   const livestreamQuery = useQuery([ 'livestream', meeting_id ], () => getLiveStream(meeting_id));
 
   useEffect(() => {
@@ -121,7 +120,6 @@ const WowzaStreamingPanel = ({
 
   const executer_createStream = useMutation(() => createLiveStream(activity_name), {
     onSuccess: (data) => {
-      // console.log('sucks', data);
       queryClient.setQueryData('livestream', data);
       activityDispatch({ type: 'meeting_created', meeting_id: data.id });
       // Invalidate and refetch
@@ -134,7 +132,6 @@ const WowzaStreamingPanel = ({
     let live_stream_stats = null;
     try {
       live_stream_status = await getLiveStreamStatus(meeting_id);
-      // console.log('live_stream_status', live_stream_status);
       setLivestreamStatus(live_stream_status);
 
       live_stream_stats = await getLiveStreamStats(meeting_id);

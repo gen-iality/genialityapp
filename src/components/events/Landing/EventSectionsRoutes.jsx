@@ -157,7 +157,6 @@ const EventSectionRoutes = props => {
 
   useEffect(() => {
     if (cEventUser.value && props.cEvent.value) {
-      // console.log(props.cEvent.value.type_event)
       if (props.cEvent.value.type_event !== 'physicalEvent') {
         checkinAttendeeInEvent(cEventUser.value, props.cEvent.value._id);
       }

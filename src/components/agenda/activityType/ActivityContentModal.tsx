@@ -119,7 +119,6 @@ function ActivityContentModal(props: ActivityContentModalProps) {
         setWidgetKeyStack={setWidgetKeyStack}
         widgetData={widgetData}
         render={(widgetData: ActivityType.CardUI | ActivityType.FormUI) => {
-          // console.debug(`render(${type}, ${JSON.stringify(data)})`);
           if ('widgetType' in widgetData) {
             const card: ActivityType.CardUI = widgetData;
             switch (card.widgetType) {

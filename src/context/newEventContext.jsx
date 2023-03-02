@@ -348,7 +348,6 @@ export const NewEventProvider = ({ children }) => {
                 template = await EventsApi.createTemplateEvent(result._id, templateId);
               }
               if (template) {
-                // console.log("RESPUESTA TEMPLATE==>",template)
                 DispatchMessageService({
                   type: 'success',
                   msj: 'Curso creado correctamente...',

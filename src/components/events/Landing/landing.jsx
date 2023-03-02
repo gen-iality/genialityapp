@@ -213,7 +213,6 @@ const Landing = props => {
           });
 
         if (cEventUser.status == 'LOADED' && cEventUser.value != null && cEventContext.status == 'LOADED') {
-          // console.log(EventContext.value.type_event);
           if (cEventContext.value.type_event !== 'onlineEvent') {
             checkinAttendeeInEvent(cEventUser.value, cEventContext.value._id);
           }

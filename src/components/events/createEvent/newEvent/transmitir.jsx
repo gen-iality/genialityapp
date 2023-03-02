@@ -22,7 +22,6 @@ function Transmitir(props) {
     if (props.currentUser) {
       obtainOrganizations();
     }
-    // console.log("ISBYORGANIZATION==>",isbyOrganization)
 
     async function obtainOrganizations() {
       if (!selectOrganization) {

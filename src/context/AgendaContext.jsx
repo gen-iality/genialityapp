@@ -174,7 +174,6 @@ export const AgendaContextProvider = ({ children }) => {
                 active: data[requestData].active || false,
               });
             });
-            // console.log('100. LISTADO ACA==>', listRequestArray);
             setRequest(listRequest);
             setRequestList(listRequestArray);
           }
@@ -271,8 +270,6 @@ export const AgendaContextProvider = ({ children }) => {
     let liveLocal = false;
     try {
       live_stream_status = await getLiveStreamStatus(meeting_id);
-
-      // console.log('live_stream_status', live_stream_status);
       console.log('10. EJECUTANDOSE EL MONITOR===>', live_stream_status.live, liveLocal);
       console.log('10. ENTRO A DETENER');
       setDataLive(live_stream_status);

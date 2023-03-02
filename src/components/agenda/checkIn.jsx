@@ -135,7 +135,6 @@ class CheckAgenda extends Component {
         item = { ...item, ...attendee, idActivity: item._id };
         return item;
       });
-      // console.log('NEWLIST1==>', newList);
       //NO SE ESTAN ELIMINANDO LOS USUARIOS BIEN HACK PARA QUITARLOS
       newList = newList?.filter((users) => users.user !== null);
       newList = await this.obtenerCheckinAttende(userRef, newList);
@@ -243,7 +242,6 @@ class CheckAgenda extends Component {
         data-tooltip="Editar"
         // eslint-disable-next-line no-unused-vars
         onClick={(e) => {
-          // console.log('EDIT USER==>', item);
           this.openEditModalUser(item);
         }}>
         <i className="fas fa-edit" />
@@ -297,7 +295,6 @@ class CheckAgenda extends Component {
   //FN para checkin
   checkIn = async (id, check = null, snap = null, edit = true) => {
     const { attendees } = this.state;
-    // console.log('ATTENDESS=>', attendees, id);
 
     //Se busca en el listado total con el id
 

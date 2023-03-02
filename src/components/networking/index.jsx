@@ -284,7 +284,6 @@ class ListEventUser extends Component {
 
   //Search records at third column
   searchResult = (data, search = 0) => {
-    // console.log("USERS==>",this.state.listTotalUser,search)
     !data ? this.setState({ users: [] }) : this.setState({ pageOfItems: data, users: data });
   };
 
@@ -666,7 +665,6 @@ class ListEventUser extends Component {
 
                                                   for (let i = 0; i < this.state.users.length; i++) {
                                                     if (this.state.users[i]._id == users._id) {
-                                                      // console.log("STATE USER==>",this.state.users[i])
                                                       this.state.users[i] = {
                                                         ...this.state.users[i],
                                                         send: 1,

@@ -256,7 +256,6 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
         setRequestListReceived(requestListReceived.filter((item) => item._id != requestId._id));
       })
       .catch((err) => {
-        // console.error('ERROR API==>', err);
         DispatchMessageService({
           type: 'error',
           msj: 'Hubo un problema',

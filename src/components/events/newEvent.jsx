@@ -224,7 +224,6 @@ class NewEvent extends Component {
                   template = await EventsApi.createTemplateEvent(result._id, eventNewContext.templateId);
                 }
                 if (template) {
-                  // console.log("RESPUESTA TEMPLATE==>",template)
                   DispatchMessageService({
                     type: 'success',
                     msj: 'Cursos creado correctamente...',

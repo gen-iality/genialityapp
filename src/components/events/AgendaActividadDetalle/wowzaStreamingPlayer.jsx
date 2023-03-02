@@ -44,7 +44,6 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
       //!live_stream_status?.active && timer_id && clearInterval(timer_id )
       const timerId = setTimeout(executer_startMonitorStatus, 5000);
       setTimerId(timerId);
-      // console.log('live_stream_status===>', live_stream_status);
     } catch (e) {
       //console.log("EXCEPCION===>",e)
       timer_id && clearInterval(timer_id);

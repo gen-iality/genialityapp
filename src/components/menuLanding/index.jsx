@@ -276,7 +276,6 @@ class MenuLanding extends Component {
       const resp = await Actions.put(`api/events/${this.props.event._id}?token=${token}`, newMenu);
     } else {
       //ACTUALIZAR ORGANIZACION
-      // console.log("ORGANIZATIONOBJ==>",this.props.organizationObj.itemsMenu)
       //console.log(this.props.organizationObj)
       const updateOrganization = {
         ...this.props.organizationObj,

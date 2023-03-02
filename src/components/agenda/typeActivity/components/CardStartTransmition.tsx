@@ -53,7 +53,6 @@ const CardStartTransmition = (props: any) => {
         setloading(false);
         setBlockedButton(true);
         message.error('El id de la transmisión no existe!');
-        // console.log('AL TRAER EL MEETING==>', e);
         // let livestreamInitial = { state: 'Finished' };
         // setLiveStreamStatus(livestreamInitial);
       }

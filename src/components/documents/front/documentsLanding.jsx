@@ -60,8 +60,6 @@ class DocumentsDetail extends Component {
         description: 'Ha ocurrido un error obteniendo los documentos',
       });
     }
-
-    // console.log('DOCUMENTES_USER=>', this.props.cEventUser?.value?.properties?.documents_user);
   }
 
   removeLoader = () => {

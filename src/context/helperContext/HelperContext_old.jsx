@@ -508,7 +508,6 @@ export const HelperContextProvider = ({ children }) => {
 
     if (data) {
       data = data.filter((request) => !request.response || request.response == 'accepted');
-      // console.log('DATA REQUEST==>', data);
       setRequestSend(data);
     }
   };

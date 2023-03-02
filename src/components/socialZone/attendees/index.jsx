@@ -19,7 +19,6 @@ const AttendeList = function(props) {
   const pag = 15;
 
   function whatGenderIs(gender) {
-    // console.log('gender', gender);
     const ramdonicon = Math.floor(Math.random() * femaleicons.length);
     const ramdoniconmale = Math.floor(Math.random() * maleIcons.length);
     return gender == 'male'
