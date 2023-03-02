@@ -36,7 +36,7 @@ const InputUploadVideo = (props: any) => {
             setLoading(false);
             break;
           case 'removed':
-            //ELIMINAR VIDEO DE GCORE
+            // Eliminar video de gcore
             if (response?.video) {
               await deleteVideo(response.video.id);
             }

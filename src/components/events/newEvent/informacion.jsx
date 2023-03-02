@@ -95,7 +95,7 @@ const Informacion = (props) => {
     const newOrganization = {
       name: !name ? props.currentUser?.names || props.currentUser?.name : name,
     };
-    //CREAR ORGANIZACION------------------------------
+    // Crear organizacion------------------------------
     const create = await OrganizationApi.createOrganization(newOrganization);
 
     /* console.log('CREATE==>', create); */

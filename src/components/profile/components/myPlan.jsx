@@ -216,7 +216,7 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'status',
       key: 'status',
       render(val, item) {
-        //APPROVED VOIDED DECLINED ERROR PENDING
+        // Approved voided declined error pending
         const color = () => {
           switch (val) {
             case 'APPROVED':

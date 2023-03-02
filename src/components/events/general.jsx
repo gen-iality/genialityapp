@@ -952,7 +952,7 @@ class General extends Component {
                           <Form.Item label="Fecha inicio">
                             <DatePicker
                               inputReadOnly
-                              //RESTRICIONES
+                              // Restriciones
                               // disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}

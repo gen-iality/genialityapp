@@ -118,7 +118,7 @@ class CreatePost extends Component {
           })
         );
         //this.setState({ showInfo: false, visible: false, keyList: Date.now(),value:'' });
-        //RESET FORMULARIO
+        // Reset formulario
         this.formRef.current.resetFields();
         DispatchMessageService({
           type: 'success',

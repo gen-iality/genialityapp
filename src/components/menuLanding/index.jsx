@@ -207,7 +207,7 @@ class MenuLanding extends Component {
       const token = await GetTokenUserFirebase();
       menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}?token=${token}`);
     } else {
-      //OBTENER DE ORGANIZACIÓN
+      // Obtener de organización
       // alert("ORGANIZATION")
 
       menuLanding.itemsMenu = this.props.organizationObj.itemsMenu || [];
@@ -275,7 +275,7 @@ class MenuLanding extends Component {
       const token = await GetTokenUserFirebase();
       const resp = await Actions.put(`api/events/${this.props.event._id}?token=${token}`, newMenu);
     } else {
-      //ACTUALIZAR ORGANIZACION
+      // Actualizar organizacion
       const updateOrganization = {
         ...this.props.organizationObj,
         itemsMenu: { ...menu },

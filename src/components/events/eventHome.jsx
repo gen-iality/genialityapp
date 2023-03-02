@@ -14,7 +14,7 @@ const EventHome = (props) => {
   if (!cEvent.value) {
     return <>Cargando...</>;
   }
-  //PERMITE EJECUTAR CODIGO JAVASCRIPT // SE UTILIZA PARA REDIRIGIR DESPUES DE LOQUEAR UN EVENTUSER
+  //PERMITE EJECUTAR CODIGO JAVASCRIPT // Se utiliza para redirigir despues de loquear un eventuser
   useEffect(() => {
     if (!cEvent.value || !cEventUser.value) return;
     cEvent && cEvent.value && cEvent.value?.message_user && cEventUser.value ? eval(cEvent.value?.message_user) : null;

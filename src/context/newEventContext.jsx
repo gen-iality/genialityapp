@@ -6,7 +6,7 @@ import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { configEventsTemplate } from '@helpers/constants';
 
 export const cNewEventContext = createContext();
-//INITIAL STATE
+// Initial state
 const initialState = {
   loading: false,
   organizations: [],
@@ -17,7 +17,7 @@ const initialState = {
   visibility: 'PUBLIC',
   type: 0,
 };
-//REDUCERS
+// Reducers
 function reducer(state, action) {
   const organizationSelect = action.payload?.organization || null;
   const organizationIdURL = action.payload?.orgId || null;
@@ -92,7 +92,7 @@ export const NewEventProvider = ({ children }) => {
   }
 
   const createOrganization = async (data) => {
-    //CREAR ORGANIZACION------------------------------
+    // Crear organizacion------------------------------
     const create = await OrganizationApi.createOrganization(data);
     if (create) {
       return create;
@@ -312,7 +312,7 @@ export const NewEventProvider = ({ children }) => {
           },
         },
       };
-      //CREAR CURSO
+      // Crear curso
       try {
         const token = await GetTokenUserFirebase();
 
@@ -322,11 +322,11 @@ export const NewEventProvider = ({ children }) => {
           const sectionsDefault = state.selectOrganization?.itemsMenu
             ? { itemsMenu: state.selectOrganization?.itemsMenu }
             : newMenu;
-          //HABILTAR SECCIONES POR DEFECTO
+          // Habiltar secciones por defecto
           const sections = await Actions.put(`api/events/${result._id}?token=${token}`, sectionsDefault);
           sections._id = sections._id ? sections._id : sections.data?._id;
           if (sections?._id) {
-            //CREAR LECCIÓN CON EL MISMO NOMBRE DEL CURSO
+            // Crear lección con el mismo nombre del curso
             const activity = {
               name: valueInputs.name,
               subtitle: null,
@@ -339,7 +339,7 @@ export const NewEventProvider = ({ children }) => {
             };
             const agenda = await AgendaApi.create(result._id, activity);
             if (agenda._id) {
-              //CREAR TEMPLATE PARA EL CURSO
+              // Crear template para el curso
               let template = !templateId && true;
               if (templateId) {
                 template = await EventsApi.createTemplateEvent(result._id, templateId);

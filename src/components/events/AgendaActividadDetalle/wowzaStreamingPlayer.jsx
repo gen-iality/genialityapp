@@ -45,7 +45,7 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
       timer_id && clearInterval(timer_id);
     }
   };
-  //ESCUCHA CUANDO LA TRANSMISION SE DETIENE
+  // Escucha cuando la transmision se detiene
   useEffect(() => {
     if (!livestreamStats?.active) {
       clearTimeout(timer_id);

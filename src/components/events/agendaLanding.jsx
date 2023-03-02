@@ -245,7 +245,7 @@ class Agenda extends Component {
     );
     //se consulta la api de espacios para
     const space = await SpacesApi.byEvent(this.props.cEvent.value._id);
-    //FILTRO
+    // Filtro
 
     const listFiltered = await this.filterStateMeetingRoom(data);
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
@@ -580,8 +580,8 @@ class Agenda extends Component {
     });
     return renderList;
   };
-  //FUNCION QUE PERMITE VERIFICAR SI EXISTEN LECCIONES PUBLICADAS POR DIA
-  //SIRVE PARA MOSTRAR U OCULTAR FECHAS
+  // Funcion que permite verificar si existen lecciones publicadas por dia
+  // Sirve para mostrar u ocultar fechas
   getActivitiesByDayVisibility = date => {
     const { toggleConference } = this.props;
     const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;

@@ -116,7 +116,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         break;
     }
   };
-  //REACT QUERY
+  // React query
   const executer_createStream = useMutation(() => createLiveStream(activityName), {
     onSuccess: async (data) => {
       queryClient.setQueryData('livestream', data);
@@ -179,7 +179,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         ////Type:url
         break;
       case 'vimeo':
-        //PERMITE AGREGAR ID O URL COMPLETA DE VIMEO
+        // Permite agregar id o url completa de vimeo
         try {
           const newDataVimeo = typeActivityState.data;
           resp = await saveConfig({ platformNew: 'vimeo', type: 'vimeo', data: newDataVimeo });
@@ -192,7 +192,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         setLoadingCreate(false);
         break;
       case 'youTube':
-        //PERMITE AGREGAR ID O URL COMPLETA DE YOUTUBE
+        // Permite agregar id o url completa de youtube
         try {
           const newData = typeActivityState.data.includes('https://youtu.be/')
             ? typeActivityState.data

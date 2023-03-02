@@ -53,7 +53,7 @@ class CheckAgenda extends Component {
     this.cargarUsuarios(self);
   }
 
-  //FUNCION QUE OBTIENE CHECKIN DE FIREBASE
+  // Funcion que obtiene checkin de firebase
   async obtaincheckin(user, ref) {
     const resp = await ref.doc(user._id).get();
     const userNew = {
@@ -67,7 +67,7 @@ class CheckAgenda extends Component {
     return userNew;
   }
 
-  //FUNCION QUE LLAMA A FIREBASE PARA OBTENER CHECKIN POR CADA USUARIO
+  // Funcion que llama a firebase para obtener checkin por cada usuario
   async obtenerCheckinAttende(ref, listuser) {
     const arrlist = [];
     for (const user of listuser) {
@@ -133,7 +133,7 @@ class CheckAgenda extends Component {
         item = { ...item, ...attendee, idActivity: item._id };
         return item;
       });
-      //NO SE ESTAN ELIMINANDO LOS USUARIOS BIEN HACK PARA QUITARLOS
+      // No se estan eliminando los usuarios bien hack para quitarlos
       newList = newList?.filter((users) => users.user !== null);
       newList = await this.obtenerCheckinAttende(userRef, newList);
 

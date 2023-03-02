@@ -11,7 +11,7 @@ const WithCode = () => {
   const [verifyLink, setVerifyLink] = useState(false);
   const conectionRef = firestore.collection(`connections`);
   useEffect(() => {
-    //REFERENCIA FIRESTORE PARA VERIFICAR SI EL USUARIO ESTA CONECTADO
+    // Referencia firestore para verificar si el usuario esta conectado
 
     const querystring = window.location.search;
     const params = new URLSearchParams(querystring);

@@ -30,7 +30,7 @@ export default class SurveyExternal extends Component {
   };
 
   Details = async () => {
-    //CREAR SURVEY PARAMETROS INICIALIZADOS
+    // Crear survey parametros inicializados
     // Revisar esta función... creo que no se usa para nada
   };
 

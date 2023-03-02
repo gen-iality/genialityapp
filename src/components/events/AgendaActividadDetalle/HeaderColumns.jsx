@@ -63,10 +63,10 @@ const HeaderColumns = (props) => {
     });
   }
 
-  //SE EJECUTA CUANDO TIENE UNA LECCIÓN PARA ESTABLECER LA REFERENCIA Y OBTENER LOS REQUEST
+  // Se ejecuta cuando tiene una lección para establecer la referencia y obtener los request
   useEffect(() => {
     if (currentActivity) {
-      //SE SETEA EL CURRENTACTIVITY PARA DETECTAR SI LA TRANSMISION ES POR EVIUSMEET U OTRO
+      // Se setea el currentactivity para detectar si la transmision es por eviusmeet u otro
       setActivityEdit(currentActivity._id);
       
       console.log("1. SE EJECUTA ESTO")
@@ -96,7 +96,7 @@ const HeaderColumns = (props) => {
         date: new Date().getTime(),
       });
     } else if (haveRequest() && cEventUSer.value?._id) {
-      //REMOVER O CANCELAR REQUEST
+      // Remover o cancelar request
       await removeRequest(refActivity, cEventUSer.value?._id);
     } else {
       DispatchMessageService({

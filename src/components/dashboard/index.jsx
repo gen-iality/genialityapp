@@ -33,7 +33,7 @@ import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { DispatchMessageService } from '@context/MessageService';
 
 const { Title } = Typography;
-//ESTILOS PAGINA PDF
+// Estilos pagina pdf
 const pageStyle = `
   
   @page {
@@ -87,8 +87,8 @@ class DashboardEvent extends Component {
       desc6: 'Visitas realizadas al curso',
       desc7: 'Impresiones totales del curso',
       loadingMetrics: true,
-      //TRUE:MUESTRA UI
-      //FALSE: PARA IMPRIMIR
+      // True:muestra ui
+      // False: para imprimir
       printButton: true,
       mailsDetails: [],
 
@@ -253,7 +253,7 @@ class DashboardEvent extends Component {
         });
       });
 
-      //MOSTRAR GRAFICAS INICIALES
+      // Mostrar graficas iniciales
       //this.graficRegistros();
       //this.graficAttendees();
       //this.graficPrintouts();
@@ -282,7 +282,7 @@ class DashboardEvent extends Component {
     this.graficAttendees();
     this.graficPrintouts();
   };
-  //GRAFICA REGISTROS POR DIA
+  // Grafica registros por dia
   async graficRegistros() {
     const labels = [],
       values = [];
@@ -303,7 +303,7 @@ class DashboardEvent extends Component {
     });
   }
 
-  //GRAFICA ASISTENTES POR DIA
+  // Grafica asistentes por dia
   async graficAttendees() {
     const labels = [],
       values = [];
@@ -323,7 +323,7 @@ class DashboardEvent extends Component {
     });
   }
 
-  //GRAFICA ASISTENTES POR DIA
+  // Grafica asistentes por dia
   async graficPrintouts() {
     const labels = [],
       values = [];

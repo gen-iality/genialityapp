@@ -43,7 +43,7 @@ function Transmitir(props) {
     const newOrganization = {
       name: props.currentUser?.names || props.currentUser?.name,
     };
-    //CREAR ORGANIZACION------------------------------
+    // Crear organizacion------------------------------
     const create = await OrganizationApi.createOrganization(newOrganization);
     if (create) {
       return create;

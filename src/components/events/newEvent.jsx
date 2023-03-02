@@ -169,7 +169,7 @@ class NewEvent extends Component {
           },
         },
       };
-      //CREAR CURSO
+      // Crear curso
       try {
         const token = await GetTokenUserFirebase();
 
@@ -179,11 +179,11 @@ class NewEvent extends Component {
           const sectionsDefault = eventNewContext.selectOrganization?.itemsMenu
             ? { itemsMenu: eventNewContext.selectOrganization?.itemsMenu }
             : newMenu;
-          //HABILTAR SECCIONES POR DEFECTO
+          // Habiltar secciones por defecto
           const sections = await Actions.put(`api/events/${result._id}?token=${token}`, sectionsDefault);
           sections._id = sections._id ? sections._id : sections.data?._id;
           if (sections?._id) {
-            //CREAR LECCIÓN CON EL MISMO NOMBRE DEL CURSO
+            // Crear lección con el mismo nombre del curso
             const activity = {
               name: eventNewContext.valueInputs.name,
               subtitle: null,
@@ -214,7 +214,7 @@ class NewEvent extends Component {
                   });
                 }
               } else {
-                //CREAR TEMPLATE PARA EL CURSO
+                // Crear template para el curso
                 let template = !eventNewContext.templateId && true;
                 if (eventNewContext.templateId) {
                   template = await EventsApi.createTemplateEvent(result._id, eventNewContext.templateId);

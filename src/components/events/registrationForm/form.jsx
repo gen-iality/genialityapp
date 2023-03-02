@@ -87,7 +87,7 @@ function OutsideAlerter(props) {
 
   return <div ref={wrapperRef}>{props.children}</div>;
 }
-//OBTENER NOMBRE ARCHIVO
+// Obtener nombre archivo
 function obtenerName(fileUrl) {
   if (typeof fileUrl == 'string') {
     const splitUrl = fileUrl?.split('/');
@@ -384,7 +384,7 @@ const FormRegister = ({
       values.email = values.email.toLowerCase();
     }
 
-    //OBTENER RUTA ARCHIVOS FILE
+    // Obtener ruta archivos file
     Object.values(extraFields).map((value) => {
       if (value.type == 'file') {
         values[value.name] = values[value.name]?.fileList
@@ -524,7 +524,7 @@ const FormRegister = ({
           : initialValues
           ? initialValues[target]
           : '';
-        //VISIBILIDAD DE CAMPOS
+        // Visibilidad de campos
         const visible =
           (initialValues?.email && name == 'email') ||
           (initialValues?.names && name == 'names') ||
@@ -817,7 +817,7 @@ const FormRegister = ({
           );
         }
 
-        //SE DEBE QUEDAR PARA RENDRIZAR EL CAMPO IMAGEN DENTRO DEL CMS
+        // Se debe quedar para rendrizar el campo imagen dentro del cms
         if (type === 'avatar') {
           ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
 
@@ -1114,7 +1114,7 @@ const FormRegister = ({
                         style={{
                           display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
                         }}
-                        // RESTRICCIONES
+                        // Restricciones
                         // disabled={!eventIsActive}
                         type="primary"
                         htmlType="submit"

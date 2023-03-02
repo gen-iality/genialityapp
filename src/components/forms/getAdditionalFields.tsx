@@ -468,7 +468,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
         );
       }
 
-      //SE DEBE QUEDAR PARA RENDRIZAR EL CAMPO IMAGEN DENTRO DEL CMS
+      // Se debe quedar para rendrizar el campo imagen dentro del cms
       if (type === 'avatar') {
         ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
 

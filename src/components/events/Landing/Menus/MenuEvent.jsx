@@ -101,7 +101,7 @@ const MenuEvent = ({ isMobile }) => {
             {event.itemsMenu &&
               Object.keys(event.itemsMenu).map((key) => {
                 //icono personalizado
-                //CAMBIO DE ICONO TRIPULACIÓN KELLOGS
+                // Cambio de icono tripulación kellogs
                 const icon =
                   event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
                     ? 'RocketOutlined'

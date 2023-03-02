@@ -20,7 +20,7 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
   const [selectedKeys, setSelectedKeys] = useState([]);
   const { requestList, removeRequest, approvedOrRejectedRequest } = useContext(AgendaContext);
   const onChange = async (nextTargetKeys, direction, moveKeys) => {
-    //ELIMINAMOS LA SOLICITUD
+    // Eliminamos la solicitud
     if (direction === 'left') {
       await Promise.all(
         moveKeys?.map(async (key) => {
@@ -28,7 +28,7 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
         })
       );
     }
-    //APPROBAMOS LA SOLICITUD
+    // Approbamos la solicitud
     if (direction === 'right') {
       await Promise.all(
         moveKeys?.map(async (key) => {

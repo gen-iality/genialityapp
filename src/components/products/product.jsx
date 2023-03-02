@@ -35,7 +35,7 @@ class Product extends Component {
     };
   }
   static contextType = HelperContext;
-  //DRAG TABLE
+  // Drag table
   DraggableContainer = (props) => (
     <SortableContainer
       useDragHandle

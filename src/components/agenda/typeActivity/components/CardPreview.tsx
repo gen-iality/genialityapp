@@ -40,7 +40,7 @@ const CardPreview = (props: any) => {
     loadingRecord,
     record,
   } = useContext(AgendaContext);
-  //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
+  // Obtener url a renderizar en componente de video
   const valideUrl = (url: string) => {
     if (url.includes('Loading2')) {
       return false;
@@ -49,12 +49,12 @@ const CardPreview = (props: any) => {
     }
   };
 
-  //PERMITE RENDERIZAR EL COMPONENTE IFRAME O REACT PLAYER GCORE
+  // Permite renderizar el componente iframe o react player gcore
   const renderPlayer = () => {
-    //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
+    // Obtener visibilidad del react player y url a renderizar
     const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
 
-    //RENDERIZAR COMPONENTE
+    // Renderizar componente
     return (
       <>
         {errorOcurred ? (
@@ -114,7 +114,7 @@ const CardPreview = (props: any) => {
     );
   };
 
-  //PERMITE VERIFICAR IDS Y NO MOSTRAR LA URL COMPLETA DE YOUTUBE Y VIMEO
+  // Permite verificar ids y no mostrar la url completa de youtube y vimeo
   const filterData = data
     ? data.toString()?.includes('https://vimeo.com/event/') || data?.toString().includes('https://youtu.be/')
       ? data?.split('/')[data?.split('/').length - 1]

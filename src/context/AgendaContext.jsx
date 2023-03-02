@@ -127,7 +127,7 @@ export const AgendaContextProvider = ({ children }) => {
     }
   }, [activityEdit]);
 
-  //FUNCION QUE PERMITE REINICIALIZAR LOS ESTADOS YA QUE AL AGREGAR O EDITAR OTRA LECCIÓN ESTOS TOMAN VALORES ANTERIORES
+  // Funcion que permite reinicializar los estados ya que al agregar o editar otra lección estos toman valores anteriores
   const initializeState = () => {
     setIsPublished(true);
     setPlatform('wowza');
@@ -216,7 +216,7 @@ export const AgendaContextProvider = ({ children }) => {
   const prepareData = (datos) => {
     const roomInfo = {
       platform: datos?.platformNew || platform,
-      //VARIABLE QUE GUARDA LA DATA QUE SE GENERA AL CREAR UN TIPO DE LECCIÓN VALIDACIÓN QUE PERMITE CONSERVAR ESTADO O LIMPIARLO
+      // Variable que guarda la data que se genera al crear un tipo de lección validación que permite conservar estado o limpiarlo
       meeting_id: datos?.data ? datos?.data : datos?.type !== 'delete' ? meeting_id : null,
       isPublished: isPublished ? isPublished : false,
       host_id,
@@ -306,7 +306,7 @@ export const AgendaContextProvider = ({ children }) => {
       default:
         urlVideo = data;
     }
-    //SE VALIDA CON URL QUE CONTENGA YOUTUBE DEBIDO A QUE REACT PLAYER NO MUESTRA VIDEO DE GCORE
+    // Se valida con url que contenga youtube debido a que react player no muestra video de gcore
     const visibleReactPlayer =
       ((type == 'Youtube' ||
         (type == 'Video' && data.includes('youtube')) ||
@@ -327,7 +327,7 @@ export const AgendaContextProvider = ({ children }) => {
     try {
       const result = await service.createOrUpdateActivity(cEvent.value._id, activity_id, roomInfo, tabs);
       if (result) {
-        //CLEAN STATUS
+        // Clean status
         setTypeActivity(null);
         setMeetingId(null);
         setRoomStatus('');

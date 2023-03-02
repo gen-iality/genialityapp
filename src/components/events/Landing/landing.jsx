@@ -157,7 +157,7 @@ const Landing = props => {
       setRegister(urlParams.get('register'));
     }
   }, []);
-  //PARA OBTENER PARAMETRO AL LOGUEARME
+  // Para obtener parametro al loguearme
   const NotificationHelper = ({ message, type, activity }) => {
     notification.open({
       message: 'Nueva notificación',

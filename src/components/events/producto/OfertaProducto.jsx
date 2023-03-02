@@ -24,7 +24,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
         setUsd(true);
         setSelectedValue(50);
       }
-      //PUJA BLOQUEDA PARA UN PRODUCTO EN ESPECIFICO, SIRVE PARA NO CAMBIAR EL VALOR A OFRECER
+      // Puja bloqueda para un producto en especifico, sirve para no cambiar el valor a ofrecer
       if (product && product._id == '6116cae171f4b926d1363266') {
         setBloquearPuja(true);
       }
@@ -69,7 +69,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
       return valueFormat;        
    }
   }*/
-  //VALORES PARA SUBIR EN LA PUJA
+  // Valores para subir en la puja
   const valuesPuja = [
     {
       name: 'COP 100.000',
@@ -85,7 +85,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
     },
   ];
 
-  //VALORES PARA SUBIR EN LA PUJA USD
+  // Valores para subir en la puja usd
   const valuesPujaDol = [
     {
       name: 'USD 50',
@@ -104,7 +104,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
       value: 1000,
     },
   ];
-  //VALIDAR SI TIENE PERMISOS DE PUJAR
+  // Validar si tiene permisos de pujar
   const permission = () => {
     if (cEventUser.value != null) {
       if (cEventUser.value.rol_id == '60e8a8b7f6817c280300dc23') {
@@ -114,11 +114,11 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
 
     return false;
   };
-  //ONCHANGE INPUT VALUE
+  // Onchange input value
   const changeValor = (e) => {
     setValueOferta(e.target.value);
   };
-  //SAVE VALUE OFERTA
+  // Save value oferta
   const saveValue = async () => {
     setLoadingSave(true);
     if (valuOferta > 0) {
@@ -166,13 +166,13 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
     }
     setLoadingSave(false);
   };
-  // BOTON MAS
+  // Boton mas
   const upvalue = () => {
     if (+valuOferta + selectedValue <= 3 * valorProduct) {
       setValueOferta(+valuOferta + selectedValue);
     }
   };
-  //BOTON MENOS
+  // Boton menos
   const downvalue = () => {
     const minValueUp = product.currency == 'USD' ? 50 : 100000;
     if (+valuOferta - selectedValue >= +valorProduct + minValueUp) {

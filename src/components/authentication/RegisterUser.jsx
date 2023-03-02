@@ -87,13 +87,13 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
     try {
       const resp = await createNewUser(newValues);
       if (resp == 1) {
-        // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
+        // Si se registró correctamente lo logueamos
         app
           .auth()
           .signInWithEmailAndPassword(newValues.email, newValues.password)
           .then((login) => {
             if (login) {
-              //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
+              // Permite validar en que sección de evius se encuentra y así renderizar el modal correspondiente
               if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
                 handleChangeTypeModal('loginSuccess');
               } else {

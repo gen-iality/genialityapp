@@ -74,7 +74,7 @@ const ModalLoginHelpers = (props) => {
       setStatus('error');
     }
   };
-  //FUNCIÓN QUE SE EJECUTA AL PRESIONAR EL BOTON
+  // Función que se ejecuta al presionar el boton
   const onFinish = async (values) => {
     setLoading(true);
     setRegisterUser(false);
@@ -84,11 +84,11 @@ const ModalLoginHelpers = (props) => {
       handleRecoveryPass(values);
       setLoading(false);
     } else {
-      //ENVIAR ACCESO AL CORREO
+      // Enviar acceso al correo
       try {
         //const resp = await EventsApi.requestUrlEmail(props.cEvent.value?._id, window.location.origin, { email:values.email });
         let resp;
-        //SE VALIDA DE ESTA MANERA PARA
+        // Se valida de esta manera para
         if (cEvent.value !== null && cEvent.value !== undefined) {
           resp = await EventsApi.requestLinkEmail(props.cEvent.value?._id, values.email);
         } else {
@@ -127,7 +127,7 @@ const ModalLoginHelpers = (props) => {
     setLoading(false);
   };
 
-  //FAILDE DE VALIDACIONES DEL FORMULARIO
+  // Failde de validaciones del formulario
   const onFinishFailed = () => {
     console.log('FALIED FORM');
   };

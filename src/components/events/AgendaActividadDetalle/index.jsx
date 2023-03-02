@@ -129,7 +129,7 @@ const AgendaActividadDetalle = props => {
     }
   }, [chatAttendeChats, isMobile]);
 
-  // VALIDAR LECCIONES POR CODIGO
+  // Validar lecciones por codigo
   useEffect(() => {
     if (cEvent.value && cUser.value) {
       if (cEvent.value?._id == '61200dfb2c0e5301fa5e9d86') {

@@ -32,7 +32,7 @@ class InformativeSection extends Component {
       informativeSection: this.props.cEvent.value.itemsMenu.informativeSection,
       markup: this.props.cEvent.value.itemsMenu.informativeSection.markup,
     });
-    //OBTENER GALERIA
+    // Obtener galeria
     // EventsApi.getGallery(this.props.cEvent.value._id).then((resp) => {
     //   if (resp && resp.data) {
     //     this.setState({
@@ -58,7 +58,7 @@ class InformativeSection extends Component {
       isModalVisible: true,
     });
   };
-  // CUANDO SE OFRECE UN PRODUCTO
+  // Cuando se ofrece un producto
   handleOk = async () => {
     //validación para campo oferta vacío
     if (this.state.value_oferta === null || this.state.value_oferta === '') {

@@ -329,7 +329,7 @@ class ListEventUser extends Component {
       extraFields = this.addDefaultLabels(extraFields);
       extraFields = this.orderFieldsByWeight(extraFields);
       const fieldsForm = Array.from(extraFields);
-      // AGREGAR EXTRAFIELDS DE ROL Y CHECKIN
+      // Agregar extrafields de rol y checkin
       const rolesOptions = rolesList.map((rol) => {
         return {
           label: rol.name,

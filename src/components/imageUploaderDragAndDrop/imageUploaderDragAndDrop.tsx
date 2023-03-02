@@ -61,7 +61,7 @@ const ImageUploaderDragAndDrop = ({
           break;
 
         case 'removed':
-          //ELIMINAR DE FIREBASE
+          // Eliminar de firebase
           await deleteFireStorageData(image);
           setImage(null);
           setIsUploading(false);

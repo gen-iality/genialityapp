@@ -18,7 +18,7 @@ import ModalAuth from '@components/authentication/ModalAuth';
 import ModalNoRegister from '@components/authentication/ModalNoRegister';
 import ModalAuthAnonymous from '@components/authentication/ModalAuthAnonymous';
 import ModalUpdate from '@components/events/Landing/ModalUpdate';
-//PAGES
+// Pages
 const Organization = loadable(() => import('../pages/eventOrganization'));
 const Home = loadable(() => import('../pages/home'));
 

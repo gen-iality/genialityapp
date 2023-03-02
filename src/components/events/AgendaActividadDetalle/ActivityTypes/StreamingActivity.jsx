@@ -17,7 +17,7 @@ const StreamingActivity = (props) => {
   const [meetingId, setmeetingId] = useState('');
   const [fnCiclo, setFnCiclo] = useState(false);
 
-  //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
+  // Estado para controlar origen de transmision
 
   const { transmition, setTransmition } = useContext(AgendaContext);
   const { currentActivity } = useHelper();

@@ -46,7 +46,7 @@ const createNewUser = async (props) => {
         return response;
       }
     } catch (e) {
-      //PERMITE VALIDAR CUANDO EL EMAIL ES INCORRECTO
+      // Permite validar cuando el email es incorrecto
       if (e.response.status == 422 && e.response.data.errors.email[0] !== 'email ya ha sido registrado.') {
         return 2;
       }
