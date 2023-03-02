@@ -43,17 +43,17 @@ const AditionalInformation = (props) => {
                 <p style={{ marginBottom: '0px' }}>{intl.formatMessage({ id: 'title.description' })}</p>
               </>
             }
-            key="description"
+            key='description'
           >
             {currentActivity?.description !== '<p><br></p>' ? (
-              <Row justify="center">
-                <Col span={24} id="img-description">
+              <Row justify='center'>
+                <Col span={24} id='img-description'>
                   {currentActivity?.description && (
                     <ReactQuill
                       value={currentActivity?.description}
                       readOnly
-                      className="hide-toolbar ql-toolbar"
-                      theme="bubble"
+                      className='hide-toolbar ql-toolbar'
+                      theme='bubble'
                     />
                   )}
                 </Col>
@@ -63,7 +63,7 @@ const AditionalInformation = (props) => {
                 <Result
                   style={{ padding: '0px' }}
                   icon={<ClipboardTextOffIcon />}
-                  title="Aún no se ha publicado una descripción"
+                  title='Aún no se ha publicado una descripción'
                 />
               </Card>
             )}
@@ -73,7 +73,7 @@ const AditionalInformation = (props) => {
             props.cEvent.value._id === '601470367711a513cc7061c2' ? (
               <div></div>
             ) : (
-              <div className="List-conferencistas">
+              <div className='List-conferencistas'>
                 <p style={{ marginTop: '5%', marginBottom: '5%' }}>
                   {props.orderedHost.length > 0 ? (
                     <Row>
@@ -104,7 +104,7 @@ const AditionalInformation = (props) => {
                                   {item.description !== '<p><br></p>' &&
                                     item.description !== null &&
                                     item.description !== undefined && (
-                                      <Button className="button_lista" onClick={() => getSpeakers(item._id)}>
+                                      <Button className='button_lista' onClick={() => getSpeakers(item._id)}>
                                         {intl.formatMessage({
                                           id: 'button.more.information',
                                         })}
@@ -138,7 +138,7 @@ const AditionalInformation = (props) => {
                 <p style={{ marginBottom: '0px' }}>Documentos</p>
               </>
             }
-            key="docs"
+            key='docs'
           >
             <div>
               <div style={{ marginTop: '5%', marginBottom: '5%' }}>
@@ -156,8 +156,8 @@ const AditionalInformation = (props) => {
           <TabPane
             tab={
               <>
-                <p style={{ marginBottom: '0px' }} className="lowerTabs__mobile-visible">
-                  <Badge dot={props.hasOpenSurveys} size="default">
+                <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-visible'>
+                  <Badge dot={props.hasOpenSurveys} size='default'>
                     Evaluaciones
                   </Badge>
                 </p>
@@ -170,10 +170,10 @@ const AditionalInformation = (props) => {
               <div style={{ paddingTop: 30 }}>
                 <Alert
                   showIcon
-                  message="Para poder responder una evaluación debes ser usuario del sistema"
-                  type="warning"
+                  message='Para poder responder una evaluación debes ser usuario del sistema'
+                  type='warning'
                 />
-                <Row style={{ marginTop: 30 }} justify="center">
+                <Row style={{ marginTop: 30 }} justify='center'>
                   <Button onClick={() => handleChangeTypeModal('register')}>Registrarme</Button>
                 </Row>
               </div>
@@ -184,12 +184,12 @@ const AditionalInformation = (props) => {
           <TabPane
             tab={
               <>
-                <p className="lowerTabs__mobile-visible" style={{ marginBottom: '0px' }}>
+                <p className='lowerTabs__mobile-visible' style={{ marginBottom: '0px' }}>
                   Juegos
                 </p>{' '}
               </>
             }
-            key="games"
+            key='games'
           ></TabPane>
         )}
       </Tabs>
