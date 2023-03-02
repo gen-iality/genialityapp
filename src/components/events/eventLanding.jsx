@@ -75,7 +75,6 @@ class EventLanding extends Component {
     return (
       <div /* style={{ marginBottom: 12 }} */>
         {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
-        {console.log('this.props.cEvent.value', this.props.cEvent.value)}
 
         {this.props.cEvent.value && (
           <>
@@ -93,7 +92,6 @@ class EventLanding extends Component {
                 [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
               }
             />
-            {console.log('this.state.thereAreQuizingOrSurveys', this.state.thereAreQuizingOrSurveys)}
             <Card style={{ display: this.state.thereAreQuizingOrSurveys ? 'block' : 'none' }}>
               <Typography.Text>Estado del curso:</Typography.Text>{' '}
               <QuizApprovedStatus

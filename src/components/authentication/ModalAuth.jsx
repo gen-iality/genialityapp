@@ -398,7 +398,6 @@ const ModalAuth = (props) => {
               >
                 {isHome() && (
                   <>
-                    {console.log('Is Home Register - RegisterUser')}
                     <RegisterUser
                       screens={screens}
                       stylePaddingMobile={stylePaddingMobile}
@@ -410,7 +409,6 @@ const ModalAuth = (props) => {
                 )}
                 {isEvent() && (
                   <>
-                    {console.log('Is Event Register - RegisterUserAndEventUser')}
                     <RegisterUserAndEventUser
                       screens={screens}
                       stylePaddingMobile={stylePaddingMobile}
@@ -420,7 +418,6 @@ const ModalAuth = (props) => {
                 )}
                 {isOrganization() && (
                   <>
-                    {console.log('Is Organization Register - RegisterUserAndOrgMember')}
                     <RegisterUserAndOrgMember
                       screens={screens}
                       stylePaddingMobile={stylePaddingMobile}

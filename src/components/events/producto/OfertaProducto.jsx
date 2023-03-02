@@ -181,7 +181,6 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
   };
   return (
     <>
-      {console.log(product, 'producto')}
       {product && product._id != '6116cae171f4b926d1363266' && (
         <Card>
           <Row>

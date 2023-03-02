@@ -1175,8 +1175,6 @@ class General extends Component {
               <BackTop />
             </Tabs.TabPane>
             <Tabs.TabPane tab="Tipos de acceso" key="2">
-              {console.log('this.state.typeEventPermit', this.state.typeEventPermit)}
-              {console.log('this.state.event', this.state.event)}
               <CardSelector
                 selected={this.state.typeEventPermit.toString()}
                 options={[

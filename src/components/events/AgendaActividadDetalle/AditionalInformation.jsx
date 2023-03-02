@@ -79,7 +79,6 @@ const AditionalInformation = (props) => {
                     <Row>
                       <Col span={24}>
                         <Card style={{ textAlign: 'left' }}>
-                          {console.log(screens)}
                           <List
                             itemLayout={screens.xs ? 'vertical' : 'horizontal'}
                             dataSource={props.orderedHost}

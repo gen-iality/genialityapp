@@ -302,9 +302,6 @@ const RegisterUserAndOrgMember = ({
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-    {console.log('dataOrgMember', dataOrgMember)}
-    {console.log('basicDataUser', basicDataUser)}
-      {console.log('buttonStatus', buttonStatus)}
       <Steps current={current} responsive={false}>
         {steps.map((item) => (
           <Step key={item.title} icon={item.icon} />

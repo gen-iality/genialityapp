@@ -950,7 +950,6 @@ const FormRegister = ({
                         })}
                       </Typography.Title>
                       {/* Revisar bien que valor usamos para picture ahorita guarda todo un objeto de tipo file que no tiene sentido deberia ser solo la url de la imagen */}
-                      {console.log('initialValues', initialValues, cUser)}
                       {organization ? (
                         <Comment
                           avatar={initialOtherValue.picture ? <Avatar src={initialOtherValue?.picture} /> : null}

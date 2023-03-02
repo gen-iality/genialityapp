@@ -86,13 +86,11 @@ class DocumentsList extends Component {
 
     return (
       <div>
-        {console.log('documentDates', documentDates, columns, loading)}
         {documentDates && data && data[0]?.activity_id ? (
           <Table dataSource={documentDates} columns={columns} loading={loading} />
         ) : (
           // <div>{documentDates.map(item => JSON.stringify(item))}</div>
           <>
-            {console.log('1. data', data)}
             <Card //bodyStyle={{ backgroundColor: this.props.colors.backgroundColor }}
               style={{ textAlign: 'left' }}
             >

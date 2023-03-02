@@ -132,7 +132,6 @@ const InvitacionListSent = ({ list }) => {
                         : item.user_name_requesting
                         ? item.user_name_requesting.charAt(0).toUpperCase()
                         : item._id.charAt(0).toUpperCase()}
-                      {console.log('ITEM===>', item)}
                     </Avatar>
                   }
                   title={item.user_name_requesting || item._id}

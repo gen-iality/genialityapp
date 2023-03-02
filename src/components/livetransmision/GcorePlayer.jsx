@@ -61,7 +61,6 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
       <div className="mediaplayer">
         {conected == 'Yes' && visibleReactPlayer ? (
           <>
-            {console.log('ESTE ES EL TIPO DE ACTIVIDAD', typeActivity)}
             <ReactPlayer
               style={{ aspectRatio: '16/9' }}
               playing

@@ -81,7 +81,6 @@ const NoticiasList = (props) => {
           noticias.length > 0 &&
           noticias.map((news) => (
             <>
-              {console.log('NOTICIA==>', news)}
               <Col /* style={{ paddingBottom: '30px' }}  */ xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                 {dayjs().format('YYYY-MM-DD') === dayjs(news.created_at).format('YYYY-MM-DD') ? (
                   <Badge.Ribbon text="Nuevo" color="cyan">
