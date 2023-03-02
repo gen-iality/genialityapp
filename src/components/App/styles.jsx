@@ -458,7 +458,8 @@ class Styles extends Component {
                           </Button>,
                         ]}
                         title={<Title level={5}>{item.title}</Title>}
-                        visible={item.editIsVisible}>
+                        visible={item.editIsVisible}
+                      >
                         <Space wrap size='large' align='start'>
                           <SketchPicker
                             color={this.state.styles[item.fieldColorName]}
@@ -503,7 +504,8 @@ class Styles extends Component {
                     <Form.Item
                       label={item.title}
                       help={item.description}
-                      onClick={() => this.handleClickSelectColor(key)}>
+                      onClick={() => this.handleClickSelectColor(key)}
+                    >
                       <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]}>
                         {this.state.styles[item.fieldColorName]}
                       </Tag>
@@ -519,7 +521,8 @@ class Styles extends Component {
                         value={this.state.styles[item.name]}
                         name={item.name}
                         onChange={(e) => this.handleChange(e, item.name)}
-                        style={{ width: 120 }}>
+                        style={{ width: 120 }}
+                      >
                         {item.options.map((item2, key2) => (
                           <Option key={key2} value={item2.value}>
                             {item2.label}

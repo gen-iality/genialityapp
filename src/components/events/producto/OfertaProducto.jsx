@@ -218,7 +218,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                         style={{ cursor: 'pointer', padding: '5px', fontSize: '14px' }}
                         color={selectedValue === val.value ? '#2db7f5' : ''}
                         onClick={() => setSelectedValue(val.value)}
-                        key={'val' + index}>
+                        key={'val' + index}
+                      >
                         {val.name}
                       </Tag>
                     ))}
@@ -228,7 +229,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                         style={{ cursor: 'pointer', padding: '5px', fontSize: '14px' }}
                         color={selectedValue === val.value ? '#2db7f5' : ''}
                         onClick={() => setSelectedValue(val.value)}
-                        key={'val' + index}>
+                        key={'val' + index}
+                      >
                         {val.name}
                       </Tag>
                     ))}

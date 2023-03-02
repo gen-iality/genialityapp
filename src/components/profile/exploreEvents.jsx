@@ -5,7 +5,8 @@ const ExploreEvents = () => {
   return (
     <Card
       style={{ borderRadius: '10px', border: '2px dashed #cccccc', cursor: 'pointer' }}
-      bodyStyle={{ padding: '0px' }}>
+      bodyStyle={{ padding: '0px' }}
+    >
       <Result
         icon={' '}
         title='No encontramos cursos en los que este registrado'

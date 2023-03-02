@@ -101,7 +101,8 @@ const NoticiasList = (props) => {
                             pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`,
                             state: { id: news._id },
                           }}
-                          key={'viewMore'}>
+                          key={'viewMore'}
+                        >
                           Ver más
                         </Link>,
                       ]}>
@@ -137,7 +138,8 @@ const NoticiasList = (props) => {
                           pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`,
                           state: { id: news._id },
                         }}
-                        key={'viewMore'}>
+                        key={'viewMore'}
+                      >
                         Ver más
                       </Link>,
                     ]}>

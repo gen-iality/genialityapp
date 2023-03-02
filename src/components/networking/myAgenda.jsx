@@ -179,7 +179,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     {dayjs(eventDate).format('MMMM DD')}
                   </div>
                 }
-                key={`event-date-${eventDateIndex}-${eventDate}`}>
+                key={`event-date-${eventDateIndex}-${eventDate}`}
+              >
                 {isNonEmptyArray(dayAgendas) ? (
                   dayAgendas.map((acceptedAgenda) => (
                     <>

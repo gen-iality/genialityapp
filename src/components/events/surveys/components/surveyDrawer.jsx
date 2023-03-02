@@ -101,7 +101,8 @@ function SurveyDrawer(props) {
           // closable={true}
           visible={cSurveys.shouldDisplaysurveyAssignedToThisActivity() && cUser.value !== null}
           onClose={closeDrawer}
-          width={window.screen.width >= 768 ? (rankingVisible === false ? '100%' : '70%') : '100%'}>
+          width={window.screen.width >= 768 ? (rankingVisible === false ? '100%' : '70%') : '100%'}
+        >
           <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
             {cSurveys.shouldDisplayRanking() && (
               <Button type='primary' onClick={showRanking}>

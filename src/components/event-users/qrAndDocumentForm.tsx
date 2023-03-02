@@ -46,7 +46,8 @@ function QrAndDocumentForm({
                     <Button
                       type='primary'
                       icon={<CameraFlipOutlineIcon />}
-                      onClick={() => (facingMode === 'user' ? setFacingMode('environment') : setFacingMode('user'))}>
+                      onClick={() => (facingMode === 'user' ? setFacingMode('environment') : setFacingMode('user'))}
+                    >
                       {facingMode === 'user' ? ' Front' : 'Rear'} Camera
                     </Button>
                   </Col>
@@ -77,7 +78,8 @@ function QrAndDocumentForm({
                 <Form.Item
                   label={'Id Usuario'}
                   name='qr'
-                  rules={[{ required: true, message: 'El campo Id Usuario no debe estar vacío!' }]}>
+                  rules={[{ required: true, message: 'El campo Id Usuario no debe estar vacío!' }]}
+                >
                   <Input autoFocus allowClear />
                 </Form.Item>
               </>
@@ -89,7 +91,8 @@ function QrAndDocumentForm({
           <Form.Item
             label={label}
             name='document'
-            rules={[{ required: true, message: 'El campo documentó no debe estar vacío!' }]}>
+            rules={[{ required: true, message: 'El campo documentó no debe estar vacío!' }]}
+          >
             <Input
               onKeyDown={(event: any) => divideInformationObtainedByTheCodeReader({ event })}
               id='document'

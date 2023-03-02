@@ -54,12 +54,14 @@ const MenuConfig = (props) => {
         overflow: 'auto',
         background: '#1B1E28',
       }}
-      inlineCollapsed={props.collapsed}>
+      inlineCollapsed={props.collapsed}
+    >
       <div style={{ textAlign: 'end', marginBottom: '15px', marginTop: '15px' }}>
         <Button
           type='primary'
           onClick={props.collapseMenu}
-          style={{ width: '100%', textAlign: 'end', background: '#1B1E28', border: 'none' }}>
+          style={{ width: '100%', textAlign: 'end', background: '#1B1E28', border: 'none' }}
+        >
           {props.collapsed ? (
             <RightOutlined style={{ fontSize: '20px' }} />
           ) : (
@@ -84,7 +86,8 @@ const MenuConfig = (props) => {
             type='primary'
             size='middle'
             target='_blank'
-            href={`${window.location.origin}/landing/${eventId}`}>
+            href={`${window.location.origin}/landing/${eventId}`}
+          >
             {props.collapsed ? '' : 'Ir al curso'}
           </Button>
         </Col>

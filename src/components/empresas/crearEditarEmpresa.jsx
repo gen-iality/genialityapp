@@ -405,7 +405,8 @@ function CrearEditarEmpresa(props) {
                                   onClick={() => {
                                     arrayHelpers.remove(serviceIndex);
                                   }}
-                                  style={{ marginRight: '20px' }}>
+                                  style={{ marginRight: '20px' }}
+                                >
                                   {'Eliminar'}
                                 </Button>
                               )}
@@ -469,7 +470,8 @@ function CrearEditarEmpresa(props) {
                                   onClick={() => {
                                     arrayHelpers.remove(socialNetworkIndex);
                                   }}
-                                  style={{ marginRight: '20px' }}>
+                                  style={{ marginRight: '20px' }}
+                                >
                                   {'Eliminar'}
                                 </Button>
                               )}
@@ -559,7 +561,8 @@ function CrearEditarEmpresa(props) {
                                   onClick={() => {
                                     arrayHelpers.remove(advisorIndex);
                                   }}
-                                  style={{ marginRight: '20px' }}>
+                                  style={{ marginRight: '20px' }}
+                                >
                                   {'Eliminar'}
                                 </Button>
                               )}
@@ -627,7 +630,8 @@ function CrearEditarEmpresa(props) {
                                   onClick={() => {
                                     arrayHelpers.remove(galleryIndex);
                                   }}
-                                  style={{ marginRight: '20px' }}>
+                                  style={{ marginRight: '20px' }}
+                                >
                                   {'Eliminar'}
                                 </Button>
                               )}

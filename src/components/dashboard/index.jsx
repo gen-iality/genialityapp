@@ -518,7 +518,8 @@ class DashboardEvent extends Component {
                         style={{ color: '#1F6E43' }}
                         shape='round'
                         icon={<FileExcelOutlined />}
-                        onClick={() => this.exportReport(this.state.metricsGraphics, 'Visitas', 'views', 'ViewsByDay')}>
+                        onClick={() => this.exportReport(this.state.metricsGraphics, 'Visitas', 'views', 'ViewsByDay')}
+                      >
                         Exportar
                       </Button>
                     </Row>
@@ -591,7 +592,8 @@ class DashboardEvent extends Component {
               <Card
                 headStyle={{ border: 'none' }}
                 title={'Métricas por lecciones del curso'}
-                extra={<MoreOutlined />}>
+                extra={<MoreOutlined />}
+              >
                 <Table
                   dataSource={this.state.metricsActivity}
                   columns={columns}
@@ -673,7 +675,8 @@ class DashboardEvent extends Component {
                     <Button
                       shape='round'
                       icon={<NotificationOutlined />}
-                      onClick={() => this.props.history.push(`/eventadmin/${this.props.eventId}/messages`)}>
+                      onClick={() => this.props.history.push(`/eventadmin/${this.props.eventId}/messages`)}
+                    >
                       Ver correos
                     </Button>
                   </Row>
@@ -716,7 +719,8 @@ class DashboardEvent extends Component {
                   style={{ color: '#F70D09' }}
                   shape='round'
                   icon={<FilePdfOutlined />}
-                  disabled={this.state.metricsGaByActivity?.length == 0 || !this.state.metricsGaByActivity}>
+                  disabled={this.state.metricsGaByActivity?.length == 0 || !this.state.metricsGaByActivity}
+                >
                   Exportar métricas
                 </Button>
               </Row>

@@ -29,7 +29,8 @@ export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
           onClick={() => handleSearch(selectedKeys, confirm, dataIndex, columnsData)}
           icon={<SearchOutlined />}
           size='small'
-          style={{ width: 90 }}>
+          style={{ width: 90 }}
+        >
           Search
         </Button>
         <Button onClick={() => handleReset(clearFilters, columnsData)} size='small' style={{ width: 90 }}>

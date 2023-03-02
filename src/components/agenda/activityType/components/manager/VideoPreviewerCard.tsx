@@ -158,7 +158,8 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
         )
       }
       bodyStyle={{ padding: '21px' }}
-      style={{ borderRadius: '8px', overflow: 'hidden' }}>
+      style={{ borderRadius: '8px', overflow: 'hidden' }}
+    >
       <Space direction='vertical' style={{ width: '100%' }} size='middle'>
         <div className='mediaplayer' style={{ borderRadius: '8px' }}>
           {props?.type !== TypeDisplayment.MEETING && renderPlayer()}
@@ -237,7 +238,8 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                       onConfirm={() => {
                         stopRecordTransmition();
                       }}
-                      onCancel={() => console.log('cancelado')}>
+                      onCancel={() => console.log('cancelado')}
+                    >
                       <Button loading={loadingRecord} type='primary' danger>
                         Detener grabación
                       </Button>
@@ -278,7 +280,8 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                 saveConfig({ habilitar_ingreso: value })
                   .then(() => console.log('config saved - habilitar_ingreso:', value));
               }}
-              style={{ width: '100%' }}>
+              style={{ width: '100%' }}
+            >
               <Select.Option value='created_meeting_room'>Actividad creada</Select.Option>
               <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
               <Select.Option value='open_meeting_room'>En vivo</Select.Option>

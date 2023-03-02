@@ -167,7 +167,8 @@ class EventUsersList extends Component {
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size='small'
-            style={{ width: 90 }}>
+            style={{ width: 90 }}
+          >
             Search
           </Button>
 
@@ -307,7 +308,8 @@ class EventUsersList extends Component {
               <Col>
                 <Button
                   onClick={() => this.goToSendMessage()}
-                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                >
                   Enviar comunicación a : {selectedRowKeys.length === 0 ? 'Todos' : selectedRowKeys.length}
                 </Button>
                 <ModalAdvise visible={this.state.modalVisible} />
@@ -324,7 +326,8 @@ class EventUsersList extends Component {
                       ? ''
                       : `${this.props.matchUrl}/importar-excel`
                   }
-                  icon={<UploadOutlined />}>
+                  icon={<UploadOutlined />}
+                >
                   <Button type='primary' disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                     Importar usuario
                   </Button>
@@ -335,7 +338,8 @@ class EventUsersList extends Component {
                   type='primary'
                   onClick={this.modalUser}
                   icon={<PlusCircleOutlined />}
-                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                >
                   Agregar usuario
                 </Button>
               </Col>

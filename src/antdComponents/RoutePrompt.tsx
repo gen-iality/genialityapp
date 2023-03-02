@@ -137,7 +137,8 @@ export function RouterPrompt({
           key='goBack'
           onClick={() => handleOK(false)}
           icon={<Logout />}
-          disabled={loadingAndDisablingButtons}>
+          disabled={loadingAndDisablingButtons}
+        >
           {okText ? okText : ''}
         </Button>,
         <Button key='cancel' onClick={handleCancel} disabled={loadingAndDisablingButtons}>

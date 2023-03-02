@@ -3,7 +3,8 @@ function MiniBanner(props) {
     <>
       <div
         className='mini-banner'
-        style={{ borderRadius: '12px', width: '80%', display: 'block', margin: 'auto', marginBottom: '25px' }}>
+        style={{ borderRadius: '12px', width: '80%', display: 'block', margin: 'auto', marginBottom: '25px' }}
+      >
         <img
           src={props.banner}
           style={{

@@ -235,7 +235,8 @@ class ActividadLanguage extends Component {
             <Form.Item
               label='Lenguaje'
               name='language'
-              rules={[{ required: true, message: 'Por favor seleccione un idioma' }]}>
+              rules={[{ required: true, message: 'Por favor seleccione un idioma' }]}
+            >
               <Select>
                 <Option value='Ingles'>Ingles</Option>
                 <Option value='Español'>Español</Option>
@@ -248,7 +249,8 @@ class ActividadLanguage extends Component {
               <Form.Item
                 label='Id de conferencia'
                 name='meeting_id'
-                rules={[{ required: true, message: 'Por favor ingrese un id' }]}>
+                rules={[{ required: true, message: 'Por favor ingrese un id' }]}
+              >
                 <InputNumber style={{ width: '100%' }} />
               </Form.Item>
             )}
@@ -256,7 +258,8 @@ class ActividadLanguage extends Component {
               <Form.Item
                 label='Id de conferencia'
                 name='vimeo_id'
-                rules={[{ required: true, message: 'Por favor ingrese un id' }]}>
+                rules={[{ required: true, message: 'Por favor ingrese un id' }]}
+              >
                 <InputNumber style={{ display: 'block' }} />
               </Form.Item>
             )}
@@ -264,7 +267,8 @@ class ActividadLanguage extends Component {
             <Form.Item
               label='estado'
               name='state'
-              rules={[{ required: true, message: 'Por favor seleccione un estado' }]}>
+              rules={[{ required: true, message: 'Por favor seleccione un estado' }]}
+            >
               <Select>
                 <Option value='open_meeting_room'>Conferencia abierta</Option>
                 <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
@@ -275,7 +279,8 @@ class ActividadLanguage extends Component {
             <Form.Item
               label='Texto informativo '
               name='informative_text'
-              rules={[{ required: true, message: 'Por favor seleccione un idioma' }]}>
+              rules={[{ required: true, message: 'Por favor seleccione un idioma' }]}
+            >
               <Input />
             </Form.Item>
 

@@ -177,7 +177,8 @@ const VirtualConference = () => {
                     }}
                     className='animate__animated animate__backInUp'>
                     <Link
-                      to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}` : `${urlAgenda}`}>
+                      to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}` : `${urlAgenda}`}
+                    >
                       <Row justify='center' align='middle' gutter={[4, 4]}>
                         <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
                           <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
@@ -209,7 +210,8 @@ const VirtualConference = () => {
                         </Col>
                         <Col xs={16} sm={16} md={12} lg={12} xl={12} xxl={12}>
                           <div
-                            style={{ alignContent: 'center', display: 'grid', height: '100%', alignItems: 'center' }}>
+                            style={{ alignContent: 'center', display: 'grid', height: '100%', alignItems: 'center' }}
+                          >
                             <Title
                               level={screens.xs === true ? 5 : 4}
                               ellipsis={{
@@ -257,7 +259,8 @@ const VirtualConference = () => {
                                 <Avatar.Group
                                   maxCount={2}
                                   size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 60, xxl: 60 }}
-                                  maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}>
+                                  maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}
+                                >
                                   {item.hosts.length < 3
                                     ? item.hosts.map((host, key) => {
                                         return (

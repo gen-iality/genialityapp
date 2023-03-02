@@ -577,7 +577,8 @@ const FormEdit = (
                     }}
                     customRequest={uploadImagedummyRequest}
                     fileList={defaultImgValue}
-                    onRemove={handleRemoveImg}>
+                    onRemove={handleRemoveImg}
+                  >
                     <Button icon={<UploadOutlined />}>Cargar imagen</Button>
                   </Upload>
                   <Tooltip
@@ -642,12 +643,14 @@ const FormEdit = (
                           onChange={handleRadio}
                           disabled={!allowGradableSurvey}
                           value={correctAnswerIndex}
-                          style={{ display: 'block', marginRight: 0 }}>
+                          style={{ display: 'block', marginRight: 0 }}
+                        >
                           {fields.map((field, index) => (
                             <Form.Item
                               label={<Text type='secondary'>Respuesta {index + 1}</Text>}
                               required={false}
-                              key={field.key}>
+                              key={field.key}
+                            >
                               <Radio value={index} style={{ width: '100%' }}>
                                 <Form.Item
                                   {...field}
@@ -681,12 +684,14 @@ const FormEdit = (
                           onChange={handleCheckbox}
                           disabled={!allowGradableSurvey}
                           value={correctAnswerIndex}
-                          style={{ display: 'block' }}>
+                          style={{ display: 'block' }}
+                        >
                           {fields.map((field, index) => (
                             <Form.Item
                               label={<Text type='secondary'>Respuesta {index + 1}</Text>}
                               required={false}
-                              key={field.key}>
+                              key={field.key}
+                            >
                               <Checkbox value={index} style={{ width: '100%' }}>
                                 <Form.Item
                                   {...field}

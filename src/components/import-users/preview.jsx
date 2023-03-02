@@ -250,7 +250,8 @@ class Preview extends Component {
             <Badge.Ribbon
               text='Seleccionado'
               color={'#2593FC'}
-              style={this.state.genericPassword ? { display: 'none' } : {}}>
+              style={this.state.genericPassword ? { display: 'none' } : {}}
+            >
               <div
                 style={
                   this.state.genericPassword === false
@@ -259,7 +260,8 @@ class Preview extends Component {
                 }>
                 <Card
                   style={{ cursor: 'pointer' }}
-                  onClick={() => this.setState({ genericPassword: false, password: null })}>
+                  onClick={() => this.setState({ genericPassword: false, password: null })}
+                >
                   <Typography.Text strong style={{ textAlign: 'justify' }}>
                     Deseo que la plataforma genere una contraseña para mis asistentes.
                   </Typography.Text>
@@ -279,7 +281,8 @@ class Preview extends Component {
             <Badge.Ribbon
               text='Seleccionado'
               color={'#2593FC'}
-              style={!this.state.genericPassword ? { display: 'none' } : {}}>
+              style={!this.state.genericPassword ? { display: 'none' } : {}}
+            >
               <div
                 style={
                   this.state.genericPassword === true
@@ -288,7 +291,8 @@ class Preview extends Component {
                 }>
                 <Card
                   style={{ cursor: 'pointer' }}
-                  onClick={() => this.setState({ genericPassword: true, showModal: true })}>
+                  onClick={() => this.setState({ genericPassword: true, showModal: true })}
+                >
                   <Typography.Text strong style={{ textAlign: 'justify' }}>
                     Deseo específicar una contraseña para mis asistentes
                   </Typography.Text>
@@ -337,7 +341,8 @@ class Preview extends Component {
           footer={null}
           destroyOnClose={true}
           closable={false}
-          visible={this.state.showModal}>
+          visible={this.state.showModal}
+        >
           {this.content()}
         </Modal>
 

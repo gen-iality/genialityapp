@@ -534,7 +534,8 @@ class ListEventUser extends Component {
                         md={24}
                         lg={12}
                         xl={12}
-                        xxl={8}>
+                        xxl={8}
+                      >
                         <Card
                           hoverable={8}
                           headStyle={
@@ -550,7 +551,8 @@ class ListEventUser extends Component {
                             marginBottom: '2%',
                             textAlign: 'left',
                           }}
-                          bordered={true}>
+                          bordered={true}
+                        >
                           <Meta
                             avatar={
                               <Avatar size={65} src={users?.user?.picture ? users?.user?.picture : ''}>

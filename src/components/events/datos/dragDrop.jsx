@@ -92,13 +92,15 @@ class DragDrop extends Component {
                   <Draggable
                     key={list.uuid ? list.uuid : list._id}
                     draggableId={list.uuid ? list.uuid : list._id}
-                    index={index}>
+                    index={index}
+                  >
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}>
+                        style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                      >
                         <span style={{ marginRight: '5%' }}>
                           <DragOutlined />
                         </span>

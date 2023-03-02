@@ -112,7 +112,8 @@ class DocumentsDetail extends Component {
                   <Card
                     title=''
                     bordered={false}
-                    style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}>
+                    style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}
+                  >
                     <Result
                       title={
                         <Typography.Title level={4} style={{ color: this.props.cEvent.value.styles.textMenu }}>
@@ -186,7 +187,8 @@ class DocumentsDetail extends Component {
                     <Card
                       title=''
                       bordered={false}
-                      style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}>
+                      style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}
+                    >
                       <Result
                         icon={<ExclamationCircleOutlined style={{ color: this.props.cEvent.value.styles.textMenu }} />}
                         title={

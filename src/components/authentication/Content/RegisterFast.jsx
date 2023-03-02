@@ -130,7 +130,8 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         form={form}
         autoComplete='on'
         layout='vertical'
-        onFinish={onFinish}>
+        onFinish={onFinish}
+      >
         <Form.Item>
           <ImgCrop rotate shape='round'>
             <Upload
@@ -151,7 +152,8 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
               customRequest={uploadImagedummyRequest}
               multiple={false}
               listType='picture'
-              maxCount={1}>
+              maxCount={1}
+            >
               {!takingPhoto && (
                 <Space direction='vertical'>
                   <Button
@@ -201,7 +203,8 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
           name='email'
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleEmail}>
+          rules={ruleEmail}
+        >
           <Input
             onChange={(e) => HandleHookForm(e, 'email')}
             type='email'
@@ -219,7 +222,8 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             name='password'
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={ruleCedula}>
+            rules={ruleCedula}
+          >
             <Input
               onChange={(e) => HandleHookForm(e, 'password')}
               type='number'
@@ -238,7 +242,8 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             name='password'
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={rulePassword}>
+            rules={rulePassword}
+          >
             <Input.Password
               onChange={(e) => HandleHookForm(e, 'password')}
               type='password'
@@ -259,7 +264,8 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
           name='names'
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleName}>
+          rules={ruleName}
+        >
           <Input
             onChange={(e) => HandleHookForm(e, 'names')}
             type='text'

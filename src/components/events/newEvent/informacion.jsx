@@ -234,7 +234,8 @@ const Informacion = (props) => {
                 cancelText='Cerrar'
                 title='Organizaciónes'
                 visible={organization && !isbyOrganization}
-                onCancel={() => changeOrganization(false)}>
+                onCancel={() => changeOrganization(false)}
+              >
                 {!createOrganizationF && (
                   <Row style={{ marginBottom: 10 }} justify={'end'}>
                     <Button onClick={() => newOrganization(true)}>
@@ -260,7 +261,8 @@ const Informacion = (props) => {
                           color: selectOrganization?.id == item.id ? 'white' : 'rgba(0, 0, 0, 0.85)',
                           background: selectOrganization?.id == item.id ? '#40a9ff' : 'white',
                         }}
-                        onClick={() => selectedOrganization(item)}>
+                        onClick={() => selectedOrganization(item)}
+                      >
                         {item.name}
                       </List.Item>
                     )}
@@ -329,7 +331,8 @@ const Informacion = (props) => {
         onOk={handleOk}
         cancelText='Cancelar'
         onCancel={handleCancel}
-        width={600}>
+        width={600}
+      >
         <Row gutter={[16, 16]} justify='center' align='top'>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <DayPicker onDayClick={changeSelectDay} selectedDays={selectedDay} value={selectedDay} />

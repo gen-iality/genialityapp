@@ -173,7 +173,8 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       title={'Agendar cita'}
       footer={null}
       onCancel={resetModal}
-      style={{ zIndex: 1031 }}>
+      style={{ zIndex: 1031 }}
+    >
       {loading ? (
         <Row align='middle' justify='center' style={{ height: 300 }}>
           <Spin />
@@ -260,7 +261,8 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                               setOpenAgenda('');
                               setAgendaMessage('');
                             }}
-                            style={{ marginRight: '10px' }}>
+                            style={{ marginRight: '10px' }}
+                          >
                             {'Cancelar'}
                           </Button>
                           <Button

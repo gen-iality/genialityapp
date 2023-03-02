@@ -31,7 +31,8 @@ const ModalRegister = ({ register, setRegister, event }) => {
       footer={null}
       zIndex={999999999}
       closable={false}
-      visible={register !== null ? true : false}>
+      visible={register !== null ? true : false}
+    >
       <Result
         icon={
           event?._id == '61a8443fa3023d1c117f9e13' ? (

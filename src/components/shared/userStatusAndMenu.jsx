@@ -90,7 +90,8 @@ const UserStatusAndMenu = (props) => {
                     },
                   });
                 }}
-                icon={<BadgeAccountOutlineIcon style={{ fontSize: '18px' }} />}>
+                icon={<BadgeAccountOutlineIcon style={{ fontSize: '18px' }} />}
+              >
                 <FormattedMessage id='header.my_data_event' defaultMessage='Mi perfil en el curso' />
               </Menu.Item>
             </Badge>
@@ -105,14 +106,16 @@ const UserStatusAndMenu = (props) => {
         {visible && (
           <Menu.Item
             icon={<TicketConfirmationOutlineIcon style={{ fontSize: '18px' }} />}
-            onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}>
+            onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}
+          >
             <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
           </Menu.Item>
         )}
         {visible && !isAtOrganizationLanding && (
           <Menu.Item
             icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
-            onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
+            onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}
+          >
             <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
           </Menu.Item>
         )}
@@ -157,7 +160,8 @@ const UserStatusAndMenu = (props) => {
           })}>
           <Menu.Item
             icon={<AccountOutlineIcon style={{ fontSize: '18px' }} />}
-            onClick={() => linkToTheMenuRouteS(`/myprofile`)}>
+            onClick={() => linkToTheMenuRouteS(`/myprofile`)}
+          >
             <FormattedMessage id='header.profile' defaultMessage='Cuenta de usuario' />
           </Menu.Item>
         </Badge>

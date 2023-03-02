@@ -141,7 +141,8 @@ const InvitacionListSent = ({ list }) => {
                 <div>
                   <Tag
                     icon={!item.response ? <ScheduleOutlined /> : <CloseCircleOutlined />}
-                    color={item.response === 'rejected' && 'error'}>
+                    color={item.response === 'rejected' && 'error'}
+                  >
                     {!item.response ? item.state : item.response}
                   </Tag>
                 </div>

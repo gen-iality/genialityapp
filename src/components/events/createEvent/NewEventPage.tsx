@@ -168,7 +168,8 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
                 <Button
                   className='button'
                   size='large'
-                  onClick={() => (window.history.length == 1 ? window.close() : window.history.back())}>
+                  onClick={() => (window.history.length == 1 ? window.close() : window.history.back())}
+                >
                   {window.history.length == 1 ? 'Salir' : 'Cancelar'}
                 </Button>
               )}

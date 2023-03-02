@@ -47,7 +47,8 @@ const MenuEvent = ({ isMobile }) => {
                     <Link
                       className='menuEvent_section-text'
                       style={{ color: event.styles.textMenu }}
-                      to={`${url}/${event.itemsMenu[key].section}`}>
+                      to={`${url}/${event.itemsMenu[key].section}`}
+                    >
                       <IconoComponente
                         style={{
                           fontSize: '22px',
@@ -74,7 +75,8 @@ const MenuEvent = ({ isMobile }) => {
                       <Link
                         className='menuEvent_section-text'
                         style={{ color: event.styles.textMenu }}
-                        to={`${url}/${event.itemsMenu[key].section}`}>
+                        to={`${url}/${event.itemsMenu[key].section}`}
+                      >
                         <span
                           style={{
                             display: 'flex',
@@ -130,7 +132,8 @@ const MenuEvent = ({ isMobile }) => {
                     <Link
                       className='menuEvent_section-text'
                       style={{ color: event.styles.textMenu }}
-                      to={`${url}/${event.itemsMenu[key].section}`}>
+                      to={`${url}/${event.itemsMenu[key].section}`}
+                    >
                       {` ${event.itemsMenu[key].name}`}
                     </Link>
                   </Menu.Item>

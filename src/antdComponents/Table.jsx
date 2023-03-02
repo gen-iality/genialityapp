@@ -133,7 +133,8 @@ const Table = (props) => {
                   <Link
                     key={`extraPathAction${item.index}`}
                     id={`extraPathAction${item.index}`}
-                    to={{ pathname: `${extraPathStateName}/${item._id}`, state: { report: item._id } }}>
+                    to={{ pathname: `${extraPathStateName}/${item._id}`, state: { report: item._id } }}
+                  >
                     <Button icon={<CrownOutlined />} type={extraPathType ? extraPathType : 'primary'} size='small' />
                   </Link>
                 </Tooltip>
@@ -160,7 +161,8 @@ const Table = (props) => {
                   <Link
                     key={`editAction${item.index}`}
                     id={`editAction${item.index}`}
-                    to={{ pathname: editPath, state: { edit: item._id } }}>
+                    to={{ pathname: editPath, state: { edit: item._id } }}
+                  >
                     <Button icon={<EditOutlined />} type='primary' size='small' />
                   </Link>
                 </Tooltip>

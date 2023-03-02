@@ -42,7 +42,8 @@ function RichTextComponentField(rawProps) {
             label={formItemProps.label}
             required={formItemProps.required}
             help={fieldError}
-            validateStatus={fieldError ? 'error' : undefined}>
+            validateStatus={fieldError ? 'error' : undefined}
+          >
             <ReactQuill
               id={id}
               ref={editorRef}

@@ -297,7 +297,8 @@ const myPlan = ({ cUser }) => {
                 setShowModal(!showModal);
                 setToShowModal('');
               }}
-              width={'100%'}>
+              width={'100%'}
+            >
               <Divider orientation='left'>
                 <strong>
                   {intl.formatMessage({
@@ -613,7 +614,8 @@ const myPlan = ({ cUser }) => {
           id: 'my_plan',
           defaultMessage: 'Mi plan',
         })}
-        key={'plan'}>
+        key={'plan'}
+      >
         <Row gutter={[12, 12]} wrap>
           <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <PlanCard
@@ -713,7 +715,8 @@ const myPlan = ({ cUser }) => {
           id: 'my_plan.billings',
           defaultMessage: 'Facturaciones',
         })}
-        key={'bills'}>
+        key={'bills'}
+      >
         <Table dataSource={bills} columns={columnsBills} scroll={{ x: 'auto' }} loading={loadingBill} />
       </Tabs.TabPane>
       <Tabs.TabPane
@@ -721,7 +724,8 @@ const myPlan = ({ cUser }) => {
           id: 'my_plan.notifications',
           defaultMessage: 'Notificaciones',
         })}
-        key={'notifications'}>
+        key={'notifications'}
+      >
         <Table dataSource={notifications} columns={columns} scroll={{ x: 'auto' }} loading={loadingNotification} />
       </Tabs.TabPane>
       <Tabs.TabPane
@@ -729,7 +733,8 @@ const myPlan = ({ cUser }) => {
           id: 'my_plan.better.plan',
           defaultMessage: 'Mejorar plan',
         })}
-        key={'plan2'}>
+        key={'plan2'}
+      >
         {plans
           .filter((plan1) => plan1?._id !== plan?._id)
           .sort((a, b) => a.index - b.index)
@@ -756,7 +761,8 @@ const myPlan = ({ cUser }) => {
                             )
                           : 'https://evius.co/contacto/'
                       }
-                      style={{ color: '#1890ff' }}>
+                      style={{ color: '#1890ff' }}
+                    >
                       {intl.formatMessage({
                         id: 'my_plan.buy.plan',
                         defaultMessage: 'Comprar plan',

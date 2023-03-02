@@ -78,7 +78,8 @@ const ModalCreateOrg = (props) => {
               listType='picture'
               maxCount={1}
               fileList={imageAvatar}
-              beforeUpload={beforeUpload}>
+              beforeUpload={beforeUpload}
+            >
               {imageAvatar === null && (
                 <Button type='primary' shape='circle' style={{ height: '150px', width: '150px' }}>
                   <Space direction='vertical'>
@@ -94,7 +95,8 @@ const ModalCreateOrg = (props) => {
           label={'Nombre de la organizacion'}
           name='name'
           style={{ marginBottom: '10px' }}
-          rules={[{ required: true, message: 'Ingrese un nombre para su organización!' }]}>
+          rules={[{ required: true, message: 'Ingrese un nombre para su organización!' }]}
+        >
           <Input type='text' size='large' placeholder={'Nombre de la organizacion'} />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>

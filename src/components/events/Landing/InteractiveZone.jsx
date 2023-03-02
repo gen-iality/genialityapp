@@ -58,7 +58,8 @@ const InteractiveZone = () => {
           theme='light'
           collapsible
           collapsed={this.state.collapsed}
-          width={400}>
+          width={400}
+        >
           <div className='Chat-Event'>
             {this.state.collapsed ? (
               <>

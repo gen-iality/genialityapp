@@ -14,7 +14,8 @@ const Footer = () => {
                 GENIALITY
               </Typography.Title>
             }
-            bordered={false}>
+            bordered={false}
+          >
             <List.Item style={{ border: 'none' }}>
               <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 Inicio
@@ -44,7 +45,8 @@ const Footer = () => {
                 Ayuda
               </Typography.Title>
             }
-            bordered={false}>
+            bordered={false}
+          >
             <List.Item style={{ border: 'none' }}>
               <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 ¿Quiénes somos?
@@ -64,7 +66,8 @@ const Footer = () => {
                 Legal
               </Typography.Title>
             }
-            bordered={false}>
+            bordered={false}
+          >
             <List.Item style={{ border: 'none' }}>
               <Link to={'/terms'} style={{ color: '#fff' }}>
                 Términos y condiciones
@@ -91,7 +94,8 @@ const Footer = () => {
           md={{ order: 1 }}
           lg={{ order: 1 }}
           xl={{ order: 1 }}
-          xxl={{ order: 1 }}>
+          xxl={{ order: 1 }}
+        >
           <img src={import.meta.env.VITE_IMAGE_FOOTER} width={200} />
         </Col>
         <Col
@@ -100,24 +104,28 @@ const Footer = () => {
           md={{ order: 2 }}
           lg={{ order: 2 }}
           xl={{ order: 2 }}
-          xxl={{ order: 2 }}>
+          xxl={{ order: 2 }}
+        >
           <Space wrap>
             <a
               href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
               target='_blank'
-              style={{ color: '#fff' }}>
+              style={{ color: '#fff' }}
+            >
               <FacebookFilled style={{ fontSize: '35px' }} />
             </a>
             <a
               href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
               target='_blank'
-              style={{ color: '#fff' }}>
+              style={{ color: '#fff' }}
+            >
               <InstagramFilled style={{ fontSize: '35px' }} />
             </a>
             <a
               href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
               target='_blank'
-              style={{ color: '#fff' }}>
+              style={{ color: '#fff' }}
+            >
               <LinkedinFilled style={{ fontSize: '35px' }} />
             </a>
           </Space>

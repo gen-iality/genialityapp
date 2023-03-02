@@ -702,7 +702,8 @@ class Datos extends Component {
                               remove: this.removeField,
                             })
                           }
-                          checked={checkInExists}>
+                          checked={checkInExists}
+                        >
                           CheckIn por documento
                         </Checkbox>
                       </Col>
@@ -711,7 +712,8 @@ class Datos extends Component {
                           disabled={this.state.available}
                           onClick={this.submitOrder}
                           type='primary'
-                          icon={<SaveOutlined />}>
+                          icon={<SaveOutlined />}
+                        >
                           {'Guardar orden'}
                         </Button>
                       </Col>
@@ -729,7 +731,8 @@ class Datos extends Component {
                     title={edit ? 'Editar dato' : 'Agregar dato'}
                     footer={false}
                     onCancel={this.closeModal2}
-                    okText={'Guardar'}>
+                    okText={'Guardar'}
+                  >
                     {/* <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} /> */}
                     <DynamicFieldCreationForm
                       onCancel={this.closeModal2}
@@ -791,7 +794,8 @@ class Datos extends Component {
                             disabled={this.state.available}
                             onClick={this.submitOrder}
                             type='primary'
-                            icon={<SaveOutlined />}>
+                            icon={<SaveOutlined />}
+                          >
                             {'Guardar orden'}
                           </Button>
                         </Col>

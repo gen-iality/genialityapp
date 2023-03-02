@@ -140,7 +140,8 @@ const Espacio = (props) => {
                 Nombre <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El nombre es requerido' }]}>
+            rules={[{ required: true, message: 'El nombre es requerido' }]}
+          >
             <Input
               value={espacio.name}
               name={'name'}

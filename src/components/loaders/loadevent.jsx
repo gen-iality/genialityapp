@@ -17,7 +17,8 @@ class LoadingEvent extends Component {
                 bordered={false}
                 style={{ width: '100%' }}
                 cover={<img src={imageUtils.EventImage} alt='Evius.co' />}
-                bodyStyle={{ padding: '5px 0px 5px 0px' }}>
+                bodyStyle={{ padding: '5px 0px 5px 0px' }}
+              >
                 <Skeleton title={false} paragraph={{ rows: 3, width: [190, 230, 80] }} active />
               </Card>
             </Col>

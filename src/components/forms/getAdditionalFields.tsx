@@ -278,7 +278,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   rules={[rule]}
                   key={'l' + key}
                   htmlFor={key}
-                  initialValue={value}>
+                  initialValue={value}
+                >
                   <Checkbox key={key} name={name}>
                     {mandatory ? (
                       <span>
@@ -497,7 +498,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       ]
                     : []
                 }
-                beforeUpload={beforeUpload}>
+                beforeUpload={beforeUpload}
+              >
                 <Button type='primary' icon={<UploadOutlined />}>
                   {intl.formatMessage({
                     id: 'form.button.avatar',
@@ -546,7 +548,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   name={name}
                   rules={validations ? [{ required: false }] : [rule]}
                   key={'l' + key}
-                  htmlFor={key}>
+                  htmlFor={key}
+                >
                   {input}
                 </Form.Item>
 

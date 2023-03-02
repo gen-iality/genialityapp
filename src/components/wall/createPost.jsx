@@ -249,7 +249,8 @@ class CreatePost extends Component {
                     accept='image/*'
                     multiple={false}
                     showUploadList={false}
-                    onChange={(e) => this.previewImage(e)}>
+                    onChange={(e) => this.previewImage(e)}
+                  >
                     <Button type='primary' icon={<CloudUploadOutlined />}>
                       Subir foto
                     </Button>
@@ -297,7 +298,8 @@ class CreatePost extends Component {
                     <Card
                       hoverable
                       style={{ marginRight: 'auto', marginLeft: 'auto', width: '100%' }}
-                      cover={<img key={this.state.keyImage} src={image} />}>
+                      cover={<img key={this.state.keyImage} src={image} />}
+                    >
                       <Button onClick={this.cancelUploadImage}>Eliminar foto</Button>
                     </Card>
                   )}

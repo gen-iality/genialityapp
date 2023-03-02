@@ -47,7 +47,8 @@ const ModalUpdate = (props: any) => {
       visible={isVisible}
       onOk={handleOpen}
       cancelText='Cancelar'
-      onCancel={() => setIsVisible(false)}>
+      onCancel={() => setIsVisible(false)}
+    >
       Tienes informacion que actualizar para este evento, por favor actualice la informacion
     </Modal>
   );

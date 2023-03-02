@@ -268,7 +268,8 @@ function AddProduct(props) {
                   Nombre del producto <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]}>
+              rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]}
+            >
               <Input
                 value={name}
                 placeholder='Nombre del producto'
@@ -301,7 +302,8 @@ function AddProduct(props) {
             </Form.Item>
             <Form.Item
               label={<label style={{ marginTop: '2%' }}>Valor</label>}
-              rules={[{ required: false, message: 'Ingrese el valor del producto' }]}>
+              rules={[{ required: false, message: 'Ingrese el valor del producto' }]}
+            >
               <Input
                 value={price}
                 placeholder='Valor del producto'

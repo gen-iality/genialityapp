@@ -123,7 +123,8 @@ class CameraFeed extends Component {
             type='primary'
             size='large'
             style={{ display: 'block', margin: '20px auto' }}
-            onClick={this.takePhoto}>
+            onClick={this.takePhoto}
+          >
             <CameraOutlined style={{ fontSize: '2rem' }} />
           </Button>
           {this.state.image && (

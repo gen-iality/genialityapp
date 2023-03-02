@@ -16,7 +16,8 @@ export default function ModalEdit({
       title='Actualizar parametro'
       visible={isVisible}
       footer={null}
-      onCancel={() => setIsVisible(false)}>
+      onCancel={() => setIsVisible(false)}
+    >
       <Form>
         <Form.Item label='Campo' name='id_properties'>
           <Select
@@ -30,12 +31,14 @@ export default function ModalEdit({
               })
             }
             placeholder='Selecciona un campo'
-            defaultValue={badge.id_properties.label}>
+            defaultValue={badge.id_properties.label}
+          >
             {filterOptions.map((option, index) => (
               <Option
                 key={index + option.value}
                 value={option.name}
-                disabled={option.label !== badge.id_properties.label}>
+                disabled={option.label !== badge.id_properties.label}
+              >
                 {option.label}
               </Option>
             ))}
@@ -50,7 +53,8 @@ export default function ModalEdit({
                 size: value,
               })
             }
-            defaultValue={badge.size}>
+            defaultValue={badge.size}
+          >
             {fontSize.map((size, index) => (
               <Option key={index + size} value={size}>
                 {size}

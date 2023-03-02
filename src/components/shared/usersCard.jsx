@@ -129,7 +129,8 @@ function UsersCard(props) {
             <Popover
               trigger='hover'
               placement='leftTop'
-              content={<PopoverInfoUser item={props.item} props={props.propsAttendees} />}>
+              content={<PopoverInfoUser item={props.item} props={props.propsAttendees} />}
+            >
               <Text
                 ellipsis={{ rows: 1 }}
                 style={{
@@ -319,7 +320,8 @@ function UsersCard(props) {
           <Avatar
             src={picture && picture}
             style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))', backgroundColor: eventColor }}
-            size={45}>
+            size={45}
+          >
             {!picture && name && name.charAt(0).toUpperCase()}
           </Avatar>
         </Badge>
@@ -368,7 +370,8 @@ function UsersCard(props) {
       }}
       className='efect-scale'
       style={props.type == 'privateChat' ? styleListPointer : styleList}
-      actions={[actionCapture]}>
+      actions={[actionCapture]}
+    >
       <List.Item.Meta title={title} description={description} avatar={avatar} />
     </List.Item>
   );

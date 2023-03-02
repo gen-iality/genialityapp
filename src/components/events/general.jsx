@@ -897,7 +897,8 @@ class General extends Component {
                     <Select
                       defaultValue={event.type_event}
                       name={'type_event'}
-                      onChange={(e) => this.handleChange(e, 'type_event')}>
+                      onChange={(e) => this.handleChange(e, 'type_event')}
+                    >
                       <Option value=''>Seleccionar...</Option>
                       <Option value='physicalEvent'>Afianzamiento de capacidades</Option> {/* TODO * /}
                       <Option value='onlineEvent'>Actualización </Option> {/* TODO * / }
@@ -910,7 +911,8 @@ class General extends Component {
                       <Select
                         defaultValue={event.event_platform}
                         name={'event_platform'}
-                        onChange={(e) => this.handleChange(e, 'event_platform')}>
+                        onChange={(e) => this.handleChange(e, 'event_platform')}
+                      >
                         <Option value="">Seleccionar...</Option>
                         <Option value='zoom'>Zoom</Option>
                         <Option value='zoomExterno'>ZoomExterno</Option>

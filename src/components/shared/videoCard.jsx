@@ -48,7 +48,8 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
               />
             }
             actions={right}
-            bodyStyle={{ paddingRight: '0px' }}>
+            bodyStyle={{ paddingRight: '0px' }}
+          >
             <Meta
               style={{}}
               description={

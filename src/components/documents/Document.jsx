@@ -410,7 +410,8 @@ const Document = (props) => {
                     Archivo <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
-                rules={[{ required: true, message: 'El archivo es requerido' }]}>
+                rules={[{ required: true, message: 'El archivo es requerido' }]}
+              >
                 <Upload
                   multiple={false}
                   name={'file'}
@@ -422,7 +423,8 @@ const Document = (props) => {
                     e.file.status = 'success';
                   }}
                   listType='picture'
-                  maxCount={1}>
+                  maxCount={1}
+                >
                   <Button block icon={<UploadOutlined />}>
                     Toca para subir archivo
                   </Button>
@@ -437,7 +439,8 @@ const Document = (props) => {
                   Título <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'El título es requerido' }]}>
+              rules={[{ required: true, message: 'El título es requerido' }]}
+            >
               <Input
                 name={'title'}
                 placeholder={folder ? 'Título de la carpeta' : 'Título del documento'}

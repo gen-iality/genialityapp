@@ -380,7 +380,8 @@ const ChatExport = ({ eventId, event }) => {
                     onClick={deleteAllChat}
                     type='danger'
                     icon={<DeleteOutlined />}
-                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                  >
                     Eliminar chat
                   </Button>
                 )}

@@ -219,7 +219,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               </Form.Item>
             </Col>
             <Col span={1}>
-              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'herramientas')}>
+              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'herramientas')}
+            >
                 <Button icon={<SettingOutlined />} />
               </Link>}
             </Col>
@@ -285,7 +286,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               </Form.Item>
             </Col>
             <Col span={1}>
-              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'espacios')}>
+              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'espacios')}
+            >
                 <Button icon={<SettingOutlined />} />
               </Link>}
             </Col>

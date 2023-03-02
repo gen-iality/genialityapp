@@ -146,7 +146,8 @@ const Ticket = (props) => {
                 Título <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El título es requerido' }]}>
+            rules={[{ required: true, message: 'El título es requerido' }]}
+          >
             <Input
               name={'title'}
               placeholder={'Título del ticket'}

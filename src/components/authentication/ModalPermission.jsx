@@ -29,7 +29,8 @@ const ModalPermission = (props) => {
       zIndex={1000}
       closable={true}
       onCancel={() => handleChangeTypeModal(null)}
-      visible={typeModal == 'register' || typeModal == 'update' || typeModal === 'registerForTheEvent'}>
+      visible={typeModal == 'register' || typeModal == 'update' || typeModal === 'registerForTheEvent'}
+    >
       <div
         // className='asistente-list'
         style={{

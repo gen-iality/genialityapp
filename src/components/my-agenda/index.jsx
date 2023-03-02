@@ -59,7 +59,8 @@ class MyAgenda extends Component {
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size='small'
-            style={{ width: 90 }}>
+            style={{ width: 90 }}
+          >
             Search
           </Button>
           <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>

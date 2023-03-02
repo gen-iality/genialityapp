@@ -892,7 +892,8 @@ class TriviaEdit extends Component {
                         Nombre <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
-                    rules={[{ required: true, message: 'El nombre es requerido' }]}>
+                    rules={[{ required: true, message: 'El nombre es requerido' }]}
+                  >
                     <Input
                       value={survey}
                       placeholder={`Nombre de la ${this.state.title.toLowerCase()}`}
@@ -906,7 +907,8 @@ class TriviaEdit extends Component {
                         Intentos permitidos <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
-                    rules={[{ required: true, message: 'Intentos permitidos es requerido' }]}>
+                    rules={[{ required: true, message: 'Intentos permitidos es requerido' }]}
+                  >
                     <InputNumber
                       style={{ width: '100%' }}
                       value={tries}
@@ -977,7 +979,8 @@ class TriviaEdit extends Component {
                                 name={'graphyType'}
                                 defaultValue={this.state.graphyType}
                                 style={{ width: 120 }}
-                                onChange={(graphy) => this.setState({ graphyType: graphy })}>
+                                onChange={(graphy) => this.setState({ graphyType: graphy })}
+                              >
                                 <Option value='y'>Horizontal</Option>
                                 <Option value='x'>vertical</Option>
                                 <Option value='pie'>Torta</Option>
@@ -1126,7 +1129,8 @@ class TriviaEdit extends Component {
                             Cantidad de preguntas <label style={{ color: 'red' }}>*</label>
                           </label>
                         }
-                        rules={[{ required: true, message: 'La cantidad de preguntas es requerido' }]}>
+                        rules={[{ required: true, message: 'La cantidad de preguntas es requerido' }]}
+                      >
                         <InputNumber
                           style={{ width: '100%' }}
                           value={random_survey_count}
@@ -1165,7 +1169,8 @@ class TriviaEdit extends Component {
                             type='primary'
                             disabled={confirmLoading}
                             loading={confirmLoading}
-                            onClick={this.sendForm}>
+                            onClick={this.sendForm}
+                          >
                             Guardar
                           </Button>,
                         ]}>

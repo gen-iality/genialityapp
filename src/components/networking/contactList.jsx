@@ -98,7 +98,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
                   //   )
                   // }
                   style={{ width: '100%', textAlign: 'left' }}
-                  bordered={true}>
+                  bordered={true}
+                >
                   <Meta
                     avatar={
                       <Avatar size={65} src={user['picture'] ? user['picture'] : ''}>
@@ -142,7 +143,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
                       block
                       size='large'
                       style={{ backgroundColor: '#363636', color: 'white' }}
-                      onClick={() => agendarCita(contact._id, contact)}>
+                      onClick={() => agendarCita(contact._id, contact)}
+                    >
                       {'Agendar cita'}
                     </Button>
                   </Col>

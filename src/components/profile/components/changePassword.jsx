@@ -69,7 +69,8 @@ export const ChangePassword = ({ email }) => {
             label={'Este es el correo electrónico que recibirá la notificación'}
             name='email'
             initialValue={email}
-            style={{ marginBottom: '10px', textAlign: 'left' }}>
+            style={{ marginBottom: '10px', textAlign: 'left' }}
+          >
             <Input type='text' size='large' disabled />
           </Form.Item>
           {sendRecovery !== null && (

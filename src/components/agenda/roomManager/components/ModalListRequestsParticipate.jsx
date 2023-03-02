@@ -63,7 +63,8 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
       closable={true}
       onCancel={() => handleModal(false)}
       visible={visible}
-      footer={null}>
+      footer={null}
+    >
       <Row gutter={[8, 8]}>
         <Col>
           <Typography.Title level={4}>Solicitudes para participar en la transmisión</Typography.Title>

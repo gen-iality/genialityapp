@@ -324,7 +324,8 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
             onChange={showRequest}
             multiple={false}
             listType='text'
-            beforeUpload={beforeUpload}>
+            beforeUpload={beforeUpload}
+          >
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         );
@@ -376,7 +377,8 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
                 name={name}
                 rules={[rule]}
                 key={'l' + key}
-                htmlFor={key}>
+                htmlFor={key}
+              >
                 {input}
               </Form.Item>
               {description && description.length < 500 && <p>{description}</p>}
@@ -421,7 +423,8 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
               onFieldsChange={fieldsChange}
-              onValuesChange={valuesChange}>
+              onValuesChange={valuesChange}
+            >
               {renderForm()}
               <br />
               <br />

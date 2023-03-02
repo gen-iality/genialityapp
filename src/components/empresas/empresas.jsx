@@ -268,7 +268,8 @@ function Empresas({ event, match }) {
                 onClick={() => orderCompany()}
                 type='primary'
                 icon={<SaveOutlined />}
-                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+              >
                 {'Guardar orden'}
               </Button>
             </Col>

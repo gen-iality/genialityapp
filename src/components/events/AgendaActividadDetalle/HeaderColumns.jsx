@@ -117,7 +117,8 @@ const HeaderColumns = (props) => {
         md={{ order: 1, span: 4 }}
         lg={{ order: 1, span: 4 }}
         xl={{ order: 1, span: 4 }}
-        style={{ padding: '4px' }}>
+        style={{ padding: '4px' }}
+      >
         <Link
           to={
             cEvent && !cEvent?.isByname
@@ -138,7 +139,8 @@ const HeaderColumns = (props) => {
         md={{ order: 1, span: 2 }}
         lg={{ order: 1, span: 2 }}
         xl={{ order: 1, span: 2 }}
-        style={{ padding: '4px' }}>
+        style={{ padding: '4px' }}
+      >
         <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Col>
             {props.activityState === 'open_meeting_room' || props.activityState === 'game' ? (
@@ -182,7 +184,8 @@ const HeaderColumns = (props) => {
         md={{ order: 2, span: 18 }}
         lg={{ order: 2, span: 16 }}
         xl={{ order: 2, span: 18 }}
-        style={{ display: 'flex' }}>
+        style={{ display: 'flex' }}
+      >
         <div style={{ padding: '8px' }}>
           <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
             {currentActivity && currentActivity?.name}
@@ -198,7 +201,8 @@ const HeaderColumns = (props) => {
               sm={{ order: 1, span: 24 }}
               md={{ order: 1, span: 24 }}
               lg={{ order: 3, span: 6 }}
-              xl={{ order: 3, span: 4 }}>
+              xl={{ order: 3, span: 4 }}
+            >
               {props.isVisible && (
                 <div>
                   {Moment.tz(
@@ -247,7 +251,8 @@ const HeaderColumns = (props) => {
                     )
                   }
                   disabled={request && request[cEventUSer.value?._id]?.active}
-                  type={!haveRequest() ? 'primary' : 'danger'}>
+                  type={!haveRequest() ? 'primary' : 'danger'}
+                >
                   {!haveRequest() && !loading
                     ? 'Solicitar participar en la transmisión'
                     : !loading
@@ -268,7 +273,8 @@ const HeaderColumns = (props) => {
                       <CancelIcon style={{ fontSize: '16px' }} />
                     )
                   }
-                  type={!haveRequest() ? 'primary' : 'danger'}>
+                  type={!haveRequest() ? 'primary' : 'danger'}
+                >
                   Cambiar a modo transmisión en vivo
                 </Button>
               )}

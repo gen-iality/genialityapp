@@ -113,7 +113,8 @@ const ModalNotifications = (props) => {
           label={'Mensaje'}
           name='notificationMessage'
           style={{ marginBottom: '10px' }}
-          rules={[{ required: true, message: 'Ingrese un mensaje!' }]}>
+          rules={[{ required: true, message: 'Ingrese un mensaje!' }]}
+        >
           <TextArea rows={8} showCount maxLength={250} placeholder={'Máximo 250 caracteres'} />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
@@ -123,7 +124,8 @@ const ModalNotifications = (props) => {
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
             size='large'
-            icon={<SendOutlined />}>
+            icon={<SendOutlined />}
+          >
             Enviar notificación
           </Button>
         </Form.Item>

@@ -87,7 +87,8 @@ const VirtualConference = () => {
                     <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                       <div
                         className='animate__animated animate__pulse animate__infinite animate__slow'
-                        style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
+                        style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}
+                      >
                         {item.habilitar_ingreso == 'open_meeting_room' ? (
                           <>
                             <img src={imageUtils.EnVivo} style={{ height: '30px' }} />
@@ -139,7 +140,8 @@ const VirtualConference = () => {
                             <Avatar.Group
                               maxCount={2}
                               size={{ xs: 18, sm: 18, md: 35, lg: 50, xl: 50, xxl: 50 }}
-                              maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}>
+                              maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}
+                            >
                               {item.hosts.length < 3
                                 ? item.hosts.map((host, key) => {
                                     return (

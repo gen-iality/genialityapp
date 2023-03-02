@@ -234,14 +234,16 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
                       style={{ marginRight: '10px' }}
                       disabled={fetching}
                       loading={fetching}
-                      onClick={() => changeAgendaStatus('rejected')}>
+                      onClick={() => changeAgendaStatus('rejected')}
+                    >
                       {'Rechazar'}
                     </Button>
                     <Button
                       type='primary'
                       disabled={fetching}
                       loading={fetching}
-                      onClick={() => changeAgendaStatus('accepted')}>
+                      onClick={() => changeAgendaStatus('accepted')}
+                    >
                       {'Aceptar'}
                     </Button>
                   </Row>

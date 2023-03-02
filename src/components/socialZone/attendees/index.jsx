@@ -123,7 +123,8 @@ const AttendeList = function(props) {
       pageStart={0}
       loadMore={() => handleInfiniteOnLoad()}
       hasMore={!loading && hasMore}
-      useWindow={false}>
+      useWindow={false}
+    >
       <List
         itemLayout='horizontal'
         dataSource={filteredlist && filteredlist}

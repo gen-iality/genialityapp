@@ -147,7 +147,8 @@ const TipoAsistente = (props) => {
                 Nombre del rol <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El nombre es requerido' }]}>
+            rules={[{ required: true, message: 'El nombre es requerido' }]}
+          >
             <Input
               name={'name'}
               placeholder={'Nombre del rol'}

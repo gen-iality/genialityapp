@@ -51,7 +51,8 @@ class InformativeSection2 extends Component {
               {this.props.cEvent.value._id == '609180c6013150612044b547' && (
                 <>
                   <h2
-                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
+                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}
+                  >
                     conferencia - Miguel Uribe Vender
                   </h2>
 
@@ -62,7 +63,8 @@ class InformativeSection2 extends Component {
                     allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                     allowFullScreen></iframe>
                   <h2
-                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
+                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}
+                  >
                     CoCrea
                   </h2>
 
@@ -75,7 +77,8 @@ class InformativeSection2 extends Component {
                     {' '}
                   </iframe>
                   <h2
-                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
+                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}
+                  >
                     Martes de Oferta Naranja Ministerio de Cultura
                   </h2>
 
@@ -87,7 +90,8 @@ class InformativeSection2 extends Component {
                     allowFullScreen></iframe>
 
                   <h2
-                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
+                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}
+                  >
                     Entrénate en la Plataforma de las Ruedas de Negocio Naranja
                   </h2>
 
@@ -102,7 +106,8 @@ class InformativeSection2 extends Component {
               {this.props.cEvent.value._id == '609180c6013150612044b547' && (
                 <>
                   <h2
-                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
+                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}
+                  >
                     Charla con Yury Buenaventura
                   </h2>
                   <br></br>
@@ -117,7 +122,8 @@ class InformativeSection2 extends Component {
               {this.props.cEvent.value._id == '609180c6013150612044b547' && (
                 <>
                   <h2
-                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
+                    style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}
+                  >
                     Charla con María Alejandra Silva de BURO
                   </h2>
                   <br></br>

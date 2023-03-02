@@ -81,7 +81,8 @@ class Lobby extends Component {
       <div
         onClick={this.handleHideIntro}
         className={`the-lobby ${this.state.showIntro ? '' : 'venue-exterior'}`}
-        style={{ backgroundImage: `url("${lobby_data.info.bgImage}")` }}>
+        style={{ backgroundImage: `url("${lobby_data.info.bgImage}")` }}
+      >
         <div
           className={`the-intro ${this.state.showIntro ? 'active' : ''}`}
           style={{ backgroundImage: `url("${lobby_data.info.bgIntroImage}")` }}></div>
@@ -90,7 +91,8 @@ class Lobby extends Component {
           <div className='the-intro-access-btn-container'>
             <p
               className='the-intro-access-btn animate__animated animate__pulse animate__slower animate__infinite'
-              onClick={this.handleHideIntro}>
+              onClick={this.handleHideIntro}
+            >
               INGRESA AL CONGRESO
             </p>
           </div>

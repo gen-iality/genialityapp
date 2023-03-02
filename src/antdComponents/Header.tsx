@@ -107,7 +107,8 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
               size="middle"
               htmlType={form ? 'submit' : 'button'}
               loading={loadingSave}
-              disabled={!eventIsActive && window.location.toString().includes('eventadmin') ? true : loadingSave}>
+              disabled={!eventIsActive && window.location.toString().includes('eventadmin') ? true : loadingSave}
+            >
               {saveName ? saveName : 'Guardar'}
             </Button>
           )}

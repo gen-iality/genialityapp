@@ -205,7 +205,8 @@ class Product extends Component {
                   onClick={this.savePosition}
                   type='primary'
                   icon={<SaveOutlined />}
-                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                >
                   {'Guardar orden'}
                 </Button>
               </Col>

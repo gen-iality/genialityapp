@@ -82,11 +82,13 @@ function FileField(rawProps) {
             label={formItemProps.label}
             required={formItemProps.required}
             help={fieldError}
-            validateStatus={fieldError ? 'error' : undefined}>
+            validateStatus={fieldError ? 'error' : undefined}
+          >
             <Spin tip='Cargando imagen...' spinning={isUploading}>
               <Card
                 hoverable
-                style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', textAlign: 'center' }}>
+                style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', textAlign: 'center' }}
+              >
                 <Upload.Dragger
                   {...draggerprops}
                   defaultFileList={[{ name: handleImageName(field.value), url: field.value }]}

@@ -113,7 +113,8 @@ function QueryTesting() {
             <Form.Item
               label='# inserciones en la Bd'
               name='insertionNumber'
-              rules={[{ required: true, message: 'Ingrese un número de inserciones!' }]}>
+              rules={[{ required: true, message: 'Ingrese un número de inserciones!' }]}
+            >
               <InputNumber min={0} max={9999} />
             </Form.Item>
 

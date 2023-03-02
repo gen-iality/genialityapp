@@ -387,7 +387,8 @@ class SendRsvp extends Component {
             okButtonProps={{ disabled: this.state.disabled }}
             confirmLoading={this.state.disabled}
             cancelText={'Cancelar'}
-            okText={'Enviar'}>
+            okText={'Enviar'}
+          >
             <p>
               Se van a enviar {this.state.selection === 'Todos' ? 'a todos las' : this.state.selection.length}{' '}
               {this.state.selection?.length === 1 ? 'invitación' : 'invitaciones'}

@@ -348,7 +348,8 @@ const Headers = (props) => {
             placement='left'
             closable={true}
             onClose={() => onClose()}
-            visible={dataGeneral.showEventMenu}>
+            visible={dataGeneral.showEventMenu}
+          >
             <MenuOld match={window.location.pathname} />
           </Drawer>
         </div>

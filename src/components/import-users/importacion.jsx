@@ -164,7 +164,8 @@ const Importacion = (props) => {
             customRequest={uploadImagedummyRequest}
             multiple={false}
             accept='.xls,.xlsx'
-            style={{ margin: '0 15px', padding: '0 !important' }}>
+            style={{ margin: '0 15px', padding: '0 !important' }}
+          >
             <p style={{ textAlign: 'center' }}>
               <InboxOutlined /> <span>Importar Excel</span>
             </p>

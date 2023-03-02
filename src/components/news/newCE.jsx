@@ -247,7 +247,8 @@ const NewCE = (props) => {
                   Título <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'El título es requerido' }]}>
+              rules={[{ required: true, message: 'El título es requerido' }]}
+            >
               <Input
                 name={'title'}
                 value={notice && notice.title}
@@ -262,7 +263,8 @@ const NewCE = (props) => {
                   Subtítulo <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'El subtítulo es requerido' }]}>
+              rules={[{ required: true, message: 'El subtítulo es requerido' }]}
+            >
               <EviusReactQuill
                 id='description_short'
                 name={'description_short'}
@@ -277,7 +279,8 @@ const NewCE = (props) => {
                   Noticia <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'La noticia es requerida' }]}>
+              rules={[{ required: true, message: 'La noticia es requerida' }]}
+            >
               <EviusReactQuill
                 id='description_complete'
                 name={'description_complete'}
@@ -293,7 +296,8 @@ const NewCE = (props) => {
                   Imagen <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'La imagen es requerida' }]}>
+              rules={[{ required: true, message: 'La imagen es requerida' }]}
+            >
               <Form.Item noStyle>
                 <ImageUploaderDragAndDrop
                   imageDataCallBack={handleImage}

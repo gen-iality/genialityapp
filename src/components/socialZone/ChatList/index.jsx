@@ -99,7 +99,8 @@ const ChatList = (props) => {
               <Badge
                 size='small'
                 style={{ minWidth: '10px', height: '10px', padding: '0px', color: cEvent.value.styles.textMenu }}
-                count={0}>
+                count={0}
+              >
                 <div style={{ color: cEvent.value.styles.textMenu }}>
                   <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />
                   {chatActual && chatActual.chatname

@@ -31,8 +31,7 @@ const ParticipantRequestsCard = (props: ParticipantRequestsCardProps) => {
         <Typography.Text style={{ fontSize: '20px' }} strong>
           Solicitudes de participación de asistentes
         </Typography.Text>
-        <Badge
-          count={count}>
+        <Badge count={count}>
           <Button onClick={() => setViewModal(true)} type='primary'>
             Ver solicitudes
           </Button>

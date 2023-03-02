@@ -53,7 +53,8 @@ const ModalNoRegister = (props) => {
       ]}
       zIndex={1000}
       closable={true}
-      visible={whenToOpenTheModal()}>
+      visible={whenToOpenTheModal()}
+    >
       <Result
         status='warning'
         icon={null}

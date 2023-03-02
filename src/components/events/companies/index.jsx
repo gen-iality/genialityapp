@@ -152,7 +152,8 @@ class Company extends Component {
                     key={`list-item-${company.id}`}
                     type='button'
                     className='iso-exhibitor-list-item'
-                    onClick={() => this.showListItem(companyIndex)}>
+                    onClick={() => this.showListItem(companyIndex)}
+                  >
                     <div className='iso-exhibitor-list-item-image'>
                       <img src={company.list_image} alt='' />
                     </div>

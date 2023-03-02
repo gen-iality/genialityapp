@@ -130,7 +130,8 @@ class Exhibitor extends Component {
           <button
             type='button'
             className='main-stand-go-button go-previous'
-            onClick={() => [this.handleHideStandImage(), showPrevious()]}>
+            onClick={() => [this.handleHideStandImage(), showPrevious()]}
+          >
             {'Anterior'}
           </button>
         )}
@@ -138,7 +139,8 @@ class Exhibitor extends Component {
           <button
             type='button'
             className='main-stand-go-button go-next'
-            onClick={() => [this.handleHideStandImage(), showNext()]}>
+            onClick={() => [this.handleHideStandImage(), showNext()]}
+          >
             {'Siguiente'}
           </button>
         )}
@@ -151,7 +153,8 @@ class Exhibitor extends Component {
                 className='main-stand-social-networks-item'
                 target='_blank'
                 rel='noreferrer'
-                key={`social-network-${index}`}>
+                key={`social-network-${index}`}
+              >
                 <img src={snIcons[item.network]} alt={item.network} />
               </a>
             ))}

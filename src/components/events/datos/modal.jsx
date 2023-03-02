@@ -354,7 +354,8 @@ class DatosModal extends Component {
             //value={info?.label + 'h' || 'value'}
             label={'Nombre campo'}
             name={'label'}
-            rules={[{ required: true }]}>
+            rules={[{ required: true }]}
+          >
             <Input name={'label'} type='text' placeholder={'Ej: Celular'} onChange={this.handleChange} />
           </Form.Item>
           <Form.Item name='name' initialValue={this.props.info?.name}>
@@ -369,7 +370,8 @@ class DatosModal extends Component {
             initialValue={info?.type}
             label={'Tipo de dato'}
             name='type'
-            rules={[{ required: true, message: 'Seleccione un tipo de dato válido' }]}>
+            rules={[{ required: true, message: 'Seleccione un tipo de dato válido' }]}
+          >
             <Select
               options={dynamicFieldOptions}
               disabled={info.name === 'picture' || info.name == 'email' || info.name == 'names' ? true : false}
@@ -448,7 +450,8 @@ class DatosModal extends Component {
               <Checkbox
                 name={`justonebyattendee`}
                 checked={info.justonebyattendee}
-                onChange={this.changeFieldjustonebyattendee}>
+                onChange={this.changeFieldjustonebyattendee}
+              >
                 Solo una opción por usuario (cuando un asistente selecciona una opción esta desaparece del listado)
               </Checkbox>
               <Divider />
@@ -527,7 +530,8 @@ class DatosModal extends Component {
                 htmlType='submit'
                 id='btnSave'
                 disabled={loading}
-                loading={loading}>
+                loading={loading}
+              >
                 {'Guardar'}
               </Button>
 

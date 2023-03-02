@@ -341,7 +341,8 @@ const Certificado = (props) => {
                     Nombre <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
-                rules={[{ required: true, message: 'El nombre es requerido' }]}>
+                rules={[{ required: true, message: 'El nombre es requerido' }]}
+              >
                 <Input
                   value={certificado.name}
                   name={'name'}
@@ -366,7 +367,8 @@ const Certificado = (props) => {
                     onChangeRol(e);
                   }}
                   placeholder={'Seleccione rol'}
-                  value={certificado.rol?._id || rol?._id}>
+                  value={certificado.rol?._id || rol?._id}
+                >
                   {roles.map((rol) => (
                     <Option key={rol?._id} value={rol?._id}>
                       {rol.name}

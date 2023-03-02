@@ -60,7 +60,8 @@ class EventCard extends Component {
                 )
               }
               actions={right}
-              bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}>
+              bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
+            >
               <Meta
                 style={{}}
                 description={

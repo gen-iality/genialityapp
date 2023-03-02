@@ -139,7 +139,8 @@ const ModalLoginHelpers = (props) => {
       footer={null}
       zIndex={1005}
       closable={false}
-      visible={typeModal === 'mail' || typeModal === 'recover'}>
+      visible={typeModal === 'mail' || typeModal === 'recover'}
+    >
       <PageHeader
         className={
           (sendRecovery != null || registerUser) &&
@@ -172,7 +173,8 @@ const ModalLoginHelpers = (props) => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         layout='vertical'
-        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
+      >
         <Typography.Title level={4} type='secondary'>
           {textoTitle}
         </Typography.Title>

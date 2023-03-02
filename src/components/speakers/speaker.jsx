@@ -309,7 +309,8 @@ function Speaker(props) {
                   Nombre <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'El nombre es requerido' }]}>
+              rules={[{ required: true, message: 'El nombre es requerido' }]}
+            >
               <Input
                 value={data.name}
                 placeholder='Nombre del conferencista'
@@ -359,7 +360,8 @@ function Speaker(props) {
                     id='btnDescription'
                     type='link'
                     onClick={() => setShowDescription_activity(true)}
-                    style={{ color: 'blue' }}>
+                    style={{ color: 'blue' }}
+                  >
                     {!showDescription_activity && !data.newItem ? (
                       <div>
                         {' '}
@@ -375,7 +377,8 @@ function Speaker(props) {
                 ) : (
                   <Tooltip
                     placement='top'
-                    text={'Si oculta la infomación da a entender que no desea mostrar el contenido de la misma'}>
+                    text={'Si oculta la infomación da a entender que no desea mostrar el contenido de la misma'}
+                  >
                     <Button type='link' onClick={() => setShowDescription_activity(false)} style={{ color: 'blue' }}>
                       <div>
                         <UpOutlined style={{ marginRight: '5px' }} />

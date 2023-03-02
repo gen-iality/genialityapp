@@ -157,7 +157,8 @@ const Faq = (props) => {
                 Título <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El título es requerido' }]}>
+            rules={[{ required: true, message: 'El título es requerido' }]}
+          >
             <Input
               value={faq && faq.title}
               name={'title'}
@@ -171,7 +172,8 @@ const Faq = (props) => {
                 Contenido <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El contenido es requerido' }]}>
+            rules={[{ required: true, message: 'El contenido es requerido' }]}
+          >
             <ReactQuill
               id='faqContent'
               value={(faq && faq.content) || ''}

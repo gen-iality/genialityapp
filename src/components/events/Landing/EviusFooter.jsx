@@ -12,7 +12,8 @@ const EviusFooter = () => {
               ? history.push(`/landing/${cEventContext.value._id}/tickets`)
               : null
           }
-          style={{ textAlign: 'center' }}>
+          style={{ textAlign: 'center' }}
+        >
           <img
             alt='image-dialog'
             src={cEventContext.value.styles.banner_footer}
