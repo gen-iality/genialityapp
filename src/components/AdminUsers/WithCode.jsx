@@ -82,8 +82,6 @@ const WithCode = () => {
                 window.location.href = `${window.location.origin}`;
               }
             });*/
-          } else {
-            console.log('NOT REQUEST');
           }
         });
     }

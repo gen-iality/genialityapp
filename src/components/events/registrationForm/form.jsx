@@ -750,13 +750,11 @@ const FormRegister = ({
                 loading={loading}
                 placeholder="Seleccione un país"
               >
-                {countries.map((country) => {
-                  return (
-                    <Option key={country.iso2} value={country.name}>
-                      {country.name}
-                    </Option>
-                  );
-                })}
+                {countries.map((country) => (
+                  <Option key={country.iso2} value={country.name}>
+                    {country.name}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           );
@@ -779,13 +777,11 @@ const FormRegister = ({
                 loading={loading}
                 placeholder="Seleccione un región"
               >
-                {regiones.map((regiones) => {
-                  return (
-                    <Option key={regiones.iso2} value={regiones.name}>
-                      {regiones.name}
-                    </Option>
-                  );
-                })}
+                {regiones.map((regiones) => (
+                  <Option key={regiones.iso2} value={regiones.name}>
+                    {regiones.name}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           );

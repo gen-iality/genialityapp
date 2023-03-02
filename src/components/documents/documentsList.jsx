@@ -89,7 +89,6 @@ class DocumentsList extends Component {
         {documentDates && data && data[0]?.activity_id ? (
           <Table dataSource={documentDates} columns={columns} loading={loading} />
         ) : (
-          // <div>{documentDates.map(item => JSON.stringify(item))}</div>
           <>
             <Card //bodyStyle={{ backgroundColor: this.props.colors.backgroundColor }}
               style={{ textAlign: 'left' }}

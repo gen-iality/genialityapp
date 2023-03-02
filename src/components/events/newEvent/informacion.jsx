@@ -313,7 +313,7 @@ const Informacion = (props) => {
             <Text>Template: </Text>
             <Select value={templateId} style={{ minWidth: '400px' }} onChange={handleChange}>
               {selectOrganization.template_properties.map((template) => (
-                <Option value={template._id['$oid']}>{template.name}</Option>
+                <Option key={template._id['$oid']} value={template._id['$oid']}>{template.name}</Option>
               ))}
             </Select>
           </Space>

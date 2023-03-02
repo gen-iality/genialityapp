@@ -23,12 +23,12 @@ export default function EviusTable({ columns, data }) {
         ))}
       </thead>
       <tbody className="ant-table-tbody">
-        {rows.map((row) => {
+        {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <tr className="ant-table-row nt-table-row-level-0">
-              {row.cells.map((cell) => {
-                return <td>{cell.render('Cell')}</td>;
+            <tr key={i} className="ant-table-row nt-table-row-level-0">
+              {row.cells.map((cell, j) => {
+                return <td key={`${i}-${j}`}>{cell.render('Cell')}</td>;
               })}
             </tr>
           );
@@ -51,7 +51,7 @@ export default function EviusTable({ columns, data }) {
           })}
           className="tr"
         >
-          {row.cells.map(cell => {
+          {row.cells.map((cell) => {
             return (
               <div {...cell.getCellProps()} className="td">
                 {cell.render('Cell')}
@@ -70,9 +70,9 @@ export default function EviusTable({ columns, data }) {
 <div>
     <div {...getTableProps()} className="table">
     <div>
-      {headerGroups.map(headerGroup => (
+      {headerGroups.map((headerGroup) => (
         <div {...headerGroup.getHeaderGroupProps()} className="tr">
-          {headerGroup.headers.map(column => (
+          {headerGroup.headers.map((column) => (
             <div {...column.getHeaderProps()} className="th">
               {column.render('Header')}
             </div>

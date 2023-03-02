@@ -148,7 +148,7 @@ export default function EviusTable(props) {
           })}
           className="tr"
         >
-          {row.cells.map(cell => {
+          {row.cells.map((cell) => {
             return (
               <div {...cell.getCellProps()} className="td">
                 {cell.render('Cell')}
@@ -166,9 +166,9 @@ export default function EviusTable(props) {
 <div>
     <div {...getTableProps()} className="table">
     <div>
-      {headerGroups.map(headerGroup => (
+      {headerGroups.map((headerGroup) => (
         <div {...headerGroup.getHeaderGroupProps()} className="tr">
-          {headerGroup.headers.map(column => (
+          {headerGroup.headers.map((column) => (
             <div {...column.getHeaderProps()} className="th">
               {column.render('Header')}
             </div>
