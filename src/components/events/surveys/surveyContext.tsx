@@ -81,8 +81,6 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
     if (!cUser || !cUser.value) return;
     if (!state.survey?._id) return;
 
-    console.log('1000. Aquí se ejecuta el use Effect');
-
     getSurveyStatus(state.survey._id, cUser.value._id).then((data) => {
       dispatch({ type: SurveyContextAction.SURVEY_STATUS_LOADED, surveyStatus: data });
     });

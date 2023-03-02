@@ -22,11 +22,7 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
 
   const deleteActivitiesTaken = useCallback(
     async (cEventUserId: any, eventId: any) => {
-      console.log('700.Aquí se eliminan las actividades vistas');
-      console.log('700.deleteActivitiesTaken eventId', eventId);
       const { data } = await AgendaApi.byEvent(eventId);
-      console.log('700.data:', data);
-      console.log('700.cEventUserId:', cEventUserId);
       await Promise.all(
         data.map(async (activity: any) => {
           await firestore

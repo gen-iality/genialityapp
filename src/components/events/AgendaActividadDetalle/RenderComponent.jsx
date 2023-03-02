@@ -183,7 +183,6 @@ const RenderComponent = (props) => {
 
           case 'closed_meeting_room':
             {
-              console.log('100. TYPE ACTIVITY==>', typeActivity);
             }
             return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />

@@ -74,7 +74,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
       setTruncatedAgendaList([
         ...agendaList.map((agenda) => {
-          console.log('1000. agenda', agenda);
           // Logic here
           let diff = Math.floor(Math.random() * 60 * 60);
 
@@ -200,8 +199,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
               async function deleteSurveyAnswers(surveyId: any, userId: any) {
                 // No se eliminan las respuestas, con solo eliminar el userProgress y surveyStatus el usuario puede volver a contestar la encuesta, sobreescribiendo las anteriores respuestas.
-                console.log('700.surveyId', surveyId);
-                console.log('700.userId', userId);
 
                 await getUserProgressRef(surveyId, userId).delete();
                 await getSurveyStatusRef(surveyId, userId).delete();

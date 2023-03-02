@@ -20,7 +20,6 @@ const HostList = () => {
   useEffect(() => {
     (async () => {
       const speakersApi = await SpeakersApi.byEvent(cEvent.value._id)
-      console.log('900.speakers', speakersApi)
       setSpeakers(speakersApi)
     })()
   }, [])
@@ -28,7 +27,6 @@ const HostList = () => {
   useEffect(() => {
     (async () => {
       const toolsApi = await ToolsApi.byEvent(cEvent.value._id)
-      console.log('900.tools', toolsApi)
       setTools(toolsApi)
     })()
   }, [])

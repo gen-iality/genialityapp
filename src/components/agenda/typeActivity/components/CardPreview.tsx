@@ -114,8 +114,6 @@ const CardPreview = (props: any) => {
     );
   };
 
-  console.log('99. DATA TRANSMITION===>', dataLive?.live, dataLive?.hls_playlist_url);
-
   //PERMITE VERIFICAR IDS Y NO MOSTRAR LA URL COMPLETA DE YOUTUBE Y VIMEO
   const filterData = data
     ? data.toString()?.includes('https://vimeo.com/event/') || data?.toString().includes('https://youtu.be/')

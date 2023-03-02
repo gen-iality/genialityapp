@@ -25,7 +25,6 @@ const reducer = (state, action) => {
 
       if (state.currentSurvey) {
         const updatedcurrentSurvey = action.payload.publishedSurveys.find(item => state.currentSurvey._id == item._id);
-        console.log('900.updatedcurrentSurvey', updatedcurrentSurvey);
         newState['currentSurvey'] = updatedcurrentSurvey;
       }
 
@@ -168,7 +167,6 @@ export function SurveysProvider({ children }) {
 
     async function fetchSurveys() {
       //  console.log('surveyContext', 'inicialize');
-      console.log('900. ESTE ES EL STATE', state);
       listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
       InitSurveysCompletedListener(cUser, dispatch);
     }

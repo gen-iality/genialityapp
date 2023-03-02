@@ -25,12 +25,10 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
   useEffect(() => {
     if (!meeting_id) return;
     if (!thereIsConnection) {
-      console.log('100. INGRESA ACA 1===>', typeActivity, thereIsConnection);
       setConected('Yes');
       setPlatformurl(defaultVideo);
       setVisibleReactPlayer(true);
     } else if (thereIsConnection) {
-      console.log('100. INGRESA ACA 2===>', typeActivity, thereIsConnection);
       const asyncfunction = async () => {
         setConected('Yes');
         setPlatformurl('none');

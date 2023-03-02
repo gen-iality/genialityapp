@@ -34,7 +34,6 @@ import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteC
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage';
 
 function Organization(props) {
-  console.log('300. props - organization', props);
   const [organization, setOrganization] = useState({});
 
   const [isLoading, setIsLoading] = useState(true);

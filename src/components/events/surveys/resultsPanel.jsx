@@ -8,8 +8,6 @@ function ResultsPanel(props) {
   const { eventId, idSurvey, currentUser } = props;
 
   const query = useSurveyQuery(eventId, idSurvey);
-  console.log('800.ResultsPanel queryData', query.data);
-  console.log('800.ResultsPanel idSurvey', idSurvey);
 
   const [userAnswers, setUserAnswers] = useState(undefined);
 
@@ -23,9 +21,6 @@ function ResultsPanel(props) {
   }
 
   useEffect(() => {
-    console.log('800.useEffect idSurvey', idSurvey);
-    console.log('800.useEffect currentUser', currentUser);
-    console.log('800.useEffect query.data', query.data);
     if (!query.data) return;
     if (!idSurvey || !currentUser.value._id) return;
 
@@ -39,7 +34,6 @@ function ResultsPanel(props) {
         if (!question.id) continue;
         // Search the answer
         const userAnswer = await getUserAnswers(question.id);
-        console.log('800.userAnswer - 1', userAnswer);
 
         // Save the current question, and the correct answer
         if (userAnswer !== undefined) {
@@ -71,7 +65,6 @@ function ResultsPanel(props) {
         <>
           <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             {userAnswers.map((answer, index) => {
-              console.log('800.userAnswersObject - 2', answer);
 
               return (
                 <Card>

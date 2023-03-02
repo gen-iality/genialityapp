@@ -10,12 +10,10 @@ import { Spin } from 'antd';
 
 function QuizActivity(props) {
   const { currentActivity } = useHelper();
-  console.log('100.propsSurveyActivity', props);
 
   const [activityState, setActivityState] = useState('');
 
   function listeningStateStreamingRoom(event_id, activity_id) {
-    console.log('100.listeningStateStreamingRoom - event_id - activity_id', event_id, activity_id);
 
     return firestore
       .collection('events')
@@ -31,8 +29,6 @@ function QuizActivity(props) {
   }
 
   useEffect(() => {
-    console.log('100.currentActivity', currentActivity);
-    console.log('100.props.cEvent', props.cEvent);
     if (!currentActivity || !props.cEvent) return;
     
     let unsubscribe;
