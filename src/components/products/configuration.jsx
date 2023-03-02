@@ -24,7 +24,6 @@ const Configuration = (props) => {
         .doc(props.eventId)
         .get();
       if (resp.exists) {
-        console.log('respuesta firebase=>', resp.data());
         const data = resp.data();
         setCheckSubasta(data.data.habilitar_subasta);
         setMessage(data.data.message);

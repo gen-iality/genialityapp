@@ -567,7 +567,6 @@ class General extends Component {
         action: 'show',
       });
       if (error?.response) {
-        console.log('ERROR ACA==>', error);
         /* console.error(error.response); */
         const { status, data } = error.response;
 
@@ -581,7 +580,6 @@ class General extends Component {
         } else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
-        console.log('ERROR DATA===>', errorData);
         /* console.error('Error', error.message); */
         if (error.request) {
           /* console.error(error.request); */

@@ -99,7 +99,6 @@ export async function parseData2Excel(data, fields, roles = null) {
       if (item?.properties) {
         switch (type) {
           case 'number':
-            console.log('ITEM ACA====>', item);
             str =
               item && item?.properties
                 ? item.properties[name]

@@ -83,7 +83,6 @@ const Informacion = (props) => {
   }
   const createNewOrganization = async (value) => {
     //alert(value);
-    //console.log(value);
     setLoadingAdd(true);
     const addOrganization = await createOrganization(value.name);
     if (addOrganization) {
@@ -130,7 +129,6 @@ const Informacion = (props) => {
     }
     async function obtenerTemplates() {
       const resp = await obtainTemplates(selectOrganization?._id);
-      //console.log("TEMPLATES==>",resp,selectOrganization)
     }
   }, [selectOrganization]);
 

@@ -115,7 +115,6 @@ class Datos extends Component {
         fields = this.orderFieldsByWeight(fieldsReplace);
         fields = this.updateIndex(fieldsReplace);
       }
-      //console.log('FIELDS==>', fields);
       this.setState({ fields, loading: false });
     } catch (e) {
       this.showError(e, 'ERROR');
@@ -462,7 +461,6 @@ class Datos extends Component {
   //Función que se ejecuta cuando se termina de hacer drag
   onSortEnd = ({ oldIndex, newIndex }) => {
     let user_properties = this.state.user_properties;
-    console.log('FIELDSSTATE==>', this.state.fields);
     const fields =
       this.state.fields.length > 0
         ? this.state.fields

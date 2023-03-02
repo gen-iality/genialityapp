@@ -37,13 +37,11 @@ function GcoreStreamingPlayer({ meeting_id, transmition, activity }) {
 
   // Solicitudes a la API de Gcore
   const executer_startMonitorStatus = async () => {
-    console.log('executer_startMonitorStatus==>', meeting_id, typeActivity);
     if (meeting_id === null || meeting_id === '' || typeActivity === 'url' || typeActivity === 'video') return;
     let live_stream_status = null;
     try {
       live_stream_status = await getLiveStreamStatus(meeting_id);
       live_stream_status && setLivestreamStatus(live_stream_status);
-      console.log('live_stream_status=>', live_stream_status);
       const timerId = setTimeout(executer_startMonitorStatus, 5000);
       setTimerId(timerId);
     } catch (e) {
@@ -61,7 +59,6 @@ function GcoreStreamingPlayer({ meeting_id, transmition, activity }) {
 
   // Si existe un meeting id se ejecuta el monitor, pero se queda colgado (timer)
   useEffect(() => {
-    console.log('meeting_ID==>', meeting_id);
     if (!meeting_id && timer_id) clearTimeout(timer_id);
     if (!meeting_id && (typeActivity == 'youTube' || typeActivity == 'vimeo' || !typeActivity)) return;
     executer_startMonitorStatus();

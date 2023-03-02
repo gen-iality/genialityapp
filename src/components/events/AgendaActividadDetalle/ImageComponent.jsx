@@ -16,7 +16,6 @@ const ImageComponent = (props) => {
   }, [currentActivity]);
 
   function RenderTextActivity(state) {
-    //console.log('que llega', state);
     switch (state) {
       case 'closed_meeting_room':
         return 'Esta lección esta por iniciar';

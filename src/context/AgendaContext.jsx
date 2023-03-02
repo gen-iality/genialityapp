@@ -76,7 +76,6 @@ export const AgendaContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (dataLive) {
-      console.log('DATA LIVE===>', dataLive.recording);
       setRecord(dataLive.recording ? 'stop' : 'start');
     }
   }, [dataLive]);
@@ -309,7 +308,6 @@ export const AgendaContextProvider = ({ children }) => {
       default:
         urlVideo = data;
     }
-    console.log('TYPE==>', type);
     //SE VALIDA CON URL QUE CONTENGA YOUTUBE DEBIDO A QUE REACT PLAYER NO MUESTRA VIDEO DE GCORE
     const visibleReactPlayer =
       ((type == 'Youtube' ||

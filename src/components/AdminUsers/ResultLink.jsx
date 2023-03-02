@@ -109,7 +109,6 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                       const conectionRef = firestore.collection(`connections`);
                       const docRef = await conectionRef.where('email', '==', data).get();
                       if (docRef.docs.length > 0) {
-                        //console.log('DOCUMENT ID==>', docRef.docs[0].id);
                         await conectionRef.doc(docRef.docs[0].id).delete();
                         setLoading(false);
                         window.location.href = window.location.href;

@@ -99,8 +99,6 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
       setCountries([]);
     };
   }, []);
-
-  //console.log(locationState.getStatesByShort('CO'), country, region);
   if (fields?.lenght === 0) return [];
 
   const additionalFormFields = fields.map((field: any, key: any) => {

@@ -91,7 +91,6 @@ class UserModal extends Component {
       });
       this.setState({ found: 1, user, edit: false, ticket_id: this.props.ticket });
     }
-    //console.log('EXTRAFIELDS===>', this.props.extraFields);
   }
 
   componentWillUnmount() {
@@ -185,7 +184,6 @@ class UserModal extends Component {
     const activityId = this.props.activityId;
     const eventId = this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent;
     this.setState({ loadingregister: true });
-    //console.log('callback=>', values);
     let resp;
     let respActivity = true;
     if (values) {
@@ -238,9 +236,7 @@ class UserModal extends Component {
       }
 
       if (this.props.byActivity && this.props.edit) {
-        //console.log('VALUES ACTIVITY==>', this.props.value);
         //respActivity = await Activity.Update(this.props.cEvent?.value?._id, this.props.value.idActivity, datos);
-        //console.log('RESPUESTA ACTIVITY UPDATE==>', respActivity, this.props.value.idActivity);
         resp = await AttendeeApi.update(this.props.cEvent?.value?._id, snap, this.props.value._id);
         if (resp) {
           // resp = { ...resp, data: { _id: resp._id } };

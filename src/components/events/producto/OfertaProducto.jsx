@@ -29,7 +29,6 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
         setBloquearPuja(true);
       }
       setPriceProduct(product && product.price);
-      console.log('PRODUCT PRICE==>', product.price);
       setValorProduct(obtenerValor());
       const minValueUp = product.currency == 'USD' ? 50 : 100000;
       const valueOfertaMin =

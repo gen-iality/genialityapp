@@ -77,7 +77,6 @@ const WithCode = () => {
 
             /*fetch(refreshLink).then((result) => {
               if (event && result) {
-                console.log('RESULTACA===>', result);
                 // window.location.href = `${window.location.origin}/landing/${event}`;
               } else {
                 window.location.href = `${window.location.origin}`;

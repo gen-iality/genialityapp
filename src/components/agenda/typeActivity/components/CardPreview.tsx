@@ -40,8 +40,6 @@ const CardPreview = (props: any) => {
     loadingRecord,
     record,
   } = useContext(AgendaContext);
-
-  console.log('DATALIVE ===>', dataLive);
   //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
   const valideUrl = (url: string) => {
     if (url.includes('Loading2')) {

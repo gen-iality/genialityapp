@@ -35,11 +35,8 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
         setConected('Yes');
         setPlatformurl('none');
         const live_stream = await getLiveStream(meeting_id);
-        console.log('LIVE STREAM===>', live_stream);
         const url = live_stream.iframe_url;
         visibleReactPlayer && setVisibleReactPlayer(false);
-
-        //console.log('100. URL==>', live_stream.hls_playlist_url);
         /** se hace uso de un TimeOut para dar tiempo a wowza de inicializar la playList para que no devuelva error 404 la primera vez que el origen 'eviusMeets' envie data */
         setTimeout(() => {
           const aditionalParameters = typeActivity !== 'url' ? '?muted=1&autoplay=1' : '';

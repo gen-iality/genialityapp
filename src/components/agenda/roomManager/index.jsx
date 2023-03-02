@@ -475,7 +475,6 @@ class RoomManager extends Component {
 
             self.restartData();
           } catch (e) {
-            console.log('EXCEPCION===>', e);
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',

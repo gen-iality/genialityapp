@@ -42,7 +42,6 @@ export function CurrentUserProvider({ children }) {
                     .then(async (resp) => {
                       const docRef = await conectionRef.where('email', '==', app.auth().currentUser?.email).get();
                       if (docRef.docs.length > 0) {
-                        //console.log('DOCUMENT ID==>', docRef.docs[0].id);
                         await conectionRef.doc(docRef.docs[0].id).delete();
                       }
 

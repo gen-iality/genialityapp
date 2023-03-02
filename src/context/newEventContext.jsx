@@ -312,7 +312,6 @@ export const NewEventProvider = ({ children }) => {
           },
         },
       };
-      console.log('DATA A VERIFICAR===>', state.selectOrganization?.itemsMenu, templateId, data);
       //CREAR CURSO
       try {
         const token = await GetTokenUserFirebase();
@@ -320,7 +319,6 @@ export const NewEventProvider = ({ children }) => {
         const result = await Actions.create(`/api/events?token=${token}`, data);
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
-          //console.log('SECCIONES ACA==>', eventNewContext.selectOrganization?.itemsMenu, newMenu);
           const sectionsDefault = state.selectOrganization?.itemsMenu
             ? { itemsMenu: state.selectOrganization?.itemsMenu }
             : newMenu;
@@ -340,7 +338,6 @@ export const NewEventProvider = ({ children }) => {
               datetime_start: selectedDateEvent?.from + ':00',
             };
             const agenda = await AgendaApi.create(result._id, activity);
-            //console.log("RESPUESTA AGENDA==>",agenda)
             if (agenda._id) {
               //CREAR TEMPLATE PARA EL CURSO
               let template = !templateId && true;
@@ -363,7 +360,6 @@ export const NewEventProvider = ({ children }) => {
               }
             }
           } else {
-            //console.log('RESP API==>', result);
             DispatchMessageService({
               type: 'error',
               msj: 'Error al crear el curso',
@@ -372,7 +368,6 @@ export const NewEventProvider = ({ children }) => {
             dispatch({ type: 'COMPLETE' });
           }
         } else {
-          //console.log('RESP API==>', result);
           DispatchMessageService({
             type: 'error',
             msj: 'Error al crear el curso',
@@ -381,7 +376,6 @@ export const NewEventProvider = ({ children }) => {
           dispatch({ type: 'COMPLETE' });
         }
       } catch (error) {
-        console.log('CATCH==>', error);
         DispatchMessageService({
           type: 'error',
           msj: 'Error al crear el curso catch',

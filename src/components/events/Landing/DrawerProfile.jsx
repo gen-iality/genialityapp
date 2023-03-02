@@ -53,7 +53,6 @@ const DrawerProfile = (props) => {
     }
   }, [props.profileuser, cEventUser.value, userSelected]);
   const haveRequestUser = (user) => {
-    //console.log("HEPERVALUE==>",requestSend,user)
     return haveRequest(user, requestSend, 1);
   };
 

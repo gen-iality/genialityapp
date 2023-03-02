@@ -72,7 +72,6 @@ class ListEventUser extends Component {
 
   changeActiveTab = async (activeTab) => {
     this.setState({ activeTab });
-    //console.log("TAB ACTIVA==>",activeTab)
     if (activeTab == 'asistentes') {
       this.setState({ loading: true });
       await this.loadData();
@@ -83,7 +82,6 @@ class ListEventUser extends Component {
     this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
   };
   agendarCita = (iduser, user) => {
-    //console.log('USERS SELECTED==>', user);
     this.setState({ eventUserIdToMakeAppointment: iduser, eventUserToMakeAppointment: user });
   };
   loadData = async () => {
@@ -313,7 +311,6 @@ class ListEventUser extends Component {
   };
 
   haveRequestUser(user) {
-    //console.log("HEPERVALUE==>",this.props.cHelper.requestSend)
     return haveRequest(user, this.props.cHelper.requestSend);
   }
 

@@ -32,20 +32,16 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
   }, [ transmition, request, evetUserContext.value ]);
 
   const executer_startMonitorStatus = async () => {
-    console.log('executer_startMonitorStatus==>', meeting_id, typeActivity);
     if (meeting_id === null || meeting_id === '' || typeActivity === 'url' || typeActivity === 'video') return;
     let live_stream_status = null;
     try {
-      //console.log('meeting_id INGRESA ACA==>', meeting_id == null, meeting_id == undefined, typeof meeting_id);
       live_stream_status = await getLiveStreamStatus(meeting_id);
       //   setLivestreamStatus(live_stream_status);
       live_stream_status && setLivestreamStats(live_stream_status);
-      console.log('live_stream_status=>', live_stream_status);
       //!live_stream_status?.active && timer_id && clearInterval(timer_id )
       const timerId = setTimeout(executer_startMonitorStatus, 5000);
       setTimerId(timerId);
     } catch (e) {
-      //console.log("EXCEPCION===>",e)
       timer_id && clearInterval(timer_id);
     }
   };
@@ -59,7 +55,6 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
 
   // SI EXISTE UN MEETING ID SE EJECUTA EL MONITOR, PERO SE QUEDA COLGADO (TIMER)
   useEffect(() => {
-    console.log('meeting_ID==>', meeting_id);
     if (!meeting_id && timer_id) clearTimeout(timer_id);
     if (!meeting_id && (typeActivity == 'youTube' || typeActivity == 'vimeo' || !typeActivity)) return;
     executer_startMonitorStatus();

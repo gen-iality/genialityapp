@@ -550,13 +550,9 @@ class ListEventUser extends Component {
             totalWithWeight,
           });
 
-          //console.log("ATTENDESS==>",updatedAttendees)
-          //console.log("ATTENDESSFIND==>",updatedAttendees.filter((at)=>at.email=='nieblesrafael@yahoo.com'))
-
           for (let i = 0; i < updatedAttendees.length; i++) {
             // Arreglo temporal para que se muestre el listado de usuarios sin romperse
             // algunos campos no son string y no se manejan bien
-            //console.log("FIELDS==>",extraFields)
             extraFields.forEach(function(key) {
               if (
                 !(
@@ -587,7 +583,6 @@ class ListEventUser extends Component {
                     ? '(' + updatedAttendees[i]['code'] + ')' + updatedAttendees[i].properties[codearea[0].name]
                     : updatedAttendees[i].properties[codearea[0].name];
                 } else {
-                  //console.log("KEY==>",updatedAttendees[i]['properties'][key.name])
                   if (updatedAttendees[i][key.name]) {
                     updatedAttendees[i][key.name] = Array.isArray(updatedAttendees[i]['properties'][key.name])
                       ? updatedAttendees[i]['properties'][key.name][0]

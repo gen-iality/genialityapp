@@ -169,8 +169,6 @@ class NewEvent extends Component {
           },
         },
       };
-
-      //console.log('EVENT TO CREATE==>', data);
       //CREAR CURSO
       try {
         const token = await GetTokenUserFirebase();
@@ -178,7 +176,6 @@ class NewEvent extends Component {
         const result = await Actions.create(`/api/events?token=${token}`, data);
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
-          //console.log('SECCIONES ACA==>', eventNewContext.selectOrganization?.itemsMenu, newMenu);
           const sectionsDefault = eventNewContext.selectOrganization?.itemsMenu
             ? { itemsMenu: eventNewContext.selectOrganization?.itemsMenu }
             : newMenu;
@@ -198,7 +195,6 @@ class NewEvent extends Component {
               datetime_start: eventNewContext.selectedDateEvent?.from + ':00',
             };
             const agenda = await AgendaApi.create(result._id, activity);
-            //console.log("RESPUESTA AGENDA==>",agenda)
             if (agenda._id) {
               if (eventNewContext.typeTransmission == 1) {
                 const sala = await this.createZoomRoom(agenda, result._id);
@@ -240,7 +236,6 @@ class NewEvent extends Component {
               }
             }
           } else {
-            //console.log('RESP API==>', result);
             DispatchMessageService({
               type: 'error',
               msj: 'Error al crear el curso',
@@ -248,7 +243,6 @@ class NewEvent extends Component {
             });
           }
         } else {
-          //console.log('RESP API==>', result);
           DispatchMessageService({
             type: 'error',
             msj: 'Error al crear el curso',
@@ -256,7 +250,6 @@ class NewEvent extends Component {
           });
         }
       } catch (error) {
-        //console.log(error);
         DispatchMessageService({
           type: 'error',
           msj: 'Error al crear el curso',

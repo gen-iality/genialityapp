@@ -88,7 +88,6 @@ class CheckAgenda extends Component {
       const { checkIn } = this.state;
       const properties = event.user_properties;
       const rolesList = await RolAttApi.byEventRolsGeneral();
-      //console.log('ROLES==>', rolesList);
       const roles = rolesList?.map((role) => {
         return { label: role.name, value: role._id };
       });
@@ -124,7 +123,6 @@ class CheckAgenda extends Component {
       let newList = [...this.state.attendees];
 
       newList = await Activity.getActivyAssitantsAdmin(this.props.event._id, agendaID);
-      console.log('NEW LIST==>', newList);
 
       newList = newList.map((item) => {
         const attendee = item.attendee
@@ -138,7 +136,6 @@ class CheckAgenda extends Component {
       //NO SE ESTAN ELIMINANDO LOS USUARIOS BIEN HACK PARA QUITARLOS
       newList = newList?.filter((users) => users.user !== null);
       newList = await this.obtenerCheckinAttende(userRef, newList);
-      //console.log('NEWLIST==>', newList);
 
       this.setState(() => {
         return { attendees: newList, loading: false, total: newList.length, checkIn, properties };
@@ -153,7 +150,6 @@ class CheckAgenda extends Component {
   }
 
   checkedincomponent = (text, item, index) => {
-    //console.log('ITEM==>', item);
     const self = this;
     return item.checkedin_at || item.properties?.checkedin_at ? (
       <p>{dayjs(item.checkedin_at || item.properties?.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
@@ -227,7 +223,6 @@ class CheckAgenda extends Component {
     return usersData;
   }
   openEditModalUser = (item) => {
-    //console.log('ITEM EDITAR==>', item);
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
 

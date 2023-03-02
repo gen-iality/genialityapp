@@ -276,7 +276,6 @@ class MenuLanding extends Component {
       const resp = await Actions.put(`api/events/${this.props.event._id}?token=${token}`, newMenu);
     } else {
       //ACTUALIZAR ORGANIZACION
-      //console.log(this.props.organizationObj)
       const updateOrganization = {
         ...this.props.organizationObj,
         itemsMenu: { ...menu },
@@ -302,7 +301,6 @@ class MenuLanding extends Component {
     const itemsMenuDB = { ...this.state.itemsMenu };
     /* console.log('ITEMSMENUTOAVAILABLE==>', this.state.itemsMenu);
     console.log('items menù', itemsMenuDB);
-    console.log('primero=>', menuBase[key]); */
     menuBase[key].checked = !menuBase[key].checked;
     /* console.log('segundo=>', menuBase[key]); */
 

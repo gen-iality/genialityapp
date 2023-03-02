@@ -196,7 +196,6 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       // Servicio que trae las invitaciones / solicitudes enviadas
       Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
         if (data.length > 0) {
-          console.log('DATA===>', data);
           setRequestListSent(data.filter((item) => !item.response || item.response === 'rejected'));
           setLoading(false);
         }
