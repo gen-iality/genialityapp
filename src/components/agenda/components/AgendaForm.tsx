@@ -226,7 +226,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             </Col>
           </Row>
         </Form.Item>
-        <Form.Item label="Conferencias">
+        <Form.Item label="Conferencistas">
           <Row wrap gutter={[8, 8]}>
             <Col span={22}>
               <Form.Item name="host_ids">
