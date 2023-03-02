@@ -43,9 +43,11 @@ const Herramienta = (props) => {
 
       try {
         if (locationState.edit) {
-          await ToolsApi.editOne(herramienta, locationState.edit, eventID);
+          const resp = await ToolsApi.editOne(herramienta, locationState.edit, eventID);
+          console.log('resp', resp);
         } else {
-          await ToolsApi.create(herramienta, eventID);
+          const resp = await ToolsApi.create(herramienta, eventID);
+          console.log('resp', resp);
         }
         DispatchMessageService({
           key: 'loading',
@@ -77,8 +79,13 @@ const Herramienta = (props) => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChangeName = (e) => {
     setHerramienta({ ...herramienta, name: e.target.value });
+  };
+
+  const handleChangeLink = (e) => {
+    console.log('Se ejecuta esto');
+    setHerramienta({ ...herramienta, link: e.target.value });
   };
 
   const onRemoveId = () => {
@@ -131,6 +138,7 @@ const Herramienta = (props) => {
   return (
     <Form onFinish={onSubmit} {...formLayout}>
       <Header title="Herramienta" back save form remove={onRemoveId} edit={locationState.edit} />
+      {console.log('herramienta', herramienta)}
 
       <Row justify="center" wrap gutter={12}>
         <Col span={12}>
@@ -146,7 +154,22 @@ const Herramienta = (props) => {
               value={herramienta.name}
               name="name"
               placeholder="Nombre de la herramienta"
-              onChange={(e) => handleChange(e)}
+              onChange={(e) => handleChangeName(e)}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={
+              <label style={{ marginTop: '2%' }} className="label">
+                Enlace (Opcional)
+              </label>
+            }
+          >
+            <Input
+              value={herramienta.link}
+              name="link"
+              placeholder="Link de la herramienta"
+              onChange={(e) => handleChangeLink(e)}
             />
           </Form.Item>
         </Col>

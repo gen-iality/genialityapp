@@ -27,6 +27,7 @@ const HostList = () => {
   useEffect(() => {
     (async () => {
       const toolsApi = await ToolsApi.byEvent(cEvent.value._id)
+      console.log('toolsApi', toolsApi);
       setTools(toolsApi)
     })()
   }, [])
@@ -49,7 +50,7 @@ const HostList = () => {
         dataSource={tools}
         renderItem={(item) => (
           <List.Item>
-            <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.name}</p>{' '}
+            {item.link ? (<a href={item.link} target="_blank">{item.name}</a>) : (<p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.name}</p>)}
           </List.Item>
         )}
       />
