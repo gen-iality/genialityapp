@@ -172,7 +172,11 @@ const RegisterUserAndOrgMember = ({
       try {
         const respUser = await OrganizationApi.saveUser(idOrganization, propertiesOrgMember);
         console.log('RegisterUser: has default position Id', { defaultPositionId });
-        await PositionsApi.Organizations.addUser(idOrganization, defaultPositionId, respUser.account_id);
+        if (defaultPositionId === undefined) {
+          console.error('This organization has no default position. Eh!')
+        } else {
+          await PositionsApi.Organizations.addUser(idOrganization, defaultPositionId, respUser.account_id);
+        }
         if (respUser && respUser.account_id) {
           setValidationGeneral({
             status: false,
