@@ -31,10 +31,10 @@ class EventLanding extends Component {
   }
 
   async componentDidUpdate() {
-    //Utilizada para concatenar parametros
+    // Utilizada para concatenar parametros
     this.currentUrl = window.location.href;
     this.urlParams = parseUrl(this.currentUrl);
-    //Si existe el activity_id por urlParams entonces seteamos el estado
+    // Si existe el activity_id por urlParams entonces seteamos el estado
     if (this.urlParams.activity_id) {
       const activity = await AgendaApi.getOne(this.urlParams.activity_id, this.props.cEvent.value._id);
       this.setState({
@@ -84,6 +84,13 @@ class EventLanding extends Component {
               activityFilter={(a) =>
                 ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
               }
+              nodeIfCompleted={(
+                <Link to={`/landing/${this.props.cEvent.value._id}/certificate`}>
+                  <Typography.Text strong>
+                    Obtener certificado
+                  </Typography.Text>
+                </Link>
+              )}
             />
             <StudentSelfCourseProgress
               hasProgressLabel
