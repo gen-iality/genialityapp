@@ -329,7 +329,7 @@ class UserModal extends Component {
         <div style={{ opacity: 0, display: 'none' }}>
           {user && badgeEvent && badgeEvent.BadgeFields && <QRCode value={userId} size={qrSize ? qrSize?.size : 64} />}
         </div>
-        <iframe title={'Print User'} ref={this.ifrmPrint} style={{ opacity: 0, display: 'none' }} />
+        <iframe title="Print User" ref={this.ifrmPrint} style={{ opacity: 0, display: 'none' }} />
       </Modal>
     );
   }

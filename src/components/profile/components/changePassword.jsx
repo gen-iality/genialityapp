@@ -66,7 +66,7 @@ export const ChangePassword = ({ email }) => {
         </Typography.Paragraph>
         <Form onFinish={handleRecoveryPass} autoComplete="off" layout="vertical">
           <Form.Item
-            label={'Este es el correo electrónico que recibirá la notificación'}
+            label="Este es el correo electrónico que recibirá la notificación"
             name="email"
             initialValue={email}
             style={{ marginBottom: '10px', textAlign: 'left' }}

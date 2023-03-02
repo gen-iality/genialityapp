@@ -145,7 +145,7 @@ const EditInformation = ({ cUser }) => {
             <Input
               type="text"
               size="large"
-              placeholder={'¿Como te llamas?'}
+              placeholder="¿Como te llamas?"
               prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>

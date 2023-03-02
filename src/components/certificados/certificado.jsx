@@ -346,7 +346,7 @@ const Certificado = (props) => {
                 <Input
                   value={certificado.name}
                   name="name"
-                  placeholder={'Nombre del certificado'}
+                  placeholder="Nombre del certificado"
                   onChange={(e) => handleChange(e)}
                 />
               </Form.Item>
@@ -366,7 +366,7 @@ const Certificado = (props) => {
                   onChange={(e) => {
                     onChangeRol(e);
                   }}
-                  placeholder={'Seleccione rol'}
+                  placeholder="Seleccione rol"
                   value={certificado.rol?._id || rol?._id}
                 >
                   {roles.map((rol) => (
@@ -380,7 +380,7 @@ const Certificado = (props) => {
           </Row>
           <Row gutter={[16, 16]}>
             <Col span={16}>
-              <Form.Item label={'Etiquetas disponibles'}>
+              <Form.Item label="Etiquetas disponibles">
                 <p>Use etiquetas para ingresar información referente al curso o los asistentes</p>
                 <Row wrap gutter={[18, 8]}>
                   {tags.map((item, key) => (
@@ -394,7 +394,7 @@ const Certificado = (props) => {
             </Col>
             <Col span={8}>
               <Form.Item
-                label={'Imagen de Fondo'}
+                label="Imagen de Fondo"
                 tooltip={
                   <>
                     {'Si desea volver a tener la imagen anterior presione el siguiente botón'}
@@ -410,7 +410,7 @@ const Certificado = (props) => {
               />
               <Image
                 src={certificado.imageFile?.data ? certificado.imageFile?.data : certificado.imageFile || imageFile}
-                alt={'Imagen certificado'}
+                alt="Imagen certificado"
                 preview={previewCert}
               />
             </Col>

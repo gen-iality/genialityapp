@@ -327,7 +327,7 @@ function Speaker(props) {
                 onChange={(e) => handleChange(e)}
               />
             </Form.Item>
-            <Form.Item label={'Carga de imagen'}>
+            <Form.Item label="Carga de imagen">
               <Form.Item noStyle>
                 <ImageUploaderDragAndDrop
                   imageDataCallBack={handleImage}
@@ -377,7 +377,7 @@ function Speaker(props) {
                 ) : (
                   <Tooltip
                     placement="top"
-                    text={'Si oculta la infomación da a entender que no desea mostrar el contenido de la misma'}
+                    text="Si oculta la infomación da a entender que no desea mostrar el contenido de la misma"
                   >
                     <Button type="link" onClick={() => setShowDescription_activity(false)} style={{ color: 'blue' }}>
                       <div>

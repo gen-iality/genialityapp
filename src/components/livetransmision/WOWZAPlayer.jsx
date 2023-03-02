@@ -92,7 +92,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
             playing={typeActivity !== 'url' ? true : false}
             loop={!loopBackGround}
             width='100%'
-            height={'100%'}
+            height="100%"
             url={platformurl}
             controls={loopBackGround}
           />
@@ -100,7 +100,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
           <iframe
             style={screens.xs && typeActivity == 'meeting' ? { aspectRatio: '10/20' } : { aspectRatio: '16/9' }}
             width='100%'
-            height={'100%'}
+            height="100%"
             src={platformurl}
             frameborder="0"
             allow={typeActivity == 'meeting' ? 'camera *;microphone *' : 'autoplay; encrypted-media'}

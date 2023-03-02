@@ -124,7 +124,7 @@ function TimeTracking(props: TimeTrackingProps) {
         }}
       >Recargar</Button>
       <List
-        header={'User session info'}
+        header="User session info"
         dataSource={userSessionInfoList}
         renderItem={(item, index) => (
           <List.Item key={index}>

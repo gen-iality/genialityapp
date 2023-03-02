@@ -256,7 +256,7 @@ function Empresas({ event, match }) {
     <div>
       <Header
         title="Empresas"
-        titleTooltip={'Agregue o edite las Empresas que se muestran en la aplicación'}
+        titleTooltip="Agregue o edite las Empresas que se muestran en la aplicación"
         addUrl={{
           pathname: `${match.url}/crear`,
           state: { new: true },

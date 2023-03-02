@@ -7,7 +7,7 @@ const renderPrint = (badges) => {
     let item;
     if (badges[i].line) {
       item = badges[i].qr ? (
-        <QRCode value={'alejomg27@gmail.com'} size={64} />
+        <QRCode value="alejomg27@gmail.com" size={64} />
       ) : (
         <div>
           <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
@@ -25,7 +25,7 @@ const renderPrint = (badges) => {
               </div>
             ) : (
               <div style={{ marginRight: '20px' }}>
-                <QRCode value={'evius.co'} size={badges[i].size} />
+                <QRCode value="evius.co" size={badges[i].size} />
               </div>
             )}
             {!badges[i + 1].qr ? (
@@ -34,7 +34,7 @@ const renderPrint = (badges) => {
               </div>
             ) : (
               <div>
-                <QRCode value={'evius.co'} size={badges[i + 1].size} />
+                <QRCode value="evius.co" size={badges[i + 1].size} />
               </div>
             )}
           </div>
@@ -48,7 +48,7 @@ const renderPrint = (badges) => {
               {!badges[i].qr ? (
                 <p style={{ fontSize: `${badges[i].size}px` }}>{badges[i].id_properties.label}</p>
               ) : (
-                <QRCode value={'evius.co'} size={badges[i].size} />
+                <QRCode value="evius.co" size={badges[i].size} />
               )}
             </div>
           </div>

@@ -173,7 +173,7 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
               style={{ width: '100%', marginTop: '20px' }}
               /* popupStyle={{ height: '50px !important', backgroundColor: 'blue' }} */
               value={dayjs(selectedDay) as unknown as any}
-              format={'DD/MM/YYYY'}
+              format="DD/MM/YYYY"
               onChange={(value) => value && changeSelectDay(value.toDate())}
             />
 

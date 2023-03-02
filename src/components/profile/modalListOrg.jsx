@@ -28,7 +28,7 @@ const ModalListOrg = (props) => {
           Organizaciones a las que pertenezco
         </Typography.Title>
         <Form.Item
-          label={'Listado de organizaciones'}
+          label="Listado de organizaciones"
           name="selectedOrg"
           style={{ marginBottom: '10px' }}
           hasFeedback

@@ -170,7 +170,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   return (
     <Modal
       visible={!!targetEventUserId}
-      title={'Agendar cita'}
+      title="Agendar cita"
       footer={null}
       onCancel={resetModal}
       style={{ zIndex: 1031 }}

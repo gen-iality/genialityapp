@@ -209,7 +209,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           <Input
             type="email"
             size="large"
-            placeholder={'micorreo@ejemplo.com'}
+            placeholder="micorreo@ejemplo.com"
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>

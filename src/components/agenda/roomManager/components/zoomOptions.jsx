@@ -3,7 +3,7 @@ export default function ZoomOptions({ hasVideoconference, select_host_manual, ha
   return (
     <>
       {!hasVideoconference && (
-        <Form.Item label={'Desea seleccionar manualmente el host?'}>
+        <Form.Item label="Desea seleccionar manualmente el host?">
           <Select
             defaultValue={select_host_manual}
             value={select_host_manual}
@@ -19,7 +19,7 @@ export default function ZoomOptions({ hasVideoconference, select_host_manual, ha
       {select_host_manual && (
         <Row style={{ marginBottom: 24 }}>
           <Col span={24}>
-            <Form.Item label={'Seleccione un host'}>
+            <Form.Item label="Seleccione un host">
               <Select
                 defaultValue={host_id}
                 value={host_id}

@@ -72,7 +72,7 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
               playing
               loop
               width='100%'
-              height={'100%'}
+              height="100%"
               url={platformurl}
             />
           </>

@@ -352,23 +352,23 @@ class DatosModal extends Component {
           <Form.Item
             initialValue={this.props.info?.label}
             //value={info?.label + 'h' || 'value'}
-            label={'Nombre campo'}
+            label="Nombre campo"
             name="label"
             rules={[{ required: true }]}
           >
-            <Input name="label" type="text" placeholder={'Ej: Celular'} onChange={this.handleChange} />
+            <Input name="label" type="text" placeholder="Ej: Celular" onChange={this.handleChange} />
           </Form.Item>
           <Form.Item name="name" initialValue={this.props.info?.name}>
             <Input
               type="text"
-              placeholder={'Nombre del campo en base de datos'}
+              placeholder="Nombre del campo en base de datos"
               disabled
               //onChange={this.handleChange}
             />
           </Form.Item>
           <Form.Item
             initialValue={info?.type}
-            label={'Tipo de dato'}
+            label="Tipo de dato"
             name="type"
             rules={[{ required: true, message: 'Seleccione un tipo de dato válido' }]}
           >
@@ -487,7 +487,7 @@ class DatosModal extends Component {
               onChange={this.changeFieldCheck}
             />
           </Form.Item>
-          <Form.Item label={'Visible para Contactos'} htmlFor="visibleByContactsModal" name="visibleByContacts">
+          <Form.Item label="Visible para Contactos" htmlFor="visibleByContactsModal" name="visibleByContacts">
             <Checkbox
               id="visibleByContactsModal"
               name="visibleByContacts"
@@ -495,7 +495,7 @@ class DatosModal extends Component {
               onChange={this.changeFieldCheckVisibleByContacts}
             />
           </Form.Item>
-          <Form.Item label={'Visible para Admin'} htmlFor="visibleByAdminModal" name="visibleByAdmin">
+          <Form.Item label="Visible para Admin" htmlFor="visibleByAdminModal" name="visibleByAdmin">
             <Checkbox
               id="visibleByAdminModal"
               name="visibleByAdmin"
@@ -511,7 +511,7 @@ class DatosModal extends Component {
               onChange={this.handleChange}
             />
           </Form.Item>
-          <Form.Item label={'Posición / Orden'} name="order_weight">
+          <Form.Item label="Posición / Orden" name="order_weight">
             <InputNumber
               min={0}
               name="order_weight"

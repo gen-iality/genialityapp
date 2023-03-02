@@ -103,7 +103,7 @@ const CardListVideo = (props: any) => {
                           size="large"
                           icon={<DownloadOutlined />}
                           type="link"
-                          download={'video.mp4'}
+                          download="video.mp4"
                           href={item.download}
                           key="option-dowload"></Button>
                       </Tooltip>,
@@ -117,7 +117,7 @@ const CardListVideo = (props: any) => {
                       </Tooltip>,
                       ,
                       <Popconfirm
-                        title={'¿Está seguro que deseas eliminar esta grabación?'}
+                        title="¿Está seguro que deseas eliminar esta grabación?"
                         onCancel={() => console.log('cancelado')}
                         onConfirm={async () => {
                           const resp = await deleteVideo(item.id);
@@ -150,7 +150,7 @@ const CardListVideo = (props: any) => {
                     height={100}
                     src={item.image || 'error'}
                     alt="Miniatura del video"
-                    fallback={'https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg'}
+                    fallback="https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg"
                   />
                 }
                 title={item?.status === 'ready' ? item.name : <Skeleton active paragraph={{ rows: 1 }} />}

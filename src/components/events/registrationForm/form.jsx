@@ -825,7 +825,7 @@ const FormRegister = ({
             <div style={{ textAlign: 'center' }}>
               <ImgCrop rotate shape="round">
                 <Upload
-                  action={'https://api.evius.co/api/files/upload/'}
+                  action="https://api.evius.co/api/files/upload/"
                   accept="image/png,image/jpeg"
                   onChange={(file) => {
                     setImageAvatar(file);
@@ -1101,7 +1101,7 @@ const FormRegister = ({
                         fontSize: '14px',
                         borderRadius: '5px',
                       }}
-                      message={'Ya te encuetras registrado en evius'}
+                      message="Ya te encuetras registrado en evius"
                     />
                   </Col>
                 )}

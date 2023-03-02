@@ -919,7 +919,7 @@ class TriviaEdit extends Component {
                   </Form.Item>
                   {this.state.idSurvey && (
                     <>
-                      <Form.Item label={'Tiempo límite en segundos por pregunta'}>
+                      <Form.Item label="Tiempo límite en segundos por pregunta">
                         <Select
                           name="time_limit"
                           value={time_limit}
@@ -935,7 +935,7 @@ class TriviaEdit extends Component {
                       </Form.Item>
                       <Row justify="space-between" wrap gutter={[8, 8]}>
                         {/* <Col>
-                    <Form.Item label={'Permitir usuarios anónimos'}>
+                    <Form.Item label="Permitir usuarios anónimos">
                       <Switch
                         name="allow_anonymous_answers"
                         checked={allow_anonymous_answers === 'true' || allow_anonymous_answers}
@@ -974,7 +974,7 @@ class TriviaEdit extends Component {
                       {displayGraphsInSurveys ||
                         (displayGraphsInSurveys === 'true' && (
                           <>
-                            <Form.Item label={'Elegir tipo de gráfica'}>
+                            <Form.Item label="Elegir tipo de gráfica">
                               <Select
                                 name="graphyType"
                                 defaultValue={this.state.graphyType}
@@ -986,7 +986,7 @@ class TriviaEdit extends Component {
                                 <Option value="pie">Torta</Option>
                               </Select>
                             </Form.Item>
-                            <Form.Item label={'Mostrar porcentaje de participantes sin votar en las gráficas'}>
+                            <Form.Item label="Mostrar porcentaje de participantes sin votar en las gráficas">
                               <Switch
                                 name="showNoVotos"
                                 checked={showNoVotos === 'true' || showNoVotos}
@@ -1025,7 +1025,7 @@ class TriviaEdit extends Component {
                         </>
                       )}
 
-                      <Form.Item label={'Permitir valor de la respuesta por usuario'}>
+                      <Form.Item label="Permitir valor de la respuesta por usuario">
                         <Switch
                           name="allow_vote_value_per_user"
                           checked={allow_vote_value_per_user === 'true' || allow_vote_value_per_user}
@@ -1046,14 +1046,14 @@ class TriviaEdit extends Component {
                       </Form.Item>
                       {(allow_gradable_survey === 'true' || allow_gradable_survey) && (
                         <>
-                          <Form.Item label={'Habilitar ranking'}>
+                          <Form.Item label="Habilitar ranking">
                             <Switch
                               name="ranking"
                               checked={ranking === 'true' || ranking}
                               onChange={(checked) => this.toggleSwitch('ranking', checked)}
                             />
                           </Form.Item>
-                          <Form.Item label={'Requiere puntaje mínimo para aprobar'}>
+                          <Form.Item label="Requiere puntaje mínimo para aprobar">
                             <Switch
                               name="hasMinimumScore"
                               checked={hasMinimumScore === 'true' || hasMinimumScore}
@@ -1061,7 +1061,7 @@ class TriviaEdit extends Component {
                             />
                           </Form.Item>
                           {(hasMinimumScore || hasMinimumScore === 'true') && (
-                            <Form.Item label={'Puntaje mínimo para aprobar'}>
+                            <Form.Item label="Puntaje mínimo para aprobar">
                               <Input name="minimumScore" value={minimumScore} onChange={this.changeInput} />
                             </Form.Item>
                           )}
@@ -1091,7 +1091,7 @@ class TriviaEdit extends Component {
                                 onChange={this.onChangeNeutral}
                               />
                             </Form.Item>
-                            <Form.Item label={'Mensaje al ganar'}>
+                            <Form.Item label="Mensaje al ganar">
                               <ReactQuill
                                 name="win_Message"
                                 id="win_Message"
@@ -1100,7 +1100,7 @@ class TriviaEdit extends Component {
                                 onChange={this.onChangeWin}
                               />
                             </Form.Item>
-                            <Form.Item label={'Mensaje al perder'}>
+                            <Form.Item label="Mensaje al perder">
                               <ReactQuill
                                 name="lose_Message"
                                 id="lose_Message"

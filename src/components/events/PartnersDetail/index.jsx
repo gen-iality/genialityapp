@@ -34,7 +34,7 @@ export default function PartnerDetail({ company, handleClosePartnerDetail }) {
             <div style={{ marginTop: '5vh', fontSize: '120%', fontWeight: 'bold' }}>
               <div className="mediaplayer">
                 <ReactPlayer
-                  width={'100%'}
+                  width="100%"
                   height="40vw"
                   style={{
                     marginTop: '0px',

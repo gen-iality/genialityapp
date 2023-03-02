@@ -50,7 +50,7 @@ function products(props) {
           }
           title={props.title}
           description={
-            <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: <Badge count={'Ver más'}></Badge> }}>
+            <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: <Badge count="Ver más"></Badge> }}>
               <p
                 dangerouslySetInnerHTML={{
                   __html: props.description && props.description,

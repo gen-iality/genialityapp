@@ -117,7 +117,7 @@ export default function Index(props) {
   return (
     <>
       <Header
-        title={'Configuración de escarapelas'}
+        title="Configuración de escarapelas"
         description={
           ' Acontinuación podrás crear la escarapela para tu evento. Agrega los Campos o QR, edita el tamaño de letra de los campos o del QR'
         }
@@ -166,7 +166,7 @@ export default function Index(props) {
         setIsVisible={setIsVisibleEdit}
         setBadge={setBadge}
       />
-      <iframe title={'Print User'} ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />
+      <iframe title="Print User" ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />
     </>
   );
 }

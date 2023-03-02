@@ -80,7 +80,7 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
           {transmition == 'EviusMeet' && visibleMeets && (
             <div style={{ aspectRatio: screens.xs ? '9/12' : '16/9' }}>
               <iframe
-                width={'100%'}
+                width="100%"
                 style={{ height: '100%' }}
                 allow='autoplay; fullscreen; camera *;microphone *'
                 // sandbox='allow-scripts;allow-presentation; allow-modals'
@@ -98,7 +98,7 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
           {transmition == 'EviusMeet' && visibleMeets && (
             <div style={{ aspectRatio: screens.xs ? '9/12' : '16/9' }}>
               <iframe
-                width={'100%'}
+                width="100%"
                 style={{ height: '100%' }}
                 allow='autoplay; fullscreen; camera *;microphone *'
                 // sandbox='allow-scripts;allow-presentation; allow-modals'

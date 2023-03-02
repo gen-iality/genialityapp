@@ -175,7 +175,7 @@ class Result extends Component {
           <>
             <Tabs defaultActiveKey="0">
               <TabPane tab="Correctos" key="0">
-                <Spin tip={'Cargando...'} spinning={data[1].length === 0}>
+                <Spin tip="Cargando..." spinning={data[1].length === 0}>
                   <Table
                     size="small"
                     rowKey="index"

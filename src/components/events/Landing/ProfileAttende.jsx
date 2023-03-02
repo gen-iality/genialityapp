@@ -27,7 +27,7 @@ const ProfileAttende = () => {
       </List.Item>
 
       <List.Item>
-        <List.Item.Meta title={'Correo electronico'} description={formatDataToString(propertiesOtherprofile.email)} />
+        <List.Item.Meta title="Correo electronico" description={formatDataToString(propertiesOtherprofile.email)} />
       </List.Item>
 
       <List.Item>

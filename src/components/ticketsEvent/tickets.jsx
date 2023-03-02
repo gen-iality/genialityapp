@@ -48,7 +48,7 @@ const Tickets = (props) => {
         API={eventTicketsApi}
         eventId={props.event._id}
         title="Tickets"
-        titleTooltip={'Agregue o edite los Tickets que se muestran en la aplicación'}
+        titleTooltip="Agregue o edite los Tickets que se muestran en la aplicación"
         addUrl={{
           pathname: `${props.matchUrl}/ticket`,
           state: { new: true },

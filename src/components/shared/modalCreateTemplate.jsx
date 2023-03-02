@@ -39,8 +39,8 @@ const ModalCreateTemplate = (props) => {
         <Typography.Title level={4} type="secondary">
           Nuevo template de datos a recolectar
         </Typography.Title>
-        <Form.Item label={'Nombre del template'} name="name" style={{ marginBottom: '10px', marginTop: '20px' }}>
-          <Input type="text" size="large" placeholder={'Nombre del template'} />
+        <Form.Item label="Nombre del template" name="name" style={{ marginBottom: '10px', marginTop: '20px' }}>
+          <Input type="text" size="large" placeholder="Nombre del template" />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           {loading ? (

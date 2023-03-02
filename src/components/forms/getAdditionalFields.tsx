@@ -478,7 +478,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           <div style={{ textAlign: 'center' }}>
             <ImgCrop rotate shape="round">
               <Upload
-                action={'https://api.evius.co/api/files/upload/'}
+                action="https://api.evius.co/api/files/upload/"
                 accept="image/png,image/jpeg"
                 onChange={(file) => {
                   // setImageAvatar(file);

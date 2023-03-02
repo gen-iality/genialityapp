@@ -76,7 +76,7 @@ function QrAndDocumentForm({
               key="2">
               <>
                 <Form.Item
-                  label={'Id Usuario'}
+                  label="Id Usuario"
                   name="qr"
                   rules={[{ required: true, message: 'El campo Id Usuario no debe estar vacío!' }]}
                 >

@@ -159,7 +159,7 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badg
             />
           )}
         </div>
-        <iframe title={'Print User'} ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />
+        <iframe title="Print User" ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />
       </Modal>
     </Row>
   );

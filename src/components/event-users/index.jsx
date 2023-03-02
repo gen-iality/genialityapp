@@ -1096,7 +1096,7 @@ class ListEventUser extends Component {
 
               <Col>
                 <Select
-                  name={'type-scanner'}
+                  name="type-scanner"
                   value={this.state.typeScanner}
                   defaultValue={this.state.typeScanner}
                   onChange={(e) => this.handleChange(e)}

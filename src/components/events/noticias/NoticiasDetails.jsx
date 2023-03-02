@@ -76,7 +76,7 @@ const NoticiasDetails = (props) => {
                     (noticia.linkYoutube === null || noticia.linkYoutube === '' || noticia.linkYoutube === undefined ? (
                       <Image
                         style={{ height: `${screens.xs ? '25vh' : '55vh'}`, objectFit: 'cover' }}
-                        alt={'imagen noticia'}
+                        alt="imagen noticia"
                         src={
                           noticia && (noticia.image || noticia.picture) ? noticia.image || noticia.picture : imgNotFound
                         }

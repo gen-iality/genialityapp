@@ -8,7 +8,7 @@ function ForbiddenPage() {
       title="Sin acceso"
       subTitle="No tiene permisos para ingresas a esta sección"
       extra={
-        <Link to={'/'}>
+        <Link to="/">
           <Button type="primary">Ir a la página principal</Button>
         </Link>
       }

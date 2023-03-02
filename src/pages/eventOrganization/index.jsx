@@ -93,7 +93,7 @@ function Organization(props) {
                 Miembros
                 <NavLink to={`${props.match.url}/members`} />
               </Menu.Item>
-              {/* <Menu.Item key={'4.1'} icon={<DeleteOutlined />}>
+              {/* <Menu.Item key="4.1" icon={<DeleteOutlined />}>
                 Organization Properties
                 <NavLink to={`${props.match.url}/organization-properties`} />
               </Menu.Item> */}

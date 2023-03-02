@@ -28,7 +28,7 @@ const TipoAsistentes = (props) => {
         API={RolAttApi}
         eventId={props.event._id}
         title="Organizadores"
-        titleTooltip={'Administre los organizadores que se muestran en la aplicación'}
+        titleTooltip="Administre los organizadores que se muestran en la aplicación"
         addUrl={{
           pathname: `${props.matchUrl}/tipoAsistente`,
           state: { new: true },

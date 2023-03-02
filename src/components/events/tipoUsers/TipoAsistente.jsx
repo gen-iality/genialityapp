@@ -137,7 +137,7 @@ const TipoAsistente = (props) => {
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title={'Tipo de Asistente'} back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header title="Tipo de Asistente" back save form remove={onRemoveId} edit={locationState.edit} />
 
       <Row justify="center" wrap gutter={18}>
         <Col>
@@ -151,7 +151,7 @@ const TipoAsistente = (props) => {
           >
             <Input
               name="name"
-              placeholder={'Nombre del rol'}
+              placeholder="Nombre del rol"
               value={tipoAsistente?.name}
               onChange={(e) => handleInputChange(e)}
             />

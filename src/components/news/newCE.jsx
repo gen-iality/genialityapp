@@ -252,7 +252,7 @@ const NewCE = (props) => {
               <Input
                 name="title"
                 value={notice && notice.title}
-                placeholder={'Título de la noticia'}
+                placeholder="Título de la noticia"
                 onChange={(e) => handleChange(e)}
               />
             </Form.Item>
@@ -313,7 +313,7 @@ const NewCE = (props) => {
                 name="linkYoutube"
                 value={notice && notice.linkYoutube}
                 type="url"
-                placeholder={'www.video.com'}
+                placeholder="www.video.com"
                 onChange={(e) => handleChange(e)}
               />
             </Form.Item>

@@ -299,7 +299,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                         'Al hacer esta puja estás aceptando nuestros términos y condiciones y adquieres el compromiso de pago por el valor ofertado, en caso que ningún otro participante realice una puja por un monto superior.'
                       }
                     />
-                    <a target="_blank" rel="noreferrer" href={'https://tiempodejuego.org/tyclaventana/'}>
+                    <a target="_blank" rel="noreferrer" href="https://tiempodejuego.org/tyclaventana/">
                       <PlayCircleOutlined /> Ver términos y condiciones
                     </a>
                   </Col>

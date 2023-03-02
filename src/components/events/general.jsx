@@ -754,7 +754,7 @@ class General extends Component {
       <>
         {/* RESTRICIONES */}
         <Form onFinish={this.submit} {...formLayout}>
-          <Header title={'Datos del curso'} save form remove={this.deleteEvent} edit={this.state.event._id} />
+          <Header title="Datos del curso" save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey="1">
             <Tabs.TabPane tab="General" key="1">
               <Row justify="center" wrap gutter={[8, 8]}>
@@ -771,7 +771,7 @@ class General extends Component {
                       ref={this.nameInputRef}
                       autoFocus
                       name="name"
-                      placeholder={'Nombre del curso'}
+                      placeholder="Nombre del curso"
                       value={event.name}
                       onChange={(e) => this.handleChange(e, 'name')}
                     />
@@ -800,7 +800,7 @@ class General extends Component {
                   </Form.Item>
 
                   {event.app_configuration && (
-                    <Form.Item label={'¿Qué módulo desea observar en el inicio?'}>
+                    <Form.Item label="¿Qué módulo desea observar en el inicio?">
                       <Select
                         name="homeSelectedScreen"
                         value={event.homeSelectedScreen}
@@ -891,7 +891,7 @@ class General extends Component {
                     </Form.Item>
                   )}
 
-                  {/* <Form.Item label={'Tipo de curso'}>
+                  {/* <Form.Item label="Tipo de curso">
                     <Select
                       defaultValue={event.type_event}
                       name="type_event"
@@ -905,7 +905,7 @@ class General extends Component {
                   </Form.Item> */}
 
                   {/* {event.type_event === 'onlineEvent' && (
-                    <Form.Item label={'Plataforma streaming del curso'}>
+                    <Form.Item label="Plataforma streaming del curso">
                       <Select
                         defaultValue={event.event_platform}
                         name="event_platform"
@@ -925,7 +925,7 @@ class General extends Component {
                       <Form.Item label="Dirección">
                         <Input
                           name="address"
-                          placeholder={'¿Cuál es la dirección del curso?'}
+                          placeholder="¿Cuál es la dirección del curso?"
                           value={event.address}
                           onChange={(e) => this.handleChange(e, 'address')}
                         />
@@ -934,7 +934,7 @@ class General extends Component {
                       <Form.Item label="Lugar">
                         <Input
                           name="venue"
-                          placeholder={'Nombre del lugar del curso'}
+                          placeholder="Nombre del lugar del curso"
                           value={event.venue}
                           onChange={(e) => this.handleChange(e, 'venue')}
                         />
@@ -943,7 +943,7 @@ class General extends Component {
                   )} */}
 
                   {!cUser?.plan && (
-                    <Form.Item label={'Especificar fechas'}>
+                    <Form.Item label="Especificar fechas">
                       {/* <Switch defaultChecked onChange={this.specificDates} checked={specificDates} /> */}
                     </Form.Item>
                   )}
@@ -952,7 +952,7 @@ class General extends Component {
                     <div>
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
-                          <Form.Item label={'Fecha inicio'}>
+                          <Form.Item label="Fecha inicio">
                             <DatePicker
                               inputReadOnly
                               //RESTRICIONES
@@ -960,13 +960,13 @@ class General extends Component {
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               value={dayjs(event.date_start)}
-                              format={'DD/MM/YYYY'}
+                              format="DD/MM/YYYY"
                               onChange={(value) => this.changeDate(value, 'date_start')}
                             />
                           </Form.Item>
                         </Col>
                         <Col span={12}>
-                          <Form.Item label={'Hora inicio'}>
+                          <Form.Item label="Hora inicio">
                             <TimePicker
                               inputReadOnly
                               disabled={iMustBlockAFunctionality}
@@ -981,19 +981,19 @@ class General extends Component {
                       </Row>
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
-                          <Form.Item label={'Fecha fin'}>
+                          <Form.Item label="Fecha fin">
                             <DatePicker
                               inputReadOnly
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               value={dayjs(event.date_end)}
-                              format={'DD/MM/YYYY'}
+                              format="DD/MM/YYYY"
                               onChange={(value) => this.changeDate(value, 'date_end')}
                             />
                           </Form.Item>
                         </Col>
                         <Col span={12}>
-                          <Form.Item label={'Hora fin'}>
+                          <Form.Item label="Hora fin">
                             <TimePicker
                               inputReadOnly
                               disabled={iMustBlockAFunctionality}
@@ -1011,13 +1011,13 @@ class General extends Component {
                     <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   )}
 
-                  <Form.Item label={'Descripción'}>
+                  <Form.Item label="Descripción">
                     <EviusReactQuill name="description" data={event.description} handleChange={this.chgTxt} />
                   </Form.Item>
 
                   <Form.Item>
                     <SelectInput
-                      name={'Organizado por:'}
+                      name="Organizado por:"
                       selectedOptions={selectedOrganizer}
                       selectOption={this.selectOrganizer}
                       options={organizers}
@@ -1034,16 +1034,16 @@ class General extends Component {
                     />
                   </Form.Item>
 
-                  <Form.Item label={'Vídeo promocional'}>
+                  <Form.Item label="Vídeo promocional">
                     <Input
                       name="video"
-                      placeholder={'www.ejemplo.com/watch?v=oK88Stdw0DI'}
+                      placeholder="www.ejemplo.com/watch?v=oK88Stdw0DI"
                       value={event.video}
                       onChange={(e) => this.handleChange(e, 'video')}
                     />
                   </Form.Item>
 
-                  <Form.Item label={'Posición del video'}>
+                  <Form.Item label="Posición del video">
                     <Switch
                       name="video_position"
                       checked={event.video_position || event.video_position === 'true'}

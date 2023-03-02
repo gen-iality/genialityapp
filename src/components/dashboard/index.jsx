@@ -475,7 +475,7 @@ class DashboardEvent extends Component {
                   <Tooltip title={this.state.desc2} placement="top" mouseEnterDelay={0.5}>
                     <Card hoverable>
                       <Statistic
-                        groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
+                        groupSeparator="." // determina el string usado para separar la unidades de mil de los valores
                         valueStyle={{ fontSize: '38px' }}
                         title="Usuarios registrados"
                         value={this.state.metricsGnal ? this.state.metricsGnal.total_users : 0}
@@ -489,7 +489,7 @@ class DashboardEvent extends Component {
                   <Tooltip title={this.state.desc3} placement="top" mouseEnterDelay={0.5}>
                     <Card hoverable>
                       <Statistic
-                        groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
+                        groupSeparator="." // determina el string usado para separar la unidades de mil de los valores
                         valueStyle={{ fontSize: '36px' }}
                         title="Duración promedio de un usuario"
                         value={
@@ -536,7 +536,7 @@ class DashboardEvent extends Component {
               <Tooltip title={this.state.desc5} placement="top" mouseEnterDelay={0.5}>
                 <Card>
                   <Statistic
-                    groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
+                    groupSeparator="." // determina el string usado para separar la unidades de mil de los valores
                     valueStyle={{ fontSize: '38px' }}
                     title="Total usuarios que visitan el curso"
                     value={this.state.metricsGnal ? this.state.metricsGnal.total_checkIn : 0}
@@ -577,7 +577,7 @@ class DashboardEvent extends Component {
               <Tooltip title={this.state.desc7} placement="top" mouseEnterDelay={0.5}>
                 <Card>
                   <Statistic
-                    groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
+                    groupSeparator="." // determina el string usado para separar la unidades de mil de los valores
                     valueStyle={{ fontSize: '38px' }}
                     title="Visitas totales del curso"
                     value={this.state.metricsGnal ? this.state.metricsGnal.total_printouts : 0}
@@ -591,7 +591,7 @@ class DashboardEvent extends Component {
             <Col span={24}>
               <Card
                 headStyle={{ border: 'none' }}
-                title={'Métricas por lecciones del curso'}
+                title="Métricas por lecciones del curso"
                 extra={<MoreOutlined />}
               >
                 <Table
@@ -605,7 +605,7 @@ class DashboardEvent extends Component {
           </Row>
           <Row gutter={(32, 32)} align="middle" justify="space-between" style={{ paddingTop: '20px' }}>
             <Col span={24}>
-              <Card headStyle={{ border: 'none' }} title={'Métricas de correos'}>
+              <Card headStyle={{ border: 'none' }} title="Métricas de correos">
                 {this.state.printButton && (
                   <Row justify="center" style={{ marginBottom: 20 }}>
                     <Card>

@@ -145,7 +145,7 @@ const Herramienta = (props) => {
             <Input
               value={herramienta.name}
               name="name"
-              placeholder={'Nombre de la herramienta'}
+              placeholder="Nombre de la herramienta"
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>

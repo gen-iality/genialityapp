@@ -208,7 +208,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             onChange={(e) => HandleHookForm(e, 'email')}
             type="email"
             size="large"
-            placeholder={'micorreo@ejemplo.com'}
+            placeholder="micorreo@ejemplo.com"
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
@@ -227,8 +227,8 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
               onChange={(e) => HandleHookForm(e, 'password')}
               type="number"
               size="large"
-              // placeholder={'Cedula del medico ó especialista'}
-              placeholder={'Cedula ó numero de identificación'}
+              // placeholder="Cedula del medico ó especialista"
+              placeholder="Cedula ó numero de identificación"
               prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>

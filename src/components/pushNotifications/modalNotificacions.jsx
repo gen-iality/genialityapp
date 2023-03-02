@@ -115,7 +115,7 @@ const ModalNotifications = (props) => {
           style={{ marginBottom: '10px' }}
           rules={[{ required: true, message: 'Ingrese un mensaje!' }]}
         >
-          <TextArea rows={8} showCount maxLength={250} placeholder={'Máximo 250 caracteres'} />
+          <TextArea rows={8} showCount maxLength={250} placeholder="Máximo 250 caracteres" />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button

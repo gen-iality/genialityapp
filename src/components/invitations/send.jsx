@@ -202,7 +202,7 @@ class SendRsvp extends Component {
       <>
         <Form {...formLayout}>
           <Header
-            title={'Detalle de la comunicación'}
+            title="Detalle de la comunicación"
             back
             form
             save
@@ -218,7 +218,7 @@ class SendRsvp extends Component {
                 <Form.Item label={`Asunto del correo (Por defecto será el nombre del curso)`}>
                   <Input
                     name="subject"
-                    placeholder={'Escribe aquí el asunto del correo'}
+                    placeholder="Escribe aquí el asunto del correo"
                     onChange={(e) => this.handleChange(e)}
                     value={this.state.rsvp.subject}
                   />
@@ -237,7 +237,7 @@ class SendRsvp extends Component {
                   />
                 </Form.Item>
 
-                <Form.Item label={'Cabecera del correo'}>
+                <Form.Item label="Cabecera del correo">
                   <EviusReactQuill
                     name="content_header"
                     data={this.state.rsvp.content_header}
@@ -245,7 +245,7 @@ class SendRsvp extends Component {
                   />
                 </Form.Item>
 
-                <Form.Item label={'Específicar fecha del curso'}>
+                <Form.Item label="Específicar fecha del curso">
                   <Checkbox style={{ marginRight: '2%' }} defaultChecked={include_date} onChange={this.onChangeDate} />
                 </Form.Item>
 
@@ -318,7 +318,7 @@ class SendRsvp extends Component {
                   )}
                 </Form.Item>
 
-                <Form.Item label={'Cuerpo de la invitación (Por defecto será la descripción del curso)'}>
+                <Form.Item label="Cuerpo de la invitación (Por defecto será la descripción del curso)">
                   <EviusReactQuill
                     name="message"
                     data={this.state.rsvp.message}

@@ -377,7 +377,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
     return (
       <Result
         title="Cargando..."
-        subTitle={'Recuperando información del miembro'}
+        subTitle="Recuperando información del miembro"
         icon={<LoadingOutlined/>}
       />
     );
@@ -450,7 +450,7 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       ) : (
         <Result
           title="Cargando..."
-          subTitle={'Recuperando información del curso'}
+          subTitle="Recuperando información del curso"
           icon={<LoadingOutlined/>}
         />
       )}

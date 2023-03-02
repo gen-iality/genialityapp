@@ -150,12 +150,12 @@ const Ticket = (props) => {
           >
             <Input
               name="title"
-              placeholder={'Título del ticket'}
+              placeholder="Título del ticket"
               value={ticket.title}
               onChange={(e) => handleInputChange(e)}
             />
           </Form.Item>
-          <Form.Item label={'Permiso de enviar respuestas'}>
+          <Form.Item label="Permiso de enviar respuestas">
             <Switch
               name="allowed_to_vote"
               checked={ticket.allowed_to_vote}

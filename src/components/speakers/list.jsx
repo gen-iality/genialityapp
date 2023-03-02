@@ -214,7 +214,7 @@ function SpeakersList(props) {
     <div>
       <Header
         title="Conferencistas"
-        titleTooltip={'Agregue o edite las personas que son conferencistas'}
+        titleTooltip="Agregue o edite las personas que son conferencistas"
         addUrl={{
           pathname: `${props.matchUrl}/speaker`,
           state: { new: true },

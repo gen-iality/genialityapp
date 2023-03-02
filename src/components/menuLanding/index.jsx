@@ -381,7 +381,7 @@ class MenuLanding extends Component {
             title={
               this.props.organization != 1 ? 'Habilitar secciones del curso' : 'Secciones a habilitar para cada curso'
             }
-            description={'(Podrás guardar la configuración de tu menú en la parte inferior)'}
+            description="(Podrás guardar la configuración de tu menú en la parte inferior)"
             save
             form
           />
@@ -395,7 +395,7 @@ class MenuLanding extends Component {
                       this.state.menu[key].section === 'interviews' ||
                       this.state.menu[key].section === 'my_sesions') &&
                     this.props.event?.visibility === 'ANONYMOUS' ? (
-                      <Result title={'No está disponible para este tipo de acceso del curso'} icon={<></>} />
+                      <Result title="No está disponible para este tipo de acceso del curso" icon={<></>} />
                     ) : (
                       <>
                         <Form.Item name={this.state.menu[key].name}>
@@ -406,7 +406,7 @@ class MenuLanding extends Component {
                             {this.state.menu[key].checked ? 'Deshabilitar' : 'Habilitar'}
                           </Button>
                         </Form.Item>
-                        <Form.Item label={'Cambiar nombre de la sección'}>
+                        <Form.Item label="Cambiar nombre de la sección">
                           <Input
                             name={`name${index}`}
                             disabled={this.state.menu[key].checked ? false : true}
@@ -417,7 +417,7 @@ class MenuLanding extends Component {
                             placeholder={this.state.menu[key].name}
                           />
                         </Form.Item>
-                        <Form.Item label={'Permisos para la sección'}>
+                        <Form.Item label="Permisos para la sección">
                           <Select
                             name={`permissions${index}`}
                             key={this.state.keySelect}
@@ -430,7 +430,7 @@ class MenuLanding extends Component {
                             <Option value="assistants">Usuarios inscritos al curso</Option>
                           </Select>
                         </Form.Item>
-                        <Form.Item label={'Posición en el menú'}>
+                        <Form.Item label="Posición en el menú">
                           <InputNumber
                             name={`position${index}`}
                             disabled={this.state.menu[key].checked ? false : true}

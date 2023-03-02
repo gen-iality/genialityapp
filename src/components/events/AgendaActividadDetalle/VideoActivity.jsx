@@ -12,7 +12,7 @@ export const VideoActivity = () => {
     <>
       {currentActivity?.video ? (
         /* <ReactPlayer
-          width={'100%'}
+          width="100%"
           style={{
             display: 'block',
             margin: '0 auto',

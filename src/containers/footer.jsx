@@ -51,7 +51,7 @@ const Footer = () => {
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <Link to={'/faqs'} style={{ color: '#fff' }}>
+              <Link to="/faqs" style={{ color: '#fff' }}>
                 FAQS
               </Link>
             </List.Item>
@@ -66,17 +66,17 @@ const Footer = () => {
             }
           >
             <List.Item style={{ border: 'none' }}>
-              <Link to={'/terms'} style={{ color: '#fff' }}>
+              <Link to="/terms" style={{ color: '#fff' }}>
                 Términos y condiciones
               </Link>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <Link to={'/privacy'} style={{ color: '#fff' }}>
+              <Link to="/privacy" style={{ color: '#fff' }}>
                 Privacidad
               </Link>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <Link to={'/policies'} style={{ color: '#fff' }}>
+              <Link to="/policies" style={{ color: '#fff' }}>
                 Políticas
               </Link>
             </List.Item>

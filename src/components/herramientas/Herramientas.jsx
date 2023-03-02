@@ -33,7 +33,7 @@ const Herramientas = (props) => {
       API={ToolsApi}
       eventId={props.event._id}
       title="Herramientas"
-      titleTooltip={'Agregue o edite las herramientas que se muestran en la aplicación'}
+      titleTooltip="Agregue o edite las herramientas que se muestran en la aplicación"
       addUrl={{
         pathname: `${props.matchUrl}/herramienta`,
         state: { new: true },

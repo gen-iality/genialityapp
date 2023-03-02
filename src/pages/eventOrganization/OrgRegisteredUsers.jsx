@@ -94,7 +94,7 @@ function OrgRegisteredUsers(props) {
   return (
     <>
       {console.log('8. usersSuscribedData', usersSuscribedData)}
-      <Header title="Inscritos" description={'Se muestran los usuarios inscritos a los cursos de la organización'} />
+      <Header title="Inscritos" description="Se muestran los usuarios inscritos a los cursos de la organización" />
 
       <Table
         columns={columns(columnsData)}

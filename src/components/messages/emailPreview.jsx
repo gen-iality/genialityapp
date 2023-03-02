@@ -55,7 +55,7 @@ const EmailPrev = (props) => {
           </Tag>
         </p>
         {props.item.image || props.event.image &&
-          <Image width={400} src={props.item.image ? props.item.image : props.event.image} alt={'Imagen perfil'} />
+          <Image width={400} src={props.item.image ? props.item.image : props.event.image} alt="Imagen perfil" />
         }
         <div
           style={{ textAlign: 'center' }}

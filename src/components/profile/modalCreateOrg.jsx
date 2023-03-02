@@ -91,12 +91,12 @@ const ModalCreateOrg = (props) => {
           </ImgCrop>
         </Form.Item>
         <Form.Item
-          label={'Nombre de la organizacion'}
+          label="Nombre de la organizacion"
           name="name"
           style={{ marginBottom: '10px' }}
           rules={[{ required: true, message: 'Ingrese un nombre para su organización!' }]}
         >
-          <Input type="text" size="large" placeholder={'Nombre de la organizacion'} />
+          <Input type="text" size="large" placeholder="Nombre de la organizacion" />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button

@@ -297,7 +297,7 @@ const myPlan = ({ cUser }) => {
                 setShowModal(!showModal);
                 setToShowModal('');
               }}
-              width={'100%'}
+              width="100%"
             >
               <Divider orientation="left">
                 <strong>

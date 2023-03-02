@@ -161,7 +161,7 @@ class ImportUsers extends Component {
         <Header
           title={<Link to={this.props.matchUrl}>Invitados</Link>}
           back
-          description={'Importación de usuarios - Excel'}
+          description="Importación de usuarios - Excel"
         />
         <br />
         <Steps current={this.state.step} /* onChange={this.onChange} */>

@@ -196,7 +196,7 @@ class Product extends Component {
       <div>
         <Header
           title="Producto"
-          titleTooltip={'Agregue o edite los Productos que se muestran en la aplicación'}
+          titleTooltip="Agregue o edite los Productos que se muestran en la aplicación"
           addFn={this.newProduct}
           extra={
             <Row wrap gutter={[8, 8]}>

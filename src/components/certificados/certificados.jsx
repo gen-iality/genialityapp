@@ -47,7 +47,7 @@ const Certificados = (props) => {
       API={CertsApi}
       eventId={props.event._id}
       title="Certificados"
-      titleTooltip={'Agregue o edite los Certificados que se muestran en la aplicación'}
+      titleTooltip="Agregue o edite los Certificados que se muestran en la aplicación"
       addUrl={{
         pathname: `${props.matchUrl}/certificado`,
         state: { new: true },

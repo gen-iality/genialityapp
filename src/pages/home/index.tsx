@@ -88,7 +88,7 @@ const Home = () => {
                 <Row gutter={[16, 16]}>
                   {isSuccess && useResponse(typeEvent)?.length <= 0 ? (
                     <Row justify="center" align="middle" style={{ width: '100%', height: '400px' }}>
-                      <Result title={'No hay cursos próximos'} />
+                      <Result title="No hay cursos próximos" />
                     </Row>
                   ) : (
                     useResponse(typeEvent)?.map((event, key) => {

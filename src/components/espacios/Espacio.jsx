@@ -145,7 +145,7 @@ const Espacio = (props) => {
             <Input
               value={espacio.name}
               name="name"
-              placeholder={'Nombre del espacio'}
+              placeholder="Nombre del espacio"
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>

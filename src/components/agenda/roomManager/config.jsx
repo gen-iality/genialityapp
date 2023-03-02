@@ -112,7 +112,7 @@ export default function RoomConfig(props) {
             <Col span={8}>
               {/**Selección plataforma de la conferencia */}
               <Form.Item
-                label={'Proveedor de transmisión'}
+                label="Proveedor de transmisión"
                 tooltip={{
                   /* placement: 'bottomLeft', */
                   title: (
@@ -132,7 +132,7 @@ export default function RoomConfig(props) {
               </Form.Item>
 
               <Form.Item
-                label={'Origen de transmisión'}
+                label="Origen de transmisión"
                 tooltip={{
                   /* placement: 'bottomLeft', */
                   title: (

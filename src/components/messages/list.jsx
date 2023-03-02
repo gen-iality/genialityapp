@@ -64,7 +64,7 @@ function InvitationsList(props) {
       <CMS
         API={MessageApi}
         eventId={props.eventId}
-        title={'Comunicaciones enviadas'}
+        title="Comunicaciones enviadas"
         description={
           <Space>
             <ExclamationCircleOutlined style={{ color: '#faad14' }} />
@@ -78,7 +78,7 @@ function InvitationsList(props) {
         extraPathIcon={<BarsOutlined />}
         extraPathTitle="Detalle"
         extraPathUpdate={<ReloadOutlined />}
-        extraPathUpdateTitle={'Actualizar métricas'}
+        extraPathUpdateTitle="Actualizar métricas"
         exportData
         fileName="ComunicacionesEnviadas"
         titleTable={

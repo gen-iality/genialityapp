@@ -75,7 +75,7 @@ const Report = (props) => {
     <CMS 
       API={InvitationsApi}
       eventId={props.event._id}
-      title={'Reporte de Networking'}
+      title="Reporte de Networking"
       exportData
       columns={columns}
       key="_id"

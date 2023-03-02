@@ -15,7 +15,7 @@ const ModalPreviewVideo = () => {
     >
       <Row gutter={[0, 0]}>
         <Col style={{ borderRadius: '5px', overflow: 'hidden', aspectRatio: '16/9' }} span={24}>
-          <ReactPlayer controls width={'100%'} height={'100%'} style={{}} url={videoObject?.url as string} />
+          <ReactPlayer controls width="100%" height="100%" style={{}} url={videoObject?.url as string} />
         </Col>
         <Col>
           <Comment

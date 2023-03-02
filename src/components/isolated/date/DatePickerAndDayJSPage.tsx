@@ -36,7 +36,7 @@ export function DatePickerAndDayJSPage (props: IDatePickerAndDayJSPageProps) {
         // disabled={false}
         style={{ width: '100%' }}
         value={dayjs(dateStart) as any}
-        format={'DD/MM/YYYY'}
+        format="DD/MM/YYYY"
         onChange={(value: any) => changeDate(value)}
       />
     </Space>

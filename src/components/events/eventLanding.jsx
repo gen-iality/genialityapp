@@ -139,8 +139,8 @@ class EventLanding extends Component {
             {this.props.cEvent.value?.video_position == 'true' && this.props.cEvent.value.video && (
               <div className="mediaplayer">
                 <ReactPlayer
-                  width={'100%'}
-                  height={'100%'}
+                  width="100%"
+                  height="100%"
                   style={{
                     aspectRatio: '16/9',
                     objectFit: 'cover',
@@ -174,8 +174,8 @@ class EventLanding extends Component {
               this.props.cEvent.value.video && (
                 <div className="mediaplayer">
                   <ReactPlayer
-                    width={'100%'}
-                    height={'100%'}
+                    width="100%"
+                    height="100%"
                     style={{
                       aspectRatio: '16/9',
                       objectFit: 'cover',

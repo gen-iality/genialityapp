@@ -92,7 +92,7 @@ const FeriasDetail = (props) => {
               {companyDetail && (companyDetail.video_url || companyDetail.description) ? (
                 <div style={{ aspectRatio: '16/9', width: '100%' }}>
                   {companyDetail && companyDetail.video_url && (
-                    <ReactPlayer width='100%' className="video" height={'100%'} url={companyDetail.video_url} />
+                    <ReactPlayer width='100%' className="video" height="100%" url={companyDetail.video_url} />
                   )}
                   <Row style={{ paddingTop: '10px' }}>
                     <Space direction="vertical">

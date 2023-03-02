@@ -147,7 +147,7 @@ const Faq = (props) => {
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title={'Pregunta frecuente'} back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header title="Pregunta frecuente" back save form remove={onRemoveId} edit={locationState.edit} />
 
       <Row justify="center" wrap gutter={12}>
         <Col>
@@ -162,7 +162,7 @@ const Faq = (props) => {
             <Input
               value={faq && faq.title}
               name="title"
-              placeholder={'Título de la pregunta frecuente'}
+              placeholder="Título de la pregunta frecuente"
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>

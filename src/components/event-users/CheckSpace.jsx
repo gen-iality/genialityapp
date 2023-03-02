@@ -123,7 +123,7 @@ class CheckSpace extends Component {
     return (
       <div>
         <Modal
-          title={'Lector QR'}
+          title="Lector QR"
           visible={qrData}
           onCancel={this.closeQr}
           footer={[

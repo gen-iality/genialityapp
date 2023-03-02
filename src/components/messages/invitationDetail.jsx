@@ -27,13 +27,13 @@ const InvitationDetail = (props) => {
 
   return (
     <Fragment>
-      <Header title={'Detalle de la comunicación'} back />
+      <Header title="Detalle de la comunicación" back />
 
       <Tabs defaultActiveKey="1">
         <TabPane tab="Reporte envios" key="1">
           <Row justify="center" wrap gutter={[8, 8]}>
             <Col span={22}>
-              {users.length ? <MessageUser key="users" users={users} /> : <Empty description={'Sin data'} />}
+              {users.length ? <MessageUser key="users" users={users} /> : <Empty description="Sin data" />}
             </Col>
           </Row>
         </TabPane>
@@ -43,7 +43,7 @@ const InvitationDetail = (props) => {
               {users.length ? (
                 <EmailPrev key="email" event={props.event} item={locationState.item} />
               ) : (
-                <Empty description={'Sin data'} />
+                <Empty description="Sin data" />
               )}
             </Col>
           </Row>

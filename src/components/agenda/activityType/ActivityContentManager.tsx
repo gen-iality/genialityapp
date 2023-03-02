@@ -304,7 +304,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
                       Video cargado
                     </Typography.Text>
                   }
-                  description={'Esta es la url cargada'}
+                  description="Esta es la url cargada"
                 />
                 <br /><strong>URL:</strong>{' '}{videoURL}
               </Card>
