@@ -55,7 +55,7 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
           borderRadius: '10px',
           marginLeft: '2px',
         }}
-        size='small'
+        size="small"
         icon={<DeleteOutlined />}
         onClick={() => deleteActivitiesTaken(cEventUserId, eventId)}
       >

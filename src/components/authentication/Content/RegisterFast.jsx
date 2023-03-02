@@ -128,15 +128,15 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
           password: basicDataUser.password,
         }}
         form={form}
-        autoComplete='on'
-        layout='vertical'
+        autoComplete="on"
+        layout="vertical"
         onFinish={onFinish}
       >
         <Form.Item>
-          <ImgCrop rotate shape='round'>
+          <ImgCrop rotate shape="round">
             <Upload
               fileList={basicDataUser.picture || []}
-              accept='image/png,image/jpeg'
+              accept="image/png,image/jpeg"
               onChange={(info) => {
                 if (info.fileList.length > 0) {
                   getBase64(info.file.originFileObj, (imageUrl) => setImageAvatar(imageUrl));
@@ -150,14 +150,14 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
                 HandleHookForm(null, 'picture', null);
               }}
               customRequest={uploadImagedummyRequest}
-              listType='picture'
+              listType="picture"
               maxCount={1}
             >
               {!takingPhoto && (
-                <Space direction='vertical'>
+                <Space direction="vertical">
                   <Button
-                    type='primary'
-                    shape='circle'
+                    type="primary"
+                    shape="circle"
                     style={{
                       height: !imageAvatar ? '120px' : '95px',
                       width: !imageAvatar ? '120px' : '95px',
@@ -180,12 +180,12 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         {/* En desktop el upload no toma fotos toca hacerlo por separado */}
         <Form.Item>
           {takingPhoto && (
-            <div className='avatarCamera'>
+            <div className="avatarCamera">
               <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} isFullscreen={false} />
             </div>
           )}
           <Button
-            type='primary'
+            type="primary"
             icon={takingPhoto ? <DeleteOutlined /> : <CameraOutlined />}
             onClick={() => {
               //setImageAvatar(null);
@@ -199,15 +199,15 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             id: 'modal.label.email',
             defaultMessage: 'Correo electrónico',
           })}
-          name='email'
+          name="email"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={ruleEmail}
         >
           <Input
             onChange={(e) => HandleHookForm(e, 'email')}
-            type='email'
-            size='large'
+            type="email"
+            size="large"
             placeholder={'micorreo@ejemplo.com'}
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
@@ -218,15 +218,15 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
               id: 'modal.label.cedula',
               defaultMessage: 'Cedula',
             })}
-            name='password'
+            name="password"
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
             rules={ruleCedula}
           >
             <Input
               onChange={(e) => HandleHookForm(e, 'password')}
-              type='number'
-              size='large'
+              type="number"
+              size="large"
               // placeholder={'Cedula del medico ó especialista'}
               placeholder={'Cedula ó numero de identificación'}
               prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
@@ -238,15 +238,15 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
               id: 'modal.label.password',
               defaultMessage: 'Documento de identidad', // TODO: Antes contraseña
             })}
-            name='password'
+            name="password"
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
             rules={rulePassword}
           >
             <Input.Password
               onChange={(e) => HandleHookForm(e, 'password')}
-              type='password'
-              size='large'
+              type="password"
+              size="large"
               placeholder={intl.formatMessage({
                 id: 'modal.label.password',
                 defaultMessage: 'Documento de identidad', // TODO: Antes contraseña
@@ -260,15 +260,15 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             id: 'modal.label.name',
             defaultMessage: 'Nombre',
           })}
-          name='names'
+          name="names"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={ruleName}
         >
           <Input
             onChange={(e) => HandleHookForm(e, 'names')}
-            type='text'
-            size='large'
+            type="text"
+            size="large"
             placeholder={intl.formatMessage({
               id: 'modal.label.name',
               defaultMessage: 'Nombre',

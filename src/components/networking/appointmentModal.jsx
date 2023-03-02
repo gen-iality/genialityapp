@@ -176,12 +176,12 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       style={{ zIndex: 1031 }}
     >
       {loading ? (
-        <Row align='middle' justify='center' style={{ height: 300 }}>
+        <Row align="middle" justify="center" style={{ height: 300 }}>
           <Spin />
         </Row>
       ) : (
         <div>
-          <Row justify='end'>
+          <Row justify="end">
             <Select
               style={{ width: 200 }}
               value={selectedDate}
@@ -201,7 +201,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
           <div>
             <List
               bordered
-              itemLayout='vertical'
+              itemLayout="vertical"
               dataSource={timetable[selectedDate]}
               renderItem={(timetableItem) => {
                 if (timetableItem.status === 'accepted') {
@@ -212,19 +212,19 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
 
                 return (
                   <List.Item>
-                    <Row align='middle'>
+                    <Row align="middle">
                       <Col xs={16}>
-                        <Row justify='center'>
+                        <Row justify="center">
                           {`${dayjs(timetableItem.timestamp_start).format('hh:mm a')} - ${dayjs(
                             timetableItem.timestamp_end
                           ).format('hh:mm a')}`}
                         </Row>
                       </Col>
                       <Col xs={8}>
-                        <Row justify='center'>
+                        <Row justify="center">
                           <Button
-                            type='primary'
-                            shape='round'
+                            type="primary"
+                            shape="round"
                             disabled={timetableItem.status !== 'free' || openAgenda === agendaId}
                             onClick={() => {
                               if (timetableItem.status === 'free') {
@@ -254,9 +254,9 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                             }}
                           />
                         </div>
-                        <Row justify='end' style={{ paddingBottom: '20px' }}>
+                        <Row justify="end" style={{ paddingBottom: '20px' }}>
                           <Button
-                            shape='round'
+                            shape="round"
                             onClick={() => {
                               setOpenAgenda('');
                               setAgendaMessage('');
@@ -266,8 +266,8 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                             Cancelar
                           </Button>
                           <Button
-                            type='primary'
-                            shape='round'
+                            type="primary"
+                            shape="round"
                             onClick={() => {
                               if (timetableItem.status === 'free') {
                                 setLoading(true);

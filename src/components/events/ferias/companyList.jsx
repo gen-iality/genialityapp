@@ -22,7 +22,7 @@ function Companylist(props) {
     Modal.info({
       title: info.name,
       content: (
-        <Space direction='vertical'>
+        <Space direction="vertical">
           {props.tel && (
             <Space>
               <PhoneOutlined />
@@ -39,7 +39,7 @@ function Companylist(props) {
             <Space>
               <GlobalOutlined />
               <Text>
-                <a rel='noreferrer' href={props.pagweb} target='_blank'>
+                <a rel="noreferrer" href={props.pagweb} target="_blank">
                   <Text style={{ width: '50vw' }} ellipsis>
                     {props.pagweb}
                   </Text>
@@ -53,7 +53,7 @@ function Companylist(props) {
   }
 
   return (
-    <div className='company-list'>
+    <div className="company-list">
       <Badge.Ribbon text={props.text} color={props.colorStand}>
         <Card
           bodyStyle={{ padding: '12px' }}
@@ -65,65 +65,65 @@ function Companylist(props) {
             margin: 'auto',
             borderRadius: '5px',
           }}>
-          <Row className='container' gutter={[10, 10]}>
+          <Row className="container" gutter={[10, 10]}>
             <Col
               xs={24}
               sm={24}
               md={24}
               lg={6}
               xl={6}
-              className='col'
+              className="col"
               onClick={() => {
                 history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`);
               }}>
-              <div className='img-contact'>
-                <img className='img' src={props.img} />
+              <div className="img-contact">
+                <img className="img" src={props.img} />
               </div>
             </Col>
             <Col xs={24} sm={24} md={24} lg={9} xl={9}>
-              <div className='info-contact'>
-                <span className='name'>
+              <div className="info-contact">
+                <span className="name">
                   <Tag color={props.colorStand} style={{ height: '12px' }} />
                   {props.name}{' '}
                 </span>
-                <span className='position'>{props.position} </span>
+                <span className="position">{props.position} </span>
                 <Paragraph
                   ellipsis={{
                     rows: 3, // Determina la cantidad de filas que se muestran antes de cortar el texto.
                     expandable: false,
                   }}
-                  className='description'>
+                  className="description">
                   {description}
                 </Paragraph>
                 <span style={{ marginTop: 15 }}>
                   <Link to={`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`}>
-                    <Button type='primary'>Visitar stand</Button>
+                    <Button type="primary">Visitar stand</Button>
                   </Link>
                 </span>
               </div>
             </Col>
             {props.tel || props.email || props.pagweb ? (
               <Col xs={24} sm={24} md={24} lg={9} xl={9}>
-                <div className='redes-contact'>
+                <div className="redes-contact">
                   {props.tel && (
-                    <span className='tel'>
-                      <PhoneOutlined className='icono' /> {props.tel}
+                    <span className="tel">
+                      <PhoneOutlined className="icono" /> {props.tel}
                     </span>
                   )}
                   {props.email && (
-                    <span className='email'>
-                      <MailOutlined className='icono' /> {props.email}
+                    <span className="email">
+                      <MailOutlined className="icono" /> {props.email}
                     </span>
                   )}
                   {props.pagweb && (
-                    <span className='web'>
-                      <GlobalOutlined className='icono' />
+                    <span className="web">
+                      <GlobalOutlined className="icono" />
                       <a
-                        rel='noreferrer'
+                        rel="noreferrer"
                         onClick={() => {
                           window.open(`${props.pagweb}`, '_blank');
                         }}
-                        target='_blank'>
+                        target="_blank">
                         <Text style={{ width: '20vw' }} ellipsis>
                           {props.pagweb}
                         </Text>
@@ -132,7 +132,7 @@ function Companylist(props) {
                   )}
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <Button type='default' className='boton' size='large' onClick={() => showModal(props)}>
+                  <Button type="default" className="boton" size="large" onClick={() => showModal(props)}>
                     Información de contacto
                   </Button>
                 </div>

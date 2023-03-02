@@ -14,11 +14,11 @@ export const remoteLogoutNotification = ({ type, names, formatMessage }: remoteL
       duration: 0,
       icon: (
         <Logout
-          className='animate__animated animate__heartBeat animate__infinite animate__slower'
+          className="animate__animated animate__heartBeat animate__infinite animate__slower"
           style={{ color: '#FF4E50' }}
         />
       ),
-      message: <b className='animate__animated animate__heartBeat animate__infinite animate__slower'>{names}</b>,
+      message: <b className="animate__animated animate__heartBeat animate__infinite animate__slower">{names}</b>,
       description: formatMessage({
         id: 'notification.log_out',
         defaultMessage: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',

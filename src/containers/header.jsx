@@ -131,14 +131,14 @@ const Headers = (props) => {
         onClick={() => {
           helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
         }}>
-        <FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
+        <FormattedMessage id="header.expired_signin" defaultMessage="Sign In" />
       </Menu.Item>
 
       <Menu.Item
         onClick={() => {
           helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
         }}>
-        <FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
+        <FormattedMessage id="registration.button.create" defaultMessage="Sign Up" />
       </Menu.Item>
     </Menu>
   );
@@ -209,13 +209,13 @@ const Headers = (props) => {
           transition: 'all 0.5s ease-out',
           opacity: fixed ? '0.9' : '1',
         }}>
-        <Menu theme='light' mode='horizontal'>
-          <Row justify='space-between' align='middle'>
-            <Row className='logo-header' justify='space-between' align='middle'>
+        <Menu theme="light" mode="horizontal">
+          <Row justify="space-between" align="middle">
+            <Row className="logo-header" justify="space-between" align="middle">
               {/* Menú de administrar un curso (esto debería aparecer en un curso no en todo lado) */}
               {dataGeneral?.showAdmin && (
-                <Col span={2} offset={3} data-target='navbarBasicExample'>
-                  <span className='icon icon-menu' onClick={() => handleMenuEvent()}>
+                <Col span={2} offset={3} data-target="navbarBasicExample">
+                  <span className="icon icon-menu" onClick={() => handleMenuEvent()}>
                     <Button style={zIndex} onClick={() => showDrawer()}>
                       {createElement(dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
                         className: 'trigger',
@@ -245,8 +245,8 @@ const Headers = (props) => {
                         color: '#FFFFFF',
                         border: 'none',
                       }}
-                      size='large'
-                      shape='circle'
+                      size="large"
+                      shape="circle"
                       icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
                     />
                   </Dropdown>
@@ -257,7 +257,7 @@ const Headers = (props) => {
                     <Button
                       icon={<LockOutlined />}
                       style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                      size='large'
+                      size="large"
                       onClick={() => {
                         helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
                       }}>
@@ -275,8 +275,8 @@ const Headers = (props) => {
                             color: '#FFFFFF',
                             border: 'none',
                           }}
-                          size='large'
-                          shape='circle'
+                          size="large"
+                          shape="circle"
                           icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
                         />
                       </Dropdown>
@@ -285,7 +285,7 @@ const Headers = (props) => {
 
                   {showButtons.buttonregister && (
                     <Button
-                      size='large'
+                      size="large"
                       onClick={() => {
                         helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
                       }}>
@@ -339,13 +339,13 @@ const Headers = (props) => {
       {/* Menu mobile */}
 
       {dataGeneral.showAdmin && dataGeneral.showEventMenu && (
-        <div id='navbarBasicExample'>
+        <div id="navbarBasicExample">
           <Drawer
-            className='hiddenMenuMobile_Landing'
-            title='Administrar curso'
+            className="hiddenMenuMobile_Landing"
+            title="Administrar curso"
             maskClosable
             bodyStyle={{ padding: '0px' }}
-            placement='left'
+            placement="left"
             closable
             onClose={() => onClose()}
             visible={dataGeneral.showEventMenu}

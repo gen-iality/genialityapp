@@ -339,7 +339,7 @@ class DatosModal extends Component {
     return (
       <>
         <Form
-          autoComplete='off' // this was added
+          autoComplete="off" // this was added
           initialValues={this.props.info}
           ref={this.formRef}
           onFinish={this.onSaveGeneral} // this changed, enable to avoid more bugs
@@ -347,7 +347,7 @@ class DatosModal extends Component {
         >
           {/* Campo oculto  con el id del mismo para poder editar un campo a recolectar para una organización */}
           <Form.Item hidden initialValue={this.props.info?._id} name="id">
-            <Input name='label' type='text' />
+            <Input name="label" type="text" />
           </Form.Item>
           <Form.Item
             initialValue={this.props.info?.label}
@@ -356,11 +356,11 @@ class DatosModal extends Component {
             name="label"
             rules={[{ required: true }]}
           >
-            <Input name="label" type='text' placeholder={'Ej: Celular'} onChange={this.handleChange} />
+            <Input name="label" type="text" placeholder={'Ej: Celular'} onChange={this.handleChange} />
           </Form.Item>
-          <Form.Item name='name' initialValue={this.props.info?.name}>
+          <Form.Item name="name" initialValue={this.props.info?.name}>
             <Input
-              type='text'
+              type="text"
               placeholder={'Nombre del campo en base de datos'}
               disabled
               //onChange={this.handleChange}
@@ -369,7 +369,7 @@ class DatosModal extends Component {
           <Form.Item
             initialValue={info?.type}
             label={'Tipo de dato'}
-            name='type'
+            name="type"
             rules={[{ required: true, message: 'Seleccione un tipo de dato válido' }]}
           >
             <Select
@@ -379,7 +379,7 @@ class DatosModal extends Component {
           </Form.Item>
 
           {/* Mark this field as dependent */}
-          <Form.Item name='isDependent'>
+          <Form.Item name="isDependent">
             <Checkbox
               name="isDependent"
               checked={(isDependent || info?.dependency?.fieldName)}
@@ -391,7 +391,7 @@ class DatosModal extends Component {
 
           {(isDependent || info?.dependency?.fieldName) && (
             <>
-            <Form.Item name='fieldName'>
+            <Form.Item name="fieldName">
               <Input
                 value={info.dependency?.fieldName}
                 onChange={(e) => {
@@ -416,7 +416,7 @@ class DatosModal extends Component {
                 onChange={this.changeDependencies}
                 onInputChange={this.handleInputChangeDependency}
                 onKeyDown={(e) => this.handleKeyDownDependent(e)}
-                placeholder='Escribe la opción y presiona Enter o Tab...'
+                placeholder="Escribe la opción y presiona Enter o Tab..."
                 defaultValue={(info?.dependency?.triggerValues ?? []).map(createOption)}
                 value={(info?.dependency?.triggerValues ?? []).map(createOption)}
                 required
@@ -436,7 +436,7 @@ class DatosModal extends Component {
                 onChange={this.changeOption}
                 onInputChange={this.handleInputChange}
                 onKeyDown={(e) => this.handleKeyDown(e)}
-                placeholder='Escribe la opción y presiona Enter o Tab...x'
+                placeholder="Escribe la opción y presiona Enter o Tab...x"
                 defaultValue={info?.options}
                 required
               />
@@ -444,7 +444,7 @@ class DatosModal extends Component {
           )}
 
           {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
-            <Form.Item name='justonebyattendee'>
+            <Form.Item name="justonebyattendee">
               <Checkbox
                 name="justonebyattendee"
                 checked={info.justonebyattendee}
@@ -457,7 +457,7 @@ class DatosModal extends Component {
           )}
 
           {(info.type === 'TTCC') && (
-            <Form.Item name='link' label="Enlace para los términos y condiciones">
+            <Form.Item name="link" label="Enlace para los términos y condiciones">
             <Input
               value={info.link}
               onChange={(e) => {
@@ -479,7 +479,7 @@ class DatosModal extends Component {
             label="Obligatorio"
             initialValue={info.mandatory || false}
             htmlFor="mandatoryModal"
-            name='mandatory'>
+            name="mandatory">
             <Checkbox
               id="mandatoryModal"
               //name="mandatory"
@@ -487,7 +487,7 @@ class DatosModal extends Component {
               onChange={this.changeFieldCheck}
             />
           </Form.Item>
-          <Form.Item label={'Visible para Contactos'} htmlFor="visibleByContactsModal" name='visibleByContacts'>
+          <Form.Item label={'Visible para Contactos'} htmlFor="visibleByContactsModal" name="visibleByContacts">
             <Checkbox
               id="visibleByContactsModal"
               name="visibleByContacts"
@@ -495,7 +495,7 @@ class DatosModal extends Component {
               onChange={this.changeFieldCheckVisibleByContacts}
             />
           </Form.Item>
-          <Form.Item label={'Visible para Admin'} htmlFor="visibleByAdminModal" name='visibleByAdmin'>
+          <Form.Item label={'Visible para Admin'} htmlFor="visibleByAdminModal" name="visibleByAdmin">
             <Checkbox
               id="visibleByAdminModal"
               name="visibleByAdmin"
@@ -503,7 +503,7 @@ class DatosModal extends Component {
               onChange={this.changeFieldCheckVisibleByAdmin}
             />
           </Form.Item>
-          <Form.Item label="$1" name='description'>
+          <Form.Item label="$1" name="description">
             <TextArea
               placeholder={'Descripción corta'}
               name="description"
@@ -511,11 +511,11 @@ class DatosModal extends Component {
               onChange={this.handleChange}
             />
           </Form.Item>
-          <Form.Item label={'Posición / Orden'} name='order_weight'>
+          <Form.Item label={'Posición / Orden'} name="order_weight">
             <InputNumber
               min={0}
               name="order_weight"
-              placeholder='1'
+              placeholder="1"
               value={info.order_weight}
               onChange={(value) => this.handleChange({ target: { name: 'order_weight', value: value } })}
             />
@@ -524,16 +524,16 @@ class DatosModal extends Component {
             <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Button
                 style={{ marginRight: 20 }}
-                type='primary'
-                htmlType='submit'
-                id='btnSave'
+                type="primary"
+                htmlType="submit"
+                id="btnSave"
                 disabled={loading}
                 loading={loading}
               >
                 Guardar
               </Button>
 
-              <Button onClick={() => this.props.cancel()} type='default' tmlType='button'>
+              <Button onClick={() => this.props.cancel()} type="default" tmlType="button">
                 Cancelar
               </Button>
             </Row>

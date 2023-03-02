@@ -61,10 +61,10 @@ class Preview extends Component {
 
   content = () => {
     return (
-      <Form onFinish={this.savePassword} preserve={false} layout='vertical'>
+      <Form onFinish={this.savePassword} preserve={false} layout="vertical">
         <Form.Item
-          name='password'
-          label='Contraseña'
+          name="password"
+          label="Contraseña"
           rules={[
             {
               required: true,
@@ -82,8 +82,8 @@ class Preview extends Component {
         </Form.Item>
 
         <Form.Item
-          name='confirm'
-          label='Confirmar contraseña'
+          name="confirm"
+          label="Confirmar contraseña"
           dependencies={['password']}
           hasFeedback
           rules={[
@@ -119,8 +119,8 @@ class Preview extends Component {
               Cancelar
             </Button>
             <Button
-              type='primary'
-              htmlType='submit'
+              type="primary"
+              htmlType="submit"
               onClick={() => {
                 Modal.destroyAll();
                 this.setState({ showMessage: false });
@@ -245,10 +245,10 @@ class Preview extends Component {
     const self = this;
     return (
       <>
-        <Row justify='center' gutter={[24, 24]}>
+        <Row justify="center" gutter={[24, 24]}>
           <Col span={10}>
             <Badge.Ribbon
-              text='Seleccionado'
+              text="Seleccionado"
               color={'#2593FC'}
               style={this.state.genericPassword ? { display: 'none' } : {}}
             >
@@ -279,7 +279,7 @@ class Preview extends Component {
           </Col>
           <Col span={10}>
             <Badge.Ribbon
-              text='Seleccionado'
+              text="Seleccionado"
               color={'#2593FC'}
               style={!this.state.genericPassword ? { display: 'none' } : {}}
             >
@@ -306,13 +306,13 @@ class Preview extends Component {
                     {this.state.genericPassword &&
                       (this.state.password === '' || this.state.password === null) &&
                       this.state.showMessage && (
-                        <Typography.Text type='secondary'>
+                        <Typography.Text type="secondary">
                           No tienes una contraseña asignada para tus asistentes, si deseas asignarla{' '}
                           <strong>haz clic aquí</strong>
                         </Typography.Text>
                       )}
                     {this.state.genericPassword && this.state.password && !this.state.showMessage && (
-                      <Typography.Text type='secondary'>
+                      <Typography.Text type="secondary">
                         Tienes una contraseña asignada para tus asistentes, si deseas cambiarla{' '}
                         <strong>haz clic aquí</strong>, ten en cuenta que por seguridad mostrará los campos vacíos.
                       </Typography.Text>
@@ -326,7 +326,7 @@ class Preview extends Component {
         <br />
         <br />
         <Button
-          type='primary'
+          type="primary"
           icon={<UploadOutlined />}
           disabled={this.state.genericPassword && (this.state.password === '' || this.state.password === null)}
           onClick={() => {
@@ -336,7 +336,7 @@ class Preview extends Component {
         </Button>
 
         <Modal
-          title='Por favor ingrese la contraseña para los asistentes'
+          title="Por favor ingrese la contraseña para los asistentes"
           icon={<ExclamationCircleOutlined />}
           footer={null}
           destroyOnClose

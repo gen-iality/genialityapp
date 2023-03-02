@@ -18,16 +18,16 @@ const OrganizationCard = (props) => {
   };
 
   const actionAdmin = screens.xs ? (
-    <SettingOutlined key='admin' onClick={() => adminOrganization()} />
+    <SettingOutlined key="admin" onClick={() => adminOrganization()} />
   ) : (
-    <span onClick={() => adminOrganization()} key='admin'>
+    <span onClick={() => adminOrganization()} key="admin">
       Administrar
     </span>
   );
   const actionview = screens.xs ? (
-    <EyeOutlined onClick={() => landingOrganization()} key='view' />
+    <EyeOutlined onClick={() => landingOrganization()} key="view" />
   ) : (
-    <span onClick={() => landingOrganization()} key='view'>
+    <span onClick={() => landingOrganization()} key="view">
       Visitar
     </span>
   );
@@ -48,14 +48,14 @@ const OrganizationCard = (props) => {
       style={{ borderRadius: '10px' }}
       bodyStyle={{ minHeight: '200px', textAlign: 'center' }}
     >
-      <Space size={8} direction='vertical' style={{ textAlign: 'center', width: '100%' }}>
+      <Space size={8} direction="vertical" style={{ textAlign: 'center', width: '100%' }}>
         {props.data ? (
           <Avatar
             size={{ xs: 100, sm: 100, md: 100, lg: 100, xl: 100, xxl: 100 }}
             src={props.data?.styles?.event_image || 'https://via.placeholder.com/500.png/50D3C9/FFFFFF?text=Image'}
           />
         ) : (
-          <Skeleton.Avatar active size={100} shape='circle' />
+          <Skeleton.Avatar active size={100} shape="circle" />
         )}
         <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ fontSize: '14px', lineHeight: '1.15rem' }}>
           {props.data?.name}

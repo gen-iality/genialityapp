@@ -66,28 +66,28 @@ const Home = () => {
             <Button
               onClick={() => settypeEvent('nextEvents')}
               type={typeEvent === 'nextEvents' ? 'primary' : 'text'}
-              size='large'
-              shape='round'>
+              size="large"
+              shape="round">
               Próximos
             </Button>
             <Button
               onClick={() => settypeEvent('oldEvents')}
               type={typeEvent === 'oldEvents' ? 'primary' : 'text'}
-              size='large'
-              shape='round'>
+              size="large"
+              shape="round">
               Pasados
             </Button>
           </Space>
         </Col>
         <Col span={24}>
-          <section className='home'>
-            <div className='dynamic-content'>
+          <section className="home">
+            <div className="dynamic-content">
               {isLoading ? (
                 <LoadingEvent />
               ) : (
                 <Row gutter={[16, 16]}>
                   {isSuccess && useResponse(typeEvent)?.length <= 0 ? (
-                    <Row justify='center' align='middle' style={{ width: '100%', height: '400px' }}>
+                    <Row justify="center" align="middle" style={{ width: '100%', height: '400px' }}>
                       <Result title={'No hay cursos próximos'} />
                     </Row>
                   ) : (
@@ -109,7 +109,7 @@ const Home = () => {
                 </Row>
               )}
               {hasMore && useResponse(typeEvent)?.length > 10 ? (
-                <Button size='large' block loading={isLoading} onClick={() => SeeMoreEvents()}>
+                <Button size="large" block loading={isLoading} onClick={() => SeeMoreEvents()}>
                   {!isLoading ? 'Ver más'.toUpperCase() : 'Cargando...'.toUpperCase()}
                 </Button>
               ) : typeEvent === 'next' ? (

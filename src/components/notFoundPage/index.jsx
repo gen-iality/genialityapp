@@ -4,12 +4,12 @@ import { Result, Button } from 'antd';
 function NotFoundPage() {
   return (
     <Result
-      status='404'
-      title='404'
-      subTitle='Lo sentimos, la página que está visitando no existe.'
+      status="404"
+      title="404"
+      subTitle="Lo sentimos, la página que está visitando no existe."
       extra={
         <Link to={'/'}>
-          <Button type='primary'>Ir a la página principal</Button>
+          <Button type="primary">Ir a la página principal</Button>
         </Link>
       }
     />

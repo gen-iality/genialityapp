@@ -57,14 +57,14 @@ const PageNotPermissions = (props) => {
       {eventPrivate.private ? (
         <Card hoverable>
           <Result
-            // status='403'
-            title='ESTE CURSO ES PRIVADO'
+            // status="403"
+            title="ESTE CURSO ES PRIVADO"
             subTitle={
               <div>
                 <h1 style={{ fontSize: '20px' }}>Si estas incrito, ingresa tus datos</h1>
               </div>
             }
-            // extra={<Button type='primary'>Back home</Button>}
+            // extra={<Button type="primary">Back home</Button>}
           />
           <UserLoginContainer eventId={EventContext.value._id} />
         </Card>

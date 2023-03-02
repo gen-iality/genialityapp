@@ -139,11 +139,11 @@ const TipoAsistente = (props) => {
     <Form onFinish={onSubmit} {...formLayout}>
       <Header title={'Tipo de Asistente'} back save form remove={onRemoveId} edit={locationState.edit} />
 
-      <Row justify='center' wrap gutter={18}>
+      <Row justify="center" wrap gutter={18}>
         <Col>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} className="label">
                 Nombre del rol <label style={{ color: 'red' }}>*</label>
               </label>
             }

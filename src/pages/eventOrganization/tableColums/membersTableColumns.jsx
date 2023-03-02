@@ -31,13 +31,13 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
         <Row gutter={8}>
           <Col>
             <Popover
-              placement='top'
+              placement="top"
               content={() => (
                 <>
                   {item.picture ? (
                     <Image key={'img' + item._id} width={200} height={200} src={item.picture} />
                   ) : (
-                    <Empty description='Imagen no encontrada' />
+                    <Empty description="Imagen no encontrada" />
                   )}
                 </>
               )}
@@ -92,22 +92,22 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
     render(val, item, index) {
       return (
         <>
-          <Tooltip title='Time tracking'>
+          <Tooltip title="Time tracking">
             <Button
               style={{ marginRight: 10 }}
-              type='primary'
-              size='small'
+              type="primary"
+              size="small"
               onClick={() => {
                 history.push(`./members/timetracking/${item._id}`);
               }}
               icon={<ClockCircleOutlined />}
             ></Button>
           </Tooltip>
-          <Tooltip title='Editar'>
+          <Tooltip title="Editar">
             <Button
               id={`editAction${index}`}
-              type='primary'
-              size='small'
+              type="primary"
+              size="small"
               onClick={(e) => {
                 editModalUser(item);
               }}

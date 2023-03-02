@@ -396,12 +396,12 @@ const Document = (props) => {
           <>
             Por favor espere mientras cargue... <br />
             Si el problema persiste, favor de recargar <br />
-            <Button type='primary' icon={<ReloadOutlined />} onClick={() => reload()}>
+            <Button type="primary" icon={<ReloadOutlined />} onClick={() => reload()}>
               Recargar
             </Button>
           </>
         }>
-        <Row justify='center' wrap gutter={12}>
+        <Row justify="center" wrap gutter={12}>
           <Col span={14}>
             {!folder && (
               <Form.Item
@@ -414,14 +414,14 @@ const Document = (props) => {
               >
                 <Upload
                   name="file"
-                  type='file'
+                  type="file"
                   fileList={documentList}
                   defaultValue={documentList}
                   onChange={(e) => {
                     onHandlerFile(e);
                     e.file.status = 'success';
                   }}
-                  listType='picture'
+                  listType="picture"
                   maxCount={1}
                 >
                   <Button block icon={<UploadOutlined />}>

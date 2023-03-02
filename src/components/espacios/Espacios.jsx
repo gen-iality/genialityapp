@@ -39,7 +39,7 @@ const Espacios = (props) => {
         state: { new: true },
       }}
       columns={columns}
-      key='_id'
+      key="_id"
       editPath={`${props.matchUrl}/espacio`}
       actions
       search

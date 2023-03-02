@@ -139,22 +139,22 @@ const Informacion = (props) => {
   };
 
   return (
-    <div className='step-information'>
-      <Space direction='vertical' size='middle'>
+    <div className="step-information">
+      <Space direction="vertical" size="middle">
         <div>
           <Text>
-            Nombre del curso <span className='text-color'>*</span>
+            Nombre del curso <span className="text-color">*</span>
           </Text>
           <Input
             name="name"
             value={valueInputs['name'] || ''}
             onChange={(e) => handleInput(e, 'name')}
-            placeholder='Nombre del curso'
+            placeholder="Nombre del curso"
           />
           {containsError('name') && (
             <Col>
               {' '}
-              <small className='text-color'>Ingrese un nombre correcto para el curso</small>
+              <small className="text-color">Ingrese un nombre correcto para el curso</small>
             </Col>
           )}
         </div>
@@ -165,8 +165,8 @@ const Informacion = (props) => {
                 Descripción{' '}
                 <Link onClick={() => visibilityDescription(false)}>
                   |{' '}
-                  <Tooltip title='Eliminar descripción'>
-                    <DeleteOutlined className='text-color' /> <small className='text-color'>Eliminar descripción</small>
+                  <Tooltip title="Eliminar descripción">
+                    <DeleteOutlined className="text-color" /> <small className="text-color">Eliminar descripción</small>
                   </Tooltip>
                 </Link>
               </Text>
@@ -177,7 +177,7 @@ const Informacion = (props) => {
               {containsError('description') && (
                 <Col>
                   {' '}
-                  <small className='text-color'>Ingrese una descripción válida</small>
+                  <small className="text-color">Ingrese una descripción válida</small>
                 </Col>
               )}
             </div>
@@ -189,17 +189,17 @@ const Informacion = (props) => {
         </div>
         <div>
           <Text>
-            Fecha del curso <span className='text-color'>*</span>
+            Fecha del curso <span className="text-color">*</span>
           </Text>
           <Input
             value={dateEvent || ''}
             onClick={showModal}
             suffix={<CalendarOutlined />}
-            placeholder='Clic para agregar fecha'
+            placeholder="Clic para agregar fecha"
           />
         </div>
         <div>
-          <Space direction='vertical'>
+          <Space direction="vertical">
             {organizations.length > 0 && (
               <div style={{ marginBottom: '30px' }}>
                 <p>
@@ -221,18 +221,18 @@ const Informacion = (props) => {
                   createOrganizationF
                     ? null
                     : [
-                        <Button key='back' onClick={() => changeOrganization(false)}>
+                        <Button key="back" onClick={() => changeOrganization(false)}>
                           Cerrar
                         </Button>,
-                        <Button key='submit' type='primary' onClick={selectOrganizationOK}>
+                        <Button key="submit" type="primary" onClick={selectOrganizationOK}>
                           Seleccionar
                         </Button>,
                       ]
                 }
                 onOk={selectOrganizationOK}
-                okText='Seleccionar'
-                cancelText='Cerrar'
-                title='Organizaciónes'
+                okText="Seleccionar"
+                cancelText="Cerrar"
+                title="Organizaciónes"
                 visible={organization && !isbyOrganization}
                 onCancel={() => changeOrganization(false)}
               >
@@ -251,7 +251,7 @@ const Informacion = (props) => {
                 {!createOrganizationF && (
                   <List
                     style={{ height: 400, overflowY: 'auto' }}
-                    size='small'
+                    size="small"
                     bordered
                     dataSource={organizations?.length > 0 && organizations}
                     renderItem={(item) => (
@@ -272,16 +272,16 @@ const Informacion = (props) => {
                   <div style={{ minHeight: 450 }}>
                     {' '}
                     <Form
-                      name='basic'
+                      name="basic"
                       labelCol={{ span: 8 }}
                       wrapperCol={{ span: 16 }}
                       initialValues={{ remember: false }}
                       onFinish={createNewOrganization}
                       onFinishFailed={null}
-                      autoComplete='off'>
+                      autoComplete="off">
                       <Form.Item
-                        label='Nombre'
-                        name='name'
+                        label="Nombre"
+                        name="name"
                         rules={[
                           {
                             required: true,
@@ -292,7 +292,7 @@ const Informacion = (props) => {
                       </Form.Item>
                       {!loadingAdd && (
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                          <Button type='primary' htmlType='submit'>
+                          <Button type="primary" htmlType="submit">
                             Agregar
                           </Button>
                         </Form.Item>
@@ -311,7 +311,7 @@ const Informacion = (props) => {
         </div>
         {/* SELECT TEMPLATE BY ORGANIZATION */}
         {selectOrganization?.template_properties && (
-          <Space direction='vertical'>
+          <Space direction="vertical">
             <Text>Template: </Text>
             <Select value={templateId} style={{ minWidth: '400px' }} onChange={handleChange}>
               {selectOrganization.template_properties.map((template) => (
@@ -324,28 +324,28 @@ const Informacion = (props) => {
 
       {/* Modal de fecha */}
       <Modal
-        className='modal-calendar'
+        className="modal-calendar"
         centered
         visible={isModalVisible}
-        okText='Aceptar'
+        okText="Aceptar"
         onOk={handleOk}
-        cancelText='Cancelar'
+        cancelText="Cancelar"
         onCancel={handleCancel}
         width={600}
       >
-        <Row gutter={[16, 16]} justify='center' align='top'>
+        <Row gutter={[16, 16]} justify="center" align="top">
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <DayPicker onDayClick={changeSelectDay} selectedDays={selectedDay} value={selectedDay} />
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <Title level={4} type='secondary'>
+            <Title level={4} type="secondary">
               Asignar hora
             </Title>
             <Card>
-              <Space direction='vertical'>
+              <Space direction="vertical">
                 <div>
                   <Space>
-                    <div className='modal-horas'>
+                    <div className="modal-horas">
                       <span>de</span>
                     </div>
                     <TimePicker
@@ -357,7 +357,7 @@ const Informacion = (props) => {
                 </div>
                 <div>
                   <Space>
-                    <div className='modal-horas'>
+                    <div className="modal-horas">
                       <span>a</span>
                     </div>
                     <TimePicker
@@ -369,7 +369,7 @@ const Informacion = (props) => {
                 </div>
               </Space>
             </Card>
-            <Paragraph type='secondary' style={{ marginTop: '10px' }}>
+            <Paragraph type="secondary" style={{ marginTop: '10px' }}>
               Si tu curso se extiende por más de un día podrás ajustar las fechas en la sección{' '}
               <strong>Datos del curso</strong> una vez lo hayas creado.
             </Paragraph>

@@ -55,14 +55,14 @@ const ModalCreateOrg = (props) => {
         props.setModalCreateOrgIsVisible(false);
         resetFields();
       }}>
-      <Form onFinish={saveNewOrganization} form={form} autoComplete='off' layout='vertical'>
-        <Typography.Title level={4} type='secondary'>
+      <Form onFinish={saveNewOrganization} form={form} autoComplete="off" layout="vertical">
+        <Typography.Title level={4} type="secondary">
           Nueva organizacion
         </Typography.Title>
         <Form.Item>
-          <ImgCrop rotate shape='round'>
+          <ImgCrop rotate shape="round">
             <Upload
-              accept='image/png,image/jpeg'
+              accept="image/png,image/jpeg"
               onChange={(file) => {
                 const fls = (file ? file.fileList : []).map((fl) => ({
                   ...fl,
@@ -74,14 +74,14 @@ const ModalCreateOrg = (props) => {
                   setImageAvatar(null);
                 }
               }}
-              listType='picture'
+              listType="picture"
               maxCount={1}
               fileList={imageAvatar}
               beforeUpload={beforeUpload}
             >
               {imageAvatar === null && (
-                <Button type='primary' shape='circle' style={{ height: '150px', width: '150px' }}>
-                  <Space direction='vertical'>
+                <Button type="primary" shape="circle" style={{ height: '150px', width: '150px' }}>
+                  <Space direction="vertical">
                     <PictureOutlined style={{ fontSize: '40px' }} />
                     Subir logo
                   </Space>
@@ -92,19 +92,19 @@ const ModalCreateOrg = (props) => {
         </Form.Item>
         <Form.Item
           label={'Nombre de la organizacion'}
-          name='name'
+          name="name"
           style={{ marginBottom: '10px' }}
           rules={[{ required: true, message: 'Ingrese un nombre para su organización!' }]}
         >
-          <Input type='text' size='large' placeholder={'Nombre de la organizacion'} />
+          <Input type="text" size="large" placeholder={'Nombre de la organizacion'} />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
             id="submitButton"
-            htmlType='submit'
+            htmlType="submit"
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size='large'>
+            size="large">
             Crear organizacion
           </Button>
         </Form.Item>

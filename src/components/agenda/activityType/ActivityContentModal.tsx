@@ -124,7 +124,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
             const card: ActivityType.CardUI = widgetData;
             switch (card.widgetType) {
               case WidgetType.FORM:
-                return <Alert message='Si esto se ve, se está pasando un card (que tiene un hijo form) en lugar de pasar el form...' />
+                return <Alert message="Si esto se ve, se está pasando un card (que tiene un hijo form) en lugar de pasar el form..." />
               case WidgetType.CARD_SET:
                 return <ActivityTypeSelectableCards
                   selected={selected}
@@ -132,12 +132,12 @@ function ActivityContentModal(props: ActivityContentModalProps) {
                   onWidgetChange={(w) => handleWidgetKeyChange(w.key)}
                 />
               case WidgetType.FINAL:
-                return <Alert type='info' message='El fin' />
+                return <Alert type="info" message="El fin" />
               default:
                 return (
                   <Alert
                     message={`Tipo de widget ${(card as ActivityType.CardUI).widgetType} es desconocido`}
-                    type='error'
+                    type="error"
                   />
                 );
             }
@@ -171,7 +171,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
 
           return (
             <Alert
-              type='error'
+              type="error"
               message={`No puede interpretar ${JSON.stringify(widgetData)}`}
             />
           );

@@ -85,7 +85,7 @@ class DragDrop extends Component {
       <div>
         <DragDropContext onDragEnd={this.onDragEnd} onDragUpdate={this.onDragUpdate}>
           <Title level={4}>Organiza los datos de los asistentes</Title>
-          <Droppable droppableId='droppable' type='user_properties'>
+          <Droppable droppableId="droppable" type="user_properties">
             {(provided, snapshot) => (
               <div ref={provided.innerRef} style={getQuestionListStyle(snapshot.isDraggingOver)}>
                 {user_properties.map((list, index) => (

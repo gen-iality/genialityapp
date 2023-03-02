@@ -257,7 +257,7 @@ function AddProduct(props) {
   return (
     <Form {...formLayout} onFinish={saveProduct}>
       <Header title="Producto" back save form edit={props.match.params.id} remove={remove} />
-      <Row justify='center' wrap gutter={12}>
+      <Row justify="center" wrap gutter={12}>
         {props.match.params.id && isLoading ? (
           <Loading />
         ) : (
@@ -272,7 +272,7 @@ function AddProduct(props) {
             >
               <Input
                 value={name}
-                placeholder='Nombre del producto'
+                placeholder="Nombre del producto"
                 name="name"
                 onChange={(e) => changeInput(e, 'name')}
               />
@@ -283,7 +283,7 @@ function AddProduct(props) {
             <Form.Item label={<label style={{ marginTop: '2%' }}>Por</label>} rules={[{ required: false }]}>
               <Input
                 value={creator}
-                placeholder='Nombre del autor, creador o descripción corta'
+                placeholder="Nombre del autor, creador o descripción corta"
                 name="creator"
                 onChange={(e) => changeInput(e, 'creator')}
               />
@@ -306,7 +306,7 @@ function AddProduct(props) {
             >
               <Input
                 value={price}
-                placeholder='Valor del producto'
+                placeholder="Valor del producto"
                 name="price"
                 onChange={(e) => changeInput(e, 'price')}
               />{' '}
@@ -318,8 +318,8 @@ function AddProduct(props) {
             <ImageUploaderDragAndDrop
               imageDataCallBack={(file) => changeImg(file, 'Imagen')}
               imageUrl={picture}
-              width='1080'
-              height='1080'
+              width="1080"
+              height="1080"
             />
 
             {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
@@ -329,8 +329,8 @@ function AddProduct(props) {
             <ImageUploaderDragAndDrop
               imageDataCallBack={(file) => changeImg(file, 'img_optional')}
               imageUrl={optionalPicture}
-              width='1080'
-              height='1080'
+              width="1080"
+              height="1080"
             />
           </Col>
         )}

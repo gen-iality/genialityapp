@@ -59,15 +59,15 @@ export default class SurveyExternal extends Component {
   render() {
     const { publishedSurveys } = this.state;
     return (
-      <Card title='Gestor de evaluaciones externas'>
+      <Card title="Gestor de evaluaciones externas">
         {this.props.isExternal ? (
           <>
             <Row style={{ padding: '8px 16px' }}>
               <Col xs={5} lg={2}>
-                <label className='label'>Tìtulo</label>
+                <label className="label">Tìtulo</label>
               </Col>
               <Col xs={17} lg={16}>
-                <label className='label'>Pregunta</label>
+                <label className="label">Pregunta</label>
               </Col>
             </Row>
             {publishedSurveys.map((survey) => {

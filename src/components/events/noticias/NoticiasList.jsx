@@ -84,13 +84,13 @@ const NoticiasList = (props) => {
               {console.log('NOTICIA==>', news)}
               <Col /* style={{ paddingBottom: '30px' }}  */ xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                 {dayjs().format('YYYY-MM-DD') === dayjs(news.created_at).format('YYYY-MM-DD') ? (
-                  <Badge.Ribbon text='Nuevo' color='cyan'>
+                  <Badge.Ribbon text="Nuevo" color="cyan">
                     <Card
                       bodyStyle={{ padding: '15px' }}
                       cover={
                         <Image
                           style={{ height: '28vh', objectFit: 'cover' }}
-                          alt='example'
+                          alt="example"
                           src={news && news.image ? news.image : 'error'}
                           fallback={imgNotFound}
                         />
@@ -107,14 +107,14 @@ const NoticiasList = (props) => {
                         </Link>,
                       ]}>
                       <div>
-                        <Space direction='vertical' style={{ width: '100%' }}>
+                        <Space direction="vertical" style={{ width: '100%' }}>
                           <h2 style={{ fontWeight: '700', marginBottom: '0px' }}>{news.title}</h2>
                           <Paragraph style={{ color: '#9e9e9e' }} ellipsis={(ellipsis, { rows: 3 })}>
                             <div dangerouslySetInnerHTML={{ __html: news && news.descriptionShort }}></div>
                           </Paragraph>
                         </Space>
                       </div>
-                      <Space direction='horizontal'>
+                      <Space direction="horizontal">
                         <CalendarOutlined style={{ fontSize: '15px' }} />
                         <Row style={{ color: 'rgba(0, 0, 0, 0.6)' }}>{`Fecha publicación: ${dayjs(news.time).format(
                           'YYYY-MM-DD'
@@ -128,7 +128,7 @@ const NoticiasList = (props) => {
                     cover={
                       <img
                         style={{ height: '28vh', objectFit: 'cover' }}
-                        alt='example'
+                        alt="example"
                         src={news && news.picture ? news.picture : imgNotFound}
                       />
                     }
@@ -144,14 +144,14 @@ const NoticiasList = (props) => {
                       </Link>,
                     ]}>
                     <div>
-                      <Space direction='vertical' style={{ width: '100%' }}>
+                      <Space direction="vertical" style={{ width: '100%' }}>
                         <h2 style={{ fontWeight: '700', marginBottom: '0px' }}>{news.title}</h2>
                         <Paragraph style={{ color: '#9e9e9e' }} ellipsis={(ellipsis, { rows: 3 })}>
                           <div dangerouslySetInnerHTML={{ __html: news && news.descriptionShort }}></div>
                         </Paragraph>
                       </Space>
                     </div>
-                    <Space direction='horizontal'>
+                    <Space direction="horizontal">
                       <CalendarOutlined style={{ fontSize: '15px' }} />
                       <Row style={{ color: 'rgba(0, 0, 0, 0.6)' }}>{`Fecha publicación: ${dayjs(news.time).format(
                         'YYYY-MM-DD'
@@ -166,7 +166,7 @@ const NoticiasList = (props) => {
           <Card style={{ width: '100%', textAlign: 'center' }}>No existen noticias</Card>
         )}
         {size && noticias && noticias.length > size && (
-          <Button type='primary' block onClick={viewAll} style={{ fontSize: '18px', height: 'auto' }}>
+          <Button type="primary" block onClick={viewAll} style={{ fontSize: '18px', height: 'auto' }}>
             {!viewMenos ? 'Ver más' : 'Ver menos'}
           </Button>
         )}

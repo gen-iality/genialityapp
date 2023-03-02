@@ -54,7 +54,7 @@ export default function ListadoJuegos(props) {
         onClick={() => props.changeContentDisplayed('games')}
         style={{ cursor: 'pointer', marginTop: '12px' }}
       >
-        <Row justify='space-between' onClick={() => props.changeContentDisplayed('games')}>
+        <Row justify="space-between" onClick={() => props.changeContentDisplayed('games')}>
           <Col span={6}>
             <Avatar size={38} style={{ backgroundColor: '#87d068' }}>
               {' '}
@@ -70,12 +70,12 @@ export default function ListadoJuegos(props) {
         </Row>
       </Card>
       {/*RANKING*/}
-      <Row justify='center'>
+      <Row justify="center">
         {myName !== '' && myScore !== '' && (
           <>
             <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi puntaje</h3>
-            <div className='card-games-ranking ranking-user'>
-              <Row justify='space-between'>
+            <div className="card-games-ranking ranking-user">
+              <Row justify="space-between">
                 <Col span={6}>
                   <Avatar size={38}>
                     {myName && myName.charAt(0).toUpperCase()}

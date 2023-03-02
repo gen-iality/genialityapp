@@ -442,7 +442,7 @@ class Styles extends Component {
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Configuración de Estilos'} save form />
 
-          <Row justify='center' wrap gutter={[8, 8]}>
+          <Row justify="center" wrap gutter={[8, 8]}>
             {stylesIsLoading ? (
               <Loading />
             ) : (
@@ -452,21 +452,21 @@ class Styles extends Component {
                     {item.editIsVisible && (
                       <Modal
                         footer={[
-                          <Button key='ok' type='primary' onClick={() => this.handleClickSelectColor(key)}>
+                          <Button key="ok" type="primary" onClick={() => this.handleClickSelectColor(key)}>
                             Aceptar
                           </Button>,
                         ]}
                         title={<Title level={5}>{item.title}</Title>}
                         visible={item.editIsVisible}
                       >
-                        <Space wrap size='large' align='start'>
+                        <Space wrap size="large" align="start">
                           <SketchPicker
                             color={this.state.styles[item.fieldColorName]}
                             onChangeComplete={(color) => {
                               this.onColorChange(color, item.fieldColorName);
                             }}
                           />
-                          <Space direction='vertical'>
+                          <Space direction="vertical">
                             <Text
                               style={{ fontSize: '20px' }}
                               code
@@ -532,7 +532,7 @@ class Styles extends Component {
                   </div>
                 ))}
 
-                <Space direction='vertical' size={25} wrap>
+                <Space direction="vertical" size={25} wrap>
                   {this.imageDrawer.map((item, key) => (
                     <div key={key}>
                       <Form.Item

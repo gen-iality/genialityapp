@@ -89,7 +89,7 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
           />
         </Col>
         <Col>
-          <Typography.Paragraph type='secondary'>
+          <Typography.Paragraph type="secondary">
             Recuerde que al aprobar una solicitud, usted está dando acceso a esa persona a participar dentro de la
             transmisión. Puede eliminar el acceso en cualquier momento.
           </Typography.Paragraph>

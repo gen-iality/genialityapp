@@ -62,14 +62,14 @@ function ResultsPanel(props) {
   return (
     <div>
       {userAnswers === undefined && (
-        <Space direction='vertical' size='middle' align='center'>
+        <Space direction="vertical" size="middle" align="center">
           <p style={{ fontWeight: '700' }}>Cargando resultados...</p>
           <LoadingOutlined style={{ fontSize: '50px', color: '#808080' }} />
         </Space>
       )}
       {userAnswers !== undefined && (
         <>
-          <Space direction='vertical' size='middle' style={{ display: 'flex' }}>
+          <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             {userAnswers.map((answer, index) => {
               console.log('800.userAnswersObject - 2', answer);
 

@@ -82,18 +82,18 @@ export default class SurveyManager extends Component {
   render() {
     const { publishedSurveys } = this.state;
     return (
-      <Card title='Gestor de evaluaciones'>
+      <Card title="Gestor de evaluaciones">
         {publishedSurveys.length > 0 ? (
           <>
             <Row style={{ padding: '8px 16px' }}>
               <Col xs={12} lg={8}>
-                <label className='label'>Evaluación</label>
+                <label className="label">Evaluación</label>
               </Col>
               <Col xs={4} lg={3}>
-                <label className='label'>Publicar</label>
+                <label className="label">Publicar</label>
               </Col>
               <Col xs={4} lg={2}>
-                <label className='label'>Abrir</label>
+                <label className="label">Abrir</label>
               </Col>
             </Row>
             {publishedSurveys.map((survey) => {

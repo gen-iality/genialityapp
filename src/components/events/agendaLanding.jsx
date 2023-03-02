@@ -513,9 +513,9 @@ class Agenda extends Component {
       const isRegistered = this.checkInscriptionStatus(item._id) && true;
 
       return (
-        <div key={index} className='container_agenda-information' style={{ marginBottom: 0 }}>
+        <div key={index} className="container_agenda-information" style={{ marginBottom: 0 }}>
           {(item.requires_registration || item.requires_registration === 'true') && !this.props.cUser ? (
-            <Badge.Ribbon color='red' placement='end' text='Requiere registro'>
+            <Badge.Ribbon color="red" placement="end" text="Requiere registro">
               <AgendaActivityItem
                 hasDate={
                   this.props.cEvent.value.styles.hideDatesAgendaItem == 'true' ||
@@ -621,18 +621,18 @@ class Agenda extends Component {
       <div>
         <Modal
           visible={this.state.visibleModal}
-          title='Información'
+          title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCancelModal}
           onClose={this.handleCancelModal}
           footer={[
-            <Button key='cancel' onClick={this.handleCancelModal}>
+            <Button key="cancel" onClick={this.handleCancelModal}>
               Cancelar
             </Button>,
-            <Button key='login' onClick={this.props.handleOpenLogin}>
+            <Button key="login" onClick={this.props.handleOpenLogin}>
               Iniciar sesión
             </Button>,
-            <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
+            <Button key="submit" type="primary" loading={loading} onClick={this.props.handleOpenRegisterForm}>
               Registrarme
             </Button>,
           ]}
@@ -642,15 +642,15 @@ class Agenda extends Component {
 
         <Modal
           visible={this.state.visibleModalRestricted}
-          title='Información'
+          title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCancelModalRestricted}
           onClose={this.handleCancelModalRestricted}
           footer={[
-            <Button key='cancel' onClick={this.handleCancelModalRestricted}>
+            <Button key="cancel" onClick={this.handleCancelModalRestricted}>
               Cancelar
             </Button>,
-            <Button key='login' onClick={this.handleOpenModalExchangeCode}>
+            <Button key="login" onClick={this.handleOpenModalExchangeCode}>
               Canjear código
             </Button>,
           ]}
@@ -666,12 +666,12 @@ class Agenda extends Component {
 
         <Modal
           visible={this.state.visibleModalRegisteredDevices}
-          title='Información'
+          title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCloseModalRestrictedDevices}
           onClose={this.handleCloseModalRestrictedDevices}
           footer={[
-            <Button key='cancel' onClick={this.handleCloseModalRestrictedDevices}>
+            <Button key="cancel" onClick={this.handleCloseModalRestrictedDevices}>
               Cancelar
             </Button>,
           ]}
@@ -681,15 +681,15 @@ class Agenda extends Component {
 
         <Modal
           visible={this.state.visibleModalExchangeCode}
-          title='Información'
+          title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCancelModalExchangeCode}
           onClose={this.handleCancelModalExchangeCode}
           footer={[
-            <Button key='cancel' onClick={this.handleCancelModalExchangeCode}>
+            <Button key="cancel" onClick={this.handleCancelModalExchangeCode}>
               Cancelar
             </Button>,
-            <Button key='login' onClick={this.exchangeCode}>
+            <Button key="login" onClick={this.exchangeCode}>
               Canjear código
             </Button>,
           ]}
@@ -709,17 +709,17 @@ class Agenda extends Component {
 
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && loading && (
-          <Row justify='center' align='middle'>
+          <Row justify="center" align="middle">
             <Card>
-              <Spin tip='Cargando...'></Spin>
+              <Spin tip="Cargando..."></Spin>
             </Card>
           </Row>
         )}
 
         {!currentActivity && !loading && (
-          <div className='container-calendar-section'>
-            <Row justify='center'>
-              <div className='container-calendar '>
+          <div className="container-calendar-section">
+            <Row justify="center">
+              <div className="container-calendar ">
                 {/* LECCIONES SIN AGRUPAR */}
                 {this.props.cEvent.value &&
                   this.props.cEvent.value.styles &&
@@ -733,7 +733,7 @@ class Agenda extends Component {
                       ) : (
                         <>
                           <Card style={{ marginBottom: '20px', height: 'auto' }}>
-                            <Divider orientation='left' style={{ fontSize: '18px', color: '#1cdcb7' }}>
+                            <Divider orientation="left" style={{ fontSize: '18px', color: '#1cdcb7' }}>
                               <p>
                                 <Space>
                                   <CalendarOutlined />

@@ -62,7 +62,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
     {activityType !== null ? (
       <Alert
         // closable
-        type='info'
+        type="info"
         showIcon={is.deleting}
         icon={<Spin/>}
         message={`Actividad de tipo: ${humanizeActivityType(activityType)}`}
@@ -77,7 +77,7 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
         <p>Todavía no has definido el tipo de actividad</p>
       </Col>
       <Col span={8}>
-        <Button onClick={handleSetActivityType} type='primary'>
+        <Button onClick={handleSetActivityType} type="primary">
           Escoge un tipo de actividad
         </Button>
       </Col>

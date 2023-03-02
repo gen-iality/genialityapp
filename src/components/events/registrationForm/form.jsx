@@ -573,7 +573,7 @@ const FormRegister = ({
                 id: 'form.phoneInput.placeholder',
                 defaultMessage: 'Ingrese número de contacto',
               })}
-              defaultCountry='CO'
+              defaultCountry="CO"
               international
             />
           );
@@ -614,7 +614,7 @@ const FormRegister = ({
             };
           }
           return (
-            <div key={'g' + key} name='field'>
+            <div key={'g' + key} name="field">
               {
                 <>
                   <Form.Item
@@ -644,7 +644,7 @@ const FormRegister = ({
                         header={intl.formatMessage({
                           id: 'registration.message.policy',
                         })}
-                        key='1'
+                        key="1"
                       >
                         <pre
                           dangerouslySetInnerHTML={{
@@ -680,9 +680,9 @@ const FormRegister = ({
         if (type === 'file') {
           input = (
             <Upload
-              accept='application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx'
+              accept="application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx"
               action='https://api.evius.co/api/files/upload/'
-              listType='text'
+              listType="text"
               beforeUpload={beforeUpload}
               defaultFileList={
                 value
@@ -732,10 +732,10 @@ const FormRegister = ({
 
         if (type === 'country') {
           input = (
-            <Form.Item id='country_input_form' initialValue={value} name={name} noStyle>
+            <Form.Item id="country_input_form" initialValue={value} name={name} noStyle>
               <Select
                 showSearch
-                optionFilterProp='children'
+                optionFilterProp="children"
                 style={{ width: '100%' }}
                 onChange={(nameCountry, aditionalData) => {
                   form.setFieldsValue({
@@ -748,7 +748,7 @@ const FormRegister = ({
                 }}
                 disabled={loading || countries.length === 0}
                 loading={loading}
-                placeholder='Seleccione un país'
+                placeholder="Seleccione un país"
               >
                 {countries.map((country) => {
                   return (
@@ -766,7 +766,7 @@ const FormRegister = ({
             <Form.Item initialValue={value} name={name} noStyle>
               <Select
                 showSearch
-                optionFilterProp='children'
+                optionFilterProp="children"
                 style={{ width: '100%' }}
                 onChange={(nameRegion, aditionalData) => {
                   form.setFieldsValue({
@@ -777,7 +777,7 @@ const FormRegister = ({
                 }}
                 disabled={loading || regiones.length === 0}
                 loading={loading}
-                placeholder='Seleccione un región'
+                placeholder="Seleccione un región"
               >
                 {regiones.map((regiones) => {
                   return (
@@ -796,14 +796,14 @@ const FormRegister = ({
             <Form.Item initialValue={value} name={name} noStyle>
               <Select
                 showSearch
-                optionFilterProp='children'
+                optionFilterProp="children"
                 style={{ width: '100%' }}
                 disabled={loading || cities.length === 0}
                 loading={loading}
                 onChange={(nameCity, aditionalData) => {
                   setCity({ name: nameCity, regionCode: aditionalData.key, inputName: name });
                 }}
-                placeholder='Seleccione una ciudad'
+                placeholder="Seleccione una ciudad"
               >
                 {cities.map((cityCode, key) => {
                   return (
@@ -823,14 +823,14 @@ const FormRegister = ({
 
           input = (
             <div style={{ textAlign: 'center' }}>
-              <ImgCrop rotate shape='round'>
+              <ImgCrop rotate shape="round">
                 <Upload
                   action={'https://api.evius.co/api/files/upload/'}
-                  accept='image/png,image/jpeg'
+                  accept="image/png,image/jpeg"
                   onChange={(file) => {
                     setImageAvatar(file);
                   }}
-                  listType='picture'
+                  listType="picture"
                   maxCount={1}
                   defaultFileList={
                     value
@@ -844,7 +844,7 @@ const FormRegister = ({
                   }
                   beforeUpload={beforeUpload}
                 >
-                  <Button type='primary' icon={<UploadOutlined />}>
+                  <Button type="primary" icon={<UploadOutlined />}>
                     {intl.formatMessage({
                       id: 'form.button.avatar',
                       defaultMessage: 'Subir imagen de perfil',
@@ -870,7 +870,7 @@ const FormRegister = ({
 
         return (
           type !== 'boolean' && (
-            <div key={'g' + key} name='field'>
+            <div key={'g' + key} name="field">
               {type === 'tituloseccion' && input}
               {type !== 'tituloseccion' && (
                 <>
@@ -900,7 +900,7 @@ const FormRegister = ({
                         header={intl.formatMessage({
                           id: 'registration.message.policy',
                         })}
-                        key='1'
+                        key="1"
                       >
                         <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
                       </Panel>
@@ -924,7 +924,7 @@ const FormRegister = ({
           <Card bodyStyle={textLeft}>
             <Form
               form={form}
-              layout='vertical'
+              layout="vertical"
               onFinish={onFinish}
               validateMessages={{
                 required: intl.formatMessage({ id: 'form.field.required' }),
@@ -1031,7 +1031,7 @@ const FormRegister = ({
                 {generalFormErrorMessageVisible && (
                   <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                     <Alert
-                      className='animate__animated animate__bounceIn'
+                      className="animate__animated animate__bounceIn"
                       style={{
                         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                         backgroundColor: '#FFFFFF',
@@ -1043,7 +1043,7 @@ const FormRegister = ({
                       message={intl.formatMessage({
                         id: 'form.missing.required.fields',
                       })}
-                      type='warning'
+                      type="warning"
                       showIcon
                       closable
                     />
@@ -1052,7 +1052,7 @@ const FormRegister = ({
                 {notLoggedAndRegister && (
                   <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                     <Alert
-                      className='animate__animated animate__bounceIn'
+                      className="animate__animated animate__bounceIn"
                       style={{
                         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                         backgroundColor: '#FFFFFF',
@@ -1067,8 +1067,8 @@ const FormRegister = ({
                       })}
                       description={
                         <Button
-                          size='middle'
-                          type='primary'
+                          size="middle"
+                          type="primary"
                           onClick={() => {
                             helperDispatch({ type: 'showLogin' });
                             setNotLoggedAndRegister(false);
@@ -1080,7 +1080,7 @@ const FormRegister = ({
                           })}
                         </Button>
                       }
-                      type='warning'
+                      type="warning"
                       showIcon
                       closable
                     />
@@ -1090,8 +1090,8 @@ const FormRegister = ({
                 {errorRegisterUser && (
                   <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                     <Alert
-                      className='animate__animated animate__bounceIn'
-                      type='warning'
+                      className="animate__animated animate__bounceIn"
+                      type="warning"
                       showIcon
                       style={{
                         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
@@ -1105,19 +1105,19 @@ const FormRegister = ({
                     />
                   </Col>
                 )}
-                <Col span={24} align='center'>
+                <Col span={24} align="center">
                   {!loadingregister && (
                     <Form.Item>
                       <Button
-                        size='large'
+                        size="large"
                         ref={buttonSubmit}
                         style={{
                           display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
                         }}
                         // RESTRICCIONES
                         // disabled={!eventIsActive}
-                        type='primary'
-                        htmlType='submit'
+                        type="primary"
+                        htmlType="submit"
                       >
                         {}
                         {isRegister(initialValues, cEventUser)

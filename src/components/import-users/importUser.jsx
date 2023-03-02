@@ -165,9 +165,9 @@ class ImportUsers extends Component {
         />
         <br />
         <Steps current={this.state.step} /* onChange={this.onChange} */>
-          <Step title='Importar' />
-          <Step title='Relacionar' />
-          <Step title='Resultado' />
+          <Step title="Importar" />
+          <Step title="Relacionar" />
+          <Step title="Resultado" />
         </Steps>
         <br />
 

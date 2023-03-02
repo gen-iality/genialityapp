@@ -103,7 +103,7 @@ const Agenda = (props) => {
         state: { new: true },
       }}
       columns={columns}
-      // key='_id'
+      // key="_id"
       editPath={`${props.matchUrl}/activity`}
       actions
       search

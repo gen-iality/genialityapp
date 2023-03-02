@@ -309,7 +309,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
               hookValidations(false, '');
               prev();
             }}
-            size='large'
+            size="large"
             style={{ margin: '0 8px' }}
           >
             {intl.formatMessage({
@@ -327,10 +327,10 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
               <>
                 {current < steps.length - 1 && (
                   <Button
-                    id='btnnextRegister'
+                    id="btnnextRegister"
                     disabled={buttonStatus}
-                    size='large'
-                    type='primary'
+                    size="large"
+                    type="primary"
                     onClick={() => {
                       next();
                     }}
@@ -374,7 +374,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                   onClick={() => helperDispatch({ type: 'showLogin' })}
-                  type='link'
+                  type="link"
                 >
                   {validationGeneral.component}
                 </Button>
@@ -383,7 +383,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
               )}
             </>
           }
-          type='error'
+          type="error"
         />
       )}
     </div>

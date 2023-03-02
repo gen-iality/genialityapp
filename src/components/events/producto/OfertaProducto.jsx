@@ -187,7 +187,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
         <Card>
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-              <Text type='secondary'>
+              <Text type="secondary">
                 Precio inicial:{' '}
                 <Title level={4}>
                   {(product &&
@@ -200,7 +200,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
             </Col>
             {hability && permission() && product && product.start_price && (
               <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <Text type='secondary'>
+                <Text type="secondary">
                   Oferta actual:{' '}
                   <Title level={4}>
                     {' $ ' + priceProduct.toLocaleString('es-CO')}
@@ -211,7 +211,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
             )}
             {hability && permission() && (
               <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <Space wrap size={8} align='center'>
+                <Space wrap size={8} align="center">
                   {!isUsd &&
                     valuesPuja.map((val, index) => (
                       <Tag
@@ -243,24 +243,24 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
               <Row style={{ marginTop: '5px' }} gutter={[20, 30]}>
                 {permission() && (
                   <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                    <Space size='small'>
+                    <Space size="small">
                       <Button
-                        type='dashed'
-                        shape='circle'
+                        type="dashed"
+                        shape="circle"
                         icon={<MinusOutlined style={{ color: '#2db7f5' }} />}
                         onClick={() => (!bloquerPuja ? downvalue() : null)}></Button>
                       <Input
                         readOnly
-                        type='number'
+                        type="number"
                         style={{ width: '100%', margin: 0 }}
                         value={`${valuOferta}`}
                         onChange={changeValor}
-                        min='1000'
+                        min="1000"
                         max={9999999999}
                       />
                       <Button
-                        type='dashed'
-                        shape='circle'
+                        type="dashed"
+                        shape="circle"
                         icon={<PlusOutlined style={{ color: '#2db7f5' }} />}
                         onClick={() => (!bloquerPuja ? upvalue() : null)}></Button>
                     </Space>
@@ -299,19 +299,19 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                         'Al hacer esta puja estás aceptando nuestros términos y condiciones y adquieres el compromiso de pago por el valor ofertado, en caso que ningún otro participante realice una puja por un monto superior.'
                       }
                     />
-                    <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
+                    <a target="_blank" rel="noreferrer" href={'https://tiempodejuego.org/tyclaventana/'}>
                       <PlayCircleOutlined /> Ver términos y condiciones
                     </a>
                   </Col>
                 )}
                 {!permission() && cEventUser.value !== null && (
                   <Row>
-                    <Alert type='warning' message='No tienes permisos para pujar sobre esta obra.' />
+                    <Alert type="warning" message="No tienes permisos para pujar sobre esta obra." />
                   </Row>
                 )}
                 {!permission() && cEventUser.value === null && (
                   <Row>
-                    <Alert type='warning' message='Aún no te has registrado al curso.' />
+                    <Alert type="warning" message="Aún no te has registrado al curso." />
                   </Row>
                 )}
               </Row>
@@ -332,7 +332,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
 
       {product && product._id == '6116cae171f4b926d1363266' && (
         <Card>
-          <Row justify='center' style={{ color: 'red' }}>
+          <Row justify="center" style={{ color: 'red' }}>
             {' '}
             La obra está agotada.
           </Row>

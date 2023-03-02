@@ -23,10 +23,10 @@ class InformativeSection2 extends Component {
     const { markup, informativeSection1 } = this.state;
 
     return (
-      <Row justify='center' gutter={[8, 8]} wrap>
+      <Row justify="center" gutter={[8, 8]} wrap>
         <Col span={23}>
           {informativeSection1 != null && (
-            <div className='site-card-border-less-wrapper'>
+            <div className="site-card-border-less-wrapper">
               {this.props.cEvent.value._id != '609180c6013150612044b547' &&
                 this.props.cEvent.value._id != '60797bfb2a9cc06ce973a1f4' && (
                   <Card
@@ -42,7 +42,7 @@ class InformativeSection2 extends Component {
                     }
                     bordered={false} /* style={{ width: 1000 }} */
                   >
-                    <div id='img-informative' style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                    <div id="img-informative" style={{ color: this.props.cEvent.value.styles.textMenu }}>
                       {markup != null && Parser(markup)}
                     </div>
                   </Card>
@@ -59,7 +59,7 @@ class InformativeSection2 extends Component {
                   <iframe
                     style={{ width: '640px', height: '380px', margin: 'auto' }}
                     src='https://www.youtube.com/embed/ZD5nWJZgt2E'
-                    frameBorder='0'
+                    frameBorder="0"
                     allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                     allowFullScreen></iframe>
                   <h2
@@ -71,7 +71,7 @@ class InformativeSection2 extends Component {
                   <iframe
                     style={{ width: '640px', height: '380px', margin: 'auto' }}
                     src='https://www.youtube.com/embed/Od19Fle4q6M'
-                    frameBorder='0'
+                    frameBorder="0"
                     allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                     allowFullScreen>
                     {' '}
@@ -85,7 +85,7 @@ class InformativeSection2 extends Component {
                   <iframe
                     style={{ width: '640px', height: '380px', margin: 'auto' }}
                     src='https://www.youtube.com/embed/videoseries?list=PL9wuymCs4-gOUS831iFNNZRMoOAq3jBlD'
-                    frameBorder='0'
+                    frameBorder="0"
                     allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                     allowFullScreen></iframe>
 
@@ -98,7 +98,7 @@ class InformativeSection2 extends Component {
                   <iframe
                     style={{ width: '640px', height: '380px', margin: 'auto' }}
                     src='https://www.youtube.com/embed/TH_4s3fWHSQ'
-                    frameBorder='0'
+                    frameBorder="0"
                     allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                     allowFullScreen></iframe>
                 </>

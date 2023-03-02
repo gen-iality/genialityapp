@@ -39,7 +39,7 @@ function MemberSettings(props) {
   return (
     <Datos
       sendprops={props}
-      type='configMembers'
+      type="configMembers"
       getFields={getFields}
       createNewField={createNewField}
       editField={editField}

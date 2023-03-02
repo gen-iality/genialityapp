@@ -93,14 +93,14 @@ const EditInformation = ({ cUser }) => {
         //   icon: <LockOutlined />,
         //   style: { backgroundColor: '#52C41A' },
         // }}
-        title='Editar mi información'
+        title="Editar mi información"
       />
       <div style={{ padding: '24px' }}>
-        <Form onFinish={editUserData} autoComplete='off' layout='vertical'>
+        <Form onFinish={editUserData} autoComplete="off" layout="vertical">
           <Form.Item>
-            <ImgCrop rotate shape='round'>
+            <ImgCrop rotate shape="round">
               <Upload
-                accept='image/png,image/jpeg'
+                accept="image/png,image/jpeg"
                 onChange={(file) => {
                   if (file.fileList.length > 0) {
                     setImageAvatar(file.fileList);
@@ -109,17 +109,17 @@ const EditInformation = ({ cUser }) => {
                   }
                 }}
                 customRequest={uploadImagedummyRequest}
-                listType='picture'
+                listType="picture"
                 maxCount={1}
                 fileList={imageAvatar}
               >
                 {!imageAvatar && (
                   <Button
-                    type='primary'
-                    shape='circle'
+                    type="primary"
+                    shape="circle"
                     style={{ height: !imageAvatar ? '150px' : '95px', width: !imageAvatar ? '150px' : '95px' }}
                   >
-                    <Space direction='vertical'>
+                    <Space direction="vertical">
                       <PictureOutlined style={{ fontSize: '40px' }} />
                       {intl.formatMessage({
                         id: 'modal.label.photo',
@@ -136,15 +136,15 @@ const EditInformation = ({ cUser }) => {
               id: 'modal.label.name',
               defaultMessage: 'Nombre',
             })}
-            name='names'
+            name="names"
             initialValue={names}
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
             rules={ruleName}
           >
             <Input
-              type='text'
-              size='large'
+              type="text"
+              size="large"
               placeholder={'¿Como te llamas?'}
               prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
@@ -161,7 +161,7 @@ const EditInformation = ({ cUser }) => {
               message={sendRecovery}
               showIcon
               closable
-              className='animate__animated animate__pulse'
+              className="animate__animated animate__pulse"
               style={{
                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                 backgroundColor: '#FFFFFF',
@@ -181,7 +181,7 @@ const EditInformation = ({ cUser }) => {
             />
           )}
           <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
-            <Button htmlType='submit' style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+            <Button htmlType="submit" style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size="large">
               Guardar cambios
             </Button>
           </Form.Item>

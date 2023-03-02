@@ -71,7 +71,7 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
         </Text>
       )}
       {description && <p>{description}</p>}
-      <Row wrap justify='end' gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
+      <Row wrap justify="end" gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
         <Col>{extra && <div>{extra}</div>}</Col>
         <Col>
           {addUrl && (

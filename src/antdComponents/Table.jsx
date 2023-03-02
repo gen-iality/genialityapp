@@ -76,14 +76,14 @@ const Table = (props) => {
           <Row wrap gutter={[8, 8]}>
             {extraFn && (
               <Col>
-                <Tooltip placement='topLeft' title={extraFnTitle}>
+                <Tooltip placement="topLeft" title={extraFnTitle}>
                   <Button
                     key={`extraAction${item.index}`}
                     id={`extraAction${item.index}`}
                     onClick={() => extraFn(item)}
                     icon={extraFnIcon ? extraFnIcon : <SettingOutlined />}
                     type={extraFnType ? extraFnType : 'primary'}
-                    size='small'
+                    size="small"
                     disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
@@ -91,7 +91,7 @@ const Table = (props) => {
             )}
             {extraPath && (
               <Col>
-                <Tooltip placement='topLeft' title={extraPathTitle}>
+                <Tooltip placement="topLeft" title={extraPathTitle}>
                   <Link
                     key={`extraPathAction${item.index}`}
                     id={`extraPathAction${item.index}`}
@@ -105,7 +105,7 @@ const Table = (props) => {
                     <Button
                       icon={extraPathIcon ? extraPathIcon : <SettingOutlined />}
                       type={extraPathType ? extraPathType : 'primary'}
-                      size='small'
+                      size="small"
                     />
                   </Link>
                 </Tooltip>
@@ -114,13 +114,13 @@ const Table = (props) => {
             {/* ACTUALIZAR STATUS MAILS */}
             {extraPathUpdate && (
               <Col>
-                <Tooltip placement='topLeft' title={extraPathUpdateTitle}>
+                <Tooltip placement="topLeft" title={extraPathUpdateTitle}>
                   <Button
                     style={{ backgroundColor: '#00C851', borderColor: '#00C851' }}
                     onClick={() => updateMails(item._id)}
                     icon={extraPathUpdate}
                     type="primary"
-                    size='small'
+                    size="small"
                   />
                 </Tooltip>
               </Col>
@@ -128,27 +128,27 @@ const Table = (props) => {
             {/*Esto de momento es por la encuesta el ranking, esto queda pendiente para modificar*/}
             {extraPathStateName && (
               <Col>
-                <Tooltip placement='topLeft' title={extraPathTitle ? 'Ranking' : ''}>
+                <Tooltip placement="topLeft" title={extraPathTitle ? 'Ranking' : ''}>
                   <Link
                     key={`extraPathAction${item.index}`}
                     id={`extraPathAction${item.index}`}
                     to={{ pathname: `${extraPathStateName}/${item._id}`, state: { report: item._id } }}
                   >
-                    <Button icon={<CrownOutlined />} type={extraPathType ? extraPathType : 'primary'} size='small' />
+                    <Button icon={<CrownOutlined />} type={extraPathType ? extraPathType : 'primary'} size="small" />
                   </Link>
                 </Tooltip>
               </Col>
             )}
             {downloadFile && item.type !== 'folder' && (
               <Col>
-                <Tooltip placement='topLeft' title='Descargar'>
-                  <a href={item.file} target='_blank'>
+                <Tooltip placement="topLeft" title="Descargar">
+                  <a href={item.file} target="_blank">
                     <Button
                       key={`downloadAction${item.index}`}
                       id={`downloadAction${item.index}`}
                       icon={<DownloadOutlined />}
-                      size='small'
-                      type='primary'
+                      size="small"
+                      type="primary"
                     />
                   </a>
                 </Tooltip>
@@ -156,41 +156,41 @@ const Table = (props) => {
             )}
             {editPath && (
               <Col>
-                <Tooltip placement='topLeft' title='Editar'>
+                <Tooltip placement="topLeft" title="Editar">
                   <Link
                     key={`editAction${item.index}`}
                     id={`editAction${item.index}`}
                     to={{ pathname: editPath, state: { edit: item._id } }}
                   >
-                    <Button icon={<EditOutlined />} type='primary' size='small' />
+                    <Button icon={<EditOutlined />} type="primary" size="small" />
                   </Link>
                 </Tooltip>
               </Col>
             )}
             {editFn && (
               <Col>
-                <Tooltip placement='topLeft' title='Editar'>
+                <Tooltip placement="topLeft" title="Editar">
                   <Button
                     key={`editAction${item.index}`}
                     id={`editAction${item.index}`}
                     onClick={() => editFn(item)}
                     icon={<EditOutlined />}
-                    type='primary'
-                    size='small'
+                    type="primary"
+                    size="small"
                   />
                 </Tooltip>
               </Col>
             )}
             {remove && !noRemove && (
               <Col>
-                <Tooltip placement='topLeft' title='Eliminar'>
+                <Tooltip placement="topLeft" title="Eliminar">
                   <Button
                     key={`removeAction${item.index}`}
                     id={`removeAction${item.index}`}
                     onClick={() => remove(item.chatId ? item.chatId : item._id, item.name)}
                     icon={<DeleteOutlined />}
-                    type='danger'
-                    size='small'
+                    type="danger"
+                    size="small"
                     disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
@@ -299,7 +299,7 @@ const Table = (props) => {
 
   //FN para el draggable 2/3
   const DraggableContainer = (props) => (
-    <SortableContainer useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props} />
+    <SortableContainer useDragHandle disableAutoscroll helperClass="row-dragging" onSortEnd={onSortEnd} {...props} />
   );
 
   //FN para el draggable 3/3
@@ -313,13 +313,13 @@ const Table = (props) => {
       <TableAnt
         columns={takeOriginalHeader ? header : headerState}
         dataSource={list}
-        size='small'
+        size="small"
         // rowKey={(record) => record.index}
         loading={loading}
         pagination={pagination}
         components={components}
         title={() => (
-          <Row wrap justify='end' gutter={[8, 8]}>
+          <Row wrap justify="end" gutter={[8, 8]}>
             {exportData && (
               <Col>
                 <ExportExcel list={list} fileName={`${fileName}${dayjs(new Date()).format('YYYY-DD-MM')}`} />

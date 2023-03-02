@@ -29,19 +29,19 @@ const InvitationDetail = (props) => {
     <Fragment>
       <Header title={'Detalle de la comunicación'} back />
 
-      <Tabs defaultActiveKey='1'>
-        <TabPane tab='Reporte envios' key='1'>
-          <Row justify='center' wrap gutter={[8, 8]}>
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="Reporte envios" key="1">
+          <Row justify="center" wrap gutter={[8, 8]}>
             <Col span={22}>
-              {users.length ? <MessageUser key='users' users={users} /> : <Empty description={'Sin data'} />}
+              {users.length ? <MessageUser key="users" users={users} /> : <Empty description={'Sin data'} />}
             </Col>
           </Row>
         </TabPane>
-        <TabPane tab='Mensaje enviado' key='2'>
-          <Row justify='center' wrap gutter={[8, 8]}>
+        <TabPane tab="Mensaje enviado" key="2">
+          <Row justify="center" wrap gutter={[8, 8]}>
             <Col span={22}>
               {users.length ? (
-                <EmailPrev key='email' event={props.event} item={locationState.item} />
+                <EmailPrev key="email" event={props.event} item={locationState.item} />
               ) : (
                 <Empty description={'Sin data'} />
               )}

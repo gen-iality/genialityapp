@@ -19,25 +19,25 @@ const ProductCard = ({ galery, eventId, history }) => {
       onClick={() => history.push(`/landing/${eventId}/producto/${galery._id}/detailsproducts`)}
       cover={
         <img
-          alt='example'
+          alt="example"
           src={galery && galery.image && galery.image[0]}
           style={{ height: '250px', objectFit: 'cover' }}
         />
       }>
       <Meta
         description={
-          <Space direction='vertical'>
+          <Space direction="vertical">
             <Title level={5} ellipsis={{ rows: 2 }}>
               {galery.name}
             </Title>
             {galery && (
-              <Space direction='vertical'>
+              <Space direction="vertical">
                 {galery?.by && (
-                  <Typography.Text type='secondary' italic>
+                  <Typography.Text type="secondary" italic>
                     {galery?.by}
                   </Typography.Text>
                 )}
-                {galery?.price && <Typography.Text type='success'> $ {galery?.price}</Typography.Text>}
+                {galery?.price && <Typography.Text type="success"> $ {galery?.price}</Typography.Text>}
               </Space>
             )}
           </Space>

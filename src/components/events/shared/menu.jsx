@@ -48,8 +48,8 @@ const MenuConfig = (props) => {
   return (
     <Menu
       // defaultOpenKeys={['main']}
-      mode='vertical'
-      theme='dark'
+      mode="vertical"
+      theme="dark"
       style={{
         overflow: 'auto',
         background: '#1B1E28',
@@ -58,7 +58,7 @@ const MenuConfig = (props) => {
     >
       <div style={{ textAlign: 'end', marginBottom: '15px', marginTop: '15px' }}>
         <Button
-          type='primary'
+          type="primary"
           onClick={props.collapseMenu}
           style={{ width: '100%', textAlign: 'end', background: '#1B1E28', border: 'none' }}
         >
@@ -70,7 +70,7 @@ const MenuConfig = (props) => {
         </Button>
       </div>
 
-      <Row justify='center' style={{ textAlign: 'center' }}>
+      <Row justify="center" style={{ textAlign: 'center' }}>
         <Col span={24}>
           <img
             style={{
@@ -83,9 +83,9 @@ const MenuConfig = (props) => {
         <Col span={24}>
           <Button
             icon={props.collapsed ? <OpenInNewIcon /> : ''}
-            type='primary'
-            size='middle'
-            target='_blank'
+            type="primary"
+            size="middle"
+            target="_blank"
             href={`${window.location.origin}/landing/${eventId}`}
           >
             {props.collapsed ? '' : 'Ir al curso'}
@@ -96,14 +96,14 @@ const MenuConfig = (props) => {
       {renderMenuItems(controller, props)}
 
       <SubMenu
-        key='sub9'
+        key="sub9"
         title={
           <span>
             <ApartmentOutlined />
             <span>Administrar organizaciones</span>
           </span>
         }>
-        <Menu.Item key='30'>
+        <Menu.Item key="30">
           Panel de administración
           <NavLink onClick={handleClick} to={`/admin/organization/${controller.organizationId}`}></NavLink>
         </Menu.Item>

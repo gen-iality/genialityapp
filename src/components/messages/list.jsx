@@ -68,7 +68,7 @@ function InvitationsList(props) {
         description={
           <Space>
             <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-            <Text type='secondary'>La información en la tabla puede demorar un tiempo en reflejarse.</Text>
+            <Text type="secondary">La información en la tabla puede demorar un tiempo en reflejarse.</Text>
           </Space>
         }
         columns={columns}
@@ -88,7 +88,7 @@ function InvitationsList(props) {
                 onClick={() => {
                   history.push(`/eventadmin/${eventId}/dashboard`);
                 }}
-                type='ghost'
+                type="ghost"
                 icon={<LineChartOutlined />}
               >
                 Ver estadísticas

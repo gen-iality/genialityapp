@@ -78,7 +78,7 @@ const Report = (props) => {
       title={'Reporte de Networking'}
       exportData
       columns={columns}
-      key='_id'
+      key="_id"
       search
       setColumnsData={setColumnsData}
       fileName="Employees"

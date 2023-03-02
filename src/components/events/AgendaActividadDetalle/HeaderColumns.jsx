@@ -110,7 +110,7 @@ const HeaderColumns = (props) => {
 
   const intl = useIntl();
   return (
-    <Row align='middle'>
+    <Row align="middle">
       <Col
         xs={{ order: 2, span: 8 }}
         sm={{ order: 2, span: 8 }}
@@ -126,7 +126,7 @@ const HeaderColumns = (props) => {
               : `/event/${cEvent?.nameEvent}/agenda`
           }>
           <Row style={{ paddingLeft: '10px' }}>
-            <Button type='primary' shape='round' icon={<ArrowLeftOutlined />} size='small'>
+            <Button type="primary" shape="round" icon={<ArrowLeftOutlined />} size="small">
               {intl.formatMessage({ id: 'button.back.agenda' })}
             </Button>
           </Row>
@@ -144,7 +144,7 @@ const HeaderColumns = (props) => {
         <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Col>
             {props.activityState === 'open_meeting_room' || props.activityState === 'game' ? (
-              <img style={{ height: '4vh', width: '4vh' }} src={imageUtils.EnVivo} alt='React logo' />
+              <img style={{ height: '4vh', width: '4vh' }} src={imageUtils.EnVivo} alt="React logo" />
             ) : props.activityState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video ? (
               <CaretRightOutlined style={{ fontSize: '30px' }} />
             ) : props.activityState === 'ended_meeting_room' && currentActivity !== null ? (

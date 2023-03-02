@@ -221,8 +221,8 @@ function ModulePage(props: any) {
       >
         <Form form={form} onFinish={onFormFinish}>
           <Form.Item
-            name='moduleName'
-            label='Nombre del módulo'
+            name="moduleName"
+            label="Nombre del módulo"
             rules={[{ required: true, message: 'Es necesario el nombre de módulo' }]}
           >
             <Input />

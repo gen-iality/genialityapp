@@ -12,7 +12,7 @@ const MessageRegister = (props) => {
       {props.match.params.type == 'free' && (
         <Card>
           <Result
-            status='success'
+            status="success"
             title={intl.formatMessage({ id: 'registration.message.success' })}
             subTitle={
               <h2 style={{ fontSize: '20px' }}>

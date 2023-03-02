@@ -42,11 +42,11 @@ const ModalUpdate = (props: any) => {
 
   return (
     <Modal
-      okText='Actualizar'
-      title='Informacion Importante'
+      okText="Actualizar"
+      title="Informacion Importante"
       visible={isVisible}
       onOk={handleOpen}
-      cancelText='Cancelar'
+      cancelText="Cancelar"
       onCancel={() => setIsVisible(false)}
     >
       Tienes informacion que actualizar para este evento, por favor actualice la informacion

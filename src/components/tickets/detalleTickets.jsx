@@ -42,31 +42,31 @@ class DetailTickets extends Component {
           onCancel={this.handleOk}
           style={{ height: '100%' }}
           footer={[
-            <Button key='back' type='primary' onClick={this.handleOk}>
+            <Button key="back" type="primary" onClick={this.handleOk}>
               Ok
             </Button>,
           ]}>
-          <Descriptions title={item.event} size='small' column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-            {<Descriptions.Item label='Rol'>{item.rol ? item.rol : 'No tienes un rol asignado'}</Descriptions.Item>}
-            {item.state && <Descriptions.Item label='Estado'>{item.state}</Descriptions.Item>}
+          <Descriptions title={item.event} size="small" column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+            {<Descriptions.Item label="Rol">{item.rol ? item.rol : 'No tienes un rol asignado'}</Descriptions.Item>}
+            {item.state && <Descriptions.Item label="Estado">{item.state}</Descriptions.Item>}
             {item.event_start && (
-              <Descriptions.Item label='Fecha de inicio'>
+              <Descriptions.Item label="Fecha de inicio">
                 <TimeStamp date={item.event_start} />
               </Descriptions.Item>
             )}
             {item.event_end && (
-              <Descriptions.Item label='Fecha finalización'>
+              <Descriptions.Item label="Fecha finalización">
                 <TimeStamp date={item.event_end} />
               </Descriptions.Item>
             )}
             {
-              <Descriptions.Item label='Registro'>
+              <Descriptions.Item label="Registro">
                 {item.status ? 'Asistencia confirmada' : 'Asistencia sin confirmar'}
               </Descriptions.Item>
             }
-            {item.author && <Descriptions.Item label='Organizador'>{item.author}</Descriptions.Item>}
+            {item.author && <Descriptions.Item label="Organizador">{item.author}</Descriptions.Item>}
             {item.properties && (
-              <Descriptions.Item title='Tu información en el curso' span={4}>
+              <Descriptions.Item title="Tu información en el curso" span={4}>
                 <Title level={4}>Tu información en el curso</Title>
               </Descriptions.Item>
             )}

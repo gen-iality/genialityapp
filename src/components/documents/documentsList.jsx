@@ -12,7 +12,7 @@ const columns = [
     render: function(text, record) {
       console.log('record', record);
       return (
-        <a href={record?.file} target='_blank' rel='noopener noreferrer'>
+        <a href={record?.file} target="_blank" rel="noopener noreferrer">
           {text}
         </a>
       );
@@ -25,8 +25,8 @@ const columns = [
     render: function(text, record) {
       console.log('record', record);
       return (
-        <a target='_blank' href={record?.file} rel='noopener noreferrer'>
-          <IconText text='Descargar' icon={<DownloadOutlined />} href={record?.file} />
+        <a target="_blank" href={record?.file} rel="noopener noreferrer">
+          <IconText text="Descargar" icon={<DownloadOutlined />} href={record?.file} />
         </a>
       );
     },
@@ -35,7 +35,7 @@ const columns = [
 
 // Estructura de boton para descargar documentos
 const IconText = ({ icon, text, onSubmit }) => (
-  <Button icon={icon} htmlType='submit' type='link' href={onSubmit} target='_blank'>
+  <Button icon={icon} htmlType="submit" type="link" href={onSubmit} target="_blank">
     {text}
   </Button>
 );
@@ -97,24 +97,24 @@ class DocumentsList extends Component {
               style={{ textAlign: 'left' }}
             >
               <List
-                itemLayout='horizontal'
-                size='small'
+                itemLayout="horizontal"
+                size="small"
                 //Se traen los datos del state
                 dataSource={data}
                 //se mapean los datos del array data
                 renderItem={(item) => (
-                  <a href={item.file} rel='noopener noreferrer' target='_blank'>
+                  <a href={item.file} rel="noopener noreferrer" target="_blank">
                     <List.Item
-                      className='shadow-box'
+                      className="shadow-box"
                       key={item._id}
                       //boton de descarga
                       actions={[
                         <a
                           key={'itemDoc' + item._id}
-                          target='_blank'
+                          target="_blank"
                           href={item.file}
                           download
-                          rel='noopener noreferrer'
+                          rel="noopener noreferrer"
                         >
                           {item.type == 'folder' ? (
                             ''
@@ -193,10 +193,10 @@ class DocumentsList extends Component {
                             actions={[
                               <a
                                 key={'itemDoc' + files._id}
-                                target='_blank'
+                                target="_blank"
                                 href={files.file}
                                 download
-                                rel='noopener noreferrer'
+                                rel="noopener noreferrer"
                               >
                                 {files.type == 'folder' ? (
                                   <DownOutlined />

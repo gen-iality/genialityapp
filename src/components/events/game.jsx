@@ -31,7 +31,7 @@ function Game(props) {
           '&email=' +
           (currentUser ? currentUser.email : 'evius@evius.co'))
       }
-      frameBorder='0'
+      frameBorder="0"
       allow='autoplay; fullscreen; camera *;microphone *'
       allowFullScreen
       allowusermedia

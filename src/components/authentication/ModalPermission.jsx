@@ -32,7 +32,7 @@ const ModalPermission = (props) => {
       visible={typeModal == 'register' || typeModal == 'update' || typeModal === 'registerForTheEvent'}
     >
       <div
-        // className='asistente-list'
+        // className="asistente-list"
         style={{
           // height: '70vh',
           overflowY: 'hidden',

@@ -140,8 +140,8 @@ const Landing = props => {
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
       <Button
-        type='primary'
-        size='small'
+        type="primary"
+        size="small"
         onClick={() =>
           window.location.replace(`${window.location.origin}/landing/${cEventContext.value._id}/activity/${activity}`)
         }
@@ -253,9 +253,9 @@ const Landing = props => {
         />
         <EventSectionsInnerMenu />
         <MenuTablets />
-        <Layout className='site-layout'>
+        <Layout className="site-layout">
           <Content
-            className='site-layout-background'
+            className="site-layout-background"
             style={{
               // paddingBottom: '15vh',
               backgroundSize: 'cover',

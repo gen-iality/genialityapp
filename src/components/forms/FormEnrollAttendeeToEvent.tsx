@@ -91,7 +91,7 @@ const FormEnrollAttendeeToEvent = ({
           <Form
             form={form}
             scrollToFirstError
-            layout='vertical'
+            layout="vertical"
             onFinish={saveAttendee}
             onFinishFailed={showGeneralMessage}
             onValuesChange={assigningConditionsToFields}
@@ -99,7 +99,7 @@ const FormEnrollAttendeeToEvent = ({
             <Row style={textLeft}>
               <Col span={24}>
                 <Card bodyStyle={textLeft} style={cardStyles}>
-                  <Spin tip='Guardando cambios' spinning={loaderWhenSavingUpdatingOrDelete}>
+                  <Spin tip="Guardando cambios" spinning={loaderWhenSavingUpdatingOrDelete}>
                     <BasicFieldsToFormEnrollAttendeeToEvent basicFields={basicFields} attendee={attendee} />
                     <Divider />
                     {thereAreExtraFields > 0 && (
@@ -127,12 +127,12 @@ const FormEnrollAttendeeToEvent = ({
               {generalFormErrorMessageVisible && (
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <Alert
-                    className='animate__animated animate__bounceIn'
+                    className="animate__animated animate__bounceIn"
                     style={alertStyles}
                     message={intl.formatMessage({
                       id: 'form.missing.required.fields',
                     })}
-                    type='warning'
+                    type="warning"
                     showIcon
                   />
                 </Col>
@@ -142,7 +142,7 @@ const FormEnrollAttendeeToEvent = ({
                 {loaderWhenSavingUpdatingOrDelete ? (
                   <LoadingOutlined style={{ fontSize: '50px' }} />
                 ) : (
-                  <Space direction='vertical'>
+                  <Space direction="vertical">
                     {attendeeInformation?._id && eventType === 'hybridEvent' && (
                       <b>
                         Tipo de checkIn:{' '}
@@ -172,10 +172,10 @@ const FormEnrollAttendeeToEvent = ({
                     )}
 
                     <Form.Item>
-                      <Space direction='horizontal'>
+                      <Space direction="horizontal">
                         <Button
-                          htmlType='submit'
-                          type='primary'
+                          htmlType="submit"
+                          type="primary"
                           ref={buttonSubmit}
                           icon={icon}
                           style={{

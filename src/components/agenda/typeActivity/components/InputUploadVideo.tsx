@@ -17,8 +17,8 @@ const InputUploadVideo = (props: any) => {
       beforeUpload={beforeUpload}
       action={`${urlUploadVideoGcore}?nameActivity=${props.activityName}`}
       maxCount={1}
-      accept='video/*'
-      name='video'
+      accept="video/*"
+      name="video"
       onRemove={() => {}}
       onChange={async (info) => {
         const { status, response } = info.file;
@@ -53,8 +53,8 @@ const InputUploadVideo = (props: any) => {
       }}>
       <Result
         icon={<FileVideoOutlineIcon />}
-        title='Haga clic o arrastre el video a esta área para cargarlo'
-        subTitle='Solamente ogm, wmv, mpg, webm, ogv, mov, asx, mpeg, mp4, m4v y avi  '
+        title="Haga clic o arrastre el video a esta área para cargarlo"
+        subTitle="Solamente ogm, wmv, mpg, webm, ogv, mov, asx, mpeg, mp4, m4v y avi  "
       />
       {loading && <Spin />}
     </Upload.Dragger>

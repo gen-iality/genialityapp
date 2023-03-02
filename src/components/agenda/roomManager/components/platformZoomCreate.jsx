@@ -17,7 +17,7 @@ export default function PlatformZoomCreate({
       )}
 
       {!useAlreadyCreated && requiresCreateRoom && (
-        <Button onClick={createZoomRoom} type='primary'>
+        <Button onClick={createZoomRoom} type="primary">
           Crear nueva transmisión
         </Button>
       )}

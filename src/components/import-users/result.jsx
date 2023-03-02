@@ -153,7 +153,7 @@ class Result extends Component {
     const data = [notok, ok];
     return (
       <>
-        <Row justify='space-between' wrap>
+        <Row justify="space-between" wrap>
           <Col>
             <Tag>{total}</Tag>
             <span>Total</span>
@@ -173,33 +173,33 @@ class Result extends Component {
         </Row>
         {total > 0 && (
           <>
-            <Tabs defaultActiveKey='0'>
-              <TabPane tab='Correctos' key='0'>
+            <Tabs defaultActiveKey="0">
+              <TabPane tab="Correctos" key="0">
                 <Spin tip={'Cargando...'} spinning={data[1].length === 0}>
                   <Table
-                    size='small'
-                    rowKey='index'
+                    size="small"
+                    rowKey="index"
                     dataSource={data[1]}
                     pagination
                     /* scroll={{ x: 2500 }} auto*/
                   >
                     <Column title={extraFields[0].name} dataIndex={extraFields[0].name} ellipsis />
                     <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis />
-                    <Column title='Estado' dataIndex='status' ellipsis />
+                    <Column title="Estado" dataIndex="status" ellipsis />
                   </Table>
                 </Spin>
               </TabPane>
-              <TabPane tab='Incorrectos' key='1'>
+              <TabPane tab="Incorrectos" key="1">
                 <Table
-                  size='small'
-                  rowKey='index'
+                  size="small"
+                  rowKey="index"
                   dataSource={data[0]}
                   pagination
                   /* scroll={{ x: 2500 }}  auto*/
                 >
                   <Column title={extraFields[0].name} dataIndex={extraFields[0].name} ellipsis />
                   <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis />
-                  <Column title='Estado' dataIndex='status' ellipsis />
+                  <Column title="Estado" dataIndex="status" ellipsis />
                 </Table>
               </TabPane>
             </Tabs>

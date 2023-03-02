@@ -107,10 +107,10 @@ const ResponsePayu = (props) => {
         }
         extra={[
           <Button
-            key='action'
+            key="action"
             style={{ marginTop: '10px' }}
-            type='primary'
-            size='large'
+            type="primary"
+            size="large"
             onClick={() => {
               setVisible(false);
               !isDeclined()

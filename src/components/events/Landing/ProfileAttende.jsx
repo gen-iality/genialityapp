@@ -5,7 +5,7 @@ import { formatDataToString } from '@helpers/utils';
 const ProfileAttende = () => {
   const { propertiesOtherprofile } = useHelper();
   return (
-    <div className='ant-list ant-list-split ant-list-bordered'>
+    <div className="ant-list ant-list-split ant-list-bordered">
       <List.Item>
         <List.Item.Meta
           title="Nombre"

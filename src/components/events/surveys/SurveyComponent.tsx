@@ -262,7 +262,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
           {isSaveButtonShown && (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Button
-                type='primary'
+                type="primary"
                 onClick={() => {
                   saveSurveyStatus().then(() => history.push(`/landing/${eventId}/evento`))
                 }}

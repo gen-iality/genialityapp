@@ -137,9 +137,9 @@ function AgendaActivityItem(props) {
     <>
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
-          className='agendaHover ' /* efect-scale */
-          justify='start'
-          align='middle'
+          className="agendaHover " /* efect-scale */
+          justify="start"
+          align="middle"
           onClick={() => {
             if (item.platform === 'zoomExterno' && item.habilitar_ingreso === 'open_meeting_room') {
               const { eventUser } = props;
@@ -153,7 +153,7 @@ function AgendaActivityItem(props) {
           <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
             {/* card de agenda en mobile */}
             <Badge.Ribbon
-              className='animate__animated animate__bounceIn animate__delay-2s'
+              className="animate__animated animate__bounceIn animate__delay-2s"
               placement="end"
               style={{ height: 'auto', paddingRight: '15px' }}
               color={item.habilitar_ingreso == 'open_meeting_room' ? 'red' : 'transparent'}
@@ -161,11 +161,11 @@ function AgendaActivityItem(props) {
                 item.habilitar_ingreso == 'open_meeting_room' ? (
                   <Space>
                     <AccessPointIcon
-                      className='animate__animated animate__heartBeat animate__infinite animate__slower'
+                      className="animate__animated animate__heartBeat animate__infinite animate__slower"
                       style={{ fontSize: '24px' }}
                     />
                     <span style={{ textAlign: 'center', fontSize: '15px' }}>
-                      {<FormattedMessage id='live' defaultMessage='En vivo' />}
+                      {<FormattedMessage id="live" defaultMessage="En vivo" />}
                     </span>
                   </Space>
                 ) : (
@@ -175,7 +175,7 @@ function AgendaActivityItem(props) {
               <Card
                 hoverable
                 style={{ backgroundColor: 'transparent' }}
-                className='card-agenda-mobile agendaHover efect-scale'
+                className="card-agenda-mobile agendaHover efect-scale"
                 bodyStyle={{
                   padding: '10px',
                   border: `solid 2px ${cEvent.value.styles.textMenu}`,
@@ -185,7 +185,7 @@ function AgendaActivityItem(props) {
                 <Row gutter={[8, 8]}>
                   <Col span={6}>
                     {!props.hasDate && (
-                      <div className='agenda-hora' style={{ color: cEvent.value.styles.textMenu }}>
+                      <div className="agenda-hora" style={{ color: cEvent.value.styles.textMenu }}>
                         {item.datetime_start
                           ? Moment.tz(
                               item.datetime_start,
@@ -196,7 +196,7 @@ function AgendaActivityItem(props) {
                               .format('hh:mm a')
                           : ''}
                         {item.datetime_start && (
-                          <p className='ultrasmall-mobile'>
+                          <p className="ultrasmall-mobile">
                             {Moment.tz(
                               item.datetime_start,
                               'YYYY-MM-DD HH:mm',
@@ -210,8 +210,8 @@ function AgendaActivityItem(props) {
                     )}
                     {/* aqui se encuenta el estado de agenda en la mobile */}
                     {item.platform && (
-                      <div style={{ textAlign: 'center' }} className='contenedor-estado-agenda'>
-                        <Space direction='vertical' size={1}>
+                      <div style={{ textAlign: 'center' }} className="contenedor-estado-agenda">
+                        <Space direction="vertical" size={1}>
                           {meetingState == 'open_meeting_room' ? (
                             <CaretRightOutlined
                               style={{
@@ -252,13 +252,13 @@ function AgendaActivityItem(props) {
                     )}
                   </Col>
                   <Col span={18} style={{ textAlign: 'left' }}>
-                    <Space direction='vertical'>
+                    <Space direction="vertical">
                       <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
                         <Col span={24}>
-                          <div className='tituloM' style={{ color: cEvent.value.styles.textMenu }}>
+                          <div className="tituloM" style={{ color: cEvent.value.styles.textMenu }}>
                             {item.name}.
                           </div>
-                          <span className='lugarM' style={{ color: cEvent.value.styles.textMenu }}>
+                          <span className="lugarM" style={{ color: cEvent.value.styles.textMenu }}>
                             {item && item.space && item.space.name}
                           </span>
                         </Col>
@@ -305,7 +305,7 @@ function AgendaActivityItem(props) {
           <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
             {/* card de la genda en desktop */}
             <Badge.Ribbon
-              className='animate__animated animate__bounceIn animate__delay-2s'
+              className="animate__animated animate__bounceIn animate__delay-2s"
               placement={screens.xs ? 'start' : 'end'}
               style={{ height: 'auto', paddingRight: '15px' }}
               color={item.habilitar_ingreso == 'open_meeting_room' ? 'red' : 'transparent'}
@@ -313,11 +313,11 @@ function AgendaActivityItem(props) {
                 item.habilitar_ingreso == 'open_meeting_room' ? (
                   <Space>
                     <AccessPointIcon
-                      className='animate__animated animate__heartBeat animate__infinite animate__slower'
+                      className="animate__animated animate__heartBeat animate__infinite animate__slower"
                       style={{ fontSize: '24px' }}
                     />
                     <span style={{ textAlign: 'center', fontSize: '15px' }}>
-                      {<FormattedMessage id='live' defaultMessage='En vivo' />}
+                      {<FormattedMessage id="live" defaultMessage="En vivo" />}
                     </span>
                   </Space>
                 ) : (
@@ -330,7 +330,7 @@ function AgendaActivityItem(props) {
                   maxHeight: '280px',
                 }}
                 hoverable
-                className='card-agenda-desktop agendaHover efect-scale shadow-box'
+                className="card-agenda-desktop agendaHover efect-scale shadow-box"
                 bodyStyle={{
                   padding: '10px',
                   borderRadius: '5px',
@@ -341,13 +341,13 @@ function AgendaActivityItem(props) {
                     md={24}
                     lg={24}
                     xl={24}
-                    className='agenda-contenido'
+                    className="agenda-contenido"
                   >
-                    <Space direction='vertical'>
+                    <Space direction="vertical">
                       <Row gutter={[10, 10]}>
                         <Row span={24} style={{ paddingLeft: '0px' }}>
                           <ActivityCustomIcon style={{marginTop: '0.3em', marginRight: '10px'}} type={item.type?.name}/>
-                          <div className='titulo' style={{ color: cEvent.value.styles.textMenu, marginRight: '1rem' }}>
+                          <div className="titulo" style={{ color: cEvent.value.styles.textMenu, marginRight: '1rem' }}>
                             {item.name}
                           </div>
                           <div style={{marginRight: '1rem'}}>
@@ -355,7 +355,7 @@ function AgendaActivityItem(props) {
                               <QuizProgress eventId={cEvent.value._id} userId={currentUser.value._id} surveyId={meetingId} />
                             )}
                           </div>
-                          <div className='lesson'>
+                          <div className="lesson">
                             <Badge
                               style={{
                                 backgroundColor: activityContentValues.url === item.type?.name ? '#CB1313'
@@ -365,7 +365,7 @@ function AgendaActivityItem(props) {
                               count={lessonTypeToString(item.type?.name || 'Contenido genérico')}
                             />
                           </div>
-                          <span className='lugar' style={{ color: cEvent.value.styles.textMenu }}>
+                          <span className="lugar" style={{ color: cEvent.value.styles.textMenu }}>
                             {item && item.space && item.space.name}
                           </span>
                         </Row>
@@ -375,7 +375,7 @@ function AgendaActivityItem(props) {
                             (item.hosts.length < 4 ? (
                               <>
                                 {item.hosts.map((speaker, key) => (
-                                  <Space key={key} style={{ marginRight: '8px' }} direction='horizontal'>
+                                  <Space key={key} style={{ marginRight: '8px' }} direction="horizontal">
                                     <Avatar size={24} src={speaker.image} />
                                     <Typography.Text style={{ color: cEvent.value.styles.textMenu, fontWeight: '400' }}>
                                       {speaker.name}
@@ -402,8 +402,8 @@ function AgendaActivityItem(props) {
                             {item.habilitar_ingreso === 'open_meeting_room' && (
                             <Button
                               size={screens.xs ? 'small' : 'small'}
-                              type='primary'
-                              className='buttonVirtualConference'
+                              type="primary"
+                              className="buttonVirtualConference"
                               style={{ marginTop: '5px' }}
                               onClick={() => {
                                 if (item.platform === 'zoomExterno' && item.habilitar_ingreso === 'open_meeting_room') {
@@ -414,7 +414,7 @@ function AgendaActivityItem(props) {
                                   HandleGoActivity(item._id);
                                 }
                               }}>
-                              <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
+                              <FormattedMessage id="live.join" defaultMessage="Ingresa aquí" />
                             </Button>
                           )}
                         </Row>

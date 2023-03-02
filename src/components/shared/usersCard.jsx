@@ -102,7 +102,7 @@ function UsersCard(props) {
         <>
           {cUser.value ? (
             <a
-              key='list-loadmore-edit'
+              key="list-loadmore-edit"
               onClick={() => {
                 createNewOneToOneChat(
                   cUser.value.uid,
@@ -127,8 +127,8 @@ function UsersCard(props) {
         <>
           {props.propsAttendees ? (
             <Popover
-              trigger='hover'
-              placement='leftTop'
+              trigger="hover"
+              placement="leftTop"
               content={<PopoverInfoUser item={props.item} props={props.propsAttendees} />}
             >
               <Text
@@ -140,7 +140,7 @@ function UsersCard(props) {
                   fontSize: '15px',
                   // whiteSpace: 'break-spaces'
                 }}
-                key='list-loadmore-edit'>
+                key="list-loadmore-edit">
                 {name || names}
               </Text>
             </Popover>
@@ -153,7 +153,7 @@ function UsersCard(props) {
                 fontSize: '15px',
                 // whiteSpace: 'break-spaces'
               }}
-              key='list-loadmore-edit'>
+              key="list-loadmore-edit">
               {name || names}
             </Text>
           )}
@@ -193,7 +193,7 @@ function UsersCard(props) {
             fontSize: '15px',
             // whiteSpace: 'break-spaces'
           }}
-          key='list-loadmore-edit'>
+          key="list-loadmore-edit">
           {names || name}
         </Text>
       );
@@ -253,14 +253,14 @@ function UsersCard(props) {
             fontSize: '15px',
             // whiteSpace: 'break-spaces'
           }}
-          key='list-loadmore-edit'>
+          key="list-loadmore-edit">
           {formatName(name || names)}
         </Text>
       );
     });
     setDescription(() => {
       return (
-        <div className='animate__animated animate__bounceIn' style={{ color: '#52C41A' }}>
+        <div className="animate__animated animate__bounceIn" style={{ color: '#52C41A' }}>
           {score} Pts
         </div>
       );
@@ -282,7 +282,7 @@ function UsersCard(props) {
     setActionCapture(() => {
       return (
         <a
-          key='list-loadmore-edit'
+          key="list-loadmore-edit"
           onClick={() => {
             setGameData(props.item);
           }}>
@@ -302,14 +302,14 @@ function UsersCard(props) {
             fontSize: '15px',
             // whiteSpace: 'break-spaces'
           }}
-          key='list-loadmore-edit'>
+          key="list-loadmore-edit">
           {formatName(name)}
         </Text>
       );
     });
     // setDescription(() => {
     //   return (
-    //     <div className='animate__animated animate__bounceIn' style={{ color: '#52C41A' }}>
+    //     <div className="animate__animated animate__bounceIn" style={{ color: '#52C41A' }}>
     //       10 Pts
     //     </div>
     //   );
@@ -368,7 +368,7 @@ function UsersCard(props) {
             )
           : '';
       }}
-      className='efect-scale'
+      className="efect-scale"
       style={props.type == 'privateChat' ? styleListPointer : styleList}
       actions={[actionCapture]}
     >

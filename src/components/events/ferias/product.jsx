@@ -13,15 +13,15 @@ function products(props) {
           props.url == null
             ? [
                 <>
-                  <Tooltip key='comprar' title='No hay link'>
+                  <Tooltip key="comprar" title="No hay link">
                     <LinkOff style={{ fontSize: '24px' }} />
                   </Tooltip>
                 </>,
               ]
             : [
-                <Tooltip key='comprar' title='Comprar'>
-                  <a href={props.url} target='__blank'>
-                    <ShoppingCartOutlined style={{ fontSize: '24px' }} key='comprar' />
+                <Tooltip key="comprar" title="Comprar">
+                  <a href={props.url} target="__blank">
+                    <ShoppingCartOutlined style={{ fontSize: '24px' }} key="comprar" />
                   </a>
                 </Tooltip>,
               ]
@@ -35,15 +35,15 @@ function products(props) {
             src={props.imgProduct === '' ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Item' : props.imgProduct}
           />
         }
-        className='product-company'>
+        className="product-company">
         <Card.Meta
           avatar={
             props.etiqueta && props.etiqueta === 'Producto' ? (
-              <Tooltip title='Producto'>
+              <Tooltip title="Producto">
                 <ShoppingOutlineIcon style={{ fontSize: '18px' }} />
               </Tooltip>
             ) : (
-              <Tooltip title='Servicio'>
+              <Tooltip title="Servicio">
                 <HandshakeOutlineIcon style={{ fontSize: '18px' }} />
               </Tooltip>
             )

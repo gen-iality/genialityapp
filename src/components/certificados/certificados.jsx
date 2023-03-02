@@ -53,7 +53,7 @@ const Certificados = (props) => {
         state: { new: true },
       }}
       columns={columns}
-      key='_id'
+      key="_id"
       editPath={`${props.matchUrl}/certificado`}
       actions
       search

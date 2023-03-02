@@ -1,7 +1,7 @@
 export default function loading() {
   return (
-    <div className='loading-container'>
-      <div className='lds-ring'>
+    <div className="loading-container">
+      <div className="lds-ring">
         <div />
         <div />
         <div />

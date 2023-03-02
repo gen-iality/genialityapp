@@ -13,13 +13,13 @@ export default function ModalEdit({
   return (
     <Modal
       destroyOnClose
-      title='Actualizar parametro'
+      title="Actualizar parametro"
       visible={isVisible}
       footer={null}
       onCancel={() => setIsVisible(false)}
     >
       <Form>
-        <Form.Item label='Campo' name='id_properties'>
+        <Form.Item label="Campo" name="id_properties">
           <Select
             onChange={(value) =>
               setBadge({
@@ -30,7 +30,7 @@ export default function ModalEdit({
                 },
               })
             }
-            placeholder='Selecciona un campo'
+            placeholder="Selecciona un campo"
             defaultValue={badge.id_properties.label}
           >
             {filterOptions.map((option, index) => (
@@ -44,9 +44,9 @@ export default function ModalEdit({
             ))}
           </Select>
         </Form.Item>
-        <Form.Item label='Tamaño' name='size'>
+        <Form.Item label="Tamaño" name="size">
           <Select
-            placeholder='Selecciona un tamaño'
+            placeholder="Selecciona un tamaño"
             onChange={(value) =>
               setBadge({
                 ...badge,
@@ -63,7 +63,7 @@ export default function ModalEdit({
           </Select>
         </Form.Item>
         <Form.Item>
-          <Button type='primary' onClick={() => editField()}>
+          <Button type="primary" onClick={() => editField()}>
             Agregar
           </Button>
         </Form.Item>

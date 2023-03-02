@@ -33,7 +33,7 @@ function FullActivityTypeInfoLayout(props: FullActivityTypeInfoLayoutProps) {
   useEffect(() => onLoaded(), []);
 
   return (
-    <Row justify='space-around' align='middle' style={{ margin: '0px 40px 0px 40px' }}>
+    <Row justify="space-around" align="middle" style={{ margin: '0px 40px 0px 40px' }}>
       <Col span={12}>
         <Title level={4}>{title}</Title>
         <Paragraph>{description} </Paragraph>
@@ -43,7 +43,7 @@ function FullActivityTypeInfoLayout(props: FullActivityTypeInfoLayoutProps) {
           onLoad={() => setIsLoading(false)}
           src={image}
           style={{ objectFit: 'contain', backgroundColor: isLoading ? '#F2F2F2' : 'transparent' }}
-          width='400'
+          width="400"
         />
       </Col>
     </Row>

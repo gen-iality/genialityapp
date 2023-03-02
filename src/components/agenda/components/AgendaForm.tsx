@@ -236,7 +236,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             <Col span={1}>
               <Button
                 onClick={() => setIsSpeakerModalOpened(true)}
-                title='Agregar conferencista'
+                title="Agregar conferencista"
                 icon={<PlusOutlined />}
               />
             </Col>
@@ -244,7 +244,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               <Button
                 onClick={() => props.matchUrl && goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })}
                 icon={<SettingOutlined />}
-                title='Configurar en otra página'
+                title="Configurar en otra página"
               />
             </Col>
             {/* The speaker modal */}

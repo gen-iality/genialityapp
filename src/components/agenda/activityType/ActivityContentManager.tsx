@@ -144,7 +144,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         }}
       >Forzar actualizar</Button>
       <EviusReactQuill
-        name='html'
+        name="html"
         data={contentSource}
         handleChange={(value: string) => setContentSource(value)}
       />
@@ -155,7 +155,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   if (activityContentValues.pdf === activityContentType) {
     return (
       <>
-        {!contentSource && <Alert type='info' message='Cargando contenido...' />}
+        {!contentSource && <Alert type="info" message="Cargando contenido..." />}
         <Document
           simpleMode
           notRecordFileInDocuments
@@ -195,7 +195,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
       </div>
       {activityContentType === activityContentValues.quizing && (
         <>
-        {(!contentSource) && (<Alert type='info' message='Cargando contenido...'/>)}
+        {(!contentSource) && (<Alert type="info" message="Cargando contenido..."/>)}
         <QuizCMS
           title="$1"
           activityId={activityEdit}
@@ -220,7 +220,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
       )}
       {activityContentType === activityContentValues.survey && (
         <>
-        {(!contentSource) && (<Alert type='info' message='Cargando contenido...'/>)}
+        {(!contentSource) && (<Alert type="info" message="Cargando contenido..."/>)}
         <SurveyCMS
           title="Encuesta"
           activityId={activityEdit}

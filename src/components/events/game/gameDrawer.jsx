@@ -55,7 +55,7 @@ function GameDrawer(props) {
                 ) : (
                   <GamepadVariantOutline style={iconStyles} />
                 )}
-                <Space direction='vertical' size={-3}>
+                <Space direction="vertical" size={-3}>
                   {gameData.name}
                 </Space>
               </Space>
@@ -64,7 +64,7 @@ function GameDrawer(props) {
         }
         bodyStyle={{ padding: '10px' }}
         closeIcon={<CloseOutlined style={{ fontSize: '24px' }} />}
-        placement='right'
+        placement="right"
         visible={gameVisible}
         onClose={closeDrawer}
         width={window.screen.width >= 768 ? (!rankingVisible ? '100%' : '70%') : '100%'}
@@ -72,14 +72,14 @@ function GameDrawer(props) {
         {cEvent.value._id !== '619d09f7cbd9a47c2d386372' && (
           <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
             {
-              <Button type='primary' onClick={showRanking}>
+              <Button type="primary" onClick={showRanking}>
                 {!rankingVisible ? 'Cerrar ranking' : 'Abrir ranking'}
               </Button>
             }
           </div>
         )}
 
-        <Row gutter={[8, 8]} justify='center'>
+        <Row gutter={[8, 8]} justify="center">
           <Col xl={rankingVisible ? 24 : 16} xxl={rankingVisible ? 24 : 16}>
             <Game />
           </Col>

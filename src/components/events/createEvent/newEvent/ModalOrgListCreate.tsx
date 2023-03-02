@@ -174,7 +174,7 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                   >
                     {imageAvatar === null && (
                       <Button type="primary" shape="circle" style={{ height: '150px', width: '150px' }}>
-                        <Space direction='vertical'>
+                        <Space direction="vertical">
                           <PictureOutlined style={{ fontSize: '40px' }} />
                           Subir logo
                         </Space>

@@ -123,11 +123,11 @@ export default function RoomConfig(props) {
                     </Typography.Text>
                   ),
                 }}>
-                <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => setPlatform(e)}>
-                  <Option value='wowza'>
-                    GEN streaming <Typography.Text type='secondary'>(recomendado)</Typography.Text>
+                <Select defaultValue={platform} value={platform} name="platform" onChange={(e) => setPlatform(e)}>
+                  <Option value="wowza">
+                    GEN streaming <Typography.Text type="secondary">(recomendado)</Typography.Text>
                   </Option>
-                  <Option value='vimeo'>Vimeo</Option>
+                  <Option value="vimeo">Vimeo</Option>
                 </Select>
               </Form.Item>
 
@@ -143,7 +143,7 @@ export default function RoomConfig(props) {
                     </Typography.Text>
                   ),
                 }}>
-                <List itemLayout='horizontal' bordered={false}>
+                <List itemLayout="horizontal" bordered={false}>
                   <List.Item
                     style={{
                       borderRadius: '10px',
@@ -183,13 +183,13 @@ export default function RoomConfig(props) {
             </Col>
             <Col span={16}>
               <Card style={{ borderRadius: '10px' }} bordered>
-                <Row justify='center' align='middle' gutter={24}>
+                <Row justify="center" align="middle" gutter={24}>
                   <Col span={16}>
                     <Typography.Title level={3}>
                       {'Crea una transmisión con '}{' '}
                       {transmition === 'EviusMeet' ? 'todo el poder de GEN.iality' : transmition}{' '}
                     </Typography.Title>
-                    <Typography.Text type='secondary'>
+                    <Typography.Text type="secondary">
                       <ul>
                         <li>
                           {transmition === 'EviusMeet'
@@ -205,7 +205,7 @@ export default function RoomConfig(props) {
                         </li>
                       </ul>
                     </Typography.Text>
-                    <Space direction='vertical'>
+                    <Space direction="vertical">
                       {/** create a meeting or reuse and old one */}
                       {/** StoreAlreadyCreatedMeeting */}
                       {useAlreadyCreated ? (

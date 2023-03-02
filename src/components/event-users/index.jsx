@@ -110,7 +110,7 @@ const ModalWithLessonsInfo = ({ show, onHidden, allActivities, attendee, current
 
   return (
     <Modal centered footer={null} visible={show} closable onCancel={onHidden}>
-      <Space direction='vertical'>
+      <Space direction="vertical">
         <Content />
       </Space>
     </Modal>
@@ -215,11 +215,11 @@ class ListEventUser extends Component {
   editcomponent = (text, item, index) => {
     const { eventIsActive } = this.context;
     return (
-      <Tooltip placement='topLeft' title='Editar'>
+      <Tooltip placement="topLeft" title="Editar">
         <Button
           type="primary"
           icon={<EditOutlined />}
-          size='small'
+          size="small"
           onClick={() => this.openEditModalUser(item)}
           disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
         />
@@ -435,7 +435,7 @@ class ListEventUser extends Component {
 
                 case 'file':
                   return (
-                    <a target='__blank' download={item?.name} href={key[item?.name]}>
+                    <a target="__blank" download={item?.name} href={key[item?.name]}>
                       {this.obtenerName(key[item?.name])}
                     </a>
                   );
@@ -703,7 +703,7 @@ class ListEventUser extends Component {
       let resp = await TicketsApi.checkInAttendee(event._id, id);
       //message.success('Usuario Chequeado');
     } catch (e) {
-      message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+      message.error(<FormattedMessage id="toast.error" defaultMessage='Sry :(' />);
     } */
     //return;
     const eventIdSearch = this.props.match.params.id ? this.props.match.params.id : this.props.event._id;
@@ -873,15 +873,15 @@ class ListEventUser extends Component {
         />
         <Space>
           <Button
-            type='primary'
+            type="primary"
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            size='small'
+            size="small"
             style={{ width: 90 }}
           >
             Search
           </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
+          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
         </Space>
@@ -1051,7 +1051,7 @@ class ListEventUser extends Component {
                   <Col>
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                      color='lightgrey'
+                      color="lightgrey"
                       icon={<UsergroupAddOutlined />}
                     >
                       <strong>Inscritos: </strong>
@@ -1061,7 +1061,7 @@ class ListEventUser extends Component {
                   <Col>
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                      color='lightgrey'
+                      color="lightgrey"
                       icon={<StarOutlined />}
                     >
                       <strong>Participantes: </strong>
@@ -1088,7 +1088,7 @@ class ListEventUser extends Component {
 
               {!activityId && (
                 <Col>
-                  <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                  <Button type="ghost" icon={<FullscreenOutlined />} onClick={this.showModal}>
                     Expandir
                   </Button>
                 </Col>
@@ -1102,11 +1102,11 @@ class ListEventUser extends Component {
                   onChange={(e) => this.handleChange(e)}
                   style={{ width: 220 }}
                 >
-                  <Option value='scanner-qr'>Escanear QR</Option>
+                  <Option value="scanner-qr">Escanear QR</Option>
                   {fieldsForm.map((item, index) => {
                     if (item.type === 'checkInField')
                       return (
-                        <Option key={index} value='scanner-document'>
+                        <Option key={index} value="scanner-document">
                           Escanear {item.label}
                         </Option>
                       );
@@ -1115,7 +1115,7 @@ class ListEventUser extends Component {
               </Col>
               <Col>
                 {usersReq.length > 0 && (
-                  <Button type='primary' icon={<DownloadOutlined />} onClick={this.exportFile}>
+                  <Button type="primary" icon={<DownloadOutlined />} onClick={this.exportFile}>
                     Exportar
                   </Button>
                 )}
@@ -1131,7 +1131,7 @@ class ListEventUser extends Component {
                   }}
                 >
                   <Button
-                    type='primary'
+                    type="primary"
                     icon={<UploadOutlined />}
                     disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   >
@@ -1141,9 +1141,9 @@ class ListEventUser extends Component {
               </Col>
               <Col>
                 <Button
-                  type='primary'
+                  type="primary"
                   icon={<PlusCircleOutlined />}
-                  size='middle'
+                  size="middle"
                   onClick={this.addUser}
                   disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                 >
@@ -1184,21 +1184,21 @@ class ListEventUser extends Component {
           }
           visible={this.state.isModalVisible}
           footer={[
-            <Button style={{ float: 'right' }} type='primary' size='large' onClick={this.hideModal} key='close'>
+            <Button style={{ float: 'right' }} type="primary" size="large" onClick={this.hideModal} key="close">
               Cerrar
             </Button>,
-            <div key='fecha' style={{ float: 'left' }}>
+            <div key="fecha" style={{ float: 'left' }}>
               <Title level={5}>
                 Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
               </Title>
             </div>,
           ]}
           style={{ top: 0, textAlign: 'center' }}
-          width='100vw'
+          width="100vw"
         >
-          <Row align='middle' justify='center' style={{ width: '80vw' }}>
+          <Row align="middle" justify="center" style={{ width: '80vw' }}>
             <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
-              <Row align='middle'>
+              <Row align="middle">
                 <Card
                   bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
                   cover={
@@ -1206,7 +1206,7 @@ class ListEventUser extends Component {
                       <img
                         style={{ objectFit: 'cover', width: '96vw' }}
                         src={this.props.event.styles.event_image}
-                        alt='Logo curso'
+                        alt="Logo curso"
                       />
                     ) : (
                       ''
@@ -1216,7 +1216,7 @@ class ListEventUser extends Component {
               </Row>
             </Col>
             <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>
-              <Row align='middle'>
+              <Row align="middle">
                 <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                   <Card bodyStyle={{}} style={{}} bordered={false}>
                     <Statistic

@@ -4,11 +4,11 @@ import { formatDataToString } from '@helpers/utils';
 const PropertiesProfile = (props) => {
   return (
     <Col
-      className='asistente-list' //agrega el estilo a la barra de scroll
+      className="asistente-list" //agrega el estilo a la barra de scroll
       span={24}
       style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'auto' }}
     >
-      {!props.propertiesUserPerfil && <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>}
+      {!props.propertiesUserPerfil && <Spin style={{ padding: '50px' }} size="large" tip="Cargando..."></Spin>}
       <List
         bordered
         dataSource={props.propertiesUserPerfil && props.propertiesUserPerfil}

@@ -386,7 +386,7 @@ class MenuLanding extends Component {
             form
           />
 
-          <Spin tip='Cargando...' size='large' spinning={this.state.isLoading}>
+          <Spin tip="Cargando..." size="large" spinning={this.state.isLoading}>
             <Row gutter={[8, 8]} wrap>
               {Object.keys(this.state.menu).map((key, index) => (
                 <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
@@ -426,8 +426,8 @@ class MenuLanding extends Component {
                             onChange={(e) => {
                               this.changePermissions(key, e);
                             }}>
-                            <Option value='public'>Abierto para todos</Option>
-                            <Option value='assistants'>Usuarios inscritos al curso</Option>
+                            <Option value="public">Abierto para todos</Option>
+                            <Option value="assistants">Usuarios inscritos al curso</Option>
                           </Select>
                         </Form.Item>
                         <Form.Item label={'Posición en el menú'}>

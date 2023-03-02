@@ -29,8 +29,8 @@ const CardRTMP = () => {
         }
       />{' '}
       <br />
-      <Space direction='vertical' style={{ width: '100%' }}>
-        <Space direction='vertical' style={{ width: '100%' }}>
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <Space direction="vertical" style={{ width: '100%' }}>
           <Typography.Text>RTMP url</Typography.Text>
           <Input.Group compact>
             <Input
@@ -38,7 +38,7 @@ const CardRTMP = () => {
               disabled
               value={dataRtmp?.rtmp} /* value={linkRolProductor} */
             />
-            <Tooltip title='Copiar RTMP url'>
+            <Tooltip title="Copiar RTMP url">
               <Button
                 onClick={() => copyToClipboard(dataRtmp?.rtmp)}
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}
@@ -46,7 +46,7 @@ const CardRTMP = () => {
             </Tooltip>
           </Input.Group>
         </Space>
-        <Space direction='vertical' style={{ width: '100%' }}>
+        <Space direction="vertical" style={{ width: '100%' }}>
           <Typography.Text>RTMP clave</Typography.Text>
           <Input.Group compact>
             <Input
@@ -54,7 +54,7 @@ const CardRTMP = () => {
               disabled
               value={dataRtmp?.password} /* value={linkRolProductor} */
             />
-            <Tooltip title='Copiar RTMP clave'>
+            <Tooltip title="Copiar RTMP clave">
               <Button
                 onClick={() => copyToClipboard(dataRtmp?.password)}
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}

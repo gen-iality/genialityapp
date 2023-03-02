@@ -773,11 +773,11 @@ class TriviaEdit extends Component {
             <>
               <div style={{ marginBottom: '10px' }}>
                 {e.correctAnswer ? (
-                  <Tag icon={<CheckCircleOutlined />} color='success'>
+                  <Tag icon={<CheckCircleOutlined />} color="success">
                     Respuesta asignada
                   </Tag>
                 ) : (
-                  <Tag icon={<CloseCircleOutlined />} color='error'>
+                  <Tag icon={<CloseCircleOutlined />} color="error">
                     Sin respuesta asignada
                   </Tag>
                 )}
@@ -807,25 +807,25 @@ class TriviaEdit extends Component {
           return (
             <Row gutter={[8, 8]}>
               <Col>
-                <Tooltip placement='topLeft' title='Editar'>
+                <Tooltip placement="topLeft" title="Editar">
                   <Button
                     icon={<EditOutlined />}
-                    type='primary'
-                    size='small'
+                    type="primary"
+                    size="small"
                     onClick={() => this.editQuestion(record.id)}
                     disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
               <Col>
-                <Tooltip placement='topLeft' title='Eliminar'>
+                <Tooltip placement="topLeft" title="Eliminar">
                   <Button
                     key={`removeAction${record.index}`}
                     id={`removeAction${record.index}`}
                     onClick={() => this.deleteOneQuestion(record.id)}
                     icon={<DeleteOutlined />}
-                    type='danger'
-                    size='small'
+                    type="danger"
+                    size="small"
                     disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
@@ -848,7 +848,7 @@ class TriviaEdit extends Component {
           remove={this.remove}
           edit={this.state.idSurvey}
           extra={
-            <Space direction='horizontal' style={{ maginRigth: '50px' }}>
+            <Space direction="horizontal" style={{ maginRigth: '50px' }}>
               {this.state.idSurvey && (
                 <>
                   <Col>
@@ -856,8 +856,8 @@ class TriviaEdit extends Component {
                       <Switch
                         name="publish"
                         checked={publish === 'true' || publish}
-                        checkedChildren='Sí'
-                        unCheckedChildren='No'
+                        checkedChildren="Sí"
+                        unCheckedChildren="No"
                         onChange={(checked) => this.setState({ publish: checked ? 'true' : 'false' })}
                       />
                     </Form.Item>
@@ -867,8 +867,8 @@ class TriviaEdit extends Component {
                       <Switch
                         name="openSurvey"
                         checked={openSurvey === 'true'}
-                        checkedChildren='Sí'
-                        unCheckedChildren='No'
+                        checkedChildren="Sí"
+                        unCheckedChildren="No"
                         onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
                       />
                     </Form.Item>
@@ -878,7 +878,7 @@ class TriviaEdit extends Component {
             </Space>
           }
         />
-        <Row justify='center' wrap gutter={8}>
+        <Row justify="center" wrap gutter={8}>
           <Col span={16}>
             {isLoading ? (
               <Loading />
@@ -933,7 +933,7 @@ class TriviaEdit extends Component {
                           ))}
                         </Select>
                       </Form.Item>
-                      <Row justify='space-between' wrap gutter={[8, 8]}>
+                      <Row justify="space-between" wrap gutter={[8, 8]}>
                         {/* <Col>
                     <Form.Item label={'Permitir usuarios anónimos'}>
                       <Switch
@@ -981,9 +981,9 @@ class TriviaEdit extends Component {
                                 style={{ width: 120 }}
                                 onChange={(graphy) => this.setState({ graphyType: graphy })}
                               >
-                                <Option value='y'>Horizontal</Option>
-                                <Option value='x'>vertical</Option>
-                                <Option value='pie'>Torta</Option>
+                                <Option value="y">Horizontal</Option>
+                                <Option value="x">vertical</Option>
+                                <Option value="pie">Torta</Option>
                               </Select>
                             </Form.Item>
                             <Form.Item label={'Mostrar porcentaje de participantes sin votar en las gráficas'}>
@@ -1160,12 +1160,12 @@ class TriviaEdit extends Component {
                         onOk={this.sendForm}
                         onCancel={this.closeModal}
                         footer={[
-                          <Button key='back' onClick={this.closeModal}>
+                          <Button key="back" onClick={this.closeModal}>
                             Cancelar
                           </Button>,
                           <Button
-                            key='submit'
-                            type='primary'
+                            key="submit"
+                            type="primary"
                             disabled={confirmLoading}
                             loading={confirmLoading}
                             onClick={this.sendForm}
@@ -1180,7 +1180,7 @@ class TriviaEdit extends Component {
                               marginBottom: '20px',
                             }}
                             level={4}
-                            type='secondary'>
+                            type="secondary">
                             Gestionar pregunta
                           </Title>
                           <FormQuestionEdit

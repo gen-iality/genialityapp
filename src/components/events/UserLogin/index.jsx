@@ -72,8 +72,8 @@ class UserLogin extends Component {
             {!enabledFormRecoveryPass && this.props.cEventUser.value !== null && (
               <Result
                 icon={<SmileOutlined />}
-                title='Bienvenido..!'
-                subTitle='Desde ahora puedes disfrutar de nuestro curso'></Result>
+                title="Bienvenido..!"
+                subTitle="Desde ahora puedes disfrutar de nuestro curso"></Result>
             )}
 
             {enabledFormRecoveryPass && (

@@ -68,12 +68,12 @@ function Transmitir(props) {
   return (
     <>
       {optTransmitir == false ? (
-        <div className='step-transmision'>
-          <h1 className='title-step'>Transmitir desde GEN.iality</h1>
+        <div className="step-transmision">
+          <h1 className="title-step">Transmitir desde GEN.iality</h1>
           <Row>
             <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
-              <div className='container'>
-                <div className='container-image'>
+              <div className="container">
+                <div className="container-image">
                   <img
                     style={{ width: '60%', margin: 'auto' }}
                     src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceEvius.png?alt=media&token=caecef6c-e177-47aa-bcd5-347c754fe409'
@@ -83,8 +83,8 @@ function Transmitir(props) {
               </div>
             </Col>
             <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14}>
-              <div className='container-description'>
-                <div className='descriptions'>
+              <div className="container-description">
+                <div className="descriptions">
                   <p>
                     Tu curso será transmitido desde evius usando tus camara y teniendo la posibilidad de agregar
                     efectos profesionales
@@ -98,15 +98,15 @@ function Transmitir(props) {
           {organization && !isbyOrganization && (
             <Modal
               onOk={selectOrganizationOK}
-              okText='Seleccionar'
-              cancelText='Cerrar'
-              title='Organización'
+              okText="Seleccionar"
+              cancelText="Cerrar"
+              title="Organización"
               visible={organization && !isbyOrganization}
               onCancel={() => changeOrganization(false)}
             >
               <List
                 style={{ height: 400, overflowY: 'auto' }}
-                size='small'
+                size="small"
                 bordered
                 dataSource={organizations}
                 renderItem={(item) => (

@@ -42,16 +42,16 @@ const ModalRegister = ({ register, setRegister, event }) => {
             <CheckCircleTwoTone twoToneColor='#52c41a' />
           )
         }
-        status='success'
-        title={<Typography.Text type='success'> {titleModal} </Typography.Text>}
+        status="success"
+        title={<Typography.Text type="success"> {titleModal} </Typography.Text>}
         subTitle={<span style={{ fontSize: '18px' }}>{message}</span>}
         extra={[
           register != 3 ? (
             <Button
               onClick={() => setRegister(null)}
               style={{ backgroundColor: '#52C41A', color: '#FFFFFF', marginTop: '10px' }}
-              size='large'
-              key='console'>
+              size="large"
+              key="console">
               {infoButton}
             </Button>
           ) : (

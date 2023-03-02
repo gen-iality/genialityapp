@@ -175,14 +175,14 @@ const MainProfile = (props) => {
         onCollapse={() => showSider()}
         width={!screens.xs ? 300 : '92vw'}
         style={{ backgroundColor: '#ffffff', paddingTop: '10px', paddingBottom: '10px' }}
-        breakpoint='lg'
-        collapsedWidth='0'
+        breakpoint="lg"
+        collapsedWidth="0"
         zeroWidthTriggerStyle={{ top: '-40px', width: '50px' }}
       >
-        <Row justify='center' gutter={[10, 20]}>
+        <Row justify="center" gutter={[10, 20]}>
           <Space
             size={5}
-            direction='vertical'
+            direction="vertical"
             style={{ textAlign: 'center', paddingLeft: '15px', paddingRight: '15px' }}
           >
             {props?.cUser?.value ? (
@@ -194,12 +194,12 @@ const MainProfile = (props) => {
                 )}
               </>
             ) : (
-              <Skeleton.Avatar active size={150} shape='circle' />
+              <Skeleton.Avatar active size={150} shape="circle" />
             )}
             <Typography.Text style={{ fontSize: '20px', width: '250px', overflowWrap: 'anywhere' }}>
               {props?.cUser?.value?.names || props?.cUser?.value?.displayName || props?.cUser?.value?.name}
             </Typography.Text>
-            <Typography.Text type='secondary' style={{ fontSize: '16px', width: '220px', wordBreak: 'break-all' }}>
+            <Typography.Text type="secondary" style={{ fontSize: '16px', width: '220px', wordBreak: 'break-all' }}>
               {props?.cUser?.value?.email}
             </Typography.Text>
           </Space>
@@ -253,7 +253,7 @@ const MainProfile = (props) => {
                 // right: `${screens.xs ? '10%' : '22%'}`,
               }}
               src={import.meta.env.VITE_LOGO_SVG}
-              alt='logo'
+              alt="logo"
             />
           </Col>
         </Row>
@@ -276,7 +276,7 @@ const MainProfile = (props) => {
                       <AppstoreFilled /> Todos
                     </Space>
                   }
-                  key='1'>
+                  key="1">
                   <Row gutter={[16, 2]}>
                     <Col span={24}>
                       <Row gutter={[0, 16]}>
@@ -340,7 +340,7 @@ const MainProfile = (props) => {
                       </Row>
                     </Col>
                     <Col span={24}>
-                      <Divider orientation='left'>Cursos creado</Divider>
+                      <Divider orientation="left">Cursos creado</Divider>
                       <Row gutter={[16, 16]}>
                         {eventsIHaveCreatedIsLoading ? (
                           <Loading />
@@ -348,9 +348,9 @@ const MainProfile = (props) => {
                           <>
                             <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                               {organizationsLimited.length > 0 ? (
-                                <NewCard entityType='event' cUser={props.cUser} org={organizationsLimited} />
+                                <NewCard entityType="event" cUser={props.cUser} org={organizationsLimited} />
                               ) : (
-                                <NewCard entityType='event' cUser={props.cUser} />
+                                <NewCard entityType="event" cUser={props.cUser} />
                               )}
                             </Col>
                             {/* aqui empieza el mapeo de eventCard.jsx maximo 4 */}
@@ -386,7 +386,7 @@ const MainProfile = (props) => {
                     </Col>
 
                     <Col span={24}>
-                      <Divider orientation='left'>Cursos en los que estoy registrado</Divider>
+                      <Divider orientation="left">Cursos en los que estoy registrado</Divider>
                       <Row gutter={[16, 16]}>
                         {eventsThatIHaveParticipatedIsLoading ? (
                           <Loading />
@@ -418,14 +418,14 @@ const MainProfile = (props) => {
                     </Col>
 
                     <Col span={24}>
-                      <Divider orientation='left'>Organizaciones</Divider>
+                      <Divider orientation="left">Organizaciones</Divider>
                       <Row gutter={[16, 16]}>
                         {organizationsIsLoading ? (
                           <Loading />
                         ) : (
                           <>
                             <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                              <NewCard entityType='organization' cUser={props.cUser} fetchItem={fetchItem} />
+                              <NewCard entityType="organization" cUser={props.cUser} fetchItem={fetchItem} />
                             </Col>
                             {/* aqui empieza el mapeo maximo 6 */}
                             {organizationsLimited.length > 0 &&
@@ -444,13 +444,13 @@ const MainProfile = (props) => {
                   </Row>
                 </TabPane>
               )}
-              <TabPane tab='Organizaciones' key='2'>
+              <TabPane tab="Organizaciones" key="2">
                 {organizationsIsLoading ? (
                   <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
                     <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                      <NewCard entityType='organization' cUser={props.cUser} fetchItem={fetchItem} />
+                      <NewCard entityType="organization" cUser={props.cUser} fetchItem={fetchItem} />
                     </Col>
                     {organizations.length > 0 &&
                       organizations.map((organization, index) => {
@@ -463,16 +463,16 @@ const MainProfile = (props) => {
                   </Row>
                 )}
               </TabPane>
-              <TabPane tab='Cursos creados' key='3'>
+              <TabPane tab="Cursos creados" key="3">
                 {eventsIHaveCreatedIsLoading ? (
                   <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
                     <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                       {organizationsLimited.length > 0 ? (
-                        <NewCard entityType='event' cUser={props.cUser} org={organizationsLimited} />
+                        <NewCard entityType="event" cUser={props.cUser} org={organizationsLimited} />
                       ) : (
-                        <NewCard entityType='event' cUser={props.cUser} />
+                        <NewCard entityType="event" cUser={props.cUser} />
                       )}
                     </Col>
                     {events.map((event, index) => {
@@ -502,7 +502,7 @@ const MainProfile = (props) => {
                   </Row>
                 )}
               </TabPane>
-              <TabPane tab='Registros a cursos' key='4'>
+              <TabPane tab="Registros a cursos" key="4">
                 {eventsThatIHaveParticipatedIsLoading ? (
                   <Loading />
                 ) : (
@@ -530,7 +530,7 @@ const MainProfile = (props) => {
                   </Row>
                 )}
               </TabPane>
-              <TabPane tab='Calificaciones' key='5'>
+              <TabPane tab="Calificaciones" key="5">
                 {events.length === 0 && (
                   <Typography.Text strong>Sin cursos</Typography.Text>
                 )}
@@ -545,7 +545,7 @@ const MainProfile = (props) => {
                   ))
                 )}
               </TabPane>
-              <TabPane tab='Certificaciones' key='6'>
+              <TabPane tab="Certificaciones" key="6">
                 {!(props?.cUser?.value?._id) ? (
                   <Loading />
                 ) : (

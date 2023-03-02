@@ -164,17 +164,17 @@ const ModalLoginHelpers = (props) => {
           </Space>
         }
         onBack={() => null}
-        title=' ' // NO eliminar el espacio en blanco
+        title=" " // NO eliminar el espacio en blanco
       />
 
       <Form
         form={form}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        layout='vertical'
+        layout="vertical"
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
       >
-        <Typography.Title level={4} type='secondary'>
+        <Typography.Title level={4} type="secondary">
           {textoTitle}
         </Typography.Title>
         <Form.Item
@@ -182,7 +182,7 @@ const ModalLoginHelpers = (props) => {
             id: 'modal.label.email',
             defaultMessage: 'Correo electrónico',
           })}
-          name='email'
+          name="email"
           style={{ marginBottom: '10px' }}
           rules={[
             {
@@ -201,8 +201,8 @@ const ModalLoginHelpers = (props) => {
             },
           ]}>
           <Input
-            type='email'
-            size='large'
+            type="email"
+            size="large"
             placeholder={intl.formatMessage({
               id: 'modal.label.email',
               defaultMessage: 'Correo electrónico',
@@ -216,7 +216,7 @@ const ModalLoginHelpers = (props) => {
             message={sendRecovery}
             showIcon
             closable
-            className='animate__animated animate__bounceIn'
+            className="animate__animated animate__bounceIn"
             style={{
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
               backgroundColor: '#FFFFFF',
@@ -229,8 +229,8 @@ const ModalLoginHelpers = (props) => {
             description={
               resul !== 'OK' && (
                 <Button
-                  size='middle'
-                  type='primary'
+                  size="middle"
+                  type="primary"
                   onClick={() => {
                     helperDispatch({ type: 'showRegister' });
                     handleChangeTypeModal(null);
@@ -250,13 +250,13 @@ const ModalLoginHelpers = (props) => {
         {registerUser && (
           <Alert
             showIcon
-            type='error'
+            type="error"
             message={intl.formatMessage({
               id: 'modal.message.notregistered',
               defaultMessage: 'Este email no se encuentra registrado en este curso',
             })}
             closable
-            className='animate__animated animate__bounceIn animate__faster'
+            className="animate__animated animate__bounceIn animate__faster"
             style={{
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
               backgroundColor: '#FFFFFF',
@@ -268,8 +268,8 @@ const ModalLoginHelpers = (props) => {
             }}
             description={
               <Button
-                size='middle'
-                type='primary'
+                size="middle"
+                type="primary"
                 onClick={() => {
                   helperDispatch({ type: 'showRegister' });
                   handleChangeTypeModal(null);
@@ -289,16 +289,16 @@ const ModalLoginHelpers = (props) => {
           <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
             <Button
               id="submitButton"
-              htmlType='submit'
+              htmlType="submit"
               block
               style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-              size='large'>
+              size="large">
               {textoButton}
             </Button>
           </Form.Item>
         )}
         {loading && (
-          <Row justify='center'>
+          <Row justify="center">
             <LoadingOutlined style={{ fontSize: '50px' }} />
           </Row>
         )}

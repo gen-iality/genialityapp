@@ -14,7 +14,7 @@ const GenericActivity = () => {
   return (
     <>
       <HeaderColumnswithContext isVisible activityState={activityState} />
-      <Result icon={<SmileOutlined />} title='Puedes asignar un contenido audiovisual a esta lección' />
+      <Result icon={<SmileOutlined />} title="Puedes asignar un contenido audiovisual a esta lección" />
     </>
   );
 };

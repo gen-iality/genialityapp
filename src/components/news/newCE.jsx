@@ -236,7 +236,7 @@ const NewCE = (props) => {
     <Form onFinish={onSubmit} {...formLayout} initialValues={notice}>
       <Header title="Noticia" back save form edit={locationState?.edit} remove={remove} />
 
-      <Row justify='center' wrap gutter={12}>
+      <Row justify="center" wrap gutter={12}>
         {locationState.edit && isLoading ? (
           <Loading />
         ) : (
@@ -266,7 +266,7 @@ const NewCE = (props) => {
               rules={[{ required: true, message: 'El subtítulo es requerido' }]}
             >
               <EviusReactQuill
-                id='description_short'
+                id="description_short"
                 name="description_short"
                 data={notice && notice.description_short ? notice.description_short : ''}
                 handleChange={(e) => changeDescription(e, 'description_short')}
@@ -282,7 +282,7 @@ const NewCE = (props) => {
               rules={[{ required: true, message: 'La noticia es requerida' }]}
             >
               <EviusReactQuill
-                id='description_complete'
+                id="description_complete"
                 name="description_complete"
                 data={(notice && notice.description_complete) || ''}
                 //modules={toolbarEditor}
@@ -302,17 +302,17 @@ const NewCE = (props) => {
                 <ImageUploaderDragAndDrop
                   imageDataCallBack={handleImage}
                   imageUrl={notice && notice?.image}
-                  width='1080'
-                  height='1080'
+                  width="1080"
+                  height="1080"
                 />
               </Form.Item>
             </Form.Item>
 
-            <Form.Item label='Link del video'>
+            <Form.Item label="Link del video">
               <Input
                 name="linkYoutube"
                 value={notice && notice.linkYoutube}
-                type='url'
+                type="url"
                 placeholder={'www.video.com'}
                 onChange={(e) => handleChange(e)}
               />
@@ -321,7 +321,7 @@ const NewCE = (props) => {
             <Form.Item label="Fecha">
               <DatePicker
                 name="time"
-                format='YYYY-DD-MM'
+                format="YYYY-DD-MM"
                 value={notice && dayjs(notice.time)}
                 onChange={onChangeDate}
               />

@@ -69,7 +69,7 @@ class CommentsList extends Component {
     console.log('COMENTARIOS==>', dataComment, this.props);
     return (
       <div style={{ textAlign: 'left' }}>
-        {!dataComment && <Spin tip='Loading...' />}
+        {!dataComment && <Spin tip="Loading..." />}
 
         {dataComment && dataComment.length === 0 && (
           <Card style={{ display: 'block', margin: '0 auto', textAlign: 'left', padding: '0px 30px' }}>
@@ -79,7 +79,7 @@ class CommentsList extends Component {
 
         {dataComment && dataComment.length > 0 && (
           <List
-            itemLayout='vertical'
+            itemLayout="vertical"
             // Aqui se llama al array del state
             dataSource={dataComment}
             // Aqui se mapea al array del state

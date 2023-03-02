@@ -86,12 +86,12 @@ const InputSource = ({ type, addonBefore, placeholder }: propsOptions) => {
   const { selectOption, typeOptions } = useTypeActivity();
   return (
     <Form>
-      <Form.Item name='url' rules={(rules as any)[typeOptions.key] || [{ required: true }]}>
+      <Form.Item name="url" rules={(rules as any)[typeOptions.key] || [{ required: true }]}>
         <Input
           type={type === 'vimeo' ? 'number' : 'text'}
           addonBefore={addonBefore}
           placeholder={placeholder}
-          size='large'
+          size="large"
           onChange={(e) => {
             //esto es para enviar solo el ID si es una url de youtube o vimeo
             selectOption(typeOptions.key, (onChange as any)[typeOptions.key](e));

@@ -322,7 +322,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
           <Upload
             action='https://api.evius.co/api/files/upload/'
             onChange={showRequest}
-            listType='text'
+            listType="text"
             beforeUpload={beforeUpload}
           >
             <Button icon={<UploadOutlined />}>Upload</Button>
@@ -333,7 +333,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       //   input = (
       //       <>
       //         <Password
-      //         name='password'
+      //         name="password"
       //         style={{ marginBottom: '15px'}}
       //         placeholder="Ingrese su password"
       //         key={key}
@@ -361,7 +361,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       }
 
       return (
-        <div key={'g' + key} name='field'>
+        <div key={'g' + key} name="field">
           {type == 'tituloseccion' && input}
           {type != 'tituloseccion' && (
             <>
@@ -383,7 +383,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               {description && description.length < 500 && <p>{description}</p>}
               {description && description.length > 500 && (
                 <Collapse defaultActiveKey={['0']}>
-                  <Panel header='Política de privacidad, términos y condiciones' key='1'>
+                  <Panel header="Política de privacidad, términos y condiciones" key="1">
                     <pre>{description}</pre>
                   </Panel>
                 </Collapse>
@@ -401,9 +401,9 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       {notLoggedAndRegister && (
         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
           <Alert
-            message='Datos actualizados'
-            description='Tus datos han sido actualizados correctamente'
-            type='info'
+            message="Datos actualizados"
+            description="Tus datos han sido actualizados correctamente"
+            type="info"
             showIcon
             closable
           />
@@ -413,10 +413,10 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       <br />
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
-          <Card title='Actualización de campos' bodyStyle={textLeft}>
+          <Card title="Actualización de campos" bodyStyle={textLeft}>
             <Form
               form={form}
-              layout='vertical'
+              layout="vertical"
               onFinish={onFinish}
               validateMessages={validateMessages}
               initialValues={initialValues}
@@ -431,7 +431,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   {generalFormErrorMessageVisible && (
-                    <Alert message='Falto por completar algunos campos. ' type='warning' />
+                    <Alert message="Falto por completar algunos campos. " type="warning" />
                   )}
                 </Col>
               </Row>
@@ -439,7 +439,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <Form.Item>
-                    <Button type='primary' htmlType='submit'>
+                    <Button type="primary" htmlType="submit">
                       Actualizar datos
                     </Button>
                   </Form.Item>
@@ -449,7 +449,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
           </Card>
         ) : (
           <Card>
-            <Result status='success' title='Datos actualizados!' subTitle={successMessage} />
+            <Result status="success" title="Datos actualizados!" subTitle={successMessage} />
           </Card>
         )}
       </Col>

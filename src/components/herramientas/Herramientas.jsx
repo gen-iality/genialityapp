@@ -39,7 +39,7 @@ const Herramientas = (props) => {
         state: { new: true },
       }}
       columns={columns}
-      key='_id'
+      key="_id"
       editPath={`${props.matchUrl}/herramienta`}
       actions
       search

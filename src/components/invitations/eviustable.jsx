@@ -13,20 +13,20 @@ export default function EviusTable({ columns, data }) {
 
   return (
     <table>
-      <thead className='ant-table-thead'>
+      <thead className="ant-table-thead">
         {headerGroups.map((headerGroup, index) => (
           <tr key={index} {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
-              <th className='ant-table-header-column'>{column.render('Header')}</th>
+              <th className="ant-table-header-column">{column.render('Header')}</th>
             ))}
           </tr>
         ))}
       </thead>
-      <tbody className='ant-table-tbody'>
+      <tbody className="ant-table-tbody">
         {rows.map((row) => {
           prepareRow(row);
           return (
-            <tr className='ant-table-row nt-table-row-level-0'>
+            <tr className="ant-table-row nt-table-row-level-0">
               {row.cells.map((cell) => {
                 return <td>{cell.render('Cell')}</td>;
               })}

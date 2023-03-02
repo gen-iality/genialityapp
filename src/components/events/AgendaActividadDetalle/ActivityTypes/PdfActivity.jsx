@@ -52,7 +52,7 @@ const PdfActivity = () => {
   return (
     <>
       <HeaderColumnswithContext isVisible activityState={activityState} />
-      <a href={pdfURL} target='blank'>Descargar PDF</a>
+      <a href={pdfURL} target="blank">Descargar PDF</a>
       <Document file={pdfURL} onLoadSuccess={onDocumentLoadSuccess}>
         <Page pageNumber={pageNumber} width={600} />
       </Document>
@@ -60,10 +60,10 @@ const PdfActivity = () => {
         <p>
           Page {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
         </p>
-        <button type='button' disabled={pageNumber <= 1} onClick={previousPage}>
+        <button type="button" disabled={pageNumber <= 1} onClick={previousPage}>
           Previous
         </button>
-        <button type='button' disabled={pageNumber >= numPages} onClick={nextPage}>
+        <button type="button" disabled={pageNumber >= numPages} onClick={nextPage}>
           Next
         </button>
       </div>

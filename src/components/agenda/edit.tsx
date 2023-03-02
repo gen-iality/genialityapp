@@ -324,11 +324,11 @@ function AgendaEdit(props: AgendaEditProps) {
         <RouterPrompt
           save
           when={showPendingChangesModal}
-          title='Tienes cambios sin guardar.'
-          description='¿Qué deseas hacer?'
-          okText='No guardar'
-          okSaveText='Guardar'
-          cancelText='Cancelar'
+          title="Tienes cambios sin guardar."
+          description="¿Qué deseas hacer?"
+          okText="No guardar"
+          okSaveText="Guardar"
+          cancelText="Cancelar"
           onOK={() => true}
           onOKSave={submit}
           onCancel={() => false}
@@ -346,10 +346,10 @@ function AgendaEdit(props: AgendaEditProps) {
           edit={location.state.edit || currentActivityID || undefined}
           extra={
             isEditing && (
-              <Form.Item label='Publicar' labelCol={{ span: 14 }}>
+              <Form.Item label="Publicar" labelCol={{ span: 14 }}>
                 <Switch
-                  checkedChildren='Sí'
-                  unCheckedChildren='No'
+                  checkedChildren="Sí"
+                  unCheckedChildren="No"
                   checked={agendaContext.isPublished}
                   onChange={(value) => {
                     agendaContext.setIsPublished(value);
@@ -370,7 +370,7 @@ function AgendaEdit(props: AgendaEditProps) {
         ) : (
           <>
             <Tabs activeKey={currentTab} onChange={(key) => setCurrentTab(key)}>
-              <TabPane tab='Agenda' key='1'>
+              <TabPane tab="Agenda" key="1">
                 {/*
           This component will handle the formdata and save the data using
           the provided methods:
@@ -395,7 +395,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
               {isEditing && (
                 <>
-                  <TabPane tab='Contenido' key='2'>
+                  <TabPane tab="Contenido" key="2">
                     <Row wrap gutter={12}>
                       <Col span={24}>
                         {currentActivityID && (
@@ -411,16 +411,16 @@ function AgendaEdit(props: AgendaEditProps) {
                       </Col>
                     </Row>
                   </TabPane>
-                  <TabPane tab='Juegos' key='3'>
-                    <Row justify='center' wrap gutter={12}>
+                  <TabPane tab="Juegos" key="3">
+                    <Row justify="center" wrap gutter={12}>
                       <Col span={20}>
                         <RoomController />
                         <BackTop />
                       </Col>
                     </Row>
                   </TabPane>
-                  <TabPane tab='Encuestas' key='4'>
-                    <Row justify='center' wrap gutter={12}>
+                  <TabPane tab="Encuestas" key="4">
+                    <Row justify="center" wrap gutter={12}>
                       <Col span={20}>
                         <SurveyManager
                           event_id={props.event._id}
@@ -431,8 +431,8 @@ function AgendaEdit(props: AgendaEditProps) {
                       </Col>
                     </Row>
                   </TabPane>
-                  <TabPane tab='Documentos' key='5'>
-                    <Row justify='center' wrap gutter={12}>
+                  <TabPane tab="Documentos" key="5">
+                    <Row justify="center" wrap gutter={12}>
                       <Col span={20}>
                         <Form.Item>
                           <AgendaDocumentForm

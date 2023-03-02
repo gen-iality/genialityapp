@@ -63,7 +63,7 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
 
   return (
     <>
-      <div className='mediaplayer'>
+      <div className="mediaplayer">
         {conected == 'Yes' && visibleReactPlayer ? (
           <>
             {console.log('ESTE ES EL TIPO DE ACTIVIDAD', typeActivity)}
@@ -83,7 +83,7 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
               width='100%'
               height='100%'
               src={platformurl}
-              frameBorder='0'
+              frameBorder="0"
               allow='autoplay; encrypted-media'
               allowFullScreen></iframe>
           </>

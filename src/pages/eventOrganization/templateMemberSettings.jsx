@@ -23,7 +23,7 @@ function TemplateMemberSettings(props) {
     <>
       {organization && (
         <Datos
-          type='organization'
+          type="organization"
           eventId={organizationId}
           org={organization}
           url={props.match.url}

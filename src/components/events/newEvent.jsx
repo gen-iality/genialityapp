@@ -409,42 +409,42 @@ class NewEvent extends Component {
     const { current } = this.state;
     const context = this.context;
     return (
-      <Row justify='center' className='newEvent'>
+      <Row justify="center" className="newEvent">
         {/* Items del paso a paso */}
-        <div className='itemStep'>
+        <div className="itemStep">
           <Steps current={current} responsive>
             {this.state.steps.map((item) => (
               <Step key={item.title} title={item.title} icon={item.icon} />
             ))}
           </Steps>
         </div>
-        <Card className='card-container' bodyStyle={{ borderTop: '25px solid #50D3C9', borderRadius: '5px' }}>
+        <Card className="card-container" bodyStyle={{ borderTop: '25px solid #50D3C9', borderRadius: '5px' }}>
           {/* Contenido de cada item del paso a paso */}
-          <Row justify='center' style={{ marginBottom: '8px' }}>
+          <Row justify="center" style={{ marginBottom: '8px' }}>
             {this.obtainContent(this.state.steps[current])}
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
           {!this.state.loading && !context.loadingOrganization && (
-            <div className='button-container'>
+            <div className="button-container">
               {current > 0 && (
-                <Button className='button' size='large' onClick={() => this.prev()}>
+                <Button className="button" size="large" onClick={() => this.prev()}>
                   Anterior
                 </Button>
               )}
               {current < this.state.steps.length - 1 && (
-                <Button className='button' type='primary' size='large' onClick={() => this.next()}>
+                <Button className="button" type="primary" size="large" onClick={() => this.next()}>
                   Siguiente
                 </Button>
               )}
               {current === this.state.steps.length - 1 && (
-                <Button className='button' type='primary' size='large' onClick={() => this.saveEvent()}>
+                <Button className="button" type="primary" size="large" onClick={() => this.saveEvent()}>
                   Crear curso
                 </Button>
               )}
             </div>
           )}
           {(this.state.loading || context.loadingOrganization) && (
-            <Row justify='center'>
+            <Row justify="center">
               Espere.. <Spin />
             </Row>
           )}

@@ -135,9 +135,9 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
         width: '100vw',
         backgroundColor: '#FCEAD9',
       }}>
-      <Row justify='center' className='newEvent' style={{ transition: 'all 1.5s ease-out' }}>
+      <Row justify="center" className="newEvent" style={{ transition: 'all 1.5s ease-out' }}>
         {/* Items del paso a paso */}
-        <div className='itemStep'>
+        <div className="itemStep">
           <Steps current={current} responsive>
             {steps.map((item) => (
               <Steps.Step key={item.title} title={item.title} icon={item.icon} />
@@ -155,39 +155,39 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
             height: `80%`,
             borderRadius: '25px',
           }}
-          className='card-container'>
+          className="card-container">
           {/* Contenido de cada item del paso a paso */}
-          <Row justify='center' style={{ marginBottom: '8px' }}>
+          <Row justify="center" style={{ marginBottom: '8px' }}>
             {obtainContent(steps[current])}
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
           {/* SE VALIDA CON window.history.length  PARA DETECTAR SI ES POSIBLE HACER EL BACK YA QUE AVECES SE ABRE UNA PESTAÑA NUEVA*/}
           {!eventNewContext.state.loading && (
-            <div className='button-container'>
+            <div className="button-container">
               {current <= 0 && (
                 <Button
-                  className='button'
-                  size='large'
+                  className="button"
+                  size="large"
                   onClick={() => (window.history.length == 1 ? window.close() : window.history.back())}
                 >
                   {window.history.length == 1 ? 'Salir' : 'Cancelar'}
                 </Button>
               )}
               {current > 0 && (
-                <Button className='button' size='large' onClick={() => goPrevious()}>
+                <Button className="button" size="large" onClick={() => goPrevious()}>
                   Anterior
                 </Button>
               )}
               {current < steps.length - 1 && (
-                <Button className='button' type='primary' size='large' onClick={() => goNext()}>
+                <Button className="button" type="primary" size="large" onClick={() => goNext()}>
                   Siguiente
                 </Button>
               )}
               {current === steps.length - 1 && (
                 <Button
-                  className='button'
-                  type='primary'
-                  size='large'
+                  className="button"
+                  type="primary"
+                  size="large"
                   onClick={async () => await eventNewContext.saveEvent()}
                 >
                   Crear curso
@@ -196,7 +196,7 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
             </div>
           )}
           {eventNewContext.state.loading && (
-            <Row justify='center'>
+            <Row justify="center">
               Espere.. <Spin />
             </Row>
           )}

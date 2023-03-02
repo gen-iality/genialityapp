@@ -85,9 +85,9 @@ const SocialZone = (props) => {
   }, [cEvent]);
 
   return (
-    <div className='siderContentFixed'>
+    <div className="siderContentFixed">
       <Tabs
-        defaultActiveKey='1'
+        defaultActiveKey="1"
         onChange={callback}
         activeKey={chatAttendeChats}
         onTabClick={(key) => {
@@ -96,22 +96,22 @@ const SocialZone = (props) => {
         tabBarExtraContent={{ left: props.ToggleVisibilityButton }}
       >
         <TabPane
-          className='asistente-chat-list'
+          className="asistente-chat-list"
           tab={
             <>
               {props.generalTabs.publicChat && (
-                <Badge onClick={() => HandleChatOrAttende('1')} size='small' count={totalPrivateMessages}>
+                <Badge onClick={() => HandleChatOrAttende('1')} size="small" count={totalPrivateMessages}>
                   <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
                 </Badge>
               )}
             </>
           }
-          key='1'
+          key="1"
         >
           <ThisRouteCanBeDisplayed>
             <ChatList
               typeEvent={typeEvent}
-              key='ChatList'
+              key="ChatList"
               props={props}
               setCurrentUser={setCurrentUser}
               generalTabs={props.generalTabs}
@@ -127,23 +127,23 @@ const SocialZone = (props) => {
                 <>
                   {props.generalTabs?.attendees && (
                     <div style={{ color: cEvent.value.styles.textMenu }}>
-                      <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />{' '}
+                      <FormattedMessage id="tabs.attendees.socialzone" defaultMessage="Asistentes" />{' '}
                       {countAttendeesOnline.length > 0 && <>({countAttendeesOnline.length})</>}
                     </div>
                   )}
                 </>
               }
-              key='2'
+              key="2"
             >
               <ThisRouteCanBeDisplayed>
-                <div key='AttendeList'>
+                <div key="AttendeList">
                   <Row>
                     <Space size={10} style={{ width: '100%' }}>
                       {!Object.keys(attendeeList).length ? (
                         ''
                       ) : (
                         <div
-                          className='control'
+                          className="control"
                           style={{
                             marginBottom: '10px',
                             marginRight: '5px',
@@ -155,10 +155,10 @@ const SocialZone = (props) => {
                             style={{ color: cEvent.value.styles.textMenu }}
                             ref={busquedaRef}
                             autoFocus
-                            type='text'
+                            type="text"
                             name="name"
                             onChange={handleChange}
-                            placeholder='Buscar participante...'
+                            placeholder="Buscar participante..."
                           />
                         </div>
                       )}
@@ -167,7 +167,7 @@ const SocialZone = (props) => {
                         : busqueda !== null && (
                             <Button
                               icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
-                              shape='round'
+                              shape="round"
                               onClick={searhAttende}
                             >
                               {!isFiltered && 'Buscar'}
@@ -176,9 +176,9 @@ const SocialZone = (props) => {
                           )}
                     </Space>
                   </Row>
-                  <div className='asistente-list'>
+                  <div className="asistente-list">
                     {!Object.keys(attendeeList).length ? (
-                      <Row justify='center'>
+                      <Row justify="center">
                         <p>No hay asistentes aún</p>
                       </Row>
                     ) : (
@@ -202,22 +202,22 @@ const SocialZone = (props) => {
 
         {currentActivity !== null && typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
           <TabPane
-            className='asistente-survey-list asistente-list'
+            className="asistente-survey-list asistente-list"
             tab={
               <div style={{ marginBottom: '0px' }}>
-                <Badge dot={props.hasOpenSurveys} size='default'>
+                <Badge dot={props.hasOpenSurveys} size="default">
                   <span style={{ color: cEvent.value.styles.textMenu }}>
-                    <FormattedMessage id='tabs.surveys.socialzone' defaultMessage='Evaluaciones' />
+                    <FormattedMessage id="tabs.surveys.socialzone" defaultMessage="Evaluaciones" />
                   </span>
                 </Badge>
               </div>
             }
-            key='3'
+            key="3"
           >
             <ThisRouteCanBeDisplayed>
-              <div key='SurveyList'>
+              <div key="SurveyList">
                 <Row
-                  justify='space-between'
+                  justify="space-between"
                   style={{ display: 'pointer' }}
                   onClick={() => {
                     props.setMainStage(null);
@@ -235,10 +235,10 @@ const SocialZone = (props) => {
                   <div style={{ paddingTop: 30 }}>
                     <Alert
                       showIcon
-                      message='Para poder responder una evaluación debes ser usuario del sistema'
-                      type='warning'
+                      message="Para poder responder una evaluación debes ser usuario del sistema"
+                      type="warning"
                     />
-                    <Row style={{ marginTop: 30 }} justify='center'>
+                    <Row style={{ marginTop: 30 }} justify="center">
                       <Button onClick={redirectRegister}>Registrarme</Button>
                     </Row>
                   </div>
@@ -252,7 +252,7 @@ const SocialZone = (props) => {
           (tabsGenerals?.games || tabsGenerals?.games === 'true') &&
           currentActivity?.habilitar_ingreso === 'open_meeting_room' && (
             <TabPane
-              className='asistente-survey-list asistente-list'
+              className="asistente-survey-list asistente-list"
               tab={
                 <>
                   <p
@@ -261,18 +261,18 @@ const SocialZone = (props) => {
                       color: cEvent.value.styles.textMenu,
                     }}
                   >
-                    <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
+                    <FormattedMessage id="tabs.games.socialzone" defaultMessage="Juegos" />
                   </p>
                 </>
               }
-              key='4'
+              key="4"
             >
               <>
                 {cEvent.value._id == '619d09f7cbd9a47c2d386372' ? (
-                  <GameList key='GameList' />
+                  <GameList key="GameList" />
                 ) : (
                   <ThisRouteCanBeDisplayed>
-                    <GameList key='GameList' />
+                    <GameList key="GameList" />
                   </ThisRouteCanBeDisplayed>
                 )}
               </>

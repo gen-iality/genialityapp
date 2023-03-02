@@ -9,7 +9,7 @@ class Policies extends Component {
   render() {
     return (
       <div style={{ textaAlign: 'justify', padding: '0 150px' }}>
-        <h1 className='title'> EVIUS - PRIVACY POLICY</h1>
+        <h1 className="title"> EVIUS - PRIVACY POLICY</h1>
         <p>
           This is the privacy policy (&quot;Privacy Policy&quot;) that governs how we, Evius Inc. (&quot;Evius,&quot;
           &quot;we,&quot; &quot;our&quot; or &quot;us&quot;), use Personal Information (as defined below) that we

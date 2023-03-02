@@ -87,7 +87,7 @@ const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploader
           }}
           beforeUpload={handleBeforeUpload}
         >
-          <Button type='primary' icon={<UploadOutlined />}>
+          <Button type="primary" icon={<UploadOutlined />}>
             <FormattedMessage
               id="form.button.avatar"
               defaultMessage="Subir imagen de perfil"

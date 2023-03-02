@@ -105,13 +105,13 @@ const ModalNotifications = (props) => {
         setModalSendNotificationVisible(false);
         resetFields();
       }}>
-      <Form onFinish={sendNotifications} form={form} autoComplete='off' layout='vertical'>
-        <Typography.Title level={4} type='secondary'>
+      <Form onFinish={sendNotifications} form={form} autoComplete="off" layout="vertical">
+        <Typography.Title level={4} type="secondary">
           Enviar notificación push
         </Typography.Title>
         <Form.Item
           label="Mensaje"
-          name='notificationMessage'
+          name="notificationMessage"
           style={{ marginBottom: '10px' }}
           rules={[{ required: true, message: 'Ingrese un mensaje!' }]}
         >
@@ -120,10 +120,10 @@ const ModalNotifications = (props) => {
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
             id="submitButton"
-            htmlType='submit'
+            htmlType="submit"
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size='large'
+            size="large"
             icon={<SendOutlined />}
           >
             Enviar notificación

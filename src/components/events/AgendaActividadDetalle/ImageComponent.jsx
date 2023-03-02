@@ -50,18 +50,18 @@ const ImageComponent = (props) => {
     : props.cEvent.value.styles?.banner_image;
 
   return (
-    <div className='mediaplayer'>
+    <div className="mediaplayer">
       {props.cEvent.value.styles.toolbarDefaultBg != undefined || props.cEvent.value.styles.toolbarDefaultBg != '' ? (
         imageToShow && (
           <img
-            className='activity_image'
+            className="activity_image"
             style={{
               width: '100%',
               height: '60vh',
               objectFit: 'cover',
             }}
             src={imageToShow}
-            alt='Activity'
+            alt="Activity"
           />
         )
       ) : (

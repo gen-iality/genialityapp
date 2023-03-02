@@ -75,7 +75,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
       ) : (
         <iframe
           src={platformurl}
-          frameBorder='0'
+          frameBorder="0"
           allow='autoplay; fullscreen; camera *;microphone *'
           allowFullScreen
           allowusermedia

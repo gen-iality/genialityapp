@@ -138,31 +138,31 @@ const Importacion = (props) => {
 
   return (
     <>
-      <div className='importacion-txt'>
+      <div className="importacion-txt">
         <p>
           Para importar los usuarios de tu curso, debes cargar un archivo excel (.xls) con las columnas organizadas
           (como se muestra abajo). Para mayor facilidad, <strong>descarga nuestro template</strong> para organizar los
           datos de tus asistentes.
         </p>
       </div>
-      <h2 className='has-text-grey has-text-weight-bold'>CAMPOS REQUERIDOS</h2>
+      <h2 className="has-text-grey has-text-weight-bold">CAMPOS REQUERIDOS</h2>
       <Row wrap gutter={[8, 8]}>
         {addMoreItemsToExtraFields().map((extra, key) => (
           <Col key={key}>
-            <span className='has-text-grey-light'>{extra?.label || extra?.name}</span>
-            <Divider type='vertical' />
+            <span className="has-text-grey-light">{extra?.label || extra?.name}</span>
+            <Divider type="vertical" />
           </Col>
         ))}
       </Row>
       <br />
-      <Row justify='center' align='middle' wrap gutter={[16, 16]}>
+      <Row justify="center" align="middle" wrap gutter={[16, 16]}>
         <Col>
           <Upload.Dragger
             maxCount={1}
             onChange={(e) => handleXlsFile(e.fileList[0])}
             onDrop={(e) => handleXlsFile(e.fileList[0])}
             customRequest={uploadImagedummyRequest}
-            accept='.xls,.xlsx'
+            accept=".xls,.xlsx"
             style={{ margin: '0 15px', padding: '0 !important' }}
           >
             <p style={{ textAlign: 'center' }}>
@@ -171,7 +171,7 @@ const Importacion = (props) => {
           </Upload.Dragger>
         </Col>
         <Col>
-          <Button type='link' icon={<DownloadOutlined />} onClick={downloadExcel}>
+          <Button type="link" icon={<DownloadOutlined />} onClick={downloadExcel}>
             Descargar Template
           </Button>
         </Col>

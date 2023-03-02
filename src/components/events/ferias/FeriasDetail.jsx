@@ -60,10 +60,10 @@ const FeriasDetail = (props) => {
   const { TabPane } = Tabs;
 
   return (
-    <div className='feriasdetail'>
+    <div className="feriasdetail">
       <div style={{ position: 'relative' }}>
         <FeriasBanner imagen={companyDetail?.stand_image} />
-        <div className='container-information'>
+        <div className="container-information">
           <Information
             companyDetail={companyDetail}
             ImgCompany={companyDetail?.list_image}
@@ -86,16 +86,16 @@ const FeriasDetail = (props) => {
           marginBottom: '4vw',
           paddingBottom: '4vw',
         }}>
-        <Tabs defaultActiveKey='1' tabPosition='top' type='card'>
-          <TabPane tab='Información' key='1'>
+        <Tabs defaultActiveKey="1" tabPosition="top" type="card">
+          <TabPane tab="Información" key="1">
             <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
               {companyDetail && (companyDetail.video_url || companyDetail.description) ? (
                 <div style={{ aspectRatio: '16/9', width: '100%' }}>
                   {companyDetail && companyDetail.video_url && (
-                    <ReactPlayer width='100%' className='video' height={'100%'} url={companyDetail.video_url} />
+                    <ReactPlayer width='100%' className="video" height={'100%'} url={companyDetail.video_url} />
                   )}
                   <Row style={{ paddingTop: '10px' }}>
-                    <Space direction='vertical'>
+                    <Space direction="vertical">
                       <Title level={4}>Descripción</Title>
                       <div
                         style={{ fontSize: '18px' }}
@@ -106,12 +106,12 @@ const FeriasDetail = (props) => {
                   </Row>
                 </div>
               ) : (
-                <Feedback message='No hay información' />
+                <Feedback message="No hay información" />
               )}
             </div>
           </TabPane>
           {visibleTab && (
-            <TabPane tab='Productos y Servicios' key='2'>
+            <TabPane tab="Productos y Servicios" key="2">
               {/* componente  de Productos */}
               <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
                 {companyDetail && companyDetail.services.length > 0 ? (
@@ -133,13 +133,13 @@ const FeriasDetail = (props) => {
                     </Row>
                   </div>
                 ) : (
-                  <Feedback message='No hay productos' />
+                  <Feedback message="No hay productos" />
                 )}
               </div>
             </TabPane>
           )}
           {visibleTab && (
-            <TabPane tab='Contactos' key='3'>
+            <TabPane tab="Contactos" key="3">
               {/* componente  de contactos */}
               <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
                 {companyDetail && companyDetail.advisor.length > 0 ? (
@@ -155,13 +155,13 @@ const FeriasDetail = (props) => {
                     />
                   ))
                 ) : (
-                  <Feedback message='No hay contactos' />
+                  <Feedback message="No hay contactos" />
                 )}
               </div>
             </TabPane>
           )}
           {visibleTab && (
-            <TabPane tab='Galería' key='4'>
+            <TabPane tab="Galería" key="4">
               <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1.5vw' }}>
                 <Row gutter={[16, 16]}>
                   <Image.PreviewGroup>
@@ -181,7 +181,7 @@ const FeriasDetail = (props) => {
                         </Col>
                       ))
                     ) : (
-                      <Feedback message='No hay imágenes' />
+                      <Feedback message="No hay imágenes" />
                     )}
                   </Image.PreviewGroup>
                 </Row>

@@ -123,7 +123,7 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
             {isVisible && dataLive?.active && (
               <Button
                 loading={is.stoppingStreaming}
-                type='primary'
+                type="primary"
                 danger
                 onClick={() => executer_stopStream()}
               >
@@ -135,8 +135,8 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
                 title={`¿Está seguro que desea ${deletingMessage}?`}
                 onConfirm={handleConfirmDeleting}
                 onCancel={() => console.log('cancelado')}
-                okText='Sí'
-                cancelText='No'>
+                okText="Sí"
+                cancelText="No">
                 <Button loading={isDeleting} danger>
                   Eliminar
                 </Button>

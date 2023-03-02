@@ -138,11 +138,11 @@ const Ticket = (props) => {
     <Form onFinish={onSubmit} {...formLayout}>
       <Header title="Ticket" back save form remove={onRemoveId} edit={locationState.edit} />
 
-      <Row justify='center' wrap gutter={18}>
+      <Row justify="center" wrap gutter={18}>
         <Col>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} className="label">
                 Título <label style={{ color: 'red' }}>*</label>
               </label>
             }
@@ -159,8 +159,8 @@ const Ticket = (props) => {
             <Switch
               name="allowed_to_vote"
               checked={ticket.allowed_to_vote}
-              checkedChildren='Sí'
-              unCheckedChildren='No'
+              checkedChildren="Sí"
+              unCheckedChildren="No"
               onChange={(checked) => setTicket({ ...ticket, allowed_to_vote: checked })}
             />
           </Form.Item>

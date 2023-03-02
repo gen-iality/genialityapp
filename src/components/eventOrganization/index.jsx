@@ -180,7 +180,7 @@ const EventOrganization = (props) => {
                   </Row>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={16} xl={20} xxl={20}>
-                  <Space direction='vertical' size={8} style={{ width: '100%' }}>
+                  <Space direction="vertical" size={8} style={{ width: '100%' }}>
                     {isAdminUser && (
                       <Link
                         to={`/admin/organization/${props.match.params.id}`}
@@ -190,7 +190,7 @@ const EventOrganization = (props) => {
                           cursor: 'pointer',
                         }}
                       >
-                        <Button type='text' icon={<EditOutlined />}>
+                        <Button type="text" icon={<EditOutlined />}>
                           Administrar
                         </Button>
                       </Link>
@@ -201,7 +201,7 @@ const EventOrganization = (props) => {
                         fontWeight: '600',
                         lineHeight: '2.25rem',
                       }}
-                      type='secondary'
+                      type="secondary"
                     >
                       {organization.name}
                     </Text>
@@ -251,7 +251,7 @@ const EventOrganization = (props) => {
                       alignItems: 'center',
                     }}
                   >
-                    <Empty description='No hay cursos pasados' />
+                    <Empty description="No hay cursos pasados" />
                   </div>
                 )}
               </Row>
@@ -290,7 +290,7 @@ const EventOrganization = (props) => {
                       alignItems: 'center',
                     }}
                   >
-                    <Empty description='No hay cursos próximos agendados' />
+                    <Empty description="No hay cursos próximos agendados" />
                   </div>
                 )}
               </Row>
@@ -402,7 +402,7 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberF
     return (
       <Modal
         visible={isModalOpened}
-        title='Usuario ya inscrito'
+        title="Usuario ya inscrito"
         onOk={() => setIsModalOpened(false)}
         onCancel={() => setIsModalOpened(false)}
       >
@@ -414,20 +414,20 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<RegisterMemberF
   return (
     <Modal
       visible={isModalOpened}
-      title='Registrarse como miembro de esta organización'
-      okText='Inscribirse'
+      title="Registrarse como miembro de esta organización"
+      okText="Inscribirse"
       onOk={() => form.submit()}
     >
       <Form form={form} onFinish={onFormSubmit}>
         {user ? (
-          <Alert message='No se requieren más datos' />
+          <Alert message="No se requieren más datos" />
         ) : (
           <>
-            <Form.Item label='Nombre' name='name' rules={[{ required: true, message: 'Falta el nombre' }]}>
+            <Form.Item label="Nombre" name="name" rules={[{ required: true, message: 'Falta el nombre' }]}>
               <Input />
             </Form.Item>
 
-            <Form.Item label='Correo' name='email' rules={[{ required: true, message: 'Falta el correo' }]}>
+            <Form.Item label="Correo" name="email" rules={[{ required: true, message: 'Falta el correo' }]}>
               <Input />
             </Form.Item>
           </>

@@ -129,14 +129,14 @@ class CheckSpace extends Component {
           footer={[
             <>
               {qrData.user && (
-                <Button type='primary' onClick={this.readOther}>
+                <Button type="primary" onClick={this.readOther}>
                   Leer QR
                 </Button>
               )}
             </>,
             <>
               {qrData.another && (
-                <Button type='primary' onClick={this.addUser}>
+                <Button type="primary" onClick={this.addUser}>
                   Agregar asistente
                 </Button>
               )}
@@ -148,8 +148,8 @@ class CheckSpace extends Component {
                 <div>
                   {qrData.user.checked_in && (
                     <div>
-                      <h1 className='title'>Usuario inscrito</h1>
-                      <h2 className='subtitle'>
+                      <h1 className="title">Usuario inscrito</h1>
+                      <h2 className="subtitle">
                         Fecha: <FormattedDate value={qrData.user.checked_at.toDate()} /> -{' '}
                         <FormattedTime value={qrData.user.checked_at.toDate()} />
                       </h2>
@@ -161,7 +161,7 @@ class CheckSpace extends Component {
                 </div>
               ) : (
                 <>
-                  <Tabs defaultActiveKey='1'>
+                  <Tabs defaultActiveKey="1">
                     <TabPane
                       tab={
                         <>
@@ -169,14 +169,14 @@ class CheckSpace extends Component {
                           Camara
                         </>
                       }
-                      key='1'>
+                      key="1">
                       <Form.Item>
                         <Select value={facingMode} onChange={(e) => this.setState({ facingMode: e })}>
-                          <Option value='user'>Selfie</Option>
-                          <Option value='environment'>Rear</Option>
+                          <Option value="user">Selfie</Option>
+                          <Option value="environment">Rear</Option>
                         </Select>
                       </Form.Item>
-                      <Row justify='center' wrap gutter={8}>
+                      <Row justify="center" wrap gutter={8}>
                         <QrReader
                           delay={500}
                           facingMode={facingMode}
@@ -193,7 +193,7 @@ class CheckSpace extends Component {
                           Pistola
                         </>
                       }
-                      key='2'>
+                      key="2">
                       <Form.Item label="$1">
                         <Input
                           name="searchCC"
@@ -203,14 +203,14 @@ class CheckSpace extends Component {
                           autoFocus
                         />
                         {gunMsj && (
-                          <div className='msg'>
-                            <p className='msg_error'>{gunMsj}</p>
+                          <div className="msg">
+                            <p className="msg_error">{gunMsj}</p>
                           </div>
                         )}
                       </Form.Item>
-                      <Row justify='center' wrap gutter={8}>
+                      <Row justify="center" wrap gutter={8}>
                         <Col>
-                          <Button type='primary' onClick={() => this.handleScan(this.state.newCC)}>
+                          <Button type="primary" onClick={() => this.handleScan(this.state.newCC)}>
                             Buscar
                           </Button>
                         </Col>

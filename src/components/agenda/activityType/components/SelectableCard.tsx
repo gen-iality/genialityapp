@@ -80,7 +80,7 @@
                </Title>
              ) : undefined}
              description={
-               <Paragraph type='secondary' style={{ userSelect: 'none' }}>
+               <Paragraph type="secondary" style={{ userSelect: 'none' }}>
                  {description}
                </Paragraph>
              }

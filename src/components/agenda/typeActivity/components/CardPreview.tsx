@@ -62,8 +62,8 @@ const CardPreview = (props: any) => {
       <>
         {errorOcurred ? (
           <Result
-            status='info'
-            title='Lo sentimos'
+            status="info"
+            title="Lo sentimos"
             subTitle={
               errorMessage === 'An error occurred.'
                 ? errorMessage
@@ -104,7 +104,7 @@ const CardPreview = (props: any) => {
             style={{ aspectRatio: '16/9' }}
             width='100%'
             src={urlVideo + '?muted=1&autoplay=1'}
-            frameBorder='0'
+            frameBorder="0"
             allow='autoplay; encrypted-media'
             allowFullScreen
             onLoad={(e) => {
@@ -159,11 +159,11 @@ const CardPreview = (props: any) => {
       bodyStyle={{ padding: '21px' }}
       style={{ borderRadius: '8px', overflow: 'hidden' }}
     >
-      <Space direction='vertical' style={{ width: '100%' }} size='middle'>
-        <div className='mediaplayer' style={{ borderRadius: '8px' }}>
+      <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        <div className="mediaplayer" style={{ borderRadius: '8px' }}>
           {props?.type !== 'reunión' && renderPlayer()}
         </div>
-        <Row align='top' justify='space-between'>
+        <Row align="top" justify="space-between">
           <Col span={dataLive?.live && dataLive?.active ? 16 : 24}>
             <Comment
               avatar={
@@ -208,9 +208,9 @@ const CardPreview = (props: any) => {
                 ) : props.type === 'vimeo' || props.type == 'Youtube' ? (
                   'Conexión externa'
                 ) : dataLive?.active ? (
-                  <Typography.Text type='success'>Iniciado</Typography.Text>
+                  <Typography.Text type="success">Iniciado</Typography.Text>
                 ) : (
-                  <Typography.Text type='danger'>Detenido</Typography.Text>
+                  <Typography.Text type="danger">Detenido</Typography.Text>
                 )
               }
             />
@@ -226,20 +226,20 @@ const CardPreview = (props: any) => {
                       onClick={() => {
                         startRecordTransmition();
                       }}
-                      type='primary'>
+                      type="primary">
                       Iniciar grabación
                     </Button>
                   ) : (
                     <Popconfirm
-                      title='¿Está seguro que desea detener la grabación?'
-                      okText='Si'
-                      cancelText='No'
+                      title="¿Está seguro que desea detener la grabación?"
+                      okText="Si"
+                      cancelText="No"
                       onConfirm={() => {
                         stopRecordTransmition();
                       }}
                       onCancel={() => console.log('cancelado')}
                     >
-                      <Button loading={loadingRecord} type='primary' danger>
+                      <Button loading={loadingRecord} type="primary" danger>
                         Detener grabación
                       </Button>
                     </Popconfirm>
@@ -269,7 +269,7 @@ const CardPreview = (props: any) => {
         )}
         {((dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet')) ||
           (props.type !== 'Transmisión' && props.type !== 'EviusMeet' && props.type !== 'reunión' && props.type !== 'Video')) && (
-          <Space direction='vertical' style={{ width: '100%' }}>
+          <Space direction="vertical" style={{ width: '100%' }}>
             <Typography.Text strong>Estado de la lección para tus asistentes: </Typography.Text>
             <Select
               value={roomStatus}
@@ -279,10 +279,10 @@ const CardPreview = (props: any) => {
               style={{ width: '100%' }}
             >
               <Select.Option value="">Lección creada</Select.Option>
-              <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
-              <Select.Option value='open_meeting_room'>En vivo</Select.Option>
-              <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>
-              {props.type === 'Video' && <Select.Option value='no_visibe'>Oculto</Select.Option>}
+              <Select.Option value="closed_meeting_room">Iniciará pronto</Select.Option>
+              <Select.Option value="open_meeting_room">En vivo</Select.Option>
+              <Select.Option value="ended_meeting_room">Finalizada</Select.Option>
+              {props.type === 'Video' && <Select.Option value="no_visibe">Oculto</Select.Option>}
             </Select>
           </Space>
         )}

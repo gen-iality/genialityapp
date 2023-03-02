@@ -15,7 +15,7 @@ class LoadingEvent extends Component {
             <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
               <Card
                 style={{ width: '100%' }}
-                cover={<img src={imageUtils.EventImage} alt='Evius.co' />}
+                cover={<img src={imageUtils.EventImage} alt="Evius.co" />}
                 bodyStyle={{ padding: '5px 0px 5px 0px' }}
               >
                 <Skeleton paragraph={{ rows: 3, width: [190, 230, 80] }} active />

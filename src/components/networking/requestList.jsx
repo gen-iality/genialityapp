@@ -50,10 +50,10 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
               <List.Item
                 key={item._id}
                 actions={[
-                  <Button key='btn-aceptar' onClick={() => sendResponseToInvitation(item, true)}>
+                  <Button key="btn-aceptar" onClick={() => sendResponseToInvitation(item, true)}>
                     Aceptar
                   </Button>,
-                  <Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item, false)}>
+                  <Button key="btn-noaceptar" onClick={() => sendResponseToInvitation(item, false)}>
                     Rechazar
                   </Button>,
                 ]}>
@@ -275,9 +275,9 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
     return currentUser === null ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
         <Alert
-          message='Iniciar sesión'
-          description='Para poder ver contactos es necesario iniciar sesión.'
-          type='info'
+          message="Iniciar sesión"
+          description="Para poder ver contactos es necesario iniciar sesión."
+          type="info"
           showIcon
         />
       </Col>

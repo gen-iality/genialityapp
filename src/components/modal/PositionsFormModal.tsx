@@ -200,7 +200,7 @@ function PositionsFormModal(props: PositionsFormModalProps) {
       <Form onFinish={onSubmit} {...formLayout} form={handler.form}>
         <Header title="Cargo" save form remove={onRemoveId} edit={!!handler.currentPosition} />
 
-        <Row justify='center' wrap gutter={12}>
+        <Row justify="center" wrap gutter={12}>
           <Col>
             <Form.Item
               initialValue={handler.currentPosition?.position_name}
@@ -217,8 +217,8 @@ function PositionsFormModal(props: PositionsFormModalProps) {
               label="Cursos asignados"
             >
               <Select
-                mode='multiple'
-                placeholder='Asigna los cursos al cargo'
+                mode="multiple"
+                placeholder="Asigna los cursos al cargo"
                 options={(possibleEvents || []).map((event) => ({
                   value: event._id,
                   label: event.name,

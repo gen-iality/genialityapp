@@ -47,7 +47,7 @@ const PopoverInfoUser = (props) => {
         actions={
           containtNetworking && [
             userSelected ? (
-              <Tooltip title='Ver perfil' onClick={() => props.setViewPerfil({ view: true, perfil: userSelected })}>
+              <Tooltip title="Ver perfil" onClick={() => props.setViewPerfil({ view: true, perfil: userSelected })}>
                 <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />
               </Tooltip>
             ) : (
@@ -125,7 +125,7 @@ const PopoverInfoUser = (props) => {
               <Spin />
             ),
             userSelected ? (
-              <Tooltip title='Agendar cita'>
+              <Tooltip title="Agendar cita">
                 <VideoCameraOutlined
                   onClick={async () => {
                     setViewPerfil({ view: false, perfil: userSelected });

@@ -16,22 +16,22 @@ const Footer = () => {
             }
           >
             <List.Item style={{ border: 'none' }}>
-              <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 Inicio
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 Tipos de cursos
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 Casos de éxito
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 Solicitar demo
               </a>
             </List.Item>
@@ -46,7 +46,7 @@ const Footer = () => {
             }
           >
             <List.Item style={{ border: 'none' }}>
-              <a target='_blank' href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
                 ¿Quiénes somos?
               </a>
             </List.Item>
@@ -84,7 +84,7 @@ const Footer = () => {
         </Col>
       </Row>
       <Divider style={{ backgroundColor: '#fff' }} />
-      <Row gutter={[0, 8]} wrap justify='space-between'>
+      <Row gutter={[0, 8]} wrap justify="space-between">
         <Col
           xs={{ order: 2 }}
           sm={{ order: 2 }}
@@ -106,21 +106,21 @@ const Footer = () => {
           <Space wrap>
             <a
               href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
-              target='_blank'
+              target="_blank"
               style={{ color: '#fff' }}
             >
               <FacebookFilled style={{ fontSize: '35px' }} />
             </a>
             <a
               href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
-              target='_blank'
+              target="_blank"
               style={{ color: '#fff' }}
             >
               <InstagramFilled style={{ fontSize: '35px' }} />
             </a>
             <a
               href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
-              target='_blank'
+              target="_blank"
               style={{ color: '#fff' }}
             >
               <LinkedinFilled style={{ fontSize: '35px' }} />

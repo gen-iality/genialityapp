@@ -190,7 +190,7 @@ function SpeakersList(props) {
 
   //FN para el draggable 2/3
   const DraggableContainer = (props) => (
-    <SortableContainer useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props} />
+    <SortableContainer useDragHandle disableAutoscroll helperClass="row-dragging" onSortEnd={onSortEnd} {...props} />
   );
 
   //FN para el draggable 3/3
@@ -225,8 +225,8 @@ function SpeakersList(props) {
       <Table
         columns={columns(columnsData)}
         dataSource={sortAndIndexSpeakers()}
-        size='small'
-        rowKey='index'
+        size="small"
+        rowKey="index"
         loading={isLoading}
         components={{
           body: {

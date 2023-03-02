@@ -32,7 +32,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
   return (
     <Link to={`/landing/${activity.event_id}/activity/${activity._id}`}>
       {forma === 'horizontal' ? (
-        <div className='animate__animated animate__fadeIn'>
+        <div className="animate__animated animate__fadeIn">
           <Card
             className="horizontal"
             bordered={bordered}
@@ -54,12 +54,12 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
               style={{}}
               description={
                 <div>
-                  <Space direction='vertical' size={2}>
+                  <Space direction="vertical" size={2}>
                     <Paragraph strong ellipsis={{ rows: 2 }}>
                       {activity.name}
                     </Paragraph>
                     <span style={{ fontSize: '10px' }}>
-                      <Space size='small'>
+                      <Space size="small">
                         <CalendarOutlined style={{ fontSize: '14px' }} />
                         <time>{dayjs(activity.datetime_end).format('DD MMM YYYY')}</time>
                       </Space>
@@ -99,12 +99,12 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
             <Meta
               description={
                 <div>
-                  <Space direction='vertical' size={-10}>
+                  <Space direction="vertical" size={-10}>
                     <Paragraph strong ellipsis={{ rows: 2 }}>
                       {activity.name}
                     </Paragraph>
                     <span style={{ fontSize: '10px' }}>
-                      <Space size='small'>
+                      <Space size="small">
                         <CalendarOutlined style={{ fontSize: '14px' }} />
                         <time>{dayjs(activity.datetime_end).format('DD MMM YYYY')}</time>
                       </Space>

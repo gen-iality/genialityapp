@@ -34,7 +34,7 @@ function pushNotification(props) {
 
   const notifyEveryoneButton = (
     <Button
-      type='primary'
+      type="primary"
       onClick={() => {
         setUserToNotify();
         setModalSendNotificationVisible(true);
@@ -80,7 +80,7 @@ function pushNotification(props) {
         extra={notifyEveryoneButton}
       />
       <Table
-        key='index'
+        key="index"
         list={listUsersWithNotifications}
         header={columns}
         setColumnsData={setColumnsData}
@@ -89,7 +89,7 @@ function pushNotification(props) {
         actions
         extraFn={extraField}
         extraFnIcon={<SendOutlined />}
-        extraFnTitle='Enviar notificación a este usuario'
+        extraFnTitle="Enviar notificación a este usuario"
       />
     </>
   );

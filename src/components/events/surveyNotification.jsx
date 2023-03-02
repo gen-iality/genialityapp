@@ -22,7 +22,7 @@ const surveyNotification = () => {
   const openNotification = () => {
     const key = `open${Date.now()}`;
     const btn = (
-      <Button type='primary' size='small' onClick={() => surveyVisible(key, true)}>
+      <Button type="primary" size="small" onClick={() => surveyVisible(key, true)}>
         Contestar
       </Button>
     );
@@ -38,14 +38,14 @@ const surveyNotification = () => {
 
   return (
     <>
-      <Button type='primary' onClick={openNotification}>
+      <Button type="primary" onClick={openNotification}>
         Open notification
       </Button>
 
       <Drawer
         zIndex={1000}
-        title='Basic drawer'
-        placement='right'
+        title="Basic drawer"
+        placement="right"
         closable
         onClose={() => clearStates()}
         visible={drawerVisible}></Drawer>

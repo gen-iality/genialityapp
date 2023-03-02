@@ -18,17 +18,17 @@ function SurveyCard(props) {
   return (
     <Card style={{ borderRadius: '10px', marginTop: '6px' }} bodyStyle={bodyStyle}>
       {publishedSurveys && publishedSurveys.length === 0 ? (
-        <Result icon={<ClipboardTextOff />} title='Aún no se han publicado evaluaciones' />
+        <Result icon={<ClipboardTextOff />} title="Aún no se han publicado evaluaciones" />
       ) : (
         <List
           style={{ overflowY: 'auto', height: 'auto', overflowX: 'hidden' }}
-          className='asistente-list'
+          className="asistente-list"
           dataSource={publishedSurveys}
           loading={status != 'LOADED'}
           renderItem={(survey) => (
             <>
               <Card
-                className='card-agenda-desktop agendaHover efect-scale'
+                className="card-agenda-desktop agendaHover efect-scale"
                 style={{
                   borderRadius: '10px',
                   marginBottom: '8px',
@@ -46,36 +46,36 @@ function SurveyCard(props) {
                           !currentSurveyStatus[survey._id] ||
                           !currentSurveyStatus[survey._id].surveyCompleted ? (
                             <Col style={{ marginBottom: '3px' }}>
-                              <Tag icon={<ExclamationCircleOutlined />} color='warning'>
+                              <Tag icon={<ExclamationCircleOutlined />} color="warning">
                                 Sin contestar
                               </Tag>
                             </Col>
                           ) : currentSurveyStatus[survey._id].surveyCompleted === 'running' ? (
                             <Col style={{ marginBottom: '3px' }}>
-                              <Tag icon={<SyncOutlined spin />} color='geekblue'>
+                              <Tag icon={<SyncOutlined spin />} color="geekblue">
                                 En progreso
                               </Tag>
                             </Col>
                           ) : currentSurveyStatus[survey._id].surveyCompleted === 'completed' ? (
                             <Col style={{ marginBottom: '3px' }}>
-                              <Tag icon={<CheckCircleOutlined />} color='success'>
+                              <Tag icon={<CheckCircleOutlined />} color="success">
                                 Completada
                               </Tag>
                             </Col>
                           ) : (
                             <Col style={{ marginBottom: '3px' }}>
-                              <Tag color='red'>Error</Tag>
+                              <Tag color="red">Error</Tag>
                             </Col>
                           )}
                           {survey && (
                             <Col style={{ marginBottom: '3px' }}>
                               {' '}
                               {survey.isOpened === 'true' || survey.isOpened ? (
-                                <Tag icon={<CheckCircleOutlined />} color='green'>
+                                <Tag icon={<CheckCircleOutlined />} color="green">
                                   Abierta
                                 </Tag>
                               ) : (
-                                <Tag icon={<CloseCircleOutlined />} color='red'>
+                                <Tag icon={<CloseCircleOutlined />} color="red">
                                   Cerrada
                                 </Tag>
                               )}

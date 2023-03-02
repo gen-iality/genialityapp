@@ -318,7 +318,7 @@ const RegisterUserAndOrgMember = ({
               hookValidations(false, '');
               goTopreviousStep();
             }}
-            size='large'
+            size="large"
             style={{ margin: '0 8px' }}
           >
             {intl.formatMessage({
@@ -336,10 +336,10 @@ const RegisterUserAndOrgMember = ({
               <>
                 {current < steps.length - 1 && (
                   <Button
-                    id='btnnextRegister'
+                    id="btnnextRegister"
                     disabled={buttonStatus}
-                    size='large'
-                    type='primary'
+                    size="large"
+                    type="primary"
                     onClick={goToNextStep}
                   >
                     {current > 0
@@ -381,7 +381,7 @@ const RegisterUserAndOrgMember = ({
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                   onClick={() => helperDispatch({ type: 'showLogin' })} // REVISAR: Al parecer no está funcionando el dispatch
-                  type='link'
+                  type="link"
                 >
                   {validationGeneral.component}
                 </Button>
@@ -390,7 +390,7 @@ const RegisterUserAndOrgMember = ({
               )}
             </>
           }
-          type='error'
+          type="error"
         />
       )}
     </div>

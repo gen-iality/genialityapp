@@ -156,7 +156,7 @@ const myPlan = ({ cUser }) => {
         return (
           <Space wrap>
             <Tooltip
-              placement='topLeft'
+              placement="topLeft"
               title={intl.formatMessage({
                 id: 'button.delete',
                 defaultMessage: 'Eliminar',
@@ -277,7 +277,7 @@ const myPlan = ({ cUser }) => {
         return (
           <Space wrap>
             <Tooltip
-              placement='topLeft'
+              placement="topLeft"
               title={intl.formatMessage({
                 id: 'my_plan.preview',
                 defaultMessage: 'Previsualización',
@@ -299,7 +299,7 @@ const myPlan = ({ cUser }) => {
               }}
               width={'100%'}
             >
-              <Divider orientation='left'>
+              <Divider orientation="left">
                 <strong>
                   {intl.formatMessage({
                     id: 'my_plan.voucher',
@@ -309,7 +309,7 @@ const myPlan = ({ cUser }) => {
               </Divider>
               <Row gutter={[12, 12]} wrap>
                 <Col span={12}>
-                  <Space direction='vertical'>
+                  <Space direction="vertical">
                     <Typography.Text>
                       <Typography.Text strong>
                         {intl.formatMessage({
@@ -390,7 +390,7 @@ const myPlan = ({ cUser }) => {
                   </Space>
                 </Col>
                 <Col span={12}>
-                  <Space direction='vertical'>
+                  <Space direction="vertical">
                     <Typography.Text>
                       <Typography.Text strong>
                         {intl.formatMessage({
@@ -402,7 +402,7 @@ const myPlan = ({ cUser }) => {
                       {item?.billing?.reference_evius} (evius) / {item?.billing?.reference_wompi} (wompi)
                     </Typography.Text>
                     <Typography.Text>
-                      <Space direction='vertical'>
+                      <Space direction="vertical">
                         <Typography.Text strong>
                           {intl.formatMessage({
                             id: 'my_plan.description',
@@ -673,7 +673,7 @@ const myPlan = ({ cUser }) => {
           <Col span={24}>
             <Typography.Text strong style={{ color: 'orange' }}>
               <small>
-                <Space direction='vertical'>
+                <Space direction="vertical">
                   {consumption?.start_date && consumption?.end_date && (
                     <Typography.Text>
                       Tu plan se encuentra activo desde{' '}
@@ -688,7 +688,7 @@ const myPlan = ({ cUser }) => {
                     </Typography.Text>
                   )}
                   {totalUsersByPlan?.totalRegisteredUsers > 0 && (
-                    <Tag icon={<ExclamationCircleOutlined />} color='warning'>
+                    <Tag icon={<ExclamationCircleOutlined />} color="warning">
                       {totalUsersByPlan?.totalRegisteredUsers === totalUsersByPlan?.totalAllowedUsers
                         ? 'Has alcanzado el límite de usuarios permitidos en tu plan'
                         : `Has registrado ${totalUsersByPlan?.totalRegisteredUsers} de usuarios en total de tu plan`}

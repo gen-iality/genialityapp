@@ -163,8 +163,8 @@ const AgendaActividadDetalle = props => {
           collectionId={cUser.value._id}
         />
       )}
-      <div className=' container_agenda-information container-calendar2'>
-        <Card style={{ padding: '1 !important' }} className='agenda_information'>
+      <div className=" container_agenda-information container-calendar2">
+        <Card style={{ padding: '1 !important' }} className="agenda_information">
 
           {activity?.type === undefined ? <PreloaderApp /> : <HOCActividad activity={activity} />}
 

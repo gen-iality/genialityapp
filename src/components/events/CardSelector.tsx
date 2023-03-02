@@ -20,7 +20,7 @@ export const CardSelector = (props: CardSelectorProps) => {
   const [currentSelected, setCurrentSelected] = useState(props.selected);
 
   return (
-    <Row justify='center' wrap gutter={[8, 8]}>
+    <Row justify="center" wrap gutter={[8, 8]}>
       <Col span={16}>
         <Form.Item label="">
           <Row gutter={[16, 16]} wrap>
@@ -45,7 +45,7 @@ export const CardSelector = (props: CardSelectorProps) => {
                       maxWidth: '220px',
                     }}
                   >
-                    <Space direction='vertical'>
+                    <Space direction="vertical">
                       <div
                         onClick={() => {
                           props.onSelected(option.id);
@@ -54,7 +54,7 @@ export const CardSelector = (props: CardSelectorProps) => {
                       >
                         <Text strong>{option.title}</Text>
                         <Divider />
-                        <Text type='secondary'>{option.body}</Text>
+                        <Text type="secondary">{option.body}</Text>
                       </div>
                       {currentSelected === option.id && option.checkbox !== undefined && (
                         <>

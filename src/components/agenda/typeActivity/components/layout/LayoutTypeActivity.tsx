@@ -47,13 +47,13 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
       </Header>
       <Content style={{ padding: '60px 50px 60px 50px' }}>{children}</Content>
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
-        <Row justify='end' gutter={[8, 8]} /* style={{ backgroundColor: 'red' }} */>
+        <Row justify="end" gutter={[8, 8]} /* style={{ backgroundColor: 'red' }} */>
           <Col>
             <Button onClick={previousOrCancel}>{buttonTextPreviousOrCancel}</Button>
           </Col>
           <Col>
             {!loadingCreate ? (
-              <Button disabled={disableNextButton} onClick={nextOrCreate} type='primary'>
+              <Button disabled={disableNextButton} onClick={nextOrCreate} type="primary">
                 {buttonsTextNextOrCreate}
               </Button>
             ) : (

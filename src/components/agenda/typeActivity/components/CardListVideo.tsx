@@ -82,9 +82,9 @@ const CardListVideo = (props: any) => {
               actions={
                 item?.status === 'ready'
                   ? [
-                      <Tooltip color="green" title='Asignar a esta lección'>
+                      <Tooltip color="green" title="Asignar a esta lección">
                         <Button
-                          size='large'
+                          size="large"
                           icon={
                             !loading && item.hls_url == selectVideo ? (
                               <CheckSquareOutlined style={{ color: '#52C41A' }} />
@@ -94,26 +94,26 @@ const CardListVideo = (props: any) => {
                               keyVideo == item.hls_url && <Spin />
                             ) /* sin asignar es <BorderOutlined /> y asigando es <CheckSquareOutlined />  */
                           }
-                          type='text'
+                          type="text"
                           onClick={() => asignarVideo(item.hls_url)}
-                          key='option-assign'></Button>
+                          key="option-assign"></Button>
                       </Tooltip>,
-                      <Tooltip title='Descargar'>
+                      <Tooltip title="Descargar">
                         <Button
-                          size='large'
+                          size="large"
                           icon={<DownloadOutlined />}
-                          type='link'
+                          type="link"
                           download={'video.mp4'}
                           href={item.download}
-                          key='option-dowload'></Button>
+                          key="option-dowload"></Button>
                       </Tooltip>,
-                      <Tooltip title='Visualizar'>
+                      <Tooltip title="Visualizar">
                         <Button
-                          size='large'
-                          type='text'
+                          size="large"
+                          type="text"
                           icon={<PlaySquareOutlined />}
                           onClick={() => visualizeVideo(item.hls_url, item.created_at, item.name)}
-                          key='option-preview'></Button>
+                          key="option-preview"></Button>
                       </Tooltip>,
                       ,
                       <Popconfirm
@@ -128,19 +128,19 @@ const CardListVideo = (props: any) => {
                             message.error('Error al eliminar video');
                           }
                         }}
-                        okText='Si'
-                        cancelText='No'>
-                        <Tooltip color="red" title='Eliminar video'>
+                        okText="Si"
+                        cancelText="No">
+                        <Tooltip color="red" title="Eliminar video">
                           <Button
                             danger
-                            size='large'
+                            size="large"
                             icon={<DeleteOutlined />}
-                            type='text'
-                            key='option-delete'></Button>
+                            type="text"
+                            key="option-delete"></Button>
                         </Tooltip>
                       </Popconfirm>,
                     ]
-                  : [<Spin indicator={<LoadingOutlined />} tip='Procesando...' />]
+                  : [<Spin indicator={<LoadingOutlined />} tip="Procesando..." />]
               }>
               <List.Item.Meta
                 avatar={
@@ -149,14 +149,14 @@ const CardListVideo = (props: any) => {
                     width={150}
                     height={100}
                     src={item.image || 'error'}
-                    alt='Miniatura del video'
+                    alt="Miniatura del video"
                     fallback={'https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg'}
                   />
                 }
                 title={item?.status === 'ready' ? item.name : <Skeleton active paragraph={{ rows: 1 }} />}
                 description={
                   item?.status === 'ready' && (
-                    <Space direction='vertical'>
+                    <Space direction="vertical">
                       <Tag icon={<ClockCircleOutlined />}>{milisegundosTohour(item?.duration)}</Tag>
                       <Tag icon={<CalendarOutlined />}>{dayjs(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}</Tag>
                     </Space>

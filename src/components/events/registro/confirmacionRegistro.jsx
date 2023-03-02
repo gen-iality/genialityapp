@@ -75,7 +75,7 @@ function ConfirmacionRegistro(props) {
           save
           form
         />
-        <Row justify='center' wrap gutter={[8, 8]}>
+        <Row justify="center" wrap gutter={[8, 8]}>
           <Col span={18}>
             <Form.Item label={'Mensaje de Inscripción'}>
               <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />

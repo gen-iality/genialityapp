@@ -35,7 +35,7 @@ class EventCard extends Component {
     const formatDate = dayjs(blockedDate).format('DD MMM YYYY');
 
     return (
-      <div className='animate__animated animate__fadeIn'>
+      <div className="animate__animated animate__fadeIn">
         <Badge.Ribbon
           style={{
             maxWidth: '250px',
@@ -48,7 +48,7 @@ class EventCard extends Component {
               <div>
                 <Space>
                   <span>
-                    <i className='fas fa-map-marker-alt' />
+                    <i className="fas fa-map-marker-alt" />
                   </span>
                   <span>{event.venue ? event.venue : 'Virtual'}</span>
                 </Space>
@@ -63,11 +63,11 @@ class EventCard extends Component {
               event.picture ? (
                 <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
                   <img
-                    className='animate__animated animate__fadeIn animate__slower'
-                    loading='lazy'
+                    className="animate__animated animate__fadeIn animate__slower"
+                    loading="lazy"
                     style={{ objectFit: 'cover', height: '180px', width: '100%' }}
                     src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
-                    alt='geniality.com.co'
+                    alt="geniality.com.co"
                   />
                   {this.props.moreDetails && event._id && (
                     <StudentGeneralCourseProgress eventId={event._id} />
@@ -79,8 +79,8 @@ class EventCard extends Component {
               ) : (
                 <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
                   <img
-                    className='animate__animated animate__fadeIn animate__slower'
-                    loading='lazy'
+                    className="animate__animated animate__fadeIn animate__slower"
+                    loading="lazy"
                     style={{ objectFit: 'cover', height: '180px', width: '100%' }}
                     src={
                       event.styles
@@ -89,7 +89,7 @@ class EventCard extends Component {
                           : EventImage
                         : EventImage
                     }
-                    alt='geniality.com.co'
+                    alt="geniality.com.co"
                   />
                   {this.props.moreDetails && event._id && (
                     <StudentGeneralCourseProgress eventId={event._id} />
@@ -107,10 +107,10 @@ class EventCard extends Component {
               style={{}}
               description={
                 <Link to={`/landing/${event._id}`}>
-                <Space size={1} direction='vertical'>
+                <Space size={1} direction="vertical">
                   <span style={{ fontSize: '12px' }}>
                     {!this.props.noDates && <Space>
-                      <i className='fas fa-calendar-alt' />
+                      <i className="fas fa-calendar-alt" />
                       <time dateTime={event.datetime_from}>{dayjs(event.datetime_from).format('DD MMM YYYY')}</time>
                       {'-'}
                       <time dateTime={event.datetime_to}>{dayjs(event.datetime_to).format('DD MMM YYYY')}</time>

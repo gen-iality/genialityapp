@@ -155,14 +155,14 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
       <Form
         onFinish={onFinishCreateNewUser}
         form={form}
-        autoComplete='off'
-        layout='vertical'
+        autoComplete="off"
+        layout="vertical"
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
       >
         <Form.Item>
-          <ImgCrop rotate shape='round'>
+          <ImgCrop rotate shape="round">
             <Upload
-              accept='image/png,image/jpeg'
+              accept="image/png,image/jpeg"
               onChange={(file) => {
                 if (file.fileList.length > 0) {
                   setImageAvatar(file.fileList);
@@ -171,20 +171,20 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
                 }
               }}
               customRequest={uploadImagedummyRequest}
-              listType='picture'
+              listType="picture"
               maxCount={1}
               fileList={imageAvatar}
             >
               {
                 <Button
-                  type='primary'
-                  shape='circle'
+                  type="primary"
+                  shape="circle"
                   style={{
                     height: !imageAvatar ? '150px' : '95px',
                     width: !imageAvatar ? '150px' : '95px',
                   }}
                 >
-                  <Space direction='vertical'>
+                  <Space direction="vertical">
                     <PictureOutlined style={{ fontSize: '40px' }} />
                     {intl.formatMessage({
                       id: 'modal.label.photo',
@@ -201,14 +201,14 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             id: 'modal.label.email',
             defaultMessage: 'Correo electrónico',
           })}
-          name='email'
+          name="email"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={ruleEmail}
         >
           <Input
-            type='email'
-            size='large'
+            type="email"
+            size="large"
             placeholder={'micorreo@ejemplo.com'}
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
@@ -218,14 +218,14 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             id: 'modal.label.password',
             defaultMessage: 'Contraseña',
           })}
-          name='password'
+          name="password"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={rulePassword}
         >
           <Input.Password
-            type='password'
-            size='large'
+            type="password"
+            size="large"
             placeholder={intl.formatMessage({
               id: 'modal.label.password',
               defaultMessage: 'Contraseña',
@@ -238,14 +238,14 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             id: 'modal.label.name',
             defaultMessage: 'Nombre',
           })}
-          name='names'
+          name="names"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
           rules={ruleName}
         >
           <Input
-            type='text'
-            size='large'
+            type="text"
+            size="large"
             placeholder={intl.formatMessage({
               id: 'modal.label.name',
               defaultMessage: 'Nombre',
@@ -256,10 +256,10 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
             id="submitButton"
-            htmlType='submit'
+            htmlType="submit"
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size='large'
+            size="large"
           >
             {intl.formatMessage({
               id: 'modal.label.create_user',
@@ -272,7 +272,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             showIcon
             onClose={() => setErrorEmail(false)}
             closable
-            className='animate__animated animate__bounceIn'
+            className="animate__animated animate__bounceIn"
             style={{
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
               backgroundColor: '#FFFFFF',
@@ -283,7 +283,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
               borderRadius: '5px',
               marginBottom: '15px',
             }}
-            type='error'
+            type="error"
             message={intl.formatMessage({
               id: 'modal.feedback.errorDNSNotFound',
               defaultMessage: 'El correo ingresado no es válido.',

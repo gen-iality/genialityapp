@@ -89,21 +89,21 @@ function OrganizationInformation(props) {
 
   return (
     <div>
-      <Form {...formLayout} name='nest-messages' onFinish={updateOrganization}>
+      <Form {...formLayout} name="nest-messages" onFinish={updateOrganization}>
         <Header title="$1" save form />
 
-        <Tabs defaultActiveKey='1'>
-          <Tabs.TabPane tab='General' key='1'>
-            <Row justify='center' gutter={[8, 8]} wrap>
+        <Tabs defaultActiveKey="1">
+          <Tabs.TabPane tab="General" key="1">
+            <Row justify="center" gutter={[8, 8]} wrap>
               <Col span={12}>
-                <Form.Item name={['organization', 'name']} label='Nombre' initialValue={name}>
+                <Form.Item name={['organization', 'name']} label="Nombre" initialValue={name}>
                   <Input />
                 </Form.Item>
-                <Form.Item name={['organization', 'description']} label='Descripción' initialValue={description}>
+                <Form.Item name={['organization', 'description']} label="Descripción" initialValue={description}>
                   <Input.TextArea />
                 </Form.Item>
                 <Form.Item
-                  label='Tipo de cursos'
+                  label="Tipo de cursos"
                   initialValue={type_event || 'Corporativo'}
                   name={['organization', 'type_event']}
                 >
@@ -118,7 +118,7 @@ function OrganizationInformation(props) {
               </Col>
             </Row>
           </Tabs.TabPane>
-          <Tabs.TabPane tab='Tipos de acceso' key='2'>
+          <Tabs.TabPane tab="Tipos de acceso" key="2">
             <CardSelector
               selected={typeOrgPermit.toString()}
               options={[

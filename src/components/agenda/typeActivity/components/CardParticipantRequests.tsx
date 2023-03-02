@@ -6,7 +6,7 @@ const CardParticipantRequests = (props: any) => {
 
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
-      <Space size='large'>
+      <Space size="large">
         <HumanGreetingVariantIcon style={{ fontSize: '36px' }} />
 
         <Typography.Text style={{ fontSize: '20px' }} strong>
@@ -18,7 +18,7 @@ const CardParticipantRequests = (props: any) => {
               ? Object.values(request).filter((request: any) => request.active != true).length
               : 0
           }>
-          <Button onClick={() => setViewModal(true)} type='primary'>
+          <Button onClick={() => setViewModal(true)} type="primary">
             Ver solicitudes
           </Button>
         </Badge>

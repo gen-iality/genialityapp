@@ -129,7 +129,7 @@ class InformativeSection extends Component {
     return (
       <Fragment>
         {informativeSection !== null && (
-          <div className='site-card-border-less-wrapper' style={{ marginTop: 35 }}>
+          <div className="site-card-border-less-wrapper" style={{ marginTop: 35 }}>
             <Card
               title={informativeSection.name || 'clasificación'}
               style={{ backgroundColor: 'transparent', margin: 'auto' }}

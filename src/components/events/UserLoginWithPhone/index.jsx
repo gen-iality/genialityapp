@@ -167,8 +167,8 @@ class UserLogin extends Component {
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item
-                  label='E-Mail'
-                  name='email'
+                  label="E-Mail"
+                  name="email"
                   rules={[
                     {
                       required: true,
@@ -182,15 +182,15 @@ class UserLogin extends Component {
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item
-                  label='Contraseña'
-                  name='password'
+                  label="Contraseña"
+                  name="password"
                   rules={[
                     {
                       required: true,
                       message: 'Ingrese su contraseña',
                     },
                   ]}>
-                  <Input type='password' style={{ width: '300px' }} />
+                  <Input type="password" style={{ width: '300px' }} />
                 </Form.Item>
               </Col>
             </Row>
@@ -207,7 +207,7 @@ class UserLogin extends Component {
                   {this.state.loading ? (
                     <Spin />
                   ) : (
-                    <Button type='primary' htmlType='submit'>
+                    <Button type="primary" htmlType="submit">
                       Ingresar
                     </Button>
                   )}
@@ -226,8 +226,8 @@ class UserLogin extends Component {
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item
-                  label='Código de verificación'
-                  name='verificationCode'
+                  label="Código de verificación"
+                  name="verificationCode"
                   rules={[
                     {
                       required: true,
@@ -248,7 +248,7 @@ class UserLogin extends Component {
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item>
-                  <Button type='primary' htmlType='submit'>
+                  <Button type="primary" htmlType="submit">
                     Verificar
                   </Button>
                 </Form.Item>

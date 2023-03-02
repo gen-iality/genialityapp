@@ -17,7 +17,7 @@ function ClosedSurvey(props) {
           </h1>
         }
         extra={
-          <Button onClick={() => setSurveyResult('results')} type='primary' size='large'>
+          <Button onClick={() => setSurveyResult('results')} type="primary" size="large">
             Ir a resultados
           </Button>
         }

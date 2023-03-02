@@ -35,22 +35,22 @@ export const networks = [
   {
     name: 'Facebook',
     path: 'facebook',
-    icon: <i className='fab fa-facebook'></i>,
+    icon: <i className="fab fa-facebook"></i>,
   },
   {
     name: 'Twitter',
     path: 'twitter',
-    icon: <i className='fab fa-twitter'></i>,
+    icon: <i className="fab fa-twitter"></i>,
   },
   {
     name: 'Instagram',
     path: 'instagram',
-    icon: <i className='fab fa-instagram'></i>,
+    icon: <i className="fab fa-instagram"></i>,
   },
   {
     name: 'LinkedIn',
     path: 'linkedIn',
-    icon: <i className='fab fa-linkedin'></i>,
+    icon: <i className="fab fa-linkedin"></i>,
   },
 ];
 export const rolPermissions = {

@@ -167,8 +167,8 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
       render: (value: string | Cell) => (
         <>
         {typeof value !== 'string' && value.isController ? (
-          <Space align='center' size='large'>
-            <Button title='Agregar pregunta' type='primary' onClick={showModalForRow}>
+          <Space align="center" size="large">
+            <Button title="Agregar pregunta" type="primary" onClick={showModalForRow}>
               <PlusOutlined />
             </Button>
           </Space>
@@ -191,7 +191,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
             {value.isController ? (
               <Button
                 danger // The button should be different
-                title='Eliminar categoría'
+                title="Eliminar categoría"
                 onClick={() => {
                   const newSourceData = { ...sourceData };
                   newSourceData.columns.splice(i, 1);
@@ -228,8 +228,8 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
       key: `key_controller`,
       dataIndex: 'row_controller',
       title: (text) => (
-        <Space align='center' size='large'>
-          <Button title='Agregar categoría' type='primary' onClick={showModalForColumn}>
+        <Space align="center" size="large">
+          <Button title="Agregar categoría" type="primary" onClick={showModalForColumn}>
             <PlusOutlined />
           </Button>
         </Space>
@@ -239,7 +239,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
         {record.key !== 'key_row_controller' && (
           <Button
             danger // The button should be different
-            title='Eliminar pregunta'
+            title="Eliminar pregunta"
             onClick={() => {
               const newSourceData = { ...sourceData };
               const i = index;
@@ -316,24 +316,24 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     <Modal
       visible={isOpenedModal} // Enable open/close the modal before clicking the plus-buttons
       title={title}
-      okText='Add' // Change for more understandable
+      okText="Add" // Change for more understandable
       onCancel={closeModal} // Close and edit some states
       onOk={addNewElement} // Add the new element acccording to the selected modalType
     >
-      <Space direction='vertical'>
-        {isAlertShown && <Alert message='Faltan datos' type='error'/>}
+      <Space direction="vertical">
+        {isAlertShown && <Alert message="Faltan datos" type="error"/>}
         <Input
           autoFocus // The first field
           required // It is important that this field won't be empty
-          size='large' // Size, but we NEED that this field has the 100% of width
-          placeholder='Texto' // As we don't use label, so...
+          size="large" // Size, but we NEED that this field has the 100% of width
+          placeholder="Texto" // As we don't use label, so...
           value={nextText} // Current value
           onChange={(e) => setNextText(e.target.value)} // Update current value
         />
         <Input
           required // It is important that this field won't be empty
-          size='large' // Size, but we NEED that this field has the 100% of width
-          placeholder='Valor' // As we don't use label, so...
+          size="large" // Size, but we NEED that this field has the 100% of width
+          placeholder="Valor" // As we don't use label, so...
           value={nextValue} // Current value
           onChange={(e) => setNextValue(e.target.value)} // Update current value
         />

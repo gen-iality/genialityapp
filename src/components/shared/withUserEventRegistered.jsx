@@ -25,7 +25,7 @@ function WithUserEventRegistered(Component) {
           <div>
             {!currentUser && event && !event.allow_register && (
               <Alert
-                message='Curso restringido. requiere usuario'
+                message="Curso restringido. requiere usuario"
                 description={
                   <p>
                     <b>Curso restringido:</b>
@@ -33,14 +33,14 @@ function WithUserEventRegistered(Component) {
                     el curso ingresa al sistema con tu usuario para poder acceder al curso, &nbsp;&nbsp;
                   </p>
                 }
-                type='info'
+                type="info"
                 showIcon
               />
             )}
 
             {currentUser && !usuarioRegistrado && event && !event.allow_register && (
               <Alert
-                message='Curso restringido. requiere registro previo'
+                message="Curso restringido. requiere registro previo"
                 description={
                   <p>
                     <b>Curso restringido:</b>
@@ -48,7 +48,7 @@ function WithUserEventRegistered(Component) {
                     no tienes acceso comunicate con el organizador &nbsp;&nbsp;
                   </p>
                 }
-                type='warning'
+                type="warning"
                 showIcon
               />
             )}

@@ -755,9 +755,9 @@ class General extends Component {
         {/* RESTRICIONES */}
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Datos del curso'} save form remove={this.deleteEvent} edit={this.state.event._id} />
-          <Tabs defaultActiveKey='1'>
-            <Tabs.TabPane tab='General' key='1'>
-              <Row justify='center' wrap gutter={[8, 8]}>
+          <Tabs defaultActiveKey="1">
+            <Tabs.TabPane tab="General" key="1">
+              <Row justify="center" wrap gutter={[8, 8]}>
                 <Col span={16}>
                   <Form.Item
                     label={
@@ -785,8 +785,8 @@ class General extends Component {
                     }
                   >
                     <Select
-                      mode='multiple'
-                      placeholder='Asigna un cargo para excluir'
+                      mode="multiple"
+                      placeholder="Asigna un cargo para excluir"
                       onChange={(values) => {
                         console.log(values);
                         EventsApi.editItsPositions(event._id, values);
@@ -898,9 +898,9 @@ class General extends Component {
                       onChange={(e) => this.handleChange(e, 'type_event')}
                     >
                       <Option value="">Seleccionar...</Option>
-                      <Option value='physicalEvent'>Afianzamiento de capacidades</Option> {/* TODO * /}
-                      <Option value='onlineEvent'>Actualización </Option> {/* TODO * / }
-                      <Option value='hybridEvent'>Curso híbrido</Option>
+                      <Option value="physicalEvent">Afianzamiento de capacidades</Option> {/* TODO * /}
+                      <Option value="onlineEvent">Actualización </Option> {/* TODO * / }
+                      <Option value="hybridEvent">Curso híbrido</Option>
                     </Select>
                   </Form.Item> */}
 
@@ -912,10 +912,10 @@ class General extends Component {
                         onChange={(e) => this.handleChange(e, 'event_platform')}
                       >
                         <Option value="">Seleccionar...</Option>
-                        <Option value='zoom'>Zoom</Option>
-                        <Option value='zoomExterno'>ZoomExterno</Option>
-                        <Option value='vimeo'>Vimeo</Option>
-                        <Option value='bigmarker'>BigMaker</Option>
+                        <Option value="zoom">Zoom</Option>
+                        <Option value="zoomExterno">ZoomExterno</Option>
+                        <Option value="vimeo">Vimeo</Option>
+                        <Option value="bigmarker">BigMaker</Option>
                       </Select>
                     </Form.Item>
                   )} */}
@@ -1029,8 +1029,8 @@ class General extends Component {
                     <ImageUploaderDragAndDrop
                       imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
                       imageUrl={image}
-                      width='1080'
-                      height='1080'
+                      width="1080"
+                      height="1080"
                     />
                   </Form.Item>
 
@@ -1047,8 +1047,8 @@ class General extends Component {
                     <Switch
                       name="video_position"
                       checked={event.video_position || event.video_position === 'true'}
-                      checkedChildren='Arriba'
-                      unCheckedChildren='Abajo'
+                      checkedChildren="Arriba"
+                      unCheckedChildren="Abajo"
                       onChange={(checked) =>
                         this.setState({
                           event: {
@@ -1060,7 +1060,7 @@ class General extends Component {
                     />
                   </Form.Item>
 
-                  <Card title='Zona social'>
+                  <Card title="Zona social">
                     <Row style={{ padding: '8px 0px' }}>
                       <Col xs={18}>Chat general</Col>
                       <Col xs={6}>
@@ -1101,10 +1101,10 @@ class General extends Component {
                     </Row>
                   </Card>
 
-                  <Form.Item label='¿Es curso de certificación?'>
+                  <Form.Item label="¿Es curso de certificación?">
                     <Switch
-                      checkedChildren='Certificación'
-                      unCheckedChildren='GEN.iality'
+                      checkedChildren="Certificación"
+                      unCheckedChildren="GEN.iality"
                       checked={event.is_certification}
                       onChange={(checked) => {
                         this.handleChange(checked, 'is_certification');
@@ -1114,7 +1114,7 @@ class General extends Component {
 
                   {event.is_certification && (
                     <>
-                      <Form.Item label='Descripción de la certificación (valor por defecto)'>
+                      <Form.Item label="Descripción de la certificación (valor por defecto)">
                         <Input
                           value={event.default_certification_description}
                           onChange={(e) => {
@@ -1124,7 +1124,7 @@ class General extends Component {
                       </Form.Item>
 
                       <Form.Item
-                        label='Días de vigencia (valor por defecto)'
+                        label="Días de vigencia (valor por defecto)"
                         rules={[
                           {
                             required: true,
@@ -1141,7 +1141,7 @@ class General extends Component {
                         />
                       </Form.Item>
 
-                      <Form.Item label='Horas de la certificación (valor por defecto)'>
+                      <Form.Item label="Horas de la certificación (valor por defecto)">
                         <InputNumber
                           min={1}
                           value={event.default_certification_hours || 1}
@@ -1151,7 +1151,7 @@ class General extends Component {
                         />
                       </Form.Item>
 
-                      <Form.Item label='Entidad de la certificación (valor por defecto)'>
+                      <Form.Item label="Entidad de la certificación (valor por defecto)">
                         <Input
                           value={event.default_certification_entity}
                           onChange={(e) => {
@@ -1177,7 +1177,7 @@ class General extends Component {
               </Row>
               <BackTop />
             </Tabs.TabPane>
-            <Tabs.TabPane tab='Tipos de acceso' key='2'>
+            <Tabs.TabPane tab="Tipos de acceso" key="2">
               {console.log('this.state.typeEventPermit', this.state.typeEventPermit)}
               {console.log('this.state.event', this.state.event)}
               <CardSelector
@@ -1235,7 +1235,7 @@ class General extends Component {
             </Tabs.TabPane>
           </Tabs>
           {serverError && <ErrorServe errorData={errorData} />}
-          {this.state.fileMsgBanner && <p className='help is-success'>{this.state.fileMsgBanner}</p>}
+          {this.state.fileMsgBanner && <p className="help is-success">{this.state.fileMsgBanner}</p>}
         </Form>
       </>
     );

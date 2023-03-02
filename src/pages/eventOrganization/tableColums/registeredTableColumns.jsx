@@ -73,7 +73,7 @@ export const columns = (columnsData) => {
     ...membersGetColumnSearchProps('validity_date', columnsData),
     render(val, item) {
       if (item.validity_date === null) {
-        return <Tag color='blue'>{`Sin certificado`}</Tag> //TODO: Utilizar la función traductora.
+        return <Tag color="blue">{`Sin certificado`}</Tag> //TODO: Utilizar la función traductora.
       } else {
         const actualDate = dayjs(new Date());
         const finishDate = dayjs(item.validity_date);

@@ -47,7 +47,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
             // right: `${screens.xs ? '10%' : '22%'}`,
           }}
           src={import.meta.env.VITE_LOGO_SVG}
-          alt='logo'
+          alt="logo"
         />
         <Result
           icon={status === 'loading' && <LoadingOutlined />}
@@ -73,7 +73,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
           subTitle={
             status === 'loading' ? null : (
               <Typography.Paragraph
-                type='secondary'
+                type="secondary"
                 style={{
                   fontSize: `${screens.xs ? '14px' : '18px'}`,
                   overflowWrap: 'anywhere',
@@ -94,10 +94,10 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                     onClick={() => {
                       window.location.href = `${window.location.origin}`;
                     }}
-                    size='large'
-                    type='text'
+                    size="large"
+                    type="text"
                     disabled={loading}
-                    key='goToEvius'>
+                    key="goToEvius">
                     {intl.formatMessage({
                       id: 'header.confirm.cancelText',
                       defaultMessage: 'Cancelar',
@@ -116,10 +116,10 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                       }
                       setLoading(false);
                     }}
-                    size='large'
+                    size="large"
                     loading={loading}
-                    type='primary'
-                    key='goToEvius'>
+                    type="primary"
+                    key="goToEvius">
                     {intl.formatMessage({
                       id: 'result_link.continue',
                       defaultMessage: 'Continuar',

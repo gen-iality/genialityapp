@@ -9,10 +9,10 @@ const ExploreEvents = () => {
     >
       <Result
         icon={' '}
-        title='No encontramos cursos en los que este registrado'
+        title="No encontramos cursos en los que este registrado"
         extra={
           <Link to={'/'}>
-            <Button size='large' type='primary'>
+            <Button size="large" type="primary">
               Explorar cursos
             </Button>
           </Link>

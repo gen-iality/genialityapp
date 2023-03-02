@@ -13,28 +13,28 @@ import { DispatchMessageService } from '@context/MessageService';
 
 const Editor = ({ onSubmit, submitting, value, loadingsave, errimage, errNote, refText }) => (
   <Form ref={refText} onFinish={onSubmit}>
-    <Form.Item name='post'>
-      <TextArea placeholder='¿Qué está pasando?' rows={4} />
+    <Form.Item name="post">
+      <TextArea placeholder="¿Qué está pasando?" rows={4} />
     </Form.Item>
     {errimage && (
       <div style={{ marginBottom: 30 }}>
-        <Alert type='error' message='Formato de archivo incorrecto!' />
+        <Alert type="error" message="Formato de archivo incorrecto!" />
       </div>
     )}
     {errNote && (
       <div style={{ marginBottom: 30 }}>
-        <Alert type='error' message='Ingrese una texto válido o una imagen!' />
+        <Alert type="error" message="Ingrese una texto válido o una imagen!" />
       </div>
     )}
 
     <Form.Item>
       {!loadingsave && (
         <Button
-          id='submitPost'
+          id="submitPost"
           style={{ background: loadingsave ? 'white' : '#333F44' }}
-          htmlType='submit'
+          htmlType="submit"
           loading={submitting}
-          type='primary'>
+          type="primary">
           Enviar
         </Button>
       )}
@@ -219,7 +219,7 @@ class CreatePost extends Component {
       <div>
         <div>
           {this.props.cUser && (
-            <Button style={{ marginBottom: '3%', marginTop: '3%' }} type='primary' onClick={this.showModal}>
+            <Button style={{ marginBottom: '3%', marginTop: '3%' }} type="primary" onClick={this.showModal}>
               Crear publicación
             </Button>
           )}
@@ -230,26 +230,26 @@ class CreatePost extends Component {
                 <p>
                   <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado, inicia sesión para poder
                   realizar publicaciones &nbsp;&nbsp;
-                  <Button type='primary'>
+                  <Button type="primary">
                     <a href={AuthUrl}>Ir a Ingreso</a>
                   </Button>
                 </p>
               }
-              type='error'
+              type="error"
             />
           )}
 
-          <Modal visible={visible} title='Publicaciones' onOk={this.handleOk} onCancel={this.handleCancel} footer={[]}>
+          <Modal visible={visible} title="Publicaciones" onOk={this.handleOk} onCancel={this.handleCancel} footer={[]}>
             <Row>
               <Col style={{ textAlign: 'center' }} xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Space>
                   {/* Boton para subir foto desde la galeria del dispositivo */}
                   <Upload
-                    type='file'
-                    accept='image/*'
+                    type="file"
+                    accept="image/*"
                     onChange={(e) => this.previewImage(e)}
                   >
-                    <Button type='primary' icon={<CloudUploadOutlined />}>
+                    <Button type="primary" icon={<CloudUploadOutlined />}>
                       Subir foto
                     </Button>
                   </Upload>
@@ -265,10 +265,10 @@ class CreatePost extends Component {
                   </Space>
                   {/* Modal para camara  */}
 
-                  <div hidden={hidden} className='App'>
+                  <div hidden={hidden} className="App">
                     {/* En esta modal se muestra la imagen de selfie */}
                     <Modal
-                      title='Camara'
+                      title="Camara"
                       centered
                       visible={this.state.modal2Visible}
                       onOk={(e) => {
@@ -279,8 +279,8 @@ class CreatePost extends Component {
                       }}
                       footer={[
                         <Button
-                          key='submit'
-                          type='primary'
+                          key="submit"
+                          type="primary"
                           onClick={(e) => {
                             this.setState({ hidden: false }, this.setModal2Visible(false));
                           }}>

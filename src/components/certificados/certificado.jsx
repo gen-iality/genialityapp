@@ -299,7 +299,7 @@ const Certificado = (props) => {
           <>
             <ExclamationOutlined
               style={{ color: 'orange' }}
-              className='animate__animated animate__pulse animate__infinite'
+              className="animate__animated animate__pulse animate__infinite"
             />
             {'Para tener una vista más exacta del certificado por favor presione el botón de generar'}
             <br />
@@ -315,14 +315,14 @@ const Certificado = (props) => {
           <Form.Item>
             <Row wrap gutter={[16, 8]}>
               <Col>
-                <Upload type='file' accept='image/*' showUploadList={false} onChange={(e) => handleImage(e)}>
-                  <Button type='primary' icon={<UploadOutlined />}>
+                <Upload type="file" accept="image/*" showUploadList={false} onChange={(e) => handleImage(e)}>
+                  <Button type="primary" icon={<UploadOutlined />}>
                     {'Imagen de Fondo'}
                   </Button>
                 </Upload>
               </Col>
               <Col>
-                <Button type='primary' onClick={generate}>
+                <Button type="primary" onClick={generate}>
                   Generar
                 </Button>
               </Col>
@@ -331,13 +331,13 @@ const Certificado = (props) => {
         }
       />
 
-      <Row justify='center' wrap gutter={12}>
+      <Row justify="center" wrap gutter={12}>
         <Col span={20}>
           <Row wrap gutter={[16, 16]}>
             <Col span={12}>
               <Form.Item
                 label={
-                  <label style={{ marginTop: '2%' }} className='label'>
+                  <label style={{ marginTop: '2%' }} className="label">
                     Nombre <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
@@ -355,7 +355,7 @@ const Certificado = (props) => {
               <Form.Item
                 label="Rol"
                 /* label={
-                  <label style={{ marginTop: '2%' }} className='label'>
+                  <label style={{ marginTop: '2%' }} className="label">
                     Rol <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
@@ -399,7 +399,7 @@ const Certificado = (props) => {
                   <>
                     {'Si desea volver a tener la imagen anterior presione el siguiente botón'}
                     <Button
-                      type='primary'
+                      type="primary"
                       onClick={() =>
                         setCertificado({ ...certificado, imageFile: imageFile, imageData: imageFile, image: imageFile })
                       }>
@@ -417,7 +417,7 @@ const Certificado = (props) => {
           </Row>
 
           <Form.Item label="Certificado">
-            <EviusReactQuill name='content' data={certificado.content} handleChange={chgTxt} />
+            <EviusReactQuill name="content" data={certificado.content} handleChange={chgTxt} />
           </Form.Item>
         </Col>
       </Row>

@@ -24,14 +24,14 @@ function QrAndDocumentForm({
 
   return (
     <Form
-      layout='vertical'
+      layout="vertical"
       form={form}
       onFinish={searchAttendeeByParameter}
-      // autoComplete='off'
+      // autoComplete="off"
     >
       {typeScanner === 'scanner-qr' ? (
         <>
-          <Tabs defaultValue='1' destroyInactiveTabPane>
+          <Tabs defaultValue="1" destroyInactiveTabPane>
             <TabPane
               tab={
                 <>
@@ -39,12 +39,12 @@ function QrAndDocumentForm({
                   Camara
                 </>
               }
-              key='1'>
+              key="1">
               <Form.Item>
-                <Row justify='center' wrap gutter={8}>
+                <Row justify="center" wrap gutter={8}>
                   <Col>
                     <Button
-                      type='primary'
+                      type="primary"
                       icon={<CameraFlipOutlineIcon />}
                       onClick={() => (facingMode === 'user' ? setFacingMode('environment') : setFacingMode('user'))}
                     >
@@ -53,7 +53,7 @@ function QrAndDocumentForm({
                   </Col>
                 </Row>
               </Form.Item>
-              <Row justify='center' wrap gutter={8}>
+              <Row justify="center" wrap gutter={8}>
                 <QrReader
                   delay={1500}
                   facingMode={facingMode}
@@ -73,11 +73,11 @@ function QrAndDocumentForm({
                   Pistola
                 </>
               }
-              key='2'>
+              key="2">
               <>
                 <Form.Item
                   label={'Id Usuario'}
-                  name='qr'
+                  name="qr"
                   rules={[{ required: true, message: 'El campo Id Usuario no debe estar vacío!' }]}
                 >
                   <Input autoFocus allowClear />
@@ -90,12 +90,12 @@ function QrAndDocumentForm({
         <>
           <Form.Item
             label={label}
-            name='document'
+            name="document"
             rules={[{ required: true, message: 'El campo documentó no debe estar vacío!' }]}
           >
             <Input
               onKeyDown={(event: any) => divideInformationObtainedByTheCodeReader({ event })}
-              id='document'
+              id="document"
               allowClear
               autoFocus
             />

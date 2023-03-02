@@ -111,7 +111,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
           ))}
 
         {loading && (
-          <Row align='middle' justify='center' style={{ height: 100 }}>
+          <Row align="middle" justify="center" style={{ height: 100 }}>
             <Spin />
           </Row>
         )}
@@ -138,7 +138,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
             ))}
 
           {loading1 && (
-            <Row align='middle' justify='center' style={{ height: 100 }}>
+            <Row align="middle" justify="center" style={{ height: 100 }}>
               <Spin />
             </Row>
           )}
@@ -203,7 +203,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
   };
 
   return (
-    <Row justify='center' style={{ marginBottom: '20px' }}>
+    <Row justify="center" style={{ marginBottom: '20px' }}>
       <Card style={{ width: 600, textAlign: 'left' }} bordered>
         <div style={{ marginBottom: '10px' }}>{meSended ? 'Solicitud de cita a: ' : 'Solicitud de cita por: '}</div>
         <Meta
@@ -239,7 +239,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
                       Rechazar
                     </Button>
                     <Button
-                      type='primary'
+                      type="primary"
                       disabled={fetching}
                       loading={fetching}
                       onClick={() => changeAgendaStatus('accepted')}

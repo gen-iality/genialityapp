@@ -102,7 +102,7 @@ function TimeTracking(props: TimeTrackingProps) {
     return (
       <>
       <Result
-        title='Cargando...'
+        title="Cargando..."
         subTitle={subtitleLoading}
         icon={<LoadingOutlined/>}
       />

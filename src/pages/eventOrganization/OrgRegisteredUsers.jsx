@@ -99,8 +99,8 @@ function OrgRegisteredUsers(props) {
       <Table
         columns={columns(columnsData)}
         dataSource={usersSuscribedData}
-        size='small'
-        rowKey='index'
+        size="small"
+        rowKey="index"
         loading={isLoading}
         scroll={{ x: 'auto' }}
       />

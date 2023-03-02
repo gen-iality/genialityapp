@@ -46,12 +46,12 @@ function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {
       </Content>
 
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
-        <Row justify='end' gutter={[8, 8]}>
+        <Row justify="end" gutter={[8, 8]}>
           <Col>
             {!hideSelectButton && (
               <Button
                 disabled={!somethingWasSelected}
-                type='primary'
+                type="primary"
                 onClick={handleSelectButton}
               >
                 Seleccionar

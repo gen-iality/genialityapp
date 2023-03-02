@@ -85,12 +85,12 @@ const InitialView = (props: any) => {
         return (
           <Card>
             <Title level={4} >Todavía no has definido el tipo de contenido</Title>
-            <Button onClick={() => toggleActivitySteps('type')} type='primary'>
+            <Button onClick={() => toggleActivitySteps('type')} type="primary">
               Escoge un tipo de contenido
             </Button>
             <Result
               icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
-              status='info'            />
+              status="info"            />
           </Card>
         );
     }

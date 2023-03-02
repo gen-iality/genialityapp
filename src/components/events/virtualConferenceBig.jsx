@@ -34,9 +34,9 @@ const MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setAc
                 ? 'large'
                 : (screens.xs || screens.sm) && 'small'
             }
-            type='primary'
+            type="primary"
             danger
-            className='buttonVirtualConference'
+            className="buttonVirtualConference"
             onClick={() => {
               if (activity.platform === 'zoomExterno') {
                 zoomExternoHandleOpen(activity, eventUser);
@@ -44,7 +44,7 @@ const MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setAc
                 setActivity(activity);
               }
             }}>
-            <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
+            <FormattedMessage id="live.join" defaultMessage="Ingresa aquí" />
           </Button>
         </>
       );
@@ -120,7 +120,7 @@ const VirtualConference = () => {
   return (
     <ThisRouteCanBeDisplayed>
       <div
-        key='VirtualConference'
+        key="VirtualConference"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -142,7 +142,7 @@ const VirtualConference = () => {
             .map((item, key) => (
               <>
                 <Badge.Ribbon
-                  className='animate__animated animate__bounceIn animate__delay-2s'
+                  className="animate__animated animate__bounceIn animate__delay-2s"
                   placement={screens.xs ? 'start' : 'end'}
                   style={{ height: 'auto' }}
                   color={item.habilitar_ingreso == 'open_meeting_room' ? '#FF4E50' : 'transparent'}
@@ -150,11 +150,11 @@ const VirtualConference = () => {
                     item.habilitar_ingreso == 'open_meeting_room' ? (
                       <Space>
                         <AccessPointIcon
-                          className='animate__animated animate__heartBeat animate__infinite animate__slower'
+                          className="animate__animated animate__heartBeat animate__infinite animate__slower"
                           style={{ fontSize: '24px' }}
                         />
                         <span style={{ textAlign: 'center', fontSize: '15px' }}>
-                          {<FormattedMessage id='live' defaultMessage='En vivo' />}
+                          {<FormattedMessage id="live" defaultMessage="En vivo" />}
                         </span>
                       </Space>
                     ) : (
@@ -175,11 +175,11 @@ const VirtualConference = () => {
                       borderLeft: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                       borderRight: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                     }}
-                    className='animate__animated animate__backInUp'>
+                    className="animate__animated animate__backInUp">
                     <Link
                       to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}` : `${urlAgenda}`}
                     >
-                      <Row justify='center' align='middle' gutter={[4, 4]}>
+                      <Row justify="center" align="middle" gutter={[4, 4]}>
                         <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
                           <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
                             {item.habilitar_ingreso == 'open_meeting_room' ? (
@@ -200,7 +200,7 @@ const VirtualConference = () => {
                               <>
                                 <FieldTimeOutlined style={{ fontSize: '50px', color: '#FAAD14' }} />
                                 <span style={{ textAlign: 'center', fontSize: '15px' }}>
-                                  {<FormattedMessage id='live.closed' defaultMessage='Iniciará pronto' />}
+                                  {<FormattedMessage id="live.closed" defaultMessage="Iniciará pronto" />}
                                 </span>
                               </>
                             ) : (
@@ -238,7 +238,7 @@ const VirtualConference = () => {
                               {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
                                 .tz(Moment.tz.guess())
                                 .format('h:mm A')}
-                              <span className='ultrasmall-mobile'>
+                              <span className="ultrasmall-mobile">
                                 {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
                                   .tz(Moment.tz.guess())
                                   .format(' (Z)')}
@@ -255,7 +255,7 @@ const VirtualConference = () => {
                               height: '153px',
                             }}>
                             {item.hosts && (
-                              <div className='Virtual-Conferences'>
+                              <div className="Virtual-Conferences">
                                 <Avatar.Group
                                   maxCount={2}
                                   size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 60, xxl: 60 }}

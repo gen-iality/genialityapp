@@ -36,7 +36,7 @@ const HostList = () => {
   return (
     <>
       <List
-        size='small'
+        size="small"
         header={<h3>DURACIÓN</h3>}
         dataSource={dataDuration}
         renderItem={(item) => (
@@ -46,7 +46,7 @@ const HostList = () => {
         )}
       />
       <List
-        size='small'
+        size="small"
         header={<h3>HERRAMIENTAS</h3>}
         dataSource={tools}
         renderItem={(item) => (
@@ -56,11 +56,11 @@ const HostList = () => {
         )}
       />
       <List
-        size='small'
+        size="small"
         header={<h3>COLABORADORES</h3>}
         dataSource={speakers}
         renderItem={(item: any) => (
-          <List.Item className='shadow-box'>
+          <List.Item className="shadow-box">
             <List.Item.Meta
               avatar={<Avatar src={item.image} />}
               description={

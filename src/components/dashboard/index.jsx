@@ -427,7 +427,7 @@ class DashboardEvent extends Component {
     return !this.state.loadingMetrics ? (
       <>
         <div ref={(el) => (this.componentRef = el)}>
-          <Row justify='start'>
+          <Row justify="start">
             <img
               style={{ height: '200px', width: '1920px', objectFit: 'contain' }}
               src={
@@ -436,7 +436,7 @@ class DashboardEvent extends Component {
                 // 'https://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
                 'https://dummyimage.com/970x250/ffffff/50d3c8.jpg&text=EVIUS'
               }
-              alt='evius'
+              alt="evius"
             />
 
             {this.state.printButton ? (
@@ -447,15 +447,15 @@ class DashboardEvent extends Component {
               </Title>
             )}
           </Row>
-          <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
+          <Row gutter={(32, 32)} align="middle" justify="space-between" style={{ paddingTop: '20px' }}>
             <Col span={this.state.printButton ? 18 : 24}>
-              <Tooltip title={this.state.desc1} placement='top' mouseEnterDelay={0.5}>
+              <Tooltip title={this.state.desc1} placement="top" mouseEnterDelay={0.5}>
                 <Card>
                   {this.state.printButton && (
-                    <Row justify='end'>
+                    <Row justify="end">
                       <Button
                         style={{ color: '#1F6E43' }}
-                        shape='round'
+                        shape="round"
                         icon={<FileExcelOutlined />}
                         onClick={() =>
                           this.exportReport(this.state.metricsRegister, 'Register', 'register', 'registerByDay')
@@ -472,12 +472,12 @@ class DashboardEvent extends Component {
             <Col span={this.state.printButton ? 6 : 24}>
               <Row gutter={(32, 32)}>
                 <Col span={24}>
-                  <Tooltip title={this.state.desc2} placement='top' mouseEnterDelay={0.5}>
+                  <Tooltip title={this.state.desc2} placement="top" mouseEnterDelay={0.5}>
                     <Card hoverable>
                       <Statistic
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                         valueStyle={{ fontSize: '38px' }}
-                        title='Usuarios registrados'
+                        title="Usuarios registrados"
                         value={this.state.metricsGnal ? this.state.metricsGnal.total_users : 0}
                         prefix={<IdcardOutlined />}
                       />
@@ -486,12 +486,12 @@ class DashboardEvent extends Component {
                 </Col>
 
                 <Col className={this.state.printButton ? '' : 'pagebreak'} span={24}>
-                  <Tooltip title={this.state.desc3} placement='top' mouseEnterDelay={0.5}>
+                  <Tooltip title={this.state.desc3} placement="top" mouseEnterDelay={0.5}>
                     <Card hoverable>
                       <Statistic
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                         valueStyle={{ fontSize: '36px' }}
-                        title='Duración promedio de un usuario'
+                        title="Duración promedio de un usuario"
                         value={
                           this.state.metricsGnal
                             ? !isNaN(this.state.metricsGnal.avg_time)
@@ -500,7 +500,7 @@ class DashboardEvent extends Component {
                             : 0
                         }
                         prefix={<FieldTimeOutlined />}
-                        suffix='min'
+                        suffix="min"
                       />
                     </Card>
                   </Tooltip>
@@ -508,15 +508,15 @@ class DashboardEvent extends Component {
               </Row>
             </Col>
           </Row>
-          <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
+          <Row gutter={(32, 32)} align="middle" justify="space-between" style={{ paddingTop: '20px' }}>
             <Col className={this.state.printButton ? '' : 'pagebreak'} span={this.state.printButton ? 18 : 24}>
-              <Tooltip title={this.state.desc4} placement='top' mouseEnterDelay={0.5}>
+              <Tooltip title={this.state.desc4} placement="top" mouseEnterDelay={0.5}>
                 <Card>
                   {this.state.printButton && (
-                    <Row justify='end'>
+                    <Row justify="end">
                       <Button
                         style={{ color: '#1F6E43' }}
-                        shape='round'
+                        shape="round"
                         icon={<FileExcelOutlined />}
                         onClick={() => this.exportReport(this.state.metricsGraphics, 'Visitas', 'views', 'ViewsByDay')}
                       >
@@ -525,7 +525,7 @@ class DashboardEvent extends Component {
                     </Row>
                   )}
                   {this.state.attendesDay && (
-                    <Row justify='center'>
+                    <Row justify="center">
                       <Bar data={this.state.attendesDay} options={this.options} />
                     </Row>
                   )}
@@ -533,12 +533,12 @@ class DashboardEvent extends Component {
               </Tooltip>
             </Col>
             <Col span={this.state.printButton ? 6 : 24}>
-              <Tooltip title={this.state.desc5} placement='top' mouseEnterDelay={0.5}>
+              <Tooltip title={this.state.desc5} placement="top" mouseEnterDelay={0.5}>
                 <Card>
                   <Statistic
                     groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                     valueStyle={{ fontSize: '38px' }}
-                    title='Total usuarios que visitan el curso'
+                    title="Total usuarios que visitan el curso"
                     value={this.state.metricsGnal ? this.state.metricsGnal.total_checkIn : 0}
                     prefix={<UserOutlined />}
                   />
@@ -547,16 +547,16 @@ class DashboardEvent extends Component {
             </Col>
 
             <Col span={this.state.printButton ? 18 : 24}>
-              <Tooltip title={this.state.desc6} placement='top' mouseEnterDelay={0.5}>
+              <Tooltip title={this.state.desc6} placement="top" mouseEnterDelay={0.5}>
                 <Card>
                   {this.state.printButton && (
-                    <Row justify='end'>
+                    <Row justify="end">
                       <Button
                         style={{
                           color: '#1F6E43',
                           display: this.state.printButton ? 'block' : 'none',
                         }}
-                        shape='round'
+                        shape="round"
                         icon={<FileExcelOutlined />}
                         onClick={() =>
                           this.exportReport(this.state.metricsGraphics, 'Número de visitas', 'time', 'visitasByDia')
@@ -566,7 +566,7 @@ class DashboardEvent extends Component {
                     </Row>
                   )}
                   {this.state.printoutsDay && (
-                    <Row justify='center'>
+                    <Row justify="center">
                       <Line data={this.state.printoutsDay} options={this.options} />
                     </Row>
                   )}
@@ -574,12 +574,12 @@ class DashboardEvent extends Component {
               </Tooltip>
             </Col>
             <Col span={this.state.printButton ? 6 : 24}>
-              <Tooltip title={this.state.desc7} placement='top' mouseEnterDelay={0.5}>
+              <Tooltip title={this.state.desc7} placement="top" mouseEnterDelay={0.5}>
                 <Card>
                   <Statistic
                     groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                     valueStyle={{ fontSize: '38px' }}
-                    title='Visitas totales del curso'
+                    title="Visitas totales del curso"
                     value={this.state.metricsGnal ? this.state.metricsGnal.total_printouts : 0}
                     prefix={<EyeOutlined />}
                   />
@@ -587,7 +587,7 @@ class DashboardEvent extends Component {
               </Tooltip>
             </Col>
           </Row>
-          <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
+          <Row gutter={(32, 32)} align="middle" justify="space-between" style={{ paddingTop: '20px' }}>
             <Col span={24}>
               <Card
                 headStyle={{ border: 'none' }}
@@ -597,17 +597,17 @@ class DashboardEvent extends Component {
                 <Table
                   dataSource={this.state.metricsActivity}
                   columns={columns}
-                  size='small'
+                  size="small"
                   pagination={this.state.printButton ? { pageSize: 5 } : false}
                 />
               </Card>
             </Col>
           </Row>
-          <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
+          <Row gutter={(32, 32)} align="middle" justify="space-between" style={{ paddingTop: '20px' }}>
             <Col span={24}>
               <Card headStyle={{ border: 'none' }} title={'Métricas de correos'}>
                 {this.state.printButton && (
-                  <Row justify='center' style={{ marginBottom: 20 }}>
+                  <Row justify="center" style={{ marginBottom: 20 }}>
                     <Card>
                       <Statistic
                         valueStyle={{ fontSize: '36px', textAlign: 'center' }}
@@ -618,7 +618,7 @@ class DashboardEvent extends Component {
                   </Row>
                 )}
                 {this.state.printButton && (
-                  <Row justify='space-around' align='middle' gutter={[8, 8]}>
+                  <Row justify="space-around" align="middle" gutter={[8, 8]}>
                     <Col span={4}>
                       <Card>
                         <Statistic
@@ -673,7 +673,7 @@ class DashboardEvent extends Component {
                 {this.state.printButton && (
                   <Row>
                     <Button
-                      shape='round'
+                      shape="round"
                       icon={<NotificationOutlined />}
                       onClick={() => this.props.history.push(`/eventadmin/${this.props.eventId}/messages`)}
                     >
@@ -691,7 +691,7 @@ class DashboardEvent extends Component {
               </Card>
             </Col>
           </Row>
-          <Row justify='start'>
+          <Row justify="start">
             <img
               style={{ height: '200px', width: '1920px', objectFit: 'contain' }}
               src={
@@ -700,7 +700,7 @@ class DashboardEvent extends Component {
                 // 'https://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
                 'https://dummyimage.com/970x250/ffffff/50d3c8.jpg&text=EVIUS'
               }
-              alt='evius'
+              alt="evius"
             />
           </Row>
         </div>
@@ -712,11 +712,11 @@ class DashboardEvent extends Component {
           documentTitle={'Métricas del curso ' + this.props.eventName}
           trigger={() => {
             return (
-              <Row justify='end' style={{ paddingTop: '10px' }}>
+              <Row justify="end" style={{ paddingTop: '10px' }}>
                 <Button
                   danger
                   style={{ color: '#F70D09' }}
-                  shape='round'
+                  shape="round"
                   icon={<FilePdfOutlined />}
                   disabled={this.state.metricsGaByActivity?.length == 0 || !this.state.metricsGaByActivity}
                 >
@@ -729,7 +729,7 @@ class DashboardEvent extends Component {
         />
       </>
     ) : (
-      <Row justify='center' align='middle'>
+      <Row justify="center" align="middle">
         <Spin />
       </Row>
     );

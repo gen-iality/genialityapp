@@ -65,14 +65,14 @@ const StreamingActivity = (props) => {
       case 'closed_meeting_room':
         return (
           <>
-            <Result icon={<SmileOutlined />} title='La transmisión iniciará pronto!' />
+            <Result icon={<SmileOutlined />} title="La transmisión iniciará pronto!" />
           </>
         );
 
       case 'ended_meeting_room':
         return currentActivity?.video ? (
           <>
-            <div className='mediaplayer' style={{ aspectRatio: '16/9' }}>
+            <div className="mediaplayer" style={{ aspectRatio: '16/9' }}>
               <ReactPlayer
                 style={{ objectFit: 'cover' }}
                 width='100%'
@@ -84,7 +84,7 @@ const StreamingActivity = (props) => {
           </>
         ) : (
           <>
-            <Result icon={<SmileOutlined />} title='La transmisión ha terminado!' />
+            <Result icon={<SmileOutlined />} title="La transmisión ha terminado!" />
           </>
         );
       case 'created_meeting_room':

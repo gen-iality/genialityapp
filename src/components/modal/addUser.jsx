@@ -197,7 +197,7 @@ class AddUser extends Component {
           onCancel={this.props.handleModal}
           visible={this.props.modal}
           footer={[
-            <Button type='primary' onClick={this.handleSubmit} disabled={this.state.create} loading={this.state.create}>
+            <Button type="primary" onClick={this.handleSubmit} disabled={this.state.create} loading={this.state.create}>
               {this.state.edit ? 'Guardar' : 'Crear'}
             </Button>,
           ]}>

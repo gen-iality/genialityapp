@@ -24,21 +24,21 @@ const ModalSpeakers = (props) => {
   return (
     <Fragment>
       <Modal
-        title='Conferencista'
+        title="Conferencista"
         centered
         width={1000}
         visible={modalVisible}
         onCancel={() => clearStates()}
         onOk={() => clearStates()}
         footer={[
-          <Button key='cerrar' type='primary' onClick={() => clearStates()}>
+          <Button key="cerrar" type="primary" onClick={() => clearStates()}>
             Cerrar
           </Button>,
         ]}>
         <Row>
           {/* Imagen del conferencista */}
 
-          <Col flex='1 1 auto'>
+          <Col flex="1 1 auto">
             {speakers.image ? (
               <Avatar style={{ display: 'block', margin: '0 auto' }} size={130} src={speakers.image} />
             ) : (
@@ -47,7 +47,7 @@ const ModalSpeakers = (props) => {
           </Col>
 
           {/* Descripción del conferencista */}
-          <Col flex='1 1 600px'>
+          <Col flex="1 1 600px">
             <span>
               <b>{speakers.name}</b>
             </span>

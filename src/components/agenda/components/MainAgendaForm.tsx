@@ -303,7 +303,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   return (
     <>
       {isLoaded ? (
-        <Row justify='center' wrap gutter={12}>
+        <Row justify="center" wrap gutter={12}>
           <Col span={20}>{props.activityId && <ActivityTypeSelector />}</Col>
           <Col span={20}>
             <Form.Item
@@ -317,14 +317,14 @@ function MainAgendaForm(props: MainAgendaFormProps) {
               <Input
                 autoFocus
                 ref={nameInputRef}
-                type='text'
-                name='name'
+                type="text"
+                name="name"
                 value={formdata.name}
                 onChange={(value) => handleChangeFormData('name', value.target.value)}
-                placeholder='Nombre de la lección'
+                placeholder="Nombre de la lección"
               />
             </Form.Item>
-            <Form.Item label='Módulo (opcional)' initialValue={null}>
+            <Form.Item label="Módulo (opcional)" initialValue={null}>
               <SelectAntd
                 options={[
                   { label: 'Seleccionar...', value: null },
@@ -338,7 +338,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                   console.debug('select module:', value);
                   handleChangeFormData('module_id', value);
                 }}
-                placeholder='Seleccionar...'
+                placeholder="Seleccionar..."
               />
             </Form.Item>
             <Form.Item
@@ -356,7 +356,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 onChange={(value) => handleChangeFormData('date', value)}
               />
             </Form.Item>
-            <Row wrap justify='center' gutter={[8, 8]}>
+            <Row wrap justify="center" gutter={[8, 8]}>
               <Col span={12}>
                 <Form.Item
                   style={{ width: '100%' }}
@@ -396,18 +396,18 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item label='Herramientas'>
+            <Form.Item label="Herramientas">
               <Row wrap gutter={[8, 8]}>
                 <Col span={23}>
                   <Select
                     isMulti
-                    id='tools'
+                    id="tools"
                     isClearable
                     styles={creatableStyles}
                     onChange={(value: any) => handleChangeFormData('selectedTools', value)}
                     options={allTools}
                     value={formdata.selectedTools}
-                    placeholder='Sin herramientas...'
+                    placeholder="Sin herramientas..."
                   />
                 </Col>
                 <Col span={1}>
@@ -417,12 +417,12 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 </Col>
               </Row>
             </Form.Item>
-            <Form.Item label='Conferencista'>
+            <Form.Item label="Conferencista">
               <Row wrap gutter={[8, 8]}>
                 <Col span={22}>
                   <Select
                     isMulti
-                    id='hosts'
+                    id="hosts"
                     isClearable
                     styles={creatableStyles}
                     onChange={(value: any) => handleChangeFormData('selectedHosts', value)}
@@ -437,7 +437,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                       setIsSpeakerModalShown(true);
                       console.log('Open the speaker modal');
                     }}
-                    title='Agregar conferencista'
+                    title="Agregar conferencista"
                     icon={<PlusOutlined />}
                   />
                 </Col>
@@ -445,7 +445,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                   <Button
                     onClick={() => goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })}
                     icon={<SettingOutlined />}
-                    title='Configurar en otra página'
+                    title="Configurar en otra página"
                   />
                 </Col>
                 {/* The speaker modal */}
@@ -471,7 +471,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 </Modal>
               </Row>
             </Form.Item>
-            <Form.Item label='Espacio'>
+            <Form.Item label="Espacio">
               <Row wrap gutter={[8, 8]}>
                 <Col span={23}>
                   <SelectAntd value={formdata.space_id} onChange={(value) => handleChangeFormData('space_id', value)}>
@@ -490,7 +490,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 </Col>
               </Row>
             </Form.Item>
-            <Form.Item label='Categorías'>
+            <Form.Item label="Categorías">
               <Row wrap gutter={[8, 8]}>
                 <Col span={23}>
                   <Creatable
@@ -503,7 +503,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                     isLoading={thisIsLoading.categories}
                     options={allCategories}
                     value={formdata.selectedCategories}
-                    placeholder='Sin categoría...'
+                    placeholder="Sin categoría..."
                   />
                 </Col>
                 <Col span={1}>
@@ -511,48 +511,48 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 </Col>
               </Row>
             </Form.Item>
-            <Form.Item label='¿Tiene espacio físico?'>
+            <Form.Item label="¿Tiene espacio físico?">
               <Switch
                 checked={formdata.isPhysical}
-                checkedChildren='Sí'
-                unCheckedChildren='No'
+                checkedChildren="Sí"
+                unCheckedChildren="No"
                 onChange={(chosen) => handleChangeFormData('isPhysical', chosen)}
               />
             </Form.Item>
             {formdata.isPhysical && (
               <>
-                <Form.Item label='Longitud'>
+                <Form.Item label="Longitud">
                   <Input
-                    type='number'
-                    name='length'
+                    type="number"
+                    name="length"
                     value={formdata.length}
                     onChange={(event) => handleChangeFormData('length', event.target.value)}
-                    placeholder='Ej. 4.677027'
+                    placeholder="Ej. 4.677027"
                   />
                 </Form.Item>
-                <Form.Item label='Latitud'>
+                <Form.Item label="Latitud">
                   <Input
-                    type='number'
-                    name='latitude'
+                    type="number"
+                    name="latitude"
                     value={formdata.latitude}
                     onChange={(event) => handleChangeFormData('latitude', event.target.value)}
-                    placeholder='Ej. -74.094086'
+                    placeholder="Ej. -74.094086"
                   />
                 </Form.Item>
               </>
             )}
-            <Form.Item label='Descripción'>
+            <Form.Item label="Descripción">
               <Space>
                 <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-                <Text type='secondary'>Esta información no es visible en la Agenda/Lección en versión Mobile.</Text>
+                <Text type="secondary">Esta información no es visible en la Agenda/Lección en versión Mobile.</Text>
               </Space>
               <EviusReactQuill
-                name='description'
+                name="description"
                 data={formdata.description}
                 handleChange={(value: string) => handleChangeReactQuill(value, 'description')}
               />
             </Form.Item>
-            <Form.Item label='Imagen'>
+            <Form.Item label="Imagen">
               <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
                 <Form.Item noStyle>
                   <p>
@@ -573,8 +573,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                   <ImageUploaderDragAndDrop
                     imageDataCallBack={handleImageChange}
                     imageUrl={formdata.image}
-                    width='1080'
-                    height='1080'
+                    width="1080"
+                    height="1080"
                   />
                 </Form.Item>
               </Card>

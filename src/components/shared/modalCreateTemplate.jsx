@@ -35,12 +35,12 @@ const ModalCreateTemplate = (props) => {
       onCancel={() => props.handlevisibleModal()}
       visible={props.visible}
     >
-      <Form onFinish={onFinish} layout='vertical'>
-        <Typography.Title level={4} type='secondary'>
+      <Form onFinish={onFinish} layout="vertical">
+        <Typography.Title level={4} type="secondary">
           Nuevo template de datos a recolectar
         </Typography.Title>
-        <Form.Item label={'Nombre del template'} name='name' style={{ marginBottom: '10px', marginTop: '20px' }}>
-          <Input type='text' size='large' placeholder={'Nombre del template'} />
+        <Form.Item label={'Nombre del template'} name="name" style={{ marginBottom: '10px', marginTop: '20px' }}>
+          <Input type="text" size="large" placeholder={'Nombre del template'} />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           {loading ? (
@@ -48,10 +48,10 @@ const ModalCreateTemplate = (props) => {
           ) : (
             <Button
               id="submitButton"
-              htmlType='submit'
+              htmlType="submit"
               block
               style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-              size='large'>
+              size="large">
               Crear template
             </Button>
           )}

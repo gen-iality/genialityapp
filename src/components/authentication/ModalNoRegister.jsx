@@ -39,9 +39,9 @@ const ModalNoRegister = (props) => {
             onClick={() => {
               window.location.href = `${window.location.origin}`;
             }}
-            key='sign_off'
-            type='text'
-            size='large'>
+            key="sign_off"
+            type="text"
+            size="large">
             <b>
               {intl.formatMessage({
                 id: 'modal.no_register.gotoevius',
@@ -56,7 +56,7 @@ const ModalNoRegister = (props) => {
       visible={whenToOpenTheModal()}
     >
       <Result
-        status='warning'
+        status="warning"
         icon={null}
         title={
           props.cHelper.typeModal !== 'loginSuccessNotRegister' ? (

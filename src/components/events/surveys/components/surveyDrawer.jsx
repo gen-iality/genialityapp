@@ -69,7 +69,7 @@ function SurveyDrawer(props) {
                     }}
                   />
                 )}
-                <Space direction='vertical' size={-3}>
+                <Space direction="vertical" size={-3}>
                   {cSurveys.currentSurvey?.name}
                   {cSurveys.currentSurvey.allow_gradable_survey === 'true' && (
                     <span style={{ fontSize: '12px', color: '#52c41a' }}>Calificable</span>
@@ -97,7 +97,7 @@ function SurveyDrawer(props) {
           }
           bodyStyle={{ padding: '10px' }}
           closeIcon={<CloseOutlined style={{ fontSize: '24px' }} />}
-          placement='right'
+          placement="right"
           // closable
           visible={cSurveys.shouldDisplaysurveyAssignedToThisActivity() && cUser.value !== null}
           onClose={closeDrawer}
@@ -105,13 +105,13 @@ function SurveyDrawer(props) {
         >
           <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
             {cSurveys.shouldDisplayRanking() && (
-              <Button type='primary' onClick={showRanking}>
+              <Button type="primary" onClick={showRanking}>
                 {!rankingVisible ? 'Cerrar ranking' : 'Abrir ranking'}
               </Button>
             )}
           </div>
 
-          <Row gutter={[8, 8]} justify='center'>
+          <Row gutter={[8, 8]} justify="center">
             <Col xl={rankingVisible ? 24 : 16} xxl={rankingVisible ? 24 : 16}>
               <ThisRouteCanBeDisplayed>
                 <SurveyDetailPage />

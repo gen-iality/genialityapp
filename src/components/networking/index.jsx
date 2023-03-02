@@ -348,11 +348,11 @@ class ListEventUser extends Component {
         <Modal visible={this.state.modalView} footer={null} closable={false}>
           <Result
             extra={
-              <Button type='primary' onClick={this.closeModal}>
+              <Button type="primary" onClick={this.closeModal}>
                 Cerrar
               </Button>
             }
-            title='Información adicional'
+            title="Información adicional"
             subTitle='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
                   se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
           />
@@ -360,7 +360,7 @@ class ListEventUser extends Component {
 
         {/* Componente de busqueda */}
         <Tabs style={{ background: '#FFFFFF' }} activeKey={activeTab} onChange={this.changeActiveTab}>
-          <TabPane tab='Participantes' key='asistentes'>
+          <TabPane tab="Participantes" key="asistentes">
             {
               <AppointmentModal
                 targetEventUserId={this.state.eventUserIdToMakeAppointment}
@@ -372,14 +372,14 @@ class ListEventUser extends Component {
             }
 
             <Form>
-              <Row justify='space-around' gutter={[16, 16]}>
+              <Row justify="space-around" gutter={[16, 16]}>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ margin: '0 auto' }}>
                   <Form.Item
                     labelCol={{ span: 24 }}
-                    label='Busca aquí las personas que deseas contactar'
-                    name='searchInput'>
+                    label="Busca aquí las personas que deseas contactar"
+                    name="searchInput">
                     <SearchComponent
-                      id='searchInput'
+                      id="searchInput"
                       placeholder=""
                       data={usersFiltered}
                       kind="user"
@@ -393,14 +393,14 @@ class ListEventUser extends Component {
                 </Col>
               </Row>
 
-              <Row justify='space-around' gutter={[16, 16]}>
+              <Row justify="space-around" gutter={[16, 16]}>
                 {/*Alerta quemado para el eventop de finanzas de clima*/}
                 {this.props.cEvent.value._id === '5f9708a2e4c9eb75713f8cc6' && (
                   <>
                     <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                      <Form.Item label="Tipo de asistente" name="filterTypeUser" labelCol={{ span: 24 }}>
                         <FilterNetworking
-                          id='filterSector'
+                          id="filterSector"
                           properties={this.props.cEvent.value.user_properties || []}
                           filterProperty="participacomo"
                           handleSelect={this.handleSelectFilter}
@@ -408,9 +408,9 @@ class ListEventUser extends Component {
                       </Form.Item>
                     </Col>
                     <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                      <Form.Item label="Sector" name="filterSector" labelCol={{ span: 24 }}>
                         <FilterNetworking
-                          id='filterSector'
+                          id="filterSector"
                           properties={this.props.cEvent.value.user_properties || []}
                           filterProperty="sector"
                           handleSelect={this.handleSelectFilter}
@@ -424,9 +424,9 @@ class ListEventUser extends Component {
                 {this.props.cEvent.value._id === '5f92d0cee5e2552f1b7c8ea2' && (
                   <>
                     <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                      <Form.Item label="Tipo de asistente" name="filterTypeUser" labelCol={{ span: 24 }}>
                         <FilterNetworking
-                          id='filterSector'
+                          id="filterSector"
                           properties={this.props.cEvent.value.user_properties || []}
                           filterProperty="participascomo"
                           handleSelect={this.handleSelectFilter}
@@ -434,9 +434,9 @@ class ListEventUser extends Component {
                       </Form.Item>
                     </Col>
                     <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Tipo de participante' name='filterSector' labelCol={{ span: 24 }}>
+                      <Form.Item label="Tipo de participante" name="filterSector" labelCol={{ span: 24 }}>
                         <FilterNetworking
-                          id='filterSector'
+                          id="filterSector"
                           properties={this.props.cEvent.value.user_properties || []}
                           filterProperty="tipodeparticipante"
                           handleSelect={this.handleSelectFilter}
@@ -450,9 +450,9 @@ class ListEventUser extends Component {
                 {this.props.cEvent.value._id === '5f7f21217828e17d80642856' && (
                   <>
                     <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                      <Form.Item label="Tipo de asistente" name="filterTypeUser" labelCol={{ span: 24 }}>
                         <FilterNetworking
-                          id='filterSector'
+                          id="filterSector"
                           properties={this.props.cEvent.value.user_properties || []}
                           filterProperty="participacomo"
                           handleSelect={this.handleSelectFilter}
@@ -460,9 +460,9 @@ class ListEventUser extends Component {
                       </Form.Item>
                     </Col>
                     <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                      <Form.Item label="Sector" name="filterSector" labelCol={{ span: 24 }}>
                         <FilterNetworking
-                          id='filterSector'
+                          id="filterSector"
                           properties={this.props.cEvent.value.user_properties || []}
                           filterProperty="queproductooservicioofreces"
                           handleSelect={this.handleSelectFilter}
@@ -476,9 +476,9 @@ class ListEventUser extends Component {
                 {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' && (
                   <>
                     <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                      <Form.Item label="Tipo de asistente" name="filterTypeUser" labelCol={{ span: 24 }}>
                         <FilterNetworking
-                          id='filterSector'
+                          id="filterSector"
                           properties={this.props.cEvent.value.user_properties || []}
                           filterProperty="asistecomo"
                           handleSelect={this.handleSelectFilter}
@@ -486,9 +486,9 @@ class ListEventUser extends Component {
                       </Form.Item>
                     </Col>
                     <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                      <Form.Item label="Sector" name="filterSector" labelCol={{ span: 24 }}>
                         <FilterNetworking
-                          id='filterSector'
+                          id="filterSector"
                           properties={this.props.cEvent.value.user_properties || []}
                           filterProperty="sector"
                           handleSelect={this.handleSelectFilter}
@@ -506,9 +506,9 @@ class ListEventUser extends Component {
                 <br />
                 <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
                   <Alert
-                    message='Solicitudes'
-                    description='Para enviar solicitudes debes estar suscrito al curso'
-                    type='info'
+                    message="Solicitudes"
+                    description="Para enviar solicitudes debes estar suscrito al curso"
+                    type="info"
                     closable
                   />
                 </Col>
@@ -519,11 +519,11 @@ class ListEventUser extends Component {
               {this.state.loading ? (
                 <Fragment>
                   <Loading />
-                  <h2 className='has-text-centered'>Cargando...</h2>
+                  <h2 className="has-text-centered">Cargando...</h2>
                 </Fragment>
               ) : (
-                <div className='container card-Sugeridos'>
-                  <Row justify='space-between' gutter={[10, 10]}>
+                <div className="container card-Sugeridos">
+                  <Row justify="space-between" gutter={[10, 10]}>
                     {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                     {pageOfItems.map((users, userIndex) => (
                       <Col
@@ -600,7 +600,7 @@ class ListEventUser extends Component {
                                   {eventUserId !== null && (
                                     <Space wrap>
                                       <Button
-                                        type='primary'
+                                        type="primary"
                                         onClick={() => {
                                           //alert("ACAAA")
 
@@ -612,7 +612,7 @@ class ListEventUser extends Component {
                                         {'Agendar cita'}
                                       </Button>
                                       <Button
-                                        type='primary'
+                                        type="primary"
                                         disabled={
                                           this.isMyContact(users) ||
                                           this.haveRequestUser(users) ||
@@ -728,9 +728,9 @@ class ListEventUser extends Component {
 
                   {!this.state.loading && !this.props.cEventUser.value && (
                     <Alert
-                      message='Iniciar sesión'
-                      description='Para poder ver los asistentes es necesario iniciar sesión.'
-                      type='info'
+                      message="Iniciar sesión"
+                      description="Para poder ver los asistentes es necesario iniciar sesión."
+                      type="info"
                       showIcon
                     />
                   )}
@@ -756,7 +756,7 @@ class ListEventUser extends Component {
                 )}
               </div>
             }
-            key='mi-agenda'>
+            key="mi-agenda">
             {activeTab === 'mi-agenda' && (
               <>
                 {this.props.cEventUser && this.props.cEventUser.value && (
@@ -780,7 +780,7 @@ class ListEventUser extends Component {
             )}
           </TabPane>
 
-          <TabPane tab='Mis contactos' key='mis-contactos'>
+          <TabPane tab="Mis contactos" key="mis-contactos">
             <ContactList
               agendarCita={this.agendarCita}
               eventId={this.props.cEvent.value._id}
@@ -805,7 +805,7 @@ class ListEventUser extends Component {
                 )}
               </div>
             }
-            key='solicitudes'>
+            key="solicitudes">
             <RequestList
               currentUser={this.props.cEventUser.value}
               currentUserAc={this.props.cUser.value}
@@ -833,7 +833,7 @@ class ListEventUser extends Component {
                 )}
               </div>
             }
-            key='solicitudes-de-citas'>
+            key="solicitudes-de-citas">
             {activeTab === 'solicitudes-de-citas' && (
               <AppointmentRequests
                 eventId={this.props.cEvent.value._id}

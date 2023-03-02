@@ -54,7 +54,7 @@ const Tickets = (props) => {
           state: { new: true },
         }}
         columns={columns}
-        key='_id'
+        key="_id"
         editPath={`${props.matchUrl}/ticket`}
         actions
         search

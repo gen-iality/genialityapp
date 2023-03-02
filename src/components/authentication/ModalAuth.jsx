@@ -192,19 +192,19 @@ const ModalAuth = (props) => {
         visible={controllerLoginVisible?.visible}
         closable={controllerLoginVisible?.organization !== 'organization' ? true : false}
       >
-        <Tabs onChange={callback} centered size='large' activeKey={currentAuthScreen}>
+        <Tabs onChange={callback} centered size="large" activeKey={currentAuthScreen}>
           <TabPane
             tab={intl.formatMessage({
               id: 'modal.title.login',
               defaultMessage: 'Iniciar sesión',
             })}
-            key='login'
+            key="login"
           >
             <Form
               form={form1}
               onFinish={handleLoginEmailPassword}
               onFinishFailed={onFinishFailed}
-              layout='vertical'
+              layout="vertical"
               style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
             >
               {props.organization == 'organization' && (
@@ -224,7 +224,7 @@ const ModalAuth = (props) => {
                   id: 'modal.label.email',
                   defaultMessage: 'Correo electrónico',
                 })}
-                name='email'
+                name="email"
                 style={{ marginBottom: '15px', textAlign: 'left' }}
                 rules={[
                   {
@@ -238,8 +238,8 @@ const ModalAuth = (props) => {
               >
                 <Input
                   disabled={loading}
-                  type='email'
-                  size='large'
+                  type="email"
+                  size="large"
                   placeholder={intl.formatMessage({
                     id: 'modal.label.email',
                     defaultMessage: 'Correo electrónico',
@@ -253,7 +253,7 @@ const ModalAuth = (props) => {
                     id: 'modal.label.cedula',
                     defaultMessage: 'Cedula',
                   })}
-                  name='password'
+                  name="password"
                   style={{ marginBottom: '15px', textAlign: 'left' }}
                   rules={[
                     {
@@ -267,7 +267,7 @@ const ModalAuth = (props) => {
                 >
                   <Input
                     disabled={loading}
-                    size='large'
+                    size="large"
                     placeholder={intl.formatMessage({
                       id: 'modal.label.cedula',
                       defaultMessage: 'Cedula',
@@ -282,7 +282,7 @@ const ModalAuth = (props) => {
                     id: 'modal.label.password',
                     defaultMessage: 'Contraseña',
                   })}
-                  name='password'
+                  name="password"
                   style={{ marginBottom: '15px', textAlign: 'left' }}
                   rules={[
                     {
@@ -296,7 +296,7 @@ const ModalAuth = (props) => {
                 >
                   <Input.Password
                     disabled={loading}
-                    size='large'
+                    size="large"
                     placeholder={intl.formatMessage({
                       id: 'modal.label.password',
                       defaultMessage: 'Contraseña',
@@ -312,7 +312,7 @@ const ModalAuth = (props) => {
                     onClick={() => handleChangeTypeModal('recover')}
                     underline
                     id="forgotpassword"
-                    type='secondary'
+                    type="secondary"
                     style={{ float: 'right', cursor: 'pointer' }}
                   >
                     {intl.formatMessage({
@@ -327,7 +327,7 @@ const ModalAuth = (props) => {
                   showIcon
                   onClose={() => setErrorLogin(false)}
                   closable
-                  className='animate__animated animate__bounceIn'
+                  className="animate__animated animate__bounceIn"
                   style={{
                     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                     backgroundColor: '#FFFFFF',
@@ -338,7 +338,7 @@ const ModalAuth = (props) => {
                     borderRadius: '5px',
                     marginBottom: '15px',
                   }}
-                  type='error'
+                  type="error"
                   message={msjError}
                 />
               )}
@@ -346,10 +346,10 @@ const ModalAuth = (props) => {
                 <Form.Item style={{ marginBottom: '15px' }}>
                   <Button
                     id="loginButton"
-                    htmlType='submit'
+                    htmlType="submit"
                     block
                     style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                    size='large'
+                    size="large"
                   >
                     {intl.formatMessage({
                       id: 'modal.title.login',
@@ -363,14 +363,14 @@ const ModalAuth = (props) => {
             {props.organization !== 'landing' && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
             {props.organization !== 'landing' && (
               <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-                <Space direction='vertical' style={{ width: '100%' }}>
+                <Space direction="vertical" style={{ width: '100%' }}>
                   <Button
                     icon={<MailOutlined />}
                     disabled={loading}
                     onClick={() => handleChangeTypeModal('mail')}
-                    type='primary'
+                    type="primary"
                     block
-                    size='large'
+                    size="large"
                   >
                     {intl.formatMessage({
                       id: 'modal.option.send',
@@ -384,7 +384,7 @@ const ModalAuth = (props) => {
           {isVisibleRegister() && (
             <TabPane
               tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })}
-              key='register'
+              key="register"
             >
               <div
                 style={{

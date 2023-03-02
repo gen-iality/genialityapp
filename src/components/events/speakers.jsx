@@ -133,12 +133,12 @@ class Speakers extends Component {
     if (speaker.description !== '<p><br></p>' && speaker.description !== undefined && speaker.description !== null) {
       return (
         <Button
-          type='primary'
-          /* className='modal-button' */
+          type="primary"
+          /* className="modal-button" */
           onClick={() => this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)}
           key={'sp' + speaker._id}
           data-target='#myModal'
-          aria-haspopup='true'
+          aria-haspopup="true"
         >
           Ver más...
         </Button>
@@ -171,7 +171,7 @@ class Speakers extends Component {
                     {speakersWithCategory.length && (
                       <>
                         {speakersWithCategory[category.order].length && (
-                          <Row wrap key={index} gutter={[16, 16]} justify='center'>
+                          <Row wrap key={index} gutter={[16, 16]} justify="center">
                             <div
                               style={{
                                 width: '98%',
@@ -243,7 +243,7 @@ class Speakers extends Component {
                                                 whiteSpace: 'nowrap',
                                                 overflow: 'hidden',
                                               }}>
-                                              <Tooltip placement='bottomLeft' title={speaker.name}>
+                                              <Tooltip placement="bottomLeft" title={speaker.name}>
                                                 {speaker.name}
                                               </Tooltip>
                                             </p>
@@ -282,7 +282,7 @@ class Speakers extends Component {
           </>
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
-        <Row wrap gutter={[16, 16]} justify='center' style={{ padding: '40px' }}>
+        <Row wrap gutter={[16, 16]} justify="center" style={{ padding: '40px' }}>
           {/* Mapeo de datos para mostrar los Speakers */}
           {speakersWithoutCategory.length > 0 &&
             speakersWithoutCategory.map((speaker, key) => (
@@ -373,7 +373,7 @@ class Speakers extends Component {
           <Row>
             {/* Imagen del conferencista */}
 
-            <Col flex='1 1 auto'>
+            <Col flex="1 1 auto">
               {infoSpeaker.imagen ? (
                 <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} src={infoSpeaker.imagen} />
               ) : (
@@ -382,7 +382,7 @@ class Speakers extends Component {
             </Col>
 
             {/* Descripción del conferencista */}
-            <Col flex='1 1 600px'>
+            <Col flex="1 1 600px">
               <span>
                 <b style={{ color: this.props.cEvent.value?.styles?.textMenu }}>{infoSpeaker.nombre}</b>
               </span>
@@ -392,22 +392,22 @@ class Speakers extends Component {
                 </span>
                 <br />
                 <br />
-                <Row justify='center'>
-                  <Col span={24} id='img-description'>
+                <Row justify="center">
+                  <Col span={24} id="img-description">
                     <ReactQuill
                       style={{ color: this.props.cEvent.value?.styles?.textMenu }}
                       value={infoSpeaker.descripcion}
                       readOnly
-                      className='hide-toolbar ql-toolbar'
-                      theme='bubble'
+                      className="hide-toolbar ql-toolbar"
+                      theme="bubble"
                     />
                   </Col>
                 </Row>
               </p>
             </Col>
             <Col span={24}>
-              <Row justify='end'>
-                <Button key='cerrar' size='large' type='primary' onClick={() => this.setModalVisible(false)}>
+              <Row justify="end">
+                <Button key="cerrar" size="large" type="primary" onClick={() => this.setModalVisible(false)}>
                   Cerrar
                 </Button>
               </Row>
@@ -430,13 +430,13 @@ class Speakers extends Component {
                       </p>
                       <p>{activities.name}</p>
                       <br />
-                      <Row justify='center'>
-                        <Col span={24} id='img-description'>
+                      <Row justify="center">
+                        <Col span={24} id="img-description">
                           <ReactQuill
                             value={activities.description}
                             readOnly
-                            className='hide-toolbar ql-toolbar'
-                            theme='bubble'
+                            className="hide-toolbar ql-toolbar"
+                            theme="bubble"
                           />
                         </Col>
                       </Row>

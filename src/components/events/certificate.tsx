@@ -32,7 +32,7 @@ const tags = [
 
 
 const IconText = ({ icon, text, onSubmit }: { icon: any, text: string, onSubmit: () => void}) => (
-  <Button htmlType='submit' type='primary' onClick={onSubmit}>
+  <Button htmlType="submit" type="primary" onClick={onSubmit}>
     {createElement(icon, { style: { marginRight: 8 } })}
     {text}
   </Button>
@@ -137,21 +137,21 @@ function Certificate(props: CertificateProps) {
 
   return (
     <>
-    <Row gutter={[8, 8]} wrap justify='center'>
+    <Row gutter={[8, 8]} wrap justify="center">
       <Col span={24}>
         <Card>
           {isPassed === undefined && (
             <Spin>Cargando...</Spin>
           )}
           {!isPassed && (
-            <Alert message='Certificados NO disponibles' type='error' />
+            <Alert message="Certificados NO disponibles" type="error" />
           )}
           {(isPassed) && (
             <>
-            <Alert message='Certificados disponibles' type='success' />
+            <Alert message="Certificados disponibles" type="success" />
             <br />
             <IconText
-              text='Descargar certificado'
+              text="Descargar certificado"
               icon={DownloadOutlined}
               onSubmit={() => generateCert(props.cEventUser.value)}
             />

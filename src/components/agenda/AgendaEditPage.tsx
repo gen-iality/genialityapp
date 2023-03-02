@@ -306,7 +306,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
           </Tabs.TabPane>
           {isEditing && (
             <>
-              <Tabs.TabPane tab='Contenido' key='2'>
+              <Tabs.TabPane tab="Contenido" key="2">
                 <Row wrap gutter={12}>
                   <Col span={24}>
                     {currentAgenda?._id && (
@@ -322,8 +322,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
                   </Col>
                 </Row>
               </Tabs.TabPane>
-              <Tabs.TabPane tab='Documentos' key='5'>
-                <Row justify='center' wrap gutter={12}>
+              <Tabs.TabPane tab="Documentos" key="5">
+                <Row justify="center" wrap gutter={12}>
                   <Col span={20}>
                     <Form.Item>
                       <AgendaDocumentForm

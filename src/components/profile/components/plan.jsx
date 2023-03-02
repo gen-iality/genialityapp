@@ -20,7 +20,7 @@ const plan = ({ plan, mine }) => {
 
       <Row gutter={[12, 12]} wrap>
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
-          <Space direction='vertical'>
+          <Space direction="vertical">
             <Space>
               <Typography.Text strong>
                 {intl.formatMessage({
@@ -115,7 +115,7 @@ const plan = ({ plan, mine }) => {
           </Space>
         </Col>
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
-          <Space direction='vertical'>
+          <Space direction="vertical">
             <Space>
               <Typography.Text strong>
                 {intl.formatMessage({
@@ -317,7 +317,7 @@ const plan = ({ plan, mine }) => {
           </Space>
         </Col>
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
-          <Space direction='vertical'>
+          <Space direction="vertical">
             <Space>
               <Typography.Text strong>
                 {intl.formatMessage({

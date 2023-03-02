@@ -124,9 +124,9 @@ const AttendeList = function(props) {
       hasMore={!loading && hasMore}
     >
       <List
-        itemLayout='horizontal'
+        itemLayout="horizontal"
         dataSource={filteredlist && filteredlist}
-        renderItem={(item) => <UsersCard type='attendees' item={item} propsAttendees={props} />}></List>
+        renderItem={(item) => <UsersCard type="attendees" item={item} propsAttendees={props} />}></List>
     </InfiniteScroll>
   );
 };

@@ -20,7 +20,7 @@ export const VideoActivity = () => {
           url={currentActivity && currentActivity?.video}
           controls
         /> */
-        <div className='mediaplayer'>
+        <div className="mediaplayer">
           <ReactPlayer
             style={{ objectFit: 'cover' }}
             width='100%'
@@ -30,7 +30,7 @@ export const VideoActivity = () => {
           />
         </div>
       ) : (
-        <Result icon={<SmileOutlined />} title='Este curso ha terminado!' />
+        <Result icon={<SmileOutlined />} title="Este curso ha terminado!" />
       )}
     </>
   );

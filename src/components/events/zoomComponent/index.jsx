@@ -270,28 +270,28 @@ class ZoomComponent extends Component {
         className={`content-zoom ${isMedium ? 'mediumScreen' : ''} ${
           isMinimize ? 'minimizeScreen' : ''
         }`}>
-        <div className='buttons-header'>
+        <div className="buttons-header">
           <div>
-            <div className='title-header'>
-              <span className='icon-live'>&#9673;</span>&nbsp;
+            <div className="title-header">
+              <span className="icon-live">&#9673;</span>&nbsp;
               <span>Conferencia en vivo</span>
             </div>
           </div>
 
           <div>
             {/* botón pantalla completa */}
-            <Button className='ant-btn-header' onClick={this.goFull}>
+            <Button className="ant-btn-header" onClick={this.goFull}>
               <FullscreenOutlined />
             </Button>
 
             {/* botón pantalla minimizada */}
-            <Button className='ant-btn-header' onClick={this.goMinimize}>
+            <Button className="ant-btn-header" onClick={this.goMinimize}>
               <LineOutlined />
             </Button>
 
             {/* botón cerrar */}
-            <Button className='ant-btn-header' onClick={() => toggleConference(false)}>
-              <span className='icon-close'>&#10006;</span>
+            <Button className="ant-btn-header" onClick={() => toggleConference(false)}>
+              <span className="icon-close">&#10006;</span>
             </Button>
           </div>
         </div>
@@ -303,16 +303,16 @@ class ZoomComponent extends Component {
               allow='autoplay; fullscreen; camera *;microphone *'
               allowUserMedia
               allowFullScreen
-              className='iframe-zoom nuevo'>
+              className="iframe-zoom nuevo">
               <p>Your browser does not support iframes.</p>
             </iframe>
           )}
           {/* VIMEO LIVESTREAMING */}
           {this.state.event && platform === 'vimeo' && (
-            <Row className='platform-vimeo' style={{ display: 'contents' }}>
+            <Row className="platform-vimeo" style={{ display: 'contents' }}>
               <iframe
                 src={`https://player.vimeo.com/video/${meeting_id}`}
-                frameBorder='0'
+                frameBorder="0"
                 allow='autoplay; fullscreen; camera *;microphone *'
                 allowFullScreen
                 allowusermedia
@@ -324,7 +324,7 @@ class ZoomComponent extends Component {
                     `https://castrolgame.netlify.app` +
                     (this.props.userEntered ? '?uid=' + this.props.userEntered._id : '')
                   }
-                  frameBorder='0'
+                  frameBorder="0"
                   allow='autoplay; fullscreen; camera *;microphone *'
                   allowFullScreen
                   allowusermedia
@@ -344,7 +344,7 @@ class ZoomComponent extends Component {
                       '&email=' +
                       (email ? email : 'evius@evius.co'))
                   }
-                  frameBorder='0'
+                  frameBorder="0"
                   allow='autoplay; fullscreen; camera *;microphone *'
                   allowFullScreen
                   allowusermedia
@@ -386,22 +386,22 @@ class ZoomComponent extends Component {
 
           {this.state.event && platform === 'bigmarker' && (
             <>
-              {!this.state.error_bigmarker && !this.state.urllogin_bigmarker && <Spin tip='Loading...'></Spin>}
+              {!this.state.error_bigmarker && !this.state.urllogin_bigmarker && <Spin tip="Loading..."></Spin>}
               {this.state.error_bigmarker && (
                 <div>
                   {' '}
-                  <Result status='warning' title={this.state.error_bigmarker} />
+                  <Result status="warning" title={this.state.error_bigmarker} />
                 </div>
               )}
               {!this.state.error_bigmarker && this.state.urllogin_bigmarker && (
                 <iframe
-                  id='conference'
+                  id="conference"
                   src={this.state.urllogin_bigmarker} //"https://www.bigmarker.com/conferences/1c3e6af84135/api_attend"
-                  frameBorder='0'
+                  frameBorder="0"
                   allow='autoplay; fullscreen; camera *;microphone *'
                   allowFullScreen
                   allowusermedia
-                  className='iframe-zoom nuevo'></iframe>
+                  className="iframe-zoom nuevo"></iframe>
               )}
             </>
           )}

@@ -49,7 +49,7 @@ const Stands = (props) => {
       render(key, record) {
         return (
           <input
-            type='color'
+            type="color"
             style={{ width: '60%', height: 31, marginTop: 1 }}
             value={record.color}
             disabled
@@ -68,7 +68,7 @@ const Stands = (props) => {
           <>
             <Row wrap gutter={[8, 8]}>
               <Col>
-                <Tooltip placement='topLeft' title='Editar'>
+                <Tooltip placement="topLeft" title="Editar">
                   <Button
                     key={`editAction${record.index}`}
                     id={`editAction${record.index}`}
@@ -79,14 +79,14 @@ const Stands = (props) => {
                       obtenerStand(record);
                     }}
                     icon={<EditOutlined />}
-                    type='primary'
-                    size='small'
+                    type="primary"
+                    size="small"
                     disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
               <Col>
-                <Tooltip placement='topLeft' title='Eliminar'>
+                <Tooltip placement="topLeft" title="Eliminar">
                   <Button
                     key={`removeAction${record.index}`}
                     id={`removeAction${record.index}`}
@@ -94,8 +94,8 @@ const Stands = (props) => {
                       deleteStand(key);
                     }}
                     icon={<DeleteOutlined />}
-                    type='danger'
-                    size='small'
+                    type="danger"
+                    size="small"
                     disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
@@ -289,7 +289,7 @@ const Stands = (props) => {
     <div>
       <Header title="$1" back />
 
-      <Row justify='center' wrap gutter={12}>
+      <Row justify="center" wrap gutter={12}>
         <Col span={20}>
           <Alert
             message={
@@ -297,15 +297,15 @@ const Stands = (props) => {
             }
           />
           <br />
-          <Row justify='space-between'>
+          <Row justify="space-between">
             <p>Visualización: </p>
             <Select value={visualization} style={{ width: 220, marginLeft: 30 }} onChange={handleChange}>
-              <Option value='list'>Listado</Option>
-              <Option value='stand'>Stand</Option>
+              <Option value="list">Listado</Option>
+              <Option value="stand">Stand</Option>
             </Select>
             <Button
               onClick={() => saveConfiguration()}
-              type='primary'
+              type="primary"
               icon={<SaveOutlined />}
               disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
             >
@@ -316,7 +316,7 @@ const Stands = (props) => {
           <Divider />
 
           <Card
-            title='Tipos de stands'
+            title="Tipos de stands"
             extra={
               <Button
                 onClick={() => {
@@ -326,7 +326,7 @@ const Stands = (props) => {
                   setNoValid(false);
                   obtenerStand(null);
                 }}
-                type='primary'
+                type="primary"
                 icon={<PlusCircleOutlined />}
                 disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
               >
@@ -334,7 +334,7 @@ const Stands = (props) => {
               </Button>
             }
           >
-            <Table columns={columns} dataSource={standsList} pagination={false} rowKey='_id' />
+            <Table columns={columns} dataSource={standsList} pagination={false} rowKey="_id" />
 
             <Modal
               title={selectedStand ? 'Editar stand' : 'Agregar stand'}
@@ -353,7 +353,7 @@ const Stands = (props) => {
                 <Form.Item label={<span style={{ width: 70 }}>Color</span>}>
                   <div onClick={() => handleClickSelectColor()}>
                     <input
-                      type='color'
+                      type="color"
                       style={{ marginRight: '3%', width: '8%', height: 31, marginTop: 1 }}
                       value={colorStand}
                       disabled
@@ -372,7 +372,7 @@ const Stands = (props) => {
                         left: '600px',
                         zIndex: 10000,
                       }}>
-                      <Card size='small' style={{ width: '250px' }}>
+                      <Card size="small" style={{ width: '250px' }}>
                         <SketchPicker
                           color={colorStand}
                           onChangeComplete={(color) => {

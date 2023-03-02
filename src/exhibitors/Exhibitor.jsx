@@ -122,14 +122,14 @@ class Exhibitor extends Component {
 
     return (
       <div className={`main-stand main-stand-${standType}`}>
-        <button type='button' className='main-stand-goback' onClick={goBack}>
-          <img src='/exhibitors/icons/baseline_arrow_back_white_18dp.png' alt="" />
+        <button type="button" className="main-stand-goback" onClick={goBack}>
+          <img src="/exhibitors/icons/baseline_arrow_back_white_18dp.png" alt="" />
           Regresar
         </button>
         {showStandImage && (
           <button
-            type='button'
-            className='main-stand-go-button go-previous'
+            type="button"
+            className="main-stand-go-button go-previous"
             onClick={() => [this.handleHideStandImage(), showPrevious()]}
           >
             Anterior
@@ -137,108 +137,108 @@ class Exhibitor extends Component {
         )}
         {showStandImage && (
           <button
-            type='button'
-            className='main-stand-go-button go-next'
+            type="button"
+            className="main-stand-go-button go-next"
             onClick={() => [this.handleHideStandImage(), showNext()]}
           >
             Siguiente
           </button>
         )}
-        <div className='main-stand-social-networks'>
+        <div className="main-stand-social-networks">
           {isNonEmptyArray(socialNetworks) &&
             socialNetworks.map((item, index) => (
               <a
                 title={item.network}
                 href={item.url}
-                className='main-stand-social-networks-item'
-                target='_blank'
-                rel='noreferrer'
+                className="main-stand-social-networks-item"
+                target="_blank"
+                rel="noreferrer"
                 key={`social-network-${index}`}
               >
                 <img src={snIcons[item.network]} alt={item.network} />
               </a>
             ))}
         </div>
-        <div className='main-stand-navigation'>
+        <div className="main-stand-navigation">
           {(!!contactInfoImage || !!contactInfoDescription) && (
-            <div className='main-stand-navigation-item' onClick={this.handleShowInfo}>
-              <div className='main-stand-navigation-item-icon'>
-                <img src='/exhibitors/icons/ic_domain_24px.png' alt="" />
+            <div className="main-stand-navigation-item" onClick={this.handleShowInfo}>
+              <div className="main-stand-navigation-item-icon">
+                <img src="/exhibitors/icons/ic_domain_24px.png" alt="" />
               </div>
-              <div className='main-stand-navigation-item-label'>CONTACTO</div>
+              <div className="main-stand-navigation-item-label">CONTACTO</div>
             </div>
           )}
 
           {standType === 'Oro' && isNonEmptyArray(gallery) && (
-            <div className='main-stand-navigation-item' onClick={this.handleShowGallery}>
-              <div className='main-stand-navigation-item-icon'>
-                <img src='/exhibitors/icons/ic_perm_media_24px.png' alt="" />
+            <div className="main-stand-navigation-item" onClick={this.handleShowGallery}>
+              <div className="main-stand-navigation-item-icon">
+                <img src="/exhibitors/icons/ic_perm_media_24px.png" alt="" />
               </div>
-              <div className='main-stand-navigation-item-label'>GALERÍA</div>
+              <div className="main-stand-navigation-item-label">GALERÍA</div>
             </div>
           )}
 
           {isNonEmptyArray(services) && (
-            <div className='main-stand-navigation-item' onClick={this.handleShowServices}>
-              <div className='main-stand-navigation-item-icon'>
-                <img src='/exhibitors/icons/ic_card_travel_24px.png' alt="" />
+            <div className="main-stand-navigation-item" onClick={this.handleShowServices}>
+              <div className="main-stand-navigation-item-icon">
+                <img src="/exhibitors/icons/ic_card_travel_24px.png" alt="" />
               </div>
-              <div className='main-stand-navigation-item-label'>SERVICIOS</div>
+              <div className="main-stand-navigation-item-label">SERVICIOS</div>
             </div>
           )}
 
           {!!brochure && (
-            <a href={brochure} target='_blank' rel='noreferrer' className='main-stand-navigation-item'>
-              <div className='main-stand-navigation-item-icon'>
-                <img src='/exhibitors/icons/ic_library_books_24px.png' alt="" />
+            <a href={brochure} target="_blank" rel="noreferrer" className="main-stand-navigation-item">
+              <div className="main-stand-navigation-item-icon">
+                <img src="/exhibitors/icons/ic_library_books_24px.png" alt="" />
               </div>
-              <div className='main-stand-navigation-item-label'>CATÁLOGO</div>
+              <div className="main-stand-navigation-item-label">CATÁLOGO</div>
             </a>
           )}
 
           {standType === 'Oro' && !!webpage && (
-            <a href={webpage} target='_blank' rel='noreferrer' className='main-stand-navigation-item'>
-              <div className='main-stand-navigation-item-icon'>
-                <img src='/exhibitors/icons/ic_public_24px.png' alt="" />
+            <a href={webpage} target="_blank" rel="noreferrer" className="main-stand-navigation-item">
+              <div className="main-stand-navigation-item-icon">
+                <img src="/exhibitors/icons/ic_public_24px.png" alt="" />
               </div>
-              <div className='main-stand-navigation-item-label'>SITIO WEB</div>
+              <div className="main-stand-navigation-item-label">SITIO WEB</div>
             </a>
           )}
         </div>
         {!!advisorNumber && (
           <a
-            className='main-stand-chat'
+            className="main-stand-chat"
             href={'https://api.whatsapp.com/send?phone=' + advisorNumber}
-            target='_blank'
-            rel='noreferrer'>
-            <img className='chat-image' src={advisorImage ? advisorImage : `/exhibitors/person.png`} alt="" />
-            <div className='chat-message'>
+            target="_blank"
+            rel="noreferrer">
+            <img className="chat-image" src={advisorImage ? advisorImage : `/exhibitors/person.png`} alt="" />
+            <div className="chat-message">
               Hola soy {advisorName}, <br />
               Te puedo ayudar en algo?
             </div>
           </a>
         )}
-        <div className='main-stand-module'>
+        <div className="main-stand-module">
           {showStandImage && (
-            <div className='main-stand-module-wrap'>
-              <img className='stand-image' src={standImage} alt='stand picture' />
-              <div className='main-stand-play-btn' onClick={this.handleShowVideo} />
+            <div className="main-stand-module-wrap">
+              <img className="stand-image" src={standImage} alt="stand picture" />
+              <div className="main-stand-play-btn" onClick={this.handleShowVideo} />
             </div>
           )}
         </div>
 
         {isNonEmptyArray(gallery) && (
           <div className={`main-stand-gallery ${this.state.showGallery ? 'active' : ''}`}>
-            <div className='main-stand-gallery-overlay' />
-            <div className='main-stand-gallery-close-window' onClick={this.handleHideGallery}>
-              <img src='/exhibitors/icons/ic_close_24px.png' alt="" />
+            <div className="main-stand-gallery-overlay" />
+            <div className="main-stand-gallery-close-window" onClick={this.handleHideGallery}>
+              <img src="/exhibitors/icons/ic_close_24px.png" alt="" />
             </div>
-            <div className='main-stand-gallery-container'>
+            <div className="main-stand-gallery-container">
               <Swiper spaceBetween={0} slidesPerView={1} navigation pagination={{ clickable: true }}>
                 {gallery.map((slide, index) => (
                   <SwiperSlide key={index}>
-                    <div className='main-stand-gallery-slide'>
-                      <img className='main-stand-gallery-slide-image' src={slide.image} alt="" />
+                    <div className="main-stand-gallery-slide">
+                      <img className="main-stand-gallery-slide-image" src={slide.image} alt="" />
                     </div>
                   </SwiperSlide>
                 ))}
@@ -249,15 +249,15 @@ class Exhibitor extends Component {
 
         {isNonEmptyArray(services) && (
           <div className={`main-stand-modal ${this.state.showServices ? 'active' : ''}`}>
-            <div className='main-stand-modal-overlay' onClick={this.handleHideServices} />
+            <div className="main-stand-modal-overlay" onClick={this.handleHideServices} />
             <div className={`main-stand-modal-container`}>
-              <div className='main-stand-modal-header'>
-                <div className='main-stand-modal-header-title'>Servicios</div>
-                <div className='main-stand-modal-close-window' onClick={this.handleHideServices}>
-                  <img src='/exhibitors/icons/ic_close_24px.png' alt="" />
+              <div className="main-stand-modal-header">
+                <div className="main-stand-modal-header-title">Servicios</div>
+                <div className="main-stand-modal-close-window" onClick={this.handleHideServices}>
+                  <img src="/exhibitors/icons/ic_close_24px.png" alt="" />
                 </div>
               </div>
-              <div className='main-stand-modal-content'>
+              <div className="main-stand-modal-content">
                 {services.map((service, index) => {
                   const infoClassName = classNames('main-stand-services-item-image', {
                     'only-image': !!service && !!service.image && !service.description,
@@ -267,7 +267,7 @@ class Exhibitor extends Component {
                   });
 
                   return (
-                    <div className='main-stand-services-item' key={`service-item-${index}`}>
+                    <div className="main-stand-services-item" key={`service-item-${index}`}>
                       {!!service && !!service.image && (
                         <div className={infoClassName}>
                           <img src={service.image} alt="" />
@@ -287,24 +287,24 @@ class Exhibitor extends Component {
         )}
 
         <div className={`main-stand-modal main-stand-modal-contact-info ${this.state.showInfo ? 'active' : ''}`}>
-          <div className='main-stand-modal-overlay' onClick={this.handleHideInfo} />
+          <div className="main-stand-modal-overlay" onClick={this.handleHideInfo} />
           <div className={`main-stand-modal-container`}>
-            <div className='main-stand-modal-header'>
-              <div className='main-stand-modal-header-title'>Información de contacto</div>
-              <div className='main-stand-modal-close-window' onClick={this.handleHideInfo}>
-                <img src='/exhibitors/icons/ic_close_24px.png' alt="" />
+            <div className="main-stand-modal-header">
+              <div className="main-stand-modal-header-title">Información de contacto</div>
+              <div className="main-stand-modal-close-window" onClick={this.handleHideInfo}>
+                <img src="/exhibitors/icons/ic_close_24px.png" alt="" />
               </div>
             </div>
-            <div className='main-stand-modal-content'>
-              <div className='main-stand-contact-info'>
+            <div className="main-stand-modal-content">
+              <div className="main-stand-contact-info">
                 {!!contactInfoImage && (
-                  <div className='main-stand-contact-info-image'>
+                  <div className="main-stand-contact-info-image">
                     <img src={contactInfoImage} alt="" />
                   </div>
                 )}
-                <div className='main-stand-contact-info-info'>
+                <div className="main-stand-contact-info-info">
                   {!!contactInfoDescription && (
-                    <div className='main-stand-contact-info-description'>
+                    <div className="main-stand-contact-info-description">
                       <div>{htmlParser(contactInfoDescription)}</div>
                     </div>
                   )}
@@ -315,11 +315,11 @@ class Exhibitor extends Component {
         </div>
 
         <div className={`main-stand-modal main-stand-modal-video ${this.state.showVideo ? 'active' : ''}`}>
-          <div className='main-stand-modal-overlay' onClick={this.handleHideVideo} />
-          <div className='main-stand-modal-close-window' onClick={this.handleHideVideo}>
-            <img src='/exhibitors/icons/ic_close_24px.png' alt="" />
+          <div className="main-stand-modal-overlay" onClick={this.handleHideVideo} />
+          <div className="main-stand-modal-close-window" onClick={this.handleHideVideo}>
+            <img src="/exhibitors/icons/ic_close_24px.png" alt="" />
           </div>
-          <div className='main-stand-modal-video-wrap'>
+          <div className="main-stand-modal-video-wrap">
             <ReactPlayer url={videoUrl} />
           </div>
         </div>

@@ -243,7 +243,7 @@ export function formatDataToString(data, property) {
                 {fileList.map((item, index) => {
                   return (
                     <li key={'item-files-' + index}>
-                      <a href={item.response} target='_blank' rel='noreferrer'>
+                      <a href={item.response} target="_blank" rel="noreferrer">
                         {item.name}
                       </a>
                     </li>

@@ -132,11 +132,11 @@ const Herramienta = (props) => {
     <Form onFinish={onSubmit} {...formLayout}>
       <Header title="Herramienta" back save form remove={onRemoveId} edit={locationState.edit} />
 
-      <Row justify='center' wrap gutter={12}>
+      <Row justify="center" wrap gutter={12}>
         <Col span={12}>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} className="label">
                 Nombre <label style={{ color: 'red' }}>*</label>
               </label>
             }

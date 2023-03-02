@@ -7,7 +7,7 @@ export default function ZoomOptions({ hasVideoconference, select_host_manual, ha
           <Select
             defaultValue={select_host_manual}
             value={select_host_manual}
-            name='select_host_manual'
+            name="select_host_manual"
             onChange={(e) => handleChange(e, 'select_host_manual')}
           >
             <Option value>Si</Option>
@@ -23,7 +23,7 @@ export default function ZoomOptions({ hasVideoconference, select_host_manual, ha
               <Select
                 defaultValue={host_id}
                 value={host_id}
-                name='host_id'
+                name="host_id"
                 onChange={(e) => handleChange(e, 'host_id')}
               >
                 <Option value={null}>Seleccione...</Option>

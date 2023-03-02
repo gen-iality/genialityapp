@@ -288,7 +288,7 @@ class UserModal extends Component {
     return (
       <Modal closable onCancel={() => this.props.handleModal()} visible>
         <div
-          // className='asistente-list'
+          // className="asistente-list"
           style={{
             paddingLeft: '0px',
             paddingRight: '0px',

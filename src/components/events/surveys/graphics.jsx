@@ -310,15 +310,15 @@ class Graphics extends Component {
     if (dataSurvey.questions)
       return (
         <>
-          <Card bodyStyle={{ padding: '0' }} className='survyCard'>
+          <Card bodyStyle={{ padding: '0' }} className="survyCard">
             <strong style={{ fontSize: '16px' }}>{titleQuestion}</strong>
             {/* esta validacion es para que tomo los estilos la torta */}
             <Card bodyStyle={{ padding: '0px' }}>
-              <Row justify='center'>
+              <Row justify="center">
                 <canvas
-                  id='chart'
-                  width='600'
-                  height='400'
+                  id="chart"
+                  width="600"
+                  height="400"
                   // style={{width:'500px', height:'700px'}}
                 ></canvas>
               </Row>

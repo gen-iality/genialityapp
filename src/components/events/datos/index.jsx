@@ -441,7 +441,7 @@ class Datos extends Component {
     <SortableContainer
       useDragHandle
       disableAutoscroll
-      helperClass='row-dragging'
+      helperClass="row-dragging"
       onSortEnd={this.onSortEnd}
       {...props}
     />
@@ -536,7 +536,7 @@ class Datos extends Component {
         render: (record, key) =>
           key.name !== 'email' && key.name !== 'names' ? (
             <Checkbox
-              name='mandatory'
+              name="mandatory"
               onChange={() => this.changeCheckBox(key, 'mandatory')}
               checked={record}
               /* disabled={key.name === 'contrasena' || key.type === 'password'} */
@@ -551,7 +551,7 @@ class Datos extends Component {
         align: 'center',
         render: (record, key) => (
           <Checkbox
-            name='visibleByContacts'
+            name="visibleByContacts"
             onChange={() => this.changeCheckBox(key, 'visibleByContacts', 'visibleByAdmin')}
             checked={record}
             disabled={
@@ -569,7 +569,7 @@ class Datos extends Component {
         align: 'center',
         render: (record, key) => (
           <Checkbox
-            name='sensibility'
+            name="sensibility"
             onChange={() => this.changeCheckBox(key, 'sensibility')}
             checked={record}
             disabled={
@@ -588,7 +588,7 @@ class Datos extends Component {
         render: (record, key) =>
           key.name !== 'email' && key.name !== 'names' ? (
             <Checkbox
-              name='visibleByAdmin'
+              name="visibleByAdmin"
               onChange={() => this.changeCheckBox(key, 'visibleByAdmin', 'visibleByContacts')}
               checked={record}
               /* disabled={key.name === 'contrasena' || key.type === 'password'} */
@@ -607,14 +607,14 @@ class Datos extends Component {
             <Row wrap gutter={[8, 8]}>
               <Col>
                 {key.name !== 'email' /* && key.name !== 'contrasena' */ && (
-                  <Tooltip placement='topLeft' title='Editar'>
+                  <Tooltip placement="topLeft" title="Editar">
                     <Button
                       key={`editAction${key.index}`}
                       id={`editAction${key.index}`}
                       onClick={() => this.editField(key)}
                       icon={<EditOutlined />}
-                      type='primary'
-                      size='small'
+                      type="primary"
+                      size="small"
                       disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                     />
                   </Tooltip>
@@ -622,14 +622,14 @@ class Datos extends Component {
               </Col>
               <Col>
                 {key.name !== 'email' && key.name !== 'names' /* && key.name !== 'contrasena' */ && (
-                  <Tooltip placement='topLeft' title='Eliminar'>
+                  <Tooltip placement="topLeft" title="Eliminar">
                     <Button
                       key={`removeAction${key.index}`}
                       id={`removeAction${key.index}`}
                       onClick={() => this.removeField(key._id || key.name)}
                       icon={<DeleteOutlined />}
-                      type='danger'
-                      size='small'
+                      type="danger"
+                      size="small"
                       disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                     />
                   </Tooltip>
@@ -658,7 +658,7 @@ class Datos extends Component {
 
     return (
       <div>
-        <Tabs defaultActiveKey='1'>
+        <Tabs defaultActiveKey="1">
           {this.state.visibleModal && (
             <ModalCreateTemplate
               visible={this.state.visibleModal}
@@ -668,7 +668,7 @@ class Datos extends Component {
           )}
 
           {this.props.type !== 'organization' && (
-            <TabPane tab='Configuración General' key='1'>
+            <TabPane tab="Configuración General" key="1">
               <Fragment>
                 <Header title={'Interacción con la plataforma'} />
                 <small>
@@ -680,8 +680,8 @@ class Datos extends Component {
                 <Table
                   columns={columns}
                   dataSource={fields}
-                  rowKey='index'
-                  size='small'
+                  rowKey="index"
+                  size="small"
                   components={{
                     body: {
                       wrapper: this.DraggableContainer,
@@ -689,10 +689,10 @@ class Datos extends Component {
                     },
                   }}
                   title={() => (
-                    <Row justify='end' wrap gutter={[8, 8]}>
+                    <Row justify="end" wrap gutter={[8, 8]}>
                       <Col>
                         <Checkbox
-                          name='checkInByDocument'
+                          name="checkInByDocument"
                           onChange={(value) =>
                             createFieldForCheckInPerDocument({
                               value,
@@ -710,14 +710,14 @@ class Datos extends Component {
                         <Button
                           disabled={this.state.available}
                           onClick={this.submitOrder}
-                          type='primary'
+                          type="primary"
                           icon={<SaveOutlined />}
                         >
                           {'Guardar orden'}
                         </Button>
                       </Col>
                       <Col>
-                        <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addField}>
+                        <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addField}>
                           Agregar
                         </Button>
                       </Col>
@@ -745,7 +745,7 @@ class Datos extends Component {
           )}
 
           {this.props.type == 'organization' && (
-            <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
+            <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key="3">
               {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (
                 <Fragment>
                   <Header
@@ -754,7 +754,7 @@ class Datos extends Component {
                         Recopilación de datos de plantillas
                         {this.props.type !== 'configMembers' && (
                           <Button
-                            type='link'
+                            type="link"
                             style={{ color: 'blue' }}
                             onClick={() =>
                               this.setState({
@@ -776,8 +776,8 @@ class Datos extends Component {
                   <Table
                     columns={columns}
                     dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
-                    rowKey='index'
-                    size='small'
+                    rowKey="index"
+                    size="small"
                     components={{
                       body: {
                         wrapper: this.DraggableContainer,
@@ -785,19 +785,19 @@ class Datos extends Component {
                       },
                     }}
                     title={() => (
-                      <Row justify='end' wrap gutter={[8, 8]}>
+                      <Row justify="end" wrap gutter={[8, 8]}>
                         <Col>
                           <Button
                             disabled={this.state.available}
                             onClick={this.submitOrder}
-                            type='primary'
+                            type="primary"
                             icon={<SaveOutlined />}
                           >
                             {'Guardar orden'}
                           </Button>
                         </Col>
                         <Col>
-                          <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addField}>
+                          <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addField}>
                             Agregar
                           </Button>
                         </Col>

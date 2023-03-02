@@ -78,7 +78,7 @@ class Test extends Component {
     return (
       <Fragment>
         <ComponentTest
-          testData='prueba de dato'
+          testData="prueba de dato"
           validate
           event={this.props.event}
           currentUser={this.state.currentUser}

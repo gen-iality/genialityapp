@@ -234,19 +234,19 @@ class CheckAgenda extends Component {
 
   editcomponent = (text, item, index) => {
     return (
-      <Tooltip placement='topLeft' title='Editar'>
-        <Button type="primary" icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
+      <Tooltip placement="topLeft" title="Editar">
+        <Button type="primary" icon={<EditOutlined />} size="small" onClick={() => this.openEditModalUser(item)} />
       </Tooltip>
 
       /* <span
-        className='icon has-text-grey action_pointer'
+        className="icon has-text-grey action_pointer"
         data-tooltip="Editar"
         // eslint-disable-next-line no-unused-vars
         onClick={(e) => {
           // console.log('EDIT USER==>', item);
           this.openEditModalUser(item);
         }}>
-        <i className='fas fa-edit' />
+        <i className="fas fa-edit" />
       </span> */
     );
   };
@@ -393,15 +393,15 @@ class CheckAgenda extends Component {
         />
         <Space>
           <Button
-            type='primary'
+            type="primary"
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            size='small'
+            size="small"
             style={{ width: 90 }}
           >
             Search
           </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
+          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
         </Space>
@@ -537,14 +537,14 @@ class CheckAgenda extends Component {
           pagination
           scroll={{ x: 'auto' }}
           titleTable={
-            <Row gutter={[8, 8]} wrap justify='end'>
+            <Row gutter={[8, 8]} wrap justify="end">
               <Col>
-                <Button onClick={this.goToSendMessage} type='primary' icon={<SendOutlined />}>
+                <Button onClick={this.goToSendMessage} type="primary" icon={<SendOutlined />}>
                   {'Enviar comunicación/correo'}
                 </Button>
               </Col>
               <Col>
-                <Button onClick={this.exportFile} type='primary' icon={<DownloadOutlined />}>
+                <Button onClick={this.exportFile} type="primary" icon={<DownloadOutlined />}>
                   Exportar
                 </Button>
               </Col>
@@ -553,14 +553,14 @@ class CheckAgenda extends Component {
                   onClick={() =>
                     this.props.history.push(`/eventadmin/${this.props.event._id}/invitados/importar-excel`)
                   }
-                  type='primary'
+                  type="primary"
                   icon={<UploadOutlined />}
                 >
                   {'Importar usuario'}
                 </Button>
               </Col>
               <Col>
-                <Button onClick={this.addUser} type='primary' icon={<PlusCircleOutlined />}>
+                <Button onClick={this.addUser} type="primary" icon={<PlusCircleOutlined />}>
                   {'Agregar usuario'}
                 </Button>
               </Col>

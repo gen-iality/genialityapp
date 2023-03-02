@@ -27,22 +27,22 @@ function GameList(props) {
     <Card style={{ borderRadius: '10px', marginTop: '6px' }} bodyStyle={bodyStyle}>
       <List
         loading={isLoading}
-        itemLayout='horizontal'
+        itemLayout="horizontal"
         dataSource={listOfGames}
         renderItem={(item) => (
           <Card
-            className='card-agenda-desktop agendaHover efect-scale'
+            className="card-agenda-desktop agendaHover efect-scale"
             style={{
               borderRadius: '10px',
               marginBottom: '8px',
               border: '1px solid',
               borderColor: '#0000001c',
             }}>
-            <UsersCard type='gameList' item={item} />
+            <UsersCard type="gameList" item={item} />
           </Card>
         )}
         locale={{
-          emptyText: <Result icon={<GoogleControllerOff />} title='No hay juegos disponibles para esta lección' />,
+          emptyText: <Result icon={<GoogleControllerOff />} title="No hay juegos disponibles para esta lección" />,
         }}
       />
     </Card>

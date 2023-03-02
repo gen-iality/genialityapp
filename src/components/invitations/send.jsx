@@ -210,7 +210,7 @@ class SendRsvp extends Component {
             saveName="Enviar"
           />
 
-          <Row justify='center' wrap gutter={8}>
+          <Row justify="center" wrap gutter={8}>
             {isLoading ? (
               <Loading />
             ) : (
@@ -232,14 +232,14 @@ class SendRsvp extends Component {
                   <ImageUploaderDragAndDrop
                     imageDataCallBack={(imageUrl) => this.changeImgHeader(imageUrl)}
                     imageUrl={this.state.rsvp?.image_header}
-                    width='1080'
-                    height='1080'
+                    width="1080"
+                    height="1080"
                   />
                 </Form.Item>
 
                 <Form.Item label={'Cabecera del correo'}>
                   <EviusReactQuill
-                    name='content_header'
+                    name="content_header"
                     data={this.state.rsvp.content_header}
                     handleChange={(e) => this.QuillComplement1(e)}
                   />
@@ -256,37 +256,37 @@ class SendRsvp extends Component {
                         {' '}
                         <CalendarOutlined /> Fecha inicio
                       </p>
-                      <p className='date'>{dayjs(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
+                      <p className="date">{dayjs(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
                     </Col>
                     <Col span={12}>
                       <p>
                         {' '}
                         <FieldTimeOutlined /> Hora
                       </p>
-                      <p className='date'>{dayjs(this.props.event.datetime_from).format('HH:mm')}</p>
+                      <p className="date">{dayjs(this.props.event.datetime_from).format('HH:mm')}</p>
                     </Col>
                     <Col span={12}>
                       <p>
                         {' '}
                         <CalendarOutlined /> Fecha fin
                       </p>
-                      <p className='date'>{dayjs(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
+                      <p className="date">{dayjs(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
                     </Col>
                     <Col span={12}>
                       <p>
                         {' '}
                         <FieldTimeOutlined /> Hora
                       </p>
-                      <p className='date'>{dayjs(this.props.event.datetime_to).format('HH:mm')}</p>
+                      <p className="date">{dayjs(this.props.event.datetime_to).format('HH:mm')}</p>
                     </Col>
                   </Row>
                 )}
-                <Row justify='center'>
+                <Row justify="center">
                   <Col>
                     <EnvironmentOutlined />
                     Ubicación del curso
                     <br />
-                    <span className='rsvp-location'>
+                    <span className="rsvp-location">
                       {this.props.event.location !== null && this.props.event.location.FormattedAddress}
                     </span>
                   </Col>
@@ -298,7 +298,7 @@ class SendRsvp extends Component {
 
                   <Row style={{ margin: 10 }}>
                     {!this.state.showimgDefault ? (
-                      <Button onClick={() => this.setState({ showimgDefault: true })} type='success'>
+                      <Button onClick={() => this.setState({ showimgDefault: true })} type="success">
                         Mostrar imagen por defecto
                       </Button>
                     ) : (
@@ -312,15 +312,15 @@ class SendRsvp extends Component {
                     <ImageUploaderDragAndDrop
                       imageDataCallBack={(imageUrl) => this.changeImg(imageUrl)}
                       imageUrl={this.state.rsvp?.image}
-                      width='1080'
-                      height='1080'
+                      width="1080"
+                      height="1080"
                     />
                   )}
                 </Form.Item>
 
                 <Form.Item label={'Cuerpo de la invitación (Por defecto será la descripción del curso)'}>
                   <EviusReactQuill
-                    name='message'
+                    name="message"
                     data={this.state.rsvp.message}
                     handleChange={(e) => this.QuillComplement2(e)}
                   />
@@ -336,13 +336,13 @@ class SendRsvp extends Component {
                   <ImageUploaderDragAndDrop
                     imageDataCallBack={(imageUrl) => this.changeImgFooter(imageUrl)}
                     imageUrl={this.state.rsvp?.image_footer}
-                    width='1080'
-                    height='1080'
+                    width="1080"
+                    height="1080"
                   />
                 </Form.Item>
 
                 <Card>
-                  <Row gutter={[8, 8]} wrap justify='center'>
+                  <Row gutter={[8, 8]} wrap justify="center">
                     <Col span={24}>
                       <Typography.Paragraph>
                         Seleccionados{' '}
@@ -363,16 +363,16 @@ class SendRsvp extends Component {
                     ) : (
                       this.state.selection?.map((item, key) => {
                         return (
-                          <p key={key} className='selection'>
+                          <p key={key} className="selection">
                             {item.email}
                           </p>
                         );
                       })
                     )}
                   </Row>
-                  <Row justify='center' gutter={8} wrap>
+                  <Row justify="center" gutter={8} wrap>
                     <Link to={{ pathname: `${this.props.matchUrl}` }}>
-                      <Button type='primary'>Editar seleccionados</Button>
+                      <Button type="primary">Editar seleccionados</Button>
                     </Link>
                   </Row>
                 </Card>

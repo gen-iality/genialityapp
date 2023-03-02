@@ -92,9 +92,9 @@ const WithCode = () => {
   return (
     <>
       {loading ? (
-        <ResultLink status='loading' verifyLink={verifyLink} data={email} />
+        <ResultLink status="loading" verifyLink={verifyLink} data={email} />
       ) : error ? (
-        <ResultLink status='error' data={email} event={event} />
+        <ResultLink status="error" data={email} event={event} />
       ) : (
         ''
       )}

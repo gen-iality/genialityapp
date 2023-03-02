@@ -89,7 +89,7 @@ function GcoreStreamingPlayer({ meeting_id, transmition, activity }) {
                 allowFullScreen
                 allowusermedia
                 src={eviusmeetUrl}
-                frameBorder='0'></iframe>
+                frameBorder="0"></iframe>
             </div>
           )}
         </>
@@ -109,7 +109,7 @@ function GcoreStreamingPlayer({ meeting_id, transmition, activity }) {
                 allowFullScreen
                 allowusermedia
                 src={eviusmeetUrl}
-                frameBorder='0'></iframe>
+                frameBorder="0"></iframe>
             </div>
           )}
         </>

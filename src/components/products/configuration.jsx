@@ -85,7 +85,7 @@ const Configuration = (props) => {
   return !loadingData ? (
     <>
       <Header title="$1" back save saveMethod={saveConfiguration} />
-      <Row justify='center' wrap gutter={12}>
+      <Row justify="center" wrap gutter={12}>
         <Col span={16}>
           <p>Habilitar puja</p>
           <Switch checked={checkSubasta} onChange={onChange} />

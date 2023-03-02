@@ -6,7 +6,7 @@ function LessonViewedCheck(props) {
   if (!isTaken) return null;
 
   return (
-    <Badge.Ribbon text='Viewed' color='green' placement='end' />
+    <Badge.Ribbon text="Viewed" color="green" placement="end" />
   );
 }
 
