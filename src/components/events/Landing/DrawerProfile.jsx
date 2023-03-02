@@ -89,7 +89,7 @@ const DrawerProfile = (props) => {
   return (
     <>
       {openModal && (
-        <Modal zIndex={1} closable footer={false} visible={true} onCancel={() => closeOrOpenModal()}>
+        <Modal zIndex={1} closable footer={false} visible onCancel={() => closeOrOpenModal()}>
           <div
             style={{
               padding: '0px',
