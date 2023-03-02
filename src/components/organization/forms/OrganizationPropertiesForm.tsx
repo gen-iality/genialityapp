@@ -139,7 +139,7 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
       {isSubmiting ? (
         <LoadingOutlined style={{ fontSize: '50px' }} />
       ) : form && (
-        <Card bordered={false} bodyStyle={textLeftStyle}>
+        <Card bodyStyle={textLeftStyle}>
           <DynamicForm
             noSubmitButton={noSubmitButton}
             form={form}

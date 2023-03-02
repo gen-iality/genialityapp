@@ -288,7 +288,6 @@ function Empresas({ event, match }) {
         locale={tableLocale}
         dataSource={companyList}
         columns={companyColumns}
-        pagination={false}
         rowKey='index'
         size='small'
         components={{

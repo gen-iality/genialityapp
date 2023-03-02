@@ -322,7 +322,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
           <Upload
             action='https://api.evius.co/api/files/upload/'
             onChange={showRequest}
-            multiple={false}
             listType='text'
             beforeUpload={beforeUpload}
           >

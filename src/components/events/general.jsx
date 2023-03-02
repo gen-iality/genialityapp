@@ -961,7 +961,6 @@ class General extends Component {
                               // disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
-                              allowClear={false}
                               value={dayjs(event.date_start)}
                               format={'DD/MM/YYYY'}
                               onChange={(value) => this.changeDate(value, 'date_start')}
@@ -971,11 +970,9 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Hora inicio'}>
                             <TimePicker
-                              showNow={false}
                               inputReadOnly={true}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
-                              allowClear={false}
                               value={dayjs(event.hour_start)}
                               use12Hours
                               format='h:mm a'
@@ -991,7 +988,6 @@ class General extends Component {
                               inputReadOnly={true}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
-                              allowClear={false}
                               value={dayjs(event.date_end)}
                               format={'DD/MM/YYYY'}
                               onChange={(value) => this.changeDate(value, 'date_end')}
@@ -1001,11 +997,9 @@ class General extends Component {
                         <Col span={12}>
                           <Form.Item label={'Hora fin'}>
                             <TimePicker
-                              showNow={false}
                               inputReadOnly={true}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
-                              allowClear={false}
                               value={dayjs(event.hour_end)}
                               use12Hours
                               format='h:mm a'
@@ -1026,7 +1020,6 @@ class General extends Component {
                   <Form.Item>
                     <SelectInput
                       name={'Organizado por:'}
-                      isMulti={false}
                       selectedOptions={selectedOrganizer}
                       selectOption={this.selectOrganizer}
                       options={organizers}

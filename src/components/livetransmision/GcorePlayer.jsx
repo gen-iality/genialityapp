@@ -69,13 +69,11 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
             {console.log('ESTE ES EL TIPO DE ACTIVIDAD', typeActivity)}
             <ReactPlayer
               style={{ aspectRatio: '16/9' }}
-              muted={false}
               playing={true}
               loop={true}
               width='100%'
               height={'100%'}
               url={platformurl}
-              controls={false}
             />
           </>
         ) : conected == 'Yes' ? (

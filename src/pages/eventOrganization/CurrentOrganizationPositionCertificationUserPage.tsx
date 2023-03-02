@@ -201,7 +201,6 @@ function CurrentOrganizationPositionCertificationUserPage(
         dataSource={allPositionEvents}
         size='small'
         rowKey='index'
-        pagination={false}
         loading={isLoading}
         scroll={{ x: 'auto' }}
         title={() => (

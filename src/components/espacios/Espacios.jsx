@@ -41,7 +41,6 @@ const Espacios = (props) => {
       columns={columns}
       key='_id'
       editPath={`${props.matchUrl}/espacio`}
-      pagination={false}
       actions
       search
       setColumnsData={setColumnsData}

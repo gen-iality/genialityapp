@@ -766,7 +766,6 @@ class ListEventUser extends Component {
                     currentUser={this.props.currentUser}
                     notificacion={this.props.notification}
                     eventUsers={users}
-                    showpendingsend={false}
                   />
                 )}
                 {this.props.cEventUser && this.props.cEventUser.value && (

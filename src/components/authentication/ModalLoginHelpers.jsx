@@ -138,7 +138,6 @@ const ModalLoginHelpers = (props) => {
       centered
       footer={null}
       zIndex={1005}
-      closable={false}
       visible={typeModal === 'mail' || typeModal === 'recover'}
     >
       <PageHeader

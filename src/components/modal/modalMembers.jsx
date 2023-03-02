@@ -112,7 +112,7 @@ function ModalMembers(props) {
   }
 
   return (
-    <Modal closable footer={false} visible={true} onCancel={() => props.closeOrOpenModalMembers()}>
+    <Modal closable visible={true} onCancel={() => props.closeOrOpenModalMembers()}>
       <div
         style={{
           paddingLeft: '0px',

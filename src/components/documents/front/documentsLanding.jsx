@@ -111,7 +111,6 @@ class DocumentsDetail extends Component {
                 <div className='site-card-border-less-wrapper'>
                   <Card
                     title=''
-                    bordered={false}
                     style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}
                   >
                     <Result
@@ -186,7 +185,6 @@ class DocumentsDetail extends Component {
                   <div className='site-card-border-less-wrapper'>
                     <Card
                       title=''
-                      bordered={false}
                       style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}
                     >
                       <Result

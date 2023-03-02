@@ -559,7 +559,6 @@ const FormEdit = (
               <Form.Item key="img" name="image" label="Imagen">
                 <Space direction='horizontal'>
                   <Upload
-                    multiple={false}
                     accept='image/png, image/jpeg'
                     name='logo'
                     listType='picture'
@@ -648,7 +647,6 @@ const FormEdit = (
                           {fields.map((field, index) => (
                             <Form.Item
                               label={<Text type='secondary'>Respuesta {index + 1}</Text>}
-                              required={false}
                               key={field.key}
                             >
                               <Radio value={index} style={{ width: '100%' }}>
@@ -689,7 +687,6 @@ const FormEdit = (
                           {fields.map((field, index) => (
                             <Form.Item
                               label={<Text type='secondary'>Respuesta {index + 1}</Text>}
-                              required={false}
                               key={field.key}
                             >
                               <Checkbox value={index} style={{ width: '100%' }}>
@@ -727,7 +724,6 @@ const FormEdit = (
                         {fields.map((field, index) => (
                           <Form.Item
                             label={<Text type='secondary'>Opción</Text>}
-                            required={false}
                             key={field.key}
                           >
                             <Space direction='horizontal' key={`space_${field.key}`}>

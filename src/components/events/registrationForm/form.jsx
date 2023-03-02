@@ -682,7 +682,6 @@ const FormRegister = ({
             <Upload
               accept='application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx'
               action='https://api.evius.co/api/files/upload/'
-              multiple={false}
               listType='text'
               beforeUpload={beforeUpload}
               defaultFileList={
@@ -831,7 +830,6 @@ const FormRegister = ({
                   onChange={(file) => {
                     setImageAvatar(file);
                   }}
-                  multiple={false}
                   listType='picture'
                   maxCount={1}
                   defaultFileList={
@@ -923,7 +921,7 @@ const FormRegister = ({
     <>
       <Col xs={24} sm={22} md={24} lg={24} xl={24} style={center}>
         {!submittedForm ? (
-          <Card bordered={false} bodyStyle={textLeft}>
+          <Card bodyStyle={textLeft}>
             <Form
               form={form}
               layout='vertical'

@@ -264,7 +264,6 @@ function OrgMembers(props) {
         dataSource={membersData}
         size='small'
         rowKey='index'
-        pagination={false}
         loading={isLoading || membersData.length === 0}
         scroll={{ x: 'auto' }}
         title={() => (

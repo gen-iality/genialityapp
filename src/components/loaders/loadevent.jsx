@@ -14,12 +14,11 @@ class LoadingEvent extends Component {
           return (
             <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
               <Card
-                bordered={false}
                 style={{ width: '100%' }}
                 cover={<img src={imageUtils.EventImage} alt='Evius.co' />}
                 bodyStyle={{ padding: '5px 0px 5px 0px' }}
               >
-                <Skeleton title={false} paragraph={{ rows: 3, width: [190, 230, 80] }} active />
+                <Skeleton paragraph={{ rows: 3, width: [190, 230, 80] }} active />
               </Card>
             </Col>
           );

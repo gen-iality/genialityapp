@@ -340,7 +340,6 @@ class Preview extends Component {
           icon={<ExclamationCircleOutlined />}
           footer={null}
           destroyOnClose={true}
-          closable={false}
           visible={this.state.showModal}
         >
           {this.content()}

@@ -132,7 +132,7 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
               </Button>
             </div>
           )}
-          <ModalOrgListCreate modalListOrgIsVisible={false} orgId={props.orgId} />
+          <ModalOrgListCreate orgId={props.orgId} />
         </Space>
 
         {state.selectOrganization?.template_properties && (
@@ -172,7 +172,6 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
               inputReadOnly
               style={{ width: '100%', marginTop: '20px' }}
               /* popupStyle={{ height: '50px !important', backgroundColor: 'blue' }} */
-              allowClear={false}
               value={dayjs(selectedDay) as unknown as any}
               format={'DD/MM/YYYY'}
               onChange={(value) => value && changeSelectDay(value.toDate())}
@@ -197,8 +196,6 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
                   </div>
                   <TimePicker
                     inputReadOnly
-                    showNow={false}
-                    allowClear={false}
                     use12Hours
                     value={dayjs(selectedHours.from) as unknown as any}
                     onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours, at: hours })}
@@ -211,8 +208,6 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
                   </div>
                   <TimePicker
                     inputReadOnly
-                    showNow={false}
-                    allowClear={false}
                     use12Hours
                     value={dayjs(selectedHours.at) as unknown as any}
                     onChange={(hours) => changeSelectHours({ ...selectedHours, at: hours })}

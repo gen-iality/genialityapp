@@ -42,7 +42,6 @@ const News = (props) => {
       columns={columns}
       key='_id'
       editPath={`${props.match.url}/new`}
-      pagination={false}
       actions
       search
       setColumnsData={setColumnsData}

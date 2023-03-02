@@ -451,7 +451,6 @@ class Styles extends Component {
                   <div key={key}>
                     {item.editIsVisible && (
                       <Modal
-                        closable={false}
                         footer={[
                           <Button key='ok' type='primary' onClick={() => this.handleClickSelectColor(key)}>
                             Aceptar

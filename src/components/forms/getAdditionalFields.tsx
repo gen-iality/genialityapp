@@ -345,7 +345,6 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               accept='application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx'
               action={`${ApiUrl}/api/files/upload/`}
               maxCount={1}
-              multiple={false}
               listType='text'
               beforeUpload={beforeUpload}
               onRemove={async (file: any) => {
@@ -484,7 +483,6 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                 onChange={(file) => {
                   // setImageAvatar(file);
                 }}
-                multiple={false}
                 listType='picture'
                 maxCount={1}
                 // @ts-ignore: Unreachable code error

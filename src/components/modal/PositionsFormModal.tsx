@@ -187,7 +187,6 @@ function PositionsFormModal(props: PositionsFormModalProps) {
   return (
     <Modal
       closable
-      footer={false}
       visible={handler.isOpened}
       onCancel={() => handler.close()}
     >

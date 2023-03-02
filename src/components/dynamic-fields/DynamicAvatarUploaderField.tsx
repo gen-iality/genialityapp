@@ -79,7 +79,6 @@ const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploader
               }
             }
           }}
-          multiple={false}
           listType="picture"
           maxCount={1}
           onRemove={(file) => {

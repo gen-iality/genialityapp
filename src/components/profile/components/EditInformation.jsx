@@ -109,7 +109,6 @@ const EditInformation = ({ cUser }) => {
                   }
                 }}
                 customRequest={uploadImagedummyRequest}
-                multiple={false}
                 listType='picture'
                 maxCount={1}
                 fileList={imageAvatar}

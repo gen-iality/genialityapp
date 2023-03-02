@@ -60,7 +60,6 @@ const trivia = (props) => {
           columns={columns}
           key="_id"
           editPath={`${props.matchUrl}/encuesta`}
-          pagination={false}
           actions
           search
           setColumnsData={setColumnsData}

@@ -189,7 +189,6 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
         dataSource={dataSource}
         size='small'
         rowKey='index'
-        pagination={false}
         loading={isLoading}
         scroll={{ x: 'auto' }}
         title={() => (

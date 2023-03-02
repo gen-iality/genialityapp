@@ -105,7 +105,6 @@ const Agenda = (props) => {
       columns={columns}
       // key='_id'
       editPath={`${props.matchUrl}/activity`}
-      pagination={false}
       actions
       search
       setColumnsData={setColumnsData}

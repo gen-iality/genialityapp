@@ -355,7 +355,6 @@ class Event extends Component {
                 url={match.url}
                 componentKey='checkin'
                 type='activity'
-                shownAll={false}
                 componentKeyToMergingOrAdaptIt='activity-checkin'
               />
 

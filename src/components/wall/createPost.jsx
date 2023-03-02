@@ -247,8 +247,6 @@ class CreatePost extends Component {
                   <Upload
                     type='file'
                     accept='image/*'
-                    multiple={false}
-                    showUploadList={false}
                     onChange={(e) => this.previewImage(e)}
                   >
                     <Button type='primary' icon={<CloudUploadOutlined />}>

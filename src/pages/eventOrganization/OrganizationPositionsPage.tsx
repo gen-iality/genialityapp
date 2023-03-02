@@ -82,7 +82,6 @@ function OrganizationPositionsPage(props: Props) {
         dataSource={positionsData}
         size="small"
         rowKey="index"
-        pagination={false}
         loading={isLoading}
         scroll={{ x: 'auto' }}
         title={() => (

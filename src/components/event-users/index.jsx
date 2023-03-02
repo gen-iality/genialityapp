@@ -1183,7 +1183,6 @@ class ListEventUser extends Component {
             </>
           }
           visible={this.state.isModalVisible}
-          closable={false}
           footer={[
             <Button style={{ float: 'right' }} type='primary' size='large' onClick={this.hideModal} key='close'>
               Cerrar

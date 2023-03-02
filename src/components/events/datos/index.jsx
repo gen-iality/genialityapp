@@ -680,7 +680,6 @@ class Datos extends Component {
                 <Table
                   columns={columns}
                   dataSource={fields}
-                  pagination={false}
                   rowKey='index'
                   size='small'
                   components={{
@@ -729,7 +728,6 @@ class Datos extends Component {
                   <Modal
                     visible={modal}
                     title={edit ? 'Editar dato' : 'Agregar dato'}
-                    footer={false}
                     onCancel={this.closeModal2}
                     okText="Guardar"
                   >
@@ -778,7 +776,6 @@ class Datos extends Component {
                   <Table
                     columns={columns}
                     dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
-                    pagination={false}
                     rowKey='index'
                     size='small'
                     components={{
@@ -811,7 +808,6 @@ class Datos extends Component {
                     <Modal
                       visible={modal}
                       title={edit ? 'Editar dato' : 'Agregar dato'}
-                      footer={false}
                       onCancel={this.closeModal2}
                       cancelText="Cancelar"
                     >
@@ -844,7 +840,6 @@ class Datos extends Component {
                       },
                     });
                   }}
-                  pagination={false}
                   actions
                 />
               )}

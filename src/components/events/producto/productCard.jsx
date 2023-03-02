@@ -13,7 +13,6 @@ const ProductCard = ({ galery, eventId, history }) => {
           </div>
         ),
       ]} */
-      bordered={false}
       bodyStyle={{ padding: '10px', minHeight: '120px', width: '100%' }}
       key={'Cardgallery' + galery.id}
       style={{ width: '100%', cursor: 'pointer' }}

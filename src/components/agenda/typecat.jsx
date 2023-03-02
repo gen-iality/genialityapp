@@ -48,7 +48,6 @@ const AgendaTypeCat = (props) => {
       columns={columns}
       key='_id'
       editPath={`${props.matchUrl}/edit${subject}`}
-      pagination={false}
       actions
     />
   );

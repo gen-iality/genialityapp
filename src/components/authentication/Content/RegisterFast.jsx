@@ -150,7 +150,6 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
                 HandleHookForm(null, 'picture', null);
               }}
               customRequest={uploadImagedummyRequest}
-              multiple={false}
               listType='picture'
               maxCount={1}
             >

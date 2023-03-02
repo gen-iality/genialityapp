@@ -71,7 +71,6 @@ const NoticiasDetails = (props) => {
                 />
                 <br />
                 <Card
-                  bordered={false}
                   cover={
                     noticia &&
                     (noticia.linkYoutube === null || noticia.linkYoutube === '' || noticia.linkYoutube === undefined ? (
