@@ -475,7 +475,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
               <Row wrap gutter={[8, 8]}>
                 <Col span={23}>
                   <SelectAntd value={formdata.space_id} onChange={(value) => handleChangeFormData('space_id', value)}>
-                    <Option value=''>Seleccione un lugar/salón ...</Option>
+                    <Option value="">Seleccione un lugar/salón ...</Option>
                     {allSpaces.map((space) => (
                       <Option key={space.value} value={space.value}>
                         {space.label}

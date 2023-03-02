@@ -77,7 +77,7 @@ function Transmitir(props) {
                   <img
                     style={{ width: '60%', margin: 'auto' }}
                     src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceEvius.png?alt=media&token=caecef6c-e177-47aa-bcd5-347c754fe409'
-                    alt=''
+                    alt=""
                   />
                 </div>
               </div>

@@ -344,7 +344,7 @@ function CrearEditarEmpresa(props) {
                   options={standTypesOptions}
                 />
 
-                <FileField name='brochure' label='Brochure' placeholder='' />
+                <FileField name='brochure' label='Brochure' placeholder="" />
 
                 <FieldArray
                   name='services'

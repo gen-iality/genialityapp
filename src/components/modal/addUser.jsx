@@ -129,7 +129,7 @@ class AddUser extends Component {
             onChange={(e) => {
               this.onChange(e, type, name);
             }}>
-            <Option value={''}>Seleccione...</Option>
+            <Option value="">Seleccione...</Option>
             {input}
           </Select>
         );
@@ -205,8 +205,8 @@ class AddUser extends Component {
             {Object.keys(this.state.user).length > 0 && this.renderForm()}
             {tickets.length > 0 && (
               <Form.Item label="Tiquete">
-                <Select onChange={(e) => this.onChange(e, 'select', 'ticketid')} name="ticketid" defaultValue={''}>
-                  <Option value={''}>..Seleccione</Option>
+                <Select onChange={(e) => this.onChange(e, 'select', 'ticketid')} name="ticketid" defaultValue="">
+                  <Option value="">..Seleccione</Option>
                   {tickets.map((item, key) => {
                     return (
                       <Option key={key} value={item._id}>

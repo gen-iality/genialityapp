@@ -94,7 +94,7 @@ export const ButtonPayment = ({ eventId, user }) => {
               style={{ width: '100%' }}
               type='image'
               border='0'
-              alt=''
+              alt=""
               src='http://www.payulatam.com/img-secure-2015/boton_pagar_mediano.png'
               onClick='this.form.urlOrigen.value = window.location.href;'
             />{' '}
@@ -110,7 +110,7 @@ export const ButtonPayment = ({ eventId, user }) => {
             <input name='lng' type='hidden' value='es' />
             <input name='responseUrl' type='hidden' value={responseUrl} />
             <input name='confirmationUrl' type='hidden' value='https://devapi.evius.co/test.php' />
-            <input name='sourceUrl' id='urlOrigen' value='' type='hidden' />
+            <input name='sourceUrl' id='urlOrigen' value="" type='hidden' />
             <input name='buttonType' value='SIMPLE' type='hidden' />
             <input name='signature' value={signature} type='hidden' />
             <input name='buyerEmail' type='hidden' value={user?.user.email} />

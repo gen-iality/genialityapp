@@ -278,7 +278,7 @@ const CardPreview = (props: any) => {
               }}
               style={{ width: '100%' }}
             >
-              <Select.Option value=''>Lección creada</Select.Option>
+              <Select.Option value="">Lección creada</Select.Option>
               <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
               <Select.Option value='open_meeting_room'>En vivo</Select.Option>
               <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>

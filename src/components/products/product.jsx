@@ -235,7 +235,7 @@ class Product extends Component {
               },
             }}>
             <Column
-              title=''
+              title=""
               dataIndex='move'
               width='50px'
               align='center'

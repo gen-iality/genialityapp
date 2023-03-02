@@ -123,7 +123,7 @@ class Exhibitor extends Component {
     return (
       <div className={`main-stand main-stand-${standType}`}>
         <button type='button' className='main-stand-goback' onClick={goBack}>
-          <img src='/exhibitors/icons/baseline_arrow_back_white_18dp.png' alt='' />
+          <img src='/exhibitors/icons/baseline_arrow_back_white_18dp.png' alt="" />
           Regresar
         </button>
         {showStandImage && (
@@ -163,7 +163,7 @@ class Exhibitor extends Component {
           {(!!contactInfoImage || !!contactInfoDescription) && (
             <div className='main-stand-navigation-item' onClick={this.handleShowInfo}>
               <div className='main-stand-navigation-item-icon'>
-                <img src='/exhibitors/icons/ic_domain_24px.png' alt='' />
+                <img src='/exhibitors/icons/ic_domain_24px.png' alt="" />
               </div>
               <div className='main-stand-navigation-item-label'>CONTACTO</div>
             </div>
@@ -172,7 +172,7 @@ class Exhibitor extends Component {
           {standType === 'Oro' && isNonEmptyArray(gallery) && (
             <div className='main-stand-navigation-item' onClick={this.handleShowGallery}>
               <div className='main-stand-navigation-item-icon'>
-                <img src='/exhibitors/icons/ic_perm_media_24px.png' alt='' />
+                <img src='/exhibitors/icons/ic_perm_media_24px.png' alt="" />
               </div>
               <div className='main-stand-navigation-item-label'>GALERÍA</div>
             </div>
@@ -181,7 +181,7 @@ class Exhibitor extends Component {
           {isNonEmptyArray(services) && (
             <div className='main-stand-navigation-item' onClick={this.handleShowServices}>
               <div className='main-stand-navigation-item-icon'>
-                <img src='/exhibitors/icons/ic_card_travel_24px.png' alt='' />
+                <img src='/exhibitors/icons/ic_card_travel_24px.png' alt="" />
               </div>
               <div className='main-stand-navigation-item-label'>SERVICIOS</div>
             </div>
@@ -190,7 +190,7 @@ class Exhibitor extends Component {
           {!!brochure && (
             <a href={brochure} target='_blank' rel='noreferrer' className='main-stand-navigation-item'>
               <div className='main-stand-navigation-item-icon'>
-                <img src='/exhibitors/icons/ic_library_books_24px.png' alt='' />
+                <img src='/exhibitors/icons/ic_library_books_24px.png' alt="" />
               </div>
               <div className='main-stand-navigation-item-label'>CATÁLOGO</div>
             </a>
@@ -199,7 +199,7 @@ class Exhibitor extends Component {
           {standType === 'Oro' && !!webpage && (
             <a href={webpage} target='_blank' rel='noreferrer' className='main-stand-navigation-item'>
               <div className='main-stand-navigation-item-icon'>
-                <img src='/exhibitors/icons/ic_public_24px.png' alt='' />
+                <img src='/exhibitors/icons/ic_public_24px.png' alt="" />
               </div>
               <div className='main-stand-navigation-item-label'>SITIO WEB</div>
             </a>
@@ -211,7 +211,7 @@ class Exhibitor extends Component {
             href={'https://api.whatsapp.com/send?phone=' + advisorNumber}
             target='_blank'
             rel='noreferrer'>
-            <img className='chat-image' src={advisorImage ? advisorImage : `/exhibitors/person.png`} alt='' />
+            <img className='chat-image' src={advisorImage ? advisorImage : `/exhibitors/person.png`} alt="" />
             <div className='chat-message'>
               Hola soy {advisorName}, <br />
               Te puedo ayudar en algo?
@@ -231,14 +231,14 @@ class Exhibitor extends Component {
           <div className={`main-stand-gallery ${this.state.showGallery ? 'active' : ''}`}>
             <div className='main-stand-gallery-overlay' />
             <div className='main-stand-gallery-close-window' onClick={this.handleHideGallery}>
-              <img src='/exhibitors/icons/ic_close_24px.png' alt='' />
+              <img src='/exhibitors/icons/ic_close_24px.png' alt="" />
             </div>
             <div className='main-stand-gallery-container'>
               <Swiper spaceBetween={0} slidesPerView={1} navigation pagination={{ clickable: true }}>
                 {gallery.map((slide, index) => (
                   <SwiperSlide key={index}>
                     <div className='main-stand-gallery-slide'>
-                      <img className='main-stand-gallery-slide-image' src={slide.image} alt='' />
+                      <img className='main-stand-gallery-slide-image' src={slide.image} alt="" />
                     </div>
                   </SwiperSlide>
                 ))}
@@ -254,7 +254,7 @@ class Exhibitor extends Component {
               <div className='main-stand-modal-header'>
                 <div className='main-stand-modal-header-title'>Servicios</div>
                 <div className='main-stand-modal-close-window' onClick={this.handleHideServices}>
-                  <img src='/exhibitors/icons/ic_close_24px.png' alt='' />
+                  <img src='/exhibitors/icons/ic_close_24px.png' alt="" />
                 </div>
               </div>
               <div className='main-stand-modal-content'>
@@ -270,7 +270,7 @@ class Exhibitor extends Component {
                     <div className='main-stand-services-item' key={`service-item-${index}`}>
                       {!!service && !!service.image && (
                         <div className={infoClassName}>
-                          <img src={service.image} alt='' />
+                          <img src={service.image} alt="" />
                         </div>
                       )}
                       {!!service && !!service.description && (
@@ -292,14 +292,14 @@ class Exhibitor extends Component {
             <div className='main-stand-modal-header'>
               <div className='main-stand-modal-header-title'>Información de contacto</div>
               <div className='main-stand-modal-close-window' onClick={this.handleHideInfo}>
-                <img src='/exhibitors/icons/ic_close_24px.png' alt='' />
+                <img src='/exhibitors/icons/ic_close_24px.png' alt="" />
               </div>
             </div>
             <div className='main-stand-modal-content'>
               <div className='main-stand-contact-info'>
                 {!!contactInfoImage && (
                   <div className='main-stand-contact-info-image'>
-                    <img src={contactInfoImage} alt='' />
+                    <img src={contactInfoImage} alt="" />
                   </div>
                 )}
                 <div className='main-stand-contact-info-info'>
@@ -317,7 +317,7 @@ class Exhibitor extends Component {
         <div className={`main-stand-modal main-stand-modal-video ${this.state.showVideo ? 'active' : ''}`}>
           <div className='main-stand-modal-overlay' onClick={this.handleHideVideo} />
           <div className='main-stand-modal-close-window' onClick={this.handleHideVideo}>
-            <img src='/exhibitors/icons/ic_close_24px.png' alt='' />
+            <img src='/exhibitors/icons/ic_close_24px.png' alt="" />
           </div>
           <div className='main-stand-modal-video-wrap'>
             <ReactPlayer url={videoUrl} />

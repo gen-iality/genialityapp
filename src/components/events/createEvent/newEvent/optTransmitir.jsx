@@ -37,7 +37,7 @@ function OptionTransmitir() {
               <div className='container-img'>
                 <img
                   src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceRtmp.png?alt=media&token=58dca6ce-6671-41ef-bda4-40ae4546e0e3'
-                  alt=''
+                  alt=""
                 />
               </div>
               <span className='title-opt'>Transmision por RTMP</span>
@@ -52,7 +52,7 @@ function OptionTransmitir() {
               <div className='container-img'>
                 <img
                   src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceLink.png?alt=media&token=dd26eb19-8440-430b-a7bf-bf542883a5c9'
-                  alt=''
+                  alt=""
                 />
               </div>
               <span className='title-opt'>Transmision por Link</span>
@@ -68,7 +68,7 @@ function OptionTransmitir() {
       <Modal width={600} className='modal-opt' visible={isModalLink} onOk={handleOklink} onCancel={handleCancellink}>
         <img
           src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceLink.png?alt=media&token=dd26eb19-8440-430b-a7bf-bf542883a5c9'
-          alt=''
+          alt=""
         />
         <span className='title'>Transmision por link</span>
         <Form name='basic'>
@@ -81,7 +81,7 @@ function OptionTransmitir() {
       <Modal width={600} className='modal-opt' visible={isModalRtmp} onOk={handleOkRtmp} onCancel={handleCancelRmtmp}>
         <img
           src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceRtmp.png?alt=media&token=58dca6ce-6671-41ef-bda4-40ae4546e0e3'
-          alt=''
+          alt=""
         />
         <span className='title'>Transmision por RTMP</span>
         <Form name='basic'>

@@ -386,7 +386,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
         input = (
           <Form.Item initialValue={value} name={name} noStyle>
             <Select style={{ width: '100%' }}>
-              <Option value={''}>Seleccione...</Option>
+              <Option value="">Seleccione...</Option>
               {input}
             </Select>
           </Form.Item>

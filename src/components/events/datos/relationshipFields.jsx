@@ -175,8 +175,8 @@ class RelationshipFields extends Component {
           <div>
             <label>El campo: </label>
             <div className='select'>
-              <select defaultValue='' name='field' onChange={(e) => this.handleChange(e)}>
-                <option value=''>Seleccione...</option>
+              <select defaultValue="" name='field' onChange={(e) => this.handleChange(e)}>
+                <option value="">Seleccione...</option>
                 {fields.map((field, key) => {
                   return (
                     <option key={key} value={field.name}>
@@ -205,8 +205,8 @@ class RelationshipFields extends Component {
                 {item.type === 'list' && (
                   <>
                     <div className='select'>
-                      <select defaultValue='' name='fieldToValidate' onChange={(e) => this.handleChange(e)}>
-                        <option value=''>Seleccione...</option>
+                      <select defaultValue="" name='fieldToValidate' onChange={(e) => this.handleChange(e)}>
+                        <option value="">Seleccione...</option>
                         <option key={key} value={item.name}>
                           {item.label}
                         </option>
@@ -215,8 +215,8 @@ class RelationshipFields extends Component {
                     <Divider type='vertical' />
                     <label>Tenga el valor de: </label>
                     <div className='select'>
-                      <select defaultValue='' name='value' onChange={(e) => this.handleChange(e)}>
-                        <option value=''>Seleccione...</option>
+                      <select defaultValue="" name='value' onChange={(e) => this.handleChange(e)}>
+                        <option value="">Seleccione...</option>
                         {item.options.map((item, key) => (
                           <option key={key} value={item.value}>
                             {item.label}

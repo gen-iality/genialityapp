@@ -724,7 +724,7 @@ const FormRegister = ({
             : [];
           input = (
             <Select style={{ width: '100%' }} name={name} defaultValue={value}>
-              <Option value={''}>Seleccione...</Option>
+              <Option value="">Seleccione...</Option>
               {input}
             </Select>
           );

@@ -100,10 +100,10 @@ class Lobby extends Component {
 
         <div className='the-lobby-header'>
           <div className='the-lobby-header-col-left'>
-            <img src={lobby_data.info.logo} alt='' />
+            <img src={lobby_data.info.logo} alt="" />
           </div>
           <div className='the-lobby-header-col-center'>
-            <img src={this.state.showIntro ? lobby_data.info.logoFeriaInner : lobby_data.info.logoFeria} alt='' />
+            <img src={this.state.showIntro ? lobby_data.info.logoFeriaInner : lobby_data.info.logoFeria} alt="" />
           </div>
           <div className='the-lobby-header-col-right'>
             <div className='the-lobby-header-general-info'>
@@ -111,7 +111,7 @@ class Lobby extends Component {
                 <div className='the-lobby-header-general-info-group'>
                   <div className='the-lobby-header-general-info-group-item'>
                     <div className='the-lobby-header-general-info-group-item-icon'>
-                      <img src='/lobby/ICONO_RELOJ.png' alt='' />
+                      <img src='/lobby/ICONO_RELOJ.png' alt="" />
                     </div>
                     <div>
                       <div className='the-lobby-header-general-info-group-item-label'>DESDE</div>
@@ -120,7 +120,7 @@ class Lobby extends Component {
                   </div>
                   <div className='the-lobby-header-general-info-group-item'>
                     <div className='the-lobby-header-general-info-group-item-icon'>
-                      <img src='/lobby/ICONO_LUGAR.png' alt='' />
+                      <img src='/lobby/ICONO_LUGAR.png' alt="" />
                     </div>
                     <div>
                       <div className='the-lobby-header-general-info-group-item-label'>{lobby_data.info.city}</div>
@@ -140,10 +140,10 @@ class Lobby extends Component {
         <div className='the-lobby-video'>
           <div className='the-lobby-video-wrap-holder'>
             <div className='the-lobby-video-holder'>
-              <img src='/lobby/TIRA_PANTALLA.png' alt='' />
+              <img src='/lobby/TIRA_PANTALLA.png' alt="" />
             </div>
             <div className='the-lobby-video-holder'>
-              <img src='/lobby/TIRA_PANTALLA.png' alt='' />
+              <img src='/lobby/TIRA_PANTALLA.png' alt="" />
             </div>
           </div>
           <div className='the-lobby-video-wrap'>

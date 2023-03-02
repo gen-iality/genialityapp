@@ -21,7 +21,7 @@ const ModalPreviewVideo = () => {
           <Comment
             author={<Typography.Text style={{ fontSize: '16px' }}>{videoObject?.name as string}</Typography.Text>}
             datetime={videoObject && dayjs(videoObject?.created_at).format('MMMM Do YYYY, h:mm:ss a')}
-            content={''}
+            content=""
           />
         </Col>
       </Row>

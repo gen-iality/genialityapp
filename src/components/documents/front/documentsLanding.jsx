@@ -110,7 +110,7 @@ class DocumentsDetail extends Component {
               {(!folders || !folders.length) && (
                 <div className='site-card-border-less-wrapper'>
                   <Card
-                    title=''
+                    title=""
                     style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}
                   >
                     <Result
@@ -184,7 +184,7 @@ class DocumentsDetail extends Component {
                 this.props.cEventUser?.value?.properties?.documents_user == undefined && (
                   <div className='site-card-border-less-wrapper'>
                     <Card
-                      title=''
+                      title=""
                       style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}
                     >
                       <Result

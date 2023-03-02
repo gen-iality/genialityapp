@@ -380,7 +380,7 @@ class ListEventUser extends Component {
                     name='searchInput'>
                     <SearchComponent
                       id='searchInput'
-                      placeholder={''}
+                      placeholder=""
                       data={usersFiltered}
                       kind="user"
                       event={this.props.cEvent.value._id}

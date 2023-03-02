@@ -311,7 +311,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         });
         input = (
           <Select defaultValue={value} style={{ width: '100%' }} name={name}>
-            <Option value={''}>Seleccione...</Option>
+            <Option value="">Seleccione...</Option>
             {input}
           </Select>
         );

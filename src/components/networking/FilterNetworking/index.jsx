@@ -18,8 +18,8 @@ export default function FilterNetWorking({ properties, filterProperty, handleSel
       size="middle"
       onChange={handleSelect}
       placeholder={`Seleccione ${filterProperty}`}
-      defaultValue=''>
-      <option key={0} value=''>
+      defaultValue="">
+      <option key={0} value="">
         Ver todo
       </option>
       {options.map((option, index) => {

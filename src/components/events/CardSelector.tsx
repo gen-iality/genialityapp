@@ -22,7 +22,7 @@ export const CardSelector = (props: CardSelectorProps) => {
   return (
     <Row justify='center' wrap gutter={[8, 8]}>
       <Col span={16}>
-        <Form.Item label={''}>
+        <Form.Item label="">
           <Row gutter={[16, 16]} wrap>
             {props.options.map((option) => (
               <Col key={option.id} xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>

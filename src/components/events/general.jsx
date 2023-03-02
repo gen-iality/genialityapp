@@ -899,7 +899,7 @@ class General extends Component {
                       name="type_event"
                       onChange={(e) => this.handleChange(e, 'type_event')}
                     >
-                      <Option value=''>Seleccionar...</Option>
+                      <Option value="">Seleccionar...</Option>
                       <Option value='physicalEvent'>Afianzamiento de capacidades</Option> {/* TODO * /}
                       <Option value='onlineEvent'>Actualización </Option> {/* TODO * / }
                       <Option value='hybridEvent'>Curso híbrido</Option>

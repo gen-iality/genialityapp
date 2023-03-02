@@ -140,7 +140,7 @@ class Company extends Component {
               goBack();
             }
           }}>
-          <img src='/exhibitors/icons/baseline_arrow_back_white_18dp.png' alt='' />
+          <img src='/exhibitors/icons/baseline_arrow_back_white_18dp.png' alt="" />
           Regresar
         </button>
         <div className='iso-exhibitor-list' ref={this.standsListRef} onScroll={this.onScrollStandsList}>
@@ -155,7 +155,7 @@ class Company extends Component {
                     onClick={() => this.showListItem(companyIndex)}
                   >
                     <div className='iso-exhibitor-list-item-image'>
-                      <img src={company.list_image} alt='' />
+                      <img src={company.list_image} alt="" />
                     </div>
                     <div className='iso-exhibitor-list-item-description'>
                       <span></span> {company.name}
