@@ -143,7 +143,7 @@ function Certificate(props: CertificateProps) {
           {isPassed === undefined && (
             <Spin>Cargando...</Spin>
           )}
-          {isPassed === false && (
+          {!isPassed && (
             <Alert message='Certificados NO disponibles' type='error' />
           )}
           {(isPassed) && (

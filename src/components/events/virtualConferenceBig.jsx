@@ -184,7 +184,7 @@ const VirtualConference = () => {
                           <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
                             {item.habilitar_ingreso == 'open_meeting_room' ? (
                               <>
-                                {screens.xs === false && (
+                                {screens.!xs && (
                                   <CaretRightOutlined style={{ fontSize: '50px', color: '#FF4E50' }} />
                                 )}
                                 <span style={{ textAlign: 'center', fontSize: '15px' }}>

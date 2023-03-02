@@ -652,7 +652,7 @@ class General extends Component {
   async specificDates(checked) {
     this.setState({ specificDates: checked });
 
-    if (checked === false) {
+    if (!checked) {
       const properties = {
         dates: {},
       };
@@ -948,7 +948,7 @@ class General extends Component {
                     </Form.Item>
                   )}
 
-                  {specificDates === false ? (
+                  {!specificDates ? (
                     <div>
                       <Row gutter={[8, 8]}>
                         <Col span={12}>

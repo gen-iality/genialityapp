@@ -106,7 +106,6 @@ const Table = (props) => {
                       icon={extraPathIcon ? extraPathIcon : <SettingOutlined />}
                       type={extraPathType ? extraPathType : 'primary'}
                       size='small'
-                      /* !eventIsActive === false && window.location.toString().includes('eventadmin')} */
                     />
                   </Link>
                 </Tooltip>

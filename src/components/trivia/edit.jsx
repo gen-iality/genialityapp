@@ -813,7 +813,7 @@ class TriviaEdit extends Component {
                     type='primary'
                     size='small'
                     onClick={() => this.editQuestion(record.id)}
-                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                    disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
@@ -826,7 +826,7 @@ class TriviaEdit extends Component {
                     icon={<DeleteOutlined />}
                     type='danger'
                     size='small'
-                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                    disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
@@ -1004,7 +1004,7 @@ class TriviaEdit extends Component {
                         />
                       </Form.Item>
 
-                      {(isGlobal === 'false' || isGlobal === false) && (
+                      {(isGlobal === 'false' || !isGlobal) && (
                         <>
                           <Form.Item label={`Relacionar esta ${this.state.title.toLowerCase()} a una lección`}>
                             <Select
