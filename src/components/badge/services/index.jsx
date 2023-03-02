@@ -6,7 +6,7 @@ export const getInitialValues = async (event, setValues, setQrExist) => {
     if (resp._id) {
       const badgesFilter = resp.BadgeFields.filter((i) => i.qr || (!i.qr && i.id_properties));
       setValues(badgesFilter);
-      const qr = badgesFilter.find((bagde) => bagde.qr === true);
+      const qr = badgesFilter.find((bagde) => bagde.qr);
       if (qr) setQrExist(true);
     }
   }

@@ -14,7 +14,7 @@ function GameList(props) {
 
   function getGamesData() {
     const games = gamesData ? gamesData : [];
-    const gamesDataFiltered = games.filter((games) => games.showGame === true);
+    const gamesDataFiltered = games.filter((games) => games.showGame);
     setListOfGames(gamesDataFiltered);
     setIsLoading(false);
   }

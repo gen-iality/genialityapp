@@ -30,9 +30,9 @@ const MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setAc
         <>
           <Button
             size={
-              screens.xxl === true || screens.xl === true || screens.lg === true
+              screens.xxl || screens.xl || screens.lg
                 ? 'large'
-                : (screens.xs === true || screens.sm === true) && 'small'
+                : (screens.xs || screens.sm) && 'small'
             }
             type='primary'
             danger
@@ -135,7 +135,7 @@ const VirtualConference = () => {
               return (
                 item?.habilitar_ingreso &&
                 (item?.habilitar_ingreso == 'open_meeting_room' || item?.habilitar_ingreso == 'closed_meeting_room') &&
-                (item?.isPublished === true || item?.isPublished === 'true')
+                (item?.isPublished || item?.isPublished === 'true')
               );
             })
 
@@ -143,7 +143,7 @@ const VirtualConference = () => {
               <>
                 <Badge.Ribbon
                   className='animate__animated animate__bounceIn animate__delay-2s'
-                  placement={screens.xs === true ? 'start' : 'end'}
+                  placement={screens.xs ? 'start' : 'end'}
                   style={{ height: 'auto' }}
                   color={item.habilitar_ingreso == 'open_meeting_room' ? '#FF4E50' : 'transparent'}
                   text={
@@ -170,7 +170,7 @@ const VirtualConference = () => {
                       maxHeight: '300px',
                       marginTop: '8px',
                       marginBottom: '8px',
-                      width: `${screens.xs === true ? '90vw' : '58vw'}`,
+                      width: `${screens.xs ? '90vw' : '58vw'}`,
                       borderRadius: '10px',
                       borderLeft: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                       borderRight: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
@@ -213,7 +213,7 @@ const VirtualConference = () => {
                             style={{ alignContent: 'center', display: 'grid', height: '100%', alignItems: 'center' }}
                           >
                             <Title
-                              level={screens.xs === true ? 5 : 4}
+                              level={screens.xs ? 5 : 4}
                               ellipsis={{
                                 rows: 2, // Determina la cantidad de filas que se muestran antes de cortar el texto.
                                 expandable: true,
@@ -228,7 +228,7 @@ const VirtualConference = () => {
                               {item.name}
                             </Title>
 
-                            <h2 style={{ color: '#7c909a', fontSize: `${screens.xs === true ? '12px' : '14px'}` }}>
+                            <h2 style={{ color: '#7c909a', fontSize: `${screens.xs ? '12px' : '14px'}` }}>
                               {Moment(item.datetime_start).format('LL')}
                               <span>&nbsp;&nbsp;&nbsp;</span>
                               {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')

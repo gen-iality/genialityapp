@@ -489,7 +489,7 @@ class General extends Component {
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
       picture: image,
       video: event.video || null,
-      video_position: event.video_position === 'true' || event.video_position === true ? 'true' : 'false',
+      video_position: event.video_position === 'true' || event.video_position ? 'true' : 'false',
       venue: event.venue,
       analytics: event.analytics,
       address: event.address,
@@ -1046,7 +1046,7 @@ class General extends Component {
                   <Form.Item label={'Posición del video'}>
                     <Switch
                       name="video_position"
-                      checked={event.video_position === true || event.video_position === 'true'}
+                      checked={event.video_position || event.video_position === 'true'}
                       checkedChildren='Arriba'
                       unCheckedChildren='Abajo'
                       onChange={(checked) =>
@@ -1199,7 +1199,7 @@ class General extends Component {
                         this.setState({
                           event: {
                             ...this.state.event,
-                            visibility: checked === true ? 'ANONYMOUS' : 'PUBLIC',
+                            visibility: checked ? 'ANONYMOUS' : 'PUBLIC',
                             allow_register: true,
                           },
                         });

@@ -108,7 +108,7 @@ const Home = () => {
                   )}
                 </Row>
               )}
-              {hasMore === true && useResponse(typeEvent)?.length > 10 ? (
+              {hasMore && useResponse(typeEvent)?.length > 10 ? (
                 <Button size='large' block loading={isLoading} onClick={() => SeeMoreEvents()}>
                   {!isLoading ? 'Ver más'.toUpperCase() : 'Cargando...'.toUpperCase()}
                 </Button>

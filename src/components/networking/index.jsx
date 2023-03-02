@@ -109,7 +109,7 @@ class ListEventUser extends Component {
 
     if (eventUserList && eventUserList.length > 0) {
       let destacados = [];
-      destacados = eventUserList.filter((asistente) => asistente.destacado && asistente.destacado == true);
+      destacados = eventUserList.filter((asistente) => asistente.destacado && asistente.destacado);
       if (destacados && destacados.length >= 0) {
         eventUserList = [...destacados, ...eventUserList];
       }
@@ -539,7 +539,7 @@ class ListEventUser extends Component {
                         <Card
                           hoverable={8}
                           headStyle={
-                            users.destacado && users.destacado === true
+                            users.destacado && users.destacado
                               ? { backgroundColor: '#6ddab5' }
                               : {
                                   backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,

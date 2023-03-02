@@ -462,7 +462,7 @@ const FormEdit = (
             validateMessages={validateMessages}
             initialValues={defaultValues} // initial values
           >
-            {allowGradableSurvey === true ? (
+            {allowGradableSurvey ? (
               <div>
                 {fieldsFormQuestionWithPoints.map((field, key) =>
                   field.type ? (

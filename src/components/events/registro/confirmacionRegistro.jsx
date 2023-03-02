@@ -15,7 +15,7 @@ function ConfirmacionRegistro(props) {
   // Se definen las variables de useState para enviar y obtener datos
   const [validateEmail, setValidateEmail] = useState(() => {
     if (props.event && props.event.validateEmail) {
-      if (props.event.validateEmail === 'true' || props.event.validateEmail === true) {
+      if (props.event.validateEmail === 'true' || props.event.validateEmail) {
         return true;
       } else {
         return false;

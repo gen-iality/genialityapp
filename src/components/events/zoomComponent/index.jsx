@@ -267,8 +267,8 @@ class ZoomComponent extends Component {
     } = this.state;
     return (
       <div
-        className={`content-zoom ${isMedium === true ? 'mediumScreen' : ''} ${
-          isMinimize === true ? 'minimizeScreen' : ''
+        className={`content-zoom ${isMedium ? 'mediumScreen' : ''} ${
+          isMinimize ? 'minimizeScreen' : ''
         }`}>
         <div className='buttons-header'>
           <div>

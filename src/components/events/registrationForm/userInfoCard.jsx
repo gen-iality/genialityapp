@@ -223,7 +223,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       const target = name;
       let value = user[target];
 
-      if (m.visibleByAdmin == true) {
+      if (m.visibleByAdmin) {
         return <div key={key}></div>;
       }
 
@@ -353,7 +353,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
       //rule = (type == "password") ? { ...rule, type: "password" } : rule;
       // let hideFields =
-      //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
+      //   mandatory || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
 
       if (type == 'boolean' && mandatory) {
         const textoError = 'Debes llenar este  campo es obligatorio';

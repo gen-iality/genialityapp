@@ -285,7 +285,7 @@ class Preview extends Component {
             >
               <div
                 style={
-                  this.state.genericPassword === true
+                  this.state.genericPassword
                     ? { borderColor: '#2593FC', borderStyle: 'solid', borderWidth: '4px', borderRadius: '6px' }
                     : {}
                 }>

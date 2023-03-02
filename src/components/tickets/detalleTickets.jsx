@@ -61,7 +61,7 @@ class DetailTickets extends Component {
             )}
             {
               <Descriptions.Item label='Registro'>
-                {item.status === true ? 'Asistencia confirmada' : 'Asistencia sin confirmar'}
+                {item.status ? 'Asistencia confirmada' : 'Asistencia sin confirmar'}
               </Descriptions.Item>
             }
             {item.author && <Descriptions.Item label='Organizador'>{item.author}</Descriptions.Item>}

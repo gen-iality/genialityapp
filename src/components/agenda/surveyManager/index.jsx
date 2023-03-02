@@ -67,7 +67,7 @@ export default class SurveyManager extends Component {
   handleChange = async (survey_id, data) => {
     const result = await this.updateSurvey(survey_id, data);
     const canSendComunications = this.props.canSendComunications;
-    if (canSendComunications && canSendComunications === true && data.isOpened === 'true') {
+    if (canSendComunications && data.isOpened === 'true') {
       await sendCommunicationOpen(survey_id);
     }
     if (result && result.state === 'updated') {

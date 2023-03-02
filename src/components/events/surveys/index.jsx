@@ -83,7 +83,7 @@ class SurveyForm extends Component {
       // Listado de encuestas publicadas del curso
       publishedSurveys = eventSurveys.filter(
         (survey) =>
-          (survey.isPublished === 'true' || survey.isPublished === true) &&
+          (survey.isPublished === 'true' || survey.isPublished) &&
           ((activity && survey.activity_id === activity._id) || survey.isGlobal === 'true')
       );
 
@@ -118,7 +118,7 @@ class SurveyForm extends Component {
 
     //No es la manera ideal pero aqui forzamos una revisión en la base de datos para asber si el usuario ya voto
     //mejor tener esto en forma de contexto o algo similar
-    if (prevState.forceCheckVoted !== this.state.forceCheckVoted && this.state.forceCheckVoted === true) {
+    if (prevState.forceCheckVoted !== this.state.forceCheckVoted && this.state.forceCheckVoted) {
       await this.callback();
     }
   }
@@ -179,7 +179,7 @@ class SurveyForm extends Component {
   userVote = () => {
     const { surveysData } = this.state;
     for (const i in surveysData) {
-      if (surveysData[i].userHasVoted === true) {
+      if (surveysData[i].userHasVoted) {
         this.setState({ userVote: true });
       } else if (surveysData[i].open === false) {
         this.setState({ userVote: true });
@@ -211,7 +211,7 @@ class SurveyForm extends Component {
         forceCheckVoted: true,
         loading: true,
       });
-      // if (data === true) this.listenSurveysData();
+      // if (data) this.listenSurveysData();
     } else if (Object.prototype.hasOwnProperty.call(data, '_id')) {
       const selectedSurvey = data;
       this.setState({ selectedSurvey });

@@ -283,7 +283,7 @@ class UserModal extends Component {
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
     const { modal, badgeEvent, componentKey } = this.props;
-    const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr === true);
+    const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr);
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
       <Modal closable onCancel={() => this.props.handleModal()} visible>

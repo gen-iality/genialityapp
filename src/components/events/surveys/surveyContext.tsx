@@ -141,7 +141,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
       console.debug('not show graphics because checkIfSurveyWasAnswered() is false');
     }
 
-    if (state.survey.displayGraphsInSurveys === 'true' || state.survey.displayGraphsInSurveys === true) {
+    if (state.survey.displayGraphsInSurveys === 'true' || state.survey.displayGraphsInSurveys) {
       console.debug('enable showing graphics');
       return true;
     }
@@ -154,7 +154,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
     if (!state.survey) {
       return false;
     }
-    return state.survey.rankingVisible === 'true' || state.survey.rankingVisible === true;
+    return state.survey.rankingVisible === 'true' || state.survey.rankingVisible;
   };
 
   const resetSurveyStatus = async (userId: string) => {

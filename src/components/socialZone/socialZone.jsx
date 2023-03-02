@@ -249,7 +249,7 @@ const SocialZone = (props) => {
         )}
 
         {tabsGenerals !== null &&
-          (tabsGenerals?.games === true || tabsGenerals?.games === 'true') &&
+          (tabsGenerals?.games || tabsGenerals?.games === 'true') &&
           currentActivity?.habilitar_ingreso === 'open_meeting_room' && (
             <TabPane
               className='asistente-survey-list asistente-list'

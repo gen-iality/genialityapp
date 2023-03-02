@@ -37,11 +37,11 @@ const DynamicTermsAndCondictionsField: React.FunctionComponent<IDynamicTermsAndC
     const newRule: Rule = { ...basicRule }
     newRule.validator = (rule, value) => {
       if (mandatory) {
-        return value === true
+        return value
           ? Promise.resolve()
           : Promise.reject(requiredFieldErrorMessage)
       } else {
-        return value == true || value == false || value == '' || value == undefined
+        return value || !value || value == '' || value == undefined
           ? Promise.resolve()
           : Promise.reject(requiredFieldErrorMessage)
       }

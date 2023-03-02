@@ -451,7 +451,7 @@ class Agenda extends Component {
 
   validationRegisterAndExchangeCode = activity => {
     const hasPayment =
-      this.props.cEvent.value.has_payment === true || this.props.cEvent.value.has_payment === 'true' ? true : false;
+      this.props.cEvent.value.has_payment || this.props.cEvent.value.has_payment === 'true' ? true : false;
 
     // Listado de cursos que requieren validación
     if (hasPayment) {
@@ -728,7 +728,7 @@ class Agenda extends Component {
                   days.map(day => (
                     <>
                       {this.props.cEvent.value.styles.hideDatesAgendaItem === 'true' ||
-                      this.props.cEvent.value.styles.hideDatesAgendaItem === true ? (
+                      this.props.cEvent.value.styles.hideDatesAgendaItem ? (
                         this.getActivitiesByDay(day)
                       ) : (
                         <>
@@ -754,7 +754,7 @@ class Agenda extends Component {
                 {this.props.cEvent.value &&
                   this.props.cEvent.value.styles &&
                   (this.props.cEvent.value.styles.hideDatesAgenda === 'true' ||
-                    this.props.cEvent.value.styles.hideDatesAgenda === true ||
+                    this.props.cEvent.value.styles.hideDatesAgenda ||
                     this.props.cEvent.value.styles.hideDatesAgenda == undefined) && (
                     <>
                       <div

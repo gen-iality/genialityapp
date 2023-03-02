@@ -135,7 +135,7 @@ function OrganizationInformation(props) {
                   checkbox: {
                     text: 'Registro sin autenticación de usuario (Beta)',
                     onCheck: (checked) => {
-                      setVisibilityState(checked === true ? 'ANONYMOUS' : 'PUBLIC');
+                      setVisibilityState(checked ? 'ANONYMOUS' : 'PUBLIC');
                       setAllowRegister(true);
                     },
                     initialCheck: visibilityState === 'ANONYMOUS',

@@ -504,7 +504,7 @@ const FormRegister = ({
     if (!extraFields) return '';
     const formUI = extraFields.map((m, key) => {
       /* console.log(m, key) */
-      if (m.visibleByAdmin == true) {
+      if (m.visibleByAdmin) {
         return;
       }
       //Este if es nuevo para poder validar las contraseñas viejos (nuevo flujo para no mostrar esos campos)
@@ -541,7 +541,7 @@ const FormRegister = ({
         //no entiendo b esto para que funciona
         // if (conditionals.state === "enabled") {
         //   if (label === conditionals.field) {
-        //     if (true == true || value === [conditionals.value]) {
+        //     if (true || value === [conditionals.value]) {
         //       label = conditionals.field;
         //     } else {
         //       return;
@@ -603,12 +603,12 @@ const FormRegister = ({
         if (type === 'boolean') {
           if (mandatory) {
             rule = {
-              validator: (_, value) => (value == true ? Promise.resolve() : Promise.reject(textoError)),
+              validator: (_, value) => (value ? Promise.resolve() : Promise.reject(textoError)),
             };
           } else {
             rule = {
               validator: (_, value) =>
-                value == true || value == false || value == '' || value == undefined
+                value || !value || value == '' || value == undefined
                   ? Promise.resolve()
                   : Promise.reject(textoError),
             };

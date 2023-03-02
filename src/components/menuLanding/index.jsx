@@ -403,13 +403,13 @@ class MenuLanding extends Component {
                             onClick={() => {
                               this.mapActiveItemsToAvailable(key);
                             }}>
-                            {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
+                            {this.state.menu[key].checked ? 'Deshabilitar' : 'Habilitar'}
                           </Button>
                         </Form.Item>
                         <Form.Item label={'Cambiar nombre de la sección'}>
                           <Input
                             name={`name${index}`}
-                            disabled={this.state.menu[key].checked === true ? false : true}
+                            disabled={this.state.menu[key].checked ? false : true}
                             //value={this.state.menu[key].name}
                             onChange={(e) => {
                               this.changeNameMenu(key, e.target.value);
@@ -421,7 +421,7 @@ class MenuLanding extends Component {
                           <Select
                             name={`permissions${index}`}
                             key={this.state.keySelect}
-                            disabled={this.state.menu[key].checked === true ? false : true}
+                            disabled={this.state.menu[key].checked ? false : true}
                             value={this.state.menu[key].permissions}
                             onChange={(e) => {
                               this.changePermissions(key, e);
@@ -433,7 +433,7 @@ class MenuLanding extends Component {
                         <Form.Item label={'Posición en el menú'}>
                           <InputNumber
                             name={`position${index}`}
-                            disabled={this.state.menu[key].checked === true ? false : true}
+                            disabled={this.state.menu[key].checked ? false : true}
                             value={this.state.menu[key].position}
                             onChange={(e) => this.orderPosition(key, e)}
                           />

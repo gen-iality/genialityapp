@@ -26,7 +26,7 @@ function listenSurveysData(event, activity, currentUser, callback) {
       // Listado de encuestas publicadas del curso
       publishedSurveys = eventSurveys.filter(
          (survey) =>
-            (survey.isPublished === 'true' || survey.isPublished === true) &&
+            (survey.isPublished === 'true' || survey.isPublished) &&
             ((activity && survey.activity_id === activity._id) || survey.isGlobal === 'true')
       );
 
@@ -38,7 +38,7 @@ function listenSurveysData(event, activity, currentUser, callback) {
       }
 
       const openSurveys = publishedSurveys.filter(
-         (survey) => survey.isOpened && (survey.isOpened == 'true' || survey.isOpened == true)
+         (survey) => survey.isOpened && (survey.isOpened == 'true' || survey.isOpened)
       );
 
       const hasOpenSurveys = openSurveys.length > 0;

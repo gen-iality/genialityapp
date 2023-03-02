@@ -251,7 +251,7 @@ class EventUsersList extends Component {
     this.props.setGuestSelected(attendeesForSendMessage);
     this.props.history.push(`${this.props.matchUrl}/createmessage`);
     // } else {
-    //   this.setState({ modalVisible: modalVisible === true ? false : true });
+    //   this.setState({ modalVisible: modalVisible ? false : true });
     // }
   };
 

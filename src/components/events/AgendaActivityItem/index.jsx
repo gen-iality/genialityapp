@@ -306,7 +306,7 @@ function AgendaActivityItem(props) {
             {/* card de la genda en desktop */}
             <Badge.Ribbon
               className='animate__animated animate__bounceIn animate__delay-2s'
-              placement={screens.xs === true ? 'start' : 'end'}
+              placement={screens.xs ? 'start' : 'end'}
               style={{ height: 'auto', paddingRight: '15px' }}
               color={item.habilitar_ingreso == 'open_meeting_room' ? 'red' : 'transparent'}
               text={
@@ -401,7 +401,7 @@ function AgendaActivityItem(props) {
                             ))}
                             {item.habilitar_ingreso === 'open_meeting_room' && (
                             <Button
-                              size={screens.xs === true ? 'small' : 'small'}
+                              size={screens.xs ? 'small' : 'small'}
                               type='primary'
                               className='buttonVirtualConference'
                               style={{ marginTop: '5px' }}

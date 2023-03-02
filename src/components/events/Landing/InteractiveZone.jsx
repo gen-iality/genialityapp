@@ -17,7 +17,7 @@ const InteractiveZone = () => {
           }
           size='large'
           onClick={this.showDrawerMobile}
-          style={this.state.visibleChat == true ? { display: 'none' } : {}}></Button>
+          style={this.state.visibleChat ? { display: 'none' } : {}}></Button>
       </div>
       <Drawer
         height={450}

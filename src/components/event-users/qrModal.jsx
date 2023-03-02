@@ -105,7 +105,7 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badg
       printBagdeUser(ifrmPrint, badges, scannerData.attendee.properties);
     }
   };
-  const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr === true);
+  const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr);
   return (
     <Row style={{ textAlign: 'center' }}>
       <Modal visible={openModal} onCancel={closeQr} footer={null}>

@@ -75,7 +75,7 @@ const VirtualConference = () => {
             return (
               item?.habilitar_ingreso &&
               (item?.habilitar_ingreso == 'open_meeting_room' || item?.habilitar_ingreso == 'closed_meeting_room') &&
-              (item?.isPublished === true || item?.isPublished === 'true')
+              (item?.isPublished || item?.isPublished === 'true')
             );
           })
 

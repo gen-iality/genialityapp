@@ -153,7 +153,7 @@ const AditionalInformation = (props) => {
         )}
 
         {props.tabs && (
-          // && (props.tabs.surveys === true || props.tabs.surveys === 'true')
+          // && (props.tabs.surveys || props.tabs.surveys === 'true')
           <TabPane
             tab={
               <>
@@ -181,7 +181,7 @@ const AditionalInformation = (props) => {
             )}
           </TabPane>
         )}
-        {props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
+        {props.tabs && (props.tabs.games || props.tabs.games === 'true') && (
           <TabPane
             tab={
               <>

@@ -20,10 +20,10 @@ export function recordTypeForThisEvent(cEvent) {
 
   const event = cEvent?.value;
   if (!event) return 'LOADING';
-  if (event?.visibility === 'PUBLIC' && event?.allow_register === true) return 'PUBLIC_EVENT_WITH_REGISTRATION';
+  if (event?.visibility === 'PUBLIC' && event?.allow_register) return 'PUBLIC_EVENT_WITH_REGISTRATION';
   if (event?.visibility === 'PUBLIC' && event?.allow_register === false) return 'UN_REGISTERED_PUBLIC_EVENT';
   if (event?.visibility === 'PRIVATE' && event?.allow_register === false) return 'PRIVATE_EVENT';
-  if (event?.visibility === 'ANONYMOUS' && event?.allow_register === true)
+  if (event?.visibility === 'ANONYMOUS' && event?.allow_register)
     return 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS';
 }
 

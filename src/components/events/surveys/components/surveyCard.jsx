@@ -70,7 +70,7 @@ function SurveyCard(props) {
                           {survey && (
                             <Col style={{ marginBottom: '3px' }}>
                               {' '}
-                              {survey.isOpened === 'true' || survey.isOpened === true ? (
+                              {survey.isOpened === 'true' || survey.isOpened ? (
                                 <Tag icon={<CheckCircleOutlined />} color='green'>
                                   Abierta
                                 </Tag>

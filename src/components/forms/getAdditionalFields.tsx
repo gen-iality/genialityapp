@@ -105,7 +105,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
 
   const additionalFormFields = fields.map((field: any, key: any) => {
     // se valida si el campo es visible solo el en cms,
-    if (field.visibleByAdmin == true && !visibleInCms) return;
+    if (field.visibleByAdmin && !visibleInCms) return;
 
     //Este if es nuevo para poder validar las contraseñas viejos (nuevo flujo para no mostrar esos campos)
     if (field.name !== 'contrasena' && field.name !== 'password') {
@@ -257,12 +257,12 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           textoError = intl.formatMessage({ id: 'form.field.required' });
 
           rule = {
-            validator: (_: any, value: any) => (value == true ? Promise.resolve() : Promise.reject(textoError)),
+            validator: (_: any, value: any) => (value ? Promise.resolve() : Promise.reject(textoError)),
           };
         } else {
           rule = {
             validator: (_: any, value: any) =>
-              value == true || value == false || value == '' || value == undefined
+              value || !value || value == '' || value == undefined
                 ? Promise.resolve()
                 : Promise.reject(textoError),
           };

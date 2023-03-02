@@ -114,7 +114,7 @@ class EventLanding extends Component {
             style={
               this.props.cEvent.value.styles &&
               this.props.cEvent.value.styles.show_card_banner &&
-              this.props.cEvent.value.styles.show_card_banner === true
+              this.props.cEvent.value.styles.show_card_banner
                 ? { marginTop: '2%' }
                 : { marginTop: '0px' }
             }

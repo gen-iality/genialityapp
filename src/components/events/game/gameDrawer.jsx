@@ -80,7 +80,7 @@ function GameDrawer(props) {
         )}
 
         <Row gutter={[8, 8]} justify='center'>
-          <Col xl={rankingVisible === true ? 24 : 16} xxl={rankingVisible === true ? 24 : 16}>
+          <Col xl={rankingVisible ? 24 : 16} xxl={rankingVisible ? 24 : 16}>
             <Game />
           </Col>
           {cEvent.value._id !== '619d09f7cbd9a47c2d386372' && (

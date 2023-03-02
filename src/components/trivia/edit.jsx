@@ -401,7 +401,7 @@ class TriviaEdit extends Component {
         //Survey State
         freezeGame: this.state.freezeGame === 'true' ? true : false,
         open: this.state.openSurvey,
-        publish: this.state.publish === 'true' || this.state.publish === true ? 'true' : 'false',
+        publish: this.state.publish === 'true' || this.state.publish ? 'true' : 'false',
 
         minimumScore: parseInt(this.state.minimumScore),
 
@@ -855,7 +855,7 @@ class TriviaEdit extends Component {
                     <Form.Item label="Publicar" labelCol={{ span: 14 }}>
                       <Switch
                         name="publish"
-                        checked={publish === 'true' || publish === true}
+                        checked={publish === 'true' || publish}
                         checkedChildren='Sí'
                         unCheckedChildren='No'
                         onChange={(checked) => this.setState({ publish: checked ? 'true' : 'false' })}
@@ -938,7 +938,7 @@ class TriviaEdit extends Component {
                     <Form.Item label={'Permitir usuarios anónimos'}>
                       <Switch
                         name="allow_anonymous_answers"
-                        checked={allow_anonymous_answers === 'true' || allow_anonymous_answers === true}
+                        checked={allow_anonymous_answers === 'true' || allow_anonymous_answers}
                         onChange={(checked) => this.setState({ allow_anonymous_answers: checked ? 'true' : 'false' })}
                       />
                     </Form.Item>
@@ -947,7 +947,7 @@ class TriviaEdit extends Component {
                     <Form.Item label={`Publicar ${this.state.title.toLowerCase()}`}>
                       <Switch
                         name="publish"
-                        checked={publish === 'true' || publish === true}
+                        checked={publish === 'true' || publish}
                         onChange={(checked) => this.setState({ publish: checked ? 'true' : 'false' })}
                       />
                     </Form.Item>
@@ -956,7 +956,7 @@ class TriviaEdit extends Component {
                           <Form.Item label={`Mostar gráficas en cada ${this.state.title.toLowerCase()}`}>
                             <Switch
                               name="displayGraphsInSurveys"
-                              checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys === true}
+                              checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys}
                               onChange={(checked) => this.toggleSwitch('displayGraphsInSurveys', checked)}
                             />
                           </Form.Item>
@@ -971,7 +971,7 @@ class TriviaEdit extends Component {
                           </Form.Item>
                         </Col> */}
                       </Row>
-                      {displayGraphsInSurveys === true ||
+                      {displayGraphsInSurveys ||
                         (displayGraphsInSurveys === 'true' && (
                           <>
                             <Form.Item label={'Elegir tipo de gráfica'}>
@@ -989,7 +989,7 @@ class TriviaEdit extends Component {
                             <Form.Item label={'Mostrar porcentaje de participantes sin votar en las gráficas'}>
                               <Switch
                                 name="showNoVotos"
-                                checked={showNoVotos === 'true' || showNoVotos === true}
+                                checked={showNoVotos === 'true' || showNoVotos}
                                 onChange={(checked) => this.setState({ showNoVotos: checked ? 'true' : 'false' })}
                               />
                             </Form.Item>
@@ -999,7 +999,7 @@ class TriviaEdit extends Component {
                       <Form.Item label={`${this.state.title} global (visible en todas las lecciones)`}>
                         <Switch
                           name="isGlobal"
-                          checked={isGlobal === 'true' || isGlobal === true}
+                          checked={isGlobal === 'true' || isGlobal}
                           onChange={(checked) => this.setState({ isGlobal: checked ? 'true' : 'false' })}
                         />
                       </Form.Item>
@@ -1028,39 +1028,39 @@ class TriviaEdit extends Component {
                       <Form.Item label={'Permitir valor de la respuesta por usuario'}>
                         <Switch
                           name="allow_vote_value_per_user"
-                          checked={allow_vote_value_per_user === 'true' || allow_vote_value_per_user === true}
+                          checked={allow_vote_value_per_user === 'true' || allow_vote_value_per_user}
                           onChange={(checked) => this.toggleSwitch('allow_vote_value_per_user', checked)}
                         />
                       </Form.Item>
                       <Form.Item label={`${this.state.title} calificable`}>
                         <Switch
                           name="allow_gradable_survey"
-                          checked={allow_gradable_survey === 'true' || allow_gradable_survey === true}
+                          checked={allow_gradable_survey === 'true' || allow_gradable_survey}
                           onChange={(checked) => {
                             this.toggleSwitch('allow_gradable_survey', checked);
-                            if (ranking === 'true' || ranking === true) {
+                            if (ranking === 'true' || ranking) {
                               this.toggleSwitch('ranking', checked);
                             }
                           }}
                         />
                       </Form.Item>
-                      {(allow_gradable_survey === 'true' || allow_gradable_survey === true) && (
+                      {(allow_gradable_survey === 'true' || allow_gradable_survey) && (
                         <>
                           <Form.Item label={'Habilitar ranking'}>
                             <Switch
                               name="ranking"
-                              checked={ranking === 'true' || ranking === true}
+                              checked={ranking === 'true' || ranking}
                               onChange={(checked) => this.toggleSwitch('ranking', checked)}
                             />
                           </Form.Item>
                           <Form.Item label={'Requiere puntaje mínimo para aprobar'}>
                             <Switch
                               name="hasMinimumScore"
-                              checked={hasMinimumScore === 'true' || hasMinimumScore === true}
+                              checked={hasMinimumScore === 'true' || hasMinimumScore}
                               onChange={(checked) => this.setState({ hasMinimumScore: checked ? 'true' : 'false' })}
                             />
                           </Form.Item>
-                          {(hasMinimumScore === true || hasMinimumScore === 'true') && (
+                          {(hasMinimumScore || hasMinimumScore === 'true') && (
                             <Form.Item label={'Puntaje mínimo para aprobar'}>
                               <Input name="minimumScore" value={minimumScore} onChange={this.changeInput} />
                             </Form.Item>
@@ -1116,7 +1116,7 @@ class TriviaEdit extends Component {
                     <Form.Item label={`${this.state.title} con preguntas aleatorias`}>
                       <Switch
                         name="random_survey"
-                        checked={random_survey === 'true' || random_survey === true}
+                        checked={random_survey === 'true' || random_survey}
                         onChange={(checked) => {
                           this.toggleSwitch('random_survey', checked);
                         }}

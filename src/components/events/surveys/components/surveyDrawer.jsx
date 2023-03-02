@@ -112,7 +112,7 @@ function SurveyDrawer(props) {
           </div>
 
           <Row gutter={[8, 8]} justify='center'>
-            <Col xl={rankingVisible === true ? 24 : 16} xxl={rankingVisible === true ? 24 : 16}>
+            <Col xl={rankingVisible ? 24 : 16} xxl={rankingVisible ? 24 : 16}>
               <ThisRouteCanBeDisplayed>
                 <SurveyDetailPage />
               </ThisRouteCanBeDisplayed>

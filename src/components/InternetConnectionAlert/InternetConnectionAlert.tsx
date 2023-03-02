@@ -33,7 +33,7 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
 
   useEffect(() => {
     if (connectionStatus === 'initial') return;
-    if (connectionStatus === true) {
+    if (connectionStatus) {
       setTimeout(() => {
         setConnectionStatus('initial');
       }, 3500);
