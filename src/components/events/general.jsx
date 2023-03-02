@@ -924,7 +924,7 @@ class General extends Component {
 
                   {/* {event.type_event !== 'onlineEvent' && (
                     <>
-                      <Form.Item label={'Dirección'}>
+                      <Form.Item label="Dirección">
                         <Input
                           name="address"
                           placeholder={'¿Cuál es la dirección del curso?'}
