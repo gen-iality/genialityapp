@@ -319,7 +319,7 @@ function Speaker(props) {
               />
             </Form.Item>
 
-            <Form.Item label="$1">
+            <Form.Item label="Ocupación">
               <Input
                 value={data.profession}
                 placeholder="Ocupación del conferencista"
@@ -353,7 +353,7 @@ function Speaker(props) {
               </Form.Item>
             )}
 
-            <Form.Item label="$1">
+            <Form.Item label="Descripción">
               <>
                 {!showDescription_activity ? (
                   <Button

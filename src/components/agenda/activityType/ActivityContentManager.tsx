@@ -197,7 +197,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         <>
         {(!contentSource) && (<Alert type="info" message="Cargando contenido..."/>)}
         <QuizCMS
-          title="$1"
+          title="Evaluación"
           activityId={activityEdit}
           event={eventContext.value}
           matchUrl={props.matchUrl}

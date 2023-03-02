@@ -382,7 +382,7 @@ class SendRsvp extends Component {
           <Modal
             visible={this.state.modal}
             onCancel={this.closeModal}
-            title="$1"
+            title="Confirmación"
             onOk={this.submit}
             okButtonProps={{ disabled: this.state.disabled }}
             confirmLoading={this.state.disabled}

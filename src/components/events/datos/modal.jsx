@@ -503,9 +503,9 @@ class DatosModal extends Component {
               onChange={this.changeFieldCheckVisibleByAdmin}
             />
           </Form.Item>
-          <Form.Item label="$1" name="description">
+          <Form.Item label="Descripción" name="description">
             <TextArea
-              placeholder={'Descripción corta'}
+              placeholder="Descripción corta"
               name="description"
               value={info.description || ''}
               onChange={this.handleChange}

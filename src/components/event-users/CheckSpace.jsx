@@ -194,7 +194,7 @@ class CheckSpace extends Component {
                         </>
                       }
                       key="2">
-                      <Form.Item label="$1">
+                      <Form.Item label="Código">
                         <Input
                           name="searchCC"
                           ref={this.txtInput}
