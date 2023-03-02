@@ -132,7 +132,7 @@ class Exhibitor extends Component {
             className='main-stand-go-button go-previous'
             onClick={() => [this.handleHideStandImage(), showPrevious()]}
           >
-            {'Anterior'}
+            Anterior
           </button>
         )}
         {showStandImage && (
@@ -141,7 +141,7 @@ class Exhibitor extends Component {
             className='main-stand-go-button go-next'
             onClick={() => [this.handleHideStandImage(), showNext()]}
           >
-            {'Siguiente'}
+            Siguiente
           </button>
         )}
         <div className='main-stand-social-networks'>

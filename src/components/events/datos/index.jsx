@@ -718,7 +718,7 @@ class Datos extends Component {
                       </Col>
                       <Col>
                         <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addField}>
-                          {'Agregar'}
+                          Agregar
                         </Button>
                       </Col>
                     </Row>
@@ -798,7 +798,7 @@ class Datos extends Component {
                         </Col>
                         <Col>
                           <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addField}>
-                            {'Agregar'}
+                            Agregar
                           </Button>
                         </Col>
                       </Row>

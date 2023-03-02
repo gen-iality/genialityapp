@@ -323,7 +323,7 @@ const Certificado = (props) => {
               </Col>
               <Col>
                 <Button type='primary' onClick={generate}>
-                  {'Generar'}
+                  Generar
                 </Button>
               </Col>
             </Row>

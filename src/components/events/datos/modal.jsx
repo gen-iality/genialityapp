@@ -530,11 +530,11 @@ class DatosModal extends Component {
                 disabled={loading}
                 loading={loading}
               >
-                {'Guardar'}
+                Guardar
               </Button>
 
               <Button onClick={() => this.props.cancel()} type='default' tmlType='button'>
-                {'Cancelar'}
+                Cancelar
               </Button>
             </Row>
           </Form.Item>

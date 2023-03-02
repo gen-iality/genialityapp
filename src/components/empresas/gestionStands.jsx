@@ -309,7 +309,7 @@ const Stands = (props) => {
               icon={<SaveOutlined />}
               disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
             >
-              {'Guardar'}
+              Guardar
             </Button>
           </Row>
 
@@ -330,7 +330,7 @@ const Stands = (props) => {
                 icon={<PlusCircleOutlined />}
                 disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
               >
-                {'Agregar'}
+                Agregar
               </Button>
             }
           >

@@ -166,7 +166,7 @@ class CheckSpace extends Component {
                       tab={
                         <>
                           <CameraOutlined />
-                          {'Camara'}
+                          Camara
                         </>
                       }
                       key='1'>
@@ -190,7 +190,7 @@ class CheckSpace extends Component {
                       tab={
                         <>
                           <ExpandOutlined />
-                          {'Pistola'}
+                          Pistola
                         </>
                       }
                       key='2'>

@@ -11,7 +11,7 @@ export default function PartnerDetail({ company, handleClosePartnerDetail }) {
         <Col>
           <Button onClick={handleClosePartnerDetail}>
             <LeftOutlined style={{ fontSize: '16px' }} />
-            {'Volver'}
+            Volver
           </Button>
         </Col>
       </Row>

@@ -36,7 +36,7 @@ function QrAndDocumentForm({
               tab={
                 <>
                   <CameraOutlined />
-                  {'Camara'}
+                  Camara
                 </>
               }
               key='1'>
@@ -70,7 +70,7 @@ function QrAndDocumentForm({
               tab={
                 <>
                   <ExpandOutlined />
-                  {'Pistola'}
+                  Pistola
                 </>
               }
               key='2'>

@@ -50,7 +50,7 @@ function OrgEvents(props) {
                 icon={<PlusCircleOutlined />}
                 onClick={() => linkToTheMenuRouteS(`/create-event/${props.cUser?.value?._id}?orgId=${organizationId}`)}
               >
-                {'Agregar'}
+                Agregar
               </Button>
             </Col>
           </Row>

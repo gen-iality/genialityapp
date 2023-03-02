@@ -545,7 +545,7 @@ class CheckAgenda extends Component {
               </Col>
               <Col>
                 <Button onClick={this.exportFile} type='primary' icon={<DownloadOutlined />}>
-                  {'Exportar'}
+                  Exportar
                 </Button>
               </Col>
               <Col>

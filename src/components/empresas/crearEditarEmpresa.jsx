@@ -407,7 +407,7 @@ function CrearEditarEmpresa(props) {
                                   }}
                                   style={{ marginRight: '20px' }}
                                 >
-                                  {'Eliminar'}
+                                  Eliminar
                                 </Button>
                               )}
 
@@ -472,7 +472,7 @@ function CrearEditarEmpresa(props) {
                                   }}
                                   style={{ marginRight: '20px' }}
                                 >
-                                  {'Eliminar'}
+                                  Eliminar
                                 </Button>
                               )}
                               {values.social_networks.length < SOCIAL_NETWORKS_LIMIT &&
@@ -563,7 +563,7 @@ function CrearEditarEmpresa(props) {
                                   }}
                                   style={{ marginRight: '20px' }}
                                 >
-                                  {'Eliminar'}
+                                  Eliminar
                                 </Button>
                               )}
                               {/*values.advisor.length < ADVISOR_LIMIT && */}
@@ -632,7 +632,7 @@ function CrearEditarEmpresa(props) {
                                   }}
                                   style={{ marginRight: '20px' }}
                                 >
-                                  {'Eliminar'}
+                                  Eliminar
                                 </Button>
                               )}
                               {values.gallery.length < GALLERY_LIMIT && galleryIndex === values.gallery.length - 1 && (

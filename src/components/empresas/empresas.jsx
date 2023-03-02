@@ -185,7 +185,7 @@ function Empresas({ event, match }) {
       width: '100px',
       ellipsis: true,
       render(visible) {
-        return visible ? <Tag color='green'>{'Visible'}</Tag> : <Tag color='red'>{'Oculto'}</Tag>;
+        return visible ? <Tag color='green'>Visible</Tag> : <Tag color='red'>Oculto</Tag>;
       },
     },
     {
@@ -276,7 +276,7 @@ function Empresas({ event, match }) {
             <Col>
               <Link to={`${match.url}/configuration`}>
                 <Button type='primary' icon={<SettingOutlined />} id="configuration">
-                  {'Configuración'}
+                  Configuración
                 </Button>
               </Link>
             </Col>

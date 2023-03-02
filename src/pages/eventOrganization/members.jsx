@@ -277,7 +277,7 @@ function OrgMembers(props) {
             </Col>
             <Col>
               <Button type='primary' icon={<PlusCircleOutlined />} onClick={addUser}>
-                {'Agregar'}
+                Agregar
               </Button>
             </Col>
           </Row>

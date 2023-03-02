@@ -236,7 +236,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
                       loading={fetching}
                       onClick={() => changeAgendaStatus('rejected')}
                     >
-                      {'Rechazar'}
+                      Rechazar
                     </Button>
                     <Button
                       type='primary'
@@ -244,7 +244,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
                       loading={fetching}
                       onClick={() => changeAgendaStatus('accepted')}
                     >
-                      {'Aceptar'}
+                      Aceptar
                     </Button>
                   </Row>
                 )

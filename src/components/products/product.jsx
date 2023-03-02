@@ -212,7 +212,7 @@ class Product extends Component {
               </Col>
               <Col>
                 <Button type='primary' icon={<SettingOutlined />} onClick={this.configuration} id="configuration">
-                  {'Configuración'}
+                  Configuración
                 </Button>
               </Col>
             </Row>

@@ -159,7 +159,7 @@ class ImportUsers extends Component {
     return (
       <>
         <Header
-          title={<Link to={this.props.matchUrl}>{'Invitados'}</Link>}
+          title={<Link to={this.props.matchUrl}>Invitados</Link>}
           back
           description={'Importación de usuarios - Excel'}
         />

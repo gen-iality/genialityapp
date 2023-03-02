@@ -156,19 +156,19 @@ class Result extends Component {
         <Row justify='space-between' wrap>
           <Col>
             <Tag>{total}</Tag>
-            <span>{'Total'}</span>
+            <span>Total</span>
           </Col>
           <Col>
             <Tag color='#1cdcb7'>{saved}</Tag>
-            <span>{'Importados'}</span>
+            <span>Importados</span>
           </Col>
           <Col>
             <Tag color='#ff3860'>{fails}</Tag>
-            <span>{'Fallidos'}</span>
+            <span>Fallidos</span>
           </Col>
           <Col>
             <Tag color='#ffdd57'>{updated}</Tag>
-            <span>{'Actualizados'}</span>
+            <span>Actualizados</span>
           </Col>
         </Row>
         {total > 0 && (

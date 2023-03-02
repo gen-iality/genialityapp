@@ -263,7 +263,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                             }}
                             style={{ marginRight: '10px' }}
                           >
-                            {'Cancelar'}
+                            Cancelar
                           </Button>
                           <Button
                             type='primary'

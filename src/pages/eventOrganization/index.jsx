@@ -78,19 +78,19 @@ function Organization(props) {
               //inlineCollapsed={collapseMenu}
             >
               <Menu.Item key="1" icon={<BarsOutlined />}>
-                {'Información'}
+                Información
                 <NavLink to={`${props.match.url}/information`} />
               </Menu.Item>
               <Menu.Item key="2" icon={<ScheduleOutlined />}>
-                {'Cursos'}
+                Cursos
                 <NavLink to={`${props.match.url}/events`} />
               </Menu.Item>
               <Menu.Item key="3" icon={<SketchOutlined />}>
-                {'Apariencia'}
+                Apariencia
                 <NavLink to={`${props.match.url}/appearance`} />
               </Menu.Item>
               <Menu.Item key="4" icon={<TeamOutlined />}>
-                {'Miembros'}
+                Miembros
                 <NavLink to={`${props.match.url}/members`} />
               </Menu.Item>
               {/* <Menu.Item key={'4.1'} icon={<DeleteOutlined />}>
@@ -98,11 +98,11 @@ function Organization(props) {
                 <NavLink to={`${props.match.url}/organization-properties`} />
               </Menu.Item> */}
               <Menu.Item key="5" icon={<TeamOutlined />}>
-                {'Cargos'}
+                Cargos
                 <NavLink to={`${props.match.url}/positions`} />
               </Menu.Item>
               <Menu.Item key="6" icon={<TeamOutlined />}>
-                {'Inscritos'}
+                Inscritos
                 <NavLink to={`${props.match.url}/registered`} />
               </Menu.Item>
               <Menu.Item key="7" icon={<UserSwitchOutlined />}>
