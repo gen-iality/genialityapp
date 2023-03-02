@@ -35,7 +35,6 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
       icon: <ContactsOutlined />,
     },
   ])
-  const [isLoading, setIsLoading] = useState(false)
 
   const eventNewContext: any = useContext(cNewEventContext)
 
@@ -47,7 +46,7 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
     setCurrent((previous) => previous - 1)
   }
 
-  const obtainContent = (step) => {
+  const obtainContent = (step: typeof steps[number]) => {
     switch (step.title) {
       case 'Información':
         return <InitialNewEventFormSection orgId={orgId || undefined} currentUser={currentUser} />
@@ -113,6 +112,13 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
           organization = { ...organization, id: organization._id }
           eventNewContext.selectedOrganization(organization)
           eventNewContext.eventByOrganization(false)
+
+          // I saw the NewEventContext and i have seen that the saveEvent method
+          // will take data from the reducer state instead the context state.
+          // Then, I call the dispatcher too
+          // eventNewContext.dispatch({ type: 'SELECT_ORGANIZATION', payload: { organization } })
+          // Well.. I comment because the component ModalOrgListCreate is setting now
+          // this value, and when its orgId prop change, the component will update the state
         }
       })
     }
@@ -156,7 +162,7 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
           {/* SE VALIDA CON window.history.length  PARA DETECTAR SI ES POSIBLE HACER EL BACK YA QUE AVECES SE ABRE UNA PESTAÑA NUEVA*/}
-          {!isLoading && (
+          {!eventNewContext.state.loading && (
             <div className='button-container'>
               {current <= 0 && (
                 <Button
@@ -181,13 +187,14 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
                   className='button'
                   type='primary'
                   size='large'
-                  onClick={async () => await eventNewContext.saveEvent()}>
+                  onClick={async () => await eventNewContext.saveEvent()}
+                >
                   Crear curso
                 </Button>
               )}
             </div>
           )}
-          {isLoading && (
+          {eventNewContext.state.loading && (
             <Row justify='center'>
               Espere.. <Spin />
             </Row>
