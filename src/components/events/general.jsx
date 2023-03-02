@@ -170,9 +170,7 @@ class General extends Component {
 
     const info = this.props.event;
     this.setState({ info });
-    this.setState({
-      checked: info.initial_page ? true : false,
-    });
+    this.setState({ checked: !!info.initial_page });
     try {
       const { event } = this.props;
       // event.picture = (typeof event.picture === 'object') ? event.picture[0] : "";
@@ -495,11 +493,11 @@ class General extends Component {
       venue: event.venue,
       analytics: event.analytics,
       address: event.address,
-      has_date: event.has_date === 'true' || event.has_date === true ? true : false,
+      has_date: event.has_date === 'true' || !!event.has_date,
       allow_register: event.allow_register,
       allow_detail_calendar:
-        event.allow_detail_calendar === 'true' || event.allow_detail_calendar === true ? true : false,
-      enable_language: event.enable_language === 'true' || event.enable_language === true ? true : false,
+        event.allow_detail_calendar === 'true' || !!event.allow_detail_calendar,
+      enable_language: event.enable_language === 'true' || !!event.enable_language,
       homeSelectedScreen: event.homeSelectedScreen,
       visibility: event.visibility ? event.visibility : 'PRIVATE',
       description: event.description,

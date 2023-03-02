@@ -116,7 +116,7 @@ class EventCard extends Component {
                       <time dateTime={event.datetime_to}>{dayjs(event.datetime_to).format('DD MMM YYYY')}</time>
                     </Space>}
                   </span>
-                  <Typography.Text ellipsis={isAdmin ? true : false} style={isAdmin ? styleAdmin : styleNormal}>
+                  <Typography.Text ellipsis={!!isAdmin} style={isAdmin ? styleAdmin : styleNormal}>
                     {event.name}
                   </Typography.Text>
                   <span>

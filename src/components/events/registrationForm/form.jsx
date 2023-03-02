@@ -108,7 +108,7 @@ function isVisibleButton(basicDataUser, extraFields, cEventUser) {
 }
 
 function isRegister(initialValues, cEventUser) {
-  return (initialValues !== null && Object.keys(initialValues).length === 0) || cEventUser.value == null ? true : false;
+  return (initialValues !== null && Object.keys(initialValues).length === 0) || cEventUser.value == null;
 }
 
 function fieldsAditional(extraFields) {
@@ -489,12 +489,12 @@ const FormRegister = ({
         action: 'show',
       });
     }
-    return isLt5M ? true : false;
+    return isLt5M;
   };
 
   function validateUrl() {
     const url = window.location.pathname;
-    return url.includes('/landing/') ? true : false;
+    return url.includes('/landing/');
   }
 
   /**

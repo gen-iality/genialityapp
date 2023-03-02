@@ -45,7 +45,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       .collection('events')
       .doc(event._id)
       .onSnapshot(function(doc) {
-        setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
+        setEnableMeetings(doc.data() && !!(doc.data().enableMeetings));
       });
   }, [event]);
 

@@ -88,7 +88,7 @@ class ListEventUser extends Component {
   };
   loadData = async () => {
     const { changeItem } = this.state;
-    const showModal = window.sessionStorage.getItem('message') === null ? true : false;
+    const showModal = window.sessionStorage.getItem('message') === null;
     this.setState({ modalView: showModal });
     // NO BORRAR ES UN AVANCE  PARA OPTIMIZAR LAS PETICIONES A LA API DE LA SECCION NETWORKING
     let eventUserList = [];

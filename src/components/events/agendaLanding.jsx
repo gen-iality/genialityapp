@@ -418,7 +418,7 @@ class Agenda extends Component {
     const { userAgenda } = this.state;
     if (!userAgenda) return false;
     const checkInscription = userAgenda.filter(activity => activity.activity_id === activityId);
-    const statusInscription = checkInscription.length ? true : false;
+    const statusInscription = !!checkInscription.length;
     return statusInscription;
   }
 

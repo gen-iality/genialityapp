@@ -29,7 +29,7 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
     if (!isLt5M) {
       message.error('Image must smaller than 5MB!')
     }
-    return isLt5M ? true : false
+    return isLt5M
   }
 
   const resetFields = () => {

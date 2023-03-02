@@ -55,7 +55,7 @@ class UserRegistration extends Component {
             eventUser: eventUser,
             userTickets: tickets && tickets.data,
             loading: false,
-            registeredUser: eventUser ? true : false,
+            registeredUser: !!eventUser,
             initialValues: { names: data.names, email: data.email },
           });
         }

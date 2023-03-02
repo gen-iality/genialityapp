@@ -55,7 +55,7 @@ const ModalAuth = (props) => {
       case 'PRIVATE_EVENT':
         return false;
       case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
-        return props.isPrivateRoute ? true : false;
+        return !!props.isPrivateRoute;
       case 'PUBLIC_EVENT_WITH_REGISTRATION':
         return true;
       default:

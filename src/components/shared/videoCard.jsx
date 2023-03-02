@@ -89,7 +89,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
             style={{ width: '100%', borderRadius: '8px' }}
             cover={
               <ReactPlayer
-                /* light={duration !== 0 ? true : false} */
+                /* light={duration !== 0} */
                 width={'100%'}
                 height="150px"
                 url={activity.video}

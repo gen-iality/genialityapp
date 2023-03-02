@@ -41,7 +41,7 @@ function listenSurveysData(event, activity, currentUser, callback) {
          (survey) => survey.isOpened && (survey.isOpened == 'true' || survey.isOpened == true)
       );
 
-      const hasOpenSurveys = openSurveys.length > 0 ? true : false;
+      const hasOpenSurveys = openSurveys.length > 0;
 
       const surveyVisible = publishedSurveys && publishedSurveys.length;
 

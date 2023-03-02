@@ -30,10 +30,10 @@ export default function ConferenceTabsComponent(props) {
   const { chat, surveys, games, attendees, activeTab } = props;
   return (
     <div className='zoom-collapsed'>
-      <Button onClick={() => setCollapsed(collapsed === false ? true : false)} className='zoom-collapsed_button'>
+      <Button onClick={() => setCollapsed(collapsed === false)} className='zoom-collapsed_button'>
         {createElement(collapsed ? RightOutlined : LeftOutlined, {
           className: 'trigger',
-          onClick: () => setCollapsed(collapsed === false ? true : false),
+          onClick: () => setCollapsed(collapsed === false),
         })}
       </Button>
       {collapsed === false ? (
@@ -93,7 +93,7 @@ export default function ConferenceTabsComponent(props) {
                 </Tooltip>
               }
               onClick={() => {
-                setCollapsed(collapsed === false ? true : false);
+                setCollapsed(collapsed === false);
                 handleClick('chat');
               }}
             />
@@ -107,7 +107,7 @@ export default function ConferenceTabsComponent(props) {
                 </Tooltip>
               }
               onClick={() => {
-                setCollapsed(collapsed === false ? true : false);
+                setCollapsed(collapsed === false);
                 handleClick('surveys');
               }}
             />
@@ -121,7 +121,7 @@ export default function ConferenceTabsComponent(props) {
                 </Tooltip>
               }
               onClick={() => {
-                setCollapsed(collapsed === false ? true : false);
+                setCollapsed(collapsed === false);
                 handleClick('attendees');
               }}
             />
@@ -134,7 +134,7 @@ export default function ConferenceTabsComponent(props) {
                   <BuildOutlined
                     style={{ fontSize: '21px' }}
                     onClick={() => {
-                      setCollapsed(collapsed === false ? true : false);
+                      setCollapsed(collapsed === false);
                       handleClick('games');
                     }}
                   />

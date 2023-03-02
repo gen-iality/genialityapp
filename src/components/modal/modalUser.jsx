@@ -56,7 +56,7 @@ class UserModal extends Component {
         Object.keys(value.properties).map((obj) => {
           return (user[obj] = value.properties[obj]);
         });
-        const checked_in = value.checkedin_at ? true : false;
+        const checked_in = !!value.checkedin_at;
         user = { ...user, _id: value._id };
         this.setState({
           user,
@@ -72,7 +72,7 @@ class UserModal extends Component {
         Object.keys(value).map((obj) => {
           return (user[obj] = value[obj]);
         });
-        const checked_in = value.checkedin_at ? true : false;
+        const checked_in = !!value.checkedin_at;
         this.setState({
           user,
           ticket_id: value.ticket_id,

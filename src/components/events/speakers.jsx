@@ -69,7 +69,7 @@ class Speakers extends Component {
 
     // Si hay speakers con categorias entonces habilitamos el render agrupado de los speakers
     // sino entonces mostrasmos solo los spakers sin categorias
-    const renderSpeakerCategories = categories.length ? true : false;
+    const renderSpeakerCategories = !!categories.length;
 
     this.setState({ renderSpeakerCategories });
 
@@ -206,7 +206,7 @@ class Speakers extends Component {
                                           );
                                         }
                                       }}
-                                      hoverable={speaker.description ? true : false}
+                                      hoverable={!!speaker.description}
                                       style={{
                                         paddingTop: '30px',
                                         borderRadius: '20px',
@@ -307,7 +307,7 @@ class Speakers extends Component {
                           );
                         }
                       }}
-                      hoverable={speaker.description ? true : false}
+                      hoverable={!!speaker.description}
                       style={{
                         paddingTop: '30px',
                         borderRadius: '20px',

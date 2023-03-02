@@ -10,7 +10,7 @@ const ModalPreviewVideo = () => {
       onCancel={() => visualizeVideo(null, null, null)}
       width="680px"
       bodyStyle={{ paddingTop: '40px' }}
-      visible={videoObject !== null ? true : false}
+      visible={videoObject !== null}
       footer={null}
     >
       <Row gutter={[0, 0]}>

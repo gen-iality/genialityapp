@@ -18,7 +18,7 @@ const ModalCreateOrg = (props) => {
         action: 'show',
       });
     }
-    return isLt5M ? true : false;
+    return isLt5M;
   };
 
   function resetFields() {
