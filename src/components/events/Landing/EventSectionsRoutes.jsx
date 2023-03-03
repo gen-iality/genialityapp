@@ -157,7 +157,6 @@ const EventSectionRoutes = props => {
 
   useEffect(() => {
     if (cEventUser.value && props.cEvent.value) {
-      // console.log(props.cEvent.value.type_event)
       if (props.cEvent.value.type_event !== 'physicalEvent') {
         checkinAttendeeInEvent(cEventUser.value, props.cEvent.value._id);
       }
@@ -190,11 +189,11 @@ const EventSectionRoutes = props => {
       {props.viewVirtualconference && (
         <>
           {props.cEvent.value?.styles?.show_title &&
-            (props.cEvent.value?.styles.show_title === true || props.cEvent.value?.styles?.show_title === 'true') && (
+            (props.cEvent.value?.styles.show_title || props.cEvent.value?.styles?.show_title === 'true') && (
               <InfoEvent />
             )}
           {props.cEvent.value?.styles?.show_video_widget &&
-            (props.cEvent.value?.styles?.show_video_widget === true ||
+            (props.cEvent.value?.styles?.show_video_widget ||
               props.cEvent.value?.styles?.show_video_widget === 'true') && (
               <ListVideoCard idevent={props.cEvent.value} />
             )}
@@ -208,43 +207,43 @@ const EventSectionRoutes = props => {
 
         <Route path={`${path}/certificate`}>
           <ThisRouteCanBeDisplayed>
-            <Certificate key='certificate' />
+            <Certificate key="certificate" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/documents`}>
           <ThisRouteCanBeDisplayed>
-            <DocumentsForm key='documents' />
+            <DocumentsForm key="documents" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/interviews`}>
           <ThisRouteCanBeDisplayed>
-            <MyAgendaIndepend key='interviews' />
+            <MyAgendaIndepend key="interviews" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/networking`}>
           <ThisRouteCanBeDisplayed>
-            <NetworkingForm key='networking' />
+            <NetworkingForm key="networking" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/informativeSection1`}>
           <ThisRouteCanBeDisplayed>
-            <InformativeSection2 key='informativeSection1' />
+            <InformativeSection2 key="informativeSection1" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/informativeSection`}>
           <ThisRouteCanBeDisplayed>
-            <InformativeSection key='informativeSection' />
+            <InformativeSection key="informativeSection" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/my_section`}>
           <ThisRouteCanBeDisplayed>
-            <MySection key='my_section' />
+            <MySection key="my_section" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -254,74 +253,74 @@ const EventSectionRoutes = props => {
               socialzonetabs={{
                 ...props?.generaltabs,
               }}
-              key='activity'
+              key="activity"
             />
           </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/speakers`}>
           <ThisRouteCanBeDisplayed>
-            <SpeakersForm key='speakers' />
+            <SpeakersForm key="speakers" />
           </ThisRouteCanBeDisplayed>
         </Route>
         <Route path={`${path}/survey`}>
           <ThisRouteCanBeDisplayed>
-            <SurveyForm key='survey' />
+            <SurveyForm key="survey" />
           </ThisRouteCanBeDisplayed>
         </Route>
         <Route path={`${path}/partners`}>
           <ThisRouteCanBeDisplayed>
-            <Partners key='partners' />
+            <Partners key="partners" />
           </ThisRouteCanBeDisplayed>
         </Route>
         <Route path={`${path}/faqs`}>
           <ThisRouteCanBeDisplayed>
-            <FaqsForm key='faqs' />
+            <FaqsForm key="faqs" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/evento`}>
           <ThisRouteCanBeDisplayed>
-            <EventHome key='evento' setActivitiesAttendee={setActivitiesAttendee} />
+            <EventHome key="evento" setActivitiesAttendee={setActivitiesAttendee} />
           </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/wall`}>
           <ThisRouteCanBeDisplayed>
-            <WallForm key='wall' />
+            <WallForm key="wall" />
           </ThisRouteCanBeDisplayed>
         </Route>
         <Route path={`${path}/videos`}>
           <ThisRouteCanBeDisplayed>
-            <Videos key='videos' />
+            <Videos key="videos" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/ferias`}>
           <ThisRouteCanBeDisplayed>
-            <Ferias key='ferias' />
+            <Ferias key="ferias" />
           </ThisRouteCanBeDisplayed>
         </Route>
         <Route path={`${path}/noticias`}>
           <ThisRouteCanBeDisplayed>
-            <Noticias key='noticias' />
+            <Noticias key="noticias" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
         <Route path={`${path}/certs`}>
           <ThisRouteCanBeDisplayed>
-            <CertificadoLanding key='certs' />
+            <CertificadoLanding key="certs" />
           </ThisRouteCanBeDisplayed>
         </Route>
         <Route path={`${path}/producto`}>
           <ThisRouteCanBeDisplayed>
-            <Productos key='producto' />
+            <Productos key="producto" />
           </ThisRouteCanBeDisplayed>
         </Route>
         <Route path={`${path}/agenda`}>
           <ThisRouteCanBeDisplayed>
             <Agenda
-              key='agenda'
+              key="agenda"
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
               setVirtualConference={props.setVirtualConference}

@@ -9,7 +9,7 @@ class EventCard extends Component {
     const { event, bordered, right, loading } = this.props;
     const { Meta } = Card;
     return (
-      <div className='animate__animated animate__fadeIn'>
+      <div className="animate__animated animate__fadeIn">
         <Badge.Ribbon
           style={{
             maxWidth: '250px',
@@ -22,7 +22,7 @@ class EventCard extends Component {
               <div>
                 <Space>
                   <span>
-                    <i className='fas fa-map-marker-alt' />
+                    <i className="fas fa-map-marker-alt" />
                   </span>
                   <span>{event.venue ? event.venue : 'Virtual'}</span>
                 </Space>
@@ -37,16 +37,16 @@ class EventCard extends Component {
               cover={
                 event.picture ? (
                   <img
-                    className='animate__animated animate__fadeIn animate__slower'
-                    loading='lazy'
+                    className="animate__animated animate__fadeIn animate__slower"
+                    loading="lazy"
                     style={{ objectFit: 'cover', height: 180 }}
                     src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
-                    alt='Evius.co'
+                    alt="Evius.co"
                   />
                 ) : (
                   <img
-                    className='animate__animated animate__fadeIn animate__slower'
-                    loading='lazy'
+                    className="animate__animated animate__fadeIn animate__slower"
+                    loading="lazy"
                     style={{ objectFit: 'cover', height: 180 }}
                     src={
                       event.styles
@@ -55,19 +55,20 @@ class EventCard extends Component {
                           : EventImage
                         : EventImage
                     }
-                    alt='Evius.co'
+                    alt="Evius.co"
                   />
                 )
               }
               actions={right}
-              bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}>
+              bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
+            >
               <Meta
                 style={{}}
                 description={
                   <div>
                     <span style={{ fontSize: '12px' }}>
                       <Space>
-                        <i className='fas fa-calendar-alt' />
+                        <i className="fas fa-calendar-alt" />
                         <time dateTime={event.datetime_from}>{dayjs(event.datetime_from).format('DD MMM YYYY')}</time>
                         {'-'}
                         <time dateTime={event.datetime_from}>{dayjs(event.datetime_from).format('DD MMM YYYY')}</time>

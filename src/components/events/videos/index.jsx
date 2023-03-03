@@ -31,7 +31,7 @@ const Videos = () => {
 
   return (
     <div style={{ padding: '24px' }}>
-      <PageHeader backIcon={false} title='Vídeos grabados' />
+      <PageHeader backIcon={false} title="Vídeos grabados" />
       {existActivity === 1 ? (
         <Row gutter={[16, 16]}>
           {activitiesEvent &&
@@ -47,7 +47,7 @@ const Videos = () => {
                         event={cEvent.value}
                         action={{ name: 'Ver', url: `landing/${cEvent.value._id}` }}
                         activity={activity}
-                        shape='vertical'
+                        shape="vertical"
                       />
                     </Col>
                   );
@@ -56,7 +56,7 @@ const Videos = () => {
               })}
         </Row>
       ) : (
-        <Feedback message='No hay vídeos grabados' />
+        <Feedback message="No hay vídeos grabados" />
       )}
     </div>
   );

@@ -85,9 +85,9 @@ export async function parseData2Excel(data, fields, roles = null) {
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
   data.map((item, key) => {
-    const checkedInAt = typeof item.checkedin_at === 'object' ? item.checkedin_at?.toDate() : item.checkedin_at;
-    const updatedAt = typeof item.updated_at === 'object' ? item.updated_at?.toDate() : item.updated_at;
-    const createdAt = typeof item.created_at === 'object' ? item.created_at?.toDate() : item.created_at;
+    const checkedInAt = item.checkedin_at;
+    const updatedAt = item.updated_at;
+    const createdAt = item.created_at;
     info[key] = {};
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
     info[key]['checked'] =
@@ -99,7 +99,6 @@ export async function parseData2Excel(data, fields, roles = null) {
       if (item?.properties) {
         switch (type) {
           case 'number':
-            console.log('ITEM ACA====>', item);
             str =
               item && item?.properties
                 ? item.properties[name]
@@ -243,7 +242,7 @@ export function formatDataToString(data, property) {
                 {fileList.map((item, index) => {
                   return (
                     <li key={'item-files-' + index}>
-                      <a href={item.response} target='_blank' rel='noreferrer'>
+                      <a href={item.response} target="_blank" rel="noreferrer">
                         {item.name}
                       </a>
                     </li>

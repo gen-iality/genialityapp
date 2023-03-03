@@ -16,15 +16,16 @@ function MeetingPlayer({ activity }) {
 
   return (
     <>
-      <div className='mediaplayer'>
+      <div className="mediaplayer">
         <iframe
           style={{ aspectRatio: screens.xs ? '10/20' : '16/9' }}
           width='100%'
           height= {'100%'}
           allow='camera *;microphone *'
-          frameborder='0'
+          frameborder="0"
           allowfullscreen
-          src={eviusmeetUrl}>
+          src={eviusmeetUrl}
+        >
         </iframe>
       </div>
   </>

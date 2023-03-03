@@ -12,7 +12,7 @@ import certificateImage from '../events/certificateImageV2';
 // Estructura de boton para descargar certificados
 
 const IconText = ({ icon, text, onSubmit }) => (
-  <Button htmlType='submit' type='primary' onClick={onSubmit}>
+  <Button htmlType="submit" type="primary" onClick={onSubmit}>
     {createElement(icon, { style: { marginRight: 8 } })}
     {text}
   </Button>
@@ -170,12 +170,12 @@ class CertificadoLanding extends Component {
     return (
       <>
         {this.props.cUser.value && this.props.cUser.value._id && checkedInUsers && checkedInUsers.length > 0 && (
-          <Row gutter={[8, 8]} wrap justify='center'>
+          <Row gutter={[8, 8]} wrap justify="center">
             <Col span={24}>
               <Card>
                 <>
                   {/* Alert informativo de certificados disponibles */}
-                  <Alert message='Certificados disponibles' type='success' />
+                  <Alert message="Certificados disponibles" type="success" />
                   {checkedInUsers.map((user, key) => (
                     <div key={key}>
                       <br />
@@ -183,7 +183,7 @@ class CertificadoLanding extends Component {
 
                       {/* Importacion del boton para descargar certificado */}
                       <IconText
-                        text='Descargar certificado'
+                        text="Descargar certificado"
                         icon={DownloadOutlined}
                         onSubmit={() => this.generateCert(user)}
                       />

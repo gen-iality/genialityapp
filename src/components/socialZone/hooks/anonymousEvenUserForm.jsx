@@ -49,29 +49,29 @@ function AnonymousEvenUserForm() {
   };
 
   return (
-    <Form className='asistente-list' {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
-      <Row justify='start' style={{ marginBottom: 15 }}>
+    <Form className="asistente-list" {...layout} name="basic" initialValues={{ remember: true }} onFinish={onFinish}>
+      <Row justify="start" style={{ marginBottom: 15 }}>
         <Col>
-          <Text type='secondary'>
+          <Text type="secondary">
             <FormattedMessage
-              id='form.message.socialzone'
-              defaultMessage='Registrate para participar en el chat de este curso'
+              id="form.message.socialzone"
+              defaultMessage="Registrate para participar en el chat de este curso"
             />
           </Text>
         </Col>
       </Row>
 
-      <Form.Item label='Nombre' name='name' rules={[{ required: true, message: 'Ingrese su nombre' }]}>
+      <Form.Item label="Nombre" name="name" rules={[{ required: true, message: 'Ingrese su nombre' }]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label='Email' name='email' rules={[{ required: true, message: 'Ingrese su email' }]}>
+      <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Ingrese su email' }]}>
         <Input />
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
-        <Button htmlType='submit' type='primary'>
-          {/*<FormattedMessage id='form.button.register' defaultMessage='Registrarme' />*/}
+        <Button htmlType="submit" type="primary">
+          {/*<FormattedMessage id="form.button.register" defaultMessage="Registrarme" />*/}
           Ingresar
         </Button>
       </Form.Item>

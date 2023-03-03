@@ -8,7 +8,7 @@ import { useEventContext } from '@context/eventContext';
 import { useUserEvent } from '@context/eventUserContext';
 
 import type AgendaType from '@Utilities/types/AgendaType';
-import { Spin, Typography } from 'antd';
+import { Spin, Typography, Badge } from 'antd';
 
 type CurrentEventAttendees = any; // TODO: define this type and move to @Utilities/types/
 
@@ -17,10 +17,17 @@ export interface StudentSelfCourseProgressProps {
   hasProgressLabel?: boolean;
   activityFilter?: (a: AgendaType) => boolean;
   customTitle?: string;
+  nodeIfCompleted?: ReactNode,
 }
 
 function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
-  const { progressType, hasProgressLabel = false, activityFilter = (a: AgendaType) => true, customTitle } = props;
+  const {
+    progressType,
+    hasProgressLabel = false,
+    activityFilter = (a: AgendaType) => true,
+    customTitle,
+    nodeIfCompleted,
+  } = props;
 
   const cEventContext = useEventContext();
   const cEventUser = useUserEvent();
@@ -70,7 +77,7 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
     return null;
   }
 
-  return (
+  const render = () => (
     <CourseProgress
       title={customTitle}
       hasLabel={hasProgressLabel}
@@ -78,7 +85,17 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
       percentValue={progressPercentValue}
       type={progressType}
     />
-  );
+  )
+
+  if (progressPercentValue === 100 && nodeIfCompleted) {
+    return (
+      <Badge.Ribbon text={nodeIfCompleted} color="#fb8500">
+        {render()}
+      </Badge.Ribbon>
+    )
+  }
+
+  return render()
 }
 
 export default memo(StudentSelfCourseProgress);

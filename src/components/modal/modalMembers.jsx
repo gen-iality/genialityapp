@@ -112,7 +112,7 @@ function ModalMembers(props) {
   }
 
   return (
-    <Modal closable footer={false} visible={true} onCancel={() => props.closeOrOpenModalMembers()}>
+    <Modal closable footer={false} visible onCancel={() => props.closeOrOpenModalMembers()}>
       <div
         style={{
           paddingLeft: '0px',
@@ -127,7 +127,7 @@ function ModalMembers(props) {
           initialOtherValue={props.value}
           eventUserOther={{}}
           fields={props.extraFields}
-          organization={true}
+          organization
           options={options}
           callback={saveUser}
           loadingregister={loadingregister}

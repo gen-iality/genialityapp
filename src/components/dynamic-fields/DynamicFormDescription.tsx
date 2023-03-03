@@ -19,7 +19,7 @@ const DynamicFormDescription: React.FunctionComponent<Pick<IDynamicFieldProps['f
     {description && description.length > 500 && (
       <Collapse defaultActiveKey={['0']} style={{ marginBottom: '15px' }}>
         <Collapse.Panel
-          key='1'
+          key="1"
           header={intl.formatMessage({
             id: 'registration.message.policy',
           })}

@@ -140,8 +140,8 @@ const Landing = props => {
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
       <Button
-        type='primary'
-        size='small'
+        type="primary"
+        size="small"
         onClick={() =>
           window.location.replace(`${window.location.origin}/landing/${cEventContext.value._id}/activity/${activity}`)
         }
@@ -157,7 +157,7 @@ const Landing = props => {
       setRegister(urlParams.get('register'));
     }
   }, []);
-  //PARA OBTENER PARAMETRO AL LOGUEARME
+  // Para obtener parametro al loguearme
   const NotificationHelper = ({ message, type, activity }) => {
     notification.open({
       message: 'Nueva notificación',
@@ -213,7 +213,6 @@ const Landing = props => {
           });
 
         if (cEventUser.status == 'LOADED' && cEventUser.value != null && cEventContext.status == 'LOADED') {
-          // console.log(EventContext.value.type_event);
           if (cEventContext.value.type_event !== 'onlineEvent') {
             checkinAttendeeInEvent(cEventUser.value, cEventContext.value._id);
           }
@@ -253,9 +252,9 @@ const Landing = props => {
         />
         <EventSectionsInnerMenu />
         <MenuTablets />
-        <Layout className='site-layout'>
+        <Layout className="site-layout">
           <Content
-            className='site-layout-background'
+            className="site-layout-background"
             style={{
               // paddingBottom: '15vh',
               backgroundSize: 'cover',

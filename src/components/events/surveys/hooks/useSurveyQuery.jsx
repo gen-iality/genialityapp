@@ -36,7 +36,6 @@ function useSurveyQuery(eventId, idSurvey, isResetingSurvey) {
       const loadedSurvey = await loadSelectedSurvey(eventId, idSurvey, currentUser.value._id);
       //loadedSurvey.currentPage = 0;
       loadedSurvey.currentPage = await getUserCurrentSurveyPage(idSurvey, currentUser.value._id);
-      console.log('500.innerAsyncCall loadedSurvey', loadedSurvey);
       setInnerQuery(loadedSurvey);
     };
     innerAsyncCall();
@@ -45,7 +44,6 @@ function useSurveyQuery(eventId, idSurvey, isResetingSurvey) {
   //realtime Query
   useEffect(() => {
     function handleRealTimeCallback(surveyStatus) {
-      console.log('500.handleRealTimeCallback surveyStatus', surveyStatus);
       setInnerRealTimeQuery(surveyStatus);
     }
     const unsuscribe = initRealTimeSurveyListening(idSurvey, handleRealTimeCallback);

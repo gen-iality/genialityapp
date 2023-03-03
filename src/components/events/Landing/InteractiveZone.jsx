@@ -7,26 +7,26 @@ const InteractiveZone = () => {
   return (
     <>
       {/* aqui esta el boton del chat mobile */}
-      <div className='chat-evius_mobile'>
+      <div className="chat-evius_mobile">
         <Button
-          shape='circle'
+          shape="circle"
           icon={
             <Badge count={this.state.totalNewMessages}>
               <MessageOutlined style={{ fontSize: '20px' }} />
             </Badge>
           }
-          size='large'
+          size="large"
           onClick={this.showDrawerMobile}
-          style={this.state.visibleChat == true ? { display: 'none' } : {}}></Button>
+          style={this.state.visibleChat ? { display: 'none' } : {}}></Button>
       </div>
       <Drawer
         height={450}
         placement={this.state.placementBottom}
-        closable={true}
+        closable
         onClose={this.onClose}
         visible={this.state.visibleChat}
-        maskClosable={true}
-        className='drawerMobile'>
+        maskClosable
+        className="drawerMobile">
         <SocialZone
           updateChat={this.state.updateChat}
           collapse={this.state.collapsed}
@@ -52,14 +52,15 @@ const InteractiveZone = () => {
         this.state.generalTabs?.publicChat ||
         this.state.generalTabs?.privateChat) && (
         <Sider
-          className='collapse-chatEvent'
+          className="collapse-chatEvent"
           style={{ backgroundColor: this.props.cEvent.styles?.toolbarMenuSocial }}
           trigger={null}
-          theme='light'
+          theme="light"
           collapsible
           collapsed={this.state.collapsed}
-          width={400}>
-          <div className='Chat-Event'>
+          width={400}
+        >
+          <div className="Chat-Event">
             {this.state.collapsed ? (
               <>
                 {/* MENU DERECHO */}
@@ -67,7 +68,7 @@ const InteractiveZone = () => {
               </>
             ) : (
               <>
-                <Button type='link' onClick={this.toggleCollapsed}>
+                <Button type="link" onClick={this.toggleCollapsed}>
                   <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
                 </Button>
 

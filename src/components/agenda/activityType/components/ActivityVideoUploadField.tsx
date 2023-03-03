@@ -58,14 +58,15 @@ function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
       beforeUpload={handleBeforeUpload}
       action={`${urlUploadVideoGcore}?nameActivity=${props.activityName}`}
       maxCount={1}
-      accept='video/*'
-      name='video'
+      accept="video/*"
+      name="video"
       onRemove={() => {}}
-      onChange={handleOnChange}>
+      onChange={handleOnChange}
+    >
       <Result
         icon={<FileVideoOutlineIcon />}
-        title='Haga clic o arrastre el video a esta área para cargarlo'
-        subTitle='Solamente formato ogm, wmv, mpg, webm, ogv, mov, asx, mpeg, mp4, m4v y avi.'
+        title="Haga clic o arrastre el video a esta área para cargarlo"
+        subTitle="Solamente formato ogm, wmv, mpg, webm, ogv, mov, asx, mpeg, mp4, m4v y avi."
       />
       {isLoading && <Spin />}
     </Upload.Dragger>

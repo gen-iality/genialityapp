@@ -25,7 +25,7 @@ const MenuEvent = ({ isMobile }) => {
         //     maxHeight: '100vh',
         //   }}
         // >
-        <Menu style={stylesMenuItems} mode='inline' defaultSelectedKeys={['1']}>
+        <Menu style={stylesMenuItems} mode="inline" defaultSelectedKeys={['1']}>
           {event.itemsMenu &&
             !eventPrivate.private &&
             Object.keys(event.itemsMenu).map((key) => {
@@ -42,12 +42,13 @@ const MenuEvent = ({ isMobile }) => {
               const IconoComponente = iconComponents[icon];
 
               return key == 'networking' ? (
-                <Menu.Item key={event.itemsMenu[key].section} className='MenuItem_event'>
+                <Menu.Item key={event.itemsMenu[key].section} className="MenuItem_event">
                   <Badge key={event.itemsMenu[key].section} count={totalsolicitudes} offset={[-30, -2]}>
                     <Link
-                      className='menuEvent_section-text'
+                      className="menuEvent_section-text"
                       style={{ color: event.styles.textMenu }}
-                      to={`${url}/${event.itemsMenu[key].section}`}>
+                      to={`${url}/${event.itemsMenu[key].section}`}
+                    >
                       <IconoComponente
                         style={{
                           fontSize: '22px',
@@ -61,7 +62,7 @@ const MenuEvent = ({ isMobile }) => {
               ) : (
                 key !== 'networking' && (
                   <>
-                    <Menu.Item key={event.itemsMenu[key].section} className='MenuItem_event'>
+                    <Menu.Item key={event.itemsMenu[key].section} className="MenuItem_event">
                       <IconoComponente
                         style={{
                           fontSize: '22px',
@@ -72,9 +73,10 @@ const MenuEvent = ({ isMobile }) => {
                         }}
                       />
                       <Link
-                        className='menuEvent_section-text'
+                        className="menuEvent_section-text"
                         style={{ color: event.styles.textMenu }}
-                        to={`${url}/${event.itemsMenu[key].section}`}>
+                        to={`${url}/${event.itemsMenu[key].section}`}
+                      >
                         <span
                           style={{
                             display: 'flex',
@@ -95,11 +97,11 @@ const MenuEvent = ({ isMobile }) => {
         // </div>
         isMobile &&
         !eventPrivate.private && (
-          <Menu style={stylesMenuItems} mode='vertical' defaultSelectedKeys={['1']}>
+          <Menu style={stylesMenuItems} mode="vertical" defaultSelectedKeys={['1']}>
             {event.itemsMenu &&
               Object.keys(event.itemsMenu).map((key) => {
                 //icono personalizado
-                //CAMBIO DE ICONO TRIPULACIÓN KELLOGS
+                // Cambio de icono tripulación kellogs
                 const icon =
                   event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
                     ? 'RocketOutlined'
@@ -118,7 +120,7 @@ const MenuEvent = ({ isMobile }) => {
                       color: event.styles.textMenu,
                     }}
                     key={event.itemsMenu[key].section}
-                    className='MenuItem_event'>
+                    className="MenuItem_event">
                     <IconoComponente
                       style={{
                         margin: '0 auto',
@@ -128,9 +130,10 @@ const MenuEvent = ({ isMobile }) => {
                     />
 
                     <Link
-                      className='menuEvent_section-text'
+                      className="menuEvent_section-text"
                       style={{ color: event.styles.textMenu }}
-                      to={`${url}/${event.itemsMenu[key].section}`}>
+                      to={`${url}/${event.itemsMenu[key].section}`}
+                    >
                       {` ${event.itemsMenu[key].name}`}
                     </Link>
                   </Menu.Item>

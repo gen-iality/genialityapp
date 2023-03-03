@@ -29,7 +29,7 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
     if (!isLt5M) {
       message.error('Image must smaller than 5MB!')
     }
-    return isLt5M ? true : false
+    return isLt5M
   }
 
   const resetFields = () => {
@@ -76,7 +76,7 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
     if (cUser.value || modalListOrgIsVisible) {
       obtainOrganizations()
     }
-  }, [cUser.value, modalListOrgIsVisible])
+  }, [cUser.value, modalListOrgIsVisible, orgId])
 
   return (
     <Modal
@@ -112,7 +112,8 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
       okText="Seleccionar"
       cancelText="Cerrar"
       visible={state?.visible}
-      onCancel={() => dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })}>
+      onCancel={() => dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })}
+    >
       <Tabs activeKey={state?.tab} onChange={(key) => dispatch({ type: 'SELECT_TAB', payload: { tab: key } })}>
         <TabPane tab="Mis organizaciones" key="list">
           <List
@@ -128,7 +129,8 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                   background: state.selectOrganization?.id == item.id ? '#40a9ff' : 'white',
                   borderRadius: '8px',
                 }}
-                onClick={() => dispatch({ type: 'SELECT_ORGANIZATION', payload: { orgId: null, organization: item } })}>
+                onClick={() => dispatch({ type: 'SELECT_ORGANIZATION', payload: { orgId: null, organization: item } })}
+              >
                 {item.name}
               </List.Item>
             )}
@@ -169,10 +171,11 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                     listType="picture"
                     maxCount={1}
                     fileList={imageAvatar}
-                    beforeUpload={beforeUpload}>
+                    beforeUpload={beforeUpload}
+                  >
                     {imageAvatar === null && (
                       <Button type="primary" shape="circle" style={{ height: '150px', width: '150px' }}>
-                        <Space direction='vertical'>
+                        <Space direction="vertical">
                           <PictureOutlined style={{ fontSize: '40px' }} />
                           Subir logo
                         </Space>

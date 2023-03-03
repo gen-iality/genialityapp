@@ -63,7 +63,8 @@ const ResponsePayu = (props) => {
       }}
       closable={false}
       visible={visible}
-      footer={null}>
+      footer={null}
+    >
       <Result
         icon={
           response &&
@@ -107,10 +108,10 @@ const ResponsePayu = (props) => {
         }
         extra={[
           <Button
-            key='action'
+            key="action"
             style={{ marginTop: '10px' }}
-            type='primary'
-            size='large'
+            type="primary"
+            size="large"
             onClick={() => {
               setVisible(false);
               !isDeclined()

@@ -12,17 +12,17 @@ const MenuTabletsSocialZone = (props) => {
 
   return (
     <>
-      <div className='chat-evius_mobile  animate__animated animate__pulse animate__slower animate__infinite'>
-        <Space direction='horizontal' size='small'>
+      <div className="chat-evius_mobile  animate__animated animate__pulse animate__slower animate__infinite">
+        <Space direction="horizontal" size="small">
           <Button
             style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
-            shape='circle'
+            shape="circle"
             icon={
               <Badge count={props.totalNewMessages}>
                 <MessageOutlined style={{ fontSize: '20px', color: cEvent.value.styles?.textMenu }} />
               </Badge>
             }
-            size='large'
+            size="large"
             onClick={() => {
               setOptionselected('1');
               setisDrawerVisible(!isDrawerVisible);
@@ -30,13 +30,13 @@ const MenuTabletsSocialZone = (props) => {
           {props.currentActivity && (
             <Button
               style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
-              shape='circle'
+              shape="circle"
               icon={
                 <Badge dot={props.hasOpenSurveys}>
                   <PieChartOutlined style={{ fontSize: '20px', color: cEvent.value.styles?.textMenu }} />
                 </Badge>
               }
-              size='large'
+              size="large"
               onClick={() => {
                 setOptionselected('3');
                 setisDrawerVisible(!isDrawerVisible);
@@ -48,20 +48,20 @@ const MenuTabletsSocialZone = (props) => {
       <Drawer
         style={{ zIndex: '200' }}
         bodyStyle={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
-        height={'90vh'}
-        placement='bottom'
-        closable={true}
+        height="90vh"
+        placement="bottom"
+        closable
         onClose={() => setisDrawerVisible(!isDrawerVisible)}
         visible={isDrawerVisible}
-        maskClosable={true}
-        className='drawerMobile'>
+        maskClosable
+        className="drawerMobile">
         <SocialZone
           totalMessages={props.totalNewMessages}
           optionselected={optionselected}
           tab={1}
           generalTabs={props.generalTabs}
           currentActivity={props.currentActivity}
-          mobile={true}
+          mobile
         />
       </Drawer>
     </>

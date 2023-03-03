@@ -24,7 +24,6 @@ const Configuration = (props) => {
         .doc(props.eventId)
         .get();
       if (resp.exists) {
-        console.log('respuesta firebase=>', resp.data());
         const data = resp.data();
         setCheckSubasta(data.data.habilitar_subasta);
         setMessage(data.data.message);
@@ -84,14 +83,14 @@ const Configuration = (props) => {
 
   return !loadingData ? (
     <>
-      <Header title={'Configuración'} back save saveMethod={saveConfiguration} />
-      <Row justify='center' wrap gutter={12}>
+      <Header title="Configuración" back save saveMethod={saveConfiguration} />
+      <Row justify="center" wrap gutter={12}>
         <Col span={16}>
           <p>Habilitar puja</p>
           <Switch checked={checkSubasta} onChange={onChange} />
           <br /> <br />
           <p>Mensaje a mostrar al deshabilitar</p>
-          <ReactQuill id={'messageF'} value={messageF} modules={toolbarEditor} onChange={changeMessage} />
+          <ReactQuill id="messageF" value={messageF} modules={toolbarEditor} onChange={changeMessage} />
         </Col>
       </Row>
     </>

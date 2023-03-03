@@ -46,14 +46,14 @@ const Certificados = (props) => {
     <CMS 
       API={CertsApi}
       eventId={props.event._id}
-      title={'Certificados'}
-      titleTooltip={'Agregue o edite los Certificados que se muestran en la aplicación'}
+      title="Certificados"
+      titleTooltip="Agregue o edite los Certificados que se muestran en la aplicación"
       addUrl={{
         pathname: `${props.matchUrl}/certificado`,
         state: { new: true },
       }}
       columns={columns}
-      key='_id'
+      key="_id"
       editPath={`${props.matchUrl}/certificado`}
       pagination={false}
       actions

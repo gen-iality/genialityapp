@@ -18,10 +18,10 @@ function SurveyQuestionFeedback(props: SurveyQuestionFeedbackProps) {
 
   return (
     <Result
-      className='animate__animated animate__fadeIn'
+      className="animate__animated animate__fadeIn"
       {...newProps}
       extra={[
-        <Button type='primary' onClick={props.onNextClick}>
+        <Button type="primary" onClick={props.onNextClick}>
           Next
         </Button>,
       ]}

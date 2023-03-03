@@ -34,7 +34,6 @@ import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteC
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage';
 
 function Organization(props) {
-  console.log('300. props - organization', props);
   const [organization, setOrganization] = useState({});
 
   const [isLoading, setIsLoading] = useState(true);
@@ -55,17 +54,17 @@ function Organization(props) {
       {isLoading ? (
         <Loading />
       ) : (
-        <Layout style={{ minHeight: '100vh' }} className='columns'>
+        <Layout style={{ minHeight: '100vh' }} className="columns">
           <Layout.Sider
             trigger={null}
             collapsible
             collapsed={collapseMenu}
-            theme='dark'
+            theme="dark"
             /* style={{ backgroundColor: '#fff' }} */
             width={220}
           >
             <Button
-              type='primary'
+              type="primary"
               onClick={() => setCollapseMenu(!collapseMenu)}
               style={{ marginBottom: 16 }}
               icon={collapseMenu ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -73,60 +72,60 @@ function Organization(props) {
             <Menu
               defaultSelectedKeys={['1']}
               defaultOpenKeys={['1']}
-              mode='inline'
-              theme='dark'
+              mode="inline"
+              theme="dark"
               //inlineCollapsed={collapseMenu}
             >
-              <Menu.Item key={'1'} icon={<BarsOutlined />}>
-                {'Información'}
+              <Menu.Item key="1" icon={<BarsOutlined />}>
+                Información
                 <NavLink to={`${props.match.url}/information`} />
               </Menu.Item>
-              <Menu.Item key={'2'} icon={<ScheduleOutlined />}>
-                {'Cursos'}
+              <Menu.Item key="2" icon={<ScheduleOutlined />}>
+                Cursos
                 <NavLink to={`${props.match.url}/events`} />
               </Menu.Item>
-              <Menu.Item key={'3'} icon={<SketchOutlined />}>
-                {'Apariencia'}
+              <Menu.Item key="3" icon={<SketchOutlined />}>
+                Apariencia
                 <NavLink to={`${props.match.url}/appearance`} />
               </Menu.Item>
-              <Menu.Item key={'4'} icon={<TeamOutlined />}>
-                {'Miembros'}
+              <Menu.Item key="4" icon={<TeamOutlined />}>
+                Miembros
                 <NavLink to={`${props.match.url}/members`} />
               </Menu.Item>
-              {/* <Menu.Item key={'4.1'} icon={<DeleteOutlined />}>
+              {/* <Menu.Item key="4.1" icon={<DeleteOutlined />}>
                 Organization Properties
                 <NavLink to={`${props.match.url}/organization-properties`} />
               </Menu.Item> */}
-              <Menu.Item key={'5'} icon={<TeamOutlined />}>
-                {'Cargos'}
+              <Menu.Item key="5" icon={<TeamOutlined />}>
+                Cargos
                 <NavLink to={`${props.match.url}/positions`} />
               </Menu.Item>
-              <Menu.Item key={'6'} icon={<TeamOutlined />}>
-                {'Inscritos'}
+              <Menu.Item key="6" icon={<TeamOutlined />}>
+                Inscritos
                 <NavLink to={`${props.match.url}/registered`} />
               </Menu.Item>
-              <Menu.Item key={'7'} icon={<UserSwitchOutlined />}>
+              <Menu.Item key="7" icon={<UserSwitchOutlined />}>
                 <small>{'Configuración de Miembros'}</small>
                 <NavLink to={`${props.match.url}/membersettings`} />
               </Menu.Item>
-              <Menu.Item key={'8'} icon={<ProjectOutlined />}>
+              <Menu.Item key="8" icon={<ProjectOutlined />}>
                 <small>{'Configuración de Plantillas'}</small>
                 <NavLink to={`${props.match.url}/templatesettings`} />
               </Menu.Item>
-              <Menu.Item key={'9'} icon={<MenuOutlined />}>
+              <Menu.Item key="9" icon={<MenuOutlined />}>
                 {'Menú Items'}
                 <NavLink to={`${props.match.url}/menuItems`} />
               </Menu.Item>
             </Menu>
           </Layout.Sider>
-          <Layout.Content className='column event-main' style={{ width: 500 }}>
+          <Layout.Content className="column event-main" style={{ width: 500 }}>
             {isLoading ? (
               <Loading />
             ) : (
               <div style={{ padding: '5px' }}>
-                <Tag color='#2bf4d5' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft: 20 }}>
+                <Tag color='#003853' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft: 20 }}>
                   <a
-                    target='_blank'
+                    target="_blank"
                     href={`${window.location.origin}/organization/${organization._id}/events
                         `}
                   >
@@ -145,84 +144,84 @@ function Organization(props) {
                     path={`${props.match.url}/events`}
                     component={OrgEvents}
                     org={organization}
-                    componentKey='events'
+                    componentKey="events"
                   />
                   <Protected
                     exact
                     path={`${props.match.url}/information`}
                     component={OrganizationProfile}
                     org={organization}
-                    componentKey='information'
+                    componentKey="information"
                   />
                   <Protected
                     exact
                     path={`${props.match.url}/appearance`}
                     component={Styles}
                     org={organization}
-                    componentKey='appearance'
+                    componentKey="appearance"
                   />
                   <Protected
                     exact
                     path={`${props.match.url}/members`}
                     component={OrgMembers}
                     org={organization}
-                    componentKey='members'
+                    componentKey="members"
                   />
                   <Protected
                     exact
                     path={`${props.match.url}/organization-properties`}
                     component={OrganizationPropertiesIsolatedPage}
                     org={organization}
-                    componentKey='organization-properties'
+                    componentKey="organization-properties"
                   />
                   <Protected
                     exact
                     path={`${props.match.url}/positions`}
                     component={OrganizationPositionsPage}
                     org={organization}
-                    componentKey='positions'
+                    componentKey="positions"
                   />
                   <Protected
                     exact
                     path={`${props.match.url}/positions/:positionId`}
                     component={CurrentOrganizationPositionPage}
                     org={organization}
-                    componentKey='current-positions'
+                    componentKey="current-positions"
                   />
                   <Protected
                     exact
                     path={`${props.match.url}/positions/:positionId/user/:userId`}
                     component={CurrentOrganizationPositionCertificationUserPage}
                     org={organization}
-                    componentKey='current-positions-certification-user'
+                    componentKey="current-positions-certification-user"
                   />
                   <Protected
                     exact
                     path={`${props.match.url}/registered/`}
                     component={OrgRegisteredUsers}
                     org={organization}
-                    componentKey='members'
+                    componentKey="members"
                   />
                   <Protected
                     exact
                     path={`${props.match.url}/members/timetracking/:memberIdParam`}
                     component={OrganizationTimeTrackingPage}
                     org={organization}
-                    componentKey='members'
+                    componentKey="members"
                   />
                   <Protected
                     exact
                     path={`${props.match.url}/membersettings`}
                     component={MemberSettings}
                     org={organization}
-                    componentKey='membersettings'
+                    componentKey="membersettings"
                   />
                   <Protected
                     exact
                     path={`${props.match.url}/templatesettings`}
                     component={TemplateMemberSettings}
                     org={organization}
-                    componentKey='templatesettings'
+                    componentKey="templatesettings"
                   />
                   <Protected
                     exact
@@ -231,14 +230,14 @@ function Organization(props) {
                     org={organization}
                     organizationObj={organization}
                     organization={1}
-                    componentKey='menuItems'
+                    componentKey="menuItems"
                   />
 
                   <Protected
                     path={`${props.match.url}`}
                     component={NoMatchPage}
                     org={organization}
-                    componentKey='NoMatch'
+                    componentKey="NoMatch"
                   />
                 </Switch>
               </div>
@@ -256,7 +255,7 @@ const Protected = ({ component: Component, org, ...rest }) => (
     render={(props) =>
       org?._id ? (
         <ValidateAccessRouteCms>
-          <Component key='cmsOrg' {...props} {...rest} org={org} />
+          <Component key="cmsOrg" {...props} {...rest} org={org} />
         </ValidateAccessRouteCms>
       ) : (
         // <Redirect push to={`${url}/agenda`} />

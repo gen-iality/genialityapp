@@ -12,7 +12,7 @@ const ContentInformative = ({ title, description, image }: propsOptions) => {
   const [loading, setloading] = useState(true);
 
   return (
-    <Row justify='space-around' align='middle' style={{ margin: '0px 40px 0px 40px' }}>
+    <Row justify="space-around" align="middle" style={{ margin: '0px 40px 0px 40px' }}>
       <Col span={12}>
         <Typography.Title level={4}>{title}</Typography.Title>
         <Typography.Paragraph>{description} </Typography.Paragraph>
@@ -22,7 +22,7 @@ const ContentInformative = ({ title, description, image }: propsOptions) => {
           onLoad={() => setloading(false)}
           src={image}
           style={{ objectFit: 'contain', backgroundColor: loading ? '#F2F2F2' : 'transparent' }}
-          width='400'
+          width="400"
         />
       </Col>
     </Row>

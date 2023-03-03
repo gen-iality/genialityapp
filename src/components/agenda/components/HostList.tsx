@@ -20,7 +20,6 @@ const HostList = () => {
   useEffect(() => {
     (async () => {
       const speakersApi = await SpeakersApi.byEvent(cEvent.value._id)
-      console.log('900.speakers', speakersApi)
       setSpeakers(speakersApi)
     })()
   }, [])
@@ -28,7 +27,7 @@ const HostList = () => {
   useEffect(() => {
     (async () => {
       const toolsApi = await ToolsApi.byEvent(cEvent.value._id)
-      console.log('900.tools', toolsApi)
+      console.log('toolsApi', toolsApi);
       setTools(toolsApi)
     })()
   }, [])
@@ -36,7 +35,7 @@ const HostList = () => {
   return (
     <>
       <List
-        size='small'
+        size="small"
         header={<h3>DURACIÓN</h3>}
         dataSource={dataDuration}
         renderItem={(item) => (
@@ -46,21 +45,21 @@ const HostList = () => {
         )}
       />
       <List
-        size='small'
+        size="small"
         header={<h3>HERRAMIENTAS</h3>}
         dataSource={tools}
         renderItem={(item) => (
           <List.Item>
-            <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.name}</p>{' '}
+            {item.link ? (<a href={item.link} target="_blank">{item.name}</a>) : (<p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.name}</p>)}
           </List.Item>
         )}
       />
       <List
-        size='small'
+        size="small"
         header={<h3>COLABORADORES</h3>}
         dataSource={speakers}
         renderItem={(item: any) => (
-          <List.Item className='shadow-box'>
+          <List.Item className="shadow-box">
             <List.Item.Meta
               avatar={<Avatar src={item.image} />}
               description={

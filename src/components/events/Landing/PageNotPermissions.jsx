@@ -57,14 +57,14 @@ const PageNotPermissions = (props) => {
       {eventPrivate.private ? (
         <Card hoverable>
           <Result
-            // status='403'
-            title='ESTE CURSO ES PRIVADO'
+            // status="403"
+            title="ESTE CURSO ES PRIVADO"
             subTitle={
               <div>
                 <h1 style={{ fontSize: '20px' }}>Si estas incrito, ingresa tus datos</h1>
               </div>
             }
-            // extra={<Button type='primary'>Back home</Button>}
+            // extra={<Button type="primary">Back home</Button>}
           />
           <UserLoginContainer eventId={EventContext.value._id} />
         </Card>
@@ -76,7 +76,7 @@ const PageNotPermissions = (props) => {
           {EventContext.value._id == '60cb7c70a9e4de51ac7945a2' && (
             <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
               {products.length > 0 && !loading && (
-                <Row style={{ paddingTop: '18px' }} gutter={[16, 16]} key={'container'}>
+                <Row style={{ paddingTop: '18px' }} gutter={[16, 16]} key="container">
                   {products.map((galery) => (
                     <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8} key={galery.id}>
                       <ProductCard history={history} eventId={EventContext.value._id} galery={galery} />

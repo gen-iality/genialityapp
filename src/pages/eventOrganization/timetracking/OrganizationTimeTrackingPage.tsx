@@ -119,11 +119,11 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
       key: 'event',
       render: (item: any) => {
         return (
-          <Tooltip title='Abrir información de esta actividad'>
+          <Tooltip title="Abrir información de esta actividad">
             <Button
               icon={<UnorderedListOutlined />}
-              type='primary'
-              size='small'
+              type="primary"
+              size="small"
               onClick={() => {
                 setSelectedEvent(item);
                 openModal();
@@ -376,8 +376,8 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
   if (isLoading) {
     return (
       <Result
-        title='Cargando...'
-        subTitle={'Recuperando información del miembro'}
+        title="Cargando..."
+        subTitle="Recuperando información del miembro"
         icon={<LoadingOutlined/>}
       />
     );
@@ -388,8 +388,8 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
     <Typography.Title>Usuario en {organization.name}</Typography.Title>
     <Card
       title={
-        <Space direction='horizontal' style={{justifyContent: 'space-between', display: 'flex'}}>
-          <Space direction='horizontal'>
+        <Space direction="horizontal" style={{justifyContent: 'space-between', display: 'flex'}}>
+          <Space direction="horizontal">
             <Online isOnline={userInfo.isOnline}/>
             <Avatar
               style={{ backgroundColor: '#87d068' }}
@@ -400,12 +400,12 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
             </Avatar>
             <Typography.Text>{userInfo.name}</Typography.Text>
           </Space>
-          <Space direction='horizontal'>
+          <Space direction="horizontal">
             <Typography.Text>Modo:</Typography.Text>
             <Select onChange={(mode) => setTimeMode(mode)} defaultValue={timeMode} style={{minWidth: 120}}>
-              <Select.Option value='minutes'>Minutos</Select.Option>
-              <Select.Option value='hours'>Horas</Select.Option>
-              <Select.Option value='days'>Días</Select.Option>
+              <Select.Option value="minutes">Minutos</Select.Option>
+              <Select.Option value="hours">Horas</Select.Option>
+              <Select.Option value="days">Días</Select.Option>
             </Select>
           </Space>
         </Space>
@@ -419,14 +419,14 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
         }}
       >
       </Space>
-      <Space direction='vertical'>
+      <Space direction="vertical">
         <Typography.Text>{closedGlobalSessionLogs.length} ingresos</Typography.Text>
-        <Space direction='horizontal'>
+        <Space direction="horizontal">
           <Card>{loggedTime.time.toFixed(2)} {loggedTime.description}</Card>
         </Space>
       </Space>
       <Divider/>
-      <Space direction='vertical'>
+      <Space direction="vertical">
         <Typography.Text>{events.length} registros por área:</Typography.Text>
         {events.length === 0 ? (
           <Typography.Text italic>Sin datos.</Typography.Text>
@@ -449,8 +449,8 @@ const OrganizationTimeTrackingPage: FunctionComponent<OrganizationTimeTrackingPa
         />
       ) : (
         <Result
-          title='Cargando...'
-          subTitle={'Recuperando información del curso'}
+          title="Cargando..."
+          subTitle="Recuperando información del curso"
           icon={<LoadingOutlined/>}
         />
       )}

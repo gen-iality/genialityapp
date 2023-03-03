@@ -66,7 +66,7 @@ function FileField(rawProps) {
       return;
     },
     iconRender(file) {
-      return <FileImageOutlined style={{ color: '#009fd9' }} />;
+      return <FileImageOutlined style={{ color: '#003853' }} />;
     },
     onPreview(file) {},
     /**------------------------------------------------- */
@@ -82,11 +82,13 @@ function FileField(rawProps) {
             label={formItemProps.label}
             required={formItemProps.required}
             help={fieldError}
-            validateStatus={fieldError ? 'error' : undefined}>
-            <Spin tip='Cargando imagen...' spinning={isUploading}>
+            validateStatus={fieldError ? 'error' : undefined}
+          >
+            <Spin tip="Cargando imagen..." spinning={isUploading}>
               <Card
                 hoverable
-                style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', textAlign: 'center' }}>
+                style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', textAlign: 'center' }}
+              >
                 <Upload.Dragger
                   {...draggerprops}
                   defaultFileList={[{ name: handleImageName(field.value), url: field.value }]}
@@ -94,11 +96,11 @@ function FileField(rawProps) {
                     saveEventImage(files, form, field);
                   }}>
                   <>
-                    <p className='ant-upload-drag-icon'>
-                      <FileImageOutlined style={{ color: '#009fd9' }} />
+                    <p className="ant-upload-drag-icon">
+                      <FileImageOutlined style={{ color: '#003853' }} />
                     </p>
-                    <p className='ant-upload-text'>Haga clic o arrastre el archivo a esta área para cargarlo</p>
-                    <p className='ant-upload-hint'>Tipos de archivos: pdf, excel, word, entre otros.</p>
+                    <p className="ant-upload-text">Haga clic o arrastre el archivo a esta área para cargarlo</p>
+                    <p className="ant-upload-hint">Tipos de archivos: pdf, excel, word, entre otros.</p>
                   </>
                 </Upload.Dragger>
               </Card>

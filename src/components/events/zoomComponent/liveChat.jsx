@@ -7,8 +7,8 @@ export default function LiveChat(props) {
           {props.meeting_id && (
             <iframe
               src={`https://vimeo.com/live-chat/${props.meeting_id}`}
-              className='chat-vimeo'
-              frameBorder='0'></iframe>
+              className="chat-vimeo"
+              frameBorder="0"></iframe>
           )}
         </>
       )}

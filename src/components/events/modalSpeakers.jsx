@@ -19,6 +19,7 @@ const ModalSpeakers = (props) => {
   function clearStates() {
     setSpeakers({});
     setModalVisible(false);
+    props.setIdSpeaker(null);
   }
 
   return (
@@ -34,7 +35,8 @@ const ModalSpeakers = (props) => {
           <Button key='cerrar' type='primary' onClick={() => clearStates()}>
             Cerrar
           </Button>,
-        ]}>
+        ]}
+      >
         <Row>
           {/* Imagen del conferencista */}
 

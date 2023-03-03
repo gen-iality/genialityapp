@@ -245,7 +245,7 @@ class Agenda extends Component {
     );
     //se consulta la api de espacios para
     const space = await SpacesApi.byEvent(this.props.cEvent.value._id);
-    //FILTRO
+    // Filtro
 
     const listFiltered = await this.filterStateMeetingRoom(data);
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
@@ -418,7 +418,7 @@ class Agenda extends Component {
     const { userAgenda } = this.state;
     if (!userAgenda) return false;
     const checkInscription = userAgenda.filter(activity => activity.activity_id === activityId);
-    const statusInscription = checkInscription.length ? true : false;
+    const statusInscription = !!checkInscription.length;
     return statusInscription;
   }
 
@@ -451,7 +451,7 @@ class Agenda extends Component {
 
   validationRegisterAndExchangeCode = activity => {
     const hasPayment =
-      this.props.cEvent.value.has_payment === true || this.props.cEvent.value.has_payment === 'true' ? true : false;
+      this.props.cEvent.value.has_payment || this.props.cEvent.value.has_payment === 'true' ? true : false;
 
     // Listado de cursos que requieren validación
     if (hasPayment) {
@@ -513,9 +513,9 @@ class Agenda extends Component {
       const isRegistered = this.checkInscriptionStatus(item._id) && true;
 
       return (
-        <div key={index} className='container_agenda-information' style={{ marginBottom: 0 }}>
+        <div key={index} className="container_agenda-information" style={{ marginBottom: 0 }}>
           {(item.requires_registration || item.requires_registration === 'true') && !this.props.cUser ? (
-            <Badge.Ribbon color='red' placement='end' text='Requiere registro'>
+            <Badge.Ribbon color="red" placement="end" text="Requiere registro">
               <AgendaActivityItem
                 hasDate={
                   this.props.cEvent.value.styles.hideDatesAgendaItem == 'true' ||
@@ -580,8 +580,8 @@ class Agenda extends Component {
     });
     return renderList;
   };
-  //FUNCION QUE PERMITE VERIFICAR SI EXISTEN LECCIONES PUBLICADAS POR DIA
-  //SIRVE PARA MOSTRAR U OCULTAR FECHAS
+  // Funcion que permite verificar si existen lecciones publicadas por dia
+  // Sirve para mostrar u ocultar fechas
   getActivitiesByDayVisibility = date => {
     const { toggleConference } = this.props;
     const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
@@ -621,18 +621,18 @@ class Agenda extends Component {
       <div>
         <Modal
           visible={this.state.visibleModal}
-          title='Información'
+          title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCancelModal}
           onClose={this.handleCancelModal}
           footer={[
-            <Button key='cancel' onClick={this.handleCancelModal}>
+            <Button key="cancel" onClick={this.handleCancelModal}>
               Cancelar
             </Button>,
-            <Button key='login' onClick={this.props.handleOpenLogin}>
+            <Button key="login" onClick={this.props.handleOpenLogin}>
               Iniciar sesión
             </Button>,
-            <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
+            <Button key="submit" type="primary" loading={loading} onClick={this.props.handleOpenRegisterForm}>
               Registrarme
             </Button>,
           ]}
@@ -642,15 +642,15 @@ class Agenda extends Component {
 
         <Modal
           visible={this.state.visibleModalRestricted}
-          title='Información'
+          title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCancelModalRestricted}
           onClose={this.handleCancelModalRestricted}
           footer={[
-            <Button key='cancel' onClick={this.handleCancelModalRestricted}>
+            <Button key="cancel" onClick={this.handleCancelModalRestricted}>
               Cancelar
             </Button>,
-            <Button key='login' onClick={this.handleOpenModalExchangeCode}>
+            <Button key="login" onClick={this.handleOpenModalExchangeCode}>
               Canjear código
             </Button>,
           ]}
@@ -666,12 +666,12 @@ class Agenda extends Component {
 
         <Modal
           visible={this.state.visibleModalRegisteredDevices}
-          title='Información'
+          title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCloseModalRestrictedDevices}
           onClose={this.handleCloseModalRestrictedDevices}
           footer={[
-            <Button key='cancel' onClick={this.handleCloseModalRestrictedDevices}>
+            <Button key="cancel" onClick={this.handleCloseModalRestrictedDevices}>
               Cancelar
             </Button>,
           ]}
@@ -681,15 +681,15 @@ class Agenda extends Component {
 
         <Modal
           visible={this.state.visibleModalExchangeCode}
-          title='Información'
+          title="Información"
           // onOk={this.handleOk}
           onCancel={this.handleCancelModalExchangeCode}
           onClose={this.handleCancelModalExchangeCode}
           footer={[
-            <Button key='cancel' onClick={this.handleCancelModalExchangeCode}>
+            <Button key="cancel" onClick={this.handleCancelModalExchangeCode}>
               Cancelar
             </Button>,
-            <Button key='login' onClick={this.exchangeCode}>
+            <Button key="login" onClick={this.exchangeCode}>
               Canjear código
             </Button>,
           ]}
@@ -709,17 +709,17 @@ class Agenda extends Component {
 
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && loading && (
-          <Row justify='center' align='middle'>
+          <Row justify="center" align="middle">
             <Card>
-              <Spin tip='Cargando...'></Spin>
+              <Spin tip="Cargando..."></Spin>
             </Card>
           </Row>
         )}
 
         {!currentActivity && !loading && (
-          <div className='container-calendar-section'>
-            <Row justify='center'>
-              <div className='container-calendar '>
+          <div className="container-calendar-section">
+            <Row justify="center">
+              <div className="container-calendar ">
                 {/* LECCIONES SIN AGRUPAR */}
                 {this.props.cEvent.value &&
                   this.props.cEvent.value.styles &&
@@ -728,12 +728,12 @@ class Agenda extends Component {
                   days.map(day => (
                     <>
                       {this.props.cEvent.value.styles.hideDatesAgendaItem === 'true' ||
-                      this.props.cEvent.value.styles.hideDatesAgendaItem === true ? (
+                      this.props.cEvent.value.styles.hideDatesAgendaItem ? (
                         this.getActivitiesByDay(day)
                       ) : (
                         <>
                           <Card style={{ marginBottom: '20px', height: 'auto' }}>
-                            <Divider orientation='left' style={{ fontSize: '18px', color: '#1cdcb7' }}>
+                            <Divider orientation="left" style={{ fontSize: '18px', color: '#f7981d' }}>
                               <p>
                                 <Space>
                                   <CalendarOutlined />
@@ -754,7 +754,7 @@ class Agenda extends Component {
                 {this.props.cEvent.value &&
                   this.props.cEvent.value.styles &&
                   (this.props.cEvent.value.styles.hideDatesAgenda === 'true' ||
-                    this.props.cEvent.value.styles.hideDatesAgenda === true ||
+                    this.props.cEvent.value.styles.hideDatesAgenda ||
                     this.props.cEvent.value.styles.hideDatesAgenda == undefined) && (
                     <>
                       <div

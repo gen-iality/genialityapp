@@ -33,14 +33,14 @@ const News = (props) => {
     <CMS
       API={NewsFeed}
       eventId={props.event._id}
-      title={'Noticias'}
-      titleTooltip={'Agregue o edite las Noticias que se muestran en la aplicación'}
+      title="Noticias"
+      titleTooltip="Agregue o edite las Noticias que se muestran en la aplicación"
       addUrl={{
         pathname: `${props.match.url}/new`,
         state: { new: true },
       }}
       columns={columns}
-      key='_id'
+      key="_id"
       editPath={`${props.match.url}/new`}
       pagination={false}
       actions

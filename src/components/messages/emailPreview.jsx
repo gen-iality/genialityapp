@@ -9,13 +9,13 @@ const EmailPrev = (props) => {
   return (
     <div>
       <div style={{ textAlign: 'center' }}>
-        <div className='icon-header' dangerouslySetInnerHTML={{ __html: icon }} />
+        <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} />
         <p>
           Hola <strong>invitado</strong>, haz sido invitad@ a
           <br />
           <strong>{props.event.name}</strong>
         </p>
-        <Row justify='center' gutter={[0, 24]} wrap>
+        <Row justify="center" gutter={[0, 24]} wrap>
           <Col span={12}>
             <p>
               {' '}
@@ -45,17 +45,17 @@ const EmailPrev = (props) => {
             <p>{dayjs(props.event.datetime_to).format('HH:mm')}</p>
           </Col>
         </Row>
-        <p className='has-text-primary'>
+        <p className="has-text-primary">
           <EnvironmentOutlined />
           Ubicación del curso
           <br />
           {props?.event?.location?.FormattedAddress}
-          <Tag color='#1cdcb7' style={{ fontSize: '14px' }}>
+          <Tag color='#f7981d' style={{ fontSize: '14px' }}>
             Confirmar asistencia
           </Tag>
         </p>
         {props.item.image || props.event.image &&
-          <Image width={400} src={props.item.image ? props.item.image : props.event.image} alt={'Imagen perfil'} />
+          <Image width={400} src={props.item.image ? props.item.image : props.event.image} alt="Imagen perfil" />
         }
         <div
           style={{ textAlign: 'center' }}

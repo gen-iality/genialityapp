@@ -90,8 +90,9 @@ const UserStatusAndMenu = (props) => {
                     },
                   });
                 }}
-                icon={<BadgeAccountOutlineIcon style={{ fontSize: '18px' }} />}>
-                <FormattedMessage id='header.my_data_event' defaultMessage='Mi perfil en el curso' />
+                icon={<BadgeAccountOutlineIcon style={{ fontSize: '18px' }} />}
+              >
+                <FormattedMessage id="header.my_data_event" defaultMessage="Mi perfil en el curso" />
               </Menu.Item>
             </Badge>
           )}
@@ -105,14 +106,16 @@ const UserStatusAndMenu = (props) => {
         {visible && (
           <Menu.Item
             icon={<TicketConfirmationOutlineIcon style={{ fontSize: '18px' }} />}
-            onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}>
+            onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}
+          >
             <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
           </Menu.Item>
         )}
         {visible && !isAtOrganizationLanding && (
           <Menu.Item
             icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
-            onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
+            onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}
+          >
             <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
           </Menu.Item>
         )}
@@ -122,7 +125,7 @@ const UserStatusAndMenu = (props) => {
             onClick={() => {
               linkToTheMenuRouteS(`/myprofile/organization`);
             }}>
-            <FormattedMessage id='header.my_organizations' defaultMessage='Administrar mis cursos' />
+            <FormattedMessage id="header.my_organizations" defaultMessage="Administrar mis cursos" />
           </Menu.Item>
         )}
         <Menu.Divider />
@@ -138,8 +141,8 @@ const UserStatusAndMenu = (props) => {
                   : `/create-event/${props.userEvent._id}`
               )
             }>
-            <Button block type='primary' size='medium'>
-              <FormattedMessage id='header.create_event' defaultMessage='Crear curso' />
+            <Button block type="primary" size="medium">
+              <FormattedMessage id="header.create_event" defaultMessage="Crear curso" />
             </Button>
           </Menu.Item>
         )}
@@ -157,13 +160,14 @@ const UserStatusAndMenu = (props) => {
           })}>
           <Menu.Item
             icon={<AccountOutlineIcon style={{ fontSize: '18px' }} />}
-            onClick={() => linkToTheMenuRouteS(`/myprofile`)}>
-            <FormattedMessage id='header.profile' defaultMessage='Cuenta de usuario' />
+            onClick={() => linkToTheMenuRouteS(`/myprofile`)}
+          >
+            <FormattedMessage id="header.profile" defaultMessage="Cuenta de usuario" />
           </Menu.Item>
         </Badge>
 
         <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={() => showPropsConfirm()}>
-          <FormattedMessage id='header.logout' defaultMessage='Salir' />
+          <FormattedMessage id="header.logout" defaultMessage="Salir" />
         </Menu.Item>
       </Menu.ItemGroup>
     </Menu>
@@ -173,7 +177,7 @@ const UserStatusAndMenu = (props) => {
         <Menu.Item style={ItemStyle}>{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
       ) : (
         <Menu.Item danger icon={<LogoutIcon style={{ fontSize: '18px' }} />} onClick={() => showPropsConfirm()}>
-          <FormattedMessage id='header.logout' defaultMessage='Salir' />
+          <FormattedMessage id="header.logout" defaultMessage="Salir" />
         </Menu.Item>
       )}
     </Menu>
@@ -184,10 +188,10 @@ const UserStatusAndMenu = (props) => {
   const loggedInuser = (
     <Row style={MenuStyle}>
       <Col style={MenuStyle}>
-        <Dropdown arrow overlay={menu} placement='bottomRight'>
+        <Dropdown arrow overlay={menu} placement="bottomRight">
           <a onClick={(e) => e.preventDefault()}>
             <Space
-              className='shadowHover'
+              className="shadowHover"
               style={{
                 height: '40px',
                 backgroundColor: 'white',
@@ -199,12 +203,12 @@ const UserStatusAndMenu = (props) => {
               {photo ? (
                 <Avatar src={photo} />
               ) : (
-                <Avatar className='avatar_menu-user'>
+                <Avatar className="avatar_menu-user">
                   {name && name.charAt(0).toUpperCase()}
                   {name && name.substring(name.indexOf(' ') + 1, name.indexOf(' ') + 2)}
                 </Avatar>
               )}
-              <span className='name_menu-user'>{name}</span>
+              <span className="name_menu-user">{name}</span>
               <DownOutlined style={{ fontSize: '12px' }} />
             </Space>
           </a>

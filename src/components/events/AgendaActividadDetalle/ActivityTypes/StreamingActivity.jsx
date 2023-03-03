@@ -17,7 +17,7 @@ const StreamingActivity = (props) => {
   const [meetingId, setmeetingId] = useState('');
   const [fnCiclo, setFnCiclo] = useState(false);
 
-  //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
+  // Estado para controlar origen de transmision
 
   const { transmition, setTransmition } = useContext(AgendaContext);
   const { currentActivity } = useHelper();
@@ -65,14 +65,14 @@ const StreamingActivity = (props) => {
       case 'closed_meeting_room':
         return (
           <>
-            <Result icon={<SmileOutlined />} title='La transmisión iniciará pronto!' />
+            <Result icon={<SmileOutlined />} title="La transmisión iniciará pronto!" />
           </>
         );
 
       case 'ended_meeting_room':
         return currentActivity?.video ? (
           <>
-            <div className='mediaplayer' style={{ aspectRatio: '16/9' }}>
+            <div className="mediaplayer" style={{ aspectRatio: '16/9' }}>
               <ReactPlayer
                 style={{ objectFit: 'cover' }}
                 width='100%'
@@ -84,7 +84,7 @@ const StreamingActivity = (props) => {
           </>
         ) : (
           <>
-            <Result icon={<SmileOutlined />} title='La transmisión ha terminado!' />
+            <Result icon={<SmileOutlined />} title="La transmisión ha terminado!" />
           </>
         );
       case 'created_meeting_room':
@@ -110,7 +110,7 @@ const StreamingActivity = (props) => {
 
   return (
     <>
-      <HeaderColumnswithContext isVisible={true} activityState={activityState} />
+      <HeaderColumnswithContext isVisible activityState={activityState} />
       {ViewTypeStreaming(activityState)}
     </>
   )

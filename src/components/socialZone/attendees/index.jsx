@@ -19,7 +19,6 @@ const AttendeList = function(props) {
   const pag = 15;
 
   function whatGenderIs(gender) {
-    // console.log('gender', gender);
     const ramdonicon = Math.floor(Math.random() * femaleicons.length);
     const ramdoniconmale = Math.floor(Math.random() * maleIcons.length);
     return gender == 'male'
@@ -123,11 +122,12 @@ const AttendeList = function(props) {
       pageStart={0}
       loadMore={() => handleInfiniteOnLoad()}
       hasMore={!loading && hasMore}
-      useWindow={false}>
+      useWindow={false}
+    >
       <List
-        itemLayout='horizontal'
+        itemLayout="horizontal"
         dataSource={filteredlist && filteredlist}
-        renderItem={(item) => <UsersCard type='attendees' item={item} propsAttendees={props} />}></List>
+        renderItem={(item) => <UsersCard type="attendees" item={item} propsAttendees={props} />}></List>
     </InfiniteScroll>
   );
 };

@@ -22,7 +22,7 @@ const EventAccessTypeSection: FunctionComponent  = () => {
       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
         <Badge
           onClick={() => dispatch({ type: 'TYPE_EVENT', payload: { type: 0 } })}
-          count={state.type === 0 ? <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />  : ''}
+          count={state.type === 0 ? <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} />  : ''}
         >
           <Card
             style={{
@@ -59,7 +59,7 @@ const EventAccessTypeSection: FunctionComponent  = () => {
       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
         <Badge
           onClick={() => dispatch({ type: 'TYPE_EVENT', payload: { type: 1 } })}
-          count={state.type === 1 ? <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} /> : ''}
+          count={state.type === 1 ? <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} /> : ''}
         >
           <Card
             style={{
@@ -88,7 +88,7 @@ const EventAccessTypeSection: FunctionComponent  = () => {
       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
         <Badge
           onClick={() => dispatch({ type: 'TYPE_EVENT', payload: { type: 2 } })}
-          count={state.type === 2 ? <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} /> : ''}
+          count={state.type === 2 ? <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} /> : ''}
         >
           <Card
             style={{

@@ -4,7 +4,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 const Loading = () => {
   return (
     <Space
-      direction='horizontal'
+      direction="horizontal"
       style={{
         width: '100%',
         display: 'flex',

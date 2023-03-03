@@ -53,7 +53,6 @@ const DrawerProfile = (props) => {
     }
   }, [props.profileuser, cEventUser.value, userSelected]);
   const haveRequestUser = (user) => {
-    //console.log("HEPERVALUE==>",requestSend,user)
     return haveRequest(user, requestSend, 1);
   };
 
@@ -90,7 +89,7 @@ const DrawerProfile = (props) => {
   return (
     <>
       {openModal && (
-        <Modal zIndex={1} closable footer={false} visible={true} onCancel={() => closeOrOpenModal()}>
+        <Modal zIndex={1} closable footer={false} visible onCancel={() => closeOrOpenModal()}>
           <div
             style={{
               padding: '0px',
@@ -118,20 +117,20 @@ const DrawerProfile = (props) => {
               }}
             />
             {isMe ? (
-              <FormattedMessage id='header.my_data_event' defaultMessage='Mi perfil en el curso' />
+              <FormattedMessage id="header.my_data_event" defaultMessage="Mi perfil en el curso" />
             ) : (
-              <FormattedMessage id='header.my_data_event2' defaultMessage='Perfil del participante en el curso' />
+              <FormattedMessage id="header.my_data_event2" defaultMessage="Perfil del participante en el curso" />
             )}
           </Space>
         }
         zIndex={0}
         visible={props.viewPerfil}
-        closable={true}
+        closable
         onClose={() => props.setViewPerfil({ view: false, perfil: null })}
-        width={'52vh'}
+        width="52vh"
         bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}
       >
-        <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '10px' }}>
+        <Row justify="center" style={{ paddingLeft: '15px', paddingRight: '10px' }}>
           <Col span={24}>
             <Typography.Paragraph>
               {isMe
@@ -147,8 +146,8 @@ const DrawerProfile = (props) => {
                 onClick={() => {
                   setOpenModal(true);
                 }}
-                type='text'
-                size='middle'
+                type="text"
+                size="middle"
                 style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}
               >
                 {props.cEvent.value.visibility === 'PUBLIC' && (
@@ -158,14 +157,14 @@ const DrawerProfile = (props) => {
             </Col>
           )}
         </Row>
-        <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '5px' }}>
+        <Row justify="center" style={{ paddingLeft: '15px', paddingRight: '5px' }}>
           <Col
-            className='asistente-list' //agrega el estilo a la barra de scroll
+            className="asistente-list" //agrega el estilo a la barra de scroll
             span={24}
             style={{ marginTop: '20px', height: '50vh', maxHeight: '50vh', overflowY: 'auto' }}
           >
             {(!userSelected || !userPropertiesProfile) && (
-              <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>
+              <Spin style={{ padding: '50px' }} size="large" tip="Cargando..."></Spin>
             )}
 
             {

@@ -95,7 +95,7 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
       <Space direction="vertical" size="middle" style={{ marginBottom: '30px' }}>
         <div>
           <Text>
-            Nombre del curso <span className='text-color'>*</span>
+            Nombre del curso <span className="text-color">*</span>
           </Text>
           <Input
             name="name"
@@ -160,10 +160,11 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
         onOk={handleOk}
         cancelText="Cancelar"
         onCancel={handleCancel}
-        width={600}>
+        width={600}
+      >
         <Row gutter={[16, 16]} justify="center" align="top">
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <Title level={4} type='secondary'>
+            <Title level={4} type="secondary">
               Asignar fecha
             </Title>
 
@@ -173,7 +174,7 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
               /* popupStyle={{ height: '50px !important', backgroundColor: 'blue' }} */
               allowClear={false}
               value={dayjs(selectedDay) as unknown as any}
-              format={'DD/MM/YYYY'}
+              format="DD/MM/YYYY"
               onChange={(value) => value && changeSelectDay(value.toDate())}
             />
 

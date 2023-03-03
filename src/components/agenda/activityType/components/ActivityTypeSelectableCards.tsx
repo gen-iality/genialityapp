@@ -23,14 +23,14 @@ function ActivityTypeSelectableCards(props: ActivityTypeSelectableCardsProps) {
   if (widget.key !== 'type') {
     // Then widget is ActivityTypeCard, not FormWidgetFlow
     if (widget.widgetType !== WidgetType.CARD_SET) {
-      return <Alert message='Imposible de mostrar' type='error' />
+      return <Alert message="Imposible de mostrar" type="error" />
     }
   }
 
   const cards: ActivityType.CardUI[] = widget.cards;
 
   return (
-    <Row justify='center' gutter={[16, 16]}>
+    <Row justify="center" gutter={[16, 16]}>
       {cards.length === 0 && <p>Ninguna opción fue pasada</p>}
       {cards.map((card, index) => (
         <Col

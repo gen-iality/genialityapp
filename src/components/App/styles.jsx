@@ -440,9 +440,9 @@ class Styles extends Component {
     return (
       <>
         <Form onFinish={this.submit} {...formLayout}>
-          <Header title={'Configuración de Estilos'} save form />
+          <Header title="Configuración de Estilos" save form />
 
-          <Row justify='center' wrap gutter={[8, 8]}>
+          <Row justify="center" wrap gutter={[8, 8]}>
             {stylesIsLoading ? (
               <Loading />
             ) : (
@@ -453,20 +453,21 @@ class Styles extends Component {
                       <Modal
                         closable={false}
                         footer={[
-                          <Button key='ok' type='primary' onClick={() => this.handleClickSelectColor(key)}>
+                          <Button key="ok" type="primary" onClick={() => this.handleClickSelectColor(key)}>
                             Aceptar
                           </Button>,
                         ]}
                         title={<Title level={5}>{item.title}</Title>}
-                        visible={item.editIsVisible}>
-                        <Space wrap size='large' align='start'>
+                        visible={item.editIsVisible}
+                      >
+                        <Space wrap size="large" align="start">
                           <SketchPicker
                             color={this.state.styles[item.fieldColorName]}
                             onChangeComplete={(color) => {
                               this.onColorChange(color, item.fieldColorName);
                             }}
                           />
-                          <Space direction='vertical'>
+                          <Space direction="vertical">
                             <Text
                               style={{ fontSize: '20px' }}
                               code
@@ -503,7 +504,8 @@ class Styles extends Component {
                     <Form.Item
                       label={item.title}
                       help={item.description}
-                      onClick={() => this.handleClickSelectColor(key)}>
+                      onClick={() => this.handleClickSelectColor(key)}
+                    >
                       <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]}>
                         {this.state.styles[item.fieldColorName]}
                       </Tag>
@@ -519,7 +521,8 @@ class Styles extends Component {
                         value={this.state.styles[item.name]}
                         name={item.name}
                         onChange={(e) => this.handleChange(e, item.name)}
-                        style={{ width: 120 }}>
+                        style={{ width: 120 }}
+                      >
                         {item.options.map((item2, key2) => (
                           <Option key={key2} value={item2.value}>
                             {item2.label}
@@ -530,7 +533,7 @@ class Styles extends Component {
                   </div>
                 ))}
 
-                <Space direction='vertical' size={25} wrap>
+                <Space direction="vertical" size={25} wrap>
                   {this.imageDrawer.map((item, key) => (
                     <div key={key}>
                       <Form.Item

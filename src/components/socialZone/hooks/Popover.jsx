@@ -48,7 +48,7 @@ const PopoverInfoUser = (props) => {
         actions={
           containtNetworking && [
             userSelected ? (
-              <Tooltip title='Ver perfil' onClick={() => props.setViewPerfil({ view: true, perfil: userSelected })}>
+              <Tooltip title="Ver perfil" onClick={() => props.setViewPerfil({ view: true, perfil: userSelected })}>
                 <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />
               </Tooltip>
             ) : (
@@ -126,11 +126,11 @@ const PopoverInfoUser = (props) => {
               <Spin />
             ),
             userSelected ? (
-              <Tooltip title='Agendar cita'>
+              <Tooltip title="Agendar cita">
                 <VideoCameraOutlined
                   onClick={async () => {
                     setViewPerfil({ view: false, perfil: userSelected });
-                    //SE CREA EL OBJETO CON ID INVERTIDO PARA QUE EL COMPONENTE APPOINT MODAL FUNCIONE CORRECTAMENTE
+                    // Se crea el objeto con id invertido para que el componente appoint modal funcione correctamente
                     const evetuser = userSelected._id;
                     const userReview = {
                       ...userSelected,

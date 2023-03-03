@@ -169,11 +169,11 @@ function CurrentOrganizationPositionCertificationUserPage(
         title: 'Opciones',
         width: 80,
         render: (event: any) => (
-          <Tooltip title='Borrar'>
+          <Tooltip title="Borrar">
             <Button
               id={`deleteAction${event._id}`}
-              type='primary'
-              size='small'
+              type="primary"
+              size="small"
               onClick={(e) => alert('No implementado aún')}
               icon={<DeleteOutlined />}
             />
@@ -199,16 +199,16 @@ function CurrentOrganizationPositionCertificationUserPage(
       <Table
         columns={columns}
         dataSource={allPositionEvents}
-        size='small'
-        rowKey='index'
+        size="small"
+        rowKey="index"
         pagination={false}
         loading={isLoading}
         scroll={{ x: 'auto' }}
         title={() => (
-          <Row wrap justify='end' gutter={[8, 8]}>
+          <Row wrap justify="end" gutter={[8, 8]}>
             <Col>
               <Button
-                type='primary'
+                type="primary"
                 icon={<PlusCircleOutlined />}
                 onClick={() => {
                   form.resetFields();
@@ -233,32 +233,32 @@ function CurrentOrganizationPositionCertificationUserPage(
         onCancel={() => closeModal()}
       >
         <Form form={form} onFinish={onFormFinish}>
-          <Form.Item name='event_id' label='Curso a dar certificación' rules={[{ required: true, message: 'Esto' }]}>
+          <Form.Item name="event_id" label="Curso a dar certificación" rules={[{ required: true, message: 'Esto' }]}>
             <Select options={allEvents.map((event) => ({ label: event.name, value: event._id }))} />
           </Form.Item>
-          <Form.Item name='success' label='Exitoso'>
+          <Form.Item name="success" label="Exitoso">
             <Switch />
           </Form.Item>
-          <Form.Item name='description' label='Descripción' rules={[{ required: true, message: 'Ah!' }]}>
+          <Form.Item name="description" label="Descripción" rules={[{ required: true, message: 'Ah!' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name='hours' label='Horas' rules={[{ required: true, message: 'Ah!' }]}>
+          <Form.Item name="hours" label="Horas" rules={[{ required: true, message: 'Ah!' }]}>
             <InputNumber min={1} />
           </Form.Item>
-          <Form.Item name='entity' label='Entidad' rules={[{ required: true, message: 'Ah!' }]}>
+          <Form.Item name="entity" label="Entidad" rules={[{ required: true, message: 'Ah!' }]}>
             <Input />
           </Form.Item>
           <Form.Item
-            name='approved_from_date'
-            label='Fecha de aprobación'
+            name="approved_from_date"
+            label="Fecha de aprobación"
             rules={[{ required: true, message: 'Cuándo!' }]}
             initialValue={dayjs(Date.now())}
           >
             <DatePicker />
           </Form.Item>
           <Form.Item
-            name='approved_until_date'
-            label='Fecha de vencimiento'
+            name="approved_until_date"
+            label="Fecha de vencimiento"
             rules={[{ required: true, message: 'Cuándo!' }]}
             initialValue={dayjs(Date.now())}
           >

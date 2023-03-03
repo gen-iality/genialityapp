@@ -105,11 +105,11 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badg
       printBagdeUser(ifrmPrint, badges, scannerData.attendee.properties);
     }
   };
-  const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr === true);
+  const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr);
   return (
     <Row style={{ textAlign: 'center' }}>
       <Modal visible={openModal} onCancel={closeQr} footer={null}>
-        <Title level={4} type='secondary'>
+        <Title level={4} type="secondary">
           {typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}
         </Title>
         {!loadingregister && Object.keys(scannerData).length > 0 && (
@@ -118,7 +118,7 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badg
             message={assignMessageAndTypeToQrmodalAlert({ scannerData, attendeeId }).message}
             showIcon
             closable
-            className='animate__animated animate__pulse'
+            className="animate__animated animate__pulse"
           />
         )}
         <>
@@ -159,7 +159,7 @@ const QrModal = ({ fields, typeScanner, clearOption, closeModal, openModal, badg
             />
           )}
         </div>
-        <iframe title={'Print User'} ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />
+        <iframe title="Print User" ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />
       </Modal>
     </Row>
   );

@@ -207,7 +207,7 @@ class MenuLanding extends Component {
       const token = await GetTokenUserFirebase();
       menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}?token=${token}`);
     } else {
-      //OBTENER DE ORGANIZACIÓN
+      // Obtener de organización
       // alert("ORGANIZATION")
 
       menuLanding.itemsMenu = this.props.organizationObj.itemsMenu || [];
@@ -275,9 +275,7 @@ class MenuLanding extends Component {
       const token = await GetTokenUserFirebase();
       const resp = await Actions.put(`api/events/${this.props.event._id}?token=${token}`, newMenu);
     } else {
-      //ACTUALIZAR ORGANIZACION
-      // console.log("ORGANIZATIONOBJ==>",this.props.organizationObj.itemsMenu)
-      //console.log(this.props.organizationObj)
+      // Actualizar organizacion
       const updateOrganization = {
         ...this.props.organizationObj,
         itemsMenu: { ...menu },
@@ -303,7 +301,6 @@ class MenuLanding extends Component {
     const itemsMenuDB = { ...this.state.itemsMenu };
     /* console.log('ITEMSMENUTOAVAILABLE==>', this.state.itemsMenu);
     console.log('items menù', itemsMenuDB);
-    console.log('primero=>', menuBase[key]); */
     menuBase[key].checked = !menuBase[key].checked;
     /* console.log('segundo=>', menuBase[key]); */
 
@@ -381,21 +378,21 @@ class MenuLanding extends Component {
             title={
               this.props.organization != 1 ? 'Habilitar secciones del curso' : 'Secciones a habilitar para cada curso'
             }
-            description={'(Podrás guardar la configuración de tu menú en la parte inferior)'}
+            description="(Podrás guardar la configuración de tu menú en la parte inferior)"
             save
             form
           />
 
-          <Spin tip='Cargando...' size='large' spinning={this.state.isLoading}>
+          <Spin tip="Cargando..." size="large" spinning={this.state.isLoading}>
             <Row gutter={[8, 8]} wrap>
               {Object.keys(this.state.menu).map((key, index) => (
                 <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
-                  <Card title={this.state.menu[key].name} bordered={true} style={{ maxHeight: '350px' }}>
+                  <Card title={this.state.menu[key].name} bordered style={{ maxHeight: '350px' }}>
                     {(this.state.menu[key].section === 'networking' ||
                       this.state.menu[key].section === 'interviews' ||
                       this.state.menu[key].section === 'my_sesions') &&
                     this.props.event?.visibility === 'ANONYMOUS' ? (
-                      <Result title={'No está disponible para este tipo de acceso del curso'} icon={<></>} />
+                      <Result title="No está disponible para este tipo de acceso del curso" icon={<></>} />
                     ) : (
                       <>
                         <Form.Item name={this.state.menu[key].name}>
@@ -403,13 +400,13 @@ class MenuLanding extends Component {
                             onClick={() => {
                               this.mapActiveItemsToAvailable(key);
                             }}>
-                            {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
+                            {this.state.menu[key].checked ? 'Deshabilitar' : 'Habilitar'}
                           </Button>
                         </Form.Item>
-                        <Form.Item label={'Cambiar nombre de la sección'}>
+                        <Form.Item label="Cambiar nombre de la sección">
                           <Input
                             name={`name${index}`}
-                            disabled={this.state.menu[key].checked === true ? false : true}
+                            disabled={this.state.menu[key].checked ? false : true}
                             //value={this.state.menu[key].name}
                             onChange={(e) => {
                               this.changeNameMenu(key, e.target.value);
@@ -417,23 +414,23 @@ class MenuLanding extends Component {
                             placeholder={this.state.menu[key].name}
                           />
                         </Form.Item>
-                        <Form.Item label={'Permisos para la sección'}>
+                        <Form.Item label="Permisos para la sección">
                           <Select
                             name={`permissions${index}`}
                             key={this.state.keySelect}
-                            disabled={this.state.menu[key].checked === true ? false : true}
+                            disabled={this.state.menu[key].checked ? false : true}
                             value={this.state.menu[key].permissions}
                             onChange={(e) => {
                               this.changePermissions(key, e);
                             }}>
-                            <Option value='public'>Abierto para todos</Option>
-                            <Option value='assistants'>Usuarios inscritos al curso</Option>
+                            <Option value="public">Abierto para todos</Option>
+                            <Option value="assistants">Usuarios inscritos al curso</Option>
                           </Select>
                         </Form.Item>
-                        <Form.Item label={'Posición en el menú'}>
+                        <Form.Item label="Posición en el menú">
                           <InputNumber
                             name={`position${index}`}
-                            disabled={this.state.menu[key].checked === true ? false : true}
+                            disabled={this.state.menu[key].checked ? false : true}
                             value={this.state.menu[key].position}
                             onChange={(e) => this.orderPosition(key, e)}
                           />

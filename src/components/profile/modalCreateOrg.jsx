@@ -18,7 +18,7 @@ const ModalCreateOrg = (props) => {
         action: 'show',
       });
     }
-    return isLt5M ? true : false;
+    return isLt5M;
   };
 
   function resetFields() {
@@ -49,20 +49,21 @@ const ModalCreateOrg = (props) => {
       centered
       footer={null}
       zIndex={1000}
-      closable={true}
+      closable
       visible={props.modalCreateOrgIsVisible}
       onCancel={() => {
         props.setModalCreateOrgIsVisible(false);
         resetFields();
-      }}>
-      <Form onFinish={saveNewOrganization} form={form} autoComplete='off' layout='vertical'>
-        <Typography.Title level={4} type='secondary'>
+      }}
+    >
+      <Form onFinish={saveNewOrganization} form={form} autoComplete="off" layout="vertical">
+        <Typography.Title level={4} type="secondary">
           Nueva organizacion
         </Typography.Title>
         <Form.Item>
-          <ImgCrop rotate shape='round'>
+          <ImgCrop rotate shape="round">
             <Upload
-              accept='image/png,image/jpeg'
+              accept="image/png,image/jpeg"
               onChange={(file) => {
                 const fls = (file ? file.fileList : []).map((fl) => ({
                   ...fl,
@@ -75,13 +76,14 @@ const ModalCreateOrg = (props) => {
                 }
               }}
               multiple={false}
-              listType='picture'
+              listType="picture"
               maxCount={1}
               fileList={imageAvatar}
-              beforeUpload={beforeUpload}>
+              beforeUpload={beforeUpload}
+            >
               {imageAvatar === null && (
-                <Button type='primary' shape='circle' style={{ height: '150px', width: '150px' }}>
-                  <Space direction='vertical'>
+                <Button type="primary" shape="circle" style={{ height: '150px', width: '150px' }}>
+                  <Space direction="vertical">
                     <PictureOutlined style={{ fontSize: '40px' }} />
                     Subir logo
                   </Space>
@@ -91,19 +93,21 @@ const ModalCreateOrg = (props) => {
           </ImgCrop>
         </Form.Item>
         <Form.Item
-          label={'Nombre de la organizacion'}
-          name='name'
+          label="Nombre de la organizacion"
+          name="name"
           style={{ marginBottom: '10px' }}
-          rules={[{ required: true, message: 'Ingrese un nombre para su organización!' }]}>
-          <Input type='text' size='large' placeholder={'Nombre de la organizacion'} />
+          rules={[{ required: true, message: 'Ingrese un nombre para su organización!' }]}
+        >
+          <Input type="text" size="large" placeholder="Nombre de la organizacion" />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
-            id={'submitButton'}
-            htmlType='submit'
+            id="submitButton"
+            htmlType="submit"
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size='large'>
+            size="large"
+          >
             Crear organizacion
           </Button>
         </Form.Item>

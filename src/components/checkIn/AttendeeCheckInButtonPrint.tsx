@@ -3,7 +3,7 @@ import { Button } from 'antd';
 import { PrinterOutlined } from '@ant-design/icons';
 const AttendeeCheckInButtonPrint = ({ onPrintUser }: { onPrintUser: () => void | undefined }) => {
   return (
-    <Button onClick={onPrintUser} type='primary' block={true} icon={<PrinterOutlined />}>
+    <Button onClick={onPrintUser} type="primary" block icon={<PrinterOutlined />}>
       Imprimir Escarapela
     </Button>
   );

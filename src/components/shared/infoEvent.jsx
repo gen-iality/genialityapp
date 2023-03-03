@@ -46,8 +46,8 @@ const InfoEvent = () => {
         !cEventUser?.value && (
           <Button
             onClick={() => handleChangeTypeModal('registerForTheEvent')}
-            type='primary'
-            size='large'
+            type="primary"
+            size="large"
             disabled={!eventIsActive}
           >
             {intl.formatMessage({
@@ -69,7 +69,7 @@ const InfoEvent = () => {
       //         <time>{dayjs(cEvent.value.datetime_from).format('LT')}</time>
       //       </Space>
       //     </Space>
-      //     <Divider type='vertical'></Divider>
+      //     <Divider type="vertical"></Divider>
       //     <Space wrap>
       //       <Space>
       //         <CalendarOutlined />

@@ -47,11 +47,12 @@ function SelectField(rawProps) {
       label={formItemProps.label}
       required={formItemProps.required}
       help={fieldError}
-      validateStatus={fieldError ? 'error' : undefined}>
+      validateStatus={fieldError ? 'error' : undefined}
+    >
       <Select {...props} {...formikProps.field} onBlur={handleBlur} onChange={handleChange}>
         {isArray(options) ? (
           <>
-            <Option value=''>Seleccionar una opción</Option>
+            <Option value="">Seleccionar una opción</Option>
             {options.map(optionsMapper)}
           </>
         ) : (

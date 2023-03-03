@@ -75,13 +75,13 @@ const Report = (props) => {
     <CMS 
       API={InvitationsApi}
       eventId={props.event._id}
-      title={'Reporte de Networking'}
+      title="Reporte de Networking"
       exportData
       columns={columns}
-      key='_id'
+      key="_id"
       search
       setColumnsData={setColumnsData}
-      fileName={'Employees'}
+      fileName="Employees"
       scroll={{x: 'auto'}}
     />
   );

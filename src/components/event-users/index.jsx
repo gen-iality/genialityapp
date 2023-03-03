@@ -2,7 +2,7 @@ import { Component, useState, useEffect } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
 import { firestore } from '@helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request';
-import { AgendaApi } from '@helpers/request';
+import { AgendaApi, OrganizationApi } from '@helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
@@ -109,8 +109,8 @@ const ModalWithLessonsInfo = ({ show, onHidden, allActivities, attendee, current
   };
 
   return (
-    <Modal centered footer={null} visible={show} closable={true} onCancel={onHidden}>
-      <Space direction='vertical'>
+    <Modal centered footer={null} visible={show} closable onCancel={onHidden}>
+      <Space direction="vertical">
         <Content />
       </Space>
     </Modal>
@@ -169,6 +169,7 @@ class ListEventUser extends Component {
       totalCheckedIn: 0,
       totalCheckedInWithWeight: 0,
       extraFields: [],
+      simplifyOrgProperties: [],
       spacesEvents: [],
       addUser: false,
       editUser: false,
@@ -212,15 +213,22 @@ class ListEventUser extends Component {
   static contextType = HelperContext;
 
   // eslint-disable-next-line no-unused-vars
-  editcomponent = (text, item, index) => {
+  editcomponent = (text, item, index, badColumns) => {
+    const newItem = JSON.parse(JSON.stringify(item))
+    const filteredProperties = Object.fromEntries(
+      Object.entries(newItem.properties).filter(([key, value]) => {
+        return !(badColumns.includes(key))
+      })
+    )
+    newItem.properties = filteredProperties
     const { eventIsActive } = this.context;
     return (
-      <Tooltip placement='topLeft' title='Editar'>
+      <Tooltip placement="topLeft" title="Editar">
         <Button
-          type={'primary'}
+          type="primary"
           icon={<EditOutlined />}
-          size='small'
-          onClick={() => this.openEditModalUser(item)}
+          size="small"
+          onClick={() => this.openEditModalUser(newItem)}
           disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
         />
       </Tooltip>
@@ -319,8 +327,13 @@ class ListEventUser extends Component {
     this.checkFirebasePersistence();
     try {
       const event = await EventsApi.getOne(this.props.event._id);
+      const orgId = event.organizer._id;
+      const org = await OrganizationApi.getOne(orgId)
 
       const properties = event.user_properties;
+      const simplifyOrgProperties = (org.user_properties || []).filter(
+        (property) => !['email', 'password', 'names'].includes(property.name)
+      )
       const rolesList = await RolAttApi.byEventRolsGeneral();
       const badgeEvent = await BadgeApi.get(this.props.event._id);
 
@@ -329,7 +342,7 @@ class ListEventUser extends Component {
       extraFields = this.addDefaultLabels(extraFields);
       extraFields = this.orderFieldsByWeight(extraFields);
       const fieldsForm = Array.from(extraFields);
-      // AGREGAR EXTRAFIELDS DE ROL Y CHECKIN
+      // Agregar extrafields de rol y checkin
       const rolesOptions = rolesList.map((rol) => {
         return {
           label: rol.name,
@@ -371,7 +384,7 @@ class ListEventUser extends Component {
 
       let columns = [];
       const checkInColumn = {
-        title: 'Ingreso',
+        title: 'Fecha de ingreso',
         dataIndex: 'checkedin_at',
         key: 'checkedin_at',
         width: '120px',
@@ -405,7 +418,12 @@ class ListEventUser extends Component {
         key: 'edit',
         fixed: 'right',
         width: 60,
-        render: self.editcomponent,
+        render: (...args) => {
+          self.editcomponent(
+            ...args,
+            simplifyOrgProperties.map((item) => item.name),
+          )
+        },
       };
       /* columns.push(editColumn); */
       /** Additional columns for hybrid events */
@@ -435,7 +453,7 @@ class ListEventUser extends Component {
 
                 case 'file':
                   return (
-                    <a target='__blank' download={item?.name} href={key[item?.name]}>
+                    <a target="__blank" download={item?.name} href={key[item?.name]}>
                       {this.obtenerName(key[item?.name])}
                     </a>
                   );
@@ -450,6 +468,25 @@ class ListEventUser extends Component {
           };
         });
       columns = [...columns, ...extraColumns];
+
+      // Inject the organization member properties here
+      const orgExtraColumns = simplifyOrgProperties
+        .map((property) => {
+          return {
+            title: property.label,
+            dataIndex: property.name,
+            key: property.name,
+            ellipsis: true,
+            sorter: (a, b) => a[property.name]?.length - b[property.name]?.length,
+            ...self.getColumnSearchProps(property.name),
+            render: (record, item) => {
+              return (item.properties || [])[property.name]
+            }
+          }
+        })
+      columns = [...columns, ...orgExtraColumns];
+      this.setState({ simplifyOrgProperties })
+
       const { data: allActivities } = await AgendaApi.byEvent(this.props.event._id);
       this.setState({ allActivities });
       const progressing = {
@@ -550,13 +587,9 @@ class ListEventUser extends Component {
             totalWithWeight,
           });
 
-          //console.log("ATTENDESS==>",updatedAttendees)
-          //console.log("ATTENDESSFIND==>",updatedAttendees.filter((at)=>at.email=='nieblesrafael@yahoo.com'))
-
           for (let i = 0; i < updatedAttendees.length; i++) {
             // Arreglo temporal para que se muestre el listado de usuarios sin romperse
             // algunos campos no son string y no se manejan bien
-            //console.log("FIELDS==>",extraFields)
             extraFields.forEach(function(key) {
               if (
                 !(
@@ -587,7 +620,6 @@ class ListEventUser extends Component {
                     ? '(' + updatedAttendees[i]['code'] + ')' + updatedAttendees[i].properties[codearea[0].name]
                     : updatedAttendees[i].properties[codearea[0].name];
                 } else {
-                  //console.log("KEY==>",updatedAttendees[i]['properties'][key.name])
                   if (updatedAttendees[i][key.name]) {
                     updatedAttendees[i][key.name] = Array.isArray(updatedAttendees[i]['properties'][key.name])
                       ? updatedAttendees[i]['properties'][key.name][0]
@@ -616,10 +648,39 @@ class ListEventUser extends Component {
 
           const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
 
+          // Inject here the org member data
+          const extendedAttendees = []
+          {
+            if (!orgId) {
+              console.warn('cannot get organization ID from event data')
+            }
+            const { data: orgUsers } = await OrganizationApi.getUsers(orgId);
+            console.log('orgUsers', orgUsers)
+
+            extendedAttendees.push(...attendees.map((eventUser) => {
+              // Find this event user in the organization member list
+              const orgMember = orgUsers.find((member) => member.account_id === eventUser.account_id)
+              if (!orgMember) {
+                console.warn('event user', eventUser, 'not found as organization member')
+                return eventUser
+              }
+
+              return {
+                ...eventUser, // Normal data
+                properties: {
+                  ...orgMember.properties, // organization member properties,
+                  ...eventUser.properties, // Overwritten event user properties
+                },
+              }
+            }))
+          }
+
+          console.info('extendedAttendees', extendedAttendees)
+
           this.setState({
             unSusCribeConFigFast,
             unSuscribeAttendees,
-            users: attendees,
+            users: extendedAttendees, // attendees,
             usersReq: updatedAttendees,
             auxArr: attendees,
             loading: false,
@@ -659,7 +720,11 @@ class ListEventUser extends Component {
 
     const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
 
-    const data = await parseData2Excel(attendees, this.state.extraFields, this.state.rolesList);
+    console.info('attendees', attendees)
+
+    const joint = [...this.state.extraFields, ...this.state.simplifyOrgProperties]
+
+    const data = await parseData2Excel(attendees, joint, this.state.rolesList);
     const ws = utils.json_to_sheet(data);
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Asistentes');
@@ -703,7 +768,7 @@ class ListEventUser extends Component {
       let resp = await TicketsApi.checkInAttendee(event._id, id);
       //message.success('Usuario Chequeado');
     } catch (e) {
-      message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+      message.error(<FormattedMessage id="toast.error" defaultMessage='Sry :(' />);
     } */
     //return;
     const eventIdSearch = this.props.match.params.id ? this.props.match.params.id : this.props.event._id;
@@ -873,15 +938,15 @@ class ListEventUser extends Component {
         />
         <Space>
           <Button
-            type='primary'
+            type="primary"
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            size='small'
+            size="small"
             style={{ width: 90 }}
           >
             Search
           </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
+          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
         </Space>
@@ -1051,7 +1116,7 @@ class ListEventUser extends Component {
                   <Col>
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                      color='lightgrey'
+                      color="lightgrey"
                       icon={<UsergroupAddOutlined />}
                     >
                       <strong>Inscritos: </strong>
@@ -1061,7 +1126,7 @@ class ListEventUser extends Component {
                   <Col>
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                      color='lightgrey'
+                      color="lightgrey"
                       icon={<StarOutlined />}
                     >
                       <strong>Participantes: </strong>
@@ -1088,7 +1153,7 @@ class ListEventUser extends Component {
 
               {!activityId && (
                 <Col>
-                  <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                  <Button type="ghost" icon={<FullscreenOutlined />} onClick={this.showModal}>
                     Expandir
                   </Button>
                 </Col>
@@ -1096,17 +1161,17 @@ class ListEventUser extends Component {
 
               <Col>
                 <Select
-                  name={'type-scanner'}
+                  name="type-scanner"
                   value={this.state.typeScanner}
                   defaultValue={this.state.typeScanner}
                   onChange={(e) => this.handleChange(e)}
                   style={{ width: 220 }}
                 >
-                  <Option value='scanner-qr'>Escanear QR</Option>
+                  <Option value="scanner-qr">Escanear QR</Option>
                   {fieldsForm.map((item, index) => {
                     if (item.type === 'checkInField')
                       return (
-                        <Option key={index} value='scanner-document'>
+                        <Option key={index} value="scanner-document">
                           Escanear {item.label}
                         </Option>
                       );
@@ -1115,7 +1180,7 @@ class ListEventUser extends Component {
               </Col>
               <Col>
                 {usersReq.length > 0 && (
-                  <Button type='primary' icon={<DownloadOutlined />} onClick={this.exportFile}>
+                  <Button type="primary" icon={<DownloadOutlined />} onClick={this.exportFile}>
                     Exportar
                   </Button>
                 )}
@@ -1131,7 +1196,7 @@ class ListEventUser extends Component {
                   }}
                 >
                   <Button
-                    type='primary'
+                    type="primary"
                     icon={<UploadOutlined />}
                     disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                   >
@@ -1141,9 +1206,9 @@ class ListEventUser extends Component {
               </Col>
               <Col>
                 <Button
-                  type='primary'
+                  type="primary"
                   icon={<PlusCircleOutlined />}
-                  size='middle'
+                  size="middle"
                   onClick={this.addUser}
                   disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                 >
@@ -1185,21 +1250,21 @@ class ListEventUser extends Component {
           visible={this.state.isModalVisible}
           closable={false}
           footer={[
-            <Button style={{ float: 'right' }} type='primary' size='large' onClick={this.hideModal} key='close'>
+            <Button style={{ float: 'right' }} type="primary" size="large" onClick={this.hideModal} key="close">
               Cerrar
             </Button>,
-            <div key='fecha' style={{ float: 'left' }}>
+            <div key="fecha" style={{ float: 'left' }}>
               <Title level={5}>
                 Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
               </Title>
             </div>,
           ]}
           style={{ top: 0, textAlign: 'center' }}
-          width='100vw'
+          width="100vw"
         >
-          <Row align='middle' justify='center' style={{ width: '80vw' }}>
+          <Row align="middle" justify="center" style={{ width: '80vw' }}>
             <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
-              <Row align='middle'>
+              <Row align="middle">
                 <Card
                   bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
                   cover={
@@ -1207,7 +1272,7 @@ class ListEventUser extends Component {
                       <img
                         style={{ objectFit: 'cover', width: '96vw' }}
                         src={this.props.event.styles.event_image}
-                        alt='Logo curso'
+                        alt="Logo curso"
                       />
                     ) : (
                       ''
@@ -1217,7 +1282,7 @@ class ListEventUser extends Component {
               </Row>
             </Col>
             <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>
-              <Row align='middle'>
+              <Row align="middle">
                 <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                   <Card bodyStyle={{}} style={{}} bordered={false}>
                     <Statistic

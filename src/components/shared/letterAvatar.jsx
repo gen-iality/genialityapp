@@ -55,5 +55,5 @@ export default function LetterAvatar(props) {
   dataURI = canvas.toDataURL();
   canvas = null;
 
-  return <img src={dataURI} alt={`avatar_${name}`} className='author-image' />;
+  return <img src={dataURI} alt={`avatar_${name}`} className="author-image" />;
 }

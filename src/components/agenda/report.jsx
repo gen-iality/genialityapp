@@ -54,8 +54,8 @@ const ReportList = (props) => {
       <CMS
         API={AgendaApi}
         eventId={props.event._id}
-        title={'Inscripción a la lección'}
-        description={'Para actualizar valores, refrescar la página'}
+        title="Inscripción a la lección"
+        description="Para actualizar valores, refrescar la página"
         columns={columns}
         search
         setColumnsData={setColumnsData}
@@ -63,9 +63,9 @@ const ReportList = (props) => {
         noRemove
         extraPath={`${props.url}/checkin`}
         extraPathIcon={<RightOutlined />}
-        extraPathTitle={'Detalle'}
+        extraPathTitle="Detalle"
         exportData
-        fileName={'CheckInActivity'}
+        fileName="CheckInActivity"
       />
     </div>
   );

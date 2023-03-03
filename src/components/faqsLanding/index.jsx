@@ -42,17 +42,18 @@ class Faqs extends Component {
   render() {
     const { faqsData, styles } = this.state;
     return (
-      <Row gutter={[8, 8]} wrap justify='center'>
+      <Row gutter={[8, 8]} wrap justify="center">
         <Col xs={22} sm={22} md={18} lg={18} xl={18}>
           <Collapse
-            className='collapse_question'
+            className="collapse_question"
             /* style={{
               backgroundColor:
                 this.props.cEvent.value.styles.toolbarDefaultBg !== '#ffffff'
                   ? this.props.cEvent.value.styles.toolbarDefaultBg
                   : '#7d8485d4',
             }} */
-            defaultActiveKey={['3']}>
+            defaultActiveKey={['3']}
+          >
             {faqsData.map((faqs, key) => (
               <Panel
                 key={key}
@@ -65,12 +66,12 @@ class Faqs extends Component {
                 }>
                 <b>Respuesta:</b>{' '}
                 <Row>
-                  <Col span={24} id='img-informative'>
+                  <Col span={24} id="img-informative">
                     <ReactQuill
                       value={faqs.content}
-                      readOnly={true}
-                      className='hide-toolbar ql-toolbar'
-                      theme='bubble'
+                      readOnly
+                      className="hide-toolbar ql-toolbar"
+                      theme="bubble"
                     />
                   </Col>
                 </Row>

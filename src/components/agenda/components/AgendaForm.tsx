@@ -219,13 +219,14 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               </Form.Item>
             </Col>
             <Col span={1}>
-              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'herramientas')}>
+              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'herramientas')}
+            >
                 <Button icon={<SettingOutlined />} />
               </Link>}
             </Col>
           </Row>
         </Form.Item>
-        <Form.Item label="Conferencias">
+        <Form.Item label="Conferencistas">
           <Row wrap gutter={[8, 8]}>
             <Col span={22}>
               <Form.Item name="host_ids">
@@ -235,7 +236,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             <Col span={1}>
               <Button
                 onClick={() => setIsSpeakerModalOpened(true)}
-                title='Agregar conferencista'
+                title="Agregar conferencista"
                 icon={<PlusOutlined />}
               />
             </Col>
@@ -243,7 +244,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               <Button
                 onClick={() => props.matchUrl && goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })}
                 icon={<SettingOutlined />}
-                title='Configurar en otra página'
+                title="Configurar en otra página"
               />
             </Col>
             {/* The speaker modal */}
@@ -285,7 +286,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               </Form.Item>
             </Col>
             <Col span={1}>
-              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'espacios')}>
+              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'espacios')}
+            >
                 <Button icon={<SettingOutlined />} />
               </Link>}
             </Col>

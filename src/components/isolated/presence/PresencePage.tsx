@@ -23,8 +23,8 @@ export function PresencePage (props: IPresencePageProps) {
     <div>
       ok
       {/* <Presence
-        userId='paco'
-        organizationId='org'
+        userId="paco"
+        organizationId="org"
         debuglog={LOG}
         errorlog={ERROR} 
         realtimeDB={fireRealtime}
@@ -33,12 +33,12 @@ export function PresencePage (props: IPresencePageProps) {
       <Presence<Data>
         global
         data={data}
-        // userId='paco'
-        // organizationId='org'
+        // userId="paco"
+        // organizationId="org"
         debuglog={GLOG}
         errorlog={GERROR}
         realtimeDB={fireRealtime}
-        collectionId={'paco'}
+        collectionId="paco"
       />
     </div>
   );

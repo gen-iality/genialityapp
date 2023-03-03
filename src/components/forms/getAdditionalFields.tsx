@@ -9,19 +9,19 @@ import { useEffect, useState } from 'react';
  * This solution is distributed as is:
  * https://github.com/react-component/picker/issues/123#issuecomment-728755491
  */
- import dayjs from 'dayjs';
- import advancedFormat from 'dayjs/plugin/advancedFormat';
- import customParseFormat from 'dayjs/plugin/customParseFormat';
- import localeData from 'dayjs/plugin/localeData';
- import weekday from 'dayjs/plugin/weekday';
- import weekOfYear from 'dayjs/plugin/weekOfYear';
- import weekYear from 'dayjs/plugin/weekYear';
- dayjs.extend(customParseFormat);
- dayjs.extend(advancedFormat);
- dayjs.extend(weekday);
- dayjs.extend(localeData);
- dayjs.extend(weekOfYear);
- dayjs.extend(weekYear);
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localeData from 'dayjs/plugin/localeData';
+import weekday from 'dayjs/plugin/weekday';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import weekYear from 'dayjs/plugin/weekYear';
+dayjs.extend(customParseFormat);
+dayjs.extend(advancedFormat);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
+dayjs.extend(weekOfYear);
+dayjs.extend(weekYear);
 import { deleteFireStorageData } from '@Utilities/deleteFireStorageData';
 import { countryApi } from '@helpers/request';
 /**TODO::ocaciona error en ios */
@@ -99,13 +99,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
       setCountries([]);
     };
   }, []);
-
-  //console.log(locationState.getStatesByShort('CO'), country, region);
   if (fields?.lenght === 0) return [];
 
   const additionalFormFields = fields.map((field: any, key: any) => {
     // se valida si el campo es visible solo el en cms,
-    if (field.visibleByAdmin == true && !visibleInCms) return;
+    if (field.visibleByAdmin && !visibleInCms) return;
 
     //Este if es nuevo para poder validar las contraseñas viejos (nuevo flujo para no mostrar esos campos)
     if (field.name !== 'contrasena' && field.name !== 'password') {
@@ -161,12 +159,13 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           <Form.Item initialValue={areacodeselected} name={['code']} noStyle>
             <Select
               showSearch
-              optionFilterProp='children'
+              optionFilterProp="children"
               style={{ fontSize: '12px', width: 155 }}
               onChange={(val) => {
                 areacodeselected = val;
               }}
-              placeholder='Código de area del pais'>
+              placeholder="Código de area del pais"
+            >
               {areaCode.map((code: any, key: any) => {
                 return (
                   <Option key={key} value={code.value}>
@@ -183,10 +182,10 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               addonBefore={prefixSelector}
               name={name}
               required={mandatory}
-              type='number'
+              type="number"
               key={key}
               style={{ width: '100%' }}
-              placeholder='Numero de telefono'
+              placeholder="Numero de telefono"
             />
           </Form.Item>
         );
@@ -196,12 +195,13 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           <Form.Item initialValue={onlyAreacodeselected} name={name} noStyle>
             <Select
               showSearch
-              optionFilterProp='children'
+              optionFilterProp="children"
               style={{ width: '100%' }}
               onChange={(val) => {
                 onlyAreacodeselected = val;
               }}
-              placeholder='Código de area del pais'>
+              placeholder="Código de area del pais"
+            >
               {areaCode.map((code: any, key: any) => {
                 return (
                   <Option key={key} value={code.value}>
@@ -221,7 +221,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               <div
                 dangerouslySetInnerHTML={{
                   __html: label,
-                }}></div>
+                }}
+              ></div>
             </div>
             <Divider />
           </>
@@ -244,7 +245,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
 
         input = (
           <Form.Item initialValue={defaultValue} name={name} noStyle>
-            <Select mode='multiple' placeholder='Selecciona una o mas opciones' style={{ width: '100%' }}>
+            <Select mode="multiple" placeholder="Selecciona una o mas opciones" style={{ width: '100%' }}>
               {input}
             </Select>
           </Form.Item>
@@ -257,14 +258,12 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           textoError = intl.formatMessage({ id: 'form.field.required' });
 
           rule = {
-            validator: (_: any, value: any) => (value == true ? Promise.resolve() : Promise.reject(textoError)),
+            validator: (_: any, value: any) => (value ? Promise.resolve() : Promise.reject(textoError)),
           };
         } else {
           rule = {
             validator: (_: any, value: any) =>
-              value == true || value == false || value == '' || value == undefined
-                ? Promise.resolve()
-                : Promise.reject(textoError),
+              value || !value || value == '' || value == undefined ? Promise.resolve() : Promise.reject(textoError),
           };
         }
 
@@ -273,12 +272,13 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             {
               <>
                 <Form.Item
-                  valuePropName={'checked'}
+                  valuePropName="checked"
                   name={name}
                   rules={[rule]}
                   key={'l' + key}
                   htmlFor={key}
-                  initialValue={value}>
+                  initialValue={value}
+                >
                   <Checkbox key={key} name={name}>
                     {mandatory ? (
                       <span>
@@ -301,12 +301,14 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       header={intl.formatMessage({
                         id: 'registration.message.policy',
                       })}
-                      key='1'>
+                      key="1"
+                    >
                       <pre
                         dangerouslySetInnerHTML={{
                           __html: description,
                         }}
-                        style={{ whiteSpace: 'normal' }}></pre>
+                        style={{ whiteSpace: 'normal' }}
+                      ></pre>
                     </Panel>
                   </Collapse>
                 )}
@@ -341,11 +343,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
         input = (
           <Form.Item initialValue={value} name={name} noStyle>
             <Dragger
-              accept='application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx'
+              accept="application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx"
               action={`${ApiUrl}/api/files/upload/`}
               maxCount={1}
               multiple={false}
-              listType='text'
+              listType="text"
               beforeUpload={beforeUpload}
               onRemove={async (file: any) => {
                 const urlFile = file.url || file.response;
@@ -361,10 +363,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       },
                     ]
                   : []
-              }>
+              }
+            >
               <>
-                <p className='ant-upload-drag-icon'>
-                  <InboxOutlined style={{ color: '#009fd9' }} />
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined style={{ color: '#003853' }} />
                 </p>
                 <p>Haga clic o arrastre el archivo a esta área para cargarlo</p>
               </>
@@ -386,7 +389,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
         input = (
           <Form.Item initialValue={value} name={name} noStyle>
             <Select style={{ width: '100%' }}>
-              <Option value={''}>Seleccione...</Option>
+              <Option value="">Seleccione...</Option>
               {input}
             </Select>
           </Form.Item>
@@ -398,7 +401,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           <Form.Item initialValue={value} name={name} noStyle>
             <Select
               showSearch
-              optionFilterProp='children'
+              optionFilterProp="children"
               style={{ width: '100%' }}
               onChange={(nameCountry, aditionalData: any) => {
                 getState(aditionalData.key);
@@ -407,7 +410,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               }}
               disabled={loading || countries.length === 0}
               loading={loading}
-              placeholder='Seleccione un país'>
+              placeholder="Seleccione un país"
+            >
               {countries.map((country: any) => {
                 return (
                   <Option key={country.iso2} value={country.name}>
@@ -424,7 +428,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           <Form.Item initialValue={value} name={name} noStyle>
             <Select
               showSearch
-              optionFilterProp='children'
+              optionFilterProp="children"
               style={{ width: '100%' }}
               onChange={(nameRegion, aditionalData: any) => {
                 getCities(country.countryCode, aditionalData.key);
@@ -432,7 +436,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               }}
               disabled={loading || regiones.length === 0}
               loading={loading}
-              placeholder='Seleccione un región'>
+              placeholder="Seleccione un región"
+            >
               {regiones.map((regiones: any) => {
                 return (
                   <Option key={regiones.iso2} value={regiones.name}>
@@ -450,14 +455,15 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           <Form.Item initialValue={value} name={name} noStyle>
             <Select
               showSearch
-              optionFilterProp='children'
+              optionFilterProp="children"
               style={{ width: '100%' }}
               disabled={loading || cities.length === 0}
               loading={loading}
               onChange={(nameCity, aditionalData: any) => {
                 setCity({ name: nameCity, regionCode: aditionalData.key, inputName: name });
               }}
-              placeholder='Seleccione una ciudad'>
+              placeholder="Seleccione una ciudad"
+            >
               {cities.map((cityCode: any, key: any) => {
                 return (
                   <Option key={key} value={cityCode.name}>
@@ -470,21 +476,21 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
         );
       }
 
-      //SE DEBE QUEDAR PARA RENDRIZAR EL CAMPO IMAGEN DENTRO DEL CMS
+      // Se debe quedar para rendrizar el campo imagen dentro del cms
       if (type === 'avatar') {
         ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
 
         input = (
           <div style={{ textAlign: 'center' }}>
-            <ImgCrop rotate shape='round'>
+            <ImgCrop rotate shape="round">
               <Upload
-                action={'https://api.evius.co/api/files/upload/'}
-                accept='image/png,image/jpeg'
+                action="https://api.evius.co/api/files/upload/"
+                accept="image/png,image/jpeg"
                 onChange={(file) => {
                   // setImageAvatar(file);
                 }}
                 multiple={false}
-                listType='picture'
+                listType="picture"
                 maxCount={1}
                 // @ts-ignore: Unreachable code error
                 defaultFileList={
@@ -497,8 +503,9 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       ]
                     : []
                 }
-                beforeUpload={beforeUpload}>
-                <Button type='primary' icon={<UploadOutlined />}>
+                beforeUpload={beforeUpload}
+              >
+                <Button type="primary" icon={<UploadOutlined />}>
                   {intl.formatMessage({
                     id: 'form.button.avatar',
                     defaultMessage: 'Subir imagen de perfil',
@@ -546,7 +553,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   name={name}
                   rules={validations ? [{ required: false }] : [rule]}
                   key={'l' + key}
-                  htmlFor={key}>
+                  htmlFor={key}
+                >
                   {input}
                 </Form.Item>
 
@@ -560,7 +568,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       header={intl.formatMessage({
                         id: 'registration.message.policy',
                       })}
-                      key='1'>
+                      key="1"
+                    >
                       <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
                     </Panel>
                   </Collapse>

@@ -89,7 +89,6 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
   }, [queryData]);
 
   const displayFeedbackAfterEachQuestion = (sender: Survey.SurveyModel, options: any) => {
-    console.log('200.displayFeedbackAfterEachQuestion called')
     if (showingFeedback !== true) {
       stopChangeToNextQuestion(options);
       hideTimerPanel();
@@ -167,7 +166,6 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     setIsSavingPoints(true);
     try {
       const value = parseInt(question.points) || 0;
-      console.log('200.saveGainedSurveyPoints survey correct?', correctAnswer);
       await addRightPoints(queryData._id, currentUser.value._id, correctAnswer ? value : 0);
       console.log('600 savedGainedSurveyPoints value', value);
       setIsSavingPoints(false);
@@ -190,11 +188,8 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
       question = surveyModel.currentPage.questions[1];
     }
 
-    console.log('200.saveSurveyAnswers question', question);
-
     // Funcion que retorna si la opcion escogida es la respuesta correcta
     correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
-    console.log('200.saveSurveyAnswers correctAnswer', correctAnswer);
 
     /** funcion para validar tipo de respuesta multiple o unica */
     const responseIndex = await getResponsesIndex(question);
@@ -211,12 +206,10 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
     if (!(Object.keys(currentUser).length === 0)) {
       savingResponseByUserId(queryData, question, currentUser, eventUsers, voteWeight, infoOptionQuestion);
-      console.log('200.saveSurveyAnswers savingResponseByUserId');
     }
   }
 
   async function saveSurveyData(sender: Survey.SurveyModel) {
-    console.log('200.saveSurveyData');
 
     await saveSurveyCurrentPage();
     await saveSurveyAnswers(sender.currentPage.questions);
@@ -226,7 +219,6 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
   }
 
   async function onSurveyCompleted(sender: Survey.SurveyModel) {
-    console.log('200.onSurveyCompleted');
     await saveSurveyData(sender);
     await messageWhenCompletingSurvey(surveyModel, queryData, currentUser.value._id);
   }
@@ -240,7 +232,6 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
             <SurveyQuestionsFeedback
               questions={currentQuestionsForFeedback}
               onNextClick={() => {
-                console.log('200.SurveyQuestionsFeedback');
                 setShowingFeedback(false);
                 surveyModel.nextPage();
                 if (surveyModel.state === 'completed') {
@@ -262,7 +253,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
           {isSaveButtonShown && (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Button
-                type='primary'
+                type="primary"
                 onClick={() => {
                   saveSurveyStatus().then(() => history.push(`/landing/${eventId}/evento`))
                 }}

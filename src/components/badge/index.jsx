@@ -103,7 +103,7 @@ export default function Index(props) {
 
       key: 'action',
       render: (_, record, index) => (
-        <Space size='middle'>
+        <Space size="middle">
           <Button onClick={() => actionEditField(record, index)} icon={<EditOutlined />}>
             Editar
           </Button>
@@ -117,19 +117,19 @@ export default function Index(props) {
   return (
     <>
       <Header
-        title={'Configuración de escarapelas'}
+        title="Configuración de escarapelas"
         description={
           ' Acontinuación podrás crear la escarapela para tu evento. Agrega los Campos o QR, edita el tamaño de letra de los campos o del QR'
         }
       />
-      <Row justify='center' wrap gutter={[16, 16]}>
+      <Row justify="center" wrap gutter={[16, 16]}>
         <Col span={16}>
           <Space style={{ marginBottom: 8 }}>
-            <Button type='primary' onClick={() => saveBadge(event, badges, message)} block>
+            <Button type="primary" onClick={() => saveBadge(event, badges, message)} block>
               Guardar
             </Button>
             {!qrExist && <Button onClick={addQR}>Agregar QR</Button>}
-            <Button type='primary' onClick={() => printBagde(ifrmPrint, badges)}>
+            <Button type="primary" onClick={() => printBagde(ifrmPrint, badges)}>
               Imprimir
             </Button>
           </Space>
@@ -166,7 +166,7 @@ export default function Index(props) {
         setIsVisible={setIsVisibleEdit}
         setBadge={setBadge}
       />
-      <iframe title={'Print User'} ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />
+      <iframe title="Print User" ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />
     </>
   );
 }

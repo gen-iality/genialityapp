@@ -139,8 +139,8 @@ class SearchComponent extends Component {
       <div className={this.props.classes} style={{ width: '100%' }}>
         <Form.Item rules={[{ required: true }]} onSubmit={this.searchCert}>
           <Input
-            id='inputSearch'
-            type='text'
+            id="inputSearch"
+            type="text"
             size={this.props.size ? this.props.size : 'large'}
             // onChange={this.handleFilter}
             onInput={this.handleFilter}
@@ -161,8 +161,8 @@ class SearchComponent extends Component {
           />
           {this.state.showMessage && (
             <Alert
-              message={<FormattedMessage id={`global.search_${this.state.message}`} defaultMessage='Help' />}
-              type='warning'
+              message={<FormattedMessage id={`global.search_${this.state.message}`} defaultMessage="Help" />}
+              type="warning"
               showIcon
             />
           )}

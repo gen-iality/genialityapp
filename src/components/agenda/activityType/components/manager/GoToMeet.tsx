@@ -46,7 +46,7 @@ const GoToMeet = (props: GoToMeetProps) => {
         description={
           <Button
             onClick={() => window.open(props.type === 'reunión' ? urlReunion : urlEviusTransmision, '_blank')}
-            type='primary'>
+            type="primary">
             {props.type === 'reunión' && 'Entrar a la reunión'}
             {props.type === 'EviusMeet' && 'Entrar para transmitir'}
           </Button>

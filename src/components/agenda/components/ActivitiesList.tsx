@@ -74,7 +74,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
       setTruncatedAgendaList([
         ...agendaList.map((agenda) => {
-          console.log('1000. agenda', agenda);
           // Logic here
           let diff = Math.floor(Math.random() * 60 * 60);
 
@@ -111,7 +110,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   }
                 })();
               }, [cEventUserId]);
-              if (isTaken) return <Badge style={{ backgroundColor: '#339D25', marginRight: '3px' }} count='Visto' />;
+              if (isTaken) return <Badge style={{ backgroundColor: '#339D25', marginRight: '3px' }} count="Visto" />;
               return <></>;
             },
             QuizProgressComponent: ({ userId, isAnswersDeleted }) => {
@@ -200,8 +199,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
               async function deleteSurveyAnswers(surveyId: any, userId: any) {
                 // No se eliminan las respuestas, con solo eliminar el userProgress y surveyStatus el usuario puede volver a contestar la encuesta, sobreescribiendo las anteriores respuestas.
-                console.log('700.surveyId', surveyId);
-                console.log('700.userId', userId);
 
                 await getUserProgressRef(surveyId, userId).delete();
                 await getSurveyStatusRef(surveyId, userId).delete();
@@ -223,7 +220,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                       marginLeft: '2px',
                     }}
                     disabled={isDeleted}
-                    size='small'
+                    size="small"
                     icon={<DeleteOutlined />}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -258,19 +255,19 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
               return (
                 <Badge.Ribbon
-                  className='animate__animated animate__bounceIn animate__delay-2s'
-                  placement={'end'}
+                  className="animate__animated animate__bounceIn animate__delay-2s"
+                  placement="end"
                   style={{ height: 'auto', padding: '3px', top: -5, lineHeight: '10px' }}
                   color={isLive ? 'red' : 'transparent'}
                   text={
                     isLive ? (
-                      <Space direction='horizontal' style={{ padding: 0 }}>
+                      <Space direction="horizontal" style={{ padding: 0 }}>
                         <AccessPointIcon
-                          className='animate__animated animate__heartBeat animate__infinite animate__slower'
+                          className="animate__animated animate__heartBeat animate__infinite animate__slower"
                           style={{ fontSize: '12px' }}
                         />
                         <span style={{ textAlign: 'center', fontSize: '12px' }}>
-                          {/* {<FormattedMessage id='live' defaultMessage='En vivo' />} */}
+                          {/* {<FormattedMessage id="live" defaultMessage="En vivo" />} */}
                           En Vivo
                         </span>
                       </Space>
@@ -296,13 +293,13 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   const ListThisActivities = (props: { dataSource: any[] }) => (
     <List
-      size='small'
+      size="small"
       // header={<h2>LECCIONES DEL CURSO</h2>}
       //bordered
       dataSource={props.dataSource}
       renderItem={(item: TruncatedAgenda) => (
         <item.RibbonComponent>
-          <List.Item className='shadow-box'>
+          <List.Item className="shadow-box">
             {item.host_picture && (
               <img
                 style={{ width: '6rem', height: '6rem', borderRadius: '50%', marginRight: '1rem' }}
@@ -330,7 +327,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
                 <Link to={item.link}>
                   <div style={{ fontSize: '1.6rem' }}>
-                    <ActivityCustomIcon type={item.type!} className='list-icon' style={{ marginRight: '1em' }} />
+                    <ActivityCustomIcon type={item.type!} className="list-icon" style={{ marginRight: '1em' }} />
                     <span>{item.title}</span>
                   </div>
                 </Link>

@@ -56,9 +56,9 @@ const ContactList = ({ tabActive, agendarCita }) => {
     return userCurrentContext.value === null ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} xxl={15} style={{ margin: '0 auto' }}>
         <Alert
-          message='Iniciar sesión'
-          description='Para poder ver contactos es necesario iniciar sesión.'
-          type='info'
+          message="Iniciar sesión"
+          description="Para poder ver contactos es necesario iniciar sesión."
+          type="info"
           showIcon
         />
       </Col>
@@ -88,8 +88,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
                   //           ? user.numerodecelular
                   //           : user.telefono)
                   //       }
-                  //       target='_blank'
-                  //       rel='noreferrer'>
+                  //       target="_blank"
+                  //       rel="noreferrer">
                   //       <span>
                   //         Hola soy {user.names}, <br />
                   //         Escribeme por WhatsApp
@@ -98,12 +98,12 @@ const ContactList = ({ tabActive, agendarCita }) => {
                   //   )
                   // }
                   style={{ width: '100%', textAlign: 'left' }}
-                  bordered={true}>
+                  bordered
+                >
                   <Meta
                     avatar={
                       <Avatar size={65} src={user['picture'] ? user['picture'] : ''}>
                         {!user['picture'] && user.names ? user.names.charAt(0).toUpperCase() : user.names}
-                        {console.log('USER ACA==>', user)}
                       </Avatar>
                     }
                     title={user.names ? user.names : 'No registra Nombre'}
@@ -140,9 +140,10 @@ const ContactList = ({ tabActive, agendarCita }) => {
                   <Col xs={24}>
                     <Button
                       block
-                      size='large'
+                      size="large"
                       style={{ backgroundColor: '#363636', color: 'white' }}
-                      onClick={() => agendarCita(contact._id, contact)}>
+                      onClick={() => agendarCita(contact._id, contact)}
+                    >
                       {'Agendar cita'}
                     </Button>
                   </Col>

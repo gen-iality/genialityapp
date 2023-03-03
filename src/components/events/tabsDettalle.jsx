@@ -53,7 +53,7 @@ export default class TabsCard extends Component {
       <>
         <Card
           style={{ width: '100%' }}
-          title='Card title'
+          title="Card title"
           extra={<a href='#'>More</a>}
           tabList={tabList}
           activeTabKey={this.state.key}

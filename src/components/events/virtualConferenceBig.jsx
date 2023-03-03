@@ -30,13 +30,13 @@ const MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setAc
         <>
           <Button
             size={
-              screens.xxl === true || screens.xl === true || screens.lg === true
+              screens.xxl || screens.xl || screens.lg
                 ? 'large'
-                : (screens.xs === true || screens.sm === true) && 'small'
+                : (screens.xs || screens.sm) && 'small'
             }
-            type='primary'
+            type="primary"
             danger
-            className='buttonVirtualConference'
+            className="buttonVirtualConference"
             onClick={() => {
               if (activity.platform === 'zoomExterno') {
                 zoomExternoHandleOpen(activity, eventUser);
@@ -44,7 +44,7 @@ const MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setAc
                 setActivity(activity);
               }
             }}>
-            <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
+            <FormattedMessage id="live.join" defaultMessage="Ingresa aquí" />
           </Button>
         </>
       );
@@ -120,7 +120,7 @@ const VirtualConference = () => {
   return (
     <ThisRouteCanBeDisplayed>
       <div
-        key='VirtualConference'
+        key="VirtualConference"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -135,26 +135,26 @@ const VirtualConference = () => {
               return (
                 item?.habilitar_ingreso &&
                 (item?.habilitar_ingreso == 'open_meeting_room' || item?.habilitar_ingreso == 'closed_meeting_room') &&
-                (item?.isPublished === true || item?.isPublished === 'true')
+                (item?.isPublished || item?.isPublished === 'true')
               );
             })
 
             .map((item, key) => (
               <>
                 <Badge.Ribbon
-                  className='animate__animated animate__bounceIn animate__delay-2s'
-                  placement={screens.xs === true ? 'start' : 'end'}
+                  className="animate__animated animate__bounceIn animate__delay-2s"
+                  placement={screens.xs ? 'start' : 'end'}
                   style={{ height: 'auto' }}
                   color={item.habilitar_ingreso == 'open_meeting_room' ? '#FF4E50' : 'transparent'}
                   text={
                     item.habilitar_ingreso == 'open_meeting_room' ? (
                       <Space>
                         <AccessPointIcon
-                          className='animate__animated animate__heartBeat animate__infinite animate__slower'
+                          className="animate__animated animate__heartBeat animate__infinite animate__slower"
                           style={{ fontSize: '24px' }}
                         />
                         <span style={{ textAlign: 'center', fontSize: '15px' }}>
-                          {<FormattedMessage id='live' defaultMessage='En vivo' />}
+                          {<FormattedMessage id="live" defaultMessage="En vivo" />}
                         </span>
                       </Space>
                     ) : (
@@ -170,20 +170,21 @@ const VirtualConference = () => {
                       maxHeight: '300px',
                       marginTop: '8px',
                       marginBottom: '8px',
-                      width: `${screens.xs === true ? '90vw' : '58vw'}`,
+                      width: `${screens.xs ? '90vw' : '58vw'}`,
                       borderRadius: '10px',
                       borderLeft: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                       borderRight: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                     }}
-                    className='animate__animated animate__backInUp'>
+                    className="animate__animated animate__backInUp">
                     <Link
-                      to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}` : `${urlAgenda}`}>
-                      <Row justify='center' align='middle' gutter={[4, 4]}>
+                      to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}` : `${urlAgenda}`}
+                    >
+                      <Row justify="center" align="middle" gutter={[4, 4]}>
                         <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
                           <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
                             {item.habilitar_ingreso == 'open_meeting_room' ? (
                               <>
-                                {screens.xs === false && (
+                                {!screens.xs && (
                                   <CaretRightOutlined style={{ fontSize: '50px', color: '#FF4E50' }} />
                                 )}
                                 <span style={{ textAlign: 'center', fontSize: '15px' }}>
@@ -199,7 +200,7 @@ const VirtualConference = () => {
                               <>
                                 <FieldTimeOutlined style={{ fontSize: '50px', color: '#FAAD14' }} />
                                 <span style={{ textAlign: 'center', fontSize: '15px' }}>
-                                  {<FormattedMessage id='live.closed' defaultMessage='Iniciará pronto' />}
+                                  {<FormattedMessage id="live.closed" defaultMessage="Iniciará pronto" />}
                                 </span>
                               </>
                             ) : (
@@ -209,9 +210,10 @@ const VirtualConference = () => {
                         </Col>
                         <Col xs={16} sm={16} md={12} lg={12} xl={12} xxl={12}>
                           <div
-                            style={{ alignContent: 'center', display: 'grid', height: '100%', alignItems: 'center' }}>
+                            style={{ alignContent: 'center', display: 'grid', height: '100%', alignItems: 'center' }}
+                          >
                             <Title
-                              level={screens.xs === true ? 5 : 4}
+                              level={screens.xs ? 5 : 4}
                               ellipsis={{
                                 rows: 2, // Determina la cantidad de filas que se muestran antes de cortar el texto.
                                 expandable: true,
@@ -226,7 +228,7 @@ const VirtualConference = () => {
                               {item.name}
                             </Title>
 
-                            <h2 style={{ color: '#7c909a', fontSize: `${screens.xs === true ? '12px' : '14px'}` }}>
+                            <h2 style={{ color: '#7c909a', fontSize: `${screens.xs ? '12px' : '14px'}` }}>
                               {Moment(item.datetime_start).format('LL')}
                               <span>&nbsp;&nbsp;&nbsp;</span>
                               {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
@@ -236,7 +238,7 @@ const VirtualConference = () => {
                               {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
                                 .tz(Moment.tz.guess())
                                 .format('h:mm A')}
-                              <span className='ultrasmall-mobile'>
+                              <span className="ultrasmall-mobile">
                                 {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
                                   .tz(Moment.tz.guess())
                                   .format(' (Z)')}
@@ -253,11 +255,12 @@ const VirtualConference = () => {
                               height: '153px',
                             }}>
                             {item.hosts && (
-                              <div className='Virtual-Conferences'>
+                              <div className="Virtual-Conferences">
                                 <Avatar.Group
                                   maxCount={2}
                                   size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 60, xxl: 60 }}
-                                  maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}>
+                                  maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}
+                                >
                                   {item.hosts.length < 3
                                     ? item.hosts.map((host, key) => {
                                         return (

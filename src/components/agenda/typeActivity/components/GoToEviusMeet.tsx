@@ -10,7 +10,6 @@ const GoToEviusMeet = (props: any) => {
   const baseUrl = 'https://stagingeviusmeet.netlify.app/prepare';
   const urlReunion = `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rol=1`;
   const urlEviusTransmision = `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rtmp=${dataLive?.push_url}&rol=1`;
-  console.log('TYPE==>', props);
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       <Card.Meta
@@ -22,7 +21,7 @@ const GoToEviusMeet = (props: any) => {
         description={
           <Button
             onClick={() => window.open(props.type === 'reunión' ? urlReunion : urlEviusTransmision, '_blank')}
-            type='primary'>
+            type="primary">
             {props.type === 'reunión' && 'Entrar a la reunión'}
             {props.type === 'EviusMeet' && 'Entrar para transmitir'}
           </Button>

@@ -54,8 +54,6 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
     }
     /*
         let live_stream = await getLiveStreamConfig(meeting_id)
-
-        //console.log('resss', res.data.live_stream);
         //url = res.data.live_stream.player_embed_code;
         url = live_stream.player_hls_playback_url;
       //url =  `https://stagingeviusmeet.netlify.app/?username=${name}&email=${email}`;
@@ -75,7 +73,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
       ) : (
         <iframe
           src={platformurl}
-          frameBorder='0'
+          frameBorder="0"
           allow='autoplay; fullscreen; camera *;microphone *'
           allowFullScreen
           allowusermedia

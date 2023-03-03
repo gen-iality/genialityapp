@@ -5,6 +5,9 @@ import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import Modal from './modalRelation';
 
+/**
+ * @deprecated nobody uses this
+ */
 class RelationshipFields extends Component {
   constructor(props) {
     super(props);
@@ -60,14 +63,15 @@ class RelationshipFields extends Component {
         />
         <Space>
           <Button
-            type='primary'
+            type="primary"
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            size='small'
-            style={{ width: 90 }}>
+            size="small"
+            style={{ width: 90 }}
+          >
             Search
           </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
+          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
         </Space>
@@ -153,7 +157,7 @@ class RelationshipFields extends Component {
         key: 'x',
         render: () => (
           <>
-            <Button type='primary' onClick={this.showModal}>
+            <Button type="primary" onClick={this.showModal}>
               Editar
             </Button>
           </>
@@ -166,13 +170,13 @@ class RelationshipFields extends Component {
       },
     ];
     return (
-      <Form layout='inline'>
+      <Form layout="inline">
         <>
           <div>
             <label>El campo: </label>
-            <div className='select'>
-              <select defaultValue='' name='field' onChange={(e) => this.handleChange(e)}>
-                <option value=''>Seleccione...</option>
+            <div className="select">
+              <select defaultValue="" name="field" onChange={(e) => this.handleChange(e)}>
+                <option value="">Seleccione...</option>
                 {fields.map((field, key) => {
                   return (
                     <option key={key} value={field.name}>
@@ -183,36 +187,36 @@ class RelationshipFields extends Component {
               </select>
             </div>
           </div>
-          <Divider type='vertical' />
+          <Divider type="vertical" />
           <div>
             <label>Estará: </label>
-            <div className='select'>
-              <select defaultValue='disabled' name='state' onChange={(e) => this.handleChange(e)}>
-                <option value='enabled'>Habilitado</option>
-                <option value='disabled'>Inhabilitado</option>
+            <div className="select">
+              <select defaultValue="disabled" name="state" onChange={(e) => this.handleChange(e)}>
+                <option value="enabled">Habilitado</option>
+                <option value="disabled">Inhabilitado</option>
               </select>
             </div>
           </div>
-          <Divider type='vertical' />
+          <Divider type="vertical" />
           <label>Cuando el campo: </label>
           {fields.map((item, key) => {
             return (
               <div key={key}>
                 {item.type === 'list' && (
                   <>
-                    <div className='select'>
-                      <select defaultValue='' name='fieldToValidate' onChange={(e) => this.handleChange(e)}>
-                        <option value=''>Seleccione...</option>
+                    <div className="select">
+                      <select defaultValue="" name="fieldToValidate" onChange={(e) => this.handleChange(e)}>
+                        <option value="">Seleccione...</option>
                         <option key={key} value={item.name}>
                           {item.label}
                         </option>
                       </select>
                     </div>
-                    <Divider type='vertical' />
+                    <Divider type="vertical" />
                     <label>Tenga el valor de: </label>
-                    <div className='select'>
-                      <select defaultValue='' name='value' onChange={(e) => this.handleChange(e)}>
-                        <option value=''>Seleccione...</option>
+                    <div className="select">
+                      <select defaultValue="" name="value" onChange={(e) => this.handleChange(e)}>
+                        <option value="">Seleccione...</option>
                         {item.options.map((item, key) => (
                           <option key={key} value={item.value}>
                             {item.label}

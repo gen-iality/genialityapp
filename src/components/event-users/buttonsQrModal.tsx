@@ -6,14 +6,14 @@ type SearchAndCleanButtonsPropTypes = {
 
 export const SearchAndCleanButtons = ({ cleanInputSearch }: SearchAndCleanButtonsPropTypes) => {
   return (
-    <Row justify='center' wrap gutter={8}>
+    <Row justify="center" wrap gutter={8}>
       <Col>
-        <Button type='primary' htmlType='submit'>
+        <Button type="primary" htmlType="submit">
           Buscar
         </Button>
       </Col>
       <Col>
-        <Button type='ghost' onClick={() => cleanInputSearch()}>
+        <Button type="ghost" onClick={() => cleanInputSearch()}>
           Limpiar
         </Button>
       </Col>

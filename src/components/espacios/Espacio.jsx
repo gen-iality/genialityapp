@@ -130,21 +130,22 @@ const Espacio = (props) => {
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title={'Espacio'} back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header title="Espacio" back save form remove={onRemoveId} edit={locationState.edit} />
 
-      <Row justify='center' wrap gutter={12}>
+      <Row justify="center" wrap gutter={12}>
         <Col span={12}>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} className="label">
                 Nombre <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El nombre es requerido' }]}>
+            rules={[{ required: true, message: 'El nombre es requerido' }]}
+          >
             <Input
               value={espacio.name}
-              name={'name'}
-              placeholder={'Nombre del espacio'}
+              name="name"
+              placeholder="Nombre del espacio"
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>

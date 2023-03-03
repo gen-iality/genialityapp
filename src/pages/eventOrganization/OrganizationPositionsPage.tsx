@@ -86,7 +86,7 @@ function OrganizationPositionsPage(props: Props) {
         loading={isLoading}
         scroll={{ x: 'auto' }}
         title={() => (
-          <Row wrap justify='end' gutter={[8, 8]}>
+          <Row wrap justify="end" gutter={[8, 8]}>
             <Col>
               <Button
                 type="primary"

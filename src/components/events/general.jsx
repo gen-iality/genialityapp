@@ -170,9 +170,7 @@ class General extends Component {
 
     const info = this.props.event;
     this.setState({ info });
-    this.setState({
-      checked: info.initial_page ? true : false,
-    });
+    this.setState({ checked: !!info.initial_page });
     try {
       const { event } = this.props;
       // event.picture = (typeof event.picture === 'object') ? event.picture[0] : "";
@@ -264,7 +262,6 @@ class General extends Component {
     const valueData = e?.target?.value;
 
     const targetData = e?.target;
-    // console.log(e.target);
     if (targetData !== null || targetData !== undefined || targetData !== '') {
       let value = e;
       if (typeof valueData === 'string') {
@@ -491,15 +488,14 @@ class General extends Component {
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
       picture: image,
       video: event.video || null,
-      video_position: event.video_position === 'true' || event.video_position === true ? 'true' : 'false',
+      video_position: event.video_position === 'true' || event.video_position ? 'true' : 'false',
       venue: event.venue,
       analytics: event.analytics,
       address: event.address,
-      has_date: event.has_date === 'true' || event.has_date === true ? true : false,
+      has_date: event.has_date === 'true' || !!event.has_date,
       allow_register: event.allow_register,
-      allow_detail_calendar:
-        event.allow_detail_calendar === 'true' || event.allow_detail_calendar === true ? true : false,
-      enable_language: event.enable_language === 'true' || event.enable_language === true ? true : false,
+      allow_detail_calendar: event.allow_detail_calendar === 'true' || !!event.allow_detail_calendar,
+      enable_language: event.enable_language === 'true' || !!event.enable_language,
       homeSelectedScreen: event.homeSelectedScreen,
       visibility: event.visibility ? event.visibility : 'PRIVATE',
       description: event.description,
@@ -570,7 +566,6 @@ class General extends Component {
         action: 'show',
       });
       if (error?.response) {
-        console.log('ERROR ACA==>', error);
         /* console.error(error.response); */
         const { status, data } = error.response;
 
@@ -584,7 +579,6 @@ class General extends Component {
         } else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
-        console.log('ERROR DATA===>', errorData);
         /* console.error('Error', error.message); */
         if (error.request) {
           /* console.error(error.request); */
@@ -654,7 +648,7 @@ class General extends Component {
   async specificDates(checked) {
     this.setState({ specificDates: checked });
 
-    if (checked === false) {
+    if (!checked) {
       const properties = {
         dates: {},
       };
@@ -756,10 +750,10 @@ class General extends Component {
       <>
         {/* RESTRICIONES */}
         <Form onFinish={this.submit} {...formLayout}>
-          <Header title={'Datos del curso'} save form remove={this.deleteEvent} edit={this.state.event._id} />
-          <Tabs defaultActiveKey='1'>
-            <Tabs.TabPane tab='General' key='1'>
-              <Row justify='center' wrap gutter={[8, 8]}>
+          <Header title="Datos del curso" save form remove={this.deleteEvent} edit={this.state.event._id} />
+          <Tabs defaultActiveKey="1">
+            <Tabs.TabPane tab="General" key="1">
+              <Row justify="center" wrap gutter={[8, 8]}>
                 <Col span={16}>
                   <Form.Item
                     label={
@@ -771,9 +765,9 @@ class General extends Component {
                   >
                     <Input
                       ref={this.nameInputRef}
-                      autoFocus={true}
-                      name={'name'}
-                      placeholder={'Nombre del curso'}
+                      autoFocus
+                      name="name"
+                      placeholder="Nombre del curso"
                       value={event.name}
                       onChange={(e) => this.handleChange(e, 'name')}
                     />
@@ -787,8 +781,8 @@ class General extends Component {
                     }
                   >
                     <Select
-                      mode='multiple'
-                      placeholder='Asigna un cargo para excluir'
+                      mode="multiple"
+                      placeholder="Asigna un cargo para excluir"
                       onChange={(values) => {
                         console.log(values);
                         EventsApi.editItsPositions(event._id, values);
@@ -802,9 +796,9 @@ class General extends Component {
                   </Form.Item>
 
                   {event.app_configuration && (
-                    <Form.Item label={'¿Qué módulo desea observar en el inicio?'}>
+                    <Form.Item label="¿Qué módulo desea observar en el inicio?">
                       <Select
-                        name={'homeSelectedScreen'}
+                        name="homeSelectedScreen"
                         value={event.homeSelectedScreen}
                         onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}
                       >
@@ -893,48 +887,50 @@ class General extends Component {
                     </Form.Item>
                   )}
 
-                  {/* <Form.Item label={'Tipo de curso'}>
+                  {/* <Form.Item label="Tipo de curso">
                     <Select
                       defaultValue={event.type_event}
-                      name={'type_event'}
-                      onChange={(e) => this.handleChange(e, 'type_event')}>
-                      <Option value=''>Seleccionar...</Option>
-                      <Option value='physicalEvent'>Afianzamiento de capacidades</Option> {/* TODO * /}
-                      <Option value='onlineEvent'>Actualización </Option> {/* TODO * / }
-                      <Option value='hybridEvent'>Curso híbrido</Option>
+                      name="type_event"
+                      onChange={(e) => this.handleChange(e, 'type_event')}
+                    >
+                      <Option value="">Seleccionar...</Option>
+                      <Option value="physicalEvent">Afianzamiento de capacidades</Option> {/* TODO * /}
+                      <Option value="onlineEvent">Actualización </Option> {/* TODO * / }
+                      <Option value="hybridEvent">Curso híbrido</Option>
                     </Select>
                   </Form.Item> */}
 
                   {/* {event.type_event === 'onlineEvent' && (
-                    <Form.Item label={'Plataforma streaming del curso'}>
+                    <Form.Item label="Plataforma streaming del curso">
                       <Select
                         defaultValue={event.event_platform}
-                        name={'event_platform'}
-                        onChange={(e) => this.handleChange(e, 'event_platform')}>
+                        name="event_platform"
+                        onChange={(e) => this.handleChange(e, 'event_platform')}
+                      >
                         <Option value="">Seleccionar...</Option>
-                        <Option value='zoom'>Zoom</Option>
-                        <Option value='zoomExterno'>ZoomExterno</Option>
-                        <Option value='vimeo'>Vimeo</Option>
-                        <Option value='bigmarker'>BigMaker</Option>
+                        <Option value="zoom">Zoom</Option>
+                        <Option value="zoomExterno">ZoomExterno</Option>
+                        <Option value="vimeo">Vimeo</Option>
+                        <Option value="bigmarker">BigMaker</Option>
                       </Select>
                     </Form.Item>
                   )} */}
 
                   {/* {event.type_event !== 'onlineEvent' && (
                     <>
-                      <Form.Item label={'Dirección'}>
+                      <Form.Item label="Dirección">
                         <Input
-                          name={'address'}
-                          placeholder={'¿Cuál es la dirección del curso?'}
+                          name="address"
+                          placeholder="¿Cuál es la dirección del curso?"
                           value={event.address}
                           onChange={(e) => this.handleChange(e, 'address')}
                         />
                       </Form.Item>
 
-                      <Form.Item label={'Lugar'}>
+                      <Form.Item label="Lugar">
                         <Input
-                          name={'venue'}
-                          placeholder={'Nombre del lugar del curso'}
+                          name="venue"
+                          placeholder="Nombre del lugar del curso"
                           value={event.venue}
                           onChange={(e) => this.handleChange(e, 'venue')}
                         />
@@ -943,31 +939,31 @@ class General extends Component {
                   )} */}
 
                   {!cUser?.plan && (
-                    <Form.Item label={'Especificar fechas'}>
+                    <Form.Item label="Especificar fechas">
                       {/* <Switch defaultChecked onChange={this.specificDates} checked={specificDates} /> */}
                     </Form.Item>
                   )}
 
-                  {specificDates === false ? (
+                  {!specificDates ? (
                     <div>
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
-                          <Form.Item label={'Fecha inicio'}>
+                          <Form.Item label="Fecha inicio">
                             <DatePicker
-                              inputReadOnly={true}
-                              //RESTRICIONES
+                              inputReadOnly
+                              // Restriciones
                               // disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={dayjs(event.date_start)}
-                              format={'DD/MM/YYYY'}
+                              format="DD/MM/YYYY"
                               onChange={(value) => this.changeDate(value, 'date_start')}
                             />
                           </Form.Item>
                         </Col>
                         <Col span={12}>
-                          <Form.Item label={'Hora inicio'}>
+                          <Form.Item label="Hora inicio">
                             <TimePicker
                               showNow={false}
                               inputReadOnly={true}
@@ -976,7 +972,7 @@ class General extends Component {
                               allowClear={false}
                               value={dayjs(event.hour_start)}
                               use12Hours
-                              format='h:mm a'
+                              format="h:mm a"
                               onChange={(value) => this.changeDate(value, 'hour_start')}
                             />
                           </Form.Item>
@@ -984,20 +980,20 @@ class General extends Component {
                       </Row>
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
-                          <Form.Item label={'Fecha fin'}>
+                          <Form.Item label="Fecha fin">
                             <DatePicker
-                              inputReadOnly={true}
+                              inputReadOnly
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={dayjs(event.date_end)}
-                              format={'DD/MM/YYYY'}
+                              format="DD/MM/YYYY"
                               onChange={(value) => this.changeDate(value, 'date_end')}
                             />
                           </Form.Item>
                         </Col>
                         <Col span={12}>
-                          <Form.Item label={'Hora fin'}>
+                          <Form.Item label="Hora fin">
                             <TimePicker
                               showNow={false}
                               inputReadOnly={true}
@@ -1006,7 +1002,7 @@ class General extends Component {
                               allowClear={false}
                               value={dayjs(event.hour_end)}
                               use12Hours
-                              format='h:mm a'
+                              format="h:mm a"
                               onChange={(value) => this.changeDate(value, 'hour_end')}
                             />
                           </Form.Item>
@@ -1017,18 +1013,18 @@ class General extends Component {
                     <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   )}
 
-                  <Form.Item label={'Descripción'}>
-                    <EviusReactQuill name={'description'} data={event.description} handleChange={this.chgTxt} />
+                  <Form.Item label="Descripción">
+                    <EviusReactQuill name="description" data={event.description} handleChange={this.chgTxt} />
                   </Form.Item>
 
                   <Form.Item>
                     <SelectInput
-                      name={'Organizado por:'}
+                      name="Organizado por:"
                       isMulti={false}
                       selectedOptions={selectedOrganizer}
                       selectOption={this.selectOrganizer}
                       options={organizers}
-                      required={true}
+                      required
                     />
                   </Form.Item>
 
@@ -1036,26 +1032,26 @@ class General extends Component {
                     <ImageUploaderDragAndDrop
                       imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
                       imageUrl={image}
-                      width='1080'
-                      height='1080'
+                      width="1080"
+                      height="1080"
                     />
                   </Form.Item>
 
-                  <Form.Item label={'Vídeo promocional'}>
+                  <Form.Item label="Vídeo promocional">
                     <Input
-                      name={'video'}
-                      placeholder={'www.ejemplo.com/watch?v=oK88Stdw0DI'}
+                      name="video"
+                      placeholder="www.ejemplo.com/watch?v=oK88Stdw0DI"
                       value={event.video}
                       onChange={(e) => this.handleChange(e, 'video')}
                     />
                   </Form.Item>
 
-                  <Form.Item label={'Posición del video'}>
+                  <Form.Item label="Posición del video">
                     <Switch
-                      name={'video_position'}
-                      checked={event.video_position === true || event.video_position === 'true'}
-                      checkedChildren='Arriba'
-                      unCheckedChildren='Abajo'
+                      name="video_position"
+                      checked={event.video_position || event.video_position === 'true'}
+                      checkedChildren="Arriba"
+                      unCheckedChildren="Abajo"
                       onChange={(checked) =>
                         this.setState({
                           event: {
@@ -1067,7 +1063,7 @@ class General extends Component {
                     />
                   </Form.Item>
 
-                  <Card title='Zona social'>
+                  <Card title="Zona social">
                     <Row style={{ padding: '8px 0px' }}>
                       <Col xs={18}>Chat general</Col>
                       <Col xs={6}>
@@ -1108,10 +1104,10 @@ class General extends Component {
                     </Row>
                   </Card>
 
-                  <Form.Item label='¿Es curso de certificación?'>
+                  <Form.Item label="¿Es curso de certificación?">
                     <Switch
-                      checkedChildren='Certificación'
-                      unCheckedChildren='GEN.iality'
+                      checkedChildren="Certificación"
+                      unCheckedChildren="GEN.iality"
                       checked={event.is_certification}
                       onChange={(checked) => {
                         this.handleChange(checked, 'is_certification');
@@ -1121,7 +1117,7 @@ class General extends Component {
 
                   {event.is_certification && (
                     <>
-                      <Form.Item label='Descripción de la certificación (valor por defecto)'>
+                      <Form.Item label="Descripción de la certificación (valor por defecto)">
                         <Input
                           value={event.default_certification_description}
                           onChange={(e) => {
@@ -1131,7 +1127,7 @@ class General extends Component {
                       </Form.Item>
 
                       <Form.Item
-                        label='Días de vigencia (valor por defecto)'
+                        label="Días de vigencia (valor por defecto)"
                         rules={[
                           {
                             required: true,
@@ -1148,7 +1144,7 @@ class General extends Component {
                         />
                       </Form.Item>
 
-                      <Form.Item label='Horas de la certificación (valor por defecto)'>
+                      <Form.Item label="Horas de la certificación (valor por defecto)">
                         <InputNumber
                           min={1}
                           value={event.default_certification_hours || 1}
@@ -1158,7 +1154,7 @@ class General extends Component {
                         />
                       </Form.Item>
 
-                      <Form.Item label='Entidad de la certificación (valor por defecto)'>
+                      <Form.Item label="Entidad de la certificación (valor por defecto)">
                         <Input
                           value={event.default_certification_entity}
                           onChange={(e) => {
@@ -1184,9 +1180,7 @@ class General extends Component {
               </Row>
               <BackTop />
             </Tabs.TabPane>
-            <Tabs.TabPane tab='Tipos de acceso' key='2'>
-              {console.log('this.state.typeEventPermit', this.state.typeEventPermit)}
-              {console.log('this.state.event', this.state.event)}
+            <Tabs.TabPane tab="Tipos de acceso" key="2">
               <CardSelector
                 selected={this.state.typeEventPermit.toString()}
                 options={[
@@ -1206,7 +1200,7 @@ class General extends Component {
                         this.setState({
                           event: {
                             ...this.state.event,
-                            visibility: checked === true ? 'ANONYMOUS' : 'PUBLIC',
+                            visibility: checked ? 'ANONYMOUS' : 'PUBLIC',
                             allow_register: true,
                           },
                         });
@@ -1242,7 +1236,7 @@ class General extends Component {
             </Tabs.TabPane>
           </Tabs>
           {serverError && <ErrorServe errorData={errorData} />}
-          {this.state.fileMsgBanner && <p className='help is-success'>{this.state.fileMsgBanner}</p>}
+          {this.state.fileMsgBanner && <p className="help is-success">{this.state.fileMsgBanner}</p>}
         </Form>
       </>
     );

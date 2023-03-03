@@ -66,7 +66,7 @@ const SmartModalStepByStep = (props: any) => {
 
         {typeOptions.key === 'meeting' && (
           <ContentInformative
-            title={'GEN Connect'}
+            title="GEN Connect"
             description={
               'La herramienta para videoconferencias, comparte tu cámara, habla con tus participantes y presenta lo que quieras desde tu PC. Puedes personalizar el escenario a tu gusto, imágenes de fondo, recuadros o marcos para el escenario, muestra mensajes para todos, usa los colores de tu marca. Controla el acceso y lo que comparten tus participantes. Descubre esto y mucho más con GEN Connect.'
             }

@@ -34,14 +34,14 @@ const ModalNoRegister = (props) => {
       bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
       centered
       footer={[
-        <Space wrap key={'options'}>
+        <Space wrap key="options">
           <Button
             onClick={() => {
               window.location.href = `${window.location.origin}`;
             }}
-            key='sign_off'
-            type='text'
-            size='large'>
+            key="sign_off"
+            type="text"
+            size="large">
             <b>
               {intl.formatMessage({
                 id: 'modal.no_register.gotoevius',
@@ -52,10 +52,11 @@ const ModalNoRegister = (props) => {
         </Space>,
       ]}
       zIndex={1000}
-      closable={true}
-      visible={whenToOpenTheModal()}>
+      closable
+      visible={whenToOpenTheModal()}
+    >
       <Result
-        status='warning'
+        status="warning"
         icon={null}
         title={
           props.cHelper.typeModal !== 'loginSuccessNotRegister' ? (

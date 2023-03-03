@@ -6,8 +6,8 @@ export default function RankingMyScore({ myScore }) {
     <div style={{ marginTop: 16 }}>
       <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi puntaje</h3>
       {name !== '' && (
-        <div className='card-games-ranking ranking-user'>
-          <Row justify='space-between'>
+        <div className="card-games-ranking ranking-user">
+          <Row justify="space-between">
             <Col span={6}>
               <Avatar size={38}>
                 {name && name.charAt(0).toUpperCase()}

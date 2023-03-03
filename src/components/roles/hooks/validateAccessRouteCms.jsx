@@ -69,7 +69,7 @@ function ValidateAccessRouteCms({ children }) {
   };
 
   return (
-    <Spin tip='Cargando...' size='large' spinning={thisComponentIsLoading}>
+    <Spin tip="Cargando..." size="large" spinning={thisComponentIsLoading}>
       {component}
     </Spin>
   );

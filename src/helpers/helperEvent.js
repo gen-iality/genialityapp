@@ -74,7 +74,7 @@ export function publishedSurveysByActivity(currentActivity, eventSurveys, curren
     // Listado de encuestas publicadas del curso
     publishedSurveys = eventSurveys.filter(
       (survey) =>
-        (survey.isPublished === 'true' || survey.isPublished === true) &&
+        (survey.isPublished === 'true' || survey.isPublished) &&
         ((currentActivity && survey.activity_id === currentActivity._id) || survey.isGlobal === 'true'),
     );
     if (!currentUser || Object.keys(currentUser).length === 0) {

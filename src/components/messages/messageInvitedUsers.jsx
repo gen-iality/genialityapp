@@ -9,7 +9,7 @@ class InvitedUsers extends Component {
 
   render() {
     return (
-      <div className={'invitations'}>
+      <div className="invitations">
         <h1 style={{ color: 'red' }}>
           {' '}
           ***TODO Este link deberia llevar al envio de correos con los usuarios invitados preseleccionados.

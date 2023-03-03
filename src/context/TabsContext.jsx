@@ -79,8 +79,8 @@
 //       <Button
 //         style={{ backgroundColor: '#1CDCB7', borderColor: 'white', color: 'white', fontWeight: '700' }}
 //         icon={<SendOutlined />}
-//         type='primary'
-//         size='small'
+//         type="primary"
+//         size="small"
 //         onClick={() => {
 //           setisCollapsedMenuRigth(false);
 //           HandleChatOrAttende('1');
@@ -101,7 +101,7 @@
 
 //     const args = {
 //       message: (
-//         <Row justify='space-between'>
+//         <Row justify="space-between">
 //           <Col style={{ fontWeight: 'bold' }}>{data.remitente}</Col>
 
 //           <Col>{dayjs().format('h:mm A')}</Col>

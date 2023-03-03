@@ -18,7 +18,7 @@ import ModalAuth from '@components/authentication/ModalAuth';
 import ModalNoRegister from '@components/authentication/ModalNoRegister';
 import ModalAuthAnonymous from '@components/authentication/ModalAuthAnonymous';
 import ModalUpdate from '@components/events/Landing/ModalUpdate';
-//PAGES
+// Pages
 const Organization = loadable(() => import('../pages/eventOrganization'));
 const Home = loadable(() => import('../pages/home'));
 
@@ -35,11 +35,11 @@ const MainRouter = (props) => {
 
   return (
     <Router
-      basename='/'
+      basename="/"
       getUserConfirmation={() => {
         /* Empty callback to block the default browser prompt, it is necessary to be able to use in custon hook RouterPrompt */
       }}>
-      <main className='main'>
+      <main className="main">
         <Switch>
           {/* 
            Front
@@ -57,7 +57,7 @@ const MainRouter = (props) => {
           <RouteContext path={['/landing/:event_id', '/event/:event_name']} component={Landing} />
           <RouteContext exact path='/organization/:id/events' component={Organization} />
           <RouteContext exact path='/organization/:id' component={Organization} />
-          <RouteContext exact path='/' component={PageWithFooter} />
+          <RouteContext exact path="/" component={PageWithFooter} />
           <Route component={NotFoundPage} />
         </Switch>
       </main>

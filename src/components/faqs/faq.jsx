@@ -147,35 +147,37 @@ const Faq = (props) => {
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title={'Pregunta frecuente'} back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header title="Pregunta frecuente" back save form remove={onRemoveId} edit={locationState.edit} />
 
-      <Row justify='center' wrap gutter={12}>
+      <Row justify="center" wrap gutter={12}>
         <Col>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} className="label">
                 Título <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El título es requerido' }]}>
+            rules={[{ required: true, message: 'El título es requerido' }]}
+          >
             <Input
               value={faq && faq.title}
-              name={'title'}
-              placeholder={'Título de la pregunta frecuente'}
+              name="title"
+              placeholder="Título de la pregunta frecuente"
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} className="label">
                 Contenido <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El contenido es requerido' }]}>
+            rules={[{ required: true, message: 'El contenido es requerido' }]}
+          >
             <ReactQuill
-              id='faqContent'
+              id="faqContent"
               value={(faq && faq.content) || ''}
-              name={'content'}
+              name="content"
               onChange={HandleQuillEditorChange}
               modules={toolbarEditor}
             />

@@ -32,11 +32,11 @@ class ModalInvitationError extends Component {
         <div>
           <Modal
             visible={visible}
-            title='No seleccionaste ningún Usuario'
+            title="No seleccionaste ningún Usuario"
             onOk={this.handleOk}
             onCancel={this.handleCancel}
             footer={[
-              <Button key='submit' type='primary' onClick={this.handleOk}>
+              <Button key="submit" type="primary" onClick={this.handleOk}>
                 Cerrar
               </Button>,
             ]}>

@@ -26,7 +26,7 @@ const RenderComponent = (props) => {
   const [platform, setplatform] = useState('');
   const [meetingId, setmeetingId] = useState('');
   const [fnCiclo, setFnCiclo] = useState(false);
-  //ESTADO PARA CONTROLAR ORIGEN DE TRANSMISION
+  // Estado para controlar origen de transmision
   const { transmition, setTransmition, setTypeActivity, typeActivity } = useContext(AgendaContext);
   const { currentActivity, chatAttendeChats, HandleChatOrAttende, HandlePublicPrivate, helperDispatch } = useHelper();
 
@@ -82,7 +82,7 @@ const RenderComponent = (props) => {
     if (chatAttendeChats === '4') {
       setRenderGame('game');
     } else {
-      // NO SE DEBE QUEMAR OPEN MEETEING ROOM POR QUE SE CAMBIA EL ESTADO AL DAR CLICK EN CUALQUIER TAB
+      // No se debe quemar open meeteing room por que se cambia el estado al dar click en cualquier tab
       if (activityStateGlobal) {
         setactivityState(activityStateGlobal);
       }
@@ -106,7 +106,7 @@ const RenderComponent = (props) => {
             return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext willStartSoon={true} />;
+            return <ImageComponentwithContext willStartSoon />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
@@ -130,7 +130,7 @@ const RenderComponent = (props) => {
             return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext willStartSoon={true} />;
+            return <ImageComponentwithContext willStartSoon />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
@@ -154,7 +154,7 @@ const RenderComponent = (props) => {
             return <DolbyCard />;
 
           case 'closed_meeting_room':
-            return <ImageComponentwithContext willStartSoon={true} />;
+            return <ImageComponentwithContext willStartSoon />;
 
           case 'ended_meeting_room':
             return <VideoActivity />;
@@ -183,12 +183,11 @@ const RenderComponent = (props) => {
 
           case 'closed_meeting_room':
             {
-              console.log('100. TYPE ACTIVITY==>', typeActivity);
             }
             return typeActivity === 'url' || typeActivity === 'video' ? (
               <WowzaStreamingPlayer activity={currentActivity} transmition={transmition} meeting_id={meetingId} />
             ) : (
-              <ImageComponentwithContext willStartSoon={true} />
+              <ImageComponentwithContext willStartSoon />
             );
 
           case 'ended_meeting_room':
@@ -229,7 +228,7 @@ const RenderComponent = (props) => {
   return (
     <>
       {' '}
-      <HeaderColumnswithContext isVisible={true} activityState={activityState} />
+      <HeaderColumnswithContext isVisible activityState={activityState} />
       {RenderizarComponente(platform, activityState, renderGame)}
     </>
   );

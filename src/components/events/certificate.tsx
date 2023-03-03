@@ -1,14 +1,20 @@
-import { useEffect, useState, createElement } from 'react';
+import { useEffect, useState, createElement, useMemo } from 'react';
 import dayjs from 'dayjs';
-import { Row, Col, Card, Spin, Alert, Button, Modal } from 'antd';
+import { Row, Col, Card, Spin, Alert, Button, Modal, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import withContext from '@context/withContext';
-import { CertsApi, RolAttApi, SurveysApi } from '@helpers/request';
+import { AgendaApi, CertsApi, RolAttApi, SurveysApi } from '@helpers/request';
 import { SurveyData } from '@components/events/surveys/types';
 import useAsyncPrepareQuizStats from '../quiz/useAsyncPrepareQuizStats';
 import { DownloadOutlined } from '@ant-design/icons';
 
+import { activityContentValues } from '@context/activityType/constants/ui';
+
 import certificateImage from './certificateImage';
+import { firestore } from '@helpers/firebase';
+import AgendaType from '@Utilities/types/AgendaType';
+
+type CurrentEventAttendees = any; // TODO: define this type and move to @Utilities/types/
 
 export interface CertificateProps {
   cEvent?: any
@@ -32,14 +38,17 @@ const tags = [
 
 
 const IconText = ({ icon, text, onSubmit }: { icon: any, text: string, onSubmit: () => void}) => (
-  <Button htmlType='submit' type='primary' onClick={onSubmit}>
+  <Button htmlType="submit" type="primary" onClick={onSubmit}>
     {createElement(icon, { style: { marginRight: 8 } })}
     {text}
   </Button>
 );
 
 function Certificate(props: CertificateProps) {
-  const [isPassed, setIsPassed] = useState<boolean | undefined>(undefined);
+  const [wereEvaluationsPassed, setWereEvaluationsPassed] = useState<boolean | undefined>(undefined);
+
+  const [activitiesAttendee, setActivitiesAttendee] = useState<CurrentEventAttendees[]>([]);
+  const [allActivities, setAllActivities] = useState<AgendaType[]>([]);
 
   const background = certificateImage;
 
@@ -100,6 +109,7 @@ function Certificate(props: CertificateProps) {
     if (!props.cUser?.value?._id) return;
     if (!props.cEvent?.value?._id) return;
 
+    // Take data to the evaluation certificates
     (async () => {
       const surveys: SurveyData[] = await SurveysApi.byEvent(props.cEvent?.value?._id);
 
@@ -128,30 +138,74 @@ function Certificate(props: CertificateProps) {
       console.debug('passed', passed)
       console.debug('surveys.length', surveys.length)
       if (passed === surveys.length) {
-        setIsPassed(true);
+        setWereEvaluationsPassed(true);
       } else if (notPassed < surveys.length) {
-        setIsPassed(false);
+        setWereEvaluationsPassed(false);
       }
     })();
-  }, [props.cUser?.value, props.cEvent?.value?._id]);
+
+    // Take the date for the finished course certificate
+    (async () => {
+      if (!props.cEvent?.value) return;
+      if (!props.cEventUser?.value) return;
+      console.log('start finding course stats')
+
+      setActivitiesAttendee([]);
+
+      const activityFilter = (a: any) => ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+
+      const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(props.cEvent.value._id);
+      const filteredData = data.filter(activityFilter);
+
+      setAllActivities(filteredData);
+      const existentActivities = filteredData.map(async (activity) => {
+        const activityAttendee = await firestore
+          .collection(`${activity._id}_event_attendees`)
+          .doc(props.cEventUser?.value?._id)
+          .get(); //checkedin_at
+        if (activityAttendee.exists) return activityAttendee.data() as CurrentEventAttendees;
+        return null;
+      });
+      // Filter existent activities and set the state
+      setActivitiesAttendee(
+        // Promises don't bite :)
+        (await Promise.all(existentActivities)).filter((item) => !!item),
+      );
+    })();
+  }, [props.cUser?.value, props.cEvent?.value, props.cEventUser?.value]);
+
+  const progressPercentValue: number = useMemo(
+    () => Math.round(((activitiesAttendee.length || 0) / (allActivities.length || 0)) * 100),
+    [activitiesAttendee, allActivities],
+  );
 
   return (
     <>
-    <Row gutter={[8, 8]} wrap justify='center'>
+    <Row gutter={[8, 8]} wrap justify="center">
       <Col span={24}>
         <Card>
-          {isPassed === undefined && (
+          {wereEvaluationsPassed === undefined && (
             <Spin>Cargando...</Spin>
           )}
-          {isPassed === false && (
-            <Alert message='Certificados NO disponibles' type='error' />
+          {!wereEvaluationsPassed && (
+            <Alert message="Certificados de evaluaciones NO disponibles" type="error" />
           )}
-          {(isPassed) && (
+          {(wereEvaluationsPassed) && (
             <>
-            <Alert message='Certificados disponibles' type='success' />
+            <Alert message="Certificados de evaluaciones disponibles" type="success" />
             <br />
             <IconText
-              text='Descargar certificado'
+              text="Descargar certificado de evaluaciones"
+              icon={DownloadOutlined}
+              onSubmit={() => generateCert(props.cEventUser.value)}
+            />
+            </>
+          )}
+          {progressPercentValue === 100 && (
+            <>
+            <Alert message="Hay certificado de curso completo" type="success" />
+            <IconText
+              text="Descargar certificado de curso"
               icon={DownloadOutlined}
               onSubmit={() => generateCert(props.cEventUser.value)}
             />

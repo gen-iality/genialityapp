@@ -103,18 +103,18 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
   return (
     <div>
       {cSurvey.shouldDisplaySurveyAnswered() ? (
-        <Space direction='vertical' size='middle' align='center' style={{ display: 'flex' }}>
+        <Space direction="vertical" size="middle" align="center" style={{ display: 'flex' }}>
           <em>{cSurvey.surveyStatsString}</em>
           <Result
             style={{ height: '50%', padding: '75px 75px 20px' }}
-            status='success'
-            title='Ya has contestado esta evaluación'
+            status="success"
+            title="Ya has contestado esta evaluación"
           />
           <QuizProgress eventId={cEvent.value._id} userId={currentUser.value._id} surveyId={surveyId} />
           <Button
             onClick={() => showResultsPanel()}
-            type='primary'
-            key='console'
+            type="primary"
+            key="console"
           >
             Ver mis respuestas
           </Button>
@@ -127,8 +127,8 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
                   setIsResetingSurvey(false);
                 });
               }}
-              type='primary'
-              key='console'
+              type="primary"
+              key="console"
               disabled={isResetingSurvey}
             >
               Responder de nuevo {isResetingSurvey && <Spin/>}
@@ -138,20 +138,20 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
             <ResultsPanel eventId={cEvent.value?._id} currentUser={currentUser} idSurvey={surveyId} />
           )}
           {enableGoToCertificate && (
-            <Button type='primary' onClick={handleGoToCertificate}>
+            <Button type="primary" onClick={handleGoToCertificate}>
               Descargar certificado
             </Button>
           )}
         </Space>
       ) : cSurvey.shouldDisplaySurveyClosedMenssage() ? (
-        <Result title='Esta evaluación ha sido cerrada' />
+        <Result title="Esta evaluación ha sido cerrada" />
       ) : //cSurvey.shouldDisplayGraphics() ? (
       //   <>
       //     <Divider />
-      //     <Graphics idSurvey={surveyId} eventId={cEvent.value?._id} operation='participationPercentage' />
+      //     <Graphics idSurvey={surveyId} eventId={cEvent.value?._id} operation="participationPercentage" />
       //   </>
       /* ) :*/ (
-        <Card className='surveyCard'>
+        <Card className="surveyCard">
           <SurveyComponent eventId={cEvent.value?._id} queryData={query.data} />
           <em>{cSurvey.surveyStatsString}</em>
         </Card>

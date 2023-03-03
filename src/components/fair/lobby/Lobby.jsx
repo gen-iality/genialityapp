@@ -69,9 +69,9 @@ class Lobby extends Component {
       return (
         <iframe
           style={{ width: '100%', height: '90vh' }}
-          title='Congreso PH'
+          title="Congreso PH"
           src='https://standy.club/#/stand-list'
-          frameBorder='0'
+          frameBorder="0"
           allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
           allowFullScreen></iframe>
       );
@@ -81,50 +81,52 @@ class Lobby extends Component {
       <div
         onClick={this.handleHideIntro}
         className={`the-lobby ${this.state.showIntro ? '' : 'venue-exterior'}`}
-        style={{ backgroundImage: `url("${lobby_data.info.bgImage}")` }}>
+        style={{ backgroundImage: `url("${lobby_data.info.bgImage}")` }}
+      >
         <div
           className={`the-intro ${this.state.showIntro ? 'active' : ''}`}
           style={{ backgroundImage: `url("${lobby_data.info.bgIntroImage}")` }}></div>
 
         {!this.state.showIntro && (
-          <div className='the-intro-access-btn-container'>
+          <div className="the-intro-access-btn-container">
             <p
-              className='the-intro-access-btn animate__animated animate__pulse animate__slower animate__infinite'
-              onClick={this.handleHideIntro}>
+              className="the-intro-access-btn animate__animated animate__pulse animate__slower animate__infinite"
+              onClick={this.handleHideIntro}
+            >
               INGRESA AL CONGRESO
             </p>
           </div>
         )}
 
-        <div className='the-lobby-header'>
-          <div className='the-lobby-header-col-left'>
-            <img src={lobby_data.info.logo} alt='' />
+        <div className="the-lobby-header">
+          <div className="the-lobby-header-col-left">
+            <img src={lobby_data.info.logo} alt="" />
           </div>
-          <div className='the-lobby-header-col-center'>
-            <img src={this.state.showIntro ? lobby_data.info.logoFeriaInner : lobby_data.info.logoFeria} alt='' />
+          <div className="the-lobby-header-col-center">
+            <img src={this.state.showIntro ? lobby_data.info.logoFeriaInner : lobby_data.info.logoFeria} alt="" />
           </div>
-          <div className='the-lobby-header-col-right'>
-            <div className='the-lobby-header-general-info'>
-              <div className='the-lobby-header-general-info-wrap'>
-                <div className='the-lobby-header-general-info-group'>
-                  <div className='the-lobby-header-general-info-group-item'>
-                    <div className='the-lobby-header-general-info-group-item-icon'>
-                      <img src='/lobby/ICONO_RELOJ.png' alt='' />
+          <div className="the-lobby-header-col-right">
+            <div className="the-lobby-header-general-info">
+              <div className="the-lobby-header-general-info-wrap">
+                <div className="the-lobby-header-general-info-group">
+                  <div className="the-lobby-header-general-info-group-item">
+                    <div className="the-lobby-header-general-info-group-item-icon">
+                      <img src="/lobby/ICONO_RELOJ.png" alt="" />
                     </div>
                     <div>
-                      <div className='the-lobby-header-general-info-group-item-label'>DESDE</div>
+                      <div className="the-lobby-header-general-info-group-item-label">DESDE</div>
                       {lobby_data.info.time_from} a {lobby_data.info.time_to}
                     </div>
                   </div>
-                  <div className='the-lobby-header-general-info-group-item'>
-                    <div className='the-lobby-header-general-info-group-item-icon'>
-                      <img src='/lobby/ICONO_LUGAR.png' alt='' />
+                  <div className="the-lobby-header-general-info-group-item">
+                    <div className="the-lobby-header-general-info-group-item-icon">
+                      <img src="/lobby/ICONO_LUGAR.png" alt="" />
                     </div>
                     <div>
-                      <div className='the-lobby-header-general-info-group-item-label'>{lobby_data.info.city}</div>
+                      <div className="the-lobby-header-general-info-group-item-label">{lobby_data.info.city}</div>
                     </div>
                   </div>
-                  <div className='the-lobby-header-general-info-group-item'>
+                  <div className="the-lobby-header-general-info-group-item">
                     <div>
                       <div>{lobby_data.info.type}</div>
                       <div>Organizador: {lobby_data.info.organizer}</div>
@@ -135,23 +137,23 @@ class Lobby extends Component {
             </div>
           </div>
         </div>
-        <div className='the-lobby-video'>
-          <div className='the-lobby-video-wrap-holder'>
-            <div className='the-lobby-video-holder'>
-              <img src='/lobby/TIRA_PANTALLA.png' alt='' />
+        <div className="the-lobby-video">
+          <div className="the-lobby-video-wrap-holder">
+            <div className="the-lobby-video-holder">
+              <img src="/lobby/TIRA_PANTALLA.png" alt="" />
             </div>
-            <div className='the-lobby-video-holder'>
-              <img src='/lobby/TIRA_PANTALLA.png' alt='' />
+            <div className="the-lobby-video-holder">
+              <img src="/lobby/TIRA_PANTALLA.png" alt="" />
             </div>
           </div>
-          <div className='the-lobby-video-wrap'>
-            <div className='the-lobby-video-container'>
+          <div className="the-lobby-video-wrap">
+            <div className="the-lobby-video-container">
               <iframe
-                title='Congreso PH'
-                width='560'
-                height='315'
+                title="Congreso PH"
+                width="560"
+                height="315"
                 src='https://www.youtube.com/embed/bBu5D33dcBA'
-                frameBorder='0'
+                frameBorder="0"
                 allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
                 allowFullScreen></iframe>
             </div>
@@ -159,7 +161,7 @@ class Lobby extends Component {
         </div>
 
         {this.state.showIntro && (
-          <div className='standlist-container'>
+          <div className="standlist-container">
             <StandsList />
           </div>
         )}

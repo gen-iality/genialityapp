@@ -20,7 +20,7 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
   const [selectedKeys, setSelectedKeys] = useState([]);
   const { requestList, removeRequest, approvedOrRejectedRequest } = useContext(AgendaContext);
   const onChange = async (nextTargetKeys, direction, moveKeys) => {
-    //ELIMINAMOS LA SOLICITUD
+    // Eliminamos la solicitud
     if (direction === 'left') {
       await Promise.all(
         moveKeys?.map(async (key) => {
@@ -28,7 +28,7 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
         })
       );
     }
-    //APPROBAMOS LA SOLICITUD
+    // Approbamos la solicitud
     if (direction === 'right') {
       await Promise.all(
         moveKeys?.map(async (key) => {
@@ -60,10 +60,11 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
     <Modal
       width={700}
       // bodyStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      closable={true}
+      closable
       onCancel={() => handleModal(false)}
       visible={visible}
-      footer={null}>
+      footer={null}
+    >
       <Row gutter={[8, 8]}>
         <Col>
           <Typography.Title level={4}>Solicitudes para participar en la transmisión</Typography.Title>
@@ -89,7 +90,7 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
           />
         </Col>
         <Col>
-          <Typography.Paragraph type='secondary'>
+          <Typography.Paragraph type="secondary">
             Recuerde que al aprobar una solicitud, usted está dando acceso a esa persona a participar dentro de la
             transmisión. Puede eliminar el acceso en cualquier momento.
           </Typography.Paragraph>

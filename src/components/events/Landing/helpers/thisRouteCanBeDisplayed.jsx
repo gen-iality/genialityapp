@@ -20,10 +20,10 @@ export function recordTypeForThisEvent(cEvent) {
 
   const event = cEvent?.value;
   if (!event) return 'LOADING';
-  if (event?.visibility === 'PUBLIC' && event?.allow_register === true) return 'PUBLIC_EVENT_WITH_REGISTRATION';
+  if (event?.visibility === 'PUBLIC' && event?.allow_register) return 'PUBLIC_EVENT_WITH_REGISTRATION';
   if (event?.visibility === 'PUBLIC' && event?.allow_register === false) return 'UN_REGISTERED_PUBLIC_EVENT';
   if (event?.visibility === 'PRIVATE' && event?.allow_register === false) return 'PRIVATE_EVENT';
-  if (event?.visibility === 'ANONYMOUS' && event?.allow_register === true)
+  if (event?.visibility === 'ANONYMOUS' && event?.allow_register)
     return 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS';
 }
 
@@ -60,8 +60,8 @@ function ThisRouteCanBeDisplayed({ children }) {
         return (
           <Result
             style={{ backgroundColor: 'white', borderRadius: '15px' }}
-            className='animate__animated animate__pulse'
-            status='warning'
+            className="animate__animated animate__pulse"
+            status="warning"
             title={renderTitleComponentForPublicEventWithRegistration(loading)}
             extra={[
               loading ? (
@@ -69,9 +69,9 @@ function ThisRouteCanBeDisplayed({ children }) {
               ) : (
                 <Button
                   onClick={() => handleChangeTypeModal('registerForTheEvent')}
-                  size='large'
-                  type='primary'
-                  key='goToEvent'>
+                  size="large"
+                  type="primary"
+                  key="goToEvent">
                   {intl.formatMessage({ id: 'modal.feedback.enroll' })}
                 </Button>
               ),
@@ -113,8 +113,8 @@ function ThisRouteCanBeDisplayed({ children }) {
       default:
         return (
           <Result
-            className='animate__animated animate__pulse'
-            status='warning'
+            className="animate__animated animate__pulse"
+            status="warning"
             title={
               <Typography.Title level={2}>
                 {intl.formatMessage({ id: 'modal.no_register.msg_anonymous.title' })}
@@ -133,8 +133,8 @@ function ThisRouteCanBeDisplayed({ children }) {
       default:
         return (
           <Result
-            className='animate__animated animate__pulse'
-            status='warning'
+            className="animate__animated animate__pulse"
+            status="warning"
             title={
               <Typography.Title level={2}>
                 {intl.formatMessage({ id: 'modal.no_register.msg_private.title' })}
@@ -142,7 +142,7 @@ function ThisRouteCanBeDisplayed({ children }) {
             }
             subTitle={
               <Typography.Paragraph
-                type='secondary'
+                type="secondary"
                 style={{
                   fontSize: '18px',
                   overflowWrap: 'anywhere',

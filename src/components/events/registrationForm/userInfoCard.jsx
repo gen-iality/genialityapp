@@ -96,7 +96,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         setSuccessMessage(
           Object.entries(initialValues).length > 0
             ? `Actualización de datos exitosa`
-            : `Fuiste registrado al curso con el correo ${values.email}, revisa tu correo para confirmar.`
+            : `Fuiste registrado al curso con el correo ${values.email}, revisa tu correo para confirmar.`,
         );
 
         setSubmittedForm(true);
@@ -223,7 +223,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       const target = name;
       let value = user[target];
 
-      if (m.visibleByAdmin == true) {
+      if (m.visibleByAdmin) {
         return <div key={key}></div>;
       }
 
@@ -311,7 +311,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         });
         input = (
           <Select defaultValue={value} style={{ width: '100%' }} name={name}>
-            <Option value={''}>Seleccione...</Option>
+            <Option value="">Seleccione...</Option>
             {input}
           </Select>
         );
@@ -320,11 +320,12 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       if (type === 'file') {
         input = (
           <Upload
-            action='https://api.evius.co/api/files/upload/'
+            action="https://api.evius.co/api/files/upload/"
             onChange={showRequest}
             multiple={false}
-            listType='text'
-            beforeUpload={beforeUpload}>
+            listType="text"
+            beforeUpload={beforeUpload}
+          >
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         );
@@ -333,7 +334,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       //   input = (
       //       <>
       //         <Password
-      //         name='password'
+      //         name="password"
       //         style={{ marginBottom: '15px'}}
       //         placeholder="Ingrese su password"
       //         key={key}
@@ -353,7 +354,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
       //rule = (type == "password") ? { ...rule, type: "password" } : rule;
       // let hideFields =
-      //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
+      //   mandatory || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
 
       if (type == 'boolean' && mandatory) {
         const textoError = 'Debes llenar este  campo es obligatorio';
@@ -361,7 +362,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       }
 
       return (
-        <div key={'g' + key} name='field'>
+        <div key={'g' + key} name="field">
           {type == 'tituloseccion' && input}
           {type != 'tituloseccion' && (
             <>
@@ -376,13 +377,14 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
                 name={name}
                 rules={[rule]}
                 key={'l' + key}
-                htmlFor={key}>
+                htmlFor={key}
+              >
                 {input}
               </Form.Item>
               {description && description.length < 500 && <p>{description}</p>}
               {description && description.length > 500 && (
                 <Collapse defaultActiveKey={['0']}>
-                  <Panel header='Política de privacidad, términos y condiciones' key='1'>
+                  <Panel header="Política de privacidad, términos y condiciones" key="1">
                     <pre>{description}</pre>
                   </Panel>
                 </Collapse>
@@ -400,9 +402,9 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       {notLoggedAndRegister && (
         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
           <Alert
-            message='Datos actualizados'
-            description='Tus datos han sido actualizados correctamente'
-            type='info'
+            message="Datos actualizados"
+            description="Tus datos han sido actualizados correctamente"
+            type="info"
             showIcon
             closable
           />
@@ -412,16 +414,17 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       <br />
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
-          <Card title='Actualización de campos' bodyStyle={textLeft}>
+          <Card title="Actualización de campos" bodyStyle={textLeft}>
             <Form
               form={form}
-              layout='vertical'
+              layout="vertical"
               onFinish={onFinish}
               validateMessages={validateMessages}
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
               onFieldsChange={fieldsChange}
-              onValuesChange={valuesChange}>
+              onValuesChange={valuesChange}
+            >
               {renderForm()}
               <br />
               <br />
@@ -429,7 +432,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   {generalFormErrorMessageVisible && (
-                    <Alert message='Falto por completar algunos campos. ' type='warning' />
+                    <Alert message="Falto por completar algunos campos. " type="warning" />
                   )}
                 </Col>
               </Row>
@@ -437,7 +440,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <Form.Item>
-                    <Button type='primary' htmlType='submit'>
+                    <Button type="primary" htmlType="submit">
                       Actualizar datos
                     </Button>
                   </Form.Item>
@@ -447,7 +450,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
           </Card>
         ) : (
           <Card>
-            <Result status='success' title='Datos actualizados!' subTitle={successMessage} />
+            <Result status="success" title="Datos actualizados!" subTitle={successMessage} />
           </Card>
         )}
       </Col>

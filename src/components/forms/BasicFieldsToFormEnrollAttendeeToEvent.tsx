@@ -27,7 +27,7 @@ const BasicFieldsToFormEnrollAttendeeToEvent = ({ basicFields, attendee }: any) 
           <Comment
             style={{ textAlign: 'center' }}
             content={
-              <Space direction='vertical'>
+              <Space direction="vertical">
                 <Text style={nameAndEmailBasicFieldsStyles}>{names}</Text>
                 <Text style={nameAndEmailBasicFieldsStyles}>{email}</Text>
               </Space>

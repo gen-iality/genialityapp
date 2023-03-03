@@ -29,15 +29,15 @@ export default function ConferenceTabsComponent(props) {
 
   const { chat, surveys, games, attendees, activeTab } = props;
   return (
-    <div className='zoom-collapsed'>
-      <Button onClick={() => setCollapsed(collapsed === false ? true : false)} className='zoom-collapsed_button'>
+    <div className="zoom-collapsed">
+      <Button onClick={() => setCollapsed(!collapsed)} className="zoom-collapsed_button">
         {createElement(collapsed ? RightOutlined : LeftOutlined, {
           className: 'trigger',
-          onClick: () => setCollapsed(collapsed === false ? true : false),
+          onClick: () => setCollapsed(!collapsed),
         })}
       </Button>
-      {collapsed === false ? (
-        <div className='zoom-collapsed_tabs'>
+      {!collapsed ? (
+        <div className="zoom-collapsed_tabs">
           <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={callback}>
             {chat && (
               <TabPane
@@ -47,7 +47,7 @@ export default function ConferenceTabsComponent(props) {
                     <p style={{ marginBottom: '0px' }}>Chat</p>
                   </>
                 }
-                key='chat'>
+                key="chat">
                 <LiveChat {...props} />
               </TabPane>
             )}
@@ -60,7 +60,7 @@ export default function ConferenceTabsComponent(props) {
                     <p style={{ marginBottom: '0px' }}>Asistentes</p>
                   </>
                 }
-                key='attendees'>
+                key="attendees">
                 Asistentes
               </TabPane>
             )}
@@ -71,12 +71,12 @@ export default function ConferenceTabsComponent(props) {
                     <img
                       src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
                       style={{ width: '32px' }}
-                      alt='Games'
+                      alt="Games"
                     />
                     <p style={{ marginBottom: '0px' }}>Juego</p>
                   </>
                 }
-                key='games'>
+                key="games">
                 <ListadoJuegos {...props} />
               </TabPane>
             )}
@@ -86,55 +86,55 @@ export default function ConferenceTabsComponent(props) {
         <Menu>
           {chat && (
             <Menu.Item
-              key='chat'
+              key="chat"
               icon={
-                <Tooltip placement='leftTop' title='Chat'>
+                <Tooltip placement="leftTop" title="Chat">
                   <CommentOutlined style={{ fontSize: '21px' }} />
                 </Tooltip>
               }
               onClick={() => {
-                setCollapsed(collapsed === false ? true : false);
+                setCollapsed(!collapsed);
                 handleClick('chat');
               }}
             />
           )}
           {surveys && (
             <Menu.Item
-              key='surveys'
+              key="surveys"
               icon={
-                <Tooltip placement='leftTop' title='Surveys'>
+                <Tooltip placement="leftTop" title="Surveys">
                   <PieChartOutlined style={{ fontSize: '21px' }} />
                 </Tooltip>
               }
               onClick={() => {
-                setCollapsed(collapsed === false ? true : false);
+                setCollapsed(!collapsed);
                 handleClick('surveys');
               }}
             />
           )}
           {attendees && (
             <Menu.Item
-              key='atteendes'
+              key="atteendes"
               icon={
-                <Tooltip placement='leftTop' title='Atteendes'>
+                <Tooltip placement="leftTop" title="Atteendes">
                   <TeamOutlined style={{ fontSize: '21px' }} />
                 </Tooltip>
               }
               onClick={() => {
-                setCollapsed(collapsed === false ? true : false);
+                setCollapsed(!collapsed);
                 handleClick('attendees');
               }}
             />
           )}
           {games && (
             <Menu.Item
-              key='game'
+              key="game"
               icon={
-                <Tooltip placement='leftTop' title='Games'>
+                <Tooltip placement="leftTop" title="Games">
                   <BuildOutlined
                     style={{ fontSize: '21px' }}
                     onClick={() => {
-                      setCollapsed(collapsed === false ? true : false);
+                      setCollapsed(!collapsed);
                       handleClick('games');
                     }}
                   />

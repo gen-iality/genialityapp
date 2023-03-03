@@ -21,14 +21,14 @@ const VideoActivity = () => {
 
   return (
     <>
-      <HeaderColumnswithContext isVisible={true} activityState={activityState}/>
-        <div className='mediaplayer' style={{ aspectRatio: '16/9' }}>
+      <HeaderColumnswithContext isVisible activityState={activityState}/>
+        <div className="mediaplayer" style={{ aspectRatio: '16/9' }}>
           {isItAnFrame ? (
             <iframe
             style={{ aspectRatio: '16/9' }}
             width='100%'
             src={urlVideo + '?muted=1&autoplay=0'}
-            frameBorder='0'
+            frameBorder="0"
             allow='autoplay; encrypted-media'
             allowFullScreen
             ></iframe>

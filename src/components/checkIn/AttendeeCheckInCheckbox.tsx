@@ -22,12 +22,8 @@ const AttendeeCheckInCheckbox = ({
   const { _id, checked_in, checkedin_at } = attendee || {};
 
   useEffect(() => {
-    let dateAndTime: any = '';
-    try {
-      dateAndTime = typeof checkedin_at === 'object' ? checkedin_at?.toDate() : checkedin_at;
-    } catch (error) {}
     setAttemdeeCheckIn(checked_in);
-    setAttemdeeCheckedinAt(dateAndTime);
+    setAttemdeeCheckedinAt(checkedin_at);
   }, [attendee]);
 
   const saveAttemdeeCheckIn = async (e: CheckboxChangeEvent) => {
@@ -70,7 +66,7 @@ const AttendeeCheckInCheckbox = ({
         <Checkbox checked={attemdeeCheckIn} onChange={saveAttemdeeCheckIn}>
           <b>
             {attemdeeCheckIn
-              ? `Checked at: ${dayjs(attemdeeCheckedinAt).format('D/MMM/YY H:mm:ss A')}`
+              ? `${dayjs(attemdeeCheckedinAt).format('D/MMM/YYYY H:mm:ss A')}`
               : 'Registrar ingreso'}
           </b>
         </Checkbox>

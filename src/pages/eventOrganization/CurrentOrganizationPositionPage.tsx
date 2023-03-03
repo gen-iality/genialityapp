@@ -154,11 +154,11 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
         title: 'Opciones',
         width: 80,
         render: (orgUser: any) => (
-          <Tooltip title='Borrar'>
+          <Tooltip title="Borrar">
             <Button
               id={`deleteAction${orgUser._id}`}
-              type='primary'
-              size='small'
+              type="primary"
+              size="small"
               onClick={(e) => deleteOrgUser(orgUser).finally(() => loadUsers())}
               icon={<DeleteOutlined />}
             />
@@ -193,9 +193,9 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
         loading={isLoading}
         scroll={{ x: 'auto' }}
         title={() => (
-          <Row wrap justify='end' gutter={[8, 8]}>
+          <Row wrap justify="end" gutter={[8, 8]}>
             <Col>
-              <Button type='primary' icon={<PlusCircleOutlined />} onClick={onAddOrganizationUser}>
+              <Button type="primary" icon={<PlusCircleOutlined />} onClick={onAddOrganizationUser}>
                 {'Agregar usuario'}
               </Button>
             </Col>

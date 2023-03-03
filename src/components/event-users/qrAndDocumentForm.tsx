@@ -24,35 +24,36 @@ function QrAndDocumentForm({
 
   return (
     <Form
-      layout='vertical'
+      layout="vertical"
       form={form}
       onFinish={searchAttendeeByParameter}
-      // autoComplete='off'
+      // autoComplete="off"
     >
       {typeScanner === 'scanner-qr' ? (
         <>
-          <Tabs defaultValue='1' destroyInactiveTabPane={true}>
+          <Tabs defaultValue="1" destroyInactiveTabPane>
             <TabPane
               tab={
                 <>
                   <CameraOutlined />
-                  {'Camara'}
+                  Camara
                 </>
               }
-              key='1'>
+              key="1">
               <Form.Item>
-                <Row justify='center' wrap gutter={8}>
+                <Row justify="center" wrap gutter={8}>
                   <Col>
                     <Button
-                      type='primary'
+                      type="primary"
                       icon={<CameraFlipOutlineIcon />}
-                      onClick={() => (facingMode === 'user' ? setFacingMode('environment') : setFacingMode('user'))}>
+                      onClick={() => (facingMode === 'user' ? setFacingMode('environment') : setFacingMode('user'))}
+                    >
                       {facingMode === 'user' ? ' Front' : 'Rear'} Camera
                     </Button>
                   </Col>
                 </Row>
               </Form.Item>
-              <Row justify='center' wrap gutter={8}>
+              <Row justify="center" wrap gutter={8}>
                 <QrReader
                   delay={1500}
                   facingMode={facingMode}
@@ -69,15 +70,16 @@ function QrAndDocumentForm({
               tab={
                 <>
                   <ExpandOutlined />
-                  {'Pistola'}
+                  Pistola
                 </>
               }
-              key='2'>
+              key="2">
               <>
                 <Form.Item
-                  label={'Id Usuario'}
-                  name='qr'
-                  rules={[{ required: true, message: 'El campo Id Usuario no debe estar vacío!' }]}>
+                  label="Id Usuario"
+                  name="qr"
+                  rules={[{ required: true, message: 'El campo Id Usuario no debe estar vacío!' }]}
+                >
                   <Input autoFocus allowClear />
                 </Form.Item>
               </>
@@ -88,11 +90,12 @@ function QrAndDocumentForm({
         <>
           <Form.Item
             label={label}
-            name='document'
-            rules={[{ required: true, message: 'El campo documentó no debe estar vacío!' }]}>
+            name="document"
+            rules={[{ required: true, message: 'El campo documentó no debe estar vacío!' }]}
+          >
             <Input
               onKeyDown={(event: any) => divideInformationObtainedByTheCodeReader({ event })}
-              id='document'
+              id="document"
               allowClear
               autoFocus
             />

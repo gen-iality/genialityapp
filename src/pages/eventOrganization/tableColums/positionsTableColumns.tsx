@@ -61,10 +61,10 @@ export default function positionsTableColumns(
       width: 80,
       render: (_, position) => {
         return (
-          <Tooltip key={position._id} title='Editar'>
+          <Tooltip key={position._id} title="Editar">
             <Button
-              type='primary'
-              size='small'
+              type="primary"
+              size="small"
               onClick={(e) => cbEdit(position)}
               icon={<EditOutlined />}
             />

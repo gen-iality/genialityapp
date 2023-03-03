@@ -14,7 +14,7 @@ const EventHome = (props) => {
   if (!cEvent.value) {
     return <>Cargando...</>;
   }
-  //PERMITE EJECUTAR CODIGO JAVASCRIPT // SE UTILIZA PARA REDIRIGIR DESPUES DE LOQUEAR UN EVENTUSER
+  //PERMITE EJECUTAR CODIGO JAVASCRIPT // Se utiliza para redirigir despues de loquear un eventuser
   useEffect(() => {
     if (!cEvent.value || !cEventUser.value) return;
     cEvent && cEvent.value && cEvent.value?.message_user && cEventUser.value ? eval(cEvent.value?.message_user) : null;
@@ -23,7 +23,7 @@ const EventHome = (props) => {
   return (
     <>
       {cEvent && cEvent.value && cEvent.value._id && cEvent.value._id !== '610e72451c2ae8638d5395c6' && (
-        <Row justify='center'>
+        <Row justify="center">
           <Col span={24} /* sm={24} md={16} lg={18} xl={18} */ style={{ padding: '1rem' }}>
             <EventLanding setActivitiesAttendee={setActivitiesAttendee} />
           </Col>

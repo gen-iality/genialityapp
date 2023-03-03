@@ -25,7 +25,7 @@ export const columns = (goToEvent) => [
     /* fixed: 'left', */
     render(val, item) {
       return (
-        <Button type='link' onClick={() => goToEvent(item._id)}>
+        <Button type="link" onClick={() => goToEvent(item._id)}>
           <span style={{ color: '#2E9AFE' }}>{item.name}</span>
         </Button>
       );

@@ -91,7 +91,7 @@ class DateEvent extends Component {
             onDayClick={this.handleDayClick}
           />
         </div>
-        <Button style={{ marginTop: '3%' }} type='primary' onClick={this.save}>
+        <Button style={{ marginTop: '3%' }} type="primary" onClick={this.save}>
           Guardar
         </Button>
       </div>

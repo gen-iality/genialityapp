@@ -56,7 +56,7 @@ class UserModal extends Component {
         Object.keys(value.properties).map((obj) => {
           return (user[obj] = value.properties[obj]);
         });
-        const checked_in = value.checkedin_at ? true : false;
+        const checked_in = !!value.checkedin_at;
         user = { ...user, _id: value._id };
         this.setState({
           user,
@@ -72,7 +72,7 @@ class UserModal extends Component {
         Object.keys(value).map((obj) => {
           return (user[obj] = value[obj]);
         });
-        const checked_in = value.checkedin_at ? true : false;
+        const checked_in = !!value.checkedin_at;
         this.setState({
           user,
           ticket_id: value.ticket_id,
@@ -91,7 +91,6 @@ class UserModal extends Component {
       });
       this.setState({ found: 1, user, edit: false, ticket_id: this.props.ticket });
     }
-    //console.log('EXTRAFIELDS===>', this.props.extraFields);
   }
 
   componentWillUnmount() {
@@ -185,7 +184,6 @@ class UserModal extends Component {
     const activityId = this.props.activityId;
     const eventId = this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent;
     this.setState({ loadingregister: true });
-    //console.log('callback=>', values);
     let resp;
     let respActivity = true;
     if (values) {
@@ -238,9 +236,7 @@ class UserModal extends Component {
       }
 
       if (this.props.byActivity && this.props.edit) {
-        //console.log('VALUES ACTIVITY==>', this.props.value);
         //respActivity = await Activity.Update(this.props.cEvent?.value?._id, this.props.value.idActivity, datos);
-        //console.log('RESPUESTA ACTIVITY UPDATE==>', respActivity, this.props.value.idActivity);
         resp = await AttendeeApi.update(this.props.cEvent?.value?._id, snap, this.props.value._id);
         if (resp) {
           // resp = { ...resp, data: { _id: resp._id } };
@@ -283,12 +279,12 @@ class UserModal extends Component {
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
     const { modal, badgeEvent, componentKey } = this.props;
-    const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr === true);
+    const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr);
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
-      <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible={true}>
+      <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible>
         <div
-          // className='asistente-list'
+          // className="asistente-list"
           style={{
             paddingLeft: '0px',
             paddingRight: '0px',
@@ -317,11 +313,11 @@ class UserModal extends Component {
               initialOtherValue={this.props.value || {}}
               eventUserOther={user || {}}
               fields={this.props.extraFields}
-              organization={true}
+              organization
               options={this.options}
               callback={this.saveUser}
               loadingregister={this.state.loadingregister}
-              usedInCms={true}
+              usedInCms
               editUser={this.props.edit}
             />
           )}
@@ -329,7 +325,7 @@ class UserModal extends Component {
         <div style={{ opacity: 0, display: 'none' }}>
           {user && badgeEvent && badgeEvent.BadgeFields && <QRCode value={userId} size={qrSize ? qrSize?.size : 64} />}
         </div>
-        <iframe title={'Print User'} ref={this.ifrmPrint} style={{ opacity: 0, display: 'none' }} />
+        <iframe title="Print User" ref={this.ifrmPrint} style={{ opacity: 0, display: 'none' }} />
       </Modal>
     );
   }

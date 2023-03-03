@@ -51,14 +51,14 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
       {validationGeneral.loading ? (
         <>
           <Row>
-            <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
+            <Typography.Text type="secondary" style={{ fontSize: '18px' }}>
               {fraseLoading}
             </Typography.Text>
           </Row>
         </>
       ) : (
         <>
-          <Result status='success' title='Inscripción exitosa!' />
+          <Result status="success" title="Inscripción exitosa!" />
           <RedirectUser basicDataUser={basicDataUser} cEvent={cEvent} dataEventUser={dataEventUser} />
         </>
       )}
@@ -142,7 +142,7 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
   return (
     <>
       <Space>
-        <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
+        <Typography.Text type="secondary" style={{ fontSize: '18px' }}>
           {signInWithEmailAndPasswordError ? (
             <Alert
               style={{ marginTop: '5px' }}
@@ -157,7 +157,7 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
                     onClick={() => {
                       helperDispatch({ type: 'showLogin' });
                     }}
-                    type='link'>
+                    type="link">
                     {intl.formatMessage({
                       id: 'modal.feedback.title.errorlink',
                       defaultMessage: 'iniciar sesión',
@@ -165,7 +165,7 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
                   </Button>
                 </>
               }
-              type='error'
+              type="error"
             />
           ) : (
             <>

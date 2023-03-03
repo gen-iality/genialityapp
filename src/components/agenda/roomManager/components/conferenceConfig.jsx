@@ -35,20 +35,21 @@ export default function ConferenceConfig({ roomStatus, deleteRoom, setRoomStatus
   return (
     <>
       <Card bordered style={{ borderRadius: '10px' }}>
-        <Row gutter={[16, 16]} justify='space-between' align='middle'>
+        <Row gutter={[16, 16]} justify="space-between" align="middle">
           <Col>
             <Space>
-              <label className='label'>Estado de la transmisión para tus asistentes: </label>
+              <label className="label">Estado de la transmisión para tus asistentes: </label>
               <Select
                 value={roomStatus}
                 onChange={(value) => {
                   setRoomStatus(value);
                 }}
-                style={{ width: '180px' }}>
-                <Option value=''>Lección creada</Option>
-                <Option value='closed_meeting_room'>Iniciará pronto</Option>
-                <Option value='open_meeting_room'>En vivo</Option>
-                <Option value='ended_meeting_room'>Finalizada</Option>
+                style={{ width: '180px' }}
+              >
+                <Option value="">Lección creada</Option>
+                <Option value="closed_meeting_room">Iniciará pronto</Option>
+                <Option value="open_meeting_room">En vivo</Option>
+                <Option value="ended_meeting_room">Finalizada</Option>
               </Select>
             </Space>
           </Col>
@@ -56,13 +57,13 @@ export default function ConferenceConfig({ roomStatus, deleteRoom, setRoomStatus
             <Col>
               <Badge
                 onClick={() => setViewModal(true)}
-                count={request && Object.keys(request).length > 0 ? Object.keys(request).length : 0}>
-                <Button type='primary'>Solicitudes de participación</Button>
+                count={request && Object.keys(request).length > 0 ? Object.keys(request).length : 0}
+              >
+                <Button type="primary">Solicitudes de participación</Button>
               </Badge>
             </Col>
           )}
           <Col>
-            {console.log('status==>', status)}
             {status !== 'starting' && (
               <Button onClick={deleteRoom} danger>
                 Eliminar transmisión

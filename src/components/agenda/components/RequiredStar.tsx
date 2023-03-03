@@ -1,5 +1,5 @@
-function RequiredStar() {
-  return ( <span style={{ color: 'red' }}>*</span> );
-}
+import { FunctionComponent } from 'react'
 
-export default RequiredStar;
+const RequiredStar: FunctionComponent = () => <span style={{ color: 'red' }}>*</span>
+
+export default RequiredStar

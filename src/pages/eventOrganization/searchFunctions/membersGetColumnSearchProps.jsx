@@ -25,19 +25,20 @@ export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
       />
       <Space>
         <Button
-          type='primary'
+          type="primary"
           onClick={() => handleSearch(selectedKeys, confirm, dataIndex, columnsData)}
           icon={<SearchOutlined />}
-          size='small'
-          style={{ width: 90 }}>
+          size="small"
+          style={{ width: 90 }}
+        >
           Search
         </Button>
-        <Button onClick={() => handleReset(clearFilters, columnsData)} size='small' style={{ width: 90 }}>
+        <Button onClick={() => handleReset(clearFilters, columnsData)} size="small" style={{ width: 90 }}>
           Reset
         </Button>
         <Button
-          type='link'
-          size='small'
+          type="link"
+          size="small"
           onClick={() => {
             confirm({ closeDropdown: false });
             columnsData.setSearchText(selectedKeys[0]);

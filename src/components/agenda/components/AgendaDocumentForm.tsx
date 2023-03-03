@@ -48,8 +48,8 @@ function AgendaDocumentForm(props: AgendaDocumentForm) {
     {wasLoaded && <Spin/>}
     <Select
       showArrow
-      id='nameDocuments'
-      mode='multiple'
+      id="nameDocuments"
+      mode="multiple"
       options={allNameDocuments}
       onChange={onSelectedDocuments}
       defaultValue={selectedDocuments}

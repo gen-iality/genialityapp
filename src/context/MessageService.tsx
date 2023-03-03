@@ -14,7 +14,7 @@ interface PropsOptions {
   key?: string;
 }
 
-//TIPOS DE MENSAJES
+// Tipos de mensajes
 //success, error, warning, info, loading
 //api doc=> https://ant.design/components/message/
 

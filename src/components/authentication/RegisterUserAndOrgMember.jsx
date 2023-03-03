@@ -93,7 +93,7 @@ const RegisterUserAndOrgMember = ({
           basicDataUser={basicDataUser}
           organization={organization}
           onSubmit={onSubmit}
-          noSubmitButton={true}
+          noSubmitButton
         />
       ),
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
@@ -172,7 +172,11 @@ const RegisterUserAndOrgMember = ({
       try {
         const respUser = await OrganizationApi.saveUser(idOrganization, propertiesOrgMember);
         console.log('RegisterUser: has default position Id', { defaultPositionId });
-        await PositionsApi.Organizations.addUser(idOrganization, defaultPositionId, respUser.account_id);
+        if (defaultPositionId === undefined) {
+          console.error('This organization has no default position. Eh!')
+        } else {
+          await PositionsApi.Organizations.addUser(idOrganization, defaultPositionId, respUser.account_id);
+        }
         if (respUser && respUser.account_id) {
           setValidationGeneral({
             status: false,
@@ -302,9 +306,6 @@ const RegisterUserAndOrgMember = ({
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-    {console.log('dataOrgMember', dataOrgMember)}
-    {console.log('basicDataUser', basicDataUser)}
-      {console.log('buttonStatus', buttonStatus)}
       <Steps current={current} responsive={false}>
         {steps.map((item) => (
           <Step key={item.title} icon={item.icon} />
@@ -318,7 +319,7 @@ const RegisterUserAndOrgMember = ({
               hookValidations(false, '');
               goTopreviousStep();
             }}
-            size='large'
+            size="large"
             style={{ margin: '0 8px' }}
           >
             {intl.formatMessage({
@@ -336,10 +337,10 @@ const RegisterUserAndOrgMember = ({
               <>
                 {current < steps.length - 1 && (
                   <Button
-                    id='btnnextRegister'
+                    id="btnnextRegister"
                     disabled={buttonStatus}
-                    size='large'
-                    type='primary'
+                    size="large"
+                    type="primary"
                     onClick={goToNextStep}
                   >
                     {current > 0
@@ -381,7 +382,7 @@ const RegisterUserAndOrgMember = ({
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                   onClick={() => helperDispatch({ type: 'showLogin' })} // REVISAR: Al parecer no está funcionando el dispatch
-                  type='link'
+                  type="link"
                 >
                   {validationGeneral.component}
                 </Button>
@@ -390,7 +391,7 @@ const RegisterUserAndOrgMember = ({
               )}
             </>
           }
-          type='error'
+          type="error"
         />
       )}
     </div>

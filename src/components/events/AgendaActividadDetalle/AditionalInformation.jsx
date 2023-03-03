@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
-import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row, Grid, Space } from 'antd';
+import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row, Grid, Space, Result } from 'antd';
 import WithEviusContext from '@context/withContext';
 import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
@@ -9,6 +9,7 @@ import ModalSpeaker from '../modalSpeakers';
 import DocumentsList from '../../documents/documentsList';
 import { UserOutlined } from '@ant-design/icons';
 import ReactQuill from 'react-quill';
+import ClipboardTextOffIcon from '@2fd/ant-design-icons/lib/ClipboardTextOff';
 const { TabPane } = Tabs;
 const { Title } = Typography;
 const { useBreakpoint } = Grid;
@@ -17,7 +18,7 @@ const AditionalInformation = (props) => {
   const { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useHelper();
   const intl = useIntl();
   const [activeTab, setActiveTab] = useState('description');
-  const [idSpeaker, setIdSpeaker] = useState(false);
+  const [idSpeaker, setIdSpeaker] = useState(null);
   const screens = useBreakpoint();
 
   function handleChangeLowerTabs(tab) {
@@ -44,19 +45,30 @@ const AditionalInformation = (props) => {
             }
             key='description'
           >
-            <Row justify='center'>
-              <Col span={24} id='img-description'>
-                {currentActivity?.description && (
-                  <ReactQuill
-                    value={currentActivity?.description}
-                    readOnly={true}
-                    className='hide-toolbar ql-toolbar'
-                    theme='bubble'
-                  />
-                )}
-              </Col>
-            </Row>
-            <br />
+            {currentActivity?.description !== '<p><br></p>' ? (
+              <Row justify='center'>
+                <Col span={24} id='img-description'>
+                  {currentActivity?.description && (
+                    <ReactQuill
+                      value={currentActivity?.description}
+                      readOnly
+                      className='hide-toolbar ql-toolbar'
+                      theme='bubble'
+                    />
+                  )}
+                </Col>
+              </Row>
+            ) : (
+              <Card style={{ borderRadius: '10px', padding: '0px' }}>
+                <Result
+                  style={{ padding: '0px' }}
+                  icon={<ClipboardTextOffIcon />}
+                  title='Aún no se ha publicado una descripción'
+                />
+              </Card>
+            )}
+
+            {/* <br /> */}
             {(currentActivity !== null && currentActivity.hosts.length === 0) ||
             props.cEvent.value._id === '601470367711a513cc7061c2' ? (
               <div></div>
@@ -67,7 +79,6 @@ const AditionalInformation = (props) => {
                     <Row>
                       <Col span={24}>
                         <Card style={{ textAlign: 'left' }}>
-                          {console.log(screens)}
                           <List
                             itemLayout={screens.xs ? 'vertical' : 'horizontal'}
                             dataSource={props.orderedHost}
@@ -104,7 +115,12 @@ const AditionalInformation = (props) => {
                             )}
                           />
                           {idSpeaker ? (
-                            <ModalSpeaker showModal={true} eventId={props.cEvent.value._id} speakerId={idSpeaker} />
+                            <ModalSpeaker
+                              showModal
+                              eventId={props.cEvent.value._id}
+                              speakerId={idSpeaker}
+                              setIdSpeaker={setIdSpeaker}
+                            />
                           ) : (
                             <></>
                           )}
@@ -141,7 +157,7 @@ const AditionalInformation = (props) => {
         )}
 
         {props.tabs && (
-          // && (props.tabs.surveys === true || props.tabs.surveys === 'true')
+          // && (props.tabs.surveys || props.tabs.surveys === 'true')
           <TabPane
             tab={
               <>
@@ -169,7 +185,7 @@ const AditionalInformation = (props) => {
             )}
           </TabPane>
         )}
-        {props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
+        {props.tabs && (props.tabs.games || props.tabs.games === 'true') && (
           <TabPane
             tab={
               <>

@@ -94,19 +94,19 @@ class CameraFeed extends Component {
   render() {
     const { image, hidden, hide } = this.state;
     return (
-      <div className='c-camera-feed' hidden={hide}>
+      <div className="c-camera-feed" hidden={hide}>
         {/* camara */}
 
         {/* Desde que en el array no haya información la camara se muetra 
                 de lo contrario se mostrara la imagen capturada. */}
 
         <div>
-          <div className='c-camera-feed__viewer'>
-            <video hidden={this.state.hiddeVideo} ref={(ref) => (this.videoPlayer = ref)} width='1280' heigh='960' />
+          <div className="c-camera-feed__viewer">
+            <video hidden={this.state.hiddeVideo} ref={(ref) => (this.videoPlayer = ref)} width="1280" heigh="960" />
           </div>
         </div>
         {/* Imagen capturada  */}
-        <div className='c-camera-feed__stage'>
+        <div className="c-camera-feed__stage">
           <canvas
             style={{ maxWidth: '100%' }}
             width={imageWidh}
@@ -114,16 +114,17 @@ class CameraFeed extends Component {
             hidden={hidden}
             ref={(ref) => (this.canvas = ref)}
           />
-          <img alt='camara' width={imageWidh} height={imageheigh} id='getImage' hidden src={image} />
+          <img alt="camara" width={imageWidh} height={imageheigh} id="getImage" hidden src={image} />
         </div>
 
         <div style={{ textAlign: 'center' }}>
           <Button
             hidden={this.state.hiddeVideo}
-            type='primary'
-            size='large'
+            type="primary"
+            size="large"
             style={{ display: 'block', margin: '20px auto' }}
-            onClick={this.takePhoto}>
+            onClick={this.takePhoto}
+          >
             <CameraOutlined style={{ fontSize: '2rem' }} />
           </Button>
           {this.state.image && (

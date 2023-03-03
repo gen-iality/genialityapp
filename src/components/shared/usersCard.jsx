@@ -102,7 +102,7 @@ function UsersCard(props) {
         <>
           {cUser.value ? (
             <a
-              key='list-loadmore-edit'
+              key="list-loadmore-edit"
               onClick={() => {
                 createNewOneToOneChat(
                   cUser.value.uid,
@@ -114,7 +114,7 @@ function UsersCard(props) {
                 HandleChatOrAttende('1');
                 HandlePublicPrivate('private');
               }}>
-              <Tooltip title={'Chatear'}>
+              <Tooltip title="Chatear">
                 <MessageTwoTone style={{ fontSize: '24px' }} />
               </Tooltip>
             </a>
@@ -127,9 +127,10 @@ function UsersCard(props) {
         <>
           {props.propsAttendees ? (
             <Popover
-              trigger='hover'
-              placement='leftTop'
-              content={<PopoverInfoUser item={props.item} props={props.propsAttendees} />}>
+              trigger="hover"
+              placement="leftTop"
+              content={<PopoverInfoUser item={props.item} props={props.propsAttendees} />}
+            >
               <Text
                 ellipsis={{ rows: 1 }}
                 style={{
@@ -139,7 +140,7 @@ function UsersCard(props) {
                   fontSize: '15px',
                   // whiteSpace: 'break-spaces'
                 }}
-                key='list-loadmore-edit'>
+                key="list-loadmore-edit">
                 {name || names}
               </Text>
             </Popover>
@@ -152,7 +153,7 @@ function UsersCard(props) {
                 fontSize: '15px',
                 // whiteSpace: 'break-spaces'
               }}
-              key='list-loadmore-edit'>
+              key="list-loadmore-edit">
               {name || names}
             </Text>
           )}
@@ -192,7 +193,7 @@ function UsersCard(props) {
             fontSize: '15px',
             // whiteSpace: 'break-spaces'
           }}
-          key='list-loadmore-edit'>
+          key="list-loadmore-edit">
           {names || name}
         </Text>
       );
@@ -252,14 +253,14 @@ function UsersCard(props) {
             fontSize: '15px',
             // whiteSpace: 'break-spaces'
           }}
-          key='list-loadmore-edit'>
+          key="list-loadmore-edit">
           {formatName(name || names)}
         </Text>
       );
     });
     setDescription(() => {
       return (
-        <div className='animate__animated animate__bounceIn' style={{ color: '#52C41A' }}>
+        <div className="animate__animated animate__bounceIn" style={{ color: '#52C41A' }}>
           {score} Pts
         </div>
       );
@@ -281,11 +282,11 @@ function UsersCard(props) {
     setActionCapture(() => {
       return (
         <a
-          key='list-loadmore-edit'
+          key="list-loadmore-edit"
           onClick={() => {
             setGameData(props.item);
           }}>
-          <Tooltip title={'Jugar'}>
+          <Tooltip title="Jugar">
             <GamepadVariantOutline style={{ fontSize: '32px', color: '#178BF7' }} />
           </Tooltip>
         </a>
@@ -301,14 +302,14 @@ function UsersCard(props) {
             fontSize: '15px',
             // whiteSpace: 'break-spaces'
           }}
-          key='list-loadmore-edit'>
+          key="list-loadmore-edit">
           {formatName(name)}
         </Text>
       );
     });
     // setDescription(() => {
     //   return (
-    //     <div className='animate__animated animate__bounceIn' style={{ color: '#52C41A' }}>
+    //     <div className="animate__animated animate__bounceIn" style={{ color: '#52C41A' }}>
     //       10 Pts
     //     </div>
     //   );
@@ -319,7 +320,8 @@ function UsersCard(props) {
           <Avatar
             src={picture && picture}
             style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))', backgroundColor: eventColor }}
-            size={45}>
+            size={45}
+          >
             {!picture && name && name.charAt(0).toUpperCase()}
           </Avatar>
         </Badge>
@@ -366,9 +368,10 @@ function UsersCard(props) {
             )
           : '';
       }}
-      className='efect-scale'
+      className="efect-scale"
       style={props.type == 'privateChat' ? styleListPointer : styleList}
-      actions={[actionCapture]}>
+      actions={[actionCapture]}
+    >
       <List.Item.Meta title={title} description={description} avatar={avatar} />
     </List.Item>
   );

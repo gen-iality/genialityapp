@@ -18,25 +18,25 @@ const ModalListOrg = (props) => {
       centered
       footer={null}
       zIndex={1000}
-      closable={true}
+      closable
       visible={props.modalListOrgIsVisible}
       onCancel={() => {
         props.setModalListOrgIsVisible(false);
       }}>
-      <Form onFinish={selectOrganization} autoComplete='off' layout='vertical'>
-        <Typography.Title level={4} type='secondary'>
+      <Form onFinish={selectOrganization} autoComplete="off" layout="vertical">
+        <Typography.Title level={4} type="secondary">
           Organizaciones a las que pertenezco
         </Typography.Title>
         <Form.Item
-          label={'Listado de organizaciones'}
-          name='selectedOrg'
+          label="Listado de organizaciones"
+          name="selectedOrg"
           style={{ marginBottom: '10px' }}
           hasFeedback
           rules={[
             { required: true, message: 'Por favor seleccione una organización bajo la cual se creara este curso!' },
           ]}>
           {props.org && props.org.length > 0 && (
-            <Select placeholder='Por favor seleccione una organización'>
+            <Select placeholder="Por favor seleccione una organización">
               {props?.org?.map((orgItem, key) => {
                 return (
                   <Option key={key} value={orgItem.id}>
@@ -49,11 +49,11 @@ const ModalListOrg = (props) => {
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
-            id={'submitButton'}
-            htmlType='submit'
+            id="submitButton"
+            htmlType="submit"
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size='large'>
+            size="large">
             Crear curso
           </Button>
         </Form.Item>

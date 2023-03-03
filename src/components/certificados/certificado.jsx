@@ -294,12 +294,12 @@ const Certificado = (props) => {
   return (
     <Form onFinish={onSubmit} {...formLayout}>
       <Header
-        title={'Certificado'}
+        title="Certificado"
         description={
           <>
             <ExclamationOutlined
               style={{ color: 'orange' }}
-              className='animate__animated animate__pulse animate__infinite'
+              className="animate__animated animate__pulse animate__infinite"
             />
             {'Para tener una vista más exacta del certificado por favor presione el botón de generar'}
             <br />
@@ -315,15 +315,15 @@ const Certificado = (props) => {
           <Form.Item>
             <Row wrap gutter={[16, 8]}>
               <Col>
-                <Upload type='file' accept='image/*' showUploadList={false} onChange={(e) => handleImage(e)}>
-                  <Button type='primary' icon={<UploadOutlined />}>
+                <Upload type="file" accept="image/*" showUploadList={false} onChange={(e) => handleImage(e)}>
+                  <Button type="primary" icon={<UploadOutlined />}>
                     {'Imagen de Fondo'}
                   </Button>
                 </Upload>
               </Col>
               <Col>
-                <Button type='primary' onClick={generate}>
-                  {'Generar'}
+                <Button type="primary" onClick={generate}>
+                  Generar
                 </Button>
               </Col>
             </Row>
@@ -331,42 +331,44 @@ const Certificado = (props) => {
         }
       />
 
-      <Row justify='center' wrap gutter={12}>
+      <Row justify="center" wrap gutter={12}>
         <Col span={20}>
           <Row wrap gutter={[16, 16]}>
             <Col span={12}>
               <Form.Item
                 label={
-                  <label style={{ marginTop: '2%' }} className='label'>
+                  <label style={{ marginTop: '2%' }} className="label">
                     Nombre <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
-                rules={[{ required: true, message: 'El nombre es requerido' }]}>
+                rules={[{ required: true, message: 'El nombre es requerido' }]}
+              >
                 <Input
                   value={certificado.name}
-                  name={'name'}
-                  placeholder={'Nombre del certificado'}
+                  name="name"
+                  placeholder="Nombre del certificado"
                   onChange={(e) => handleChange(e)}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label={'Rol'}
+                label="Rol"
                 /* label={
-                  <label style={{ marginTop: '2%' }} className='label'>
+                  <label style={{ marginTop: '2%' }} className="label">
                     Rol <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
                 rules={[{ required: true, message: 'El rol es requerido' }]} */
               >
                 <Select
-                  name={'rol'}
+                  name="rol"
                   onChange={(e) => {
                     onChangeRol(e);
                   }}
-                  placeholder={'Seleccione rol'}
-                  value={certificado.rol?._id || rol?._id}>
+                  placeholder="Seleccione rol"
+                  value={certificado.rol?._id || rol?._id}
+                >
                   {roles.map((rol) => (
                     <Option key={rol?._id} value={rol?._id}>
                       {rol.name}
@@ -378,7 +380,7 @@ const Certificado = (props) => {
           </Row>
           <Row gutter={[16, 16]}>
             <Col span={16}>
-              <Form.Item label={'Etiquetas disponibles'}>
+              <Form.Item label="Etiquetas disponibles">
                 <p>Use etiquetas para ingresar información referente al curso o los asistentes</p>
                 <Row wrap gutter={[18, 8]}>
                   {tags.map((item, key) => (
@@ -392,12 +394,12 @@ const Certificado = (props) => {
             </Col>
             <Col span={8}>
               <Form.Item
-                label={'Imagen de Fondo'}
+                label="Imagen de Fondo"
                 tooltip={
                   <>
                     {'Si desea volver a tener la imagen anterior presione el siguiente botón'}
                     <Button
-                      type='primary'
+                      type="primary"
                       onClick={() =>
                         setCertificado({ ...certificado, imageFile: imageFile, imageData: imageFile, image: imageFile })
                       }>
@@ -408,14 +410,14 @@ const Certificado = (props) => {
               />
               <Image
                 src={certificado.imageFile?.data ? certificado.imageFile?.data : certificado.imageFile || imageFile}
-                alt={'Imagen certificado'}
+                alt="Imagen certificado"
                 preview={previewCert}
               />
             </Col>
           </Row>
 
-          <Form.Item label={'Certificado'}>
-            <EviusReactQuill name='content' data={certificado.content} handleChange={chgTxt} />
+          <Form.Item label="Certificado">
+            <EviusReactQuill name="content" data={certificado.content} handleChange={chgTxt} />
           </Form.Item>
         </Col>
       </Row>

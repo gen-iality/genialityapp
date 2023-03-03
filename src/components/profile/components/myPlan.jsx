@@ -156,7 +156,7 @@ const myPlan = ({ cUser }) => {
         return (
           <Space wrap>
             <Tooltip
-              placement='topLeft'
+              placement="topLeft"
               title={intl.formatMessage({
                 id: 'button.delete',
                 defaultMessage: 'Eliminar',
@@ -216,7 +216,7 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'status',
       key: 'status',
       render(val, item) {
-        //APPROVED VOIDED DECLINED ERROR PENDING
+        // Approved voided declined error pending
         const color = () => {
           switch (val) {
             case 'APPROVED':
@@ -277,7 +277,7 @@ const myPlan = ({ cUser }) => {
         return (
           <Space wrap>
             <Tooltip
-              placement='topLeft'
+              placement="topLeft"
               title={intl.formatMessage({
                 id: 'my_plan.preview',
                 defaultMessage: 'Previsualización',
@@ -297,8 +297,9 @@ const myPlan = ({ cUser }) => {
                 setShowModal(!showModal);
                 setToShowModal('');
               }}
-              width={'100%'}>
-              <Divider orientation='left'>
+              width="100%"
+            >
+              <Divider orientation="left">
                 <strong>
                   {intl.formatMessage({
                     id: 'my_plan.voucher',
@@ -308,7 +309,7 @@ const myPlan = ({ cUser }) => {
               </Divider>
               <Row gutter={[12, 12]} wrap>
                 <Col span={12}>
-                  <Space direction='vertical'>
+                  <Space direction="vertical">
                     <Typography.Text>
                       <Typography.Text strong>
                         {intl.formatMessage({
@@ -389,7 +390,7 @@ const myPlan = ({ cUser }) => {
                   </Space>
                 </Col>
                 <Col span={12}>
-                  <Space direction='vertical'>
+                  <Space direction="vertical">
                     <Typography.Text>
                       <Typography.Text strong>
                         {intl.formatMessage({
@@ -401,7 +402,7 @@ const myPlan = ({ cUser }) => {
                       {item?.billing?.reference_evius} (evius) / {item?.billing?.reference_wompi} (wompi)
                     </Typography.Text>
                     <Typography.Text>
-                      <Space direction='vertical'>
+                      <Space direction="vertical">
                         <Typography.Text strong>
                           {intl.formatMessage({
                             id: 'my_plan.description',
@@ -607,13 +608,14 @@ const myPlan = ({ cUser }) => {
   };
 
   return (
-    <Tabs defaultActiveKey={'plan'}>
+    <Tabs defaultActiveKey="plan">
       <Tabs.TabPane
         tab={intl.formatMessage({
           id: 'my_plan',
           defaultMessage: 'Mi plan',
         })}
-        key={'plan'}>
+        key="plan"
+      >
         <Row gutter={[12, 12]} wrap>
           <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <PlanCard
@@ -671,7 +673,7 @@ const myPlan = ({ cUser }) => {
           <Col span={24}>
             <Typography.Text strong style={{ color: 'orange' }}>
               <small>
-                <Space direction='vertical'>
+                <Space direction="vertical">
                   {consumption?.start_date && consumption?.end_date && (
                     <Typography.Text>
                       Tu plan se encuentra activo desde{' '}
@@ -686,7 +688,7 @@ const myPlan = ({ cUser }) => {
                     </Typography.Text>
                   )}
                   {totalUsersByPlan?.totalRegisteredUsers > 0 && (
-                    <Tag icon={<ExclamationCircleOutlined />} color='warning'>
+                    <Tag icon={<ExclamationCircleOutlined />} color="warning">
                       {totalUsersByPlan?.totalRegisteredUsers === totalUsersByPlan?.totalAllowedUsers
                         ? 'Has alcanzado el límite de usuarios permitidos en tu plan'
                         : `Has registrado ${totalUsersByPlan?.totalRegisteredUsers} de usuarios en total de tu plan`}
@@ -713,7 +715,8 @@ const myPlan = ({ cUser }) => {
           id: 'my_plan.billings',
           defaultMessage: 'Facturaciones',
         })}
-        key={'bills'}>
+        key="bills"
+      >
         <Table dataSource={bills} columns={columnsBills} scroll={{ x: 'auto' }} loading={loadingBill} />
       </Tabs.TabPane>
       <Tabs.TabPane
@@ -721,7 +724,8 @@ const myPlan = ({ cUser }) => {
           id: 'my_plan.notifications',
           defaultMessage: 'Notificaciones',
         })}
-        key={'notifications'}>
+        key="notifications"
+      >
         <Table dataSource={notifications} columns={columns} scroll={{ x: 'auto' }} loading={loadingNotification} />
       </Tabs.TabPane>
       <Tabs.TabPane
@@ -729,7 +733,8 @@ const myPlan = ({ cUser }) => {
           id: 'my_plan.better.plan',
           defaultMessage: 'Mejorar plan',
         })}
-        key={'plan2'}>
+        key="plan2"
+      >
         {plans
           .filter((plan1) => plan1?._id !== plan?._id)
           .sort((a, b) => a.index - b.index)
@@ -756,7 +761,8 @@ const myPlan = ({ cUser }) => {
                             )
                           : 'https://evius.co/contacto/'
                       }
-                      style={{ color: '#1890ff' }}>
+                      style={{ color: '#1890ff' }}
+                    >
                       {intl.formatMessage({
                         id: 'my_plan.buy.plan',
                         defaultMessage: 'Comprar plan',

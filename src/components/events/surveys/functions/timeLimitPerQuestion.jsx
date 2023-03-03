@@ -10,7 +10,7 @@ function TimeLimitPerQuestion(survey, options) {
     const timeTotal = dayjs.utc(survey.maxTimeToFinishPage * 1000).format('mm:ss');
     options.text = `Tienes ${timeTotal} para responder la pregunta. Quedan ${countDown}`;
   } else {
-    options.text = ``;
+    options.text = '';
   }
 }
 

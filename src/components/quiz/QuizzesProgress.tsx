@@ -134,8 +134,8 @@ function QuizzesProgress(props: QuizzesProgressProps) {
     <section>
       <Typography.Text strong>Progreso de quices</Typography.Text>
       <br />
-      {notPassedCount > 0 && <Alert message='Curso reprobado' type='error' />}
-      {passedCount === totalCourses && <Alert message='Curso aprobado' type='success' />}
+      {notPassedCount > 0 && <Alert message="Curso reprobado" type="error" />}
+      {passedCount === totalCourses && <Alert message="Curso aprobado" type="success" />}
       <Table dataSource={rows} columns={columns} />
     </section>
   );

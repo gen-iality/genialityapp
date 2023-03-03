@@ -250,14 +250,14 @@ function Speaker(props) {
   const prefixSelector = (
     <Select
       showSearch
-      optionFilterProp='children'
+      optionFilterProp="children"
       style={{ fontSize: '12px', width: 150 }}
       value={areacodeselected}
       onChange={(val) => {
         setareacodeselected(val);
         console.log(val);
       }}
-      placeholder='Codigo de area del pais'>
+      placeholder="Codigo de area del pais">
       {areaCode.map((code, key) => {
         return (
           <Option key={key} value={code.value}>
@@ -280,11 +280,11 @@ function Speaker(props) {
         edit={state.edit && !justCreate}
         remove={remove}
         extra={
-          <Form.Item label={'Visible'} labelCol={{ span: 13 }}>
+          <Form.Item label="Visible" labelCol={{ span: 13 }}>
             <Switch
-              checkedChildren='Sí'
-              unCheckedChildren='No'
-              name={'published'}
+              checkedChildren="Sí"
+              unCheckedChildren="No"
+              name="published"
               checked={data.published}
               onChange={(checked) =>
                 setData({
@@ -298,68 +298,70 @@ function Speaker(props) {
         /* messageHeaderAlert={messageHeaderAlert} */
       />
 
-      <Row justify='center' wrap gutter={12}>
+      <Row justify="center" wrap gutter={12}>
         {state.edit && !justCreate && editDataIsLoading ? (
           <Loading />
         ) : (
           <Col span={justCreate ? 22 : 12}>
             <Form.Item
               label={
-                <label style={{ marginTop: '2%' }} className='label'>
+                <label style={{ marginTop: '2%' }} className="label">
                   Nombre <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'El nombre es requerido' }]}>
+              rules={[{ required: true, message: 'El nombre es requerido' }]}
+            >
               <Input
                 value={data.name}
-                placeholder='Nombre del conferencista'
-                name={'name'}
+                placeholder="Nombre del conferencista"
+                name="name"
                 onChange={(e) => handleChange(e)}
               />
             </Form.Item>
 
-            <Form.Item label={'Ocupación'}>
+            <Form.Item label="Ocupación">
               <Input
                 value={data.profession}
-                placeholder='Ocupación del conferencista'
-                name={'profession'}
+                placeholder="Ocupación del conferencista"
+                name="profession"
                 onChange={(e) => handleChange(e)}
               />
             </Form.Item>
-            <Form.Item label={'Carga de imagen'}>
+            <Form.Item label="Carga de imagen">
               <Form.Item noStyle>
                 <ImageUploaderDragAndDrop
                   imageDataCallBack={handleImage}
                   imageUrl={data.image}
-                  width='1080'
-                  height='1080'
+                  width="1080"
+                  height="1080"
                 />
               </Form.Item>
             </Form.Item>
 
             {event && event?.organizer?.type_event == 'Misiones' && (
-              <Form.Item label={'Teléfono'} name={'phone'}>
+              <Form.Item label="phone" name="phone">
                 <Input
                   addonBefore={prefixSelector}
                   //onChange={(e) => setnumberareacode(e.target.value)}
                   value={data?.phone || ''}
                   //required={mandatory}
-                  type='number'
-                  key={'tel'}
+                  type="number"
+                  key="tel"
                   style={{ width: '100%' }}
-                  placeholder='Numero de telefono'
+                  placeholder="Numero de telefono"
                 />
               </Form.Item>
             )}
 
-            <Form.Item label={'Descripción'}>
+            <Form.Item label="Descripción">
               <>
                 {!showDescription_activity ? (
                   <Button
-                    id='btnDescription'
-                    type='link'
+                    id="btnDescription"
+                    type="link"
                     onClick={() => setShowDescription_activity(true)}
-                    style={{ color: 'blue' }}>
+                    style={{ color: 'blue' }}
+                  >
                     {!showDescription_activity && !data.newItem ? (
                       <div>
                         {' '}
@@ -374,9 +376,10 @@ function Speaker(props) {
                   </Button>
                 ) : (
                   <Tooltip
-                    placement='top'
-                    text={'Si oculta la infomación da a entender que no desea mostrar el contenido de la misma'}>
-                    <Button type='link' onClick={() => setShowDescription_activity(false)} style={{ color: 'blue' }}>
+                    placement="top"
+                    text="Si oculta la infomación da a entender que no desea mostrar el contenido de la misma"
+                  >
+                    <Button type="link" onClick={() => setShowDescription_activity(false)} style={{ color: 'blue' }}>
                       <div>
                         <UpOutlined style={{ marginRight: '5px' }} />
                         Ocultar descripción{' '}
@@ -387,8 +390,8 @@ function Speaker(props) {
               </>
               {showDescription_activity && (
                 <EviusReactQuill
-                  id='description'
-                  name={'description'}
+                  id="description"
+                  name="description"
                   data={data.description}
                   handleChange={chgTxt}
                   style={{ marginTop: '5px' }}

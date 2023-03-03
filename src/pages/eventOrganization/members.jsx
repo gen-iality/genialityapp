@@ -243,7 +243,7 @@ function OrgMembers(props) {
   return (
     <>
       <Header
-        title={'Miembros'}
+        title="Miembros"
         description={
           'Se muestran los primeros 50 usuarios, para verlos todos por favor descargar el excel o realizar una búsqueda.'
         }
@@ -262,23 +262,23 @@ function OrgMembers(props) {
       <Table
         columns={columns(columnsData, editModalUser, extraFields, userActivities, isStaticsLoading)}
         dataSource={membersData}
-        size='small'
-        rowKey='index'
+        size="small"
+        rowKey="index"
         pagination={false}
         loading={isLoading || membersData.length === 0}
         scroll={{ x: 'auto' }}
         title={() => (
-          <Row wrap justify='end' gutter={[8, 8]}>
+          <Row wrap justify="end" gutter={[8, 8]}>
             <Col>
               {membersData.length > 0 && (
-                <Button type='primary' icon={<DownloadOutlined />} onClick={exportFile}>
+                <Button type="primary" icon={<DownloadOutlined />} onClick={exportFile}>
                   Exportar
                 </Button>
               )}
             </Col>
             <Col>
-              <Button type='primary' icon={<PlusCircleOutlined />} onClick={addUser}>
-                {'Agregar'}
+              <Button type="primary" icon={<PlusCircleOutlined />} onClick={addUser}>
+                Agregar
               </Button>
             </Col>
           </Row>

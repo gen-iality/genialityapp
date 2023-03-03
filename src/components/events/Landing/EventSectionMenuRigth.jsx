@@ -19,22 +19,24 @@ const EventSectionMenuRigth = (props) => {
   const { isCollapsedMenuRigth, HandleOpenCloseMenuRigth, tabsGenerals } = useHelper();
 
   const ToggleVisibility = <Button
-  id='button_open_menu'
-  className='animate__animated animate__headShake animate__slower animate__infinite'
-  type='link'
-  onClick={() => HandleOpenCloseMenuRigth(true)}>
+  id="button_open_menu"
+  className="animate__animated animate__headShake animate__slower animate__infinite"
+  type="link"
+  onClick={() => HandleOpenCloseMenuRigth(true)}
+>
   <ArrowRightOutlined style={{ fontSize: '20px', color: cEvent.value.styles.textMenu }} />
 </Button>;
 
   return (
     <Sider
-      className='collapse-chatEvent'
+      className="collapse-chatEvent"
       style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg   }}
       trigger={null}
       width={400}
-      collapsed={isCollapsedMenuRigth}>
+      collapsed={isCollapsedMenuRigth}
+    >
       {!props.viewPerfil ? (
-        <div className='Chat-Event' style={{ height: '100%' }}>
+        <div className="Chat-Event" style={{ height: '100%' }}>
           {isCollapsedMenuRigth ? (
             <>
               <MenuRigth currentActivity={props.currentActivity} tabs={tabsGenerals} generalTabs={props.generalTabs} />

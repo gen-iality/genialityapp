@@ -31,12 +31,12 @@ function ActivityExternalUrlField(props: ActivityExternalUrlFieldProps) {
       subTitle={<Paragraph>{subtitle}</Paragraph>}
       title={
         <Form>
-          <Form.Item name='url' rules={rules[type as keyof typeof rules] as unknown as undefined || [{ required: true }]}>
+          <Form.Item name="url" rules={rules[type as keyof typeof rules] as unknown as undefined || [{ required: true }]}>
             <Input
               type={type === 'vimeo' ? 'number' : 'text'}
               addonBefore={addonBefore}
               placeholder={placeholder}
-              size='large'
+              size="large"
               onChange={(e) => {
                 // This is for send the ID only if the URL is from YouTube or Vimeo
                 onInput(urlProcessorSet[type](e));

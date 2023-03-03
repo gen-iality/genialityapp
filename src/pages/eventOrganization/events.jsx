@@ -40,18 +40,18 @@ function OrgEvents(props) {
         columns={columns(goToEvent)}
         dataSource={eventData}
         loading={isLoading}
-        size='small'
-        rowKey='index'
+        size="small"
+        rowKey="index"
         pagination={false}
         title={() => (
-          <Row wrap justify='end' gutter={[8, 8]}>
+          <Row wrap justify="end" gutter={[8, 8]}>
             <Col>
               <Button
-                type='primary'
+                type="primary"
                 icon={<PlusCircleOutlined />}
                 onClick={() => linkToTheMenuRouteS(`/create-event/${props.cUser?.value?._id}?orgId=${organizationId}`)}
               >
-                {'Agregar'}
+                Agregar
               </Button>
             </Col>
           </Row>

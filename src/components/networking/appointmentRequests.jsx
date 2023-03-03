@@ -111,7 +111,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
           ))}
 
         {loading && (
-          <Row align='middle' justify='center' style={{ height: 100 }}>
+          <Row align="middle" justify="center" style={{ height: 100 }}>
             <Spin />
           </Row>
         )}
@@ -128,7 +128,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
                   data={pendingAgenda}
                   fetching={fetching}
                   setFetching={setFetching}
-                  meSended={true}
+                  meSended
                 />
               ))
             ) : (
@@ -138,7 +138,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
             ))}
 
           {loading1 && (
-            <Row align='middle' justify='center' style={{ height: 100 }}>
+            <Row align="middle" justify="center" style={{ height: 100 }}>
               <Spin />
             </Row>
           )}
@@ -203,8 +203,8 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
   };
 
   return (
-    <Row justify='center' style={{ marginBottom: '20px' }}>
-      <Card style={{ width: 600, textAlign: 'left' }} bordered={true}>
+    <Row justify="center" style={{ marginBottom: '20px' }}>
+      <Card style={{ width: 600, textAlign: 'left' }} bordered>
         <div style={{ marginBottom: '10px' }}>{meSended ? 'Solicitud de cita a: ' : 'Solicitud de cita por: '}</div>
         <Meta
           avatar={<Avatar>{data.name ? data.name.charAt(0).toUpperCase() : '-'}</Avatar>}
@@ -234,15 +234,17 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
                       style={{ marginRight: '10px' }}
                       disabled={fetching}
                       loading={fetching}
-                      onClick={() => changeAgendaStatus('rejected')}>
-                      {'Rechazar'}
+                      onClick={() => changeAgendaStatus('rejected')}
+                    >
+                      Rechazar
                     </Button>
                     <Button
-                      type='primary'
+                      type="primary"
                       disabled={fetching}
                       loading={fetching}
-                      onClick={() => changeAgendaStatus('accepted')}>
-                      {'Aceptar'}
+                      onClick={() => changeAgendaStatus('accepted')}
+                    >
+                      Aceptar
                     </Button>
                   </Row>
                 )

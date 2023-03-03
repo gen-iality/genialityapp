@@ -109,7 +109,7 @@ export const createFieldForCheckInPerDocument = async ({ value, checkInFieldsIds
       title: `Al habilitar el checkIn por documento, recuerda que:`,
       content: (
         <List
-          size='small'
+          size="small"
           dataSource={checkInInstructions}
           renderItem={(item, index) => (
             <List.Item>

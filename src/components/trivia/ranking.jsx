@@ -79,7 +79,7 @@ class Ranking extends Component {
     }
     const ws = utils.json_to_sheet(data);
     const wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, `${'ranking'}`);
+    utils.book_append_sheet(wb, ws, 'ranking');
     const name = `${this.props.match.params.id}`;
 
     writeFileXLSX(wb, `ranking_${name}_${dayjs().format('DDMMYY')}.xls`);
@@ -92,9 +92,9 @@ class Ranking extends Component {
 
     return (
       <Fragment>
-        <Header title={'Ranking'} back />
+        <Header title="Ranking" back />
 
-        <Table header={columns} list={listOfUserResponse} pagination={false} exportData fileName={`Ranking`} />
+        <Table header={columns} list={listOfUserResponse} pagination={false} exportData fileName="Ranking" />
       </Fragment>
     );
   }

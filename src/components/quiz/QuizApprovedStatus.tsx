@@ -82,7 +82,7 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
               borderRadius: '10px',
               marginLeft: '2px',
             }}
-            size='small'
+            size="small"
             icon={<DownloadOutlined />}
           >
             Certificado

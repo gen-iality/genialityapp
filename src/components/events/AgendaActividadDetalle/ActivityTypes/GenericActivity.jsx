@@ -13,8 +13,8 @@ const GenericActivity = () => {
 
   return (
     <>
-      <HeaderColumnswithContext isVisible={true} activityState={activityState} />
-      <Result icon={<SmileOutlined />} title='Puedes asignar un contenido audiovisual a esta lección' />
+      <HeaderColumnswithContext isVisible activityState={activityState} />
+      <Result icon={<SmileOutlined />} title="Puedes asignar un contenido audiovisual a esta lección" />
     </>
   );
 };

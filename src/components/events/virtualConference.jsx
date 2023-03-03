@@ -75,31 +75,32 @@ const VirtualConference = () => {
             return (
               item?.habilitar_ingreso &&
               (item?.habilitar_ingreso == 'open_meeting_room' || item?.habilitar_ingreso == 'closed_meeting_room') &&
-              (item?.isPublished === true || item?.isPublished === 'true')
+              (item?.isPublished || item?.isPublished === 'true')
             );
           })
 
           .map((item, key) => (
             <>
-              <div key={key} hoverable className='animate__animated animate__slideInRight'>
+              <div key={key} hoverable className="animate__animated animate__slideInRight">
                 <Link to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}` : `${urlAgenda}`}>
-                  <Row justify='center' align='middle' gutter={[8, 8]}>
+                  <Row justify="center" align="middle" gutter={[8, 8]}>
                     <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                       <div
-                        className='animate__animated animate__pulse animate__infinite animate__slow'
-                        style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
+                        className="animate__animated animate__pulse animate__infinite animate__slow"
+                        style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}
+                      >
                         {item.habilitar_ingreso == 'open_meeting_room' ? (
                           <>
                             <img src={imageUtils.EnVivo} style={{ height: '30px' }} />
-                            <span className='ultrasmall-mobile' style={{ textAlign: 'center' }}>
-                              {<FormattedMessage id='live' defaultMessage='En vivo' />}
+                            <span className="ultrasmall-mobile" style={{ textAlign: 'center' }}>
+                              {<FormattedMessage id="live" defaultMessage="En vivo" />}
                             </span>
                           </>
                         ) : item.habilitar_ingreso == 'closed_meeting_room' ? (
                           <>
                             <FieldTimeOutlined style={{ fontSize: '30px', color: '#FAAD14' }} />
-                            <span className='ultrasmall-mobile' style={{ textAlign: 'center' }}>
-                              {<FormattedMessage id='live.closed' defaultMessage='Iniciará pronto' />}
+                            <span className="ultrasmall-mobile" style={{ textAlign: 'center' }}>
+                              {<FormattedMessage id="live.closed" defaultMessage="Iniciará pronto" />}
                             </span>
                           </>
                         ) : (
@@ -123,7 +124,7 @@ const VirtualConference = () => {
                           {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
                             .tz(Moment.tz.guess())
                             .format('h:mm A')}
-                          <span className='ultrasmall-mobile'>
+                          <span className="ultrasmall-mobile">
                             {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
                               .tz(Moment.tz.guess())
                               .format(' (Z)')}
@@ -135,11 +136,12 @@ const VirtualConference = () => {
                     <Col xs={0} sm={0} md={6} lg={6} xl={6} xxl={6}>
                       <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
                         {item.hosts && (
-                          <div className='Virtual-Conferences'>
+                          <div className="Virtual-Conferences">
                             <Avatar.Group
                               maxCount={2}
                               size={{ xs: 18, sm: 18, md: 35, lg: 50, xl: 50, xxl: 50 }}
-                              maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}>
+                              maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}
+                            >
                               {item.hosts.length < 3
                                 ? item.hosts.map((host, key) => {
                                     return (
