@@ -169,6 +169,7 @@ class ListEventUser extends Component {
       totalCheckedIn: 0,
       totalCheckedInWithWeight: 0,
       extraFields: [],
+      simplifyOrgProperties: [],
       spacesEvents: [],
       addUser: false,
       editUser: false,
@@ -213,12 +214,13 @@ class ListEventUser extends Component {
 
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index, badColumns) => {
+    const newItem = JSON.parse(JSON.stringify(item))
     const filteredProperties = Object.fromEntries(
-      Object.entries(item.properties).filter(([key, value]) => {
+      Object.entries(newItem.properties).filter(([key, value]) => {
         return !(badColumns.includes(key))
       })
     )
-    item.properties = filteredProperties
+    newItem.properties = filteredProperties
     const { eventIsActive } = this.context;
     return (
       <Tooltip placement="topLeft" title="Editar">
@@ -226,7 +228,7 @@ class ListEventUser extends Component {
           type="primary"
           icon={<EditOutlined />}
           size="small"
-          onClick={() => this.openEditModalUser(item)}
+          onClick={() => this.openEditModalUser(newItem)}
           disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
         />
       </Tooltip>
@@ -483,6 +485,7 @@ class ListEventUser extends Component {
           }
         })
       columns = [...columns, ...orgExtraColumns];
+      this.setState({ simplifyOrgProperties })
 
       const { data: allActivities } = await AgendaApi.byEvent(this.props.event._id);
       this.setState({ allActivities });
@@ -652,10 +655,11 @@ class ListEventUser extends Component {
               console.warn('cannot get organization ID from event data')
             }
             const { data: orgUsers } = await OrganizationApi.getUsers(orgId);
+            console.log('orgUsers', orgUsers)
 
             extendedAttendees.push(...attendees.map((eventUser) => {
               // Find this event user in the organization member list
-              const orgMember = orgUsers.find((member) => member.user._id === eventUser.account_id)
+              const orgMember = orgUsers.find((member) => member.account_id === eventUser.account_id)
               if (!orgMember) {
                 console.warn('event user', eventUser, 'not found as organization member')
                 return eventUser
@@ -664,12 +668,15 @@ class ListEventUser extends Component {
               return {
                 ...eventUser, // Normal data
                 properties: {
+                  ...orgMember, // I dont understand because in this point the org member has data of its properties at the root
                   ...orgMember.properties, // organization member properties,
                   ...eventUser.properties, // Overwritten event user properties
                 },
               }
             }))
           }
+
+          console.info('extendedAttendees', extendedAttendees)
 
           this.setState({
             unSusCribeConFigFast,
@@ -714,7 +721,11 @@ class ListEventUser extends Component {
 
     const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
 
-    const data = await parseData2Excel(attendees, this.state.extraFields, this.state.rolesList);
+    console.info('attendees', attendees)
+
+    const joint = [...this.state.extraFields, ...this.state.simplifyOrgProperties]
+
+    const data = await parseData2Excel(attendees, joint, this.state.rolesList);
     const ws = utils.json_to_sheet(data);
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Asistentes');
