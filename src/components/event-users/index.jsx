@@ -668,7 +668,6 @@ class ListEventUser extends Component {
               return {
                 ...eventUser, // Normal data
                 properties: {
-                  ...orgMember, // I dont understand because in this point the org member has data of its properties at the root
                   ...orgMember.properties, // organization member properties,
                   ...eventUser.properties, // Overwritten event user properties
                 },
