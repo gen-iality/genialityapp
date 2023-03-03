@@ -50,7 +50,7 @@ const EmailPrev = (props) => {
           Ubicación del curso
           <br />
           {props?.event?.location?.FormattedAddress}
-          <Tag color='#1cdcb7' style={{ fontSize: '14px' }}>
+          <Tag color='#f7981d' style={{ fontSize: '14px' }}>
             Confirmar asistencia
           </Tag>
         </p>

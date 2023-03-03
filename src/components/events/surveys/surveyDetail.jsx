@@ -18,7 +18,7 @@ function SurveyDetail(props) {
   return (
     <Card>
       <Button
-        style={{ backgroundColor: '#1cdcb7', color: '#ffffff' }}
+        style={{ backgroundColor: '#f7981d', color: '#ffffff' }}
         size="large"
         icon={<ArrowLeftOutlined />}
         block

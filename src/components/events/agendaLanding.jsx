@@ -733,7 +733,7 @@ class Agenda extends Component {
                       ) : (
                         <>
                           <Card style={{ marginBottom: '20px', height: 'auto' }}>
-                            <Divider orientation="left" style={{ fontSize: '18px', color: '#1cdcb7' }}>
+                            <Divider orientation="left" style={{ fontSize: '18px', color: '#f7981d' }}>
                               <p>
                                 <Space>
                                   <CalendarOutlined />

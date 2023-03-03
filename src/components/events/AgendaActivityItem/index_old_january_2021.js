@@ -196,7 +196,7 @@ function AgendaActivityItem(props) {
                 <Col md={4} lg={4} xl={4}>
                   <div className='agenda-hora'>
                     <Timeline>
-                      <Timeline.Item color='#1cdcb7'>
+                      <Timeline.Item color='#f7981d'>
                         {item.datetime_start
                           ? Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
                               .tz(timeZone)
@@ -229,7 +229,7 @@ function AgendaActivityItem(props) {
                           </p>
                         </div>
                       </Timeline.Item>
-                      <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>
+                      <Timeline.Item color='#f7981d' style={{ paddingBottom: '0px' }}>
                         {item.datetime_end
                           ? Moment(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
                               .tz(timeZone)

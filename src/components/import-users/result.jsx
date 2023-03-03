@@ -159,7 +159,7 @@ class Result extends Component {
             <span>Total</span>
           </Col>
           <Col>
-            <Tag color='#1cdcb7'>{saved}</Tag>
+            <Tag color='#f7981d'>{saved}</Tag>
             <span>Importados</span>
           </Col>
           <Col>

@@ -123,7 +123,7 @@ function Organization(props) {
               <Loading />
             ) : (
               <div style={{ padding: '5px' }}>
-                <Tag color='#2bf4d5' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft: 20 }}>
+                <Tag color='#003853' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft: 20 }}>
                   <a
                     target="_blank"
                     href={`${window.location.origin}/organization/${organization._id}/events

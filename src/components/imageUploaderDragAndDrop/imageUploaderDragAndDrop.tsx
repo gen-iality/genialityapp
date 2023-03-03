@@ -78,7 +78,7 @@ const ImageUploaderDragAndDrop = ({
       return;
     },
     iconRender(file: any) {
-      return <FileImageOutlined style={{ color: '#009fd9' }} />;
+      return <FileImageOutlined style={{ color: '#003853' }} />;
     },
     onPreview(file: any) {},
     /**------------------------------------------------- */
@@ -93,7 +93,7 @@ const ImageUploaderDragAndDrop = ({
           ) : (
             <>
               <p className="ant-upload-drag-icon">
-                <FileImageOutlined style={{ color: '#009fd9' }} />
+                <FileImageOutlined style={{ color: '#003853' }} />
               </p>
               <p className="ant-upload-text">Haga clic o arrastre el archivo a esta área para cargarlo</p>
               <p className="ant-upload-hint">

@@ -48,7 +48,7 @@ class AnimateImg extends Component {
                   ) : (
                     <PlayCircleTwoTone
                       className="icono-play"
-                      twoToneColor='#1cdcb7'
+                      twoToneColor='#f7981d'
                       style={{ position: 'absolute', top: '50%', left: '45%', backgroundColor: '#f5f5f500' }}
                       onClick={this.autoplayVideo}
                     />

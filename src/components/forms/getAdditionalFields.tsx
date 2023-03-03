@@ -367,7 +367,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             >
               <>
                 <p className="ant-upload-drag-icon">
-                  <InboxOutlined style={{ color: '#009fd9' }} />
+                  <InboxOutlined style={{ color: '#003853' }} />
                 </p>
                 <p>Haga clic o arrastre el archivo a esta área para cargarlo</p>
               </>

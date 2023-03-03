@@ -66,7 +66,7 @@ function FileField(rawProps) {
       return;
     },
     iconRender(file) {
-      return <FileImageOutlined style={{ color: '#009fd9' }} />;
+      return <FileImageOutlined style={{ color: '#003853' }} />;
     },
     onPreview(file) {},
     /**------------------------------------------------- */
@@ -97,7 +97,7 @@ function FileField(rawProps) {
                   }}>
                   <>
                     <p className="ant-upload-drag-icon">
-                      <FileImageOutlined style={{ color: '#009fd9' }} />
+                      <FileImageOutlined style={{ color: '#003853' }} />
                     </p>
                     <p className="ant-upload-text">Haga clic o arrastre el archivo a esta área para cargarlo</p>
                     <p className="ant-upload-hint">Tipos de archivos: pdf, excel, word, entre otros.</p>
