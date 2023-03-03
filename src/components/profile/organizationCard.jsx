@@ -10,7 +10,7 @@ const OrganizationCard = (props) => {
   const [eventsLength, setEventsLength] = useState(0);
 
   const adminOrganization = () => {
-    window.location.href = `${window.location.origin}/admin/organization/${props.data.id}/events`;
+    window.location.href = `${window.location.origin}/admin/organization/${props.data.id}/information`;
   };
 
   const landingOrganization = () => {
