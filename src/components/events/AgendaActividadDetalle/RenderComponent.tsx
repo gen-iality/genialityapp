@@ -247,7 +247,7 @@ const RenderComponent = (props: any) => {
 					);
 			}
 		},
-		[platform, activityState, renderGame]
+		[platform, activityState, renderGame, fnCiclo]
 	);
 
 	return (
