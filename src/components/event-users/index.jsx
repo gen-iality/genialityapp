@@ -2,7 +2,7 @@ import { Component, useState, useEffect } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
 import { firestore } from '@helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request';
-import { AgendaApi } from '@helpers/request';
+import { AgendaApi, OrganizationApi } from '@helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
@@ -319,8 +319,13 @@ class ListEventUser extends Component {
     this.checkFirebasePersistence();
     try {
       const event = await EventsApi.getOne(this.props.event._id);
+      const orgId = event.organizer._id;
+      const org = await OrganizationApi.getOne(orgId)
 
       const properties = event.user_properties;
+      const simplifyOrgProperties = (org.user_properties || []).filter(
+        (property) => !['email', 'password', 'names'].includes(property.name)
+      )
       const rolesList = await RolAttApi.byEventRolsGeneral();
       const badgeEvent = await BadgeApi.get(this.props.event._id);
 
@@ -450,6 +455,24 @@ class ListEventUser extends Component {
           };
         });
       columns = [...columns, ...extraColumns];
+
+      // Inject the organization member properties here
+      const orgExtraColumns = simplifyOrgProperties
+        .map((property) => {
+          return {
+            title: property.label,
+            dataIndex: property.name,
+            key: property.name,
+            ellipsis: true,
+            sorter: (a, b) => a[property.name]?.length - b[property.name]?.length,
+            ...self.getColumnSearchProps(property.name),
+            render: (record, item) => {
+              return (item.properties || [])[property.name]
+            }
+          }
+        })
+      columns = [...columns, ...orgExtraColumns];
+
       const { data: allActivities } = await AgendaApi.byEvent(this.props.event._id);
       this.setState({ allActivities });
       const progressing = {
@@ -611,10 +634,36 @@ class ListEventUser extends Component {
 
           const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
 
+          // Inject here the org member data
+          const extendedAttendees = []
+          {
+            if (!orgId) {
+              console.warn('cannot get organization ID from event data')
+            }
+            const { data: orgUsers } = await OrganizationApi.getUsers(orgId);
+
+            extendedAttendees.push(...attendees.map((eventUser) => {
+              // Find this event user in the organization member list
+              const orgMember = orgUsers.find((member) => member.user._id === eventUser.account_id)
+              if (!orgMember) {
+                console.warn('event user', eventUser, 'not found as organization member')
+                return eventUser
+              }
+
+              return {
+                ...eventUser, // Normal data
+                properties: {
+                  ...orgMember.properties, // organization member properties,
+                  ...eventUser.properties, // Overwritten event user properties
+                },
+              }
+            }))
+          }
+
           this.setState({
             unSusCribeConFigFast,
             unSuscribeAttendees,
-            users: attendees,
+            users: extendedAttendees, // attendees,
             usersReq: updatedAttendees,
             auxArr: attendees,
             loading: false,
