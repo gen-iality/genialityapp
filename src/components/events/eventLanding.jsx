@@ -86,7 +86,7 @@ class EventLanding extends Component {
               }
               nodeIfCompleted={(
                 <Link to={`/landing/${this.props.cEvent.value._id}/certificate`}>
-                  <Typography.Text strong>
+                  <Typography.Text strong  style={{ color: '#FFFFFF'}}>
                     Obtener certificado
                   </Typography.Text>
                 </Link>

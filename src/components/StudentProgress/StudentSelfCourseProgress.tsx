@@ -89,7 +89,7 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
 
   if (progressPercentValue === 100 && nodeIfCompleted) {
     return (
-      <Badge.Ribbon text={nodeIfCompleted} color="#1BBF5C">
+      <Badge.Ribbon text={nodeIfCompleted} color="#fb8500">
         {render()}
       </Badge.Ribbon>
     )
