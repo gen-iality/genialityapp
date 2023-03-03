@@ -29,7 +29,7 @@ export const CardSelector = (props: CardSelectorProps) => {
                 <Badge
                   count={
                     option.id === currentSelected ? (
-                      <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
+                      <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} />
                     ) : (
                       ''
                     )
