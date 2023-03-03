@@ -326,7 +326,6 @@ class ListEventUser extends Component {
       const simplifyOrgProperties = (org.user_properties || []).filter(
         (property) => !['email', 'password', 'names'].includes(property.name)
       )
-      console.debug('org_properties', simplifyOrgProperties)
       const rolesList = await RolAttApi.byEventRolsGeneral();
       const badgeEvent = await BadgeApi.get(this.props.event._id);
 
@@ -460,7 +459,6 @@ class ListEventUser extends Component {
       // Inject the organization member properties here
       const orgExtraColumns = simplifyOrgProperties
         .map((property) => {
-          console.info('inject', property)
           return {
             title: property.label,
             dataIndex: property.name,
@@ -469,7 +467,7 @@ class ListEventUser extends Component {
             sorter: (a, b) => a[property.name]?.length - b[property.name]?.length,
             ...self.getColumnSearchProps(property.name),
             render: (record, item) => {
-              return item[property.name]
+              return (item.properties || [])[property.name]
             }
           }
         })
@@ -636,7 +634,6 @@ class ListEventUser extends Component {
 
           const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
 
-          console.info('attendees', attendees)
           // Inject here the org member data
           const extendedAttendees = []
           {
