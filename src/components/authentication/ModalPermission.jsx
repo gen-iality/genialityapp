@@ -45,7 +45,7 @@ const ModalPermission = (props) => {
         action: 'show',
       });
       cEventUser.setUpdateUser(true);
-      setOpenModal(false);
+      handleChangeTypeModal(null);
     } else {
       DispatchMessageService({
         type: 'error',
