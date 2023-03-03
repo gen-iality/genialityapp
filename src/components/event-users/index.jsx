@@ -323,8 +323,10 @@ class ListEventUser extends Component {
       const org = await OrganizationApi.getOne(orgId)
 
       const properties = event.user_properties;
-      const orgProperties = org.user_properties
-      console.debug('org_properties', orgProperties)
+      const simplifyOrgProperties = (org.user_properties || []).filter(
+        (property) => !['email', 'password', 'names'].includes(property.name)
+      )
+      console.debug('org_properties', simplifyOrgProperties)
       const rolesList = await RolAttApi.byEventRolsGeneral();
       const badgeEvent = await BadgeApi.get(this.props.event._id);
 
@@ -456,8 +458,7 @@ class ListEventUser extends Component {
       columns = [...columns, ...extraColumns];
 
       // Inject the organization member properties here
-      const orgExtraColumns = orgProperties
-        .filter((property) => !['email', 'password', 'names'].includes(property.name))
+      const orgExtraColumns = simplifyOrgProperties
         .map((property) => {
           console.info('inject', property)
           return {
