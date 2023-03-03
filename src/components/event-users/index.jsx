@@ -212,7 +212,13 @@ class ListEventUser extends Component {
   static contextType = HelperContext;
 
   // eslint-disable-next-line no-unused-vars
-  editcomponent = (text, item, index) => {
+  editcomponent = (text, item, index, badColumns) => {
+    const filteredProperties = Object.fromEntries(
+      Object.entries(item.properties).filter(([key, value]) => {
+        return !(badColumns.includes(key))
+      })
+    )
+    item.properties = filteredProperties
     const { eventIsActive } = this.context;
     return (
       <Tooltip placement="topLeft" title="Editar">
@@ -410,7 +416,12 @@ class ListEventUser extends Component {
         key: 'edit',
         fixed: 'right',
         width: 60,
-        render: self.editcomponent,
+        render: (...args) => {
+          self.editcomponent(
+            ...args,
+            simplifyOrgProperties.map((item) => item.name),
+          )
+        },
       };
       /* columns.push(editColumn); */
       /** Additional columns for hybrid events */
