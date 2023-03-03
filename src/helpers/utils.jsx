@@ -85,9 +85,9 @@ export async function parseData2Excel(data, fields, roles = null) {
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
   data.map((item, key) => {
-    const checkedInAt = typeof item.checkedin_at === 'object' ? item.checkedin_at?.toDate() : item.checkedin_at;
-    const updatedAt = typeof item.updated_at === 'object' ? item.updated_at?.toDate() : item.updated_at;
-    const createdAt = typeof item.created_at === 'object' ? item.created_at?.toDate() : item.created_at;
+    const checkedInAt = item.checkedin_at;
+    const updatedAt = item.updated_at;
+    const createdAt = item.created_at;
     info[key] = {};
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
     info[key]['checked'] =
