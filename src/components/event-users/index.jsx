@@ -480,6 +480,11 @@ class ListEventUser extends Component {
             sorter: (a, b) => a[property.name]?.length - b[property.name]?.length,
             ...self.getColumnSearchProps(property.name),
             render: (record, item) => {
+              const value = item.properties[property.name]
+              if (property.type === 'boolean') {
+                return typeof value === 'undefined' ? 'N/A' : value ? 'Sí' : 'No'
+              }
+              // TODO: we need check other type, and parse
               return (item.properties || [])[property.name]
             }
           }

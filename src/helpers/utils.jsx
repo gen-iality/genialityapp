@@ -109,7 +109,8 @@ export async function parseData2Excel(data, fields, roles = null) {
                 : '';
             break;
           case 'boolean':
-            str = item[name] ? item[name] : '';
+            // str = item[name] ? item[name] : '';
+            str = typeof item[name] === 'undefined' ? 'N/A' : item[name] ? 'Sí' : 'No';
             break;
           case 'complex':
             if (item.properties[name]?.includes('url')) {
