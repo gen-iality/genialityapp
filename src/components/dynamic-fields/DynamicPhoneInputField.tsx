@@ -6,6 +6,9 @@ import DynamicFormItem from './DynamicFormItem'
 import useMandatoryRule from './hooks/useMandatoryRule'
 import { IDynamicFieldProps } from './types'
 
+import 'react-phone-number-input/style.css';
+
+
 interface IDynamicPhoneInputFieldProps extends IDynamicFieldProps {
   form?: FormInstance,
   placeholder?: string,
