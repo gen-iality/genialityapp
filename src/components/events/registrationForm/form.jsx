@@ -336,6 +336,10 @@ const FormRegister = ({
     }
   }, [validateOrgMember?.status, validateOrgMember?.statusFields]);
 
+   useEffect(() => {
+    hideConditionalFieldsToDefault(conditionals, cEventUser);
+  }, [cEventUser.value, initialValues, conditionals, cEvent.value?._id]);
+
   useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
@@ -478,6 +482,11 @@ const FormRegister = ({
       return (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition;
     });
     setExtraFields(newExtraFields);
+  };
+
+   const hideConditionalFieldsToDefault = (conditionals, eventUser) => {
+    const allFields = eventUser && eventUser['properties'] ? eventUser['properties'] : [];
+    updateFieldsVisibility(conditionals, allFields);
   };
 
   const beforeUpload = (file) => {
