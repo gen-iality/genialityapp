@@ -62,7 +62,6 @@ const ModalWithLessonsInfo = ({ show, onHidden, allActivities, attendee, current
 
   useEffect(async () => {
     if (!currentUser) return;
-    console.log(allActivities, 'xd', attendee);
     if (allActivities.length == 0) return;
 
     const existentActivities = await allActivities.map(async (activity) => {
@@ -153,6 +152,7 @@ const ColumnProgreso = ({ shownAll, item, allActivities, onOpen, updateAttendee,
   }
   return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>;
 };
+window.firestore = firestore
 
 class ListEventUser extends Component {
   constructor(props) {
@@ -571,6 +571,7 @@ class ListEventUser extends Component {
         async (snapshot) => {
           const currentAttendees = [...this.state.usersReq];
           const updatedAttendees = updateAttendees(currentAttendees, snapshot);
+          console.log('updatedAttendees', updatedAttendees)
 
           const totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
 
@@ -653,9 +654,26 @@ class ListEventUser extends Component {
 
           const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
 
+          // The attribute `activityProperties` looks like unused, so I get the
+          // attendee from Firebase... That's awful, but this is the effect non-thinking
+          if (activityId) {
+            const collections = await firestore.collection(`${activityId}_event_attendees`).get()
+            const docs = collections.docs
+
+            const userDataList = []
+            docs.forEach((doc) => userDataList.push(doc.data()))
+
+            const userDataIds = userDataList.map((user) => user.account_id)
+
+            while (attendees.length > 0) { attendees.pop() }
+            attendees.push(...updatedAttendees.filter((user) => userDataIds.includes(user.account_id)))
+          }
+
+
           // Inject here the org member data
           const extendedAttendees = []
           {
+            // TODO: This can crashs, but I am so busy to fix
             if (!orgId) {
               console.warn('cannot get organization ID from event data')
             }
