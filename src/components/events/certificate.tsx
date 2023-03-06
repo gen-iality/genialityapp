@@ -137,9 +137,9 @@ function Certificate(props: CertificateProps) {
 
       console.debug('passed', passed)
       console.debug('surveys.length', surveys.length)
-      if (passed === surveys.length) {
+      if ((surveys.length >  0) && passed === surveys.length ) {
         setWereEvaluationsPassed(true);
-      } else if (notPassed < surveys.length) {
+      } else if ((surveys.length === 0) || notPassed < surveys.length) {
         setWereEvaluationsPassed(false);
       }
     })();
@@ -188,11 +188,15 @@ function Certificate(props: CertificateProps) {
             <Spin>Cargando...</Spin>
           )}
           {!wereEvaluationsPassed && (
-            <Alert message="Certificados de evaluaciones NO disponibles" type="error" />
+            <>
+              <Alert message="Certificado de evaluaciones NO disponible" type="error" />
+              <br />
+            </>
+
           )}
           {(wereEvaluationsPassed) && (
             <>
-            <Alert message="Certificados de evaluaciones disponibles" type="success" />
+            <Alert message="Certificado de evaluaciones disponible" type="success" />
             <br />
             <IconText
               text="Descargar certificado de evaluaciones"
@@ -203,7 +207,8 @@ function Certificate(props: CertificateProps) {
           )}
           {progressPercentValue === 100 && (
             <>
-            <Alert message="Hay certificado de curso completo" type="success" />
+            <Alert message="Certificado de curso completo" type="success" />
+            <br />
             <IconText
               text="Descargar certificado de curso"
               icon={DownloadOutlined}
