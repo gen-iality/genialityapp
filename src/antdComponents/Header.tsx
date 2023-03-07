@@ -12,7 +12,7 @@ interface HeaderProps {
   addUrl?: string
   addFn?: MouseEventHandler<HTMLElement>,
   edit?: string,
-  remove: MouseEventHandler<HTMLElement>,
+  remove?: MouseEventHandler<HTMLElement>,
   save?: boolean,
   saveMethod?: MouseEventHandler<HTMLElement>,
   saveName?: string,
