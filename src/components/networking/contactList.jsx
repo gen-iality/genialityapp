@@ -144,7 +144,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
                       style={{ backgroundColor: '#363636', color: 'white' }}
                       onClick={() => agendarCita(contact._id, contact)}
                     >
-                      {'Agendar cita'}
+                      Agendar cita
                     </Button>
                   </Col>
                 </Card>

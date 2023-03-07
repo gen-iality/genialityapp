@@ -1235,7 +1235,7 @@ class ListEventUser extends Component {
                   onClick={this.addUser}
                   disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                 >
-                  {'Agregar usuario'}
+                  Agregar usuario
                 </Button>
               </Col>
             </Row>

@@ -105,11 +105,11 @@ function Organization(props) {
                 <NavLink to={`${props.match.url}/registered`} />
               </Menu.Item>
               <Menu.Item key="7" icon={<UserSwitchOutlined />}>
-                <small>{'Configuración de Miembros'}</small>
+                <small>Configuración de Miembros</small>
                 <NavLink to={`${props.match.url}/membersettings`} />
               </Menu.Item>
               <Menu.Item key="8" icon={<ProjectOutlined />}>
-                <small>{'Configuración de Plantillas'}</small>
+                <small>Configuración de Plantillas</small>
                 <NavLink to={`${props.match.url}/templatesettings`} />
               </Menu.Item>
               <Menu.Item key="9" icon={<MenuOutlined />}>

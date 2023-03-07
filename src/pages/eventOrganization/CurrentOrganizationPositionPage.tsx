@@ -196,7 +196,7 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
           <Row wrap justify="end" gutter={[8, 8]}>
             <Col>
               <Button type="primary" icon={<PlusCircleOutlined />} onClick={onAddOrganizationUser}>
-                {'Agregar usuario'}
+                Agregar usuario
               </Button>
             </Col>
           </Row>

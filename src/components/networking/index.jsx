@@ -603,8 +603,9 @@ class ListEventUser extends Component {
                                             eventUserIdToMakeAppointment: users._id,
                                             eventUserToMakeAppointment: users,
                                           });
-                                        }}>
-                                        {'Agendar cita'}
+                                        }}
+                                      >
+                                        Agendar cita
                                       </Button>
                                       <Button
                                         type="primary"
@@ -716,7 +717,9 @@ class ListEventUser extends Component {
                   )}
                   {!this.state.loading && users.length == 0 && this.props.cEventUser.value && (
                     <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-                      <Card style={{ textAlign: 'center' }}>{'No existen usuarios'}</Card>
+                      <Card style={{ textAlign: 'center' }}>
+                        No existen usuarios
+                      </Card>
                     </Col>
                   )}
 

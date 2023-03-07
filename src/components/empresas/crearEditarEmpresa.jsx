@@ -417,8 +417,9 @@ function CrearEditarEmpresa(props) {
                                   icon={<PlusCircleOutlined />}
                                   onClick={() => {
                                     arrayHelpers.push({ description: '', image: '', web_url: '' });
-                                  }}>
-                                  {'Agregar servicio'}
+                                  }}
+                                >
+                                  Agregar servicio
                                 </Button>
                               )}
                             </Form.Item>
@@ -432,8 +433,9 @@ function CrearEditarEmpresa(props) {
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
                             arrayHelpers.push({ description: '', image: '', web_url: '' });
-                          }}>
-                          {'Agregar servicio'}
+                          }}
+                        >
+                          Agregar servicio
                         </Button>
                       </Form.Item>
                     );
@@ -482,8 +484,9 @@ function CrearEditarEmpresa(props) {
                                     icon={<PlusCircleOutlined />}
                                     onClick={() => {
                                       arrayHelpers.push({ url: '', network: undefined });
-                                    }}>
-                                    {'Agregar red social'}
+                                    }}
+                                  >
+                                    Agregar red social
                                   </Button>
                                 )}
                             </Form.Item>
@@ -497,8 +500,9 @@ function CrearEditarEmpresa(props) {
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
                             arrayHelpers.push({ url: '', network: undefined });
-                          }}>
-                          {'Agregar red social'}
+                          }}
+                        >
+                          Agregar red social
                         </Button>
                       </Form.Item>
                     );
@@ -580,8 +584,9 @@ function CrearEditarEmpresa(props) {
                                       email: '',
                                       cargo: '',
                                     });
-                                  }}>
-                                  {'Agregar advisor'}
+                                  }}
+                                >
+                                  Agregar advisor
                                 </Button>
                               )}
                             </Form.Item>
@@ -602,8 +607,9 @@ function CrearEditarEmpresa(props) {
                               email: '',
                               cargo: '',
                             });
-                          }}>
-                          {'Agregar advisor'}
+                          }}
+                        >
+                          Agregar advisor
                         </Button>
                       </Form.Item>
                     );
@@ -641,8 +647,9 @@ function CrearEditarEmpresa(props) {
                                   icon={<PlusCircleOutlined />}
                                   onClick={() => {
                                     arrayHelpers.push({ image: '' });
-                                  }}>
-                                  {'Agregar imagen'}
+                                  }}
+                                >
+                                  Agregar imagen
                                 </Button>
                               )}
                             </Form.Item>
@@ -656,8 +663,9 @@ function CrearEditarEmpresa(props) {
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
                             arrayHelpers.push({ image: '' });
-                          }}>
-                          {'Agregar imagen'}
+                          }}
+                        >
+                          Agregar imagen
                         </Button>
                       </Form.Item>
                     );

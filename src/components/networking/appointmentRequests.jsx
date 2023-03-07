@@ -106,7 +106,9 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
             ))
           ) : (
             <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-            <Card style={{ textAlign: 'center' }}>{'No tienes solicitudes recibidas pendientes'}</Card>
+            <Card style={{ textAlign: 'center' }}>
+              No tienes solicitudes recibidas pendientes
+            </Card>
             </Col>
           ))}
 
@@ -133,7 +135,9 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
               ))
             ) : (
               <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-              <Card style={{ textAlign: 'center' }}>{'No tienes solicitudes pendientes enviadas'}</Card>
+              <Card style={{ textAlign: 'center' }}>
+                No tienes solicitudes pendientes enviadas
+              </Card>
               </Col>
             ))}
 

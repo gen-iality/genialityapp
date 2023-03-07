@@ -1014,7 +1014,7 @@ class TriviaEdit extends Component {
                               onChange={(relation) => {
                                 this.setState({ activity_id: relation });
                               }}>
-                              <Option value="">{'No relacionar'}</Option>
+                              <Option value="">No relacionar</Option>
                               {dataAgenda.map((activity, key) => (
                                 <Option key={key} value={activity._id}>
                                   {activity.name}

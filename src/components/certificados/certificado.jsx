@@ -317,7 +317,7 @@ const Certificado = (props) => {
               <Col>
                 <Upload type="file" accept="image/*" showUploadList={false} onChange={(e) => handleImage(e)}>
                   <Button type="primary" icon={<UploadOutlined />}>
-                    {'Imagen de Fondo'}
+                    Imagen de Fondo
                   </Button>
                 </Upload>
               </Col>
@@ -402,8 +402,9 @@ const Certificado = (props) => {
                       type="primary"
                       onClick={() =>
                         setCertificado({ ...certificado, imageFile: imageFile, imageData: imageFile, image: imageFile })
-                      }>
-                      {'Cambiar a Imagen original'}
+                      }
+                    >
+                      Cambiar a Imagen original
                     </Button>
                   </>
                 }
