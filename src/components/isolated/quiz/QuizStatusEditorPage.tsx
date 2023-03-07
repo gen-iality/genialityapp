@@ -86,7 +86,7 @@ export function QuizStatusEditorPage (props: QuizStatusEditorPageProps) {
         value={valueRight}
         onChange={(e) => setValueRight(e.target.value)}
       />
-      <Button onClick={handleUpdate}>Update</Button>
+      <Button onClick={handleUpdate}>Actualizar</Button>
       {isBadAlertShown && <Alert type="error" message="No puedes enviar eso" />}
       {isGoodAlertShown && <Alert type="success" message="Datos enviados" />}
     </Space>
