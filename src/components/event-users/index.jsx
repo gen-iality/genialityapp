@@ -382,7 +382,7 @@ class ListEventUser extends Component {
         _id: { $oid: '614260d226e7862220497eac2' },
       });
 
-      let columns = [];
+      const columns = [];
       const checkInColumn = {
         title: 'Fecha de ingreso',
         dataIndex: 'checkedin_at',
@@ -418,12 +418,12 @@ class ListEventUser extends Component {
         key: 'edit',
         fixed: 'right',
         width: 60,
-        render: (...args) => {
+        render: (...args) => (
           self.editcomponent(
             ...args,
             simplifyOrgProperties.map((item) => item.name),
           )
-        },
+        ),
       };
       /* columns.push(editColumn); */
       /** Additional columns for hybrid events */
@@ -467,7 +467,7 @@ class ListEventUser extends Component {
             },
           };
         });
-      columns = [...columns, ...extraColumns];
+      columns.push(...extraColumns);
 
       // Inject the organization member properties here
       const orgExtraColumns = simplifyOrgProperties
@@ -489,7 +489,7 @@ class ListEventUser extends Component {
             }
           }
         })
-      columns = [...columns, ...orgExtraColumns];
+      columns.push(...orgExtraColumns);
       this.setState({ simplifyOrgProperties })
 
       const { data: allActivities } = await AgendaApi.byEvent(this.props.event._id);
