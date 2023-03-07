@@ -244,9 +244,6 @@ function OrgMembers(props) {
     <>
       <Header
         title="Miembros"
-        description={
-          'Se muestran los primeros 50 usuarios, para verlos todos por favor descargar el excel o realizar una búsqueda.'
-        }
       />
 
       <p>
@@ -264,7 +261,7 @@ function OrgMembers(props) {
         dataSource={membersData}
         size="small"
         rowKey="index"
-        pagination={false}
+        pagination={{ pageSize: 50 }}
         loading={isLoading || membersData.length === 0}
         scroll={{ x: 'auto' }}
         title={() => (
