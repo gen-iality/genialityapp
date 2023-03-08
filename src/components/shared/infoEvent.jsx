@@ -1,7 +1,7 @@
 import { useEventContext } from '@context/eventContext';
 import { Button, Divider, PageHeader, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
-import { CalendarOutlined, ClockCircleOutlined, HomeOutlined, RollbackOutlined } from '@ant-design/icons';
+import { CalendarOutlined, ClockCircleOutlined, GoldOutlined, HomeOutlined, RollbackOutlined } from '@ant-design/icons';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useUserEvent } from '@context/eventUserContext';
 import { useCurrentUser } from '@context/userContext';
@@ -38,14 +38,14 @@ const InfoEvent = () => {
           level={2}
           style={{ color: cEvent.value.styles.textMenu, fontSize: '2.5rem', whiteSpace: 'normal' }}
         >
+          {cEvent.value.name}
+          {' '}
           <Link
             title="Ir a la organización"
             to={`/organization/${cEvent.value.organizer._id}`}
           >
-            <RollbackOutlined />
+            <Button icon={<GoldOutlined /> }>Ir a la organización</Button>
           </Link>
-          {' '}
-          {cEvent.value.name}
         </Typography.Title>
       }
       extra={
