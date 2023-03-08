@@ -115,7 +115,7 @@ function UsersCard(props) {
                 HandlePublicPrivate('private');
               }}>
               <Tooltip title="Chatear">
-                <MessageTwoTone style={{ fontSize: '24px' }} />
+                {/* <MessageTwoTone style={{ fontSize: '24px' }} /> */}
               </Tooltip>
             </a>
           ) : null}
