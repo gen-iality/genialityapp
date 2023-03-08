@@ -46,6 +46,7 @@ const IconText = ({ icon, text, onSubmit }: { icon: any, text: string, onSubmit:
 
 function Certificate(props: CertificateProps) {
   const [wereEvaluationsPassed, setWereEvaluationsPassed] = useState<boolean | undefined>(undefined);
+  const [thereAreEvaluations, setThereAreEvaluations] = useState<boolean | undefined>(false);
 
   const [activitiesAttendee, setActivitiesAttendee] = useState<CurrentEventAttendees[]>([]);
   const [allActivities, setAllActivities] = useState<AgendaType[]>([]);
@@ -137,7 +138,12 @@ function Certificate(props: CertificateProps) {
 
       console.debug('passed', passed)
       console.debug('surveys.length', surveys.length)
-      if ((surveys.length >  0) && passed === surveys.length ) {
+      
+      if (surveys.length ===  0) {
+        setThereAreEvaluations(false);
+      }
+      
+      if (passed === surveys.length ) {
         setWereEvaluationsPassed(true);
       } else if ((surveys.length === 0) || notPassed < surveys.length) {
         setWereEvaluationsPassed(false);
@@ -184,27 +190,32 @@ function Certificate(props: CertificateProps) {
     <Row gutter={[8, 8]} wrap justify="center">
       <Col span={24}>
         <Card>
-          {wereEvaluationsPassed === undefined && (
-            <Spin>Cargando...</Spin>
-          )}
-          {!wereEvaluationsPassed && (
+          {thereAreEvaluations && (
             <>
-              <Alert message="Certificado de evaluaciones NO disponible" type="error" />
-              <br />
-            </>
+              {wereEvaluationsPassed === undefined && (
+                <Spin>Cargando...</Spin>
+              )}
+              {!wereEvaluationsPassed && (
+                <>
+                  <Alert message="Certificado de evaluaciones NO disponible" type="error" />
+                  <br />
+                </>
 
-          )}
-          {(wereEvaluationsPassed) && (
-            <>
-            <Alert message="Certificado de evaluaciones disponible" type="success" />
-            <br />
-            <IconText
-              text="Descargar certificado de evaluaciones"
-              icon={DownloadOutlined}
-              onSubmit={() => generateCert(props.cEventUser.value)}
-            />
+              )}
+              {(wereEvaluationsPassed) && (
+                <>
+                <Alert message="Certificado de evaluaciones disponible" type="success" />
+                <br />
+                <IconText
+                  text="Descargar certificado de evaluaciones"
+                  icon={DownloadOutlined}
+                  onSubmit={() => generateCert(props.cEventUser.value)}
+                />
+                </>
+              )}
             </>
           )}
+          
           {progressPercentValue === 100 && (
             <>
             <Alert message="Certificado de curso completo" type="success" />
