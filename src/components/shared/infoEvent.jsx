@@ -1,13 +1,14 @@
 import { useEventContext } from '@context/eventContext';
 import { Button, Divider, PageHeader, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
-import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { CalendarOutlined, ClockCircleOutlined, HomeOutlined, RollbackOutlined } from '@ant-design/icons';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useUserEvent } from '@context/eventUserContext';
 import { useCurrentUser } from '@context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 import { useIntl } from 'react-intl';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import { Link } from 'react-router-dom';
 
 dayjs.extend(localizedFormat);
 
@@ -31,12 +32,19 @@ const InfoEvent = () => {
         boxShadow: '0px 0px 8px 5px #eee',
         borderRadius: '20px',
         backgroundColor: cEvent.value.styles.toolbarDefaultBg,
-      }}
+      }}      
       title={
         <Typography.Title
           level={2}
           style={{ color: cEvent.value.styles.textMenu, fontSize: '2.5rem', whiteSpace: 'normal' }}
         >
+          <Link
+            title="Ir a la organización"
+            to={`/organization/${cEvent.value.organizer._id}`}
+          >
+            <RollbackOutlined />
+          </Link>
+          {' '}
           {cEvent.value.name}
         </Typography.Title>
       }
