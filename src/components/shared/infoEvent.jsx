@@ -28,9 +28,9 @@ const InfoEvent = () => {
         paddingBottom: '0', //20px
         margin: '20px',
         // border: `2px solid ${cEvent.value.styles.textMenu}`,
-        border: `1px solid #afafaf`,
-        boxShadow: '0px 0px 8px 5px #eee',
-        borderRadius: '20px',
+        border: `1px solid rgba(0,0,0,0.5)`,
+        // boxShadow: '0px 0px 8px 5px #eee',
+        borderRadius: '0.3em',
         backgroundColor: cEvent.value.styles.toolbarDefaultBg,
       }}      
       title={
@@ -39,17 +39,17 @@ const InfoEvent = () => {
           style={{ color: cEvent.value.styles.textMenu, fontSize: '2.5rem', whiteSpace: 'normal' }}
         >
           {cEvent.value.name}
-          {' '}
-          <Link
-            title="Ir a la organización"
-            to={`/organization/${cEvent.value.organizer._id}`}
-          >
-            <Button icon={<GoldOutlined /> }>Ir a la organización</Button>
-          </Link>
         </Typography.Title>
       }
       extra={
-        recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
+        <>
+        <Link
+          title="Ir a la organización"
+          to={`/organization/${cEvent.value.organizer._id}`}
+        >
+          <Button icon={<GoldOutlined /> }>Ir a la organización</Button>
+        </Link>
+        {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
         cUser?.value &&
         !cEventUser?.value && (
           <Button
@@ -63,7 +63,8 @@ const InfoEvent = () => {
               defaultMessage: 'Inscribirme al curso',
             })}
           </Button>
-        )
+        )}
+        </>
       }
       // footer={
       //   <Space style={{ color: cEvent.value.styles.textMenu }}>
