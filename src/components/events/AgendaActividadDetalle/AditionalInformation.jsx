@@ -147,8 +147,10 @@ const AditionalInformation = (props) => {
             </div>
           </TabPane>
         )}
+        {console.log('props.tabs', props.tabs)}
+        {console.log('props', props)}
 
-        {props.tabs && (
+       {/*  {props.tabs && (
           // && (props.tabs.surveys || props.tabs.surveys === 'true')
           <TabPane
             tab={
@@ -188,7 +190,7 @@ const AditionalInformation = (props) => {
             }
             key='games'
           ></TabPane>
-        )}
+        )} */}
       </Tabs>
     </Card>
   );
