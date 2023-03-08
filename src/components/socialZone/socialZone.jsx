@@ -128,7 +128,7 @@ const SocialZone = (props) => {
                   {props.generalTabs?.attendees && (
                     <div style={{ color: cEvent.value.styles.textMenu }}>
                       <FormattedMessage id="tabs.attendees.socialzone" defaultMessage="Asistentes" />{' '}
-                      {countAttendeesOnline.length > 0 && <>({countAttendeesOnline.length})</>}
+                      {countAttendeesOnline.length > 0 && countAttendeesOnline.length}
                     </div>
                   )}
                 </>
@@ -199,8 +199,9 @@ const SocialZone = (props) => {
             </TabPane>
           )}
         </>
+        {console.log('cEvent', cEvent.value)}
 
-        {currentActivity !== null && typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
+        {/* {currentActivity !== null && typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
           <TabPane
             className="asistente-survey-list asistente-list"
             tab={
@@ -246,7 +247,7 @@ const SocialZone = (props) => {
               </div>
             </ThisRouteCanBeDisplayed>
           </TabPane>
-        )}
+        )} */}
 
         {tabsGenerals !== null &&
           (tabsGenerals?.games || tabsGenerals?.games === 'true') &&
