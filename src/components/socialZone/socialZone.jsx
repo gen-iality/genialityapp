@@ -90,7 +90,7 @@ const SocialZone = (props) => {
       <Tabs
         defaultActiveKey="2"
         onChange={callback}
-        activeKey="2"
+        //activeKey={chatAttendeChats}
         onTabClick={(key) => {
           HandleChatOrAttende(key);
         }}
