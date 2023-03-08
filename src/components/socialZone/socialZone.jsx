@@ -86,10 +86,11 @@ const SocialZone = (props) => {
 
   return (
     <div className="siderContentFixed">
+    {console.log('chatAttendeChats', chatAttendeChats)}
       <Tabs
-        defaultActiveKey="1"
+        defaultActiveKey="2"
         onChange={callback}
-        activeKey={chatAttendeChats}
+        activeKey="2"
         onTabClick={(key) => {
           HandleChatOrAttende(key);
         }}
