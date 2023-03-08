@@ -5,11 +5,8 @@ import { SpeakersApi, ToolsApi } from '@helpers/request'
 
 const dataDuration = [
   {
-    title: '1 hora de contenido',
-  },
-  {
-    title: '6 horas de práctica',
-  },
+    title: '5 hora de contenido',
+  }
 ]
 
 const HostList = () => {
