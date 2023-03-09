@@ -112,10 +112,13 @@ export const columns = (columnsData, extraFields=[]) => {
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       render: (record, item) => {
         // TODO: parse each dynamic field type like boolean, string, etc.
-        if (item.type === 'boolean') {
+        if (field.type === 'boolean') {
           return record === undefined ? 'N/A' : record ? 'Sí' : 'No'
         }
-        return record
+        if (field.type === 'TTCC') {
+          return record === undefined ? 'N/A' : record ? 'Aceptado' : 'No aceptado'
+        }
+        return (record || '').toString()
       }
     }
   }
