@@ -47,6 +47,21 @@ export const columns = (columnsData, extraFields=[]) => {
     },
   };
 
+  const position = {
+    key: 'position',
+    title: 'Cargo',
+    dataIndex: 'position',
+    ellipsis: true,
+    sorter: (a, b) => a.eventUser_email.localeCompare(b.eventUser_email),
+    ...membersGetColumnSearchProps('positon', columnsData),
+    render: (record) => {
+      if (record === undefined) {
+        return <p style={{ color: '#999' }}>Sin cargo</p>
+      }
+      return record;
+    },
+  };
+
   const course = {
     key: 'event_name',
     title: 'Curso',
@@ -162,6 +177,7 @@ export const columns = (columnsData, extraFields=[]) => {
   columns.push(checkedin_at);
   columns.push(name);
   columns.push(email);
+  columns.push(position);
   columns.push(approved_from_date);
   columns.push(approved_until_date);
   columns.push(validity_date);
