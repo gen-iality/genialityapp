@@ -68,9 +68,9 @@ function OrgRegisteredUsers(props) {
             );
             console.log('1. certification', userCertification);
             if (userCertification?.approved_until_date) {
-              properties.validity_date = userCertification.approved_until_date;
-              properties.approved_until_date = userCertification.approved_until_date;
-              properties.approved_from_date = userCertification.approved_from_date;
+              properties.validity_date = dayjs(userCertification.approved_until_date);
+              properties.approved_until_date = dayjs(userCertification.approved_until_date);
+              properties.approved_from_date = dayjs(userCertification.approved_from_date);
             } else {
               properties.validity_date = null;
               properties.approved_until_date = null;
