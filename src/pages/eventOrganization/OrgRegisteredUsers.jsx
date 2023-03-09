@@ -48,8 +48,8 @@ function OrgRegisteredUsers(props) {
     return formattedDate;
   }
 
-  const exportPDF = useCallback(() => {
-    console.log('exporting to PDF....')
+  const exportXLSX = useCallback(() => {
+    console.log('exporting to XLSX....')
     const ws = utils.json_to_sheet(usersSuscribedData.map((item) => {
       return {
         ...(Object.fromEntries(Object.entries(item).map((pair) => {
@@ -187,9 +187,9 @@ function OrgRegisteredUsers(props) {
       <Button
         type="primary"
         icon={<DownloadOutlined />}
-        onClick={() => exportPDF()}
+        onClick={() => exportXLSX()}
       >
-        Exportar PDF
+        Exportar
       </Button>
       <Table
         columns={columns(columnsData, extraFields, addNewCertificationModal)}
