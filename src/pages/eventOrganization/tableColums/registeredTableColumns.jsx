@@ -1,13 +1,13 @@
 import { useHistory } from 'react-router';
 import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin, Tag } from 'antd';
-import { ClockCircleOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
+import { ClockCircleOutlined, EditOutlined, FileAddOutlined, UserOutlined } from '@ant-design/icons';
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
-export const columns = (columnsData) => {
+export const columns = (columnsData, addNewCertificationModal) => {
   const columns = [];
 
   const checkedin_at = {
@@ -137,6 +137,31 @@ export const columns = (columnsData) => {
     }, */
   };
 
+  const editOption = {
+    title: 'Agregar',
+    dataIndex: 'index',
+    align: 'center',
+    fixed: 'right',
+    width: 80,
+    render(val, item, index) {
+      return (
+        <>
+          <Tooltip title="Editar">
+            <Button
+              id={`editAction${index}`}
+              type="primary"
+              size="small"
+              onClick={(e) => {
+                addNewCertificationModal(item);
+              }}
+              icon={<FileAddOutlined />}
+            ></Button>
+          </Tooltip>
+        </>
+      );
+    },
+  };
+
   columns.push(checkedin_at);
   columns.push(name);
   columns.push(email);
@@ -145,5 +170,7 @@ export const columns = (columnsData) => {
   columns.push(validity_date);
   columns.push(course);
   columns.push(created_at);
+  columns.push(editOption);
+
   return columns;
 };
