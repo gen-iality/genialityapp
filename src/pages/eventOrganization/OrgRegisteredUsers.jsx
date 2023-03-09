@@ -1,9 +1,9 @@
 /** React's libraries */
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
 /** Antd imports */
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
 
 /** Components */
 import Header from '@antdComponents/Header';
@@ -15,6 +15,10 @@ import { firestore } from '@helpers/firebase';
 
 /** Context */
 import withContext from '@context/withContext';
+import { DownloadOutlined } from '@ant-design/icons';
+
+/** export Excel */
+import { utils, writeFileXLSX } from 'xlsx';
 
 function OrgRegisteredUsers(props) {
   const { _id: organizationId } = props.org;
@@ -38,6 +42,14 @@ function OrgRegisteredUsers(props) {
     const formattedDate = dayjs.unix(segundos).format('YYYY-MM-DD');
     return formattedDate;
   }
+
+  const exportPDF = useCallback(() => {
+    console.log('exporting to PDF....')
+    const ws = utils.json_to_sheet(usersSuscribedData);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, 'Registered');
+    writeFileXLSX(wb, `Inscritos_${dayjs().format('l')}.xlsx`);
+  }, [usersSuscribedData])
 
   const getRegisteredUsers = async () => {
     const { data: orgEvents } = await OrganizationApi.events(organizationId);
@@ -120,7 +132,14 @@ function OrgRegisteredUsers(props) {
   return (
     <>
       <Header title="Inscritos" description="Se muestran los usuarios inscritos a los cursos de la organización" />
-      {console.log('usersSuscribedData', usersSuscribedData)}
+
+      <Button
+        type="primary"
+        icon={<DownloadOutlined />}
+        onClick={() => exportPDF()}
+      >
+        Exportar PDF
+      </Button>
       <Table
         columns={columns(columnsData, extraFields)}
         dataSource={usersSuscribedData}
