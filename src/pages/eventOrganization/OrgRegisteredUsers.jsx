@@ -26,8 +26,11 @@ function OrgRegisteredUsers(props) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
 
+  const [extraFields, setExtraFields] = useState([])
+
   useEffect(() => {
     getRegisteredUsers();
+    setExtraFields(props.org.user_properties.filter((item) => (!['email', 'names'].includes(item.name))))
   }, []);
 
   function formattedRealDate(timestamp) {
@@ -96,7 +99,7 @@ function OrgRegisteredUsers(props) {
       <Header title="Inscritos" description="Se muestran los usuarios inscritos a los cursos de la organización" />
 
       <Table
-        columns={columns(columnsData)}
+        columns={columns(columnsData, extraFields)}
         dataSource={usersSuscribedData}
         size="small"
         rowKey="index"
