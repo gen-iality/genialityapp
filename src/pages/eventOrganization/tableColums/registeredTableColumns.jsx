@@ -74,6 +74,42 @@ export const columns = (columnsData, extraFields=[]) => {
     }, */
   };
 
+  const approved_from_date = {
+    key: 'approved_from_date',
+    title: 'Fecha de emisión',
+    dataIndex: 'approved_from_date',
+    align: 'center',
+    //width: 150,
+    ellipsis: true,
+    sorter: (a, b) => {
+      if (a.approved_from_date === null) return -1;
+      if (b.approved_from_date === null) return 1;
+      return a.approved_from_date - b.approved_from_date || 1;
+    },
+    ...membersGetColumnSearchProps('approved_from_date', columnsData),
+    render: (val, item) => (
+      <>{item?.approved_from_date ? dayjs(item?.approved_from_date).format('DD/MM/YYYY') : 'Sin fecha'}</>
+    ),
+  };
+
+  const approved_until_date = {
+    key: 'approved_until_date',
+    title: 'Fecha de vencimiento',
+    dataIndex: 'approved_until_date',
+    align: 'center',
+    //width: 150,
+    ellipsis: true,
+    sorter: (a, b) => {
+      if (a.approved_until_date === null) return -1;
+      if (b.approved_until_date === null) return 1;
+      return a.approved_until_date - b.approved_until_date || 1;
+    },
+    ...membersGetColumnSearchProps('approved_until_date', columnsData),
+    render: (val, item) => (
+      <>{item?.approved_until_date ? dayjs(item?.approved_until_date).format('DD/MM/YYYY') : 'Sin fecha'}</>
+    ),
+  };
+
   const validity_date = {
     key: 'validity_date',
     title: 'Estado de vigencia',
@@ -81,14 +117,14 @@ export const columns = (columnsData, extraFields=[]) => {
     align: 'center',
     ellipsis: true,
     sorter: (a, b) => {
-      if (a.validity_date === null) return -1
-      if (b.validity_date === null) return 1
-      return a.validity_date - b.validity_date || 1
+      if (a.validity_date === null) return -1;
+      if (b.validity_date === null) return 1;
+      return a.validity_date - b.validity_date || 1;
     },
     ...membersGetColumnSearchProps('validity_date', columnsData),
     render(val, item) {
       if (item.validity_date === null) {
-        return <Tag color="blue">{`Sin certificado`}</Tag> //TODO: Utilizar la función traductora.
+        return <Tag color="blue">{`Sin certificado`}</Tag>; //TODO: Utilizar la función traductora.
       } else {
         const actualDate = dayjs(new Date());
         const finishDate = dayjs(item.validity_date);
@@ -142,6 +178,8 @@ export const columns = (columnsData, extraFields=[]) => {
   columns.push(name);
   columns.push(email);
   columns.push(position);
+  columns.push(approved_from_date);
+  columns.push(approved_until_date);
   columns.push(validity_date);
   columns.push(course);
   columns.push(...(extraFields.map(timeToThink)));

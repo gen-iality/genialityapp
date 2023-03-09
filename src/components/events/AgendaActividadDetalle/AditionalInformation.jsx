@@ -45,7 +45,7 @@ const AditionalInformation = (props) => {
             }
             key='description'
           >
-            {currentActivity?.description !== '<p><br></p>' ? (
+            {currentActivity?.description !== '<p><br></p>' && (
               <Row justify='center'>
                 <Col span={24} id='img-description'>
                   {currentActivity?.description && (
@@ -58,14 +58,6 @@ const AditionalInformation = (props) => {
                   )}
                 </Col>
               </Row>
-            ) : (
-              <Card style={{ borderRadius: '10px', padding: '0px' }}>
-                <Result
-                  style={{ padding: '0px' }}
-                  icon={<ClipboardTextOffIcon />}
-                  title='Aún no se ha publicado una descripción'
-                />
-              </Card>
             )}
 
             {/* <br /> */}
@@ -155,8 +147,10 @@ const AditionalInformation = (props) => {
             </div>
           </TabPane>
         )}
+        {console.log('props.tabs', props.tabs)}
+        {console.log('props', props)}
 
-        {props.tabs && (
+       {/*  {props.tabs && (
           // && (props.tabs.surveys || props.tabs.surveys === 'true')
           <TabPane
             tab={
@@ -196,7 +190,7 @@ const AditionalInformation = (props) => {
             }
             key='games'
           ></TabPane>
-        )}
+        )} */}
       </Tabs>
     </Card>
   );
