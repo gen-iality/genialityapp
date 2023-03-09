@@ -45,7 +45,21 @@ function OrgRegisteredUsers(props) {
 
   const exportPDF = useCallback(() => {
     console.log('exporting to PDF....')
-    const ws = utils.json_to_sheet(usersSuscribedData);
+    const ws = utils.json_to_sheet(usersSuscribedData.map((item) => {
+      return {
+        ...(Object.fromEntries(Object.entries(item).map((pair) => {
+          const [key, value] = pair
+          if (typeof value === 'undefined') {
+            return [key, 'N/A']
+          }
+          if (typeof value === 'boolean') {
+            return [key, value ? 'Sí' : 'No']
+          }
+          return [key, value]
+        }))),
+        position: item.position ?? 'Sin cargo'
+      }
+    }));
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Registered');
     writeFileXLSX(wb, `Inscritos_${dayjs().format('l')}.xlsx`);
