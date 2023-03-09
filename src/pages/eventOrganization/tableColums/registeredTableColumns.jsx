@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
-export const columns = (columnsData) => {
+export const columns = (columnsData, extraFields=[]) => {
   const columns = [];
 
   const checkedin_at = {
@@ -137,6 +137,28 @@ export const columns = (columnsData) => {
     }, */
   };
 
+  // This ColumnData is used for all the extra fields
+  const timeToThink = (field, defaultKey) => {
+    return {
+      key: field.id ?? field._id ?? field.name ?? defaultKey,
+      title: field.label,
+      dataIndex: field.name,
+      ellipsis: true,
+      // This sorter is generic and it can crash when you are in a selling
+      sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+      render: (record, item) => {
+        // TODO: parse each dynamic field type like boolean, string, etc.
+        if (field.type === 'boolean') {
+          return record === undefined ? 'N/A' : record ? 'Sí' : 'No'
+        }
+        if (field.type === 'TTCC') {
+          return record === undefined ? 'N/A' : record ? 'Aceptado' : 'No aceptado'
+        }
+        return (record || '').toString()
+      }
+    }
+  }
+
   columns.push(checkedin_at);
   columns.push(name);
   columns.push(email);
@@ -144,6 +166,8 @@ export const columns = (columnsData) => {
   columns.push(approved_until_date);
   columns.push(validity_date);
   columns.push(course);
+  columns.push(...(extraFields.map(timeToThink)));
+  console.log('extraFields', extraFields)
   columns.push(created_at);
   return columns;
 };

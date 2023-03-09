@@ -26,8 +26,11 @@ function OrgRegisteredUsers(props) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
 
+  const [extraFields, setExtraFields] = useState([])
+
   useEffect(() => {
     getRegisteredUsers();
+    setExtraFields(props.org.user_properties.filter((item) => (!['email', 'names'].includes(item.name))))
   }, []);
 
   function formattedRealDate(timestamp) {
@@ -38,20 +41,23 @@ function OrgRegisteredUsers(props) {
 
   const getRegisteredUsers = async () => {
     const { data: orgEvents } = await OrganizationApi.events(organizationId);
-    console.log('orgEvents', orgEvents);
+    // con//sole.log('orgEvents', orgEvents);
+    const { data: orgUsers } = await OrganizationApi.getUsers(organizationId);
+    // con//sole.log('orgUsers', orgUsers)
 
     const totalRegistered = (
       await Promise.all(
         orgEvents.map(async (orgEvent) => {
           const asistentes = firestore.collection(`${orgEvent._id}_event_attendees`);
           const querySnapshot = await asistentes.get();
-          console.log('querySnapshot', querySnapshot);
+          // con//sole.log('querySnapshot', querySnapshot);
 
           const certificationsByEvent = await CerticationsApi.getByUserAndEvent(null, orgEvent._id);
-          console.log('1. certificationsByEvent', certificationsByEvent);
+          // con//sole.log('1. certificationsByEvent', certificationsByEvent);
 
           const registeredByEvent = querySnapshot.docs.map((doc) => {
             const infoEventUser = doc.data();
+            // con//sole.log('infoEventUser', infoEventUser)
             const properties = {
               checkedin_at: infoEventUser?.checkedin_at
                 ? formattedRealDate(infoEventUser?.checkedin_at)
@@ -61,12 +67,23 @@ function OrgRegisteredUsers(props) {
               validity_date: null,
               event_name: orgEvent.name,
               created_at: orgEvent.created_at,
+              // Why "organiser"? anyway...
             };
+
+            const userId = infoEventUser.account_id
+            const orgMember = orgUsers.find((member) => member.account_id === userId)
+
+            // Inject the dynamic field
+            const filteredDynamicField = (orgEvent.organiser.user_properties || []).filter((data) => !['email', 'names'].includes(data.name))
+            if (orgMember) {
+              filteredDynamicField.forEach((field) => {
+                properties[field.name] = orgMember.properties[field.name]
+              })
+            }
 
             const userCertification = certificationsByEvent.find(
               (certificationByEvent) => certificationByEvent.user_id === infoEventUser?.account_id,
             );
-            console.log('1. certification', userCertification);
             if (userCertification?.approved_until_date) {
               properties.validity_date = dayjs(userCertification.approved_until_date);
               properties.approved_until_date = dayjs(userCertification.approved_until_date);
@@ -102,7 +119,7 @@ function OrgRegisteredUsers(props) {
       <Header title="Inscritos" description="Se muestran los usuarios inscritos a los cursos de la organización" />
       {console.log('usersSuscribedData', usersSuscribedData)}
       <Table
-        columns={columns(columnsData)}
+        columns={columns(columnsData, extraFields)}
         dataSource={usersSuscribedData}
         size="small"
         rowKey="index"
