@@ -68,7 +68,13 @@ function OrgRegisteredUsers(props) {
             );
             console.log('1. certification', userCertification);
             if (userCertification?.approved_until_date) {
-              properties.validity_date = dayjs(userCertification.approved_until_date);
+              properties.validity_date = userCertification.approved_until_date;
+              properties.approved_until_date = userCertification.approved_until_date;
+              properties.approved_from_date = userCertification.approved_from_date;
+            } else {
+              properties.validity_date = null;
+              properties.approved_until_date = null;
+              properties.approved_from_date = null;
             }
 
             return properties;
@@ -94,7 +100,7 @@ function OrgRegisteredUsers(props) {
   return (
     <>
       <Header title="Inscritos" description="Se muestran los usuarios inscritos a los cursos de la organización" />
-
+      {console.log('usersSuscribedData', usersSuscribedData)}
       <Table
         columns={columns(columnsData)}
         dataSource={usersSuscribedData}
