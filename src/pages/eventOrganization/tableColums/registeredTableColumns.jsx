@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
-export const columns = (columnsData, addNewCertificationModal) => {
+export const columns = (columnsData, extraFields = [], addNewCertificationModal) => {
   const columns = [];
 
   const checkedin_at = {
@@ -44,6 +44,21 @@ export const columns = (columnsData, addNewCertificationModal) => {
     ...membersGetColumnSearchProps('eventUser_email', columnsData),
     render: (val, item) => {
       return item.eventUser_email;
+    },
+  };
+
+  const position = {
+    key: 'position',
+    title: 'Cargo',
+    dataIndex: 'position',
+    ellipsis: true,
+    sorter: (a, b) => a.eventUser_email.localeCompare(b.eventUser_email),
+    ...membersGetColumnSearchProps('positon', columnsData),
+    render: (record) => {
+      if (record === undefined) {
+        return <p style={{ color: '#999' }}>Sin cargo</p>;
+      }
+      return record;
     },
   };
 
@@ -161,14 +176,39 @@ export const columns = (columnsData, addNewCertificationModal) => {
       );
     },
   };
+  // This ColumnData is used for all the extra fields
+  const timeToThink = (field, defaultKey) => {
+    return {
+      key: field.id ?? field._id ?? field.name ?? defaultKey,
+      title: field.label,
+      dataIndex: field.name,
+      ellipsis: true,
+      //filterSearch: true,
+      // This sorter is generic and it can crash when you are in a selling
+      sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+      render: (record, item) => {
+        // TODO: parse each dynamic field type like boolean, string, etc.
+        if (field.type === 'boolean') {
+          return record === undefined ? 'N/A' : record ? 'Sí' : 'No';
+        }
+        if (field.type === 'TTCC') {
+          return record === undefined ? 'N/A' : record ? 'Aceptado' : 'No aceptado';
+        }
+        return (record || '').toString();
+      },
+    };
+  };
 
-  columns.push(checkedin_at);
   columns.push(name);
-  columns.push(email);
+  columns.push(position);
   columns.push(approved_from_date);
   columns.push(approved_until_date);
   columns.push(validity_date);
   columns.push(course);
+  columns.push(...extraFields.map(timeToThink));
+  console.log('extraFields', extraFields);
+  columns.push(email);
+  columns.push(checkedin_at);
   columns.push(created_at);
   columns.push(editOption);
 
