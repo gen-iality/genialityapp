@@ -81,6 +81,9 @@ function OrgRegisteredUsers(props) {
               })
             }
 
+            // Inject the position
+            properties.position = orgMember.position?.position_name
+
             const userCertification = certificationsByEvent.find(
               (certificationByEvent) => certificationByEvent.user_id === infoEventUser?.account_id,
             );
