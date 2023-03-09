@@ -1,13 +1,13 @@
 import { useHistory } from 'react-router';
 import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin, Tag } from 'antd';
-import { ClockCircleOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
+import { ClockCircleOutlined, EditOutlined, FileAddOutlined, UserOutlined } from '@ant-design/icons';
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
-export const columns = (columnsData, extraFields=[]) => {
+export const columns = (columnsData, extraFields = [], addNewCertificationModal) => {
   const columns = [];
 
   const checkedin_at = {
@@ -56,7 +56,7 @@ export const columns = (columnsData, extraFields=[]) => {
     ...membersGetColumnSearchProps('positon', columnsData),
     render: (record) => {
       if (record === undefined) {
-        return <p style={{ color: '#999' }}>Sin cargo</p>
+        return <p style={{ color: '#999' }}>Sin cargo</p>;
       }
       return record;
     },
@@ -152,6 +152,30 @@ export const columns = (columnsData, extraFields=[]) => {
     }, */
   };
 
+  const editOption = {
+    title: 'Agregar',
+    dataIndex: 'index',
+    align: 'center',
+    fixed: 'right',
+    width: 80,
+    render(val, item, index) {
+      return (
+        <>
+          <Tooltip title="Editar">
+            <Button
+              id={`editAction${index}`}
+              type="primary"
+              size="small"
+              onClick={(e) => {
+                addNewCertificationModal(item);
+              }}
+              icon={<FileAddOutlined />}
+            ></Button>
+          </Tooltip>
+        </>
+      );
+    },
+  };
   // This ColumnData is used for all the extra fields
   const timeToThink = (field, defaultKey) => {
     return {
@@ -159,31 +183,34 @@ export const columns = (columnsData, extraFields=[]) => {
       title: field.label,
       dataIndex: field.name,
       ellipsis: true,
+      //filterSearch: true,
       // This sorter is generic and it can crash when you are in a selling
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       render: (record, item) => {
         // TODO: parse each dynamic field type like boolean, string, etc.
         if (field.type === 'boolean') {
-          return record === undefined ? 'N/A' : record ? 'Sí' : 'No'
+          return record === undefined ? 'N/A' : record ? 'Sí' : 'No';
         }
         if (field.type === 'TTCC') {
-          return record === undefined ? 'N/A' : record ? 'Aceptado' : 'No aceptado'
+          return record === undefined ? 'N/A' : record ? 'Aceptado' : 'No aceptado';
         }
-        return (record || '').toString()
-      }
-    }
-  }
+        return (record || '').toString();
+      },
+    };
+  };
 
-  columns.push(checkedin_at);
   columns.push(name);
-  columns.push(email);
   columns.push(position);
   columns.push(approved_from_date);
   columns.push(approved_until_date);
   columns.push(validity_date);
   columns.push(course);
-  columns.push(...(extraFields.map(timeToThink)));
-  console.log('extraFields', extraFields)
+  columns.push(...extraFields.map(timeToThink));
+  console.log('extraFields', extraFields);
+  columns.push(email);
+  columns.push(checkedin_at);
   columns.push(created_at);
+  columns.push(editOption);
+
   return columns;
 };
