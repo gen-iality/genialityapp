@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row, Grid, Space, Result } from 'antd';
@@ -10,6 +10,7 @@ import DocumentsList from '../../documents/documentsList';
 import { UserOutlined } from '@ant-design/icons';
 import ReactQuill from 'react-quill';
 import ClipboardTextOffIcon from '@2fd/ant-design-icons/lib/ClipboardTextOff';
+import { DocumentsApi } from '@helpers/request';
 const { TabPane } = Tabs;
 const { Title } = Typography;
 const { useBreakpoint } = Grid;
@@ -19,7 +20,18 @@ const AditionalInformation = (props) => {
   const intl = useIntl();
   const [activeTab, setActiveTab] = useState('description');
   const [idSpeaker, setIdSpeaker] = useState(null);
+  const [document, setDocument] = useState({});
   const screens = useBreakpoint();
+
+  useEffect(() => {
+    getDocuments();
+  }, [currentActivity?.selected_document]);
+
+  async function getDocuments() {
+    const allDocuments = await DocumentsApi.getAll(props.cEvent.value._id);
+    const document = allDocuments.data.filter((document) => document._id === currentActivity?.selected_document[0]);
+    setDocument(document);
+  }
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
@@ -142,9 +154,7 @@ const AditionalInformation = (props) => {
             <div>
               <div style={{ marginTop: '5%', marginBottom: '5%' }}>
                 <b>Documentos:</b> &nbsp;
-                <div>
-                  <DocumentsList data={currentActivity !== null && currentActivity.selected_document} />
-                </div>
+                <DocumentsList data={document} />
               </div>
             </div>
           </TabPane>
