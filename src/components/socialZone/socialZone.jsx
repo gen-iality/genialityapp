@@ -86,7 +86,7 @@ const SocialZone = (props) => {
 
   return (
     <div className="siderContentFixed">
-    {console.log('chatAttendeChats', chatAttendeChats)}
+      {console.log('chatAttendeChats', chatAttendeChats)}
       <Tabs
         defaultActiveKey="2"
         onChange={callback}
@@ -96,30 +96,6 @@ const SocialZone = (props) => {
         }}
         tabBarExtraContent={{ left: props.ToggleVisibilityButton }}
       >
-        <TabPane
-          className="asistente-chat-list"
-          tab={
-            <>
-              {props.generalTabs.publicChat && (
-                <Badge onClick={() => HandleChatOrAttende('1')} size="small" count={totalPrivateMessages}>
-                  <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
-                </Badge>
-              )}
-            </>
-          }
-          key="1"
-        >
-          <ThisRouteCanBeDisplayed>
-            <ChatList
-              typeEvent={typeEvent}
-              key="ChatList"
-              props={props}
-              setCurrentUser={setCurrentUser}
-              generalTabs={props.generalTabs}
-            />
-          </ThisRouteCanBeDisplayed>
-        </TabPane>
-
         <>
           {typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
             <TabPane
@@ -200,7 +176,30 @@ const SocialZone = (props) => {
             </TabPane>
           )}
         </>
-        {console.log('cEvent', cEvent.value)}
+
+        <TabPane
+          className="asistente-chat-list"
+          tab={
+            <>
+              {props.generalTabs.publicChat && (
+                <Badge onClick={() => HandleChatOrAttende('1')} size="small" count={totalPrivateMessages}>
+                  <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
+                </Badge>
+              )}
+            </>
+          }
+          key="1"
+        >
+          <ThisRouteCanBeDisplayed>
+            <ChatList
+              typeEvent={typeEvent}
+              key="ChatList"
+              props={props}
+              setCurrentUser={setCurrentUser}
+              generalTabs={props.generalTabs}
+            />
+          </ThisRouteCanBeDisplayed>
+        </TabPane>
 
         {/* {currentActivity !== null && typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
           <TabPane
