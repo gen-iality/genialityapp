@@ -43,17 +43,17 @@ const AditionalInformation = (props) => {
                 <p style={{ marginBottom: '0px' }}>{intl.formatMessage({ id: 'title.description' })}</p>
               </>
             }
-            key='description'
+            key="description"
           >
             {currentActivity?.description !== '<p><br></p>' && (
-              <Row justify='center'>
-                <Col span={24} id='img-description'>
+              <Row justify="center">
+                <Col span={24} id="img-description">
                   {currentActivity?.description && (
                     <ReactQuill
                       value={currentActivity?.description}
                       readOnly
-                      className='hide-toolbar ql-toolbar'
-                      theme='bubble'
+                      className="hide-toolbar ql-toolbar"
+                      theme="bubble"
                     />
                   )}
                 </Col>
@@ -65,7 +65,7 @@ const AditionalInformation = (props) => {
             props.cEvent.value._id === '601470367711a513cc7061c2' ? (
               <div></div>
             ) : (
-              <div className='List-conferencistas'>
+              <div className="List-conferencistas">
                 <p style={{ marginTop: '5%', marginBottom: '5%' }}>
                   {props.orderedHost.length > 0 ? (
                     <Row>
@@ -96,7 +96,7 @@ const AditionalInformation = (props) => {
                                   {item.description !== '<p><br></p>' &&
                                     item.description !== null &&
                                     item.description !== undefined && (
-                                      <Button className='button_lista' onClick={() => getSpeakers(item._id)}>
+                                      <Button className="button_lista" onClick={() => getSpeakers(item._id)}>
                                         {intl.formatMessage({
                                           id: 'button.more.information',
                                         })}
@@ -128,6 +128,8 @@ const AditionalInformation = (props) => {
           </TabPane>
         }
 
+        {console.log('currentActivity', currentActivity)}
+
         {currentActivity !== null && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
           <TabPane
             tab={
@@ -135,7 +137,7 @@ const AditionalInformation = (props) => {
                 <p style={{ marginBottom: '0px' }}>Documentos</p>
               </>
             }
-            key='docs'
+            key="docs"
           >
             <div>
               <div style={{ marginTop: '5%', marginBottom: '5%' }}>
@@ -150,7 +152,7 @@ const AditionalInformation = (props) => {
         {console.log('props.tabs', props.tabs)}
         {console.log('props', props)}
 
-       {/*  {props.tabs && (
+        {/*  {props.tabs && (
           // && (props.tabs.surveys || props.tabs.surveys === 'true')
           <TabPane
             tab={
