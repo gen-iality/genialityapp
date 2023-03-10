@@ -1,9 +1,9 @@
 /** React's libraries */
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
 /** Antd imports */
-import { DatePicker, Form, Input, InputNumber, Select, Switch, Table, Modal } from 'antd';
+import { DatePicker, Form, Input, InputNumber, Select, Switch, Table, Modal, Button } from 'antd';
 
 /** Components */
 import Header from '@antdComponents/Header';
@@ -15,6 +15,10 @@ import { firestore } from '@helpers/firebase';
 
 /** Context */
 import withContext from '@context/withContext';
+import { DownloadOutlined } from '@ant-design/icons';
+
+/** export Excel */
+import { utils, writeFileXLSX } from 'xlsx';
 
 function OrgRegisteredUsers(props) {
   const { _id: organizationId } = props.org;
@@ -43,6 +47,28 @@ function OrgRegisteredUsers(props) {
     const formattedDate = dayjs.unix(segundos).format('YYYY-MM-DD');
     return formattedDate;
   }
+
+  const exportXLSX = useCallback(() => {
+    console.log('exporting to XLSX....')
+    const ws = utils.json_to_sheet(usersSuscribedData.map((item) => {
+      return {
+        ...(Object.fromEntries(Object.entries(item).map((pair) => {
+          const [key, value] = pair
+          if (typeof value === 'undefined') {
+            return [key, 'N/A']
+          }
+          if (typeof value === 'boolean') {
+            return [key, value ? 'Sí' : 'No']
+          }
+          return [key, value]
+        }))),
+        position: item.position ?? 'Sin cargo'
+      }
+    }));
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, 'Registered');
+    writeFileXLSX(wb, `Inscritos_${dayjs().format('l')}.xlsx`);
+  }, [usersSuscribedData])
 
   const getRegisteredUsers = async () => {
     const { data: orgEvents } = await OrganizationApi.events(organizationId);
@@ -157,7 +183,14 @@ function OrgRegisteredUsers(props) {
   return (
     <>
       <Header title="Inscritos" description="Se muestran los usuarios inscritos a los cursos de la organización" />
-      {console.log('usersSuscribedData', usersSuscribedData)}
+
+      <Button
+        type="primary"
+        icon={<DownloadOutlined />}
+        onClick={() => exportXLSX()}
+      >
+        Exportar
+      </Button>
       <Table
         columns={columns(columnsData, extraFields, addNewCertificationModal)}
         dataSource={usersSuscribedData}
