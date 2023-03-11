@@ -106,6 +106,7 @@ class General extends Component {
         privateChat: true,
         attendees: true,
       },
+      is_socialZoneOpened: true,
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
       registerForm: {
@@ -524,6 +525,7 @@ class General extends Component {
       default_certification_hours: event.default_certification_hours,
       default_certification_entity: event.default_certification_entity,
       default_certification_last_hours: event.default_certification_last_hours,
+      is_socialZoneOpened: event.is_socialZoneOpened,
     };
 
     try {
@@ -749,6 +751,7 @@ class General extends Component {
     return (
       <>
         {/* RESTRICIONES */}
+        {console.log('event', event)}
         <Form onFinish={this.submit} {...formLayout}>
           <Header title="Datos del curso" save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey="1">
@@ -1099,6 +1102,17 @@ class General extends Component {
                               async () => await this.upsertTabs(),
                             )
                           }
+                        />
+                      </Col>
+                    </Row>
+                    <Row style={{ padding: '8px 0px' }}>
+                      <Col xs={18}>Mantener la zona social desplegada cada vez que se ingresa a una actividad</Col>
+                      <Col xs={6}>
+                        <Switch
+                          checked={event.is_socialZoneOpened}
+                          onChange={(checked) => {
+                            this.handleChange(checked, 'is_socialZoneOpened');
+                          }}
                         />
                       </Col>
                     </Row>
