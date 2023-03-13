@@ -424,6 +424,7 @@ const ModalAuth = (props) => {
                       stylePaddingDesktop={stylePaddingDesktop}
                       idOrganization={controllerLoginVisible.idOrganization} // New!
                       defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
+                      requireAutomaticLoguin={true}
                     />
                   </>
                 )}

@@ -34,6 +34,7 @@ const RegisterUserAndOrgMember = ({
   stylePaddingDesktop,
   idOrganization,
   defaultPositionId,
+  requireAutomaticLoguin,
 }) => {
   console.log('idOrganization', idOrganization);
   const intl = useIntl();
@@ -100,7 +101,7 @@ const RegisterUserAndOrgMember = ({
     },
     {
       title: 'Last',
-      content: <RegistrationResult validationGeneral={validationGeneral} basicDataUser={basicDataUser} />,
+      content: <RegistrationResult validationGeneral={validationGeneral} basicDataUser={basicDataUser}  requireAutomaticLoguin={requireAutomaticLoguin}/>,
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
     },
   ];

@@ -1,23 +1,38 @@
 import { useState } from 'react';
 import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request';
 import FormComponent from '../events/registrationForm/form';
-import { Alert, Button, Modal } from 'antd';
+import { Alert, Button, Grid, Modal } from 'antd';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '@context/MessageService';
 import { useIntl } from 'react-intl';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-
+import RegisterUserAndOrgMember from '@components/authentication/RegisterUserAndOrgMember';
 
 const { confirm } = Modal;
+const { useBreakpoint } = Grid;
+
+const stylePaddingDesktop = {
+  paddingLeft: '30px',
+  paddingRight: '30px',
+  textAlign: 'center',
+};
+const stylePaddingMobile = {
+  paddingLeft: '10px',
+  paddingRight: '10px',
+  textAlign: 'center',
+};
 
 function ModalMembers(props) {
   const organizationId = props.organizationId;
   const userId = props.value._id;
   const intl = useIntl();
-  const { handleChangeTypeModal, typeModal, helperDispatch, currentAuthScreen  } = useHelper();
+  const screens = useBreakpoint();
+
+  const { handleChangeTypeModal, typeModal, helperDispatch, currentAuthScreen, controllerLoginVisible } = useHelper();
 
   const [loadingregister, setLoadingregister] = useState(false);
   const [existGenialialityUser, setExistGenialialityUser] = useState(true);
+  const [makeUserRegister, setMakeUserRegister] = useState(false);
 
   const options = [
     {
@@ -148,17 +163,29 @@ function ModalMembers(props) {
             marginTop: '30px',
           }}
         >
-          <FormComponent
-            conditionalsOther={[]}
-            initialOtherValue={props.value}
-            eventUserOther={{}}
-            fields={props.extraFields}
-            organization
-            options={options}
-            callback={validateGenialityUser}
-            loadingregister={loadingregister}
-            editUser={props.editMember}
-          />
+          {makeUserRegister ? (
+            <RegisterUserAndOrgMember
+              screens={screens}
+              stylePaddingMobile={stylePaddingMobile}
+              stylePaddingDesktop={stylePaddingDesktop}
+              idOrganization={organizationId} // New!
+              defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
+              requireAutomaticLoguin={false}
+            />
+          ) : (
+            <FormComponent
+              conditionalsOther={[]}
+              initialOtherValue={props.value}
+              eventUserOther={{}}
+              fields={props.extraFields}
+              organization
+              options={options}
+              callback={validateGenialityUser}
+              loadingregister={loadingregister}
+              editUser={props.editMember}
+            />
+          )}
+
           {!existGenialialityUser && (
             <Alert
               showIcon
@@ -174,30 +201,28 @@ function ModalMembers(props) {
                 marginBottom: '15px',
               }}
               /* closable */
-              message={<>
-                {'Usuario no está registrado en Geniality'}
-                <Button
-                  style={{ fontWeight: 'bold' }}
-                  onClick={() => {
-                    //props.closeOrOpenModalMembers();
-                    console.log('Se registra el usuario');
-                    //helperDispatch({ type: 'showLogin' });
-                    handleChangeTypeModal('register');
-                  }}
-                  type="link"
-                >
-                  Registrar Usuario
-                </Button>
-              </>}
+              message={
+                <>
+                  {'Usuario no está registrado en Geniality'}
+                  <Button
+                    style={{ fontWeight: 'bold', marginLeft: '2rem' }}
+                    onClick={() => {
+                      console.log('Se registra el usuario');
+                      setMakeUserRegister(true);
+                      setExistGenialialityUser(true);
+                    }}
+                    type="primary"
+                  >
+                    Registrar Usuario
+                  </Button>
+                </>
+              }
               type="error"
             />
           )}
         </div>
       </Modal>
-
-      
     </>
-    
   );
 }
 
