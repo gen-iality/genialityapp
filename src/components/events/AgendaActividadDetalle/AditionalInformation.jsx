@@ -140,8 +140,6 @@ const AditionalInformation = (props) => {
           </TabPane>
         }
 
-        {console.log('currentActivity', currentActivity)}
-
         {currentActivity !== null && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
           <TabPane
             tab={
@@ -159,8 +157,6 @@ const AditionalInformation = (props) => {
             </div>
           </TabPane>
         )}
-        {console.log('props.tabs', props.tabs)}
-        {console.log('props', props)}
 
         {/*  {props.tabs && (
           // && (props.tabs.surveys || props.tabs.surveys === 'true')

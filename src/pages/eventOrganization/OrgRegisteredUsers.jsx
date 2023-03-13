@@ -200,8 +200,6 @@ function OrgRegisteredUsers(props) {
         loading={isLoading}
         scroll={{ x: 'auto' }}
       />
-      {console.log('selectedOrgMember', selectedOrgMember)}
-      {console.log('selectedOrgMember?.eventUser_name', selectedOrgMember?.eventUser_name)}
 
       <Modal
         visible={isModalOpened}
