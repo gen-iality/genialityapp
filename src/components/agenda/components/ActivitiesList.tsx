@@ -396,12 +396,12 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   return (
     <>
-      <DeleteActivitiesTakenButton
+      {import.meta.env.NODE_ENV !== 'production' ? <DeleteActivitiesTakenButton
         eventId={eventId}
         cEventUserId={cEventUserId}
         setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
         setActivitiesAttendee={setActivitiesAttendee}
-      />
+      /> : undefined}
       <ModuledActivityHOC
         list={truncatedAgendaList}
         render={(nameToFilter) => (
