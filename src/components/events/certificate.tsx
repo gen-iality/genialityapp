@@ -17,10 +17,10 @@ import AgendaType from '@Utilities/types/AgendaType';
 type CurrentEventAttendees = any; // TODO: define this type and move to @Utilities/types/
 
 export interface CertificateProps {
-  cEvent?: any
-  cEventUser?: any,
-  cUser?: any
-};
+  cEvent?: any;
+  cEventUser?: any;
+  cUser?: any;
+}
 
 // const originalContent = '<p><br></p><p><br></p><p>Certificamos que</p><p>[user.names],</p><p>completó con éxito el curso</p><p>[event.name]</p><p>realizado del [event.start] al [event.end].';
 const originalContent = '';
@@ -36,8 +36,7 @@ const tags = [
   { tag: 'rol.name', label: 'Nombre del Rol' },
 ];
 
-
-const IconText = ({ icon, text, onSubmit }: { icon: any, text: string, onSubmit: () => void}) => (
+const IconText = ({ icon, text, onSubmit }: { icon: any; text: string; onSubmit: () => void }) => (
   <Button htmlType="submit" type="primary" onClick={onSubmit}>
     {createElement(icon, { style: { marginRight: 8 } })}
     {text}
@@ -61,7 +60,7 @@ function Certificate(props: CertificateProps) {
 
     const certs = await CertsApi.byEvent(props.cEvent.value._id);
     const roles = await RolAttApi.byEvent(props.cEvent.value._id);
-    const currentEvent = { ...props.cEvent.value }; 
+    const currentEvent = { ...props.cEvent.value };
     currentEvent.datetime_from = dayjs(currentEvent.datetime_from).format('DD/MM/YYYY');
     currentEvent.datetime_to = dayjs(currentEvent.datetime_to).format('DD/MM/YYYY');
     //Por defecto se trae el certificado sin rol
@@ -126,7 +125,7 @@ function Certificate(props: CertificateProps) {
           survey,
         );
 
-        console.debug('stats', stats)
+        console.debug('stats', stats);
         if (stats.minimum > 0) {
           if (stats.right >= stats.minimum) {
             passed = passed + 1;
@@ -136,16 +135,16 @@ function Certificate(props: CertificateProps) {
         }
       }
 
-      console.debug('passed', passed)
-      console.debug('surveys.length', surveys.length)
-      
-      if (surveys.length ===  0) {
+      console.debug('passed', passed);
+      console.debug('surveys.length', surveys.length);
+
+      if (surveys.length === 0) {
         setThereAreEvaluations(false);
       }
-      
-      if (passed === surveys.length ) {
+
+      if (passed === surveys.length) {
         setWereEvaluationsPassed(true);
-      } else if ((surveys.length === 0) || notPassed < surveys.length) {
+      } else if (surveys.length === 0 || notPassed < surveys.length) {
         setWereEvaluationsPassed(false);
       }
     })();
@@ -154,11 +153,12 @@ function Certificate(props: CertificateProps) {
     (async () => {
       if (!props.cEvent?.value) return;
       if (!props.cEventUser?.value) return;
-      console.log('start finding course stats')
+      console.log('start finding course stats');
 
       setActivitiesAttendee([]);
 
-      const activityFilter = (a: any) => ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+      const activityFilter = (a: any) =>
+        ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name);
 
       const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(props.cEvent.value._id);
       const filteredData = data.filter(activityFilter);
@@ -187,49 +187,46 @@ function Certificate(props: CertificateProps) {
 
   return (
     <>
-    <Row gutter={[8, 8]} wrap justify="center">
-      <Col span={24}>
-        <Card>
-          {thereAreEvaluations && (
-            <>
-              {wereEvaluationsPassed === undefined && (
-                <Spin>Cargando...</Spin>
-              )}
-              {!wereEvaluationsPassed && (
-                <>
-                  <Alert message="Certificado de evaluaciones NO disponible" type="error" />
-                  <br />
-                </>
+      <Row gutter={[8, 8]} wrap justify="center">
+        <Col span={24}>
+          <Card>
+            {thereAreEvaluations && (
+              <>
+                {wereEvaluationsPassed === undefined && <Spin>Cargando...</Spin>}
+                {!wereEvaluationsPassed && (
+                  <>
+                    <Alert message="Certificado de evaluaciones NO disponible" type="error" />
+                    <br />
+                  </>
+                )}
+                {wereEvaluationsPassed && (
+                  <>
+                    <Alert message="Certificado de evaluaciones disponible" type="success" />
+                    <br />
+                    <IconText
+                      text="Descargar certificado de evaluaciones"
+                      icon={DownloadOutlined}
+                      onSubmit={() => generateCert(props.cEventUser.value)}
+                    />
+                  </>
+                )}
+              </>
+            )}
 
-              )}
-              {(wereEvaluationsPassed) && (
-                <>
-                <Alert message="Certificado de evaluaciones disponible" type="success" />
+            {progressPercentValue === 100 && (
+              <>
+                <Alert message="Certificado de curso completo" type="success" />
                 <br />
                 <IconText
-                  text="Descargar certificado de evaluaciones"
+                  text="Descargar certificado de curso"
                   icon={DownloadOutlined}
                   onSubmit={() => generateCert(props.cEventUser.value)}
                 />
-                </>
-              )}
-            </>
-          )}
-          
-          {progressPercentValue === 100 && (
-            <>
-            <Alert message="Certificado de curso completo" type="success" />
-            <br />
-            <IconText
-              text="Descargar certificado de curso"
-              icon={DownloadOutlined}
-              onSubmit={() => generateCert(props.cEventUser.value)}
-            />
-            </>
-          )}
-        </Card>
-      </Col>
-    </Row>
+              </>
+            )}
+          </Card>
+        </Col>
+      </Row>
     </>
   );
 }
