@@ -16,6 +16,10 @@ export interface IParticipants {
     name   : string
     email? : string
     phone? : string
-    attendance  : string
+    attendance  : typeAttendace
 }
 
+export enum typeAttendace {
+    confirmed = 'asistencia confirmada',
+    unconfirmed = 'sin confirmar'
+}

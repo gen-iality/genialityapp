@@ -1,34 +1,29 @@
-import { CaretDownOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
-import {
-  Button,
-  Card,
-  Col,
-  Collapse,
-  Result,
-  Row,
-  Space,
-  Typography,
-  Avatar,
-  Tooltip,
-  Form,
-  Table,
-} from 'antd';
+import { CaretDownOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table } from 'antd';
 import React from 'react';
-import { IMeeting, IParticipants } from '../interfaces/meetings.interfaces';
+import { IMeeting, IParticipants, typeAttendace } from '../interfaces/meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
 import moment from 'moment';
 import { ColumnsType } from 'antd/lib/table';
 
 export default function MeetingItem({ date, name, place, participants }: IMeeting) {
   const dateFormat = moment(date).format('DD/MM/YYYY hh:mm:ss');
-  const prueba = () =>{
 
-  }
-  const dataParticipants = participants.map((participant,index : number) => ({
+  const ParticipanConfirm = (participant: IParticipants) => {
+    const temp = participants.filter((part) => part.name === participant.name);
+    temp.push({
+      ...participant,
+      attendance: typeAttendace.confirmed,
+    });
+    participants = temp;
+  };
+  const prueba = () => {};
+  const dataParticipants = participants.map((participant, index: number) => ({
     ...participant,
-    key : index
+    key: index,
   }));
-  const columns  : ColumnsType<IParticipants> = [
+
+  const columns: ColumnsType<IParticipants> = [
     {
       title: 'Participante',
       dataIndex: 'name',
@@ -40,7 +35,7 @@ export default function MeetingItem({ date, name, place, participants }: IMeetin
     {
       title: 'Asistencia',
       dataIndex: 'attendance',
-    }
+    },
   ];
   return (
     <Collapse
@@ -52,7 +47,12 @@ export default function MeetingItem({ date, name, place, participants }: IMeetin
       <Collapse.Panel
         key='1'
         header={
-          <Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>{name}</Typography.Text>
+          <Space>
+            <Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>{name}</Typography.Text>
+            <Typography.Text style={{ fontSize: '14px', fontWeight: '500', color: '#6F737C' }}>
+              {dateFormat}
+            </Typography.Text>
+          </Space>
         }
         extra={
           <Space>
@@ -65,14 +65,14 @@ export default function MeetingItem({ date, name, place, participants }: IMeetin
                 </Tooltip>
               ))}
             </Avatar.Group>
-            <Button icon={<EditOutlined />} onClick={prueba}/>
-            <Button icon={<DeleteOutlined />} onClick={prueba}/>
+            <Button icon={<EditOutlined />} onClick={prueba} />
+            <Button icon={<DeleteOutlined />} onClick={prueba} />
           </Space>
         }>
         <Row gutter={[16, 16]}>
           <Col span={24}>
             <Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '5px' }}>
-            <Result
+              <Result
                 style={{ padding: '10px' }}
                 status={'info'}
                 title='La reunion iniciara en :'
@@ -86,26 +86,32 @@ export default function MeetingItem({ date, name, place, participants }: IMeetin
               />
               <Row justify='center' gutter={[16, 16]}>
                 <Form layout='inline'>
-                <Form.Item label='Fecha'>
-                  <Typography>
-                    <pre>{dateFormat}</pre>
-                  </Typography>
-                </Form.Item>
-                <Form.Item label='Lugar'>
-                  <Typography>
-                    <pre>{place}</pre>
-                  </Typography>
-                </Form.Item>
-                </Form>                
+                  <Form.Item label='Fecha'>
+                    <Typography>
+                      <pre>{dateFormat}</pre>
+                    </Typography>
+                  </Form.Item>
+                  <Form.Item label='Lugar'>
+                    <Typography>
+                      <pre>{place}</pre>
+                    </Typography>
+                  </Form.Item>
+                </Form>
               </Row>
             </Card>
-            <Table rowSelection={{
-              type : 'checkbox'
-            }} dataSource={dataParticipants} columns={columns} />;
+            <Table
+              rowSelection={{
+                type: 'checkbox',
+                onSelect(participant) {
+                  ParticipanConfirm(participant);
+                },
+              }}
+              dataSource={dataParticipants}
+              columns={columns}
+            />
           </Col>
-          
         </Row>
       </Collapse.Panel>
     </Collapse>
-  )
+  );
 }
