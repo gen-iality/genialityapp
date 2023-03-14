@@ -1,4 +1,4 @@
-import { Button, Col, Row, Tabs } from 'antd';
+import { Button, Col, Row, Tabs,Modal } from 'antd';
 import React, { useState } from 'react';
 import Report from '../report';
 import { UseEventContext } from '@/context/eventContext';
@@ -7,7 +7,7 @@ import MeetingList from './components/MeetingList';
 import MeetingForm from './components/MeetingForm';
 
 export default function Networking() {
-  const [modal, setModal] = useState(true);
+  const [modal, setModal] = useState(false);
 
   const openModal = () => {
     setModal(true);
@@ -22,10 +22,19 @@ export default function Networking() {
     <Tabs defaultActiveKey={'1'}>
       
       <Tabs.TabPane tab='Agendar citas' key={1}>
-      <MeetingForm/>
+      {modal && (
+								<Modal
+									visible={modal}
+									title={'Agregar Reunion'}
+									footer={false}
+									onCancel={closeModal}
+									okText={'Guardar'}>
+									<MeetingForm/>
+								</Modal>
+							)}
         <Row justify='end' wrap gutter={[8, 8]}>
           <Col>
-            <Button type='primary' icon={<PlusCircleOutlined />} size='middle'>
+            <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={openModal}>
               Agregar
             </Button>
           </Col>
