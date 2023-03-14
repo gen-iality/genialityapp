@@ -15,12 +15,9 @@ class Service {
         .doc(activity_id)
         .get()
         .then((activity) => {
-          // console.log('ACTIVITY==>', activity);
           if (!activity.exists) {
-            // console.log('ACTIVITY UPDATE==>', activity);
             resolve(false);
           }
-          // console.log('ACTIVITY UPDATE==>', activity);
           resolve(true);
         });
     });
@@ -28,7 +25,6 @@ class Service {
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
     //SI EXISTE ACTIVITY ID SI NO SE ROMPE AL CREAR LA ACTIVIDAD
-    // console.log('***SE EJECUTA LA ACTUALIZACION***');
     if (activity_id) {
       console.log(event_id, activity_id, roomInfo, tabs, 'service');
       const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
@@ -47,8 +43,6 @@ class Service {
       return new Promise((resolve, reject) => {
         this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
           if (existActivity) {
-            // console.log('avalibleGames', avalibleGames);
-
             this.firestore
               .collection('events')
               .doc(event_id)

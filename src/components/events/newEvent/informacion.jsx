@@ -62,7 +62,7 @@ const Informacion = (props) => {
   useEffect(() => {
     if (props.currentUser) {
       obtainOrganizations();
-    } // console.log("ISBYORGANIZATION==>",isbyOrganization)
+    }
   }, [props.orgId, props.currentUser]);
   async function obtainOrganizations() {
     isLoadingOrganization(true);

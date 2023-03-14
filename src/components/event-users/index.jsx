@@ -499,9 +499,7 @@ class ListEventUser extends Component {
         dataIndex: 'progress_id',
         key: 'progress_id',
         ellipsis: true,
-        sorter: (a, b) => {
-          return true; // console.log('>', a, b);
-        },
+        sorter: (a, b) => true,
         render: (text, item, index) => (
           <ColumnProgreso
             shownAll={this.props.shownAll}
