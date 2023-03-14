@@ -48,14 +48,9 @@ function OrgMembers(props) {
   const [searchedColumn, setSearchedColumn] = useState('');
   const [extraFields, setExtraFields] = useState([]);
 
-  useEffect(
-    () => {
-      startingComponent();
-    },
-    [
-      /* props.org.user_properties */
-    ],
-  );
+  useEffect(() => {
+    startingComponent();
+  }, []);
 
   useEffect(() => {
     updateDataMembers();
