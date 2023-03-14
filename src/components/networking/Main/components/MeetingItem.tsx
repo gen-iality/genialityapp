@@ -43,7 +43,7 @@ export default function MeetingItem(menting : IMeeting) {
         key='1'
         header={
           <Space>
-            <Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>{name}</Typography.Text>
+            <Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>{meentign.name}</Typography.Text>
             <Typography.Text style={{ fontSize: '14px', fontWeight: '500', color: '#6F737C' }}>{dateFormat}</Typography.Text>
           </Space>
         }
