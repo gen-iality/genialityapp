@@ -10,12 +10,15 @@ import { IMeeting } from './interfaces/meetings.interfaces';
 
 export default function Networking() {
   const [modal, setModal] = useState(false);
+  const [edicion, setEdicion] = useState(false);
 
-  const openModal = () => {
+  const openModal = (modo?:string) => {
+    if (modo ==='edit') setEdicion(true)
     setModal(true);
   };
   const closeModal = () => {
     setModal(false);
+    setEdicion(false);
   };
 
   const eventContext = UseEventContext();
@@ -134,7 +137,7 @@ export default function Networking() {
       {modal && (
 								<Modal
 									visible={modal}
-									title={'Agregar Reunion'}
+									title={edicion?'Editar reunion':'Agregar Reunion'}
 									footer={false}
 									onCancel={closeModal}
 									okText={'Guardar'}>
@@ -143,7 +146,7 @@ export default function Networking() {
 							)}
         <Row justify='end' wrap gutter={[8, 8]}>
           <Col>
-            <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={openModal}>
+            <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={()=>openModal()}>
               Agregar
             </Button>
           </Col>
