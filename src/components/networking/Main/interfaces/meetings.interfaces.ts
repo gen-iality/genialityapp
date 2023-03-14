@@ -4,11 +4,11 @@ export interface IMeetingList {
     
 }
 export interface IMeeting {
+    id:string
     name  : string
     date  : string  | Date
     place : string
     participants : IParticipants[]
-
 }
 
 export interface IParticipants {
@@ -16,5 +16,6 @@ export interface IParticipants {
     email? : string
     phone? : string
     attendance  : boolean
+    id:string
 }
 

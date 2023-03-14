@@ -20,53 +20,61 @@ export default function Networking() {
     setModal(false);
     setEdicion(false);
   };
-
+  
   const eventContext = UseEventContext();
   const eventId = eventContext?.idEvent;
   const dataPruebas : IMeeting[] = [
     {
+      id:"f54e1515g51r15gf",
       name  : 'prueba 0',
       place : 'barranquilla/la-victoria',
       date  : new Date(Date.now() + 86400000),
       participants : [
         {
+          id:"f54erf41r5f",
           name : 'carlos',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
           attendance : false
         },
         {
+          id:"f54erf4ef5eff",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',
           attendance : false
         },
         {
+          id:"f54erf4515f1fe",
           name : 'carlos',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
           attendance : false
         },
         {
+          id:"f54erf4fe5e5f2",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',
           attendance : false
         }
-      ]
+      ],
     },
     {
+      id:"f54erf41r5f45e45e5e5e55w",
       name  : 'prueba 1',
       place : 'barranquilla/la-victoria',
       date  : new Date(),
       participants : [
         {
+          id:"f54erg165615115rg",
           name : 'carlos',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
           attendance : false
         },
         {
+          id:"f54erf4F4e5f45e45f45efe",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',
@@ -74,17 +82,20 @@ export default function Networking() {
         }
       ]
     },{
+      id:"f54erf41r5f45e45e5eFe54f45ef45e5f5e55w",
       name  : 'prueba 2',
       place : 'barranquilla/la-victoria',
       date  : new Date(),
       participants : [
         {
+          id:"e231fe521fe231fe1fe52f",
           name : 'carlos',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
           attendance : false
         },
         {
+          id:"e1gfefe1f23e1f32e1f23ef",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',
@@ -92,17 +103,20 @@ export default function Networking() {
         }
       ]
     },{
+      id:"f54erf41rf54e54f156ef4156ef1e",
       name  : 'prueba 3',
       place : 'barranquilla/la-victoria',
       date  : new Date(),
       participants : [
         {
+          id:"f54erf41r5fe51f5e1f5e1f5ef",
           name : 'carlos',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
           attendance : false
         },
         {
+          id:"4fef1e51f5e41f5e1f45e1f5e1f",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',
@@ -110,17 +124,20 @@ export default function Networking() {
         }
       ]
     },{
+      id:"f54erf41r5f45e454ef54ef415ef",
       name  : 'prueba 4',
       place : 'barranquilla/la-victoria',
       date  : new Date(),
       participants : [
         {
+          id:"f54erf41r5f45e435e1f5e41f5e1f",
           name : 'carlos andres rubio viloria',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
           attendance : false
         },
         {
+          id:"f54erf41r5f45e45e5e5f51ef15ef1ef",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',

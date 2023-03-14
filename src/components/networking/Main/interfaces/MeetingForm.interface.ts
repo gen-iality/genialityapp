@@ -1,30 +1,36 @@
-import { IParticipants } from "./meetings.interfaces";
+import { IMeeting, IParticipants } from "./meetings.interfaces";
 
 export interface TransferType {
     key: string;
     title: string;
-    description: string;
 }
+
+export interface FormMeeting {
+    id?:string;
+    name?:string;
+    participants?:IParticipants[];
+    date?:string | Date;
+    time?:string
+    place?:string
+} 
 
 export interface PropsMeetingForm {
     cancel: () => void;
+    reunion_info?:IMeeting
 }
 
 export const UsuariosArray:TransferType[]=[
     {
         key:'1',
         title:"Carlos",
-        description:"Descripcion 1"
     },
     {
         key:'2',
         title:"Luis",
-        description:"Descripcion 2"
     },
     {
         key:'3',
         title:"Marlon",
-        description:"Descripcion 3"
     }
 ]
 

@@ -1,40 +1,48 @@
-import React, { useState, Fragment, createRef } from 'react';
+import React, { useState, Fragment, createRef, useEffect } from 'react';
 import { Form, Input,  Button, Row, Transfer, DatePicker, TimePicker } from 'antd';
 import type { TransferDirection } from 'antd/es/transfer';
-import { PropsMeetingForm, TransferType, UsuariosArray } from '../interfaces/MeetingForm.interface';
+import { FormMeeting, PropsMeetingForm, TransferType, UsuariosArray } from '../interfaces/MeetingForm.interface';
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 };
-
-
 
 const filterOption=(inputValue:string, option:TransferType)=> {
   return option.title.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
 }
 
 
-const mockData: TransferType[] = Array.from({ length: 20 }).map((_, i) => ({
-  key: i.toString(),
-  title: `content${i + 1}`,
-  description: `description of content${i + 1}`,
-}));
 
 const initialTargetKeys:string[] =[] ;
 
 
-export default function MeetingForm({ cancel }: PropsMeetingForm) {
-  const [form] = Form.useForm();
+export default function MeetingForm({ cancel, reunion_info}: PropsMeetingForm) {
   const formRef = createRef<any>();
   const [targetKeys, setTargetKeys] = useState(initialTargetKeys);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [dataTransfer, setDataTransfer] = useState<TransferType[]>([])
+  const [form, setForm] = useState<FormMeeting>({
+    id:reunion_info?.id,
+    date:reunion_info?.date,
+    // time:reunion_info?.time,
+    place:reunion_info?.place,
+    name:reunion_info?.name
+  })
 
+
+  useEffect(() => {
+    const participants: TransferType[] = reunion_info?.participants.map((item) => ({
+      key: item.id,
+      title: item.name
+    })) ??[];
+    setDataTransfer(participants)
+  }, [])
+  
   const onChange = (nextTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
     setTargetKeys(nextTargetKeys);
   };
 
   const onSelectChange = (sourceSelectedKeys: string[], targetSelectedKeys: string[]) => {
-   console.log({sourceSelectedKeys,targetSelectedKeys})
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 
@@ -45,23 +53,26 @@ export default function MeetingForm({ cancel }: PropsMeetingForm) {
   return (
     <Fragment>
       <Form
-        form={form}
         autoComplete='off'
         initialValues={() => {}}
         ref={() => {}}
         onFinish={(e) => {
-          console.log(e);
+          console.log(e)
+          // setForm()
         }}
         {...formLayout}>
+          <Form.Item hidden initialValue={reunion_info} name={'id'}>
+            <Input name='id' type='text' />
+          </Form.Item>
         <Form.Item
           label={'Nombre'}
-          name={'nombre'}
+          name={'name'}
           rules={[{ required: true, message: 'Es necesario el nombre de la reunion' }]}>
-          <Input ref={formRef} name={'nombre'} type='text' placeholder={'Ej: Acuerdo productos'} />
+          <Input ref={formRef} name={'name'} type='text' placeholder={'Ej: Acuerdo productos'} />
         </Form.Item>
         <Form.Item
           label={'Participantes'}
-          name='participantes'
+          name='participants'
           rules={[{ required: true, message: 'Es necesario escoger al menos un participante' }]}>
           <Transfer
             filterOption={filterOption}
@@ -83,14 +94,7 @@ export default function MeetingForm({ cancel }: PropsMeetingForm) {
           name='fecha'
           rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}>
             {/* @ts-ignore */} 
-          <DatePicker inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'DD/MM/YYYY HH:mm:ss'} />
-        </Form.Item>
-        <Form.Item
-          label={'Hora reunion'}
-          name='fecha'
-          rules={[{ required: true, message: 'Es necesario seleccionar la hora de la reunion' }]}>
-            {/* @ts-ignore */} 
-          <TimePicker inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'HH:mm:ss'} />
+          <DatePicker showTime inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'DD/MM/YYYY HH:mm:ss'} />
         </Form.Item>
         <Form.Item
           label={'Lugar'}
