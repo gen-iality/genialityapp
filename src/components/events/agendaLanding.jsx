@@ -237,12 +237,7 @@ class Agenda extends Component {
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
 
-    const { data } = await AgendaApi.byEvent(
-      this.props.cEvent.value._id,
-      this.props.cEvent.value._id === '5f99a20378f48e50a571e3b6'
-        ? `?orderBy=[{"field":"datetime_start","order":"desc"}]`
-        : null,
-    );
+    const { data } = await AgendaApi.byEvent(this.props.cEvent.value._id);
     //se consulta la api de espacios para
     const space = await SpacesApi.byEvent(this.props.cEvent.value._id);
     // Filtro

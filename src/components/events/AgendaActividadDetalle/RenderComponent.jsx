@@ -53,10 +53,6 @@ const RenderComponent = (props) => {
             HandleChatOrAttende('1');
             HandlePublicPrivate('public');
           }
-          //Validacion para colombina (quitar apenas pase el curso)
-          if (event_id == '619d09f7cbd9a47c2d386372') {
-            HandleChatOrAttende('4');
-          }
 
           // handleChangeTabs(tabs);
           helperDispatch({ type: 'changeTabs', tabs: tabs });

@@ -124,8 +124,7 @@ class InformativeSection extends Component {
     );
   };
   render() {
-    const { markup, informativeSection, ellipsis } = this.state;
-    const { Paragraph } = Typography;
+    const { markup, informativeSection } = this.state;
     return (
       <Fragment>
         {informativeSection !== null && (
@@ -135,28 +134,7 @@ class InformativeSection extends Component {
               bordered={false}
               style={{ backgroundColor: 'transparent', margin: 'auto' }}
             >
-              {this.props.cEvent.value._id !== '611c285104f5d97d1b0f5ed2' && markup && Parser(markup)}
-
-              {this.props.cEvent.value._id == '611c285104f5d97d1b0f5ed2' && (
-                <>
-                  <h2
-                    style={{
-                      fontWeight: 700,
-                      fontSize: '20px',
-                      borderBottom: '1px solid #C0BAB9',
-                      marginTop: '15px',
-                      margin: 'auto',
-                    }}>
-                    Proyecto casos clínicos de obesidad: Adiposopatia en el Siglo XXI, más allá del peso Ideal
-                  </h2>
-                  <br></br>
-                  <ReactPlayer
-                    style={{ width: '560px', height: '445px', margin: 'auto' }}
-                    url='https://vimeo.com/589393733'
-                    controls
-                  />
-                </>
-              )}
+              { markup && Parser(markup)}
             </Card>
           </div>
         )}

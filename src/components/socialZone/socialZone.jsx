@@ -267,15 +267,9 @@ const SocialZone = (props) => {
               }
               key="4"
             >
-              <>
-                {cEvent.value._id == '619d09f7cbd9a47c2d386372' ? (
-                  <GameList key="GameList" />
-                ) : (
-                  <ThisRouteCanBeDisplayed>
-                    <GameList key="GameList" />
-                  </ThisRouteCanBeDisplayed>
-                )}
-              </>
+              <ThisRouteCanBeDisplayed>
+                <GameList key="GameList" />
+              </ThisRouteCanBeDisplayed>
             </TabPane>
           )}
       </Tabs>

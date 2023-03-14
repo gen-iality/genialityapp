@@ -132,22 +132,7 @@ const AgendaActividadDetalle = props => {
   // Validar lecciones por codigo
   useEffect(() => {
     if (cEvent.value && cUser.value) {
-      if (cEvent.value?._id == '61200dfb2c0e5301fa5e9d86') {
-        if (activitiesCode.includes(props.match.params.activity_id)) {
-          if (cEventUser.value) {
-            if (
-              codeActivity.includes(cEventUser.value?.properties.codigo) ||
-              cityValid.includes(cEventUser.value?.properties.ciudad)
-            ) {
-              setblockActivity(false);
-            } else {
-              setblockActivity(true);
-            }
-          }
-        }
-      } else {
-        setblockActivity(false);
-      }
+      setblockActivity(false);
     }
   }, [cEvent.value, cEventUser.value, cUser.value]);
 
