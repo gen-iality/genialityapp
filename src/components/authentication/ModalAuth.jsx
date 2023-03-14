@@ -413,6 +413,7 @@ const ModalAuth = (props) => {
                       screens={screens}
                       stylePaddingMobile={stylePaddingMobile}
                       stylePaddingDesktop={stylePaddingDesktop}
+                      requireAutomaticLoguin={true}
                     />
                   </>
                 )}
