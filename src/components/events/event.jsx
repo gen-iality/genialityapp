@@ -23,7 +23,7 @@ import Speakers from '../speakers';
 import MenuLanding from '../menuLanding';
 import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
-import ReportNetworking from '../networking/report';
+import NetworkingPage from '../networking/Main/index.tsx';
 import NewsSectionRoutes from '../news/newsRoute';
 import ProductSectionRoutes from '../products/productsRoute';
 import { withRouter } from 'react-router-dom';
@@ -360,7 +360,7 @@ class Event extends Component {
               />
               <Protected
                 path={`${match.url}/reportNetworking`}
-                component={ReportNetworking}
+                component={NetworkingPage}
                 event={event}
                 componentKey='reportNetworking'
               />
