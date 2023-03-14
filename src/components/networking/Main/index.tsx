@@ -12,6 +12,7 @@ export default function Networking() {
   console.log(eventId);
   return (
     <Tabs defaultActiveKey={'1'}>
+      
       <Tabs.TabPane tab='Agendar citas' key={1}>
       <MeetingForm/>
         <Row justify='end' wrap gutter={[8, 8]}>
@@ -21,8 +22,8 @@ export default function Networking() {
             </Button>
           </Col>
         </Row>
-        <Row justify='center' wrap gutter={[12, 12]}>
-          <Col>
+        <Row justify='center' wrap gutter={[0, 16]}>
+          <Col span={24}>
             <MeetingList/>
           </Col>
         </Row>
@@ -31,6 +32,7 @@ export default function Networking() {
       <Tabs.TabPane tab='Report de networking' key={2}>
         <Report props={eventId} />
       </Tabs.TabPane>
+
     </Tabs>
   );
 }
