@@ -7,6 +7,7 @@ import MeetingList from './components/MeetingList';
 import MeetingForm from './components/MeetingForm';
 import { IMeeting } from './interfaces/meetings.interfaces';
 
+
 export default function Networking() {
   const [modal, setModal] = useState(false);
 
@@ -16,6 +17,7 @@ export default function Networking() {
   const closeModal = () => {
     setModal(false);
   };
+
   const eventContext = UseEventContext();
   const eventId = eventContext?.idEvent;
   const dataPruebas : IMeeting[] = [
