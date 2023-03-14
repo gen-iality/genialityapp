@@ -12,30 +12,14 @@ const filterOption=(inputValue:string, option:TransferType)=> {
 }
 
 
-
-const initialTargetKeys:string[] =[] ;
-
-
-export default function MeetingForm({ cancel, reunion_info}: PropsMeetingForm) {
+export default function MeetingForm({ cancel, reunion_info,attendees,edit}: PropsMeetingForm) {
   const formRef = createRef<any>();
-  const [targetKeys, setTargetKeys] = useState(initialTargetKeys);
+  const [targetKeys, setTargetKeys] = useState<string[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [dataTransfer, setDataTransfer] = useState<TransferType[]>([])
-  const [form, setForm] = useState<FormMeeting>({
-    id:reunion_info?.id,
-    date:reunion_info?.date,
-    // time:reunion_info?.time,
-    place:reunion_info?.place,
-    name:reunion_info?.name
-  })
-
 
   useEffect(() => {
-    const participants: TransferType[] = reunion_info?.participants.map((item) => ({
-      key: item.id,
-      title: item.name
-    })) ??[];
-    setDataTransfer(participants)
+    setDataTransfer(attendees.map(asistente =>({title:asistente.user.names,key:asistente.user._id})))
   }, [])
   
   const onChange = (nextTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
@@ -61,14 +45,14 @@ export default function MeetingForm({ cancel, reunion_info}: PropsMeetingForm) {
           // setForm()
         }}
         {...formLayout}>
-          <Form.Item hidden initialValue={reunion_info} name={'id'}>
-            <Input name='id' type='text' />
+          <Form.Item hidden initialValue={reunion_info} name={'id'} >
+            <Input name='id' type='text' value={edit?reunion_info?.id:''}/>
           </Form.Item>
         <Form.Item
           label={'Nombre'}
           name={'name'}
           rules={[{ required: true, message: 'Es necesario el nombre de la reunion' }]}>
-          <Input ref={formRef} name={'name'} type='text' placeholder={'Ej: Acuerdo productos'} />
+          <Input ref={formRef} name={'name'} type='text' placeholder={'Ej: Acuerdo productos'} value={edit?reunion_info?.name:''}/>
         </Form.Item>
         <Form.Item
           label={'Participantes'}
@@ -77,7 +61,7 @@ export default function MeetingForm({ cancel, reunion_info}: PropsMeetingForm) {
           <Transfer
             filterOption={filterOption}
             showSearch
-            dataSource={UsuariosArray}
+            dataSource={dataTransfer}
             titles={['Disponibles', 'Asignados']}
             targetKeys={targetKeys}
             selectedKeys={selectedKeys}
@@ -94,13 +78,13 @@ export default function MeetingForm({ cancel, reunion_info}: PropsMeetingForm) {
           name='fecha'
           rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}>
             {/* @ts-ignore */} 
-          <DatePicker showTime inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'DD/MM/YYYY HH:mm:ss'} />
+          <DatePicker showTime inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'DD/MM/YYYY HH:mm:ss'} value={edit?reunion_info?.date:''}/>
         </Form.Item>
         <Form.Item
           label={'Lugar'}
           name='lugar'
           rules={[{ required: true, message: 'Es necesario seleccionar el lugar de la reunion' }]}>
-          <Input ref={formRef} name={'lugar'} type='text' placeholder={'Ej: Salon principal'} />
+          <Input ref={formRef} name={'lugar'} type='text' placeholder={'Ej: Salon principal'} value={edit?reunion_info?.place:''}/>
         </Form.Item>
 
         <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

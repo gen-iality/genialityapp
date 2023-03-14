@@ -17,6 +17,8 @@ export interface FormMeeting {
 export interface PropsMeetingForm {
     cancel: () => void;
     reunion_info?:IMeeting
+    attendees:any[]
+    edit:boolean
 }
 
 export const UsuariosArray:TransferType[]=[

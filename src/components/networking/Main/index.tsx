@@ -176,7 +176,7 @@ export default function Networking() {
 									footer={false}
 									onCancel={closeModal}
 									okText={'Guardar'}>
-									<MeetingForm cancel={closeModal}/>
+									<MeetingForm cancel={closeModal} attendees={attendees} edit={edicion}/>
 								</Modal>
 							)}
         <Row justify='end' wrap gutter={[8, 8]}>
