@@ -19,7 +19,7 @@ const HostList = () => {
       const speakersApi = await SpeakersApi.byEvent(cEvent.value._id)
       setSpeakers(speakersApi)
     })()
-  }, [])
+  }, [cEvent.value])
 
   useEffect(() => {
     (async () => {
@@ -27,7 +27,7 @@ const HostList = () => {
       console.log('toolsApi', toolsApi);
       setTools(toolsApi)
     })()
-  }, [])
+  }, [cEvent.value])
 
   return (
     <>
