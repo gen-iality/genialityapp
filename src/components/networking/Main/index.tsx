@@ -5,6 +5,7 @@ import { UseEventContext } from '@/context/eventContext';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import MeetingList from './components/MeetingList';
 import MeetingForm from './components/MeetingForm';
+import { IMeeting } from './interfaces/meetings.interfaces';
 
 export default function Networking() {
   const [modal, setModal] = useState(false);
@@ -17,7 +18,27 @@ export default function Networking() {
   };
   const eventContext = UseEventContext();
   const eventId = eventContext?.idEvent;
-  console.log(eventId);
+  const dataPruebas : IMeeting[] = [
+    {
+      name  : 'prueba',
+      place : 'barranquilla/la-victoria',
+      date  : new Date(),
+      participants : [
+        {
+          name : 'carlos',
+          email : 'carloprueba@gmail.com',
+          phone : '234992904',
+          attendance : false
+        },
+        {
+          name : 'luis',
+          email : 'luisprueba@gmail.com',
+          phone : '3223231212',
+          attendance : false
+        }
+      ]
+    }
+  ]
   return (
     <Tabs defaultActiveKey={'1'}>
       
@@ -41,7 +62,7 @@ export default function Networking() {
         </Row>
         <Row justify='center' wrap gutter={[0, 16]}>
           <Col span={24}>
-            <MeetingList/>
+            <MeetingList meentings={dataPruebas}/>
           </Col>
         </Row>
       </Tabs.TabPane>
