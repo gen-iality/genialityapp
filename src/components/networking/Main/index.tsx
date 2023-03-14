@@ -20,7 +20,38 @@ export default function Networking() {
   const eventId = eventContext?.idEvent;
   const dataPruebas : IMeeting[] = [
     {
-      name  : 'prueba',
+      name  : 'prueba 0',
+      place : 'barranquilla/la-victoria',
+      date  : new Date(Date.now() + 86400000),
+      participants : [
+        {
+          name : 'carlos',
+          email : 'carloprueba@gmail.com',
+          phone : '234992904',
+          attendance : false
+        },
+        {
+          name : 'luis',
+          email : 'luisprueba@gmail.com',
+          phone : '3223231212',
+          attendance : false
+        },
+        {
+          name : 'carlos',
+          email : 'carloprueba@gmail.com',
+          phone : '234992904',
+          attendance : false
+        },
+        {
+          name : 'luis',
+          email : 'luisprueba@gmail.com',
+          phone : '3223231212',
+          attendance : false
+        }
+      ]
+    },
+    {
+      name  : 'prueba 1',
       place : 'barranquilla/la-victoria',
       date  : new Date(),
       participants : [
@@ -37,8 +68,63 @@ export default function Networking() {
           attendance : false
         }
       ]
+    },{
+      name  : 'prueba 2',
+      place : 'barranquilla/la-victoria',
+      date  : new Date(),
+      participants : [
+        {
+          name : 'carlos',
+          email : 'carloprueba@gmail.com',
+          phone : '234992904',
+          attendance : false
+        },
+        {
+          name : 'luis',
+          email : 'luisprueba@gmail.com',
+          phone : '3223231212',
+          attendance : false
+        }
+      ]
+    },{
+      name  : 'prueba 3',
+      place : 'barranquilla/la-victoria',
+      date  : new Date(),
+      participants : [
+        {
+          name : 'carlos',
+          email : 'carloprueba@gmail.com',
+          phone : '234992904',
+          attendance : false
+        },
+        {
+          name : 'luis',
+          email : 'luisprueba@gmail.com',
+          phone : '3223231212',
+          attendance : false
+        }
+      ]
+    },{
+      name  : 'prueba 4',
+      place : 'barranquilla/la-victoria',
+      date  : new Date(),
+      participants : [
+        {
+          name : 'carlos andres rubio viloria',
+          email : 'carloprueba@gmail.com',
+          phone : '234992904',
+          attendance : false
+        },
+        {
+          name : 'luis',
+          email : 'luisprueba@gmail.com',
+          phone : '3223231212',
+          attendance : false
+        }
+      ]
     }
   ]
+  
   return (
     <Tabs defaultActiveKey={'1'}>
       

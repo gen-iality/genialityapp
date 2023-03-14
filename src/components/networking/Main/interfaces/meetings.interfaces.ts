@@ -1,6 +1,7 @@
 
 export interface IMeetingList {
     meentings : IMeeting[]
+    
 }
 export interface IMeeting {
     name  : string
