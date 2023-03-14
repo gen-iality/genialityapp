@@ -1,6 +1,6 @@
-import React, { useState, Fragment, createRef } from 'react';
+import { useState, Fragment, createRef } from 'react';
 import { Form, Input, Button, Row, Transfer, DatePicker } from 'antd';
-import { PropsMeetingForm, TransferType, UsuariosArray } from '../interfaces/MeetingForm.interface';
+import { UsuariosArray } from '../interfaces/MeetingForm.interface';
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
@@ -76,14 +76,20 @@ export default function MeetingForm({ cancel }) {
           rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}>
           <DatePicker
             inputReadOnly={true}
-            //RESTRICIONES
-            // disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
-            disabled={iMustBlockAFunctionality}
             style={{ width: '100%' }}
             allowClear={false}
-            value={Moment(event.date_start)}
             format={'DD/MM/YYYY'}
-            onChange={(value) => this.changeDate(value, 'date_start')}
+          />
+        </Form.Item>
+        <Form.Item
+          label={'Fecha reunion'}
+          name='fecha'
+          rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}>
+          <DatePicker
+            inputReadOnly={true}
+            style={{ width: '100%' }}
+            allowClear={false}
+            format={'DD/MM/YYYY'}
           />
         </Form.Item>
 
