@@ -41,7 +41,7 @@ function OrgMembers(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [isStaticsLoading, setIsStaticsLoading] = useState(true);
   const [addOrEditUser, setAddOrEditUser] = useState(false);
-  const [editMember, setEditMember] = useState(false);
+  const [isEditingThetMember, setIsEditingThetMember] = useState(false);
 
   /** Columns CMS States */
   const [searchText, setSearchText] = useState('');
@@ -242,13 +242,13 @@ function OrgMembers(props) {
   function addUser() {
     setSelectedUser({});
     closeOrOpenModalMembers();
-    setEditMember(false);
+    setIsEditingThetMember(false);
   }
 
   function editModalUser(item) {
     setSelectedUser(item);
     closeOrOpenModalMembers();
-    setEditMember(true);
+    setIsEditingThetMember(true);
   }
 
   const columnsData = {
@@ -302,7 +302,7 @@ function OrgMembers(props) {
         <ModalMembers
           extraFields={extraFields}
           value={selectedUser}
-          editMember={editMember}
+          editMember={isEditingThetMember}
           closeOrOpenModalMembers={closeOrOpenModalMembers}
           organizationId={organizationId}
           startingComponent={startingComponent}
