@@ -30,7 +30,7 @@ function OrgMembers(props) {
   const history = useHistory();
 
   /** Data States */
-  const [membersData, setMembersData] = useState([]);
+  const [membersDataSource, setMembersDataSource] = useState([]);
   const [lastUpdate, setLastUpdate] = useState();
   const [orgUsersList, setOrgUsersList] = useState([]);
   const [orgEventsList, setOrgEventsList] = useState([]);
@@ -152,7 +152,7 @@ function OrgMembers(props) {
 
     console.log('Variable - Miembros de la organización', fieldsMembersData);
 
-    setMembersData(fieldsMembersData);
+    setMembersDataSource(fieldsMembersData);
     setIsLoading(false);
   }
 
@@ -222,7 +222,7 @@ function OrgMembers(props) {
     e.preventDefault();
     e.stopPropagation();
 
-    const ws = utils.json_to_sheet(membersData);
+    const ws = utils.json_to_sheet(membersDataSource);
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Members');
     writeFileXLSX(wb, `Miembros_${dayjs().format('l')}.xlsx`);
@@ -262,21 +262,21 @@ function OrgMembers(props) {
       </p>
 
       <p>
-        <Tag>Inscritos: {membersData.length || 0}</Tag>
+        <Tag>Inscritos: {membersDataSource.length || 0}</Tag>
       </p>
 
       <Table
         columns={columns(columnsData, editModalUser, extraFields, userActivities, isStaticsLoading)}
-        dataSource={membersData}
+        dataSource={membersDataSource}
         size="small"
         rowKey="index"
         pagination={{ pageSize: 50 }}
-        loading={isLoading || membersData.length === 0}
+        loading={isLoading || membersDataSource.length === 0}
         scroll={{ x: 'auto' }}
         title={() => (
           <Row wrap justify="end" gutter={[8, 8]}>
             <Col>
-              {membersData.length > 0 && (
+              {membersDataSource.length > 0 && (
                 <Button type="primary" icon={<DownloadOutlined />} onClick={exportFile}>
                   Exportar
                 </Button>
