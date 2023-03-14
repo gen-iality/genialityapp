@@ -4,7 +4,7 @@ import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import moment from 'moment';
 
-const Report = (props) => {
+const Report = (eventId) => {
   let [columnsData, setColumnsData] = useState({});
 
   const columns = [
@@ -74,8 +74,8 @@ const Report = (props) => {
   return (
     <CMS 
       API={InvitationsApi}
-      eventId={props.event._id}
-      title={'Networking'}
+      eventId={eventId}
+      title={'Reporte de Networking'}
       exportData
       columns={columns}
       key='_id'
