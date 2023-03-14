@@ -126,7 +126,7 @@ function OrgMembers(props) {
   }
 
   async function updateDataMembers() {
-    const fieldsMembersData = [];
+    const allMemberFields = [];
 
     console.log('1. orgUsersList', orgUsersList);
 
@@ -140,19 +140,19 @@ function OrgMembers(props) {
         _id: orgUser._id,
         created_at: orgUser.created_at,
         updated_at: orgUser.updated_at,
-        role: orgUser.rol.name,
+        role: orgUser.rol?.name || 'Sin rol',
         picture: orgUser.user.picture,
         position: orgUser.position?.position_name || 'Sin cargo',
         position_id: orgUser.position?._id || null,
         stats: userActivities[orgUser.account_id],
       };
 
-      fieldsMembersData.push(properties);
+      allMemberFields.push(properties);
     });
 
-    console.log('Variable - Miembros de la organización', fieldsMembersData);
+    console.log('Variable - Miembros de la organización', allMemberFields);
 
-    setMembersDataSource(fieldsMembersData);
+    setMembersDataSource(allMemberFields);
     setIsLoading(false);
   }
 
@@ -208,7 +208,7 @@ function OrgMembers(props) {
     };
 
     const rolField = {
-      name: 'rol_id',
+      name: 'role',
       label: 'Rol',
       mandatory: true,
       type: 'list',
