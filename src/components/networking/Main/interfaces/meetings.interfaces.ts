@@ -12,6 +12,7 @@ export interface IMeeting {
 }
 
 export interface IParticipants {
+    id:string
     name   : string
     email? : string
     phone? : string
