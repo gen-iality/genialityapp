@@ -7,7 +7,6 @@ import {
   BarChartOutlined,
   PrinterOutlined,
   RocketOutlined,
-  CloudOutlined,
 } from '@ant-design/icons';
 
 const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -253,19 +252,6 @@ export const MenuItems = [
         name: 'Estadísticas de Asambleas',
         path: '/assembly-dashboard',
         key: 'estadisticas-asamblea',
-        onClick: handleClick,
-      },
-    ],
-  },
-  {
-    name: 'networking',
-    icon: <CloudOutlined />,
-    key: 'networking',
-    items: [ 
-      {
-        name: 'Agendar citas',
-        path: '/networking/meeting',
-        key: 'networking',
         onClick: handleClick,
       },
     ],

@@ -449,13 +449,6 @@ class Event extends Component {
                 componentKey='estadisticas-asamblea'
               />
               <Protected
-                path={`${match.url}/networking/meeting`}
-                component={Bingo}
-                eventId={event._id}
-                event={event}
-                componentKey='networking-meeting'
-              />
-              <Protected
                 path={`${match.url}/badge`}
                 component={BadgeEvent}
                 eventId={event._id}
