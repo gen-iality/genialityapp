@@ -8,7 +8,7 @@ import { OrderFunctions } from '@helpers/request';
 export const PayForm = ({ eventId, ...props }) => {
   return (
     <Card>
-      {eventId && eventId == '60cb7c70a9e4de51ac7945a2' && (
+      {/* {eventId && eventId == '60cb7c70a//9e4de51ac794//5a2' && (
         <Result
           icon={<ShopOutlined />}
           title="Para completar el registro y poder hacer pujas por las obras, realiza el pago de la entrada en el siguiente botón de pago."
@@ -20,7 +20,7 @@ export const PayForm = ({ eventId, ...props }) => {
             </div>
           }
         />
-      )}
+      )} */}
     </Card>
   );
 };

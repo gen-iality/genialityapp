@@ -34,10 +34,7 @@ const MenuEvent = ({ isMobile }) => {
                 return <></>;
               }
 
-              const icon =
-                event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
-                  ? 'RocketOutlined'
-                  : event.itemsMenu[key].icon;
+              const icon = event.itemsMenu[key].icon;
 
               const IconoComponente = iconComponents[icon];
 
@@ -102,10 +99,7 @@ const MenuEvent = ({ isMobile }) => {
               Object.keys(event.itemsMenu).map((key) => {
                 //icono personalizado
                 // Cambio de icono tripulación kellogs
-                const icon =
-                  event._id === '62c5e89176dfb307163c05a9' && event.itemsMenu[key].icon == 'AudioOutlined'
-                    ? 'RocketOutlined'
-                    : event.itemsMenu[key].icon;
+                const icon = event.itemsMenu[key].icon;
 
                 const IconoComponente = iconComponents[icon];
 

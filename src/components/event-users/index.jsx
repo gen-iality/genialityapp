@@ -630,8 +630,7 @@ class ListEventUser extends Component {
                     updatedAttendees[i][key.name] = Array.isArray(updatedAttendees[i]['properties'][key.name])
                       ? updatedAttendees[i]['properties'][key.name][0]
                       : updatedAttendees[i]['properties'][key.name];
-                    updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] =
-                      self.props.event._id == '60c8affc0b4f4b417d252b29' ? 'SI' : '';
+                    updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] = '';
                   }
                 }
               }

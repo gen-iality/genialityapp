@@ -42,10 +42,6 @@ const FeriasDetail = (props) => {
     const { match } = props;
     const eventId = match.params.event_id;
     const idCompany = match.params.id;
-    //tabs quemados por visibilidad de cliente ya que no se tenia información
-    if (eventId === '60cb7c70a9e4de51ac7945a2') {
-      setVisibleTab(false);
-    }
 
     obtenerEmpresa(eventId, idCompany).then((resp) => {
       setCompanyDetail(resp);

@@ -62,10 +62,6 @@ const UserStatusAndMenu = (props) => {
     }
   }, [props.match])
 
-  useEffect(() => {
-    if (props.eventId && props.eventId == '60cb7c70a9e4de51ac7945a2') setVisible(false);
-  }, [props.eventId]);
-
   const menu = !props.anonimususer ? (
     <Menu>
       {props.location.pathname.includes('landing') && cEventUser.value && cEventUser.status === 'LOADED' && (
