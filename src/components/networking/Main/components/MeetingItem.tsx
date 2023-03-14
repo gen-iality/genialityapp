@@ -1,27 +1,22 @@
 import { CaretDownOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table } from 'antd';
-import React from 'react';
+import React , { useState } from 'react';
 import { IMeeting, IParticipants, typeAttendace } from '../interfaces/meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
 import moment from 'moment';
 import { ColumnsType } from 'antd/lib/table';
 
-export default function MeetingItem({ date, name, place, participants }: IMeeting) {
-  const dateFormat = moment(date).format('DD/MM/YYYY hh:mm:ss');
 
-  const ParticipanConfirm = (participant: IParticipants) => {
-    const temp = participants.filter((part) => part.name === participant.name);
-    temp.push({
-      ...participant,
-      attendance: typeAttendace.confirmed,
-    });
-    participants = temp;
+export default function MeetingItem(menting : IMeeting) {
+  const [meentign, setMeentign] = useState<IMeeting>(menting)
+  const dateFormat = moment(meentign.date).format('DD/MM/YYYY hh:mm:ss');
+
+  const ParticipanConfirm = (participant: IParticipants, selected : boolean) => {
+    console.log(participant)
+    const temp = meentign.participants.map((part) => (part.id === participant.id ? {...part,attendance : selected ? typeAttendace.confirmed : typeAttendace.unconfirmed} : part))
+    setMeentign({...meentign, participants : temp }) ;
   };
   const prueba = () => {};
-  const dataParticipants = participants.map((participant, index: number) => ({
-    ...participant,
-    key: index,
-  }));
 
   const columns: ColumnsType<IParticipants> = [
     {
@@ -48,16 +43,14 @@ export default function MeetingItem({ date, name, place, participants }: IMeetin
         key='1'
         header={
           <Space>
-            <Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>{name}</Typography.Text>
-            <Typography.Text style={{ fontSize: '14px', fontWeight: '500', color: '#6F737C' }}>
-              {dateFormat}
-            </Typography.Text>
+            <Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>{meentign.name}</Typography.Text>
+            <Typography.Text style={{ fontSize: '14px', fontWeight: '500', color: '#6F737C' }}>{dateFormat}</Typography.Text>
           </Space>
         }
         extra={
           <Space>
             <Avatar.Group maxCount={4} maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
-              {participants.map((participant, key) => (
+              {meentign.participants.map((participant, key) => (
                 <Tooltip key={key} title={participant.name} placement='top'>
                   <Avatar style={{ backgroundColor: '#333F44', color: 'white' }}>
                     {participant.name && participant.name.charAt(0).toUpperCase()}
@@ -79,7 +72,7 @@ export default function MeetingItem({ date, name, place, participants }: IMeetin
                 extra={
                   <Countdown
                     style={{ margin: 'auto' }}
-                    value={date.toString()}
+                    value={meentign.date.toString()}
                     format='D [días] H [horas] m [minutos] s [segundos]'
                   />
                 }
@@ -93,7 +86,7 @@ export default function MeetingItem({ date, name, place, participants }: IMeetin
                   </Form.Item>
                   <Form.Item label='Lugar'>
                     <Typography>
-                      <pre>{place}</pre>
+                      <pre>{meentign.place}</pre>
                     </Typography>
                   </Form.Item>
                 </Form>
@@ -102,11 +95,11 @@ export default function MeetingItem({ date, name, place, participants }: IMeetin
             <Table
               rowSelection={{
                 type: 'checkbox',
-                onSelect(participant) {
-                  ParticipanConfirm(participant);
+                onSelect(participant,selected) {
+                  ParticipanConfirm(participant,selected);
                 },
               }}
-              dataSource={dataParticipants}
+              dataSource={meentign.participants.map((partici,index)=>({...partici,key : index}))}
               columns={columns}
             />
           </Col>
