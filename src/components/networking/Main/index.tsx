@@ -1,5 +1,5 @@
 import { Button, Col, Row, Tabs } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import Report from '../report';
 import { UseEventContext } from '@/context/eventContext';
 import { PlusCircleOutlined } from '@ant-design/icons';
@@ -7,6 +7,14 @@ import MeetingList from './components/MeetingList';
 import MeetingForm from './components/MeetingForm';
 
 export default function Networking() {
+  const [modal, setModal] = useState(true);
+
+  const openModal = () => {
+    setModal(true);
+  };
+  const closeModal = () => {
+    setModal(false);
+  };
   const eventContext = UseEventContext();
   const eventId = eventContext?.idEvent;
   console.log(eventId);

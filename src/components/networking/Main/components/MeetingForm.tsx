@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react';
 
 export default function MeetingForm() {
-  return (
-    <div>MeetingForm</div>
-  )
+  const [modal, setModal] = useState(true);
+
+  const openModal = () => {
+    setModal(true);
+  };
+  const closeModal = () => {
+    setModal(false);
+  };
+  return <div></div>;
 }
