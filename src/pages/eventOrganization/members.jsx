@@ -40,7 +40,7 @@ function OrgMembers(props) {
   /** Flag States */
   const [isLoading, setIsLoading] = useState(true);
   const [isStaticsLoading, setIsStaticsLoading] = useState(true);
-  const [addOrEditUser, setAddOrEditUser] = useState(false);
+  const [shouldRenderModal, setShouldRenderModel] = useState(false);
   const [isEditingThetMember, setIsEditingThetMember] = useState(false);
 
   /** Columns CMS States */
@@ -234,9 +234,7 @@ function OrgMembers(props) {
   }
 
   function closeOrOpenModalMembers() {
-    setAddOrEditUser((prevState) => {
-      return !prevState;
-    });
+    setShouldRenderModel((prevState) => !prevState);
   }
 
   function addUser() {
@@ -298,7 +296,7 @@ function OrgMembers(props) {
         )}
       />
 
-      {addOrEditUser && (
+      {shouldRenderModal && (
         <ModalMembers
           extraFields={extraFields}
           value={selectedUser}
