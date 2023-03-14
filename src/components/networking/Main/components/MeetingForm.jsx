@@ -1,46 +1,39 @@
 import React, { useState, Fragment, createRef } from 'react';
-import { Form, Input, Radio, Select, Button, Row, Transfer } from 'antd';
-import type { TransferDirection } from 'antd/es/transfer';
+import { Form, Input, Button, Row, Transfer, DatePicker } from 'antd';
 import { PropsMeetingForm, TransferType, UsuariosArray } from '../interfaces/MeetingForm.interface';
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 };
 
-
-
-const filterOption=(inputValue:string, option:TransferType)=> {
+const filterOption = (inputValue, option) => {
   return option.title.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
-}
+};
 
-
-const mockData: TransferType[] = Array.from({ length: 20 }).map((_, i) => ({
+const mockData = Array.from({ length: 20 }).map((_, i) => ({
   key: i.toString(),
   title: `content${i + 1}`,
   description: `description of content${i + 1}`,
 }));
 
-const initialTargetKeys:string[] =[] ;
+const initialTargetKeys = [];
 
-
-export default function MeetingForm({ cancel }: PropsMeetingForm) {
+export default function MeetingForm({ cancel }) {
   const [form] = Form.useForm();
-  const formRef = createRef<any>();
+  const formRef = createRef();
   const [targetKeys, setTargetKeys] = useState(initialTargetKeys);
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [selectedKeys, setSelectedKeys] = useState([]);
 
-  const onChange = (nextTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
+  const onChange = (nextTargetKeys, direction, moveKeys) => {
     setTargetKeys(nextTargetKeys);
   };
 
-  const onSelectChange = (sourceSelectedKeys: string[], targetSelectedKeys: string[]) => {
-   console.log({sourceSelectedKeys,targetSelectedKeys})
+  const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+    console.log({ sourceSelectedKeys, targetSelectedKeys });
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 
-  const onScroll = (direction: TransferDirection, e: React.SyntheticEvent<HTMLUListElement>) => {
-  };
-
+  const onScroll = (direction, e) => {};
 
   return (
     <Fragment>
@@ -73,25 +66,35 @@ export default function MeetingForm({ cancel }: PropsMeetingForm) {
             onChange={onChange}
             onSelectChange={onSelectChange}
             onScroll={onScroll}
-            render={item => item.title}
+            render={(item) => item.title}
           />
-          
         </Form.Item>
+
         <Form.Item
-          label={'Fecha'}
+          label={'Fecha reunion'}
           name='fecha'
           rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}>
-          
+          <DatePicker
+            inputReadOnly={true}
+            //RESTRICIONES
+            // disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
+            disabled={iMustBlockAFunctionality}
+            style={{ width: '100%' }}
+            allowClear={false}
+            value={Moment(event.date_start)}
+            format={'DD/MM/YYYY'}
+            onChange={(value) => this.changeDate(value, 'date_start')}
+          />
         </Form.Item>
 
         <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Button type='primary' style={{ marginRight: 10 }} htmlType='submit'>
-              Guardar
-            </Button>
-            <Button onClick={cancel} type='default' style={{ marginRight: 10 }}>
-              Cancelar
-            </Button>
-          </Row>
+          <Button type='primary' style={{ marginRight: 10 }} htmlType='submit'>
+            Guardar
+          </Button>
+          <Button onClick={cancel} type='default' style={{ marginRight: 10 }}>
+            Cancelar
+          </Button>
+        </Row>
       </Form>
     </Fragment>
   );
