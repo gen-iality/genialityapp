@@ -119,14 +119,15 @@ function ModalMembers(props) {
     setLoadingregister(true);
 
     let resp;
-    const body = { properties: values };
 
     if (props.editMember) {
+      values.rol_id = values.role
       resp = await OrganizationApi.editUser(organizationId, userId, values);
       if (values.position_id) {
         await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);
       }
     } else {
+      const body = { properties: values, rol_id: values.role };
       resp = await OrganizationApi.saveUser(organizationId, body);
       if (values.position_id) {
         await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);

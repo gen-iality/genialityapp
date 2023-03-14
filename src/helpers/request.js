@@ -743,6 +743,11 @@ export const OrganizationApi = {
     const data = { position_id: positionId }
     return await Actions.put(`/api/organizations/${organizationId}/default-position`, data)
   },
+  Roles: {
+    getAll: async (organizationId) => {
+      return await Actions.get(`/api/organizations/${organizationId}/roles`);
+    },
+  }
 };
 export const BadgeApi = {
   create: async (data) => {
