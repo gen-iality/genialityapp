@@ -1,16 +1,34 @@
 import { Button, Col, Row, Tabs,Modal } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Report from '../report';
 import { UseEventContext } from '@/context/eventContext';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import MeetingList from './components/MeetingList';
 import MeetingForm from './components/MeetingForm';
 import { IMeeting } from './interfaces/meetings.interfaces';
+import { listenAttendees, listenMeetings } from './services/meenting.service';
 
 
 export default function Networking() {
   const [modal, setModal] = useState(false);
   const [edicion, setEdicion] = useState(false);
+  const [attendees, setAttendees] = useState([])
+  const [meetings, setMeetings] = useState([])
+
+  useEffect(() => {
+    if(!!eventId) {
+      const unsubscribeAttendees = listenAttendees(eventId, setAttendees)
+      const unsubscribeMeetings = listenMeetings(eventId, setMeetings)
+      return () => {
+        unsubscribeAttendees()
+        unsubscribeMeetings()
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log({ attendees, meetings })
+  },[attendees, meetings]) 
 
   const openModal = (modo?:string) => {
     if (modo ==='edit') setEdicion(true)
@@ -35,28 +53,28 @@ export default function Networking() {
           name : 'carlos',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
-          attendance : false
+          attendance : 'sin asistir'
         },
         {
           id:"f54erf4ef5eff",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',
-          attendance : false
+          attendance : 'sin asistir'
         },
         {
           id:"f54erf4515f1fe",
           name : 'carlos',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
-          attendance : false
+          attendance : 'sin asistir'
         },
         {
           id:"f54erf4fe5e5f2",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',
-          attendance : false
+          attendance : 'sin asistir'
         }
       ],
     },
@@ -71,14 +89,14 @@ export default function Networking() {
           name : 'carlos',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
-          attendance : false
+          attendance : 'sin asistir'
         },
         {
           id:"f54erf4F4e5f45e45f45efe",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',
-          attendance : false
+          attendance : 'sin asistir'
         }
       ]
     },{
@@ -92,14 +110,14 @@ export default function Networking() {
           name : 'carlos',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
-          attendance : false
+          attendance : 'sin asistir'
         },
         {
           id:"e1gfefe1f23e1f32e1f23ef",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',
-          attendance : false
+          attendance : 'sin asistir'
         }
       ]
     },{
@@ -113,14 +131,14 @@ export default function Networking() {
           name : 'carlos',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
-          attendance : false
+          attendance : 'sin asistir'
         },
         {
           id:"4fef1e51f5e41f5e1f45e1f5e1f",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',
-          attendance : false
+          attendance : 'sin asistir'
         }
       ]
     },{
@@ -134,14 +152,14 @@ export default function Networking() {
           name : 'carlos andres rubio viloria',
           email : 'carloprueba@gmail.com',
           phone : '234992904',
-          attendance : false
+          attendance : 'sin asistir'
         },
         {
           id:"f54erf41r5f45e45e5e5f51ef15ef1ef",
           name : 'luis',
           email : 'luisprueba@gmail.com',
           phone : '3223231212',
-          attendance : false
+          attendance : 'sin asistir'
         }
       ]
     }

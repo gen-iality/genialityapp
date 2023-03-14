@@ -15,7 +15,6 @@ export interface IParticipants {
     name   : string
     email? : string
     phone? : string
-    attendance  : boolean
-    id:string
+    attendance  : string
 }
 

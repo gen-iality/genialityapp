@@ -11,17 +11,37 @@ import {
   Avatar,
   Tooltip,
   Form,
+  Table,
 } from 'antd';
 import React from 'react';
-import { IMeeting } from '../interfaces/meetings.interfaces';
+import { IMeeting, IParticipants } from '../interfaces/meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
 import moment from 'moment';
+import { ColumnsType } from 'antd/lib/table';
 
 export default function MeetingItem({ date, name, place, participants }: IMeeting) {
   const dateFormat = moment(date).format('DD/MM/YYYY hh:mm:ss');
   const prueba = () =>{
 
   }
+  const dataParticipants = participants.map((participant,index : number) => ({
+    ...participant,
+    key : index
+  }));
+  const columns  : ColumnsType<IParticipants> = [
+    {
+      title: 'Participante',
+      dataIndex: 'name',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+    },
+    {
+      title: 'Asistencia',
+      dataIndex: 'attendance',
+    }
+  ];
   return (
     <Collapse
       expandIcon={({ isActive }) => (
@@ -79,9 +99,13 @@ export default function MeetingItem({ date, name, place, participants }: IMeetin
                 </Form>                
               </Row>
             </Card>
+            <Table rowSelection={{
+              type : 'checkbox'
+            }} dataSource={dataParticipants} columns={columns} />;
           </Col>
+          
         </Row>
       </Collapse.Panel>
     </Collapse>
-  );
+  )
 }
