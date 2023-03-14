@@ -156,7 +156,6 @@ function OrgRegisteredUsers(props) {
     console.log('item', item);
     openModal();
     setSelectedOrgMember(item);
-    //setEditMember(true);
   };
 
   const onFormFinish = (values) => {

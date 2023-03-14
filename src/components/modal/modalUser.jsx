@@ -387,7 +387,6 @@ class UserModal extends Component {
                     style={{ fontWeight: 'bold', marginLeft: '2rem' }}
                     onClick={() => {
                       console.log('Se registra el usuario');
-                      //setMakeUserRegister(true);
                       this.setState({ makeUserRegister: true });
                       this.setState({ existGenialialityUser: true });
 

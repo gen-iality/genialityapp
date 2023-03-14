@@ -307,13 +307,7 @@ function UsersCard(props) {
         </Text>
       );
     });
-    // setDescription(() => {
-    //   return (
-    //     <div className="animate__animated animate__bounceIn" style={{ color: '#52C41A' }}>
-    //       10 Pts
-    //     </div>
-    //   );
-    // });
+
     setAvatar(() => {
       return (
         <Badge offset={[-40, 3]}>

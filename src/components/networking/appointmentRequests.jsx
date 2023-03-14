@@ -63,7 +63,6 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
     if (eventContext && userEventContext) {
       if (eventContext.value?._id && userEventContext.value?._id) {
         setLoading1(true);
-        //setPendingAgendasSent([]);
 
         getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
           .then((agendas) => {
@@ -173,7 +172,6 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             state: '1',
           };
           addNotification(notificationr, eventContext.value, userCurrentContext.value);
-          // setSendRespuesta(true); -> this setter is not in this subcomponent
           setFetching(false);
         })
         .catch((error) => {
