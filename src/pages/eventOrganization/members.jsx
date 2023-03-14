@@ -187,8 +187,18 @@ function OrgMembers(props) {
     return positionsOptions;
   }
 
+  const getRolesAsOptions = async () => {
+    const roles = await OrganizationApi.Roles.getAll(organizationId)
+    return (roles || []).map((role) => ({
+      value: role._id,
+      label: role.name,
+      type: role.type,
+    }))
+  }
+
   async function setFormFields() {
     const positionList = await getPositionList();
+    const rolList = await getRolesAsOptions()
 
     const positionField = {
       name: 'position_id',
@@ -202,7 +212,15 @@ function OrgMembers(props) {
       _id: { $oid: '614260d226e7862220497eac3' },
     };
 
-    setExtraFields([...props.org.user_properties, positionField]);
+    const rolField = {
+      name: 'rol_id',
+      label: 'Rol',
+      mandatory: true,
+      type: 'list',
+      options: rolList,
+    }
+
+    setExtraFields([rolField, ...props.org.user_properties, positionField]);
   }
 
   async function exportFile(e) {
