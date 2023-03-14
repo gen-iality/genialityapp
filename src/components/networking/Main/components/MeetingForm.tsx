@@ -1,5 +1,5 @@
 import React, { useState, Fragment, createRef } from 'react';
-import { Form, Input,  Button, Row, Transfer, DatePicker } from 'antd';
+import { Form, Input,  Button, Row, Transfer, DatePicker, TimePicker } from 'antd';
 import type { TransferDirection } from 'antd/es/transfer';
 import { PropsMeetingForm, TransferType, UsuariosArray } from '../interfaces/MeetingForm.interface';
 const formLayout = {
@@ -83,7 +83,14 @@ export default function MeetingForm({ cancel }: PropsMeetingForm) {
           name='fecha'
           rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}>
             {/* @ts-ignore */} 
-          <DatePicker inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'DD/MM/YYYY'} />
+          <DatePicker inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'DD/MM/YYYY HH:mm:ss'} />
+        </Form.Item>
+        <Form.Item
+          label={'Hora reunion'}
+          name='fecha'
+          rules={[{ required: true, message: 'Es necesario seleccionar la hora de la reunion' }]}>
+            {/* @ts-ignore */} 
+          <TimePicker inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'HH:mm:ss'} />
         </Form.Item>
         <Form.Item
           label={'Lugar'}
