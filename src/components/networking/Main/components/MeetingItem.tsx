@@ -72,7 +72,7 @@ export default function MeetingItem({menting : tempMeenting } : IMeentingItem) {
         <Row gutter={[16, 16]}>
           <Col span={24}>
             <Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '5px' }}>
-              <Result
+              {/* <Result
                 style={{ padding: '10px' }}
                 status={'info'}
                 title='La reunion iniciara en :'
@@ -83,7 +83,7 @@ export default function MeetingItem({menting : tempMeenting } : IMeentingItem) {
                     format='D [días] H [horas] m [minutos] s [segundos]'
                   />
                 }
-              />
+              /> */}
               <Row justify='center' gutter={[16, 16]}>
                 <Form layout='inline'>
                   <Form.Item label='Fecha'>
