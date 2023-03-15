@@ -13,7 +13,10 @@ export default function MeetingItem({menting : tempMeenting } : IMeentingItem) {
 
   const [meentign, setMeentign] = useState<IMeeting>(tempMeenting)
   const  { editMeenting,deleteMeeting }  = useContext(NetworkingContext)
-  const dateFormat = moment(meentign.date).format('DD/MM/YYYY hh:mm:ss');
+  const fechaFormat = moment(meentign.date).format('DD/MM/YYYY')
+  const startTime = moment(meentign.horas[0]).format('hh:mm:ss')
+  const endTime = moment(meentign.horas[1]).format('hh:mm:ss')
+
 
   const handleChange = (participant: IParticipants, selected : boolean) => {
     const temp = meentign.participants.map((part) => (part.id === participant.id ? {...part,attendance : selected ? typeAttendace.confirmed : typeAttendace.unconfirmed} : part))
@@ -48,7 +51,7 @@ export default function MeetingItem({menting : tempMeenting } : IMeentingItem) {
         header={
           <Space>
             <Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>{meentign.name}</Typography.Text>
-            <Typography.Text style={{ fontSize: '14px', fontWeight: '500', color: '#6F737C' }}>{dateFormat}</Typography.Text>
+            <Typography.Text style={{ fontSize: '14px', fontWeight: '500', color: '#6F737C' }}>{`${fechaFormat} - ${startTime}`}</Typography.Text>
           </Space>
         }
         extra={
@@ -76,7 +79,7 @@ export default function MeetingItem({menting : tempMeenting } : IMeentingItem) {
                 extra={
                   <Countdown
                     style={{ margin: 'auto' }}
-                    value={meentign.date.toString()}
+                    value={new Date(`${fechaFormat} ${startTime}`).toString()}
                     format='D [días] H [horas] m [minutos] s [segundos]'
                   />
                 }
@@ -85,7 +88,17 @@ export default function MeetingItem({menting : tempMeenting } : IMeentingItem) {
                 <Form layout='inline'>
                   <Form.Item label='Fecha'>
                     <Typography>
-                      <pre>{dateFormat}</pre>
+                      <pre>{fechaFormat}</pre>
+                    </Typography>
+                  </Form.Item>
+                  <Form.Item label='Hora incio'>
+                    <Typography>
+                      <pre>{startTime}</pre>
+                    </Typography>
+                  </Form.Item>
+                  <Form.Item label='Hora fin'>
+                    <Typography>
+                      <pre>{endTime}</pre>
                     </Typography>
                   </Form.Item>
                   <Form.Item label='Lugar'>
