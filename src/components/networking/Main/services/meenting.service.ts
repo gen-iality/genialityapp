@@ -17,7 +17,6 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
 		.collection(`networkingByEventId`)
 		.doc(eventId)
 		.collection('meetings').onSnapshot(snapshot => {
-			console.log("!snapshot.empty",!snapshot.empty)
       if (!snapshot.empty) {
         const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as {};
         setMeetings(data);
