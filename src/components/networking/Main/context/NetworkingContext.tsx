@@ -14,7 +14,8 @@ interface NetworkingContextType {
   editMeenting: (MeentingUptade: IMeeting) => void;
   closeModal: () => void;
   openModal: (mode?: string) => void;
-  createMeeting:(meeting: Omit<IMeeting, 'id'>)=>void
+  createMeeting:(meeting: Omit<IMeeting, 'id'>)=>void,
+  updateMeeting:(eventId: string, meetingId: string, meeting: IMeeting)=>void
 }
 
 export const NetworkingContext = createContext<NetworkingContextType>({} as NetworkingContextType);
@@ -66,6 +67,9 @@ export default function NetworkingProvider(props: Props) {
   const createMeeting = (meeting: Omit<IMeeting, 'id'>) => {
     service.createMeeting(eventId, meeting);
   };
+  const updateMeeting = (eventId: string, meetingId: string, meeting: IMeeting) => {
+    service.updateMeeting(eventId,meetingId,meeting);
+  };
   const values = {
     modal,
     openModal,
@@ -78,7 +82,8 @@ export default function NetworkingProvider(props: Props) {
     attendees,
     setMeetings,
     editMeenting,
-    createMeeting
+    createMeeting,
+    updateMeeting
   };
 
   return <NetworkingContext.Provider value={values}>{props.children}</NetworkingContext.Provider>;

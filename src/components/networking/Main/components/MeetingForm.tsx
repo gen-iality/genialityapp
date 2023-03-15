@@ -1,9 +1,8 @@
 import React, { useState, Fragment, createRef, useEffect, useContext } from 'react';
 import { Form, Input,  Button, Row, Transfer, DatePicker } from 'antd';
 import type { TransferDirection } from 'antd/es/transfer';
-import { FormMeeting, TransferType} from '../interfaces/MeetingForm.interface';
 import { NetworkingContext } from '../context/NetworkingContext';
-import { IMeeting, IParticipants, typeAttendace } from '../interfaces/meetings.interfaces';
+import { IMeeting, IParticipants, typeAttendace,FormMeeting,TransferType } from '../interfaces/meetings.interfaces';
 
 import { filterOption, formLayout } from '../utils/utils';
 import moment from 'moment';
@@ -17,7 +16,7 @@ export default function MeetingForm() {
     meentingSelect, 
     edicion, 
     closeModal,
-    createMeeting} = useContext(NetworkingContext);
+    createMeeting,updateMeeting} = useContext(NetworkingContext);
 
     const formRef = createRef<any>();
 
@@ -49,7 +48,7 @@ export default function MeetingForm() {
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 
-  const onCreate =(datos:FormMeeting)=>{
+  const onSubmit =(datos:FormMeeting)=>{
     const participants:IParticipants[] = dataTransfer.filter((item:any) =>datos.participants.includes(item.key))
     const meeting:Omit<IMeeting,'id'>={
         name:datos.name,
@@ -58,6 +57,10 @@ export default function MeetingForm() {
         place:datos.place
     }
    try {
+    if(edicion && datos.id){
+      updateMeeting(attendees.event_id,datos.id,{...meeting,id:datos.id})
+      return closeModal() 
+    }
     createMeeting(meeting)
     closeModal()
    } catch (error) {
@@ -74,7 +77,7 @@ export default function MeetingForm() {
         {...formLayout}
         autoComplete='off'
         ref={() => {}}
-        onFinish={edicion?onEdit:onCreate}
+        onFinish={onSubmit}
         // initialValues={formState}
         >
           <Form.Item hidden name={'id'} initialValue={edicion?formState.id:''}>
