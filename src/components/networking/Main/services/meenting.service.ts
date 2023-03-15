@@ -6,6 +6,8 @@ export const listenAttendees = (eventId: string, setAttendees: any) => {
 		if (!snapshot.empty) {
 			const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as {};
 			setAttendees(data);
+		} else {
+			setAttendees([])
 		}
 	});
 };
@@ -19,7 +21,9 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
       if (!snapshot.empty) {
         const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as {};
         setMeetings(data);
-      }
+      } else {
+		setMeetings([])
+	  }
     })
 };
 
