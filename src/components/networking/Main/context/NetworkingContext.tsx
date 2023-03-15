@@ -17,7 +17,6 @@ interface NetworkingContextType {
   createMeeting:(meeting: Omit<IMeeting, 'id'>)=>void,
   updateMeeting:(meetingId: string, meeting: IMeeting)=>void
   eventId:string
-  setReloadData:React.Dispatch<React.SetStateAction<boolean>>;
   deleteMeeting:( meetingId: string)=>void
 }
 
@@ -42,7 +41,6 @@ export default function NetworkingProvider(props: Props) {
   const [meentingSelect, setMeentingSelect] = useState<IMeeting>(meetingSelectedInitial);
   const [modal, setModal] = useState(false);
   const [edicion, setEdicion] = useState(false);
-  const [reloadData, setReloadData] = useState(false)
   const cUser = UseUserEvent();
   const eventId = cUser?.value?.event_id;
 
@@ -55,19 +53,16 @@ export default function NetworkingProvider(props: Props) {
         unsubscribeMeetings();
       };
     }
-  }, [reloadData]);
+  }, []);
 
   useEffect(() => {
-    console.log({ attendees, meetings });
   }, [attendees, meetings]);
 
   const editMeenting = (meentign: IMeeting) => {
-    console.log(meentign);
     setMeentingSelect(meentign);
     openModal('edit');
   };
   const openModal = (modo?: string) => {
-    console.log('abirendo modal de reuniones');
     if (modo === 'edit') setEdicion(true);
     setModal(true);
   };
@@ -79,15 +74,12 @@ export default function NetworkingProvider(props: Props) {
 
   const createMeeting = async (meeting: Omit<IMeeting, 'id'>) => {
     await service.createMeeting(eventId, meeting);
-    setReloadData((valor)=>!valor)
   };
   const updateMeeting = async ( meetingId: string, meeting: IMeeting) => {
    await  service.updateMeeting(eventId,meetingId,meeting);
-    setReloadData((valor)=>!valor)
   };
   const deleteMeeting = async( meetingId: string) => {
     await service.deleteMeeting(eventId,meetingId);
-    setReloadData((valor)=>!valor)
   };
   const values = {
     modal,
@@ -104,7 +96,6 @@ export default function NetworkingProvider(props: Props) {
     createMeeting,
     updateMeeting,
     eventId,
-    setReloadData,
     deleteMeeting
   };
 

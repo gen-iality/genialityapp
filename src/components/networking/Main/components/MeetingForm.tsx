@@ -26,7 +26,6 @@ export default function MeetingForm() {
     const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
     const [dataTransfer, setDataTransfer] = useState<TransferType[]>([])
     const {formState,onInputChange,onResetForm} = useForm<IMeeting>(meentingSelect)
-    console.log({targetKeys,selectedKeys,dataTransfer})
 
   useEffect(() => {
      if(edicion) {
@@ -54,7 +53,6 @@ export default function MeetingForm() {
 
   const onSubmit =(datos:FormMeeting)=>{
     try {
-      console.log('datos',datos)
     //Buscar los datos de los asistentes
     const participants:IParticipants[] = dataTransfer.filter((item:any) =>targetKeys.includes(item.key));
 
@@ -103,7 +101,6 @@ export default function MeetingForm() {
           label={'Participantes'}
           name='participants'
           rules={[{validator: (_, value) => {
-            console.log('value',value)
             if (!value && targetKeys.length===0) {
               return Promise.reject(new Error('Es necesario escoger al menos un participante'));
             }
@@ -142,7 +139,7 @@ export default function MeetingForm() {
           initialValue={[edicion?moment(formState.horas[0]):'',edicion?moment(formState.horas[1]):'']}
           >
             {/* @ts-ignore */} 
-          <TimePicker.RangePicker  placeholder={['Hora inicio','Hora fin']} format={'hh:mm'} inputReadOnly={true} style={{ width: '100%' }} allowClear={false} />
+          <TimePicker.RangePicker  use12Hours placeholder={['Hora inicio','Hora fin']} format={'hh:mm a'} inputReadOnly={true} style={{ width: '100%' }} allowClear={false} />
         </Form.Item>
 
         <Form.Item
