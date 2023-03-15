@@ -9,9 +9,7 @@ import { NetworkingContext } from '../context/NetworkingContext';
 
 export default function Meentign() {
   const { 
-    attendees, 
     meetings, 
-    meentingSelect, 
     modal,
     edicion, 
     closeModal , 
