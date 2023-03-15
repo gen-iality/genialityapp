@@ -68,19 +68,19 @@ export default function NetworkingProvider(props: Props) {
     setMeentingSelect(undefined)
   };
 
-  const createMeeting = (meeting: Omit<IMeeting, 'id'>) => {
-    service.createMeeting(eventId, meeting);
+  const createMeeting = async (meeting: Omit<IMeeting, 'id'>) => {
+    await service.createMeeting(eventId, meeting);
     console.log('Hora de actualizar')
     setReloadData((valor)=>!valor)
   };
-  const updateMeeting = ( meetingId: string, meeting: IMeeting) => {
-    service.updateMeeting(eventId,meetingId,meeting);
+  const updateMeeting = async ( meetingId: string, meeting: IMeeting) => {
+   await  service.updateMeeting(eventId,meetingId,meeting);
     console.log('Hora de actualizar')
     setReloadData((valor)=>!valor)
   };
-  const deleteMeeting = ( meetingId: string) => {
+  const deleteMeeting = async( meetingId: string) => {
     console.log("Eliminado")
-    service.deleteMeeting(eventId,meetingId);
+    await service.deleteMeeting(eventId,meetingId);
     console.log('Hora de actualizar')
     setReloadData((valor)=>!valor)
     console.log(meetings)
