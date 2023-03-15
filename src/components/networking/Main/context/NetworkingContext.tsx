@@ -75,12 +75,15 @@ export default function NetworkingProvider(props: Props) {
   };
   const updateMeeting = ( meetingId: string, meeting: IMeeting) => {
     service.updateMeeting(eventId,meetingId,meeting);
+    console.log('Hora de actualizar')
     setReloadData((valor)=>!valor)
   };
   const deleteMeeting = ( meetingId: string) => {
     console.log("Eliminado")
     service.deleteMeeting(eventId,meetingId);
+    console.log('Hora de actualizar')
     setReloadData((valor)=>!valor)
+    console.log(meetings)
   };
   const values = {
     modal,

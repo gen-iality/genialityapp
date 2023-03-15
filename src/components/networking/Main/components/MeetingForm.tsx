@@ -1,5 +1,5 @@
 import React, { useState, Fragment, createRef, useEffect, useContext } from 'react';
-import { Form, Input,  Button, Row, Transfer, DatePicker } from 'antd';
+import { Form, Input,  Button, Row, Transfer, DatePicker, TimePicker } from 'antd';
 import type { TransferDirection } from 'antd/es/transfer';
 import { NetworkingContext } from '../context/NetworkingContext';
 import { IMeeting, IParticipants, typeAttendace,FormMeeting,TransferType } from '../interfaces/meetings.interfaces';
@@ -57,8 +57,10 @@ export default function MeetingForm() {
         name:datos.name,
         date:datos.date.toString(),
         participants:participants,
-        place:datos.place
+        place:datos.place,
+        horas:[datos.horas[0].toString(),datos.horas[1].toString()]       
     }
+
    try {
     if(edicion && datos.id){
       
@@ -118,8 +120,20 @@ export default function MeetingForm() {
           initialValue={edicion?moment(formState.date):''}
           >
             {/* @ts-ignore */} 
-          <DatePicker  showTime inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'YYYY-MM-DD HH:mm'} />
+          <DatePicker inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'YYYY-MM-DD'} />
         </Form.Item>
+
+
+        <Form.Item
+          label={'Rango de horas'}
+          name='horas'
+          rules={[{ required: true, message: 'Es necesario seleccionar el rango de horas' }]}
+          initialValue={[edicion?moment(formState.horas[0]):'',edicion?moment(formState.horas[1]):'']}
+          >
+            {/* @ts-ignore */} 
+          <TimePicker.RangePicker  placeholder={['Hora inicio','Hora fin']} format={'hh:mm'} inputReadOnly={true} style={{ width: '100%' }} allowClear={false} />
+        </Form.Item>
+
         <Form.Item
           label={'Lugar'}
           name='place'

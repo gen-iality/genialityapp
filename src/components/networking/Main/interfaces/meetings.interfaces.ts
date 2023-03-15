@@ -7,11 +7,12 @@ export interface IMeentingItem {
     menting : IMeeting
 }
 export interface IMeeting {
-    id:string
-    name  : string
-    date  : string  | Date
-    place : string
-    participants : IParticipants[]
+    id:string;
+    name  : string;
+    date  : string  | Date;
+    horas:string[];
+    place : string;
+    participants : IParticipants[];
 }
 
 
@@ -35,5 +36,6 @@ export interface FormMeeting {
     name:string;
     participants:IParticipants[];
     date:string | Date;
-    place:string
-} 
+    place:string;
+    horas:string[];
+}
