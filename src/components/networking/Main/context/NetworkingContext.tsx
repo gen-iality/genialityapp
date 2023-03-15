@@ -15,9 +15,10 @@ interface NetworkingContextType {
   closeModal: () => void;
   openModal: (mode?: string) => void;
   createMeeting:(meeting: Omit<IMeeting, 'id'>)=>void,
-  updateMeeting:(eventId: string, meetingId: string, meeting: IMeeting)=>void
+  updateMeeting:(meetingId: string, meeting: IMeeting)=>void
   eventId:string
   setReloadData:React.Dispatch<React.SetStateAction<boolean>>;
+  deleteMeeting:( meetingId: string)=>void
 }
 
 export const NetworkingContext = createContext<NetworkingContextType>({} as NetworkingContextType);
@@ -72,8 +73,13 @@ export default function NetworkingProvider(props: Props) {
     console.log('Hora de actualizar')
     setReloadData((valor)=>!valor)
   };
-  const updateMeeting = (eventId: string, meetingId: string, meeting: IMeeting) => {
+  const updateMeeting = ( meetingId: string, meeting: IMeeting) => {
     service.updateMeeting(eventId,meetingId,meeting);
+    setReloadData((valor)=>!valor)
+  };
+  const deleteMeeting = ( meetingId: string) => {
+    console.log("Eliminado")
+    service.deleteMeeting(eventId,meetingId);
     setReloadData((valor)=>!valor)
   };
   const values = {
@@ -91,7 +97,8 @@ export default function NetworkingProvider(props: Props) {
     createMeeting,
     updateMeeting,
     eventId,
-    setReloadData
+    setReloadData,
+    deleteMeeting
   };
 
   return <NetworkingContext.Provider value={values}>{props.children}</NetworkingContext.Provider>;

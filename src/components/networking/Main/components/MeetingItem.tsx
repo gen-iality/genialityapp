@@ -12,7 +12,7 @@ import { NetworkingContext } from '../context/NetworkingContext';
 export default function MeetingItem({menting } : IMeentingItem) {
 
   const [meentign, setMeentign] = useState<IMeeting>(menting)
-  const  { editMeenting }  = useContext(NetworkingContext)
+  const  { editMeenting,deleteMeeting }  = useContext(NetworkingContext)
   const dateFormat = moment(meentign.date).format('DD/MM/YYYY hh:mm:ss');
 
   const handleChange = (participant: IParticipants, selected : boolean) => {
@@ -62,7 +62,7 @@ export default function MeetingItem({menting } : IMeentingItem) {
               ))}
             </Avatar.Group>
             <Button icon={<EditOutlined />} onClick={()=>editMeenting(meentign)} />
-            <Button icon={<DeleteOutlined />} onClick={()=>editMeenting(meentign)} />
+            <Button icon={<DeleteOutlined />} onClick={()=>deleteMeeting(meentign.id)} />
           </Space>
         }>
         <Row gutter={[16, 16]}>

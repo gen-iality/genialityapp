@@ -62,7 +62,7 @@ export default function MeetingForm() {
    try {
     if(edicion && datos.id){
       
-      updateMeeting(eventId,datos.id,{...meeting,id:datos.id})
+      updateMeeting(datos.id,{...meeting,id:datos.id})
       return closeModal() 
     }
     createMeeting(meeting)
