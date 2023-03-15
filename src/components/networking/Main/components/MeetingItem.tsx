@@ -16,7 +16,6 @@ export default function MeetingItem({menting } : IMeentingItem) {
   const dateFormat = moment(meentign.date).format('DD/MM/YYYY hh:mm:ss');
 
   const handleChange = (participant: IParticipants, selected : boolean) => {
-    console.log(participant)
     const temp = meentign.participants.map((part) => (part.id === participant.id ? {...part,attendance : selected ? typeAttendace.confirmed : typeAttendace.unconfirmed} : part))
     setMeentign({...meentign, participants : temp }) ;
   };

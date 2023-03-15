@@ -1,4 +1,5 @@
 import { firestore } from '@/helpers/firebase';
+import { IMeeting } from '../interfaces/meetings.interfaces';
 
 export const listenAttendees = (eventId: string, setAttendees: any) => {
 	return firestore.collection(`${eventId}_event_attendees`).onSnapshot(snapshot => {
@@ -21,7 +22,7 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
     })
 };
 
-export const createMeeting = async (eventId: string, createMeetingDto: any) => {
+export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMeeting,'id'>) => {
 	try {
 		await firestore
 			.collection(`networkingByEventId`)

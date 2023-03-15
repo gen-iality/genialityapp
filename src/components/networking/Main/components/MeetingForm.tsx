@@ -1,25 +1,44 @@
-import React, { useState, Fragment, createRef, useEffect } from 'react';
-import { Form, Input,  Button, Row, Transfer, DatePicker, TimePicker } from 'antd';
+import React, { useState, Fragment, createRef, useEffect, useContext } from 'react';
+import { Form, Input,  Button, Row, Transfer, DatePicker } from 'antd';
 import type { TransferDirection } from 'antd/es/transfer';
-import { FormMeeting, PropsMeetingForm, TransferType, UsuariosArray } from '../interfaces/MeetingForm.interface';
-const formLayout = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 },
-};
+import { FormMeeting, TransferType} from '../interfaces/MeetingForm.interface';
+import { NetworkingContext } from '../context/NetworkingContext';
+import { IMeeting, IParticipants, typeAttendace } from '../interfaces/meetings.interfaces';
 
-const filterOption=(inputValue:string, option:TransferType)=> {
-  return option.title.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
-}
+import { filterOption, formLayout } from '../utils/utils';
+import moment from 'moment';
+import { useForm } from '@/hooks/useForm';
 
 
-export default function MeetingForm({ cancel, reunion_info,attendees,edit}: PropsMeetingForm) {
-  const formRef = createRef<any>();
-  const [targetKeys, setTargetKeys] = useState<string[]>([]);
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-  const [dataTransfer, setDataTransfer] = useState<TransferType[]>([])
+export default function MeetingForm() {
+
+  const { 
+    attendees, 
+    meentingSelect, 
+    edicion, 
+    closeModal,
+    createMeeting} = useContext(NetworkingContext);
+
+    const formRef = createRef<any>();
+
+    const [targetKeys, setTargetKeys] = useState<string[]>([]);
+    const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+    const [dataTransfer, setDataTransfer] = useState<TransferType[]>([])
+    const {formState,onInputChange,onResetForm} = useForm<IMeeting>(meentingSelect)
 
   useEffect(() => {
-    setDataTransfer(attendees.map(asistente =>({title:asistente.user.names,key:asistente.user._id})))
+     if(edicion && meentingSelect?.participants) {
+      setTargetKeys(meentingSelect?.participants.map((item:any)=>item.id))
+     }
+
+    setDataTransfer(attendees.map((asistente:any) =>(
+      {
+        id:asistente.user._id,
+        name:asistente.user.names,
+        key:asistente.user._id,
+        email:asistente.user.email,
+        attendance:typeAttendace.unconfirmed
+      })))
   }, [])
   
   const onChange = (nextTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
@@ -30,34 +49,50 @@ export default function MeetingForm({ cancel, reunion_info,attendees,edit}: Prop
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 
-  const onScroll = (direction: TransferDirection, e: React.SyntheticEvent<HTMLUListElement>) => {
-  };
-  console.log(edit?reunion_info?.id:'')
+  const onCreate =(datos:FormMeeting)=>{
+    const participants:IParticipants[] = dataTransfer.filter((item:any) =>datos.participants.includes(item.key))
+    const meeting:Omit<IMeeting,'id'>={
+        name:datos.name,
+        date:datos.date.toString(),
+        participants:participants,
+        place:datos.place
+    }
+   try {
+    createMeeting(meeting)
+    closeModal()
+   } catch (error) {
+    console.log("Ocurrio un al guardar la reunion")
+   }
+    
+  }
+  const onEdit =(datos:FormMeeting)=>{
+    
+  }
   return (
     <Fragment>
       <Form
+        {...formLayout}
         autoComplete='off'
-        initialValues={() => {}}
         ref={() => {}}
-        onFinish={(e) => {
-          console.log(e)
-          // setForm()
-        }}
-        {...formLayout}>
-          <Form.Item hidden initialValue={reunion_info} name={'id'} >
-            <Input name='id' type='text' value={edit?reunion_info?.id:''}/>
+        onFinish={edicion?onEdit:onCreate}
+        // initialValues={formState}
+        >
+          <Form.Item hidden name={'id'} initialValue={edicion?formState.id:''}>
+            <Input name='id' type='text' />
           </Form.Item>
         <Form.Item
           label={'Nombre'}
           name={'name'}
+          initialValue={edicion?formState.name:''}
           rules={[{ required: true, message: 'Es necesario el nombre de la reunion' }]}>
-          <Input ref={formRef} name={'name'} type='text' placeholder={'Ej: Acuerdo productos'} value={edit?reunion_info?.name:''}/>
+          <Input ref={formRef} name={'name'} type='text' placeholder={'Ej: Acuerdo productos'} />
         </Form.Item>
         <Form.Item
           label={'Participantes'}
           name='participants'
           rules={[{ required: true, message: 'Es necesario escoger al menos un participante' }]}>
           <Transfer
+            style={{ width: '100%' }}
             filterOption={filterOption}
             showSearch
             dataSource={dataTransfer}
@@ -66,31 +101,34 @@ export default function MeetingForm({ cancel, reunion_info,attendees,edit}: Prop
             selectedKeys={selectedKeys}
             onChange={onChange}
             onSelectChange={onSelectChange}
-            onScroll={onScroll}
-            render={item => item.title}
+            render={item => item.name}
           />
           
         </Form.Item>
        
         <Form.Item
           label={'Fecha reunion'}
-          name='fecha'
-          rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}>
+          name='date'
+          rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}
+          initialValue={edicion?moment(formState.date):''}
+          >
             {/* @ts-ignore */} 
-          <DatePicker showTime inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'DD/MM/YYYY HH:mm:ss'} value={edit?reunion_info?.date:''}/>
+          <DatePicker  showTime inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'YYYY-MM-DD HH:mm'} />
         </Form.Item>
         <Form.Item
           label={'Lugar'}
-          name='lugar'
-          rules={[{ required: true, message: 'Es necesario seleccionar el lugar de la reunion' }]}>
-          <Input ref={formRef} name={'lugar'} type='text' placeholder={'Ej: Salon principal'} value={edit?reunion_info?.place:''}/>
+          name='place'
+          rules={[{ required: true, message: 'Es necesario seleccionar el lugar de la reunion' }]}
+          initialValue={edicion?formState.place:''}
+          >
+          <Input ref={formRef} name={'place'} type='text' placeholder={'Ej: Salon principal'} />
         </Form.Item>
 
         <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Button type='primary' style={{ marginRight: 10 }} htmlType='submit'>
               Guardar
             </Button>
-            <Button onClick={cancel} type='default' style={{ marginRight: 10 }}>
+            <Button onClick={closeModal} type='default' style={{ marginRight: 10 }}>
               Cancelar
             </Button>
           </Row>
