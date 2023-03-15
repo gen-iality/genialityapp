@@ -16,6 +16,8 @@ interface NetworkingContextType {
   openModal: (mode?: string) => void;
   createMeeting:(meeting: Omit<IMeeting, 'id'>)=>void,
   updateMeeting:(eventId: string, meetingId: string, meeting: IMeeting)=>void
+  eventId:string
+  setReloadData:React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const NetworkingContext = createContext<NetworkingContextType>({} as NetworkingContextType);
@@ -30,6 +32,7 @@ export default function NetworkingProvider(props: Props) {
   const [meentingSelect, setMeentingSelect] = useState<IMeeting | undefined>();
   const [modal, setModal] = useState(false);
   const [edicion, setEdicion] = useState(false);
+  const [reloadData, setReloadData] = useState(false)
   const cUser = UseUserEvent();
   const eventId = cUser?.value?.event_id;
 
@@ -42,7 +45,7 @@ export default function NetworkingProvider(props: Props) {
         unsubscribeMeetings();
       };
     }
-  }, []);
+  }, [reloadData]);
 
   useEffect(() => {
     console.log({ attendees, meetings });
@@ -66,9 +69,12 @@ export default function NetworkingProvider(props: Props) {
 
   const createMeeting = (meeting: Omit<IMeeting, 'id'>) => {
     service.createMeeting(eventId, meeting);
+    console.log('Hora de actualizar')
+    setReloadData((valor)=>!valor)
   };
   const updateMeeting = (eventId: string, meetingId: string, meeting: IMeeting) => {
     service.updateMeeting(eventId,meetingId,meeting);
+    setReloadData((valor)=>!valor)
   };
   const values = {
     modal,
@@ -83,7 +89,9 @@ export default function NetworkingProvider(props: Props) {
     setMeetings,
     editMeenting,
     createMeeting,
-    updateMeeting
+    updateMeeting,
+    eventId,
+    setReloadData
   };
 
   return <NetworkingContext.Provider value={values}>{props.children}</NetworkingContext.Provider>;

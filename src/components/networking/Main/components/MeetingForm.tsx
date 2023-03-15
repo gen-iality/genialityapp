@@ -16,7 +16,10 @@ export default function MeetingForm() {
     meentingSelect, 
     edicion, 
     closeModal,
-    createMeeting,updateMeeting} = useContext(NetworkingContext);
+    createMeeting,
+    updateMeeting,
+    eventId,
+    setReloadData} = useContext(NetworkingContext);
 
     const formRef = createRef<any>();
 
@@ -58,19 +61,18 @@ export default function MeetingForm() {
     }
    try {
     if(edicion && datos.id){
-      updateMeeting(attendees.event_id,datos.id,{...meeting,id:datos.id})
+      
+      updateMeeting(eventId,datos.id,{...meeting,id:datos.id})
       return closeModal() 
     }
     createMeeting(meeting)
     closeModal()
+    
    } catch (error) {
     console.log("Ocurrio un al guardar la reunion")
    }
-    
   }
-  const onEdit =(datos:FormMeeting)=>{
-    
-  }
+  
   return (
     <Fragment>
       <Form
