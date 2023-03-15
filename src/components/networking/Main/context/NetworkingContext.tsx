@@ -9,8 +9,8 @@ interface NetworkingContextType {
   edicion: boolean;
   attendees: any;
   meetings: IMeeting[];
-  meentingSelect: IMeeting | undefined;
-  setMeentingSelect: React.Dispatch<React.SetStateAction<IMeeting | undefined>>;
+  meentingSelect: IMeeting;
+  setMeentingSelect: React.Dispatch<React.SetStateAction<IMeeting>>;
   editMeenting: (MeentingUptade: IMeeting) => void;
   closeModal: () => void;
   openModal: (mode?: string) => void;
@@ -27,10 +27,19 @@ interface Props {
   children: ReactNode;
 }
 
+const meetingSelectedInitial:IMeeting ={
+  date:'',
+  horas:[],
+  id:'',
+  name:'',
+  participants:[],
+  place:''
+}
+
 export default function NetworkingProvider(props: Props) {
   const [attendees, setAttendees] = useState<any>([]);
   const [meetings, setMeetings] = useState<IMeeting[]>([]);
-  const [meentingSelect, setMeentingSelect] = useState<IMeeting | undefined>();
+  const [meentingSelect, setMeentingSelect] = useState<IMeeting>(meetingSelectedInitial);
   const [modal, setModal] = useState(false);
   const [edicion, setEdicion] = useState(false);
   const [reloadData, setReloadData] = useState(false)
@@ -65,25 +74,20 @@ export default function NetworkingProvider(props: Props) {
   const closeModal = () => {
     setModal(false);
     setEdicion(false);
-    setMeentingSelect(undefined)
+    setMeentingSelect(meetingSelectedInitial)
   };
 
   const createMeeting = async (meeting: Omit<IMeeting, 'id'>) => {
     await service.createMeeting(eventId, meeting);
-    console.log('Hora de actualizar')
     setReloadData((valor)=>!valor)
   };
   const updateMeeting = async ( meetingId: string, meeting: IMeeting) => {
    await  service.updateMeeting(eventId,meetingId,meeting);
-    console.log('Hora de actualizar')
     setReloadData((valor)=>!valor)
   };
   const deleteMeeting = async( meetingId: string) => {
-    console.log("Eliminado")
     await service.deleteMeeting(eventId,meetingId);
-    console.log('Hora de actualizar')
     setReloadData((valor)=>!valor)
-    console.log(meetings)
   };
   const values = {
     modal,

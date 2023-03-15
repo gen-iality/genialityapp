@@ -18,8 +18,7 @@ export default function MeetingForm() {
     closeModal,
     createMeeting,
     updateMeeting,
-    eventId,
-    setReloadData} = useContext(NetworkingContext);
+    } = useContext(NetworkingContext);
 
     const formRef = createRef<any>();
 
@@ -27,12 +26,14 @@ export default function MeetingForm() {
     const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
     const [dataTransfer, setDataTransfer] = useState<TransferType[]>([])
     const {formState,onInputChange,onResetForm} = useForm<IMeeting>(meentingSelect)
+    console.log({targetKeys,selectedKeys,dataTransfer})
 
   useEffect(() => {
-     if(edicion && meentingSelect?.participants) {
-      setTargetKeys(meentingSelect?.participants.map((item:any)=>item.id))
+     if(edicion) {
+      setTargetKeys(meentingSelect.participants.map((item:any)=>item.id))
      }
 
+     //Tranformar todos los asistentes al evento para el transfer
     setDataTransfer(attendees.map((asistente:any) =>(
       {
         id:asistente.user._id,
@@ -52,7 +53,12 @@ export default function MeetingForm() {
   };
 
   const onSubmit =(datos:FormMeeting)=>{
-    const participants:IParticipants[] = dataTransfer.filter((item:any) =>datos.participants.includes(item.key))
+    try {
+      console.log('datos',datos)
+    //Buscar los datos de los asistentes
+    const participants:IParticipants[] = dataTransfer.filter((item:any) =>targetKeys.includes(item.key));
+
+    //objeto de creacion
     const meeting:Omit<IMeeting,'id'>={
         name:datos.name,
         date:datos.date.toString(),
@@ -61,9 +67,8 @@ export default function MeetingForm() {
         horas:[datos.horas[0].toString(),datos.horas[1].toString()]       
     }
 
-   try {
+  
     if(edicion && datos.id){
-      
       updateMeeting(datos.id,{...meeting,id:datos.id})
       return closeModal() 
     }
@@ -71,7 +76,7 @@ export default function MeetingForm() {
     closeModal()
     
    } catch (error) {
-    console.log("Ocurrio un al guardar la reunion")
+    console.log(`Ocurrio un problema al ${edicion?'editar':'guardar'} la reunion`)
    }
   }
   
@@ -97,7 +102,13 @@ export default function MeetingForm() {
         <Form.Item
           label={'Participantes'}
           name='participants'
-          rules={[{ required: true, message: 'Es necesario escoger al menos un participante' }]}>
+          rules={[{validator: (_, value) => {
+            console.log('value',value)
+            if (!value && targetKeys.length===0) {
+              return Promise.reject(new Error('Es necesario escoger al menos un participante'));
+            }
+            return Promise.resolve();
+          }}]}>
           <Transfer
             style={{ width: '100%' }}
             filterOption={filterOption}
