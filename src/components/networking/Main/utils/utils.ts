@@ -1,8 +1,8 @@
-import { TransferType } from "../interfaces/MeetingForm.interface";
+import { TransferType } from "../interfaces/meetings.interfaces";
 
 
 export const filterOption = (inputValue: string, option: TransferType) => {
-    return option.title.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
+    return option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
 }
 
 export const formLayout = {
