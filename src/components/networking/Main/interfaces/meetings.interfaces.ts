@@ -1,7 +1,10 @@
 
 export interface IMeetingList {
     meentings : IMeeting[]
-    
+}
+
+export interface IMeentingItem {
+    menting : IMeeting
 }
 export interface IMeeting {
     id:string
@@ -11,11 +14,11 @@ export interface IMeeting {
     participants : IParticipants[]
 }
 
+
 export interface IParticipants {
     id:string
     name   : string
     email? : string
-    phone? : string
     attendance  : typeAttendace
 }
 

@@ -1,22 +1,26 @@
 import { CaretDownOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table } from 'antd';
 import React , { useState } from 'react';
-import { IMeeting, IParticipants, typeAttendace } from '../interfaces/meetings.interfaces';
+import { IMeeting, IParticipants, typeAttendace, IMeentingItem } from '../interfaces/meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
 import moment from 'moment';
 import { ColumnsType } from 'antd/lib/table';
+import { useContext } from 'react';
+import { NetworkingContext } from '../context/NetworkingContext';
 
 
-export default function MeetingItem(menting : IMeeting) {
+export default function MeetingItem({menting } : IMeentingItem) {
+
   const [meentign, setMeentign] = useState<IMeeting>(menting)
+  const  { editMeenting }  = useContext(NetworkingContext)
   const dateFormat = moment(meentign.date).format('DD/MM/YYYY hh:mm:ss');
 
-  const ParticipanConfirm = (participant: IParticipants, selected : boolean) => {
+  const handleChange = (participant: IParticipants, selected : boolean) => {
     console.log(participant)
     const temp = meentign.participants.map((part) => (part.id === participant.id ? {...part,attendance : selected ? typeAttendace.confirmed : typeAttendace.unconfirmed} : part))
     setMeentign({...meentign, participants : temp }) ;
   };
-  const prueba = () => {};
+
 
   const columns: ColumnsType<IParticipants> = [
     {
@@ -58,8 +62,8 @@ export default function MeetingItem(menting : IMeeting) {
                 </Tooltip>
               ))}
             </Avatar.Group>
-            <Button icon={<EditOutlined />} onClick={prueba} />
-            <Button icon={<DeleteOutlined />} onClick={prueba} />
+            <Button icon={<EditOutlined />} onClick={()=>editMeenting(meentign)} />
+            <Button icon={<DeleteOutlined />} onClick={()=>editMeenting(meentign)} />
           </Space>
         }>
         <Row gutter={[16, 16]}>
@@ -96,7 +100,7 @@ export default function MeetingItem(menting : IMeeting) {
               rowSelection={{
                 type: 'checkbox',
                 onSelect(participant,selected) {
-                  ParticipanConfirm(participant,selected);
+                  handleChange(participant,selected);
                 },
               }}
               dataSource={meentign.participants.map((partici,index)=>({...partici,key : index}))}

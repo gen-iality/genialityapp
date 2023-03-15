@@ -361,6 +361,7 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/reportNetworking`}
                 component={NetworkingPage}
+                eventId={event._id}
                 event={event}
                 componentKey='reportNetworking'
               />

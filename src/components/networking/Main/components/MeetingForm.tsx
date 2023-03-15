@@ -32,8 +32,7 @@ export default function MeetingForm({ cancel, reunion_info,attendees,edit}: Prop
 
   const onScroll = (direction: TransferDirection, e: React.SyntheticEvent<HTMLUListElement>) => {
   };
-
-
+  console.log(edit?reunion_info?.id:'')
   return (
     <Fragment>
       <Form
