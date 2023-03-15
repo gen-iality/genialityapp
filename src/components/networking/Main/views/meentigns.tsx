@@ -33,7 +33,7 @@ export default function Meentign() {
       )}
       <Row justify='end' wrap gutter={[8, 8]}>
         <Col>
-          <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={() => openModal()}>
+          <Button style={{marginBottom:10}} type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={() => openModal()}>
             Agregar
           </Button>
         </Col>
