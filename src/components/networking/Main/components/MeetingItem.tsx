@@ -9,9 +9,9 @@ import { useContext } from 'react';
 import { NetworkingContext } from '../context/NetworkingContext';
 
 
-export default function MeetingItem({menting } : IMeentingItem) {
+export default function MeetingItem({menting : tempMeenting } : IMeentingItem) {
 
-  const [meentign, setMeentign] = useState<IMeeting>(menting)
+  const [meentign, setMeentign] = useState<IMeeting>(tempMeenting)
   const  { editMeenting,deleteMeeting }  = useContext(NetworkingContext)
   const dateFormat = moment(meentign.date).format('DD/MM/YYYY hh:mm:ss');
 
@@ -36,13 +36,14 @@ export default function MeetingItem({menting } : IMeentingItem) {
     },
   ];
   return (
-    <Collapse
+    <Collapse 
+      collapsible='header'
       expandIcon={({ isActive }) => (
         <Button type='text' shape='circle' icon={<CaretDownOutlined rotate={isActive ? 180 : 0} />}></Button>
       )}
       bordered={false}
       style={{ backgroundColor: '#F9FAFE' }}>
-      <Collapse.Panel
+      <Collapse.Panel 
         key='1'
         header={
           <Space>
