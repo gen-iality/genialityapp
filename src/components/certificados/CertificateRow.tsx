@@ -41,24 +41,25 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
       <Row gutter={[16, 16]}>
       <Col span={8}>
         <Form.Item label="Tipo">
-        <Select
-          options={possibleType.map((type) => ({
-            label: type,
-            value: `Tipo ${type}`,
-          }))}
-          placeholder="Seleccione un tipo de fila"
-          onChange={(value) => {
-            onChange({
-              ...certRow,
-              type: value,
-            })
-          }}
-        />
+          <Select
+            options={possibleType.map((type) => ({
+              label: type,
+              value: `Tipo ${type}`,
+            }))}
+            placeholder="Seleccione un tipo de fila"
+            onChange={(value) => {
+              onChange({
+                ...certRow,
+                type: value,
+              })
+            }}
+          />
         </Form.Item>
       </Col>
       <Col span={8}>
         <Form.Item label="Repeticiones (válido para tipo break)">
           <InputNumber
+            style={{ width: 200 }}
             min={1}
             placeholder="Sólo para tipo break"
             onChange={(value) => {
