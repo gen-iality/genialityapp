@@ -3,7 +3,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import Certificados from './certificados';
 import Certificado from './certificado';
 
-function CertificadosRoutes(props) {
+function CertificateRoutes(props: any) {
   const { event, match } = props;
   return (
     <Fragment>
@@ -19,4 +19,4 @@ function CertificadosRoutes(props) {
   );
 }
 
-export default withRouter(CertificadosRoutes);
+export default withRouter(CertificateRoutes);

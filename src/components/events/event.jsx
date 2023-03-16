@@ -60,7 +60,7 @@ const Styles = loadable(() => import('../App/styles'));
 const DashboardEvent = loadable(() => import('../dashboard'));
 const BadgeEvent = loadable(() => import('../badge'));
 const OrdersEvent = loadable(() => import('../orders'));
-const ListCertificados = loadable(() => import('../certificados'));
+const CertificateRoutes = loadable(() => import('../certificates/CertificateRoutes'));
 /* const ReporteCertificados = loadable(() => import('../certificados/reporte_old')); */
 /* const ConfigurationApp = loadable(() => import('../App/configuration')); */
 const NotificationsApp = loadable(() => import('../pushNotifications/index'));
@@ -412,8 +412,8 @@ class Event extends Component {
               />
               <Protected path={`${match.url}/orders`} component={OrdersEvent} event={event} componentKey="orders" />
               <Protected
-                path={`${match.url}/certificados`}
-                component={ListCertificados}
+                path={`${match.url}/certificates`}
+                component={CertificateRoutes}
                 event={event}
                 componentKey="certificados"
               />
