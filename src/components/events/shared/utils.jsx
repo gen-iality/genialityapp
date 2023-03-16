@@ -80,7 +80,7 @@ export const MenuItems = [
       // },
       {
         name: 'Certificados',
-        path: '/certificados',
+        path: '/certificates',
         key: 'certificados',
         onClick: handleClick,
       },
