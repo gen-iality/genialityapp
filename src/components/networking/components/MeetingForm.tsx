@@ -1,72 +1,22 @@
-import React, { useState, Fragment, createRef, useEffect, useContext } from 'react';
+import React, { Fragment } from 'react';
 import { Form, Input, Button, Row, Transfer, DatePicker, TimePicker } from 'antd';
-import { NetworkingContext } from '../context/NetworkingContext';
-import { IMeeting, IParticipants, typeAttendace, FormMeeting, TransferType } from '../interfaces/Meetings.interfaces';
-
 import { filterOption, formLayout } from '../utils/utils';
 import moment from 'moment';
-import { useForm } from '@/hooks/useForm';
+import { useMeetingFormLogic } from '../hooks/useMeetingFormLogic';
 
 export default function MeetingForm() {
-  const { attendees, meentingSelect, edicion, closeModal, createMeeting, updateMeeting } = useContext(
-    NetworkingContext
-  );
-
-  const formRef = createRef<any>();
-
-  const [targetKeys, setTargetKeys] = useState<string[]>([]);
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-  const [dataTransfer, setDataTransfer] = useState<TransferType[]>([]);
-  const { formState, onInputChange, onResetForm } = useForm<IMeeting>(meentingSelect);
-  useEffect(() => {
-    if (edicion) {
-      setTargetKeys(meentingSelect.participants.map((item: any) => item.id));
-    }
-
-    //Tranformar todos los asistentes al evento para el transfer
-    setDataTransfer(
-      attendees.map((asistente: any) => ({
-        id: asistente.user._id,
-        name: asistente.user.names,
-        key: asistente.user._id,
-        email: asistente.user.email,
-        attendance: typeAttendace.unconfirmed,
-      }))
-    );
-  }, []);
-
-  const onChange = (nextTargetKeys: string[]) => {
-    setTargetKeys(nextTargetKeys);
-  };
-
-  const onSelectChange = (sourceSelectedKeys: string[], targetSelectedKeys: string[]) => {
-    setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
-  };
-
-  const onSubmit = (datos: FormMeeting) => {
-    try {
-      //Buscar los datos de los asistentes
-      const participants: IParticipants[] = dataTransfer.filter((item: any) => targetKeys.includes(item.key));
-
-      //objeto de creacion
-      const meeting: Omit<IMeeting, 'id'> = {
-        name: datos.name,
-        date: datos.date.toString(),
-        participants: participants,
-        place: datos.place,
-        horas: [datos.horas[0].toString(), datos.horas[1].toString()],
-      };
-
-      if (edicion && datos.id) {
-        updateMeeting(datos.id, { ...meeting, id: datos.id });
-        return closeModal();
-      }
-      createMeeting(meeting);
-      closeModal();
-    } catch (error) {
-      console.log(`Ocurrio un problema al ${edicion ? 'editar' : 'guardar'} la reunion`);
-    }
-  };
+  const {
+    onSubmit,
+    edicion,
+    formState,
+    formRef,
+    AttendeesKeyTarget,
+    attendeesTransfer,
+    selectedAttendesKeys,
+    onChange,
+    onSelectChange,
+    closeModal
+  } = useMeetingFormLogic();
 
   return (
     <Fragment>
@@ -89,7 +39,7 @@ export default function MeetingForm() {
           rules={[
             {
               validator: (_, value) => {
-                if (!value && targetKeys.length === 0) {
+                if (!value && AttendeesKeyTarget.length === 0) {
                   return Promise.reject(new Error('Es necesario escoger al menos un participante'));
                 }
                 return Promise.resolve();
@@ -100,10 +50,10 @@ export default function MeetingForm() {
             style={{ width: '100%' }}
             filterOption={filterOption}
             showSearch
-            dataSource={dataTransfer}
+            dataSource={attendeesTransfer}
             titles={['Disponibles', 'Asignados']}
-            targetKeys={targetKeys}
-            selectedKeys={selectedKeys}
+            targetKeys={AttendeesKeyTarget}
+            selectedKeys={selectedAttendesKeys}
             onChange={onChange}
             onSelectChange={onSelectChange}
             render={(item) => item.name}
