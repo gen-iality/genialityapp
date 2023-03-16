@@ -1,3 +1,4 @@
+import { DispatchMessageService } from '@/context/MessageService';
 import { useForm } from '@/hooks/useForm';
 import React, { createRef, useContext, useEffect, useState } from 'react'
 import { NetworkingContext } from '../context/NetworkingContext';
@@ -41,6 +42,12 @@ export const useMeetingFormLogic = () => {
     };
 
     const onSubmit = (datos: FormMeeting) => {
+        DispatchMessageService({
+            type: 'loading',
+            key: 'loading',
+            msj: ' Por favor espere mientras se guarda la información...',
+            action: 'show',
+        })
         try {
             //Buscar los datos de los asistentes
             const participants: IParticipants[] = attendeesTransfer.filter((attendeeTransfer: any) => AttendeesKeyTarget.includes(attendeeTransfer.key));
@@ -52,16 +59,45 @@ export const useMeetingFormLogic = () => {
                 participants: participants,
                 place: datos.place,
                 horas: [datos.horas[0].toString(), datos.horas[1].toString()],
+                dateUpdated: Date.now(),
             };
 
             if (dataContext.edicion && datos.id) {
                 dataContext.updateMeeting(datos.id, { ...meeting, id: datos.id });
+                DispatchMessageService({
+                    key: 'loading',
+                    action: 'destroy',
+                });
+                DispatchMessageService({
+                    type: 'success',
+                    msj: 'Información guardada correctamente!',
+                    action: 'show',
+                });
                 return dataContext.closeModal();
             }
             dataContext.createMeeting(meeting);
+            DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+            });
+            DispatchMessageService({
+                type: 'success',
+                msj: 'Información guardada correctamente!',
+                action: 'show',
+            });
             dataContext.closeModal();
-        } catch (error) {
+        } catch (e: any) {
+            DispatchMessageService({
+                key: 'loading',
+                action: 'destroy',
+            });
+            DispatchMessageService({
+                type: 'error',
+                msj: e.response.data.message || e.response.status,
+                action: 'show',
+            });
             console.log(`Ocurrio un problema al ${dataContext.edicion ? 'editar' : 'guardar'} la reunion`);
+            dataContext.closeModal();
         }
     };
 

@@ -13,6 +13,7 @@ export interface IMeeting {
     date  : string  | Date;
     horas:string[];
     place : string;
+    dateUpdated : number
     participants : IParticipants[];
 }
 

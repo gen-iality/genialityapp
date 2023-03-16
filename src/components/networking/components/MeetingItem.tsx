@@ -1,5 +1,5 @@
 import { CaretDownOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table } from 'antd';
+import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table, Modal } from 'antd';
 import React, { useState } from 'react';
 import { IMeeting, IParticipants, typeAttendace, IMeentingItem } from '../interfaces/Meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
@@ -7,7 +7,7 @@ import moment, { now } from 'moment';
 import { ColumnsType } from 'antd/lib/table';
 import { useContext } from 'react';
 import { NetworkingContext } from '../context/NetworkingContext';
-
+const { confirm } = Modal;
 export default function MeetingItem({ menting: tempMeenting }: IMeentingItem) {
   const [meenting, setMeentign] = useState<IMeeting>(tempMeenting);
   const { editMeenting, deleteMeeting } = useContext(NetworkingContext);

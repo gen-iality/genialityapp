@@ -8,7 +8,6 @@ import { useContext } from 'react';
 
 export default function MeentignView() {
   const { meetings, modal, edicion, closeModal, openModal } = useContext(NetworkingContext);
-
   return (
     <>
       {modal && (
