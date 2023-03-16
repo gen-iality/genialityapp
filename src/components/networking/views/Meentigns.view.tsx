@@ -6,7 +6,7 @@ import MeetingList from '../components/MeetingList';
 import MeetingForm from '../components/MeetingForm';
 import { useContext } from 'react';
 
-export default function Meentign() {
+export default function MeentignView() {
   const { meetings, modal, edicion, closeModal, openModal } = useContext(NetworkingContext);
 
   return (

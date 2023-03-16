@@ -1,3 +1,4 @@
+import { Moment } from "moment";
 
 export interface IMeetingList {
     meentings : IMeeting[]
@@ -37,6 +38,6 @@ export interface FormMeeting {
     participants:IParticipants[];
     date:string | Date;
     place:string;
-    horas:string[];
+    horas:Moment[];
 }
 
