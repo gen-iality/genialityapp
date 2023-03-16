@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
 
 /** Antd imports */
-import { Menu, Dropdown, Avatar, Button, Col, Row, Space, Badge, Modal } from 'antd';
+import { Menu, Dropdown, Avatar, Button, Col, Row, Space, Badge, Modal, Image, Grid, Typography } from 'antd';
 import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
@@ -38,6 +38,8 @@ const ItemStyle = {
   margin: 5,
 };
 const { confirm, destroyAll } = Modal;
+const { useBreakpoint } = Grid;
+const { Text } = Typography;
 
 const UserStatusAndMenu = (props) => {
   const { cEventUser } = props;
@@ -45,10 +47,15 @@ const UserStatusAndMenu = (props) => {
   const photo = props.photo;
   const name = props.name;
   const logout = props.logout;
+  const organizationId = props.match.params.id;
+
   const [visible, setVisible] = useState(true);
   const [isSomeAdminUser, setIsSomeAdminUser] = useState(false);
   const [isAtOrganizationLanding, setIsAtOrganizationLanding] = useState(false);
+  const [organization, setOrganization] = useState({});
+
   const intl = useIntl();
+  const screens = useBreakpoint();
 
   function linkToTheMenuRouteS(menuRoute) {
     window.location.href = `${window.location.origin}${menuRoute}`;
@@ -59,6 +66,13 @@ const UserStatusAndMenu = (props) => {
       const someAdmin = data.some((orgUser) => orgUser.rol?.type === 'admin');
       console.log('organization user has some admin rol?', someAdmin);
       setIsSomeAdminUser(someAdmin);
+    });
+  }, []);
+
+  useEffect(() => {
+    OrganizationApi.getOne(organizationId).then((response) => {
+      console.log('response', response);
+      setOrganization(response);
     });
   }, []);
 
@@ -269,7 +283,36 @@ const UserStatusAndMenu = (props) => {
     });
   }
 
-  return <>{user ? loggedInuser : loggedOutUser}</>;
+  return (
+    <>
+      {user ? (
+        <>
+          {isAtOrganizationLanding && !screens.xs && (
+            <>
+              <Col>
+                <Image
+                  style={{
+                    height: '50px',
+                    borderRadius: '10px',
+                    boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
+                    backgroundColor: '#FFFFFF',
+                  }}
+                  src={organization?.styles?.event_image || 'error'}
+                  fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
+                />
+              </Col>
+              <Col style={{ marginLeft: '2rem' }}>
+                <Text style={{ fontWeight: '700' }}>{organization.name}</Text>
+              </Col>
+            </>
+          )}
+          {loggedInuser}
+        </>
+      ) : (
+        loggedOutUser
+      )}
+    </>
+  );
 };
 
 const mapDispatchToProps = {

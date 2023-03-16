@@ -215,13 +215,12 @@ const Headers = (props) => {
           left: 0,
           top: 0,
           float: 'right',
-          background: 'red',
           height: '45px',
           transition: 'all 0.5s ease-out',
           opacity: fixed ? '0.9' : '1',
         }}
       >
-        <Menu theme="light" mode="horizontal">
+        <Menu style={{ border: '0px' }} theme="light" mode="horizontal">
           <Row justify="space-between" align="middle">
             <Row className="logo-header" justify="space-between" align="middle">
               {/* Menú de administrar un curso (esto debería aparecer en un curso no en todo lado) */}
