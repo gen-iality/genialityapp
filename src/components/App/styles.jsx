@@ -134,6 +134,21 @@ class Styles extends Component {
         ],
       },
       {
+        label: 'Habiltar franja de icono, título y descripción de la organización',
+        defaultValue: true,
+        name: 'show_icon_title_and_description_container',
+        options: [
+          {
+            label: 'Si',
+            value: true,
+          },
+          {
+            label: 'No',
+            value: false,
+          },
+        ],
+      },
+      {
         label: 'Mostrar widget de videos grabados',
         defaultValue: false,
         name: 'show_video_widget',
@@ -269,6 +284,7 @@ class Styles extends Component {
           banner_footer_email: dataStyles.banner_footer_email || null,
           show_banner: dataStyles.show_banner || false,
           show_title: dataStyles?.show_title || false,
+          show_icon_title_and_description_container: dataStyles?.show_icon_title_and_description_container || false,
           show_video_widget: dataStyles?.show_video_widget || false,
           show_card_banner: dataStyles.show_card_banner || false,
           show_inscription: info?.show_inscription || false,
@@ -479,7 +495,8 @@ class Styles extends Component {
                                     msj: 'Color hexadecimal copiado',
                                     action: 'show',
                                   }),
-                              }}>{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
+                              }}
+                            >{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
                             <Text
                               style={{ fontSize: '20px' }}
                               code
@@ -493,7 +510,8 @@ class Styles extends Component {
                                     msj: 'Color rgb copiado',
                                     action: 'show',
                                   }),
-                              }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
+                              }}
+                            >{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
                               this.hexToRgb(this.state.styles[item.fieldColorName])?.g
                             },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b})`}</Text>
                           </Space>
@@ -537,11 +555,7 @@ class Styles extends Component {
                   {this.imageDrawer.map((item, key) => (
                     <div key={key}>
                       <Form.Item
-                        label={
-                        <label style={{ paddingBottom: '30px' }}>
-                          {item.title}
-                        </label>
-                        }
+                        label={<label style={{ paddingBottom: '30px' }}>{item.title}</label>}
                         help={item.description}
                       >
                         <ImageUploaderDragAndDrop

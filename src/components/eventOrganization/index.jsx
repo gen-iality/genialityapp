@@ -47,7 +47,7 @@ const EventOrganization = (props) => {
 
       let positionId;
       if (organization.default_position_id) {
-        positionId = organization.default_position_id
+        positionId = organization.default_position_id;
       }
       console.log('5. positionId', positionId, 'orgId', orgId);
       helperDispatch({
@@ -150,7 +150,21 @@ const EventOrganization = (props) => {
               paddingTop: '0.5vw',
             }}
           >
-            {organization && (
+            {isAdminUser && (
+              <Link
+                to={`/admin/organization/${props.match.params.id}`}
+                style={{
+                  marginBottom: '-15px',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                }}
+              >
+                <Button type="text" icon={<EditOutlined />}>
+                  Administrar
+                </Button>
+              </Link>
+            )}
+            {organization.styles.show_icon_title_and_description_container && (
               <Row
                 gutter={[10, 10]}
                 style={{
@@ -173,28 +187,14 @@ const EventOrganization = (props) => {
                       }}
                       preview={{ maskClassName: 'roundedMask' }}
                       src={organization?.styles?.event_image || 'error'}
-                      fallback='http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image'
-                      width='100%'
-                      height='100%'
+                      fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
+                      width="100%"
+                      height="100%"
                     />
                   </Row>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={16} xl={20} xxl={20}>
                   <Space direction="vertical" size={8} style={{ width: '100%' }}>
-                    {isAdminUser && (
-                      <Link
-                        to={`/admin/organization/${props.match.params.id}`}
-                        style={{
-                          marginBottom: '-15px',
-                          fontSize: '20px',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        <Button type="text" icon={<EditOutlined />}>
-                          Administrar
-                        </Button>
-                      </Link>
-                    )}
                     <Text
                       style={{
                         fontSize: '40px',
