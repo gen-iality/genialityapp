@@ -1,7 +1,7 @@
 import { CaretDownOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table } from 'antd';
 import React , { useState } from 'react';
-import { IMeeting, IParticipants, typeAttendace, IMeentingItem } from '../interfaces/meetings.interfaces';
+import { IMeeting, IParticipants, typeAttendace, IMeentingItem } from '../interfaces/Meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
 import moment from 'moment';
 import { ColumnsType } from 'antd/lib/table';

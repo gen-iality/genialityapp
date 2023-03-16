@@ -2,7 +2,7 @@ import { ReactNode, createContext, useState, useEffect } from 'react';
 import { UseUserEvent } from '@/context/eventUserContext';
 import * as service from '../services/meenting.service';
 import { fromPlayerToScore } from '../utils/fromPlayerToScore';
-import { IMeeting } from '../interfaces/meetings.interfaces';
+import { IMeeting } from '../interfaces/Meetings.interfaces';
 
 interface NetworkingContextType {
   modal: boolean;

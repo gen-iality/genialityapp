@@ -2,7 +2,7 @@ import React, { useState, Fragment, createRef, useEffect, useContext } from 'rea
 import { Form, Input,  Button, Row, Transfer, DatePicker, TimePicker } from 'antd';
 import type { TransferDirection } from 'antd/es/transfer';
 import { NetworkingContext } from '../context/NetworkingContext';
-import { IMeeting, IParticipants, typeAttendace,FormMeeting,TransferType } from '../interfaces/meetings.interfaces';
+import { IMeeting, IParticipants, typeAttendace,FormMeeting,TransferType } from '../interfaces/Meetings.interfaces';
 
 import { filterOption, formLayout } from '../utils/utils';
 import moment from 'moment';

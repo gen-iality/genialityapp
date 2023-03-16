@@ -1,21 +1,13 @@
+import React from 'react';
 import { Button, Col, Row, Modal } from 'antd';
-import React, { useState } from 'react';
 import { PlusCircleOutlined } from '@ant-design/icons';
+import { NetworkingContext } from '../context/NetworkingContext';
 import MeetingList from '../components/MeetingList';
 import MeetingForm from '../components/MeetingForm';
-import { IMeeting, typeAttendace } from '../interfaces/meetings.interfaces';
 import { useContext } from 'react';
-import { NetworkingContext } from '../context/NetworkingContext';
 
 export default function Meentign() {
-  const { 
-    meetings, 
-    modal,
-    edicion, 
-    closeModal , 
-    openModal  } = useContext(NetworkingContext);
-
-
+  const { meetings, modal, edicion, closeModal, openModal } = useContext(NetworkingContext);
 
   return (
     <>
@@ -31,7 +23,12 @@ export default function Meentign() {
       )}
       <Row justify='end' wrap gutter={[8, 8]}>
         <Col>
-          <Button style={{marginBottom:10}} type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={() => openModal()}>
+          <Button
+            style={{ marginBottom: 10 }}
+            type='primary'
+            icon={<PlusCircleOutlined />}
+            size='middle'
+            onClick={() => openModal()}>
             Agregar
           </Button>
         </Col>

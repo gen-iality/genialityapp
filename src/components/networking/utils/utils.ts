@@ -1,4 +1,4 @@
-import { TransferType } from "../interfaces/meetings.interfaces";
+import { TransferType } from "../interfaces/Meetings.interfaces";
 
 
 export const filterOption = (inputValue: string, option: TransferType) => {

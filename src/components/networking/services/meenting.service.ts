@@ -1,5 +1,5 @@
 import { firestore } from '@/helpers/firebase';
-import { IMeeting } from '../interfaces/meetings.interfaces';
+import { IMeeting } from '../interfaces/Meetings.interfaces';
 
 export const listenAttendees = (eventId: string, setAttendees: any) => {
 	return firestore.collection(`${eventId}_event_attendees`).onSnapshot(snapshot => {

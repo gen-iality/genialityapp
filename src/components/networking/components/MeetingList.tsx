@@ -1,7 +1,7 @@
 import { Card, Col, Row } from 'antd';
 import React from 'react';
 import MeetingItem from './MeetingItem';
-import { IMeetingList } from '../interfaces/meetings.interfaces';
+import { IMeetingList } from '../interfaces/Meetings.interfaces';
 
 export default function MeetingList({ meentings }: IMeetingList) {
  

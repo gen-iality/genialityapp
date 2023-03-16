@@ -23,7 +23,7 @@ import Speakers from '../speakers';
 import MenuLanding from '../menuLanding';
 import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
-import NetworkingPage from '../networking/Main/index.tsx';
+import NetworkingPage from '../networking/Networking.page';
 import NewsSectionRoutes from '../news/newsRoute';
 import ProductSectionRoutes from '../products/productsRoute';
 import { withRouter } from 'react-router-dom';
