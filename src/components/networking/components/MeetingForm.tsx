@@ -18,7 +18,6 @@ export default function MeetingForm() {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [dataTransfer, setDataTransfer] = useState<TransferType[]>([]);
   const { formState, onInputChange, onResetForm } = useForm<IMeeting>(meentingSelect);
-
   useEffect(() => {
     if (edicion) {
       setTargetKeys(meentingSelect.participants.map((item: any) => item.id));
@@ -55,7 +54,7 @@ export default function MeetingForm() {
         date: datos.date.toString(),
         participants: participants,
         place: datos.place,
-        horas: [datos.horas[0].format('HH:mm').toString(), datos.horas[1].format('HH:mm').toString()],
+        horas: [datos.horas[0].toString(), datos.horas[1].toString()],
       };
 
       if (edicion && datos.id) {
