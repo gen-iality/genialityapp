@@ -1,4 +1,4 @@
-import { CaretDownOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table, Modal } from 'antd';
 import React, { useState } from 'react';
 import { IMeeting, IParticipants, typeAttendace, IMeentingItem } from '../interfaces/Meetings.interfaces';
@@ -42,7 +42,19 @@ export default function MeetingItem({ menting: tempMeenting }: IMeentingItem) {
       dataIndex: 'attendance',
     },
   ];
-
+  const onDelete = () => {
+    confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        deleteMeeting(meenting.id);
+      },
+    });
+  };
   return (
     <Collapse
       collapsible='header'
@@ -75,7 +87,7 @@ export default function MeetingItem({ menting: tempMeenting }: IMeentingItem) {
               ))}
             </Avatar.Group>
             <Button icon={<EditOutlined />} onClick={() => editMeenting(meenting)} />
-            <Button icon={<DeleteOutlined />} onClick={() => deleteMeeting(meenting.id)} />
+            <Button icon={<DeleteOutlined />} onClick={() => onDelete()} />
           </Space>
         }>
         <Row gutter={[16, 16]}>
