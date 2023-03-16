@@ -1,7 +1,7 @@
 import {  Tabs } from 'antd';
 import Report from '../report';
 import NetworkingProvider from './context/NetworkingContext';
-import Meentign from './views/meentigns';
+import Meentign from './views/Meentigns';
 interface Props {
 	eventId: string;
 }
