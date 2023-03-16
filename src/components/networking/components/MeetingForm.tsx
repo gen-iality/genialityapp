@@ -39,7 +39,7 @@ export default function MeetingForm() {
           rules={[
             {
               validator: (_, value) => {
-                if (!value && AttendeesKeyTarget.length === 0) {
+                if (AttendeesKeyTarget.length === 0) {
                   return Promise.reject(new Error('Es necesario escoger al menos un participante'));
                 }
                 return Promise.resolve();
