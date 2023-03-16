@@ -47,6 +47,7 @@
     "gender-detection-from-name": "^1.6.0",
     "google-map-react": "^1.1.7",
     "html-react-parser": "^0.13.0",
+    "html2pdf-certs": "github:David256/html2pdf-certs#1.0.0",
     "install": "^0.13.0",
     "less": "^4.1.2",
     "lodash": "^4.17.21",
