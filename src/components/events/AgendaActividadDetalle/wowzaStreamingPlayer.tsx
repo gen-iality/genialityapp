@@ -139,6 +139,19 @@ function WowzaStreamingPlayer(props: Props) {
 		};
 	}, [meeting_id, typeActivity]);
 
+	// useEffect(() => {
+	// 	console.log({ meeting_id, typeActivity, livestreamStats });
+	// }, [meeting_id, typeActivity, livestreamStats]);
+
+	if (typeActivity === 'meeting')
+		return (
+			<RenderEviusMeet
+				activityId={activity._id}
+				eventId={contextEvent?.value?._id}
+				userInfo={{ displayName: eventUser?.value?.user?.names, email: eventUser?.value?.user?.email }}
+			/>
+		);
+
 	return (
 		<>
 			{livestreamStats?.live ? (
@@ -160,11 +173,7 @@ function WowzaStreamingPlayer(props: Props) {
 			) : (
 				<>
 					{((transmition == 'EviusMeet' && !visibleMeets) || transmition !== 'EviusMeet') && (
-						<RenderEviusMeet
-							activityId={activity._id}
-							eventId={contextEvent?.value?._id}
-							userInfo={{ displayName: eventUser?.value?.user?.names, email: eventUser?.value?.user?.email }}
-						/>
+						<WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.live} />
 					)}
 					{transmition == 'EviusMeet' && visibleMeets && (
 						// <p>Render Evius Meet 4</p>
