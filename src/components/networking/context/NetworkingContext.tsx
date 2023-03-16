@@ -3,6 +3,7 @@ import { UseUserEvent } from '@/context/eventUserContext';
 import * as service from '../services/meenting.service';
 import { fromPlayerToScore } from '../utils/fromPlayerToScore';
 import { IMeeting } from '../interfaces/Meetings.interfaces';
+import { DispatchMessageService } from '@/context/MessageService';
 
 interface NetworkingContextType {
   modal: boolean;
@@ -14,10 +15,10 @@ interface NetworkingContextType {
   editMeenting: (MeentingUptade: IMeeting) => void;
   closeModal: () => void;
   openModal: (mode?: string) => void;
-  createMeeting:(meeting: Omit<IMeeting, 'id'>)=>void,
-  updateMeeting:(meetingId: string, meeting: IMeeting)=>void
-  eventId:string
-  deleteMeeting:( meetingId: string)=>void
+  createMeeting: (meeting: Omit<IMeeting, 'id'>) => void;
+  updateMeeting: (meetingId: string, meeting: IMeeting) => void;
+  eventId: string;
+  deleteMeeting: (meetingId: string) => void;
 }
 
 export const NetworkingContext = createContext<NetworkingContextType>({} as NetworkingContextType);
@@ -26,14 +27,15 @@ interface Props {
   children: ReactNode;
 }
 
-const meetingSelectedInitial:IMeeting ={
-  date:'',
-  horas:[],
-  id:'',
-  name:'',
-  participants:[],
-  place:''
-}
+const meetingSelectedInitial: IMeeting = {
+  date: '',
+  horas: [],
+  id: '',
+  name: '',
+  participants: [],
+  place: '',
+  dateUpdated: 0,
+};
 
 export default function NetworkingProvider(props: Props) {
   const [attendees, setAttendees] = useState<any>([]);
@@ -55,8 +57,7 @@ export default function NetworkingProvider(props: Props) {
     }
   }, []);
 
-  useEffect(() => {
-  }, [attendees, meetings]);
+  useEffect(() => {}, [attendees, meetings]);
 
   const editMeenting = (meentign: IMeeting) => {
     setMeentingSelect(meentign);
@@ -69,17 +70,45 @@ export default function NetworkingProvider(props: Props) {
   const closeModal = () => {
     setModal(false);
     setEdicion(false);
-    setMeentingSelect(meetingSelectedInitial)
+    setMeentingSelect(meetingSelectedInitial);
   };
 
   const createMeeting = async (meeting: Omit<IMeeting, 'id'>) => {
     await service.createMeeting(eventId, meeting);
   };
-  const updateMeeting = async ( meetingId: string, meeting: IMeeting) => {
-   await  service.updateMeeting(eventId,meetingId,meeting);
+  const updateMeeting = async (meetingId: string, meeting: IMeeting) => {
+    await service.updateMeeting(eventId, meetingId, meeting);
   };
-  const deleteMeeting = async( meetingId: string) => {
-    await service.deleteMeeting(eventId,meetingId);
+  const deleteMeeting = async (meetingId: string) => {
+    try {
+      DispatchMessageService({
+        type: 'loading',
+        key: 'loading',
+        msj: ' Por favor espere mientras se borra la información...',
+        action: 'show',
+      });
+
+      await service.deleteMeeting(eventId, meetingId);
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Se eliminó la información correctamente!',
+        action: 'show',
+      });
+    } catch (e:any) {
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
+      DispatchMessageService({
+        type: 'error',
+        msj: `No ha sido posible eliminar el campo error: ${e?.response?.data?.message || e.response?.status}`,
+        action: 'show',
+      });
+    }
   };
   const values = {
     modal,
@@ -96,7 +125,7 @@ export default function NetworkingProvider(props: Props) {
     createMeeting,
     updateMeeting,
     eventId,
-    deleteMeeting
+    deleteMeeting,
   };
 
   return <NetworkingContext.Provider value={values}>{props.children}</NetworkingContext.Provider>;
