@@ -11,7 +11,7 @@ function CertificateRoutes(props: any) {
         <Route exact path={`${match.url}/`} render={() => <CertificateListPage event={event} matchUrl={match.url} />} />
         <Route
           exact
-          path={`${match.url}/certificado`}
+          path={`${match.url}/certificate`}
           render={() => <Certificado event={event} matchUrl={match.url} {...props} />}
         />
       </Switch>
