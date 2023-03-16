@@ -1,19 +1,28 @@
+/** React's libraries */
 import { useEffect, useState, createElement } from 'react';
 import { useHistory } from 'react-router-dom';
-import ErrorServe from '@components/modal/serverError';
-import UserStatusAndMenu from '@components/shared/userStatusAndMenu';
+import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
+
+/** Redux imports */
 import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
-import MenuOld from '@components/events/shared/menu';
+
+/** Antd imports */
 import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
-import withContext from '@context/withContext';
-import ModalLoginHelpers from '@components/authentication/ModalLoginHelpers';
-import { recordTypeForThisEvent } from '@components/events/Landing/helpers/thisRouteCanBeDisplayed';
-import { FormattedMessage } from 'react-intl';
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
-import { useIntl } from 'react-intl';
+
+/** Context */
+import withContext from '@context/withContext';
+
+/** Components */
+import ModalLoginHelpers from '@components/authentication/ModalLoginHelpers';
+import MenuOld from '@components/events/shared/menu';
+import { recordTypeForThisEvent } from '@components/events/Landing/helpers/thisRouteCanBeDisplayed';
+import ErrorServe from '@components/modal/serverError';
+import UserStatusAndMenu from '@components/shared/userStatusAndMenu';
 
 const { useBreakpoint } = Grid;
 
@@ -130,14 +139,16 @@ const Headers = (props) => {
       <Menu.Item
         onClick={() => {
           helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
-        }}>
+        }}
+      >
         <FormattedMessage id="header.expired_signin" defaultMessage="Sign In" />
       </Menu.Item>
 
       <Menu.Item
         onClick={() => {
           helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
-        }}>
+        }}
+      >
         <FormattedMessage id="registration.button.create" defaultMessage="Sign Up" />
       </Menu.Item>
     </Menu>
@@ -208,7 +219,8 @@ const Headers = (props) => {
           height: '45px',
           transition: 'all 0.5s ease-out',
           opacity: fixed ? '0.9' : '1',
-        }}>
+        }}
+      >
         <Menu theme="light" mode="horizontal">
           <Row justify="space-between" align="middle">
             <Row className="logo-header" justify="space-between" align="middle">
@@ -260,7 +272,8 @@ const Headers = (props) => {
                       size="large"
                       onClick={() => {
                         helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
-                      }}>
+                      }}
+                    >
                       {intl.formatMessage({
                         id: 'modal.title.login',
                         defaultMessage: 'Iniciar sesión',
@@ -288,7 +301,8 @@ const Headers = (props) => {
                       size="large"
                       onClick={() => {
                         helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
-                      }}>
+                      }}
+                    >
                       {intl.formatMessage({
                         id: 'modal.title.register',
                         defaultMessage: 'Registrarme',

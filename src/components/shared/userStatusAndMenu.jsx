@@ -1,12 +1,15 @@
+/** React's libraries */
 import { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import WithLoading from './withLoading';
-import { Menu, Dropdown, Avatar, Button, Col, Row, Space, Badge, Modal } from 'antd';
-import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
+
+/** Redux imports */
 import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
-import withContext from '@context/withContext';
+
+/** Antd imports */
+import { Menu, Dropdown, Avatar, Button, Col, Row, Space, Badge, Modal } from 'antd';
+import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
@@ -14,7 +17,14 @@ import CalendarCheckOutlineIcon from '@2fd/ant-design-icons/lib/CalendarCheckOut
 import HexagonMultipleOutlineIcon from '@2fd/ant-design-icons/lib/HexagonMultipleOutline';
 import LogoutIcon from '@2fd/ant-design-icons/lib/Logout';
 
-import { OrganizationApi } from '@helpers/request'
+/** Helpers and utils */
+import { OrganizationApi } from '@helpers/request';
+
+/** Context */
+import withContext from '@context/withContext';
+
+/** Components */
+import WithLoading from './withLoading';
 
 const MenuStyle = {
   flex: 1,
@@ -36,8 +46,8 @@ const UserStatusAndMenu = (props) => {
   const name = props.name;
   const logout = props.logout;
   const [visible, setVisible] = useState(true);
-  const [isSomeAdminUser, setIsSomeAdminUser] = useState(false)
-  const [isAtOrganizationLanding, setIsAtOrganizationLanding] = useState(false)
+  const [isSomeAdminUser, setIsSomeAdminUser] = useState(false);
+  const [isAtOrganizationLanding, setIsAtOrganizationLanding] = useState(false);
   const intl = useIntl();
 
   function linkToTheMenuRouteS(menuRoute) {
@@ -46,21 +56,21 @@ const UserStatusAndMenu = (props) => {
 
   useEffect(() => {
     OrganizationApi.mine().then((data) => {
-      const someAdmin = data.some((orgUser) => orgUser.rol?.type === 'admin')
-      console.log('organization user has some admin rol?', someAdmin)
-      setIsSomeAdminUser(someAdmin)      
-    })
-  }, [])
+      const someAdmin = data.some((orgUser) => orgUser.rol?.type === 'admin');
+      console.log('organization user has some admin rol?', someAdmin);
+      setIsSomeAdminUser(someAdmin);
+    });
+  }, []);
 
   useEffect(() => {
     // Why do I have to do that bro
-    const path = props.match?.path || ''
+    const path = props.match?.path || '';
     if (path.startsWith('/organization') && path.endsWith('/events')) {
-      setIsAtOrganizationLanding(true)
+      setIsAtOrganizationLanding(true);
     } else {
-      setIsAtOrganizationLanding(false)
+      setIsAtOrganizationLanding(false);
     }
-  }, [props.match])
+  }, [props.match]);
 
   const menu = !props.anonimususer ? (
     <Menu>
@@ -69,13 +79,15 @@ const UserStatusAndMenu = (props) => {
           title={intl.formatMessage({
             id: 'header.title.Event',
             defaultMessage: 'Curso',
-          })}>
+          })}
+        >
           {props.location.pathname.includes('landing') && cEventUser.value && cEventUser.status === 'LOADED' && (
             <Badge
               count={intl.formatMessage({
                 id: 'header.new',
                 defaultMessage: 'Nuevo',
-              })}>
+              })}
+            >
               <Menu.Item
                 onClick={() => {
                   props.setViewPerfil({
@@ -98,13 +110,17 @@ const UserStatusAndMenu = (props) => {
         title={intl.formatMessage({
           id: 'header.title.Management',
           defaultMessage: 'Administración',
-        })}>
+        })}
+      >
         {visible && (
           <Menu.Item
             icon={<TicketConfirmationOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}
           >
-            <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
+            <FormattedMessage
+              id={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_MANAGEMENT}
+              defaultMessage={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_DEFAULT_MESSAGE_MANAGEMENT}
+            />
           </Menu.Item>
         )}
         {visible && !isAtOrganizationLanding && (
@@ -112,15 +128,19 @@ const UserStatusAndMenu = (props) => {
             icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}
           >
-            <FormattedMessage id={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_MANAGEMENT} defaultMessage={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_DEFAULT_MESSAGE_MANAGEMENT} />
+            <FormattedMessage
+              id={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_MANAGEMENT}
+              defaultMessage={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_DEFAULT_MESSAGE_MANAGEMENT}
+            />
           </Menu.Item>
         )}
-        {(visible && isSomeAdminUser || visible && !isAtOrganizationLanding) && (
+        {((visible && isSomeAdminUser) || (visible && !isAtOrganizationLanding)) && (
           <Menu.Item
             icon={<HexagonMultipleOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => {
               linkToTheMenuRouteS(`/myprofile/organization`);
-            }}>
+            }}
+          >
             <FormattedMessage id="header.my_organizations" defaultMessage="Administrar mis cursos" />
           </Menu.Item>
         )}
@@ -134,9 +154,10 @@ const UserStatusAndMenu = (props) => {
                   : window.location.toString().includes('organization') &&
                     !window.location.toString().includes('myprofile')
                   ? `/create-event/${props.userEvent._id}/?orgId=${props.eventId}`
-                  : `/create-event/${props.userEvent._id}`
+                  : `/create-event/${props.userEvent._id}`,
               )
-            }>
+            }
+          >
             <Button block type="primary" size="medium">
               <FormattedMessage id="header.create_event" defaultMessage="Crear curso" />
             </Button>
@@ -148,12 +169,14 @@ const UserStatusAndMenu = (props) => {
         title={intl.formatMessage({
           id: 'header.title.User',
           defaultMessage: 'Usuario',
-        })}>
+        })}
+      >
         <Badge
           count={intl.formatMessage({
             id: 'header.new',
             defaultMessage: 'Nuevo',
-          })}>
+          })}
+        >
           <Menu.Item
             icon={<AccountOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => linkToTheMenuRouteS(`/myprofile`)}
@@ -191,11 +214,12 @@ const UserStatusAndMenu = (props) => {
               style={{
                 height: '40px',
                 backgroundColor: 'white',
-                borderRadius: '50px',
+                borderRadius: '10px',
                 padding: '15px',
                 border: '1px solid #e8e8e8',
                 background: '#f5f5f5',
-              }}>
+              }}
+            >
               {photo ? (
                 <Avatar src={photo} />
               ) : (
