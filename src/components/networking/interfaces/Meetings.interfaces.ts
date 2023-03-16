@@ -5,13 +5,13 @@ export interface IMeetingList {
 }
 
 export interface IMeentingItem {
-    menting : IMeeting
+    meenting : IMeeting
 }
 export interface IMeeting {
     id:string;
     name  : string;
     date  : string  | Date;
-    horas:string[];
+    horas : string[];
     place : string;
     dateUpdated : number
     participants : IParticipants[];

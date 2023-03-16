@@ -1,4 +1,5 @@
-import { TransferType } from "../interfaces/Meetings.interfaces";
+import { ColumnsType } from "antd/lib/table";
+import { IParticipants, TransferType } from "../interfaces/Meetings.interfaces";
 
 
 export const filterOption = (inputValue: string, option: TransferType) => {
@@ -14,4 +15,19 @@ export const generateRandomKey = () => {
 export const formLayout = {
     labelCol: { span: 24 },
     wrapperCol: { span: 24 },
-};
+  };
+
+export const columnsParticipants: ColumnsType<IParticipants> = [
+    {
+      title: 'Participante',
+      dataIndex: 'name',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+    },
+    {
+      title: 'Asistencia',
+      dataIndex: 'attendance',
+    },
+  ];

@@ -10,7 +10,7 @@ export default function MeetingList({ meentings }: IMeetingList) {
       <Row gutter={[0, 16]}>
         {meentings?.map((meenting, key) => (
           <Col key={key} span={24} >
-            <MeetingItem key={meenting.dateUpdated} menting={meenting} />
+            <MeetingItem key={meenting.dateUpdated} meenting={meenting} />
           </Col>
         ))}
       </Row>

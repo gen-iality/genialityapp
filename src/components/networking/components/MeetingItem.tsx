@@ -1,47 +1,34 @@
-import { CaretDownOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table, Modal } from 'antd';
 import React, { useState } from 'react';
-import { IMeeting, IParticipants, typeAttendace, IMeentingItem } from '../interfaces/Meetings.interfaces';
+import { IParticipants, typeAttendace, IMeentingItem } from '../interfaces/Meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
 import moment, { now } from 'moment';
-import { ColumnsType } from 'antd/lib/table';
 import { useContext } from 'react';
 import { NetworkingContext } from '../context/NetworkingContext';
+import { columnsParticipants } from '../utils/utils';
+import useDateForm from '../hooks/useDateFormat';
 const { confirm } = Modal;
-export default function MeetingItem({ menting: tempMeenting }: IMeentingItem) {
-  const [meenting, setMeentign] = useState<IMeeting>(tempMeenting);
-  const { editMeenting, deleteMeeting } = useContext(NetworkingContext);
-  const fecha = moment(tempMeenting.date);
-  const startTime = moment(tempMeenting.horas[0] || '00:00').format('hh:mm A');
-  const endTime = moment(tempMeenting.horas[1] || '00:00').format('hh:mm A');
-  const [meentingStart, setmeentingStart] = useState(
-    moment(now()).isAfter(`${fecha.format('MM/DD/YYYY')} ${startTime}`)
-  );
 
-  console.log('debug component render', startTime, tempMeenting.horas);
-  const handleChange = (participant: IParticipants, selected: boolean) => {
+export default function MeetingItem({ meenting }: IMeentingItem) {
+  const [participants, setParticipants] = useState<IParticipants[]>(meenting.participants);
+  const {dateFormat , hoursFormat} = useDateForm()
+  const [startTime,endTime] = hoursFormat(meenting.horas)
+  const [meentingStart, setmeentingStart] = useState(
+    moment(now()).isAfter(`${dateFormat(meenting.date)} ${startTime}`)
+  );
+  const { editMeenting, deleteMeeting, updateMeeting } = useContext(NetworkingContext);
+
+  const handleChange = (participants: IParticipants[]) => {
+    const confirmedIds = participants.map((part) => part.id);
     const temp = meenting.participants.map((part) =>
-      part.id === participant.id
-        ? { ...part, attendance: selected ? typeAttendace.confirmed : typeAttendace.unconfirmed }
-        : part
+      confirmedIds.includes(part.id)
+        ? { ...part, attendance: typeAttendace.confirmed }
+        : { ...part, attendance: typeAttendace.unconfirmed }
     );
-    setMeentign({ ...meenting, participants: temp });
+    setParticipants( temp );
   };
 
-  const columns: ColumnsType<IParticipants> = [
-    {
-      title: 'Participante',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-    },
-    {
-      title: 'Asistencia',
-      dataIndex: 'attendance',
-    },
-  ];
   const onDelete = () => {
     confirm({
       title: `¿Está seguro de eliminar la información?`,
@@ -70,15 +57,13 @@ export default function MeetingItem({ menting: tempMeenting }: IMeentingItem) {
             <Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>
               {meenting.name}
             </Typography.Text>
-            <Typography.Text style={{ fontSize: '14px', fontWeight: '500', color: '#6F737C' }}>{`${fecha.format(
-              'DD/MM/YYYY'
-            )} - ${startTime}`}</Typography.Text>
+            <Typography.Text style={{ fontSize: '14px', fontWeight: '500', color: '#6F737C' }}>{`${dateFormat(meenting.date)} - ${startTime}`}</Typography.Text>
           </Space>
         }
         extra={
           <Space>
             <Avatar.Group maxCount={4} maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
-              {meenting.participants.map((participant, key) => (
+              {participants.map((participant, key) => (
                 <Tooltip key={key} title={participant.name} placement='top'>
                   <Avatar style={{ backgroundColor: '#333F44', color: 'white' }}>
                     {participant.name && participant.name.charAt(0).toUpperCase()}
@@ -101,7 +86,7 @@ export default function MeetingItem({ menting: tempMeenting }: IMeentingItem) {
                   !meentingStart && (
                     <Countdown
                       style={{ margin: 'auto' }}
-                      value={`${fecha.format('MM/DD/YYYY')} ${startTime}`}
+                      value={`${dateFormat(meenting.date,'MM/DD/YYYY')} ${startTime}`}
                       format='D [días] H [horas] m [minutos] s [segundos]'
                       onFinish={() => setmeentingStart(true)}
                     />
@@ -112,7 +97,7 @@ export default function MeetingItem({ menting: tempMeenting }: IMeentingItem) {
                 <Form layout='inline'>
                   <Form.Item label='Fecha'>
                     <Typography>
-                      <pre>{fecha.format('DD/MM/YYYY')}</pre>
+                      <pre>{dateFormat(meenting.date)}</pre>
                     </Typography>
                   </Form.Item>
                   <Form.Item label='Hora incio'>
@@ -136,12 +121,20 @@ export default function MeetingItem({ menting: tempMeenting }: IMeentingItem) {
             <Table
               rowSelection={{
                 type: 'checkbox',
-                onSelect(participant, selected) {
-                  handleChange(participant, selected);
+                defaultSelectedRowKeys: participants
+                  .filter((partici) => partici.attendance === typeAttendace.confirmed)
+                  .map((item) => item.id),
+                onChange(selectkey, participants) {
+                  handleChange(participants);
                 },
               }}
-              dataSource={meenting.participants.map((partici, index) => ({ ...partici, key: index }))}
-              columns={columns}
+              dataSource={participants.map((partici) => ({ ...partici, key: partici.id }))}
+              columns={columnsParticipants}
+            />
+            <Button
+              disabled={!meentingStart}
+              icon={<SaveOutlined />}
+              onClick={() => updateMeeting(meenting.id, meenting)}
             />
           </Col>
         </Row>
