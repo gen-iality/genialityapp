@@ -287,7 +287,7 @@ const UserStatusAndMenu = (props) => {
     <>
       {user ? (
         <>
-          {isAtOrganizationLanding && !screens.xs && (
+          {isAtOrganizationLanding && (
             <>
               <Col>
                 <Image
@@ -301,11 +301,15 @@ const UserStatusAndMenu = (props) => {
                   fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
                 />
               </Col>
-              <Col style={{ marginLeft: '2rem' }}>
-                <Text style={{ fontWeight: '700' }}>{organization.name}</Text>
-              </Col>
+
+              {!screens.xs && (
+                <Col style={{ marginLeft: '2rem' }}>
+                  <Text style={{ fontWeight: '700' }}>{organization.name}</Text>
+                </Col>
+              )}
             </>
           )}
+
           {loggedInuser}
         </>
       ) : (
