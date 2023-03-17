@@ -99,7 +99,7 @@ const ViewPrelanding = ({ preview }) => {
 
 	//! TEMPORAL VALIDATION TO GET INTO EVENT FOR LG EVENT
 	useEffect(() => {
-		if (isLGEvent) {
+		if (!!cEventContext?.value?.redirect_landing) {
 			if (cEventUser?.value?._id && history.location.pathname === `/${idEvent}`) {
 				window.sessionStorage.setItem('session', cEventContext.value?._id);
 				return history.push(`/landing/${cEventContext?.value?._id}`);
