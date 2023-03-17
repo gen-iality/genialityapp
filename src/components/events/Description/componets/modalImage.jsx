@@ -31,7 +31,7 @@ const ModalImageComponent = ({
       setImage(null);
       setShowInputUrl(false);
     } else {
-      if (initialValue.hiperVinculo.length > 0) {
+      if (initialValue.hiperVinculo?.length > 0) {
         setShowInputUrl(true);
         setUrl(initialValue.hiperVinculo);
       }
@@ -65,6 +65,12 @@ const ModalImageComponent = ({
   const hadledChange = ({ target }) => {
     setUrl(target.value);
   };
+
+  const handledShowInput = ()=> {
+    setShowInputUrl(!showInputUrl);
+    setUrl('')
+  };
+
   return (
     <Modal
       width={720}
@@ -90,13 +96,13 @@ const ModalImageComponent = ({
         <Button
           icon={showInputUrl ? <MinusCircleOutlined style={iconsStyles} /> : <PlusCircleOutlined style={iconsStyles} />}
           type='link'
-          onClick={() => setShowInputUrl(!showInputUrl)}>
+          onClick={handledShowInput}>
           {showInputUrl ? 'Quitar URL' : 'Agregar URL'}
         </Button>
 
         {showInputUrl && (
           <Form {...formLayout}>
-            <Form.Item label={'Enlace'} >
+            <Form.Item label={'Enlace'} initialValue={url}>
               <Input defaultValue={url} name='url' placeholder={`Enlace de redireccion`} onChange={hadledChange}></Input>
             </Form.Item>
           </Form>
