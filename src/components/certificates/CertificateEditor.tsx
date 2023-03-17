@@ -262,8 +262,11 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
           return
         }
 
+        // @ts-expect-error
         canvas.height = this.naturalHeight;
+        // @ts-expect-error
         canvas.width = this.naturalWidth;
+        // @ts-expect-error
         ctx.drawImage(this, 0, 0);
         const dataURL = canvas.toDataURL(outputFormat);
         resolve(dataURL);
