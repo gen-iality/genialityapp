@@ -346,6 +346,8 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
       }
     });
 
+    // THIS line tries to avoid CORS, but if it can't, then... everything is screwed
+
     // Conver the image url to image base64
     let imageAsUri = certificateData.background;
     if (imageAsUri.toString().toLowerCase().startsWith('http')) {
