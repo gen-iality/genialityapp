@@ -31,6 +31,10 @@ const ModalImageComponent = ({
       setImage(null);
       setShowInputUrl(false);
     } else {
+      if (initialValue.hiperVinculo.length > 0) {
+        setShowInputUrl(true);
+        setUrl(initialValue.hiperVinculo);
+      }
       setImage(initialValue.value);
     }
     return () => setType(null);
@@ -39,16 +43,19 @@ const ModalImageComponent = ({
   const saveImage = () => {
     if (!image) return message.error('Seleccione una imagen para poder guardar');
 
-    if (showInputUrl && url.length === 0) return message.error('Debe digitar una url');
+    if (showInputUrl && url.length === 0) return message.error('Debe diligenciar una url valida para la imagen');
 
     const item = {
       ...initialValue,
       type: 'image',
       value: image,
+      hiperVinculo: url,
     };
 
     saveItem(item, setLoading, dataSource, setItem, cEvent, setDataSource);
     setType(null);
+    setShowInputUrl(false);
+    setUrl('');
   };
 
   const handleImage = (imageUrl) => {
@@ -79,7 +86,7 @@ const ModalImageComponent = ({
         hoverable={false}
       />
 
-      <Col style={{ padding: 10 }}>
+      <Col style={{ padding: 20 }}>
         <Button
           icon={showInputUrl ? <MinusCircleOutlined style={iconsStyles} /> : <PlusCircleOutlined style={iconsStyles} />}
           type='link'
@@ -88,9 +95,9 @@ const ModalImageComponent = ({
         </Button>
 
         {showInputUrl && (
-          <Form  {...formLayout}>
-            <Form.Item label={'Enlace'}>
-              <Input name='url' placeholder={`Enlace de redireccion`} onChange={hadledChange}></Input>
+          <Form {...formLayout}>
+            <Form.Item label={'Enlace'} >
+              <Input defaultValue={url} name='url' placeholder={`Enlace de redireccion`} onChange={hadledChange}></Input>
             </Form.Item>
           </Form>
         )}
