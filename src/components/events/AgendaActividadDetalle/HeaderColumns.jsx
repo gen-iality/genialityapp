@@ -120,28 +120,17 @@ const HeaderColumns = (props) => {
   const intl = useIntl();
   return (
     <Row align="middle">
-      <Col
-        xs={{ order: 2, span: 8 }}
-        sm={{ order: 2, span: 8 }}
-        md={{ order: 1, span: 4 }}
-        lg={{ order: 1, span: 4 }}
-        xl={{ order: 1, span: 4 }}
-        style={{ padding: '4px' }}
+      <Link
+        to={
+          cEvent && !cEvent?.isByname
+            ? `/landing/${props.cEvent.value._id}/agenda`
+            : `/event/${cEvent?.nameEvent}/agenda`
+        }
       >
-        <Link
-          to={
-            cEvent && !cEvent?.isByname
-              ? `/landing/${props.cEvent.value._id}/agenda`
-              : `/event/${cEvent?.nameEvent}/agenda`
-          }
-        >
-          <Row style={{ paddingLeft: '10px' }}>
-            <Button type="primary" shape="round" icon={<ArrowLeftOutlined />} size="small">
-              {intl.formatMessage({ id: 'button.back.agenda' })}
-            </Button>
-          </Row>
-        </Link>
-      </Col>
+        <Button type="primary" shape="round" icon={<ArrowLeftOutlined />} size="small">
+          {intl.formatMessage({ id: 'button.back.agenda' })}
+        </Button>
+      </Link>
 
       <Col
         xs={{ order: 2, span: 4 }}
