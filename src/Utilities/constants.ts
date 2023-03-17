@@ -1,0 +1,1 @@
+export const LG_EVENT_IDS = ['641471cb527e71ee4b0a2322'];

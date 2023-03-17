@@ -24,6 +24,7 @@ import getEventsponsors from '../empresas/customHooks/useGetEventCompanies';
 import useScript from './hooks/useScript';
 import useInjectScript from './hooks/useInjectScript';
 import { scriptGoogleTagManagerAudi, scriptTeadesAudi, scriptTeadeBodyAudi } from './constants/constants';
+import { LG_EVENT_IDS } from '@/Utilities/constants';
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
 
@@ -66,8 +67,18 @@ const ViewPrelanding = ({ preview }) => {
 	const idEvent = cEventContext.value?._id;
 	const shadow = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : '';
 
+	const isLGEvent = LG_EVENT_IDS.includes(idEvent);
 	//PERMITE INGRESAR A LA LANDING DEL EVENTO
 	useEffect(() => {
+		// if (isLGEvent) {
+		// 	if (cEventUser?.value?._id && history.location.pathname === `/${idEvent}`) {
+		// 		console.log({ history });
+		// 		console.log('Is LG EVENT & Event User registered... Executing redirect');
+		// 		// return history.push(`/landing/${cEventContext?.value?._id}`);
+		// 	} else {
+		// 		console.log('Is LG EVENT but Event User not exists... Stay here');
+		// 	}
+		// } else {
 		setIsPrelanding(true);
 		// window.sessionStorage.setItem('message', true);
 		if (!cEventContext.value) return;
@@ -77,24 +88,27 @@ const ViewPrelanding = ({ preview }) => {
 		}
 		if (preview) return;
 		if (window.sessionStorage.getItem('session') === cEventContext.value?._id) {
-			// console.log(cEvent);
-			// console.log('cEventContext?.value?.redirect_activity', cEventContext?.value?.redirect_activity);
-			// console.log('!!cEventContext?.value?.redirect_activity', !!cEventContext?.value?.redirect_activity);
-			// console.log(
-			// 	"typeof cEventContext?.value?.redirect_activity === 'string'",
-			// 	typeof cEventContext?.value?.redirect_activity === 'string'
-			// );
-			// console.log(
-			// 	!!cEventContext?.value?.redirect_activity && typeof cEventContext?.value?.redirect_activity === 'string'
-			// );
 			if (!!cEventContext?.value?.redirect_activity && typeof cEventContext?.value?.redirect_activity === 'string') {
 				history.replace(`/landing/${cEventContext.value?._id}/activity/${cEventContext?.value?.redirect_activity}`);
 			} else {
 				history.replace(`/landing/${cEventContext?.value?._id}`);
 			}
-			// history.replace(`/landing/${cEventContext.value?._id}`);
 		}
+		// }
 	}, [cEventContext, cUser, cEventUser]);
+
+	//! TEMPORAL VALIDATION TO GET INTO EVENT FOR LG EVENT
+	useEffect(() => {
+		if (isLGEvent) {
+			if (cEventUser?.value?._id && history.location.pathname === `/${idEvent}`) {
+				window.sessionStorage.setItem('session', cEventContext.value?._id);
+				return history.push(`/landing/${cEventContext?.value?._id}`);
+			} else {
+				console.log('Is LG EVENT but Event User not exists... Stay here');
+			}
+		}
+	}, [cEventUser]);
+	//! TEMPORAL VALIDATION TO GET INTO EVENT FOR LG EVENT
 
 	/**DYNAMIC STYLES */
 	// Estilos para el contenedor de bloques en desktop y mobile
