@@ -50,7 +50,7 @@ function feriaInformation(props) {
                   <Row style={{ fontSize: '14px', marginTop: 12 }}>
                     {props.companyDetail.telefono && (
                       <Col>
-                        <span style={{color: props.color.text}} className='tel' style={{ marginRight: 20 }}>
+                        <span style={{color: props.color.text, marginRight: 20}} className='tel'>
                           <PhoneOutlined className='icono' /> {props.companyDetail.telefono}
                         </span>
                       </Col>
