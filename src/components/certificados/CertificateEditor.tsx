@@ -242,6 +242,24 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     }
   };
 
+  // https://stackoverflow.com/a/20285053
+  const toDataURL = (url: string) : Promise<string> => {
+    const p = new Promise<string>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        const reader = new FileReader();
+        reader.onloadend = function() {
+          resolve(reader.result as unknown as string);
+        }
+        reader.readAsDataURL(xhr.response);
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+    })
+    return p
+  }
+
   const generatePDF = async () => {
     props.event.datetime_from = dayjs(props.event.datetime_from).format('DD-MM-YYYY');
     props.event.datetime_to = dayjs(props.event.datetime_to).format('DD-MM-YYYY');
@@ -300,6 +318,21 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
       }
     });
 
+    // Conver the image url to image base64
+    let imageAsUri = certificateData.background;
+    if (imageAsUri.toString().toLowerCase().startsWith('http')) {
+      try {
+        imageAsUri = await toDataURL(certificateData.background)
+      } catch (err) {
+        console.error('Cannot request because CORS', err)
+      }
+    }
+      
+
+    setCertificateData({
+      ...certificateData,
+      background: imageAsUri,
+    })
     setNoFinalCertRows(newNoFinalCertRows);
     setReadyCertToGenerate(newNoFinalCertRows);
 
