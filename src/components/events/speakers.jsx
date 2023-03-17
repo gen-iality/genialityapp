@@ -412,11 +412,11 @@ class Speakers extends Component {
 
             {/* Descripción del conferencista */}
             <Col flex='1 1 600px'>
-              <span>
+              <span style={{color:this.props.cEvent.value?.styles?.textMenu}}>
                 <b>{infoSpeaker.nombre}</b>
               </span>
               <p>
-                <span>
+                <span style={{color:this.props.cEvent.value?.styles?.textMenu}}>
                   <b>{infoSpeaker.cargo}</b>
                 </span>
                 <br />

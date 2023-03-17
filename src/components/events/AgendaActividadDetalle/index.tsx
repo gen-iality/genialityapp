@@ -50,7 +50,7 @@ const AgendaActividadDetalle = (props: any) => {
 	const activityId = props.match.params.activity_id;
 	const eventId = cEvent.value._id;
 	const isAssambleyMod = cEvent.value.user_properties.some((property: any) => property.type === 'voteWeight');	
-	const voteWeight = cEventUser.value.properties.voteWeight ? Number(cEventUser.value.properties.voteWeight) : 1
+	const voteWeight = cEventUser.value?.properties?.voteWeight ? Number(cEventUser.value?.properties?.voteWeight) : 1
 	const intl = useIntl();
 	{
 		Moment.locale(window.navigator.language);

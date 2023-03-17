@@ -66,6 +66,7 @@ const FeriasDetail = (props) => {
         <FeriasBanner imagen={companyDetail?.stand_image} />
         <div className='container-information'>
           <Information
+            color={{text: colorTexto, bg:colorFondo}}
             companyDetail={companyDetail}
             ImgCompany={companyDetail?.list_image}
             titleCompany={companyDetail && companyDetail.name}
@@ -97,9 +98,9 @@ const FeriasDetail = (props) => {
                   )}
                   <Row style={{ paddingTop: '10px' }}>
                     <Space direction='vertical'>
-                      <Title level={4}>Descripción</Title>
+                      <Title style={{color: colorTexto}} level={4}>Descripción</Title>
                       <div
-                        style={{ fontSize: '18px' }}
+                        style={{ fontSize: '18px', color: colorTexto }}
                         dangerouslySetInnerHTML={{
                           __html: companyDetail && companyDetail.description,
                         }}></div>
@@ -107,11 +108,11 @@ const FeriasDetail = (props) => {
                   </Row>
                 </div>
               ) : (
-                <Feedback message='No hay información' />
+                <Feedback color={{text: colorTexto, bg:colorFondo}} message='No hay información' />
               )}
             </div>
           </TabPane>
-          {visibleTab && (
+          {companyDetail && companyDetail.services.length > 0 && (
             <TabPane tab='Productos y Servicios' key='2'>
               {/* componente  de Productos */}
               <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
@@ -134,12 +135,12 @@ const FeriasDetail = (props) => {
                     </Row>
                   </div>
                 ) : (
-                  <Feedback message='No hay productos' />
+                  <Feedback color={{text: colorTexto, bg:colorFondo}} message='No hay productos' />
                 )}
               </div>
             </TabPane>
           )}
-          {visibleTab && (
+          {companyDetail && companyDetail.advisor.length > 0 && (
             <TabPane tab='Contactos' key='3'>
               {/* componente  de contactos */}
               <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
@@ -157,12 +158,12 @@ const FeriasDetail = (props) => {
                     />
                   ))
                 ) : (
-                  <Feedback message='No hay contactos' />
+                  <Feedback color={{text: colorTexto, bg:colorFondo}} message='No hay contactos' />
                 )}
               </div>
             </TabPane>
           )}
-          {visibleTab && (
+          {companyDetail && companyDetail.gallery.length > 0 && (
             <TabPane tab='Galería' key='4'>
               <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1.5vw' }}>
                 <Row gutter={[16, 16]}>
@@ -183,7 +184,7 @@ const FeriasDetail = (props) => {
                         </Col>
                       ))
                     ) : (
-                      <Feedback message='No hay imágenes' />
+                      <Feedback color={{text: colorTexto, bg:colorFondo}} message='No hay imágenes' />
                     )}
                   </Image.PreviewGroup>
                 </Row>
