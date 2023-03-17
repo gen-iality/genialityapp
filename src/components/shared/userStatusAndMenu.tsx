@@ -41,6 +41,8 @@ const UserStatusAndMenu = (props: any) => {
 		window.location.href = `${window.location.origin}${menuRoute}`;
 	}
 	useEffect(() => {
+		console.log('first',  props.eventId)
+		console.log('first',  props.eventId == '64074725abdc1ea2c80b5062')
 		if (props.eventId && props.eventId == '64074725abdc1ea2c80b5062') setVisible(false);
 	}, [props.eventId]);
 
