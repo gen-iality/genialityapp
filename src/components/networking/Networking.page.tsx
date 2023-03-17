@@ -14,7 +14,11 @@ export default function NetworkingPage({ eventId } : PropsNetworking) {
         <MeentignView/>
       </Tabs.TabPane>
 
-      <Tabs.TabPane tab='Reporte de networking' key={2}>
+    {/*   <Tabs.TabPane tab='Calendario' key={2}>
+        <MeentignView/>
+      </Tabs.TabPane> */}
+
+      <Tabs.TabPane tab='Reporte de networking' key={3}>
         <Report props={eventId} />
       </Tabs.TabPane>
 
