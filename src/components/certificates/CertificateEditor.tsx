@@ -10,9 +10,8 @@ import dayjs from 'dayjs';
 import { firestore } from '@helpers/firebase';
 import { withRouter } from 'react-router-dom';
 import { DispatchMessageService } from '@context/MessageService';
-import { Html2PdfCerts } from 'html2pdf-certs'
+import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs';
 import 'html2pdf-certs/dist/styles.css'
-import { CertRow, Html2PdfCertsRef } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types';
 import CertificateRows from './CertificateRows';
 import { availableTags, defaultCertificateBackground, defaultCertRows } from './constants';
 import { replaceAllTagValues } from './utils/replaceAllTagValues';
