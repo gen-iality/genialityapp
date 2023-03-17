@@ -14,6 +14,7 @@ import CalendarCheckOutlineIcon from '@2fd/ant-design-icons/lib/CalendarCheckOut
 import HexagonMultipleOutlineIcon from '@2fd/ant-design-icons/lib/HexagonMultipleOutline';
 import LogoutIcon from '@2fd/ant-design-icons/lib/Logout';
 import { getCorrectColor } from '@/helpers/utils';
+import { UseEventContext } from '@/context/eventContext';
 const MenuStyle: CSSProperties = {
 	flex: 1,
 	textAlign: 'right',
@@ -36,15 +37,17 @@ const UserStatusAndMenu = (props: any) => {
 	let colorHeader = props.colorHeader;
 	const [visible, setVisible] = useState(true);
 	const intl = useIntl();
+	const eventContext = UseEventContext()
+	const eventId = eventContext.value?._id
 
 	function linkToTheMenuRouteS(menuRoute: any) {
 		window.location.href = `${window.location.origin}${menuRoute}`;
 	}
 	useEffect(() => {
-		console.log('first',  props.eventId)
-		console.log('first',  props.eventId == '64074725abdc1ea2c80b5062')
-		if (props.eventId && props.eventId == '64074725abdc1ea2c80b5062') setVisible(false);
-	}, [props.eventId]);
+		// console.log('first',  eventId)
+		// console.log('first',  eventId == '64074725abdc1ea2c80b5062')
+		if (eventId && eventId === '64074725abdc1ea2c80b5062') setVisible(false);
+	}, [eventId]);
 
 	let menu = !props.anonimususer ? (
 		<Menu>
@@ -83,7 +86,7 @@ const UserStatusAndMenu = (props: any) => {
 					)}
 				</Menu.ItemGroup>
 			)}
-			<Menu.ItemGroup
+			{visible && <Menu.ItemGroup
 				key='user-status-menu-item-group-2'
 				title={intl.formatMessage({
 					id: 'header.title.Management',
@@ -134,7 +137,7 @@ const UserStatusAndMenu = (props: any) => {
 						</Button>
 					</Menu.Item>
 				)}
-			</Menu.ItemGroup>
+			</Menu.ItemGroup>}
 
 			<Menu.ItemGroup
 				key='user-status-menu-item-group-3'
@@ -142,18 +145,21 @@ const UserStatusAndMenu = (props: any) => {
 					id: 'header.title.User',
 					defaultMessage: 'Usuario',
 				})}>
-				<Badge
-					count={intl.formatMessage({
-						id: 'header.new',
-						defaultMessage: 'Nuevo',
-					})}>
-					<Menu.Item
-						key='user-status-menu-item-group-3-menu-item-1'
-						icon={<AccountOutlineIcon style={{ fontSize: '18px' }} />}
-						onClick={() => linkToTheMenuRouteS(`/myprofile`)}>
-						<FormattedMessage id='header.profile' defaultMessage='Cuenta de usuario' />
-					</Menu.Item>
-				</Badge>
+				{visible && (
+					<Badge
+						count={intl.formatMessage({
+							id: 'header.new',
+							defaultMessage: 'Nuevo',
+						})}>
+						<Menu.Item
+							key='user-status-menu-item-group-3-menu-item-1'
+							icon={<AccountOutlineIcon style={{ fontSize: '18px' }} />}
+							onClick={() => linkToTheMenuRouteS(`/myprofile`)}>
+							<FormattedMessage id='header.profile' defaultMessage='Cuenta de usuario' />
+						</Menu.Item>
+					</Badge>
+					)
+				}
 
 				<Menu.Item
 					key='user-status-menu-item-group-3-menu-item-2'
