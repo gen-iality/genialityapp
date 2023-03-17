@@ -524,6 +524,7 @@ class General extends Component {
       default_certification_hours: event.default_certification_hours,
       default_certification_entity: event.default_certification_entity,
       default_certification_last_hours: event.default_certification_last_hours,
+      duration: event.duration,
     };
 
     try {
@@ -1012,6 +1013,19 @@ class General extends Component {
                   ) : (
                     <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   )}
+
+                  <Form.Item
+                    label="Duración"
+                    rules={[{ required: true, message: 'El tiempo de duración es requerido' }]}
+                  >
+                    <Input
+                      autoFocus
+                      name="duration"
+                      placeholder="Duración del curso"
+                      value={event.duration}
+                      onChange={(e) => this.handleChange(e, 'duration')}
+                    />
+                  </Form.Item>
 
                   <Form.Item label="Descripción">
                     <EviusReactQuill name="description" data={event.description} handleChange={this.chgTxt} />
