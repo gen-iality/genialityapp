@@ -1068,7 +1068,7 @@ class General extends Component {
 
                   <Card title="Zona social">
                     <Row style={{ padding: '8px 0px' }}>
-                      <Col xs={18}>Chat general</Col>
+                      <Col xs={18}>Habilitar chat general</Col>
                       <Col xs={6}>
                         <Switch
                           checked={this.state?.tabs?.publicChat}
@@ -1087,7 +1087,7 @@ class General extends Component {
                       </Col>
                     </Row>
                     <Row style={{ padding: '8px 0px' }}>
-                      <Col xs={18}>Chat privado</Col>
+                      <Col xs={18}>Habilitar chat privado</Col>
                       <Col xs={6}>
                         <Switch
                           checked={this.state?.tabs?.privateChat}
@@ -1097,6 +1097,25 @@ class General extends Component {
                                 tabs: {
                                   ...this.state.tabs,
                                   privateChat: checked,
+                                },
+                              },
+                              async () => await this.upsertTabs(),
+                            )
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row style={{ padding: '8px 0px' }}>
+                      <Col xs={18}>Habilitar lista de asistentes</Col>
+                      <Col xs={6}>
+                        <Switch
+                          checked={this.state?.tabs?.attendees}
+                          onChange={(checked) =>
+                            this.setState(
+                              {
+                                tabs: {
+                                  ...this.state.tabs,
+                                  attendees: checked,
                                 },
                               },
                               async () => await this.upsertTabs(),
