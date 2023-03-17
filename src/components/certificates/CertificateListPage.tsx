@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, FunctionComponent } from 'react';
 import { CertsApi, RolAttApi } from '@helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import dayjs from 'dayjs';
 
-const Certificados = (props) => {
+const CertificateListPage: FunctionComponent<any> = (props) => {
   const [columnsData, setColumnsData] = useState({});
 
   const columns = [
@@ -12,16 +12,16 @@ const Certificados = (props) => {
       title: 'Nombre',
       dataIndex: 'name',
       ellipsis: true,
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: (a: any, b: any) => a.name.localeCompare(b.name),
       ...getColumnSearchProps('name', columnsData)
     },
     {
       title: 'Rol',
       dataIndex: 'rol',
       ellipsis: true,
-      sorter: (a, b) => a.rol.name.localeCompare(b.rol.name),
+      sorter: (a: any, b: any) => a.rol.name.localeCompare(b.rol.name),
       ...getColumnSearchProps('rol', columnsData),
-      render(val, item) {
+      render(val: any, item: any) {
         return (
           <div>{item.rol && item.rol.name ? item.rol.name : 'Sin rol'}</div>
         )
@@ -32,9 +32,9 @@ const Certificados = (props) => {
       dataIndex: 'created_at',
       ellipsis: true,
       width: 180,
-      sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+      sorter: (a: any, b: any) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
-      render(val, item) {
+      render(val: any, item: any) {
         return (
           <div>{dayjs(item.created_at).format('YYYY-DD-MM')}</div>
         )
@@ -49,12 +49,12 @@ const Certificados = (props) => {
       title="Certificados"
       titleTooltip="Agregue o edite los Certificados que se muestran en la aplicación"
       addUrl={{
-        pathname: `${props.matchUrl}/certificado`,
+        pathname: `${props.matchUrl}/certificate`,
         state: { new: true },
       }}
       columns={columns}
       key="_id"
-      editPath={`${props.matchUrl}/certificado`}
+      editPath={`${props.matchUrl}/certificate`}
       pagination={false}
       actions
       search
@@ -63,4 +63,4 @@ const Certificados = (props) => {
   );
 }
 
-export default Certificados;
+export default CertificateListPage;
