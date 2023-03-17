@@ -38,8 +38,8 @@ const defaultCertRows: CertRow[] = [
 
 const initContent: string = JSON.stringify(defaultCertRows)
 
-// const defaultCertificateBackground = 'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2FGEN.iality-cert.jpeg?alt=media&token=008d4828-a64e-4218-ad2d-02ec11d7cd96';
-const defaultCertificateBackground = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Green_field.jpg';
+const defaultCertificateBackground = 'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2FGEN.iality-cert.jpeg?alt=media&token=008d4828-a64e-4218-ad2d-02ec11d7cd96';
+// const defaultCertificateBackground = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Green_field.jpg';
 
 type CertificateData = {
   name: string,
