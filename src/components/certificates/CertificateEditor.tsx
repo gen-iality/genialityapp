@@ -14,6 +14,7 @@ import { Html2PdfCerts } from 'html2pdf-certs'
 import 'html2pdf-certs/dist/styles.css'
 import { CertRow, Html2PdfCertsRef } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types';
 import CertificateRows from './CertificateRows';
+import { availableTags } from './constants';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -70,18 +71,6 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
   const [form] = Form.useForm();
 
   const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
-
-  const tags = [
-    { tag: 'event.name', label: 'Nombre del curso', value: 'name' },
-    { tag: 'event.start', label: 'Fecha inicio del curso', value: 'datetime_from' },
-    { tag: 'event.end', label: 'Fecha fin del curso', value: 'datetime_to' },
-    { tag: 'event.venue', label: 'Lugar del curso', value: 'venue' },
-    { tag: 'event.address', label: 'Dirección del curso', value: 'location.FormattedAddress' },
-    { tag: 'user.names', label: 'Nombre(s) de asistente', value: 'names' },
-    { tag: 'user.email', label: 'Correo de asistente', value: 'email' },
-    { tag: 'ticket.name', label: 'Nombre del tiquete', value: 'ticket.title' },
-    { tag: 'rol.name', label: 'Nombre del Rol' },
-  ];
 
   const requestCertificateDataFromID = async (id: string) => {
     const data = await CertsApi.getOne(id);
@@ -318,7 +307,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     }
 
     // Replace tags
-    tags.map((item) => {
+    availableTags.map((item) => {
       let value;
       if (item.tag.includes('event.')) value = props.event[item.value || ''];
       else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin tiquete';
@@ -507,7 +496,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         <Col span={16}>
           <Form.Item label="Etiquetas disponibles">
             <Row wrap gutter={[18, 8]}>
-              {tags.map((tag, index) => (
+              {availableTags.map((tag, index) => (
                 <Col key={index}>
                   <code>{tag.tag}</code>
                   <p>{tag.label}</p>
