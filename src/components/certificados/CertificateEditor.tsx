@@ -357,6 +357,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         console.log('imagen url:', {imageAsUri})
       } catch (err) {
         console.error('Cannot request because CORS', err)
+        setIsGenerating(false)
       }
     }
 
@@ -367,6 +368,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         console.log('imagen url (legacy mode):', {imageAsUri})
       } catch (err2) {
         console.error('Cannot request because CORS (in legacy mode)', err2)
+        setIsGenerating(false)
       }
     }
     console.debug({ imageAsUri })
