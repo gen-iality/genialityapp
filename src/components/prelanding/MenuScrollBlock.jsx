@@ -33,27 +33,9 @@ const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades, vpat
     return false;
   };
 
-  const createLabel = (name) => {
-    let label;
-    switch (name) {
-      case 'Contador':
-        label = 'Contador';
-        break;
-      case 'Descripción':
-        label = 'Descripción';
-        break;
-      case 'Conferencistas':
-        label = 'Conferencistas';
-        break;
-      case 'Actividades':
-        label = 'Actividades';
-        break;
-      case 'Patrocinadores':
-        label = 'Patrocinadores';
-        break;
-    }
-    return label;
-  };
+  const createLabel = (section) => {
+    return section.label || section.name
+   };
   return screens.xs ? (
     <Collapse
       className='menu__prelanding'
@@ -87,7 +69,7 @@ const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades, vpat
                   <List.Item.Meta
                     title={
                       <Typography.Text strong style={{ color: textColor, fontSize: '16px' }}>
-                        {createLabel(section.name)}
+                        {createLabel(section)}
                       </Typography.Text>
                     }
                   />
@@ -112,7 +94,7 @@ const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades, vpat
                   alignToTop={true}
                   selector={`#${section.name}_block`}>
                   <Button type='text' size='large' style={{ color: textColor, fontWeight: '700' }}>
-                    {createLabel(section.name)}
+                    {createLabel(section)}
                   </Button>
                 </ScrollIntoView>
               )
