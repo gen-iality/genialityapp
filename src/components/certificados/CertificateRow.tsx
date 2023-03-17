@@ -1,6 +1,16 @@
 import { DeleteFilled } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, InputNumber, Row, Select } from 'antd';
+import { Button, Card, Col, Form, Input, InputNumber, Row, Select, Space, Typography } from 'antd';
 import { CertRow } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types';
+
+
+const certRowTypeToTitle: {[key: string]: string} = {
+  break: 'Salto',
+  h1: 'Título 1',
+  h2: 'Título 2',
+  h3: 'Subtítulo 1',
+  h4: 'Subtítulo 2',
+  text: 'Texto',
+}
 
 interface ICertificateRowProps {
     value?: CertRow,
@@ -22,9 +32,8 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
   } = props
 
   return (
-    <Card
-      title={(
-      <div>
+    <Row gutter={[16, 16]} style={{borderColor: '#eee', borderWidth: 1, borderStyle: 'solid'}}>
+      <Col span={1}>
         {showDeleteButton ? (
         <Button
           danger
@@ -32,65 +41,54 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
           icon={<DeleteFilled />}
         />
         ) : undefined}
-        {' '}
-        {title}
-      </div>
-      )}
-      style={{ width: '100%' }}
-  >
-      <Row gutter={[16, 16]}>
-      <Col span={8}>
-        <Form.Item label="Tipo">
-          <Select
-            options={possibleType.map((type) => ({
-              value: type,
-              label: `Tipo ${type}`,
-            }))}
-            defaultValue={certRow.type}
-            placeholder="Seleccione un tipo de fila"
-            onChange={(value) => {
-              onChange({
-                ...certRow,
-                type: value,
-              })
-            }}
-          />
-        </Form.Item>
       </Col>
-      <Col span={8}>
-        <Form.Item label="Repeticiones (válido para tipo break)">
-          <InputNumber
-            style={{ width: 200 }}
-            min={1}
-            defaultValue={certRow.times || 1}
-            placeholder="Sólo para tipo break"
-            onChange={(value) => {
-              onChange({
-                ...certRow,
-                times: value || 1,
-              })
-            }}
-          />
-        </Form.Item>
+      <Col span={2}>
+        <Typography.Text strong>{title}</Typography.Text>
       </Col>
-      <Col span={24}>
-        <Form.Item label="Contenido">
-          {/* TODO: Add support for content of type CertRow when its has children too */}
-          <Input
-            placeholder="Contenido"
-            defaultValue={certRow.content as string}
-            onChange={(e: any) => {
-              onChange({
-                ...certRow,
-                content: e.target.value,
-              })
-            }}
-          />
-        </Form.Item>
+      <Col span={3}>
+        <InputNumber
+          min={1}
+          defaultValue={certRow.times || 1}
+          placeholder="Sólo para tipo break"
+          onChange={(value) => {
+            onChange({
+              ...certRow,
+              times: value || 1,
+            })
+          }}
+        />
       </Col>
-      </Row>
-    </Card>
-  );
+      <Col span={4}>
+        <Select
+          options={possibleType.map((type) => ({
+            value: type,
+            label: type ? certRowTypeToTitle[type] : 'Desconocido',
+          }))}
+          defaultValue={certRow.type}
+          placeholder="Seleccione un tipo de fila"
+          onChange={(value) => {
+            onChange({
+              ...certRow,
+              type: value,
+            })
+          }}
+        />
+      </Col>
+      <Col span={14}>
+        {/* TODO: Add support for content of type CertRow when its has children too */}
+        <Input
+          placeholder="Contenido"
+          defaultValue={certRow.content as string}
+          onChange={(e: any) => {
+            onChange({
+              ...certRow,
+              content: e.target.value,
+            })
+          }}
+        />
+      </Col>
+    </Row>
+  )
 };
 
 export default CertificateRow;
