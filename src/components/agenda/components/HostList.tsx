@@ -1,25 +1,26 @@
 /** React's libraries */
 import { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 
 /** Antd imports */
-import { List, Avatar } from 'antd';
+import { List, Avatar, Typography, Row, Divider, Card, Space } from 'antd';
+import { AlertOutlined } from '@ant-design/icons';
 
 /** Helpers and utils */
-import { SpeakersApi, ToolsApi } from '@helpers/request';
+import { EventsApi, SpeakersApi, ToolsApi } from '@helpers/request';
 
 /** Context */
 import { useEventContext } from '@context/eventContext';
 
-const dataDuration = [
-  {
-    title: '5 hora de contenido',
-  },
-];
+const { Title, Text } = Typography;
 
 const HostList = () => {
   const cEvent = useEventContext();
+  const intl = useIntl();
+
   const [speakers, setSpeakers] = useState<any[]>([]);
   const [tools, setTools] = useState<any[]>([]);
+  const [duration, setDuration] = useState<any[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -36,18 +37,51 @@ const HostList = () => {
     })();
   }, [cEvent.value]);
 
+  useEffect(() => {
+    (async () => {
+      const event = await EventsApi.getOne(cEvent.value._id);
+      console.log('event', event);
+      setDuration(event.duration);
+    })();
+  }, [cEvent.value]);
+
   return (
     <>
-      <List
-        size="small"
-        header={<h3>DURACIÓN</h3>}
-        dataSource={dataDuration}
-        renderItem={(item) => (
-          <List.Item>
-            <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.title}</p>
-          </List.Item>
-        )}
-      />
+      {duration && (
+        <>
+          <Row style={{ marginBottom: '1rem' }}>
+            <h3>DURACIÓN</h3>
+            <Divider style={{ margin: '15px 0px' }} />
+            <Text style={{ marginLeft: '1.5rem' }}>
+              {duration}{' '}
+              {intl.formatMessage({
+                id: 'label.duration.content',
+                defaultMessage: 'de contenido',
+              })}
+            </Text>
+          </Row>
+        </>
+      )}
+
+      <Card
+        style={{
+          borderRadius: '10px',
+          border: '2px solid #bae637',
+          margin: '0px 10px',
+          textAlign: 'center',
+        }}
+      >
+        <Space direction="vertical" align="center">
+          <AlertOutlined style={{ fontSize: '2rem' }} />
+          <Text>
+            {intl.formatMessage({
+              id: 'label.duration.message',
+              defaultMessage: 'Para obtener el certificado debes cursar el 80% del curso.',
+            })}
+          </Text>
+        </Space>
+      </Card>
+
       <List
         size="small"
         header={<h3>HERRAMIENTAS</h3>}
@@ -64,6 +98,7 @@ const HostList = () => {
           </List.Item>
         )}
       />
+
       <List
         size="small"
         header={<h3>COLABORADORES</h3>}
