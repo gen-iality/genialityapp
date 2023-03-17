@@ -15,7 +15,8 @@ export function EnableAnalyticsByEVENT() {
     var f = document.getElementsByClassName(htmlElementId)[0];
     createElement = document.createElement('script');
     createElement.async = true;
-    createElement.src = '//www.googletagmanager.com/gtag/js?id=' + analyticsId + '&l=' + dataLayer;
+    createElement.src = '//www.googletagmanager.com/gtag/js?id=' + analyticsId;
+    //createElement.src = '//www.googletagmanager.com/gtag/js?id=' + analyticsId + '&l=' + dataLayer;
     if (f) {
       f.parentNode.insertBefore(createElement, f);
     }
