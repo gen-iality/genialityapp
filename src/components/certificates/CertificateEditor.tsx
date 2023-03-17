@@ -15,6 +15,7 @@ import 'html2pdf-certs/dist/styles.css'
 import { CertRow, Html2PdfCertsRef } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types';
 import CertificateRows from './CertificateRows';
 import { availableTags } from './constants';
+import { replaceAllTagValues } from './utils/replaceAllTagValues';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -288,9 +289,6 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
 
     const userRef = firestore.collection(`${props.event._id}_event_attendees`);
 
-    // Copy the object
-    let newNoFinalCertRows: CertRow[] = JSON.parse(JSON.stringify(noFinalCertRows))
-
     let oneUser: any = null;
     try {
       oneUser = await new Promise((resolve, reject) => {
@@ -309,34 +307,12 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
       return
     }
 
-    // Replace tags
-    availableTags.map((item) => {
-      let value;
-      if (item.tag.includes('event.')) value = props.event[item.value || ''];
-      else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin tiquete';
-      else if (item.tag.includes('rol.')) {
-        const rols = roles.find((currentRol) => currentRol._id === oneUser.rol_id);
-        const rolName = rols ? rols.name.toUpperCase() : 'Sin rol';
-        value = rolName;
-      } else {
-        value = oneUser.properties[item.value || ''];
-      }
-      
-      if (item.tag) {
-        const wantedTag = item.tag;
-        const wishedValue = value;
-
-        // Replace in all rows
-        newNoFinalCertRows = newNoFinalCertRows.map((row) => {
-          if (row.content) {
-            if (typeof row.content === 'string') {
-              row.content = row.content.replace(`[${wantedTag}]`, wishedValue);
-            }
-          }
-          return row
-        })
-      }
-    });
+    const newNoFinalCertRows = replaceAllTagValues(
+      props.event,
+      oneUser,
+      roles,
+      noFinalCertRows,
+    )
 
     // THIS line tries to avoid CORS, but if it can't, then... everything is screwed
 
