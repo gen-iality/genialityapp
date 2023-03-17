@@ -2,7 +2,7 @@ import { FunctionComponent, useEffect, useState, useRef } from 'react';
 import { CertsApi, RolAttApi } from '@helpers/request';
 import { useHistory } from 'react-router-dom';
 import { handleRequestError } from '@helpers/utils';
-import { Row, Col, Form, Input, Modal, Select, Button, Upload, Image, Typography, List, Card, InputNumber, Divider } from 'antd';
+import { Row, Col, Form, Input, Modal, Select, Button, Upload, Image as ImageAntD, Typography, List, Card, InputNumber, Divider } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined, CloseCircleOutlined, PlusCircleFilled, DeleteFilled, LoadingOutlined } from '@ant-design/icons';
 import Header from '@antdComponents/Header';
 import BackTop from '@antdComponents/BackTop';
@@ -38,7 +38,8 @@ const defaultCertRows: CertRow[] = [
 
 const initContent: string = JSON.stringify(defaultCertRows)
 
-const defaultCertificateBackground = 'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2FGEN.iality-cert.jpeg?alt=media&token=008d4828-a64e-4218-ad2d-02ec11d7cd96';
+// const defaultCertificateBackground = 'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2FGEN.iality-cert.jpeg?alt=media&token=008d4828-a64e-4218-ad2d-02ec11d7cd96';
+const defaultCertificateBackground = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Green_field.jpg';
 
 type CertificateData = {
   name: string,
@@ -84,6 +85,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
 
   const requestCertificateDataFromID = async (id: string) => {
     const data = await CertsApi.getOne(id);
+    console.log('request cert', {data})
     if (!data.content) {
       if (data.content.trim() === '[]')
         setCertificateData({ ...data, content: initContent });
@@ -92,11 +94,13 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     }
 
     setCertificateData({ ...data });
+    data.content && setNoFinalCertRows(JSON.parse(data.content))
     form.setFieldsValue({ ...data })
     form.setFieldsValue({ certRows: JSON.parse(data.content) })
   };
 
   const onSubmit = async (values: any) => {
+    console.log('submit', {values})
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -104,7 +108,10 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
       action: 'show',
     });
 
-    setCertificateData(values)
+    setCertificateData({
+      ...certificateData,
+      ...values,
+    })
 
     const payload = {
       name: values.name,
@@ -113,6 +120,8 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
       event_id: props.event._id,
       background: certificateData.background,
       rol: values.role,
+      cert_width: values.cert_width,
+      cert_height: values.cert_height,
     };
 
     try {
@@ -230,7 +239,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
   };
 
   // https://stackoverflow.com/a/20285053
-  const toDataURL = (url: string) : Promise<string> => {
+  const toDataURL_New = (url: string) : Promise<string> => {
     const p = new Promise<string>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function() {
@@ -240,9 +249,41 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         }
         reader.readAsDataURL(xhr.response);
       };
+      xhr.onerror = function(err) {
+        reject(err)
+      }
       xhr.open('GET', url);
       xhr.responseType = 'blob';
       xhr.send();
+    })
+    return p
+  }
+
+  const toDataURL_Legacy = (src: string, outputFormat?: string): Promise<string> => {
+    const p = new Promise<string>((resolve, reject) => {
+      const img = new Image();
+      // const img = document.createElement('IMG') as HTMLImageElement;
+      img.crossOrigin = 'Anonymous';
+      img.onload = function() {
+        const canvas = document.createElement('CANVAS') as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d');
+
+        if (!ctx) {
+          reject('Cannot get the canvas 2d context')
+          return
+        }
+
+        canvas.height = this.naturalHeight;
+        canvas.width = this.naturalWidth;
+        ctx.drawImage(this, 0, 0);
+        const dataURL = canvas.toDataURL(outputFormat);
+        resolve(dataURL);
+      };
+      img.src = src;
+      if (img.complete || img.complete === undefined) {
+        img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+        img.src = src;
+      }
     })
     return p
   }
@@ -309,12 +350,24 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     let imageAsUri = certificateData.background;
     if (imageAsUri.toString().toLowerCase().startsWith('http')) {
       try {
-        imageAsUri = await toDataURL(certificateData.background)
+        console.log('converting image url to image base64')
+        imageAsUri = await toDataURL_New(certificateData.background)
+        console.log('imagen url:', {imageAsUri})
       } catch (err) {
         console.error('Cannot request because CORS', err)
       }
     }
-      
+
+    if (imageAsUri.toString().toLowerCase().startsWith('http')) {
+      try {
+        console.log('try to converting image url to image base64 using legacy mode')
+        imageAsUri = await toDataURL_Legacy(certificateData.background)
+        console.log('imagen url (legacy mode):', {imageAsUri})
+      } catch (err2) {
+        console.error('Cannot request because CORS (in legacy mode)', err2)
+      }
+    }
+    console.debug({ imageAsUri })
 
     setCertificateData({
       ...certificateData,
@@ -477,7 +530,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
               </Button>
             )}
           >
-            <Image
+            <ImageAntD
               src={certificateData.background}
               alt="Imagen certificado"
             />
@@ -506,8 +559,14 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         backgroundColor='#005882'
         enableLinks={true}
         filename="certificate-test.pdf"
-        format={[1280, 720]}
-        sizeStyle={{height: 720, width: 1280}}
+        format={[
+          certificateData.cert_width ?? 1280,
+          certificateData.cert_height ?? 720,
+        ]}
+        sizeStyle={{
+          height: certificateData.cert_height ?? 720,
+          width: certificateData.cert_width ?? 1280,
+      }}
         transformationScale={0.5}
         unit="px"
         orientation="landscape"
