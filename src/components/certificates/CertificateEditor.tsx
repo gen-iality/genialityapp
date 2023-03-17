@@ -14,7 +14,7 @@ import { Html2PdfCerts } from 'html2pdf-certs'
 import 'html2pdf-certs/dist/styles.css'
 import { CertRow, Html2PdfCertsRef } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types';
 import CertificateRows from './CertificateRows';
-import { availableTags } from './constants';
+import { availableTags, defaultCertRows } from './constants';
 import { replaceAllTagValues } from './utils/replaceAllTagValues';
 import { CertificateData } from './types';
 
@@ -25,19 +25,6 @@ const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 };
-
-const defaultCertRows: CertRow[] = [
-  {type: 'break', times: 19},
-  {type: 'h3', content: 'Certificamos que'},
-  {type: 'break', times: 2},
-  {type: 'h4', content: '[user.names]'},
-  {type: 'break', times: 3},
-  {type: 'h3', content: 'participo con éxito el curso'},
-  {type: 'break'},
-  {type: 'h2', content: '[event.name]'},
-  {type: 'break', times: 1},
-  {type: 'h4', content: 'realizado del [event.start] al [event.end]'},
-]
 
 const initContent: string = JSON.stringify(defaultCertRows)
 
