@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import Moment from 'moment-timezone';
+import dayjs from 'dayjs';
 
 /** export Excel */
 
@@ -214,28 +215,37 @@ const HeaderColumns = (props) => {
             >
               {props.isVisible && (
                 <div>
-                  {Moment.tz(
-                    currentActivity !== null && currentActivity?.datetime_start,
-                    'YYYY-MM-DD h:mm',
-                    'America/Bogota',
-                  )
-                    .tz(Moment.tz.guess())
-                    .format('DD MMM YYYY')}{' '}
-                  {Moment.tz(
-                    currentActivity !== null && currentActivity?.datetime_start,
-                    'YYYY-MM-DD h:mm',
-                    'America/Bogota',
-                  )
-                    .tz(Moment.tz.guess())
-                    .format('h:mm a z')}{' '}
-                  -{' '}
-                  {Moment.tz(
-                    currentActivity !== null && currentActivity?.datetime_end,
-                    'YYYY-MM-DD h:mm',
-                    'America/Bogota',
-                  )
-                    .tz(Moment.tz.guess())
-                    .format('h:mm a z')}
+                  {currentActivity?.type.name === ('url' || 'video') ? (
+                    <>
+                      {intl.formatMessage({ id: 'label.posted.date', defaultMessage: 'Publicado ' })}{' '}
+                      {dayjs(currentActivity?.datetime_start).fromNow()}
+                    </>
+                  ) : (
+                    <>
+                      {Moment.tz(
+                        currentActivity !== null && currentActivity?.datetime_start,
+                        'YYYY-MM-DD h:mm',
+                        'America/Bogota',
+                      )
+                        .tz(Moment.tz.guess())
+                        .format('DD MMM YYYY')}{' '}
+                      {Moment.tz(
+                        currentActivity !== null && currentActivity?.datetime_start,
+                        'YYYY-MM-DD h:mm',
+                        'America/Bogota',
+                      )
+                        .tz(Moment.tz.guess())
+                        .format('h:mm a z')}{' '}
+                      -{' '}
+                      {Moment.tz(
+                        currentActivity !== null && currentActivity?.datetime_end,
+                        'YYYY-MM-DD h:mm',
+                        'America/Bogota',
+                      )
+                        .tz(Moment.tz.guess())
+                        .format('h:mm a z')}
+                    </>
+                  )}
                 </div>
               )}
             </div>

@@ -252,7 +252,8 @@
     "my_plan.informative_section": "Informative section",
     "my_plan.sponsors": "Sponsors",
     "my_plan.news": "News",
-    "my_plan.products": "Products"
+    "my_plan.products": "Products",
+    "label.posted.date": "Posted"
   },
   "es": {
     "header.help": "Ayuda",
@@ -514,7 +515,8 @@
     "my_plan.sponsors": "Patrocinadores",
     "my_plan.news": "Noticias",
     "my_plan.products": "Productos",
-    "my_plan.videos": "Videos"
+    "my_plan.videos": "Videos",
+    "label.posted.date": "Publicado"
   },
   "pt": {
     "live.join": "Entrar",
@@ -665,6 +667,7 @@
     "message.error.complete.requerid.data": "Ocorreu um erro, preencha as informações necessárias!",
     "message.success.updated.tabs": "Abas da zona social atualizadas!",
     "message.error.updated.tabs": "Ocorreu um erro ao atualizar as guias da zona social",
-    "message.success.initialized.tabs": "Abas da área social inicializadas"
+    "message.success.initialized.tabs": "Abas da área social inicializadas",
+    "label.posted.date": "Postado"
   }
 }
