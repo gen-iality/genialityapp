@@ -1,9 +1,9 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useState, useRef } from 'react';
 import { CertsApi, RolAttApi } from '@helpers/request';
 import { useHistory } from 'react-router-dom';
 import { handleRequestError } from '@helpers/utils';
 import { Row, Col, Form, Input, Modal, Select, Button, Upload, Image, Typography, List, Card, InputNumber, Divider } from 'antd';
-import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined, CloseCircleOutlined, PlusCircleFilled, DeleteFilled } from '@ant-design/icons';
+import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined, CloseCircleOutlined, PlusCircleFilled, DeleteFilled, LoadingOutlined } from '@ant-design/icons';
 import Header from '@antdComponents/Header';
 import BackTop from '@antdComponents/BackTop';
 import dayjs from 'dayjs';
@@ -12,7 +12,7 @@ import { withRouter } from 'react-router-dom';
 import { DispatchMessageService } from '@context/MessageService';
 import { Html2PdfCerts } from 'html2pdf-certs'
 import 'html2pdf-certs/dist/styles.css'
-import { CertRow } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types';
+import { CertRow, Html2PdfCertsRef } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types';
 import CertificateRows from './CertificateRows';
 
 const { confirm } = Modal;
@@ -60,8 +60,14 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     name: '',
   });
   const [roles, setRoles] = useState<any[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const [noFinalCertRows, setNoFinalCertRows] = useState<CertRow[]>(JSON.parse(initContent));
+  const [backUpNoFinalCertRows] = useState<CertRow[]>(JSON.parse(initContent));
+  const [readyCertToGenerate, setReadyCertToGenerate] = useState<CertRow[] | undefined>();
+
+
+  const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
 
   const tags = [
     { tag: 'event.name', label: 'Nombre del curso', value: 'name' },
@@ -236,62 +242,68 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     }
   };
 
-  const generate = () => {
-    console.log(props.event.datetime_from);
-    console.log(props.event.datetime_to);
+  const generatePDF = async () => {
     props.event.datetime_from = dayjs(props.event.datetime_from).format('DD-MM-YYYY');
     props.event.datetime_to = dayjs(props.event.datetime_to).format('DD-MM-YYYY');
-    let content = certificateData.content;
+
+    setIsGenerating(true);
+
     const userRef = firestore.collection(`${props.event._id}_event_attendees`);
-    userRef
-      .orderBy('updated_at', 'desc')
-      .limit(1)
-      .get()
-      .then((querySnapshot) => {
-        if (!querySnapshot.empty) {
-          const oneUser = querySnapshot.docs[0].data();
-          tags.map((item) => {
-            let value;
-            if (item.tag.includes('event.')) value = props.event[item.value || ''];
-            else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin tiquete';
-            else if (item.tag.includes('rol.')) {
-              const rols = roles.find((rol1) => rol1._id === oneUser.rol_id);
-              const rolName = rols ? rols.name.toUpperCase() : 'Sin rol';
-              value = rolName;
-            } else value = oneUser.properties[item.value || ''];
-            if (item.tag) {
-              content = content.replace(`[${item?.tag}]`, value);
+
+    // Copy the object
+    let newNoFinalCertRows: CertRow[] = JSON.parse(JSON.stringify(noFinalCertRows))
+
+    let oneUser: any = null;
+    try {
+      oneUser = await new Promise((resolve, reject) => {
+      userRef
+        .orderBy('updated_at', 'desc')
+        .limit(1)
+        .get()
+        .then((querySnapshot) => {
+          if (querySnapshot.empty) reject()
+          else resolve(querySnapshot.docs[0].data())
+        })
+      })
+    } catch (err) {
+      console.error('Cannot generate the certificate', err)
+      setIsGenerating(false);
+      return
+    }
+
+    // Replace tags
+    tags.map((item) => {
+      let value;
+      if (item.tag.includes('event.')) value = props.event[item.value || ''];
+      else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin tiquete';
+      else if (item.tag.includes('rol.')) {
+        const rols = roles.find((currentRol) => currentRol._id === oneUser.rol_id);
+        const rolName = rols ? rols.name.toUpperCase() : 'Sin rol';
+        value = rolName;
+      } else {
+        value = oneUser.properties[item.value || ''];
+      }
+      
+      if (item.tag) {
+        const wantedTag = item.tag;
+        const wishedValue = value;
+
+        // Replace in all rows
+        newNoFinalCertRows = newNoFinalCertRows.map((row) => {
+          if (row.content) {
+            if (typeof row.content === 'string') {
+              row.content = row.content.replace(`[${wantedTag}]`, wishedValue);
             }
-          });
-          setPreviewCert(content);
-          /* console.log(content, 'content') */
-          const body = {
-            content: content,
-            image: certificateData.imageFile?.data ? certificateData.imageFile?.data : certificateData.imageFile || defaultCertificateBackground,
-          };
-          /* console.log(body, 'body') */
-          CertsApi.generateCert(body).then((file) => {
-            const blob = new Blob([file.blob], { type: file.type, charset: 'UTF-8' });
-            // IE doesn't allow using a blob object directly as link href
-            // instead it is necessary to use msSaveOrOpenBlob
-            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-              window.navigator.msSaveOrOpenBlob(blob);
-              return;
-            }
-            const data = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.dataType = 'json';
-            link.href = data;
-            link.target = '_blank';
-            /* link.download = `certificado${certificado.name}.pdf`; */
-            link.dispatchEvent(new MouseEvent('click'));
-            setTimeout(() => {
-              // For Firefox it is necessary to delay revoking the ObjectURL
-              window.URL.revokeObjectURL(data);
-            }, 60);
-          });
-        }
-      });
+          }
+          return row
+        })
+      }
+    });
+
+    setNoFinalCertRows(newNoFinalCertRows);
+    setReadyCertToGenerate(newNoFinalCertRows);
+
+    setIsGenerating(false);
   };
 
   useEffect(() => {
@@ -303,6 +315,18 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     // Get all roles
     requestRoles();
   }, [locationState.edit]);
+
+  // Watch and generate the PDF
+  useEffect(() => {
+    if (!pdfGeneratorRef.current) {
+      console.debug('ref to Html2PdfCerts is undefined');
+      return
+    }
+    if (typeof readyCertToGenerate !== 'undefined') {
+      console.log('start generating the certificate')
+      pdfGeneratorRef.current.generatePdf()
+    }
+  }, [readyCertToGenerate, pdfGeneratorRef.current])
 
   return (
     <Form
@@ -343,7 +367,11 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
                 </Upload>
               </Col>
               <Col>
-                <Button type="primary" onClick={() => alert('not implemented generate')}>
+                <Button
+                  type="primary"
+                  icon={isGenerating ? <LoadingOutlined /> : undefined}
+                  onClick={() => generatePDF()}
+                >
                   Generar
                 </Button>
               </Col>
@@ -431,7 +459,6 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
             <Image
               src={certificateData.background}
               alt="Imagen certificado"
-              // preview={certificateData.background}
             />
           </Form.Item>
         </Col>
@@ -442,6 +469,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
           <Form.Item
             name="certRows"
             label="Filas"
+            initialValue={noFinalCertRows}
           >
             <CertificateRows onChange={setNoFinalCertRows} />
           </Form.Item>
@@ -451,6 +479,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
       <Divider />
 
       <Html2PdfCerts
+        handler={pdfGeneratorRef}
         rows={noFinalCertRows}
         imageUrl={ certificateData.background ?? defaultCertificateBackground}
         backgroundColor='#005882'
@@ -461,6 +490,11 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         transformationScale={0.5}
         unit="px"
         orientation="landscape"
+        onEndGenerate={() => {
+          setNoFinalCertRows(backUpNoFinalCertRows)
+          setReadyCertToGenerate(undefined)
+          setIsGenerating(false)
+        }}
       />
 
       <BackTop />
@@ -498,7 +532,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
                 </Upload>
               </Col>
               <Col>
-                <Button type="primary" onClick={generate}>
+                <Button type="primary" onClick={generatePDF}>
                   Generar
                 </Button>
               </Col>
