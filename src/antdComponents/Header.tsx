@@ -2,7 +2,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { Tooltip, Typography, Row, Col, Button } from 'antd'
 import { PlusCircleOutlined, SaveOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import { FunctionComponent, MouseEventHandler } from 'react'
+import { FunctionComponent, MouseEventHandler, ReactElement } from 'react'
 
 const { Title, Text } = Typography
 
@@ -19,7 +19,7 @@ interface HeaderProps {
   back?: boolean,
   form?: boolean,
   extra?: any,
-  description?: string,
+  description?: string | ReactElement,
   loadingSave?: boolean,
   saveNameIcon?: boolean,
   customBack?: string,
