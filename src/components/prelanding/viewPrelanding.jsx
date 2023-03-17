@@ -24,6 +24,7 @@ import getEventsponsors from '../empresas/customHooks/useGetEventCompanies';
 import useScript from './hooks/useScript';
 import useInjectScript from './hooks/useInjectScript';
 import { scriptGoogleTagManagerAudi, scriptTeadesAudi, scriptTeadeBodyAudi } from './constants/constants';
+import { LG_EVENT_IDS } from '@/Utilities/constants';
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
 
@@ -66,7 +67,6 @@ const ViewPrelanding = ({ preview }) => {
 	const idEvent = cEventContext.value?._id;
 	const shadow = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : '';
 
-	const LG_EVENT_IDS = ['641471cb527e71ee4b0a2322'];
 	const isLGEvent = LG_EVENT_IDS.includes(idEvent);
 	//PERMITE INGRESAR A LA LANDING DEL EVENTO
 	useEffect(() => {

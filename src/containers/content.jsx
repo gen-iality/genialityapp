@@ -25,6 +25,7 @@ import BlockedEvent from '@/components/events/Landing/BlockedEvent';
 import ModalAuthAnonymous from '@/components/authentication/ModalAuthAnonymous';
 import ModalUpdate from '@/components/events/Landing/ModalUpdate';
 import BingoPresentation from '@/components/games/bingo/views/BingoPresentation';
+import LGNotification from '@/components/shared/LGNotification';
 //Code splitting
 const Header = loadable(() => import('./header'));
 const Home = loadable(() => import('../pages/home'));
@@ -141,6 +142,7 @@ const RouteContext = ({ component: Component, ...rest }) => (
                       <Header />
                     }
                     <Component { ...props } />
+                    <LGNotification />
                     <ModalAuth />
                     <ModalAuthAnonymous />
                     <ModalNoRegister />
