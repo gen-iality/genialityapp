@@ -322,9 +322,10 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
       console.debug('ref to Html2PdfCerts is undefined');
       return
     }
-    if (typeof readyCertToGenerate !== 'undefined') {
+    if (readyCertToGenerate !== undefined) {
       console.log('start generating the certificate')
       pdfGeneratorRef.current.generatePdf()
+      setReadyCertToGenerate(undefined)
     }
   }, [readyCertToGenerate, pdfGeneratorRef.current])
 
@@ -492,7 +493,6 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         orientation="landscape"
         onEndGenerate={() => {
           setNoFinalCertRows(backUpNoFinalCertRows)
-          setReadyCertToGenerate(undefined)
           setIsGenerating(false)
         }}
       />
