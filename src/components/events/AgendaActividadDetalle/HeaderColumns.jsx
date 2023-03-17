@@ -1,8 +1,13 @@
-import { Button, Col, Modal, Row, Spin } from 'antd';
+/** React's libraries */
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
+import Moment from 'moment-timezone';
+
+/** export Excel */
+
+/** Antd imports */
+import { Button, Col, Modal, Row, Spin } from 'antd';
 import {
   ArrowLeftOutlined,
   CaretRightOutlined,
@@ -11,17 +16,20 @@ import {
   ExclamationCircleOutlined,
   LoadingOutlined,
 } from '@ant-design/icons';
-import WithEviusContext from '@context/withContext';
-
-import Moment from 'moment-timezone';
-import { useEventContext } from '@context/eventContext';
 import HumanGreetingVariantIcon from '@2fd/ant-design-icons/lib/HumanGreetingVariant';
 import CancelIcon from '@2fd/ant-design-icons/lib/Cancel';
+
+/** Helpers and utils */
+import { imageUtils } from '../../../Utilities/ImageUtils';
+import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed';
+
+/** Context */
+import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useEventContext } from '@context/eventContext';
+import WithEviusContext from '@context/withContext';
 import AgendaContext from '@context/AgendaContext';
 import { CurrentEventUserContext } from '@context/eventUserContext';
-import { imageUtils } from '../../../Utilities/ImageUtils';
 import { DispatchMessageService } from '@context/MessageService';
-import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed';
 
 const HeaderColumns = (props) => {
   const { currentActivity } = useHelper();
@@ -68,8 +76,8 @@ const HeaderColumns = (props) => {
     if (currentActivity) {
       // Se setea el currentactivity para detectar si la transmision es por eviusmeet u otro
       setActivityEdit(currentActivity._id);
-      
-      console.log("1. SE EJECUTA ESTO")
+
+      console.log('1. SE EJECUTA ESTO');
     }
     if (!currentActivity || typeActivity !== 'eviusMeet') return;
     const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;
@@ -124,7 +132,8 @@ const HeaderColumns = (props) => {
             cEvent && !cEvent?.isByname
               ? `/landing/${props.cEvent.value._id}/agenda`
               : `/event/${cEvent?.nameEvent}/agenda`
-          }>
+          }
+        >
           <Row style={{ paddingLeft: '10px' }}>
             <Button type="primary" shape="round" icon={<ArrowLeftOutlined />} size="small">
               {intl.formatMessage({ id: 'button.back.agenda' })}
@@ -165,7 +174,8 @@ const HeaderColumns = (props) => {
             fontWeight: 'normal',
             alignItems: 'center',
             justifyContent: 'center',
-          }}>
+          }}
+        >
           {props.activityState === 'open_meeting_room' || props.activityState === 'game'
             ? 'En vivo'
             : props.activityState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video
@@ -187,15 +197,14 @@ const HeaderColumns = (props) => {
         style={{ display: 'flex' }}
       >
         <div style={{ padding: '8px' }}>
-          <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
-            {currentActivity && currentActivity?.name}
-          </Row>
+          <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>{currentActivity && currentActivity?.name}</Row>
           <Row
             style={{
               height: '2.5vh',
               fontSize: 10,
               fontWeight: 'normal',
-            }}>
+            }}
+          >
             <div
               xs={{ order: 1, span: 24 }}
               sm={{ order: 1, span: 24 }}
@@ -208,14 +217,14 @@ const HeaderColumns = (props) => {
                   {Moment.tz(
                     currentActivity !== null && currentActivity?.datetime_start,
                     'YYYY-MM-DD h:mm',
-                    'America/Bogota'
+                    'America/Bogota',
                   )
                     .tz(Moment.tz.guess())
                     .format('DD MMM YYYY')}{' '}
                   {Moment.tz(
                     currentActivity !== null && currentActivity?.datetime_start,
                     'YYYY-MM-DD h:mm',
-                    'America/Bogota'
+                    'America/Bogota',
                   )
                     .tz(Moment.tz.guess())
                     .format('h:mm a z')}{' '}
@@ -223,7 +232,7 @@ const HeaderColumns = (props) => {
                   {Moment.tz(
                     currentActivity !== null && currentActivity?.datetime_end,
                     'YYYY-MM-DD h:mm',
-                    'America/Bogota'
+                    'America/Bogota',
                   )
                     .tz(Moment.tz.guess())
                     .format('h:mm a z')}
@@ -237,7 +246,8 @@ const HeaderColumns = (props) => {
             {typeActivity == 'eviusMeet' &&
               !request[cEventUSer.value?._id]?.active &&
               cEventUSer.value?._id &&
-              props.activityState === 'open_meeting_room' && recordTypeForThisEvent( cEvent)!=="UN_REGISTERED_PUBLIC_EVENT" && (
+              props.activityState === 'open_meeting_room' &&
+              recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT' && (
                 <Button
                   style={{ transition: 'all 1s' }}
                   onClick={() => (!loading ? sendOrCancelRequest() : null)}
