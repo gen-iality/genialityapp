@@ -41,7 +41,7 @@ const UserStatusAndMenu = (props: any) => {
 		window.location.href = `${window.location.origin}${menuRoute}`;
 	}
 	useEffect(() => {
-		if (props.eventId && props.eventId == '60cb7c70a9e4de51ac7945a2') setVisible(false);
+		if (props.eventId && props.eventId == '64074725abdc1ea2c80b5062') setVisible(false);
 	}, [props.eventId]);
 
 	let menu = !props.anonimususer ? (
