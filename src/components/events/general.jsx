@@ -51,6 +51,7 @@ import AccessTypeCard from '../shared/accessTypeCard/AccessTypeCard';
 import { AccessTypeCardData } from '../shared/accessTypeCard/accesTypeCardData/accesTypeCardData';
 import ActivityRedirectForm from '../shared/ActivityRedirectForm';
 import CustomPasswordLabel from './CustomPasswordLabel';
+import LandingRedirectForm from '../shared/LandingRedirectForm';
 
 Moment.locale('es');
 const { Title, Text } = Typography;
@@ -95,6 +96,7 @@ class General extends Component {
 				attendees: true,
 			},
 			redirect_activity: null,
+			redirect_landing: null,
 			itemsMenu: [],
 			// Estado inicial de la seccion de formulario de registro
 			registerForm: {
@@ -887,7 +889,10 @@ class General extends Component {
 											initialState={this.props.event?.redirect_activity}
 										/>
 									)}
-
+									<LandingRedirectForm
+										eventId={this.props.event._id}
+										initialState={this.props.event?.redirect_landing}
+									/>
 									<CustomPasswordLabel
                     isCustomPasswordLabel={this.state.isCustomPasswordLabel}
                     customPasswordLabel={this.state.customPasswordLabel}

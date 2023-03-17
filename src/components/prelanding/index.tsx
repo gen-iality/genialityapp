@@ -11,6 +11,7 @@ import {
 	Input,
 	Menu,
 	message,
+	Modal,
 	Row,
 	Select,
 	Space,
@@ -35,7 +36,7 @@ import { useHistory } from 'react-router';
 import { obtenerData, settingsSection, visibleAlert } from './hooks/helperFunction';
 import DrawerPreviewLanding from './drawerPreviewLanding';
 import getEventsponsors from '../empresas/customHooks/useGetEventCompanies';
-import { DataSource, LandingBlock } from './types';
+import { Alias, DataSource, LandingBlock } from './types';
 
 const DragHandle = SortableHandle(() => (
 	<DragIcon
@@ -57,6 +58,7 @@ interface PreLandingSectionsProps {
 
 const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) => {
 	const [dataSource, setDataSource] = useState<DataSource>({} as DataSource);
+	const [modal, setModal] = useState<boolean>(false);
 	const [loading, setLoading] = useState(false);
 	const [visible, setVisible] = useState(false);
 	const [description, setDescription] = useState([]);
@@ -170,11 +172,18 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 			}
 			if (response) setDataSource(response);
 			if (saved) message.success('Configuración guardada correctamente');
-			else message.error('Error al guardar la configuración');
+			else message.error('Error al guardar la configuración'); 
 		} else {
 			message.error('Secciones no se pueden guardar');
 		}
 	};
+
+	const saveAliases = (alias : Alias) => {
+		const { main_landing_blocks } = dataSource
+		const newBlocks = main_landing_blocks.map((block)=>({...block, label : alias[block.key]}))
+		setDataSource({...dataSource, main_landing_blocks : newBlocks})
+		setModal(false)
+	}
 	//COLUMNAS PARA LAS SECCIONES DE PRELANDING
 	const columns = [
 		{
@@ -196,6 +205,11 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 		{
 			title: 'Sección',
 			dataIndex: 'name',
+			className: 'drag-visible',
+		},
+		{
+			title: 'Alias',
+			dataIndex: 'label',
 			className: 'drag-visible',
 		},
 		{
@@ -265,6 +279,27 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 
 	return (
 		<Row gutter={[8, 8]}>
+			{modal && <Modal
+			  visible={modal}
+			  title={'Editar alias de secciones'}
+			  footer={false}
+			  onCancel={()=>setModal(false)}
+			  okText={'Guardar'}>
+			   <Form onFinish={saveAliases} layout='vertical'>
+				{dataSource.main_landing_blocks.map((block)=>(
+					<Form.Item
+					label={block.name}
+					name={`${block.key}`}
+					initialValue={block.label || block.name}
+					>
+						<Input  name={block.name} type='text' placeholder={'Ingrese un alias'} />
+				    </Form.Item>	
+				))}
+				<Button htmlType='submit' type='primary'>
+					Guardar
+				</Button>
+				</Form>
+			</Modal>}
 			<Col span={18}>
 				<Card hoverable={true} style={{ borderRadius: '20px' }} loading={loading}>
 					<Table
@@ -282,6 +317,9 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 						}}
 					/>
 					<Row justify='end' style={{ marginTop: 10 }}>
+					<Button style={{ margin :'0px  5px'}} onClick={() => setModal(true)} type='primary'>
+								Editar alias
+					</Button>
 						{!loading ? (
 							<Button onClick={() => saveSections()} type='primary'>
 								Guardar orden y estado
