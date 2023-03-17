@@ -24,3 +24,6 @@ export const defaultCertRows: CertRow[] = [
   {type: 'break', times: 1},
   {type: 'h4', content: 'realizado del [event.start] al [event.end]'},
 ]
+
+export const defaultCertificateBackground = 'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2FGEN.iality-cert.jpeg?alt=media&token=008d4828-a64e-4218-ad2d-02ec11d7cd96';
+// export const defaultCertificateBackground = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Green_field.jpg';

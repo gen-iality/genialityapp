@@ -14,7 +14,7 @@ import { Html2PdfCerts } from 'html2pdf-certs'
 import 'html2pdf-certs/dist/styles.css'
 import { CertRow, Html2PdfCertsRef } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types';
 import CertificateRows from './CertificateRows';
-import { availableTags, defaultCertRows } from './constants';
+import { availableTags, defaultCertificateBackground, defaultCertRows } from './constants';
 import { replaceAllTagValues } from './utils/replaceAllTagValues';
 import { CertificateData } from './types';
 
@@ -27,9 +27,6 @@ const formLayout = {
 };
 
 const initContent: string = JSON.stringify(defaultCertRows)
-
-const defaultCertificateBackground = 'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2FGEN.iality-cert.jpeg?alt=media&token=008d4828-a64e-4218-ad2d-02ec11d7cd96';
-// const defaultCertificateBackground = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Green_field.jpg';
 
 const CertificateEditor: FunctionComponent<any> = (props) => {
   const locationState = props.location?.state; //si viene new o edit en el state, si es edit es un id
