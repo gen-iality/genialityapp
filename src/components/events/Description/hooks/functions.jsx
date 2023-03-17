@@ -6,7 +6,7 @@ export const renderTypeComponent = (type, value) => {
     case 'image':
       return <Image preview={false} src={value} width='100%' style={{ borderRadius: '10px' }} />;
     case 'text':
-      return <div dangerouslySetInnerHTML={{ __html: value }} />;
+      return <div style={{width:'100%'}} dangerouslySetInnerHTML={{ __html: value }} />;
     case 'video':
       return (
         <ReactPlayer
