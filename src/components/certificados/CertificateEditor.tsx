@@ -66,6 +66,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
   const [backUpNoFinalCertRows] = useState<CertRow[]>(JSON.parse(initContent));
   const [readyCertToGenerate, setReadyCertToGenerate] = useState<CertRow[] | undefined>();
 
+  const [form] = Form.useForm();
 
   const pdfGeneratorRef = useRef<Html2PdfCertsRef>(null)
 
@@ -91,71 +92,57 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     }
 
     setCertificateData({ ...data });
+    form.setFieldsValue({ ...data })
+    form.setFieldsValue({ certRows: JSON.parse(data.content) })
   };
 
   const onSubmit = async (values: any) => {
-    if (certificateData.name) {
-      // && certificado.rol
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere mientras se guarda la información...',
+      action: 'show',
+    });
+
+    setCertificateData(values)
+
+    const payload = {
+      name: values.name,
+      // rol_id: values.role, // TODO: check if this is the rol._id
+      content: JSON.stringify(values.certRows), // Parse to text
+      event_id: props.event._id,
+      background: certificateData.background,
+      rol: values.role,
+    };
+
+    try {
+      if (locationState.edit) {
+        await CertsApi.editOne(payload, locationState.edit);
+      } else {
+        await CertsApi.create(payload);
+      }
+
       DispatchMessageService({
-        type: 'loading',
         key: 'loading',
-        msj: 'Por favor espere mientras se guarda la información...',
+        action: 'destroy',
+      });
+
+      DispatchMessageService({
+        type: 'success',
+        msj: 'Información guardada correctamente!',
         action: 'show',
       });
 
-      try {
-        if (locationState.edit) {
-          const data = {
-            name: certificateData.name,
-            rol_id: certificateData.rol?._id,
-            event_id: props.event._id,
-            background: certificateData.background,
-            rol: certificateData.rol,
-            content: certificateData.content,
-          };
-          await CertsApi.editOne(data, locationState.edit);
-          /* console.log(data) */
-        } else {
-          const data = {
-            name: certificateData.name,
-            rol_id: certificateData.rol?._id,
-            content: certificateData.content,
-            event_id: props.event._id,
-            background: certificateData.image?.data || certificateData.image,
-            rol: certificateData?.rol,
-          };
-          await CertsApi.create(data);
-        }
+      history.push(`${props.matchUrl}`);
+    } catch (e) {
+      DispatchMessageService({
+        key: 'loading',
+        action: 'destroy',
+      });
 
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        });
-
-        history.push(`${props.matchUrl}`);
-      } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        });
-      }
-    } else {
-      // y el rol son
       DispatchMessageService({
         type: 'error',
-        msj: 'El nombre es requerido',
+        msj: handleRequestError(e).message,
         action: 'show',
       });
     }
@@ -365,9 +352,8 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
   return (
     <Form
     {...formLayout}
-    onFinish={(values) => {
-      console.log('upload', values)
-    }}
+    form={form}
+    onFinish={onSubmit}
     >
       <Header
         title="Certificado"
@@ -419,6 +405,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
           <Form.Item
             name="name"
             label="Nombre del certificado"
+            initialValue={certificateData.name}
             rules={[{required: true, message: 'Necesario'}]}
           >
             <Input placeholder="Nombre del certificado" />
@@ -533,137 +520,6 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
       <BackTop />
     </Form>
   )
-
-  return (
-    <Form onFinish={onSubmit} {...formLayout}>
-      <Header
-        title="Certificado"
-        description={
-          <>
-            <ExclamationOutlined
-              style={{ color: 'orange' }}
-              className="animate__animated animate__pulse animate__infinite"
-            />
-            {'Para tener una vista más exacta del certificado por favor presione el botón de generar'}
-            <br />
-            <br />
-          </>
-        }
-        back
-        save
-        form
-        remove={onRemoveId}
-        edit={locationState.edit}
-        extra={
-          <Form.Item>
-            <Row wrap gutter={[16, 8]}>
-              <Col>
-                <Upload type="file" accept="image/*" showUploadList={false} onChange={(e) => handleImage(e)}>
-                  <Button type="primary" icon={<UploadOutlined />}>
-                    Imagen de Fondo
-                  </Button>
-                </Upload>
-              </Col>
-              <Col>
-                <Button type="primary" onClick={generatePDF}>
-                  Generar
-                </Button>
-              </Col>
-            </Row>
-          </Form.Item>
-        }
-      />
-
-      <Row justify="center" wrap gutter={12}>
-        <Col span={20}>
-          <Row wrap gutter={[16, 16]}>
-            <Col span={12}>
-              <Form.Item
-                label={
-                  <label style={{ marginTop: '2%' }} className="label">
-                    Nombre <label style={{ color: 'red' }}>*</label>
-                  </label>
-                }
-                rules={[{ required: true, message: 'El nombre es requerido' }]}
-              >
-                <Input
-                  value={certificateData.name}
-                  name="name"
-                  placeholder="Nombre del certificado"
-                  onChange={(e) => handleChange(e)}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Rol"
-                /* label={
-                  <label style={{ marginTop: '2%' }} className="label">
-                    Rol <label style={{ color: 'red' }}>*</label>
-                  </label>
-                }
-                rules={[{ required: true, message: 'El rol es requerido' }]} */
-              >
-                <Select
-                  name="rol"
-                  onChange={(e) => {
-                    onChangeRol(e);
-                  }}
-                  placeholder="Seleccione rol"
-                  value={certificateData.rol?._id || role?._id}
-                >
-                  {roles.map((rol) => (
-                    <Option key={rol?._id} value={rol?._id}>
-                      {rol.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={[16, 16]}>
-            <Col span={16}>
-              <Form.Item label="Etiquetas disponibles">
-                <p>Use etiquetas para ingresar información referente al curso o los asistentes</p>
-                <Row wrap gutter={[18, 8]}>
-                  {tags.map((item, key) => (
-                    <Col key={key}>
-                      <code>{item.tag}</code>
-                      <p>{item.label}</p>
-                    </Col>
-                  ))}
-                </Row>
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item
-                label="Imagen de Fondo"
-                tooltip={
-                  <>
-                    {'Si desea volver a tener la imagen anterior presione el siguiente botón'}
-                    <Button
-                      type="primary"
-                      onClick={() =>
-                        setCertificateData({ ...certificateData, imageFile: defaultCertificateBackground, imageData: defaultCertificateBackground, image: defaultCertificateBackground })
-                      }
-                    >
-                      Cambiar a Imagen original
-                    </Button>
-                  </>
-                }
-              />
-              <Image
-                src={certificateData.imageFile?.data ? certificateData.imageFile?.data : certificateData.imageFile || defaultCertificateBackground}
-                alt="Imagen certificado"
-                preview={previewCert}
-              />
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-      <BackTop />
-    </Form>
-  );
 };
 
 export default withRouter(CertificateEditor);
