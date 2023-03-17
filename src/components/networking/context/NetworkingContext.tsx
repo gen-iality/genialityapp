@@ -16,7 +16,7 @@ interface NetworkingContextType {
   closeModal: () => void;
   openModal: (mode?: string) => void;
   createMeeting: (meeting: Omit<IMeeting, 'id'>) => void;
-  updateMeeting: (meetingId: string, meeting: IMeeting) => void;
+  updateMeeting: (meetingId: string, meeting: IMeeting) => Promise<void>;
   eventId: string;
   deleteMeeting: (meetingId: string) => void;
 }
@@ -74,13 +74,25 @@ export default function NetworkingProvider(props: Props) {
   };
 
   const createMeeting = async (meeting: Omit<IMeeting, 'id'>) => {
-    await service.createMeeting(eventId, meeting);
+   const response = await service.createMeeting(eventId, meeting);
+    DispatchMessageService({
+      type: response ? 'success' : 'error',
+      msj: response ? 'Información guardada correctamente!' : 'Error al guardar la informacion',
+      action: 'show',
+    });
   };
   const updateMeeting = async (meetingId: string, meeting: IMeeting) => {
-    await service.updateMeeting(eventId, meetingId, meeting);
+
+    const response = await service.updateMeeting(eventId, meetingId, meeting);
+
+    DispatchMessageService({
+      type: response ? 'success' : 'error',
+      msj: response ? 'Información guardada correctamente!' : 'Error al guardar la informacion',
+      action: 'show',
+    });
+
   };
   const deleteMeeting = async (meetingId: string) => {
-    try {
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
@@ -88,27 +100,16 @@ export default function NetworkingProvider(props: Props) {
         action: 'show',
       });
 
-      await service.deleteMeeting(eventId, meetingId);
+      const response = await service.deleteMeeting(eventId, meetingId);
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
       });
       DispatchMessageService({
-        type: 'success',
-        msj: 'Se eliminó la información correctamente!',
+        type: response ? 'success' : 'error',
+        msj: response ? 'Información guardada correctamente!' : 'No ha sido posible eliminar el campo',
         action: 'show',
       });
-    } catch (e:any) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
-      DispatchMessageService({
-        type: 'error',
-        msj: `No ha sido posible eliminar el campo error: ${e?.response?.data?.message || e.response?.status}`,
-        action: 'show',
-      });
-    }
   };
   const values = {
     modal,

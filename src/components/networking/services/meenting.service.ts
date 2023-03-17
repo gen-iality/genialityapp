@@ -34,8 +34,10 @@ export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMee
 			.collection('meetings')
 			.doc()
 			.set(createMeetingDto);
+			return true
 	} catch (error) {
 		console.log(error);
+		return false
 	}
 };
 
@@ -47,8 +49,10 @@ export const updateMeeting = async (eventId: string, meetingId: string, updateMe
 			.collection('meetings')
 			.doc(meetingId)
 			.update(updateMeetingDto);
+		return true
 	} catch (error) {
 		console.log(error);
+		return false
 	}
 };
 
@@ -60,7 +64,9 @@ export const deleteMeeting = async (eventId: string, meetingId: string) => {
 			.collection('meetings')
 			.doc(meetingId)
 			.delete();
+			return true
 	} catch (error) {
 		console.log(error);
+		return false
 	}
 };

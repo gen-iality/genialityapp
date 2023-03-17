@@ -1,4 +1,10 @@
-import { CaretDownOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined, SaveOutlined } from '@ant-design/icons';
+import {
+  CaretDownOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  SaveOutlined,
+} from '@ant-design/icons';
 import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table, Modal } from 'antd';
 import React, { useState } from 'react';
 import { IParticipants, typeAttendace, IMeentingItem } from '../interfaces/Meetings.interfaces';
@@ -12,10 +18,10 @@ const { confirm } = Modal;
 
 export default function MeetingItem({ meenting }: IMeentingItem) {
   const [participants, setParticipants] = useState<IParticipants[]>(meenting.participants);
-  const {dateFormat , hoursFormat} = useDateForm()
-  const [startTime,endTime] = hoursFormat(meenting.horas)
+  const { dateFormat, hoursFormat } = useDateForm();
+  const [startTime, endTime] = hoursFormat(meenting.horas);
   const [meentingStart, setmeentingStart] = useState(
-    moment(now()).isAfter(`${dateFormat(meenting.date)} ${startTime}`)
+    moment(now()).isAfter(`${dateFormat(meenting.date, 'MM/DD/YYYY')} ${startTime}`)
   );
   const { editMeenting, deleteMeeting, updateMeeting } = useContext(NetworkingContext);
 
@@ -26,7 +32,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
         ? { ...part, attendance: typeAttendace.confirmed }
         : { ...part, attendance: typeAttendace.unconfirmed }
     );
-    setParticipants( temp );
+    setParticipants(temp);
   };
 
   const onDelete = () => {
@@ -41,6 +47,10 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
         deleteMeeting(meenting.id);
       },
     });
+  };
+
+  const onUpdate = async () => {
+    await updateMeeting(meenting.id, {...meenting, participants : participants});
   };
   return (
     <Collapse
@@ -57,7 +67,9 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
             <Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>
               {meenting.name}
             </Typography.Text>
-            <Typography.Text style={{ fontSize: '14px', fontWeight: '500', color: '#6F737C' }}>{`${dateFormat(meenting.date)} - ${startTime}`}</Typography.Text>
+            <Typography.Text style={{ fontSize: '14px', fontWeight: '500', color: '#6F737C' }}>{`${dateFormat(
+              meenting.date
+            )} - ${startTime}`}</Typography.Text>
           </Space>
         }
         extra={
@@ -86,7 +98,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                   !meentingStart && (
                     <Countdown
                       style={{ margin: 'auto' }}
-                      value={`${dateFormat(meenting.date,'MM/DD/YYYY')} ${startTime}`}
+                      value={`${dateFormat(meenting.date, 'MM/DD/YYYY')} ${startTime}`}
                       format='D [días] H [horas] m [minutos] s [segundos]'
                       onFinish={() => setmeentingStart(true)}
                     />
@@ -131,11 +143,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
               dataSource={participants.map((partici) => ({ ...partici, key: partici.id }))}
               columns={columnsParticipants}
             />
-            <Button
-              disabled={!meentingStart}
-              icon={<SaveOutlined />}
-              onClick={() => updateMeeting(meenting.id, meenting)}
-            />
+            <Button disabled={!meentingStart} icon={<SaveOutlined />} onClick={() => onUpdate()} />
           </Col>
         </Row>
       </Collapse.Panel>

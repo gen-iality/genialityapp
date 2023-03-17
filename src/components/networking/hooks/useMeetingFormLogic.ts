@@ -68,22 +68,12 @@ export const useMeetingFormLogic = () => {
                     key: 'loading',
                     action: 'destroy',
                 });
-                DispatchMessageService({
-                    type: 'success',
-                    msj: 'Información guardada correctamente!',
-                    action: 'show',
-                });
                 return dataContext.closeModal();
             }
             dataContext.createMeeting(meeting);
             DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-            });
-            DispatchMessageService({
-                type: 'success',
-                msj: 'Información guardada correctamente!',
-                action: 'show',
             });
             dataContext.closeModal();
         } catch (e: any) {
