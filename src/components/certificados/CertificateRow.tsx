@@ -43,9 +43,10 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
         <Form.Item label="Tipo">
           <Select
             options={possibleType.map((type) => ({
-              label: type,
-              value: `Tipo ${type}`,
+              value: type,
+              label: `Tipo ${type}`,
             }))}
+            defaultValue={certRow.type}
             placeholder="Seleccione un tipo de fila"
             onChange={(value) => {
               onChange({
@@ -61,6 +62,7 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
           <InputNumber
             style={{ width: 200 }}
             min={1}
+            defaultValue={certRow.times || 1}
             placeholder="Sólo para tipo break"
             onChange={(value) => {
               onChange({
@@ -73,8 +75,10 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
       </Col>
       <Col span={24}>
         <Form.Item label="Contenido">
+          {/* TODO: Add support for content of type CertRow when its has children too */}
           <Input
             placeholder="Contenido"
+            defaultValue={certRow.content as string}
             onChange={(e: any) => {
               onChange({
                 ...certRow,
