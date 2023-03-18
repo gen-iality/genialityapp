@@ -82,22 +82,24 @@ const HostList = () => {
         </Space>
       </Card>
 
-      <List
-        size="small"
-        header={<h3>HERRAMIENTAS</h3>}
-        dataSource={tools}
-        renderItem={(item) => (
-          <List.Item>
-            {item.link ? (
-              <a href={item.link} target="_blank">
-                {item.name}
-              </a>
-            ) : (
-              <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.name}</p>
-            )}
-          </List.Item>
-        )}
-      />
+      {tools.length !== 0 && (
+        <List
+          size="small"
+          header={<h3>HERRAMIENTAS</h3>}
+          dataSource={tools}
+          renderItem={(item) => (
+            <List.Item>
+              {item.link ? (
+                <a href={item.link} target="_blank">
+                  {item.name}
+                </a>
+              ) : (
+                <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.name}</p>
+              )}
+            </List.Item>
+          )}
+        />
+      )}
 
       <List
         size="small"
