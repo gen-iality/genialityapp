@@ -276,7 +276,7 @@ const ViewPrelanding = ({ preview }) => {
 									</Card>
 								</Col>
 							)}
-							{visibleSection('Descripción') && description.length > 0 && (
+							{visibleSection('Descripción') && description?.length > 0 && (
 								<Col order={obtenerOrder('Descripción')} span={24}>
 									<Card
 										id='Descripción_block'
