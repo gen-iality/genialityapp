@@ -324,13 +324,13 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   //paddingLeft: '25px',
                 }}
               >
-                <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
                 <Link to={item.link}>
                   <div style={{ fontSize: '1.6rem' }}>
                     <ActivityCustomIcon type={item.type!} className="list-icon" style={{ marginRight: '1em' }} />
                     <span>{item.title}</span>
                   </div>
                 </Link>
+                <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <span style={{ marginRight: '.5em' }}>
@@ -396,12 +396,16 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   return (
     <>
-      {import.meta.env.NODE_ENV !== 'production' ? <DeleteActivitiesTakenButton
-        eventId={eventId}
-        cEventUserId={cEventUserId}
-        setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
-        setActivitiesAttendee={setActivitiesAttendee}
-      /> : undefined}
+      {import.meta.env.NODE_ENV !== 'production' ? (
+        <DeleteActivitiesTakenButton
+          eventId={eventId}
+          cEventUserId={cEventUserId}
+          setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
+          setActivitiesAttendee={setActivitiesAttendee}
+        />
+      ) : (
+        undefined
+      )}
       <ModuledActivityHOC
         list={truncatedAgendaList}
         render={(nameToFilter) => (
