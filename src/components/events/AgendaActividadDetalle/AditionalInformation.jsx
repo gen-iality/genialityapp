@@ -73,11 +73,10 @@ const AditionalInformation = (props) => {
             )}
 
             {/* <br /> */}
-            {(currentActivity !== null && currentActivity.hosts.length === 0) ? (
+            {currentActivity !== null && currentActivity.hosts.length === 0 ? (
               <div></div>
             ) : (
-            <div className="List-conferencistas">
-              <p style={{ marginTop: '5%', marginBottom: '5%' }}>
+              <div className="List-conferencistas">
                 {props.orderedHost.length > 0 ? (
                   <Row>
                     <Col span={24}>
@@ -133,8 +132,7 @@ const AditionalInformation = (props) => {
                 ) : (
                   <></>
                 )}
-              </p>
-            </div>
+              </div>
             )}
           </TabPane>
         }
