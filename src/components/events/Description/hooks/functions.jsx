@@ -6,12 +6,12 @@ export const renderTypeComponent = (type, value, hiperVinculo = '') => {
     case 'image':
       return (
         <>
-          {hiperVinculo.length > 0 ? (
+          {hiperVinculo?.length > 0 ? (
             <a target="_blank" href={hiperVinculo ? hiperVinculo : ''}>
-              <Image epreview={false} preview={false} src={value} width='100%' style={{ borderRadius: '10px' }} />
+              <Image preview={false} src={value} width='100%' style={{ borderRadius: '10px' }} />
             </a>
           ) : (
-            <Image epreview={false} src={value} width='100%' style={{ borderRadius: '10px' }} />
+            <Image preview={false} src={value} width='100%' style={{ borderRadius: '10px' }} />
           )}
         </>
       );
