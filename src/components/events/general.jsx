@@ -106,7 +106,7 @@ class General extends Component {
         privateChat: true,
         attendees: true,
       },
-      is_socialZoneOpened: true,
+      is_socialzone_opened: true,
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
       registerForm: {
@@ -525,7 +525,7 @@ class General extends Component {
       default_certification_hours: event.default_certification_hours,
       default_certification_entity: event.default_certification_entity,
       default_certification_last_hours: event.default_certification_last_hours,
-      is_socialZoneOpened: event.is_socialZoneOpened,
+      is_socialzone_opened: event.is_socialzone_opened,
     };
 
     try {
@@ -1128,9 +1128,9 @@ class General extends Component {
                       <Col xs={18}>Mantener la zona social desplegada cada vez que se ingresa a una actividad</Col>
                       <Col xs={6}>
                         <Switch
-                          checked={event.is_socialZoneOpened}
+                          checked={event.is_socialzone_opened}
                           onChange={(checked) => {
-                            this.handleChange(checked, 'is_socialZoneOpened');
+                            this.handleChange(checked, 'is_socialzone_opened');
                           }}
                         />
                       </Col>

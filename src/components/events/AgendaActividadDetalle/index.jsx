@@ -68,12 +68,12 @@ const AgendaActividadDetalle = (props) => {
     props.setTopBanner(false);
     props.setVirtualConference(false);
 
-    HandleOpenCloseMenuRigth(true);
-    /* if (props.socialzonetabs?.publicChat || props.socialzonetabs?.privateChat || props.socialzonetabs?.attendees) {
+    if (cEvent?.value?.is_socialzone_opened) {
+      console.log('1. Social zone - true')
       HandleOpenCloseMenuRigth(false);
     } else {
       HandleOpenCloseMenuRigth(true);
-    } */
+    }
 
     return () => {
       props.setTopBanner(true);
