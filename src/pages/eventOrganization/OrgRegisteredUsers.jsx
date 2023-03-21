@@ -114,7 +114,7 @@ function OrgRegisteredUsers(props) {
               filteredDynamicField.forEach((field) => {
                 properties[field.name] = orgMember.properties[field.name];
               });
-            }
+            } else return properties;
 
             // Inject the position
             properties.position = orgMember.position?.position_name;
