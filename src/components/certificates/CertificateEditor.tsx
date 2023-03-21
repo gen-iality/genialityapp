@@ -28,7 +28,7 @@ const formLayout = {
 const initContent: string = JSON.stringify(defaultCertRows)
 
 const CertificateEditor: FunctionComponent<any> = (props) => {
-  const locationState = props.location?.state; //si viene new o edit en el state, si es edit es un id
+  const locationState = props.location?.state || {}; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
   const [certificateData, setCertificateData] = useState<CertificateData>({
     content: initContent,
@@ -170,28 +170,32 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
     setRoles(data);
   };
 
-  const handleImage = (e: any) => {
-    const file = e.file;
+  const handleImage = (file: any) => {
     if (file) {
       // Create URL from image to show it
-      const imageURL = window.URL.createObjectURL(file.originFileObj)
+      const imageURL = window.URL.createObjectURL(file)
+      console.debug('imageURL', { imageURL })
       setCertificateData({ ...certificateData, background: imageURL });
       // An image is created to convert it to base64 and get its type and format
 
       const reader = new FileReader();
-      reader.readAsDataURL(file.originFileObj);
+      reader.readAsDataURL(file); // originFileObj
       reader.onload = () => {
         const imageData = {
           data: reader.result,
           full: file.type,
           type: file.type.split('/')[1],
         };
-        setCertificateData({
-          ...certificateData,
-          // imageData: imageData,
-          // imageFile: imageData,
-          // image: imageData,
-        });
+
+        if (reader.result) {
+          setCertificateData({
+            ...certificateData,
+            background: reader.result.toString(),
+            // imageData: imageData,
+            // imageFile: imageData,
+            // image: imageData,
+          });
+        }
       };
     } else {
       DispatchMessageService({
@@ -378,7 +382,12 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
                   type="select"
                   accept="image/*"
                   showUploadList={false}
-                  onChange={(e) => handleImage(e)}
+                  // onChange={(e) => handleImage(e)}
+                  beforeUpload={(file) => {
+                    console.log('Dont upload', {file})
+                    handleImage(file)
+                    return false
+                  }}
                 >
                   <Button type="primary" icon={<UploadOutlined />}>
                     Imagen de Fondo
