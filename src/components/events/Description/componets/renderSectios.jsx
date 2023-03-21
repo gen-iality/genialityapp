@@ -17,7 +17,7 @@ export const RenderSectios = () => {
   return (
     <Row gutter={[16, 16]}>
       {dataSource.map((section) => {
-        return renderTypeComponent(section.type, section.value);
+        return renderTypeComponent(section.type, section.value, section.hiperVinculo);
       })}
     </Row>
   );

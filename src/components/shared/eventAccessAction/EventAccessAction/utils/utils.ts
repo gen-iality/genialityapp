@@ -11,17 +11,23 @@ type CopyStatus = Record<Status, Copy>;
 
 interface Copy {
 	title: string;
+	titleArkMed:string;
 	content: string;
+	contentArkMed: string;
 }
 
 const EXTERNAL_REDIRECT_COPYS: CopyStatus = {
 	withURL: {
 		title: 'Estás abandonando Evius',
+		titleArkMed:'Bienvenido',
 		content: 'Esto es debido a que el evento se llevara a cabo en otro sitio web',
+		contentArkMed:'A continuación ingresará al evento Insulinización eficaz, conveniente y segura desde el inicio.',
 	},
 	noURL: {
 		title: 'El evento aún no ha comenzado',
+		titleArkMed:'',
 		content: 'Asegúrate de estar atento a las actualizaciones y no te pierdas ningún detalle.',
+		contentArkMed:'',
 	},
 };
 
@@ -43,8 +49,8 @@ const internalOrExternalEvent = ({ cEvent, history }: internalOrExternalEventInt
 	const withURL: Status = !!cEvent?.url_external ? 'withURL' : 'noURL';
 
 	confirm({
-		title: EXTERNAL_REDIRECT_COPYS[withURL].title,
-		content: EXTERNAL_REDIRECT_COPYS[withURL].content,
+		title:cEvent?._id === '6414c5bfecd0614a5c087352' ? EXTERNAL_REDIRECT_COPYS[withURL].titleArkMed  : EXTERNAL_REDIRECT_COPYS[withURL].title,
+		content: cEvent?._id === '6414c5bfecd0614a5c087352' ? EXTERNAL_REDIRECT_COPYS[withURL].contentArkMed : EXTERNAL_REDIRECT_COPYS[withURL].content,
 		onOk() {
 			if (cEvent?.url_external && cEvent.where_it_run === 'ExternalEvent') {
 				window.open(cEvent?.url_external, '_blank');

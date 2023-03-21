@@ -97,7 +97,7 @@ function Companylist(props) {
                 </Paragraph>
                 <span style={{ marginTop: 15 }}>
                   <Link to={`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`}>
-                    <Button type='primary'>Visitar stand</Button>
+                    <Button type='primary'>Ingresar aquí</Button>
                   </Link>
                 </span>
               </div>
