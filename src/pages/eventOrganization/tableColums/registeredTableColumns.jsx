@@ -56,7 +56,7 @@ export const columns = (columnsData, extraFields = [], addNewCertificationModal)
     ...membersGetColumnSearchProps('positon', columnsData),
     render: (record) => {
       if (record === undefined) {
-        return <p style={{ color: '#999' }}>Sin cargo</p>;
+        return <span style={{ color: '#999' }}>Sin cargo</span>;
       }
       return record;
     },
