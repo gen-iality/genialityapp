@@ -1,14 +1,21 @@
-import { useEventContext } from '@context/eventContext';
-import { Button, Divider, PageHeader, Space, Typography } from 'antd';
+/** React's libraries */
+import { useIntl } from 'react-intl';
+import { Link } from 'react-router-dom';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 import dayjs from 'dayjs';
+
+/** Antd imports */
+import { Button, Divider, PageHeader, Space, Typography } from 'antd';
 import { CalendarOutlined, ClockCircleOutlined, GoldOutlined, HomeOutlined, RollbackOutlined } from '@ant-design/icons';
+
+/** Helpers and utils */
+import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+
+/** Context */
+import { useEventContext } from '@context/eventContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useUserEvent } from '@context/eventUserContext';
 import { useCurrentUser } from '@context/userContext';
-import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
-import { useIntl } from 'react-intl';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import { Link } from 'react-router-dom';
 
 dayjs.extend(localizedFormat);
 
@@ -32,7 +39,7 @@ const InfoEvent = () => {
         // boxShadow: '0px 0px 8px 5px #eee',
         borderRadius: '0.3em',
         backgroundColor: cEvent.value.styles.toolbarDefaultBg,
-      }}      
+      }}
       title={
         <Typography.Title
           level={2}
@@ -43,27 +50,23 @@ const InfoEvent = () => {
       }
       extra={
         <>
-        <Link
-          title="Ir a la organización"
-          to={`/organization/${cEvent.value.organizer._id}`}
-        >
-          <Button icon={<GoldOutlined /> }>Ir a la organización</Button>
-        </Link>
-        {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
-        cUser?.value &&
-        !cEventUser?.value && (
-          <Button
-            onClick={() => handleChangeTypeModal('registerForTheEvent')}
-            type="primary"
-            size="large"
-            disabled={!eventIsActive}
-          >
-            {intl.formatMessage({
-              id: 'Button.signup',
-              defaultMessage: 'Inscribirme al curso',
-            })}
-          </Button>
-        )}
+          <Link title="Ir a la organización" to={`/organization/${cEvent.value.organizer._id}`}>
+            <Button icon={<GoldOutlined />}>Ir a la organización</Button>
+          </Link>
+
+          {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && cUser?.value && !cEventUser?.value && (
+            <Button
+              onClick={() => handleChangeTypeModal('registerForTheEvent')}
+              type="primary"
+              size="large"
+              disabled={!eventIsActive}
+            >
+              {intl.formatMessage({
+                id: 'Button.signup',
+                defaultMessage: 'Inscribirme al curso',
+              })}
+            </Button>
+          )}
         </>
       }
       // footer={
