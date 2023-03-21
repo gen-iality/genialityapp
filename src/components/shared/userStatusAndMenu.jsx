@@ -315,7 +315,7 @@ const UserStatusAndMenu = (props) => {
 
               {!screens.xs && (
                 <Col style={{ marginLeft: '2rem' }}>
-                  <Text style={{ fontWeight: '700' }}>{organization.name}</Text>
+                  <Text style={{ fontWeight: '700' }}>{organization?.name}</Text>
                 </Col>
               )}
               {loggedInuser}
