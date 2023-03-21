@@ -1,7 +1,7 @@
 /** React's libraries */
 import { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 /** Redux imports */
 import { connect } from 'react-redux';
@@ -9,7 +9,7 @@ import { setViewPerfil } from '../../redux/viewPerfil/actions';
 
 /** Antd imports */
 import { Menu, Dropdown, Avatar, Button, Col, Row, Space, Badge, Modal, Image, Grid, Typography } from 'antd';
-import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, DownOutlined, ExclamationCircleOutlined, GoldOutlined } from '@ant-design/icons';
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
@@ -22,6 +22,7 @@ import { OrganizationApi } from '@helpers/request';
 
 /** Context */
 import withContext from '@context/withContext';
+import { useEventContext } from '@context/eventContext';
 
 /** Components */
 import WithLoading from './withLoading';
@@ -52,8 +53,10 @@ const UserStatusAndMenu = (props) => {
   const [visible, setVisible] = useState(true);
   const [isSomeAdminUser, setIsSomeAdminUser] = useState(false);
   const [isAtOrganizationLanding, setIsAtOrganizationLanding] = useState(false);
+  const [isAtEventLanding, setIsAtEventLanding] = useState(false);
   const [organization, setOrganization] = useState({});
 
+  const cEvent = useEventContext();
   const intl = useIntl();
   const screens = useBreakpoint();
 
@@ -83,6 +86,12 @@ const UserStatusAndMenu = (props) => {
       setIsAtOrganizationLanding(true);
     } else {
       setIsAtOrganizationLanding(false);
+    }
+
+    if (path.startsWith('/landing')) {
+      setIsAtEventLanding(true);
+    } else {
+      setIsAtEventLanding(false);
     }
   }, [props.match]);
 
@@ -287,6 +296,8 @@ const UserStatusAndMenu = (props) => {
     <>
       {user ? (
         <>
+          {console.log('isAtOrganizationLanding', isAtOrganizationLanding)}
+          {console.log('organization', organization)}
           {isAtOrganizationLanding && (
             <>
               <Col>
@@ -307,10 +318,22 @@ const UserStatusAndMenu = (props) => {
                   <Text style={{ fontWeight: '700' }}>{organization.name}</Text>
                 </Col>
               )}
+              {loggedInuser}
             </>
           )}
 
-          {loggedInuser}
+          {isAtEventLanding && (
+            <>
+              <Space justify="end">
+                <Link title="Ir a la organización" to={`/organization/${cEvent.value?.organizer._id}/events`}>
+                  <Button style={{ borderRadius: '10px' }} size="middle" icon={<ArrowLeftOutlined />}>
+                    Todos los cursos
+                  </Button>
+                </Link>
+                {loggedInuser}
+              </Space>
+            </>
+          )}
         </>
       ) : (
         loggedOutUser

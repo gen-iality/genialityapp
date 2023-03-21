@@ -50,10 +50,6 @@ const InfoEvent = () => {
       }
       extra={
         <>
-          <Link title="Ir a la organización" to={`/organization/${cEvent.value.organizer._id}`}>
-            <Button icon={<GoldOutlined />}>Ir a la organización</Button>
-          </Link>
-
           {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && cUser?.value && !cEventUser?.value && (
             <Button
               onClick={() => handleChangeTypeModal('registerForTheEvent')}
