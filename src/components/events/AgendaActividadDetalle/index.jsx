@@ -29,7 +29,7 @@ const { setHasOpenSurveys } = SurveyActions;
 
 const { LOG, ERROR } = Logger('studentlanding-activity');
 
-const AgendaActividadDetalle = props => {
+const AgendaActividadDetalle = (props) => {
   const { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper();
   const [orderedHost, setOrderedHost] = useState([]);
   const cSurveys = useSurveysContext();
@@ -58,7 +58,7 @@ const AgendaActividadDetalle = props => {
       setOrderedHost(hosts);
     }
 
-    getActividad().then(result => {
+    getActividad().then((result) => {
       helperDispatch({ type: 'currentActivity', currentActivity: result });
       setactivity(result);
       orderHost(result.hosts);
@@ -68,8 +68,8 @@ const AgendaActividadDetalle = props => {
     props.setTopBanner(false);
     props.setVirtualConference(false);
 
-    HandleOpenCloseMenuRigth(false);
-    if (props.socialzonetabs?.publicChat || props.socialzonetabs?.privateChat || props.socialzonetabs?.attendees) {
+    if (cEvent?.value?.is_socialzone_opened) {
+      console.log('1. Social zone - true')
       HandleOpenCloseMenuRigth(false);
     } else {
       HandleOpenCloseMenuRigth(true);
@@ -139,7 +139,7 @@ const AgendaActividadDetalle = props => {
   // {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
   return (
     <div>
-      {(cUser.value?._id && cEvent.value?._id && activity?._id) && (
+      {cUser.value?._id && cEvent.value?._id && activity?._id && (
         <Presence
           data={{ eventId: cEvent.value._id, activityId: activity._id, type: 'activity' }}
           debuglog={LOG}
@@ -150,7 +150,6 @@ const AgendaActividadDetalle = props => {
       )}
       <div className=" container_agenda-information container-calendar2">
         <Card style={{ padding: '1 !important' }} className="agenda_information">
-
           {activity?.type === undefined ? <PreloaderApp /> : <HOCActividad activity={activity} />}
 
           <AditionalInformation orderedHost={orderedHost} />
@@ -162,7 +161,7 @@ const AgendaActividadDetalle = props => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   mainStageContent: state.stage.data.mainStage,
   userInfo: state.user.data,
   currentActivity: state.stage.data.currentActivity,

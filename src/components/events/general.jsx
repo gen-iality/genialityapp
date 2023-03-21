@@ -106,6 +106,7 @@ class General extends Component {
         privateChat: true,
         attendees: true,
       },
+      is_socialzone_opened: true,
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
       registerForm: {
@@ -525,6 +526,7 @@ class General extends Component {
       default_certification_entity: event.default_certification_entity,
       default_certification_last_hours: event.default_certification_last_hours,
       duration: event.duration,
+      is_socialzone_opened: event.is_socialzone_opened,
     };
 
     try {
@@ -750,6 +752,7 @@ class General extends Component {
     return (
       <>
         {/* RESTRICIONES */}
+        {console.log('event', event)}
         <Form onFinish={this.submit} {...formLayout}>
           <Header title="Datos del curso" save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey="1">
@@ -1079,7 +1082,7 @@ class General extends Component {
 
                   <Card title="Zona social">
                     <Row style={{ padding: '8px 0px' }}>
-                      <Col xs={18}>Chat general</Col>
+                      <Col xs={18}>Habilitar chat general</Col>
                       <Col xs={6}>
                         <Switch
                           checked={this.state?.tabs?.publicChat}
@@ -1098,7 +1101,7 @@ class General extends Component {
                       </Col>
                     </Row>
                     <Row style={{ padding: '8px 0px' }}>
-                      <Col xs={18}>Chat privado</Col>
+                      <Col xs={18}>Habilitar chat privado</Col>
                       <Col xs={6}>
                         <Switch
                           checked={this.state?.tabs?.privateChat}
@@ -1113,6 +1116,36 @@ class General extends Component {
                               async () => await this.upsertTabs(),
                             )
                           }
+                        />
+                      </Col>
+                    </Row>
+                    <Row style={{ padding: '8px 0px' }}>
+                      <Col xs={18}>Habilitar lista de asistentes</Col>
+                      <Col xs={6}>
+                        <Switch
+                          checked={this.state?.tabs?.attendees}
+                          onChange={(checked) =>
+                            this.setState(
+                              {
+                                tabs: {
+                                  ...this.state.tabs,
+                                  attendees: checked,
+                                },
+                              },
+                              async () => await this.upsertTabs(),
+                            )
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row style={{ padding: '8px 0px' }}>
+                      <Col xs={18}>Mantener la zona social desplegada cada vez que se ingresa a una actividad</Col>
+                      <Col xs={6}>
+                        <Switch
+                          checked={event.is_socialzone_opened}
+                          onChange={(checked) => {
+                            this.handleChange(checked, 'is_socialzone_opened');
+                          }}
                         />
                       </Col>
                     </Row>
