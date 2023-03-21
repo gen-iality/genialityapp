@@ -1,14 +1,20 @@
+/** React's libraries */
 import { useEffect, useState, useMemo, memo, ReactNode } from 'react';
+
+/** Antd imports */
+import { Spin, Typography, Badge } from 'antd';
+
+/** Helpers and utils */
 import { firestore } from '@helpers/firebase';
 import { AgendaApi } from '@helpers/request';
+import type AgendaType from '@Utilities/types/AgendaType';
 
-import CourseProgress from './CourseProgress';
-
+/** Context */
 import { useEventContext } from '@context/eventContext';
 import { useUserEvent } from '@context/eventUserContext';
 
-import type AgendaType from '@Utilities/types/AgendaType';
-import { Spin, Typography, Badge } from 'antd';
+/** Components */
+import CourseProgress from './CourseProgress';
 
 type CurrentEventAttendees = any; // TODO: define this type and move to @Utilities/types/
 
@@ -17,7 +23,7 @@ export interface StudentSelfCourseProgressProps {
   hasProgressLabel?: boolean;
   activityFilter?: (a: AgendaType) => boolean;
   customTitle?: string;
-  nodeIfCompleted?: ReactNode,
+  nodeIfCompleted?: ReactNode;
 }
 
 function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
@@ -85,17 +91,17 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
       percentValue={progressPercentValue}
       type={progressType}
     />
-  )
+  );
 
   if (progressPercentValue === 100 && nodeIfCompleted) {
     return (
       <Badge.Ribbon text={nodeIfCompleted} color="#fb8500">
         {render()}
       </Badge.Ribbon>
-    )
+    );
   }
 
-  return render()
+  return render();
 }
 
 export default memo(StudentSelfCourseProgress);
