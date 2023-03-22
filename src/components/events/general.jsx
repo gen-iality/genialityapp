@@ -524,6 +524,7 @@ class General extends Component {
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
       is_certification: event.is_certification,
+      is_examen_required: event.is_examen_required,
       validity_days: event.validity_days,
       default_certification_description: event.default_certification_description,
       default_certification_hours: event.default_certification_hours,
@@ -1160,6 +1161,17 @@ class General extends Component {
                       </Col>
                     </Row>
                   </Card>
+
+                  <Form.Item label="¿Es curso con examen?">
+                    <Switch
+                      checkedChildren="Evaluado"
+                      unCheckedChildren="Abierto"
+                      checked={event.is_examen_required}
+                      onChange={(checked) => {
+                        this.handleChange(checked, 'is_examen_required');
+                      }}
+                    />
+                  </Form.Item>
 
                   <Form.Item label="¿Es curso de certificación?">
                     <Switch
