@@ -93,13 +93,15 @@ class EventLanding extends Component {
                 </Link>
               }
             />
-            <StudentSelfCourseProgress
-              hasProgressLabel
-              customTitle="Avance de exámenes"
-              activityFilter={(a) =>
-                [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
-              }
-            />
+            {this.props.cEvent.value.is_examen_required ? (
+              <StudentSelfCourseProgress
+                hasProgressLabel
+                customTitle="Avance de exámenes"
+                activityFilter={(a) =>
+                  [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+                }
+              />
+            ) : undefined}
             <Card style={{ display: this.state.thereAreQuizingOrSurveys ? 'block' : 'none' }}>
               <Typography.Text>Estado del curso:</Typography.Text>{' '}
               <QuizApprovedStatus
