@@ -1,12 +1,12 @@
 /** React's libraries */
-import { useState } from 'react';
-import { useIntl } from 'react-intl';
-import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
+import { useMemo, useState } from 'react'
+import { useIntl } from 'react-intl'
+import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 
 /** Antd imports */
-import { Alert } from 'antd';
-import { FormInstance } from 'antd/lib/form';
+import { Alert } from 'antd'
+import { FormInstance, Rule } from 'antd/lib/form'
 
 /** Hooks, helpers and utils */
 import useMandatoryRule from './hooks/useMandatoryRule';
@@ -16,13 +16,23 @@ import { IDynamicFieldProps } from './types';
 import DynamicFormItem from './DynamicFormItem';
 
 interface IDynamicPhoneInputFieldProps extends IDynamicFieldProps {
-  form?: FormInstance;
-  placeholder?: string;
-  defaultCountry?: string;
+  form?: FormInstance
+  amountMin?: number
+  placeholder?: string
+  defaultCountry?: string
 }
 
-const DynamicPhoneInputField: React.FunctionComponent<IDynamicPhoneInputFieldProps> = (props) => {
-  const { form, fieldData, allInitialValues, placeholder = 'Phone number', defaultCountry = 'CO' } = props;
+const DynamicPhoneInputField: React.FunctionComponent<IDynamicPhoneInputFieldProps> = (
+  props,
+) => {
+  const {
+    form,
+    fieldData,
+    allInitialValues,
+    placeholder = 'Phone number',
+    defaultCountry = 'CO',
+    amountMin,
+  } = props
 
   const { name } = fieldData;
   const intl = useIntl();
@@ -35,8 +45,27 @@ const DynamicPhoneInputField: React.FunctionComponent<IDynamicPhoneInputFieldPro
     setValuePhone(isValid);
   };
 
+  const rules: Rule[] = useMemo(() => {
+    return [
+      basicRule,
+      {
+        validator: (rule, value) => {
+          if (!amountMin) return Promise.resolve()
+          if (value.toString().length < amountMin) {
+            return Promise.reject(`Min ${amountMin} digits`)
+          }
+          return Promise.resolve()
+        },
+      },
+    ]
+  }, [basicRule])
+
   return (
-    <DynamicFormItem rules={[basicRule]} fieldData={fieldData} initialValue={allInitialValues[name]}>
+    <DynamicFormItem
+      rules={rules}
+      fieldData={fieldData}
+      initialValue={allInitialValues[name]}
+    >
       <PhoneInput
         placeholder={intl.formatMessage({
           id: 'form.phone',
