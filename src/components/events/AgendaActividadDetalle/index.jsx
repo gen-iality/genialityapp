@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, useHistory, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import { useIntl } from 'react-intl';
-import { Row, Card, Alert, Spin } from 'antd';
+import { Row, Card, Alert, Spin, Col, Button } from 'antd';
 import WithEviusContext from '@context/withContext';
 import { setTopBanner } from '../../../redux/topBanner/actions';
 import { AgendaApi } from '@helpers/request';
@@ -24,6 +24,7 @@ import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
 import Presence from '@components/presence/Presence';
 import { fireRealtime } from '@helpers/firebase';
 import Logger from '@Utilities/logger';
+import { ArrowRightOutlined } from '@ant-design/icons';
 
 const { setHasOpenSurveys } = SurveyActions;
 
@@ -40,6 +41,7 @@ const AgendaActividadDetalle = (props) => {
   const cUser = useCurrentUser();
   const cEventUser = useUserEvent();
   const cEvent = useEventContext();
+  const history = useHistory();
 
   const intl = useIntl();
   {
@@ -69,7 +71,6 @@ const AgendaActividadDetalle = (props) => {
     props.setVirtualConference(false);
 
     if (cEvent?.value?.is_socialzone_opened) {
-      console.log('1. Social zone - true')
       HandleOpenCloseMenuRigth(false);
     } else {
       HandleOpenCloseMenuRigth(true);
@@ -136,6 +137,19 @@ const AgendaActividadDetalle = (props) => {
     }
   }, [cEvent.value, cEventUser.value, cUser.value]);
 
+  const nextActivity = async () => {
+    const { data: allEventActivities } = await AgendaApi.byEvent(cEvent?.value._id);
+
+    const currentActivityId = props.match.params.activity_id;
+    const currentActivityObject = allEventActivities.find((eventActivity) => eventActivity._id === currentActivityId);
+    const currentActivityIndex = allEventActivities.indexOf(currentActivityObject);
+
+    const nextActivityIndex = currentActivityIndex + 1;
+    const nextActivityObject = allEventActivities[nextActivityIndex];
+
+    history.push(`/landing/${cEvent?.value._id}/activity/${nextActivityObject._id}`);
+  };
+
   // {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
   return (
     <div>
@@ -151,6 +165,15 @@ const AgendaActividadDetalle = (props) => {
       <div className=" container_agenda-information container-calendar2">
         <Card style={{ padding: '1 !important' }} className="agenda_information">
           {activity?.type === undefined ? <PreloaderApp /> : <HOCActividad activity={activity} />}
+          <Col align="end">
+            <Button style={{ marginTop: '1rem' }} type="primary" size="large" onClick={nextActivity}>
+              {intl.formatMessage({
+                id: 'activity.button.next',
+                defaultMessage: 'Siguiente',
+              })}
+              <ArrowRightOutlined />
+            </Button>
+          </Col>
 
           <AditionalInformation orderedHost={orderedHost} />
         </Card>

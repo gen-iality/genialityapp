@@ -255,7 +255,8 @@
     "my_plan.products": "Products",
     "label.posted.date": "Posted",
     "label.duration.content": "of content",
-    "label.duration.message": "To obtain the certificate you must take 80% of the course."
+    "label.duration.message": "To obtain the certificate you must take 80% of the course.",
+    "activity.button.next": "Next"
   },
   "es": {
     "header.help": "Ayuda",
@@ -520,7 +521,8 @@
     "my_plan.videos": "Videos",
     "label.posted.date": "Publicado",
     "label.duration.content": "de contenido",
-    "label.duration.message": "Para obtener el certificado debes cursar el 80% del curso."
+    "label.duration.message": "Para obtener el certificado debes cursar el 80% del curso.",
+    "activity.button.next": "Siguiente"
   },
   "pt": {
     "live.join": "Entrar",
@@ -674,6 +676,7 @@
     "message.success.initialized.tabs": "Abas da área social inicializadas",
     "label.posted.date": "Postado",
     "label.duration.content": "de conteúdo",
-    "label.duration.message": "Para obter o certificado você deve fazer 80% do curso."
+    "label.duration.message": "Para obter o certificado você deve fazer 80% do curso.",
+    "activity.button.next": "Seguindo"
   }
 }
