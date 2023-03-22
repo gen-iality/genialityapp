@@ -54,6 +54,7 @@ const UserStatusAndMenu = (props) => {
   const [isSomeAdminUser, setIsSomeAdminUser] = useState(false);
   const [isAtOrganizationLanding, setIsAtOrganizationLanding] = useState(false);
   const [isAtEventLanding, setIsAtEventLanding] = useState(false);
+  const [isAtHome, setIsAtHome] = useState(false);
   const [organization, setOrganization] = useState({});
 
   const cEvent = useEventContext();
@@ -92,6 +93,12 @@ const UserStatusAndMenu = (props) => {
       setIsAtEventLanding(true);
     } else {
       setIsAtEventLanding(false);
+    }
+
+    if (path.startsWith('/landing') || path.startsWith('/organization')) {
+      setIsAtHome(false);
+    } else {
+      setIsAtHome(true);
     }
   }, [props.match]);
 
@@ -334,6 +341,9 @@ const UserStatusAndMenu = (props) => {
               </Space>
             </>
           )}
+
+          {isAtHome && loggedInuser}
+          
         </>
       ) : (
         loggedOutUser
