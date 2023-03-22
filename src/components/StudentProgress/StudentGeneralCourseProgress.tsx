@@ -65,8 +65,9 @@ function StudentGeneralCourseProgress(props: StudentGeneralCourseProgressProps) 
     setActivitiesAttendee([]);
     const loadData = async () => {
       const { data } = await AgendaApi.byEvent(eventId);
-      setActivities(data);
-      const existentActivities = data.map(async (activity: AgendaType) => {
+      const withoutInfoActivities = data.filter(((activity: AgendaType) => !activity.is_info_only))
+      setActivities(withoutInfoActivities);
+      const existentActivities = withoutInfoActivities.map(async (activity: AgendaType) => {
         const activity_attendee = await firestore
           .collection(`${activity._id}_event_attendees`)
           .doc(eventUserId)

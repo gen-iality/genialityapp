@@ -5,6 +5,7 @@
 export default interface AgendaType {
   _id?: string;
   module_id: string | undefined;
+  is_info_only?: boolean,
   module?: { _id: string; event_id?: string; module_name: string; order?: number };
   name: string;
   subtitle: string;
