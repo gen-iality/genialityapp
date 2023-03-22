@@ -20,6 +20,7 @@ import { getAnswersRef, getUserProgressRef, getQuestionsRef } from '@components/
 
 type TruncatedAgenda = {
   title: string;
+  isInfoOnly?: boolean,
   module_name?: string;
   module_order?: number;
   type?: ActivityType.ContentValue;
@@ -85,6 +86,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
           const result: TruncatedAgenda = {
             title: agenda.name,
+            isInfoOnly: agenda.is_info_only,
             module_name: agenda.module?.module_name,
             module_order: agenda.module?.order || 0,
             type: agenda.type?.name as ActivityType.ContentValue,
@@ -338,6 +340,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   {item.QuizProgressComponent && currentUser.value?._id && (
                     <item.QuizProgressComponent userId={currentUser.value._id} isAnswersDeleted={isAnswersDeleted} />
                   )}
+                  {item.isInfoOnly && <Badge style={{ backgroundColor: '#999' }} count="Info" />}
                   {item.DeleteSurveyAnswersButton && currentUser.value?._id && (
                     <item.DeleteSurveyAnswersButton
                       userId={currentUser.value._id}
