@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs'
 
-import { Button, Card, Col, Form, FormInstance, InputRef, Modal, Row, Space, TimePicker, Typography } from 'antd'
+import { Button, Card, Col, Form, FormInstance, InputRef, Modal, Row, Space, Switch, TimePicker, Typography } from 'antd'
 
 import {
   Select,
@@ -26,6 +26,7 @@ import { Link, useHistory } from 'react-router-dom'
 export interface FormValues {
   name: string,
   module_id: string,
+  is_info_only?: boolean,
   datetime_start: string, // real
   datetime_end: string, // real
   date: string, // clone
@@ -176,6 +177,18 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             placeholder="Seleccionar..."
           />
         </Form.Item>
+
+        <Form.Item
+          label="¿Actividad informativa (opcional)?"
+          name="is_info_only"
+          valuePropName="checked"
+        >
+          <Switch
+            checkedChildren="Informativa"
+            unCheckedChildren="Normal"
+          />
+        </Form.Item>
+
         <Form.Item
           label="Día"
           name="date"

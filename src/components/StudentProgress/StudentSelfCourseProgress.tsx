@@ -50,7 +50,7 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
     setActivitiesAttendee([]);
     const loadData = async () => {
       const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(cEventContext.value._id);
-      const filteredData = data.filter(activityFilter);
+      const filteredData = data.filter(activityFilter).filter((activity) => !activity.is_info_only);
       setAllActivities(filteredData);
       const existentActivities = filteredData.map(async (activity) => {
         const activityAttendee = await firestore

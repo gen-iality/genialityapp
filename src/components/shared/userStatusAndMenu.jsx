@@ -74,11 +74,12 @@ const UserStatusAndMenu = (props) => {
   }, []);
 
   useEffect(() => {
+    if (!organizationId) return
     OrganizationApi.getOne(organizationId).then((response) => {
       console.log('response', response);
       setOrganization(response);
     });
-  }, []);
+  }, [organizationId]);
 
   useEffect(() => {
     // Why do I have to do that bro
@@ -303,8 +304,6 @@ const UserStatusAndMenu = (props) => {
     <>
       {user ? (
         <>
-          {console.log('isAtOrganizationLanding', isAtOrganizationLanding)}
-          {console.log('organization', organization)}
           {isAtOrganizationLanding && (
             <>
               <Col>
