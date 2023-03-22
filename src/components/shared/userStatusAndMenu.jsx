@@ -303,8 +303,6 @@ const UserStatusAndMenu = (props) => {
     <>
       {user ? (
         <>
-          {console.log('isAtOrganizationLanding', isAtOrganizationLanding)}
-          {console.log('organization', organization)}
           {isAtOrganizationLanding && (
             <>
               <Col>
