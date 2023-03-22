@@ -37,7 +37,7 @@ const MenuTabletsSocialZone = (props) => {
               }}
             ></Button>
           )}
-          {props.currentActivity && (
+          {/* {props.currentActivity && (
             <Button
               style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
               shape="circle"
@@ -52,7 +52,7 @@ const MenuTabletsSocialZone = (props) => {
                 setisDrawerVisible(!isDrawerVisible);
               }}
             ></Button>
-          )}
+          )} */}
         </Space>
       </div>
 
