@@ -1,9 +1,16 @@
+/** React's libraries */
 import { useState } from 'react';
+import { connect } from 'react-redux';
+
+/** Antd imports */
 import { Button, Badge, Drawer, Space } from 'antd';
 import { MessageOutlined, PieChartOutlined } from '@ant-design/icons';
-import SocialZone from '../../../socialZone/socialZone';
+
+/** Context */
 import { useEventContext } from '@context/eventContext';
-import { connect } from 'react-redux';
+
+/** Components */
+import SocialZone from '../../../socialZone/socialZone';
 
 const MenuTabletsSocialZone = (props) => {
   const [isDrawerVisible, setisDrawerVisible] = useState(false);
@@ -26,7 +33,8 @@ const MenuTabletsSocialZone = (props) => {
             onClick={() => {
               setOptionselected('1');
               setisDrawerVisible(!isDrawerVisible);
-            }}></Button>
+            }}
+          ></Button>
           {props.currentActivity && (
             <Button
               style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
@@ -40,7 +48,8 @@ const MenuTabletsSocialZone = (props) => {
               onClick={() => {
                 setOptionselected('3');
                 setisDrawerVisible(!isDrawerVisible);
-              }}></Button>
+              }}
+            ></Button>
           )}
         </Space>
       </div>
@@ -54,7 +63,8 @@ const MenuTabletsSocialZone = (props) => {
         onClose={() => setisDrawerVisible(!isDrawerVisible)}
         visible={isDrawerVisible}
         maskClosable
-        className="drawerMobile">
+        className="drawerMobile"
+      >
         <SocialZone
           totalMessages={props.totalNewMessages}
           optionselected={optionselected}
