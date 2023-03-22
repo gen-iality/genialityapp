@@ -32,7 +32,7 @@ const Certificate = loadable(() => import('../certificate'));
 const WallForm = loadable(() => import('../../wall/index'));
 const Ferias = loadable(() => import('../ferias/index'));
 const VirtualConferenceBig = loadable(() => import('../virtualConferenceBig'));
-const CertificadoLanding = loadable(() => import('../../certificados/cerLanding'));
+const CertificadoLanding = loadable(() => import('../../certificates/cerLanding'));
 const MyAgendaIndepend = loadable(() => import('../../networking/myAgendaIndepend'));
 const NetworkingForm = loadable(() => import('../../networking'));
 const InformativeSection2 = loadable(() => import('../informativeSections/informativeSection2'));

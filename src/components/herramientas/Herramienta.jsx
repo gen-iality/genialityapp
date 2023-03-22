@@ -138,7 +138,6 @@ const Herramienta = (props) => {
   return (
     <Form onFinish={onSubmit} {...formLayout}>
       <Header title="Herramienta" back save form remove={onRemoveId} edit={locationState.edit} />
-      {console.log('herramienta', herramienta)}
 
       <Row justify="center" wrap gutter={12}>
         <Col span={12}>

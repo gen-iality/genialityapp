@@ -1,4 +1,4 @@
-import { useEffect, useState, createElement, useMemo } from 'react';
+import { useEffect, useState, createElement, useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import { Row, Col, Card, Spin, Alert, Button, Modal, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
@@ -6,38 +6,31 @@ import withContext from '@context/withContext';
 import { AgendaApi, CertsApi, RolAttApi, SurveysApi } from '@helpers/request';
 import { SurveyData } from '@components/events/surveys/types';
 import useAsyncPrepareQuizStats from '../quiz/useAsyncPrepareQuizStats';
-import { DownloadOutlined } from '@ant-design/icons';
+import { DownloadOutlined, LoadingOutlined } from '@ant-design/icons';
 
 import { activityContentValues } from '@context/activityType/constants/ui';
 
+//Imagen en base64 quemada de 'Genilaity - Lina Paola Bonilla'
 import certificateImage from './certificateImage';
 import { firestore } from '@helpers/firebase';
 import AgendaType from '@Utilities/types/AgendaType';
+import { defaultCertificateBackground, defaultCertRows } from '@components/certificates/constants';
+import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs';
+import 'html2pdf-certs/dist/styles.css'
+import { CertificateData } from '@components/certificates/types';
+import { replaceAllTagValues } from '@components/certificates/utils/replaceAllTagValues';
 
 type CurrentEventAttendees = any; // TODO: define this type and move to @Utilities/types/
 
 export interface CertificateProps {
-  cEvent?: any
-  cEventUser?: any,
-  cUser?: any
-};
+  cEvent?: any;
+  cEventUser?: any;
+  cUser?: any;
+}
 
-// const originalContent = '<p><br></p><p><br></p><p>Certificamos que</p><p>[user.names],</p><p>completó con éxito el curso</p><p>[event.name]</p><p>realizado del [event.start] al [event.end].';
-const originalContent = '';
-const tags = [
-  { tag: 'event.name', label: 'Nombre del Cursos', value: 'name' },
-  { tag: 'event.start', label: 'Fecha inicio del Cursos', value: 'datetime_from' },
-  { tag: 'event.end', label: 'Fecha fin del Cursos', value: 'datetime_to' },
-  { tag: 'event.venue', label: 'Lugar del Cursos', value: 'venue' },
-  { tag: 'event.address', label: 'Dirección del Cursos', value: 'location.FormattedAddress' },
-  { tag: 'user.names', label: 'Nombre(s) de asistente', value: 'names' },
-  { tag: 'user.email', label: 'Correo de asistente', value: 'email' },
-  { tag: 'ticket.name', label: 'Nombre del tiquete', value: 'ticket.title' },
-  { tag: 'rol.name', label: 'Nombre del Rol' },
-];
+const initContent: string = JSON.stringify(defaultCertRows)
 
-
-const IconText = ({ icon, text, onSubmit }: { icon: any, text: string, onSubmit: () => void}) => (
+const IconText = ({ icon, text, onSubmit }: { icon: any; text: string; onSubmit: () => void }) => (
   <Button htmlType="submit" type="primary" onClick={onSubmit}>
     {createElement(icon, { style: { marginRight: 8 } })}
     {text}
@@ -46,9 +39,23 @@ const IconText = ({ icon, text, onSubmit }: { icon: any, text: string, onSubmit:
 
 function Certificate(props: CertificateProps) {
   const [wereEvaluationsPassed, setWereEvaluationsPassed] = useState<boolean | undefined>(undefined);
+  const [thereAreEvaluations, setThereAreEvaluations] = useState<boolean | undefined>(undefined);
 
   const [activitiesAttendee, setActivitiesAttendee] = useState<CurrentEventAttendees[]>([]);
   const [allActivities, setAllActivities] = useState<AgendaType[]>([]);
+
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [certificateData, setCertificateData] = useState<CertificateData>({
+    content: initContent,
+    background: defaultCertificateBackground,
+    event_id: '',
+    name: '',
+  });
+  const [readyCertToGenerate, setReadyCertToGenerate] = useState<CertificateData | undefined>();
+  const [finalCertRows, setFinalCertRows] = useState<CertRow[]>(JSON.parse(initContent));
+
+  const pdfQuizGeneratorRef = useRef<Html2PdfCertsRef>(null)
+  const pdfGeneralGeneratorRef = useRef<Html2PdfCertsRef>(null)
 
   const background = certificateImage;
 
@@ -60,50 +67,71 @@ function Certificate(props: CertificateProps) {
 
     const certs = await CertsApi.byEvent(props.cEvent.value._id);
     const roles = await RolAttApi.byEvent(props.cEvent.value._id);
-    const currentEvent = { ...props.cEvent.value }; 
+    const currentEvent = { ...props.cEvent.value };
     currentEvent.datetime_from = dayjs(currentEvent.datetime_from).format('DD/MM/YYYY');
     currentEvent.datetime_to = dayjs(currentEvent.datetime_to).format('DD/MM/YYYY');
+
     //Por defecto se trae el certificado sin rol
-    let rolCert = certs.find((cert: any) => !cert.rol_id);
+    let rolCert: CertificateData | undefined = certs.find((cert: any) => !cert.rol_id);
     //Si el asistente tiene rol_id y este corresponde con uno de los roles attendees, encuentra el certificado ligado
     const rolValidation = roles.find((rol: any) => rol._id === dataUser.rol_id);
-    if (dataUser.rol_id && rolValidation)
+    if (dataUser.rol_id && rolValidation) {
       rolCert = certs.find((cert: any) => {
         return cert.rol._id === dataUser.rol_id;
       });
-    let content = rolCert?.content ? rolCert?.content : originalContent;
-    tags.map((item: any) => {
-      let value;
-      if (item.tag.includes('event.')) value = currentEvent[item.value];
-      else if (item.tag.includes('ticket.')) value = dataUser.ticket;
-      else if (item.tag.includes('rol.')) {
-        if (dataUser.rol_id && roles.find((ticket: any) => ticket._id === dataUser.rol_id))
-          value = roles.find((ticket: any) => ticket._id === dataUser.rol_id).name.toUpperCase();
-        else value = 'ASISTENTE';
-      } else value = dataUser.properties[item.value];
-      return (content = content.replace(`[${item.tag}]`, value));
-    });
-    const body = { content, image: rolCert?.background ? rolCert?.background : background };
-    const file = await CertsApi.generateCert(body);
-    const blob = new Blob([file.blob], { type: file.type, charset: 'UTF-8' });
-    // IE doesn't allow using a blob object directly as link href
-    // instead it is necessary to use msSaveOrOpenBlob
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(blob);
-      return;
     }
-    const data = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.dataType = 'json';
-    link.href = data;
-    link.download = 'certificado.pdf';
-    link.dispatchEvent(new MouseEvent('click'));
-    setTimeout(() => {
-      // For Firefox it is necessary to delay revoking the ObjectURL
-      window.URL.revokeObjectURL(data);
-      modal.destroy();
-    }, 60);
+
+    let currentCertRows: CertRow[] = defaultCertRows
+    if (rolCert?.content) {
+      console.log('parse cert content from DB-saved')
+      currentCertRows = JSON.parse(rolCert?.content) as CertRow[]
+    }
+
+    // Put the user's data in the cert rows to print
+    const newCertRows = replaceAllTagValues(
+      currentEvent,
+      dataUser,
+      roles,
+      currentCertRows,
+    )
+    
+    setCertificateData({
+      ...certificateData,
+      ...(rolCert || {}),
+      background: rolCert?.background ?? certificateData.background ?? defaultCertificateBackground
+    });
+    setFinalCertRows(newCertRows)
+
+    setReadyCertToGenerate(rolCert)
+
+    modal.destroy()
   };
+
+  // Watch and generate the PDF for quiz
+  useEffect(() => {
+    if (!pdfQuizGeneratorRef.current) {
+      console.debug('ref to Html2PdfCerts is undefined');
+      return
+    }
+    if (readyCertToGenerate !== undefined) {
+      console.log('start generating the certificate')
+      pdfQuizGeneratorRef.current.generatePdf()
+      setReadyCertToGenerate(undefined)
+    }
+  }, [readyCertToGenerate, pdfQuizGeneratorRef.current])
+
+  // Watch and generate the PDF for general
+  useEffect(() => {
+    if (!pdfGeneralGeneratorRef.current) {
+      console.debug('ref to Html2PdfCerts is undefined');
+      return
+    }
+    if (readyCertToGenerate !== undefined) {
+      console.log('start generating the certificate')
+      pdfGeneralGeneratorRef.current.generatePdf()
+      setReadyCertToGenerate(undefined)
+    }
+  }, [readyCertToGenerate, pdfGeneralGeneratorRef.current])
 
   useEffect(() => {
     if (!props.cUser?.value?._id) return;
@@ -125,7 +153,7 @@ function Certificate(props: CertificateProps) {
           survey,
         );
 
-        console.debug('stats', stats)
+        console.debug('stats', stats);
         if (stats.minimum > 0) {
           if (stats.right >= stats.minimum) {
             passed = passed + 1;
@@ -135,11 +163,16 @@ function Certificate(props: CertificateProps) {
         }
       }
 
-      console.debug('passed', passed)
-      console.debug('surveys.length', surveys.length)
+      console.debug('1. passed', passed);
+      console.debug('1. surveys.length', surveys.length);
+
+      if (surveys.length === 0) {
+        setThereAreEvaluations(false);
+      } else setThereAreEvaluations(true);
+
       if (passed === surveys.length) {
         setWereEvaluationsPassed(true);
-      } else if (notPassed < surveys.length) {
+      } else {
         setWereEvaluationsPassed(false);
       }
     })();
@@ -148,11 +181,12 @@ function Certificate(props: CertificateProps) {
     (async () => {
       if (!props.cEvent?.value) return;
       if (!props.cEventUser?.value) return;
-      console.log('start finding course stats')
+      console.log('start finding course stats');
 
       setActivitiesAttendee([]);
 
-      const activityFilter = (a: any) => ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+      const activityFilter = (a: any) =>
+        ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name);
 
       const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(props.cEvent.value._id);
       const filteredData = data.filter(activityFilter);
@@ -181,39 +215,95 @@ function Certificate(props: CertificateProps) {
 
   return (
     <>
-    <Row gutter={[8, 8]} wrap justify="center">
-      <Col span={24}>
-        <Card>
-          {wereEvaluationsPassed === undefined && (
-            <Spin>Cargando...</Spin>
+      <Row gutter={[8, 8]} wrap justify="center">
+        <Col span={24}>
+          {thereAreEvaluations === undefined ? (
+            <Card style={{ textAlign: 'center' }}>
+              <Spin tip="Cargando..." />
+            </Card>
+          ) : (
+            <Card>
+              {thereAreEvaluations && (
+                <>
+                  {!wereEvaluationsPassed && (
+                    <>
+                      <Alert message="Certificado de evaluaciones NO disponible" type="error" />
+                      <br />
+                    </>
+                  )}
+                  {wereEvaluationsPassed && (
+                    <>
+                      <Alert message="Certificado de evaluaciones disponible" type="success" />
+                      <br />
+                      <IconText
+                        text="Descargar certificado de evaluaciones"
+                        icon={isGenerating ? LoadingOutlined : DownloadOutlined}
+                        onSubmit={() => generateCert(props.cEventUser.value)}
+                      />
+                      <Html2PdfCerts
+                        handler={pdfQuizGeneratorRef}
+                        rows={finalCertRows}
+                        imageUrl={ certificateData.background ?? defaultCertificateBackground}
+                        backgroundColor='#005882'
+                        enableLinks={true}
+                        filename="certificate-quiz.pdf"
+                        format={[
+                          certificateData.cert_width ?? 1280,
+                          certificateData.cert_height ?? 720,
+                        ]}
+                        sizeStyle={{
+                          height: certificateData.cert_height ?? 720,
+                          width: certificateData.cert_width ?? 1280,
+                      }}
+                        transformationScale={0.5}
+                        unit="px"
+                        orientation="landscape"
+                        onEndGenerate={() => {
+                          setIsGenerating(false)
+                        }}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+
+              {progressPercentValue === 100 && (
+                <>
+                  <Alert message="Certificado de curso completo" type="success" />
+                  <br />
+                  <IconText
+                    text="Descargar certificado de curso"
+                    icon={isGenerating ? LoadingOutlined : DownloadOutlined}
+                    onSubmit={() => generateCert(props.cEventUser.value)}
+                  />
+                  <Html2PdfCerts
+                    handler={pdfGeneralGeneratorRef}
+                    rows={finalCertRows}
+                    imageUrl={ certificateData.background ?? defaultCertificateBackground}
+                    backgroundColor='#005882'
+                    enableLinks={true}
+                    filename="certificate-general.pdf"
+                    format={[
+                      certificateData.cert_width ?? 1280,
+                      certificateData.cert_height ?? 720,
+                    ]}
+                    sizeStyle={{
+                      height: certificateData.cert_height ?? 720,
+                      width: certificateData.cert_width ?? 1280,
+                  }}
+                    transformationScale={0.5}
+                    unit="px"
+                    orientation="landscape"
+                    onEndGenerate={() => {
+                      setIsGenerating(false)
+                    }}
+                  />
+                </>
+              )}
+            </Card>
           )}
-          {!wereEvaluationsPassed && (
-            <Alert message="Certificados de evaluaciones NO disponibles" type="error" />
-          )}
-          {(wereEvaluationsPassed) && (
-            <>
-            <Alert message="Certificados de evaluaciones disponibles" type="success" />
-            <br />
-            <IconText
-              text="Descargar certificado de evaluaciones"
-              icon={DownloadOutlined}
-              onSubmit={() => generateCert(props.cEventUser.value)}
-            />
-            </>
-          )}
-          {progressPercentValue === 100 && (
-            <>
-            <Alert message="Hay certificado de curso completo" type="success" />
-            <IconText
-              text="Descargar certificado de curso"
-              icon={DownloadOutlined}
-              onSubmit={() => generateCert(props.cEventUser.value)}
-            />
-            </>
-          )}
-        </Card>
-      </Col>
-    </Row>
+        </Col>
+      </Row>
     </>
   );
 }

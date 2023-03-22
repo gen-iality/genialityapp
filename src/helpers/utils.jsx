@@ -109,7 +109,9 @@ export async function parseData2Excel(data, fields, roles = null) {
                 : '';
             break;
           case 'boolean':
-            str = item[name] ? item[name] : '';
+            // str = item[name] ? item[name] : '';
+            const whereIsTheValue = (item.properties ?? item)[name]
+            str = typeof whereIsTheValue === 'undefined' ? 'N/A' : whereIsTheValue ? 'Sí' : 'No';
             break;
           case 'complex':
             if (item.properties[name]?.includes('url')) {

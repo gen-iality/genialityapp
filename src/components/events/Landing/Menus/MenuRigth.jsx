@@ -91,7 +91,7 @@ const MenuRigth = (props) => {
               HandleChatOrAttende('2');
             }}></Menu.Item>
         )}
-        {currentActivity != null &&
+       {/*  {currentActivity != null &&
           // currentActivity.habilitar_ingreso === 'open_meeting_room' &&
           typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
             <Menu.Item
@@ -114,7 +114,7 @@ const MenuRigth = (props) => {
                 HandleOpenCloseMenuRigth(false);
                 HandleChatOrAttende('3');
               }}></Menu.Item>
-          )}
+          )} */}
         <>
           {tabsGenerals &&
             tabsGenerals.games &&

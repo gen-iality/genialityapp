@@ -35,7 +35,6 @@ export const helperReducer = (state: any, action: any) => {
       };
 
     default:
-      console.log('🚀 FUERA DEL REDUCER');
       return state;
   }
 };

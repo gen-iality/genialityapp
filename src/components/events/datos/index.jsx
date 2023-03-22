@@ -712,7 +712,7 @@ class Datos extends Component {
                           type="primary"
                           icon={<SaveOutlined />}
                         >
-                          {'Guardar orden'}
+                          Guardar orden
                         </Button>
                       </Col>
                       <Col>
@@ -795,7 +795,7 @@ class Datos extends Component {
                             type="primary"
                             icon={<SaveOutlined />}
                           >
-                            {'Guardar orden'}
+                            Guardar orden
                           </Button>
                         </Col>
                         <Col>

@@ -107,14 +107,6 @@ class MenuLanding extends Component {
           checked: false,
           permissions: 'public',
         },
-        trophies: {
-          name: 'Trofeos',
-          position: 30,
-          section: 'trophies',
-          icon: 'TrophyOutlined',
-          checked: false,
-          permissions: 'public',
-        },
         my_sesions: {
           name: 'Mis lecciones',
           position: 30,

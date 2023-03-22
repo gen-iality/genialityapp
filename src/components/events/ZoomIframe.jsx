@@ -16,10 +16,8 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
 
   const checkStreamStatus = async () => {
     const live_stream_status = await getLiveStreamStatus(meeting_id);
-    // setStreamStatus(live_stream_status); -> it is undefinded
 
     const live_stream_stats = await getLiveStreamStats(meeting_id);
-    // setStreamStats(live_stream_stats); -> it is undefinded
 
     setTimeout(checkStreamStatus, 5000);
   };

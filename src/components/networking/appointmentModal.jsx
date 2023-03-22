@@ -299,8 +299,9 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                                     resetModal();
                                   });
                               }
-                            }}>
-                            {'Enviar solicitud'}
+                            }}
+                          >
+                            Enviar solicitud
                           </Button>
                         </Row>
                       </div>

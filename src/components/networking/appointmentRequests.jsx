@@ -63,7 +63,6 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
     if (eventContext && userEventContext) {
       if (eventContext.value?._id && userEventContext.value?._id) {
         setLoading1(true);
-        //setPendingAgendasSent([]);
 
         getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
           .then((agendas) => {
@@ -106,7 +105,9 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
             ))
           ) : (
             <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-            <Card style={{ textAlign: 'center' }}>{'No tienes solicitudes recibidas pendientes'}</Card>
+            <Card style={{ textAlign: 'center' }}>
+              No tienes solicitudes recibidas pendientes
+            </Card>
             </Col>
           ))}
 
@@ -133,7 +134,9 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
               ))
             ) : (
               <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-              <Card style={{ textAlign: 'center' }}>{'No tienes solicitudes pendientes enviadas'}</Card>
+              <Card style={{ textAlign: 'center' }}>
+                No tienes solicitudes pendientes enviadas
+              </Card>
               </Col>
             ))}
 
@@ -169,7 +172,6 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             state: '1',
           };
           addNotification(notificationr, eventContext.value, userCurrentContext.value);
-          // setSendRespuesta(true); -> this setter is not in this subcomponent
           setFetching(false);
         })
         .catch((error) => {

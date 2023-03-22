@@ -486,9 +486,6 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               <Upload
                 action="https://api.evius.co/api/files/upload/"
                 accept="image/png,image/jpeg"
-                onChange={(file) => {
-                  // setImageAvatar(file);
-                }}
                 multiple={false}
                 listType="picture"
                 maxCount={1}

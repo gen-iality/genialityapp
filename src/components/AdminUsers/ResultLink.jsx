@@ -77,7 +77,8 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                 style={{
                   fontSize: `${screens.xs ? '14px' : '18px'}`,
                   overflowWrap: 'anywhere',
-                }}>
+                }}
+              >
                 {intl.formatMessage({
                   id: 'result_link.description',
                   defaultMessage:

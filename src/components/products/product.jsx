@@ -207,7 +207,7 @@ class Product extends Component {
                   icon={<SaveOutlined />}
                   disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                 >
-                  {'Guardar orden'}
+                  Guardar orden
                 </Button>
               </Col>
               <Col>

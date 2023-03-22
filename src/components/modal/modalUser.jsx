@@ -7,7 +7,7 @@ import { icon } from '@helpers/constants';
 import { Redirect } from 'react-router-dom';
 import { Actions } from '@helpers/request';
 import FormComponent from '../events/registrationForm/form';
-import { Modal } from 'antd';
+import { Alert, Button, Grid, Modal } from 'antd';
 import withContext from '@context/withContext';
 import { ComponentCollection } from 'survey-react';
 import { saveImageStorage } from '@helpers/helperSaveImage';
@@ -18,8 +18,21 @@ import { DispatchMessageService } from '@context/MessageService';
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
 import { handleRequestError } from '@helpers/utils';
 import printBagdeUser from '../badge/utils/printBagdeUser';
+import RegisterUserAndEventUser from '@components/authentication/RegisterUserAndEventUser';
 
 const { confirm } = Modal;
+const { useBreakpoint } = Grid;
+
+const stylePaddingDesktop = {
+  paddingLeft: '30px',
+  paddingRight: '30px',
+  textAlign: 'center',
+};
+const stylePaddingMobile = {
+  paddingLeft: '10px',
+  paddingRight: '10px',
+  textAlign: 'center',
+};
 
 class UserModal extends Component {
   constructor(props) {
@@ -39,6 +52,8 @@ class UserModal extends Component {
       checked_in: false,
       tickets: [],
       loadingregister: false,
+      existGenialialityUser: true,
+      makeUserRegister: false,
     };
     this.ifrmPrint = React.createRef();
   }
@@ -267,6 +282,24 @@ class UserModal extends Component {
     this.setState({ loadingregister: false });
   };
 
+  validateGenialityUser = async (values) => {
+    console.log('1. values', values);
+    console.log('1. values.email', values.email);
+
+    const genialityUserRequest = await UsersApi.findByEmail(values.email);
+    console.log('genialityUserRequest', genialityUserRequest)
+    const [genialityUser] = genialityUserRequest;
+    console.log('genialityUser', genialityUser)
+
+    if (!genialityUser) {
+      console.log('1. El usuario no existe, se debe crear el usuario en geniality');
+      this.setState({ existGenialialityUser: false });
+    } else {
+      this.setState({ existGenialialityUser: true });
+      this.saveUser(values);
+    }
+  }
+
   printUser = () => {
     const resp = this.props.badgeEvent;
     if (resp._id) {
@@ -307,18 +340,64 @@ class UserModal extends Component {
               badgeEvent={this.props.badgeEvent}
               activityId={this.props.activityId}
             />
-          ) : (
-            <FormComponent
-              conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
-              initialOtherValue={this.props.value || {}}
-              eventUserOther={user || {}}
-              fields={this.props.extraFields}
-              organization
-              options={this.options}
-              callback={this.saveUser}
-              loadingregister={this.state.loadingregister}
-              usedInCms
-              editUser={this.props.edit}
+          ) : (this.state.makeUserRegister ? (
+            <RegisterUserAndEventUser
+              screens={[]}
+              stylePaddingMobile={stylePaddingMobile}
+              stylePaddingDesktop={stylePaddingDesktop}
+              requireAutomaticLoguin={false}
+            />
+
+            ) : (
+              <FormComponent
+                conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
+                initialOtherValue={this.props.value || {}}
+                eventUserOther={user || {}}
+                fields={this.props.extraFields}
+                organization
+                options={this.options}
+                callback={this.validateGenialityUser}
+                loadingregister={this.state.loadingregister}
+                usedInCms
+                editUser={this.props.edit}
+              />
+              )
+          )}
+        </div>
+        <div>
+        {!this.state.existGenialialityUser && (
+            <Alert
+              showIcon
+              /* style={{ marginTop: '5px' }} */
+              style={{
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                backgroundColor: '#FFFFFF',
+                color: '#000000',
+                borderLeft: '5px solid #FF4E50',
+                fontSize: '14px',
+                textAlign: 'start',
+                borderRadius: '5px',
+                marginBottom: '15px',
+              }}
+              /* closable */
+              message={
+                <>
+                  {'Usuario no está registrado en Geniality'}
+                  <Button
+                    style={{ fontWeight: 'bold', marginLeft: '2rem' }}
+                    onClick={() => {
+                      console.log('Se registra el usuario');
+                      this.setState({ makeUserRegister: true });
+                      this.setState({ existGenialialityUser: true });
+
+                    }}
+                    type="primary"
+                  >
+                    Registrar Usuario
+                  </Button>
+                </>
+              }
+              type="error"
             />
           )}
         </div>

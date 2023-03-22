@@ -188,10 +188,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
           <Button
             type="primary"
             icon={takingPhoto ? <DeleteOutlined /> : <CameraOutlined />}
-            onClick={() => {
-              //setImageAvatar(null);
-              setTakingPhoto(!takingPhoto);
-            }}
+            onClick={() => setTakingPhoto(!takingPhoto)}
           />
         </Form.Item>
 

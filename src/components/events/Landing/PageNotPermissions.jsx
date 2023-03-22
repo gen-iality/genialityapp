@@ -73,19 +73,6 @@ const PageNotPermissions = (props) => {
           {' '}
           {redirect !== null || (redirect !== undefined && <Redirect to={`${urlsection}${redirect}`} />)}
           {/* Sección quemada para curso de subasta sileciosa FTDJ */}
-          {EventContext.value._id == '60cb7c70a9e4de51ac7945a2' && (
-            <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
-              {products.length > 0 && !loading && (
-                <Row style={{ paddingTop: '18px' }} gutter={[16, 16]} key="container">
-                  {products.map((galery) => (
-                    <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8} key={galery.id}>
-                      <ProductCard history={history} eventId={EventContext.value._id} galery={galery} />
-                    </Col>
-                  ))}
-                </Row>
-              )}
-            </Col>
-          )}
           {loading && (
             <div style={{ textAlign: 'center' }}>
               <Spin></Spin>

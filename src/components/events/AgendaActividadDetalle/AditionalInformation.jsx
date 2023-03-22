@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row, Grid, Space, Result } from 'antd';
@@ -10,6 +10,7 @@ import DocumentsList from '../../documents/documentsList';
 import { UserOutlined } from '@ant-design/icons';
 import ReactQuill from 'react-quill';
 import ClipboardTextOffIcon from '@2fd/ant-design-icons/lib/ClipboardTextOff';
+import { DocumentsApi } from '@helpers/request';
 const { TabPane } = Tabs;
 const { Title } = Typography;
 const { useBreakpoint } = Grid;
@@ -19,7 +20,18 @@ const AditionalInformation = (props) => {
   const intl = useIntl();
   const [activeTab, setActiveTab] = useState('description');
   const [idSpeaker, setIdSpeaker] = useState(null);
+  const [document, setDocument] = useState({});
   const screens = useBreakpoint();
+
+  useEffect(() => {
+    getDocuments();
+  }, [currentActivity?.selected_document]);
+
+  async function getDocuments() {
+    const allDocuments = await DocumentsApi.getAll(props.cEvent.value._id);
+    const document = allDocuments.data.filter((document) => document._id === currentActivity?.selected_document[0]);
+    setDocument(document);
+  }
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
@@ -43,94 +55,83 @@ const AditionalInformation = (props) => {
                 <p style={{ marginBottom: '0px' }}>{intl.formatMessage({ id: 'title.description' })}</p>
               </>
             }
-            key='description'
+            key="description"
           >
-            {currentActivity?.description !== '<p><br></p>' ? (
-              <Row justify='center'>
-                <Col span={24} id='img-description'>
+            {currentActivity?.description !== '<p><br></p>' && (
+              <Row justify="center">
+                <Col span={24} id="img-description">
                   {currentActivity?.description && (
                     <ReactQuill
                       value={currentActivity?.description}
                       readOnly
-                      className='hide-toolbar ql-toolbar'
-                      theme='bubble'
+                      className="hide-toolbar ql-toolbar"
+                      theme="bubble"
                     />
                   )}
                 </Col>
               </Row>
-            ) : (
-              <Card style={{ borderRadius: '10px', padding: '0px' }}>
-                <Result
-                  style={{ padding: '0px' }}
-                  icon={<ClipboardTextOffIcon />}
-                  title='Aún no se ha publicado una descripción'
-                />
-              </Card>
             )}
 
             {/* <br /> */}
-            {(currentActivity !== null && currentActivity.hosts.length === 0) ||
-            props.cEvent.value._id === '601470367711a513cc7061c2' ? (
+            {currentActivity !== null && currentActivity.hosts.length === 0 ? (
               <div></div>
             ) : (
-              <div className='List-conferencistas'>
-                <p style={{ marginTop: '5%', marginBottom: '5%' }}>
-                  {props.orderedHost.length > 0 ? (
-                    <Row>
-                      <Col span={24}>
-                        <Card style={{ textAlign: 'left' }}>
-                          <List
-                            itemLayout={screens.xs ? 'vertical' : 'horizontal'}
-                            dataSource={props.orderedHost}
-                            renderItem={(item) => (
-                              <List.Item style={{ padding: 16 }}>
-                                <List.Item.Meta
-                                  style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                  }}
-                                  avatar={
-                                    item.image ? (
-                                      <Avatar size={80} src={item.image} />
-                                    ) : (
-                                      <Avatar size={80} icon={<UserOutlined />} />
-                                    )
-                                  }
-                                  title={<strong>{item.name}</strong>}
-                                  description={item.profession}
-                                />
-                                <Space wrap>
-                                  {item.description !== '<p><br></p>' &&
-                                    item.description !== null &&
-                                    item.description !== undefined && (
-                                      <Button className='button_lista' onClick={() => getSpeakers(item._id)}>
-                                        {intl.formatMessage({
-                                          id: 'button.more.information',
-                                        })}
-                                      </Button>
-                                    )}
-                                </Space>
-                              </List.Item>
-                            )}
-                          />
-                          {idSpeaker ? (
-                            <ModalSpeaker
-                              showModal
-                              eventId={props.cEvent.value._id}
-                              speakerId={idSpeaker}
-                              setIdSpeaker={setIdSpeaker}
-                            />
-                          ) : (
-                            <></>
+              <div className="List-conferencistas">
+                {props.orderedHost.length > 0 ? (
+                  <Row>
+                    <Col span={24}>
+                      <Card style={{ textAlign: 'left' }}>
+                        <List
+                          itemLayout={screens.xs ? 'vertical' : 'horizontal'}
+                          dataSource={props.orderedHost}
+                          renderItem={(item) => (
+                            <List.Item style={{ padding: 16 }}>
+                              <List.Item.Meta
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                }}
+                                avatar={
+                                  item.image ? (
+                                    <Avatar size={80} src={item.image} />
+                                  ) : (
+                                    <Avatar size={80} icon={<UserOutlined />} />
+                                  )
+                                }
+                                title={<strong>{item.name}</strong>}
+                                description={item.profession}
+                              />
+                              <Space wrap>
+                                {item.description !== '<p><br></p>' &&
+                                  item.description !== null &&
+                                  item.description !== undefined && (
+                                    <Button className="button_lista" onClick={() => getSpeakers(item._id)}>
+                                      {intl.formatMessage({
+                                        id: 'button.more.information',
+                                      })}
+                                    </Button>
+                                  )}
+                              </Space>
+                            </List.Item>
                           )}
-                        </Card>
-                      </Col>
-                    </Row>
-                  ) : (
-                    <></>
-                  )}
-                </p>
+                        />
+                        {idSpeaker ? (
+                          <ModalSpeaker
+                            showModal
+                            eventId={props.cEvent.value._id}
+                            speakerId={idSpeaker}
+                            setIdSpeaker={setIdSpeaker}
+                          />
+                        ) : (
+                          <></>
+                        )}
+                      </Card>
+                    </Col>
+                  </Row>
+                ) : (
+                  <></>
+                )}
               </div>
             )}
           </TabPane>
@@ -143,20 +144,18 @@ const AditionalInformation = (props) => {
                 <p style={{ marginBottom: '0px' }}>Documentos</p>
               </>
             }
-            key='docs'
+            key="docs"
           >
             <div>
               <div style={{ marginTop: '5%', marginBottom: '5%' }}>
                 <b>Documentos:</b> &nbsp;
-                <div>
-                  <DocumentsList data={currentActivity !== null && currentActivity.selected_document} />
-                </div>
+                <DocumentsList data={document} />
               </div>
             </div>
           </TabPane>
         )}
 
-        {props.tabs && (
+        {/*  {props.tabs && (
           // && (props.tabs.surveys || props.tabs.surveys === 'true')
           <TabPane
             tab={
@@ -196,7 +195,7 @@ const AditionalInformation = (props) => {
             }
             key='games'
           ></TabPane>
-        )}
+        )} */}
       </Tabs>
     </Card>
   );

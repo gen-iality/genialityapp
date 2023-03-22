@@ -164,7 +164,7 @@
     "restore.email.not.registered": "The email entered is not registered",
     "auth.restricted.event.title": "Restricted course: requires prior registration",
     "auth.restricted.event.message": "You must be registered prior to the course to access the live space, if you are registered and do not have access, contact the organizer",
-    "Button.signup": "Sign up for the course",
+    "Button.signup": "Sign up",
     "msg.no_fields_update": "There are no fields available to update in this course",
     "msg.no_fields_create": "There are no additional fields in this course",
     "title.user_data": "User data",
@@ -252,7 +252,10 @@
     "my_plan.informative_section": "Informative section",
     "my_plan.sponsors": "Sponsors",
     "my_plan.news": "News",
-    "my_plan.products": "Products"
+    "my_plan.products": "Products",
+    "label.posted.date": "Posted",
+    "label.duration.content": "of content",
+    "label.duration.message": "To obtain the certificate you must take 80% of the course."
   },
   "es": {
     "header.help": "Ayuda",
@@ -420,7 +423,7 @@
     "restore.email.not.registered": "El correo ingresado no se encuentra registrado",
     "auth.restricted.event.title": "Curso restringido: requiere registro previo",
     "auth.restricted.event.message": "Debes estar previamente registrado al curso para acceder al espacio en vivo, si estas registrado y no tienes acceso comunicate con el organizador",
-    "Button.signup": "Inscribirme al curso",
+    "Button.signup": "Inscribir",
     "msg.no_fields_update": "No hay campos disponibles para actualizar en este curso",
     "msg.no_fields_create": "No hay campos adicionales en este curso",
     "title.user_data": "Datos del usuario",
@@ -514,7 +517,10 @@
     "my_plan.sponsors": "Patrocinadores",
     "my_plan.news": "Noticias",
     "my_plan.products": "Productos",
-    "my_plan.videos": "Videos"
+    "my_plan.videos": "Videos",
+    "label.posted.date": "Publicado",
+    "label.duration.content": "de contenido",
+    "label.duration.message": "Para obtener el certificado debes cursar el 80% del curso."
   },
   "pt": {
     "live.join": "Entrar",
@@ -640,7 +646,7 @@
     "restore.email.not.registered": "O email inserido não está registrado",
     "auth.restricted.event.title": "Curso restringido: requiere registro previo",
     "auth.restricted.event.message": "Debes estar previamente registrado al curso para acceder al espacio en vivo, si estas registrado y no tienes acceso comunicate con el organizador",
-    "Button.signup": "Inscreva-se no curso",
+    "Button.signup": "Inscrevir",
     "msg.no_fields_update": "Não há campos disponíveis para atualização neste curso",
     "msg.no_fields_create": "Não há campos adicionais neste curso",
     "title.user_data": "Dados do usuário",
@@ -665,6 +671,9 @@
     "message.error.complete.requerid.data": "Ocorreu um erro, preencha as informações necessárias!",
     "message.success.updated.tabs": "Abas da zona social atualizadas!",
     "message.error.updated.tabs": "Ocorreu um erro ao atualizar as guias da zona social",
-    "message.success.initialized.tabs": "Abas da área social inicializadas"
+    "message.success.initialized.tabs": "Abas da área social inicializadas",
+    "label.posted.date": "Postado",
+    "label.duration.content": "de conteúdo",
+    "label.duration.message": "Para obter o certificado você deve fazer 80% do curso."
   }
 }

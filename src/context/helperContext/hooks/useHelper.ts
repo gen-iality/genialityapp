@@ -63,9 +63,6 @@ export const useHelper = () => {
     eventIsActive,
   } = useContext(HelperContext);
 
-  // const helperContextDebug = useContext(HelperContext);
-  // console.log('🚀 =====>  ', helperContextDebug);
-
   return {
     helperDispatch,
     containtNetworking,

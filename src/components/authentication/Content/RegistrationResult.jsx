@@ -10,7 +10,7 @@ import { DispatchMessageService } from '@context/MessageService';
 import { async } from 'ramda-adjunct';
 import { AttendeeApi } from '@helpers/request';
 
-const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEventUser }) => {
+const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEventUser, requireAutomaticLoguin }) => {
   const [fraseLoading, setfraseLoading] = useState('');
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
       ) : (
         <>
           <Result status="success" title="Inscripción exitosa!" />
-          <RedirectUser basicDataUser={basicDataUser} cEvent={cEvent} dataEventUser={dataEventUser} />
+          {requireAutomaticLoguin && (<RedirectUser basicDataUser={basicDataUser} cEvent={cEvent} dataEventUser={dataEventUser}/>)}
         </>
       )}
     </>

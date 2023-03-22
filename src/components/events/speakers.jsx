@@ -357,13 +357,6 @@ class Speakers extends Component {
         <Modal
           closeIcon={<CloseOutlined style={{ color: this.props.cEvent.value?.styles?.textMenu }} />}
           bodyStyle={{ backgroundColor: this.props.cEvent.value?.styles?.toolbarDefaultBg }}
-          /* title={
-            infoSpeaker.category
-              ? infoSpeaker.category
-              : this.props.cEvent.value._id !== '60cb7c70a9e4de51ac7945a2'
-              ? 'Conferencista'
-              : 'Artista'
-          } */
           centered
           width={1000}
           visible={this.state.modalVisible}

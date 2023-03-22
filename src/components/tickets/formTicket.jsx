@@ -70,7 +70,6 @@ class TicketsForm extends Component {
     const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
     const ticketstoshow = tickets; //tickets.filter((ticket) => ticket.stage_id == id); //Filtrar los tiquetes del stage activo
 
-    //"5e835d9fd74d5c6cfd379992"
     //Persistencia de tiquetes seleccionados después de login
     let info = localStorage.getItem('info'); //Se trae info
     if (info && evius_token) {

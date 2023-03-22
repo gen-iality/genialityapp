@@ -195,14 +195,18 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     </>
                   ))
                 ) : (
-                  <Card style={{ textAlign: 'center' }}>{'No tienes citas agendadas para esta fecha'}</Card>
+                  <Card style={{ textAlign: 'center' }}>
+                    No tienes citas agendadas para esta fecha
+                  </Card>
                 )}
               </TabPane>
             );
           })}
         </Tabs>
       ) : (
-        <Card>{'No tienes citas actualmente'}</Card>
+        <Card>
+          No tienes citas actualmente
+        </Card>
       )}
     </div>
   );
@@ -270,7 +274,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
             okText="Si"
             cancelText="No">
             <Button type="text" danger disabled={loading} loading={loading}>
-              {'Cancelar cita'}
+              Cancelar cita
             </Button>
           </Popconfirm>
         }

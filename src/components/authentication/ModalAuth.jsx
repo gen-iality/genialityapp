@@ -413,6 +413,7 @@ const ModalAuth = (props) => {
                       screens={screens}
                       stylePaddingMobile={stylePaddingMobile}
                       stylePaddingDesktop={stylePaddingDesktop}
+                      requireAutomaticLoguin={true}
                     />
                   </>
                 )}
@@ -424,6 +425,7 @@ const ModalAuth = (props) => {
                       stylePaddingDesktop={stylePaddingDesktop}
                       idOrganization={controllerLoginVisible.idOrganization} // New!
                       defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
+                      requireAutomaticLoguin={true}
                     />
                   </>
                 )}

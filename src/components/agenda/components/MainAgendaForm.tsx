@@ -199,9 +199,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     if (target === 'description') {
       setFormData({ ...previousFormData, description: value });
     } else if (target === 'registration_message') {
-      // It seems be never used, the value should be save in `agenda` but this
-      // component don't receive a setter for agenda. Something like:
-      // setAgenda({ ...previousAgenda, registration_message: value });
       console.warn(`ignored handleChangeReactQuill("${value}", "${target}")`);
     }
   };

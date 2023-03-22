@@ -87,38 +87,14 @@ const SocialZone = (props) => {
   return (
     <div className="siderContentFixed">
       <Tabs
-        defaultActiveKey="1"
+        defaultActiveKey="2"
         onChange={callback}
-        activeKey={chatAttendeChats}
+        //activeKey={chatAttendeChats}
         onTabClick={(key) => {
           HandleChatOrAttende(key);
         }}
         tabBarExtraContent={{ left: props.ToggleVisibilityButton }}
       >
-        <TabPane
-          className="asistente-chat-list"
-          tab={
-            <>
-              {props.generalTabs.publicChat && (
-                <Badge onClick={() => HandleChatOrAttende('1')} size="small" count={totalPrivateMessages}>
-                  <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
-                </Badge>
-              )}
-            </>
-          }
-          key="1"
-        >
-          <ThisRouteCanBeDisplayed>
-            <ChatList
-              typeEvent={typeEvent}
-              key="ChatList"
-              props={props}
-              setCurrentUser={setCurrentUser}
-              generalTabs={props.generalTabs}
-            />
-          </ThisRouteCanBeDisplayed>
-        </TabPane>
-
         <>
           {typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
             <TabPane
@@ -128,7 +104,7 @@ const SocialZone = (props) => {
                   {props.generalTabs?.attendees && (
                     <div style={{ color: cEvent.value.styles.textMenu }}>
                       <FormattedMessage id="tabs.attendees.socialzone" defaultMessage="Asistentes" />{' '}
-                      {countAttendeesOnline.length > 0 && <>({countAttendeesOnline.length})</>}
+                      {countAttendeesOnline.length > 0 && countAttendeesOnline.length}
                     </div>
                   )}
                 </>
@@ -200,7 +176,31 @@ const SocialZone = (props) => {
           )}
         </>
 
-        {currentActivity !== null && typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
+        <TabPane
+          className="asistente-chat-list"
+          tab={
+            <>
+              {props.generalTabs.publicChat && (
+                <Badge onClick={() => HandleChatOrAttende('1')} size="small" count={totalPrivateMessages}>
+                  <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
+                </Badge>
+              )}
+            </>
+          }
+          key="1"
+        >
+          <ThisRouteCanBeDisplayed>
+            <ChatList
+              typeEvent={typeEvent}
+              key="ChatList"
+              props={props}
+              setCurrentUser={setCurrentUser}
+              generalTabs={props.generalTabs}
+            />
+          </ThisRouteCanBeDisplayed>
+        </TabPane>
+
+        {/* {currentActivity !== null && typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
           <TabPane
             className="asistente-survey-list asistente-list"
             tab={
@@ -246,7 +246,7 @@ const SocialZone = (props) => {
               </div>
             </ThisRouteCanBeDisplayed>
           </TabPane>
-        )}
+        )} */}
 
         {tabsGenerals !== null &&
           (tabsGenerals?.games || tabsGenerals?.games === 'true') &&
@@ -267,15 +267,9 @@ const SocialZone = (props) => {
               }
               key="4"
             >
-              <>
-                {cEvent.value._id == '619d09f7cbd9a47c2d386372' ? (
-                  <GameList key="GameList" />
-                ) : (
-                  <ThisRouteCanBeDisplayed>
-                    <GameList key="GameList" />
-                  </ThisRouteCanBeDisplayed>
-                )}
-              </>
+              <ThisRouteCanBeDisplayed>
+                <GameList key="GameList" />
+              </ThisRouteCanBeDisplayed>
             </TabPane>
           )}
       </Tabs>

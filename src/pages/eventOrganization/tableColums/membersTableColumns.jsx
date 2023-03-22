@@ -12,6 +12,7 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
   if (!extraFields) return [];
 
   const dynamicColumns = extraFields.map((extraField) => {
+    if (extraField.name === 'role') return null
     return {
       title: extraField.label,
       dataIndex: extraField.name === 'position_id' ? 'position' : extraField.name,
@@ -19,7 +20,7 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
       sorter: (a, b) => a[extraField.name]?.length - b[extraField.name]?.length,
       ...membersGetColumnSearchProps(extraField.name, columnsData),
     };
-  });
+  }).filter((x) => x !== null);
 
   const picture = {
     title: 'Avatar',

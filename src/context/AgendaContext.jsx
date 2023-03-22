@@ -119,9 +119,7 @@ export const AgendaContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (activityEdit) {
-      console.log('8. LECCIÓN ACA===>', activityEdit);
       obtenerDetalleActivity();
-      // setMeetingId(null); -> Why does Jaime Daniel set null the meetingId? Let me test without that
     } else {
       initializeState();
     }

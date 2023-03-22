@@ -30,7 +30,7 @@ function OrgMembers(props) {
   const history = useHistory();
 
   /** Data States */
-  const [membersData, setMembersData] = useState([]);
+  const [membersDataSource, setMembersDataSource] = useState([]);
   const [lastUpdate, setLastUpdate] = useState();
   const [orgUsersList, setOrgUsersList] = useState([]);
   const [orgEventsList, setOrgEventsList] = useState([]);
@@ -40,22 +40,17 @@ function OrgMembers(props) {
   /** Flag States */
   const [isLoading, setIsLoading] = useState(true);
   const [isStaticsLoading, setIsStaticsLoading] = useState(true);
-  const [addOrEditUser, setAddOrEditUser] = useState(false);
-  const [editMember, setEditMember] = useState(false);
+  const [shouldRenderModal, setShouldRenderModel] = useState(false);
+  const [isEditingThetMember, setIsEditingThetMember] = useState(false);
 
   /** Columns CMS States */
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [extraFields, setExtraFields] = useState([]);
 
-  useEffect(
-    () => {
-      startingComponent();
-    },
-    [
-      /* props.org.user_properties */
-    ],
-  );
+  useEffect(() => {
+    startingComponent();
+  }, []);
 
   useEffect(() => {
     updateDataMembers();
@@ -131,7 +126,7 @@ function OrgMembers(props) {
   }
 
   async function updateDataMembers() {
-    const fieldsMembersData = [];
+    const allMemberFields = [];
 
     console.log('1. orgUsersList', orgUsersList);
 
@@ -145,19 +140,19 @@ function OrgMembers(props) {
         _id: orgUser._id,
         created_at: orgUser.created_at,
         updated_at: orgUser.updated_at,
-        role: orgUser.rol.name,
+        role: orgUser.rol?.name || 'Sin rol',
         picture: orgUser.user.picture,
         position: orgUser.position?.position_name || 'Sin cargo',
         position_id: orgUser.position?._id || null,
         stats: userActivities[orgUser.account_id],
       };
 
-      fieldsMembersData.push(properties);
+      allMemberFields.push(properties);
     });
 
-    console.log('Variable - Miembros de la organización', fieldsMembersData);
+    console.log('Variable - Miembros de la organización', allMemberFields);
 
-    setMembersData(fieldsMembersData);
+    setMembersDataSource(allMemberFields);
     setIsLoading(false);
   }
 
@@ -187,8 +182,18 @@ function OrgMembers(props) {
     return positionsOptions;
   }
 
+  const getRolesAsOptions = async () => {
+    const roles = await OrganizationApi.Roles.getAll(organizationId)
+    return (roles || []).map((role) => ({
+      value: role._id,
+      label: role.name,
+      type: role.type,
+    }))
+  }
+
   async function setFormFields() {
     const positionList = await getPositionList();
+    const rolList = await getRolesAsOptions()
 
     const positionField = {
       name: 'position_id',
@@ -202,35 +207,41 @@ function OrgMembers(props) {
       _id: { $oid: '614260d226e7862220497eac3' },
     };
 
-    setExtraFields([...props.org.user_properties, positionField]);
+    const rolField = {
+      name: 'role',
+      label: 'Rol',
+      mandatory: true,
+      type: 'list',
+      options: rolList,
+    }
+
+    setExtraFields([rolField, ...props.org.user_properties, positionField]);
   }
 
   async function exportFile(e) {
     e.preventDefault();
     e.stopPropagation();
 
-    const ws = utils.json_to_sheet(membersData);
+    const ws = utils.json_to_sheet(membersDataSource);
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Members');
     writeFileXLSX(wb, `Miembros_${dayjs().format('l')}.xlsx`);
   }
 
   function closeOrOpenModalMembers() {
-    setAddOrEditUser((prevState) => {
-      return !prevState;
-    });
+    setShouldRenderModel((prevState) => !prevState);
   }
 
   function addUser() {
     setSelectedUser({});
     closeOrOpenModalMembers();
-    setEditMember(false);
+    setIsEditingThetMember(false);
   }
 
   function editModalUser(item) {
     setSelectedUser(item);
     closeOrOpenModalMembers();
-    setEditMember(true);
+    setIsEditingThetMember(true);
   }
 
   const columnsData = {
@@ -242,12 +253,7 @@ function OrgMembers(props) {
 
   return (
     <>
-      <Header
-        title="Miembros"
-        description={
-          'Se muestran los primeros 50 usuarios, para verlos todos por favor descargar el excel o realizar una búsqueda.'
-        }
-      />
+      <Header title="Miembros" />
 
       <p>
         <small>
@@ -256,21 +262,21 @@ function OrgMembers(props) {
       </p>
 
       <p>
-        <Tag>Inscritos: {membersData.length || 0}</Tag>
+        <Tag>Inscritos: {membersDataSource.length || 0}</Tag>
       </p>
 
       <Table
         columns={columns(columnsData, editModalUser, extraFields, userActivities, isStaticsLoading)}
-        dataSource={membersData}
+        dataSource={membersDataSource}
         size="small"
         rowKey="index"
-        pagination={false}
-        loading={isLoading || membersData.length === 0}
+        pagination={{ pageSize: 50 }}
+        loading={isLoading || membersDataSource.length === 0}
         scroll={{ x: 'auto' }}
         title={() => (
           <Row wrap justify="end" gutter={[8, 8]}>
             <Col>
-              {membersData.length > 0 && (
+              {membersDataSource.length > 0 && (
                 <Button type="primary" icon={<DownloadOutlined />} onClick={exportFile}>
                   Exportar
                 </Button>
@@ -285,11 +291,11 @@ function OrgMembers(props) {
         )}
       />
 
-      {addOrEditUser && (
+      {shouldRenderModal && (
         <ModalMembers
           extraFields={extraFields}
           value={selectedUser}
-          editMember={editMember}
+          editMember={isEditingThetMember}
           closeOrOpenModalMembers={closeOrOpenModalMembers}
           organizationId={organizationId}
           startingComponent={startingComponent}

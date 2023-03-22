@@ -1,6 +1,7 @@
+/** Context */
 import { SurveyProvider } from '@components/events/surveys/surveyContext';
 
-import RenderComponent from './RenderComponent';
+/** Components */
 import StreamingActivity from './ActivityTypes/StreamingActivity';
 import MeetingActivity from './ActivityTypes/MeetingActivity';
 import QuizActivity from './ActivityTypes/QuizActivity';
@@ -31,11 +32,19 @@ function ActivityTypeSwitch({ activity }) {
       return <PdfActivity />;
     case 'quiz':
     case 'quizing':
-      return <SurveyProvider><QuizActivity /></SurveyProvider>;
+      return (
+        <SurveyProvider>
+          <QuizActivity />
+        </SurveyProvider>
+      );
     case 'survey':
-      return <SurveyProvider><SurveyActivity /></SurveyProvider>;
+      return (
+        <SurveyProvider>
+          <SurveyActivity />
+        </SurveyProvider>
+      );
     case 'html':
-      return <HtmlActivity/>;
+      return <HtmlActivity />;
     default:
       return <GenericActivity />;
   }

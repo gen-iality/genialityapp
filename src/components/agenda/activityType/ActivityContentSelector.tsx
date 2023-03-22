@@ -73,7 +73,6 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   const handleInput = (text: string) => {
     console.debug('text will:', text);
     setWritten(text)
-    // setContentSource(text);
   };
 
   if (!activityType) {

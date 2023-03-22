@@ -62,7 +62,6 @@ const ModalWithLessonsInfo = ({ show, onHidden, allActivities, attendee, current
 
   useEffect(async () => {
     if (!currentUser) return;
-    console.log(allActivities, 'xd', attendee);
     if (allActivities.length == 0) return;
 
     const existentActivities = await allActivities.map(async (activity) => {
@@ -153,6 +152,7 @@ const ColumnProgreso = ({ shownAll, item, allActivities, onOpen, updateAttendee,
   }
   return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>;
 };
+window.firestore = firestore
 
 class ListEventUser extends Component {
   constructor(props) {
@@ -382,7 +382,7 @@ class ListEventUser extends Component {
         _id: { $oid: '614260d226e7862220497eac2' },
       });
 
-      let columns = [];
+      const columns = [];
       const checkInColumn = {
         title: 'Fecha de ingreso',
         dataIndex: 'checkedin_at',
@@ -418,12 +418,12 @@ class ListEventUser extends Component {
         key: 'edit',
         fixed: 'right',
         width: 60,
-        render: (...args) => {
+        render: (...args) => (
           self.editcomponent(
             ...args,
             simplifyOrgProperties.map((item) => item.name),
           )
-        },
+        ),
       };
       /* columns.push(editColumn); */
       /** Additional columns for hybrid events */
@@ -467,7 +467,7 @@ class ListEventUser extends Component {
             },
           };
         });
-      columns = [...columns, ...extraColumns];
+      columns.push(...extraColumns);
 
       // Inject the organization member properties here
       const orgExtraColumns = simplifyOrgProperties
@@ -480,11 +480,16 @@ class ListEventUser extends Component {
             sorter: (a, b) => a[property.name]?.length - b[property.name]?.length,
             ...self.getColumnSearchProps(property.name),
             render: (record, item) => {
+              const value = item.properties[property.name]
+              if (property.type === 'boolean') {
+                return typeof value === 'undefined' ? 'N/A' : value ? 'Sí' : 'No'
+              }
+              // TODO: we need check other type, and parse
               return (item.properties || [])[property.name]
             }
           }
         })
-      columns = [...columns, ...orgExtraColumns];
+      columns.push(...orgExtraColumns);
       this.setState({ simplifyOrgProperties })
 
       const { data: allActivities } = await AgendaApi.byEvent(this.props.event._id);
@@ -494,9 +499,7 @@ class ListEventUser extends Component {
         dataIndex: 'progress_id',
         key: 'progress_id',
         ellipsis: true,
-        sorter: (a, b) => {
-          return true; // console.log('>', a, b);
-        },
+        sorter: (a, b) => true,
         render: (text, item, index) => (
           <ColumnProgreso
             shownAll={this.props.shownAll}
@@ -566,6 +569,7 @@ class ListEventUser extends Component {
         async (snapshot) => {
           const currentAttendees = [...this.state.usersReq];
           const updatedAttendees = updateAttendees(currentAttendees, snapshot);
+          console.log('updatedAttendees', updatedAttendees)
 
           const totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
 
@@ -624,8 +628,7 @@ class ListEventUser extends Component {
                     updatedAttendees[i][key.name] = Array.isArray(updatedAttendees[i]['properties'][key.name])
                       ? updatedAttendees[i]['properties'][key.name][0]
                       : updatedAttendees[i]['properties'][key.name];
-                    updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] =
-                      self.props.event._id == '60c8affc0b4f4b417d252b29' ? 'SI' : '';
+                    updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] = '';
                   }
                 }
               }
@@ -648,9 +651,26 @@ class ListEventUser extends Component {
 
           const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
 
+          // The attribute `activityProperties` looks like unused, so I get the
+          // attendee from Firebase... That's awful, but this is the effect non-thinking
+          if (activityId) {
+            const collections = await firestore.collection(`${activityId}_event_attendees`).get()
+            const docs = collections.docs
+
+            const userDataList = []
+            docs.forEach((doc) => userDataList.push(doc.data()))
+
+            const userDataIds = userDataList.map((user) => user.account_id)
+
+            while (attendees.length > 0) { attendees.pop() }
+            attendees.push(...updatedAttendees.filter((user) => userDataIds.includes(user.account_id)))
+          }
+
+
           // Inject here the org member data
           const extendedAttendees = []
           {
+            // TODO: This can crashs, but I am so busy to fix
             if (!orgId) {
               console.warn('cannot get organization ID from event data')
             }
@@ -1212,7 +1232,7 @@ class ListEventUser extends Component {
                   onClick={this.addUser}
                   disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                 >
-                  {'Agregar usuario'}
+                  Agregar usuario
                 </Button>
               </Col>
             </Row>

@@ -548,12 +548,12 @@ class CheckAgenda extends Component {
                   type="primary"
                   icon={<UploadOutlined />}
                 >
-                  {'Importar usuario'}
+                  Importar usuario
                 </Button>
               </Col>
               <Col>
                 <Button onClick={this.addUser} type="primary" icon={<PlusCircleOutlined />}>
-                  {'Agregar usuario'}
+                  Agregar usuario
                 </Button>
               </Col>
             </Row>
