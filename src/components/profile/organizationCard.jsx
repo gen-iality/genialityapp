@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { EyeOutlined, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Card, Space, Typography, Grid, Skeleton } from 'antd';
-import { OrganizationFuction } from '@helpers/request';
+import { OrganizationApi, OrganizationFuction } from '@helpers/request';
 import { truncate } from 'lodash-es';
 const { useBreakpoint } = Grid;
 
 const OrganizationCard = (props) => {
   const screens = useBreakpoint();
   const [eventsLength, setEventsLength] = useState(0);
+  const [isAdminUser, setIsAdminUser] = useState(false);
 
   const adminOrganization = () => {
     window.location.href = `${window.location.origin}/admin/organization/${props.data.id}/information`;
@@ -42,9 +43,23 @@ const OrganizationCard = (props) => {
     fetchItem();
   }, []);
 
+  useEffect(() => {
+    if (!props.data) return;
+
+    OrganizationApi.getMeUser(props.data.id).then(({ data }) => {
+      const [orgUser] = data;
+
+      console.debug('EventOrganization member rol:', orgUser?.rol);
+      setIsAdminUser(orgUser?.rol?.type === 'admin');
+    });
+  }, [props.data]);
+
   return (
     <Card
-      actions={[actionAdmin, actionview]}
+      actions={[
+        ...(isAdminUser ? [actionAdmin] : []),
+        actionview,
+      ]}
       style={{ borderRadius: '10px' }}
       bodyStyle={{ minHeight: '200px', textAlign: 'center' }}
     >
