@@ -378,6 +378,10 @@ class General extends Component {
     const { tabs } = this.state;
     const response = await this.validateTabs();
 
+    if (!this.state?.tabs?.attendees && !this.state?.tabs?.privateChat && !this.state?.tabs?.publicChat) {
+      this.handleChange(false, 'is_socialzone_opened');
+    }
+
     return new Promise(function(resolve) {
       if (response) {
         const updateData = { ...response, tabs: { ...tabs } };
@@ -1144,7 +1148,13 @@ class General extends Component {
                         <Switch
                           checked={event.is_socialzone_opened}
                           onChange={(checked) => {
-                            this.handleChange(checked, 'is_socialzone_opened');
+                            if (
+                              this.state?.tabs?.attendees ||
+                              this.state?.tabs?.privateChat ||
+                              this.state?.tabs?.publicChat
+                            ) {
+                              this.handleChange(checked, 'is_socialzone_opened');
+                            }
                           }}
                         />
                       </Col>
