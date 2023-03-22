@@ -269,7 +269,7 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
     }
 
     if (type === 'codearea') {
-      return <DynamicPhoneInputField key={`item ${index}`} form={form} fieldData={field} allInitialValues={initialValues} />
+      return <DynamicPhoneInputField key={`item ${index}`} form={form} fieldData={field} allInitialValues={initialValues} amountMin={7} />
     }
 
     if (type === 'multiplelisttable') {
