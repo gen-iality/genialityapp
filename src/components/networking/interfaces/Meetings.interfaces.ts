@@ -8,10 +8,10 @@ export interface IMeentingItem {
     meenting : IMeeting
 }
 export interface IMeeting {
-    id:string;
+    id :string;
     name  : string;
-    date  : string  | Date;
-    horas : string[];
+    start  : string
+    end    : string;
     place : string;
     dateUpdated : number
     participants : IParticipants[];
@@ -37,8 +37,14 @@ export interface FormMeeting {
     id?:string;
     name:string;
     participants:IParticipants[];
-    date:string | Date;
+    date:Moment[];
     place:string;
-    horas:Moment[];
 }
 
+export interface IEventCalendar<T> {
+    start: Date;
+    end:   Date;
+    event: T ;
+    resourceId?: number;
+    isAllDay?: boolean;
+}

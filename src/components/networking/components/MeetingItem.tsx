@@ -19,9 +19,10 @@ const { confirm } = Modal;
 export default function MeetingItem({ meenting }: IMeentingItem) {
   const [participants, setParticipants] = useState<IParticipants[]>(meenting.participants);
   const { dateFormat, hoursFormat } = useDateForm();
-  const [startTime, endTime] = hoursFormat(meenting.horas);
+  const [startTime, endTime] = hoursFormat([meenting.start, meenting.end]);
+
   const [meentingStart, setmeentingStart] = useState(
-    moment(now()).isAfter(`${dateFormat(meenting.date, 'MM/DD/YYYY')} ${startTime}`)
+    moment(now()).isAfter(dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A'))
   );
   const { editMeenting, deleteMeeting, updateMeeting } = useContext(NetworkingContext);
 
@@ -50,7 +51,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
   };
 
   const onUpdate = async () => {
-    await updateMeeting(meenting.id, {...meenting, participants : participants});
+    await updateMeeting(meenting.id, { ...meenting, participants: participants });
   };
   return (
     <Collapse
@@ -68,7 +69,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
               {meenting.name}
             </Typography.Text>
             <Typography.Text style={{ fontSize: '14px', fontWeight: '500', color: '#6F737C' }}>{`${dateFormat(
-              meenting.date
+              meenting.start
             )} - ${startTime}`}</Typography.Text>
           </Space>
         }
@@ -98,7 +99,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                   !meentingStart && (
                     <Countdown
                       style={{ margin: 'auto' }}
-                      value={`${dateFormat(meenting.date, 'MM/DD/YYYY')} ${startTime}`}
+                      value={dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')}
                       format='D [días] H [horas] m [minutos] s [segundos]'
                       onFinish={() => setmeentingStart(true)}
                     />
@@ -107,19 +108,14 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
               />
               <Row justify='center' gutter={[16, 16]}>
                 <Form layout='inline'>
-                  <Form.Item label='Fecha'>
+                  <Form.Item label='Fecha incio'>
                     <Typography>
-                      <pre>{dateFormat(meenting.date)}</pre>
+                      <pre>{dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')}</pre>
                     </Typography>
                   </Form.Item>
-                  <Form.Item label='Hora incio'>
+                  <Form.Item label='Fecha fin'>
                     <Typography>
-                      <pre>{startTime}</pre>
-                    </Typography>
-                  </Form.Item>
-                  <Form.Item label='Hora fin'>
-                    <Typography>
-                      <pre>{endTime}</pre>
+                      <pre>{dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A')}</pre>
                     </Typography>
                   </Form.Item>
                   <Form.Item label='Lugar'>
@@ -136,7 +132,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                 defaultSelectedRowKeys: participants
                   .filter((partici) => partici.attendance === typeAttendace.confirmed)
                   .map((item) => item.id),
-                onChange(selectkey, participants) {
+                onChange(_selectkey, participants) {
                   handleChange(participants);
                 },
               }}

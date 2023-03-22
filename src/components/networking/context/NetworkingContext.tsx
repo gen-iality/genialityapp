@@ -1,11 +1,11 @@
 import { ReactNode, createContext, useState, useEffect } from 'react';
 import { UseUserEvent } from '@/context/eventUserContext';
 import * as service from '../services/meenting.service';
-import { fromPlayerToScore } from '../utils/fromPlayerToScore';
 import { IMeeting } from '../interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 
 interface NetworkingContextType {
+  meetingSelectedInitial : IMeeting
   modal: boolean;
   edicion: boolean;
   attendees: any;
@@ -28,8 +28,8 @@ interface Props {
 }
 
 const meetingSelectedInitial: IMeeting = {
-  date: '',
-  horas: [],
+  start: '',
+  end : '',
   id: '',
   name: '',
   participants: [],
@@ -57,9 +57,10 @@ export default function NetworkingProvider(props: Props) {
     }
   }, []);
 
-  useEffect(() => {}, [attendees, meetings]);
+  useEffect(() => {console.log(meetings,attendees)}, [attendees, meetings]);
 
   const editMeenting = (meentign: IMeeting) => {
+    console.log('algo',meentign)
     setMeentingSelect(meentign);
     openModal('edit');
   };
@@ -112,6 +113,7 @@ export default function NetworkingProvider(props: Props) {
       });
   };
   const values = {
+    meetingSelectedInitial,
     modal,
     openModal,
     closeModal,

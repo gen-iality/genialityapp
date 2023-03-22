@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
-import { Form, Input, Button, Row, Transfer, DatePicker, TimePicker } from 'antd';
+import { Form, Input, Button, Row, Transfer, DatePicker, Select } from 'antd';
 import { filterOption, formLayout } from '../utils/utils';
 import moment from 'moment';
 import { useMeetingFormLogic } from '../hooks/useMeetingFormLogic';
-
+const { RangePicker } = DatePicker
 export default function MeetingForm() {
   const {
     onSubmit,
@@ -24,7 +24,6 @@ export default function MeetingForm() {
         <Form.Item hidden name={'id'} initialValue={edicion ? formState.id : ''}>
           <Input name='id' type='text' />
         </Form.Item>
-
         <Form.Item
           label={'Nombre'}
           name={'name'}
@@ -32,7 +31,6 @@ export default function MeetingForm() {
           rules={[{ required: true, message: 'Es necesario el nombre de la reunion' }]}>
           <Input ref={formRef} name={'name'} type='text' placeholder={'Ej: Acuerdo productos'} />
         </Form.Item>
-
         <Form.Item
           label={'Participantes'}
           name='participants'
@@ -59,32 +57,21 @@ export default function MeetingForm() {
             render={(item) => item.name}
           />
         </Form.Item>
-
+        <Form.Item label={'Administrador'} name='admin' initialValue={edicion ? formState.place : ''}>
+          <Select
+            defaultValue=''
+            style={{ width: 120 }}
+            options={attendeesTransfer.filter((attendees) => AttendeesKeyTarget.includes(attendees.id)).map((atd)=>({label : atd.name, value :  atd.id}))}
+          />
+        </Form.Item>
         <Form.Item
           label={'Fecha reunion'}
           name='date'
           rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}
-          initialValue={edicion ? moment(formState.date) : ''}>
+          initialValue={edicion ? [moment(formState.start), moment(formState.end)] : []}>
           {/* @ts-ignore */}
-          <DatePicker inputReadOnly={true} style={{ width: '100%' }} allowClear={false} format={'YYYY-MM-DD'} />
+          <RangePicker showTime={{ format: 'HH:mm A' }} format='YYYY-MM-DD HH:mm' />
         </Form.Item>
-
-        <Form.Item
-          label={'Rango de horas'}
-          name='horas'
-          rules={[{ required: true, message: 'Es necesario seleccionar el rango de horas' }]}
-          initialValue={[edicion ? moment(formState.horas[0]) : '', edicion ? moment(formState.horas[1]) : '']}>
-          {/* @ts-ignore */}
-          <TimePicker.RangePicker
-            use12Hours
-            placeholder={['Hora inicio', 'Hora fin']}
-            format={'hh:mm a'}
-            inputReadOnly={true}
-            style={{ width: '100%' }}
-            allowClear={false}
-          />
-        </Form.Item>
-
         <Form.Item
           label={'Lugar'}
           name='place'

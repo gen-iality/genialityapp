@@ -42,7 +42,9 @@ export const useMeetingFormLogic = () => {
     };
 
     const onSubmit = (datos: FormMeeting) => {
-        DispatchMessageService({
+
+        console.log('datos formulario',datos)
+         DispatchMessageService({
             type: 'loading',
             key: 'loading',
             msj: ' Por favor espere mientras se guarda la información...',
@@ -55,10 +57,10 @@ export const useMeetingFormLogic = () => {
             //objeto de creacion
             const meeting: Omit<IMeeting, 'id'> = {
                 name: datos.name,
-                date: datos.date.toString(),
+                start: datos.date[0].toString(),
+                end : datos.date[1].toString(),
                 participants: participants,
                 place: datos.place,
-                horas: [datos.horas[0].toString(), datos.horas[1].toString()],
                 dateUpdated: Date.now(),
             };
 
@@ -88,7 +90,7 @@ export const useMeetingFormLogic = () => {
             });
             console.log(`Ocurrio un problema al ${dataContext.edicion ? 'editar' : 'guardar'} la reunion`);
             dataContext.closeModal();
-        }
+        } 
     };
 
     return {

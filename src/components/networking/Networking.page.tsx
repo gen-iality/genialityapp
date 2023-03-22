@@ -3,6 +3,7 @@ import Report from './report';
 import NetworkingProvider from './context/NetworkingContext';
 import { PropsNetworking } from './interfaces/Index.interfaces';
 import MeentignView from './views/Meentigns.view';
+import Calendar from './views/Calendar.view';
 
 
 export default function NetworkingPage({ eventId } : PropsNetworking) {  
@@ -14,9 +15,9 @@ export default function NetworkingPage({ eventId } : PropsNetworking) {
         <MeentignView/>
       </Tabs.TabPane>
 
-    {/*   <Tabs.TabPane tab='Calendario' key={2}>
-        <MeentignView/>
-      </Tabs.TabPane> */}
+      <Tabs.TabPane tab='Calendario' key={2}>
+        <Calendar/>
+      </Tabs.TabPane> 
 
       <Tabs.TabPane tab='Reporte de networking' key={3}>
         <Report props={eventId} />
