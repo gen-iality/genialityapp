@@ -408,7 +408,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         }
       />
 
-      <Row wrap gutter={[16, 16]}>
+      <Row wrap gutter={[8, 8]}>
         <Col md={12} sm={24}>
           <Form.Item
             name="name"
