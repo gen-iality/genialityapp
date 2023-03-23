@@ -72,8 +72,8 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
       )}
       {description && <p>{description}</p>}
       <Row wrap justify="end" gutter={[8, 8]} /* style={ form ? {position: 'fixed', right: 0, zIndex: 1} : ''} */>
-        <Col>{extra && <div>{extra}</div>}</Col>
-        <Col>
+        {extra && <Col><div>{extra}</div></Col>}
+        {(addUrl || addFn) && <Col>
           {addUrl && (
             <Link to={addUrl}>
               <Button
@@ -97,9 +97,9 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
               Agregar
             </Button>
           )}
-        </Col>
-        <Col>
-          {save && (
+        </Col>}
+        {save && (
+          <Col>
             <Button
               onClick={saveMethod}
               type="primary"
@@ -111,10 +111,10 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
             >
               {saveName ? saveName : 'Guardar'}
             </Button>
-          )}
-        </Col>
-        <Col>
-          {edit && (
+          </Col>
+        )}
+        {edit && (
+          <Col>          
             <Button
               id="removeHeader"
               onClick={remove}
@@ -125,8 +125,8 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
             >
               Eliminar
             </Button>
-          )}
-        </Col>
+          </Col>
+        )}
       </Row>
     </>
   )
