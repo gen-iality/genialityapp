@@ -32,8 +32,8 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
   } = props
 
   return (
-    <Row gutter={[16, 16]} style={{borderColor: '#eee', borderWidth: 1, borderStyle: 'solid'}}>
-      <Col span={1}>
+    <Row wrap gutter={[16, 16]} style={{borderColor: '#eee', borderWidth: 1, borderStyle: 'solid'}}>
+      <Col md={1} xs={4}>
         {showDeleteButton ? (
         <Button
           danger
@@ -42,12 +42,14 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
         />
         ) : undefined}
       </Col>
-      <Col span={2}>
+      <Col md={2} xs={20}>
         <Typography.Text strong>{title}</Typography.Text>
       </Col>
-      <Col span={3}>
+      <Col md={3} xs={12}>
         <InputNumber
           min={1}
+          disabled={certRow.type !== 'break'}
+          title="Cantidad de repeticiones de esta fila. Sólo para tipo salto de línea"
           defaultValue={certRow.times || 1}
           placeholder="Sólo para tipo break"
           onChange={(value) => {
@@ -58,7 +60,7 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
           }}
         />
       </Col>
-      <Col span={4}>
+      <Col md={4} xs={12}>
         <Select
           options={possibleType.map((type) => ({
             value: type,
@@ -74,7 +76,7 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
           }}
         />
       </Col>
-      <Col span={14}>
+      <Col md={14} xs={24}>
         {/* TODO: Add support for content of type CertRow when its has children too */}
         <Input
           placeholder="Contenido"
