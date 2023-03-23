@@ -34,7 +34,7 @@ const Agenda = (props) => {
     {
       title: 'Lección',
       dataIndex: 'name',
-      ellipsis: true,
+      //ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       ...getColumnSearchProps('name', columnsData),
     },
