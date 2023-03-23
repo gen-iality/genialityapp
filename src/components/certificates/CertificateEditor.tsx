@@ -409,7 +409,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
       />
 
       <Row wrap gutter={[16, 16]}>
-        <Col span={12}>
+        <Col md={12} sm={24}>
           <Form.Item
             name="name"
             label="Nombre del certificado"
@@ -419,7 +419,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
             <Input placeholder="Nombre del certificado" />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col md={12} sm={24}>
           <Form.Item
             name="role"
             label="Rol"
@@ -436,7 +436,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
       </Row>
 
       <Row wrap gutter={[16, 16]}>
-        <Col>
+        <Col md={12} sm={24}>
           <Form.Item
             name="cert_width"
             label="Dimensione ancho (opcional)"
@@ -444,7 +444,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
             <InputNumber placeholder="Ancho" />
           </Form.Item>
         </Col>
-        <Col>
+        <Col md={12} sm={24}>
           <Form.Item
             name="cert_height"
             label="Dimensione alto (opcional)"
@@ -455,7 +455,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
       </Row>
 
       <Row gutter={[16, 16]}>
-        <Col span={16}>
+        <Col md={16} sm={24}>
           <Form.Item label="Etiquetas disponibles">
             <Row wrap gutter={[18, 8]}>
               {availableTags.map((tag, index) => (
@@ -467,7 +467,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
             </Row>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col md={8} sm={24}>
           <Form.Item
             label="Imagen de fondo"
             extra={(
