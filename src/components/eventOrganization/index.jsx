@@ -133,7 +133,7 @@ const EventOrganization = (props) => {
             <div style={{ width: '100%' }}>
               {organization.styles?.banner_image !== null || '' ? (
                 <img
-                  style={{ objectFit: 'cover', width: '100%', maxHeight: '400px' }}
+                  style={{ objectFit: 'cover', width: '100%', maxHeight: '100%' }}
                   src={organization.styles?.banner_image}
                 />
               ) : (

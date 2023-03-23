@@ -65,7 +65,7 @@ class EventCard extends Component {
                   <img
                     className="animate__animated animate__fadeIn animate__slower"
                     loading="lazy"
-                    style={{ objectFit: 'cover', height: '180px', width: '100%' }}
+                    style={{ objectFit: 'cover', height: '100%', width: '100%' }}
                     src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
                     alt="geniality.com.co"
                   />
