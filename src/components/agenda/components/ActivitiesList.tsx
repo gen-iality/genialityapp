@@ -401,7 +401,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   return (
     <>
-      {currentEventUser.value.rol.type === 'admin' ? (
+      {currentEventUser.value?.rol.type === 'admin' ? (
         <DeleteActivitiesTakenButton
           eventId={eventId}
           cEventUserId={cEventUserId}
