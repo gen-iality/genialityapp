@@ -123,7 +123,7 @@ const HeaderColumns = (props) => {
       <Link
         to={
           cEvent && !cEvent?.isByname
-            ? `/landing/${props.cEvent.value._id}/agenda`
+            ? `/landing/${props.cEvent.value._id}/evento`
             : `/event/${cEvent?.nameEvent}/agenda`
         }
       >

@@ -1,17 +1,31 @@
 import { Badge, Col, Menu, Row, Space } from 'antd';
-import { useRouteMatch, Link } from 'react-router-dom';
+import { useRouteMatch, Link, useLocation, useParams } from 'react-router-dom';
 import * as iconComponents from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
 import { useEventContext } from '@context/eventContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 const MenuEvent = ({ isMobile }) => {
   const { url } = useRouteMatch();
+  const location = useLocation();
+  const params = useParams();
   const cEvent = useEventContext();
   const { totalsolicitudes, eventPrivate } = useHelper();
+  const [currentSection, setCurrentSection] = useState('');
   const event = cEvent.value;
+
+  console.log('1. params', params);
+
+  /* useEffect(() => {
+    const urlCompleta = location.pathname;
+    const urlSplited = urlCompleta.split('/');
+    console.log('1. urlSplited', urlSplited);
+    const currentSection = urlSplited[3];
+    setCurrentSection(currentSection);
+  }, [location.pathname]); */
 
   return (
     <>
@@ -59,7 +73,16 @@ const MenuEvent = ({ isMobile }) => {
               ) : (
                 key !== 'networking' && (
                   <>
-                    <Menu.Item key={event.itemsMenu[key].section} className="MenuItem_event">
+                    <Menu.Item
+                      key={event.itemsMenu[key].section}
+                      className="MenuItem_event"
+                      style={{
+                        backgroundColor: location.pathname.includes(event.itemsMenu[key].section)
+                          ? '#859194'
+                          : 'transparent',
+                      }}
+                      //selectedKeys={[currentSection]}
+                    >
                       <IconoComponente
                         style={{
                           fontSize: '22px',
@@ -80,7 +103,8 @@ const MenuEvent = ({ isMobile }) => {
                             alignItems: 'center',
                             color: event.styles.textMenu,
                             justifyContent: 'center',
-                          }}>
+                          }}
+                        >
                           {` ${event.itemsMenu[key].name}`}
                         </span>
                       </Link>
@@ -114,7 +138,8 @@ const MenuEvent = ({ isMobile }) => {
                       color: event.styles.textMenu,
                     }}
                     key={event.itemsMenu[key].section}
-                    className="MenuItem_event">
+                    className="MenuItem_event"
+                  >
                     <IconoComponente
                       style={{
                         margin: '0 auto',
