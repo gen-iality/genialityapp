@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Collapse } from 'antd';
+import { Typography, Collapse, Col } from 'antd';
 import { IDynamicFieldProps } from './types';
 import { useIntl } from 'react-intl'
 
@@ -13,8 +13,10 @@ const DynamicFormDescription: React.FunctionComponent<Pick<IDynamicFieldProps['f
   return (
     <>
     {description.length < 500 && (
-      <Typography.Text>{description}</Typography.Text>
-    )}
+        <Col style={{ marginBottom: '24px' }}>
+          <Typography.Text>{description}</Typography.Text>
+        </Col>
+      )}
 
     {description && description.length > 500 && (
       <Collapse defaultActiveKey={['0']} style={{ marginBottom: '15px' }}>
