@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo } from 'react';
+import { FunctionComponent, useContext, useMemo } from 'react';
 import { Divider, List, Typography, Button, Spin, Badge, Space, Collapse } from 'antd';
 import { ReadFilled, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
@@ -17,6 +17,7 @@ import Service from '@components/agenda/roomManager/service';
 import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton';
 import { getRef as getSurveyStatusRef } from '@components/events/surveys/services/surveyStatus';
 import { getAnswersRef, getUserProgressRef, getQuestionsRef } from '@components/events/surveys/services/surveys';
+import { CurrentEventUserContext } from '@context/eventUserContext';
 
 type TruncatedAgenda = {
   title: string;
@@ -56,6 +57,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   const [isAnswersDeleted, setAnswersIsDeleted] = useState(false);
 
   const currentUser = useCurrentUser();
+  const currentEventUser = useContext(CurrentEventUserContext);
 
   useEffect(() => {
     if (!eventId) return;
@@ -399,7 +401,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   return (
     <>
-      {import.meta.env.NODE_ENV !== 'production' ? (
+      {currentEventUser.value.rol.type === 'admin' ? (
         <DeleteActivitiesTakenButton
           eventId={eventId}
           cEventUserId={cEventUserId}
