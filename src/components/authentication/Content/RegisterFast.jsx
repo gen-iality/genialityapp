@@ -161,10 +161,12 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
                     style={{
                       height: !imageAvatar ? '120px' : '95px',
                       width: !imageAvatar ? '120px' : '95px',
+                      padding: '0px',
+                      border:'0px'
                     }}
                   >
                     {!imageAvatar && <PictureOutlined style={{ fontSize: '50px' }} />}
-                    {imageAvatar && <Avatar src={imageAvatar} size={90} />}
+                    {imageAvatar && <Avatar src={imageAvatar} size={95} />}
                   </Button>
                   <>
                     {intl.formatMessage({
