@@ -1,5 +1,5 @@
 import { ColumnsType } from "antd/lib/table";
-import { IParticipants, TransferType } from "../interfaces/Meetings.interfaces";
+import { IMeeting, IParticipants, TransferType } from '../interfaces/Meetings.interfaces';
 
 
 export const filterOption = (inputValue: string, option: TransferType) => {
@@ -9,7 +9,6 @@ export const filterOption = (inputValue: string, option: TransferType) => {
 export const generateRandomKey = () => {
     return Math.random().toString(36).substring(2, 10);
 }
-
 
 
 export const formLayout = {
@@ -31,3 +30,15 @@ export const columnsParticipants: ColumnsType<IParticipants> = [
       dataIndex: 'attendance',
     },
   ];
+
+export const attendesOption = [{label : 'ninguno', value : '0'}]
+
+export const meetingSelectedInitial: IMeeting = {
+  start: '',
+  end : '',
+  id: '',
+  name: '',
+  participants: [],
+  place: '',
+  dateUpdated: 0,
+};

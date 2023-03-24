@@ -1,13 +1,12 @@
 import React, { Fragment } from 'react';
 import { Form, Input, Button, Row, Transfer, DatePicker, Select } from 'antd';
-import { filterOption, formLayout } from '../utils/utils';
+import { attendesOption, filterOption, formLayout } from '../utils/utils';
 import moment from 'moment';
 import { useMeetingFormLogic } from '../hooks/useMeetingFormLogic';
 const { RangePicker } = DatePicker
 export default function MeetingForm() {
   const {
     onSubmit,
-    edicion,
     formState,
     formRef,
     AttendeesKeyTarget,
@@ -21,13 +20,13 @@ export default function MeetingForm() {
   return (
     <Fragment>
       <Form {...formLayout} autoComplete='off' ref={() => {}} onFinish={onSubmit}>
-        <Form.Item hidden name={'id'} initialValue={edicion ? formState.id : ''}>
+        <Form.Item hidden name={'id'} initialValue={formState.id}>
           <Input name='id' type='text' />
         </Form.Item>
         <Form.Item
           label={'Nombre'}
           name={'name'}
-          initialValue={edicion ? formState.name : ''}
+          initialValue={formState.name}
           rules={[{ required: true, message: 'Es necesario el nombre de la reunion' }]}>
           <Input ref={formRef} name={'name'} type='text' placeholder={'Ej: Acuerdo productos'} />
         </Form.Item>
@@ -57,18 +56,11 @@ export default function MeetingForm() {
             render={(item) => item.name}
           />
         </Form.Item>
-        <Form.Item label={'Administrador'} name='admin' initialValue={edicion ? formState.place : ''}>
-          <Select
-            defaultValue=''
-            style={{ width: 120 }}
-            options={attendeesTransfer.filter((attendees) => AttendeesKeyTarget.includes(attendees.id)).map((atd)=>({label : atd.name, value :  atd.id}))}
-          />
-        </Form.Item>
         <Form.Item
           label={'Fecha reunion'}
           name='date'
           rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}
-          initialValue={edicion ? [moment(formState.start), moment(formState.end)] : []}>
+          initialValue={(formState.start != '' && formState.end != '') ? [moment(formState.start), moment(formState.end)] : []}>
           {/* @ts-ignore */}
           <RangePicker showTime={{ format: 'HH:mm A' }} format='YYYY-MM-DD HH:mm' />
         </Form.Item>
@@ -76,7 +68,7 @@ export default function MeetingForm() {
           label={'Lugar'}
           name='place'
           rules={[{ required: true, message: 'Es necesario seleccionar el lugar de la reunion' }]}
-          initialValue={edicion ? formState.place : ''}>
+          initialValue={formState.place}>
           <Input ref={formRef} name={'place'} type='text' placeholder={'Ej: Salon principal'} />
         </Form.Item>
 

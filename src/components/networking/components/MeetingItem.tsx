@@ -13,14 +13,13 @@ import moment, { now } from 'moment';
 import { useContext } from 'react';
 import { NetworkingContext } from '../context/NetworkingContext';
 import { columnsParticipants } from '../utils/utils';
-import useDateForm from '../hooks/useDateFormat';
+import useDateFormat from '../hooks/useDateFormat';
 const { confirm } = Modal;
 
 export default function MeetingItem({ meenting }: IMeentingItem) {
   const [participants, setParticipants] = useState<IParticipants[]>(meenting.participants);
-  const { dateFormat, hoursFormat } = useDateForm();
-  const [startTime, endTime] = hoursFormat([meenting.start, meenting.end]);
-
+  const { dateFormat, hoursFormat } = useDateFormat();
+  const [startTime] = hoursFormat([meenting.start]);
   const [meentingStart, setmeentingStart] = useState(
     moment(now()).isAfter(dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A'))
   );
@@ -64,7 +63,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
       <Collapse.Panel
         key='1'
         header={
-          <Space>
+          <Space style={{userSelect : 'none'}}>
             <Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>
               {meenting.name}
             </Typography.Text>

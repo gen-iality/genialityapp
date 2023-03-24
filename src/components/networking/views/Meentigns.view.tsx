@@ -5,9 +5,19 @@ import { NetworkingContext } from '../context/NetworkingContext';
 import MeetingList from '../components/MeetingList';
 import MeetingForm from '../components/MeetingForm';
 import { useContext } from 'react';
+import { IMeeting } from '../interfaces/Meetings.interfaces';
 
 export default function MeentignView() {
   const { meetings, modal, edicion, closeModal, openModal } = useContext(NetworkingContext);
+
+  const orderByDate = () : IMeeting[] => {
+    return meetings.sort((a : IMeeting, b : IMeeting) => {
+      const fechaA = new Date(a.start);
+      const fechaB = new Date(b.start);
+      return fechaA.getTime() - fechaB.getTime();
+    });
+  }
+  
   return (
     <>
       {modal && (
@@ -34,7 +44,7 @@ export default function MeentignView() {
       </Row>
       <Row justify='center' wrap gutter={[0, 16]}>
         <Col span={24}>
-          <MeetingList meentings={meetings} />
+          <MeetingList meentings={orderByDate()} />
         </Col>
       </Row>
     </>

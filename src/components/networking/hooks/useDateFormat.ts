@@ -1,5 +1,5 @@
 import moment from "moment";
-const useDateForm = () => {
+const useDateFormat = () => {
     
     const defaultFormat = 'DD/MM/YYYY'   
     const defaultFormatWithHours = 'DD/MM/YYYY hh:mm A'   
@@ -23,4 +23,4 @@ const useDateForm = () => {
     }
  }
 
- export default useDateForm;
+ export default useDateFormat;

@@ -4,6 +4,7 @@ import React, { createRef, useContext, useEffect, useState } from 'react'
 import { NetworkingContext } from '../context/NetworkingContext';
 import { FormMeeting, IMeeting, IParticipants, TransferType, typeAttendace } from '../interfaces/Meetings.interfaces';
 
+
 export const useMeetingFormLogic = () => {
     const dataContext = useContext(
         NetworkingContext
@@ -15,12 +16,10 @@ export const useMeetingFormLogic = () => {
     const [selectedAttendesKeys, setSelectedAttendeesKey] = useState<string[]>([]);
     const [attendeesTransfer, setDataTransfer] = useState<TransferType[]>([]);
     const { formState, onInputChange, onResetForm } = useForm<IMeeting>(dataContext.meentingSelect);
-
     useEffect(() => {
         if (dataContext.edicion) {
             setAttendeesKeyTarget(dataContext.meentingSelect.participants.map((item: any) => item.id));
         }
-
         //Tranformar todos los asistentes al evento para el transfer
         setDataTransfer(
             dataContext.attendees.map((asistente: any) => ({
