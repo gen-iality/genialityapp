@@ -82,6 +82,7 @@ function Certificate(props: CertificateProps) {
     }
 
     let currentCertRows: CertRow[] = defaultCertRows
+    console.debug('rolCert', {rolCert})
     if (rolCert?.content) {
       console.log('parse cert content from DB-saved')
       currentCertRows = JSON.parse(rolCert?.content) as CertRow[]
@@ -207,6 +208,35 @@ function Certificate(props: CertificateProps) {
       );
     })();
   }, [props.cUser?.value, props.cEvent?.value, props.cEventUser?.value]);
+
+  // mimimi PRE-load the cert data to show the background image because client
+  useEffect(() => {
+    if (!props.cEvent.value._id) {
+      return
+    }
+    CertsApi.byEvent(props.cEvent.value._id)
+      .then((certs) => {
+        // By default the non-role certificate is loaded
+        const rolCert: CertificateData | undefined = certs.find((cert: any) => !cert.rol_id);
+
+        // Load the content because the size is different
+        let currentCertRows: CertRow[] = defaultCertRows
+        console.debug('rolCert', {rolCert})
+        if (rolCert?.content) {
+          console.log('parse cert content from DB-saved')
+          currentCertRows = JSON.parse(rolCert?.content) as CertRow[]
+        }
+
+        if (rolCert?.background) {
+          setCertificateData({
+            ...certificateData,
+            ...(rolCert || {}),
+            background: rolCert?.background ?? certificateData.background ?? defaultCertificateBackground,
+          })
+        }
+        setFinalCertRows(currentCertRows)
+      })
+  }, [props.cEvent.value])
 
   const progressPercentValue: number = useMemo(
     () => Math.round(((activitiesAttendee.length || 0) / (allActivities.length || 0)) * 100),
