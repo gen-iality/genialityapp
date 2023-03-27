@@ -222,7 +222,18 @@ function OrgMembers(props) {
     e.preventDefault();
     e.stopPropagation();
 
-    const ws = utils.json_to_sheet(membersDataSource);
+    const ws = utils.json_to_sheet(membersDataSource.map((user) => {
+      delete user._id;
+      delete user.created_at;
+      delete user.updated_at;
+      delete user.position;
+      delete user.position_id;
+      delete user.rol_id;
+      delete user.stats;
+      delete user.picture;
+      // What else?
+      return user
+    }));
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Members');
     writeFileXLSX(wb, `Miembros_${dayjs().format('l')}.xlsx`);
