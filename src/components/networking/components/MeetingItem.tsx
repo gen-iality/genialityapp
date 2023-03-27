@@ -75,21 +75,19 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
           </Space>
         }
         extra={
-          <Space>
-            <Avatar.Group maxCount={4} maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
+          <Row gutter={4}>
+            <Col><Avatar.Group maxCount={4} maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
               {participants.map((participant, key) => (
-                <div> {/* Sino se le coloca este div queda disparejo el avatar con los botones */}
-                  <Tooltip key={key} title={participant.name} placement='top'>
-                    <Avatar style={{ backgroundColor: '#333F44', color: 'white', padding: '0 !important' }}>
-                      {participant.name && participant.name.charAt(0).toUpperCase()}
-                    </Avatar>
-                  </Tooltip>
-                </div>
+                <Tooltip key={key} title={participant.name} placement='top'>
+                  <Avatar style={{ backgroundColor: '#333F44', color: 'white'}}>
+                    {participant.name && participant.name.charAt(0).toUpperCase()}
+                  </Avatar>
+                </Tooltip>
               ))}
-            </Avatar.Group>
-            <Button icon={<EditOutlined />} onClick={() => editMeenting(meenting)} />
-            <Button icon={<DeleteOutlined />} onClick={() => onDelete()} />
-          </Space>
+            </Avatar.Group></Col>
+            <Col><Button icon={<EditOutlined />} onClick={() => editMeenting(meenting)} /></Col>
+            <Col><Button icon={<DeleteOutlined />} onClick={() => onDelete()} type='danger' /></Col>            
+          </Row>
         }>
         <Row justify='center' align='middle' gutter={[16, 16]}>
           <Col span={24}>
