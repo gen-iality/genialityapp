@@ -241,7 +241,7 @@ class Event extends Component {
                 target="_blank"
                 href={`${window.location.origin}/landing/${this.state.event._id}`}
               >
-                Ir al curso
+                Ir al curso: {event.name}
               </Button>
             </Col>
           </Row>
