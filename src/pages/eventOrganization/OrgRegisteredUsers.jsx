@@ -149,6 +149,7 @@ function OrgRegisteredUsers(props) {
               filteredDynamicField.forEach((field) => {
                 properties[field.name] = orgMember.properties[field.name];
               });
+              properties['Documento de identidad'] = orgMember.properties.password
             } else return properties;
 
             // Inject the position
