@@ -48,3 +48,7 @@ export interface IEventCalendar<T> {
     resourceId?: number;
     isAllDay?: boolean;
 }
+
+export interface IMeetingCalendar extends IMeeting {
+    assigned : string
+}

@@ -2,17 +2,19 @@ import { ReactNode, createContext, useState, useEffect } from 'react';
 import { UseUserEvent } from '@/context/eventUserContext';
 import * as service from '../services/meenting.service';
 import * as serviceConfig from '../services/configuration.service';
-import { IMeeting } from '../interfaces/Meetings.interfaces';
+import { IMeeting, IMeetingCalendar } from '../interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 import { meetingSelectedInitial } from '../utils/utils';
 import { CreateObservers, IObserver } from '../interfaces/configurations.interfaces';
 
 interface NetworkingContextType {
+  eventId: string;
   modal: boolean;
   edicion: boolean;
   attendees: any;
   meetings: IMeeting[];
   observers: IObserver[];
+  DataCalendar: IMeetingCalendar[];
   meentingSelect: IMeeting;
   setMeentingSelect: React.Dispatch<React.SetStateAction<IMeeting>>;
   editMeenting: (MeentingUptade: IMeeting) => void;
@@ -21,10 +23,9 @@ interface NetworkingContextType {
   openModal: (mode?: string) => void;
   createMeeting: (meeting: Omit<IMeeting, 'id'>) => void;
   updateMeeting: (meetingId: string, meeting: IMeeting) => Promise<void>;
-  eventId: string;
   deleteMeeting: (meetingId: string) => void;
   createObserver: (data: CreateObservers) => void;
-  deleteObserver : (id : string) => void;
+  deleteObserver: (id : string) => void;
 }
 
 export const NetworkingContext = createContext<NetworkingContextType>({} as NetworkingContextType);
@@ -34,8 +35,9 @@ interface Props {
 }
 
 export default function NetworkingProvider(props: Props) {
-  const [attendees, setAttendees] = useState<any>([]);
+  const [attendees, setAttendees] = useState<any[]>([]);
   const [meetings, setMeetings] = useState<IMeeting[]>([]);
+  const [DataCalendar, setDataCalendar] = useState<IMeetingCalendar[]>([])
   const [observers, setObservers] = useState<IObserver[]>([]);
   const [meentingSelect, setMeentingSelect] = useState<IMeeting>(meetingSelectedInitial);
   const [modal, setModal] = useState(false);
@@ -57,8 +59,18 @@ export default function NetworkingProvider(props: Props) {
   }, []);
 
   useEffect(() => {
-    console.log('meetings', meetings);
-  }, [meetings]);
+    if(observers.length){
+      const dataArray: IMeetingCalendar[] = [];
+      observers.map((observer) => {
+        meetings.map((meeting) => {
+          if (meeting.participants.map((item) => item.id).includes(observer.value)) {
+            dataArray.push({ ...meeting, assigned: observer.value });
+          }
+        });
+      });
+      setDataCalendar(dataArray)
+    }
+  }, [meetings, observers]);
 
   const editMeenting = (meentign: IMeeting) => {
     setMeentingSelect(meentign);
@@ -71,7 +83,6 @@ export default function NetworkingProvider(props: Props) {
       value: asistente.user._id,
       label: asistente.user.names,
     }));
-    console.log('asdasd', observers);
     return participants.filter((item) => !observersId.includes(item.value));
   };
 
@@ -85,8 +96,17 @@ export default function NetworkingProvider(props: Props) {
     setMeentingSelect(meetingSelectedInitial);
   };
 
+  /* funciones crud para las reuniones */
   const createMeeting = async (meeting: Omit<IMeeting, 'id'>) => {
-    const response = await service.createMeeting(eventId, meeting);
+    const newMeenting : Omit<IMeeting, 'id'> = {
+      name          : meeting.name,
+      dateUpdated   : meeting.dateUpdated,
+      participants  : meeting.participants,
+      place         : meeting.place,
+      start         : meeting.start,
+      end           : meeting.end
+    }
+    const response = await service.createMeeting(eventId, newMeenting);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
       msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion',
@@ -94,7 +114,15 @@ export default function NetworkingProvider(props: Props) {
     });
   };
   const updateMeeting = async (meetingId: string, meeting: IMeeting) => {
-    const response = await service.updateMeeting(eventId, meetingId, meeting);
+    const newMeenting : Omit<IMeeting, 'id'> = {
+      name          : meeting.name,
+      dateUpdated   : meeting.dateUpdated,
+      participants  : meeting.participants,
+      place         : meeting.place,
+      start         : meeting.start,
+      end           : meeting.end
+    }
+    const response = await service.updateMeeting(eventId, meetingId, newMeenting);
 
     DispatchMessageService({
       type: response ? 'success' : 'warning',
@@ -122,6 +150,7 @@ export default function NetworkingProvider(props: Props) {
     });
   };
 
+  /* --------------------------------- */
   const createObserver = async ({ data }: CreateObservers) => {
 
     DispatchMessageService({
@@ -177,6 +206,7 @@ export default function NetworkingProvider(props: Props) {
     observers,
     createObserver,
     deleteObserver,
+    DataCalendar
   };
 
   return <NetworkingContext.Provider value={values}>{props.children}</NetworkingContext.Provider>;

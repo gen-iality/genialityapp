@@ -8,3 +8,11 @@ export interface IObserver {
 export interface CreateObservers {
     data : string[]
 }
+
+
+export enum TypeCalendarView {
+    day = "day", 
+    week = "week", 
+    month ="month", 
+    agenda ="agenda"
+}

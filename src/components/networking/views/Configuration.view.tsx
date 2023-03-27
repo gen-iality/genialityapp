@@ -4,7 +4,6 @@ import ConfigObservers from '../components/Configurations/ConfigObservers';
 import { CaretDownOutlined } from '@ant-design/icons';
 
 export default function Configuration() {
-  const data: any[] = [];
   return (
     <>
       <Collapse
