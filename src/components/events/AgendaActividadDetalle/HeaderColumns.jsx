@@ -149,7 +149,7 @@ const HeaderColumns = (props) => {
             ) : props.activityState === 'ended_meeting_room' && currentActivity !== null ? (
               <CheckCircleOutlined style={{ fontSize: '30px' }} />
             ) : (props.activityState === '' || props.activityState == null) &&
-              currentActivity?.type.name !== ('url' || 'video') ? (
+              currentActivity?.type?.name !== ('url' || 'video') ? (
               <ClockCircleOutlined style={{ fontSize: '30px' }} />
             ) : props.activityState === 'closed_meeting_room' ? (
               <LoadingOutlined style={{ fontSize: '30px' }} />
@@ -205,7 +205,7 @@ const HeaderColumns = (props) => {
             >
               {props.isVisible && (
                 <div>
-                  {currentActivity?.type.name === ('url' || 'video') ? (
+                  {currentActivity?.type?.name === ('url' || 'video') ? (
                     <>
                       {intl.formatMessage({ id: 'label.posted.date', defaultMessage: 'Publicado ' })}{' '}
                       {dayjs(currentActivity?.datetime_start).fromNow()}
