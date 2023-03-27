@@ -189,7 +189,7 @@ function Certificate(props: CertificateProps) {
         ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name);
 
       const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(props.cEvent.value._id);
-      const filteredData = data.filter(activityFilter);
+      const filteredData = data.filter(activityFilter).filter((activity) => !activity.is_info_only);
 
       setAllActivities(filteredData);
       const existentActivities = filteredData.map(async (activity) => {
