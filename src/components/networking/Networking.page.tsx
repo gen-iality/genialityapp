@@ -20,7 +20,7 @@ export default function NetworkingPage({ eventId } : PropsNetworking) {
         <Calendar/>
       </Tabs.TabPane> 
       
-      <Tabs.TabPane tab='Configuracion' key={3}>
+      <Tabs.TabPane tab='Configuración' key={3}>
         <Configuration/>
       </Tabs.TabPane>
 

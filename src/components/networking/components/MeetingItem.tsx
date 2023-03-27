@@ -1,5 +1,6 @@
 import {
   CaretDownOutlined,
+  CaretRightOutlined,
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
@@ -54,10 +55,11 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
   };
   return (
     <Collapse
-      collapsible='header'
-      expandIcon={({ isActive }) => (
+      /* collapsible='header' */
+      expandIcon={({ isActive }) => <div style={{paddingTop: '6px'}}><CaretRightOutlined rotate={isActive ? 90 : 0} /></div>}
+      /* expandIcon={({ isActive }) => (
         <Button type='text' shape='circle' icon={<CaretDownOutlined rotate={isActive ? 180 : 0} />}></Button>
-      )}
+      )} */
       bordered={false}
       style={{ backgroundColor: '#F9FAFE' }}>
       <Collapse.Panel
@@ -76,24 +78,26 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
           <Space>
             <Avatar.Group maxCount={4} maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
               {participants.map((participant, key) => (
-                <Tooltip key={key} title={participant.name} placement='top'>
-                  <Avatar style={{ backgroundColor: '#333F44', color: 'white' }}>
-                    {participant.name && participant.name.charAt(0).toUpperCase()}
-                  </Avatar>
-                </Tooltip>
+                <div> {/* Sino se le coloca este div queda disparejo el avatar con los botones */}
+                  <Tooltip key={key} title={participant.name} placement='top'>
+                    <Avatar style={{ backgroundColor: '#333F44', color: 'white', padding: '0 !important' }}>
+                      {participant.name && participant.name.charAt(0).toUpperCase()}
+                    </Avatar>
+                  </Tooltip>
+                </div>
               ))}
             </Avatar.Group>
             <Button icon={<EditOutlined />} onClick={() => editMeenting(meenting)} />
             <Button icon={<DeleteOutlined />} onClick={() => onDelete()} />
           </Space>
         }>
-        <Row gutter={[16, 16]}>
+        <Row justify='center' align='middle' gutter={[16, 16]}>
           <Col span={24}>
             <Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '5px' }}>
               <Result
-                style={{ padding: '10px' }}
+                style={{ paddingTop: '2px', paddingBottom: '15px' }}
                 status={meentingStart ? 'success' : 'info'}
-                title={meentingStart ? 'la reunion ya inicio' : 'La reunion iniciara en :'}
+                title={meentingStart ? 'La reunión ya inicio' : 'La reunión iniciará en :'}
                 extra={
                   !meentingStart && (
                     <Countdown
@@ -105,23 +109,25 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                   )
                 }
               />
-              <Row justify='center' gutter={[16, 16]}>
+              <Row justify='center' align='middle' gutter={[16, 16]}>
                 <Form layout='inline'>
-                  <Form.Item label='Fecha incio'>
-                    <Typography>
-                      <pre>{dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')}</pre>
-                    </Typography>
-                  </Form.Item>
-                  <Form.Item label='Fecha fin'>
-                    <Typography>
-                      <pre>{dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A')}</pre>
-                    </Typography>
-                  </Form.Item>
-                  <Form.Item label='Lugar'>
-                    <Typography>
-                      <pre>{meenting.place}</pre>
-                    </Typography>
-                  </Form.Item>
+                  <Space wrap>
+                    <Form.Item label='Fecha incio'>
+                      <Typography>
+                        <pre style={{margin: 0}}>{dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')}</pre>
+                      </Typography>
+                    </Form.Item>
+                    <Form.Item label='Fecha fin'>
+                      <Typography>
+                        <pre style={{margin: 0}}>{dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A')}</pre>
+                      </Typography>
+                    </Form.Item>
+                    <Form.Item label='Lugar'>
+                      <Typography>
+                        <pre style={{margin: 0, textTransform: 'uppercase'}}>{meenting.place}</pre>
+                      </Typography>
+                    </Form.Item>
+                  </Space>
                 </Form>
               </Row>
             </Card>
@@ -137,6 +143,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
               }}
               dataSource={participants.map((partici) => ({ ...partici, key: partici.id }))}
               columns={columnsParticipants}
+              scroll={{x: 'auto'}}
             />
             <Button disabled={!meentingStart} icon={<SaveOutlined />} onClick={() => onUpdate()} />
           </Col>
