@@ -232,6 +232,11 @@ function OrgMembers(props) {
       delete user.stats;
       delete user.picture;
       // What else?
+      const { password } = user
+      if (password) {
+        user['documento de identidad'] = password
+        delete user.password
+      }
       return user
     }));
     const wb = utils.book_new();
