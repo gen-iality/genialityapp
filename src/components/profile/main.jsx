@@ -549,7 +549,7 @@ const MainProfile = (props) => {
                   ))
                 )}
               </TabPane>
-              <TabPane tab="Certificaciones" key="6">
+              {/* <TabPane tab="Certificaciones" key="6">
                 {!(props?.cUser?.value?._id) ? (
                   <Loading />
                 ) : (
@@ -603,7 +603,7 @@ const MainProfile = (props) => {
                   ))}
                   </>
                 )}
-              </TabPane>
+              </TabPane> */}
             </Tabs>
           )}
           {content === 'MY_PLAN' && <MyPlan cUser={props.cUser} />}
