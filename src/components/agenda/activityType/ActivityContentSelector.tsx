@@ -10,7 +10,7 @@ import ActivityContentManager from './ActivityContentManager';
 import ActivityContentModal from './ActivityContentModal';
 
 import useActivityType from '@context/activityType/hooks/useActivityType';
-import { useGetWidgetForActivityType } from '@/context/activityType/hooks/useGetWidgetForActivityType';
+import { getWidgetForActivityType } from '@/context/activityType/hooks/getWidgetForActivityType';
 
 export interface SubActivityContentSelectorProps {
   activityId: string,
@@ -24,12 +24,11 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
     activityName,
     shouldLoad
   } = props;
-
   const [modalTitle, setModalTitle] = useState('Contenido');
   const [isModalShown, setIsModalShown] = useState(false);
   const [selectedType, setSelectedType] = useState<ActivityType.GeneralTypeValue | undefined>(undefined);
   const [widget, setWidget] = useState<ActivityType.CardUI | ActivityType.FormUI | undefined>(undefined);
-
+  
   const {
     activityType,
     activityContentType,
@@ -44,8 +43,7 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
       console.warn('activityType is none, cannot prepare content type');
       return;
     }
-
-    const [title, widget] = useGetWidgetForActivityType(activityType);
+    const [title, widget] = getWidgetForActivityType(activityType);
     if (title) setModalTitle(title);
     if (widget) setWidget(widget);
   }, [shouldLoad, activityType]);

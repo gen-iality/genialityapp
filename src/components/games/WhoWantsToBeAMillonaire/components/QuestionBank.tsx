@@ -2,7 +2,6 @@ import Header from '@/antdComponents/Header';
 import { Button, Card, Modal, Space, Table, Typography, Form, Select, Input, Divider, Checkbox, List } from 'antd';
 import generateColumnsQuestion from '../functions/genereteColumnsQuestions';
 import { useState } from 'react';
-const { Title } = Typography;
 import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { useMillonaireCMS } from '../hooks/useMillonaireCMS';
 import { VALUES_TIME_PER_ANSWERS } from '../constants/formData';
@@ -10,6 +9,9 @@ import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined } from '@ant
 import Answers from './Answers';
 import CreateAnswers from './CreateAnswers';
 import ImportBankQuestions from './ImportBankQuestions';
+
+const { Title } = Typography;
+
 export default function QuestionBank() {
   const columns = generateColumnsQuestion();
   const {

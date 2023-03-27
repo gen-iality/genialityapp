@@ -11,7 +11,7 @@ import ModalAdvise from './modal';
 import Header from '../../antdComponents/Header';
 import { HelperContext } from '@/context/helperContext/helperContext';
 import moment from 'moment';
-import { useConvertUTC } from '@/hooks/useConvertUTC';
+import { convertUTC } from '@/hooks/useConvertUTC';
 
 class eventUsersList extends Component {
   constructor(props) {
@@ -83,7 +83,7 @@ class eventUsersList extends Component {
         //Se necesita enviar la fecha con el formato de new Date()
         const newDate = new Date(val);
         //Retorna la fecha con formato YYYY-MM-DD HH:mm:ss
-        return useConvertUTC(newDate).newDateWithMoment;
+        return convertUTC(newDate).newDateWithMoment;
       },
     });
 
@@ -133,7 +133,7 @@ class eventUsersList extends Component {
           //Se necesita enviar la fecha con el formato de new Date()
           const newDate = new Date(val);
           //Retorna la fecha con formato YYYY-MM-DD HH:mm:ss
-          return useConvertUTC(newDate).newDateWithMoment;
+          return convertUTC(newDate).newDateWithMoment;
         },
       },
       {
@@ -147,7 +147,7 @@ class eventUsersList extends Component {
           //Se necesita enviar la fecha con el formato de new Date()
           const newDate = new Date(val);
           //Retorna la fecha con formato YYYY-MM-DD HH:mm:ss
-          return useConvertUTC(newDate).newDateWithMoment;
+          return convertUTC(newDate).newDateWithMoment;
         },
       }
     );

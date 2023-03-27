@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, createRef } from 'react';
 import { app, firestore } from '../../helpers/firebase';
 import { Activity, AttendeeApi, eventTicketsApi, OrganizationApi, TicketsApi, UsersApi } from '../../helpers/request';
 import { injectIntl } from 'react-intl';
@@ -40,7 +40,7 @@ class UserModal extends Component {
       tickets: [],
       loadingregister: false,
     };
-    this.ifrmPrint = React.createRef();
+    this.ifrmPrint = createRef();
   }
 
   async componentDidMount() {

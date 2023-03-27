@@ -30,6 +30,7 @@ const SortableContainer = sortableContainer((props: any) => <tbody {...props} />
 const SortableItem = sortableElement((props: any) => <tr {...props} />);
 
 export default function Datos(props: any) {
+	const { eventIsActive } = useHelper();
 	const [state, setState] = useState<State>({
 		modal: false,
 		available: false,
@@ -528,7 +529,7 @@ export default function Datos(props: any) {
 			title: 'Opciones',
 			dataIndex: '',
 			render: (key: any) => {
-				const { eventIsActive } = useHelper();
+				// const { eventIsActive } = useHelper();
 
 				return (
 					<Row wrap gutter={[8, 8]}>

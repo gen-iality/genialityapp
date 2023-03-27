@@ -9,13 +9,14 @@ import { FormattedMessage } from 'react-intl';
 import Quill from 'react-quill';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Button, Checkbox, Row, Col, Form, Input, Modal, Spin, Card, Typography } from 'antd';
-Moment.locale('es-us');
 import Header from '../../antdComponents/Header';
 import BackTop from '../../antdComponents/BackTop';
 import { CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import Loading from '../profile/loading';
+
+Moment.locale('es-us');
 
 const formLayout = {
   labelCol: { span: 24 },

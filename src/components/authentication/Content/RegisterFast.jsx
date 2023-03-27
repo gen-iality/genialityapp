@@ -11,7 +11,7 @@ import {
 import { Form, Input, Button, Space, Upload, Avatar, Image } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useIntl } from 'react-intl';
-import { useEventWithCedula } from '../../../helpers/helperEvent';
+import { eventWithCedula } from '../../../helpers/helperEvent';
 import { UseEventContext } from '../../../context/eventContext';
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils';
 import Camera from 'react-html5-camera-photo';
@@ -121,7 +121,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
   ];
 
   function onFinish(values) {
-    handleNext(values);
+    // handleNext(values);
   }
 
   return (
@@ -242,7 +242,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             />
           </Form.Item>
         )}
-        {!isCustomPassword && useEventWithCedula(cEvent.value).isArkmed && (
+        {!isCustomPassword && eventWithCedula(cEvent.value).isArkmed && (
           <Form.Item
             label={intl.formatMessage({
               id: 'modal.label.cedula',
@@ -262,7 +262,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             />
           </Form.Item>
        )}
-       {!isCustomPassword && !useEventWithCedula(cEvent.value).isArkmed && (
+       {!isCustomPassword && !eventWithCedula(cEvent.value).isArkmed && (
           <Form.Item
             label={intl.formatMessage({
               id: 'modal.label.password',

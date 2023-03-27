@@ -1,7 +1,7 @@
 import { formWidgetFlow, activityTypeNames, activityContentValues } from '../constants/ui';
 import type { ActivityType } from '../types/activityType';
 
-export function useGetWidgetForContentType (type: ActivityType.GeneralTypeValue): ActivityType.CardUI | ActivityType.FormUI | null {
+export function getWidgetForContentType (type: ActivityType.GeneralTypeValue): ActivityType.CardUI | ActivityType.FormUI | null {
   switch (type) {
     case activityTypeNames.live:
       return formWidgetFlow.cards[0];

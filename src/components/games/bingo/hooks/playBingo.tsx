@@ -29,7 +29,7 @@ import { bingoWinnerOrLoser } from '../functions';
 import { notification } from 'antd';
 import useBingoContext from './useBingoContext';
 
-const playBingo = () => {
+const PlayBingo = () => {
 	const [bingoData, setBingoData] = useState<string[]>([]);
 	const [pickedNumber, setPickedNumber] = useState<PickedNumberInterface>({
 		type: 'text',
@@ -393,4 +393,4 @@ const playBingo = () => {
 		setDisableBallotDrawButton,
 	};
 };
-export default playBingo;
+export default PlayBingo;

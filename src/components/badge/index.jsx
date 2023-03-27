@@ -3,7 +3,7 @@ import Header from '@/antdComponents/Header';
 import { Form, Row, Col, Button, Space, Modal, Select, Typography, message, Table, Card, Tooltip } from 'antd';
 import { useState, useEffect, useRef } from 'react';
 
-const { Text, Link } = Typography;
+
 import {
   EditOutlined,
   DeleteOutlined,
@@ -19,6 +19,9 @@ import renderPrint from './utils/renderPrint';
 import printBagde from './utils/printBagde';
 import { fontSize, initialStateBagde } from './constants';
 import ModalEdit from './components/ModalEdit';
+
+const { Text, Link } = Typography;
+
 export default function Index(props) {
   const { event } = props;
   const ifrmPrint = useRef();

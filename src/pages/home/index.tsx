@@ -16,7 +16,7 @@ Moment.locale('es');
 momentLocalizer();
 
 const Home = () => {
-  let { isLoading, isError, isSuccess, responseData, useResponse, handleRequest } = useApiMultiple();
+  let { isLoading, isError, isSuccess, responseData, parseResponse, handleRequest } = useApiMultiple();
   const cUser = UseCurrentUserContext();
   const [typeEvent, settypeEvent] = useState<string>('nextEvents');
   const [hasMore, sethasMore] = useState(false);
@@ -112,12 +112,12 @@ const Home = () => {
                 <LoadingEvent />
               ) : (
                 <Row gutter={[16, 16]}>
-                  {isSuccess && useResponse(typeEvent)?.length <= 0 ? (
+                  {isSuccess && parseResponse(typeEvent)?.length <= 0 ? (
                     <Row justify='center' align='middle' style={{ width: '100%', height: '400px' }}>
                       <Result title={'No hay eventos próximos'} />
                     </Row>
                   ) : (
-                    useResponse(typeEvent)?.map((event, key) => {
+                    parseResponse(typeEvent)?.map((event, key) => {
                       return (
                         <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
                           <EventCard
@@ -135,7 +135,7 @@ const Home = () => {
                   )}
                 </Row>
               )}
-              {hasMore === true && useResponse(typeEvent)?.length > 10 ? (
+              {hasMore === true && parseResponse(typeEvent)?.length > 10 ? (
                 <Button size='large' block loading={isLoading} onClick={() => SeeMoreEvents()}>
                   {!isLoading ? 'Ver más'.toUpperCase() : 'Cargando...'.toUpperCase()}
                 </Button>
@@ -143,7 +143,7 @@ const Home = () => {
                 isLoading && 'Buscando...'
               ) : (
                 isSuccess &&
-                useResponse(typeEvent)?.length > 0 && (
+                parseResponse(typeEvent)?.length > 0 && (
                   <Button disabled block>
                     {isLoading ? 'Buscando...' : 'No hay más eventos por mostrar'}
                   </Button>

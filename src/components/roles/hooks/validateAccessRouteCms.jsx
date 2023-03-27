@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import useHasRole from './userhasRole';
+import { userHasRole } from './userHasRole';
 import { Spin } from 'antd';
 import { UseUserEvent } from '../../../context/eventUserContext';
 import { theRoleExists } from '@/Utilities/roleValidations';
@@ -27,7 +27,7 @@ function ValidateAccessRouteCms({ children }) {
       let ifTheRoleExists = await theRoleExists(userRol);
 
       /** Se valida si el rol es administrador, si es asi devuelve true */
-      const canClaimWithRolAdmin = useHasRole(ifTheRoleExists, userRol);
+      const canClaimWithRolAdmin = userHasRole(ifTheRoleExists, userRol);
 
       if (canClaimWithRolAdmin) {
         setComponent(children);
@@ -53,7 +53,7 @@ function ValidateAccessRouteCms({ children }) {
     let ifTheRoleExists = await theRoleExists(rol);
 
     /** Se valida si el rol es administrador, si es asi devuelve true */
-    const canClaimWithRolAdmin = useHasRole(ifTheRoleExists, rol);
+    const canClaimWithRolAdmin = userHasRole(ifTheRoleExists, rol);
     if (children?.key === 'cms') {
       if (canClaimWithRolAdmin) {
         setComponent(children);

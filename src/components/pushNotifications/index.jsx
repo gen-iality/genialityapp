@@ -7,7 +7,7 @@ import { UsersApi } from '../../helpers/request';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import ModalNotifications from './modalNotificacions';
 
-function pushNotification(props) {
+function PushNotification(props) {
   const { _id: eventId, name: eventName } = props.event;
   let [columnsData, setColumnsData] = useState({});
   let [isLoading, setIstloading] = useState(true);
@@ -94,4 +94,4 @@ function pushNotification(props) {
   );
 }
 
-export default pushNotification;
+export default PushNotification;

@@ -162,7 +162,7 @@ const ChatExport = ({ eventId, event }) => {
         });
         setlistUsersBlocked(list);
         setLoading(false);
-      }).catch;
+      }).catch(error => console.error(error));
   }
 
   function deleteAllChat() {

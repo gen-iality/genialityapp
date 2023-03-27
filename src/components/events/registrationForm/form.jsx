@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, Fragment } from 'react';
 import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 import {
@@ -556,7 +556,7 @@ const FormRegister = ({
                         }
                         // }
                       } else {
-                        setErrorLogin(true);
+                        // setErrorLogin(true);
                       }
                     });
                 };
@@ -849,7 +849,7 @@ const FormRegister = ({
 
         if (type === 'tituloseccion') {
           input = (
-            <React.Fragment>
+            <Fragment>
               <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
                 <div
                   dangerouslySetInnerHTML={{
@@ -857,7 +857,7 @@ const FormRegister = ({
                   }}></div>
               </div>
               <Divider />
-            </React.Fragment>
+            </Fragment>
           );
         }
 
@@ -868,8 +868,8 @@ const FormRegister = ({
         }
 
         if (type === 'boolean') {
+          let textoError = intl.formatMessage({ id: 'form.field.required' });
           if (mandatory) {
-            let textoError = intl.formatMessage({ id: 'form.field.required' });
 
             rule = {
               validator: (_, value) => (value == true ? Promise.resolve() : Promise.reject(textoError)),

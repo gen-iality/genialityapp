@@ -109,7 +109,7 @@ export const saveItem = async (item, setLoading, dataSource, setItem, cEvent, se
     }, 800);
     setItem(null);
   } else {
-    message.error('Error al guardar la sección');
+    // message.error('Error al guardar la sección');
   }
 };
 

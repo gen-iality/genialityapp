@@ -1,7 +1,7 @@
 import { accessActionsTemplate } from './accessActionsTemplate';
 import { accessActionsInterface, useEventAccessActionInterface } from './interfaces/interfaces';
 
-function useEventAccessAction({
+function eventAccessAction({
   event_access_type,
   type_event,
   current_attendee_status,
@@ -11,4 +11,4 @@ function useEventAccessAction({
   return accessAction;
 }
 
-export default useEventAccessAction;
+export default eventAccessAction;
