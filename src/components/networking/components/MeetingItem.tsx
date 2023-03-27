@@ -86,7 +86,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
               ))}
             </Avatar.Group></Col>
             <Col><Button icon={<EditOutlined />} onClick={() => editMeenting(meenting)} /></Col>
-            <Col><Button icon={<DeleteOutlined />} onClick={() => onDelete()} type='danger' /></Col>            
+            <Col><Button icon={<DeleteOutlined />} onClick={() => onDelete()} danger type='primary' /></Col>            
           </Row>
         }>
         <Row justify='center' align='middle' gutter={[16, 16]}>
