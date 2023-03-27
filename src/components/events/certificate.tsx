@@ -270,6 +270,8 @@ function Certificate(props: CertificateProps) {
                         icon={isGenerating ? LoadingOutlined : DownloadOutlined}
                         onSubmit={() => generateCert(props.cEventUser.value)}
                       />
+                      <br />
+                      <Typography.Text strong>Éste es una plantilla y no es el certificado final. Clic en descargar para obtener el certificado real.</Typography.Text>
                       <Html2PdfCerts
                         handler={pdfQuizGeneratorRef}
                         rows={finalCertRows}
@@ -306,6 +308,8 @@ function Certificate(props: CertificateProps) {
                     icon={isGenerating ? LoadingOutlined : DownloadOutlined}
                     onSubmit={() => generateCert(props.cEventUser.value)}
                   />
+                  <br />
+                  <Typography.Text strong>Éste es una plantilla y no es el certificado final. Clic en descargar para obtener el certificado real.</Typography.Text>
                   <Html2PdfCerts
                     handler={pdfGeneralGeneratorRef}
                     rows={finalCertRows}
