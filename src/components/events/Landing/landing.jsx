@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { useUserEvent } from '@context/eventUserContext';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, useLocation } from 'react-router-dom';
 /** ant design */
 import { Layout, Spin, notification, Button, Result, Steps, Tooltip } from 'antd';
 /* import 'react-toastify/dist/ReactToastify.css'; */
@@ -92,6 +92,7 @@ const Landing = props => {
   const [activitiesAttendee, setActivitiesAttendee] = useState([]);
   const [activities, setActivities] = useState([]);
   const history = useHistory();
+  const location = useLocation();
 
   const loadData = async () => {
     const { data } = await AgendaApi.byEvent(cEventContext.value?._id)
@@ -128,6 +129,10 @@ const Landing = props => {
     setActivitiesAttendee([]);
     loadData();
   }, [cEventContext.value, cEventUser.value]);
+
+  useEffect(() => {
+    loadData()
+  }, [location])
 
   useEffect(() => {
     DispatchMessageService({
