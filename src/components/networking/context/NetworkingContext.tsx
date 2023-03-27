@@ -6,6 +6,10 @@ import { IMeeting, IMeetingCalendar } from '../interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 import { meetingSelectedInitial } from '../utils/utils';
 import { CreateObservers, IObserver } from '../interfaces/configurations.interfaces';
+import { BadgeApi, EventsApi, RolAttApi } from '@/helpers/request';
+import { fieldNameEmailFirst } from '@/helpers/utils';
+import { addDefaultLabels, orderFieldsByWeight } from '../components/modal-create-user/utils/KioskRegistration.utils';
+import { FieldsForm } from '../components/modal-create-user/interface/KioskRegistrationApp.interface';
 
 interface NetworkingContextType {
   eventId: string;
@@ -25,7 +29,8 @@ interface NetworkingContextType {
   updateMeeting: (meetingId: string, meeting: IMeeting) => Promise<void>;
   deleteMeeting: (meetingId: string) => void;
   createObserver: (data: CreateObservers) => void;
-  deleteObserver: (id : string) => void;
+  deleteObserver: (id: string) => void;
+  fieldsForm: FieldsForm[];
 }
 
 export const NetworkingContext = createContext<NetworkingContextType>({} as NetworkingContextType);
@@ -37,19 +42,20 @@ interface Props {
 export default function NetworkingProvider(props: Props) {
   const [attendees, setAttendees] = useState<any[]>([]);
   const [meetings, setMeetings] = useState<IMeeting[]>([]);
-  const [DataCalendar, setDataCalendar] = useState<IMeetingCalendar[]>([])
+  const [DataCalendar, setDataCalendar] = useState<IMeetingCalendar[]>([]);
   const [observers, setObservers] = useState<IObserver[]>([]);
   const [meentingSelect, setMeentingSelect] = useState<IMeeting>(meetingSelectedInitial);
   const [modal, setModal] = useState(false);
   const [edicion, setEdicion] = useState(false);
   const cUser = UseUserEvent();
   const eventId = cUser?.value?.event_id;
-
+  const [fieldsForm, setFieldsForm] = useState<any[]>([] as any[]);
   useEffect(() => {
     if (!!eventId) {
       const unsubscribeAttendees = service.listenAttendees(eventId, setAttendees);
       const unsubscribeMeetings = service.listenMeetings(eventId, setMeetings);
       const unsubscribeObservers = serviceConfig.listenObervers(eventId, setObservers);
+      getFields();
       return () => {
         unsubscribeAttendees();
         unsubscribeMeetings();
@@ -59,7 +65,7 @@ export default function NetworkingProvider(props: Props) {
   }, []);
 
   useEffect(() => {
-    if(observers.length){
+    if (observers.length) {
       const dataArray: IMeetingCalendar[] = [];
       observers.map((observer) => {
         meetings.map((meeting) => {
@@ -68,7 +74,7 @@ export default function NetworkingProvider(props: Props) {
           }
         });
       });
-      setDataCalendar(dataArray)
+      setDataCalendar(dataArray);
     }
   }, [meetings, observers]);
 
@@ -98,14 +104,14 @@ export default function NetworkingProvider(props: Props) {
 
   /* funciones crud para las reuniones */
   const createMeeting = async (meeting: Omit<IMeeting, 'id'>) => {
-    const newMeenting : Omit<IMeeting, 'id'> = {
-      name          : meeting.name,
-      dateUpdated   : meeting.dateUpdated,
-      participants  : meeting.participants,
-      place         : meeting.place,
-      start         : meeting.start,
-      end           : meeting.end
-    }
+    const newMeenting: Omit<IMeeting, 'id'> = {
+      name: meeting.name,
+      dateUpdated: meeting.dateUpdated,
+      participants: meeting.participants,
+      place: meeting.place,
+      start: meeting.start,
+      end: meeting.end,
+    };
     const response = await service.createMeeting(eventId, newMeenting);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
@@ -114,14 +120,14 @@ export default function NetworkingProvider(props: Props) {
     });
   };
   const updateMeeting = async (meetingId: string, meeting: IMeeting) => {
-    const newMeenting : Omit<IMeeting, 'id'> = {
-      name          : meeting.name,
-      dateUpdated   : meeting.dateUpdated,
-      participants  : meeting.participants,
-      place         : meeting.place,
-      start         : meeting.start,
-      end           : meeting.end
-    }
+    const newMeenting: Omit<IMeeting, 'id'> = {
+      name: meeting.name,
+      dateUpdated: meeting.dateUpdated,
+      participants: meeting.participants,
+      place: meeting.place,
+      start: meeting.start,
+      end: meeting.end,
+    };
     const response = await service.updateMeeting(eventId, meetingId, newMeenting);
 
     DispatchMessageService({
@@ -152,7 +158,6 @@ export default function NetworkingProvider(props: Props) {
 
   /* --------------------------------- */
   const createObserver = async ({ data }: CreateObservers) => {
-
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -179,13 +184,73 @@ export default function NetworkingProvider(props: Props) {
   };
 
   const deleteObserver = async (observerID: string) => {
-    const response = await serviceConfig.deleteObserver(eventId,observerID);
+    const response = await serviceConfig.deleteObserver(eventId, observerID);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
       msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion',
       action: 'show',
     });
   };
+
+  const getFields = async () => {
+    try {
+      const event = await EventsApi.getOne(eventId);
+      const rolesList = await RolAttApi.byEventRolsGeneral();
+      const properties = event.user_properties;
+      // const rolesList = await RolAttApi.byEventRolsGeneral();
+      const badgeEvent = await BadgeApi.get(eventId);
+
+      let extraFields = fieldNameEmailFirst(properties);
+
+      extraFields = addDefaultLabels(extraFields);
+      extraFields = orderFieldsByWeight(extraFields);
+      let fieldsForm = Array.from(extraFields);
+      let rolesOptions = rolesList.map((rol: any) => {
+        return {
+          label: rol.name,
+          value: rol._id,
+        };
+      });
+      fieldsForm.push({
+        author: null,
+        categories: [],
+        label: 'Rol',
+        mandatory: true,
+        name: 'rol_id',
+        organizer: null,
+        tickets: [],
+        type: 'list',
+        fields_conditions: [],
+        unique: false,
+        options: rolesOptions,
+        visibleByAdmin: false,
+        visibleByContacts: 'public',
+        _id: { $oid: '614260d226e7862220497eac1' },
+      });
+
+      fieldsForm.push({
+        author: null,
+        categories: [],
+        label: 'Checkin',
+        mandatory: false,
+        name: 'checked_in',
+        organizer: null,
+        tickets: [],
+        type: 'boolean',
+        fields_conditions: [],
+        unique: false,
+        visibleByAdmin: false,
+        visibleByContacts: 'public',
+        _id: { $oid: '614260d226e7862220497eac2' },
+      });
+      console.log('fieldsForm',fieldsForm)
+      setFieldsForm(fieldsForm);
+      return fieldsForm;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const values = {
     modal,
     openModal,
@@ -206,7 +271,8 @@ export default function NetworkingProvider(props: Props) {
     observers,
     createObserver,
     deleteObserver,
-    DataCalendar
+    DataCalendar,
+    fieldsForm,
   };
 
   return <NetworkingContext.Provider value={values}>{props.children}</NetworkingContext.Provider>;
