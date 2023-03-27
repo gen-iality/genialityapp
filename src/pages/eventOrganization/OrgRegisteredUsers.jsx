@@ -64,7 +64,42 @@ function OrgRegisteredUsers(props) {
         }))),
         position: item.position ?? 'Sin cargo'
       }
-    }));
+    }).map((user) => {
+      delete user._id;
+      delete user.created_at;
+      delete user.updated_at;
+      delete user.position;
+      delete user.position_id;
+      delete user.rol_id;
+      delete user.stats;
+      delete user.picture;
+      // What else?
+      // More sht
+      delete user.approved_until_date;
+      delete user.approved_from_date;
+      delete user.event_id;
+      delete user.validity_date
+      delete user.account_id;
+      const { eventUser_email, eventUser_name, event_name, password } = user;
+      if (password) {
+        user['documento de identidad'] = password
+        delete user.password
+      }
+      if (eventUser_email) {
+        user.email = eventUser_email
+        delete user.eventUser_email
+      }
+      if (eventUser_name) {
+        user.name = eventUser_name
+        delete user.eventUser_name
+      }
+      if (event_name) {
+        user.event = event_name
+        delete user.event_name
+      }
+      return user
+    }).filter((user) => user.checkedin_at !== 'Sin registro'));
+
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Registered');
     writeFileXLSX(wb, `Inscritos_${dayjs().format('l')}.xlsx`);
