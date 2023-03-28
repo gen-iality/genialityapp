@@ -4,6 +4,7 @@ import { DispatchMessageService } from '../context/MessageService';
 import { Actions, AgendaApi, EventsApi, OrganizationApi } from '../helpers/request';
 import { GetTokenUserFirebase } from '../helpers/HelperAuth';
 import { configEventsTemplate } from '../helpers/constants';
+import { firestore } from '@/helpers/firebase';
 
 export const cNewEventContext = createContext();
 //INITIAL STATE

@@ -26,6 +26,7 @@ import ModalAuthAnonymous from '@/components/authentication/ModalAuthAnonymous';
 import ModalUpdate from '@/components/events/Landing/ModalUpdate';
 import BingoPresentation from '@/components/games/bingo/views/BingoPresentation';
 import LGNotification from '@/components/shared/LGNotification';
+import { memo } from 'react';
 //Code splitting
 const Header = loadable(() => import('./header'));
 const Home = loadable(() => import('../pages/home'));
@@ -202,7 +203,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
                         <Header />
                         { cUser.value ? (
                           <Component { ...props } />
-                        ) : cUser.value == null && cUser.status == 'LOADED' ? (
+                        ) : cUser.value == null && cUser.status === 'LOADED' ? (
                           <>
                             <ModalAuth isPrivateRoute={ true } />
 
@@ -232,4 +233,4 @@ const PageWithFooter = () => {
   );
 };
 
-export default React.memo(ContentContainer);
+export default memo(ContentContainer);

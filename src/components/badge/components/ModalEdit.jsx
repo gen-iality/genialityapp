@@ -27,13 +27,13 @@ export default function ModalEdit({
         <Form.Item label='Campo' name='id_properties'>
           <Select
             onChange={(value) =>
-              setBadge({
+              setBadge(badge => ({
                 ...badge,
                 id_properties: {
-                  ...id_properties,
+                  ...badge.id_properties,
                   value,
                 },
-              })
+              }))
             }
             placeholder='Selecciona un campo'
             defaultValue={badge.id_properties.label}>

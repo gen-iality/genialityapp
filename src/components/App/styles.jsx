@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import { Actions, OrganizationApi } from '../../helpers/request';
 import { injectIntl } from 'react-intl';
 import { SketchPicker } from 'react-color';
@@ -435,7 +435,7 @@ class Styles extends Component {
   render() {
     const { stylesIsLoading } = this.state;
     return (
-      <React.Fragment>
+      <Fragment>
         <Form onFinish={this.submit} {...formLayout}>
           <Header title={'Configuración de Estilos'} save form />
 
@@ -569,7 +569,7 @@ class Styles extends Component {
           </Row>
           <BackTop />
         </Form>
-      </React.Fragment>
+      </Fragment>
     );
   }
 }

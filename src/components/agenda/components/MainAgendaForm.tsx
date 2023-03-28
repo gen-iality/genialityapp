@@ -28,7 +28,7 @@ import EventType from '../types/EventType';
 import AgendaType from '@Utilities/types/AgendaType';
 
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector';
-import useLoadExtraAgendaData from '../hooks/useLoadExtraAgendaData';
+import loadExtraAgendaData from '../hooks/useLoadExtraAgendaData';
 import useHourWithAdditionalMinutes from '../hooks/useHourWithAdditionalMinutes';
 
 const { Text } = Typography;
@@ -92,7 +92,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     if (!props.event?._id) return;
 
     const loading = async () => {
-      useLoadExtraAgendaData(props.event, {
+      loadExtraAgendaData(props.event, {
         setCategories: setAllCategories,
         setDays: setAllDays,
         setHosts: setAllHosts,

@@ -148,7 +148,7 @@ export const GetGeneralTabsByEvent = (event_id: any, setgeneraltabs: any) => {
     });
 };
 
-export const useEventWithCedula = (event: any) => {
+export const eventWithCedula = (event: any) => {
   let label = 'Contraseña';
   let isArkmed = false;
 

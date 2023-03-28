@@ -58,7 +58,7 @@ export const useApiMultiple = () => {
     }
   };
 
-  const useResponse = (key: string): [] => {
+  const parseResponse = (key: string): [] => {
     return responseData[key as keyof typeof responseData];
   };
 
@@ -67,7 +67,7 @@ export const useApiMultiple = () => {
     isError,
     isSuccess,
     responseData,
-    useResponse,
+    parseResponse,
     handleRequest,
   };
 };

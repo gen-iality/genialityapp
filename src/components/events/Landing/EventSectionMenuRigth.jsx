@@ -5,11 +5,12 @@ import SocialZone from '../../socialZone/socialZone';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import MenuRigth from './Menus/MenuRigth';
 import { connect } from 'react-redux';
-const { Sider } = Layout;
 import { UseEventContext } from '../../../context/eventContext';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
 import { useHelper } from '../../../context/helperContext/hooks/useHelper';
 import DrawerProfile from './DrawerProfile';
+
+const { Sider } = Layout;
 
 const EventSectionMenuRigth = (props) => {
   let [optionselected, setOptionselected] = useState(1);

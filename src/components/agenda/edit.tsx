@@ -23,7 +23,7 @@ import Service from './roomManager/service';
 import TipeOfActivity from './typeActivity';
 import SurveyManager from './surveyManager';
 import MainAgendaForm, { FormDataType } from './components/MainAgendaForm';
-import usePrepareRoomInfoData from './hooks/usePrepareRoomInfoData';
+import prepareRoomInfoData from './hooks/usePrepareRoomInfoData';
 import useBuildInfo from './hooks/useBuildInfo';
 import useValidForm from './hooks/useValidAgendaForm';
 import useDeleteActivity from './hooks/useDeleteActivity';
@@ -345,7 +345,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
   // Método para guarda la información de la configuración
   const saveConfig = async (value?: any) => {
-    const { roomInfo, tabs } = usePrepareRoomInfoData(agendaContext);
+    const { roomInfo, tabs } = prepareRoomInfoData(agendaContext);
     const activity_id = agendaContext.activityEdit || currentActivityID;
     try {
       const result = await service.createOrUpdateActivity(props.event._id, activity_id, roomInfo, tabs);
@@ -469,7 +469,7 @@ function AgendaEdit(props: AgendaEditProps) {
                       <Col span={20}>
                         <SurveyManager
                           event_id={props.event._id}
-                          activity_id={currentActivityID}
+                          activity_id={currentActivityID || ''}
                           canSendComunications={props.event?.sms_notification}
                         />
                         <BackTop />

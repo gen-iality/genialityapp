@@ -110,7 +110,8 @@ export default function RoomController(props) {
               <Switch
                 checked={games}
                 onChange={(checked) => {
-                  handleTabsController(checked, 'games'), setShowavailableGames(!showavailableGames);
+                  handleTabsController(checked, 'games');
+                  setShowavailableGames(!showavailableGames);
                 }}
               />
             </Form.Item>

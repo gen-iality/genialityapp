@@ -60,6 +60,8 @@ const parseStringNumber = (value: string | number) => {
 };
 
 function TriviaEdit(props: any) {
+	const { eventIsActive } = useHelper();
+	const cEventIsActive = eventIsActive;
 	const [state, setState] = useState<State>({
 		_id: '',
 		idSurvey: '',
@@ -791,8 +793,7 @@ function TriviaEdit(props: any) {
 			title: 'Opciones',
 			key: 'action',
 			render: (text: any, record: any) => {
-				const { eventIsActive } = useHelper();
-				const cEventIsActive = eventIsActive;
+				
 				return (
 					<Row gutter={[8, 8]}>
 						<Col>

@@ -4,7 +4,7 @@ import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 
 const { Title, Text, Paragraph } = Typography;
 
-function feriaInformation(props) {
+function FeriaInformation(props) {
 	const [loading, setloading] = useState(true);
 
 	return (
@@ -93,4 +93,4 @@ function feriaInformation(props) {
 	);
 }
 
-export default feriaInformation;
+export default FeriaInformation;

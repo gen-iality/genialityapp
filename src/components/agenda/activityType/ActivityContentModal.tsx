@@ -16,7 +16,7 @@ import FullActivityTypeInfoLayout from './components/FullActivityTypeInfoLayout'
 import ActivityVideoUploadField from './components/ActivityVideoUploadField';
 import ActivityExternalUrlField from './components/ActivityExternalUrlField';
 
-import { useGetWidgetForContentType } from '@/context/activityType/hooks/useGetWidgetForContentType';
+import { getWidgetForContentType } from '@/context/activityType/hooks/getWidgetForContentType';
 
 export interface ActivityContentModalProps extends ModalWrapperUIProps {
   widget: ActivityType.CardUI | ActivityType.FormUI,
@@ -73,7 +73,7 @@ function ActivityContentModal(props: ActivityContentModalProps) {
    * When the widgetKey changes we have to get the next widget data.
    */
   useEffect(() => {
-    const data = useGetWidgetForContentType(widgetKey as ActivityType.GeneralTypeValue);
+    const data = getWidgetForContentType(widgetKey as ActivityType.GeneralTypeValue);
     if (data) setWidgetData(data);
     /* console.debug('get data to key', widgetKey, ':', data); */
   }, [widgetKey]);

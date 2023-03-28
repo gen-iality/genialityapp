@@ -4,7 +4,7 @@ import AdditionalFieldsToFormEnrollAttendeeToEvent from './AdditionalFieldsToFor
 import { Alert, Button, Card, Col, Divider, Form, Row, Space, Spin, Typography } from 'antd';
 import { useIntl } from 'react-intl';
 import { LoadingOutlined } from '@ant-design/icons';
-import dispatchFormEnrollAttendeeToEvent from './dispatchFormEnrollAttendeeToEvent';
+import useDispatchFormEnrollAttendeeToEvent from './useDispatchFormEnrollAttendeeToEvent';
 import {
   aditionalFields,
   alertStyles,
@@ -46,7 +46,7 @@ const FormEnrollAttendeeToEvent = ({
 
   const [attendeeInformation, setAttendeeInformation] = useState<AttendeeInformation | null>(null);
 
-  const { formDispatch, formState } = dispatchFormEnrollAttendeeToEvent();
+  const { formDispatch, formState } = useDispatchFormEnrollAttendeeToEvent();
   const { basicFields, thereAreExtraFields, buttonText } = formState;
   const [validatedFields, setValidatedFields] = useState<Array<any>>([]);
   const { icon, styles, text } = submitButtonProps;

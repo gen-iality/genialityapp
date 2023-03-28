@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, createElement } from 'react';
 import Moment from 'moment';
 import { firestore } from '../../helpers/firebase';
 import { CertsApi, RolAttApi } from '../../helpers/request';
@@ -11,7 +11,7 @@ import withContext from '../../context/withContext';
 
 const IconText = ({ icon, text, onSubmit }) => (
   <Button htmlType='submit' type='primary' onClick={onSubmit}>
-    {React.createElement(icon, { style: { marginRight: 8 } })}
+    {createElement(icon, { style: { marginRight: 8 } })}
     {text}
   </Button>
 );
@@ -104,7 +104,7 @@ class CertificadoLanding extends Component {
         this.setState({ message: 'No se encontraron certificados para este documento' });
       }
     } catch (error) {
-      error;
+      console.error(error)
     }
   }
 

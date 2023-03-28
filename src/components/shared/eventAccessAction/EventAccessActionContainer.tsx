@@ -3,7 +3,7 @@ import { UseEventContext } from '@/context/eventContext';
 import { UseUserEvent } from '@/context/eventUserContext';
 import { UseCurrentUserContext } from '@/context/userContext';
 import { EventAccessAction } from './EventAccessAction';
-import useEventAccessAction from './useEventAccessAction';
+import eventAccessAction from './useEventAccessAction';
 
 const EventAccessActionContainer = () => {
 	let cEvent = UseEventContext();
@@ -23,7 +23,7 @@ const EventAccessActionContainer = () => {
 
 	if (!type_event) return <> </>;
 
-	let eventAction: string = useEventAccessAction({ event_access_type, type_event, current_attendee_status });
+	let eventAction: string = eventAccessAction({ event_access_type, type_event, current_attendee_status });
 
 	return <EventAccessAction eventAction={eventAction} />;
 };

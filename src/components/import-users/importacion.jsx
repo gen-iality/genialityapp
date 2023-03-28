@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { utils, writeFileXLSX, read } from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -137,7 +137,7 @@ const Importacion = (props) => {
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <div className='importacion-txt'>
         <p>
           Para importar los usuarios de tu evento, debes cargar un archivo excel (.xls) con las columnas organizadas
@@ -176,7 +176,7 @@ const Importacion = (props) => {
           </Button>
         </Col>
       </Row>
-    </React.Fragment>
+    </Fragment>
   );
 };
 

@@ -11,8 +11,9 @@ export default function FooterWithHints() {
 		whereIsGame: { points },
 	} = useWhereIsInLanding();
 
-	if (location.activeView !== 'game') return null;
 	const screens = useBreakpoint();
+	
+	if (location.activeView !== 'game') return null;
 
 	return (
 		<Row align='middle' justify={'center'} gutter={[10, 0]}>

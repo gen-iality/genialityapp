@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import ErrorServe from '../modal/serverError';
 import {
   Row,
@@ -244,7 +244,7 @@ class Preview extends Component {
     const { list, auxArr, serverError, errorData } = this.state;
     const self = this;
     return (
-      <React.Fragment>
+      <Fragment>
         <Row justify='center' gutter={[24, 24]}>
           <Col span={10}>
             <Badge.Ribbon
@@ -432,7 +432,7 @@ class Preview extends Component {
         )} */}
 
         {serverError && <ErrorServe errorData={errorData} />}
-      </React.Fragment>
+      </Fragment>
     );
   }
 }
