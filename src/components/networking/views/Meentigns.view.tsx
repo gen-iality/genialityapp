@@ -30,7 +30,7 @@ export default function MeentignView() {
           <MeetingForm />
         </Modal>
       )}
-      <Row justify='end' wrap gutter={[8, 8]}>
+      <Row justify='end' wrap gutter={8}>
         <Col>
           <Button
             style={{ marginBottom: 10 }}
@@ -42,7 +42,7 @@ export default function MeentignView() {
           </Button>
         </Col>
       </Row>
-      <Row justify='center' wrap gutter={[0, 16]}>
+      <Row justify='center' wrap gutter={[0, 16]} style={{paddingTop: '10px'}}>
         <Col span={24}>
           <MeetingList meentings={orderByDate()} />
         </Col>

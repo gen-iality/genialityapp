@@ -10,7 +10,7 @@ export default function MeetingList({ meentings }: IMeetingList) {
       <Col span={12} style={{ margin: 10}}>
       <Search  placeholder="input search text" onSearch={()=>{}} enterButton />
       </Col>
-      <Row gutter={[0, 16]}>
+      <Row gutter={[0, 8]}>
         {meentings?.map((meenting, key) => (
           <Col key={key} span={24} >
             <MeetingItem meenting={meenting} />
