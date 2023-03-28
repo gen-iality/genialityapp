@@ -3,6 +3,7 @@ import { useForm } from '@/hooks/useForm';
 import React, { createRef, useContext, useEffect, useState } from 'react'
 import { NetworkingContext } from '../context/NetworkingContext';
 import { FormMeeting, IMeeting, IParticipants, TransferType, typeAttendace } from '../interfaces/Meetings.interfaces';
+import { defaultType } from '../utils/utils';
 
 
 export const useMeetingFormLogic = () => {
@@ -41,8 +42,9 @@ export const useMeetingFormLogic = () => {
     };
 
     const onSubmit = (datos: FormMeeting) => {
-
-        console.log('datos formulario',datos)
+        
+         console.log('datos formulario',datos)
+         
          DispatchMessageService({
             type: 'loading',
             key: 'loading',
@@ -61,8 +63,9 @@ export const useMeetingFormLogic = () => {
                 participants: participants,
                 place: datos.place,
                 dateUpdated: Date.now(),
+                type : datos.type ? dataContext.typeMeetings.find((item)=> item.id === datos.type ): defaultType 
             };
-
+    
             if (dataContext.edicion && datos.id) {
                 dataContext.updateMeeting(datos.id, { ...meeting, id: datos.id });
                 DispatchMessageService({
@@ -89,7 +92,7 @@ export const useMeetingFormLogic = () => {
             });
             console.log(`Ocurrio un problema al ${dataContext.edicion ? 'editar' : 'guardar'} la reunion`);
             dataContext.closeModal();
-        } 
+        }  
     };
 
     return {

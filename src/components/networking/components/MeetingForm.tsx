@@ -1,9 +1,10 @@
-import React, { Fragment } from 'react';
+import React, { Fragment , useContext } from 'react';
 import { Form, Input, Button, Row, Transfer, DatePicker, Select } from 'antd';
-import { attendesOption, filterOption, formLayout } from '../utils/utils';
+import { filterOption, formLayout } from '../utils/utils';
 import moment from 'moment';
 import { useMeetingFormLogic } from '../hooks/useMeetingFormLogic';
-const { RangePicker } = DatePicker
+import { NetworkingContext } from '../context/NetworkingContext';
+const { RangePicker } = DatePicker;
 export default function MeetingForm() {
   const {
     onSubmit,
@@ -14,9 +15,9 @@ export default function MeetingForm() {
     selectedAttendesKeys,
     onChange,
     onSelectChange,
-    closeModal
+    closeModal,
   } = useMeetingFormLogic();
-
+  const {typeMeetings} = useContext(NetworkingContext)
   return (
     <Fragment>
       <Form {...formLayout} autoComplete='off' ref={() => {}} onFinish={onSubmit}>
@@ -60,7 +61,9 @@ export default function MeetingForm() {
           label={'Fecha reunion'}
           name='date'
           rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}
-          initialValue={(formState.start != '' && formState.end != '') ? [moment(formState.start), moment(formState.end)] : []}>
+          initialValue={
+            formState.start != '' && formState.end != '' ? [moment(formState.start), moment(formState.end)] : []
+          }>
           {/* @ts-ignore */}
           <RangePicker showTime={{ format: 'HH:mm A' }} format='YYYY-MM-DD HH:mm' />
         </Form.Item>
@@ -70,6 +73,13 @@ export default function MeetingForm() {
           rules={[{ required: true, message: 'Es necesario seleccionar el lugar de la reunion' }]}
           initialValue={formState.place}>
           <Input ref={formRef} name={'place'} type='text' placeholder={'Ej: Salon principal'} />
+        </Form.Item>
+        <Form.Item label={'Tipo'} name='type' initialValue={formState.place}>
+          <Select
+            defaultValue=''
+            onChange={() => {}}
+            options={typeMeetings.map((item)=> ({label: item.nameType, value: item.id}))}
+          />
         </Form.Item>
 
         <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
