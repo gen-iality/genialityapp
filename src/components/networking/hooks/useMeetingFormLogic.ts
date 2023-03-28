@@ -63,7 +63,7 @@ export const useMeetingFormLogic = () => {
                 participants: participants,
                 place: datos.place,
                 dateUpdated: Date.now(),
-                type : datos.type ? dataContext.typeMeetings.find((item)=> item.id === datos.type ): defaultType 
+                type :  dataContext.typeMeetings.find((item)=> item.id === datos.type ) || defaultType 
             };
     
             if (dataContext.edicion && datos.id) {
