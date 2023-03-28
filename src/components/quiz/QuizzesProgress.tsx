@@ -23,13 +23,17 @@ type RowData = {
 
 export interface QuizzesProgressProps {
   /**
-   * The event ID
-   */
-   eventId: string,
-   /**
-    * The current user ID
-    */
-   userId: string,
+  * The event ID
+  */
+  eventId: string,
+  /**
+  * The event name
+  */
+  eventName: string,
+  /**
+  * The current user ID
+  */
+  userId: string,
 }
 
 const columns: ColumnsType<RowData> = [
@@ -132,11 +136,15 @@ function QuizzesProgress(props: QuizzesProgressProps) {
 
   return (
     <section>
-      <Typography.Text strong>Progreso de quices</Typography.Text>
-      <br />
-      {notPassedCount > 0 && <Alert message="Curso reprobado" type="error" />}
-      {passedCount === totalCourses && <Alert message="Curso aprobado" type="success" />}
-      <Table dataSource={rows} columns={columns} />
+      {console.log('1. passedCount', passedCount)}
+      {console.log('1. totalCourses', totalCourses)}
+      {totalCourses > 0 && (<>
+        <Typography.Text strong>{props.eventName}:</Typography.Text>
+        <br />
+        <Typography.Text strong>Progreso de quices</Typography.Text>
+        {notPassedCount > 0 && <Alert message="Curso reprobado" type="error" />}
+        {passedCount === totalCourses && <Alert message="Curso aprobado" type="success" />}
+        <Table dataSource={rows} columns={columns} /></>)}
     </section>
   );
 }

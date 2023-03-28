@@ -27,7 +27,7 @@ import OrganizationCard from './organizationCard';
 import NewCard from './newCard';
 import ExploreEvents from './exploreEvents';
 import withContext from '@context/withContext';
-import { EventsApi, TicketsApi, OrganizationApi } from '@helpers/request';
+import { EventsApi, TicketsApi, OrganizationApi, SurveysApi } from '@helpers/request';
 import EventCard from '../shared/eventCard';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -59,6 +59,7 @@ const MainProfile = (props) => {
   const [organizationsIsLoading, setOrganizationsIsLoading] = useState(true);
   const [eventsIHaveCreatedIsLoading, setEventsIHaveCreatedIsLoading] = useState(true);
   const [eventsThatIHaveParticipatedIsLoading, setEventsThatIHaveParticipatedIsLoading] = useState(true);
+  const [userEventSurveys, setUserEventSurveys] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
   const [content, setContent] = useState('ACCOUNT_ACTIVITY');
 
@@ -139,6 +140,9 @@ const MainProfile = (props) => {
     /* ----------------------------------*/
     /* Organizaciones del usuario */
     myOrganizations();
+    /* ----------------------------------*/
+    /* Surveys del usuario */
+    eventsWithSurveys();
   };
 
   useEffect(() => {
@@ -167,6 +171,19 @@ const MainProfile = (props) => {
     if (activeTab !== '2') return;
     fetchItem();
   }, [activeTab]);
+
+  const eventsWithSurveys = async () => {
+    const surveys = (
+      await Promise.all(
+        tickets.map(async (tickets) => {
+          const surveysByEvent = await SurveysApi.byEvent(tickets._id);
+          return surveysByEvent;
+        })
+      )
+    ).flat();
+
+    setUserEventSurveys(surveys);
+  }
 
   return (
     <Layout style={{ height: '90.8vh' }}>
@@ -534,21 +551,26 @@ const MainProfile = (props) => {
                   </Row>
                 )}
               </TabPane>
-              <TabPane tab="Calificaciones" key="5">
-                {events.length === 0 && (
+              {console.log('1. events', events)}
+              {console.log('1. tickets', tickets)}
+
+              {userEventSurveys.length > 0  && (
+                <TabPane tab="Calificaciones" key="5">
+                {tickets.length === 0 && (
                   <Typography.Text strong>Sin cursos</Typography.Text>
                 )}
                 {!(props?.cUser?.value?._id) ? (
                   <Loading />
                 ) : (
-                  events.map((event) => (
+                  tickets.map((tickets) => (
                     <>
-                    <Typography.Text strong>{event.name}:</Typography.Text>
-                    <QuizzesProgress eventId={event._id} userId={props?.cUser?.value?._id} />
+                    <QuizzesProgress eventId={tickets._id} eventName={tickets.name} userId={props?.cUser?.value?._id} />
                     </>
                   ))
                 )}
               </TabPane>
+              )}
+              
               {/* <TabPane tab="Certificaciones" key="6">
                 {!(props?.cUser?.value?._id) ? (
                   <Loading />
