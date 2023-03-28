@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import Async from 'async';
 import { Actions } from '../../helpers/request';
 import { Row, Col, Tag, Tabs, Table, Spin } from 'antd';
@@ -135,7 +135,7 @@ class Result extends Component {
       (err) => {
         self.setState({ ok, notok });
         if (err) {
-          err;
+          console.log(err)
         }
       }
     );
@@ -152,7 +152,7 @@ class Result extends Component {
     const { extraFields } = this.props;
     const data = [notok, ok];
     return (
-      <React.Fragment>
+      <Fragment>
         <Row justify='space-between' wrap>
           <Col>
             <Tag>{total}</Tag>
@@ -172,7 +172,7 @@ class Result extends Component {
           </Col>
         </Row>
         {total > 0 && (
-          <React.Fragment>
+          <Fragment>
             <Tabs defaultActiveKey='0'>
               <TabPane tab='Correctos' key='0'>
                 <Spin tip={'Cargando...'} spinning={data[1].length === 0}>
@@ -205,9 +205,9 @@ class Result extends Component {
                 {/* </Spin> */}
               </TabPane>
             </Tabs>
-          </React.Fragment>
+          </Fragment>
         )}
-      </React.Fragment>
+      </Fragment>
     );
   }
 }

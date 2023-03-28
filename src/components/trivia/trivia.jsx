@@ -7,7 +7,7 @@ import { deleteSurvey } from "./services";
 import { Result } from "antd";
 import { recordTypeForThisEvent } from "../events/Landing/helpers/thisRouteCanBeDisplayed";
 
-const trivia = (props) => {
+const Trivia = (props) => {
   let [columnsData, setColumnsData] = useState({});
   const [typeEvent, settypeEvent] = useState();
 
@@ -77,4 +77,4 @@ const trivia = (props) => {
   );
 };
 
-export default trivia;
+export default Trivia;

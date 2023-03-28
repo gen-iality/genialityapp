@@ -20,7 +20,7 @@ import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '@/context/MessageService';
 import { handleRequestError } from '@/helpers/utils';
 
-const myPlan = ({ cUser }) => {
+const MyPlan = ({ cUser }) => {
   const plan = cUser.value?.plan;
   let [plans, setPlans] = useState([]);
   let [notifications, setNotifications] = useState([]);
@@ -847,4 +847,4 @@ const myPlan = ({ cUser }) => {
   );
 };
 
-export default myPlan;
+export default MyPlan;

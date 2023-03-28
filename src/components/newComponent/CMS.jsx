@@ -107,7 +107,10 @@ const CMS = (props) => {
             const service = new Service(firestore);
             const configuration = await service.getConfiguration(eventId, id);
             if (configuration && configuration.typeActivity === 'eviusMeet') {
-              await deleteAllVideos(name, configuration.meeting_id), await deleteLiveStream(configuration.meeting_id);
+              await Promise.all(
+                deleteAllVideos(name, configuration.meeting_id),
+                deleteLiveStream(configuration.meeting_id)
+              )
             }
             if (deleteCallback) await deleteCallback(id);
             await fireRealtime.ref(refActivity).remove();

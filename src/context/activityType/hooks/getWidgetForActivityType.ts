@@ -3,7 +3,7 @@ import type { OpenedWidget } from '../types/contextType';
 import { formWidgetFlow, activityTypeNames } from '../constants/ui';
 import { WidgetType } from '../constants/enum';
 
-export function useGetWidgetForActivityType (currentActivityType: ActivityType.Name): [string, OpenedWidget | undefined] {
+export function getWidgetForActivityType (currentActivityType: ActivityType.Name): [string, OpenedWidget | undefined] {
   let index;
   switch (currentActivityType) {
     case activityTypeNames.live:

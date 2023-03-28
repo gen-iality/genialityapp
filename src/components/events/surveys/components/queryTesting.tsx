@@ -46,10 +46,15 @@ function QueryTesting() {
       });
       setData(dataTest);
 
-      snapShot.docChanges().length > 0 &&
-      (snapShot.docChanges()[0].type === 'modified' || snapShot.docChanges()[0].type === 'removed')
-        ? startTimer()
-        : null;
+      if (
+        (snapShot.docChanges().length > 0) 
+        && 
+        (snapShot.docChanges()[0].type === 'modified' 
+        || 
+        snapShot.docChanges()[0].type === 'removed')
+        ) {
+        startTimer()
+      }
     });
 
     return unSuscribe;

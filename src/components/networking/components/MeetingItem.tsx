@@ -9,7 +9,9 @@ import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, To
 import React, { useState } from 'react';
 import { IParticipants, typeAttendace, IMeentingItem } from '../interfaces/Meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
-import moment, { now } from 'moment';
+// eslint-disable-next-line no-use-before-define
+import moment from 'moment'
+// import moment, { now } from 'moment';
 import { useContext } from 'react';
 import { NetworkingContext } from '../context/NetworkingContext';
 import { columnsParticipants } from '../utils/utils';
@@ -21,7 +23,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
   const { dateFormat, hoursFormat } = useDateFormat();
   const [startTime] = hoursFormat([meenting.start]);
   const [meentingStart, setmeentingStart] = useState(
-    moment(now()).isAfter(dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A'))
+    moment(new Date()).isAfter(dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A'))
   );
   const { editMeenting, deleteMeeting, updateMeeting } = useContext(NetworkingContext);
 

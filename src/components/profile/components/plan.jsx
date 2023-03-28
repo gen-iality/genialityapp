@@ -2,7 +2,7 @@ import { Row, Col, Card, Typography, Divider, Space } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import { useIntl } from 'react-intl';
 
-const plan = ({ plan, mine, children }) => {
+const Plan = ({ plan, mine, children }) => {
   const intl = useIntl();
   return (
     <Card style={{ borderRadius: '15px' }}>
@@ -524,4 +524,4 @@ const plan = ({ plan, mine, children }) => {
   );
 };
 
-export default plan;
+export default Plan;

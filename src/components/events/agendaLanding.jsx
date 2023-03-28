@@ -468,7 +468,7 @@ class Agenda extends Component {
           if (!checkRegisterDevice || checkRegisterDevice !== this.props.cUser._id) {
             this.props.cUser.registered_devices = this.props.cUser.registered_devices + 1;
             window.localStorage.setItem('eventUser_id', this.props.cUser._id);
-            AttendeeApi.update(event._id, this.props.cUser, this.props.cUser._id);
+            AttendeeApi.update(this.props.cEvent.value._id, this.props.cUser, this.props.cUser._id);
           }
         } else {
           if (!checkRegisterDevice) {
@@ -479,7 +479,7 @@ class Agenda extends Component {
       } else {
         this.props.cUser.registered_devices = 1;
         window.localStorage.setItem('eventUser_id', this.props.cUser._id);
-        AttendeeApi.update(event._id, this.props.cUser, this.props.cUser._id);
+        AttendeeApi.update(this.props.cEvent.value._id, this.props.cUser, this.props.cUser._id);
       }
 
       this.gotoActivity(activity);

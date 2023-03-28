@@ -97,6 +97,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
           (pendingAgendas.length > 0 ? (
             pendingAgendas.map((pendingAgenda) => (
               <RequestCard
+                setSendRespuesta={setSendRespuesta}
                 notificacion={notificacion}
                 key={`pending-${pendingAgenda.id}`}
                 data={pendingAgenda}
@@ -148,7 +149,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   );
 }
 
-function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
+function RequestCard({ data, fetching, setFetching, meSended, notificacion, setSendRespuesta }) {
   const [requestResponse, setRequestResponse] = useState('');
   const userName = data.name;
   const userEmail = data.email;

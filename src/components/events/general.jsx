@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import Moment from 'moment';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, PlansApi, TypesApi } from '../../helpers/request';
@@ -760,7 +760,7 @@ class General extends Component {
 		const streamingHours = userPlan?.availables?.streaming_hours;
 
 		return (
-			<React.Fragment>
+			<Fragment>
 				{/* RESTRICIONES */}
 				{/* {iMustValidate && (
           <>
@@ -1229,7 +1229,7 @@ class General extends Component {
 					{serverError && <ErrorServe errorData={errorData} />}
 					{this.state.fileMsgBanner && <p className='help is-success'>{this.state.fileMsgBanner}</p>}
 				</Form>
-			</React.Fragment>
+			</Fragment>
 		);
 	}
 }

@@ -7,7 +7,7 @@ import { UseUserEvent } from '../../../context/eventUserContext';
 /** ant design */
 import { Layout, Spin, notification, Button, Result } from 'antd';
 /* import 'react-toastify/dist/ReactToastify.css'; */
-const { Content } = Layout;
+
 
 import { setUserAgenda } from '../../../redux/networking/actions';
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
@@ -30,6 +30,8 @@ import moment from 'moment';
 import { useHistory } from 'react-router';
 import { recordTypeForThisEvent } from './helpers/thisRouteCanBeDisplayed';
 import { app } from '@helpers/firebase';
+
+const { Content } = Layout;
 const EviusFooter = loadable(() => import('./EviusFooter'));
 const AppointmentModal = loadable(() => import('../../networking/appointmentModal'));
 const ModalRegister = loadable(() => import('./modalRegister'));

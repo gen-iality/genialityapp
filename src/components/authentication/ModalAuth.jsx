@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
 import { UseEventContext } from '../../context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';
-import { isHome, useEventWithCedula } from '../../helpers/helperEvent';
+import { isHome, eventWithCedula } from '../../helpers/helperEvent';
 import { UseCurrentUser } from '../../context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
 
@@ -273,7 +273,7 @@ const ModalAuth = (props) => {
                   />
                 </Form.Item>
               )}
-              {!isCustomPassword && useEventWithCedula(cEvent.value).isArkmed && (
+              {!isCustomPassword && eventWithCedula(cEvent.value).isArkmed && (
                 <Form.Item
                   label={intl.formatMessage({
                     id: 'modal.label.cedula',
@@ -302,7 +302,7 @@ const ModalAuth = (props) => {
                   />
                 </Form.Item>
               )}
-              {!isCustomPassword && !useEventWithCedula(cEvent.value).isArkmed && (
+              {!isCustomPassword && !eventWithCedula(cEvent.value).isArkmed && (
                 <Form.Item
                   label={intl.formatMessage({
                     id: 'modal.label.password',

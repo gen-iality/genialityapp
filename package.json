@@ -143,10 +143,13 @@
     "@types/react-widgets-moment": "^4.0.1",
     "@vitejs/plugin-react": "^1.0.7",
     "cypress": "9.5.4",
+    "eslint": "^8.36.0",
+    "eslint-config-react-app": "^7.0.1",
     "netlify-plugin-cypress": "^2.2.0",
     "typescript": "^4.5.4",
     "vite": "^2.8.0",
     "vite-plugin-environment": "^1.1.0",
+    "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-html": "^3.2.0"
   }
 }

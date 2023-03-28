@@ -84,7 +84,7 @@ class Wall extends Component {
                 marginBottom: '20px',
               }}>
               <Col xs={24} sm={20} md={20} lg={20} xl={12}>
-                <CreatePost event={event} addPosts={this.addPosts} />
+                <CreatePost event={this.props.cEvent.value._id} addPosts={this.addPosts} />
                 <ListWall
                   createComment={this.createComment}
                   key={this.state.keyList}

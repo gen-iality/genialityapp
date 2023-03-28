@@ -16,7 +16,7 @@ const { Panel } = Collapse;
 const { TextArea } = Input;
 const { Dragger } = Upload;
 
-const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
+const GetAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   const intl = useIntl();
   let attendeeProperties = attendee?.properties || {};
   let areacodeselected = attendeeProperties['code'] || '+57';
@@ -559,4 +559,4 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   return additionalFormFields;
 };
 
-export default getAdditionalFields;
+export default GetAdditionalFields;

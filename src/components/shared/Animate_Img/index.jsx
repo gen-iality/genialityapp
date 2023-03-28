@@ -1,8 +1,9 @@
 import { Col, Row, Button } from 'antd';
 import { PlayCircleTwoTone } from '@ant-design/icons';
 import ReactPlayer from 'react-player';
+import { Component } from 'react';
 
-class AnimateImg extends React.Component {
+class AnimateImg extends Component {
   constructor(props) {
     super(props);
     this.state = {
