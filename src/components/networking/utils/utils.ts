@@ -33,6 +33,12 @@ export const columnsParticipants: ColumnsType<IParticipants> = [
 
 export const attendesOption = [{label : 'ninguno', value : '0'}]
 
+export const defaultType = {
+  id : '',
+  nameType : 'default',
+  style : '#406D85'
+}
+
 export const meetingSelectedInitial: IMeeting = {
   start: '',
   end : '',
@@ -40,5 +46,6 @@ export const meetingSelectedInitial: IMeeting = {
   name: '',
   participants: [],
   place: '',
+  type: defaultType,
   dateUpdated: 0,
 };

@@ -1,4 +1,5 @@
 import { Moment } from "moment";
+import { ITypeMeenting } from './configurations.interfaces';
 
 export interface IMeetingList {
     meentings : IMeeting[]
@@ -13,6 +14,7 @@ export interface IMeeting {
     start  : string
     end    : string;
     place : string;
+    type : ITypeMeenting | undefined
     dateUpdated : number
     participants : IParticipants[];
 }
@@ -39,6 +41,7 @@ export interface FormMeeting {
     participants:IParticipants[];
     date:Moment[];
     place:string;
+    type: string | undefined
 }
 
 export interface IEventCalendar<T> {

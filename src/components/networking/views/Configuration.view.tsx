@@ -1,32 +1,29 @@
-import { Button, Collapse, Space, Typography } from 'antd';
+import {Card, Layout } from 'antd';
 import React from 'react';
 import ConfigObservers from '../components/Configurations/ConfigObservers';
-import { CaretDownOutlined } from '@ant-design/icons';
-
+import Meta from 'antd/lib/card/Meta';
+import TypeMeenting from '../components/Configurations/TypeMeenting';
+const {Content} = Layout
 export default function Configuration() {
   return (
-    <>
-      <Collapse
-        expandIcon={({ isActive }) => (<Button type='text' shape='circle' icon={<CaretDownOutlined rotate={isActive ? 180 : 0} />}></Button>)}
-        bordered={true}
-        style={{ backgroundColor: '#F9FAFE' }}>
-
-        {/*panel de configuracion para los observadores en el calendario*/}
-        <Collapse.Panel
-          key='configuration observers'
-          header={
-            <Space style={{ userSelect: 'none' }}>
-              <Typography.Text style={{ fontSize: '20px', fontWeight: '700', color: '#6F737C' }}>
-                Configurar Observadores
-              </Typography.Text>
-            </Space>
-          }>
+    <Layout>
+      <Content style={{ display: 'flex', justifyContent: 'space-around' , padding: 10}}>
+        <Card
+          hoverable
+          style={{ width: 540 }}
+          >
+          <Meta title='Configuracion de observadores'/>
           <ConfigObservers />
-        </Collapse.Panel>
-
-          {/* proximamente mas paneles de configuracion para el calendario y las reuniones*/}
-
-      </Collapse>
-    </>
+        </Card>
+        
+        <Card
+          hoverable
+          style={{ width: 540 }}
+          >
+        <Meta title='Configuracion de tipos'/>
+        <TypeMeenting />
+        </Card>
+      </Content>
+    </Layout>
   );
 }

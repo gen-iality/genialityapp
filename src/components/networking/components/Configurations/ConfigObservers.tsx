@@ -2,6 +2,7 @@ import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Divider, Form, List, Modal, Row, Select, Typography , Space } from 'antd';
 import React, { useState , useContext } from 'react';
 import { NetworkingContext } from '../../context/NetworkingContext';
+import { CreateObservers } from '../../interfaces/configurations.interfaces';
 
 
 export default function ConfigObservers() {
@@ -11,6 +12,10 @@ export default function ConfigObservers() {
   const closeModal = () => {
     setModalConfig(false);
   };
+  const onCreate = (data : CreateObservers) =>{
+    setModalConfig(false)
+    createObserver(data)
+  }
 
   return (
     <>
@@ -22,9 +27,9 @@ export default function ConfigObservers() {
           onCancel={closeModal}
           okText={'Guardar'}>
           <>
-            <Form onFinish={createObserver}>
+            <Form onFinish={onCreate}>
               <Form.Item name={'data'} rules={[{required : true , message: 'debe seleccionar un participante'}]} initialValue={[]}>
-                <Select allowClear mode='multiple' options={attendeesList()} defaultValue={[]}/>
+                <Select allowClear mode='multiple' options={attendeesList()} defaultValue={[]} placeholder='seleccione un observador'/>
               </Form.Item>
               <Button type='primary' style={{ marginRight: 10 }} htmlType='submit'>
                 Guardar
@@ -46,6 +51,7 @@ export default function ConfigObservers() {
       </Row>
       <Divider orientation='left'>Lista de observadores</Divider>
       <List
+        pagination={{pageSize : 3}}
         header={<div>Obervadores</div>}
         bordered
         dataSource={observers}

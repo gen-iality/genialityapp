@@ -5,7 +5,7 @@ import * as serviceConfig from '../services/configuration.service';
 import { IMeeting, IMeetingCalendar } from '../interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 import { meetingSelectedInitial } from '../utils/utils';
-import { CreateObservers, IObserver } from '../interfaces/configurations.interfaces';
+import { CreateObservers, IObserver, ITypeMeenting } from '../interfaces/configurations.interfaces';
 import { BadgeApi, EventsApi, RolAttApi } from '@/helpers/request';
 import { fieldNameEmailFirst } from '@/helpers/utils';
 import { addDefaultLabels, orderFieldsByWeight } from '../components/modal-create-user/utils/KioskRegistration.utils';
@@ -17,6 +17,7 @@ interface NetworkingContextType {
   edicion: boolean;
   attendees: any;
   meetings: IMeeting[];
+  typeMeetings : ITypeMeenting[];
   observers: IObserver[];
   DataCalendar: IMeetingCalendar[];
   meentingSelect: IMeeting;
@@ -30,6 +31,9 @@ interface NetworkingContextType {
   deleteMeeting: (meetingId: string) => void;
   createObserver: (data: CreateObservers) => void;
   deleteObserver: (id: string) => void;
+  createType: (type: Omit<ITypeMeenting, 'id'>) => Promise<void>;
+  deleteType: (typeId: string) => Promise<void>;
+  updateType: (typeId: string, type:  Omit<ITypeMeenting, 'id'>) => Promise<void>;
   fieldsForm: FieldsForm[];
 }
 
@@ -42,6 +46,7 @@ interface Props {
 export default function NetworkingProvider(props: Props) {
   const [attendees, setAttendees] = useState<any[]>([]);
   const [meetings, setMeetings] = useState<IMeeting[]>([]);
+  const [typeMeetings, setTypeMeetings] = useState<ITypeMeenting[]>([]);
   const [DataCalendar, setDataCalendar] = useState<IMeetingCalendar[]>([]);
   const [observers, setObservers] = useState<IObserver[]>([]);
   const [meentingSelect, setMeentingSelect] = useState<IMeeting>(meetingSelectedInitial);
@@ -55,11 +60,13 @@ export default function NetworkingProvider(props: Props) {
       const unsubscribeAttendees = service.listenAttendees(eventId, setAttendees);
       const unsubscribeMeetings = service.listenMeetings(eventId, setMeetings);
       const unsubscribeObservers = serviceConfig.listenObervers(eventId, setObservers);
+      const unsubscribeTypes = serviceConfig.listenTypesMeentings(eventId, setTypeMeetings);
       getFields();
       return () => {
         unsubscribeAttendees();
         unsubscribeMeetings();
         unsubscribeObservers();
+        unsubscribeTypes();
       };
     }
   }, []);
@@ -111,6 +118,7 @@ export default function NetworkingProvider(props: Props) {
       place: meeting.place,
       start: meeting.start,
       end: meeting.end,
+      type : meeting.type
     };
     const response = await service.createMeeting(eventId, newMeenting);
     DispatchMessageService({
@@ -127,6 +135,7 @@ export default function NetworkingProvider(props: Props) {
       place: meeting.place,
       start: meeting.start,
       end: meeting.end,
+      type : meeting.type
     };
     const response = await service.updateMeeting(eventId, meetingId, newMeenting);
 
@@ -157,6 +166,7 @@ export default function NetworkingProvider(props: Props) {
   };
 
   /* --------------------------------- */
+
   const createObserver = async ({ data }: CreateObservers) => {
     DispatchMessageService({
       type: 'loading',
@@ -185,6 +195,33 @@ export default function NetworkingProvider(props: Props) {
 
   const deleteObserver = async (observerID: string) => {
     const response = await serviceConfig.deleteObserver(eventId, observerID);
+    DispatchMessageService({
+      type: response ? 'success' : 'warning',
+      msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion',
+      action: 'show',
+    });
+  };
+
+  /* --------------------------------- */
+  const createType = async (type: Omit<ITypeMeenting, 'id'>) => {
+    const response = await serviceConfig.creatType(eventId, type);
+    DispatchMessageService({
+      type: response ? 'success' : 'warning',
+      msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion completa',
+      action: 'show',
+    });
+  };
+
+  const deleteType = async (typeId: string) => {
+    const response = await serviceConfig.deleteType(eventId, typeId);
+    DispatchMessageService({
+      type: response ? 'success' : 'warning',
+      msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion',
+      action: 'show',
+    });
+  };
+  const updateType = async (typeId: string, type: Omit<ITypeMeenting,'id'>) => {
+    const response = await serviceConfig.updateType(eventId, typeId, type);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
       msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion',
@@ -243,7 +280,7 @@ export default function NetworkingProvider(props: Props) {
         visibleByContacts: 'public',
         _id: { $oid: '614260d226e7862220497eac2' },
       });
-      console.log('fieldsForm',fieldsForm)
+      console.log('fieldsForm', fieldsForm);
       setFieldsForm(fieldsForm);
       return fieldsForm;
     } catch (error) {
@@ -257,6 +294,7 @@ export default function NetworkingProvider(props: Props) {
     closeModal,
     edicion,
     meetings,
+    typeMeetings,
     setMeetings,
     editMeenting,
     createMeeting,
@@ -273,6 +311,9 @@ export default function NetworkingProvider(props: Props) {
     deleteObserver,
     DataCalendar,
     fieldsForm,
+    createType,
+    deleteType,
+    updateType,
   };
 
   return <NetworkingContext.Provider value={values}>{props.children}</NetworkingContext.Provider>;
