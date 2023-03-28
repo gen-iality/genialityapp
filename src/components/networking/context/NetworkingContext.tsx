@@ -118,7 +118,7 @@ export default function NetworkingProvider(props: Props) {
       place: meeting.place,
       start: meeting.start,
       end: meeting.end,
-      type : meeting.type
+      type : meeting.type 
     };
     const response = await service.createMeeting(eventId, newMeenting);
     DispatchMessageService({

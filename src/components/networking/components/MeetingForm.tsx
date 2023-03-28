@@ -74,7 +74,7 @@ export default function MeetingForm() {
           initialValue={formState.place}>
           <Input ref={formRef} name={'place'} type='text' placeholder={'Ej: Salon principal'} />
         </Form.Item>
-        <Form.Item label={'Tipo'} name='type' initialValue={formState.place}>
+        <Form.Item label={'Tipo'} name='type' initialValue={formState.type?.nameType}>
           <Select
             defaultValue=''
             onChange={() => {}}

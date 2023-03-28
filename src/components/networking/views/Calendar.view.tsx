@@ -4,7 +4,7 @@ import React, { useContext, useState } from 'react';
 import { Calendar, View, momentLocalizer } from 'react-big-calendar';
 import { NetworkingContext } from '../context/NetworkingContext';
 import { IEventCalendar, IMeeting, IMeetingCalendar } from '../interfaces/Meetings.interfaces';
-import { meetingSelectedInitial } from '../utils/utils';
+import { meetingSelectedInitial, defaultType } from '../utils/utils';
 import { TypeCalendarView } from '../interfaces/configurations.interfaces';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -52,6 +52,15 @@ export default function MyCalendar() {
     }));
   };
 
+  const eventStyleGetter = (event : IMeeting | IMeetingCalendar)  => {
+    const style = {
+      backgroundColor: event.type ? event.type.style : defaultType.style
+    };
+    return {
+      style: style,
+    };
+  }
+
   return (
     <>
       <Row justify='center' wrap gutter={[0, 16]}>
@@ -74,7 +83,7 @@ export default function MyCalendar() {
             localizer={localizer}
             getNow={now}
             selectable='ignoreEvents'
-            
+            eventPropGetter={eventStyleGetter}
             titleAccessor='name'
             startAccessor='start'
             endAccessor='end'
