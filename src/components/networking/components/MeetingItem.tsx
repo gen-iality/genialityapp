@@ -1,6 +1,5 @@
 import {
   CaretDownOutlined,
-  CaretRightOutlined,
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
@@ -55,11 +54,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
   };
   return (
     <Collapse
-      /* collapsible='header' */
-      expandIcon={({ isActive }) => <div style={{paddingTop: '6px'}}><CaretRightOutlined rotate={isActive ? 90 : 0} /></div>}
-      /* expandIcon={({ isActive }) => (
-        <Button type='text' shape='circle' icon={<CaretDownOutlined rotate={isActive ? 180 : 0} />}></Button>
-      )} */
+      expandIcon={({ isActive }) => <div style={{paddingTop: '6px'}}><CaretDownOutlined rotate={isActive ? 180 : 0} /></div>}
       bordered={false}
       style={{ backgroundColor: '#F9FAFE' }}>
       <Collapse.Panel
@@ -85,15 +80,23 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                 </Tooltip>
               ))}
             </Avatar.Group></Col>
-            <Col><Button icon={<EditOutlined />} onClick={() => editMeenting(meenting)} /></Col>
-            <Col><Button icon={<DeleteOutlined />} onClick={() => onDelete()} danger type='primary' /></Col>            
+            <Col>
+              <Tooltip placement='topLeft' title='Editar'>
+                <Button icon={<EditOutlined />} onClick={() => editMeenting(meenting)} />
+              </Tooltip>
+            </Col>
+            <Col>
+              <Tooltip placement='topLeft' title='Eliminar'>
+                <Button icon={<DeleteOutlined />} onClick={() => onDelete()} danger type='primary' />
+              </Tooltip>
+            </Col>            
           </Row>
         }>
         <Row justify='center' align='middle' gutter={[16, 16]}>
           <Col span={24}>
             <Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '5px' }}>
               <Result
-                style={{ paddingTop: '2px', paddingBottom: '15px' }}
+                style={{ paddingTop: '2px', paddingBottom: '20px' }}
                 status={meentingStart ? 'success' : 'info'}
                 title={meentingStart ? 'La reunión ya inicio' : 'La reunión iniciará en :'}
                 extra={
@@ -129,6 +132,13 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                 </Form>
               </Row>
             </Card>
+            <Row justify='end' style={{paddingTop: '15px'}}>
+              <Col>
+                <Tooltip placement='topLeft' title='Guardar'>
+                  <Button type='primary' disabled={!meentingStart} icon={<SaveOutlined />} onClick={() => onUpdate()} />
+                </Tooltip>
+              </Col>
+            </Row>
             <Table
               rowSelection={{
                 type: 'checkbox',
@@ -143,7 +153,6 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
               columns={columnsParticipants}
               scroll={{x: 'auto'}}
             />
-            <Button disabled={!meentingStart} icon={<SaveOutlined />} onClick={() => onUpdate()} />
           </Col>
         </Row>
       </Collapse.Panel>
