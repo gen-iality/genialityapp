@@ -150,8 +150,15 @@ function SurveyComponent(props: Props) {
 		currentUser: any,
 		eventId: any
 	) {
+		console.log('TEST', {
+			rankingPoints,
+			surveyModel,
+			surveyData,
+			currentUser,
+			eventId,
+		})
 		if (rankingPoints === undefined || rankingPoints === 0) return;
-		if (parseStringBoolean(surveyData.allow_gradable_survey)) return;
+		if (!parseStringBoolean(surveyData.allow_gradable_survey)) return;
 
 		//para guardar el score en el ranking
 		totalPoints += rankingPoints;
@@ -165,7 +172,7 @@ function SurveyComponent(props: Props) {
 			points: rankingPoints,
 		});
 
-		setUserPointsPerSurvey(
+		await setUserPointsPerSurvey(
 			surveyData._id,
 			currentUser,
 			rankingPoints,

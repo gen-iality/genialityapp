@@ -84,7 +84,7 @@ function TriviaEdit(props: any) {
 		allow_anonymous_answers: false,
 		allow_gradable_survey: false,
 		hasMinimumScore: false, // Si la encuesta calificable requiere un puntaje minimo de aprobación
-		isGlobal: false, // determina si la encuesta esta disponible desde cualquier actividad
+		isGlobal: true, // determina si la encuesta esta disponible desde cualquier actividad
 		showNoVotos: false,
 
 		// estado de la encuesta

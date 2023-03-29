@@ -26,9 +26,12 @@ export function listenSurveysData(
     .where('eventId', '==', event_id)
     .onSnapshot((querySnapshot) => {
       const surveys = querySnapshot.docs.map(doc => ({ _id: doc.id, ...doc.data() }) as any)
+      console.log('TEST', { surveys })
       // That's must to do something when the survey change
       const changeInSurvey = changeInSurveyDocChanges(querySnapshot.docChanges());
+      console.log('TEST', { changeInSurvey })
       const  publishedSurveys = surveys.filter(survey => parseStringBoolean(survey.isPublished))
+      console.log('TEST', { publishedSurveys })
       dispatch({ type: 'data_loaded', payload: { publishedSurveys, changeInSurvey } });
     }, onError => console.log('onError:', onError));
 }
@@ -52,6 +55,7 @@ function changeInSurveyDocChanges(docChanges: any) {
 }
 
 export function publishedSurveysByActivity(currentActivity: any, eventSurveys: any, currentUser: any) {
+  console.log('TEST', { currentActivity })
   let publishedSurveys = [];
   if (currentActivity !== null) {
     // Listado de encuestas publicadas del evento
