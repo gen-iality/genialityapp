@@ -61,11 +61,11 @@ export default function MeentignView() {
             icon={<PlusCircleOutlined />}
             size='middle'
             onClick={() => openModal()}>
-            Agregar
+            Crear cita
           </Button>
         </Col>
       </Row>
-      <Row justify='center' wrap gutter={[0, 8]} style={{paddingTop: '10px'}}>
+      <Row justify='center' wrap gutter={[0, 8]} /* style={{paddingTop: '10px'}} */>
         <Col span={24}>
           <MeetingList meentings={orderByDate()} />
         </Col>
