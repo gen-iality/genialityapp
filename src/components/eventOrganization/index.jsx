@@ -100,7 +100,7 @@ const EventOrganization = (props) => {
 
     const _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
     if (events) {
-      setUpcomingEvents(_upcomingEvents);
+      setUpcomingEvents(_upcomingEvents.reverse());
       setLastEvents(_lastEvents.reverse()); // Reverse that list to show older events as first ._.
       setOrganization(_organization);
       setIsLoading(false);
