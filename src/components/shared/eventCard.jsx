@@ -1,10 +1,18 @@
+/** React's libraries */
 import { Component } from 'react';
-import dayjs from 'dayjs';
 import { Link, withRouter } from 'react-router-dom';
+import dayjs from 'dayjs';
+
+/** Antd imports */
 import { Badge, Card, Space, Typography } from 'antd';
+
+/** Helpers and utils */
 import { imageUtils } from '@Utilities/ImageUtils';
+
+/** Context */
 import { HelperContext } from '@context/helperContext/helperContext';
 
+/** Components */
 import StudentGeneralCourseProgress from '@components/StudentProgress/StudentGeneralCourseProgress';
 import QuizApprovedStatus from '../quiz/QuizApprovedStatus';
 
@@ -54,7 +62,8 @@ class EventCard extends Component {
                 </Space>
               </div>
             </span>
-          }>
+          }
+        >
           <Card
             bordered={bordered}
             loading={loading}
@@ -69,9 +78,7 @@ class EventCard extends Component {
                     src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
                     alt="geniality.com.co"
                   />
-                  {this.props.moreDetails && event._id && (
-                    <StudentGeneralCourseProgress eventId={event._id} />
-                  )}
+                  {this.props.moreDetails && event._id && <StudentGeneralCourseProgress eventId={event._id} />}
                   {this.props.moreDetails && (
                     <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
                   )}
@@ -91,9 +98,7 @@ class EventCard extends Component {
                     }
                     alt="geniality.com.co"
                   />
-                  {this.props.moreDetails && event._id && (
-                    <StudentGeneralCourseProgress eventId={event._id} />
-                  )}
+                  {this.props.moreDetails && event._id && <StudentGeneralCourseProgress eventId={event._id} />}
                   {this.props.moreDetails && (
                     <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
                   )}
@@ -107,26 +112,28 @@ class EventCard extends Component {
               style={{}}
               description={
                 <Link to={`/landing/${event._id}`}>
-                <Space size={1} direction="vertical">
-                  <span style={{ fontSize: '12px' }}>
-                    {!this.props.noDates && <Space>
-                      <i className="fas fa-calendar-alt" />
-                      <time dateTime={event.datetime_from}>{dayjs(event.datetime_from).format('DD MMM YYYY')}</time>
-                      {'-'}
-                      <time dateTime={event.datetime_to}>{dayjs(event.datetime_to).format('DD MMM YYYY')}</time>
-                    </Space>}
-                  </span>
-                  <Typography.Text ellipsis={!!isAdmin} style={isAdmin ? styleAdmin : styleNormal}>
-                    {event.name}
-                  </Typography.Text>
-                  <span>
-                    {event.organizer?.name
-                      ? event.organizer?.name
-                      : event.author?.displayName
-                      ? event.author?.displayName
-                      : event.author?.names}
-                  </span>
-                </Space>
+                  <Space size={1} direction="vertical">
+                    <span style={{ fontSize: '12px' }}>
+                      {!this.props.noDates && (
+                        <Space>
+                          <i className="fas fa-calendar-alt" />
+                          <time dateTime={event.datetime_from}>{dayjs(event.datetime_from).format('DD MMM YYYY')}</time>
+                          {'-'}
+                          <time dateTime={event.datetime_to}>{dayjs(event.datetime_to).format('DD MMM YYYY')}</time>
+                        </Space>
+                      )}
+                    </span>
+                    <Typography.Text ellipsis={!!isAdmin} style={isAdmin ? styleAdmin : styleNormal}>
+                      {event.name}
+                    </Typography.Text>
+                    <span>
+                      {event.organizer?.name
+                        ? event.organizer?.name
+                        : event.author?.displayName
+                        ? event.author?.displayName
+                        : event.author?.names}
+                    </span>
+                  </Space>
                 </Link>
               }
             />
