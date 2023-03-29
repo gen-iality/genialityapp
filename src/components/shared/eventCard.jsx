@@ -2,6 +2,7 @@
 import { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
+import PropTypes from 'prop-types';
 
 /** Antd imports */
 import { Badge, Card, Space, Typography } from 'antd';
@@ -22,8 +23,13 @@ const EventImage = imageUtils.EventImage;
 
 class EventCard extends Component {
   static contextType = HelperContext;
+
+  static propTypes = {
+    location: PropTypes.object.isRequired,
+  };
+
   render() {
-    const { event, bordered, right, loading, isAdmin, blockedEvent } = this.props;
+    const { event, bordered, right, loading, isAdmin, blockedEvent, noAvailable, location } = this.props;
     const { eventIsActive } = this.context;
 
     const styleNormal = {
@@ -70,39 +76,73 @@ class EventCard extends Component {
             style={{ width: '100%' }}
             cover={
               event.picture ? (
-                <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
-                  <img
-                    className="animate__animated animate__fadeIn animate__slower"
-                    loading="lazy"
-                    style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-                    src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
-                    alt="geniality.com.co"
-                  />
-                  {this.props.moreDetails && event._id && <StudentGeneralCourseProgress eventId={event._id} />}
-                  {this.props.moreDetails && (
-                    <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
+                <>
+                  {noAvailable ? (
+                    <Link to={location.pathname}>
+                      <img
+                        className="animate__animated animate__fadeIn animate__slower"
+                        loading="lazy"
+                        style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+                        src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
+                        alt="geniality.com.co"
+                      />
+                    </Link>
+                  ) : (
+                    <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+                      <img
+                        className="animate__animated animate__fadeIn animate__slower"
+                        loading="lazy"
+                        style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+                        src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
+                        alt="geniality.com.co"
+                      />
+                      {this.props.moreDetails && event._id && <StudentGeneralCourseProgress eventId={event._id} />}
+                      {this.props.moreDetails && (
+                        <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
+                      )}
+                    </Link>
                   )}
-                </Link>
+                </>
               ) : (
-                <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
-                  <img
-                    className="animate__animated animate__fadeIn animate__slower"
-                    loading="lazy"
-                    style={{ objectFit: 'cover', height: '180px', width: '100%' }}
-                    src={
-                      event.styles
-                        ? event.styles.banner_image && event.styles.banner_image !== undefined
-                          ? event.styles.banner_image
-                          : EventImage
-                        : EventImage
-                    }
-                    alt="geniality.com.co"
-                  />
-                  {this.props.moreDetails && event._id && <StudentGeneralCourseProgress eventId={event._id} />}
-                  {this.props.moreDetails && (
-                    <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
+                <>
+                  {noAvailable ? (
+                    <Link to={location.pathname}>
+                      <img
+                        className="animate__animated animate__fadeIn animate__slower"
+                        loading="lazy"
+                        style={{ objectFit: 'cover', height: '180px', width: '100%' }}
+                        src={
+                          event.styles
+                            ? event.styles.banner_image && event.styles.banner_image !== undefined
+                              ? event.styles.banner_image
+                              : EventImage
+                            : EventImage
+                        }
+                        alt="geniality.com.co"
+                      />
+                    </Link>
+                  ) : (
+                    <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+                      <img
+                        className="animate__animated animate__fadeIn animate__slower"
+                        loading="lazy"
+                        style={{ objectFit: 'cover', height: '180px', width: '100%' }}
+                        src={
+                          event.styles
+                            ? event.styles.banner_image && event.styles.banner_image !== undefined
+                              ? event.styles.banner_image
+                              : EventImage
+                            : EventImage
+                        }
+                        alt="geniality.com.co"
+                      />
+                      {this.props.moreDetails && event._id && <StudentGeneralCourseProgress eventId={event._id} />}
+                      {this.props.moreDetails && (
+                        <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
+                      )}
+                    </Link>
                   )}
-                </Link>
+                </>
               )
             }
             actions={right}
@@ -111,30 +151,63 @@ class EventCard extends Component {
             <Meta
               style={{}}
               description={
-                <Link to={`/landing/${event._id}`}>
-                  <Space size={1} direction="vertical">
-                    <span style={{ fontSize: '12px' }}>
-                      {!this.props.noDates && (
-                        <Space>
-                          <i className="fas fa-calendar-alt" />
-                          <time dateTime={event.datetime_from}>{dayjs(event.datetime_from).format('DD MMM YYYY')}</time>
-                          {'-'}
-                          <time dateTime={event.datetime_to}>{dayjs(event.datetime_to).format('DD MMM YYYY')}</time>
-                        </Space>
-                      )}
-                    </span>
-                    <Typography.Text ellipsis={!!isAdmin} style={isAdmin ? styleAdmin : styleNormal}>
-                      {event.name}
-                    </Typography.Text>
-                    <span>
-                      {event.organizer?.name
-                        ? event.organizer?.name
-                        : event.author?.displayName
-                        ? event.author?.displayName
-                        : event.author?.names}
-                    </span>
-                  </Space>
-                </Link>
+                <>
+                  {noAvailable ? (
+                    <Link to={location.pathname}>
+                      <Space size={1} direction="vertical">
+                        <span style={{ fontSize: '12px' }}>
+                          {!this.props.noDates && (
+                            <Space>
+                              <i className="fas fa-calendar-alt" />
+                              <time dateTime={event.datetime_from}>
+                                {dayjs(event.datetime_from).format('DD MMM YYYY')}
+                              </time>
+                              {'-'}
+                              <time dateTime={event.datetime_to}>{dayjs(event.datetime_to).format('DD MMM YYYY')}</time>
+                            </Space>
+                          )}
+                        </span>
+                        <Typography.Text ellipsis={!!isAdmin} style={isAdmin ? styleAdmin : styleNormal}>
+                          {event.name}
+                        </Typography.Text>
+                        <span>
+                          {event.organizer?.name
+                            ? event.organizer?.name
+                            : event.author?.displayName
+                            ? event.author?.displayName
+                            : event.author?.names}
+                        </span>
+                      </Space>
+                    </Link>
+                  ) : (
+                    <Link to={`/landing/${event._id}`}>
+                      <Space size={1} direction="vertical">
+                        <span style={{ fontSize: '12px' }}>
+                          {!this.props.noDates && (
+                            <Space>
+                              <i className="fas fa-calendar-alt" />
+                              <time dateTime={event.datetime_from}>
+                                {dayjs(event.datetime_from).format('DD MMM YYYY')}
+                              </time>
+                              {'-'}
+                              <time dateTime={event.datetime_to}>{dayjs(event.datetime_to).format('DD MMM YYYY')}</time>
+                            </Space>
+                          )}
+                        </span>
+                        <Typography.Text ellipsis={!!isAdmin} style={isAdmin ? styleAdmin : styleNormal}>
+                          {event.name}
+                        </Typography.Text>
+                        <span>
+                          {event.organizer?.name
+                            ? event.organizer?.name
+                            : event.author?.displayName
+                            ? event.author?.displayName
+                            : event.author?.names}
+                        </span>
+                      </Space>
+                    </Link>
+                  )}
+                </>
               }
             />
           </Card>

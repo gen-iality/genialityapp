@@ -279,6 +279,7 @@ const EventOrganization = (props) => {
                         key={event._id}
                         event={event}
                         action={{ name: 'Ver', url: `landing/${event._id}` }}
+                        noAvailable
                       />
                     </Col>
                   ))
