@@ -26,6 +26,7 @@ class EventCard extends Component {
 
   static propTypes = {
     location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -46,7 +47,7 @@ class EventCard extends Component {
   }
 
   render() {
-    const { event, bordered, right, loading, isAdmin, blockedEvent, noAvailable, location } = this.props;
+    const { event, bordered, right, loading, isAdmin, blockedEvent, noAvailable, location, history } = this.props;
     const { eventIsActive } = this.context;
 
     const styleNormal = {
@@ -107,7 +108,7 @@ class EventCard extends Component {
                       </Link>
                     </>
                   ) : (
-                    <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+                    <a href={`/landing/${event._id}/evento`}>
                       <img
                         className="animate__animated animate__fadeIn animate__slower"
                         loading="lazy"
@@ -119,7 +120,7 @@ class EventCard extends Component {
                       {this.props.moreDetails && (
                         <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
                       )}
-                    </Link>
+                    </a>
                   )}
                 </>
               ) : (
@@ -141,7 +142,7 @@ class EventCard extends Component {
                       />
                     </Link>
                   ) : (
-                    <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+                    <a href={`/landing/${event._id}/evento`}>
                       <img
                         className="animate__animated animate__fadeIn animate__slower"
                         loading="lazy"
@@ -199,7 +200,7 @@ class EventCard extends Component {
                       </Space>
                     </Link>
                   ) : (
-                    <Link to={`/landing/${event._id}`}>
+                    <a href={`/landing/${event._id}/evento`}>
                       <Space size={1} direction="vertical">
                         <span style={{ fontSize: '12px' }}>
                           {!this.props.noDates && (
