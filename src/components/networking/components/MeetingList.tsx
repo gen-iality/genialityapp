@@ -8,7 +8,7 @@ export default function MeetingList({ meentings }: IMeetingList) {
 
   return (
     <Card headStyle={{ border: 'none' }} bodyStyle={{ paddingTop: '0px' }}>
-      <Col span={12} style={{ margin: 10}}>
+      <Col span={12} style={{ marginTop: 10, marginBottom: 10 }}>
         <Search placeholder="Escriba la cita a buscar" onSearch={()=>{}} enterButton />
       </Col>
       <Row gutter={[0, 8]}>

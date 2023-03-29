@@ -1,10 +1,11 @@
 import React, { Fragment , useContext } from 'react';
-import { Form, Input, Button, Row, Transfer, DatePicker, Select } from 'antd';
+import { Form, Input, Button, Row, Transfer, DatePicker, Select, Space, Tooltip } from 'antd';
 import { filterOption, formLayout } from '../utils/utils';
 import moment from 'moment';
 import { useMeetingFormLogic } from '../hooks/useMeetingFormLogic';
 import { NetworkingContext } from '../context/NetworkingContext';
 import locale from 'antd/es/date-picker/locale/es_ES';
+import { CloseCircleOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
 
 const { RangePicker } = DatePicker;
 
@@ -37,7 +38,12 @@ export default function MeetingForm() {
           <Input ref={formRef} name={'name'} type='text' placeholder={'Ej: Acuerdo productos'} />
         </Form.Item>
         <Form.Item
-          label={'Participantes'}
+          label={<Space>
+            <>Participantes</>
+            <Tooltip placement='topLeft' title='Agregar participante'>
+              <Button /* onClick={onClickAgregarUsuario} */ icon={<PlusCircleOutlined />} type='text' />
+            </Tooltip>
+          </Space>}
           name='participants'
           rules={[
             {
@@ -48,6 +54,7 @@ export default function MeetingForm() {
                 return Promise.resolve();
               },
             },
+            { required: true}
           ]}
         >
           <Transfer
@@ -95,10 +102,10 @@ export default function MeetingForm() {
         </Form.Item>
 
         <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Button type='primary' style={{ marginRight: 10 }} htmlType='submit'>
+          <Button type='primary' style={{ marginRight: 10 }} htmlType='submit' icon={<SaveOutlined />}>
             Guardar
           </Button>
-          <Button onClick={closeModal} type='default' style={{ marginRight: 10 }}>
+          <Button onClick={closeModal} type='default' style={{ marginRight: 10 }} danger icon={<CloseCircleOutlined />}>
             Cancelar
           </Button>
         </Row>

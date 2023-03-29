@@ -65,7 +65,7 @@ export default function MeentignView() {
           </Button>
         </Col>
       </Row>
-      <Row justify='center' wrap gutter={[0, 16]} style={{paddingTop: '10px'}}>
+      <Row justify='center' wrap gutter={[0, 8]} style={{paddingTop: '10px'}}>
         <Col span={24}>
           <MeetingList meentings={orderByDate()} />
         </Col>
