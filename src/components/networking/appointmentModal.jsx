@@ -1,4 +1,4 @@
-import { Button, Col, Input, List, Modal, notification, Row, Select, Spin } from 'antd';
+import { Button, Col, DatePicker, Input, List, Modal, notification, Row, Select, Spin, TimePicker } from 'antd';
 import moment from 'moment';
 import { find, filter, keys, pathOr, propEq, whereEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
@@ -166,7 +166,14 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     setAgendaMessage('');
     setOpenAgenda('');
   };
+  const onChange = (value,dateString) => {
+    console.log('Selected Time: ', value);
+    console.log('Formatted Selected Time: ', dateString);
+  };
 
+  const onOk = (value) => {
+    console.log('onOk: ', value);
+  };
   return (
     <Modal
       visible={!!targetEventUserId}
@@ -180,24 +187,11 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
         </Row>
       ) : (
         <div>
-          <Row justify='end'>
-            <Select
-              style={{ width: 200 }}
-              value={selectedDate}
-              onChange={(newSelectedDate) => {
-                setSelectedDate(newSelectedDate);
-                setAgendaMessage('');
-                setOpenAgenda('');
-              }}>
-              {eventDatesRange &&
-                eventDatesRange.map((eventDate) => (
-                  <Option value={eventDate} key={eventDate}>
-                    {moment(eventDate).format('D MMMM')}
-                  </Option>
-                ))}
-            </Select>
-          </Row>
           <div>
+            <Row justify='space-between' style={{margin: 5}}>
+            <DatePicker showTime onChange={onChange} onOk={onOk}  />
+            <Button type='primary' >Agendar cita</Button>
+            </Row>
             <List
               bordered
               itemLayout='vertical'
