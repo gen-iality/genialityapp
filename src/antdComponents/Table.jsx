@@ -61,6 +61,7 @@ const Table = (props) => {
     updateMails,
     takeOriginalHeader,
     footer = undefined,
+    rowSelection = rowSelection
   } = props;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -331,6 +332,7 @@ const Table = (props) => {
         )}
         scroll={scroll}
         footer={() => footer}
+        rowSelection={rowSelection}
       />
     </Suspense>
   );
