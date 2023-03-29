@@ -124,10 +124,18 @@ const Landing = props => {
   }
 
   useEffect(() => {
+    if (!cEventContext.value?._id) return
+    if (!cEventUser.value?._id) {
+      history.push(`/organization/${cEventContext.value?.organizer._id}/events`)
+    }
+  }, [cEventUser.value, cEventContext.value])
+
+  useEffect(() => {
     if (!cEventContext.value?._id) return;
     if (!cEventUser.value?._id) return;
     setActivitiesAttendee([]);
     loadData();
+    console.info('event is asked', cEventContext.value?._id)
   }, [cEventContext.value, cEventUser.value]);
 
   useEffect(() => {
