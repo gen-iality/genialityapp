@@ -54,7 +54,6 @@ function AgendaActivityItem(props) {
 
     const loadData = async () => {
       // Ask if that activity (item) is stored in <ID>_event_attendees
-      console.log('item._id', item._id)
       const activity_attendee = await firestore
         .collection(`${item._id}_event_attendees`)
         .doc(cEventUser.value._id)

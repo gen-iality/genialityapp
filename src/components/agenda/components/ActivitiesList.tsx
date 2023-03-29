@@ -103,7 +103,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               useEffect(() => {
                 if (!cEventUserId) return;
                 (async () => {
-                  console.log('item._id', agenda._id);
                   const activity_attendee = await firestore
                     .collection(`${agenda._id}_event_attendees`)
                     .doc(cEventUserId)
