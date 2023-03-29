@@ -77,7 +77,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     esbuild: {
-      // jsxInject: `import React from 'react'`,
+      jsxInject: `import React from 'react'`,
       jsxFactory: 'h',
       jsxFragment: 'Fragment',
     },
