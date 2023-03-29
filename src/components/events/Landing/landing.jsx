@@ -123,12 +123,12 @@ const Landing = props => {
     loadData();
   }
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (!cEventContext.value?._id) return
     if (!cEventUser.value?._id) {
       window.location.href = `/organization/${cEventContext.value?.organizer._id}/events`
     }
-  }, [cEventUser.value, cEventContext.value])
+  }, [cEventUser.value, cEventContext.value]) */
 
   useEffect(() => {
     if (!cEventContext.value?._id) return;
