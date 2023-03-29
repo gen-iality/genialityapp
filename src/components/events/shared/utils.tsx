@@ -111,7 +111,7 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
-        name: '  Reporte de networking',
+        name: '  Networking',
         path: '/reportNetworking',
         key: 'reporte-networking',
         onClick: handleClick,

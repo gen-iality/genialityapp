@@ -1,4 +1,4 @@
-export default function usePrepareRoomInfoData (context: any) {
+export default function prepareRoomInfoData (context: any) {
   const {
     roomStatus,
     platform,

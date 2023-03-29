@@ -15,7 +15,7 @@ type HookCallbackConfig = {
   setCategories: FunctionSetter,
 };
 
-export default async function useLoadExtraAgendaData (event: EventType, callbacks: HookCallbackConfig) {
+export default async function loadExtraAgendaData (event: EventType, callbacks: HookCallbackConfig) {
   try {
     // NOTE: The tickets are not used
     const remoteTickets = await eventTicketsApi.getAll(event?._id);

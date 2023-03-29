@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
 import { firestore } from '../../helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
@@ -33,6 +33,7 @@ import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
 import { HelperContext } from '@/context/helperContext/helperContext';
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
 import { UsersPerEventOrActivity } from './utils/utils';
+import printBagdeUser from '../badge/utils/printBagdeUser';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -810,7 +811,7 @@ class ListEventUser extends Component {
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
 
     return (
-      <React.Fragment>
+      <Fragment>
         <Header
           title={
             componentKey === 'activity-checkin'
@@ -873,7 +874,7 @@ class ListEventUser extends Component {
           titleTable={
             <Row gutter={[6, 6]}>
               {!activityId && (
-                <React.Fragment>
+                <Fragment>
                   <Col>
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
@@ -894,7 +895,7 @@ class ListEventUser extends Component {
                       </span>
                     </Tag>
                   </Col>
-                </React.Fragment>
+                </Fragment>
               )}
 
               <Col>
@@ -1068,7 +1069,7 @@ class ListEventUser extends Component {
             </Col>
           </Row>
         </Drawer>
-      </React.Fragment>
+      </Fragment>
     );
   }
 }

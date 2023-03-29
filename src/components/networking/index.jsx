@@ -30,11 +30,12 @@ import ContactList from './contactList';
 import RequestList from './requestList';
 import withContext from '../../context/withContext';
 import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../helpers/netWorkingFunctions';
-const { Meta } = Card;
-const { TabPane } = Tabs;
 import { setVirtualConference } from '../../redux/virtualconference/actions';
 import { connect } from 'react-redux';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+
+const { Meta } = Card;
+const { TabPane } = Tabs;
 
 class ListEventUser extends Component {
   constructor(props) {

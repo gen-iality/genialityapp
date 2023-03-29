@@ -191,7 +191,7 @@ function AddProduct(props) {
           action: 'show',
         });
       } catch (e) {
-        e;
+        // e;
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',

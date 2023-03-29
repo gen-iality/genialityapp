@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, createElement, Fragment } from 'react';
 import { Avatar, Button, List, Card, Spin, Alert, Popconfirm, Space, Typography, Image, Tooltip } from 'antd';
 import TimeStamp from 'react-timestamp';
 import { MessageOutlined, LikeOutlined, DeleteOutlined, LikeFilled } from '@ant-design/icons';
@@ -14,7 +14,7 @@ import { DispatchMessageService } from '../../context/MessageService';
 
 const IconText = ({ icon, text, onSubmit, color, megusta }) => (
   <Button htmlType='submit' type='text' onClick={onSubmit} style={{ color: megusta == 1 ? color : 'gray' }}>
-    {React.createElement(icon, { style: { marginRight: '2px', fontSize: '20px' } })}
+    {createElement(icon, { style: { marginRight: '2px', fontSize: '20px' } })}
     {text}
   </Button>
 );
@@ -61,7 +61,7 @@ class WallList extends Component {
 
   innershowComments = async (postId, commentsCount) => {
     let newdisplayedComments = { ...this.state.displayedComments };
-    this.state.displayedComments[postId];
+    // this.state.displayedComments[postId];
     //Mostramos los comentarios
     if (!this.state.displayedComments[postId]) {
       let content = (

@@ -22,7 +22,7 @@ class Pagination extends Component {
   }
 
   getDerivedStateFromProps(nextProps) {
-    if (nextProps.items.length !== this.props.items.length || nextProps.change !== this.props.change) {
+    if (nextProps?.items?.length !== this.props?.items?.length || nextProps?.change !== this.props?.change) {
       let auxArr = nextProps.items;
       this.setPage(nextProps.initialPage, auxArr);
     }

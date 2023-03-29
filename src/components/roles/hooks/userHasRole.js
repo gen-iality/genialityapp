@@ -1,4 +1,4 @@
-const userHasRole = (ifTheRoleExists, cEventUserRolId) => {
+export const userHasRole = (ifTheRoleExists, cEventUserRolId) => {
   if (!cEventUserRolId) {
     return false;
   }
@@ -10,4 +10,4 @@ const userHasRole = (ifTheRoleExists, cEventUserRolId) => {
   return false;
 };
 
-export default userHasRole;
+// export default userHasRole;

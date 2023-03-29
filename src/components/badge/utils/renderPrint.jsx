@@ -1,4 +1,5 @@
 import QRCode from 'qrcode.react';
+import { Fragment } from 'react';
 
 const renderPrint = (badges) => {
   let items = [];
@@ -59,7 +60,7 @@ const renderPrint = (badges) => {
     }
   }
   return items.map((item, key) => {
-    return <React.Fragment key={key}>{item}</React.Fragment>;
+    return <Fragment key={key}>{item}</Fragment>;
   });
 };
 export default renderPrint;

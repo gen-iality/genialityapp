@@ -9,7 +9,7 @@ import ThisRouteCanBeDisplayed from '../../Landing/helpers/thisRouteCanBeDisplay
 import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 
 function SurveyDrawer(props: any) {
-  let cSurveys = UseSurveysContext();
+  let cSurveys: any = UseSurveysContext();
   let cUser = UseCurrentUser();
 
   // Estado para hacer visible el ranking

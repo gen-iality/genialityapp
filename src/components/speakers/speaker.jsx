@@ -82,7 +82,10 @@ function Speaker(props) {
       setEditDataIsLoading(true);
       const info = await SpeakersApi.getOne(state.edit, eventID);
 
-      info ? setData({ ...info, newItem: false }) : '';
+      // info ? setData({ ...info, newItem: false }) : '';
+      if (info) {
+        setData({ ...info, newItem: false })
+      }
 
       setShowDescription_activity(info?.description_activity);
       const field = fieldsSelect(info.category_id, categoriesData);

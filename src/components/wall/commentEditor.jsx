@@ -18,10 +18,10 @@ const { TextArea } = Input;
 const CommentEditor = ({ onSubmit, item }) => {
   let [visibleNoUser, setVisibleNoUser] = useState(false);
 
-  return <RenderEditor onSubmit={onSubmit} item={item} visibleNoUser={visibleNoUser} />;
+  return <RenderEditor onSubmit={onSubmit} item={item} visibleNoUser={visibleNoUser} setVisibleNoUser={setVisibleNoUser} />;
 };
 
-const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
+const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item, setVisibleNoUser }) => {
   const { comment, setComment, itemcomment, setItemComment } = useContext(WallContext);
   return (
     <>

@@ -65,7 +65,7 @@ export const Actions = {
     if (unsafe) return publicInstance.delete(`${url}${id}`).then(({ data }) => data);
     return privateInstance.delete(`${url}/${id}`).then(({ data }) => data);
   },
-  edit: async (url, data, unsafe) => {
+  edit: async (url, data, unsafe, id) => {
     if (unsafe) return publicInstance.put(`${url}`, data).then(({ data }) => data);
     return privateInstance.put(`${url}/${id}`, data).then(({ data }) => data);
   },

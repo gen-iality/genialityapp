@@ -60,6 +60,8 @@ const parseStringNumber = (value: string | number) => {
 };
 
 function TriviaEdit(props: any) {
+	const { eventIsActive } = useHelper();
+	const cEventIsActive = eventIsActive;
 	const [state, setState] = useState<State>({
 		_id: '',
 		idSurvey: '',
@@ -82,7 +84,7 @@ function TriviaEdit(props: any) {
 		allow_anonymous_answers: false,
 		allow_gradable_survey: false,
 		hasMinimumScore: false, // Si la encuesta calificable requiere un puntaje minimo de aprobación
-		isGlobal: false, // determina si la encuesta esta disponible desde cualquier actividad
+		isGlobal: true, // determina si la encuesta esta disponible desde cualquier actividad
 		showNoVotos: false,
 
 		// estado de la encuesta
@@ -791,8 +793,7 @@ function TriviaEdit(props: any) {
 			title: 'Opciones',
 			key: 'action',
 			render: (text: any, record: any) => {
-				const { eventIsActive } = useHelper();
-				const cEventIsActive = eventIsActive;
+				
 				return (
 					<Row gutter={[8, 8]}>
 						<Col>
