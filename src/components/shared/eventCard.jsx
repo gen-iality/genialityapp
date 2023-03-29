@@ -160,7 +160,7 @@ class EventCard extends Component {
                       {this.props.moreDetails && (
                         <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
                       )}
-                    </Link>
+                    </a>
                   )}
                 </>
               )
@@ -225,7 +225,7 @@ class EventCard extends Component {
                             : event.author?.names}
                         </span>
                       </Space>
-                    </Link>
+                    </a>
                   )}
                 </>
               }
