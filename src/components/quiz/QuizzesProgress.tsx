@@ -136,8 +136,6 @@ function QuizzesProgress(props: QuizzesProgressProps) {
 
   return (
     <section>
-      {console.log('1. passedCount', passedCount)}
-      {console.log('1. totalCourses', totalCourses)}
       {totalCourses > 0 && (<>
         <Typography.Text strong>{props.eventName}:</Typography.Text>
         <br />

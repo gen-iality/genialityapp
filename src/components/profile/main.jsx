@@ -551,8 +551,6 @@ const MainProfile = (props) => {
                   </Row>
                 )}
               </TabPane>
-              {console.log('1. events', events)}
-              {console.log('1. tickets', tickets)}
 
               {userEventSurveys.length > 0  && (
                 <TabPane tab="Calificaciones" key="5">

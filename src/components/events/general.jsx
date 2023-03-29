@@ -757,7 +757,6 @@ class General extends Component {
     return (
       <>
         {/* RESTRICIONES */}
-        {console.log('event', event)}
         <Form onFinish={this.submit} {...formLayout}>
           <Header title="Datos del curso" save form remove={this.deleteEvent} edit={this.state.event._id} />
           <Tabs defaultActiveKey="1">

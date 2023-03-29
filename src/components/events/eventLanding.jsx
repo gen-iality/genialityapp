@@ -75,8 +75,6 @@ class EventLanding extends Component {
     return (
       <div /* style={{ marginBottom: 12 }} */>
         {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
-        {console.log('this.props.cEvent.value', this.props.cEvent.value)}
-
         {this.props.cEvent.value && (
           <>
             <StudentSelfCourseProgress
