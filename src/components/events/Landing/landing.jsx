@@ -224,7 +224,7 @@ const Landing = props => {
         }
       });
     }
-  }, [cEventContext.status, cEventUser.status, cEventUser.value]);
+  }, [cEventContext.status, cEventUser.status, cEventUser.value, location]);
 
   if (cEventContext.status === 'LOADING') return <Spin />;
 
