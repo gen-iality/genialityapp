@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 
 /** Antd imports */
-import { Badge, Card, Space, Typography } from 'antd';
+import { Badge, Card, Modal, Space, Typography } from 'antd';
 
 /** Helpers and utils */
 import { imageUtils } from '@Utilities/ImageUtils';
@@ -27,6 +27,23 @@ class EventCard extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpenModal: false,
+    };
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+  }
+
+  openModal() {
+    this.setState({ isOpenModal: true });
+  }
+
+  closeModal() {
+    this.setState({ isOpenModal: false });
+  }
 
   render() {
     const { event, bordered, right, loading, isAdmin, blockedEvent, noAvailable, location } = this.props;
@@ -78,15 +95,17 @@ class EventCard extends Component {
               event.picture ? (
                 <>
                   {noAvailable ? (
-                    <Link to={location.pathname}>
-                      <img
-                        className="animate__animated animate__fadeIn animate__slower"
-                        loading="lazy"
-                        style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-                        src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
-                        alt="geniality.com.co"
-                      />
-                    </Link>
+                    <>
+                      <Link to={location.pathname} onClick={() => this.openModal()}>
+                        <img
+                          className="animate__animated animate__fadeIn animate__slower"
+                          loading="lazy"
+                          style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+                          src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
+                          alt="geniality.com.co"
+                        />
+                      </Link>
+                    </>
                   ) : (
                     <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
                       <img
@@ -106,7 +125,7 @@ class EventCard extends Component {
               ) : (
                 <>
                   {noAvailable ? (
-                    <Link to={location.pathname}>
+                    <Link to={location.pathname} onClick={() => this.openModal()}>
                       <img
                         className="animate__animated animate__fadeIn animate__slower"
                         loading="lazy"
@@ -153,7 +172,7 @@ class EventCard extends Component {
               description={
                 <>
                   {noAvailable ? (
-                    <Link to={location.pathname}>
+                    <Link to={location.pathname} onClick={() => this.openModal()}>
                       <Space size={1} direction="vertical">
                         <span style={{ fontSize: '12px' }}>
                           {!this.props.noDates && (
@@ -212,6 +231,11 @@ class EventCard extends Component {
             />
           </Card>
         </Badge.Ribbon>
+        {this.state.isOpenModal && (
+          <Modal title="Información importante" closable footer={false} visible onCancel={() => this.closeModal()}>
+            El evento será habilitado próximamente
+          </Modal>
+        )}
       </div>
     );
   }
