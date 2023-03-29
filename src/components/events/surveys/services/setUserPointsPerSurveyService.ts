@@ -17,7 +17,7 @@ async function setUserPointsPerSurvey(surveyId: string, user: any, totalPoints: 
     partialPoints = doc.data().correctAnswers;
   }
   //Guarda el puntaje del usuario
-  firestore
+  await firestore
     .collection('surveys')
     .doc(surveyId)
     .collection('ranking')
