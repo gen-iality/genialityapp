@@ -123,7 +123,7 @@ export default function NetworkingProvider(props: Props) {
     const response = await service.createMeeting(eventId, newMeenting);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion',
+      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la informacion',
       action: 'show',
     });
   };
@@ -141,7 +141,7 @@ export default function NetworkingProvider(props: Props) {
 
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion',
+      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la información',
       action: 'show',
     });
   };
@@ -160,7 +160,7 @@ export default function NetworkingProvider(props: Props) {
     });
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? 'Información guardada correctamente!' : 'No ha sido posible eliminar el campo',
+      msj: response ? '¡Información guardada correctamente!' : 'No ha sido posible eliminar el campo',
       action: 'show',
     });
   };
@@ -187,7 +187,7 @@ export default function NetworkingProvider(props: Props) {
     DispatchMessageService({
       type: !responses.includes(false) ? 'success' : 'warning',
       msj: !responses.includes(false)
-        ? 'Información guardada correctamente!'
+        ? '¡Información guardada correctamente!'
         : 'No se logro guardar la informacion completa',
       action: 'show',
     });
@@ -197,7 +197,7 @@ export default function NetworkingProvider(props: Props) {
     const response = await serviceConfig.deleteObserver(eventId, observerID);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion',
+      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la informacion',
       action: 'show',
     });
   };
@@ -207,7 +207,7 @@ export default function NetworkingProvider(props: Props) {
     const response = await serviceConfig.creatType(eventId, type);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion completa',
+      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la informacion completa',
       action: 'show',
     });
   };
@@ -216,7 +216,7 @@ export default function NetworkingProvider(props: Props) {
     const response = await serviceConfig.deleteType(eventId, typeId);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion',
+      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la informacion',
       action: 'show',
     });
   };
@@ -224,7 +224,7 @@ export default function NetworkingProvider(props: Props) {
     const response = await serviceConfig.updateType(eventId, typeId, type);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? 'Información guardada correctamente!' : 'No se logro guardar la informacion',
+      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la informacion',
       action: 'show',
     });
   };
@@ -280,7 +280,7 @@ export default function NetworkingProvider(props: Props) {
         visibleByContacts: 'public',
         _id: { $oid: '614260d226e7862220497eac2' },
       });
-      console.log('fieldsForm', fieldsForm);
+      //console.log('fieldsForm', fieldsForm);
       setFieldsForm(fieldsForm);
       return fieldsForm;
     } catch (error) {

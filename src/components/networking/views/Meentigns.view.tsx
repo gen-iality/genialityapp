@@ -34,7 +34,7 @@ export default function MeentignView() {
   return (
     <>
       <CreateUserModal
-        title={'Agregar Usuario'}
+        title={'Agregar usuario'}
         createModalVisible={createModalVisible}
         onCancelModalCreateUser={onCancelModalAgregarUsuario}
         onOk={onOk}
@@ -42,12 +42,12 @@ export default function MeentignView() {
       {modal && (
         <Modal
           visible={modal}
-          title={edicion ? 'Editar reunion' : 'Agregar Reunion'}
+          title={edicion ? 'Editar reunión' : 'Agregar Reunión'}
           footer={false}
           onCancel={closeModal}
           okText={'Guardar'}>
           <Row justify='end'>
-            <Button onClick={onClickAgregarUsuario}>Agregar usuario</Button>
+            <Button onClick={onClickAgregarUsuario} icon={<PlusCircleOutlined />}>Agregar participante</Button>
           </Row>
 
           <MeetingForm />
