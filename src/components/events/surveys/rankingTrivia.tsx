@@ -10,7 +10,7 @@ import { UseEventContext } from '../../../context/eventContext';
 
 export default function RankingTrivia(props: any) {
   const { setGameRanking, setMyScore } = useHelper();
-  let cSurveys = UseSurveysContext();
+  let cSurveys: any = UseSurveysContext();
   let cUser = UseCurrentUser();
   let eventContext = UseEventContext();
   let currentSurvey = cSurveys.currentSurvey;
