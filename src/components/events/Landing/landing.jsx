@@ -126,7 +126,7 @@ const Landing = props => {
   useEffect(() => {
     if (!cEventContext.value?._id) return
     if (!cEventUser.value?._id) {
-      history.push(`/organization/${cEventContext.value?.organizer._id}/events`)
+      window.location.href = `/organization/${cEventContext.value?.organizer._id}/events`
     }
   }, [cEventUser.value, cEventContext.value])
 
