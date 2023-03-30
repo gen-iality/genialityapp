@@ -38,6 +38,7 @@ export default function MeetingForm() {
           <Input ref={formRef} name={'name'} type='text' placeholder={'Ej: Acuerdo productos'} />
         </Form.Item>
         <Form.Item
+          required
           label={<Space>
             <>Participantes</>
             <Tooltip placement='topLeft' title='Agregar participante'>
@@ -58,7 +59,6 @@ export default function MeetingForm() {
           ]}
         >
           <Transfer
-            /* style={{ width: '100%' }} */
             listStyle={{width: 500}}
             filterOption={filterOption}
             showSearch
