@@ -5,10 +5,11 @@ import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 import withContext from '../../context/withContext';
-
+import * as services from './services/meenting.service'
 import { getDatesRange } from '../../helpers/utils';
 import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
+import { typeAttendace } from './interfaces/Meetings.interfaces';
 
 const { Option } = Select;
 
@@ -61,13 +62,13 @@ const MESSAGE_MAX_LENGTH = 200;
 function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, closeModal, cEvent }) {
   const [openAgenda, setOpenAgenda] = useState('');
   const [agendaMessage, setAgendaMessage] = useState('');
+  const [date, setDate] = useState(null);
   const [timetable, setTimetable] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [reloadFlag, setReloadFlag] = useState(false);
   const [eventDatesRange, setEventDatesRange] = useState(false);
   const initialDate = cEvent?.value?.datetime_from.split(' ')   
-
 
   useEffect(() => {
     if (targetEventUserId === null || cEvent.value === null || cEventUser.value === null) return;
@@ -167,13 +168,45 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     setAgendaMessage('');
     setOpenAgenda('');
   };
-  const onChange = (value,dateString) => {
-    console.log('Selected Time: ', value);
-    console.log('Formatted Selected Time: ', dateString);
-  };
 
-  const onOk = (value) => {
-    console.log('onOk: ', value);
+
+  const onSubmit = async () => {
+    if(!date) return notification.warning({message:  'Debes seleccionar una fecha'});
+    
+    const startDate = date.toString();
+    const endDate = date.add(20, 'minutes').toString();
+    const eventId = cEvent.value._id;
+
+    const participants = [
+      {
+        id: cEventUser.value.user._id,
+        name: cEventUser.value.user.names,
+        email: cEventUser.value.user.email || '',
+        attendance: typeAttendace.unconfirmed,
+      },
+      {
+        id: targetEventUser.user._id,
+        name: targetEventUser.user.names,
+        email: targetEventUser.user.email || '',
+        attendance: typeAttendace.unconfirmed,
+      },
+    ];
+
+    const meenting = {
+      name: `Reunion con ${targetEventUser.user.names}`,
+      participants: participants,
+      place: 'evius meet',
+      start: startDate,
+      end: endDate,
+      dateUpdated: Date.now(),
+    };
+
+    const response = await services.createMeeting(eventId, meenting);
+    setDate(null)
+    notification.open({
+      type : response ? 'success' : 'warning',
+      message : response ? '¡Se envio la solicitud de cita!' : 'No se logro agendar la cita'
+    })
   };
   const disabledDate = (current) => {
     const initial  = cEvent?.value?.datetime_from
@@ -195,8 +228,8 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
         <div>
           <div>
             <Row justify='space-between' style={{margin: 5}}>
-            <DatePicker format={'DD-MM-YYYY hh:mm:ss'}  showTime={{ defaultValue: moment(initialDate[1] || '00:00:00', 'HH:mm:ss') }} disabledDate={disabledDate} onChange={onChange} onOk={onOk}  />
-            <Button type='primary' >Agendar cita</Button>
+            <DatePicker format={'DD-MM-YYYY hh:mm:ss'}  showTime={{ defaultValue: moment(initialDate[1] || '00:00:00', 'HH:mm:ss') }} disabledDate={disabledDate} onOk={(value)=>setDate(value)}  />
+            <Button type='primary' onClick={onSubmit} >Agendar cita</Button>
             </Row>
             <List
               bordered
