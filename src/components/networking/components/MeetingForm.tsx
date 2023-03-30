@@ -22,7 +22,7 @@ export default function MeetingForm() {
     closeModal,
   } = useMeetingFormLogic();
 
-  const {typeMeetings} = useContext(NetworkingContext);
+  const {typeMeetings, onClickAgregarUsuario} = useContext(NetworkingContext);
 
   return (
     <Fragment>
@@ -41,7 +41,7 @@ export default function MeetingForm() {
           label={<Space>
             <>Participantes</>
             <Tooltip placement='topLeft' title='Agregar participante'>
-              <Button /* onClick={onClickAgregarUsuario} */ icon={<PlusCircleOutlined />} type='text' />
+              <Button  onClick={onClickAgregarUsuario}  icon={<PlusCircleOutlined />} type='text' />
             </Tooltip>
           </Space>}
           name='participants'

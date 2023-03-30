@@ -14,6 +14,7 @@ import { FieldsForm } from '../components/modal-create-user/interface/KioskRegis
 interface NetworkingContextType {
   eventId: string;
   modal: boolean;
+  createModalVisible: boolean;
   edicion: boolean;
   attendees: any;
   meetings: IMeeting[];
@@ -22,8 +23,11 @@ interface NetworkingContextType {
   DataCalendar: IMeetingCalendar[];
   meentingSelect: IMeeting;
   setMeentingSelect: React.Dispatch<React.SetStateAction<IMeeting>>;
+  setCreateModalVisible : React.Dispatch<React.SetStateAction<boolean>>
   editMeenting: (MeentingUptade: IMeeting) => void;
   closeModal: () => void;
+  onClickAgregarUsuario: () => void;
+  onCancelModalAgregarUsuario: () => void;
   attendeesList: () => Omit<IObserver, 'id'>[];
   openModal: (mode?: string) => void;
   createMeeting: (meeting: Omit<IMeeting, 'id'>) => void;
@@ -51,6 +55,7 @@ export default function NetworkingProvider(props: Props) {
   const [observers, setObservers] = useState<IObserver[]>([]);
   const [meentingSelect, setMeentingSelect] = useState<IMeeting>(meetingSelectedInitial);
   const [modal, setModal] = useState(false);
+  const [createModalVisible, setCreateModalVisible] = useState(false);
   const [edicion, setEdicion] = useState(false);
   const cUser = UseUserEvent();
   const eventId = cUser?.value?.event_id;
@@ -84,6 +89,16 @@ export default function NetworkingProvider(props: Props) {
       setDataCalendar(dataArray);
     }
   }, [meetings, observers]);
+
+  const onClickAgregarUsuario = () => {
+    closeModal();
+    setCreateModalVisible(true);
+  };
+
+  const onCancelModalAgregarUsuario = () => {
+    setCreateModalVisible(false);
+    openModal();
+  };
 
   const editMeenting = (meentign: IMeeting) => {
     setMeentingSelect(meentign);
@@ -290,7 +305,11 @@ export default function NetworkingProvider(props: Props) {
 
   const values = {
     modal,
+    createModalVisible,
     openModal,
+    onClickAgregarUsuario,
+    onCancelModalAgregarUsuario,
+    setCreateModalVisible,
     closeModal,
     edicion,
     meetings,

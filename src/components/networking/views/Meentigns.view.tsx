@@ -9,8 +9,7 @@ import { IMeeting } from '../interfaces/Meetings.interfaces';
 import CreateUserModal from '../components/modal-create-user/CreateUserModal';
 
 export default function MeentignView() {
-  const { meetings, modal, edicion, closeModal, openModal } = useContext(NetworkingContext);
-  const [createModalVisible, setCreateModalVisible] = useState(false);
+  const { meetings, modal, edicion, closeModal, openModal, onCancelModalAgregarUsuario, createModalVisible, setCreateModalVisible } = useContext(NetworkingContext);
   const orderByDate = (): IMeeting[] => {
     return meetings?.sort((a: IMeeting, b: IMeeting) => {
       const fechaA = new Date(a.start);
@@ -18,14 +17,7 @@ export default function MeentignView() {
       return fechaA.getTime() - fechaB.getTime();
     });
   };
-  const onClickAgregarUsuario = () => {
-    closeModal();
-    setCreateModalVisible(true);
-  };
-  const onCancelModalAgregarUsuario = () => {
-    setCreateModalVisible(false);
-    openModal();
-  };
+
   const onOk = () => {
     setCreateModalVisible(false);
     openModal();
@@ -46,10 +38,6 @@ export default function MeentignView() {
           footer={false}
           onCancel={closeModal}
           okText={'Guardar'}>
-          <Row justify='end'>
-            <Button onClick={onClickAgregarUsuario} icon={<PlusCircleOutlined />}>Agregar participante</Button>
-          </Row>
-
           <MeetingForm />
         </Modal>
       )}
