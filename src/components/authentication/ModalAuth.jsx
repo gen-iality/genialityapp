@@ -96,6 +96,11 @@ const ModalAuth = (props) => {
 
           helperDispatch({ type: 'showLogin', visible: false });
         } else {
+          if (cEvent.value?.organiser?._id) {
+            console.log('Vaaaaamonos')
+            window.location.href =`/organization/${cEvent.value.organiser._id}/events`
+          }
+          console.debug(window.location.href, cEvent.value)
           isModalVisible();
         }
       });
