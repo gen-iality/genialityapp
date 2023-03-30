@@ -61,7 +61,7 @@ export default function MeetingForm() {
           ]}
         >
           <Transfer
-            listStyle={{width: 500}}
+            listStyle={{width: '100%'}}
             filterOption={filterOption}
             showSearch
             dataSource={attendeesTransfer}
