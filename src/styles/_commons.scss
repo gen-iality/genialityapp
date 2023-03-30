@@ -1109,3 +1109,21 @@ a {
 .desplazar::-webkit-scrollbar-track:active {
 	background: transparent;
 }
+
+.styleButton {
+	display: inline-flex;
+	align-items: center;
+	overflow:hidden;
+	width: auto;
+	max-width: 32px; /** I'm animating max-width because width needs to be auto, and auto can't be animated **/
+	-webkit-transition: max-width 0.5s;
+	transition: max-width 0.5s;
+}
+
+.styleButton:hover {
+	max-width: 300px;
+}
+
+.styleText {
+	white-space: nowrap;
+}

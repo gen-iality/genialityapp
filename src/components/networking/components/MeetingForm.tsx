@@ -41,11 +41,16 @@ export default function MeetingForm() {
           required
           label={<Space>
             <>Participantes</>
-            <Tooltip placement='topLeft' title='Agregar participante'>
-              <Button onClick={onClickAgregarUsuario} icon={<PlusCircleOutlined />} type='text'>
-                {/* Agregar participante */}
+            {/* <Tooltip placement='topLeft' title='Agregar participante'> */}
+              <Button 
+                onClick={onClickAgregarUsuario} 
+                icon={<PlusCircleOutlined />} 
+                type='text'
+                className='styleButton'
+              >
+                <span className='styleText'>Agregar participante</span>
               </Button>
-            </Tooltip>
+            {/* </Tooltip> */}
           </Space>}
           name='participants'
           rules={[
