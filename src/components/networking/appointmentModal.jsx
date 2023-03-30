@@ -66,10 +66,11 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   const [loading, setLoading] = useState(true);
   const [reloadFlag, setReloadFlag] = useState(false);
   const [eventDatesRange, setEventDatesRange] = useState(false);
+  const initialDate = cEvent?.value?.datetime_from.split(' ')   
+
 
   useEffect(() => {
     if (targetEventUserId === null || cEvent.value === null || cEventUser.value === null) return;
-
     const loadData = async () => {
       setLoading(true);
       setTimetable({});
@@ -174,6 +175,11 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   const onOk = (value) => {
     console.log('onOk: ', value);
   };
+  const disabledDate = (current) => {
+    const initial  = cEvent?.value?.datetime_from
+    const finish  = cEvent?.value?.datetime_to
+    return current && (current < moment(initial)  || current > moment(finish));
+  };
   return (
     <Modal
       visible={!!targetEventUserId}
@@ -189,7 +195,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
         <div>
           <div>
             <Row justify='space-between' style={{margin: 5}}>
-            <DatePicker showTime onChange={onChange} onOk={onOk}  />
+            <DatePicker format={'DD-MM-YYYY hh:mm:ss'}  showTime={{ defaultValue: moment(initialDate[1] || '00:00:00', 'HH:mm:ss') }} disabledDate={disabledDate} onChange={onChange} onOk={onOk}  />
             <Button type='primary' >Agendar cita</Button>
             </Row>
             <List
