@@ -6,7 +6,7 @@ import {
   SaveOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table, Modal } from 'antd';
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { IParticipants, typeAttendace, IMeentingItem } from '../interfaces/Meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
 // eslint-disable-next-line no-use-before-define
@@ -16,6 +16,7 @@ import { useContext } from 'react';
 import { NetworkingContext } from '../context/NetworkingContext';
 import { columnsParticipants } from '../utils/utils';
 import useDateFormat from '../hooks/useDateFormat';
+
 const { confirm } = Modal;
 
 export default function MeetingItem({ meenting }: IMeentingItem) {
@@ -26,6 +27,11 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
     moment(new Date()).isAfter(dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A'))
   );
   const { editMeenting, deleteMeeting, updateMeeting } = useContext(NetworkingContext);
+
+  useEffect(()=>{
+    setParticipants(meenting.participants)
+  },[meenting.participants])
+
 
   const handleChange = (participants: IParticipants[]) => {
     const confirmedIds = participants.map((part) => part.id);

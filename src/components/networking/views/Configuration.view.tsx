@@ -1,29 +1,39 @@
-import {Card, Layout } from 'antd';
+import {Card, Col, Divider, Layout, Row, Typography } from 'antd';
 import React from 'react';
 import ConfigObservers from '../components/Configurations/ConfigObservers';
 import Meta from 'antd/lib/card/Meta';
 import TypeMeenting from '../components/Configurations/TypeMeenting';
-const {Content} = Layout
+
+const {Content} = Layout;
+
 export default function Configuration() {
   return (
-    <Layout>
-      <Content style={{ display: 'flex', justifyContent: 'space-around' , padding: 10}}>
+    <Row justify='center' align='middle' gutter={8}>
+      <Col span={12}>
         <Card
           hoverable
-          style={{ width: 540 }}
-          >
-          <Meta title='Configuracion de observadores'/>
+          /* style={{ width: 540 }} */
+        >
+          <Divider orientation='left'><Typography.Title level={5}>Configuración de observadores</Typography.Title></Divider>
+          
+          {/* <Meta title=''/> */}
           <ConfigObservers />
         </Card>
-        
+      </Col>
+      <Col span={12}>
         <Card
           hoverable
-          style={{ width: 540 }}
-          >
-        <Meta title='Configuracion de tipos'/>
-        <TypeMeenting />
+          /* style={{ width: 540 }} */
+        >
+          <Divider orientation='left'><Typography.Title level={5}>Configuración de tipos</Typography.Title></Divider>
+          
+          {/* <Meta title=''/> */}
+          <TypeMeenting />
         </Card>
-      </Content>
-    </Layout>
+      </Col>
+      {/* <Content style={{ display: 'flex', justifyContent: 'space-around' , padding: 10}}>
+        
+      </Content> */}
+    </Row>
   );
 }

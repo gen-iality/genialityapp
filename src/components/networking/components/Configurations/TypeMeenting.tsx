@@ -1,5 +1,5 @@
-import { PlusCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Divider, Form, Input, List, Modal, Row, Space, Tag, Typography } from 'antd';
+import { PlusCircleOutlined, DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Divider, Form, Input, List, Modal, Row, Space, Tag, Tooltip, Typography } from 'antd';
 import React, { useState, useContext } from 'react';
 import { NetworkingContext } from '../../context/NetworkingContext';
 import { SketchPicker } from 'react-color';
@@ -53,36 +53,39 @@ export default function TypeMeenting() {
       {modalType && (
         <Modal
           visible={modalType}
-          title={edit ? 'editar tipo de reunion' : 'Agregar tipo de reunion'}
+          title={edit ? 'Editar tipo de reunión' : 'Agregar tipo de reunión'}
           footer={false}
           onCancel={closeModal}
           okText={'Guardar'}>
           <>
-            <Form onFinish={edit ? onUpdate : onCreate} layout='horizontal'>
+            <Form onFinish={edit ? onUpdate : onCreate} layout='vertical'>
               <Form.Item
                 name={'name'}
-                label={'nombre'}
-                rules={[{ required: true, message: 'debe seleccionar un participante'},{max: 15, message: 'el nombre tiene un maximo de 15 caracteres'}]}
+                label={'Nombre'}
+                rules={[{ required: true, message: 'El nombre es requerido'},{max: 15, message: 'El nombre tiene un máximo de 15 caracteres'}]}
                 initialValue={edit ? selected.nameType : ''}>
-                <Input placeholder='nombre del tipo de reunion' />
+                <Input placeholder='Nombre del tipo de reunión' />
               </Form.Item>
-              <Form.Item name={'color'} label={'color'}></Form.Item>
-              <Space size={'small'} align='center' direction='vertical' style={{ display: 'flex' }}>
-                <SketchPicker color={color} onChangeComplete={handleColorChange} />
-                <Button type='primary' style={{ margin: 10 }} htmlType='submit'>
+              <Form.Item name={'color'} label={'Color'}>
+                <Space size={'small'} align='center' direction='vertical' style={{ display: 'flex' }}>
+                  <SketchPicker color={color} onChangeComplete={handleColorChange} />
+                </Space>
+              </Form.Item>
+              <Row justify='end'>
+                <Button type='primary' /* style={{ margin: 10 }}  */htmlType='submit' icon={<SaveOutlined />}>
                   Guardar
                 </Button>
-              </Space>
+              </Row>
             </Form>
           </>
         </Modal>
       )}
-      <Row justify='end'>
+      <Row justify='end' style={{paddingBottom: '10px'}}>
         <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={openModal}>
           Agregar
         </Button>
       </Row>
-      <Divider orientation='left'>Tipos de reuniones</Divider>
+      {/* <Divider orientation='left'>Tipos de reuniones</Divider> */}
       <List
         pagination={{ pageSize: 3 }}
         header={<div>Tipos</div>}
@@ -91,8 +94,8 @@ export default function TypeMeenting() {
         renderItem={(item) => (
           <List.Item
             actions={[
-              <Button onClick={() => onEdit(item)} icon={<EditOutlined />} />,
-              <Button onClick={() => deleteType(item.id)} icon={<DeleteOutlined />} />,
+              <Tooltip placement='left' title='Editar'><Button onClick={() => onEdit(item)} icon={<EditOutlined />} /></Tooltip>,
+              <Tooltip placement='left' title='Eliminar'><Button onClick={() => deleteType(item.id)} icon={<DeleteOutlined />} danger type='primary' /></Tooltip>,
             ]}>
             <Space style={{ width: 80 }}>
               <Typography.Text>{item.nameType}</Typography.Text>

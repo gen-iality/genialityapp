@@ -40,7 +40,7 @@ const CreateUserModal = ({ createModalVisible, onCancelModalCreateUser, onOk, ..
   return (
     <>
       {createModalVisible && (
-        <Modal visible={createModalVisible} onCancel={onCancelModalCreateUser} onOk={onOk} {...restProps}>
+        <Modal visible={createModalVisible} footer={null} onCancel={onCancelModalCreateUser} onOk={onOk} {...restProps}>
           {' '}
           <div>
             {fieldsForm && fieldsForm?.length > 0 && (

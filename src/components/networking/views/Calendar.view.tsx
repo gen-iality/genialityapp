@@ -1,4 +1,4 @@
-import { Col, Row } from 'antd';
+import { Card, Col, Row } from 'antd';
 import moment from 'moment';
 import React, { useContext, useState } from 'react';
 import { Calendar, View, momentLocalizer } from 'react-big-calendar';
@@ -63,32 +63,34 @@ export default function MyCalendar() {
 
   return (
     <>
-      <Row justify='center' wrap gutter={[0, 16]}>
-        <Col span={24}>
-          <ReactBigCalendar
-            events={View === TypeCalendarView.month ? renderEvents(meetings) : renderEvents(DataCalendar)}
-            view={View}
-            onView={(view: View) => setView(view)}
-           
-            onSelectSlot={createEventCalendar}
-            onSelectEvent={editMeenting}
-            onEventDrop={updateEventCalendar}
-            onEventResize={updateEventCalendar}
-           
-            resources={observers.length ? observers : undefined}
-            resourceAccessor={'assigned'}
-            resourceIdAccessor='value'
-            resourceTitleAccessor='label'
-           
-            localizer={localizer}
-            getNow={now}
-            selectable='ignoreEvents'
-            eventPropGetter={eventStyleGetter}
-            titleAccessor='name'
-            startAccessor='start'
-            endAccessor='end'
-            style={{ height: 500 }}
-          />
+      <Row justify='center' wrap gutter={8}>
+        <Col span={23}>
+          <Card hoverable>
+            <ReactBigCalendar
+              events={View === TypeCalendarView.month ? renderEvents(meetings) : renderEvents(DataCalendar)}
+              view={View}
+              onView={(view: View) => setView(view)}
+            
+              onSelectSlot={createEventCalendar}
+              onSelectEvent={editMeenting}
+              onEventDrop={updateEventCalendar}
+              onEventResize={updateEventCalendar}
+            
+              resources={observers.length ? observers : undefined}
+              resourceAccessor={'assigned'}
+              resourceIdAccessor='value'
+              resourceTitleAccessor='label'
+            
+              localizer={localizer}
+              getNow={now}
+              selectable='ignoreEvents'
+              eventPropGetter={eventStyleGetter}
+              titleAccessor='name'
+              startAccessor='start'
+              endAccessor='end'
+              style={{ height: 500 }}
+            />
+          </Card>
         </Col>
       </Row>
     </>
