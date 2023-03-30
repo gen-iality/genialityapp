@@ -101,12 +101,12 @@ export default function MeetingForm() {
           />
         </Form.Item>
 
-        <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Row justify='end'>
+          <Button onClick={closeModal} type='primary' style={{ marginRight: 10 }} danger icon={<CloseCircleOutlined />}>
+            Cancelar
+          </Button>
           <Button type='primary' style={{ marginRight: 10 }} htmlType='submit' icon={<SaveOutlined />}>
             Guardar
-          </Button>
-          <Button onClick={closeModal} type='default' style={{ marginRight: 10 }} danger icon={<CloseCircleOutlined />}>
-            Cancelar
           </Button>
         </Row>
       </Form>

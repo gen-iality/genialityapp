@@ -1,5 +1,5 @@
-import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Divider, Form, List, Modal, Row, Select, Typography , Space } from 'antd';
+import { DeleteOutlined, InfoCircleOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Divider, Form, List, Modal, Row, Select, Typography , Space, Alert, Tooltip } from 'antd';
 import React, { useState , useContext } from 'react';
 import { NetworkingContext } from '../../context/NetworkingContext';
 import { CreateObservers } from '../../interfaces/configurations.interfaces';
@@ -28,17 +28,22 @@ export default function ConfigObservers() {
           okText={'Guardar'}>
           <>
             <Form onFinish={onCreate}>
-              <Form.Item name={'data'} rules={[{required : true , message: 'debe seleccionar un participante'}]} initialValue={[]}>
-                <Select allowClear mode='multiple' options={attendeesList()} defaultValue={[]} placeholder='seleccione un observador'/>
+              <Form.Item name={'data'} rules={[{required : true , message: 'Debe seleccionar un participante'}]} initialValue={[]}>
+                <Select allowClear mode='multiple' options={attendeesList()} defaultValue={[]} placeholder='Seleccione un observador' style={{paddingBottom: '5px'}} showArrow={true}/>
+                <Typography.Text type='secondary'>
+                  <InfoCircleOutlined /> Puede seleccionar más de un observador
+                </Typography.Text>
               </Form.Item>
-              <Button type='primary' style={{ marginRight: 10 }} htmlType='submit'>
-                Guardar
-              </Button> 
+              <Row justify='end'>
+                <Button type='primary' icon={<SaveOutlined />} htmlType='submit'>
+                  Guardar
+                </Button> 
+              </Row>
             </Form>
           </>
         </Modal>
       }
-      <Row justify='end'>
+      <Row justify='end' style={{paddingBottom: '10px'}}>
         <Button
           type='primary'
           icon={<PlusCircleOutlined />}
@@ -49,14 +54,14 @@ export default function ConfigObservers() {
           Agregar
         </Button>
       </Row>
-      <Divider orientation='left'>Lista de observadores</Divider>
+      {/* <Divider orientation='left'>Lista de observadores</Divider> */}
       <List
         pagination={{pageSize : 3}}
         header={<div>Obervadores</div>}
         bordered
         dataSource={observers}
         renderItem={(item) => (
-          <List.Item actions={[<Button onClick={()=>deleteObserver(item.id)} icon={<DeleteOutlined />}/>]}>
+          <List.Item actions={[<Tooltip placement='topLeft' title='Eliminar'><Button onClick={()=>deleteObserver(item.id)} icon={<DeleteOutlined />} danger type='primary'/></Tooltip>]}>
             <Space size={'large'}>
             <Typography.Text>{item.label}</Typography.Text>
             </Space>
