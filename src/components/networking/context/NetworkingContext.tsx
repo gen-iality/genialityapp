@@ -91,13 +91,11 @@ export default function NetworkingProvider(props: Props) {
   }, [meetings, observers]);
 
   const onClickAgregarUsuario = () => {
-    closeModal();
     setCreateModalVisible(true);
   };
 
   const onCancelModalAgregarUsuario = () => {
     setCreateModalVisible(false);
-    openModal();
   };
 
   const editMeenting = (meentign: IMeeting) => {

@@ -33,6 +33,7 @@ export default function MeentignView() {
       />
       {modal && (
         <Modal
+          style={ createModalVisible ? {display : 'none'} :  {}}
           visible={modal}
           title={edicion ? 'Editar reunión' : 'Agregar Reunión'}
           footer={false}
