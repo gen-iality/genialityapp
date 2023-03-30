@@ -9,7 +9,7 @@ import { TypeCalendarView } from '../interfaces/configurations.interfaces';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
-
+import 'moment/dist/locale/es';
 
 export default function MyCalendar() {
   const [View, setView] = useState<View>(TypeCalendarView.month);
@@ -89,6 +89,18 @@ export default function MyCalendar() {
               startAccessor='start'
               endAccessor='end'
               style={{ height: 500 }}
+              messages={{
+                next: "Siguiente",
+                previous: "Anterior",
+                today: "Hoy",
+                month: "Mes",
+                week: "Semana",
+                day: "Día",
+                date: 'Fecha',
+                time: 'Hora',
+                event: 'Evento', 
+              }}
+              culture='es'
             />
           </Card>
         </Col>
