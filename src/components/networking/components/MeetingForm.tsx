@@ -54,7 +54,7 @@ export default function MeetingForm() {
                 return Promise.resolve();
               },
             },
-            { required: true}
+            /* { required: true} */
           ]}
         >
           <Transfer

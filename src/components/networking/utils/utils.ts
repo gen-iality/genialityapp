@@ -35,7 +35,7 @@ export const attendesOption = [{label : 'ninguno', value : '0'}]
 
 export const defaultType = {
   id : '',
-  nameType : 'default',
+  nameType : 'Seleccione una opción', //'default',
   style : '#406D85'
 }
 
