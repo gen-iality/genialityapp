@@ -42,7 +42,9 @@ export default function MeetingForm() {
           label={<Space>
             <>Participantes</>
             <Tooltip placement='topLeft' title='Agregar participante'>
-              <Button  onClick={onClickAgregarUsuario}  icon={<PlusCircleOutlined />} type='text' />
+              <Button onClick={onClickAgregarUsuario} icon={<PlusCircleOutlined />} type='text'>
+                {/* Agregar participante */}
+              </Button>
             </Tooltip>
           </Space>}
           name='participants'
