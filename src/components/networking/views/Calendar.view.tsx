@@ -21,7 +21,7 @@ export default function MyCalendar() {
     setMeentingSelect, 
     openModal, 
     observers , 
-    DataCalendar } = useContext(
+    DataCalendar, typeMeetings } = useContext(
     NetworkingContext
   );
 
@@ -54,7 +54,7 @@ export default function MyCalendar() {
 
   const eventStyleGetter = (event : IMeeting | IMeetingCalendar)  => {
     const style = {
-      backgroundColor: event.type ? event.type.style : defaultType.style
+      backgroundColor: typeMeetings.find((item)=> item.id === event.type?.id)?.style || defaultType.style
     };
     return {
       style: style,
