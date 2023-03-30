@@ -9,8 +9,7 @@ import { IMeeting } from '../interfaces/Meetings.interfaces';
 import CreateUserModal from '../components/modal-create-user/CreateUserModal';
 
 export default function MeentignView() {
-  const { meetings, modal, edicion, closeModal, openModal } = useContext(NetworkingContext);
-  const [createModalVisible, setCreateModalVisible] = useState(false);
+  const { meetings, modal, edicion, closeModal, openModal, onCancelModalAgregarUsuario, createModalVisible, setCreateModalVisible } = useContext(NetworkingContext);
   const orderByDate = (): IMeeting[] => {
     return meetings?.sort((a: IMeeting, b: IMeeting) => {
       const fechaA = new Date(a.start);
@@ -18,14 +17,7 @@ export default function MeentignView() {
       return fechaA.getTime() - fechaB.getTime();
     });
   };
-  const onClickAgregarUsuario = () => {
-    closeModal();
-    setCreateModalVisible(true);
-  };
-  const onCancelModalAgregarUsuario = () => {
-    setCreateModalVisible(false);
-    openModal();
-  };
+
   const onOk = () => {
     setCreateModalVisible(false);
     openModal();
@@ -34,22 +26,19 @@ export default function MeentignView() {
   return (
     <>
       <CreateUserModal
-        title={'Agregar Usuario'}
+        title={'Agregar usuario'}
         createModalVisible={createModalVisible}
         onCancelModalCreateUser={onCancelModalAgregarUsuario}
         onOk={onOk}
       />
       {modal && (
         <Modal
+          style={ createModalVisible ? {display : 'none'} :  {}}
           visible={modal}
-          title={edicion ? 'Editar reunion' : 'Agregar Reunion'}
+          title={edicion ? 'Editar reunión' : 'Agregar Reunión'}
           footer={false}
           onCancel={closeModal}
           okText={'Guardar'}>
-          <Row justify='end'>
-            <Button onClick={onClickAgregarUsuario}>Agregar usuario</Button>
-          </Row>
-
           <MeetingForm />
         </Modal>
       )}
@@ -61,11 +50,11 @@ export default function MeentignView() {
             icon={<PlusCircleOutlined />}
             size='middle'
             onClick={() => openModal()}>
-            Agregar
+            Crear cita
           </Button>
         </Col>
       </Row>
-      <Row justify='center' wrap gutter={[0, 16]} style={{paddingTop: '10px'}}>
+      <Row justify='center' wrap gutter={[0, 8]} /* style={{paddingTop: '10px'}} */>
         <Col span={24}>
           <MeetingList meentings={orderByDate()} />
         </Col>

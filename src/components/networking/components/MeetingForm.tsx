@@ -1,10 +1,14 @@
 import React, { Fragment , useContext } from 'react';
-import { Form, Input, Button, Row, Transfer, DatePicker, Select } from 'antd';
+import { Form, Input, Button, Row, Transfer, DatePicker, Select, Space, Tooltip } from 'antd';
 import { filterOption, formLayout } from '../utils/utils';
 import moment from 'moment';
 import { useMeetingFormLogic } from '../hooks/useMeetingFormLogic';
 import { NetworkingContext } from '../context/NetworkingContext';
+import locale from 'antd/es/date-picker/locale/es_ES';
+import { CloseCircleOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
+
 const { RangePicker } = DatePicker;
+
 export default function MeetingForm() {
   const {
     onSubmit,
@@ -17,7 +21,9 @@ export default function MeetingForm() {
     onSelectChange,
     closeModal,
   } = useMeetingFormLogic();
-  const {typeMeetings} = useContext(NetworkingContext)
+
+  const {typeMeetings, onClickAgregarUsuario} = useContext(NetworkingContext);
+
   return (
     <Fragment>
       <Form {...formLayout} autoComplete='off' ref={() => {}} onFinish={onSubmit}>
@@ -28,11 +34,19 @@ export default function MeetingForm() {
           label={'Nombre'}
           name={'name'}
           initialValue={formState.name}
-          rules={[{ required: true, message: 'Es necesario el nombre de la reunion' }]}>
+          rules={[{ required: true, message: 'Es necesario el nombre de la reunión' }]}>
           <Input ref={formRef} name={'name'} type='text' placeholder={'Ej: Acuerdo productos'} />
         </Form.Item>
         <Form.Item
-          label={'Participantes'}
+          required
+          label={<Space>
+            <>Participantes</>
+            <Tooltip placement='topLeft' title='Agregar participante'>
+              <Button onClick={onClickAgregarUsuario} icon={<PlusCircleOutlined />} type='text'>
+                {/* Agregar participante */}
+              </Button>
+            </Tooltip>
+          </Space>}
           name='participants'
           rules={[
             {
@@ -43,36 +57,43 @@ export default function MeetingForm() {
                 return Promise.resolve();
               },
             },
-          ]}>
+            /* { required: true} */
+          ]}
+        >
           <Transfer
-            style={{ width: '100%' }}
+            listStyle={{width: 500}}
             filterOption={filterOption}
             showSearch
             dataSource={attendeesTransfer}
+            locale={{ 
+              itemUnit: 'Participante', itemsUnit: 'Participantes', notFoundContent: 'La lista está vacía', searchPlaceholder: 'Buscar persona'
+            }}
             titles={['Disponibles', 'Asignados']}
             targetKeys={AttendeesKeyTarget}
             selectedKeys={selectedAttendesKeys}
             onChange={onChange}
             onSelectChange={onSelectChange}
             render={(item) => item.name}
+            oneWay={true}
+            showSelectAll={false}
           />
         </Form.Item>
         <Form.Item
-          label={'Fecha reunion'}
+          label={'Fecha de la reunión'}
           name='date'
           rules={[{ required: true, message: 'Es necesario seleccionar una fecha' }]}
           initialValue={
-            formState.start != '' && formState.end != '' ? [moment(formState.start), moment(formState.end)] : []
+            formState.start !== '' && formState.end !== '' ? [moment(formState.start), moment(formState.end)] : []
           }>
           {/* @ts-ignore */}
-          <RangePicker showTime={{ format: 'HH:mm A' }} format='YYYY-MM-DD HH:mm' />
+          <RangePicker showTime={{ format: 'HH:mm A' }} format='YYYY-MM-DD HH:mm' style={{width: '100%'}} locale={locale} />
         </Form.Item>
         <Form.Item
           label={'Lugar'}
           name='place'
-          rules={[{ required: true, message: 'Es necesario seleccionar el lugar de la reunion' }]}
+          rules={[{ required: true, message: 'Es necesario seleccionar el lugar de la reunión' }]}
           initialValue={formState.place}>
-          <Input ref={formRef} name={'place'} type='text' placeholder={'Ej: Salon principal'} />
+          <Input ref={formRef} name={'place'} type='text' placeholder={'Ej: Salón principal'} />
         </Form.Item>
         <Form.Item label={'Tipo'} name='type' initialValue={formState.type?.nameType}>
           <Select
@@ -82,12 +103,12 @@ export default function MeetingForm() {
           />
         </Form.Item>
 
-        <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Button type='primary' style={{ marginRight: 10 }} htmlType='submit'>
-            Guardar
-          </Button>
-          <Button onClick={closeModal} type='default' style={{ marginRight: 10 }}>
+        <Row justify='end'>
+          <Button onClick={closeModal} type='primary' style={{ marginRight: 10 }} danger icon={<CloseCircleOutlined />}>
             Cancelar
+          </Button>
+          <Button type='primary' style={{ marginRight: 10 }} htmlType='submit' icon={<SaveOutlined />}>
+            Guardar
           </Button>
         </Row>
       </Form>
