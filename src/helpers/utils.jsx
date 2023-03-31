@@ -134,7 +134,7 @@ export async function parseData2Excel(data, fields, roles = null) {
             str = Array.isArray(item.properties[name]) ? item.properties[name][0].label : item.properties[name];
             break;
           case 'codearea':
-            str = item[name];
+            str = (item.properties ?? item)[name];
             break;
           case 'file':
             str =
