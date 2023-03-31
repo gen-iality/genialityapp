@@ -73,7 +73,7 @@ const HostList = () => {
       >
         <Space direction="vertical" align="center">
           <AlertOutlined style={{ fontSize: '2rem' }} />
-          <Text>
+          <Text style={{ fontSize: '1.5rem' }} >
             {intl.formatMessage({
               id: 'label.duration.message',
               defaultMessage: 'Para obtener el certificado debes cursar el 80% del curso.',
