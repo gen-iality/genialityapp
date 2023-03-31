@@ -83,7 +83,7 @@ const RegisterUserAndOrgMember = ({
   const steps = [
     {
       title: 'First',
-      content: <RegisterFast basicDataUser={basicDataUser} HandleHookForm={HandleHookForm} />,
+      content: <RegisterFast basicDataUser={basicDataUser} formDataHandler={HandleHookForm} />,
       icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
     {
