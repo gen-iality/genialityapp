@@ -1,13 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Steps, Button, Alert, Typography } from 'antd';
-import RegisterFast from './Content/RegisterFast';
-import RegistrationResult from './Content/RegistrationResult';
-import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
-import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
-import { ScheduleOutlined } from '@ant-design/icons';
-import { UsersApi } from '@helpers/request';
-import { LoadingOutlined } from '@ant-design/icons';
-import createNewUser from './ModalsFunctions/createNewUser';
+import { useState } from 'react';
+import { Steps, Typography } from 'antd';
 import { useIntl } from 'react-intl';
 import { useEventContext } from '@context/eventContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';

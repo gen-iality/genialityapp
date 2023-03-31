@@ -12,7 +12,6 @@ import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfi
 /** Components imports */
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
-import FormComponent from '../events/registrationForm/form';
 
 /** External functions imports */
 import createNewUser from './ModalsFunctions/createNewUser';
