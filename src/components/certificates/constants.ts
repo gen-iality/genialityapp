@@ -10,6 +10,7 @@ export const availableTags = [
   { tag: 'user.email', label: 'Correo de asistente', value: 'email' },
   { tag: 'ticket.name', label: 'Nombre del tiquete', value: 'ticket.title' },
   { tag: 'rol.name', label: 'Nombre del Rol' },
+  { tag: 'user.ID', label: 'ID de usuario', value: 'ID' },
 ];
 
 export const defaultCertRows: CertRow[] = [

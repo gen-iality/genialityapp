@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { Row, Col, Card, Spin, Alert, Button, Modal, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import withContext from '@context/withContext';
-import { AgendaApi, CertsApi, RolAttApi, SurveysApi } from '@helpers/request';
+import { AgendaApi, CertsApi, OrganizationApi, RolAttApi, SurveysApi } from '@helpers/request';
 import { SurveyData } from '@components/events/surveys/types';
 import useAsyncPrepareQuizStats from '../quiz/useAsyncPrepareQuizStats';
 import { DownloadOutlined, LoadingOutlined } from '@ant-design/icons';
@@ -59,7 +59,21 @@ function Certificate(props: CertificateProps) {
 
   const background = certificateImage;
 
+  const getOrgMemberDocumentID = async (dataUser: any) => {
+    const { data: orgMembers } = await OrganizationApi.getUsers(props.cEvent.value.organiser._id)
+    const orgMember = orgMembers.find((orgMember: any) => orgMember.account_id === dataUser.account_id);
+    const orgMemberDocumentID = orgMember.properties.ID;
+
+    return orgMemberDocumentID;
+  }
+
   const generateCert = async (dataUser: any) => {
+
+    const orgMemberDocumentID = await getOrgMemberDocumentID(dataUser);
+
+    const propertiesWithDocumentID = {...dataUser.properties, ID: orgMemberDocumentID}
+    dataUser = {...dataUser, ...{properties: propertiesWithDocumentID}};
+
     const modal = Modal.success({
       title: 'Generando certificado',
       content: <Spin>Espera</Spin>,
