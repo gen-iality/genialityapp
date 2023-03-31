@@ -59,20 +59,23 @@ function Certificate(props: CertificateProps) {
 
   const background = certificateImage;
 
-  const getOrgMemberDocumentID = async (dataUser: any) => {
+  const getOrgMemberProperties = async (dataUser: any) => {
     const { data: orgMembers } = await OrganizationApi.getUsers(props.cEvent.value.organiser._id)
     const orgMember = orgMembers.find((orgMember: any) => orgMember.account_id === dataUser.account_id);
-    const orgMemberDocumentID = orgMember.properties.ID;
-
-    return orgMemberDocumentID;
+    return orgMember?.properties || {};
   }
 
   const generateCert = async (dataUser: any) => {
 
-    const orgMemberDocumentID = await getOrgMemberDocumentID(dataUser);
+    const extraOrgMemberProperties = await getOrgMemberProperties(dataUser);
 
-    const propertiesWithDocumentID = {...dataUser.properties, ID: orgMemberDocumentID}
-    dataUser = {...dataUser, ...{properties: propertiesWithDocumentID}};
+    dataUser = {
+      ...dataUser,
+      properties: {
+        ...dataUser.properties,
+        ...extraOrgMemberProperties,
+      },
+    };
 
     const modal = Modal.success({
       title: 'Generando certificado',
