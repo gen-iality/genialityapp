@@ -1127,3 +1127,7 @@ a {
 .styleText {
 	white-space: nowrap;
 }
+
+.rbc-toolbar-label, .rbc-header {
+	text-transform: capitalize !important;
+}
