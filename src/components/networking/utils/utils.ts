@@ -49,3 +49,9 @@ export const meetingSelectedInitial: IMeeting = {
   type: defaultType,
   dateUpdated: 0,
 };
+
+export const RequestMeetingState = {
+  confirmed:'confirmed',
+  rejected:'rejected',
+  pending:'pending'
+}

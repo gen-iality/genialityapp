@@ -7,7 +7,7 @@ import { SmileOutlined } from '@ant-design/icons';
 import withContext from '../../context/withContext';
 import * as services from './services/meenting.service'
 import { getDatesRange } from '../../helpers/utils';
-import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId } from './services';
+import { createAgendaToEventUser, createMeetingRequest, getAgendasFromEventUser, getUsersId } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
 import { typeAttendace } from './interfaces/Meetings.interfaces';
 
@@ -175,33 +175,18 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     
     const startDate = date.toString();
     const endDate = date.add(20, 'minutes').toString();
-    const eventId = cEvent.value._id;
+    const eventId = cEvent?.value?._id;
 
-    const participants = [
-      {
-        id: cEventUser.value.user._id,
-        name: cEventUser.value.user.names,
-        email: cEventUser.value.user.email || '',
-        attendance: typeAttendace.unconfirmed,
-      },
-      {
-        id: targetEventUser.user._id,
-        name: targetEventUser.user.names,
-        email: targetEventUser.user.email || '',
-        attendance: typeAttendace.unconfirmed,
-      },
-    ];
 
-    const meenting = {
-      name: `Reunion con ${targetEventUser.user.names}`,
-      participants: participants,
-      place: 'evius meet',
-      start: startDate,
-      end: endDate,
-      dateUpdated: Date.now(),
-    };
-
-    const response = await services.createMeeting(eventId, meenting);
+    const response = await createMeetingRequest({
+      eventId: cEvent.value._id,
+      targetEventUser,
+      message: agendaMessage,
+      cEventUser,
+      typeAttendace,
+      startDate,
+      endDate,
+    });
     setDate(null)
     notification.open({
       type : response ? 'success' : 'warning',

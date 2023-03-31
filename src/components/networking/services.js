@@ -1,6 +1,7 @@
 import { sortBy, prop } from 'ramda';
 import { firestore } from '../../helpers/firebase';
 import API, { UsersApi, EventsApi } from '../../helpers/request';
+import { RequestMeetingState } from './utils/utils';
 
 const filterList = (list, currentUser) => list.find((item) => item.account_id === currentUser);
 
@@ -151,6 +152,103 @@ export const createAgendaToEventUser = ({
 
           resolve(newAgendaResult.id);
         }
+      } catch (error) {
+        reject(error);
+      }
+    })();
+  });
+};
+export const createMeetingRequest = ({
+  eventId,
+  targetEventUser,
+  message,
+  cEventUser,
+  typeAttendace,
+  startDate,
+  endDate,
+}) => {
+  return new Promise((resolve, reject) => {
+    (async () => {
+      try {
+       
+       //Crear solicitud sin importar las solicitudes existentes
+       const participants = [
+        {
+          id: cEventUser.value.user._id,
+          name: cEventUser.value.user.names,
+          email: cEventUser.value.user.email || '',
+          attendance: typeAttendace.unconfirmed,
+        },
+        {
+          id: targetEventUser.user._id,
+          name: targetEventUser.user.names,
+          email: targetEventUser.user.email || '',
+          attendance: typeAttendace.unconfirmed,
+        },
+      ];
+  
+      const meeting = {
+        name: `Reunion con ${targetEventUser.user.names}`,
+        participants: participants,
+        place: 'evius meet',
+        start: startDate,
+        end: endDate,
+        dateUpdated: Date.now(),
+      };
+
+      const requestMeenting={
+        to:targetEventUser.user._id,
+        from:cEventUser.value.user._id,
+        meeting,
+        date:startDate,
+        message,
+        status:RequestMeetingState.pending
+      }
+       
+      const newAgendaResult = await firestore
+      .collection('networkingByEventId')
+      .doc(eventId)
+      .collection('meeting_request')
+      .add(requestMeenting);
+    // enviamos notificaciones por correo
+    let data = {
+      id_user_requested: requestMeenting.to,
+      id_user_requesting: requestMeenting.from,
+      request_id: newAgendaResult.id,
+      user_name_requesting: 'Juan Carlos',
+      event_id: eventId,
+      state: 'send',
+      request_type: 'meeting',
+      start_time: new Date(startDate).toLocaleTimeString(),
+    };
+
+    EventsApi.sendMeetingRequest(eventId, data);
+
+    resolve(newAgendaResult.id);
+      } catch (error) {
+        reject(error);
+      }
+    })();
+  });
+};
+export const getMeetingRequest = ({
+  eventId,
+  cEventUser,
+  stateMeeting
+}) => {
+  return new Promise((resolve, reject) => {
+    (async () => {
+      try {
+      
+      const requestMeetings = await firestore
+      .collection('networkingByEventId')
+      .doc(eventId)
+      .collection('meeting_request')
+      .where('from', '==', cEventUser.value.user._id)
+      .where( 'status','==',stateMeeting)
+      .get()
+
+      resolve(requestMeetings);
       } catch (error) {
         reject(error);
       }
