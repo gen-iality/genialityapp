@@ -12,7 +12,6 @@ import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfi
 /** Components imports */
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
-import FormComponent from '../events/registrationForm/form';
 
 /** External functions imports */
 import createNewUser from './ModalsFunctions/createNewUser';
@@ -67,7 +66,7 @@ const RegisterUserAndOrgMember = ({
     setButtonStatus(status);
   };
 
-  const HandleHookForm = (e, FieldName, picture) => {
+  const formDataHandler = (e, FieldName, picture) => {
     const value = FieldName === 'picture' ? picture : e.target.value;
 
     setBasicDataUser((previous) => ({
@@ -83,7 +82,7 @@ const RegisterUserAndOrgMember = ({
   const steps = [
     {
       title: 'First',
-      content: <RegisterFast basicDataUser={basicDataUser} HandleHookForm={HandleHookForm} />,
+      content: <RegisterFast basicDataUser={basicDataUser} formDataHandler={formDataHandler} />,
       icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
     {

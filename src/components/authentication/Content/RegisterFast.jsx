@@ -24,7 +24,7 @@ function getBase64(img, callback) {
   reader.readAsDataURL(img);
 }
 
-const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
+const RegisterFast = ({ basicDataUser, formDataHandler }) => {
   const intl = useIntl();
   const cEvent = useEventContext();
   const [takingPhoto, setTakingPhoto] = useState(false);
@@ -54,7 +54,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
         thumbUrl: dataUri,
       },
     ];
-    HandleHookForm(null, 'picture', pic);
+    formDataHandler(null, 'picture', pic);
     setImageAvatar(dataUri);
     setTakingPhoto(false);
   };
@@ -139,14 +139,14 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
               onChange={(info) => {
                 if (info.fileList.length > 0) {
                   getBase64(info.file.originFileObj, (imageUrl) => setImageAvatar(imageUrl));
-                  HandleHookForm(null, 'picture', info.fileList);
+                  formDataHandler(null, 'picture', info.fileList);
                 } else {
-                  HandleHookForm(null, 'picture', null);
+                  formDataHandler(null, 'picture', null);
                   setImageAvatar(null);
                 }
               }}
               onRemove={() => {
-                HandleHookForm(null, 'picture', null);
+                formDataHandler(null, 'picture', null);
               }}
               customRequest={uploadImagedummyRequest}
               multiple={false}
@@ -205,7 +205,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
           rules={ruleEmail}
         >
           <Input
-            onChange={(e) => HandleHookForm(e, 'email')}
+            onChange={(e) => formDataHandler(e, 'email')}
             type="email"
             size="large"
             placeholder="micorreo@ejemplo.com"
@@ -224,7 +224,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             rules={ruleCedula}
           >
             <Input
-              onChange={(e) => HandleHookForm(e, 'password')}
+              onChange={(e) => formDataHandler(e, 'password')}
               type="number"
               size="large"
               // placeholder="Cedula del medico ó especialista"
@@ -244,7 +244,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
             rules={rulePassword}
           >
             <Input.Password
-              onChange={(e) => HandleHookForm(e, 'password')}
+              onChange={(e) => formDataHandler(e, 'password')}
               type="password"
               size="large"
               placeholder={intl.formatMessage({
@@ -266,7 +266,7 @@ const RegisterFast = ({ basicDataUser, HandleHookForm }) => {
           rules={ruleName}
         >
           <Input
-            onChange={(e) => HandleHookForm(e, 'names')}
+            onChange={(e) => formDataHandler(e, 'names')}
             type="text"
             size="large"
             placeholder={intl.formatMessage({

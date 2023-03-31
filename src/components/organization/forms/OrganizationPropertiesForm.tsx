@@ -61,7 +61,7 @@ const textLeftStyle: any = {
 type FormValuesType = any
 
 interface IOrganizationPropertiesFormProps {
-  basicDataUser: object,
+  basicDataUser: any,
   organization: any,
   onProperyChange?: (propertyName: string, propertyValue: any) => void,
   otherFields?: IDynamicFieldData[],
@@ -114,6 +114,7 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
       {
         ...previous,
         ...(props.basicDataUser || {}),
+        ID: props.basicDataUser.password, // Clone the ID-password as only ID
       }
     ))
   }, [props.basicDataUser])
