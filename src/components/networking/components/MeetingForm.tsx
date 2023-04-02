@@ -1,5 +1,5 @@
 import React, { Fragment , useContext } from 'react';
-import { Form, Input, Button, Row, Transfer, DatePicker, Select, Space, Tooltip } from 'antd';
+import { Form, Input, Button, Row, Transfer, DatePicker, Select, Space } from 'antd';
 import { filterOption, formLayout } from '../utils/utils';
 import moment from 'moment';
 import { useMeetingFormLogic } from '../hooks/useMeetingFormLogic';
@@ -64,7 +64,7 @@ export default function MeetingForm() {
           ]}
         >
           <Transfer
-            listStyle={{width: '100%'}}
+            listStyle={{ width: 500 }}
             filterOption={filterOption}
             showSearch
             dataSource={attendeesTransfer}
