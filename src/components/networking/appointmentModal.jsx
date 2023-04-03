@@ -160,7 +160,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       state: '0',
     };
 
-    // await addNotification(notificationA, cEvent.value, cEventUser.value);
+    await addNotification(notificationA, cEvent.value, cEventUser.value);
   }
   const resetModal = () => {
     closeModal();
