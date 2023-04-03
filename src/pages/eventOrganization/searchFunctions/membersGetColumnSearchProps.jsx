@@ -2,8 +2,12 @@ import { Button, Input, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
-const handleSearch = (selectedKeys, confirm, dataIndex, columnsData) => {
-  confirm();
+const handleSearch = (selectedKeys, confirm, dataIndex, columnsData, closeDropdown) => {
+  if (typeof closeDropdown === 'undefined' || closeDropdown === undefined) {
+    confirm();
+  } else {
+    confirm({ closeDropdown });
+  }
   columnsData.setSearchText(selectedKeys[0]);
   columnsData.setSearchedColumn(dataIndex);
 };
@@ -39,11 +43,7 @@ export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
         <Button
           type="link"
           size="small"
-          onClick={() => {
-            confirm({ closeDropdown: false });
-            columnsData.setSearchText(selectedKeys[0]);
-            columnsData.setSearchedColumn(dataIndex);
-          }}>
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex, columnsData, false)}>
           Filter
         </Button>
       </Space>
