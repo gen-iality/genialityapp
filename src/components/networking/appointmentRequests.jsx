@@ -32,9 +32,11 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   let eventContext = UseEventContext();
 
   useEffect(async () => {
-   const algo = await getMeetingRequest(eventContext.value._id,userEventContext.value.user._id,RequestMeetingState.pending)
-   console.log('veamos esto',algo)
-    if (eventContext.value != null && userEventContext.value !== null) {
+   const request = await getMeetingRequest(eventContext.value._id,userEventContext.value.user._id,RequestMeetingState.pending)
+   console.log('veamos esto',request)
+   setPendingAgendas(request)
+   setLoading(false);
+  /*   if (eventContext.value != null && userEventContext.value !== null) {
       if (eventContext.value._id && userEventContext.value._id) {
         setLoading(true);
         setPendingAgendas([]);
@@ -59,7 +61,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
           })
           .finally(() => setLoading(false));
       }
-    }
+    } */
   }, [eventContext.value, userEventContext.value, eventUsers, sendRespuesta]);
 
  
