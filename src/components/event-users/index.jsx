@@ -390,7 +390,23 @@ class ListEventUser extends Component {
         width: '120px',
         ellipsis: true,
         sorter: (a, b) => a.checkedin_at - b.checkedin_at,
-        ...self.getColumnSearchProps('checkedin_at'),
+        filters: [
+          {
+            text: 'Asistentes',
+            value: 'attendees',
+          },
+          {
+            text: 'No asistentes',
+            value: 'not_attendees',
+          },
+        ],
+        filterSearch: true,
+        onFilter: (value, record) => {
+          if(value === 'attendees') {
+            return (record.checkedin_at !== null);
+          }
+          else return (record.checkedin_at === null);
+        },
         render: self.checkedincomponent,
       };
 
