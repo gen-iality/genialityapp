@@ -4,6 +4,7 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
   SaveOutlined,
+  SmileOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table, Modal } from 'antd';
 import React, { useState , useEffect} from 'react';
@@ -27,6 +28,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
     moment(new Date()).isAfter(dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A'))
   );
   const { editMeenting, deleteMeeting, updateMeeting } = useContext(NetworkingContext);
+  const finish = dateFormat(new Date(), 'MM/DD/YYYY hh:mm A') >= dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A');
 
   useEffect(()=>{
     setParticipants(meenting.participants)
@@ -60,6 +62,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
   const onUpdate = async () => {
     await updateMeeting(meenting.id, { ...meenting, participants: participants });
   };
+  
   return (
     <Collapse
       expandIcon={({ isActive }) => <div style={{paddingTop: '6px'}}><CaretDownOutlined rotate={isActive ? 180 : 0} /></div>}
@@ -105,8 +108,9 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
             <Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '5px' }}>
               <Result
                 style={{ paddingTop: '2px', paddingBottom: '20px' }}
-                status={meentingStart ? 'success' : 'info'}
-                title={meentingStart ? 'La reunión ya inicio' : 'La reunión iniciará en :'}
+                status={finish ? 'info' : meentingStart ? 'success' : 'info'}
+                title={finish ? '¡La reunión finalizó!' : meentingStart ? 'La reunión ya inicio' : 'La reunión iniciará en :'}
+                icon={finish && <SmileOutlined />}
                 extra={
                   !meentingStart && (
                     <Countdown
@@ -118,26 +122,25 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                   )
                 }
               />
-              <Row justify='center' align='middle' gutter={[16, 16]}>
-                <Form layout='inline'>
+              <Row justify='center' align='middle' gutter={[16, 16]} wrap>
+                <Col>
                   <Space wrap>
-                    <Form.Item label='Fecha incio'>
-                      <Typography>
-                        <pre style={{margin: 0}}>{dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')}</pre>
-                      </Typography>
-                    </Form.Item>
-                    <Form.Item label='Fecha fin'>
-                      <Typography>
-                        <pre style={{margin: 0}}>{dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A')}</pre>
-                      </Typography>
-                    </Form.Item>
-                    <Form.Item label='Lugar'>
-                      <Typography>
-                        <pre style={{margin: 0, textTransform: 'uppercase'}}>{meenting.place}</pre>
-                      </Typography>
-                    </Form.Item>
+                    <Typography.Text strong>Fecha incio:</Typography.Text>
+                    <Typography.Text code>{dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')}</Typography.Text>
                   </Space>
-                </Form>
+                </Col>
+                <Col>
+                  <Space wrap>
+                    <Typography.Text strong>Fecha fin: </Typography.Text>
+                    <Typography.Text code>{dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A')}</Typography.Text>
+                  </Space>
+                </Col>
+                <Col>
+                  <Space wrap>
+                    <Typography.Text strong>Lugar: </Typography.Text>
+                    <Typography.Text code style={{textTransform: 'uppercase'}}>{meenting.place}</Typography.Text>
+                  </Space>
+                </Col>
               </Row>
             </Card>
             <Row justify='end' style={{paddingTop: '15px'}}>

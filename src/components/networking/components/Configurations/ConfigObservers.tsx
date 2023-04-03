@@ -62,8 +62,8 @@ export default function ConfigObservers() {
       </Row>
       {/* <Divider orientation='left'>Lista de observadores</Divider> */}
       <List
-        pagination={{pageSize : 3}}
-        header={<div>Obervadores</div>}
+        pagination={{pageSize : 5}}
+        header={<div>Observadores</div>}
         bordered
         dataSource={observers}
         renderItem={(item) => (
