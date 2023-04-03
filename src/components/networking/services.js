@@ -181,7 +181,6 @@ export const createMeetingRequest = ({
   return new Promise((resolve, reject) => {
     (async () => {
       try {
-       
        //Crear solicitud sin importar las solicitudes existentes
        const participants = [
          {
@@ -207,31 +206,31 @@ export const createMeetingRequest = ({
           dateUpdated: Date.now(),
         };
         
-      const requestMeenting={
-        user_to : {
-          id : targetEventUser.user._id,
-          name : targetEventUser.user.names,
-          email : targetEventUser.user.email || ''
-        },
-        user_from : {
-          id : cEventUser.value.user._id,
-          name : cEventUser.value.user.names,
-          email :cEventUser.value.user.email || ''
-        },
-        meeting,
-        date:startDate,
-        message,
-        status:RequestMeetingState.pending
-      }
-      const newAgendaResult = await firestore
-      .collection('networkingByEventId')
-      .doc(eventId)
-      .collection('meeting_request')
-      .add(requestMeenting);
-    // enviamos notificaciones por correo
-    let data = {
-      id_user_requested: requestMeenting.to,
-      id_user_requesting: requestMeenting.from,
+        const requestMeenting={
+          user_to : {
+            id : targetUser.user._id,
+            name : targetUser.user.names,
+            email : targetUser.user.email || ''
+          },
+          user_from : {
+            id : creatorUser.value.user._id,
+            name : creatorUser.value.user.names,
+            email :creatorUser.value.user.email || ''
+          },
+          meeting,
+          date:startDate,
+          message,
+          status:RequestMeetingState.pending
+        }
+        const newAgendaResult = await firestore
+        .collection('networkingByEventId')
+        .doc(eventId)
+        .collection('meeting_request')
+        .add(requestMeenting);
+        // enviamos notificaciones por correo
+        let data = {
+          id_user_requested: requestMeenting.to,
+          id_user_requesting: requestMeenting.from,
       request_id: newAgendaResult.id,
       user_name_requesting: 'Juan Carlos',
       event_id: eventId,
@@ -239,8 +238,8 @@ export const createMeetingRequest = ({
       request_type: 'meeting',
       start_time: new Date(startDate).toLocaleTimeString(),
     };
-      //todo: Arreglar not found de sendEmail
-     await EventsApi.sendMeetingRequest(eventId, data);
+    //todo: Arreglar not found de sendEmail
+    await EventsApi.sendMeetingRequest(eventId, data);
      resolve(newAgendaResult.id);
       } catch (error) {
         reject(error);
