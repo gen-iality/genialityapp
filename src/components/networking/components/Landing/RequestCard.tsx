@@ -15,7 +15,6 @@ const { Meta } = Card;
 
 export default function RequestCardTs({
   data,
-  fetching,
   notificacion,
   setFetching,
   setSendRespuesta,
@@ -27,17 +26,26 @@ const statusRequestText = {
     [RequestMeetingState.pending] : 'pendiente',
     [RequestMeetingState.rejected] : 'rechazada',
 }
-
+  const [loader, setloader] = useState(false)
   const [requestResponse, setRequestResponse] = useState<string>(RequestMeetingState.pending);
-  const userName = data.user_from_name;
-  const userEmail = data.email;
+  const userName = received ?  data.user_from.name  : data.user_to.name 
+  const userEmail = received ?  data.user_from.email : data.user_to.email 
   //contextos
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
   let userCurrentContext = UseCurrentUser();
 
   const changeAgendaStatus = (newStatus: string) => {
-    if (!fetching) {
+    //setloader(true)
+    let notificationr = {
+        idReceive: userCurrentContext.value._id,
+        idEmited:  data.id,
+        state: '1',
+      };
+
+      addNotification(notificationr, eventContext.value, userCurrentContext.value);
+      setloader(false)
+      /*    if (!fetching) {
       setFetching(true);
       acceptOrRejectAgenda(eventContext.value._id, userEventContext.value._id, data, newStatus)
         .then(() => {
@@ -73,7 +81,7 @@ const statusRequestText = {
           }
         })
         .finally(() => setFetching(false));
-    }
+    } */
   };
 
   return (
@@ -81,22 +89,21 @@ const statusRequestText = {
       <Card style={{ width: 600, textAlign: 'left' }} bordered={true}>
         <div style={{ marginBottom: '10px' }}>{received ? 'Solicitud de cita por: ' : 'Solicitud de cita a: '}</div>
         <Meta
-          avatar={<Avatar>{data.user_from_name ? data.user_from_name.charAt(0).toUpperCase() : '-'}</Avatar>}
+          avatar={<Avatar>{`${userName}`.charAt(0).toUpperCase() }</Avatar>}
           title={  userName || 'No registra nombre'}
           description={
             <div>
               <Row>
                 <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
-                  <p>{received ? data.email || userEmail || 'No registra correo' : data.email_requesting || '-'}</p>
+                  <p>{ userEmail || 'No registra correo'}</p>
                     <p style={{ paddingRight: '20px' }}>
                       {'Mensaje: '}
                       {data.message || 'sin mensaje'}
                     </p>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-                  <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div>
-                  <div>{moment(data.timestamp_start).format('hh:mm a')}</div>
-                  <div>{moment(data.timestamp_end).format('hh:mm a')}</div>
+                  <div style={{ textTransform: 'capitalize' }}>{moment(data.date).format('DD/MM/YYYY')}</div>
+                  <div>{moment(data.date).format('hh:mm a')}</div>
                 </Col>
               </Row>
               {requestResponse ? (
@@ -104,15 +111,15 @@ const statusRequestText = {
                   <Row>
                     <Button
                       style={{ marginRight: '10px' }}
-                      disabled={fetching}
-                      loading={fetching}
+                      disabled={loader}
+                      loading={loader}
                       onClick={() => changeAgendaStatus(RequestMeetingState.rejected)}>
                       {'Rechazar'}
                     </Button>
                     <Button
                       type='primary'
-                      disabled={fetching}
-                      loading={fetching}
+                      disabled={loader}
+                      loading={loader}
                       onClick={() => changeAgendaStatus(RequestMeetingState.confirmed)}>
                       {'Aceptar'}
                     </Button>

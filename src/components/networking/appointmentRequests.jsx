@@ -32,10 +32,14 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
   useEffect(async () => {
-   const request = await getMeetingRequest(eventContext.value._id,userEventContext.value.user._id,RequestMeetingState.pending)
+   const request = await getMeetingRequest('user_to.id',eventContext.value._id,userEventContext.value.user._id,RequestMeetingState.pending)
+   const requestSend = await getMeetingRequest('user_from.id',eventContext.value._id,userEventContext.value.user._id,RequestMeetingState.pending)
    console.log('veamos esto',request)
    setPendingAgendas(request)
+   setPendingAgendasSent(requestSend)
+
    setLoading(false);
+   setLoading1(false);
   /*   if (eventContext.value != null && userEventContext.value !== null) {
       if (eventContext.value._id && userEventContext.value._id) {
         setLoading(true);
@@ -78,7 +82,6 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
                 notificacion={notificacion}
                 key={`pending-${pendingAgenda.id}`}
                 data={pendingAgenda}
-                fetching={fetching}
                 setFetching={setFetching}
                 received={true}
               />
@@ -101,13 +104,13 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
           {!loading1 &&
             (pendingAgendasSent.length > 0 ? (
               pendingAgendasSent.map((pendingAgenda) => (
-                <RequestCard
+                <RequestCardTs
                   notificacion={notificacion}
                   key={`pending-${pendingAgenda.id}`}
                   data={pendingAgenda}
                   fetching={fetching}
                   setFetching={setFetching}
-                  meSended={true}
+                  received={false}
                 />
               ))
             ) : (

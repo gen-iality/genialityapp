@@ -159,7 +159,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       type: 'agenda',
       state: '0',
     };
-
+    console.log('veamos el objeto este',notificationA)
     await addNotification(notificationA, cEvent.value, cEventUser.value);
   }
   const resetModal = () => {

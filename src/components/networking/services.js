@@ -249,6 +249,7 @@ export const createMeetingRequest = ({
 };
 /**
  * 
+ * @param {string} property 
  * @param {string} eventId 
  * @param {string} userID 
  * @param {string} stateMeeting 
@@ -262,6 +263,7 @@ export const createMeetingRequest = ({
  * }[]>}
  */
 export const getMeetingRequest = (
+  property,
   eventId,
   userID,
   stateMeeting
@@ -273,7 +275,7 @@ export const getMeetingRequest = (
       .collection('networkingByEventId')
       .doc(eventId)
       .collection('meeting_request')
-      .where('user_to', '==', userID)
+      .where( property, '==', userID)
       .where( 'status','==',stateMeeting)
       .get()
       const data = requestMeetings.docs.map((item)=> ({id : item.id, ...item.data()}))
