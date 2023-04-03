@@ -35,8 +35,21 @@ import { DispatchMessageService } from '../../context/MessageService';
 export const ExportExcel = (props) => {
   const exportData = () => {
     if (props.list) {
+      // console.log({ oldList: props.list })
+      const newlist = props.list.map(obj => {
+        let newObj = {}
+        Object.keys(obj).map(key => {
+          if (Array.isArray(obj[key])) {
+            newObj[key] = obj[key].join(',')
+          } else {
+            newObj[key] = obj[key]
+          }
+        })
+        return newObj
+      })
+      // console.log({ newlist })
       const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.json_to_sheet(props.list);
+      const ws = XLSX.utils.json_to_sheet(newlist);
       XLSX.utils.book_append_sheet(wb, ws, 'Datos');
       XLSX.writeFile(wb, props.fileName + '.xlsx');
     } else {
