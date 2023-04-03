@@ -7,9 +7,10 @@ import { SmileOutlined } from '@ant-design/icons';
 import withContext from '../../context/withContext';
 import * as services from './services/meenting.service';
 import { getDatesRange } from '../../helpers/utils';
-import { createAgendaToEventUser, createMeetingRequest, getAgendasFromEventUser, getUsersId } from './services';
+import { createMeetingRequest, getAgendasFromEventUser, getUsersId } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
 import { typeAttendace } from './interfaces/Meetings.interfaces';
+import { DispatchMessageService } from '@/context/MessageService';
 
 const { Option } = Select;
 
@@ -135,6 +136,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   }, [targetEventUserId, reloadFlag]);
 
   async function reloadData(resp) {
+    if (!resp) return console.log('[ ERROR ] - reloadData => El id de requestMeeting es undefined');
     setReloadFlag(!reloadFlag);
 
     notification.open({
@@ -170,23 +172,32 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   };
 
   const onSubmit = async () => {
+    try {
     if (!date) return notification.warning({ message: 'Debes seleccionar una fecha' });
-
     const startDate = date.toString();
     const endDate = date.add(20, 'minutes').toString();
     const eventId = cEvent?.value?._id;
 
-    const response = await createMeetingRequest({
-      eventId: eventId,
-      targetEventUser,
-      message: agendaMessage,
-      cEventUser,
-      typeAttendace,
-      startDate,
-      endDate,
-    });
-    setDate(null);
-    reloadData(response, targetEventUserId);
+      const idRequestMeeting = await createMeetingRequest({
+        eventId: eventId,
+        targetUser:targetEventUser,
+        message: agendaMessage,
+        creatorUser:cEventUser,
+        typeAttendace,
+        startDate,
+        endDate,
+      });
+      reloadData(idRequestMeeting, targetEventUserId);
+      setDate(null);
+      closeModal();
+    } catch (error) {
+      DispatchMessageService({
+        action: 'show',
+        type: 'error',
+        msj: 'No se pudo programar la reunion, intentelo mas tarde',
+      });
+      closeModal();
+    }
   };
   const disabledDate = (current) => {
     const initial = cEvent?.value?.datetime_from;
@@ -209,7 +220,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
           <div>
             <Row justify='space-between' style={{ margin: 5 }}>
               <DatePicker
-              style={{marginBottom:10}}
+                style={{ marginBottom: 10 }}
                 format={'DD-MM-YYYY hh:mm:ss'}
                 showTime={{ defaultValue: moment(initialDate[1] || '00:00:00', 'HH:mm:ss') }}
                 disabledDate={disabledDate}

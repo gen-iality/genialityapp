@@ -148,7 +148,7 @@ export const createAgendaToEventUser = ({
             start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString(),
           };
 
-          await EventsApi.sendMeetingRequest(eventId, data);
+          EventsApi.sendMeetingRequest(eventId, data);
 
           resolve(newAgendaResult.id);
         }
@@ -158,11 +158,22 @@ export const createAgendaToEventUser = ({
     })();
   });
 };
+/**
+ * Crea una solicitud de reunión.
+ * @param {Object} params - Los parámetros para crear la solicitud de reunión.
+ * @param {string} params.eventId - El identificador del evento.
+ * @param {string} params.targetUser - El identificador del usuario objetivo de la reunión.
+ * @param {string} params.message - El mensaje asociado con la solicitud de reunión.
+ * @param {string} params.creatorUser - El identificador del usuario creador de la reunión.
+ * @param {string} params.typeAttendace
+ * @param {Date} params.startDate - La fecha y hora de inicio de la reunión.
+ * @param {Date} params.endDate - La fecha y hora de finalización de la reunión.
+ */
 export const createMeetingRequest = ({
   eventId,
-  targetEventUser,
+  targetUser,
+  creatorUser,
   message,
-  cEventUser,
   typeAttendace,
   startDate,
   endDate,
@@ -173,40 +184,39 @@ export const createMeetingRequest = ({
        
        //Crear solicitud sin importar las solicitudes existentes
        const participants = [
-        {
-          id: cEventUser.value.user._id,
-          name: cEventUser.value.user.names,
-          email: cEventUser.value.user.email || '',
-          attendance: typeAttendace.unconfirmed,
-        },
-        {
-          id: targetEventUser.user._id,
-          name: targetEventUser.user.names,
-          email: targetEventUser.user.email || '',
-          attendance: typeAttendace.unconfirmed,
-        },
-      ];
-  
-      const meeting = {
-        name: `Reunion con ${targetEventUser.user.names}`,
-        participants: participants,
-        place: 'evius meet',
-        start: startDate,
-        end: endDate,
-        dateUpdated: Date.now(),
-      };
-
+         {
+           id: creatorUser.value.user._id,
+           name: creatorUser.value.user.names,
+           email: creatorUser.value.user.email || '',
+           attendance: typeAttendace.unconfirmed,
+          },
+          {
+            id: targetUser.user._id,
+            name: targetUser.user.names,
+            email: targetUser.user.email || '',
+            attendance: typeAttendace.unconfirmed,
+          },
+        ];
+        
+        const meeting = {
+          name: `Reunion con ${targetUser.user.names}`,
+          participants: participants,
+          place: 'evius meet',
+          start: startDate,
+          end: endDate,
+          dateUpdated: Date.now(),
+        };
+        
       const requestMeenting={
-        user_to:targetEventUser.user._id,
-        user_to_name: targetEventUser.user.names,
-        user_from_name:cEventUser.value.user.names,
-        user_from:cEventUser.value.user._id,
+        user_to:targetUser.user._id,
+        user_to_name: targetUser.user.names,
+        user_from_name:creatorUser.value.user.names,
+        user_from:creatorUser.value.user._id,
         meeting,
         date:startDate,
         message,
         status:RequestMeetingState.pending
       }
-       
       const newAgendaResult = await firestore
       .collection('networkingByEventId')
       .doc(eventId)
@@ -223,9 +233,9 @@ export const createMeetingRequest = ({
       request_type: 'meeting',
       start_time: new Date(startDate).toLocaleTimeString(),
     };
-    //todo: Arreglar not found de sendEmail
+      //todo: Arreglar not found de sendEmail
      await EventsApi.sendMeetingRequest(eventId, data);
-    resolve(newAgendaResult.id);
+     resolve(newAgendaResult.id);
       } catch (error) {
         reject(error);
       }
