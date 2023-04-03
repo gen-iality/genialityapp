@@ -240,6 +240,14 @@ function OrgMembers(props) {
         delete user.password
       }
       return user
+    }).filter((user) => {
+      // Before we send the user data, we have to check if its dataIndex
+      // contains a filtered value to remove this value
+      return Object.entries(filtersToDataSource)
+        .every(([key, value]) => {
+          if (typeof user[key] === 'undefined' || user[key] === undefined) return true
+          return (user[key] === value)
+        })
     }));
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Members');

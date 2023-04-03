@@ -10,11 +10,15 @@ const handleSearch = (selectedKeys, confirm, dataIndex, columnsData, closeDropdo
   }
   columnsData.setSearchText(selectedKeys[0]);
   columnsData.setSearchedColumn(dataIndex);
+  // Set a filter to this dataIndex
+  columnsData.thisDataIndexWasFiltered(dataIndex, selectedKeys[0])
 };
 
-const handleReset = (clearFilters, columnsData) => {
+const handleReset = (clearFilters, columnsData, dataIndex) => {
   clearFilters();
   columnsData.setSearchText('');
+  // Remove the filter for this dataIndex
+  columnsData.thisDataIndexWasFiltered(dataIndex, undefined)
 };
 
 export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
@@ -37,7 +41,7 @@ export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
         >
           Search
         </Button>
-        <Button onClick={() => handleReset(clearFilters, columnsData)} size="small" style={{ width: 90 }}>
+        <Button onClick={() => handleReset(clearFilters, columnsData, dataIndex)} size="small" style={{ width: 90 }}>
           Reset
         </Button>
         <Button
