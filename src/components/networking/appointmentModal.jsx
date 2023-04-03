@@ -209,6 +209,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
           <div>
             <Row justify='space-between' style={{ margin: 5 }}>
               <DatePicker
+              style={{marginBottom:10}}
                 format={'DD-MM-YYYY hh:mm:ss'}
                 showTime={{ defaultValue: moment(initialDate[1] || '00:00:00', 'HH:mm:ss') }}
                 disabledDate={disabledDate}
