@@ -11,14 +11,14 @@ const handleSearch = (selectedKeys, confirm, dataIndex, columnsData, closeDropdo
   columnsData.setSearchText(selectedKeys[0]);
   columnsData.setSearchedColumn(dataIndex);
   // Set a filter to this dataIndex
-  columnsData.thisDataIndexWasFiltered(dataIndex, selectedKeys[0])
+  columnsData.thisDataIndexWasFiltered && columnsData.thisDataIndexWasFiltered(dataIndex, selectedKeys[0])
 };
 
 const handleReset = (clearFilters, columnsData, dataIndex) => {
   clearFilters();
   columnsData.setSearchText('');
   // Remove the filter for this dataIndex
-  columnsData.thisDataIndexWasFiltered(dataIndex, undefined)
+  columnsData.thisDataIndexWasFiltered && columnsData.thisDataIndexWasFiltered(dataIndex, undefined)
 };
 
 export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
