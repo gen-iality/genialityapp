@@ -4,6 +4,7 @@ import React, { useState, useContext } from 'react';
 import { NetworkingContext } from '../../context/NetworkingContext';
 import { SketchPicker } from 'react-color';
 import { IColor, ITypeMeenting } from '../../interfaces/configurations.interfaces';
+import InputColor from '@/components/games/bingo/components/InputColor';
 
 export default function TypeMeenting() {
   const [selected, setselected] = useState<ITypeMeenting>({ id: '', nameType: '', style: '' });
@@ -14,6 +15,7 @@ export default function TypeMeenting() {
   const { typeMeetings, createType, deleteType, updateType } = useContext(NetworkingContext);
 
   const handleColorChange = (value: IColor) => {
+    console.log(value, value.hex, 'here')
     setColor(value.hex);
   };
   const closeModal = () => {
@@ -66,10 +68,15 @@ export default function TypeMeenting() {
                 initialValue={edit ? selected.nameType : ''}>
                 <Input placeholder='Nombre del tipo de reunión' />
               </Form.Item>
-              <Form.Item name={'color'} label={'Color'}>
-                <Space size={'small'} align='center' direction='vertical' style={{ display: 'flex' }}>
+              <Form.Item name={'color'} /* label={'Color'} */>
+                <InputColor
+                  color={color}
+                  onChange={() => handleColorChange}
+                  labelColorName={'Color'}
+                />
+                {/* <Space size={'small'} align='center' direction='vertical' style={{ display: 'flex' }}>
                   <SketchPicker color={color} onChangeComplete={handleColorChange} />
-                </Space>
+                </Space> */}
               </Form.Item>
               <Row justify='end'>
                 <Button type='primary' /* style={{ margin: 10 }}  */htmlType='submit' icon={<SaveOutlined />}>
