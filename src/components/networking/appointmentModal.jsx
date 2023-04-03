@@ -160,7 +160,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       state: '0',
     };
 
-    await addNotification(notificationA, cEvent.value, cEventUser.value);
+    // await addNotification(notificationA, cEvent.value, cEventUser.value);
   }
   const resetModal = () => {
     closeModal();
@@ -200,10 +200,13 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     }
   };
   const disabledDate = (current) => {
-    const initial = cEvent?.value?.datetime_from;
-    const finish = cEvent?.value?.datetime_to;
-    return current && (current < moment(initial) || current > moment(finish));
+    const initial = moment(moment(cEvent?.value?.datetime_from).format('YYYY-MM-DD'));
+    const finish = moment(moment(cEvent?.value?.datetime_to).format('YYYY-MM-DD')) ;
+    const date_to_evaluate = moment(moment(current).format('YYYY-MM-DD'))
+    
+    return !((date_to_evaluate.isSameOrAfter(initial)) && (date_to_evaluate.isSameOrBefore(finish)))
   };
+  
   return (
     <Modal
       visible={!!targetEventUserId}
