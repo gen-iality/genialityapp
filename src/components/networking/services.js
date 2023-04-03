@@ -148,7 +148,7 @@ export const createAgendaToEventUser = ({
             start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString(),
           };
 
-          EventsApi.sendMeetingRequest(eventId, data);
+          await EventsApi.sendMeetingRequest(eventId, data);
 
           resolve(newAgendaResult.id);
         }
@@ -229,9 +229,8 @@ export const createMeetingRequest = ({
       request_type: 'meeting',
       start_time: new Date(startDate).toLocaleTimeString(),
     };
-
-    EventsApi.sendMeetingRequest(eventId, data);
-
+    //todo: Arreglar not found de sendEmail
+     await EventsApi.sendMeetingRequest(eventId, data);
     resolve(newAgendaResult.id);
       } catch (error) {
         reject(error);

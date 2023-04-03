@@ -31,7 +31,6 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   //contextos
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
-
   useEffect(async () => {
    const request = await getMeetingRequest(eventContext.value._id,userEventContext.value.user._id,RequestMeetingState.pending)
    console.log('veamos esto',request)
@@ -51,10 +50,11 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
               }, agendas);
 
               setPendingAgendas(pendingAgendas);
-              setLoading1(false);
             }
+            setLoading1(false);
           })
           .catch((error) => {
+            setLoading1(false);
             notification.error({
               message: 'Error',
               description: 'Obteniendo las citas pendientes',
