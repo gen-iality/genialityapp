@@ -2,15 +2,23 @@ import { Button, Input, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
-const handleSearch = (selectedKeys, confirm, dataIndex, columnsData) => {
-  confirm();
+const handleSearch = (selectedKeys, confirm, dataIndex, columnsData, closeDropdown) => {
+  if (typeof closeDropdown === 'undefined' || closeDropdown === undefined) {
+    confirm();
+  } else {
+    confirm({ closeDropdown });
+  }
   columnsData.setSearchText(selectedKeys[0]);
   columnsData.setSearchedColumn(dataIndex);
+  // Set a filter to this dataIndex
+  columnsData.thisDataIndexWasFiltered && columnsData.thisDataIndexWasFiltered(dataIndex, selectedKeys[0])
 };
 
-const handleReset = (clearFilters, columnsData) => {
+const handleReset = (clearFilters, columnsData, dataIndex) => {
   clearFilters();
   columnsData.setSearchText('');
+  // Remove the filter for this dataIndex
+  columnsData.thisDataIndexWasFiltered && columnsData.thisDataIndexWasFiltered(dataIndex, undefined)
 };
 
 export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
@@ -33,17 +41,13 @@ export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
         >
           Search
         </Button>
-        <Button onClick={() => handleReset(clearFilters, columnsData)} size="small" style={{ width: 90 }}>
+        <Button onClick={() => handleReset(clearFilters, columnsData, dataIndex)} size="small" style={{ width: 90 }}>
           Reset
         </Button>
         <Button
           type="link"
           size="small"
-          onClick={() => {
-            confirm({ closeDropdown: false });
-            columnsData.setSearchText(selectedKeys[0]);
-            columnsData.setSearchedColumn(dataIndex);
-          }}>
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex, columnsData, false)}>
           Filter
         </Button>
       </Space>

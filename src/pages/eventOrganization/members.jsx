@@ -48,6 +48,8 @@ function OrgMembers(props) {
   const [searchedColumn, setSearchedColumn] = useState('');
   const [extraFields, setExtraFields] = useState([]);
 
+  const [filtersToDataSource, setFiltersToDataSource] = useState({});
+
   useEffect(() => {
     startingComponent();
   }, []);
@@ -238,6 +240,14 @@ function OrgMembers(props) {
         delete user.password
       }
       return user
+    }).filter((user) => {
+      // Before we send the user data, we have to check if its dataIndex
+      // contains a filtered value to remove this value
+      return Object.entries(filtersToDataSource)
+        .every(([key, value]) => {
+          if (typeof user[key] === 'undefined' || user[key] === undefined) return true
+          return (user[key] === value)
+        })
     }));
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Members');
@@ -260,11 +270,28 @@ function OrgMembers(props) {
     setIsEditingThetMember(true);
   }
 
+  function thisDataIndexWasFiltered(currentDataIndex, filterValue) {
+    console.info('this dataIndex was filtered', currentDataIndex, filterValue)
+
+    setFiltersToDataSource((previous) => {
+      const clone = {...previous}
+      if (typeof filterValue === 'undefined' || filterValue === undefined) {
+        // Remove this dataIndex if the value is undefined only
+        delete clone[currentDataIndex]
+      } else {
+        // Update the new value
+        clone[currentDataIndex] = filterValue
+      }
+      return clone
+    })
+  }
+
   const columnsData = {
     searchedColumn,
     setSearchedColumn,
     searchText,
     setSearchText,
+    thisDataIndexWasFiltered,
   };
 
   return (

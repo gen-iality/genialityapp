@@ -37,6 +37,8 @@ function OrgRegisteredUsers(props) {
 
   const [extraFields, setExtraFields] = useState([]);
 
+  const [filtersToDataSource, setFiltersToDataSource] = useState({});
+
   useEffect(() => {
     getRegisteredUsers();
     setExtraFields(props.org.user_properties.filter((item) => !['email', 'names'].includes(item.name)));
@@ -64,6 +66,14 @@ function OrgRegisteredUsers(props) {
         }))),
         position: item.position ?? 'Sin cargo'
       }
+    }).filter((user) => {
+      // Before we send the user data, we have to check if its dataIndex
+      // contains a filtered value to remove this value
+      return Object.entries(filtersToDataSource)
+        .every(([key, value]) => {
+          if (typeof user[key] === 'undefined' || user[key] === undefined) return true
+          return (user[key] === value)
+        })
     }).map((user) => {
       delete user._id;
       delete user.created_at;
@@ -181,11 +191,28 @@ function OrgRegisteredUsers(props) {
     setIsLoading(false);
   };
 
+  function thisDataIndexWasFiltered(currentDataIndex, filterValue) {
+    console.info('this dataIndex was filtered', currentDataIndex, filterValue)
+
+    setFiltersToDataSource((previous) => {
+      const clone = {...previous}
+      if (typeof filterValue === 'undefined' || filterValue === undefined) {
+        // Remove this dataIndex if the value is undefined only
+        delete clone[currentDataIndex]
+      } else {
+        // Update the new value
+        clone[currentDataIndex] = filterValue
+      }
+      return clone
+    })
+  }
+
   const columnsData = {
     searchedColumn,
     setSearchedColumn,
     searchText,
     setSearchText,
+    thisDataIndexWasFiltered,
   };
 
   const addNewCertificationModal = (item) => {
