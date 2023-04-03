@@ -199,6 +199,7 @@ export const createMeetingRequest = ({
       const requestMeenting={
         user_to:targetEventUser.user._id,
         user_to_name: targetEventUser.user.names,
+        user_from_name:cEventUser.value.user.names,
         user_from:cEventUser.value.user._id,
         meeting,
         date:startDate,
@@ -253,14 +254,11 @@ export const getMeetingRequest = (
   return new Promise((resolve, reject) => {
     (async () => {
       try {
-      console.log('parametros,',eventId,
-      userID,
-      stateMeeting)
       const requestMeetings = await firestore
       .collection('networkingByEventId')
       .doc(eventId)
       .collection('meeting_request')
-      .where('user_from', '==', userID)
+      .where('user_to', '==', userID)
       .where( 'status','==',stateMeeting)
       .get()
       const data = requestMeetings.docs.map((item)=> ({id : item.id, ...item.data()}))
