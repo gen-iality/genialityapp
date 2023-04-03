@@ -48,6 +48,8 @@ function OrgMembers(props) {
   const [searchedColumn, setSearchedColumn] = useState('');
   const [extraFields, setExtraFields] = useState([]);
 
+  const [filtersToDataSource, setFiltersToDataSource] = useState({});
+
   useEffect(() => {
     startingComponent();
   }, []);
@@ -260,11 +262,28 @@ function OrgMembers(props) {
     setIsEditingThetMember(true);
   }
 
+  function thisDataIndexWasFiltered(currentDataIndex, filterValue) {
+    console.info('this dataIndex was filtered', currentDataIndex, filterValue)
+
+    setFiltersToDataSource((previous) => {
+      const clone = {...previous}
+      if (typeof filterValue === 'undefined' || filterValue === undefined) {
+        // Remove this dataIndex if the value is undefined only
+        delete clone[currentDataIndex]
+      } else {
+        // Update the new value
+        clone[currentDataIndex] = filterValue
+      }
+      return clone
+    })
+  }
+
   const columnsData = {
     searchedColumn,
     setSearchedColumn,
     searchText,
     setSearchText,
+    thisDataIndexWasFiltered,
   };
 
   return (
