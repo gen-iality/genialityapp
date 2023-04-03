@@ -1,12 +1,13 @@
 import {
   CaretDownOutlined,
+  CheckCircleOutlined,
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
   SaveOutlined,
   SmileOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Form, Table, Modal } from 'antd';
+import { Button, Card, Col, Collapse, Result, Row, Space, Typography, Avatar, Tooltip, Table, Modal, List, Divider, Checkbox } from 'antd';
 import React, { useState , useEffect} from 'react';
 import { IParticipants, typeAttendace, IMeentingItem } from '../interfaces/Meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
@@ -109,7 +110,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
               <Result
                 style={{ paddingTop: '2px', paddingBottom: '20px' }}
                 status={finish ? 'info' : meentingStart ? 'success' : 'info'}
-                title={finish ? '¡La reunión finalizó!' : meentingStart ? 'La reunión ya inicio' : 'La reunión iniciará en :'}
+                title={finish ? '¡La reunión ha finalizado!' : meentingStart ? '¡La reunión ha iniciado!' : 'La reunión iniciará en :'}
                 icon={finish && <SmileOutlined />}
                 extra={
                   !meentingStart && (
@@ -143,14 +144,14 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                 </Col>
               </Row>
             </Card>
-            <Row justify='end' style={{paddingTop: '15px'}}>
+            {/* <Row justify='end' style={{paddingTop: '15px'}}>
               <Col>
                 <Tooltip placement='topLeft' title='Guardar'>
                   <Button type='primary' disabled={!meentingStart} icon={<SaveOutlined />} onClick={() => onUpdate()} />
                 </Tooltip>
               </Col>
-            </Row>
-            <Table
+            </Row> */}
+            {/* <Table
               rowSelection={{
                 type: 'checkbox',
                 defaultSelectedRowKeys: participants
@@ -163,7 +164,33 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
               dataSource={participants.map((partici) => ({ ...partici, key: partici.id }))}
               columns={columnsParticipants}
               scroll={{x: 'auto'}}
-            />
+            /> */}
+
+            <Row justify='center' gutter={8} style={{paddingTop: '15px'}}>
+              <Col span={23}>
+                <Card hoverable>
+                  <Divider orientation='left'><Typography.Title level={5}>Lista de asistencia</Typography.Title></Divider>
+                  <List
+                    dataSource={participants.map((partici) => ({ ...partici, key: partici.id }))}
+                    pagination={participants.length > 5 && {pageSize : 5}}
+                    renderItem={participant => (
+                      <List.Item 
+                        key={participant.email}
+                        extra={<Checkbox checked={participant.attendance === typeAttendace.confirmed} 
+                        /* onChange={} //logica del cambio para la confirmacion */
+                      />     
+                      }>
+                        <List.Item.Meta
+                          title={<Typography.Text strong>{participant.name}</Typography.Text>}
+                          description={participant.email}
+                        />
+                      </List.Item>
+                    )}
+                  />
+                </Card>
+              </Col>
+            </Row>
+            
           </Col>
         </Row>
       </Collapse.Panel>
