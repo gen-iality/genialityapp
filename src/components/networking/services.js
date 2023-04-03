@@ -197,10 +197,16 @@ export const createMeetingRequest = ({
       };
 
       const requestMeenting={
-        user_to:targetEventUser.user._id,
-        user_to_name: targetEventUser.user.names,
-        user_from_name:cEventUser.value.user.names,
-        user_from:cEventUser.value.user._id,
+        user_to : {
+          id : targetEventUser.user._id,
+          name : targetEventUser.user.names,
+          email : targetEventUser.user.email || ''
+        },
+        user_from : {
+          id : cEventUser.value.user._id,
+          name : cEventUser.value.user.names,
+          email :cEventUser.value.user.email || ''
+        },
         meeting,
         date:startDate,
         message,

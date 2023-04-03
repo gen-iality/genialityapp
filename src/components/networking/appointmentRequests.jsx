@@ -11,6 +11,7 @@ import { UseCurrentUser } from '../../context/userContext';
 import { acceptOrRejectAgenda, getMeetingRequest, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
 import { RequestMeetingState } from './utils/utils';
+import RequestCardTs from './components/Landing/RequestCard';
 
 const { Meta } = Card;
 
@@ -72,13 +73,14 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
         {!loading &&
           (pendingAgendas.length > 0 ? (
             pendingAgendas.map((pendingAgenda) => (
-              <RequestCard
+              <RequestCardTs
                 setSendRespuesta={setSendRespuesta}
                 notificacion={notificacion}
                 key={`pending-${pendingAgenda.id}`}
                 data={pendingAgenda}
                 fetching={fetching}
                 setFetching={setFetching}
+                received={true}
               />
             ))
           ) : (
@@ -161,11 +163,6 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion, setS
               description: 'Ya tienes agendada esta hora',
             });
           } else {
-            // notification.error({
-            //   message: 'Error',
-            //   description: 'Error al actualizar la solicitud'
-            // });
-
             let notificationr = {
               idReceive: userCurrentContext.value._id,
               idEmited: data && data.id,
