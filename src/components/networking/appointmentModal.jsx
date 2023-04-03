@@ -5,7 +5,7 @@ import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 import withContext from '../../context/withContext';
-import * as services from './services/meenting.service'
+import * as services from './services/meenting.service';
 import { getDatesRange } from '../../helpers/utils';
 import { createAgendaToEventUser, createMeetingRequest, getAgendasFromEventUser, getUsersId } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
@@ -68,7 +68,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   const [loading, setLoading] = useState(true);
   const [reloadFlag, setReloadFlag] = useState(false);
   const [eventDatesRange, setEventDatesRange] = useState(false);
-  const initialDate = cEvent?.value?.datetime_from.split(' ')   
+  const initialDate = cEvent?.value?.datetime_from.split(' ');
 
   useEffect(() => {
     if (targetEventUserId === null || cEvent.value === null || cEventUser.value === null) return;
@@ -144,7 +144,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
       duration: 30,
     });
-    var usId = await getUsersId(targetEventUserId, cEvent.value._id);    
+    var usId = await getUsersId(targetEventUserId, cEvent.value._id);
 
     let notificationA = {
       idReceive: usId.account_id,
@@ -169,17 +169,15 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     setOpenAgenda('');
   };
 
-
   const onSubmit = async () => {
-    if(!date) return notification.warning({message:  'Debes seleccionar una fecha'});
-    
+    if (!date) return notification.warning({ message: 'Debes seleccionar una fecha' });
+
     const startDate = date.toString();
     const endDate = date.add(20, 'minutes').toString();
     const eventId = cEvent?.value?._id;
 
-
     const response = await createMeetingRequest({
-      eventId: cEvent.value._id,
+      eventId: eventId,
       targetEventUser,
       message: agendaMessage,
       cEventUser,
@@ -187,16 +185,13 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       startDate,
       endDate,
     });
-    setDate(null)
-    notification.open({
-      type : response ? 'success' : 'warning',
-      message : response ? '¡Se envio la solicitud de cita!' : 'No se logro agendar la cita'
-    })
+    setDate(null);
+    reloadData(response, targetEventUserId);
   };
   const disabledDate = (current) => {
-    const initial  = cEvent?.value?.datetime_from
-    const finish  = cEvent?.value?.datetime_to
-    return current && (current < moment(initial)  || current > moment(finish));
+    const initial = cEvent?.value?.datetime_from;
+    const finish = cEvent?.value?.datetime_to;
+    return current && (current < moment(initial) || current > moment(finish));
   };
   return (
     <Modal
@@ -212,11 +207,29 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       ) : (
         <div>
           <div>
-            <Row justify='space-between' style={{margin: 5}}>
-            <DatePicker format={'DD-MM-YYYY hh:mm:ss'}  showTime={{ defaultValue: moment(initialDate[1] || '00:00:00', 'HH:mm:ss') }} disabledDate={disabledDate} onOk={(value)=>setDate(value)}  />
-            <Button type='primary' onClick={onSubmit} >Agendar cita</Button>
+            <Row justify='space-between' style={{ margin: 5 }}>
+              <DatePicker
+                format={'DD-MM-YYYY hh:mm:ss'}
+                showTime={{ defaultValue: moment(initialDate[1] || '00:00:00', 'HH:mm:ss') }}
+                disabledDate={disabledDate}
+                onOk={(value) => setDate(value)}
+              />
+              <Button type='primary' onClick={onSubmit}>
+                Agendar cita
+              </Button>
+              <TextArea
+                rows={3}
+                placeholder={`Puedes agregar un mensaje corto en la solicitud. Máximo ${MESSAGE_MAX_LENGTH} caracteres.`}
+                value={agendaMessage}
+                onChange={(e) => {
+                  const newAgendaMessage = e.target.value;
+                  if (newAgendaMessage.length <= MESSAGE_MAX_LENGTH) {
+                    setAgendaMessage(newAgendaMessage);
+                  }
+                }}
+              />
             </Row>
-            <List
+            {/*  <List
               bordered
               itemLayout='vertical'
               dataSource={timetable[selectedDate]}
@@ -324,7 +337,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                   </List.Item>
                 );
               }}
-            />
+            /> */}
           </div>
         </div>
       )}

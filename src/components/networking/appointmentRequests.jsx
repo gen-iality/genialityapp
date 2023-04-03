@@ -8,8 +8,9 @@ import { UseUserEvent } from '../../context/eventUserContext';
 import { UseEventContext } from '../../context/eventContext';
 import { UseCurrentUser } from '../../context/userContext';
 
-import { acceptOrRejectAgenda, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
+import { acceptOrRejectAgenda, getMeetingRequest, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
+import { RequestMeetingState } from './utils/utils';
 
 const { Meta } = Card;
 
@@ -30,7 +31,9 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
 
-  useEffect(() => {
+  useEffect(async () => {
+   const algo = await getMeetingRequest(eventContext.value._id,userEventContext.value.user._id,RequestMeetingState.pending)
+   console.log('veamos esto',algo)
     if (eventContext.value != null && userEventContext.value !== null) {
       if (eventContext.value._id && userEventContext.value._id) {
         setLoading(true);
@@ -59,36 +62,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
     }
   }, [eventContext.value, userEventContext.value, eventUsers, sendRespuesta]);
 
-  useEffect(() => {
-    if (eventContext && userEventContext) {
-      if (eventContext.value?._id && userEventContext.value?._id) {
-        setLoading1(true);
-        //setPendingAgendasSent([]);
-
-        getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
-          .then((agendas) => {
-            if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
-              const pendingAgendas = map((agenda) => {
-                const ownerEventUser = find(propEq('_id', agenda.attendees[0]), eventUsers);
-                return { ...agenda, ownerEventUser };
-              }, agendas);
-
-              setPendingAgendasSent(pendingAgendas);
-              setLoading(false);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            notification.error({
-              message: 'Error',
-              description: 'Obteniendo las citas pendientes',
-            });
-          })
-          .finally(() => setLoading1(false));
-      }
-    }
-  }, [eventContext.value, userEventContext.value, eventUsers, sendRespuesta]);
-
+ 
   return (
     <>
     <Divider>Solicitudes de citas recibidas</Divider>

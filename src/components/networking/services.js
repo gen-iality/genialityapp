@@ -197,8 +197,9 @@ export const createMeetingRequest = ({
       };
 
       const requestMeenting={
-        to:targetEventUser.user._id,
-        from:cEventUser.value.user._id,
+        user_to:targetEventUser.user._id,
+        user_to_name: targetEventUser.user.names,
+        user_from:cEventUser.value.user._id,
         meeting,
         date:startDate,
         message,
@@ -231,26 +232,42 @@ export const createMeetingRequest = ({
     })();
   });
 };
-export const getMeetingRequest = ({
+/**
+ * 
+ * @param {string} eventId 
+ * @param {string} userID 
+ * @param {string} stateMeeting 
+ * @returns { Promise<{
+ * to: string
+ * from: string
+ * meeting: object,
+ * date: string,
+ * message: string,
+ * status: string
+ * }[]>}
+ */
+export const getMeetingRequest = (
   eventId,
-  cEventUser,
+  userID,
   stateMeeting
-}) => {
+) => {
   return new Promise((resolve, reject) => {
     (async () => {
       try {
-      
+      console.log('parametros,',eventId,
+      userID,
+      stateMeeting)
       const requestMeetings = await firestore
       .collection('networkingByEventId')
       .doc(eventId)
       .collection('meeting_request')
-      .where('from', '==', cEventUser.value.user._id)
+      .where('user_from', '==', userID)
       .where( 'status','==',stateMeeting)
       .get()
-
-      resolve(requestMeetings);
+      const data = requestMeetings.docs.map((item)=> ({id : item.id, ...item.data()}))
+      resolve(data);
       } catch (error) {
-        reject(error);
+        reject();
       }
     })();
   });
