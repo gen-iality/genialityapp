@@ -164,22 +164,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 
   return (
     <div>
-      {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-      {/* <Switch>
-          <Route path={props.match.url+"listadoCitas"} render={(props) => (
-             <ListadoCitas {...props}/>
-          )} />
-            
-            <Route path={props.match.url+"/reunion"} render={(props) => (
-          
-            <Reunion {...props}/>
-            )} />
-          
-          <Route path={props.match.url+""} render={(props) => (
-            <ListadoCitas {...props}/>
-            )} />
-        </Switch> */}
 
       {isNonEmptyArray(eventDatesRange) ? (
         <Tabs>

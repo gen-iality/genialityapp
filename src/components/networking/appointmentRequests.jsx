@@ -8,10 +8,11 @@ import { UseUserEvent } from '../../context/eventUserContext';
 import { UseEventContext } from '../../context/eventContext';
 import { UseCurrentUser } from '../../context/userContext';
 
-import { acceptOrRejectAgenda, getMeetingRequest, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
+import { acceptOrRejectAgenda, } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
 import { RequestMeetingState } from './utils/utils';
 import RequestCardTs from './components/Landing/RequestCard';
+import { getMeetingRequest } from './services/landing.service';
 
 const { Meta } = Card;
 
@@ -31,42 +32,17 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   //contextos
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
+
   useEffect(async () => {
-   const request = await getMeetingRequest('user_to.id',eventContext.value._id,userEventContext.value.user._id,RequestMeetingState.pending)
-   const requestSend = await getMeetingRequest('user_from.id',eventContext.value._id,userEventContext.value.user._id,RequestMeetingState.pending)
+   const request = await getMeetingRequest('user_to.id',eventContext.value._id,userEventContext.value.user._id,[RequestMeetingState.pending])
+   const requestSend = await getMeetingRequest('user_from.id',eventContext.value._id,userEventContext.value.user._id,[RequestMeetingState.pending,RequestMeetingState.rejected])
    console.log('veamos esto',request)
    setPendingAgendas(request)
    setPendingAgendasSent(requestSend)
 
    setLoading(false);
    setLoading1(false);
-  /*   if (eventContext.value != null && userEventContext.value !== null) {
-      if (eventContext.value._id && userEventContext.value._id) {
-        setLoading(true);
-        setPendingAgendas([]);
 
-        getPendingAgendasFromEventUser(eventContext.value._id, userEventContext.value._id)
-          .then((agendas) => {
-            if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
-              const pendingAgendas = map((agenda) => {
-                const ownerEventUser = find(propEq('_id', agenda.owner_id), eventUsers);
-                return { ...agenda, ownerEventUser };
-              }, agendas);
-
-              setPendingAgendas(pendingAgendas);
-            }
-            setLoading1(false);
-          })
-          .catch((error) => {
-            setLoading1(false);
-            notification.error({
-              message: 'Error',
-              description: 'Obteniendo las citas pendientes',
-            });
-          })
-          .finally(() => setLoading(false));
-      }
-    } */
   }, [eventContext.value, userEventContext.value, eventUsers, sendRespuesta]);
 
  
@@ -82,7 +58,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
                 notificacion={notificacion}
                 key={`pending-${pendingAgenda.id}`}
                 data={pendingAgenda}
-                setFetching={setFetching}
+                setSendRespuesta={setSendRespuesta}
                 received={true}
               />
             ))
