@@ -1,7 +1,7 @@
 import { sortBy, prop } from 'ramda';
 import { firestore } from '../../helpers/firebase';
 import API, { UsersApi, EventsApi } from '../../helpers/request';
-import { RequestMeetingState } from './utils/utils';
+import { RequestMeetingState, shortName } from './utils/utils';
 
 const filterList = (list, currentUser) => list.find((item) => item.account_id === currentUser);
 
@@ -196,9 +196,9 @@ export const createMeetingRequest = ({
             attendance: typeAttendace.unconfirmed,
           },
         ];
-        
+       
         const meeting = {
-          name: `Reunion con ${targetUser.user.names}`,
+          name: `Reunion entre ${shortName(targetUser.user.names)} y ${shortName(creatorUser.value.user.names)} `,
           participants: participants,
           place: 'evius meet',
           start: startDate,
@@ -247,45 +247,7 @@ export const createMeetingRequest = ({
     })();
   });
 };
-/**
- * 
- * @param {string} property 
- * @param {string} eventId 
- * @param {string} userID 
- * @param {string} stateMeeting 
- * @returns { Promise<{
- * to: string
- * from: string
- * meeting: object,
- * date: string,
- * message: string,
- * status: string
- * }[]>}
- */
-export const getMeetingRequest = (
-  property,
-  eventId,
-  userID,
-  stateMeeting
-) => {
-  return new Promise((resolve, reject) => {
-    (async () => {
-      try {
-      const requestMeetings = await firestore
-      .collection('networkingByEventId')
-      .doc(eventId)
-      .collection('meeting_request')
-      .where( property, '==', userID)
-      .where( 'status','==',stateMeeting)
-      .get()
-      const data = requestMeetings.docs.map((item)=> ({id : item.id, ...item.data()}))
-      resolve(data);
-      } catch (error) {
-        reject();
-      }
-    })();
-  });
-};
+
 
 export const getPendingAgendasFromEventUser = (eventId, currentEventUserId) => {
   return new Promise((resolve, reject) => {

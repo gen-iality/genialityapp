@@ -5,9 +5,9 @@ export interface IRequestCard {
   received : boolean;
   data: IRequestMeenting;
   fetching: boolean;
-  setFetching: (param: boolean) => void;
+  setFetching: React.Dispatch<React.SetStateAction<boolean>>;
   notificacion: any;
-  setSendRespuesta: (param: boolean) => void;
+  setSendRespuesta:  React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 

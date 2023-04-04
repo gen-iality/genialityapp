@@ -11,7 +11,7 @@ import React from 'react';
 import { IRequestCard } from '../../interfaces/Landing.interfaces';
 import moment from 'moment';
 import { RequestMeetingState } from '../../utils/utils';
-import { CheckCircleOutlined, ExclamationCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 const { Meta } = Card;
 const { confirm } = Modal
 
@@ -59,7 +59,7 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
     };
     addNotification(notificationr, eventContext.value, userCurrentContext.value);
     setloader(false);
-    setSendRespuesta(true);
+    setSendRespuesta((status)=> !status);
   };
 
   const changeAgendaStatus = async (newStatus: string) => {
