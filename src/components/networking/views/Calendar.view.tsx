@@ -45,7 +45,9 @@ export default function MyCalendar() {
     openModal();
   };
 
-  const renderEvents = ( events : IMeeting[]  | IMeetingCalendar[]) => {
+  const renderEvents = () => {
+    let events =  meetings
+    if(View !== TypeCalendarView.month && observers.length) events = DataCalendar
     return events.map((meeting) => ({
       ...meeting,
       start: new Date(meeting.start),
@@ -70,7 +72,7 @@ export default function MyCalendar() {
         <Col span={23}>
           <Card hoverable>
             <ReactBigCalendar
-              events={View === TypeCalendarView.month ? renderEvents(meetings) : renderEvents(DataCalendar)}
+              events={renderEvents()}
               view={View}
               onView={(view: View) => setView(view)}
             

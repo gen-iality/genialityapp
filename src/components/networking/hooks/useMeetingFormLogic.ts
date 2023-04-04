@@ -28,7 +28,7 @@ export const useMeetingFormLogic = () => {
                 name: asistente.user.names,
                 key: asistente.user._id,
                 email: asistente.user.email,
-                attendance: typeAttendace.unconfirmed,
+                confirmed: false,
             }))
         );
     }, []);
@@ -65,7 +65,7 @@ export const useMeetingFormLogic = () => {
                 dateUpdated: Date.now(),
                 type :  dataContext.typeMeetings.find((item)=> item.id === datos.type ) || defaultType 
             };
-    
+        
             if (dataContext.edicion && datos.id) {
                 dataContext.updateMeeting(datos.id, { ...meeting, id: datos.id });
                 DispatchMessageService({

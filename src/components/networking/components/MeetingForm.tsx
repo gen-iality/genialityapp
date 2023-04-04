@@ -1,6 +1,6 @@
 import React, { Fragment , useContext } from 'react';
 import { Form, Input, Button, Row, Transfer, DatePicker, Select, Space } from 'antd';
-import { filterOption, formLayout } from '../utils/utils';
+import { defaultType, filterOption, formLayout } from '../utils/utils';
 import moment from 'moment';
 import { useMeetingFormLogic } from '../hooks/useMeetingFormLogic';
 import { NetworkingContext } from '../context/NetworkingContext';
@@ -98,9 +98,8 @@ export default function MeetingForm() {
           initialValue={formState.place}>
           <Input ref={formRef} name={'place'} type='text' placeholder={'Ej: Salón principal'} />
         </Form.Item>
-        <Form.Item label={'Tipo'} name='type' initialValue={formState.type?.nameType}>
+        <Form.Item label={'Tipo'} name='type' initialValue={typeMeetings.find((item)=> item.id === formState.type?.id)?.id || defaultType.nameType}>
           <Select
-            defaultValue=''
             onChange={() => {}}
             options={typeMeetings.map((item)=> ({label: item.nameType, value: item.id}))}
           />

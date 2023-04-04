@@ -24,7 +24,7 @@ export interface IParticipants {
     id:string
     name   : string
     email? : string
-    attendance  : typeAttendace
+    confirmed  : boolean
 }
 
 export enum typeAttendace {

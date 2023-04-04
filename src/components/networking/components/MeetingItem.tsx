@@ -43,21 +43,21 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
   const { editMeenting, deleteMeeting, updateMeeting } = useContext(NetworkingContext);
   const { resultStatus, messageByState } = useMeetingState(meenting.start, meenting.end);
 
-
   const finish = dateFormat(new Date(), 'MM/DD/YYYY hh:mm A') >= dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A');
 
   useEffect(() => {
     setParticipants(meenting.participants);
   }, [meenting.participants]);
 
-  const handleChange = (participants: IParticipants[]) => {
-    const confirmedIds = participants.map((part) => part.id);
-    const temp = meenting.participants.map((part) =>
-      confirmedIds.includes(part.id)
-        ? { ...part, attendance: typeAttendace.confirmed }
-        : { ...part, attendance: typeAttendace.unconfirmed }
-    );
-    setParticipants(temp);
+  const handleChange = async (participant: IParticipants, confirmed : boolean) => {
+    const tempParticipants = participants.map((item) => {
+      if(item.id === participant.id){
+        return {...item, confirmed : confirmed}
+      }else {
+        return item
+      }
+    })
+    await updateMeeting(meenting.id, { ...meenting, participants: tempParticipants });
   };
 
   const onDelete = () => {
@@ -72,10 +72,6 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
         deleteMeeting(meenting.id);
       },
     });
-  };
-
-  const onUpdate = async () => {
-    await updateMeeting(meenting.id, { ...meenting, participants: participants });
   };
   
   return (
@@ -166,28 +162,6 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                 </Col>
               </Row>
             </Card>
-            {/* <Row justify='end' style={{paddingTop: '15px'}}>
-              <Col>
-                <Tooltip placement='topLeft' title='Guardar'>
-                  <Button type='primary' disabled={!meentingStart} icon={<SaveOutlined />} onClick={() => onUpdate()} />
-                </Tooltip>
-              </Col>
-            </Row> */}
-            {/* <Table
-              rowSelection={{
-                type: 'checkbox',
-                defaultSelectedRowKeys: participants
-                  .filter((partici) => partici.attendance === typeAttendace.confirmed)
-                  .map((item) => item.id),
-                onChange(_selectkey, participants) {
-                  handleChange(participants);
-                },
-              }}
-              dataSource={participants.map((partici) => ({ ...partici, key: partici.id }))}
-              columns={columnsParticipants}
-              scroll={{x: 'auto'}}
-            /> */}
-
             <Row justify='center' gutter={8} style={{ paddingTop: '15px' }}>
               <Col span={23}>
                 <Card hoverable>
@@ -195,15 +169,17 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                     <Typography.Title level={5}>Lista de asistencia</Typography.Title>
                   </Divider>
                   <List
-                    dataSource={participants.map((partici) => ({ ...partici, key: partici.id }))}
+                    dataSource={participants}
                     pagination={participants.length > 5 && { pageSize: 5 }}
                     renderItem={(participant) => (
                       <List.Item
                         key={participant.email}
                         extra={
                           <Checkbox
-                            checked={participant.attendance === typeAttendace.confirmed}
-                            /* onChange={} //logica del cambio para la confirmacion */
+                             checked={participant.confirmed}
+                             onChange={(check)=>{
+                              handleChange(participant,check.target.checked)
+                             }}
                           />
                         }>
                         <List.Item.Meta
