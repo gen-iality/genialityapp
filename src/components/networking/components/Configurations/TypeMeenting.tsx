@@ -15,7 +15,6 @@ export default function TypeMeenting() {
   const { typeMeetings, createType, deleteType, updateType } = useContext(NetworkingContext);
 
   const handleColorChange = (value: IColor) => {
-    console.log(value, value.hex, 'here')
     setColor(value.hex);
   };
   const closeModal = () => {
@@ -68,18 +67,13 @@ export default function TypeMeenting() {
                 initialValue={edit ? selected.nameType : ''}>
                 <Input placeholder='Nombre del tipo de reunión' />
               </Form.Item>
-              <Form.Item name={'color'} /* label={'Color'} */>
-                <InputColor
+              <InputColor
                   color={color}
-                  onChange={() => handleColorChange}
+                  onChange={(color : any) => handleColorChange(color)}
                   labelColorName={'Color'}
                 />
-                {/* <Space size={'small'} align='center' direction='vertical' style={{ display: 'flex' }}>
-                  <SketchPicker color={color} onChangeComplete={handleColorChange} />
-                </Space> */}
-              </Form.Item>
               <Row justify='end'>
-                <Button type='primary' /* style={{ margin: 10 }}  */htmlType='submit' icon={<SaveOutlined />}>
+                <Button type='primary' htmlType='submit' icon={<SaveOutlined />}>
                   Guardar
                 </Button>
               </Row>
