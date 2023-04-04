@@ -173,7 +173,14 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
   return (
     <>
       <Header
-        title={`Miembros en el cargo: ${currentPosition ? currentPosition.position_name : <Spin />}`}
+        title={(
+          <>
+           {`Miembros en el cargo: `}
+           {currentPosition ? (
+            <>{currentPosition.position_name}</>
+           ) : <Spin />}
+          </>
+        )}
       />
       <Typography.Paragraph>
         {'Agregue, edite y borre los miembros que están asignado al cargo de '}
