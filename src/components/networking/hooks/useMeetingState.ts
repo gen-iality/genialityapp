@@ -1,38 +1,49 @@
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useDateFormat from './useDateFormat';
 
 type MeetingState = 'scheduled' | 'in-progress' | 'completed';
+type ResultStatus = 'success' | 'info'
 
-type StateMap<T1, T2, T3> = {
-  scheduled: T1;
-  'in-progress': T2;
-  completed: T3;
-};
-
-const useMeetingState = <T1, T2, T3>(startMeeting: string | Date, endMeeting: string | Date, stateMap?: StateMap<T1, T2, T3>) => {
+const useMeetingState = (startMeeting: string | Date, endMeeting: string | Date) => {
   const [stateMeeting, setStateMeeting] = useState<MeetingState>('scheduled');
   const { dateFormat } = useDateFormat();
-  
+  const [messageByState, setMessageByState] = useState('')
+  const [resultStatus, setResultStatus] = useState<ResultStatus>('info')
+
+
   useEffect(() => {
     const currentDate = moment(new Date());
     
     if (currentDate.isBefore(dateFormat(startMeeting, 'MM/DD/YYYY hh:mm A'))) {
       setStateMeeting('scheduled');
-    } else if (
+      setMessageByState('La reunión iniciará en :')
+      setResultStatus('success');
+      return;
+    }
+    if (
       currentDate.isAfter(dateFormat(startMeeting, 'MM/DD/YYYY hh:mm A')) &&
       currentDate.isBefore(dateFormat(endMeeting, 'MM/DD/YYYY hh:mm A'))
     ) {
       setStateMeeting('in-progress');
-    } else if (currentDate.isAfter(dateFormat(endMeeting, 'MM/DD/YYYY hh:mm A'))) {
-      setStateMeeting('completed');
+      setMessageByState('¡La reunión ha iniciado!');
+      setResultStatus('info');
+      return;
     }
-  }, []);
+    if (currentDate.isAfter(dateFormat(endMeeting, 'MM/DD/YYYY hh:mm A'))) {
+      setStateMeeting('completed');
+      setMessageByState('¡La reunión ha finalizado!');
+      setResultStatus('info');
+      return;
+    }
+  }, [startMeeting, endMeeting]);
 
+  
   return {
     stateMeeting,
     setStateMeeting,
-    valueByState: stateMap ? stateMap[stateMeeting] : undefined,
+    resultStatus,
+    messageByState
   };
 };
 export default useMeetingState;

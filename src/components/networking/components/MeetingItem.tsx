@@ -1,10 +1,8 @@
 import {
   CaretDownOutlined,
-  CheckCircleOutlined,
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  SaveOutlined,
   SmileOutlined,
 } from '@ant-design/icons';
 import {
@@ -18,7 +16,6 @@ import {
   Typography,
   Avatar,
   Tooltip,
-  Table,
   Modal,
   List,
   Divider,
@@ -29,10 +26,8 @@ import { IParticipants, typeAttendace, IMeentingItem } from '../interfaces/Meeti
 import Countdown from 'antd/lib/statistic/Countdown';
 // eslint-disable-next-line no-use-before-define
 import moment from 'moment';
-// import moment, { now } from 'moment';
 import { useContext } from 'react';
 import { NetworkingContext } from '../context/NetworkingContext';
-import { columnsParticipants } from '../utils/utils';
 import useDateFormat from '../hooks/useDateFormat';
 import useMeetingState from '../hooks/useMeetingState';
 
@@ -46,12 +41,15 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
     moment(new Date()).isAfter(dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A'))
   );
   const { editMeenting, deleteMeeting, updateMeeting } = useContext(NetworkingContext);
-  const { stateMeeting, valueByState } = useMeetingState<'success','info','info'>(meenting.start, meenting.end,{completed:'info',"in-progress":'info',scheduled:'success'});
+  const { resultStatus, messageByState } = useMeetingState(meenting.start, meenting.end);
+
 
   const finish = dateFormat(new Date(), 'MM/DD/YYYY hh:mm A') >= dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A');
+
   useEffect(() => {
     setParticipants(meenting.participants);
   }, [meenting.participants]);
+
   const handleChange = (participants: IParticipants[]) => {
     const confirmedIds = participants.map((part) => part.id);
     const temp = meenting.participants.map((part) =>
@@ -79,7 +77,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
   const onUpdate = async () => {
     await updateMeeting(meenting.id, { ...meenting, participants: participants });
   };
-
+  
   return (
     <Collapse
       expandIcon={({ isActive }) => (
@@ -131,8 +129,8 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
             <Card bordered={false} style={{ backgroundColor: 'transparent' }} bodyStyle={{ padding: '5px' }}>
               <Result
                 style={{ paddingTop: '2px', paddingBottom: '20px' }}
-                status={valueByState}
-                title={finish ? '¡La reunión ha finalizado!' : meentingStart ? '¡La reunión ha iniciado!' : 'La reunión iniciará en :'}
+                status={resultStatus}
+                title={messageByState}
                 icon={finish && <SmileOutlined />}
                 extra={
                   !meentingStart && (
