@@ -88,7 +88,7 @@ export default function TypeMeenting() {
       </Row>
       {/* <Divider orientation='left'>Tipos de reuniones</Divider> */}
       <List
-        pagination={{ pageSize: 5 }}
+        pagination={typeMeetings.length >= 5 && { pageSize: 5 }}
         header={<div>Tipos</div>}
         bordered
         dataSource={typeMeetings}

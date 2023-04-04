@@ -12,7 +12,7 @@ export default function Configuration() {
       <Col span={12}>
         <Card
           hoverable
-          /* style={{ width: 540 }} */
+          style={{ minHeight: 550 }}
         >
           <Divider orientation='left'><Typography.Title level={5}>Configuración de observadores</Typography.Title></Divider>
           
@@ -23,7 +23,7 @@ export default function Configuration() {
       <Col span={12}>
         <Card
           hoverable
-          /* style={{ width: 540 }} */
+          style={{ minHeight: 550 }}
         >
           <Divider orientation='left'><Typography.Title level={5}>Configuración de tipos</Typography.Title></Divider>
           
