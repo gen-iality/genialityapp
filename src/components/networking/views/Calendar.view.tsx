@@ -10,6 +10,7 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import 'moment/dist/locale/es';
+import { getCorrectColor } from '@/helpers/utils';
 
 export default function MyCalendar() {
   const [View, setView] = useState<View>(TypeCalendarView.month);
@@ -54,7 +55,9 @@ export default function MyCalendar() {
 
   const eventStyleGetter = (event : IMeeting | IMeetingCalendar)  => {
     const style = {
-      backgroundColor: typeMeetings.find((item)=> item.id === event.type?.id)?.style || defaultType.style
+      backgroundColor: typeMeetings.find((item)=> item.id === event.type?.id)?.style || defaultType.style,
+      color: getCorrectColor(typeMeetings.find((item)=> item.id === event.type?.id)?.style || defaultType.style),
+      border: `1px solid #F1EEEE` 
     };
     return {
       style: style,
@@ -102,7 +105,8 @@ export default function MyCalendar() {
                 showMore: function showMore(total: number) {
                   return "+" + total + " Más";
                 },
-                noEventsInRange: 'No hay eventos dentro del rango seleccionado'
+                noEventsInRange: 'No hay eventos dentro del rango seleccionado',
+                
               }}
               culture='es'
             />
