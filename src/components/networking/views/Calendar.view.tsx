@@ -57,7 +57,7 @@ export default function MyCalendar() {
     const style = {
       backgroundColor: typeMeetings.find((item)=> item.id === event.type?.id)?.style || defaultType.style,
       color: getCorrectColor(typeMeetings.find((item)=> item.id === event.type?.id)?.style || defaultType.style),
-      border: `1px solid #F1EEEE` 
+      border: `1px solid rgba(196, 196, 196, 0.3)` //#C4C4C4 
     };
     return {
       style: style,
