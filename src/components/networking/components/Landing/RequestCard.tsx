@@ -22,7 +22,7 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
     [RequestMeetingState.rejected]: 'rechazada',
   };
   const [loader, setloader] = useState(false);
-  const [requestResponse, setRequestResponse] = useState<string>(RequestMeetingState.pending);
+  const [className, setClassName] = useState<string>('');
   const userName = received ? data.user_from.name : data.user_to.name;
   const userEmail = received ? data.user_from.email : data.user_to.email;
   //contextos
@@ -47,10 +47,24 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
       });
     }
   };
-  const rejectRequest = async () =>{
-    await services.updateRequestMeeting(eventId, data.id, { ...data, status: RequestMeetingState.rejected });
-    notificationUser();
-  }
+  const rejectRequest = async () => {
+    const response = await services.updateRequestMeeting(eventId, data.id, {
+      ...data,
+      status: RequestMeetingState.rejected,
+    });
+    if (response) {
+      setClassName('animate__animated animate__backOutLeft animate__slow');
+      notificationUser();
+    } else {
+      notification.warning({
+        icon: <ExclamationCircleOutlined />,
+        message : 'Algo salio mal!',
+        description: 'No se logró rechazar la reunión, comuníquese con el administrador'
+      });
+    }
+
+    setloader(false);
+  };
   const notificationUser = () => {
     let notificationr = {
       idReceive: userCurrentContext.value._id,
@@ -77,7 +91,6 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
         cancelText: 'Cancelar',
         onOk() {
           rejectRequest()
-          setloader(false);
         },
         onCancel() {
           setloader(false);
@@ -87,7 +100,7 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
   };
 
   return (
-    <Row justify='center' style={{ marginBottom: '20px' }} className='animate__animated animate__backInLeft animate__delay-2s'>
+    <Row justify='center' style={{ marginBottom: '20px' }} className={className}>
       <Card style={{ width: 600, textAlign: 'left' }} bordered={true}>
         <div style={{ marginBottom: '10px' }}>{received ? 'Solicitud de cita por: ' : 'Solicitud de cita a: '}</div>
         <Meta
