@@ -321,7 +321,7 @@ function Certificate(props: CertificateProps) {
                   <Alert message="Certificado de curso completo" type="success" />
                   <br />
                   <IconText
-                    text="Descargar certificado de curso"
+                    text="Descargar certificado del curso"
                     icon={isGenerating ? LoadingOutlined : DownloadOutlined}
                     onSubmit={() => generateCert(props.cEventUser.value)}
                   />
