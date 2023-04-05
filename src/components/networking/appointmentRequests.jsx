@@ -53,14 +53,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
         {!loading &&
           (pendingAgendas.length > 0 ? (
             pendingAgendas.map((pendingAgenda) => (
-              <RequestCardTs
-                setSendRespuesta={setSendRespuesta}
-                notificacion={notificacion}
-                key={`pending-${pendingAgenda.id}`}
-                data={pendingAgenda}
-                setSendRespuesta={setSendRespuesta}
-                received={true}
-              />
+              
             ))
           ) : (
             <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>

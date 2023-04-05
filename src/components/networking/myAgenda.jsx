@@ -23,6 +23,7 @@ import { getDatesRange } from '../../helpers/utils';
 import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
 import { createChatRoom } from './agendaHook';
 import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
+import useGetMeetingConfirmed from './hooks/useGetMeetingConfirmed';
 
 const { TabPane } = Tabs;
 const { Meta } = Card;
@@ -33,11 +34,12 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [acceptedAgendas, setAcceptedAgendas] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
-
+  const { loading: loadingMeeting, meetingsByUser } = useGetMeetingConfirmed();
   const eventDatesRange = useMemo(() => {
     return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
   }, [event.date_start, event.date_end]);
-
+  
+  console.log('meetingsByUser', meetingsByUser);
   useEffect(() => {
     if (!event || !event._id) return;
 
@@ -164,7 +166,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 
   return (
     <div>
-
       {isNonEmptyArray(eventDatesRange) ? (
         <Tabs>
           {eventDatesRange.map((eventDate, eventDateIndex) => {

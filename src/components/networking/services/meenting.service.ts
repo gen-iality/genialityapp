@@ -17,16 +17,32 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
 		.collection(`networkingByEventId`)
 		.doc(eventId)
 		.collection('meetings').onSnapshot(snapshot => {
-      if (!snapshot.empty) {
-        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as {};
-        setMeetings(data);
-      } else {
-		setMeetings([])
-	  }
-    })
+			if (!snapshot.empty) {
+				const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as {};
+				setMeetings(data);
+			} else {
+				setMeetings([])
+			}
+		})
 };
 
-export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMeeting,'id'>) => {
+export const listenMeetingsByUserLanding = (eventId: string, userID: string, setMeetings?: any) => {
+	return firestore
+		.collection(`networkingByEventId`)
+		.doc(eventId)
+		.collection('meetings')
+		.onSnapshot(snapshot => {
+			if (!snapshot.empty) {
+				const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeeting[];
+				const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => participant.id === userID) !== undefined)
+				if (setMeetings) setMeetings(meetingsWithUserID);
+			} else {
+				if (setMeetings) setMeetings([]);
+			}
+		})
+};
+
+export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMeeting, 'id'>) => {
 	try {
 		await firestore
 			.collection(`networkingByEventId`)
@@ -34,7 +50,7 @@ export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMee
 			.collection('meetings')
 			.doc()
 			.set(createMeetingDto);
-			return true
+		return true
 	} catch (error) {
 		console.log(error);
 		return false
@@ -64,7 +80,7 @@ export const deleteMeeting = async (eventId: string, meetingId: string) => {
 			.collection('meetings')
 			.doc(meetingId)
 			.delete();
-			return true
+		return true
 	} catch (error) {
 		console.log(error);
 		return false
