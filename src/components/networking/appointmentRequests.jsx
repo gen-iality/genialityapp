@@ -34,8 +34,8 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   let eventContext = UseEventContext();
 
   useEffect(async () => {
-   const request = await getMeetingRequest('user_to.id',eventContext.value._id,userEventContext.value.user._id,[RequestMeetingState.pending])
-   const requestSend = await getMeetingRequest('user_from.id',eventContext.value._id,userEventContext.value.user._id,[RequestMeetingState.pending,RequestMeetingState.rejected])
+   const request = await getMeetingRequest('user_to.id',eventContext.value._id,userEventContext.value._id,[RequestMeetingState.pending])
+   const requestSend = await getMeetingRequest('user_from.id',eventContext.value._id,userEventContext.value._id,[RequestMeetingState.pending,RequestMeetingState.rejected])
    console.log('veamos esto',request)
    setPendingAgendas(request)
    setPendingAgendasSent(requestSend)

@@ -236,10 +236,8 @@ export const createMeetingRequest = ({
           event_id: eventId,
           state: 'send',
           request_type: 'meeting',
-          start_time: new Date(startDate).toLocaleTimeString(),
-          timestamp_start : new Date(startDate).getTime()
+          start_time: new Date(startDate).toLocaleTimeString()
         };
-        console.log('veamos la fecha',data.timestamp_start)
     //todo: Arreglar not found de sendEmail
     await EventsApi.sendMeetingRequest(eventId, data);
      resolve(newAgendaResult.id);
