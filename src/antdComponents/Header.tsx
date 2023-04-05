@@ -7,7 +7,7 @@ import { FunctionComponent, MouseEventHandler, ReactElement } from 'react'
 const { Title, Text } = Typography
 
 interface HeaderProps {
-  title: string,
+  title: string | ReactElement,
   titleTooltip?: string,
   addUrl?: string
   addFn?: MouseEventHandler<HTMLElement>,
