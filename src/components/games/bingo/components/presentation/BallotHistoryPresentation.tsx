@@ -56,7 +56,8 @@ const BallotHistoryPresentation = ({ demonstratedBallots = [], mediaUrl }: Ballo
 													style={{ borderRadius: '10px', objectFit: 'cover' }}
 													width={80}
 													height={80}
-													src={item?.value}
+													fallback={'https://dummyimage.com/500x500/ffffff/cdcdcd.jpg&text=Sin+imagen'}
+													src={item?.value || 'error'}
 													alt={item?.value}
 												/>
 											)}
