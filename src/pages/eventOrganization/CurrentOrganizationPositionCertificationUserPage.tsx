@@ -21,6 +21,7 @@ import { ColumnsType } from 'antd/lib/table';
 import { useState, useEffect } from 'react';
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
 export interface CurrentOrganizationPositionCertificationUserPageProps {
   org: any;
@@ -108,6 +109,25 @@ function CurrentOrganizationPositionCertificationUserPage(
       {
         title: 'Certificación de',
         render: (event: any) => <span>{event.name}</span>,
+      },
+      {
+        title: 'Historial',
+        dataIndex: 'certification',
+        align: 'center',
+        width: 100,
+        render: (certification: any) => (
+          <>
+          {(certification?.certification_logs || []).length === 0 ? (
+            <em>Sin registros</em>
+          ) : (
+            <Link to={`${props.match.url}/logs`}>
+              <Tag color='#88f'>
+                {(certification?.certification_logs || []).length} registros
+              </Tag>
+            </Link>
+          )}
+          </>
+        ),
       },
       {
         title: 'Estado de aprobación',
