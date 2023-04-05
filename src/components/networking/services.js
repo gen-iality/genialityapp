@@ -187,13 +187,13 @@ export const createMeetingRequest = ({
            id: creatorUser.value.user._id,
            name: creatorUser.value.user.names,
            email: creatorUser.value.user.email || '',
-           attendance: typeAttendace.unconfirmed,
+           confirmed : false
           },
           {
             id: targetUser.user._id,
             name: targetUser.user.names,
             email: targetUser.user.email || '',
-            attendance: typeAttendace.unconfirmed,
+            confirmed: false
           },
         ];
        
@@ -229,15 +229,16 @@ export const createMeetingRequest = ({
         .add(requestMeenting);
         // enviamos notificaciones por correo
         let data = {
-          id_user_requested: requestMeenting.to,
-          id_user_requesting: requestMeenting.from,
-      request_id: newAgendaResult.id,
-      user_name_requesting: 'Juan Carlos',
-      event_id: eventId,
-      state: 'send',
-      request_type: 'meeting',
-      start_time: new Date(startDate).toLocaleTimeString(),
-    };
+          id_user_requested: requestMeenting.user_to.id,
+          id_user_requesting: requestMeenting.user_from.id ,
+          request_id: newAgendaResult.id,
+          user_name_requesting: 'Juan Carlos',
+          event_id: eventId,
+          state: 'send',
+          request_type: 'meeting',
+          start_time: new Date(startDate).toLocaleTimeString(),
+        };
+        console.log('veamos la fecha',data.start_time)
     //todo: Arreglar not found de sendEmail
     await EventsApi.sendMeetingRequest(eventId, data);
      resolve(newAgendaResult.id);
