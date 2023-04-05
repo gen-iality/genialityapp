@@ -47,9 +47,7 @@ const CertificationTag: FunctionComponent<{value: number, total: number}> = (pro
     return 'red'
   }, [props])
   return (
-    <Tag
-      color={color}
-    >
+    <Tag color={color}>
       {props.children}
     </Tag>
   )
