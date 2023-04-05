@@ -221,7 +221,8 @@ export const createMeetingRequest = ({
           meeting,
           date:startDate,
           message,
-          status:RequestMeetingState.pending
+          status:RequestMeetingState.pending,
+          timestamp : new Date.now()
         }
         const newAgendaResult = await firestore
         .collection('networkingByEventId')
