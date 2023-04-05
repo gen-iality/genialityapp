@@ -26,21 +26,27 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
 		})
 };
 //todo: mejorar el filtro de reuniones with user
-export const listenMeetingsByUserLanding = (eventId: string, userID: string, setMeetings?: any) => {
-	return firestore
-		.collection(`networkingByEventId`)
-		.doc(eventId)
-		.collection('meetings')
-		.onSnapshot(snapshot => {
+export const listenMeetingsByUserLanding = (eventId: string, userID: string): Promise<IMeeting[]> => {
+	return new Promise((resolve, reject) => {
+	  try {
+		firestore
+		  .collection(`networkingByEventId`)
+		  .doc(eventId)
+		  .collection('meetings')
+		  .onSnapshot(snapshot => {
 			if (!snapshot.empty) {
-				const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeeting[];
-				const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => participant.id === userID) !== undefined)
-				if (setMeetings) setMeetings(meetingsWithUserID);
+			  const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeeting[];
+			  const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => participant.id === userID) !== undefined);
+			  resolve(meetingsWithUserID);
 			} else {
-				if (setMeetings) setMeetings([]);
+			  resolve([]);
 			}
-		})
-};
+		  });
+	  } catch (error) {
+		reject(error);
+	  }
+	});
+  };
 
 export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMeeting, 'id'>) => {
 	try {

@@ -1,18 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  Modal,
-  notification,
-  Row,
-  Spin,
-  Tabs,
-  Space,
-  Typography,
-  Popconfirm,
-  Divider,
-} from 'antd';
+import { Button, Card, Col, notification, Row, Spin, Tabs } from 'antd';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 import { find, map, mergeRight, path, propEq } from 'ramda';
@@ -20,26 +6,26 @@ import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useMemo, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
 import { getDatesRange } from '../../helpers/utils';
-import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
+import { getAcceptedAgendasFromEventUser } from './services';
 import { createChatRoom } from './agendaHook';
 import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
 import useGetMeetingConfirmed from './hooks/useGetMeetingConfirmed';
+import AcceptedCard from './components/my-agenda/AcceptedCard';
+import TabComponent from './components/my-agenda/TabComponent';
 
 const { TabPane } = Tabs;
-const { Meta } = Card;
-const { confirm } = Modal;
 
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
+  const eventDatesRange = useMemo(() => {
+    return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
+  }, [event.date_start, event.date_end]);
+
   const [loading, setLoading] = useState(true);
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [acceptedAgendas, setAcceptedAgendas] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
-  const { loading: loadingMeeting, meetingsByUser,listDays } = useGetMeetingConfirmed();
-  const eventDatesRange = useMemo(() => {
-    return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
-  }, [event.date_start, event.date_end]);
-  
-  console.log('listDays', listDays);
+  const { loading: loadingMeeting, listDays, haveMeetings } = useGetMeetingConfirmed();
+
   useEffect(() => {
     if (!event || !event._id) return;
 
@@ -165,179 +151,58 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   }
 
   return (
-    <div>
-      {isNonEmptyArray(eventDatesRange) ? (
-        <Tabs>
-          {eventDatesRange.map((eventDate, eventDateIndex) => {
-            const dayAgendas = acceptedAgendas.filter(({ timestamp_start }) => {
-              const agendaDate = moment(timestamp_start).format('YYYY-MM-DD');
-              return agendaDate === eventDate;
-            });
+    <>
+      {/* <div>
+        {isNonEmptyArray(eventDatesRange) ? (
+          <Tabs>
+            {eventDatesRange.map((eventDate, eventDateIndex) => {
+              const dayAgendas = acceptedAgendas.filter(({ timestamp_start }) => {
+                const agendaDate = moment(timestamp_start).format('YYYY-MM-DD');
+                return agendaDate === eventDate;
+              });
 
-            return (
-              <TabPane
-                tab={
-                  <div style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
-                    {moment(eventDate).format('MMMM DD')}
-                  </div>
-                }
-                key={`event-date-${eventDateIndex}-${eventDate}`}>
-                {isNonEmptyArray(dayAgendas) ? (
-                  dayAgendas.map((acceptedAgenda) => (
-                    <>
-                      <AcceptedCard
-                        key={`accepted-${acceptedAgenda.id}`}
-                        eventId={event._id}
-                        eventUser={eventUser}
-                        data={acceptedAgenda}
-                        enableMeetings={enableMeetings}
-                        setCurrentRoom={setCurrentRoom}
-                      />
-                    </>
-                  ))
-                ) : (
-                  <Card style={{ textAlign: 'center' }}>{'No tienes citas agendadas para esta fecha'}</Card>
-                )}
-              </TabPane>
-            );
-          })}
-        </Tabs>
-      ) : (
-        <Card>{'No tienes citas actualmente'}</Card>
-      )}
-    </div>
-  );
-}
-
-function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom }) {
-  const [loading, setLoading] = useState(false);
-  const [deleted, setDeleted] = useState(false);
-
-  //const userName = pathOr('', ['names','name'], data);
-  const userName = data.owner_id == eventUser._id ? data.name ?? 'Sin nombre' : data.name_requesting ?? 'Sin nombre';
-  //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
-  const userEmail = (data.otherEventUser && data.otherEventUser.properties.email) || data.email;
-  const userImage = (data.otherEventUser && data.otherEventUser.properties.picture) || undefined;
-
-  /** Entramos a la sala 1 a 1 de la reunión
-   *
-   */
-  const accessMeetRoom = (data, eventUser) => {
-    if (!eventUser) {
-      alert('Tenemos problemas con tu usuario, itenta recargar la página');
-      return;
-    }
-    let roomName = data.id;
-
-    setCurrentRoom(roomName);
-  };
-
-  const deleteThisAgenda = () => {
-    if (!loading) {
-      setLoading(true);
-      deleteAgenda(eventId, data.id)
-        .then(() => setDeleted(true))
-        .catch((error) => {
-          console.error(error);
-          notification.error({
-            message: 'Error',
-            description: 'Error eliminando la cita',
-          });
-        })
-        .finally(() => setLoading(false));
-    }
-  };
-
-  const validDateRoom = (room) => {
-    let dateFrom = moment(room.timestamp_start).format('YYYY-MM-DD');
-
-    if (moment().format('YYYY-MM-DD') == dateFrom) {
-      return true;
-    }
-    return false;
-  };
-
-  return (
-    <Row justify='center' style={{ marginBottom: '20px' }}>
-      <Card
-        headStyle={{ border: 'none' }}
-        style={{ width: 600, textAlign: 'left', borderRadius: '10px' }}
-        bodyStyle={{ paddingTop: '0px' }}
-        bordered={true}
-        extra={
-          <Popconfirm
-            title='¿Desea cancelar/eliminar esta cita?'
-            onConfirm={deleteThisAgenda}
-            okText='Si'
-            cancelText='No'>
-            <Button type='text' danger disabled={loading} loading={loading}>
-              {'Cancelar Cita'}
-            </Button>
-          </Popconfirm>
-        }
-        title={
-          <Space wrap>
-            {/* <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div> */}
-            <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
-              {moment(data.timestamp_start).format('hh:mm a')}
-            </Typography.Text>
-            <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
-              {moment(data.timestamp_end).format('hh:mm a')}
-            </Typography.Text>
-          </Space>
-        }>
-        {/* <div style={{ marginBottom: '10px' }}>{'Cita con: '}</div> */}
-        <Meta
-          avatar={
-            userImage ? (
-              <Avatar size={50} src={userImage}></Avatar>
-            ) : (
-              <Avatar size={50}>{userName ? userName.charAt(0).toUpperCase() : userName}</Avatar>
-            )
-          }
-          title={<Typography.Title level={5}>{userName || 'No registra nombre'}</Typography.Title>}
-          description={
-            <Typography.Paragraph style={{ marginTop: '-15px' }}>
-              <Typography.Text type='secondary' style={{ paddingRight: '20px' }}>
-                {userEmail || 'No registra correo'}
-              </Typography.Text>
-              {!!data.message && (
-                <p style={{ paddingRight: '20px' }}>
-                  <Divider orientation='left' plain style={{ marginBottom: '0px' }}>
-                    Mensaje
-                  </Divider>
-                  <Typography.Paragraph type='secondary' ellipsis={{ rows: 2 }}>
-                    {data.message}
-                  </Typography.Paragraph>
-                </p>
-              )}
-            </Typography.Paragraph>
-          }
-        />
-        {!deleted ? (
-          <Row justify='center'>
-            <Col xs={24} sm={24} md={12} xl={12}>
-              <Button
-                block
-                type='primary'
-                disabled={loading || (!enableMeetings && !validDateRoom(data))}
-                loading={loading}
-                onClick={() => {
-                  accessMeetRoom(data, eventUser);
-                }}>
-                {validDateRoom(data) && !enableMeetings
-                  ? 'Ingresar a reunión'
-                  : !validDateRoom(data) && !enableMeetings
-                  ? 'Reunión no iniciada'
-                  : 'Reunión Cerrada'}
-              </Button>
-            </Col>
-          </Row>
+              return (
+                <TabPane
+                  tab={
+                    <div style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
+                      {moment(eventDate).format('MMMM DD')}
+                    </div>
+                  }
+                  key={`event-date-${eventDateIndex}-${eventDate}`}>
+                  {isNonEmptyArray(dayAgendas) ? (
+                    dayAgendas.map((acceptedAgenda) => (
+                      <>
+                        <AcceptedCard
+                          key={`accepted-${acceptedAgenda.id}`}
+                          eventId={event._id}
+                          eventUser={eventUser}
+                          data={acceptedAgenda}
+                          enableMeetings={enableMeetings}
+                          setCurrentRoom={setCurrentRoom}
+                        />
+                      </>
+                    ))
+                  ) : (
+                    <Card style={{ textAlign: 'center' }}>{'No tienes citas agendadas para esta fecha'}</Card>
+                  )}
+                </TabPane>
+              );
+            })}
+          </Tabs>
         ) : (
-          <Row>{`Cita cancelada.`}</Row>
+          <Card>{'No tienes citas actualmente'}</Card>
         )}
-      </Card>
-    </Row>
+      </div> */}
+
+      <div>
+
+      {
+          haveMeetings? (<TabComponent listTabPanels={listDays} eventUser={eventUser} enableMeetings={enableMeetings} setCurrentRoom={setCurrentRoom}/>):(
+            <Card>{'No tienes citas actualmente'}</Card>
+          )
+        }
+      </div>
+    </>
   );
 }
 
