@@ -18,7 +18,7 @@ async function setUserPointsPerSurvey(surveyId: string, user: any, totalPoints: 
   }
   //Guarda el puntaje del usuario
   console.log('TEST', 'Guarda puntaje')
-  await firestore
+  await await firestore
     .collection('surveys')
     .doc(surveyId)
     .collection('ranking')
