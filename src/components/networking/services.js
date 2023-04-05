@@ -418,6 +418,7 @@ export const getAcceptedAgendasFromEventUser = (eventId, currentEventUserId) => 
 
 export const deleteAgenda = (eventId, agendaId) => {
   return new Promise((resolve, reject) => {
+    console.log('eliminando',agendaId)
     firestore
       .collection('event_agendas')
       .doc(eventId)

@@ -36,7 +36,8 @@ export const listenMeetingsByUserLanding = (eventId: string, userID: string): Pr
 		  .onSnapshot(snapshot => {
 			if (!snapshot.empty) {
 			  const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeeting[];
-			  const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => participant.id === userID) !== undefined);
+			  const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => participant.id === userID) !== undefined &&
+			  meeting.participants.length <= 2);
 			  resolve(meetingsWithUserID);
 			} else {
 			  resolve([]);
@@ -80,6 +81,7 @@ export const updateMeeting = async (eventId: string, meetingId: string, updateMe
 
 export const deleteMeeting = async (eventId: string, meetingId: string) => {
 	try {
+		console.log('Epa eliminando',meetingId)
 		await firestore
 			.collection(`networkingByEventId`)
 			.doc(eventId)
