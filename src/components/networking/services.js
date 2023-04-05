@@ -184,13 +184,13 @@ export const createMeetingRequest = ({
        //Crear solicitud sin importar las solicitudes existentes
        const participants = [
          {
-           id: creatorUser.value.user._id,
+           id: creatorUser.value._id,
            name: creatorUser.value.user.names,
            email: creatorUser.value.user.email || '',
            confirmed : false
           },
           {
-            id: targetUser.user._id,
+            id: targetUser._id,
             name: targetUser.user.names,
             email: targetUser.user.email || '',
             confirmed: false
@@ -208,12 +208,12 @@ export const createMeetingRequest = ({
         
         const requestMeenting={
           user_to : {
-            id : targetUser.user._id,
+            id :targetUser._id,
             name : targetUser.user.names,
             email : targetUser.user.email || ''
           },
           user_from : {
-            id : creatorUser.value.user._id,
+            id : creatorUser.value._id,
             name : creatorUser.value.user.names,
             email :creatorUser.value.user.email || ''
           },
@@ -237,8 +237,9 @@ export const createMeetingRequest = ({
           state: 'send',
           request_type: 'meeting',
           start_time: new Date(startDate).toLocaleTimeString(),
+          timestamp_start : new Date(startDate).getTime()
         };
-        console.log('veamos la fecha',data.start_time)
+        console.log('veamos la fecha',data.timestamp_start)
     //todo: Arreglar not found de sendEmail
     await EventsApi.sendMeetingRequest(eventId, data);
      resolve(newAgendaResult.id);
