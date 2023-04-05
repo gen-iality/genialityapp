@@ -4,6 +4,7 @@ import React, { useState, useContext } from 'react';
 import { NetworkingContext } from '../../context/NetworkingContext';
 import { SketchPicker } from 'react-color';
 import { IColor, ITypeMeenting } from '../../interfaces/configurations.interfaces';
+import InputColor from '@/components/games/bingo/components/InputColor';
 
 export default function TypeMeenting() {
   const [selected, setselected] = useState<ITypeMeenting>({ id: '', nameType: '', style: '' });
@@ -66,13 +67,13 @@ export default function TypeMeenting() {
                 initialValue={edit ? selected.nameType : ''}>
                 <Input placeholder='Nombre del tipo de reunión' />
               </Form.Item>
-              <Form.Item name={'color'} label={'Color'}>
-                <Space size={'small'} align='center' direction='vertical' style={{ display: 'flex' }}>
-                  <SketchPicker color={color} onChangeComplete={handleColorChange} />
-                </Space>
-              </Form.Item>
+              <InputColor
+                  color={color}
+                  onChange={(color : any) => handleColorChange(color)}
+                  labelColorName={'Color'}
+                />
               <Row justify='end'>
-                <Button type='primary' /* style={{ margin: 10 }}  */htmlType='submit' icon={<SaveOutlined />}>
+                <Button type='primary' htmlType='submit' icon={<SaveOutlined />}>
                   Guardar
                 </Button>
               </Row>
@@ -87,7 +88,7 @@ export default function TypeMeenting() {
       </Row>
       {/* <Divider orientation='left'>Tipos de reuniones</Divider> */}
       <List
-        pagination={{ pageSize: 3 }}
+        pagination={typeMeetings.length >= 5 && { pageSize: 5 }}
         header={<div>Tipos</div>}
         bordered
         dataSource={typeMeetings}

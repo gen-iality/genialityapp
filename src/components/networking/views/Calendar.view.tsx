@@ -8,8 +8,9 @@ import { meetingSelectedInitial, defaultType } from '../utils/utils';
 import { TypeCalendarView } from '../interfaces/configurations.interfaces';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-/* import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'; */
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import 'moment/dist/locale/es';
+import { getCorrectColor } from '@/helpers/utils';
 
 export default function MyCalendar() {
   const [View, setView] = useState<View>(TypeCalendarView.month);
@@ -44,7 +45,9 @@ export default function MyCalendar() {
     openModal();
   };
 
-  const renderEvents = ( events : IMeeting[]  | IMeetingCalendar[]) => {
+  const renderEvents = () => {
+    let events =  meetings
+    if(View !== TypeCalendarView.month && observers.length) events = DataCalendar
     return events.map((meeting) => ({
       ...meeting,
       start: new Date(meeting.start),
@@ -54,7 +57,9 @@ export default function MyCalendar() {
 
   const eventStyleGetter = (event : IMeeting | IMeetingCalendar)  => {
     const style = {
-      backgroundColor: typeMeetings.find((item)=> item.id === event.type?.id)?.style || defaultType.style
+      backgroundColor: typeMeetings.find((item)=> item.id === event.type?.id)?.style || defaultType.style,
+      color: getCorrectColor(typeMeetings.find((item)=> item.id === event.type?.id)?.style || defaultType.style),
+      border: `1px solid rgba(196, 196, 196, 0.3)` //#C4C4C4 
     };
     return {
       style: style,
@@ -67,7 +72,7 @@ export default function MyCalendar() {
         <Col span={23}>
           <Card hoverable>
             <ReactBigCalendar
-              events={View === TypeCalendarView.month ? renderEvents(meetings) : renderEvents(DataCalendar)}
+              events={renderEvents()}
               view={View}
               onView={(view: View) => setView(view)}
             
@@ -102,7 +107,8 @@ export default function MyCalendar() {
                 showMore: function showMore(total: number) {
                   return "+" + total + " Más";
                 },
-                noEventsInRange: 'No hay eventos dentro del rango seleccionado'
+                noEventsInRange: 'No hay eventos dentro del rango seleccionado',
+                
               }}
               culture='es'
             />
