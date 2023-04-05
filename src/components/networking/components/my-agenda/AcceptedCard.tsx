@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { deleteAgenda } from '../../services';
 import moment from 'moment';
 import { Avatar, Button, Card, Col, Divider, Popconfirm, Row, Space, Typography, notification } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import { IMeeting } from '../../interfaces/Meetings.interfaces';
+import { DispatchMessageService } from '@/context/MessageService';
+import * as service from '../../services/meenting.service';
 
 interface AcceptedCardProps {
   data: IMeeting;
@@ -14,6 +15,7 @@ interface AcceptedCardProps {
 }
 
 const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom }: AcceptedCardProps) => {
+  console.log('data', data);
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
 
@@ -36,19 +38,19 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
     setCurrentRoom(roomName);
   };
 
-  const deleteThisAgenda = () => {
+  const deleteThisAgenda = async () => {
     if (!loading) {
       setLoading(true);
-      deleteAgenda(eventId, data.id)
-        .then(() => setDeleted(true))
-        .catch((error) => {
-          console.error(error);
-          notification.error({
-            message: 'Error',
-            description: 'Error eliminando la cita',
-          });
-        })
-        .finally(() => setLoading(false));
+      const response = await service.deleteMeeting(eventId, data.id);
+      
+      if (response) setDeleted(true);
+
+      DispatchMessageService({
+        type: response ? 'success' : 'warning',
+        msj: response ? '¡Información guardada correctamente!' : 'No ha sido posible eliminar el campo',
+        action: 'show',
+      });
+      setLoading(false);
     }
   };
 
@@ -73,7 +75,8 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
             title='¿Desea cancelar/eliminar esta cita?'
             onConfirm={deleteThisAgenda}
             okText='Si'
-            cancelText='No'>
+            cancelText='No'
+            onCancel={() => setLoading(false)}>
             <Button type='text' danger disabled={loading} loading={loading}>
               {'Cancelar Cita'}
             </Button>
@@ -105,7 +108,7 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
               <Typography.Text type='secondary' style={{ paddingRight: '20px' }}>
                 Integrantes
               </Typography.Text>
-              
+
               {data.participants.map((participant) => (
                 <Typography.Paragraph type='secondary'>{participant.name}</Typography.Paragraph>
               ))}

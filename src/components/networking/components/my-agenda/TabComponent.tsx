@@ -20,7 +20,7 @@ const TabComponent = ({ listTabPanels, eventUser, enableMeetings, setCurrentRoom
             tab={<div style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>{dailyMeeting.date}</div>}
             key={`daily-meeting-${eventDateIndex}-${dailyMeeting.date}`}>
             <Row justify='center'>
-              {dailyMeeting.meetings.map((meeting) => (
+              {dailyMeeting.meetings.length >0 ?dailyMeeting.meetings.map((meeting) => (
                 <Col xxl={12}>
                   <AcceptedCard
                     key={`accepted-${meeting.id}`}
@@ -31,7 +31,7 @@ const TabComponent = ({ listTabPanels, eventUser, enableMeetings, setCurrentRoom
                     setCurrentRoom={setCurrentRoom}
                   />
                 </Col>
-              ))}
+              )):(<>No tiene reuniones programadas para este dia</>)}
             </Row>
           </Tabs.TabPane>
         ))}
