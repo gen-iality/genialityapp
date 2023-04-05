@@ -34,12 +34,12 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [acceptedAgendas, setAcceptedAgendas] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
-  const { loading: loadingMeeting, meetingsByUser } = useGetMeetingConfirmed();
+  const { loading: loadingMeeting, meetingsByUser,listDays } = useGetMeetingConfirmed();
   const eventDatesRange = useMemo(() => {
     return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
   }, [event.date_start, event.date_end]);
   
-  console.log('meetingsByUser', meetingsByUser);
+  console.log('listDays', listDays);
   useEffect(() => {
     if (!event || !event._id) return;
 
