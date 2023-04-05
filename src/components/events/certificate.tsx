@@ -65,7 +65,15 @@ function Certificate(props: CertificateProps) {
     return orgMember?.properties || {};
   }
 
-  const generateCert = async (dataUser: any) => {
+  /**
+   * Generate the certificate.
+   * 
+   * If you pass false in dryRun, a real certificate will be generated.
+   * 
+   * @param dataUser The user data. Generally it is taken from the eventUser.
+   * @param dryRun true if you only want to show the certificate preview.
+   */
+  const generateCert = async (dataUser: any, dryRun: boolean = false) => {
 
     const extraOrgMemberProperties = await getOrgMemberProperties(dataUser);
 
@@ -77,10 +85,13 @@ function Certificate(props: CertificateProps) {
       },
     };
 
-    const modal = Modal.success({
-      title: 'Generando certificado',
-      content: <Spin>Espera</Spin>,
-    });
+    let modal: null | ReturnType<typeof Modal.success> = null;
+    if (!dryRun) {
+      modal = Modal.success({
+        title: 'Generando certificado',
+        content: <Spin>Espera</Spin>,
+      });
+    }
 
     const certs = await CertsApi.byEvent(props.cEvent.value._id);
     const roles = await RolAttApi.byEvent(props.cEvent.value._id);
@@ -120,9 +131,11 @@ function Certificate(props: CertificateProps) {
     });
     setFinalCertRows(newCertRows)
 
-    setReadyCertToGenerate(rolCert)
+    if (!dryRun) {
+      setReadyCertToGenerate(rolCert)
 
-    modal.destroy()
+      modal && modal.destroy()
+    }
   };
 
   // Watch and generate the PDF for quiz
@@ -228,32 +241,10 @@ function Certificate(props: CertificateProps) {
 
   // mimimi PRE-load the cert data to show the background image because client
   useEffect(() => {
-    if (!props.cEvent.value._id) {
-      return
-    }
-    CertsApi.byEvent(props.cEvent.value._id)
-      .then((certs) => {
-        // By default the non-role certificate is loaded
-        const rolCert: CertificateData | undefined = certs.find((cert: any) => !cert.rol_id);
-
-        // Load the content because the size is different
-        let currentCertRows: CertRow[] = defaultCertRows
-        console.debug('rolCert', {rolCert})
-        if (rolCert?.content) {
-          console.log('parse cert content from DB-saved')
-          currentCertRows = JSON.parse(rolCert?.content) as CertRow[]
-        }
-
-        if (rolCert?.background) {
-          setCertificateData({
-            ...certificateData,
-            ...(rolCert || {}),
-            background: rolCert?.background ?? certificateData.background ?? defaultCertificateBackground,
-          })
-        }
-        setFinalCertRows(currentCertRows)
-      })
-  }, [props.cEvent.value])
+    if (!props.cEvent.value?._id) return
+    if (!props.cEventUser.value?._id) return
+    generateCert(props.cEventUser.value, true)
+  }, [props.cEvent.value, props.cEventUser.value])
 
   const progressPercentValue: number = useMemo(
     () => Math.round(((activitiesAttendee.length || 0) / (allActivities.length || 0)) * 100),
