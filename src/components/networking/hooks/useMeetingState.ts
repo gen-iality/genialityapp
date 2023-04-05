@@ -18,7 +18,7 @@ const useMeetingState = (startMeeting: string | Date, endMeeting: string | Date)
     if (currentDate.isBefore(dateFormat(startMeeting, 'MM/DD/YYYY hh:mm A'))) {
       setStateMeeting('scheduled');
       setMessageByState('La reunión iniciará en :')
-      setResultStatus('success');
+      setResultStatus('info');
       return;
     }
     if (
@@ -27,7 +27,7 @@ const useMeetingState = (startMeeting: string | Date, endMeeting: string | Date)
     ) {
       setStateMeeting('in-progress');
       setMessageByState('¡La reunión ha iniciado!');
-      setResultStatus('info');
+      setResultStatus('success');
       return;
     }
     if (currentDate.isAfter(dateFormat(endMeeting, 'MM/DD/YYYY hh:mm A'))) {

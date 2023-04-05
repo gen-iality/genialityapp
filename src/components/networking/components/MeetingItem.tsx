@@ -22,7 +22,7 @@ import {
   Checkbox,
 } from 'antd';
 import React, { useState, useEffect } from 'react';
-import { IParticipants, typeAttendace, IMeentingItem } from '../interfaces/Meetings.interfaces';
+import { IParticipants, IMeentingItem } from '../interfaces/Meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
 // eslint-disable-next-line no-use-before-define
 import moment from 'moment';
@@ -41,9 +41,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
     moment(new Date()).isAfter(dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A'))
   );
   const { editMeenting, deleteMeeting, updateMeeting } = useContext(NetworkingContext);
-  const { resultStatus, messageByState } = useMeetingState(meenting.start, meenting.end);
-
-  const finish = dateFormat(new Date(), 'MM/DD/YYYY hh:mm A') >= dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A');
+  const { resultStatus, messageByState, stateMeeting } = useMeetingState(meenting.start, meenting.end);
 
   useEffect(() => {
     setParticipants(meenting.participants);
@@ -82,6 +80,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
         </div>
       )}
       bordered={false}
+      collapsible='header'
       style={{ backgroundColor: '#F9FAFE' }}>
       <Collapse.Panel
         key='1'
@@ -127,9 +126,9 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                 style={{ paddingTop: '2px', paddingBottom: '20px' }}
                 status={resultStatus}
                 title={messageByState}
-                icon={finish && <SmileOutlined />}
+                icon={stateMeeting === 'completed' && <SmileOutlined />}
                 extra={
-                  !meentingStart && (
+                  stateMeeting === 'scheduled' && (
                     <Countdown
                       style={{ margin: 'auto' }}
                       value={dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')}
