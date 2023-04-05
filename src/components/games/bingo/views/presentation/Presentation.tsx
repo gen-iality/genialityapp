@@ -9,7 +9,7 @@ import { ballotsAnnounced } from '../../functions';
 import useBingoPresentation from '../../hooks/useBingoPresentation';
 
 export default function Presentation() {
-	const { bingoGame } = useBingoPresentation();
+	const { bingoGame, bingo } = useBingoPresentation();
 	const cEvent = UseEventContext();
 	const gridResponsive: ColProps = {
 		xs: 24,
@@ -27,7 +27,7 @@ export default function Presentation() {
 				width: '100%',
 				padding: '30px 40px',
 				backgroundColor: '#F9FAFE',
-				backgroundImage: `url(${cEvent?.value?.styles?.BackgroundImage})`,
+				backgroundImage: `url(${ bingo?.bingo_appearance.background_image || cEvent?.value?.styles?.BackgroundImage})`,
 				backgroundPosition: 'center',
 				backgroundRepeat: 'no-repeat',
 				backgroundSize: 'cover',
