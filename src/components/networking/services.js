@@ -1,7 +1,7 @@
 import { sortBy, prop } from 'ramda';
 import { firestore } from '../../helpers/firebase';
 import API, { UsersApi, EventsApi } from '../../helpers/request';
-import { RequestMeetingState, shortName } from './utils/utils';
+import { RequestMeetingState, defaultType, shortName } from './utils/utils';
 
 const filterList = (list, currentUser) => list.find((item) => item.account_id === currentUser);
 
@@ -204,6 +204,7 @@ export const createMeetingRequest = ({
           start: startDate,
           end: endDate,
           dateUpdated: Date.now(),
+          type : defaultType
         };
         
         const requestMeenting={
