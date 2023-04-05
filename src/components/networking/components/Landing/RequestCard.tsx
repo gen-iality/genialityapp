@@ -87,7 +87,7 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
   };
 
   return (
-    <Row justify='center' style={{ marginBottom: '20px' }}>
+    <Row justify='center' style={{ marginBottom: '20px' }} className='animate__animated animate__backInLeft animate__delay-2s'>
       <Card style={{ width: 600, textAlign: 'left' }} bordered={true}>
         <div style={{ marginBottom: '10px' }}>{received ? 'Solicitud de cita por: ' : 'Solicitud de cita a: '}</div>
         <Meta

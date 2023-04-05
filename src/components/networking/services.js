@@ -196,14 +196,14 @@ export const createMeetingRequest = ({
             confirmed: false
           },
         ];
-       
+       const timestamp = Date.now()
         const meeting = {
           name: `Reunion entre ${shortName(targetUser.user.names)} y ${shortName(creatorUser.value.user.names)} `,
           participants: participants,
           place: 'evius meet',
           start: startDate,
           end: endDate,
-          dateUpdated: Date.now(),
+          dateUpdated: timestamp ,
           type : defaultType
         };
         
@@ -222,7 +222,7 @@ export const createMeetingRequest = ({
           date:startDate,
           message,
           status:RequestMeetingState.pending,
-          timestamp : new Date.now()
+          timestamp : timestamp
         }
         const newAgendaResult = await firestore
         .collection('networkingByEventId')
