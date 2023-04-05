@@ -43,7 +43,6 @@ export const useMeetingFormLogic = () => {
 
     const onSubmit = (datos: FormMeeting) => {
         
-         console.log('datos formulario',datos)
          
          DispatchMessageService({
             type: 'loading',
