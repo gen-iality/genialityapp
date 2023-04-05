@@ -188,9 +188,14 @@ function CurrentOrganizationPositionCertificationUserPage(
   return (
     <>
       <Header
-        title={`Certificados de ${currentUser ? currentUser.names : <Spin />} en el cargo de ${
-          currentPosition ? currentPosition.position_name : <Spin />
-        }`}
+        title={(
+          <>
+          {`Certificados de `}
+          {currentUser ? <>{currentUser.names}</> : <Spin />}
+          {` en el cargo de `}
+          {currentPosition ? <>{currentPosition.position_name}</> : <Spin />}
+          </>
+        )}
       />
       <Typography.Paragraph>Estos son los certificados de dicho usuario.</Typography.Paragraph>
 
