@@ -28,26 +28,24 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
 //todo: mejorar el filtro de reuniones with user
 export const listenMeetingsByUserLanding = (eventId: string, userID: string): Promise<IMeeting[]> => {
 	return new Promise((resolve, reject) => {
-	  try {
-		firestore
-		  .collection(`networkingByEventId`)
-		  .doc(eventId)
-		  .collection('meetings')
-		  .onSnapshot(snapshot => {
-			if (!snapshot.empty) {
-			  const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeeting[];
-			  const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => participant.id === userID) !== undefined &&
-			  meeting.participants.length <= 2);
-			  resolve(meetingsWithUserID);
-			} else {
-			  resolve([]);
-			}
-		  });
-	  } catch (error) {
-		reject(error);
-	  }
+		try {
+			firestore
+				.collection(`networkingByEventId`)
+				.doc(eventId)
+				.collection('meetings')
+				.get()
+				.then(res => {
+					const data = res.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeeting[];
+					const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => participant.id === userID) !== undefined &&
+						meeting.participants.length <= 2);
+					resolve(meetingsWithUserID);
+				})
+
+		} catch (error) {
+			reject(error);
+		}
 	});
-  };
+};
 
 export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMeeting, 'id'>) => {
 	try {
@@ -81,7 +79,7 @@ export const updateMeeting = async (eventId: string, meetingId: string, updateMe
 
 export const deleteMeeting = async (eventId: string, meetingId: string) => {
 	try {
-		console.log('Epa eliminando',meetingId)
+		console.log('Epa eliminando', eventId, meetingId)
 		await firestore
 			.collection(`networkingByEventId`)
 			.doc(eventId)

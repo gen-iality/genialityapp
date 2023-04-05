@@ -10,22 +10,13 @@ import { getAcceptedAgendasFromEventUser } from './services';
 import { createChatRoom } from './agendaHook';
 import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
 import useGetMeetingConfirmed from './hooks/useGetMeetingConfirmed';
-import AcceptedCard from './components/my-agenda/AcceptedCard';
 import TabComponent from './components/my-agenda/TabComponent';
 
-const { TabPane } = Tabs;
-
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
-  const eventDatesRange = useMemo(() => {
-    return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
-  }, [event.date_start, event.date_end]);
-
-  const [loading, setLoading] = useState(true);
   const [enableMeetings, setEnableMeetings] = useState(false);
-  const [acceptedAgendas, setAcceptedAgendas] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
-  const { loading: loadingMeeting, listDays, haveMeetings } = useGetMeetingConfirmed();
-
+  const { listDays, haveMeetings, loading } = useGetMeetingConfirmed();
+  console.log('mirando esta vaina',listDays)
   useEffect(() => {
     if (!event || !event._id) return;
 
@@ -36,45 +27,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
         setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
       });
   }, [event]);
-
-  useEffect(() => {
-    if (event._id && currentEventUserId && isNonEmptyArray(eventUsers)) {
-      setLoading(true);
-      getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
-        .then((agendas) => {
-          if (isNonEmptyArray(agendas)) {
-            const newAcceptedAgendas = map((agenda) => {
-              const agendaAttendees = path(['attendees'], agenda);
-              const otherAttendeeId = isNonEmptyArray(agendaAttendees)
-                ? find((attendeeId) => attendeeId !== currentEventUserId, agendaAttendees)
-                : null;
-
-              if (otherAttendeeId) {
-                const otherEventUser = find(propEq('_id', otherAttendeeId), eventUsers);
-                return mergeRight(agenda, { otherEventUser });
-              } else {
-                return agenda;
-              }
-            }, agendas);
-            setAcceptedAgendas(newAcceptedAgendas);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          notification.error({
-            message: 'Error',
-            description: 'Obteniendo las citas del usuario',
-          });
-        })
-        .finally(() => setLoading(false));
-    }
-  }, [event._id, currentEventUserId, eventUsers]);
-
-  useEffect(() => {
-    if (currentRoom) {
-      createChatRoom(currentRoom);
-    }
-  }, [currentRoom]);
 
   if (loading) {
     return (
@@ -152,55 +104,18 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 
   return (
     <>
-      {/* <div>
-        {isNonEmptyArray(eventDatesRange) ? (
-          <Tabs>
-            {eventDatesRange.map((eventDate, eventDateIndex) => {
-              const dayAgendas = acceptedAgendas.filter(({ timestamp_start }) => {
-                const agendaDate = moment(timestamp_start).format('YYYY-MM-DD');
-                return agendaDate === eventDate;
-              });
-
-              return (
-                <TabPane
-                  tab={
-                    <div style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
-                      {moment(eventDate).format('MMMM DD')}
-                    </div>
-                  }
-                  key={`event-date-${eventDateIndex}-${eventDate}`}>
-                  {isNonEmptyArray(dayAgendas) ? (
-                    dayAgendas.map((acceptedAgenda) => (
-                      <>
-                        <AcceptedCard
-                          key={`accepted-${acceptedAgenda.id}`}
-                          eventId={event._id}
-                          eventUser={eventUser}
-                          data={acceptedAgenda}
-                          enableMeetings={enableMeetings}
-                          setCurrentRoom={setCurrentRoom}
-                        />
-                      </>
-                    ))
-                  ) : (
-                    <Card style={{ textAlign: 'center' }}>{'No tienes citas agendadas para esta fecha'}</Card>
-                  )}
-                </TabPane>
-              );
-            })}
-          </Tabs>
+      <div>
+        {haveMeetings ? (
+          <TabComponent
+            listTabPanels={listDays}
+            eventUser={eventUser}
+            enableMeetings={enableMeetings}
+            setCurrentRoom={setCurrentRoom}
+            eventId={event._id}
+          />
         ) : (
           <Card>{'No tienes citas actualmente'}</Card>
         )}
-      </div> */}
-
-      <div>
-
-      {
-          haveMeetings? (<TabComponent listTabPanels={listDays} eventUser={eventUser} enableMeetings={enableMeetings} setCurrentRoom={setCurrentRoom}/>):(
-            <Card>{'No tienes citas actualmente'}</Card>
-          )
-        }
       </div>
     </>
   );

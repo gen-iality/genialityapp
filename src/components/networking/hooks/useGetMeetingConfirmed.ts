@@ -19,7 +19,11 @@ const useGetMeetingConfirmed = () => {
     const getMeetings = async () => {
         try {
             const meetingWithUser = await servicesMeenting.listenMeetingsByUserLanding(eventContext.value._id, userEventContext.value._id)
-            if (meetingWithUser.length === 0) return
+            if (meetingWithUser.length === 0) {
+                setListDays([])
+                setHaveMeetings(false)
+                return
+            }
             setHaveMeetings(true)
             setListDays(getArraysDays(meetingWithUser));
         } catch (error) {
@@ -29,6 +33,13 @@ const useGetMeetingConfirmed = () => {
         }
     }
 
+    const onSnapshot = (meetings: IMeeting[]) => {
+        setMeetingsByUser(meetings);
+        if (meetings.length === 0) {
+            setHaveMeetings(false);
+
+        }
+    }
 
     const getArraysDays = (meetingWithUser: IMeeting[]) => {
         const fechaInicial = new Date(eventContext.value.datetime_from);
@@ -46,6 +57,8 @@ const useGetMeetingConfirmed = () => {
         }
         return diasEnRango;
     };
+
+
 
     useEffect(() => {
         getMeetings()
