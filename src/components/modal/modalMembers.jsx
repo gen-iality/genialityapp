@@ -1,11 +1,20 @@
+/** React's libraries */
 import { useState } from 'react';
-import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request';
-import FormComponent from '../events/registrationForm/form';
+import { useIntl } from 'react-intl';
+
+/** Antd imports */
 import { Alert, Button, Grid, Modal } from 'antd';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+
+/** Helpers and utils */
+import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request';
+
+/** Context */
 import { DispatchMessageService } from '@context/MessageService';
-import { useIntl } from 'react-intl';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
+
+/** Components */
+import FormComponent from '../events/registrationForm/form';
 import RegisterUserAndOrgMember from '@components/authentication/RegisterUserAndOrgMember';
 
 const { confirm } = Modal;
@@ -102,9 +111,9 @@ function ModalMembers(props) {
     console.log('1. values.email', values.email);
 
     const genialityUserRequest = await UsersApi.findByEmail(values.email);
-    console.log('genialityUserRequest', genialityUserRequest)
+    console.log('genialityUserRequest', genialityUserRequest);
     const [genialityUser] = genialityUserRequest;
-    console.log('genialityUser', genialityUser)
+    console.log('genialityUser', genialityUser);
 
     if (!genialityUser) {
       console.log('1. El usuario no existe, se debe crear el usuario en geniality');
@@ -121,7 +130,7 @@ function ModalMembers(props) {
     let resp;
 
     if (props.editMember) {
-      values.rol_id = values.role
+      values.rol_id = values.role;
       resp = await OrganizationApi.editUser(organizationId, userId, values);
       if (values.position_id) {
         await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);

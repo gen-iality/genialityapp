@@ -185,17 +185,17 @@ function OrgMembers(props) {
   }
 
   const getRolesAsOptions = async () => {
-    const roles = await OrganizationApi.Roles.getAll(organizationId)
+    const roles = await OrganizationApi.Roles.getAll(organizationId);
     return (roles || []).map((role) => ({
       value: role._id,
       label: role.name,
       type: role.type,
-    }))
-  }
+    }));
+  };
 
   async function setFormFields() {
     const positionList = await getPositionList();
-    const rolList = await getRolesAsOptions()
+    const rolList = await getRolesAsOptions();
 
     const positionField = {
       name: 'position_id',
@@ -215,7 +215,7 @@ function OrgMembers(props) {
       mandatory: true,
       type: 'list',
       options: rolList,
-    }
+    };
 
     setExtraFields([rolField, ...props.org.user_properties, positionField]);
   }
@@ -224,31 +224,34 @@ function OrgMembers(props) {
     e.preventDefault();
     e.stopPropagation();
 
-    const ws = utils.json_to_sheet(membersDataSource.map((user) => {
-      delete user._id;
-      delete user.created_at;
-      delete user.updated_at;
-      delete user.position;
-      delete user.position_id;
-      delete user.rol_id;
-      delete user.stats;
-      delete user.picture;
-      // What else?
-      const { password } = user
-      if (password) {
-        user['documento de identidad'] = password
-        delete user.password
-      }
-      return user
-    }).filter((user) => {
-      // Before we send the user data, we have to check if its dataIndex
-      // contains a filtered value to remove this value
-      return Object.entries(filtersToDataSource)
-        .every(([key, value]) => {
-          if (typeof user[key] === 'undefined' || user[key] === undefined) return true
-          return (user[key] === value)
+    const ws = utils.json_to_sheet(
+      membersDataSource
+        .map((user) => {
+          delete user._id;
+          delete user.created_at;
+          delete user.updated_at;
+          delete user.position;
+          delete user.position_id;
+          delete user.rol_id;
+          delete user.stats;
+          delete user.picture;
+          // What else?
+          const { password } = user;
+          if (password) {
+            user['documento de identidad'] = password;
+            delete user.password;
+          }
+          return user;
         })
-    }));
+        .filter((user) => {
+          // Before we send the user data, we have to check if its dataIndex
+          // contains a filtered value to remove this value
+          return Object.entries(filtersToDataSource).every(([key, value]) => {
+            if (typeof user[key] === 'undefined' || user[key] === undefined) return true;
+            return user[key] === value;
+          });
+        }),
+    );
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Members');
     writeFileXLSX(wb, `Miembros_${dayjs().format('l')}.xlsx`);
@@ -271,19 +274,19 @@ function OrgMembers(props) {
   }
 
   function thisDataIndexWasFiltered(currentDataIndex, filterValue) {
-    console.info('this dataIndex was filtered', currentDataIndex, filterValue)
+    console.info('this dataIndex was filtered', currentDataIndex, filterValue);
 
     setFiltersToDataSource((previous) => {
-      const clone = {...previous}
+      const clone = { ...previous };
       if (typeof filterValue === 'undefined' || filterValue === undefined) {
         // Remove this dataIndex if the value is undefined only
-        delete clone[currentDataIndex]
+        delete clone[currentDataIndex];
       } else {
         // Update the new value
-        clone[currentDataIndex] = filterValue
+        clone[currentDataIndex] = filterValue;
       }
-      return clone
-    })
+      return clone;
+    });
   }
 
   const columnsData = {

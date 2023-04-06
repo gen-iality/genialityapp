@@ -100,7 +100,13 @@ const RegisterUserAndOrgMember = ({
     },
     {
       title: 'Last',
-      content: <RegistrationResult validationGeneral={validationGeneral} basicDataUser={basicDataUser}  requireAutomaticLoguin={requireAutomaticLoguin}/>,
+      content: (
+        <RegistrationResult
+          validationGeneral={validationGeneral}
+          basicDataUser={basicDataUser}
+          requireAutomaticLoguin={requireAutomaticLoguin}
+        />
+      ),
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
     },
   ];
@@ -173,7 +179,7 @@ const RegisterUserAndOrgMember = ({
         const respUser = await OrganizationApi.saveUser(idOrganization, propertiesOrgMember);
         console.log('RegisterUser: has default position Id', { defaultPositionId });
         if (defaultPositionId === undefined) {
-          console.error('This organization has no default position. Eh!')
+          console.error('This organization has no default position. Eh!');
         } else {
           await PositionsApi.Organizations.addUser(idOrganization, defaultPositionId, respUser.account_id);
         }
@@ -225,7 +231,9 @@ const RegisterUserAndOrgMember = ({
 
       handleValidateAccountGeniality();
     } else if (current == 1) {
-        form.validateFields().then(() => {
+      form
+        .validateFields()
+        .then(() => {
           console.log('Validate Fields');
           form.submit();
           setValidationGeneral((previous) => ({
@@ -233,8 +241,9 @@ const RegisterUserAndOrgMember = ({
             loading: true,
             status: false,
           }));
-        }).catch((error) => console.log(error));
-      }
+        })
+        .catch((error) => console.log(error));
+    }
   };
 
   const goTopreviousStep = () => {
@@ -281,14 +290,14 @@ const RegisterUserAndOrgMember = ({
     if (dataOrgMember !== undefined) {
       handleSubmit();
     }
-  }, [dataOrgMember])
+  }, [dataOrgMember]);
 
   useEffect(() => {
     OrganizationApi.getOne(idOrganization).then((response) => {
       console.log('response', response);
       setOrganization(response);
     });
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (current == 0) {

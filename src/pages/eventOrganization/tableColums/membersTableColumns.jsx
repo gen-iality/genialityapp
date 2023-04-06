@@ -1,8 +1,13 @@
+/** React's libraries */
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+
+/** Antd imports */
 import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin } from 'antd';
 import { ClockCircleOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
+
+/** Helpers and utils */
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
-import { useEffect, useState } from 'react';
 
 export const columns = (columnsData, editModalUser, extraFields, userActivities, isStaticsLoading) => {
   const history = useHistory();
@@ -11,16 +16,18 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
 
   if (!extraFields) return [];
 
-  const dynamicColumns = extraFields.map((extraField) => {
-    if (extraField.name === 'role') return null
-    return {
-      title: extraField.label,
-      dataIndex: extraField.name === 'position_id' ? 'position' : extraField.name,
-      ellipsis: true,
-      sorter: (a, b) => a[extraField.name]?.length - b[extraField.name]?.length,
-      ...membersGetColumnSearchProps(extraField.name, columnsData),
-    };
-  }).filter((x) => x !== null);
+  const dynamicColumns = extraFields
+    .map((extraField) => {
+      if (extraField.name === 'role') return null;
+      return {
+        title: extraField.label,
+        dataIndex: extraField.name === 'position_id' ? 'position' : extraField.name,
+        ellipsis: true,
+        sorter: (a, b) => a[extraField.name]?.length - b[extraField.name]?.length,
+        ...membersGetColumnSearchProps(extraField.name, columnsData),
+      };
+    })
+    .filter((x) => x !== null);
 
   const picture = {
     title: 'Avatar',
