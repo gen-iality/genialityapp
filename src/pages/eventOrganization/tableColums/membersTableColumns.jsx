@@ -18,10 +18,22 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
 
   const dynamicColumns = extraFields
     .map((extraField) => {
-      if (extraField.name === 'role') return null;
+      //if (extraField.name === 'role') return null;
+
+      const dataIndex = () => {
+        switch (extraField.name) {
+          case 'position_id':
+            return 'position';
+          case 'rol_id':
+            return 'role';
+          default:
+            return extraField.name;
+        }
+      };
+
       return {
         title: extraField.label,
-        dataIndex: extraField.name === 'position_id' ? 'position' : extraField.name,
+        dataIndex: dataIndex(),
         ellipsis: true,
         sorter: (a, b) => a[extraField.name]?.length - b[extraField.name]?.length,
         ...membersGetColumnSearchProps(extraField.name, columnsData),
@@ -56,15 +68,6 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
         </Row>
       );
     },
-  };
-
-  const role = {
-    title: 'Rol',
-    dataIndex: 'role',
-    /* align: 'center', */
-    ellipsis: true,
-    /* sorter: (a, b) => a.role?.localeCompare(b.role), */
-    ...membersGetColumnSearchProps('role', columnsData),
   };
 
   const created_at = {
@@ -148,7 +151,6 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
   useEffect(() => {
     const newColumns = [picture, ...dynamicColumns];
 
-    newColumns.push(role);
     newColumns.push(progressing);
     newColumns.push(created_at);
     newColumns.push(updated_at);

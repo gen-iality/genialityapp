@@ -40,8 +40,6 @@ function ModalMembers(props) {
   const { handleChangeTypeModal, typeModal, helperDispatch, currentAuthScreen, controllerLoginVisible } = useHelper();
 
   const [loadingregister, setLoadingregister] = useState(false);
-  const [existGenialialityUser, setExistGenialialityUser] = useState(true);
-  const [makeUserRegister, setMakeUserRegister] = useState(false);
 
   const options = [
     {
@@ -106,38 +104,14 @@ function ModalMembers(props) {
     } */
   }
 
-  async function validateGenialityUser(values) {
-    console.log('1. values', values);
-    console.log('1. values.email', values.email);
-
-    const genialityUserRequest = await UsersApi.findByEmail(values.email);
-    console.log('genialityUserRequest', genialityUserRequest);
-    const [genialityUser] = genialityUserRequest;
-    console.log('genialityUser', genialityUser);
-
-    if (!genialityUser) {
-      console.log('1. El usuario no existe, se debe crear el usuario en geniality');
-      setExistGenialialityUser(false);
-    } else {
-      setExistGenialialityUser(true);
-      enrollOrgMember(values);
-    }
-  }
-
-  async function enrollOrgMember(values) {
+  async function editOrgMember(values) {
     setLoadingregister(true);
 
     let resp;
 
     if (props.editMember) {
-      values.rol_id = values.role;
+      //values.rol_id = values.role;
       resp = await OrganizationApi.editUser(organizationId, userId, values);
-      if (values.position_id) {
-        await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);
-      }
-    } else {
-      const body = { properties: values, rol_id: values.role };
-      resp = await OrganizationApi.saveUser(organizationId, body);
       if (values.position_id) {
         await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);
       }
@@ -173,7 +147,7 @@ function ModalMembers(props) {
             marginTop: '30px',
           }}
         >
-          {makeUserRegister ? (
+          {!props.editMember ? (
             <RegisterUserAndOrgMember
               screens={screens}
               stylePaddingMobile={stylePaddingMobile}
@@ -190,44 +164,9 @@ function ModalMembers(props) {
               fields={props.extraFields}
               organization
               options={options}
-              callback={validateGenialityUser}
+              callback={editOrgMember}
               loadingregister={loadingregister}
               editUser={props.editMember}
-            />
-          )}
-
-          {!existGenialialityUser && (
-            <Alert
-              showIcon
-              /* style={{ marginTop: '5px' }} */
-              style={{
-                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                backgroundColor: '#FFFFFF',
-                color: '#000000',
-                borderLeft: '5px solid #FF4E50',
-                fontSize: '14px',
-                textAlign: 'start',
-                borderRadius: '5px',
-                marginBottom: '15px',
-              }}
-              /* closable */
-              message={
-                <>
-                  {'Usuario no está registrado en Geniality'}
-                  <Button
-                    style={{ fontWeight: 'bold', marginLeft: '2rem' }}
-                    onClick={() => {
-                      console.log('Se registra el usuario');
-                      setMakeUserRegister(true);
-                      setExistGenialialityUser(true);
-                    }}
-                    type="primary"
-                  >
-                    Registrar Usuario
-                  </Button>
-                </>
-              }
-              type="error"
             />
           )}
         </div>

@@ -143,6 +143,7 @@ function OrgMembers(props) {
         created_at: orgUser.created_at,
         updated_at: orgUser.updated_at,
         role: orgUser.rol?.name || 'Sin rol',
+        rol_id: orgUser.rol_id || null,
         picture: orgUser.user.picture,
         position: orgUser.position?.position_name || 'Sin cargo',
         position_id: orgUser.position?._id || null,
@@ -210,14 +211,14 @@ function OrgMembers(props) {
     };
 
     const rolField = {
-      name: 'role',
+      name: 'rol_id',
       label: 'Rol',
       mandatory: true,
       type: 'list',
       options: rolList,
     };
 
-    setExtraFields([rolField, ...props.org.user_properties, positionField]);
+    setExtraFields([...props.org.user_properties, positionField, rolField]);
   }
 
   async function exportFile(e) {

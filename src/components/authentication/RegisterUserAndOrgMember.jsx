@@ -1,6 +1,7 @@
 /** React's libraries imports */
 import { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
+import { useLocation } from 'react-router';
 
 /** Antd imports */
 import { Steps, Button, Alert, Form } from 'antd';
@@ -39,6 +40,7 @@ const RegisterUserAndOrgMember = ({
   const intl = useIntl();
   const [form] = Form.useForm();
   const { helperDispatch, currentAuthScreen } = useHelper();
+  const location = useLocation();
 
   const [current, setCurrent] = useState(0);
   const [basicDataUser, setBasicDataUser] = useState({
@@ -56,6 +58,7 @@ const RegisterUserAndOrgMember = ({
   });
 
   const [organization, setOrganization] = useState({});
+  const [existGenialialityUser, setExistGenialialityUser] = useState(false);
 
   const hookValidations = (status, textError) => {
     setValidationGeneral({
@@ -114,7 +117,6 @@ const RegisterUserAndOrgMember = ({
   const handleValidateAccountGeniality = async () => {
     try {
       const validateEmail = await UsersApi.validateEmail({ email: basicDataUser.email });
-      console.log(validateEmail, 'validateEmail');
       if (validateEmail?.message === 'Email valid') {
         setValidationGeneral({
           loading: false,
@@ -125,18 +127,30 @@ const RegisterUserAndOrgMember = ({
       }
     } catch (err) {
       if (err?.response?.data?.errors?.email[0] === 'email ya ha sido registrado.') {
-        setValidationGeneral({
-          loading: false,
-          status: true,
-          textError: intl.formatMessage({
-            id: 'modal.feedback.title.error',
-            defaultMessage: 'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
-          }),
-          component: intl.formatMessage({
-            id: 'modal.feedback.title.errorlink',
-            defaultMessage: 'inicia sesión',
-          }),
-        });
+        if (isAdminPage()) {
+          setCurrent(current + 1);
+          setExistGenialialityUser(true);
+
+          setValidationGeneral({
+            loading: false,
+            status: false,
+            textError: 'El usuario ya existe. Debes registrar miembro a la organización',
+            component: 'Registrar miembro de la organización',
+          });
+        } else {
+          setValidationGeneral({
+            loading: false,
+            status: true,
+            textError: intl.formatMessage({
+              id: 'modal.feedback.title.error',
+              defaultMessage: 'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
+            }),
+            component: intl.formatMessage({
+              id: 'modal.feedback.title.errorlink',
+              defaultMessage: 'inicia sesión',
+            }),
+          });
+        }
       } else if (err?.response?.data?.errors?.email[0] === 'email no es un correo válido') {
         setValidationGeneral({
           loading: false,
@@ -169,17 +183,14 @@ const RegisterUserAndOrgMember = ({
 
     async function createOrgMember() {
       const propertiesOrgMember = { properties: { ...basicDataUser, ...dataOrgMember } };
-      delete propertiesOrgMember.password;
-      delete propertiesOrgMember.picture;
-
-      console.log('propertiesOrgMember', propertiesOrgMember);
-      console.log('Organization', organization);
+      delete propertiesOrgMember.properties.password;
+      delete propertiesOrgMember.properties.picture;
 
       try {
         const respUser = await OrganizationApi.saveUser(idOrganization, propertiesOrgMember);
-        console.log('RegisterUser: has default position Id', { defaultPositionId });
+        console.log('3. RegisterUser: has default position Id', { defaultPositionId });
         if (defaultPositionId === undefined) {
-          console.error('This organization has no default position. Eh!');
+          console.error('4. This organization has no default position. Eh!');
         } else {
           await PositionsApi.Organizations.addUser(idOrganization, defaultPositionId, respUser.account_id);
         }
@@ -205,20 +216,24 @@ const RegisterUserAndOrgMember = ({
       }
     }
 
-    createAccount().then((resp) => {
-      if (resp) {
-        createOrgMember();
-      } else {
-        setValidationGeneral({
-          status: false, // REVISAR: ¿Debe ser true, para que pueda salir la alerta?
-          loading: false,
-          textError: intl.formatMessage({
-            id: 'text_error.error_creating_user',
-            defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
-          }),
-        });
-      }
-    });
+    if (existGenialialityUser) {
+      createOrgMember();
+    } else {
+      createAccount().then((resp) => {
+        if (resp) {
+          createOrgMember();
+        } else {
+          setValidationGeneral({
+            status: false, // REVISAR: ¿Debe ser true, para que pueda salir la alerta?
+            loading: false,
+            textError: intl.formatMessage({
+              id: 'text_error.error_creating_user',
+              defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
+            }),
+          });
+        }
+      });
+    }
   };
 
   const goToNextStep = () => {
@@ -234,7 +249,7 @@ const RegisterUserAndOrgMember = ({
       form
         .validateFields()
         .then(() => {
-          console.log('Validate Fields');
+          console.log('3. Validate Fields');
           form.submit();
           setValidationGeneral((previous) => ({
             ...previous,
@@ -284,6 +299,14 @@ const RegisterUserAndOrgMember = ({
     } else {
       setButtonStatus(true);
     }
+  };
+
+  const isAdminPage = () => {
+    const isAdmin = location.pathname.includes('admin');
+
+    if (isAdmin) {
+      return true;
+    } else return false;
   };
 
   useEffect(() => {
@@ -387,7 +410,7 @@ const RegisterUserAndOrgMember = ({
           message={
             <>
               {validationGeneral.textError}
-              {validationGeneral.component ? (
+              {validationGeneral.component && (
                 <Button
                   style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                   onClick={() => helperDispatch({ type: 'showLogin' })} // REVISAR: Al parecer no está funcionando el dispatch
@@ -395,8 +418,6 @@ const RegisterUserAndOrgMember = ({
                 >
                   {validationGeneral.component}
                 </Button>
-              ) : (
-                ''
               )}
             </>
           }
