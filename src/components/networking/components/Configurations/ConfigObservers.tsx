@@ -28,11 +28,17 @@ export default function ConfigObservers() {
           okText={'Guardar'}>
           <>
             <Form onFinish={onCreate}>
-              <Form.Item name={'data'} rules={[{required : true , message: 'Debe seleccionar un participante'}]} initialValue={[]}>
+              <Form.Item 
+                name={'data'} 
+                rules={[{required : true , message: 'Debe seleccionar un participante'}]} 
+                initialValue={[]}
+                help={
+                  <Typography.Text type='secondary'>
+                    <InfoCircleOutlined /> Puede seleccionar más de un observador
+                  </Typography.Text>
+                }
+              >
                 <Select allowClear mode='multiple' options={attendeesList()} defaultValue={[]} placeholder='Seleccione un observador' style={{paddingBottom: '5px'}} showArrow={true}/>
-                <Typography.Text type='secondary'>
-                  <InfoCircleOutlined /> Puede seleccionar más de un observador
-                </Typography.Text>
               </Form.Item>
               <Row justify='end'>
                 <Button type='primary' icon={<SaveOutlined />} htmlType='submit'>
@@ -56,8 +62,8 @@ export default function ConfigObservers() {
       </Row>
       {/* <Divider orientation='left'>Lista de observadores</Divider> */}
       <List
-        pagination={{pageSize : 3}}
-        header={<div>Obervadores</div>}
+        pagination={observers.length >= 5 && {pageSize : 5}}
+        header={<div>Observadores</div>}
         bordered
         dataSource={observers}
         renderItem={(item) => (

@@ -17,16 +17,37 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
 		.collection(`networkingByEventId`)
 		.doc(eventId)
 		.collection('meetings').onSnapshot(snapshot => {
-      if (!snapshot.empty) {
-        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as {};
-        setMeetings(data);
-      } else {
-		setMeetings([])
-	  }
-    })
+			if (!snapshot.empty) {
+				const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as {};
+				setMeetings(data);
+			} else {
+				setMeetings([])
+			}
+		})
+};
+//todo: mejorar el filtro de reuniones with user
+export const listenMeetingsByUserLanding = (eventId: string, userID: string): Promise<IMeeting[]> => {
+	return new Promise((resolve, reject) => {
+		try {
+			firestore
+				.collection(`networkingByEventId`)
+				.doc(eventId)
+				.collection('meetings')
+				.get()
+				.then(res => {
+					const data = res.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeeting[];
+					const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => participant.id === userID) !== undefined &&
+						meeting.participants.length <= 2);
+					resolve(meetingsWithUserID);
+				})
+
+		} catch (error) {
+			reject(error);
+		}
+	});
 };
 
-export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMeeting,'id'>) => {
+export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMeeting, 'id'>) => {
 	try {
 		await firestore
 			.collection(`networkingByEventId`)
@@ -34,7 +55,7 @@ export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMee
 			.collection('meetings')
 			.doc()
 			.set(createMeetingDto);
-			return true
+		return true
 	} catch (error) {
 		console.log(error);
 		return false
@@ -58,13 +79,14 @@ export const updateMeeting = async (eventId: string, meetingId: string, updateMe
 
 export const deleteMeeting = async (eventId: string, meetingId: string) => {
 	try {
+		console.log('Epa eliminando', eventId, meetingId)
 		await firestore
 			.collection(`networkingByEventId`)
 			.doc(eventId)
 			.collection('meetings')
 			.doc(meetingId)
 			.delete();
-			return true
+		return true
 	} catch (error) {
 		console.log(error);
 		return false

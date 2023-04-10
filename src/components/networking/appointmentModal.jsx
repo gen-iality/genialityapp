@@ -1,140 +1,35 @@
-import { Button, Col, Input, List, Modal, notification, Row, Select, Spin } from 'antd';
+import { Button, Col, DatePicker, Input, List, Modal, notification, Row, Select, Spin, TimePicker } from 'antd';
 import moment from 'moment';
 import { find, filter, keys, pathOr, propEq, whereEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 import withContext from '../../context/withContext';
-
+import * as services from './services/meenting.service';
 import { getDatesRange } from '../../helpers/utils';
-import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId } from './services';
+import { createMeetingRequest, getAgendasFromEventUser, getUsersId } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
-
-const { Option } = Select;
-
-// TODO: -> eliminar fakeEventTimetable
-const fakeEventTimetable = {
-  '2020-09-24': [
-    {
-      timestamp_start: '2020-09-24T21:00:00Z',
-      timestamp_end: '2020-09-24T21:15:00Z',
-    },
-    {
-      timestamp_start: '2020-09-24T21:15:00Z',
-      timestamp_end: '2020-09-24T21:30:00Z',
-    },
-    {
-      timestamp_start: '2020-09-24T21:30:00Z',
-      timestamp_end: '2020-09-24T21:45:00Z',
-    },
-    {
-      timestamp_start: '2020-09-24T21:45:00Z',
-      timestamp_end: '2020-09-24T22:00:00Z',
-    },
-    {
-      timestamp_start: '2020-09-24T22:00:00Z',
-      timestamp_end: '2020-09-24T22:15:00Z',
-    },
-    {
-      timestamp_start: '2020-09-24T22:15:00Z',
-      timestamp_end: '2020-09-24T22:30:00Z',
-    },
-    {
-      timestamp_start: '2020-09-24T22:30:00Z',
-      timestamp_end: '2020-09-24T22:45:00Z',
-    },
-    {
-      timestamp_start: '2020-09-24T22:45:00Z',
-      timestamp_end: '2020-09-24T23:00:00Z',
-    },
-  ],
-};
+import { typeAttendace } from './interfaces/Meetings.interfaces';
+import { DispatchMessageService } from '@/context/MessageService';
 
 const { TextArea } = Input;
-const buttonStatusText = {
-  free: 'Reservar',
-  pending: 'Pendiente',
-  rejected: 'Rechazada',
-};
 const MESSAGE_MAX_LENGTH = 200;
 
 function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, closeModal, cEvent }) {
-  const [openAgenda, setOpenAgenda] = useState('');
   const [agendaMessage, setAgendaMessage] = useState('');
-  const [timetable, setTimetable] = useState({});
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [date, setDate] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [reloadFlag, setReloadFlag] = useState(false);
-  const [eventDatesRange, setEventDatesRange] = useState(false);
+  const initialDate = cEvent?.value?.datetime_from.split(' ');
 
   useEffect(() => {
     if (targetEventUserId === null || cEvent.value === null || cEventUser.value === null) return;
-
-    const loadData = async () => {
-      setLoading(true);
-      setTimetable({});
       setAgendaMessage('');
-      setOpenAgenda('');
-
-      try {
-        const agendas = await getAgendasFromEventUser(cEvent.value._id, targetEventUserId);
-        const newTimetable = {};
-        const eventTimetable = pathOr(fakeEventTimetable, ['timetable'], cEvent.value); // TODO: -> cambiar fakeEventTimetable por {}
-        const dates = keys(eventTimetable);
-
-        dates.forEach((date) => {
-          if (isNonEmptyArray(eventTimetable[date])) {
-            eventTimetable[date].forEach((timetableItem) => {
-              const occupiedAgendas = filter(
-                whereEq({
-                  timestamp_start: timetableItem.timestamp_start,
-                  timestamp_end: timetableItem.timestamp_end,
-                }),
-                agendas
-              );
-
-              const occupiedAgendaFromMe = find(propEq('owner_id', cEventUser.value._id), occupiedAgendas);
-              const occupiedAcceptedAgenda = find(propEq('request_status', 'accepted'), occupiedAgendas);
-              const occupiedAgenda = occupiedAgendaFromMe || occupiedAcceptedAgenda;
-
-              const newTimetableItem = {
-                ...timetableItem,
-                id: occupiedAgenda ? occupiedAgenda.id : null,
-                status:
-                  !!occupiedAgenda &&
-                  (occupiedAgenda.request_status === 'accepted' || occupiedAgenda.owner_id === cEventUser.value._id)
-                    ? occupiedAgenda.request_status
-                    : 'free',
-              };
-
-              if (isNonEmptyArray(newTimetable[date])) {
-                newTimetable[date].push(newTimetableItem);
-              } else {
-                newTimetable[date] = [newTimetableItem];
-              }
-            });
-          }
-        });
-
-        setTimetable(newTimetable);
-
-        const eventDatesRange = cEvent.value && getDatesRange(cEvent.value.datetime_from, cEvent.value.datetime_to);
-        if (eventDatesRange) {
-          setEventDatesRange(eventDatesRange);
-          setSelectedDate(eventDatesRange[0]);
-        }
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
   }, [targetEventUserId, reloadFlag]);
 
   async function reloadData(resp) {
+    if (!resp) return console.log('[ ERROR ] - reloadData => El id de requestMeeting es undefined');
     setReloadFlag(!reloadFlag);
-
     notification.open({
       message: 'Solicitud enviada',
       description:
@@ -142,7 +37,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
       duration: 30,
     });
-    var usId = await getUsersId(targetEventUserId, cEvent.value._id);    
+    var usId = await getUsersId(targetEventUserId, cEvent.value._id);
 
     let notificationA = {
       idReceive: usId.account_id,
@@ -155,18 +50,56 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       type: 'agenda',
       state: '0',
     };
-
+    console.log('veamos el objeto este',notificationA)
     await addNotification(notificationA, cEvent.value, cEventUser.value);
   }
   const resetModal = () => {
     closeModal();
-    setSelectedDate(eventDatesRange[0]);
-    setLoading(true);
-    setTimetable({});
+    setLoading(false);
     setAgendaMessage('');
-    setOpenAgenda('');
+
   };
 
+  const onSubmit = async () => {
+    try {
+
+    if (!date) return notification.warning({ message: 'Debes seleccionar una fecha' });
+    setLoading(true)
+    const startDate = date.toString();
+    const endDate = date.add(20, 'minutes').toString();
+    const eventId = cEvent?.value?._id;
+
+      const idRequestMeeting = await createMeetingRequest({
+        eventId: eventId,
+        targetUser:targetEventUser,
+        message: agendaMessage,
+        creatorUser:cEventUser,
+        typeAttendace,
+        startDate,
+        endDate,
+      });
+      await reloadData(idRequestMeeting, targetEventUserId);
+      setDate(null);
+      setLoading(false)
+      closeModal();
+    } catch (error) {
+      DispatchMessageService({
+        action: 'show',
+        type: 'error',
+        msj: 'No se pudo programar la reunion, intentelo mas tarde',
+      });
+      setLoading(false)
+      closeModal();
+    }
+  };
+  const disabledDate = (current) => {
+    const initial = moment(moment(cEvent?.value?.datetime_from).format('YYYY-MM-DD'));
+    const finish = moment(moment(cEvent?.value?.datetime_to).format('YYYY-MM-DD')) ;
+    const date_to_evaluate = moment(moment(current).format('YYYY-MM-DD'))
+    
+    return !((date_to_evaluate.isSameOrAfter(initial)) && (date_to_evaluate.isSameOrBefore(finish)))
+  };
+  
   return (
     <Modal
       visible={!!targetEventUserId}
@@ -174,142 +107,33 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       footer={null}
       onCancel={resetModal}
       style={{ zIndex: 1031 }}>
-      {loading ? (
-        <Row align='middle' justify='center' style={{ height: 300 }}>
-          <Spin />
-        </Row>
-      ) : (
         <div>
-          <Row justify='end'>
-            <Select
-              style={{ width: 200 }}
-              value={selectedDate}
-              onChange={(newSelectedDate) => {
-                setSelectedDate(newSelectedDate);
-                setAgendaMessage('');
-                setOpenAgenda('');
-              }}>
-              {eventDatesRange &&
-                eventDatesRange.map((eventDate) => (
-                  <Option value={eventDate} key={eventDate}>
-                    {moment(eventDate).format('D MMMM')}
-                  </Option>
-                ))}
-            </Select>
-          </Row>
           <div>
-            <List
-              bordered
-              itemLayout='vertical'
-              dataSource={timetable[selectedDate]}
-              renderItem={(timetableItem) => {
-                if (timetableItem.status === 'accepted') {
-                  return null;
-                }
-
-                const agendaId = `${timetableItem.timestamp_start}${timetableItem.timestamp_end}`;
-
-                return (
-                  <List.Item>
-                    <Row align='middle'>
-                      <Col xs={16}>
-                        <Row justify='center'>
-                          {`${moment(timetableItem.timestamp_start).format('hh:mm a')} - ${moment(
-                            timetableItem.timestamp_end
-                          ).format('hh:mm a')}`}
-                        </Row>
-                      </Col>
-                      <Col xs={8}>
-                        <Row justify='center'>
-                          <Button
-                            type='primary'
-                            shape='round'
-                            disabled={timetableItem.status !== 'free' || openAgenda === agendaId}
-                            onClick={() => {
-                              if (timetableItem.status === 'free') {
-                                setAgendaMessage('');
-                                setOpenAgenda(agendaId);
-                              }
-                            }}>
-                            {buttonStatusText[timetableItem.status]}
-                          </Button>
-                        </Row>
-                      </Col>
-                    </Row>
-
-                    {openAgenda === agendaId && (
-                      <div>
-                        <div style={{ padding: '10px 0' }}>
-                          <TextArea
-                            rows={3}
-                            placeholder={`Puedes agregar un mensaje corto en la solicitud. Máximo ${MESSAGE_MAX_LENGTH} caracteres.`}
-                            value={agendaMessage}
-                            onChange={(e) => {
-                              const newAgendaMessage = e.target.value;
-
-                              if (newAgendaMessage.length <= MESSAGE_MAX_LENGTH) {
-                                setAgendaMessage(newAgendaMessage);
-                              }
-                            }}
-                          />
-                        </div>
-                        <Row justify='end' style={{ paddingBottom: '20px' }}>
-                          <Button
-                            shape='round'
-                            onClick={() => {
-                              setOpenAgenda('');
-                              setAgendaMessage('');
-                            }}
-                            style={{ marginRight: '10px' }}>
-                            {'Cancelar'}
-                          </Button>
-                          <Button
-                            type='primary'
-                            shape='round'
-                            onClick={() => {
-                              if (timetableItem.status === 'free') {
-                                setLoading(true);
-                                createAgendaToEventUser({
-                                  eventId: cEvent.value._id,
-                                  eventUser: cEventUser.value,
-                                  currentEventUserId: cEventUser.value._id,
-                                  targetEventUserId,
-                                  targetEventUser,
-                                  timetableItem,
-                                  message: agendaMessage,
-                                })
-                                  .then((resp) => {
-                                    reloadData(resp, targetEventUserId);
-                                  })
-                                  .catch((error) => {
-                                    console.error(error);
-                                    if (!error) {
-                                      notification.warning({
-                                        message: 'Espacio reservado',
-                                        description: 'Este espacio de tiempo ya fué reservado',
-                                      });
-                                    } else {
-                                      notification.error({
-                                        message: 'Error',
-                                        description: 'Error creando la reserva',
-                                      });
-                                    }
-                                    resetModal();
-                                  });
-                              }
-                            }}>
-                            {'Enviar solicitud'}
-                          </Button>
-                        </Row>
-                      </div>
-                    )}
-                  </List.Item>
-                );
-              }}
-            />
+            <Row justify='space-between' style={{ margin: 5 }}>
+              <DatePicker
+                style={{ marginBottom: 10 }}
+                format={'DD-MM-YYYY hh:mm:ss'}
+                showTime={{ defaultValue: moment(initialDate[1] || '00:00:00', 'HH:mm:ss') }}
+                disabledDate={disabledDate}
+                onOk={(value) => setDate(value)}
+              />
+              <Button type='primary' onClick={onSubmit} loading={loading}>
+                Agendar cita
+              </Button>
+              <TextArea
+                rows={3}
+                placeholder={`Puedes agregar un mensaje corto en la solicitud. Máximo ${MESSAGE_MAX_LENGTH} caracteres.`}
+                value={agendaMessage}
+                onChange={(e) => {
+                  const newAgendaMessage = e.target.value;
+                  if (newAgendaMessage.length <= MESSAGE_MAX_LENGTH) {
+                    setAgendaMessage(newAgendaMessage);
+                  }
+                }}
+              />
+            </Row>
           </div>
         </div>
-      )}
     </Modal>
   );
 }

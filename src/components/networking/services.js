@@ -1,6 +1,7 @@
 import { sortBy, prop } from 'ramda';
 import { firestore } from '../../helpers/firebase';
 import API, { UsersApi, EventsApi } from '../../helpers/request';
+import { RequestMeetingState, defaultType, shortName } from './utils/utils';
 
 const filterList = (list, currentUser) => list.find((item) => item.account_id === currentUser);
 
@@ -157,6 +158,98 @@ export const createAgendaToEventUser = ({
     })();
   });
 };
+/**
+ * Crea una solicitud de reunión.
+ * @param {Object} params - Los parámetros para crear la solicitud de reunión.
+ * @param {string} params.eventId - El identificador del evento.
+ * @param {string} params.targetUser - El identificador del usuario objetivo de la reunión.
+ * @param {string} params.message - El mensaje asociado con la solicitud de reunión.
+ * @param {string} params.creatorUser - El identificador del usuario creador de la reunión.
+ * @param {string} params.typeAttendace
+ * @param {Date} params.startDate - La fecha y hora de inicio de la reunión.
+ * @param {Date} params.endDate - La fecha y hora de finalización de la reunión.
+ */
+export const createMeetingRequest = ({
+  eventId,
+  targetUser,
+  creatorUser,
+  message,
+  typeAttendace,
+  startDate,
+  endDate,
+}) => {
+  return new Promise((resolve, reject) => {
+    (async () => {
+      try {
+       //Crear solicitud sin importar las solicitudes existentes
+       const participants = [
+         {
+           id: creatorUser.value._id,
+           name: creatorUser.value.user.names,
+           email: creatorUser.value.user.email || '',
+           confirmed : false
+          },
+          {
+            id: targetUser._id,
+            name: targetUser.user.names,
+            email: targetUser.user.email || '',
+            confirmed: false
+          },
+        ];
+       const timestamp = Date.now()
+        const meeting = {
+          name: `Reunion entre ${shortName(targetUser.user.names)} y ${shortName(creatorUser.value.user.names)} `,
+          participants: participants,
+          place: 'evius meet',
+          start: startDate,
+          end: endDate,
+          dateUpdated: timestamp ,
+          type : defaultType
+        };
+        
+        const requestMeenting={
+          user_to : {
+            id :targetUser._id,
+            name : targetUser.user.names,
+            email : targetUser.user.email || ''
+          },
+          user_from : {
+            id : creatorUser.value._id,
+            name : creatorUser.value.user.names,
+            email :creatorUser.value.user.email || ''
+          },
+          meeting,
+          date:startDate,
+          message,
+          status:RequestMeetingState.pending,
+          timestamp : timestamp
+        }
+        const newAgendaResult = await firestore
+        .collection('networkingByEventId')
+        .doc(eventId)
+        .collection('meeting_request')
+        .add(requestMeenting);
+        // enviamos notificaciones por correo
+        let data = {
+          id_user_requested: requestMeenting.user_to.id,
+          id_user_requesting: requestMeenting.user_from.id ,
+          request_id: newAgendaResult.id,
+          user_name_requesting: 'Juan Carlos',
+          event_id: eventId,
+          state: 'send',
+          request_type: 'meeting',
+          start_time: new Date(startDate).toLocaleTimeString()
+        };
+    //todo: Arreglar not found de sendEmail
+    await EventsApi.sendMeetingRequest(eventId, data);
+     resolve(newAgendaResult.id);
+      } catch (error) {
+        reject(error);
+      }
+    })();
+  });
+};
+
 
 export const getPendingAgendasFromEventUser = (eventId, currentEventUserId) => {
   return new Promise((resolve, reject) => {
@@ -325,6 +418,7 @@ export const getAcceptedAgendasFromEventUser = (eventId, currentEventUserId) => 
 
 export const deleteAgenda = (eventId, agendaId) => {
   return new Promise((resolve, reject) => {
+    console.log('eliminando',agendaId)
     firestore
       .collection('event_agendas')
       .doc(eventId)

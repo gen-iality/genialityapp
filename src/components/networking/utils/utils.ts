@@ -10,6 +10,11 @@ export const generateRandomKey = () => {
     return Math.random().toString(36).substring(2, 10);
 }
 
+export const shortName = ( name = 'usuario',splitter = ' ') => {
+  const names = name.split(splitter)
+  const simpleName = `${names[0]} ${names[1] || ''}`
+  return simpleName
+}
 
 export const formLayout = {
     labelCol: { span: 24 },
@@ -49,3 +54,9 @@ export const meetingSelectedInitial: IMeeting = {
   type: defaultType,
   dateUpdated: 0,
 };
+
+export const RequestMeetingState = {
+  confirmed:'confirmed',
+  rejected:'rejected',
+  pending:'pending'
+}

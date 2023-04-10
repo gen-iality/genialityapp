@@ -24,11 +24,11 @@ export const useMeetingFormLogic = () => {
         //Tranformar todos los asistentes al evento para el transfer
         setDataTransfer(
             dataContext.attendees.map((asistente: any) => ({
-                id: asistente.user._id,
+                id: asistente._id,
                 name: asistente.user.names,
-                key: asistente.user._id,
+                key: asistente._id,
                 email: asistente.user.email,
-                attendance: typeAttendace.unconfirmed,
+                confirmed: false,
             }))
         );
     }, []);
@@ -43,7 +43,6 @@ export const useMeetingFormLogic = () => {
 
     const onSubmit = (datos: FormMeeting) => {
         
-         console.log('datos formulario',datos)
          
          DispatchMessageService({
             type: 'loading',
@@ -65,7 +64,7 @@ export const useMeetingFormLogic = () => {
                 dateUpdated: Date.now(),
                 type :  dataContext.typeMeetings.find((item)=> item.id === datos.type ) || defaultType 
             };
-    
+        
             if (dataContext.edicion && datos.id) {
                 dataContext.updateMeeting(datos.id, { ...meeting, id: datos.id });
                 DispatchMessageService({

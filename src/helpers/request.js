@@ -215,8 +215,12 @@ export const EventsApi = {
     return await Actions.getOne(`/api/events/${id}/`, 'invitations');
   },
   sendMeetingRequest: async (eventId, data) => {
-    let token = await GetTokenUserFirebase();
-    return await Actions.post(`/api/events/${eventId}/meetingrequest/notify?token=${token}`, data);
+    try {
+      let token = await GetTokenUserFirebase();
+      return await Actions.post(`/api/events/${eventId}/meetingrequest/notify?token=${token}`, data);
+    } catch (error) {
+      console.log('Ocurrio un error al enviar el email')
+    }
   },
 
   sendInvitation: async (eventId, data) => {

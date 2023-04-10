@@ -293,7 +293,6 @@ export default function NetworkingProvider(props: Props) {
         visibleByContacts: 'public',
         _id: { $oid: '614260d226e7862220497eac2' },
       });
-      //console.log('fieldsForm', fieldsForm);
       setFieldsForm(fieldsForm);
       return fieldsForm;
     } catch (error) {
