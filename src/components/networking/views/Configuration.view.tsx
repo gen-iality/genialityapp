@@ -1,39 +1,49 @@
-import {Card, Col, Divider, Layout, Row, Typography } from 'antd';
+import { Card, Col, Divider, Row, Typography } from 'antd';
 import React from 'react';
 import ConfigObservers from '../components/Configurations/ConfigObservers';
-import Meta from 'antd/lib/card/Meta';
 import TypeMeenting from '../components/Configurations/TypeMeenting';
-
-const {Content} = Layout;
+import ConfigSpaces from '../components/Configurations/ConfigSpaces';
 
 export default function Configuration() {
   return (
-    <Row justify='center' align='middle' gutter={8}>
-      <Col span={12}>
-        <Card
-          hoverable
-          style={{ minHeight: 550 }}
-        >
-          <Divider orientation='left'><Typography.Title level={5}>Configuración de observadores</Typography.Title></Divider>
-          
-          {/* <Meta title=''/> */}
-          <ConfigObservers />
-        </Card>
-      </Col>
-      <Col span={12}>
-        <Card
-          hoverable
-          style={{ minHeight: 550 }}
-        >
-          <Divider orientation='left'><Typography.Title level={5}>Configuración de tipos</Typography.Title></Divider>
-          
-          {/* <Meta title=''/> */}
-          <TypeMeenting />
-        </Card>
-      </Col>
-      {/* <Content style={{ display: 'flex', justifyContent: 'space-around' , padding: 10}}>
+    <>
+      <Row justify='center' align='middle' gutter={8} style={{ marginBottom: 10 }}>
+        <Col span={12}>
+          <Card hoverable style={{ minHeight: 550 }}>
+            <Divider orientation='left'>
+              <Typography.Title level={5}>Configuración de observadores</Typography.Title>
+            </Divider>
+
+            {/* <Meta title=''/> */}
+            <ConfigObservers />
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Card hoverable style={{ minHeight: 550 }}>
+            <Divider orientation='left'>
+              <Typography.Title level={5}>Configuración de tipos</Typography.Title>
+            </Divider>
+
+            {/* <Meta title=''/> */}
+            <TypeMeenting />
+          </Card>
+        </Col>
+        {/* <Content style={{ display: 'flex', justifyContent: 'space-around' , padding: 10}}>
         
       </Content> */}
-    </Row>
+      </Row>
+      <Row justify='center' align='middle' gutter={8}>
+        <Col span={12}>
+          <Card hoverable style={{ minHeight: 550 }}>
+            <Divider orientation='left'>
+              <Typography.Title level={5}>Configuración de espacios</Typography.Title>
+            </Divider>
+
+            {/* <Meta title=''/> */}
+            <ConfigSpaces />
+          </Card>
+        </Col>
+      </Row>
+    </>
   );
 }

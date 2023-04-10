@@ -10,6 +10,7 @@ import { BadgeApi, EventsApi, RolAttApi } from '@/helpers/request';
 import { fieldNameEmailFirst } from '@/helpers/utils';
 import { addDefaultLabels, orderFieldsByWeight } from '../components/modal-create-user/utils/KioskRegistration.utils';
 import { FieldsForm } from '../components/modal-create-user/interface/KioskRegistrationApp.interface';
+import { ISpaces, ISpacesForm } from '../interfaces/spaces-interfaces';
 
 interface NetworkingContextType {
   eventId: string;
@@ -39,6 +40,8 @@ interface NetworkingContextType {
   deleteType: (typeId: string) => Promise<void>;
   updateType: (typeId: string, type:  Omit<ITypeMeenting, 'id'>) => Promise<void>;
   fieldsForm: FieldsForm[];
+  deleteSpaces: (SpaceId: string)=>Promise<void>;
+  createSpaces: (nameSpace: ISpacesForm) => Promise<void> 
 }
 
 export const NetworkingContext = createContext<NetworkingContextType>({} as NetworkingContextType);
@@ -173,7 +176,7 @@ export default function NetworkingProvider(props: Props) {
     });
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? '¡Información guardada correctamente!' : 'No ha sido posible eliminar el campo',
+      msj: response ? '¡Información eliminada correctamente!' : 'No ha sido posible eliminar el campo',
       action: 'show',
     });
   };
@@ -300,6 +303,51 @@ export default function NetworkingProvider(props: Props) {
     }
   };
 
+  const deleteSpaces = async (SpaceId: string) => {
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere mientras se borra la información...',
+      action: 'show',
+    });
+
+    const response = await service.deleteSpacesByEventId(eventId, SpaceId);
+
+    DispatchMessageService({
+      key: 'loading',
+      action: 'destroy',
+    });
+    DispatchMessageService({
+      type: response ? 'success' : 'warning',
+      msj: response ? '¡Información eliminada correctamente!' : 'No ha sido posible eliminar el campo',
+      action: 'show',
+    });
+  };
+
+  const createSpaces = async (nameSpace: ISpacesForm) => {
+    const space: ISpaces = {
+      label: nameSpace.nameSpace,
+      value: nameSpace.nameSpace.toLowerCase().replaceAll(' ', '-'),
+    };
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere...',
+      action: 'show',
+    });
+    const responses = await service.createSpacesByEventId(eventId, space);
+    DispatchMessageService({
+      key: 'loading',
+      action: 'destroy',
+    });
+    DispatchMessageService({
+      type: responses ? 'success' : 'warning',
+      msj: responses ? '¡Información guardada correctamente!' : 'No se logro guardar la informacion completa',
+      action: 'show',
+    });
+  };
+
+
   const values = {
     modal,
     createModalVisible,
@@ -330,6 +378,8 @@ export default function NetworkingProvider(props: Props) {
     createType,
     deleteType,
     updateType,
+    deleteSpaces,
+    createSpaces
   };
 
   return <NetworkingContext.Provider value={values}>{props.children}</NetworkingContext.Provider>;

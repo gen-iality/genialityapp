@@ -1,5 +1,6 @@
 import { firestore } from '@/helpers/firebase';
 import { IMeeting } from '../interfaces/Meetings.interfaces';
+import { ISpaces, ISpacesFirebase } from '../interfaces/spaces-interfaces';
 
 export const listenAttendees = (eventId: string, setAttendees: any) => {
 	return firestore.collection(`${eventId}_event_attendees`).onSnapshot(snapshot => {
@@ -47,6 +48,49 @@ export const listenMeetingsByUserLanding = (eventId: string, userID: string): Pr
 	});
 };
 
+
+export const listenSpacesByEventId = (eventId: string, setSpaces: (spaces: ISpacesFirebase[]) => void) => {
+	return firestore
+		.collection(`networkingByEventId`)
+		.doc(eventId)
+		.collection('spaces-meetings')
+		.onSnapshot(snapshot => {
+			if (!snapshot.empty) {
+				const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as ISpacesFirebase[];
+				setSpaces(data);
+			} else {
+				setSpaces([])
+			}
+		})
+};
+
+export const createSpacesByEventId = async (eventId: string, createMeetingDto: ISpaces) => {
+	try {
+		await firestore
+			.collection(`networkingByEventId`)
+			.doc(eventId)
+			.collection('spaces-meetings')
+			.doc()
+			.set(createMeetingDto);
+		return true
+	} catch (error) {
+		console.log(error);
+		return false
+	}
+};
+export const deleteSpacesByEventId = async (eventId: string, spaceId: string) => {
+	try {
+		await firestore
+			.collection(`networkingByEventId`)
+			.doc(eventId)
+			.collection('spaces-meetings')
+			.doc(spaceId)
+			.delete();
+		return true
+	} catch (error) {
+		return false
+	}
+};
 export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMeeting, 'id'>) => {
 	try {
 		await firestore
