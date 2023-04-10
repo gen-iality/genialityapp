@@ -3,14 +3,14 @@ import { useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
 /** Antd imports */
-import { DatePicker, Form, Input, InputNumber, Select, Switch, Table, Modal, Button } from 'antd';
+import { DatePicker, Form, Input, InputNumber, Select, Switch, Table, Modal, Button, Spin } from 'antd';
 
 /** Components */
 import Header from '@antdComponents/Header';
 import { columns } from './tableColums/registeredTableColumns';
 
 /** Helpers and utils */
-import { OrganizationApi, CerticationsApi } from '@helpers/request';
+import { OrganizationApi, CerticationsApi, EventsApi } from '@helpers/request';
 import { firestore } from '@helpers/firebase';
 
 /** Context */
@@ -34,6 +34,7 @@ function OrgRegisteredUsers(props) {
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   const [form] = Form.useForm();
+  const [isSettingFormValues, setIsSettingFormValues] = useState(false);
 
   const [extraFields, setExtraFields] = useState([]);
 
@@ -218,6 +219,20 @@ function OrgRegisteredUsers(props) {
   const addNewCertificationModal = (item) => {
     console.log('item', item);
     openModal();
+    setIsSettingFormValues(true);
+    EventsApi.getOne(item.event_id).then((eventData) => {
+      /**
+       * Take the event data and set the default value for description,
+       * entity and hours to create a new certification.
+       */
+      if (eventData) {
+        form.setFieldsValue({
+          description: eventData.default_certification_description,
+          entity: eventData.default_certification_entity,
+          hours: eventData.default_certification_hours ?? 1,
+        })
+      }
+    }).finally(() => setIsSettingFormValues(false))
     setSelectedOrgMember(item);
   };
 
@@ -271,6 +286,11 @@ function OrgRegisteredUsers(props) {
         }}
         onCancel={() => closeModal()}
       >
+        {isSettingFormValues ? (
+          <>
+          Cargando datos por defecto... <Spin />
+          </>
+        ) : undefined}
         <Form form={form} onFinish={onFormFinish}>
           {/* <Form.Item name="event_id" label="Curso a dar certificación" rules={[{ required: true, message: 'Esto' }]}>
             <Select //options={allEvents.map((event) => ({ label: event.name, value: event._id }))}
