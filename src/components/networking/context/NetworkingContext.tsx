@@ -327,7 +327,7 @@ export default function NetworkingProvider(props: Props) {
   const createSpaces = async (nameSpace: ISpacesForm) => {
     const space: ISpaces = {
       label: nameSpace.nameSpace,
-      value: nameSpace.nameSpace.toLowerCase().replaceAll(' ', '-'),
+      value: nameSpace.nameSpace,
     };
     DispatchMessageService({
       type: 'loading',

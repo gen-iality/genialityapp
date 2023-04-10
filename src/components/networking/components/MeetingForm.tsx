@@ -6,6 +6,7 @@ import { useMeetingFormLogic } from '../hooks/useMeetingFormLogic';
 import { NetworkingContext } from '../context/NetworkingContext';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { CloseCircleOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
+import { useGetSpaces } from '../hooks/useGetSpaces';
 
 const { RangePicker } = DatePicker;
 
@@ -23,6 +24,7 @@ export default function MeetingForm() {
   } = useMeetingFormLogic();
 
   const {typeMeetings, onClickAgregarUsuario} = useContext(NetworkingContext);
+  const { loading, spaces } = useGetSpaces();
 
   return (
     <Fragment>
@@ -96,7 +98,11 @@ export default function MeetingForm() {
           name='place'
           rules={[{ required: true, message: 'Es necesario seleccionar el lugar de la reunión' }]}
           initialValue={formState.place}>
-          <Input ref={formRef} name={'place'} type='text' placeholder={'Ej: Salón principal'} />
+             <Select
+              onChange={() => {}}
+              options={spaces}
+              placeholder={'Seleccione un espacio para la reunion'}
+              />
         </Form.Item>
         <Form.Item 
         label={'Tipo'} 
