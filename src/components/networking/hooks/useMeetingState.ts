@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import useDateFormat from './useDateFormat';
 
 type MeetingState = 'scheduled' | 'in-progress' | 'completed';
-type ResultStatus = 'success' | 'info'
+type ResultStatus = 'success' | 'info' | 'warning';
 
 const useMeetingState = (startMeeting: string | Date, endMeeting: string | Date) => {
   const [stateMeeting, setStateMeeting] = useState<MeetingState>('scheduled');
@@ -33,7 +33,7 @@ const useMeetingState = (startMeeting: string | Date, endMeeting: string | Date)
     if (currentDate.isAfter(dateFormat(endMeeting, 'MM/DD/YYYY hh:mm A'))) {
       setStateMeeting('completed');
       setMessageByState('¡La reunión ha finalizado!');
-      setResultStatus('info');
+      setResultStatus('warning');
       return;
     }
   }, [startMeeting, endMeeting]);
