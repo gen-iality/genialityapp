@@ -155,6 +155,7 @@ function ModalMembers(props) {
               idOrganization={organizationId} // New!
               defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
               requireAutomaticLoguin={false}
+              startingComponent={props.startingComponent}
             />
           ) : (
             <FormComponent

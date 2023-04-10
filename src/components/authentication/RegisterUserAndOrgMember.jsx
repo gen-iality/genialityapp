@@ -35,6 +35,7 @@ const RegisterUserAndOrgMember = ({
   idOrganization,
   defaultPositionId,
   requireAutomaticLoguin,
+  startingComponent,
 }) => {
   console.log('idOrganization', idOrganization);
   const intl = useIntl();
@@ -206,6 +207,7 @@ const RegisterUserAndOrgMember = ({
           });
           setBasicDataUser({});
           setDataOrgMember(undefined);
+          startingComponent();
         }
       } catch (err) {
         DispatchMessageService({
