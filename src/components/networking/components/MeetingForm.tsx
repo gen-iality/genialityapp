@@ -98,7 +98,10 @@ export default function MeetingForm() {
           initialValue={formState.place}>
           <Input ref={formRef} name={'place'} type='text' placeholder={'Ej: Salón principal'} />
         </Form.Item>
-        <Form.Item label={'Tipo'} name='type' initialValue={typeMeetings.find((item)=> item.id === formState.type?.id)?.id || defaultType.nameType}>
+        <Form.Item 
+        label={'Tipo'} 
+        name='type' 
+        initialValue={typeMeetings.find((item)=> item.id === formState.type?.id)?.id || defaultType.nameType}>
           <Select
             onChange={() => {}}
             options={typeMeetings.map((item)=> ({label: item.nameType, value: item.id}))}

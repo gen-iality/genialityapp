@@ -40,7 +40,6 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
   const [meentingStart, setmeentingStart] = useState(
     moment(new Date()).isAfter(dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A'))
   );
-  console.log('meenting',meenting)
   const { editMeenting, deleteMeeting, updateMeeting } = useContext(NetworkingContext);
   const { resultStatus, messageByState, stateMeeting } = useMeetingState(meenting.start, meenting.end);
 

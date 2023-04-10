@@ -106,7 +106,7 @@ export default function NetworkingProvider(props: Props) {
   const attendeesList = (): Omit<IObserver, 'id'>[] => {
     const observersId = observers.map((item) => item.value);
     const participants: Omit<IObserver, 'id'>[] = attendees.map((asistente: any) => ({
-      value: asistente.user._id,
+      value: asistente._id,
       label: asistente.user.names,
     }));
     return participants.filter((item) => !observersId.includes(item.value));
