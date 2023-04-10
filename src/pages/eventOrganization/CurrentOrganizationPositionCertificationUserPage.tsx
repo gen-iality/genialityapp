@@ -259,7 +259,25 @@ function CurrentOrganizationPositionCertificationUserPage(
       >
         <Form form={form} onFinish={onFormFinish}>
           <Form.Item name="event_id" label="Curso a dar certificación" rules={[{ required: true, message: 'Esto' }]}>
-            <Select options={allEvents.map((event) => ({ label: event.name, value: event._id }))} />
+            <Select
+              onChange={(value) => {
+                /**
+                 * When the user change the event to create the certificaciton,
+                 * then this code will update the default value for description,
+                 * entity and hours.
+                 */
+                const event = allEvents.find((event) => event._id == value)
+                console.log('value changed to:', value, event)
+                if (event) {
+                  form.setFieldsValue({
+                    description: event.default_certification_description,
+                    entity: event.default_certification_entity,
+                    hours: event.default_certification_hours ?? 1,
+                  })
+                }
+              }}
+              options={allEvents.map((event) => ({ label: event.name, value: event._id }))}
+            />
           </Form.Item>
           <Form.Item name="success" label="Exitoso">
             <Switch />
