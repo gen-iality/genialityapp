@@ -10,6 +10,7 @@ import { BadgeApi, EventsApi, RolAttApi } from '@/helpers/request';
 import { fieldNameEmailFirst } from '@/helpers/utils';
 import { addDefaultLabels, orderFieldsByWeight } from '../components/modal-create-user/utils/KioskRegistration.utils';
 import { FieldsForm } from '../components/modal-create-user/interface/KioskRegistrationApp.interface';
+import { ISpaces, ISpacesForm } from '../interfaces/spaces-interfaces';
 
 interface NetworkingContextType {
   eventId: string;
@@ -31,7 +32,7 @@ interface NetworkingContextType {
   attendeesList: () => Omit<IObserver, 'id'>[];
   openModal: (mode?: string) => void;
   createMeeting: (meeting: Omit<IMeeting, 'id'>) => void;
-  updateMeeting: (meetingId: string, meeting: IMeeting) => Promise<void>;
+  updateMeeting: (meetingId: string, meeting: IMeeting) => Promise<boolean>;
   deleteMeeting: (meetingId: string) => void;
   createObserver: (data: CreateObservers) => void;
   deleteObserver: (id: string) => void;
@@ -39,6 +40,8 @@ interface NetworkingContextType {
   deleteType: (typeId: string) => Promise<void>;
   updateType: (typeId: string, type:  Omit<ITypeMeenting, 'id'>) => Promise<void>;
   fieldsForm: FieldsForm[];
+  deleteSpaces: (SpaceId: string)=>Promise<void>;
+  createSpaces: (nameSpace: ISpacesForm) => Promise<void> 
 }
 
 export const NetworkingContext = createContext<NetworkingContextType>({} as NetworkingContextType);
@@ -78,11 +81,14 @@ export default function NetworkingProvider(props: Props) {
 
   useEffect(() => {
     if (observers.length) {
-      const dataArray: IMeetingCalendar[] = [];
+      const dataArray: any[] = [];
       observers.map((observer) => {
         meetings.map((meeting) => {
-          if (meeting.participants.map((item) => item.id).includes(observer.value)) {
-            dataArray.push({ ...meeting, assigned: observer.value });
+          if (meeting.participantsIds.includes(observer.value)) {
+            dataArray.push(
+              { ...meeting, assigned: observer.value,
+              start: new Date(meeting.start),
+              end: new Date(meeting.end),});
           }
         });
       });
@@ -106,7 +112,7 @@ export default function NetworkingProvider(props: Props) {
   const attendeesList = (): Omit<IObserver, 'id'>[] => {
     const observersId = observers.map((item) => item.value);
     const participants: Omit<IObserver, 'id'>[] = attendees.map((asistente: any) => ({
-      value: asistente.user._id,
+      value: asistente._id,
       label: asistente.user.names,
     }));
     return participants.filter((item) => !observersId.includes(item.value));
@@ -131,7 +137,8 @@ export default function NetworkingProvider(props: Props) {
       place: meeting.place,
       start: meeting.start,
       end: meeting.end,
-      type : meeting.type 
+      type : meeting.type,
+      participantsIds : meeting.participantsIds
     };
     const response = await service.createMeeting(eventId, newMeenting);
     DispatchMessageService({
@@ -148,15 +155,11 @@ export default function NetworkingProvider(props: Props) {
       place: meeting.place,
       start: meeting.start,
       end: meeting.end,
-      type : meeting.type
+      type : meeting.type,
+      participantsIds : meeting.participantsIds
     };
     const response = await service.updateMeeting(eventId, meetingId, newMeenting);
-
-    DispatchMessageService({
-      type: response ? 'success' : 'warning',
-      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la información',
-      action: 'show',
-    });
+    return response
   };
   const deleteMeeting = async (meetingId: string) => {
     DispatchMessageService({
@@ -173,8 +176,9 @@ export default function NetworkingProvider(props: Props) {
     });
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? '¡Información guardada correctamente!' : 'No ha sido posible eliminar el campo',
+      msj: response ? '¡Información eliminada correctamente!' : 'No ha sido posible eliminar el campo',
       action: 'show',
+      duration: 1
     });
   };
 
@@ -300,6 +304,51 @@ export default function NetworkingProvider(props: Props) {
     }
   };
 
+  const deleteSpaces = async (SpaceId: string) => {
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere mientras se borra la información...',
+      action: 'show',
+    });
+
+    const response = await service.deleteSpacesByEventId(eventId, SpaceId);
+
+    DispatchMessageService({
+      key: 'loading',
+      action: 'destroy',
+    });
+    DispatchMessageService({
+      type: response ? 'success' : 'warning',
+      msj: response ? '¡Información eliminada correctamente!' : 'No ha sido posible eliminar el campo',
+      action: 'show',
+    });
+  };
+
+  const createSpaces = async (nameSpace: ISpacesForm) => {
+    const space: ISpaces = {
+      label: nameSpace.nameSpace,
+      value: nameSpace.nameSpace,
+    };
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere...',
+      action: 'show',
+    });
+    const responses = await service.createSpacesByEventId(eventId, space);
+    DispatchMessageService({
+      key: 'loading',
+      action: 'destroy',
+    });
+    DispatchMessageService({
+      type: responses ? 'success' : 'warning',
+      msj: responses ? '¡Información guardada correctamente!' : 'No se logro guardar la informacion completa',
+      action: 'show',
+    });
+  };
+
+
   const values = {
     modal,
     createModalVisible,
@@ -330,6 +379,8 @@ export default function NetworkingProvider(props: Props) {
     createType,
     deleteType,
     updateType,
+    deleteSpaces,
+    createSpaces
   };
 
   return <NetworkingContext.Provider value={values}>{props.children}</NetworkingContext.Provider>;

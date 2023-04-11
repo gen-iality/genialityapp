@@ -17,6 +17,7 @@ export interface IMeeting {
     type : ITypeMeenting | undefined
     dateUpdated : number
     participants : IParticipants[];
+    participantsIds : string[]
 }
 
 

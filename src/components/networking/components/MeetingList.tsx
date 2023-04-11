@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row } from 'antd';
+import { Card, Col, Empty, Input, Row } from 'antd';
 import React, { useState } from 'react';
 import MeetingItem from './MeetingItem';
 import { IMeetingList } from '../interfaces/Meetings.interfaces';
@@ -11,19 +11,24 @@ export default function MeetingList({ meentings }: IMeetingList) {
   const filterMeentings = () => {
     return meentings.filter((item) => item.name.toLowerCase().match(filter.toLowerCase()));
   };
-
   return (
     <Card headStyle={{ border: 'none' }} bodyStyle={{ padding: '15px' }}>
-      <Col span={12} style={{ marginBottom: 10 }}>
-        <Search placeholder='Buscar la reunión' onChange={(e)=>setfilter(e.target.value)} enterButton />
-      </Col>
-      <Row gutter={[0, 8]}>
-        {filterMeentings().map((meenting, key) => (
-          <Col span={24}>
-            <MeetingItem meenting={meenting} />
+      {meentings.length === 0 ? (
+        <Empty></Empty>
+      ) : (
+        <>
+          <Col span={12} style={{ marginBottom: 10 }}>
+            <Search placeholder='Buscar la reunión' onChange={(e) => setfilter(e.target.value)} enterButton />
           </Col>
-        ))}
-      </Row>
+          <Row gutter={[0, 8]}>
+            {filterMeentings().map((meenting, key) => (
+              <Col span={24}>
+                <MeetingItem meenting={meenting} />
+              </Col>
+            ))}
+          </Row>
+        </>
+      )}
     </Card>
   );
 }

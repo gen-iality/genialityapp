@@ -41,7 +41,7 @@ export const useMeetingFormLogic = () => {
         setSelectedAttendeesKey([...sourceSelectedKeys, ...targetSelectedKeys]);
     };
 
-    const onSubmit = (datos: FormMeeting) => {
+    const onSubmit = async (datos: FormMeeting) => {
         
          
          DispatchMessageService({
@@ -60,17 +60,25 @@ export const useMeetingFormLogic = () => {
                 start: datos.date[0].toString(),
                 end : datos.date[1].toString(),
                 participants: participants,
+                participantsIds : AttendeesKeyTarget,
                 place: datos.place,
                 dateUpdated: Date.now(),
                 type :  dataContext.typeMeetings.find((item)=> item.id === datos.type ) || defaultType 
             };
         
             if (dataContext.edicion && datos.id) {
-                dataContext.updateMeeting(datos.id, { ...meeting, id: datos.id });
+                const response = await dataContext.updateMeeting(datos.id, { ...meeting, id: datos.id });
                 DispatchMessageService({
                     key: 'loading',
                     action: 'destroy',
                 });
+                DispatchMessageService({
+                    key: 'response',
+                    type: response ? 'success' : 'warning',
+                    msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la información',
+                    action: 'show',
+                    duration : 1
+                  });
                 return dataContext.closeModal();
             }
             dataContext.createMeeting(meeting);

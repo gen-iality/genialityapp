@@ -37,10 +37,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
   const [participants, setParticipants] = useState<IParticipants[]>(meenting.participants);
   const { dateFormat, hoursFormat } = useDateFormat();
   const [startTime] = hoursFormat([meenting.start]);
-  const [meentingStart, setmeentingStart] = useState(
-    moment(new Date()).isAfter(dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A'))
-  );
-  console.log('meenting',meenting)
+
   const { editMeenting, deleteMeeting, updateMeeting } = useContext(NetworkingContext);
   const { resultStatus, messageByState, stateMeeting } = useMeetingState(meenting.start, meenting.end);
 
@@ -134,7 +131,6 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                       style={{ margin: 'auto' }}
                       value={dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')}
                       format='D [días] H [horas] m [minutos] s [segundos]'
-                      onFinish={() => setmeentingStart(true)}
                     />
                   )
                 }
