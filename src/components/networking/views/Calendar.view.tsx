@@ -37,18 +37,16 @@ export default function MyCalendar() {
     deleteMeeting,
   } = useContext(NetworkingContext);
   const [groupBy, setGroupBy] = useState<GroupByResources>('spaces');
-  const { renderEvents } = useGetMeetingToCalendar(meetings, View, observers, DataCalendar, groupBy);
   const { spaces } = useGetSpaces();
-  const { events, resources, resourceAccessor, buttonGroupBy } = useGroupByCalendar(
+  const { renderEvents } = useGetMeetingToCalendar(meetings, View, observers, DataCalendar, groupBy);
+  const { resources, resourceAccessor, buttonGroupBy } = useGroupByCalendar(
     {
       observers: {
-        events: renderEvents,
         resources: observers,
         resourceAccessor: 'assigned',
         buttonGroupBy: 'Observadores',
       },
       spaces: {
-        events: renderEvents,
         resources: spaces,
         resourceAccessor: 'place',
         buttonGroupBy: 'Espacios',
@@ -56,6 +54,7 @@ export default function MyCalendar() {
     },
     groupBy
   );
+  
   const ReactBigCalendar: any = withDragAndDrop(Calendar);
 
   const showDrawer = (event: IMeeting) => {
@@ -143,7 +142,7 @@ export default function MyCalendar() {
               {(View === 'week' || View === 'day') && <Button onClick={onSetNextGroupBy}>Por {buttonGroupBy}</Button>}
             </Row>
             <ReactBigCalendar
-              events={events}
+              events={renderEvents}
               view={View}
               onView={(view: View) => setView(view)}
               onSelectSlot={createEventCalendar}

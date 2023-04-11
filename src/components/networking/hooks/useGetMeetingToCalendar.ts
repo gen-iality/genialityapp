@@ -5,7 +5,6 @@ import { GroupByResources } from '../interfaces/groupBy-interfaces';
 
 const useGetMeetingToCalendar = (meetings: IMeeting[], currentView: string, observers: IObserver[], DataCalendar: IMeetingCalendar[], groupBy: GroupByResources) => {
     const [renderEvents, setRenderEvents] = useState<any[]>([]);
-
     useEffect(() => {
         if ([TypeCalendarView.day, TypeCalendarView.week].includes(currentView as TypeCalendarView) && observers.length && groupBy === 'observers') {
             return setRenderEvents(DataCalendar);
