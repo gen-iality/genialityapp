@@ -96,7 +96,7 @@ export default function MeetingForm() {
         <Form.Item
           label={'Lugar'}
           name='place'
-          rules={[{ required: true, message: 'Es necesario seleccionar el lugar de la reunión' }]}
+          rules={[{required : false}]}
           initialValue={formState.place}>
              <Select
               onChange={() => {}}

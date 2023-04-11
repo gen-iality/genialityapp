@@ -43,14 +43,18 @@ export const defaultType = {
   nameType : 'Seleccione una opción', //'default',
   style : '#406D85'
 }
-
+export const defaultPlace = {
+  id: "",
+  value: "no especificado",
+  label: "no especificado"
+}
 export const meetingSelectedInitial: IMeeting = {
   start: '',
   end : '',
   id: '',
   name: '',
   participants: [],
-  place: '',
+  place: defaultPlace.value,
   type: defaultType,
   dateUpdated: 0,
 };

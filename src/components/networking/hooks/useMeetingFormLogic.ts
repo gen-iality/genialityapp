@@ -41,7 +41,7 @@ export const useMeetingFormLogic = () => {
         setSelectedAttendeesKey([...sourceSelectedKeys, ...targetSelectedKeys]);
     };
 
-    const onSubmit = (datos: FormMeeting) => {
+    const onSubmit = async (datos: FormMeeting) => {
         
          
          DispatchMessageService({
@@ -66,11 +66,17 @@ export const useMeetingFormLogic = () => {
             };
         
             if (dataContext.edicion && datos.id) {
-                dataContext.updateMeeting(datos.id, { ...meeting, id: datos.id });
+                const response = await dataContext.updateMeeting(datos.id, { ...meeting, id: datos.id });
                 DispatchMessageService({
                     key: 'loading',
                     action: 'destroy',
                 });
+                DispatchMessageService({
+                    key: 'response',
+                    type: response ? 'success' : 'warning',
+                    msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la información',
+                    action: 'show',
+                  });
                 return dataContext.closeModal();
             }
             dataContext.createMeeting(meeting);

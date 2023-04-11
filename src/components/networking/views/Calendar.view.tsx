@@ -1,4 +1,4 @@
-import { Card, Col, Row } from 'antd';
+import { Button, Card, Col, Drawer, Modal, Row, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useContext, useState } from 'react';
 import { Calendar, View, momentLocalizer } from 'react-big-calendar';
@@ -11,23 +11,59 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import 'moment/dist/locale/es';
 import { getCorrectColor } from '@/helpers/utils';
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import MeetingInfo from '../components/MeetingInfo';
 
+const { confirm } = Modal;
 export default function MyCalendar() {
   const [View, setView] = useState<View>(TypeCalendarView.month);
+  const [open, setOpen] = useState(false);
+  const [meenting, setMeeting] = useState(meetingSelectedInitial);
   const localizer = momentLocalizer(moment);
   const now = () => new Date();
-  const { meetings, 
-    updateMeeting, 
-    editMeenting, 
-    setMeentingSelect, 
-    openModal, 
-    observers , 
-    DataCalendar, typeMeetings } = useContext(
-    NetworkingContext
-  );
+  const {
+    meetings,
+    updateMeeting,
+    editMeenting,
+    setMeentingSelect,
+    openModal,
+    observers,
+    DataCalendar,
+    typeMeetings,
+    deleteMeeting
+  } = useContext(NetworkingContext);
 
-  const ReactBigCalendar : any = withDragAndDrop(Calendar);
+  const ReactBigCalendar: any = withDragAndDrop(Calendar);
 
+  const showDrawer = (event : IMeeting) => {
+    const meeting = meetings.find((item)=> item.id === event.id)
+    if(meeting){
+    setMeeting(meeting)
+    setOpen(true);
+    }
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+  const onEdit = () => {
+    setOpen(false)
+    editMeenting(meenting)
+  }
+  const onDelete = () => {
+    confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        deleteMeeting(meenting.id);
+        setOpen(false)
+      },
+    });
+  };
   {
     /*actualziar reuniones con el evento "drop" del calendario*/
   }
@@ -44,10 +80,10 @@ export default function MyCalendar() {
     setMeentingSelect({ ...meetingSelectedInitial, start: start.toString(), end: end.toString() });
     openModal();
   };
-
+  //todo : optimizar este procedimiento con buenas practicas
   const renderEvents = () => {
-    let events =  meetings
-    if(View !== TypeCalendarView.month && observers.length) events = DataCalendar
+    let events = meetings;
+    if (View !== TypeCalendarView.month && observers.length) events = DataCalendar;
     return events.map((meeting) => ({
       ...meeting,
       start: new Date(meeting.start),
@@ -55,37 +91,56 @@ export default function MyCalendar() {
     }));
   };
 
-  const eventStyleGetter = (event : IMeeting | IMeetingCalendar)  => {
+  const eventStyleGetter = (event: IMeeting | IMeetingCalendar) => {
     const style = {
-      backgroundColor: typeMeetings.find((item)=> item.id === event.type?.id)?.style || defaultType.style,
-      color: getCorrectColor(typeMeetings.find((item)=> item.id === event.type?.id)?.style || defaultType.style),
-      border: `1px solid rgba(196, 196, 196, 0.3)` //#C4C4C4 
+      backgroundColor: typeMeetings.find((item) => item.id === event.type?.id)?.style || defaultType.style,
+      color: getCorrectColor(typeMeetings.find((item) => item.id === event.type?.id)?.style || defaultType.style),
+      border: `1px solid rgba(196, 196, 196, 0.3)`, //#C4C4C4
     };
     return {
       style: style,
     };
-  }
-
+  };
   return (
     <>
       <Row justify='center' wrap gutter={8}>
         <Col span={23}>
+          <Drawer  
+          title={meenting.name} 
+          placement='right' 
+          onClose={onClose} 
+          visible={open}
+          size='large'
+          extra={
+            <Row gutter={[16,16]}>
+            <Col span={12}>
+              <Tooltip placement='topLeft' title='Editar'>
+                <Button icon={<EditOutlined />} onClick={() => onEdit()} />
+              </Tooltip>
+            </Col>
+            <Col  span={12}>
+              <Tooltip placement='topLeft' title='Eliminar'>
+                <Button icon={<DeleteOutlined />} onClick={() => onDelete()} danger type='primary' />
+              </Tooltip>
+            </Col>
+          </Row>
+          }
+          >
+            <MeetingInfo  meenting={meetings.find((item)=> item.id === meenting.id) || meenting}/>
+          </Drawer>
           <Card hoverable>
             <ReactBigCalendar
               events={renderEvents()}
               view={View}
               onView={(view: View) => setView(view)}
-            
               onSelectSlot={createEventCalendar}
-              onSelectEvent={editMeenting}
+              onSelectEvent={showDrawer}
               onEventDrop={updateEventCalendar}
               onEventResize={updateEventCalendar}
-            
               resources={observers.length ? observers : undefined}
               resourceAccessor={'assigned'}
               resourceIdAccessor='value'
               resourceTitleAccessor='label'
-            
               localizer={localizer}
               getNow={now}
               selectable='ignoreEvents'
@@ -95,20 +150,19 @@ export default function MyCalendar() {
               endAccessor='end'
               style={{ height: 500 }}
               messages={{
-                next: "Siguiente",
-                previous: "Anterior",
-                today: "Hoy",
-                month: "Mes",
-                week: "Semana",
-                day: "Día",
+                next: 'Siguiente',
+                previous: 'Anterior',
+                today: 'Hoy',
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
                 date: 'Fecha',
                 time: 'Hora',
-                event: 'Evento', 
+                event: 'Evento',
                 showMore: function showMore(total: number) {
-                  return "+" + total + " Más";
+                  return '+' + total + ' Más';
                 },
                 noEventsInRange: 'No hay eventos dentro del rango seleccionado',
-                
               }}
               culture='es'
             />

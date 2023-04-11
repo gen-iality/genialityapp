@@ -32,7 +32,7 @@ interface NetworkingContextType {
   attendeesList: () => Omit<IObserver, 'id'>[];
   openModal: (mode?: string) => void;
   createMeeting: (meeting: Omit<IMeeting, 'id'>) => void;
-  updateMeeting: (meetingId: string, meeting: IMeeting) => Promise<void>;
+  updateMeeting: (meetingId: string, meeting: IMeeting) => Promise<boolean>;
   deleteMeeting: (meetingId: string) => void;
   createObserver: (data: CreateObservers) => void;
   deleteObserver: (id: string) => void;
@@ -154,12 +154,7 @@ export default function NetworkingProvider(props: Props) {
       type : meeting.type
     };
     const response = await service.updateMeeting(eventId, meetingId, newMeenting);
-
-    DispatchMessageService({
-      type: response ? 'success' : 'warning',
-      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la información',
-      action: 'show',
-    });
+    return response
   };
   const deleteMeeting = async (meetingId: string) => {
     DispatchMessageService({
