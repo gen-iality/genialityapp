@@ -159,6 +159,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
 
       // Update the context
       cAgenda.setActivityEdit(activityId)
+      if (cAgenda.activityEdit !== activityId) {
+      }
 
       // Get the agenda document from current activity_id
       const agenda: AgendaType = await AgendaApi.getOne(activityId, eventId)
@@ -178,6 +180,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
 
       // Save the activity name
       cAgenda.setActivityName(agenda.name)
+      if (cAgenda.activityName !== agenda.name) {
+      }
 
       setIsEditing(true)
       console.log('this agenda data is from editing status')
@@ -216,7 +220,6 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
   }, [currentAgenda, setShouldRedirect])
 
   useEffect(() => {
-    setIsLoading(true)
     loadActivity().finally(() => setIsLoading(false))
 
     // This function is running when the component will unmount
