@@ -13,16 +13,17 @@ export default function MeetingList({ meentings }: IMeetingList) {
   };
   return (
     <Card headStyle={{ border: 'none' }} bodyStyle={{ padding: '15px' }}>
-      {meentings.length === 0 ? (
+      {!meentings?.length && (
         <Empty></Empty>
-      ) : (
+      )}
+      {!!meentings?.length && (
         <>
           <Col span={12} style={{ marginBottom: 10 }}>
             <Search placeholder='Buscar la reunión' onChange={(e) => setfilter(e.target.value)} enterButton />
           </Col>
           <Row gutter={[0, 8]}>
             {filterMeentings().map((meenting, key) => (
-              <Col span={24}>
+              <Col span={24} key={`meeting-item-${key}`}>
                 <MeetingItem meenting={meenting} />
               </Col>
             ))}
