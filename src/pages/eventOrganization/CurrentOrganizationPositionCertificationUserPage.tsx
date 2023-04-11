@@ -22,6 +22,7 @@ import { useState, useEffect } from 'react';
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
+import PositionCertificationFileUploader from './PositionCertificationFileUploader';
 
 export interface CurrentOrganizationPositionCertificationUserPageProps {
   org: any;
@@ -108,7 +109,17 @@ function CurrentOrganizationPositionCertificationUserPage(
     const newColumns: ColumnsType = [
       {
         title: 'Certificación de',
-        render: (event: any) => <span>{event.name}</span>,
+        render: (event: any) => {
+          console.log(event.certification)
+          if (event.certification?.file_url) {
+            return (
+              <a href={event.certification.file_url} target="_blank">
+                {event.name}
+              </a>
+            )
+          }
+          return <span>{event.name}</span>
+        },
       },
       {
         title: 'Historial',
@@ -306,6 +317,12 @@ function CurrentOrganizationPositionCertificationUserPage(
             initialValue={dayjs(Date.now())}
           >
             <DatePicker />
+          </Form.Item>
+          <Form.Item
+            name="file_url"
+            label="Archivo externo"
+          >
+            <PositionCertificationFileUploader path="positions" />
           </Form.Item>
         </Form>
       </Modal>
