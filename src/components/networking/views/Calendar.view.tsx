@@ -13,6 +13,10 @@ import 'moment/dist/locale/es';
 import { getCorrectColor } from '@/helpers/utils';
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import MeetingInfo from '../components/MeetingInfo';
+import useGroupByCalendar from '../hooks/useGroupByCalendar';
+import useGetMeetingToCalendar from '../hooks/useGetMeetingToCalendar';
+import { useGetSpaces } from '../hooks/useGetSpaces';
+import { GroupByResources } from '../interfaces/groupBy-interfaces';
 
 const { confirm } = Modal;
 export default function MyCalendar() {
@@ -32,7 +36,26 @@ export default function MyCalendar() {
     typeMeetings,
     deleteMeeting,
   } = useContext(NetworkingContext);
-
+  const [groupBy, setGroupBy] = useState<GroupByResources>('spaces');
+  const { renderEvents } = useGetMeetingToCalendar(meetings, View, observers, DataCalendar, groupBy);
+  const { spaces } = useGetSpaces();
+  const { events, resources, resourceAccessor, buttonGroupBy } = useGroupByCalendar(
+    {
+      observers: {
+        events: renderEvents,
+        resources: observers,
+        resourceAccessor: 'assigned',
+        buttonGroupBy: 'Observadores',
+      },
+      spaces: {
+        events: renderEvents,
+        resources: spaces,
+        resourceAccessor: 'place',
+        buttonGroupBy: 'Espacios',
+      },
+    },
+    groupBy
+  );
   const ReactBigCalendar: any = withDragAndDrop(Calendar);
 
   const showDrawer = (event: IMeeting) => {
@@ -61,35 +84,18 @@ export default function MyCalendar() {
       },
     });
   };
-  {
-    /*actualziar reuniones con el evento "drop" del calendario*/
-  }
+  /*actualziar reuniones con el evento "drop" del calendario*/
   const updateEventCalendar = ({ start, end, event }: IEventCalendar<IMeeting>) => {
     updateMeeting(event.id, { ...event, start: start.toString(), end: end.toString(), dateUpdated: Date.now() });
   };
 
-  {
-    /*crear reuniones desde el calendario*/
-  }
+  /*crear reuniones desde el calendario*/
   const createEventCalendar = ({ start, end }: IEventCalendar<IMeeting>) => {
     end.setDate(end.getDate() - 1);
     end.setTime(end.getTime() + 5 * 60 * 1000);
     setMeentingSelect({ ...meetingSelectedInitial, start: start.toString(), end: end.toString() });
     openModal();
   };
-
-  const MeentingsCalendar = (meetings: IMeeting[], currentView : string) => {
-    if ([TypeCalendarView.day, TypeCalendarView.week].includes(currentView as TypeCalendarView) && observers.length) {
-      return DataCalendar;
-    }
-    return meetings.map((meeting) => ({
-      ...meeting,
-      start: new Date(meeting.start),
-      end: new Date(meeting.end),
-    }));
-  };
-  //todo : optimizar este procedimiento con buenas practicas
-  const renderEvents = useMemo(() => MeentingsCalendar(meetings,View), [meetings,View]);
 
   const eventStyleGetter = (event: IMeeting | IMeetingCalendar) => {
     const style = {
@@ -102,6 +108,10 @@ export default function MyCalendar() {
     };
   };
 
+  const onSetNextGroupBy = () => {
+    if (groupBy === 'observers') return setGroupBy('spaces');
+    if (groupBy === 'spaces') return setGroupBy('observers');
+  };
   return (
     <>
       <Row justify='center' wrap gutter={8}>
@@ -129,16 +139,19 @@ export default function MyCalendar() {
             <MeetingInfo meenting={meetings.find((item) => item.id === meenting.id) || meenting} />
           </Drawer>
           <Card hoverable>
+            <Row justify='end' style={{ marginBottom: 10 }}>
+              {(View === 'week' || View === 'day') && <Button onClick={onSetNextGroupBy}>Por {buttonGroupBy}</Button>}
+            </Row>
             <ReactBigCalendar
-              events={renderEvents}
+              events={events}
               view={View}
               onView={(view: View) => setView(view)}
               onSelectSlot={createEventCalendar}
               onSelectEvent={showDrawer}
               onEventDrop={updateEventCalendar}
               onEventResize={updateEventCalendar}
-              resources={observers.length ? observers : undefined}
-              resourceAccessor={'assigned'}
+              resources={resources}
+              resourceAccessor={resourceAccessor}
               resourceIdAccessor='value'
               resourceTitleAccessor='label'
               localizer={localizer}
