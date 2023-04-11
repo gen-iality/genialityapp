@@ -60,6 +60,7 @@ export const useMeetingFormLogic = () => {
                 start: datos.date[0].toString(),
                 end : datos.date[1].toString(),
                 participants: participants,
+                participantsIds : AttendeesKeyTarget,
                 place: datos.place,
                 dateUpdated: Date.now(),
                 type :  dataContext.typeMeetings.find((item)=> item.id === datos.type ) || defaultType 

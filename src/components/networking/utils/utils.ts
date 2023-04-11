@@ -57,6 +57,7 @@ export const meetingSelectedInitial: IMeeting = {
   place: defaultPlace.value,
   type: defaultType,
   dateUpdated: 0,
+  participantsIds : ['']
 };
 
 export const RequestMeetingState = {

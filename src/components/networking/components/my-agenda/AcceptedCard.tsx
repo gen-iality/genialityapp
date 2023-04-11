@@ -15,7 +15,7 @@ interface AcceptedCardProps {
 }
 
 const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom }: AcceptedCardProps) => {
-  console.log('data', data);
+  
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
 

@@ -1,6 +1,6 @@
 import { Button, Card, Col, Drawer, Modal, Row, Tooltip } from 'antd';
 import moment from 'moment';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { Calendar, View, momentLocalizer } from 'react-big-calendar';
 import { NetworkingContext } from '../context/NetworkingContext';
 import { IEventCalendar, IMeeting, IMeetingCalendar } from '../interfaces/Meetings.interfaces';
@@ -36,11 +36,8 @@ export default function MyCalendar() {
   const ReactBigCalendar: any = withDragAndDrop(Calendar);
 
   const showDrawer = (event : IMeeting) => {
-    const meeting = meetings.find((item)=> item.id === event.id)
-    if(meeting){
-    setMeeting(meeting)
+    setMeeting({...event, start: event.start.toString(), end: event.end.toString()})
     setOpen(true);
-    }
   };
 
   const onClose = () => {
@@ -82,14 +79,18 @@ export default function MyCalendar() {
   };
   //todo : optimizar este procedimiento con buenas practicas
   const renderEvents = () => {
-    let events = meetings;
-    if (View !== TypeCalendarView.month && observers.length) events = DataCalendar;
-    return events.map((meeting) => ({
+    if ([TypeCalendarView.day,TypeCalendarView.week].includes(View as TypeCalendarView) && observers.length) 
+    {
+    console.log('rendimiento 1')
+     return  DataCalendar;
+    }
+    console.log('rendimiento 2')
+    return meetings.map((meeting) => ({
       ...meeting,
       start: new Date(meeting.start),
       end: new Date(meeting.end),
     }));
-  };
+  }
 
   const eventStyleGetter = (event: IMeeting | IMeetingCalendar) => {
     const style = {
@@ -101,6 +102,7 @@ export default function MyCalendar() {
       style: style,
     };
   };
+
   return (
     <>
       <Row justify='center' wrap gutter={8}>

@@ -81,11 +81,14 @@ export default function NetworkingProvider(props: Props) {
 
   useEffect(() => {
     if (observers.length) {
-      const dataArray: IMeetingCalendar[] = [];
+      const dataArray: any[] = [];
       observers.map((observer) => {
         meetings.map((meeting) => {
-          if (meeting.participants.map((item) => item.id).includes(observer.value)) {
-            dataArray.push({ ...meeting, assigned: observer.value });
+          if (meeting.participantsIds.includes(observer.value)) {
+            dataArray.push(
+              { ...meeting, assigned: observer.value,
+              start: new Date(meeting.start),
+              end: new Date(meeting.end),});
           }
         });
       });
@@ -134,7 +137,8 @@ export default function NetworkingProvider(props: Props) {
       place: meeting.place,
       start: meeting.start,
       end: meeting.end,
-      type : meeting.type 
+      type : meeting.type,
+      participantsIds : meeting.participantsIds
     };
     const response = await service.createMeeting(eventId, newMeenting);
     DispatchMessageService({
@@ -151,7 +155,8 @@ export default function NetworkingProvider(props: Props) {
       place: meeting.place,
       start: meeting.start,
       end: meeting.end,
-      type : meeting.type
+      type : meeting.type,
+      participantsIds : meeting.participantsIds
     };
     const response = await service.updateMeeting(eventId, meetingId, newMeenting);
     return response
