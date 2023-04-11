@@ -178,6 +178,7 @@ export default function NetworkingProvider(props: Props) {
       type: response ? 'success' : 'warning',
       msj: response ? '¡Información eliminada correctamente!' : 'No ha sido posible eliminar el campo',
       action: 'show',
+      duration: 1
     });
   };
 

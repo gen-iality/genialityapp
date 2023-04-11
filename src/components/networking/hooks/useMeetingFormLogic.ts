@@ -77,6 +77,7 @@ export const useMeetingFormLogic = () => {
                     type: response ? 'success' : 'warning',
                     msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la información',
                     action: 'show',
+                    duration : 1
                   });
                 return dataContext.closeModal();
             }
