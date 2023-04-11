@@ -30,13 +30,13 @@ export default function MyCalendar() {
     observers,
     DataCalendar,
     typeMeetings,
-    deleteMeeting
+    deleteMeeting,
   } = useContext(NetworkingContext);
 
   const ReactBigCalendar: any = withDragAndDrop(Calendar);
 
-  const showDrawer = (event : IMeeting) => {
-    setMeeting({...event, start: event.start.toString(), end: event.end.toString()})
+  const showDrawer = (event: IMeeting) => {
+    setMeeting({ ...event, start: event.start.toString(), end: event.end.toString() });
     setOpen(true);
   };
 
@@ -44,9 +44,9 @@ export default function MyCalendar() {
     setOpen(false);
   };
   const onEdit = () => {
-    setOpen(false)
-    editMeenting(meenting)
-  }
+    setOpen(false);
+    editMeenting(meenting);
+  };
   const onDelete = () => {
     confirm({
       title: `¿Está seguro de eliminar la información?`,
@@ -57,7 +57,7 @@ export default function MyCalendar() {
       cancelText: 'Cancelar',
       onOk() {
         deleteMeeting(meenting.id);
-        setOpen(false)
+        setOpen(false);
       },
     });
   };
@@ -77,20 +77,19 @@ export default function MyCalendar() {
     setMeentingSelect({ ...meetingSelectedInitial, start: start.toString(), end: end.toString() });
     openModal();
   };
-  //todo : optimizar este procedimiento con buenas practicas
-  const renderEvents = () => {
-    if ([TypeCalendarView.day,TypeCalendarView.week].includes(View as TypeCalendarView) && observers.length) 
-    {
-    console.log('rendimiento 1')
-     return  DataCalendar;
+
+  const MeentingsCalendar = (meetings: IMeeting[], currentView : string) => {
+    if ([TypeCalendarView.day, TypeCalendarView.week].includes(currentView as TypeCalendarView) && observers.length) {
+      return DataCalendar;
     }
-    console.log('rendimiento 2')
     return meetings.map((meeting) => ({
       ...meeting,
       start: new Date(meeting.start),
       end: new Date(meeting.end),
     }));
-  }
+  };
+  //todo : optimizar este procedimiento con buenas practicas
+  const renderEvents = useMemo(() => MeentingsCalendar(meetings,View), [meetings,View]);
 
   const eventStyleGetter = (event: IMeeting | IMeetingCalendar) => {
     const style = {
@@ -107,32 +106,31 @@ export default function MyCalendar() {
     <>
       <Row justify='center' wrap gutter={8}>
         <Col span={23}>
-          <Drawer  
-          title={meenting.name} 
-          placement='right' 
-          onClose={onClose} 
-          visible={open}
-          size='large'
-          extra={
-            <Row gutter={[16,16]}>
-            <Col span={12}>
-              <Tooltip placement='topLeft' title='Editar'>
-                <Button icon={<EditOutlined />} onClick={() => onEdit()} />
-              </Tooltip>
-            </Col>
-            <Col  span={12}>
-              <Tooltip placement='topLeft' title='Eliminar'>
-                <Button icon={<DeleteOutlined />} onClick={() => onDelete()} danger type='primary' />
-              </Tooltip>
-            </Col>
-          </Row>
-          }
-          >
-            <MeetingInfo  meenting={meetings.find((item)=> item.id === meenting.id) || meenting}/>
+          <Drawer
+            title={meenting.name}
+            placement='right'
+            onClose={onClose}
+            visible={open}
+            size='large'
+            extra={
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <Tooltip placement='topLeft' title='Editar'>
+                    <Button icon={<EditOutlined />} onClick={() => onEdit()} />
+                  </Tooltip>
+                </Col>
+                <Col span={12}>
+                  <Tooltip placement='topLeft' title='Eliminar'>
+                    <Button icon={<DeleteOutlined />} onClick={() => onDelete()} danger type='primary' />
+                  </Tooltip>
+                </Col>
+              </Row>
+            }>
+            <MeetingInfo meenting={meetings.find((item) => item.id === meenting.id) || meenting} />
           </Drawer>
           <Card hoverable>
             <ReactBigCalendar
-              events={renderEvents()}
+              events={renderEvents}
               view={View}
               onView={(view: View) => setView(view)}
               onSelectSlot={createEventCalendar}
