@@ -38,7 +38,7 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
     .collection(`networkingByEventId`)
     .doc(eventId)
     .collection('meetings')
-    .orderBy('start')
+    .orderBy('start','asc')
     .onSnapshot((snapshot) => {
       if (!snapshot.empty) {
         const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as {};
