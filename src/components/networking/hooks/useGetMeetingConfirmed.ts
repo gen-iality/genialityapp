@@ -26,8 +26,11 @@ const useGetMeetingConfirmed = () => {
     }, [])
 
     const onSetMeetingList = (meetingList: IMeeting[]) => {
-        if (meetingList.length === 0) return setHaveMeetings(false)
-        setHaveMeetings(true)
+        if (meetingList.length === 0) {
+            setLoading(false)
+            setHaveMeetings(false)
+            return
+        }
         setLoading(false)
         setMeetingsByUser(meetingList)
         setListDays(getArraysDays(meetingList));
@@ -38,12 +41,17 @@ const useGetMeetingConfirmed = () => {
         const fechaInicial = new Date(eventContext.value.datetime_from);
         const fechaFinal = new Date(eventContext.value.datetime_to);
         const diasEnRango = [];
-
+        setHaveMeetings(false)
         let fechaActual = new Date(fechaInicial);
         while (fechaActual <= fechaFinal) {
+            const meeting = meetingWithUser.filter(meeting => moment(meeting.start).isSame(fechaActual, 'day'))
+            //Se valida asi debido a que pueden existir reuniones del cms que no son validas para mostrar en la landing
+            if (meeting.length > 0) {
+                setHaveMeetings(true)
+            }
             const dia = {
                 date: moment(fechaActual).format('MMMM DD'),
-                meetings: meetingWithUser.filter(meeting => moment(meeting.start).isSame(fechaActual, 'day'))
+                meetings: meeting
             };
             diasEnRango.push(dia);
             fechaActual.setDate(fechaActual.getDate() + 1);
