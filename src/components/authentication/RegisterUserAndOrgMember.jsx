@@ -15,7 +15,7 @@ import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
 
 /** External functions imports */
-import createNewUser from './ModalsFunctions/createNewUser';
+import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/createNewUser';
 
 /** Helpers and utils imports */
 import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request';
@@ -178,8 +178,7 @@ const RegisterUserAndOrgMember = ({
     setCurrent(current + 1);
 
     async function createAccount() {
-      const resp = await createNewUser(basicDataUser);
-      return resp;
+      return await createNewUser(basicDataUser);
     }
 
     async function createOrgMember() {
@@ -221,8 +220,8 @@ const RegisterUserAndOrgMember = ({
     if (existGenialialityUser) {
       createOrgMember();
     } else {
-      createAccount().then((resp) => {
-        if (resp) {
+      createAccount().then(({status}) => {
+        if (status === CREATE_NEW_USER_SUCCESS) {
           createOrgMember();
         } else {
           setValidationGeneral({

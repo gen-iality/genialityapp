@@ -8,7 +8,7 @@ import { ScheduleOutlined } from '@ant-design/icons';
 import FormComponent from '../events/registrationForm/form';
 import { UsersApi } from '@helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
-import createNewUser from './ModalsFunctions/createNewUser';
+import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';
 import { useEventContext } from '@context/eventContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
@@ -153,13 +153,9 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
 
   const handleSubmit = () => {
     setCurrent(current + 1);
-    const SaveUserEvius = new Promise((resolve, reject) => {
-      async function CreateAccount() {
-        const resp = await createNewUser(basicDataUser);
-        resolve(resp);
-      }
-
-      CreateAccount();
+    const saveUserPromise = new Promise((resolve, reject) => {
+      createNewUser(basicDataUser)
+        .then(resolve)
     });
 
     async function createEventUser() {
@@ -196,8 +192,8 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       }
     }
 
-    SaveUserEvius.then((resp) => {
-      if (resp) {
+    saveUserPromise.then(({status}) => {
+      if (status === CREATE_NEW_USER_SUCCESS) {
         createEventUser();
       } else {
         setValidationGeneral({
