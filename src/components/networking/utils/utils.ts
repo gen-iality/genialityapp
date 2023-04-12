@@ -48,7 +48,7 @@ export const defaultPlace = {
   value: "no especificado",
   label: "no especificado"
 }
-export const meetingSelectedInitial: IMeeting = {
+export const meetingSelectedInitial: Omit<IMeeting, 'startTimestap'> = {
   start: '',
   end : '',
   id: '',

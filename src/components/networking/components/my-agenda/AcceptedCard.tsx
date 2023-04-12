@@ -19,16 +19,14 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
 
-  //const userName = pathOr('', ['names','name'], data);
   const userName = 'Reunion';
-  //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
   const userEmail = '';
   const userImage = '';
 
   /** Entramos a la sala 1 a 1 de la reunión
    *
    */
-  const accessMeetRoom = (data: any, eventUser: any) => {
+  const accessMeetRoom = (data: IMeeting, eventUser: any) => {
     if (!eventUser) {
       alert('Tenemos problemas con tu usuario, itenta recargar la página');
       return;

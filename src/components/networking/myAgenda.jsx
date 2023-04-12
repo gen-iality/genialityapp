@@ -11,6 +11,7 @@ import { createChatRoom } from './agendaHook';
 import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
 import useGetMeetingConfirmed from './hooks/useGetMeetingConfirmed';
 import TabComponent from './components/my-agenda/TabComponent';
+import { JitsiMeeting } from '@jitsi/react-sdk';
 
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
@@ -18,7 +19,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const { listDays, haveMeetings, loading } = useGetMeetingConfirmed();
   useEffect(() => {
     if (!event || !event._id) return;
-
     firestore
       .collection('events')
       .doc(event._id)
@@ -38,8 +38,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 
   if (currentRoom) {
     let userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
-    //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=8816111496
-    //
+
 
     return (
       <Row align='middle'>
@@ -53,25 +52,25 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             Regresar al listado de citas
           </Button>
           <Row gutter={[12, 12]}>
-            <Col xs={24} sm={24} md={16} xl={16} xxl={16}>
+            <Col xs={24} sm={24} md={12} lg={24} xl={16} xxl={16}>
               <div className='aspect-ratio-box' style={{ width: '100%' }}>
                 <div className='aspect-ratio-box-inside'>
-                  <iframe
-                    style={{ border: '2px solid blue' }}
-                    src={
-                      'https://video-app-0463-9499-dev.twil.io?UserName=' +
-                      userName +
-                      '&URLRoomName=' +
-                      currentRoom +
-                      '&passcode=52125404639499'
-                    }
-                    allow='autoplay;fullscreen; camera *;microphone *'
-                    allowusermedia
-                    allowFullScreen
-                    title='video'
-                    className='iframe-zoom nuevo'>
-                    <p>Your browser does not support iframes.</p>
-                  </iframe>
+                  <JitsiMeeting
+                    domain='meet.evius.co'
+                    roomName={currentRoom}
+                   /*  configOverwrite={{ ...meetConfig.config }} */
+                    userInfo={{
+                      displayName : 'carlitos',
+                      email : 'carlos.rubio@evius.co'
+                    }}
+                    getIFrameRef={(wrapperRef) => {
+                      wrapperRef.style.height = '100%';
+                      wrapperRef.lang = 'es';
+                    }}
+                    onApiReady={(externalApi) => {
+                      console.log(externalApi);
+                    }}
+                  />
                 </div>
               </div>
             </Col>

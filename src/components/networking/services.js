@@ -2,7 +2,7 @@ import { sortBy, prop } from 'ramda';
 import { firestore } from '../../helpers/firebase';
 import API, { UsersApi, EventsApi } from '../../helpers/request';
 import { RequestMeetingState, defaultType, shortName } from './utils/utils';
-
+import firebase from 'firebase/compat';
 const filterList = (list, currentUser) => list.find((item) => item.account_id === currentUser);
 
 // Funcion para consultar la informacion del actual usuario -------------------------------------------
@@ -202,6 +202,7 @@ export const createMeetingRequest = ({
           participants: participants,
           place: 'evius meet',
           start: startDate,
+          startTimestap :  firebase.firestore.Timestamp.fromDate(new Date(startDate)),
           end: endDate,
           dateUpdated: timestamp ,
           type : defaultType

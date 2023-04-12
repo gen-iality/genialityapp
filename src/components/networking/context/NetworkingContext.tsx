@@ -11,6 +11,7 @@ import { fieldNameEmailFirst } from '@/helpers/utils';
 import { addDefaultLabels, orderFieldsByWeight } from '../components/modal-create-user/utils/KioskRegistration.utils';
 import { FieldsForm } from '../components/modal-create-user/interface/KioskRegistrationApp.interface';
 import { ISpaces, ISpacesForm } from '../interfaces/spaces-interfaces';
+import firebase from 'firebase/compat';
 
 interface NetworkingContextType {
   eventId: string;
@@ -112,6 +113,7 @@ export default function NetworkingProvider(props: Props) {
       participants: meeting.participants,
       place: meeting.place,
       start: meeting.start,
+      startTimestap :  firebase.firestore.Timestamp.fromDate(new Date(meeting.start)),
       end: meeting.end,
       type : meeting.type,
       participantsIds : meeting.participantsIds
@@ -130,6 +132,7 @@ export default function NetworkingProvider(props: Props) {
       participants: meeting.participants,
       place: meeting.place,
       start: meeting.start,
+      startTimestap :  firebase.firestore.Timestamp.fromDate(new Date(meeting.start)),
       end: meeting.end,
       type : meeting.type,
       participantsIds : meeting.participantsIds
