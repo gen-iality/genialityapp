@@ -1,12 +1,7 @@
-import { Button, Card, Col, notification, Row, Spin, Tabs } from 'antd';
+import { Button, Card, Col, notification, Row, Spin } from 'antd';
 import { withRouter } from 'react-router-dom';
-import moment from 'moment';
-import { find, map, mergeRight, path, propEq } from 'ramda';
-import { isNonEmptyArray } from 'ramda-adjunct';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
-import { getDatesRange } from '../../helpers/utils';
-import { getAcceptedAgendasFromEventUser } from './services';
 import { createChatRoom } from './agendaHook';
 import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
 import useGetMeetingConfirmed from './hooks/useGetMeetingConfirmed';
