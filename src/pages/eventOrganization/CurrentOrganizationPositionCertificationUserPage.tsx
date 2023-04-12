@@ -110,7 +110,6 @@ function CurrentOrganizationPositionCertificationUserPage(
       {
         title: 'Certificación de',
         render: (event: any) => {
-          console.log(event.certification)
           if (event.certification?.file_url) {
             return (
               <a href={event.certification.file_url} target="_blank">
@@ -205,7 +204,14 @@ function CurrentOrganizationPositionCertificationUserPage(
               id={`deleteAction${event._id}`}
               type="primary"
               size="small"
-              onClick={(e) => alert('No implementado aún')}
+              onClick={(e) => {
+                alert('No implementado aún')
+                // Little future people, please implement the deleting of FireStorage too.
+                // You SHOULD check if the last url pathname element stars with "documents/" and try to
+                // decode it and use this path (that stats with "documents/") to request a deleting
+                // process with the FireStorage API. Dont say that my intrustion are bad, if you don't
+                // believe in me, then ask to ChatGPT tho
+              }}
               icon={<DeleteOutlined />}
             />
           </Tooltip>
