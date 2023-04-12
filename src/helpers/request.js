@@ -66,7 +66,7 @@ export const Actions = {
   },
   edit: async (url, data, unsafe) => {
     if (unsafe) return publicInstance.put(`${url}`, data).then(({ data }) => data);
-    return privateInstance.put(`${url}/${id}`, data).then(({ data }) => data);
+    return privateInstance.put(`${url}`, data).then(({ data }) => data);
   },
   post: async (url, data, unsafe) => {
     if (unsafe) return publicInstance.post(url, data).then(({ data }) => data);
@@ -755,7 +755,7 @@ export const BadgeApi = {
     return await Actions.post(`/api/escarapelas?token=${token}`, data);
   },
   edit: async (data, id) => {
-    return await Actions.edit('/api/escarapelas/', data, id);
+    return await Actions.edit(`/api/escarapelas/${id}`, data);
   },
   get: async (id) => {
     return await Actions.getOne('/api/escarapelas/', id);
@@ -861,7 +861,7 @@ export const PushFeed = {
     return await Actions.get(`api/events/${id}/sendpush/`, id);
   },
   editOne: async (data, id) => {
-    return await Actions.edit(`api/events/${id}/sendpush`, data, id);
+    return await Actions.edit(`api/events/${id}/sendpush`, data);
   },
   deleteOne: async (id) => {
     return await Actions.delete(`api/events/${id}/sendpush`, id);
