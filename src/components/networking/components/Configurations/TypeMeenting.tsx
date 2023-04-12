@@ -1,8 +1,7 @@
 import { PlusCircleOutlined, DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Divider, Form, Input, List, Modal, Row, Space, Tag, Tooltip, Typography } from 'antd';
+import { Button, Form, Input, List, Modal, Row, Space, Tag, Tooltip, Typography } from 'antd';
 import React, { useState, useContext } from 'react';
 import { NetworkingContext } from '../../context/NetworkingContext';
-import { SketchPicker } from 'react-color';
 import { IColor, ITypeMeenting } from '../../interfaces/configurations.interfaces';
 import InputColor from '@/components/games/bingo/components/InputColor';
 
@@ -86,9 +85,9 @@ export default function TypeMeenting() {
           Agregar
         </Button>
       </Row>
-      {/* <Divider orientation='left'>Tipos de reuniones</Divider> */}
+
       <List
-        pagination={typeMeetings.length >= 5 && { pageSize: 5 }}
+        pagination={typeMeetings && typeMeetings.length >= 5 && { pageSize: 5 }}
         header={<div>Tipos</div>}
         bordered
         dataSource={typeMeetings}
