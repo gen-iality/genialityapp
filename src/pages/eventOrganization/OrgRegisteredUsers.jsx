@@ -296,7 +296,7 @@ function OrgRegisteredUsers(props) {
             <Select //options={allEvents.map((event) => ({ label: event.name, value: event._id }))}
             />
           </Form.Item> */}
-          <Form.Item name="success" label="Exitoso">
+          <Form.Item name="success" label="Exitoso" valuePropName="checked">
             <Switch />
           </Form.Item>
           <Form.Item name="description" label="Descripción" rules={[{ required: true, message: 'Ah!' }]}>
