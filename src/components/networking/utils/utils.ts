@@ -46,7 +46,7 @@ export const defaultType = {
 export const defaultPlace = {
   id: "",
   value: "no especificado",
-  label: "no especificado"
+  label: "No especificado"
 }
 export const meetingSelectedInitial: IMeeting = {
   start: '',

@@ -77,19 +77,17 @@ export default function ConfigObservers() {
     
       <List
         pagination={observers && observers.length > 5 && { pageSize: 5 }}
-        header={<div>Observadores</div>}
+        header={<Typography.Text strong>Observadores</Typography.Text>}
         bordered
         dataSource={observers}
         renderItem={(item) => (
           <List.Item
-            actions={[
+            extra={
               <Tooltip placement='topLeft' title='Eliminar'>
                 <Button onClick={() => onDelete(item.id)} icon={<DeleteOutlined />} danger type='primary' loading={loader}/>
-              </Tooltip>,
-            ]}>
-            <Space size={'large'}>
-              <Typography.Text>{item.label}</Typography.Text>
-            </Space>
+              </Tooltip>
+            }>
+            <Typography.Text ellipsis style={{width: '220px'}}>{item.label}</Typography.Text>
           </List.Item>
         )}
       />

@@ -87,22 +87,22 @@ export default function TypeMeenting() {
       </Row>
 
       <List
-        pagination={typeMeetings && typeMeetings.length >= 5 && { pageSize: 5 }}
-        header={<div>Tipos</div>}
+        pagination={typeMeetings && typeMeetings.length > 5 && { pageSize: 5 }}
+        header={<Typography.Text strong>Tipos</Typography.Text>}
         bordered
         dataSource={typeMeetings}
         renderItem={(item) => (
           <List.Item
-            actions={[
-              <Tooltip placement='left' title='Editar'><Button onClick={() => onEdit(item)} icon={<EditOutlined />} /></Tooltip>,
-              <Tooltip placement='left' title='Eliminar'><Button onClick={() => deleteType(item.id)} icon={<DeleteOutlined />} danger type='primary' /></Tooltip>,
-            ]}>
-            <Space style={{ width: 80 }}>
-              <Typography.Text>{item.nameType}</Typography.Text>
-            </Space>
-            <Space>
-              <Tag color={item.style} style={{ width: '100px', height: 15 }}></Tag>
-            </Space>
+            extra={
+              <Space wrap>
+                <Tooltip placement='left' title='Editar'><Button onClick={() => onEdit(item)} icon={<EditOutlined />} /></Tooltip>
+                <Tooltip placement='left' title='Eliminar'><Button onClick={() => deleteType(item.id)} icon={<DeleteOutlined />} danger type='primary' /></Tooltip>
+              </Space>
+            }>
+              <Space wrap align='center'>
+                <Typography.Text ellipsis style={{width: '80px'}}>{item.nameType}</Typography.Text>
+                <Tag color={item.style} style={{ width: '100px', height: 20, marginTop: 5 }}></Tag>
+              </Space>
           </List.Item>
         )}
       />

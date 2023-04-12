@@ -24,7 +24,7 @@ const ConfigSpaces = () => {
       {modalConfig && (
         <Modal
           visible={modalConfig}
-          title={'Agregar observador'}
+          title={'Agregar espacio'}
           footer={false}
           onCancel={closeModal}
           okText={'Guardar'}>
@@ -59,20 +59,18 @@ const ConfigSpaces = () => {
      
       <List
         loading={loading}
-        pagination={spaces && spaces.length >= 5 && { pageSize: 5 }}
-        header={<div>Espacios</div>}
+        pagination={spaces && spaces.length > 5 && { pageSize: 5 }}
+        header={<Typography.Text strong>Espacios</Typography.Text>}
         bordered
         dataSource={spaces}
         renderItem={(item) => (
           <List.Item
-            actions={[
+            extra={
               <Tooltip placement='topLeft' title='Eliminar'>
                 <Button onClick={() => deleteSpaces(item.id)} icon={<DeleteOutlined />} danger type='primary' />
-              </Tooltip>,
-            ]}>
-            <Space size={'large'}>
-              <Typography.Text>{item.label}</Typography.Text>
-            </Space>
+              </Tooltip>
+            }>
+            <Typography.Paragraph ellipsis style={{width: '220px'}}>{item.label}</Typography.Paragraph>
           </List.Item>
         )}
       />

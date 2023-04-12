@@ -11,25 +11,28 @@ export default function MeetingList({ meentings, loading }: IMeetingList) {
   const filterMeentings = () => {
     return meentings.filter((item) => item.name.toLowerCase().match(filter.toLowerCase()));
   };
+
   return (
     <Card headStyle={{ border: 'none' }} bodyStyle={{ padding: '15px' }}>
-        <>
+      { filterMeentings() && filterMeentings().length > 0 &&
+        <Row gutter={8}>
           <Col span={12} style={{ marginBottom: 10 }}>
             <Search placeholder='Buscar la reunión' onChange={(e) => setfilter(e.target.value)} enterButton />
           </Col>
-          <List
-            loading={loading}
-            dataSource={filterMeentings()}
-            pagination={{ pageSize: 10 }}
-            renderItem={(meenting, key) => (
-              <List.Item key={meenting.id}>
-                <Col span={24} key={`meeting-item-${key}`}>
-                  <MeetingItem meenting={meenting} />
-                </Col>
-              </List.Item>
-            )}
-          />
-        </>
+        </Row>
+      }
+      <List
+        loading={loading}
+        dataSource={filterMeentings()}
+        pagination={filterMeentings() && filterMeentings().length > 10 && { pageSize: 10 }}
+        renderItem={(meenting, key) => (
+          <List.Item key={meenting.id}>
+            <Col span={24} key={`meeting-item-${key}`}>
+              <MeetingItem meenting={meenting} />
+            </Col>
+          </List.Item>
+        )}
+      />
     </Card>
   );
 }
