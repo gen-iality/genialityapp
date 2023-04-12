@@ -196,10 +196,14 @@ export const createMeetingRequest = ({
             confirmed: false
           },
         ];
+        const participantsIds = [
+          creatorUser.value._id,targetUser._id
+        ]
        const timestamp = Date.now()
         const meeting = {
           name: `Reunion entre ${shortName(targetUser.user.names)} y ${shortName(creatorUser.value.user.names)} `,
           participants: participants,
+          participantsIds,
           place: 'evius meet',
           start: startDate,
           startTimestap :  firebase.firestore.Timestamp.fromDate(new Date(startDate)),
