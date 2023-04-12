@@ -3,6 +3,7 @@ import { ITypeMeenting } from './configurations.interfaces';
 
 export interface IMeetingList {
     meentings : IMeeting[]
+    loading : boolean
 }
 
 export interface IMeentingItem {
@@ -53,6 +54,8 @@ export interface IEventCalendar<T> {
     isAllDay?: boolean;
 }
 
-export interface IMeetingCalendar extends IMeeting {
-    assigned : string
+export interface IMeetingCalendar extends Omit<IMeeting,'start' | 'end'> {
+    assigned?: string
+    start : Date
+    end : Date
 }

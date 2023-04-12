@@ -21,14 +21,19 @@ export default function Configuration() {
             <Divider orientation='left'>
               <Typography.Title level={5}>Configuración de tipos</Typography.Title>
             </Divider>
+
             <TypeMeenting />
           </Card>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
-          <Card hoverable /* style={{ minHeight: 550 }} */>
+
+      </Row>
+      <Row justify='center' align='middle' gutter={8}>
+        <Col span={12}>
+          <Card hoverable style={{ minHeight: 550 }}>
             <Divider orientation='left'>
               <Typography.Title level={5}>Configuración de espacios</Typography.Title>
             </Divider>
+
             <ConfigSpaces />
           </Card>
         </Col>

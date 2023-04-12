@@ -5,18 +5,20 @@ import { NetworkingContext } from '../context/NetworkingContext';
 import MeetingList from '../components/MeetingList';
 import MeetingForm from '../components/MeetingForm';
 import { useContext } from 'react';
-import { IMeeting } from '../interfaces/Meetings.interfaces';
 import CreateUserModal from '../components/modal-create-user/CreateUserModal';
+import { useGetMeetings } from '../hooks/useGetMeetings';
 
 export default function MeentignView() {
-  const { meetings, modal, edicion, closeModal, openModal, onCancelModalAgregarUsuario, createModalVisible, setCreateModalVisible } = useContext(NetworkingContext);
-  const orderByDate = (): IMeeting[] => {
-    return meetings?.sort((a: IMeeting, b: IMeeting) => {
-      const fechaA = new Date(a.start);
-      const fechaB = new Date(b.start);
-      return fechaA.getTime() - fechaB.getTime();
-    });
-  };
+  const {
+    modal,
+    edicion,
+    closeModal,
+    openModal,
+    onCancelModalAgregarUsuario,
+    createModalVisible,
+    setCreateModalVisible,
+  } = useContext(NetworkingContext);
+  const { meetings, loading } = useGetMeetings();
 
   const onOk = () => {
     setCreateModalVisible(false);
@@ -33,7 +35,7 @@ export default function MeentignView() {
       />
       {modal && (
         <Modal
-          style={ createModalVisible ? {display : 'none'} :  {}}
+          style={createModalVisible ? { display: 'none' } : {}}
           visible={modal}
           title={edicion ? 'Editar reunión' : 'Agregar Reunión'}
           footer={false}
@@ -56,7 +58,7 @@ export default function MeentignView() {
       </Row>
       <Row justify='center' wrap gutter={[0, 8]} /* style={{paddingTop: '10px'}} */>
         <Col span={24}>
-          <MeetingList meentings={orderByDate()} />
+          <MeetingList meentings={meetings} loading={loading} />
         </Col>
       </Row>
     </>

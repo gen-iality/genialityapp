@@ -1,6 +1,6 @@
 import { Button, Card, Col, Drawer, Modal, Row, Tooltip } from 'antd';
 import moment from 'moment';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Calendar, View, momentLocalizer } from 'react-big-calendar';
 import { NetworkingContext } from '../context/NetworkingContext';
 import { IEventCalendar, IMeeting, IMeetingCalendar } from '../interfaces/Meetings.interfaces';
@@ -17,6 +17,7 @@ import useGroupByCalendar from '../hooks/useGroupByCalendar';
 import useGetMeetingToCalendar from '../hooks/useGetMeetingToCalendar';
 import { useGetSpaces } from '../hooks/useGetSpaces';
 import { GroupByResources } from '../interfaces/groupBy-interfaces';
+import { useGetMeetings } from '../hooks/useGetMeetings';
 
 const { confirm } = Modal;
 export default function MyCalendar() {
@@ -26,19 +27,18 @@ export default function MyCalendar() {
   const localizer = momentLocalizer(moment);
   const now = () => new Date();
   const {
-    meetings,
     updateMeeting,
     editMeenting,
     setMeentingSelect,
     openModal,
     observers,
-    DataCalendar,
     typeMeetings,
     deleteMeeting,
   } = useContext(NetworkingContext);
+  const { meetings, loading } = useGetMeetings();
   const [groupBy, setGroupBy] = useState<GroupByResources>('spaces');
   const { spaces } = useGetSpaces();
-  const { renderEvents } = useGetMeetingToCalendar(meetings, View, observers, DataCalendar, groupBy);
+  const { renderEvents } = useGetMeetingToCalendar(meetings, View, observers, groupBy);
   const { resources, resourceAccessor, buttonGroupBy } = useGroupByCalendar(
     {
       observers: {
@@ -97,6 +97,11 @@ export default function MyCalendar() {
   };
 
   const eventStyleGetter = (event: IMeeting | IMeetingCalendar) => {
+    if(!typeMeetings) return {
+      backgroundColor: defaultType.style,
+      color: 'white',
+      border: `1px solid rgba(196, 196, 196, 0.3)`, //#C4C4C4
+    };
     const style = {
       backgroundColor: typeMeetings.find((item) => item.id === event.type?.id)?.style || defaultType.style,
       color: getCorrectColor(typeMeetings.find((item) => item.id === event.type?.id)?.style || defaultType.style),
@@ -137,7 +142,7 @@ export default function MyCalendar() {
             }>
             <MeetingInfo meenting={meetings.find((item) => item.id === meenting.id) || meenting} />
           </Drawer>
-          <Card hoverable>
+          <Card hoverable loading={loading}>
             <Row justify='end' style={{ marginBottom: 10 }}>
               {(View === 'week' || View === 'day') && <Button onClick={onSetNextGroupBy}>Por {buttonGroupBy}</Button>}
             </Row>

@@ -18,10 +18,8 @@ interface NetworkingContextType {
   createModalVisible: boolean;
   edicion: boolean;
   attendees: any;
-  meetings: IMeeting[];
   typeMeetings : ITypeMeenting[];
   observers: IObserver[];
-  DataCalendar: IMeetingCalendar[];
   meentingSelect: IMeeting;
   setMeentingSelect: React.Dispatch<React.SetStateAction<IMeeting>>;
   setCreateModalVisible : React.Dispatch<React.SetStateAction<boolean>>
@@ -34,8 +32,8 @@ interface NetworkingContextType {
   createMeeting: (meeting: Omit<IMeeting, 'id'>) => void;
   updateMeeting: (meetingId: string, meeting: IMeeting) => Promise<boolean>;
   deleteMeeting: (meetingId: string) => void;
-  createObserver: (data: CreateObservers) => void;
-  deleteObserver: (id: string) => void;
+  createObserver: (data: CreateObservers) => Promise<void>;
+  deleteObserver: (id: string) => Promise<void>;
   createType: (type: Omit<ITypeMeenting, 'id'>) => Promise<void>;
   deleteType: (typeId: string) => Promise<void>;
   updateType: (typeId: string, type:  Omit<ITypeMeenting, 'id'>) => Promise<void>;
@@ -52,9 +50,7 @@ interface Props {
 
 export default function NetworkingProvider(props: Props) {
   const [attendees, setAttendees] = useState<any[]>([]);
-  const [meetings, setMeetings] = useState<IMeeting[]>([]);
   const [typeMeetings, setTypeMeetings] = useState<ITypeMeenting[]>([]);
-  const [DataCalendar, setDataCalendar] = useState<IMeetingCalendar[]>([]);
   const [observers, setObservers] = useState<IObserver[]>([]);
   const [meentingSelect, setMeentingSelect] = useState<IMeeting>(meetingSelectedInitial);
   const [modal, setModal] = useState(false);
@@ -66,36 +62,16 @@ export default function NetworkingProvider(props: Props) {
   useEffect(() => {
     if (!!eventId) {
       const unsubscribeAttendees = service.listenAttendees(eventId, setAttendees);
-      const unsubscribeMeetings = service.listenMeetings(eventId, setMeetings);
       const unsubscribeObservers = serviceConfig.listenObervers(eventId, setObservers);
       const unsubscribeTypes = serviceConfig.listenTypesMeentings(eventId, setTypeMeetings);
       getFields();
       return () => {
         unsubscribeAttendees();
-        unsubscribeMeetings();
         unsubscribeObservers();
         unsubscribeTypes();
       };
     }
   }, []);
-
-  useEffect(() => {
-    if (observers.length) {
-      const dataArray: any[] = [];
-      observers.map((observer) => {
-        meetings.map((meeting) => {
-          if (meeting.participantsIds.includes(observer.value)) {
-            dataArray.push(
-              { ...meeting, assigned: observer.value,
-              start: new Date(meeting.start),
-              end: new Date(meeting.end),});
-          }
-        });
-      });
-      setDataCalendar(dataArray);
-    }
-  }, [meetings, observers]);
-
   const onClickAgregarUsuario = () => {
     setCreateModalVisible(true);
   };
@@ -358,9 +334,7 @@ export default function NetworkingProvider(props: Props) {
     setCreateModalVisible,
     closeModal,
     edicion,
-    meetings,
     typeMeetings,
-    setMeetings,
     editMeenting,
     createMeeting,
     updateMeeting,
@@ -374,7 +348,6 @@ export default function NetworkingProvider(props: Props) {
     observers,
     createObserver,
     deleteObserver,
-    DataCalendar,
     fieldsForm,
     createType,
     deleteType,
