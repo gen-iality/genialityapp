@@ -1,7 +1,9 @@
 import { saveImageStorage } from '@helpers/helperSaveImage';
 import { UsersApi } from '@helpers/request';
-import { message } from 'antd';
-import { DispatchMessageService } from '@context/MessageService';
+
+/**
+ * Use this constants to know how the creating process went.
+ */
 
 export const CREATE_NEW_USER_FAIL = 'CREATE_NEW_USER_FAIL'
 export const CREATE_NEW_USER_SUCCESS = 'CREATE_NEW_USER_SUCCESS'
@@ -42,7 +44,7 @@ const uploadLogo = async (picture: any, defaultPictureURL: string): Promise<stri
 
 /**
  * Create a new user and return an user registration status.
- * @param userData Info abot the user registration process.
+ * @param userData Info about the user registration process.
  * @returns An object that contains: user, status and message
  */
 const createNewUser = async (userData: UserDataType, onFinish?: () => void): Promise<CreateNewUserResultType> => {
@@ -78,6 +80,7 @@ const createNewUser = async (userData: UserDataType, onFinish?: () => void): Pro
     const registeredEmail = e.response.data.errors.email[0];
     errorMessage = registeredEmail
 
+    // NOTE: I think that this way to check if the issues was because the email, is awful
     if (e.response.status == 422 && registeredEmail !== 'email ya ha sido registrado.') {
       isErrorByExistentEmail = false;
     } else if (registeredEmail === 'email ya ha sido registrado.') {
