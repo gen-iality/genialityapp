@@ -27,28 +27,23 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
 		})
 };
 //todo: mejorar el filtro de reuniones with user
-export const listenMeetingsByUserLanding = (eventId: string, userID: string): Promise<IMeeting[]> => {
-	return new Promise((resolve, reject) => {
-		try {
-			firestore
-				.collection(`networkingByEventId`)
-				.doc(eventId)
-				.collection('meetings')
-				.get()
-				.then(res => {
-					const data = res.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeeting[];
-					const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => participant.id === userID) !== undefined &&
-						meeting.participants.length <= 2);
-					resolve(meetingsWithUserID);
-				})
+export const listenMeetingsByUserLanding = (eventId: string, userID: string, setMeetingWithUser: (meetingList: IMeeting[]) => void) => {
+	return firestore
+		.collection(`networkingByEventId`)
+		.doc(eventId)
+		.collection('meetings')
+		.onSnapshot(snapshot => {
+			if (!snapshot.empty) {
+				const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeeting[];
+				const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => participant.id === userID) !== undefined &&
+					meeting.participants.length <= 2);
+				setMeetingWithUser(meetingsWithUserID)
+			} else {
+				setMeetingWithUser([])
+			}
+		});
 
-		} catch (error) {
-			reject(error);
-		}
-	});
-};
-
-
+}
 export const listenSpacesByEventId = (eventId: string, setSpaces: (spaces: ISpacesFirebase[]) => void) => {
 	return firestore
 		.collection(`networkingByEventId`)

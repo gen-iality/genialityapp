@@ -16,7 +16,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const { listDays, haveMeetings, loading } = useGetMeetingConfirmed();
-  console.log('mirando esta vaina',listDays)
   useEffect(() => {
     if (!event || !event._id) return;
 
