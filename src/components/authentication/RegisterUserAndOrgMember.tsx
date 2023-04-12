@@ -22,7 +22,6 @@ import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request';
 
 /** Context imports */
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useEventContext } from '@context/eventContext';
 import { DispatchMessageService } from '@context/MessageService';
 import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm';
 
@@ -41,8 +40,6 @@ const RegisterUserAndOrgMember = ({
   const [form] = Form.useForm();
   const { helperDispatch, currentAuthScreen } = useHelper();
   const location = useLocation();
-
-  const cEvent = useEventContext()
 
   const [current, setCurrent] = useState(0);
   const [basicDataUser, setBasicDataUser] = useState<any>({
@@ -116,7 +113,7 @@ const RegisterUserAndOrgMember = ({
           validationGeneral={validationGeneral}
           basicDataUser={basicDataUser}
           requireAutomaticLoguin={requireAutomaticLoguin}
-          cEvent={cEvent} // NOTE: in the last this prop was undefined as th next
+          cEvent={undefined} // NOTE: in the last this prop was undefined as th next
           dataEventUser={undefined}
         />
       ),
