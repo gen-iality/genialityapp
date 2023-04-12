@@ -1,5 +1,6 @@
 import { ColumnsType } from "antd/lib/table";
 import { IMeeting, IParticipants, TransferType } from '../interfaces/Meetings.interfaces';
+import { MeetConfig } from "@/components/agenda/activityType/components/manager/ShareMeetLinkCard";
 
 
 export const filterOption = (inputValue: string, option: TransferType) => {
@@ -65,3 +66,54 @@ export const RequestMeetingState = {
   rejected:'rejected',
   pending:'pending'
 }
+export const INITIAL_MEET_CONFIG: MeetConfig = {
+	openMeet: false,
+	config: {
+		disableInviteFunctions: false,
+		welcomePage: {
+			disabled: true,
+			customUrl: 'https://evius.co',
+		},
+		enableClosePage: false,
+		readOnlyName: true,
+		disablePolls: false,
+		disableReactions: false,
+		disableReactionsModeration: false,
+		disableProfile: true,
+		hideConferenceTimer: false,
+		hideConferenceSubject: true,
+		screenshotCapture: false,
+		notifications: [
+			'connection.CONNFAIL',
+			'dialog.micNotSendingData',
+			'dialog.serviceUnavailable',
+			'dialog.sessTerminated',
+			'dialog.sessionRestarted',
+			'dialOut.statusMessage',
+			'notify.chatMessages',
+			'notify.disconnected',
+			'notify.connectedOneMember',
+			'notify.connectedTwoMembers',
+			'notify.leftOneMember',
+			'notify.leftTwoMembers',
+			'notify.connectedThreePlusMembers',
+			'notify.leftThreePlusMembers',
+			'notify.grantedTo',
+			'notify.hostAskedUnmute',
+			'notify.invitedOneMember',
+			'notify.invitedThreePlusMembers',
+			'notify.invitedTwoMembers',
+			'notify.mutedRemotelyTitle',
+			'notify.mutedTitle',
+			'notify.newDeviceAudioTitle',
+			'notify.newDeviceCameraTitle',
+			'notify.raisedHand',
+			'notify.startSilentTitle',
+			'notify.videoMutedRemotelyTitle',
+			'toolbar.noAudioSignalTitle',
+			'toolbar.noisyAudioInputTitle',
+			'toolbar.talkWhileMutedPopup',
+		],
+		toolbarButtons: ['microphone', 'camera', 'participants-pane', 'tileview', 'settings', 'fullscreen', 'raisehand', 'toggle-camera'],
+	},
+};

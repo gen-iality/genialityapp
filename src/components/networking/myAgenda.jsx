@@ -2,16 +2,27 @@ import { Button, Card, Col, notification, Row, Spin } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
-import { createChatRoom } from './agendaHook';
 import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
 import useGetMeetingConfirmed from './hooks/useGetMeetingConfirmed';
 import TabComponent from './components/my-agenda/TabComponent';
 import { JitsiMeeting } from '@jitsi/react-sdk';
-
+import {INITIAL_MEET_CONFIG} from './utils/utils' 
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const { listDays, haveMeetings, loading } = useGetMeetingConfirmed();
+
+  const defineName = () => {
+    let userName = 'Anonimo' + new Date().getTime();
+    let userEmail = `${userName}@gmail.com`
+    if(eventUser && eventUser.properties && eventUser.properties.names ) userName = eventUser.properties.names
+    if(eventUser && eventUser.properties && eventUser.properties.email ) userEmail = eventUser.properties.email
+    
+    return {
+      userName,
+      userEmail
+    }
+  }
   useEffect(() => {
     if (!event || !event._id) return;
     firestore
@@ -32,7 +43,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   }
 
   if (currentRoom) {
-    let userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
+    const {userEmail, userName} = defineName()
 
 
     return (
@@ -53,10 +64,10 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                   <JitsiMeeting
                     domain='meet.evius.co'
                     roomName={currentRoom}
-                   /*  configOverwrite={{ ...meetConfig.config }} */
+                    configOverwrite={INITIAL_MEET_CONFIG.config} 
                     userInfo={{
-                      displayName : 'carlitos',
-                      email : 'carlos.rubio@evius.co'
+                      displayName : userName,
+                      email : userEmail
                     }}
                     getIFrameRef={(wrapperRef) => {
                       wrapperRef.style.height = '100%';
