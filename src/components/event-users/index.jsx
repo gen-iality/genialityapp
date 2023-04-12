@@ -240,7 +240,7 @@ class ListEventUser extends Component {
     if (item.created_at !== null) {
       const createdAt = item?.created_at || new Date();
 
-      return <>{createdAt ? <p>{dayjs(createdAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
+      return <>{createdAt ? <span>{dayjs(createdAt).format('D/MMM/YY h:mm:ss A ')}</span> : ''}</>;
     } else {
       return '';
     }
@@ -251,7 +251,7 @@ class ListEventUser extends Component {
       for (const role of this.state.rolesList) {
         if (item.rol_id == role._id) {
           item['rol_name'] = role.name;
-          return <p>{role.name}</p>;
+          return <span>{role.name}</span>;
         }
       }
     }
@@ -262,7 +262,7 @@ class ListEventUser extends Component {
     if (item.updated_at !== null) {
       const updatedAt = item?.updated_at;
 
-      return <>{updatedAt ? <p>{dayjs(updatedAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
+      return <>{updatedAt ? <span>{dayjs(updatedAt).format('D/MMM/YY h:mm:ss A ')}</span> : ''}</>;
     } else {
       return '';
     }
