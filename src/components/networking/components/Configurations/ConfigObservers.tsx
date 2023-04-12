@@ -62,7 +62,7 @@ export default function ConfigObservers() {
       </Row>
       {/* <Divider orientation='left'>Lista de observadores</Divider> */}
       <List
-        pagination={observers.length >= 5 && {pageSize : 5}}
+        pagination={observers.length > 5 && {pageSize : 5}}
         header={<div>Observadores</div>}
         bordered
         dataSource={observers}

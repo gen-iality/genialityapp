@@ -7,39 +7,28 @@ import ConfigSpaces from '../components/Configurations/ConfigSpaces';
 export default function Configuration() {
   return (
     <>
-      <Row justify='center' align='middle' gutter={8} style={{ marginBottom: 10 }}>
-        <Col span={12}>
-          <Card hoverable style={{ minHeight: 550 }}>
+      <Row justify='center' /* align='middle' */ gutter={8} style={{ marginBottom: 10 }} wrap>
+        <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
+          <Card hoverable /* style={{ minHeight: 550 }} */>
             <Divider orientation='left'>
               <Typography.Title level={5}>Configuración de observadores</Typography.Title>
             </Divider>
-
-            {/* <Meta title=''/> */}
             <ConfigObservers />
           </Card>
         </Col>
-        <Col span={12}>
-          <Card hoverable style={{ minHeight: 550 }}>
+        <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
+          <Card hoverable /* style={{ minHeight: 550 }} */>
             <Divider orientation='left'>
               <Typography.Title level={5}>Configuración de tipos</Typography.Title>
             </Divider>
-
-            {/* <Meta title=''/> */}
             <TypeMeenting />
           </Card>
         </Col>
-        {/* <Content style={{ display: 'flex', justifyContent: 'space-around' , padding: 10}}>
-        
-      </Content> */}
-      </Row>
-      <Row justify='center' align='middle' gutter={8}>
-        <Col span={12}>
-          <Card hoverable style={{ minHeight: 550 }}>
+        <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
+          <Card hoverable /* style={{ minHeight: 550 }} */>
             <Divider orientation='left'>
               <Typography.Title level={5}>Configuración de espacios</Typography.Title>
             </Divider>
-
-            {/* <Meta title=''/> */}
             <ConfigSpaces />
           </Card>
         </Col>
