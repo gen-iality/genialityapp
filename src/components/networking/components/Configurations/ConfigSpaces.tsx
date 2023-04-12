@@ -56,10 +56,10 @@ const ConfigSpaces = () => {
           Agregar
         </Button>
       </Row>
-      {/* <Divider orientation='left'>Lista de observadores</Divider> */}
+     
       <List
         loading={loading}
-        pagination={spaces.length >= 5 && { pageSize: 5 }}
+        pagination={spaces && spaces.length >= 5 && { pageSize: 5 }}
         header={<div>Espacios</div>}
         bordered
         dataSource={spaces}

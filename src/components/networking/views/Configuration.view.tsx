@@ -14,7 +14,6 @@ export default function Configuration() {
               <Typography.Title level={5}>Configuración de observadores</Typography.Title>
             </Divider>
 
-            {/* <Meta title=''/> */}
             <ConfigObservers />
           </Card>
         </Col>
@@ -24,13 +23,10 @@ export default function Configuration() {
               <Typography.Title level={5}>Configuración de tipos</Typography.Title>
             </Divider>
 
-            {/* <Meta title=''/> */}
             <TypeMeenting />
           </Card>
         </Col>
-        {/* <Content style={{ display: 'flex', justifyContent: 'space-around' , padding: 10}}>
-        
-      </Content> */}
+
       </Row>
       <Row justify='center' align='middle' gutter={8}>
         <Col span={12}>
@@ -39,7 +35,6 @@ export default function Configuration() {
               <Typography.Title level={5}>Configuración de espacios</Typography.Title>
             </Divider>
 
-            {/* <Meta title=''/> */}
             <ConfigSpaces />
           </Card>
         </Col>
