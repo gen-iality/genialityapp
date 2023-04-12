@@ -19,6 +19,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 
 /** export Excel */
 import { utils, writeFileXLSX } from 'xlsx';
+import PositionCertificationFileUploader from './PositionCertificationFileUploader';
 
 function OrgRegisteredUsers(props) {
   const { _id: organizationId } = props.org;
@@ -296,7 +297,7 @@ function OrgRegisteredUsers(props) {
             <Select //options={allEvents.map((event) => ({ label: event.name, value: event._id }))}
             />
           </Form.Item> */}
-          <Form.Item name="success" label="Exitoso">
+          <Form.Item name="success" label="Exitoso" valuePropName="checked">
             <Switch />
           </Form.Item>
           <Form.Item name="description" label="Descripción" rules={[{ required: true, message: 'Ah!' }]}>
@@ -323,6 +324,12 @@ function OrgRegisteredUsers(props) {
             initialValue={dayjs(Date.now())}
           >
             <DatePicker />
+          </Form.Item>
+          <Form.Item
+            name="file_url"
+            label="Archivo externo"
+          >
+            <PositionCertificationFileUploader path="positions" />
           </Form.Item>
         </Form>
       </Modal>

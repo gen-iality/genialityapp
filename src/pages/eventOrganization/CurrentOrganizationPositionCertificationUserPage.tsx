@@ -22,6 +22,7 @@ import { useState, useEffect } from 'react';
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
+import PositionCertificationFileUploader from './PositionCertificationFileUploader';
 
 export interface CurrentOrganizationPositionCertificationUserPageProps {
   org: any;
@@ -108,7 +109,16 @@ function CurrentOrganizationPositionCertificationUserPage(
     const newColumns: ColumnsType = [
       {
         title: 'Certificación de',
-        render: (event: any) => <span>{event.name}</span>,
+        render: (event: any) => {
+          if (event.certification?.file_url) {
+            return (
+              <a href={event.certification.file_url} target="_blank">
+                {event.name}
+              </a>
+            )
+          }
+          return <span>{event.name}</span>
+        },
       },
       {
         title: 'Historial',
@@ -194,7 +204,14 @@ function CurrentOrganizationPositionCertificationUserPage(
               id={`deleteAction${event._id}`}
               type="primary"
               size="small"
-              onClick={(e) => alert('No implementado aún')}
+              onClick={(e) => {
+                alert('No implementado aún')
+                // Little future people, please implement the deleting of FireStorage too.
+                // You SHOULD check if the last url pathname element stars with "documents/" and try to
+                // decode it and use this path (that stats with "documents/") to request a deleting
+                // process with the FireStorage API. Dont say that my intrustion are bad, if you don't
+                // believe in me, then ask to ChatGPT tho
+              }}
               icon={<DeleteOutlined />}
             />
           </Tooltip>
@@ -279,7 +296,7 @@ function CurrentOrganizationPositionCertificationUserPage(
               options={allEvents.map((event) => ({ label: event.name, value: event._id }))}
             />
           </Form.Item>
-          <Form.Item name="success" label="Exitoso">
+          <Form.Item name="success" label="Exitoso" valuePropName="checked">
             <Switch />
           </Form.Item>
           <Form.Item name="description" label="Descripción" rules={[{ required: true, message: 'Ah!' }]}>
@@ -306,6 +323,12 @@ function CurrentOrganizationPositionCertificationUserPage(
             initialValue={dayjs(Date.now())}
           >
             <DatePicker />
+          </Form.Item>
+          <Form.Item
+            name="file_url"
+            label="Archivo externo"
+          >
+            <PositionCertificationFileUploader path="positions" />
           </Form.Item>
         </Form>
       </Modal>
