@@ -8,4 +8,5 @@ export const FrasesInspiradoras = [
     'Cuando dejas de perseguir las cosas negativas, le das la oportunidad a las cosas positivas para que te alcancen. – Lolly Daskal',
     'Recuerda que no puedes fallar en ser tú mismo. – Wayne Dyer',
     'Haz lo que puedas, con lo que tengas, donde estés. – Theodore Roosevelt',
+    'Con un solo nada es suficiente. – David Borja',
 ];
