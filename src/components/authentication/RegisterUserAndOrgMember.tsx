@@ -1,5 +1,5 @@
 /** React's libraries imports */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactElement, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { useLocation } from 'react-router';
 
@@ -15,14 +15,13 @@ import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
 
 /** External functions imports */
-import createNewUser from './ModalsFunctions/createNewUser';
+import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/createNewUser';
 
 /** Helpers and utils imports */
 import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request';
 
 /** Context imports */
 import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useEventContext } from '@context/eventContext';
 import { DispatchMessageService } from '@context/MessageService';
 import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm';
 
@@ -36,50 +35,55 @@ const RegisterUserAndOrgMember = ({
   defaultPositionId,
   requireAutomaticLoguin,
   startingComponent,
-}) => {
-  console.log('idOrganization', idOrganization);
+}: any) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const { helperDispatch, currentAuthScreen } = useHelper();
   const location = useLocation();
 
   const [current, setCurrent] = useState(0);
-  const [basicDataUser, setBasicDataUser] = useState({
+  const [basicDataUser, setBasicDataUser] = useState<any>({
     names: '',
     email: '',
     password: '',
     picture: '',
   });
-  const [dataOrgMember, setDataOrgMember] = useState(undefined); // object | undefined
+  const [dataOrgMember, setDataOrgMember] = useState<any | undefined>(undefined);
   const [buttonStatus, setButtonStatus] = useState(true);
-  const [validationGeneral, setValidationGeneral] = useState({
+  const [validationGeneral, setValidationGeneral] = useState<{
+    status: boolean,
+    textError: string,
+    isLoading: boolean,
+    component?: ReactNode,
+  }>({
     status: false,
     textError: '',
-    loading: false,
+    isLoading: false,
+    component: undefined,
   });
 
   const [organization, setOrganization] = useState({});
   const [existGenialialityUser, setExistGenialialityUser] = useState(false);
 
-  const hookValidations = (status, textError) => {
+  const hookValidations = (status: boolean, textError: string) => {
     setValidationGeneral({
       status: status,
       textError: textError,
-      loading: false,
+      isLoading: false,
     });
     setButtonStatus(status);
   };
 
-  const formDataHandler = (e, FieldName, picture) => {
-    const value = FieldName === 'picture' ? picture : e.target.value;
+  const formDataHandler = (e: any, fieldName: string, picture: any) => {
+    const value = fieldName === 'picture' ? picture : e.target.value;
 
-    setBasicDataUser((previous) => ({
+    setBasicDataUser((previous: any) => ({
       ...previous,
-      [FieldName]: value,
+      [fieldName]: value,
     }));
   };
 
-  const onSubmit = (values) => {
+  const onSubmit = (values: any) => {
     setDataOrgMember(values);
   };
 
@@ -109,6 +113,8 @@ const RegisterUserAndOrgMember = ({
           validationGeneral={validationGeneral}
           basicDataUser={basicDataUser}
           requireAutomaticLoguin={requireAutomaticLoguin}
+          cEvent={undefined} // NOTE: in the last this prop was undefined as th next
+          dataEventUser={undefined}
         />
       ),
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
@@ -120,27 +126,27 @@ const RegisterUserAndOrgMember = ({
       const validateEmail = await UsersApi.validateEmail({ email: basicDataUser.email });
       if (validateEmail?.message === 'Email valid') {
         setValidationGeneral({
-          loading: false,
+          isLoading: false,
           status: false,
           textError: '',
         });
         setCurrent(current + 1);
       }
-    } catch (err) {
+    } catch (err: any) {
       if (err?.response?.data?.errors?.email[0] === 'email ya ha sido registrado.') {
         if (isAdminPage()) {
           setCurrent(current + 1);
           setExistGenialialityUser(true);
 
           setValidationGeneral({
-            loading: false,
+            isLoading: false,
             status: false,
             textError: 'El usuario ya existe. Debes registrar miembro a la organización',
             component: 'Registrar miembro de la organización',
           });
         } else {
           setValidationGeneral({
-            loading: false,
+            isLoading: false,
             status: true,
             textError: intl.formatMessage({
               id: 'modal.feedback.title.error',
@@ -154,7 +160,7 @@ const RegisterUserAndOrgMember = ({
         }
       } else if (err?.response?.data?.errors?.email[0] === 'email no es un correo válido') {
         setValidationGeneral({
-          loading: false,
+          isLoading: false,
           status: true,
           textError: intl.formatMessage({
             id: 'modal.feedback.errorDNSNotFound',
@@ -163,7 +169,7 @@ const RegisterUserAndOrgMember = ({
         });
       } else {
         setValidationGeneral({
-          loading: false,
+          isLoading: false,
           status: true,
           textError: intl.formatMessage({
             id: 'modal.feedback.errorGeneralInternal',
@@ -178,8 +184,7 @@ const RegisterUserAndOrgMember = ({
     setCurrent(current + 1);
 
     async function createAccount() {
-      const resp = await createNewUser(basicDataUser);
-      return resp;
+      return await createNewUser(basicDataUser);
     }
 
     async function createOrgMember() {
@@ -198,7 +203,7 @@ const RegisterUserAndOrgMember = ({
         if (respUser && respUser.account_id) {
           setValidationGeneral({
             status: false,
-            loading: false,
+            isLoading: false,
             textError: intl.formatMessage({
               // REVISAR: No se debería llamar TextError, si el texto es una respuesta afirmativa.
               id: 'text_error.organization_successfully_registered',
@@ -221,13 +226,13 @@ const RegisterUserAndOrgMember = ({
     if (existGenialialityUser) {
       createOrgMember();
     } else {
-      createAccount().then((resp) => {
-        if (resp) {
+      createAccount().then(({status}) => {
+        if (status === CREATE_NEW_USER_SUCCESS) {
           createOrgMember();
         } else {
           setValidationGeneral({
             status: false, // REVISAR: ¿Debe ser true, para que pueda salir la alerta?
-            loading: false,
+            isLoading: false,
             textError: intl.formatMessage({
               id: 'text_error.error_creating_user',
               defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
@@ -242,7 +247,7 @@ const RegisterUserAndOrgMember = ({
     if (current == 0) {
       setValidationGeneral({
         ...validationGeneral,
-        loading: true,
+        isLoading: true,
         status: false,
       });
 
@@ -255,7 +260,7 @@ const RegisterUserAndOrgMember = ({
           form.submit();
           setValidationGeneral((previous) => ({
             ...previous,
-            loading: true,
+            isLoading: true,
             status: false,
           }));
         })
@@ -268,7 +273,7 @@ const RegisterUserAndOrgMember = ({
     setButtonStatus(false);
   };
 
-  function validateEmail(email) {
+  function validateEmail(email: string) {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
@@ -283,14 +288,14 @@ const RegisterUserAndOrgMember = ({
         setButtonStatus(false);
         setValidationGeneral({
           ...validationGeneral,
-          loading: false,
+          isLoading: false,
           status: false,
           textError: '',
         });
       } else {
         setValidationGeneral({
           ...validationGeneral,
-          loading: false,
+          isLoading: false,
           textError: intl.formatMessage({
             id: 'feedback.title.error',
             defaultMessage: 'Complete los campos solicitados correctamente.',
@@ -363,7 +368,7 @@ const RegisterUserAndOrgMember = ({
           </Button>
         )}
 
-        {validationGeneral.loading ? (
+        {validationGeneral.isLoading ? (
           <LoadingOutlined style={{ fontSize: '28px' }} />
         ) : (
           <>

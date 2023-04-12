@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { Steps, Button, Alert } from 'antd';
 import RegisterFast from './Content/RegisterFast';
 import RegistrationResult from './Content/RegistrationResult';
@@ -8,7 +8,7 @@ import { ScheduleOutlined } from '@ant-design/icons';
 import FormComponent from '../events/registrationForm/form';
 import { UsersApi } from '@helpers/request';
 import { LoadingOutlined } from '@ant-design/icons';
-import createNewUser from './ModalsFunctions/createNewUser';
+import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/createNewUser';
 import { useIntl } from 'react-intl';
 import { useEventContext } from '@context/eventContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
@@ -16,11 +16,11 @@ import { DispatchMessageService } from '@context/MessageService';
 
 const { Step } = Steps;
 
-const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
+const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }: any) => {
   const intl = useIntl();
   const cEvent = useEventContext();
   const [current, setCurrent] = useState(0);
-  const [basicDataUser, setbasicDataUser] = useState({
+  const [basicDataUser, setbasicDataUser] = useState<any>({
     names: '',
     email: '',
     password: '',
@@ -29,47 +29,56 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
   const { helperDispatch, currentAuthScreen } = useHelper();
   const [dataEventUser, setdataEventUser] = useState({});
   const [buttonStatus, setbuttonStatus] = useState(true);
-  const [validationGeneral, setValidationGeneral] = useState({
+  const [validationGeneral, setValidationGeneral] = useState<{
+    status: boolean,
+    textError: string,
+    isLoading: boolean,
+    component?: ReactNode,
+  }>({
     status: false,
     textError: '',
-    loading: false,
+    isLoading: false,
   });
-  const [validateEventUser, setvalidateEventUser] = useState({
+  const [validateEventUser, setvalidateEventUser] = useState<{
+    status: boolean,
+    textError: string,
+    statusFields?: boolean,
+  }>({
     status: false,
     textError: '',
     statusFields: false,
   });
 
-  const hookValidations = (status, textError) => {
+  const hookValidations = (status: boolean, textError: string) => {
     setValidationGeneral({
       status: status,
       textError: textError,
-      loading: false,
+      isLoading: false,
     });
     setbuttonStatus(status);
   };
 
-  const HandleHookForm = (e, FieldName, picture) => {
+  const HandleHookForm = (e: any, fieldName: string, picture: any) => {
     let value = '';
-    if (FieldName === 'picture') {
+    if (fieldName === 'picture') {
       value = picture;
     } else {
       value = e.target.value;
     }
 
     if (current === 0) {
-      if (FieldName === 'picture') {
-        setbasicDataUser({ ...basicDataUser, [FieldName]: picture });
+      if (fieldName === 'picture') {
+        setbasicDataUser({ ...basicDataUser, [fieldName]: picture });
       } else {
         setbasicDataUser({
           ...basicDataUser,
-          [FieldName]: value,
+          [fieldName]: value,
         });
       }
     } else {
       setdataEventUser({
         ...dataEventUser,
-        [FieldName]: value,
+        [fieldName]: value,
       });
     }
   };
@@ -96,7 +105,15 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     },
     {
       title: 'Last',
-      content: <RegistrationResult validationGeneral={validationGeneral} basicDataUser={basicDataUser} />,
+      content: (
+        <RegistrationResult
+          validationGeneral={validationGeneral}
+          basicDataUser={basicDataUser}
+          cEvent={undefined}
+          dataEventUser={undefined}
+          requireAutomaticLoguin={undefined}
+        />
+      ),
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
     },
   ];
@@ -109,16 +126,16 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       console.log(validateEmail, 'validateEmail');
       if (validateEmail?.message === 'Email valid') {
         setValidationGeneral({
-          loading: false,
+          isLoading: false,
           status: false,
           textError: '',
         });
         setCurrent(current + 1);
       }
-    } catch (err) {
+    } catch (err: any) {
       if (err?.response?.data?.errors?.email[0] === 'email ya ha sido registrado.') {
         setValidationGeneral({
-          loading: false,
+          isLoading: false,
           status: true,
           textError: intl.formatMessage({
             id: 'modal.feedback.title.error',
@@ -131,7 +148,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         });
       } else if (err?.response?.data?.errors?.email[0] === 'email no es un correo válido') {
         setValidationGeneral({
-          loading: false,
+          isLoading: false,
           status: true,
           textError: intl.formatMessage({
             id: 'modal.feedback.errorDNSNotFound',
@@ -140,7 +157,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         });
       } else {
         setValidationGeneral({
-          loading: false,
+          isLoading: false,
           status: true,
           textError: intl.formatMessage({
             id: 'modal.feedback.errorGeneralInternal',
@@ -153,17 +170,13 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
 
   const handleSubmit = () => {
     setCurrent(current + 1);
-    const SaveUserEvius = new Promise((resolve, reject) => {
-      async function CreateAccount() {
-        const resp = await createNewUser(basicDataUser);
-        resolve(resp);
-      }
-
-      CreateAccount();
+    const saveUserPromise = new Promise((resolve, reject) => {
+      createNewUser(basicDataUser)
+        .then(resolve)
     });
 
     async function createEventUser() {
-      const clonBasicDataUser = { ...basicDataUser };
+      const clonBasicDataUser: any = { ...basicDataUser };
       delete clonBasicDataUser.password;
       delete clonBasicDataUser.picture;
 
@@ -178,7 +191,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         if (respUser && respUser._id) {
           setValidationGeneral({
             status: false,
-            loading: false,
+            isLoading: false,
             textError: intl.formatMessage({
               id: 'text_error.successfully_registered',
               defaultMessage: 'Te has inscrito correctamente a este curso',
@@ -196,13 +209,13 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       }
     }
 
-    SaveUserEvius.then((resp) => {
-      if (resp) {
+    saveUserPromise.then(({status}: any) => {
+      if (status === CREATE_NEW_USER_SUCCESS) {
         createEventUser();
       } else {
         setValidationGeneral({
           status: false,
-          loading: false,
+          isLoading: false,
           textError: intl.formatMessage({
             id: 'text_error.error_creating_user',
             defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
@@ -216,7 +229,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     if (current == 0) {
       setValidationGeneral({
         ...validationGeneral,
-        loading: true,
+        isLoading: true,
         status: false,
       });
 
@@ -233,7 +246,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     if (validateEventUser.statusFields) {
       setValidationGeneral({
         ...validationGeneral,
-        loading: true,
+        isLoading: true,
         status: false,
       });
       handleSubmit();
@@ -245,7 +258,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
     setbuttonStatus(false);
   };
 
-  function validateEmail(email) {
+  function validateEmail(email: string) {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
@@ -260,14 +273,14 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         setbuttonStatus(false);
         setValidationGeneral({
           ...validationGeneral,
-          loading: false,
+          isLoading: false,
           status: false,
           textError: '',
         });
       } else {
         setValidationGeneral({
           ...validationGeneral,
-          loading: false,
+          isLoading: false,
           textError: intl.formatMessage({
             id: 'feedback.title.error',
             defaultMessage: 'Complete los campos solicitados correctamente.',
@@ -319,7 +332,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           </Button>
         )}
 
-        {validationGeneral.loading ? (
+        {validationGeneral.isLoading ? (
           <LoadingOutlined style={{ fontSize: '28px' }} />
         ) : (
           <>

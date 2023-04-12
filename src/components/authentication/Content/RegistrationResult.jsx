@@ -7,7 +7,7 @@ import { useUserEvent } from '@context/eventUserContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '@context/MessageService';
-import { async } from 'ramda-adjunct';
+
 import { AttendeeApi } from '@helpers/request';
 
 const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEventUser, requireAutomaticLoguin }) => {
@@ -22,7 +22,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
     //mientras el user espera se le dan frases motivadoras
     async function FraseInpiradora() {
       try {
-        if (validationGeneral.loading) {
+        if (validationGeneral.isLoading) {
           const ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
           setfraseLoading(FrasesInspiradoras[ramdon]);
           console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon]);
@@ -48,7 +48,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
 
   return (
     <>
-      {validationGeneral.loading ? (
+      {validationGeneral.isLoading ? (
         <>
           <Row>
             <Typography.Text type="secondary" style={{ fontSize: '18px' }}>

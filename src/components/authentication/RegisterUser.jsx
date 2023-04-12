@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Space, Upload, Alert } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import createNewUser from './ModalsFunctions/createNewUser';
+import createNewUser, { CREATE_NEW_USER_FAIL, CREATE_NEW_USER_FAIL_BECAUSE_EMAIL, CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/createNewUser';
 import { app } from '@helpers/firebase';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
@@ -12,7 +12,9 @@ import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
   const { handleChangeTypeModal } = useHelper();
-  const [errorEmail, setErrorEmail] = useState(false);
+  const [isErrorBecauseEmail, setIsErrorBecauseEmail] = useState(false);
+  // const [registrationErrorMessage, setRegistrationErrorMessage] = useState('');
+
   const ruleEmail = [
     {
       type: 'email',
@@ -61,8 +63,6 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
 
   const [form] = Form.useForm();
   const [imageAvatar, setImageAvatar] = useState(null);
-  const [modalInfo, setModalInfo] = useState(null);
-  const [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
 
   function resetFields() {
     form.resetFields();
@@ -79,21 +79,23 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
     const newValues = {
       ...values,
       picture: imageAvatar,
-      resetFields,
-      setModalInfo,
-      setOpenOrCloseTheModalFeedback,
     };
 
     try {
-      const resp = await createNewUser(newValues);
-      if (resp == 1) {
-        // Si se registró correctamente lo logueamos
+      const {
+        // user: userData,
+        message: resultMessage,
+        status: creatingStatus,
+      } = await createNewUser(newValues, resetFields);
+
+      if (creatingStatus === CREATE_NEW_USER_SUCCESS) {
+        // If the registration was successful, then login it
         app
           .auth()
           .signInWithEmailAndPassword(newValues.email, newValues.password)
           .then((login) => {
             if (login) {
-              // Permite validar en que sección de evius se encuentra y así renderizar el modal correspondiente
+              // Let us to check in what GEN.iality section we are to render the right modal component
               if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
                 handleChangeTypeModal('loginSuccess');
               } else {
@@ -102,35 +104,24 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             }
           })
           .catch((err) => {
+            console.error(err);
             handleChangeTypeModal('loginError');
           });
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
+        DispatchMessageService({ key: 'loading', action: 'destroy' });
         DispatchMessageService({
           type: 'success',
           msj: 'Información guardada correctamente!',
           action: 'show',
         });
-      } else if (resp == 0) {
-        handleChangeTypeModal('loginError');
-        setErrorEmail(false);
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error inesperado',
-          action: 'show',
-        });
       } else {
-        setErrorEmail(true);
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
+        if (creatingStatus === CREATE_NEW_USER_FAIL_BECAUSE_EMAIL) {
+          setIsErrorBecauseEmail(true);
+        } else if (creatingStatus === CREATE_NEW_USER_FAIL) {
+          setIsErrorBecauseEmail(false);
+          handleChangeTypeModal('loginError');
+        }
+
+        DispatchMessageService({ key: 'loading', action: 'destroy' });
         DispatchMessageService({
           type: 'error',
           msj: 'Ha ocurrido un error inesperado',
@@ -138,10 +129,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         });
       }
     } catch (err) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
+      console.error(err)
+      DispatchMessageService({ key: 'loading', action: 'destroy' });
       DispatchMessageService({
         type: 'error',
         msj: 'Ha ocurrido un error inesperado',
@@ -268,11 +257,11 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             })}
           </Button>
         </Form.Item>
-        {errorEmail && (
+        {isErrorBecauseEmail && (
           <Alert
             showIcon
-            onClose={() => setErrorEmail(false)}
             closable
+            onClose={() => setIsErrorBecauseEmail(false)}
             className="animate__animated animate__bounceIn"
             style={{
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
