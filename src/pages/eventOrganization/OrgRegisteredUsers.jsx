@@ -19,6 +19,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 
 /** export Excel */
 import { utils, writeFileXLSX } from 'xlsx';
+import PositionCertificationFileUploader from './PositionCertificationFileUploader';
 
 function OrgRegisteredUsers(props) {
   const { _id: organizationId } = props.org;
@@ -323,6 +324,12 @@ function OrgRegisteredUsers(props) {
             initialValue={dayjs(Date.now())}
           >
             <DatePicker />
+          </Form.Item>
+          <Form.Item
+            name="file_url"
+            label="Archivo externo"
+          >
+            <PositionCertificationFileUploader path="positions" />
           </Form.Item>
         </Form>
       </Modal>
