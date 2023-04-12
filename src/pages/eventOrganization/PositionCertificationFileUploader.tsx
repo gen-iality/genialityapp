@@ -126,6 +126,9 @@ const PositionCertificationFileUploader: React.FunctionComponent<IPositionCertif
 
       // documents/here.pdf
       const currentFirebasePath = decodeURIComponent(encodedCurrentFirebasePath)
+      if (!currentFirebasePath.startsWith('documents/')) {
+        console.warn('This url seems to be from non-Firebase URL, but it is not a problem')
+      }
       setFirebasePath(currentFirebasePath)
 
       // here.pdf
@@ -151,6 +154,17 @@ const PositionCertificationFileUploader: React.FunctionComponent<IPositionCertif
             type="drag"
             fileList={fileList}
             onChange={onUploadingChange}
+            onRemove={(file) => {
+              const ref = fireStorage.ref();
+              if (firebasePath) {
+                ref.child(firebasePath).delete().then(() => {
+                  onChange(undefined)
+                })
+              } else {
+                onChange(undefined)
+                console.warn('If this URL is from Firebase, then it is a problem. But, if it is from another URL there is no problem :)')
+              }
+            }}
             listType="text"
             maxCount={1}
           >
@@ -161,7 +175,7 @@ const PositionCertificationFileUploader: React.FunctionComponent<IPositionCertif
         </Form.Item>
       </Tabs.TabPane>
       <Tabs.TabPane tab="URL" key="2">
-        <Form.Item label="URL del certificado">
+        <Form.Item label="URL del certificado" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
           <Input value={value} onChange={(e) => onChange(e.target.value)} />
         </Form.Item>
       </Tabs.TabPane>
