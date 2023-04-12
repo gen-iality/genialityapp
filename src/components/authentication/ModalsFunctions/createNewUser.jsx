@@ -43,7 +43,7 @@ const createNewUser = async (props) => {
         });
       setOpenOrCloseTheModalFeedback(true);
       sendDataFinished();*/
-        return response;
+        return response; // HAHA! I remember when Juan change 1 for `response`, now some bugs happen
       }
     } catch (e) {
       // Permite validar cuando el email es incorrecto
