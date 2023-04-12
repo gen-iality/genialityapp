@@ -48,7 +48,6 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
       }
     });
 };
-//todo: mejorar el filtro de reuniones with user
 export const listenMeetingsByUserLanding = (eventId: string, userID: string, setMeetingWithUser: (meetingList: IMeeting[]) => void) => {
 	return firestore
 		.collection(`networkingByEventId`)
