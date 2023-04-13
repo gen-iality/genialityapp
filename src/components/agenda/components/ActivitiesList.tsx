@@ -33,7 +33,7 @@ type TruncatedAgenda = {
   QuizProgressComponent?: FunctionComponent<{ userId: string; isAnswersDeleted: boolean }>;
   DeleteSurveyAnswersButton?: FunctionComponent<{ userId: string; onAnswersDeleted: (x: boolean) => void }>;
   RibbonComponent: FunctionComponent<{ children: any }>;
-  short_description: any;
+  short_description?: any;
 };
 
 interface ActivitiesListProps {

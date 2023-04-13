@@ -37,7 +37,7 @@ export default interface AgendaType {
   tool_ids: any[] | null;
   length: string;
   latitude: string;
-  short_description: any;
+  short_description?: any;
 }
 
 export interface ExtendedAgendaType extends AgendaType {
