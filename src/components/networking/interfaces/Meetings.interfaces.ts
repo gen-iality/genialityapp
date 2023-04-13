@@ -27,6 +27,7 @@ export interface IParticipants {
     id:string
     name   : string
     email? : string
+    picture : string
     confirmed  : boolean
 }
 

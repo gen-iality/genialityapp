@@ -5,12 +5,13 @@ import TypeMeenting from '../components/Configurations/TypeMeenting';
 import ConfigSpaces from '../components/Configurations/ConfigSpaces';
 import ConfigMeet from '../components/Configurations/ConfigMeet';
 
+
 export default function Configuration() {
   return (
     <>
       <Row justify='start' gutter={[32, 32]} style={{ marginBottom: 10 }} wrap >
         <Col xs={22} sm={16} md={16} lg={12} xl={8} xxl={6}>
-          <Card hoverable style={{ height: 550, maxWidth: 600, backgroundColor: '#FDFEFE'}}>
+          <Card  hoverable style={{ height: 550, maxWidth: 600, backgroundColor: '#FDFEFE'}}>
             <Divider orientation='left'>
               <Typography.Title level={5}>Configuración de Meet</Typography.Title>
             </Divider>

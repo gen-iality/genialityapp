@@ -25,9 +25,10 @@ export const useMeetingFormLogic = () => {
         setDataTransfer(
             dataContext.attendees.map((asistente: any) => ({
                 id: asistente._id,
-                name: asistente.user.names,
+                name: asistente.user?.names,
                 key: asistente._id,
-                email: asistente.user.email,
+                email: asistente.user?.email,
+                picture : asistente.user?.picture,
                 confirmed: false,
             }))
         );

@@ -1,5 +1,6 @@
 import { firestore } from '@/helpers/firebase';
 import { IObserver, ITypeMeenting } from '../interfaces/configurations.interfaces';
+import { MeetConfig } from '../interfaces/Index.interfaces';
 
 export const listenObervers = (eventId: string, setObervers: any) => {
 	return firestore
@@ -107,3 +108,30 @@ export const updateType= async (eventId: string, typeId: string, updateTypeDto: 
 		return false
 	}
 };
+
+export const updateOrCreateConfigMeet= async (eventId: string, updateConfigDto: Omit<MeetConfig, 'id'>) => {
+	try {
+		await firestore
+			.collection(`networkingByEventId`)
+			.doc(eventId)
+			.update({ConfigMeet: updateConfigDto});
+		return true
+	} catch (error: any) {
+		return false
+	}
+};
+
+export const getConfigMeet = async <T>(eventId: string) => {
+	try {
+		const ConfigMeet = await firestore
+			.collection(`networkingByEventId`)
+			.doc(eventId)
+			.get();
+
+		return ConfigMeet.data() as T
+	} catch (error: any) {
+		return null
+	}
+};
+
+
