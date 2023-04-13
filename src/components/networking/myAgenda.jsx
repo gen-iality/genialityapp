@@ -7,6 +7,7 @@ import useGetMeetingConfirmed from './hooks/useGetMeetingConfirmed';
 import TabComponent from './components/my-agenda/TabComponent';
 import { JitsiMeeting } from '@jitsi/react-sdk';
 import {INITIAL_MEET_CONFIG} from './utils/utils' 
+import { LeftOutlined } from '@ant-design/icons';
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
@@ -52,6 +53,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
           <Button
             className='button_regresar'
             type='primary'
+            danger
+            icon={<LeftOutlined />}
             onClick={() => {
               setCurrentRoom(null);
             }}>

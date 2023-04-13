@@ -34,9 +34,10 @@ export default function ConfigObservers() {
           onCancel={closeModal}
           okText={'Guardar'}>
           <>
-            <Form onFinish={onCreate}>
+            <Form onFinish={onCreate} layout='vertical'>
               <Form.Item
                 name={'data'}
+                label={'Participantes'}
                 rules={[{ required: true, message: 'Debe seleccionar un participante' }]}
                 initialValue={[]}
                 help={

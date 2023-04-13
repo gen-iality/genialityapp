@@ -36,7 +36,7 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
     if (response) {
       await services.updateRequestMeeting(eventId, data.id, { ...data, status: RequestMeetingState.confirmed });
       notificationUser();
-      setClassName('animate__animated animate__backOutLeft animate__slow');
+      setClassName('animate__animated animate__backOutRight animate__slow');
       notification.success({
         message: 'Se agendó la reunión correctamente',
         icon: <CheckCircleOutlined />,
