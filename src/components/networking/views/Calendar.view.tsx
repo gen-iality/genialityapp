@@ -124,9 +124,10 @@ export default function MyCalendar() {
             title={<></>}
             placement='right'
             visible={open}
-            width={500}
+            width={600}
             closable={false}
             headerStyle={{border: 'none'}}
+            bodyStyle={{paddingTop: 0}}
             extra={
               <Row gutter={[16, 16]} justify='end'>
                 <Col>
