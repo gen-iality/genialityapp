@@ -1,19 +1,13 @@
-import { Button, Col, DatePicker, Input, List, Modal, notification, Row, Select, Spin, TimePicker } from 'antd';
+import { Button, DatePicker, Modal, notification, Row } from 'antd';
 import moment from 'moment';
-import { find, filter, keys, pathOr, propEq, whereEq } from 'ramda';
-import { isNonEmptyArray } from 'ramda-adjunct';
 import { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 import withContext from '../../context/withContext';
-import * as services from './services/meenting.service';
-import { getDatesRange } from '../../helpers/utils';
 import { createMeetingRequest, getAgendasFromEventUser, getUsersId } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
 import { typeAttendace } from './interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
-
-const { TextArea } = Input;
-const MESSAGE_MAX_LENGTH = 200;
+import SpacesAvalibleList from './components/spaces-requestings/SpacesAvalibleList';
 
 function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, closeModal, cEvent }) {
   const [agendaMessage, setAgendaMessage] = useState('');
@@ -22,9 +16,10 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   const [reloadFlag, setReloadFlag] = useState(false);
   const initialDate = cEvent?.value?.datetime_from.split(' ');
 
+
   useEffect(() => {
     if (targetEventUserId === null || cEvent.value === null || cEventUser.value === null) return;
-      setAgendaMessage('');
+    setAgendaMessage('');
   }, [targetEventUserId, reloadFlag]);
 
   async function reloadData(resp) {
@@ -53,33 +48,32 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     await addNotification(notificationA, cEvent.value, cEventUser.value);
   }
   const resetModal = () => {
+    setDate(null);
     closeModal();
     setLoading(false);
     setAgendaMessage('');
-
   };
 
   const onSubmit = async () => {
     try {
-
-    if (!date) return notification.warning({ message: 'Debes seleccionar una fecha' });
-    setLoading(true)
-    const startDate = date.toString();
-    const endDate = date.add(20, 'minutes').toString();
-    const eventId = cEvent?.value?._id;
+      if (!date) return notification.warning({ message: 'Debes seleccionar una fecha' });
+      setLoading(true);
+      const startDate = date.toString();
+      const endDate = date.add(20, 'minutes').toString();
+      const eventId = cEvent?.value?._id;
 
       const idRequestMeeting = await createMeetingRequest({
         eventId: eventId,
-        targetUser:targetEventUser,
+        targetUser: targetEventUser,
         message: agendaMessage,
-        creatorUser:cEventUser,
+        creatorUser: cEventUser,
         typeAttendace,
         startDate,
         endDate,
       });
       await reloadData(idRequestMeeting, targetEventUserId);
       setDate(null);
-      setLoading(false)
+      setLoading(false);
       closeModal();
     } catch (error) {
       DispatchMessageService({
@@ -87,52 +81,44 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
         type: 'error',
         msj: 'No se pudo programar la reunion, intentelo mas tarde',
       });
-      setLoading(false)
+      setLoading(false);
       closeModal();
     }
   };
   const disabledDate = (current) => {
     const initial = moment(moment(cEvent?.value?.datetime_from).format('YYYY-MM-DD'));
-    const finish = moment(moment(cEvent?.value?.datetime_to).format('YYYY-MM-DD')) ;
-    const date_to_evaluate = moment(moment(current).format('YYYY-MM-DD'))
-    
-    return !((date_to_evaluate.isSameOrAfter(initial)) && (date_to_evaluate.isSameOrBefore(finish)))
+    const finish = moment(moment(cEvent?.value?.datetime_to).format('YYYY-MM-DD'));
+    const date_to_evaluate = moment(moment(current).format('YYYY-MM-DD'));
+
+    return !(date_to_evaluate.isSameOrAfter(initial) && date_to_evaluate.isSameOrBefore(finish));
   };
-  
+
   return (
     <Modal
       visible={!!targetEventUserId}
       title={'Agendar cita'}
       footer={null}
       onCancel={resetModal}
-      style={{ zIndex: 1031 }}>
+      style={{ zIndex: 1031 }}
+      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+      >
+      <div>
         <div>
-          <div>
-            <Row justify='space-between' style={{ margin: 5 }}>
-              <DatePicker
-                style={{ marginBottom: 10 }}
-                format={'DD-MM-YYYY hh:mm:ss'}
-                showTime={{ defaultValue: moment(initialDate[1] || '00:00:00', 'HH:mm:ss') }}
-                disabledDate={disabledDate}
-                onOk={(value) => setDate(value)}
-              />
-              <Button type='primary' onClick={onSubmit} loading={loading}>
-                Agendar cita
-              </Button>
-              <TextArea
-                rows={3}
-                placeholder={`Puedes agregar un mensaje corto en la solicitud. Máximo ${MESSAGE_MAX_LENGTH} caracteres.`}
-                value={agendaMessage}
-                onChange={(e) => {
-                  const newAgendaMessage = e.target.value;
-                  if (newAgendaMessage.length <= MESSAGE_MAX_LENGTH) {
-                    setAgendaMessage(newAgendaMessage);
-                  }
-                }}
-              />
-            </Row>
-          </div>
+          <Row justify='space-between' style={{ margin: 5 }}>
+            <DatePicker
+              value={date}
+              style={{ marginBottom: 10 }}
+              format={'DD-MM-YYYY'}
+              disabledDate={disabledDate}
+              onChange={setDate}
+            />
+            <Button type='primary' onClick={onSubmit} loading={loading}>
+              Agendar cita
+            </Button>
+          </Row>
+          <Row>{date && <SpacesAvalibleList date={date} targetUserName={targetEventUser?.user?.names}/>}</Row>
         </div>
+      </div>
     </Modal>
   );
 }
