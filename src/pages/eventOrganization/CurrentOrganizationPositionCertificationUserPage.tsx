@@ -24,6 +24,8 @@ import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import PositionCertificationFileUploader from './PositionCertificationFileUploader';
 
+const { TextArea } = Input;
+
 export interface CurrentOrganizationPositionCertificationUserPageProps {
   org: any;
   match: {
@@ -282,7 +284,7 @@ function CurrentOrganizationPositionCertificationUserPage(
         }}
         onCancel={() => closeModal()}
       >
-        <Form form={form} onFinish={onFormFinish}>
+        <Form form={form} onFinish={onFormFinish} layout="vertical">
           <Form.Item name="event_id" label="Curso a dar certificación" rules={[{ required: true, message: 'Esto' }]}>
             <Select
               onChange={(value) => {
@@ -304,19 +306,19 @@ function CurrentOrganizationPositionCertificationUserPage(
               options={allEvents.map((event) => ({ label: event.name, value: event._id }))}
             />
           </Form.Item>
-          <Form.Item name="description" label="Descripción" rules={[{ required: true, message: 'Ah!' }]}>
-            <Input />
+          <Form.Item name="description" label="Descripción" rules={[{ required: true, message: 'Agrega la descripción' }]}>
+            <TextArea rows={4} />
           </Form.Item>
-          <Form.Item name="hours" label="Horas" rules={[{ required: true, message: 'Ah!' }]}>
+          <Form.Item name="hours" label="Horas" rules={[{ required: true, message: 'Agrega el número de horas' }]}>
             <InputNumber min={1} />
           </Form.Item>
-          <Form.Item name="entity" label="Entidad" rules={[{ required: true, message: 'Ah!' }]}>
+          <Form.Item name="entity" label="Entidad" rules={[{ required: true, message: 'Agrega la entidad' }]}>
             <Input />
           </Form.Item>
           <Form.Item
             name="approved_from_date"
             label="Fecha de aprobación"
-            rules={[{ required: true, message: 'Cuándo!' }]}
+            rules={[{ required: true, message: 'Agrega la fecha' }]}
             initialValue={dayjs(Date.now())}
           >
             <DatePicker />
@@ -324,7 +326,7 @@ function CurrentOrganizationPositionCertificationUserPage(
           <Form.Item
             name="approved_until_date"
             label="Fecha de vencimiento"
-            rules={[{ required: true, message: 'Cuándo!' }]}
+            rules={[{ required: true, message: 'Agrega la fecha' }]}
             initialValue={dayjs(Date.now())}
           >
             <DatePicker />

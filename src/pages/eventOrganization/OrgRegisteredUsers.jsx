@@ -21,6 +21,8 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { utils, writeFileXLSX } from 'xlsx';
 import PositionCertificationFileUploader from './PositionCertificationFileUploader';
 
+const { TextArea } = Input;
+
 function OrgRegisteredUsers(props) {
   const { _id: organizationId } = props.org;
 
@@ -292,24 +294,24 @@ function OrgRegisteredUsers(props) {
           Cargando datos por defecto... <Spin />
           </>
         ) : undefined}
-        <Form form={form} onFinish={onFormFinish}>
+        <Form form={form} onFinish={onFormFinish} layout="vertical">
           {/* <Form.Item name="event_id" label="Curso a dar certificación" rules={[{ required: true, message: 'Esto' }]}>
             <Select //options={allEvents.map((event) => ({ label: event.name, value: event._id }))}
             />
           </Form.Item> */}
-          <Form.Item name="description" label="Descripción" rules={[{ required: true, message: 'Ah!' }]}>
-            <Input />
+          <Form.Item name="description" label="Descripción" rules={[{ required: true, message: 'Agrega la descripción' }]}>
+            <TextArea rows={4} />
           </Form.Item>
-          <Form.Item name="hours" label="Horas" rules={[{ required: true, message: 'Ah!' }]}>
+          <Form.Item name="hours" label="Horas" rules={[{ required: true, message: 'Agrega el número de horas' }]}>
             <InputNumber min={1} />
           </Form.Item>
-          <Form.Item name="entity" label="Entidad" rules={[{ required: true, message: 'Ah!' }]}>
+          <Form.Item name="entity" label="Entidad" rules={[{ required: true, message: 'Agrega la entidad' }]}>
             <Input />
           </Form.Item>
           <Form.Item
             name="approved_from_date"
             label="Fecha de aprobación"
-            rules={[{ required: true, message: 'Cuándo!' }]}
+            rules={[{ required: true, message: 'Agrega la fecha' }]}
             initialValue={dayjs(Date.now())}
           >
             <DatePicker />
@@ -317,7 +319,7 @@ function OrgRegisteredUsers(props) {
           <Form.Item
             name="approved_until_date"
             label="Fecha de vencimiento"
-            rules={[{ required: true, message: 'Cuándo!' }]}
+            rules={[{ required: true, message: 'Agrega la fecha' }]}
             initialValue={dayjs(Date.now())}
           >
             <DatePicker />
