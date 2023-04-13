@@ -11,7 +11,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import 'moment/dist/locale/es';
 import { getCorrectColor } from '@/helpers/utils';
-import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { CloseOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import MeetingInfo from '../components/MeetingInfo';
 import useGroupByCalendar from '../hooks/useGroupByCalendar';
 import useGetMeetingToCalendar from '../hooks/useGetMeetingToCalendar';
@@ -121,26 +121,32 @@ export default function MyCalendar() {
       <Row justify='center' wrap gutter={8}>
         <Col span={23}>
           <Drawer
-            title={meenting.name}
+            title={<></>}
             placement='right'
-            onClose={onClose}
             visible={open}
-            size='large'
+            width={500}
+            closable={false}
+            headerStyle={{border: 'none'}}
             extra={
-              <Row gutter={[16, 16]}>
-                <Col span={12}>
+              <Row gutter={[16, 16]} justify='end'>
+                <Col>
                   <Tooltip placement='topLeft' title='Editar'>
-                    <Button icon={<EditOutlined />} onClick={() => onEdit()} />
+                    <Button icon={<EditOutlined />} onClick={() => onEdit()} type='text'/>
                   </Tooltip>
                 </Col>
-                <Col span={12}>
+                <Col>
                   <Tooltip placement='topLeft' title='Eliminar'>
-                    <Button icon={<DeleteOutlined />} onClick={() => onDelete()} danger type='primary' />
+                    <Button icon={<DeleteOutlined />} onClick={() => onDelete()} danger type='text' />
+                  </Tooltip>
+                </Col>
+                <Col>
+                  <Tooltip placement='topLeft' title='Cerrar'>
+                    <Button icon={<CloseOutlined />} onClick={onClose} type='text' />
                   </Tooltip>
                 </Col>
               </Row>
             }>
-            <MeetingInfo meenting={meetings.find((item) => item.id === meenting.id) || meenting} />
+            <MeetingInfo meenting={meetings.find((item) => item.id === meenting.id) || meenting}/>
           </Drawer>
           <Card hoverable loading={loading}>
             <Row justify='end' style={{ marginBottom: 10 }}>
