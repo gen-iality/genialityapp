@@ -110,14 +110,22 @@ function CurrentOrganizationPositionCertificationUserPage(
       {
         title: 'Certificación de',
         render: (event: any) => {
+          return <span>{event.name}</span>
+        },
+      },
+      {
+        title: 'Certificación',
+        align: 'center',
+        width: 100,
+        render: (event: any) => {
           if (event.certification?.file_url) {
             return (
               <a href={event.certification.file_url} target="_blank">
-                {event.name}
+                Ver certificado
               </a>
             )
           }
-          return <span>{event.name}</span>
+          else return <em>Sin certificado</em>;
         },
       },
       {
@@ -139,7 +147,7 @@ function CurrentOrganizationPositionCertificationUserPage(
           </>
         ),
       },
-      {
+      /* {
         title: 'Estado de aprobación',
         align: 'center',
         width: 100,
@@ -149,7 +157,7 @@ function CurrentOrganizationPositionCertificationUserPage(
             {certification?.success ? 'Aprobado' : 'No aprobado'}
           </Tag>
         ),
-      },
+      }, */
       {
         title: 'Fecha de emisión',
         align: 'center',
@@ -159,7 +167,7 @@ function CurrentOrganizationPositionCertificationUserPage(
           <>
             {certification?.approved_from_date
               ? dayjs(certification?.approved_from_date).format('DD/MM/YYYY')
-              : 'sin fecha'}
+              : <em>Sin fecha</em>}
           </>
         ),
       },
@@ -172,7 +180,7 @@ function CurrentOrganizationPositionCertificationUserPage(
           <>
             {certification?.approved_until_date
               ? dayjs(certification?.approved_until_date).format('DD/MM/YYYY')
-              : 'sin fecha'}
+              : <em>Sin fecha</em>}
           </>
         ),
       },
