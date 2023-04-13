@@ -1,5 +1,5 @@
-import { CalendarOutlined, CheckCircleOutlined, ClockCircleOutlined, LoadingOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { Card, Col, Row, Space, Typography, List, Divider, Checkbox, Badge, Avatar, Button } from 'antd';
+import { CalendarOutlined, CheckCircleOutlined, ClockCircleOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { Col, Row, Space, Typography, List, Divider, Checkbox, Badge, Avatar, Button } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { IParticipants, IMeentingItem } from '../interfaces/Meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
@@ -7,7 +7,7 @@ import { useContext } from 'react';
 import { NetworkingContext } from '../context/NetworkingContext';
 import useDateFormat from '../hooks/useDateFormat';
 import useMeetingState from '../hooks/useMeetingState';
-import GoogleMapsIcon from '@2fd/ant-design-icons/lib/GoogleMaps';
+import MapMarkerRadiusOutlineIcon from '@2fd/ant-design-icons/lib/MapMarkerRadiusOutline';
 
 export default function MeetingInfo({ meenting }: IMeentingItem) {
   const [participants, setParticipants] = useState<IParticipants[]>(meenting.participants);
@@ -42,7 +42,7 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
               <Countdown
                   valueStyle={{fontSize: '11px', color: 'rgba(0, 0, 0, 0.45)'}}
                   value={dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')}
-                  format='D [días] H [horas] m [minutos] s [segundos]'
+                  format='D [días] H [horas] m [minutos] '
                 />
             </Space> : stateMeeting === 'in-progress' ?
             <Space direction='vertical' align='center'>
@@ -66,11 +66,11 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
                   <Button icon={<CalendarOutlined /> } type='text'/>
                   
                   <Typography.Text type='secondary'>
-                    {dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')} - {dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A')}
+                    {dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')} - {stateMeeting === 'scheduled' && <br/>} {dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A')}
                   </Typography.Text>
                 </Space>
                 <Space align='center'>
-                  <Button icon={<GoogleMapsIcon style={{fontSize: 18}}/>} type='text'/>
+                  <Button icon={<MapMarkerRadiusOutlineIcon style={{fontSize: 18}}/>} type='text'/>
                   
                   <Typography.Text type='secondary' style={{ textTransform: 'uppercase'}}>
                     {meenting.place}
@@ -92,10 +92,10 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
             pagination={participants.length > 5 && { pageSize: 5 }}
             renderItem={(participant) => (
               <List.Item
-                key={participant.email}
+                key={participant?.email}
                 extra={
                   <Checkbox
-                    checked={participant.confirmed}
+                    checked={participant?.confirmed}
                     onChange={(check) => {
                       handleChange(participant, check.target.checked);
                     }}
@@ -103,7 +103,12 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
                   />
                 }>
                 <List.Item.Meta
-                  avatar={<Avatar icon={<UserOutlined />} /* src={participant?.image} */ style={{marginTop: 7}} />}
+                  avatar={
+                    participant?.picture ? 
+                      <Avatar key={'img' + participant?.id} src={participant?.picture} style={{marginTop:7}} /> : 
+                      <Avatar icon={<UserOutlined />} style={{marginTop:7}}/>
+                    
+                  }
                   title={<Typography.Text>{participant?.name}</Typography.Text>}
                   description={participant?.email}
                 />
