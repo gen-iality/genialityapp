@@ -13,6 +13,7 @@ export interface IMeeting {
     id :string;
     name  : string;
     start  : string
+    startTimestap?: firebase.default.firestore.Timestamp
     end    : string;
     place : string;
     type : ITypeMeenting | undefined

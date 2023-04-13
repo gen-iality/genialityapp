@@ -38,7 +38,7 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
     .collection(`networkingByEventId`)
     .doc(eventId)
     .collection('meetings')
-    .orderBy('start','asc')
+    .orderBy('startTimestap','asc')
     .onSnapshot((snapshot) => {
       if (!snapshot.empty) {
         const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as {};
@@ -48,17 +48,16 @@ export const listenMeetings = (eventId: string, setMeetings: any) => {
       }
     });
 };
-//todo: mejorar el filtro de reuniones with user
 export const listenMeetingsByUserLanding = (eventId: string, userID: string, setMeetingWithUser: (meetingList: IMeeting[]) => void) => {
 	return firestore
 		.collection(`networkingByEventId`)
 		.doc(eventId)
 		.collection('meetings')
+		.where('participantsIds','array-contains', userID)
 		.onSnapshot(snapshot => {
 			if (!snapshot.empty) {
 				const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeeting[];
-				const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => participant.id === userID) !== undefined &&
-					meeting.participants.length <= 2);
+				const meetingsWithUserID = data.filter(meeting => meeting.participants.find(participant => meeting.participants.length <= 2))
 				setMeetingWithUser(meetingsWithUserID)
 			} else {
 				setMeetingWithUser([])

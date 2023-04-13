@@ -1,24 +1,31 @@
-import { Button, Card, Col, notification, Row, Spin, Tabs } from 'antd';
+import { Button, Card, Col, notification, Row, Spin } from 'antd';
 import { withRouter } from 'react-router-dom';
-import moment from 'moment';
-import { find, map, mergeRight, path, propEq } from 'ramda';
-import { isNonEmptyArray } from 'ramda-adjunct';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
-import { getDatesRange } from '../../helpers/utils';
-import { getAcceptedAgendasFromEventUser } from './services';
-import { createChatRoom } from './agendaHook';
 import { isStagingOrProduccion } from '@/Utilities/isStagingOrProduccion';
 import useGetMeetingConfirmed from './hooks/useGetMeetingConfirmed';
 import TabComponent from './components/my-agenda/TabComponent';
-
+import { JitsiMeeting } from '@jitsi/react-sdk';
+import {INITIAL_MEET_CONFIG} from './utils/utils' 
+import { LeftOutlined } from '@ant-design/icons';
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const { listDays, haveMeetings, loading } = useGetMeetingConfirmed();
+
+  const defineName = () => {
+    let userName = 'Anonimo' + new Date().getTime();
+    let userEmail = `${userName}@gmail.com`
+    if(eventUser && eventUser.properties && eventUser.properties.names ) userName = eventUser.properties.names
+    if(eventUser && eventUser.properties && eventUser.properties.email ) userEmail = eventUser.properties.email
+    
+    return {
+      userName,
+      userEmail
+    }
+  }
   useEffect(() => {
     if (!event || !event._id) return;
-
     firestore
       .collection('events')
       .doc(event._id)
@@ -37,9 +44,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   }
 
   if (currentRoom) {
-    let userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
-    //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=8816111496
-    //
+    const {userEmail, userName} = defineName()
+
 
     return (
       <Row align='middle'>
@@ -47,31 +53,33 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
           <Button
             className='button_regresar'
             type='primary'
+            danger
+            icon={<LeftOutlined />}
             onClick={() => {
               setCurrentRoom(null);
             }}>
             Regresar al listado de citas
           </Button>
           <Row gutter={[12, 12]}>
-            <Col xs={24} sm={24} md={16} xl={16} xxl={16}>
+            <Col xs={24} sm={24} md={12} lg={24} xl={16} xxl={16}>
               <div className='aspect-ratio-box' style={{ width: '100%' }}>
                 <div className='aspect-ratio-box-inside'>
-                  <iframe
-                    style={{ border: '2px solid blue' }}
-                    src={
-                      'https://video-app-0463-9499-dev.twil.io?UserName=' +
-                      userName +
-                      '&URLRoomName=' +
-                      currentRoom +
-                      '&passcode=52125404639499'
-                    }
-                    allow='autoplay;fullscreen; camera *;microphone *'
-                    allowusermedia
-                    allowFullScreen
-                    title='video'
-                    className='iframe-zoom nuevo'>
-                    <p>Your browser does not support iframes.</p>
-                  </iframe>
+                  <JitsiMeeting
+                    domain='meet.evius.co'
+                    roomName={currentRoom}
+                    configOverwrite={INITIAL_MEET_CONFIG.config} 
+                    userInfo={{
+                      displayName : userName,
+                      email : userEmail
+                    }}
+                    getIFrameRef={(wrapperRef) => {
+                      wrapperRef.style.height = '100%';
+                      wrapperRef.lang = 'es';
+                    }}
+                    onApiReady={(externalApi) => {
+                      console.log(externalApi);
+                    }}
+                  />
                 </div>
               </div>
             </Col>

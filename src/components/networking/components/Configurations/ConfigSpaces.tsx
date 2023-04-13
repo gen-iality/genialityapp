@@ -29,10 +29,11 @@ const ConfigSpaces = () => {
           onCancel={closeModal}
           okText={'Guardar'}>
           <>
-            <Form onFinish={onCreateSpaces}>
+            <Form onFinish={onCreateSpaces} layout='vertical'>
               <Form.Item
                 name={'nameSpace'}
-                rules={[{ required: true, message: 'Debe diligenciar el nombre del espacio' }]}
+                label={'Nombre'}
+                rules={[{ required: true, message: 'Debe diligenciar el nombre del espacio' },{max: 20, message: 'El nombre tiene un máximo de 20 caracteres'}]}
                 initialValue={''}>
                 <Input name={'Nombre del espacio'} type='text' placeholder={'Ej: Salón principal'} />
               </Form.Item>
