@@ -8,9 +8,11 @@ import TabComponent from './components/my-agenda/TabComponent';
 import { JitsiMeeting } from '@jitsi/react-sdk';
 import {INITIAL_MEET_CONFIG} from './utils/utils' 
 import { LeftOutlined } from '@ant-design/icons';
+import { getConfigMeet } from './services/configuration.service';
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
+  const [meetConfig, setMeetConfig] = useState(INITIAL_MEET_CONFIG);
   const { listDays, haveMeetings, loading } = useGetMeetingConfirmed();
 
   const defineName = () => {
@@ -24,8 +26,15 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       userEmail
     }
   }
+  const loadConfigMeet = async () => {
+    const data = await getConfigMeet(event._id);
+    console.log('configuracion',data)
+    if (data?.ConfigMeet) setMeetConfig(data.ConfigMeet);
+    };
+
   useEffect(() => {
     if (!event || !event._id) return;
+    loadConfigMeet()
     firestore
       .collection('events')
       .doc(event._id)
@@ -67,7 +76,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                   <JitsiMeeting
                     domain='meet.evius.co'
                     roomName={currentRoom}
-                    configOverwrite={INITIAL_MEET_CONFIG.config} 
+                    configOverwrite={meetConfig.config} 
                     userInfo={{
                       displayName : userName,
                       email : userEmail

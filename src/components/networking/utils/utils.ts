@@ -1,6 +1,6 @@
 import { ColumnsType } from "antd/lib/table";
 import { IMeeting, IParticipants, TransferType } from '../interfaces/Meetings.interfaces';
-import { MeetConfig } from "@/components/agenda/activityType/components/manager/ShareMeetLinkCard";
+import { MeetConfig } from "../interfaces/Index.interfaces";
 
 
 export const filterOption = (inputValue: string, option: TransferType) => {

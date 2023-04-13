@@ -1,12 +1,13 @@
-import { Button, Card, Col, Form, List, Modal, Row, Tabs, Grid, Popconfirm } from 'antd';
-import { useEffect, useState } from 'react';
-import { firestore } from '@/helpers/firebase';
+import { Button, Card, Col, Form, List, Row, Tabs, Grid, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { UseEventContext } from '@/context/eventContext';
 import Toolbar from '../../../agenda/activityType/components/manager/eviusMeet/Toolbar';
 import { generalItems } from '../../../agenda/activityType/components/manager/eviusMeet/generalItems';
-import { MeetConfig } from '../../interfaces/Index.interfaces';
+import { MeetConfig, networkingGlobalConfig } from '../../interfaces/Index.interfaces';
 import { INITIAL_MEET_CONFIG } from '../../utils/utils';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { SaveOutlined } from '@ant-design/icons';
+import { getConfigMeet, updateOrCreateConfigMeet } from '../../services/configuration.service';
+import { DispatchMessageService } from '@/context/MessageService';
 
 const { useBreakpoint } = Grid;
 
@@ -21,49 +22,49 @@ export interface ShareMeetLinkCardProps {
 
 export default function ConfigMeet() {
   const eventContext = UseEventContext();
-  const activityId = '1';
   const eventId = eventContext?.idEvent;
   const [meetConfig, setMeetConfig] = useState<MeetConfig>(INITIAL_MEET_CONFIG);
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   const screens = useBreakpoint();
 
-  const updateMeeting = async (eventId: string, activityId: string, status: boolean) => {
-    /* 		try {
-			console.log(`events/${eventId}/activities/${activityId}`);
-			const newMeetConfig = status ? { ...meetConfig, openMeet: status } : INITIAL_MEET_CONFIG;
+  useEffect(() => {
+    loadConfigMeet();
+	// eslint-disable-next-line
+  }, []);
 
-			setLoading(true);
-			await firestore
-				.collection('events')
-				.doc(eventId)
-				.collection('activities')
-				.doc(activityId)
-				.update({ meetConfig: newMeetConfig });
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setLoading(false);
-		} */
+  const loadConfigMeet = async () => {
+	const data = await getConfigMeet<networkingGlobalConfig>(eventId);
+	if (data?.ConfigMeet) setMeetConfig(data.ConfigMeet);
   };
 
-  const handleOpenModal = () => setOpen(true);
-
-  const handleCloseModal = () => setOpen(false);
-
-  const handleOpenMeeting = async () => {
-    /* 		await updateMeeting(eventId, activityId, true);
-		handleCloseModal(); */
-  };
-
-  const handleCloseMeeting = async () => {
-    /* 	await updateMeeting(eventId, activityId, false); */
+  const uptadeConfig = async () => {
+    setLoading(true);
+    const response = await updateOrCreateConfigMeet(eventId, meetConfig);
+    DispatchMessageService({
+      action: 'show',
+      duration: 1,
+      key: 'config',
+      msj: response ? 'Configuracion guardada' : 'No se logro guardar la configuracion',
+      type: response ? 'success' : 'error',
+    });
+    setLoading(false);
   };
 
   return (
     <>
+      <Row justify='end'>
+       <Tooltip placement='top' title='Guardar Configuracion'>
+       <Button
+          type='primary'
+          loading={loading}
+          icon={<SaveOutlined />}
+          style={{ position: 'fixed', zIndex: 1 }}
+          onClick={uptadeConfig}
+        />
+       </Tooltip>
+      </Row>
       <Row>
-        <Col xs={24} >
+        <Col xs={24}>
           <Tabs>
             <Tabs.TabPane
               className={!screens.xs ? 'desplazar' : ''}

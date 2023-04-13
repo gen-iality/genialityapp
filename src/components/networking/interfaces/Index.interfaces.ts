@@ -24,6 +24,11 @@ export interface MeetConfig {
 		toolbarButtons: string[];
 	};
 }
+
+export interface networkingGlobalConfig {
+	ConfigMeet : MeetConfig
+	GlobalConfig : any
+}
 export interface IEventUser {
 	_id:                      string;
 	state_id:                 string;
