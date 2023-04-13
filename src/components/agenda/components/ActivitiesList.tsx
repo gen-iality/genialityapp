@@ -33,6 +33,7 @@ type TruncatedAgenda = {
   QuizProgressComponent?: FunctionComponent<{ userId: string; isAnswersDeleted: boolean }>;
   DeleteSurveyAnswersButton?: FunctionComponent<{ userId: string; onAnswersDeleted: (x: boolean) => void }>;
   RibbonComponent: FunctionComponent<{ children: any }>;
+  short_description: any;
 };
 
 interface ActivitiesListProps {
@@ -98,6 +99,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             link: `/landing/${eventId}/activity/${agenda._id}`,
             host_picture: agenda.hosts[0]?.image,
             name_host: agenda.hosts[0]?.name,
+            short_description: agenda.short_description,
             ViewedStatusComponent: () => {
               const [isTaken, setIsTaken] = useState(false);
               useEffect(() => {
@@ -334,6 +336,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   </div>
                 </Link>
                 <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
+                <span style={{ fontSize: '1.2rem'}}>{item.short_description}</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <span style={{ marginRight: '.5em' }}>

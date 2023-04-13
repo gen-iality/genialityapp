@@ -23,6 +23,8 @@ import { hourWithAdditionalMinutes } from '../hooks/useHourWithAdditionalMinutes
 import Speaker from '@components/speakers/speaker'
 import { Link, useHistory } from 'react-router-dom'
 
+const {TextArea} = Input;
+
 export interface FormValues {
   name: string,
   module_id: string,
@@ -161,6 +163,12 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
           rules={[{ required: true, message: 'Nombre de la lección requerida' }]}
         >
           <Input autoFocus ref={ref} placeholder="Nombre de la lección" />
+        </Form.Item>
+        <Form.Item
+          label="Descripción corta (Opcional)"
+          name="short_description"
+        >
+          <TextArea autoFocus placeholder="Descripción corta" />
         </Form.Item>
         <Form.Item
           label="Módulo (opcional)"
