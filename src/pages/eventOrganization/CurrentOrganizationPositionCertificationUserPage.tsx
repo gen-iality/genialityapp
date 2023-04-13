@@ -306,6 +306,9 @@ function CurrentOrganizationPositionCertificationUserPage(
               options={allEvents.map((event) => ({ label: event.name, value: event._id }))}
             />
           </Form.Item>
+          {/* <Form.Item name="success" label="Exitoso" valuePropName="checked">
+            <Switch />
+          </Form.Item> */}
           <Form.Item name="description" label="Descripción" rules={[{ required: true, message: 'Agrega la descripción' }]}>
             <TextArea rows={4} />
           </Form.Item>
