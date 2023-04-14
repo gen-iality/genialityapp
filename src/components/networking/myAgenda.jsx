@@ -8,7 +8,7 @@ import TabComponent from './components/my-agenda/TabComponent';
 import { JitsiMeeting } from '@jitsi/react-sdk';
 import {INITIAL_MEET_CONFIG} from './utils/utils' 
 import { LeftOutlined } from '@ant-design/icons';
-import { getConfigMeet } from './services/configuration.service';
+import { getConfig } from './services/configuration.service';
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
@@ -27,7 +27,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
     }
   }
   const loadConfigMeet = async () => {
-    const data = await getConfigMeet(event._id);
+    const data = await getConfig(event._id);
     console.log('configuracion',data)
     if (data?.ConfigMeet) setMeetConfig(data.ConfigMeet);
     };

@@ -1,3 +1,5 @@
+import { TimeParameter } from "./space-requesting.interface";
+
 export interface PropsNetworking {
 	eventId: string;
 }
@@ -26,8 +28,8 @@ export interface MeetConfig {
 }
 
 export interface networkingGlobalConfig {
-	ConfigMeet : MeetConfig
-	GlobalConfig : any
+	ConfigMeet?: MeetConfig
+	ConfigTime?: TimeParameter
 }
 export interface IEventUser {
 	_id:                      string;
@@ -81,4 +83,8 @@ export interface Rol {
 	created_at: string;
 	type:       string;
 	module:     string;
+}
+
+export interface EventProps {
+	event : any
 }
