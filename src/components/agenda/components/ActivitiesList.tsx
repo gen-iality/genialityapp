@@ -337,7 +337,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   </div>
                 </Link>
                 <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
-                {console.log('item.short_description', item.short_description)}
                 {item.short_description !== '<p><br></p>' &&  (
                   <ReactQuill
                     style={{color: '#777'}}
