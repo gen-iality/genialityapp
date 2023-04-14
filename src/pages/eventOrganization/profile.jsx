@@ -1,4 +1,6 @@
-/*global google*/
+/**
+ * NOTE: this module will be renamed to OrganizationInformation soom
+ */
 import { useState, useEffect } from 'react';
 import { OrganizationApi, TypesApi } from '@helpers/request';
 import { Form, Input, Row, Col, Select, Tabs } from 'antd';
@@ -10,11 +12,9 @@ const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 };
-const { Option } = Select;
-const { TextArea } = Input;
+
 
 function OrganizationInformation(props) {
-  console.log('props', props);
   const { name, description, _id: organizationId, type_event, visibility, allow_register, enable_notification_providers=[] } = props.org;
   const [typeEvents, setTypeEvents] = useState([]);
   const [typeOrgPermit, setTypeOrgPermit] = useState(0);
@@ -52,17 +52,16 @@ function OrganizationInformation(props) {
   };
 
   async function updateOrganization(values) {
-    const { name, description, type_event, enable_notification_providers } = values.organization;
-    const body = {
-      name,
-      description,
-      enable_notification_providers,
-      type_event: type_event,
+    const { organization } = values;
+
+    const organizationData = {
+      ...organization,
       visibility: visibilityState,
       allow_register: allowRegister,
     };
+
     try {
-      await OrganizationApi.editOne(body, organizationId);
+      await OrganizationApi.editOne(organizationData, organizationId);
       DispatchMessageService({
         type: 'success',
         msj: 'Información actualizada correctamente',
@@ -77,15 +76,9 @@ function OrganizationInformation(props) {
     }
   }
 
-  async function obtenerTypeEvents() {
-    const resp = await TypesApi.getAll();
-    if (resp) {
-      setTypeEvents(resp);
-    }
-  }
-
   useEffect(() => {
-    obtenerTypeEvents();
+    // Get all the types
+    TypesApi.getAll().then((data) => setTypeEvents(data));
   }, []);
 
   return (
@@ -108,13 +101,13 @@ function OrganizationInformation(props) {
                   initialValue={type_event || 'Corporativo'}
                   name={['organization', 'type_event']}
                 >
-                  <Select onChange={null}>
-                    {typeEvents.map((type, index) => (
-                      <Option key={index} value={type.label}>
-                        {type.label}
-                      </Option>
-                    ))}
-                  </Select>
+                  <Select
+                    onChange={null}
+                    options={typeEvents.map((type) => ({
+                      value: type.label,
+                      label: type.label,
+                    }))}
+                  />
                 </Form.Item>
                 {/* Set the notification systems */}
                 <Form.Item
