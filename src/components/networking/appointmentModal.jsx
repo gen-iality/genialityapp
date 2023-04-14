@@ -119,6 +119,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                 targetEventUserId={targetEventUserId}
                 targetUserName={targetEventUser?.user?.names}
                 onSubmit={onSubmit}
+                creatorEventUserId={cEventUser.value._id}
               />
             )}
           </Row>

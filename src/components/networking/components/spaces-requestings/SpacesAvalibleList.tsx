@@ -11,21 +11,30 @@ interface ListSpacesAvalibleProps {
   targetUserName: string;
   targetEventUserId: string;
   onSubmit: (startDate: firebase.firestore.Timestamp, endDate: firebase.firestore.Timestamp) => Promise<void>;
+  creatorEventUserId: string;
 }
 
-const SpacesAvalibleList = ({ date, targetUserName, targetEventUserId, onSubmit }: ListSpacesAvalibleProps) => {
+const SpacesAvalibleList = ({
+  date,
+  targetUserName,
+  targetEventUserId,
+  onSubmit,
+  creatorEventUserId,
+}: ListSpacesAvalibleProps) => {
   const { spacesMeetingsToTargedUser, spacesMeetingsToTargedUserLoading } = useGetSpacesMeetingsByUser(
     date,
-    targetEventUserId
+    targetEventUserId,
+    creatorEventUserId
   );
   const getAccionButton = (status: StatusSpace) => {
     if (status === 'avalible') return 'Agendar';
     if (status === 'not_available') return 'No disponible';
     if (status === 'requested') return 'Solicitado';
+    if (status === 'rejected') return 'Rechazado';
   };
 
   const getDisabledAccionButton = (status: StatusSpace) => {
-    if (status === 'not_available' || status === 'requested') return true;
+    if (status === 'not_available' || status === 'requested' || status === 'rejected') return true;
     return false;
   };
 

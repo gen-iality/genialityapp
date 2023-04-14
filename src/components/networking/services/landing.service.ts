@@ -1,6 +1,6 @@
 import { firestore } from '@/helpers/firebase';
 import { IRequestMeenting } from '../interfaces/Landing.interfaces';
-import { SpaceMeeting, SpaceMeetingFirebase } from '../interfaces/space-requesting.interface';
+import { IMeetingRequestFirebase, SpaceMeeting, SpaceMeetingFirebase } from '../interfaces/space-requesting.interface';
 import firebase from 'firebase/compat';
 
 export const getMeetingRequest = async (
@@ -54,6 +54,21 @@ export const listeningSpacesAgendedMeetings = (eventId: string, userID: string, 
       }
     });
 }
+export const listeningMeetingRequestByBothParticipants = (eventId: string, user_to_id: string, user_creator_id: string, date: string, onSet: (data: IMeetingRequestFirebase[]) => void) => {
+  console.log('eventId',eventId)
+  return firestore
+    .collection(`networkingByEventId`)
+    .doc(eventId)
+    .collection('meeting_request')
+    .onSnapshot(snapshot => {
+      if (!snapshot.empty) {
+        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeetingRequestFirebase[];
+        onSet(data)
+      } else {
+        onSet([])
+      }
+    });
+}
 
 export const createSpacesAgendedMeetings = async (eventId: string, dateStart: string, dateEnd: string, userId: string) => {
   try {
@@ -63,7 +78,6 @@ export const createSpacesAgendedMeetings = async (eventId: string, dateStart: st
       dateStart: firebase.firestore.Timestamp.fromDate(new Date(dateStart)),
       status: 'not_available'
     }
-    console.log('newSpaceAgended',newSpaceAgended)
     await firestore
       .collection(`networkingByEventId`)
       .doc(eventId)

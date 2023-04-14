@@ -5,7 +5,7 @@ import { getConfig } from '../services/configuration.service'
 import { networkingGlobalConfig } from '../interfaces/Index.interfaces'
 
 
-const useGetTimeParameter = (EventId : string) => {
+const useGetTimeParameter = (EventId: string) => {
     const [timeParametres, setTimeParametres] = useState<TimeParameter>({
         meetingDuration: 20,
         hourStartSpaces: moment('00:00 am', 'h:mm a'),
@@ -13,14 +13,15 @@ const useGetTimeParameter = (EventId : string) => {
     })
     const [timeParametreLoading, setTimeParametreLoading] = useState(true)
 
-    const loadConfig = async() => {
+    const loadConfig = async () => {
         const config = await getConfig<networkingGlobalConfig>(EventId)
-        if(config?.ConfigTime){
-            const {hourFinishSpaces,hourStartSpaces,meetingDuration} = config.ConfigTime
+        if (config?.ConfigTime) {
+            const { hourFinishSpaces, hourStartSpaces, meetingDuration } = config.ConfigTime
+            
             setTimeParametres({
                 meetingDuration: meetingDuration,
-                hourStartSpaces: moment(hourStartSpaces, 'h:mm a'),
-                hourFinishSpaces: moment(hourFinishSpaces, 'h:mm a'),
+                hourStartSpaces: moment(moment(hourStartSpaces, 'YYYY-MM-DD HH:mm:ss').format('hh:mm a'),'hh:mm a'),
+                hourFinishSpaces: moment(moment(hourFinishSpaces, 'YYYY-MM-DD HH:mm:ss').format('hh:mm a'),'hh:mm a'),
             })
         } else {
             setTimeParametres({

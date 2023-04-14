@@ -225,18 +225,17 @@ export const createMeetingRequest = ({
           },
           meeting,
           date:startDate.toDate().toString(),
+          dateStartTimestamp:startDate,
           message,
           status:RequestMeetingState.pending,
           timestamp : timestamp
         }
 
-        console.log('requestMeenting',requestMeenting)
         const newAgendaResult = await firestore
         .collection('networkingByEventId')
         .doc(eventId)
         .collection('meeting_request')
         .add(requestMeenting);
-        console.log('Se creo correctamente')
         // enviamos notificaciones por correo
         let data = {
           id_user_requested: requestMeenting.user_to.id,

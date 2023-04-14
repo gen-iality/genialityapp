@@ -36,7 +36,6 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
     if (response) {
       await services.updateRequestMeeting(eventId, data.id, { ...data, status: RequestMeetingState.confirmed });
       const resSpaceAgended = await services.createSpacesAgendedMeetings(eventId,data.meeting.start, data.meeting.end, data.user_to.id)
-      console.log('resSpaceAgended',resSpaceAgended)
       notificationUser();
       setClassName('animate__animated animate__backOutRight animate__slow');
       notification.success({
