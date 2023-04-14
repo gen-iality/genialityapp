@@ -1,4 +1,5 @@
 import { Moment } from "moment";
+import firebase from 'firebase/compat';
 
 export interface TimeParameter {
     meetingDuration: number;
@@ -6,11 +7,11 @@ export interface TimeParameter {
     hourFinishSpaces: Moment
 }
 
-export type StatusSpace = 'avalible' | 'no-avalible'
+export type StatusSpace = 'avalible' | 'requested' | 'not_available'
 
 export interface SpaceMeeting {
-    date: string;
-    hourStart: string,
+    dateStart: firebase.firestore.Timestamp,
+    dateEnd: firebase.firestore.Timestamp
     status: StatusSpace
     userId: string
 }

@@ -2,43 +2,40 @@ import { useEffect, useState } from 'react'
 import { Moment } from 'moment';
 import useGetTimeParameter from './useGetTimeParametre';
 import { generateSpaceMeetings } from '../utils/space-requesting.utils';
-import { SpaceMeetingFirebase } from '../interfaces/space-requesting.interface';
-import { createSpacesRequestMeetingsWithList, listeningSpacesRequestMeetings } from '../services/landing.service';
-import { UseUserEvent } from '@/context/eventUserContext';
+import { SpaceMeeting, SpaceMeetingFirebase } from '../interfaces/space-requesting.interface';
 import { UseEventContext } from '@/context/eventContext';
+import { listeningSpacesAgendedMeetings } from '../services/landing.service';
 
 
 
-const useGetSpacesMeetingsByUser = (date: Moment) => {
-    const [spacesMeetings, setSpacesMeetings] = useState<SpaceMeetingFirebase[] | 'initial'>('initial')
-    const [spaceMeetingLoading, setSpaceMeetingLoading] = useState(true)
-    const { timeParametres, timeParametreLoading } = useGetTimeParameter()
-    const userEventContext = UseUserEvent();
+const useGetSpacesMeetingsByUser = (date: Moment, targetEventUserId: string) => {
+    const [spacesMeetingsAgended, setSpacesMeetingsAgended] = useState<SpaceMeetingFirebase[]>([])
+    const [spacesMeetingsToTargedUser, setSpacesMeetingsToTargedUser] = useState<SpaceMeeting[]>([])
+    const [spacesMeetingsToTargedUserLoading, setspacesMeetingsToTargedUserLoading] = useState(true)
     const eventContext = UseEventContext();
+    const { timeParametres, timeParametreLoading } = useGetTimeParameter(eventContext.value._id)
 
-
-    const onSet = (spacesMeetingsFirebase: SpaceMeetingFirebase[]) => {
-        setSpaceMeetingLoading(false);
-        setSpacesMeetings(spacesMeetingsFirebase)
+    const onSet = (data: SpaceMeetingFirebase[]) => {
+        setspacesMeetingsToTargedUserLoading(false);
+        setSpacesMeetingsAgended(data)
     }
     useEffect(() => {
-        const unSubscribeListeningSpacesRequestMeetings = listeningSpacesRequestMeetings(eventContext.value._id, userEventContext.value._id, date.format('YYYY-MM-DD'), onSet)
+        const unSubscribelisteningSpacesAgendedMeetings = listeningSpacesAgendedMeetings(eventContext.value._id, targetEventUserId, date.format('YYYY-MM-DD'), onSet)
         return () => {
-            unSubscribeListeningSpacesRequestMeetings()
+            unSubscribelisteningSpacesAgendedMeetings()
         }
-    }, [timeParametres, date])
-
+    }, [date, eventContext.value._id, targetEventUserId])
 
     useEffect(() => {
-        if (spacesMeetings !== 'initial' && spacesMeetings.length === 0 && !timeParametreLoading) {
-            const spaceRequestMeetings = generateSpaceMeetings(timeParametres, date, userEventContext.value._id)
-            createSpacesRequestMeetingsWithList(eventContext.value._id, spaceRequestMeetings)
+        if (!timeParametreLoading) {
+            const spaceRequestMeetings = generateSpaceMeetings(timeParametres, date, targetEventUserId, spacesMeetingsAgended)
+            setSpacesMeetingsToTargedUser(spaceRequestMeetings)
         }
-    }, [spacesMeetings, timeParametreLoading])
+    }, [date, targetEventUserId, timeParametreLoading, spacesMeetingsAgended, timeParametres])
 
     return {
-        spacesMeetings,
-        spaceMeetingLoading
+        spacesMeetingsToTargedUser,
+        spacesMeetingsToTargedUserLoading
     }
 }
 
