@@ -79,13 +79,12 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
     }
   }, [ref.current, isFocused])
 
+  /**
+   * Wait for the agenda, after will set this value in the form.
+   * This can take some time while loading the data. In the form you will set
+   * the default values and after the date will be update :)
+   */
   useEffect(() => {
-    if (!props.event?._id) return
-
-    console.log('agenda:', props.agenda)
-
-    const eventId = props.event._id
-
     if (props.agenda) {
       // Parse the date to get start and end hours
       const date = dayjs(props.agenda.datetime_end).format('YYYY-MM-DD')
@@ -95,6 +94,14 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
         date, hour_end, hour_start,
       })      
     }
+  }, [props.agenda])
+
+  useEffect(() => {
+    if (!props.event?._id) return
+
+    console.log('agenda:', props.agenda)
+
+    const eventId = props.event._id
 
     // If dates exist, then iterate the specific dates array, formating specially.
     if (props.event.dates && props.event.dates.length > 0) {
