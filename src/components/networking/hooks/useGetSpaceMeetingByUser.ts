@@ -12,8 +12,8 @@ const useGetSpacesMeetingsByUser = (date: Moment, targetEventUserId: string) => 
     const [spacesMeetingsAgended, setSpacesMeetingsAgended] = useState<SpaceMeetingFirebase[]>([])
     const [spacesMeetingsToTargedUser, setSpacesMeetingsToTargedUser] = useState<SpaceMeeting[]>([])
     const [spacesMeetingsToTargedUserLoading, setspacesMeetingsToTargedUserLoading] = useState(true)
-    const { timeParametres, timeParametreLoading } = useGetTimeParameter()
     const eventContext = UseEventContext();
+    const { timeParametres, timeParametreLoading } = useGetTimeParameter(eventContext.value._id)
 
     const onSet = (data: SpaceMeetingFirebase[]) => {
         setspacesMeetingsToTargedUserLoading(false);

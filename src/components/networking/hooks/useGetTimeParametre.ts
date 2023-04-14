@@ -30,6 +30,10 @@ const useGetTimeParameter = (EventId : string) => {
             })
         }
         setTimeParametreLoading(false)
+    }
+
+    useEffect(() => {
+        loadConfig()
     }, [])
 
     return {
