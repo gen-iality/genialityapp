@@ -46,8 +46,6 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [form] = Form.useForm();
-
   const organizationId: string = props.org._id;
   const positionId = props.match.params.positionId;
   const userId = props.match.params.userId;
