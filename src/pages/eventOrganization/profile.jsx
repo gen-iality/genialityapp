@@ -15,7 +15,7 @@ const { TextArea } = Input;
 
 function OrganizationInformation(props) {
   console.log('props', props);
-  const { name, description, _id: organizationId, type_event, visibility, allow_register } = props.org;
+  const { name, description, _id: organizationId, type_event, visibility, allow_register, enable_notification_providers=[] } = props.org;
   const [typeEvents, setTypeEvents] = useState([]);
   const [typeOrgPermit, setTypeOrgPermit] = useState(0);
   const [visibilityState, setVisibilityState] = useState(visibility);
@@ -52,10 +52,11 @@ function OrganizationInformation(props) {
   };
 
   async function updateOrganization(values) {
-    const { name, description, type_event } = values.organization;
+    const { name, description, type_event, enable_notification_providers } = values.organization;
     const body = {
       name,
       description,
+      enable_notification_providers,
       type_event: type_event,
       visibility: visibilityState,
       allow_register: allowRegister,
@@ -114,6 +115,23 @@ function OrganizationInformation(props) {
                       </Option>
                     ))}
                   </Select>
+                </Form.Item>
+                {/* Set the notification systems */}
+                <Form.Item
+                  label="Proveedor de sistema de notificación de caducidad de certificaciones (optional)"
+                  name={['organization', 'enable_notification_providers']}
+                  initialValue={enable_notification_providers}
+                >
+                  <Select
+                    mode="multiple"
+                    style={{ width: '100%' }}
+                    placeholder="Seleccione las opciones que desea"
+                    options={[
+                      {label: 'Email', value: 'email'},
+                      {label: 'SMS', value: 'sms'},
+                      {label: 'WhatsApp', value: 'whatsapp', disabled: true},
+                    ]}
+                  />
                 </Form.Item>
               </Col>
             </Row>
