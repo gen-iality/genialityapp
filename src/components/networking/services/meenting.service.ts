@@ -115,6 +115,7 @@ export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMee
       .collection('meetings')
       .doc()
       .set(createMeetingDto);
+      console.log('Creando reunion correctamente-------------')
     return true;
   } catch (error) {
     console.log(error);

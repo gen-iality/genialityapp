@@ -1,7 +1,7 @@
 import { firestore } from '@/helpers/firebase';
 import { IRequestMeenting } from '../interfaces/Landing.interfaces';
 import { SpaceMeeting, SpaceMeetingFirebase } from '../interfaces/space-requesting.interface';
-import { sortArraySpaceMeetings } from '../utils/space-requesting.utils';
+import firebase from 'firebase/compat';
 
 export const getMeetingRequest = async (
   property: string,
@@ -39,36 +39,40 @@ export const updateRequestMeeting = async (eventId: string, requestId: string, u
   }
 };
 
-export const listeningSpacesRequestMeetings = (eventId: string, userID: string, date: string, onSet: (data: SpaceMeetingFirebase[]) => void) => {
+export const listeningSpacesAgendedMeetings = (eventId: string, userID: string, date: string, onSet: (data: SpaceMeetingFirebase[]) => void) => {
   return firestore
     .collection(`networkingByEventId`)
     .doc(eventId)
     .collection('spacesRequestingByUser')
     .where('userId', '==', userID)
-    .where('date', '==', date)
     .onSnapshot(snapshot => {
       if (!snapshot.empty) {
         const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as SpaceMeetingFirebase[];
-        onSet(sortArraySpaceMeetings(data))
+        onSet(data)
       } else {
         onSet([])
       }
     });
 }
 
-export const createSpacesRequestMeetingsWithList = async (eventId: string, spacesRequestMeetings: SpaceMeeting[]) => {
+export const createSpacesAgendedMeetings = async (eventId: string, dateStart: string, dateEnd: string, userId: string) => {
   try {
-    spacesRequestMeetings.forEach(async (spaceRequest) => {
-      console.log('Creando ', spaceRequest)
-      await firestore
-        .collection(`networkingByEventId`)
-        .doc(eventId)
-        .collection('spacesRequestingByUser')
-        .doc()
-        .set(spaceRequest)
-    })
+    const newSpaceAgended: SpaceMeeting = {
+      userId,
+      dateEnd: firebase.firestore.Timestamp.fromDate(new Date(dateEnd)),
+      dateStart: firebase.firestore.Timestamp.fromDate(new Date(dateStart)),
+      status: 'not_available'
+    }
+    console.log('newSpaceAgended',newSpaceAgended)
+    await firestore
+      .collection(`networkingByEventId`)
+      .doc(eventId)
+      .collection('spacesRequestingByUser')
+      .doc()
+      .set(newSpaceAgended);
     return true;
   } catch (error) {
+    console.log(error)
     return false;
   }
 };

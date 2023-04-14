@@ -166,8 +166,8 @@ export const createAgendaToEventUser = ({
  * @param {string} params.message - El mensaje asociado con la solicitud de reunión.
  * @param {string} params.creatorUser - El identificador del usuario creador de la reunión.
  * @param {string} params.typeAttendace
- * @param {Date} params.startDate - La fecha y hora de inicio de la reunión.
- * @param {Date} params.endDate - La fecha y hora de finalización de la reunión.
+ * @param {firebase.firestore.Timestamp} params.startDate - La fecha y hora de inicio de la reunión.
+ * @param {firebase.firestore.Timestamp} params.endDate - La fecha y hora de finalización de la reunión.
  */
 export const createMeetingRequest = ({
   eventId,
@@ -205,9 +205,9 @@ export const createMeetingRequest = ({
           participants: participants,
           participantsIds,
           place: 'evius meet',
-          start: startDate,
-          startTimestap :  firebase.firestore.Timestamp.fromDate(new Date(startDate)),
-          end: endDate,
+          start: startDate.toDate().toString(),
+          startTimestap : startDate,
+          end: endDate.toDate().toString(),
           dateUpdated: timestamp ,
           type : defaultType
         };
@@ -224,16 +224,19 @@ export const createMeetingRequest = ({
             email :creatorUser.value.user.email || ''
           },
           meeting,
-          date:startDate,
+          date:startDate.toDate().toString(),
           message,
           status:RequestMeetingState.pending,
           timestamp : timestamp
         }
+
+        console.log('requestMeenting',requestMeenting)
         const newAgendaResult = await firestore
         .collection('networkingByEventId')
         .doc(eventId)
         .collection('meeting_request')
         .add(requestMeenting);
+        console.log('Se creo correctamente')
         // enviamos notificaciones por correo
         let data = {
           id_user_requested: requestMeenting.user_to.id,
@@ -245,10 +248,10 @@ export const createMeetingRequest = ({
           request_type: 'meeting',
           start_time: new Date(startDate).toLocaleTimeString()
         };
-    //todo: Arreglar not found de sendEmail
     await EventsApi.sendMeetingRequest(eventId, data);
      resolve(newAgendaResult.id);
       } catch (error) {
+        console.log(error)
         reject(error);
       }
     })();

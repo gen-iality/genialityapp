@@ -8,14 +8,13 @@ import { addNotification } from '../../helpers/netWorkingFunctions';
 import { typeAttendace } from './interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 import SpacesAvalibleList from './components/spaces-requestings/SpacesAvalibleList';
+import firebase from 'firebase/compat';
 
 function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, closeModal, cEvent }) {
   const [agendaMessage, setAgendaMessage] = useState('');
   const [date, setDate] = useState(null);
   const [loading, setLoading] = useState(false);
   const [reloadFlag, setReloadFlag] = useState(false);
-  const initialDate = cEvent?.value?.datetime_from.split(' ');
-
 
   useEffect(() => {
     if (targetEventUserId === null || cEvent.value === null || cEventUser.value === null) return;
@@ -23,7 +22,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   }, [targetEventUserId, reloadFlag]);
 
   async function reloadData(resp) {
-    if (!resp) return console.log('[ ERROR ] - reloadData => El id de requestMeeting es undefined');
+    if (!resp) return;
     setReloadFlag(!reloadFlag);
     notification.open({
       message: 'Solicitud enviada',
@@ -54,12 +53,10 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     setAgendaMessage('');
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (startDate, endDate) => {
     try {
       if (!date) return notification.warning({ message: 'Debes seleccionar una fecha' });
       setLoading(true);
-      const startDate = date.toString();
-      const endDate = date.add(20, 'minutes').toString();
       const eventId = cEvent?.value?._id;
 
       const idRequestMeeting = await createMeetingRequest({
@@ -100,8 +97,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       footer={null}
       onCancel={resetModal}
       style={{ zIndex: 1031 }}
-      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
-      >
+      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}>
       <div>
         <div>
           <Row justify='space-between' style={{ margin: 5 }}>
@@ -116,7 +112,16 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
               Agendar cita
             </Button>
           </Row>
-          <Row>{date && <SpacesAvalibleList date={date} targetUserName={targetEventUser?.user?.names}/>}</Row>
+          <Row>
+            {date && (
+              <SpacesAvalibleList
+                date={date}
+                targetEventUserId={targetEventUserId}
+                targetUserName={targetEventUser?.user?.names}
+                onSubmit={onSubmit}
+              />
+            )}
+          </Row>
         </div>
       </div>
     </Modal>

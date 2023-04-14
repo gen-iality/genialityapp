@@ -16,7 +16,7 @@ const useGetTimeParameter = () => {
         setTimeParametres({
             meetingDuration: 20,
             hourStartSpaces: moment('2:30 am', 'h:mm a'),
-            hourFinishSpaces: moment('11:59 pm', 'h:mm a'),
+            hourFinishSpaces: moment('4:30 am', 'h:mm a'),
         })
         setTimeParametreLoading(false)
     }, [])
