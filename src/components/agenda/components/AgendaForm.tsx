@@ -42,6 +42,7 @@ export interface FormValues {
   image?: string,
   vimeo_id?: string,
   selected_document: string[],
+  short_description?: any,
 }
 
 interface IAgendaFormProps {
@@ -174,8 +175,15 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
         <Form.Item
           label="Descripción corta (Opcional)"
           name="short_description"
+          getValueProps={(value) => ({
+            data: value || '',
+            handleChange: (short_description: any) => {
+              props.form.setFieldsValue({ short_description })
+            },
+          })}
         >
-          <TextArea autoFocus placeholder="Descripción corta" />
+          <EviusReactQuill />
+          {/* <TextArea autoFocus allowClear autoSize placeholder="Descripción corta" /> */}
         </Form.Item>
         <Form.Item
           label="Módulo (opcional)"

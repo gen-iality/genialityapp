@@ -18,6 +18,7 @@ import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton';
 import { getRef as getSurveyStatusRef } from '@components/events/surveys/services/surveyStatus';
 import { getAnswersRef, getUserProgressRef, getQuestionsRef } from '@components/events/surveys/services/surveys';
 import { CurrentEventUserContext } from '@context/eventUserContext';
+import ReactQuill from 'react-quill';
 
 type TruncatedAgenda = {
   title: string;
@@ -336,7 +337,16 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   </div>
                 </Link>
                 <span style={{ fontSize: '1.6rem' }}>{item.name_host}</span>
-                <span style={{ fontSize: '1.2rem'}}>{item.short_description}</span>
+                {console.log('item.short_description', item.short_description)}
+                {item.short_description !== '<p><br></p>' &&  (
+                  <ReactQuill
+                    style={{color: '#777'}}
+                    value={item.short_description}
+                    readOnly
+                    className="hide-toolbar ql-toolbar"
+                    theme="bubble"
+                  />
+                )}
               </div>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <span style={{ marginRight: '.5em' }}>
