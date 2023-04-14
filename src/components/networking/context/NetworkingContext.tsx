@@ -2,7 +2,7 @@ import { ReactNode, createContext, useState, useEffect } from 'react';
 import { UseUserEvent } from '@/context/eventUserContext';
 import * as service from '../services/meenting.service';
 import * as serviceConfig from '../services/configuration.service';
-import { IMeeting, IMeetingCalendar } from '../interfaces/Meetings.interfaces';
+import { IMeeting } from '../interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 import { meetingSelectedInitial } from '../utils/utils';
 import { CreateObservers, IObserver, ITypeMeenting } from '../interfaces/configurations.interfaces';

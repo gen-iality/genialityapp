@@ -1,7 +1,7 @@
 import { firestore } from '@/helpers/firebase';
 import { IObserver, ITypeMeenting } from '../interfaces/configurations.interfaces';
-import { MeetConfig } from '../interfaces/Index.interfaces';
-
+import {  networkingGlobalConfig } from '../interfaces/Index.interfaces';
+import firebase from 'firebase/compat';
 export const listenObervers = (eventId: string, setObervers: any) => {
 	return firestore
 		.collection(`networkingByEventId`)
@@ -109,19 +109,20 @@ export const updateType= async (eventId: string, typeId: string, updateTypeDto: 
 	}
 };
 
-export const updateOrCreateConfigMeet= async (eventId: string, updateConfigDto: Omit<MeetConfig, 'id'>) => {
+export const updateOrCreateConfigMeet= async (eventId: string, updateConfigDto: networkingGlobalConfig) => {
 	try {
 		await firestore
 			.collection(`networkingByEventId`)
 			.doc(eventId)
-			.update({ConfigMeet: updateConfigDto});
+			.update(updateConfigDto);
 		return true
 	} catch (error: any) {
+		console.log(error)
 		return false
 	}
 };
 
-export const getConfigMeet = async <T>(eventId: string) => {
+export const getConfig = async <T>(eventId: string) => {
 	try {
 		const ConfigMeet = await firestore
 			.collection(`networkingByEventId`)
@@ -132,6 +133,35 @@ export const getConfigMeet = async <T>(eventId: string) => {
 	} catch (error: any) {
 		return null
 	}
+};
+export const deleteFieldConfig = async <T>(eventId: string) => {
+	try {
+		await firestore
+			.collection(`networkingByEventId`)
+			.doc(eventId)
+			.update({
+				ConfigTime : firebase.firestore.FieldValue.delete()
+			})
+
+		return true
+	} catch (error: any) {
+		return false
+	}
+};
+export const ListenConfig =(eventId: string,setGlogbalConfig: any) => {
+	return firestore
+		.collection(`networkingByEventId`)
+		.doc(eventId)
+		.onSnapshot(snapshot => {
+      if (snapshot.exists) {
+        const data = snapshot.data()
+        setGlogbalConfig(data);
+      } else {
+		console.log('enviando null');
+		
+		setGlogbalConfig(null)
+	  }
+    })
 };
 
 
