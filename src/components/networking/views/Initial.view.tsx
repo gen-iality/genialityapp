@@ -1,12 +1,13 @@
 import {
   CheckCircleOutlined,
+  DeleteOutlined,
   ExclamationCircleOutlined,
   FlagOutlined,
   InfoCircleOutlined,
   SaveOutlined,
   StarOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Col, Divider, Form, InputNumber, Row, Steps, Typography, notification } from 'antd';
+import { Button, Card, Col, Divider, Form, InputNumber, Row, Space, Steps, Typography, notification } from 'antd';
 import React, { useState } from 'react';
 import { UseEventContext } from '@/context/eventContext';
 import { deleteFieldConfig, updateOrCreateConfigMeet } from '../services/configuration.service';
@@ -47,20 +48,20 @@ export default function Initial({ ConfigTime }: networkingGlobalConfig) {
   }
   return (
     <>
-      <Row justify='center' gutter={[16, 16]} style={{ margin: 30 }}>
-        <Col span={16}>
+      <Row justify='center' gutter={[16, 16]}>
+        <Col span={16} style={{ margin: 30 }}>
           <Card
             hoverable
             style={{ cursor: 'auto', height: '100%', width: '100%', backgroundColor: '#FDFEFE', borderRadius: 8 }}
-            extra={ConfigTime ? <Button danger onClick={onDelete}>Delete</Button> : <></>}>
+            >
             <Divider orientation='left'>
               <Typography.Title level={5}> Configuración de Networking</Typography.Title>
             </Divider>
-            <Steps direction='horizontal' style={{ margin: 10 }}>
+            <Steps direction='horizontal'>
               <Step title={'Fecha Inicio'} description={Event.datetime_from} icon={<StarOutlined />} status='finish' />
               <Step title={'Fecha Fin'} description={Event.datetime_to} icon={<FlagOutlined />} status='finish' />
             </Steps>
-            <Form onFinish={onSave} layout='vertical'>
+            <Form onFinish={onSave} layout='vertical' style={{margin: 10}}>
               <Form.Item
                 name={'meetingDuration'}
                 label={'Tiempo entre reuniones'}
@@ -74,9 +75,12 @@ export default function Initial({ ConfigTime }: networkingGlobalConfig) {
                 <InputNumber disabled={loading} max={60} min={5} style={{ width: '100%' }} />
               </Form.Item>
               <Row justify='center' style={{ marginTop: 10 }}>
-                <Button loading={loading} type='primary' icon={<SaveOutlined />} htmlType='submit'>
+               <Space align='center'>
+               <Button loading={loading} type='primary' icon={<SaveOutlined />} htmlType='submit'>
                   Guardar
                 </Button>
+                {ConfigTime ? <Button icon={<DeleteOutlined />} danger type='primary' onClick={onDelete}>Eliminar</Button> : <></>}
+               </Space>
               </Row>
             </Form>
           </Card>
