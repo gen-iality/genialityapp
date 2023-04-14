@@ -14,12 +14,21 @@ const formLayout = {
 };
 
 
-function OrganizationInformation(props) {
-  const { name, description, _id: organizationId, type_event, visibility, allow_register, enable_notification_providers=[] } = props.org;
-  const [typeEvents, setTypeEvents] = useState([]);
-  const [typeOrgPermit, setTypeOrgPermit] = useState(0);
-  const [visibilityState, setVisibilityState] = useState(visibility);
-  const [allowRegister, setAllowRegister] = useState(allow_register);
+function OrganizationInformation(props: { org: any }) {
+  const {
+    name,
+    description,
+    _id: organizationId,
+    type_event,
+    visibility,
+    allow_register,
+    enable_notification_providers=[],
+  } = props.org;
+
+  const [typeEvents, setTypeEvents] = useState<any[]>([]);
+  const [typeOrgPermit, setTypeOrgPermit] = useState<number>(0);
+  const [visibilityState, setVisibilityState] = useState<string>(visibility);
+  const [allowRegister, setAllowRegister] = useState<boolean>(allow_register);
 
   useEffect(() => {
     if ((visibility === 'PUBLIC' || visibility === 'ANONYMOUS') && allow_register) {
@@ -34,7 +43,7 @@ function OrganizationInformation(props) {
     }
   }, [visibility, allow_register]);
 
-  const changeTypeOrgPermit = (value) => {
+  const changeTypeOrgPermit = (value: number) => {
     setTypeOrgPermit(value);
     if (value === 0) {
       //Organización pública con Registro
@@ -51,7 +60,7 @@ function OrganizationInformation(props) {
     }
   };
 
-  async function updateOrganization(values) {
+  async function updateOrganization(values: any) {
     const { organization } = values;
 
     const organizationData = {
@@ -102,7 +111,6 @@ function OrganizationInformation(props) {
                   name={['organization', 'type_event']}
                 >
                   <Select
-                    onChange={null}
                     options={typeEvents.map((type) => ({
                       value: type.label,
                       label: type.label,
