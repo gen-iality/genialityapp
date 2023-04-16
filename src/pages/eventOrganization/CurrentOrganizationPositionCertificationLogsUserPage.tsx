@@ -21,7 +21,7 @@ import {
   DatePicker,
 } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 /** Helpers and utils */
 import { EventsApi, PositionsApi, UsersApi, CerticationsApi } from '@helpers/request';
@@ -109,7 +109,7 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
         dataIndex: 'event',
         render: (event: any) => <span>{event.name}</span>,
       },
-      {
+      /* {
         title: 'Estado',
         align: 'center',
         width: 100,
@@ -117,7 +117,7 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
         render: (log: any) => (
           <Tag color={log?.success ? 'green' : 'red'}>{log?.success ? 'Aprobado' : 'No aprobado'}</Tag>
         ),
-      },
+      }, */
       {
         title: 'Fecha de emisión',
         align: 'center',
@@ -154,6 +154,46 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
             </>
           );
         },
+      },
+      {
+        title: 'Opciones',
+        width: 80,
+        render: (event: any) => (
+          <Row wrap gutter={[8, 8]}>
+            <Col>
+              <Tooltip title="Editar">
+                <Button
+                  id={`editAction${event._id}`}
+                  type="primary"
+                  size="small"
+                  onClick={(e) => {
+                    alert('No implementado aún');
+                  }}
+                  icon={<EditOutlined />}
+                />
+              </Tooltip>
+            </Col>
+            <Col>
+              <Tooltip title="Borrar">
+                <Button
+                  id={`deleteAction${event._id}`}
+                  type="primary"
+                  size="small"
+                  onClick={(e) => {
+                    alert('No implementado aún');
+                    // Little future people, please implement the deleting of FireStorage too.
+                    // You SHOULD check if the last url pathname element stars with "documents/" and try to
+                    // decode it and use this path (that stats with "documents/") to request a deleting
+                    // process with the FireStorage API. Dont say that my intrustion are bad, if you don't
+                    // believe in me, then ask to ChatGPT tho
+                  }}
+                  icon={<DeleteOutlined />}
+                  danger
+                />
+              </Tooltip>
+            </Col>
+          </Row>
+        ),
       },
     ];
 
