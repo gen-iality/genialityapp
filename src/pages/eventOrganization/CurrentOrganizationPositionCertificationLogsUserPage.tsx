@@ -1,4 +1,8 @@
-import { EventsApi, PositionsApi, UsersApi, CerticationsApi } from '@helpers/request';
+/** React's libraries */
+import { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
+
+/** Antd imports */
 import {
   Typography,
   Table,
@@ -16,11 +20,14 @@ import {
   Input,
   DatePicker,
 } from 'antd';
-import Header from '@antdComponents/Header';
 import { ColumnsType } from 'antd/lib/table';
-import { useState, useEffect } from 'react';
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
+
+/** Helpers and utils */
+import { EventsApi, PositionsApi, UsersApi, CerticationsApi } from '@helpers/request';
+
+/** Components */
+import Header from '@antdComponents/Header';
 
 export interface CurrentOrganizationPositionCertificationLogsUserPageProps {
   org: any;
@@ -82,18 +89,18 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
   }, []);
 
   useEffect(() => {
-    const data: any[] = []
+    const data: any[] = [];
     allPositionEvents.forEach((event) => {
-      const { certification } = event
+      const { certification } = event;
       // If there is not certification, ignore this event
-      if (!certification) return
+      if (!certification) return;
       // Build a data with: event, certification, certification log, to use in the table
       (certification.certification_logs || []).forEach((log: any) => {
-        data.push({ event, certification, log })
-      })
-    })
-    setDataSource(data)
-  }, [allPositionEvents])
+        data.push({ event, certification, log });
+      });
+    });
+    setDataSource(data);
+  }, [allPositionEvents]);
 
   useEffect(() => {
     const newColumns: ColumnsType = [
@@ -108,9 +115,7 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
         width: 100,
         dataIndex: 'log',
         render: (log: any) => (
-          <Tag color={log?.success ? 'green' : 'red'}>
-            {log?.success ? 'Aprobado' : 'No aprobado'}
-          </Tag>
+          <Tag color={log?.success ? 'green' : 'red'}>{log?.success ? 'Aprobado' : 'No aprobado'}</Tag>
         ),
       },
       {
@@ -119,11 +124,7 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
         width: 100,
         dataIndex: 'log',
         render: (log: any) => (
-          <>
-            {log?.approved_from_date
-              ? dayjs(log?.approved_from_date).format('DD/MM/YYYY')
-              : 'sin fecha'}
-          </>
+          <>{log?.approved_from_date ? dayjs(log?.approved_from_date).format('DD/MM/YYYY') : 'sin fecha'}</>
         ),
       },
       {
@@ -132,11 +133,7 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
         width: 100,
         dataIndex: 'log',
         render: (log: any) => (
-          <>
-            {log?.approved_until_date
-              ? dayjs(log?.approved_until_date).format('DD/MM/YYYY')
-              : 'sin fecha'}
-          </>
+          <>{log?.approved_until_date ? dayjs(log?.approved_until_date).format('DD/MM/YYYY') : 'sin fecha'}</>
         ),
       },
       {
@@ -166,14 +163,14 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
   return (
     <>
       <Header
-        title={(
+        title={
           <>
-          {`Historial de certificados de `}
-          {currentUser ? <>{currentUser.names}</> : <Spin />}
-          {` en el cargo de `}
-          {currentPosition ? <>{currentPosition.position_name}</> : <Spin />}
+            {`Historial de certificados de `}
+            {currentUser ? <>{currentUser.names}</> : <Spin />}
+            {` en el cargo de `}
+            {currentPosition ? <>{currentPosition.position_name}</> : <Spin />}
           </>
-        )}
+        }
       />
       <Typography.Paragraph>Este es el historial de certificaciones.</Typography.Paragraph>
 

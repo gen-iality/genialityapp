@@ -1,19 +1,8 @@
+/** React's libraries */
 import { useState, useEffect } from 'react';
 import { Route, NavLink, Redirect, Switch, withRouter } from 'react-router-dom';
-import Loading from '@components/profile/loading';
-import { OrganizationApi } from '@helpers/request';
-import OrganizationProfile from './profile';
-import Styles from '@components/App/styles';
-import OrgEvents from './events';
-import OrgMembers from './members';
-import OrganizationPropertiesIsolatedPage from './OrganizationPropertiesIsolatedPage'
-import OrgRegisteredUsers from './OrgRegisteredUsers';
-import OrganizationPositionsPage from './OrganizationPositionsPage';
-import CurrentOrganizationPositionPage from './CurrentOrganizationPositionPage';
-import CurrentOrganizationPositionCertificationUserPage from './CurrentOrganizationPositionCertificationUserPage';
-import CurrentOrganizationPositionCertificationLogsUserPage from './CurrentOrganizationPositionCertificationLogsUserPage';
-import MemberSettings from './memberSettings';
-import TemplateMemberSettings from './templateMemberSettings';
+
+/** Antd imports */
 import { Tag, Menu, Button, Layout } from 'antd';
 import {
   DoubleRightOutlined,
@@ -29,16 +18,33 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons';
 
+/** Helpers and utils */
+import { OrganizationApi } from '@helpers/request';
+
+/** Components */
+import Loading from '@components/profile/loading';
+import OrganizationProfile from './profile';
+import OrgEvents from './events';
+import Styles from '@components/App/styles';
+import OrgMembers from './members';
+import OrganizationPositionsPage from './OrganizationPositionsPage';
+import CurrentOrganizationPositionPage from './CurrentOrganizationPositionPage';
+import CurrentOrganizationPositionCertificationUserPage from './CurrentOrganizationPositionCertificationUserPage';
+import CurrentOrganizationPositionCertificationLogsUserPage from './CurrentOrganizationPositionCertificationLogsUserPage';
+import OrgRegisteredUsers from './OrgRegisteredUsers';
+import OrganizationPropertiesIsolatedPage from './OrganizationPropertiesIsolatedPage';
+import MemberSettings from './memberSettings';
+import TemplateMemberSettings from './templateMemberSettings';
 import MenuLanding from '@components/menuLanding/index';
 import NoMatchPage from '@components/notFoundPage/noMatchPage';
 import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteCms';
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage';
 
 function Organization(props) {
-  const [organization, setOrganization] = useState({});
-
-  const [isLoading, setIsLoading] = useState(true);
   const organizationId = props.match.params.id;
+
+  const [organization, setOrganization] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const [collapseMenu, setCollapseMenu] = useState(false);
 
   async function getOrganizationData() {
@@ -46,6 +52,7 @@ function Organization(props) {
     setOrganization(org);
     setIsLoading(false);
   }
+
   useEffect(() => {
     getOrganizationData();
   }, [props.location.pathname]);
@@ -62,8 +69,7 @@ function Organization(props) {
             collapsed={collapseMenu}
             theme="dark"
             /* style={{ backgroundColor: '#fff' }} */
-            width={220}
-          >
+            width={220}>
             <Button
               type="primary"
               onClick={() => setCollapseMenu(!collapseMenu)}
@@ -124,12 +130,8 @@ function Organization(props) {
               <Loading />
             ) : (
               <div style={{ padding: '5px' }}>
-                <Tag color='#003853' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft: 20 }}>
-                  <a
-                    target="_blank"
-                    href={`${window.location.origin}/organization/${organization._id}/events
-                        `}
-                  >
+                <Tag color="#003853" icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft: 20 }}>
+                  <a target="_blank" href={`${window.location.origin}/organization/${organization._id}/events`}>
                     {`Ir al landing de la organización: ${organization.name}`}
                   </a>
                 </Tag>

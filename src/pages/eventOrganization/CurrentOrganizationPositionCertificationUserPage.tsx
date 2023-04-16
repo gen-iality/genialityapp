@@ -1,4 +1,9 @@
-import { EventsApi, PositionsApi, UsersApi, CerticationsApi } from '@helpers/request';
+/** React's libraries */
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
+
+/** Antd imports */
 import {
   Typography,
   Table,
@@ -16,12 +21,14 @@ import {
   Input,
   DatePicker,
 } from 'antd';
-import Header from '@antdComponents/Header';
 import { ColumnsType } from 'antd/lib/table';
-import { useState, useEffect } from 'react';
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
-import { Link } from 'react-router-dom';
+
+/** Helpers and utils */
+import { EventsApi, PositionsApi, UsersApi, CerticationsApi } from '@helpers/request';
+
+/** Components */
+import Header from '@antdComponents/Header';
 import PositionCertificationFileUploader from './PositionCertificationFileUploader';
 
 const { TextArea } = Input;
@@ -40,6 +47,10 @@ export interface CurrentOrganizationPositionCertificationUserPageProps {
 function CurrentOrganizationPositionCertificationUserPage(
   props: CurrentOrganizationPositionCertificationUserPageProps,
 ) {
+  const organizationId: string = props.org._id;
+  const positionId = props.match.params.positionId;
+  const userId = props.match.params.userId;
+
   const [columns, setColumns] = useState<ColumnsType<any>>([]);
   const [allPositionEvents, setAllPositionEvents] = useState<any[]>([]);
   const [allEvents, setAllEvents] = useState<any[]>([]);
@@ -52,10 +63,6 @@ function CurrentOrganizationPositionCertificationUserPage(
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   const [form] = Form.useForm();
-
-  const organizationId: string = props.org._id;
-  const positionId = props.match.params.positionId;
-  const userId = props.match.params.userId;
 
   const openModal = () => setIsModalOpened(true);
   const closeModal = () => setIsModalOpened(false);
@@ -112,7 +119,7 @@ function CurrentOrganizationPositionCertificationUserPage(
       {
         title: 'Certificación de',
         render: (event: any) => {
-          return <span>{event.name}</span>
+          return <span>{event.name}</span>;
         },
       },
       {
@@ -125,9 +132,8 @@ function CurrentOrganizationPositionCertificationUserPage(
               <a href={event.certification.file_url} target="_blank">
                 Ver certificado
               </a>
-            )
-          }
-          else return <em>Sin certificado</em>;
+            );
+          } else return <em>Sin certificado</em>;
         },
       },
       {
@@ -137,15 +143,13 @@ function CurrentOrganizationPositionCertificationUserPage(
         width: 100,
         render: (certification: any) => (
           <>
-          {(certification?.certification_logs || []).length === 0 ? (
-            <em>Sin registros</em>
-          ) : (
-            <Link to={`${props.match.url}/logs`}>
-              <Tag color='#88f'>
-                {(certification?.certification_logs || []).length} registros
-              </Tag>
-            </Link>
-          )}
+            {(certification?.certification_logs || []).length === 0 ? (
+              <em>Sin registros</em>
+            ) : (
+              <Link to={`${props.match.url}/logs`}>
+                <Tag color="#88f">{(certification?.certification_logs || []).length} registros</Tag>
+              </Link>
+            )}
           </>
         ),
       },
@@ -167,9 +171,11 @@ function CurrentOrganizationPositionCertificationUserPage(
         dataIndex: 'certification',
         render: (certification: any) => (
           <>
-            {certification?.approved_from_date
-              ? dayjs(certification?.approved_from_date).format('DD/MM/YYYY')
-              : <em>Sin fecha</em>}
+            {certification?.approved_from_date ? (
+              dayjs(certification?.approved_from_date).format('DD/MM/YYYY')
+            ) : (
+              <em>Sin fecha</em>
+            )}
           </>
         ),
       },
@@ -180,9 +186,11 @@ function CurrentOrganizationPositionCertificationUserPage(
         dataIndex: 'certification',
         render: (certification: any) => (
           <>
-            {certification?.approved_until_date
-              ? dayjs(certification?.approved_until_date).format('DD/MM/YYYY')
-              : <em>Sin fecha</em>}
+            {certification?.approved_until_date ? (
+              dayjs(certification?.approved_until_date).format('DD/MM/YYYY')
+            ) : (
+              <em>Sin fecha</em>
+            )}
           </>
         ),
       },
@@ -215,7 +223,7 @@ function CurrentOrganizationPositionCertificationUserPage(
               type="primary"
               size="small"
               onClick={(e) => {
-                alert('No implementado aún')
+                alert('No implementado aún');
                 // Little future people, please implement the deleting of FireStorage too.
                 // You SHOULD check if the last url pathname element stars with "documents/" and try to
                 // decode it and use this path (that stats with "documents/") to request a deleting
@@ -235,14 +243,14 @@ function CurrentOrganizationPositionCertificationUserPage(
   return (
     <>
       <Header
-        title={(
+        title={
           <>
-          {`Certificados de `}
-          {currentUser ? <>{currentUser.names}</> : <Spin />}
-          {` en el cargo de `}
-          {currentPosition ? <>{currentPosition.position_name}</> : <Spin />}
+            {`Certificados de `}
+            {currentUser ? <>{currentUser.names}</> : <Spin />}
+            {` en el cargo de `}
+            {currentPosition ? <>{currentPosition.position_name}</> : <Spin />}
           </>
-        )}
+        }
       />
       <Typography.Paragraph>Estos son los certificados de dicho usuario.</Typography.Paragraph>
 
@@ -265,8 +273,7 @@ function CurrentOrganizationPositionCertificationUserPage(
                 onClick={() => {
                   form.resetFields();
                   openModal();
-                }}
-              >
+                }}>
                 Agregar certificación
               </Button>
               {isSubmiting && <Spin />}
@@ -282,8 +289,7 @@ function CurrentOrganizationPositionCertificationUserPage(
           form.submit();
           closeModal();
         }}
-        onCancel={() => closeModal()}
-      >
+        onCancel={() => closeModal()}>
         <Form form={form} onFinish={onFormFinish} layout="vertical">
           <Form.Item name="event_id" label="Curso a dar certificación" rules={[{ required: true, message: 'Esto' }]}>
             <Select
@@ -293,14 +299,14 @@ function CurrentOrganizationPositionCertificationUserPage(
                  * then this code will update the default value for description,
                  * entity and hours.
                  */
-                const event = allEvents.find((event) => event._id == value)
-                console.log('value changed to:', value, event)
+                const event = allEvents.find((event) => event._id == value);
+                console.log('value changed to:', value, event);
                 if (event) {
                   form.setFieldsValue({
                     description: event.default_certification_description,
                     entity: event.default_certification_entity,
                     hours: event.default_certification_hours ?? 1,
-                  })
+                  });
                 }
               }}
               options={allEvents.map((event) => ({ label: event.name, value: event._id }))}
@@ -309,7 +315,10 @@ function CurrentOrganizationPositionCertificationUserPage(
           {/* <Form.Item name="success" label="Exitoso" valuePropName="checked">
             <Switch />
           </Form.Item> */}
-          <Form.Item name="description" label="Descripción" rules={[{ required: true, message: 'Agrega la descripción' }]}>
+          <Form.Item
+            name="description"
+            label="Descripción"
+            rules={[{ required: true, message: 'Agrega la descripción' }]}>
             <TextArea rows={4} />
           </Form.Item>
           <Form.Item name="hours" label="Horas" rules={[{ required: true, message: 'Agrega el número de horas' }]}>
@@ -322,22 +331,17 @@ function CurrentOrganizationPositionCertificationUserPage(
             name="approved_from_date"
             label="Fecha de aprobación"
             rules={[{ required: true, message: 'Agrega la fecha' }]}
-            initialValue={dayjs(Date.now())}
-          >
+            initialValue={dayjs(Date.now())}>
             <DatePicker />
           </Form.Item>
           <Form.Item
             name="approved_until_date"
             label="Fecha de vencimiento"
             rules={[{ required: true, message: 'Agrega la fecha' }]}
-            initialValue={dayjs(Date.now())}
-          >
+            initialValue={dayjs(Date.now())}>
             <DatePicker />
           </Form.Item>
-          <Form.Item
-            name="file_url"
-            label="Archivo externo"
-          >
+          <Form.Item name="file_url" label="Archivo externo">
             <PositionCertificationFileUploader path="positions" />
           </Form.Item>
         </Form>
