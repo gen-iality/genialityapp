@@ -4,7 +4,6 @@ import { IMeetingRequestFirebase, SpaceMeeting, SpaceMeetingFirebase, StatusSpac
 import firebase from 'firebase/compat';
 
 export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Moment, userId: string, creatorId: string, requestMeetings: IMeetingRequestFirebase[]): SpaceMeeting[] => {
-
     const stateRequest = (dateStart: firebase.firestore.Timestamp) => {
         let status: StatusSpace = 'avalible'
         const haveRequestMeeting = requestMeetings.filter(requestMeeting => (requestMeeting.dateStartTimestamp.isEqual(dateStart)))
@@ -13,6 +12,9 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
                 switch (requesMeeting.status) {
                     case "confirmed":
                         if (requesMeeting.user_from.id === creatorId) {
+                            status = 'accepted'
+                        }
+                        if (requesMeeting.user_from.id === userId && requesMeeting.user_to.id === creatorId) {
                             status = 'accepted'
                         } else {
                             status = 'not_available'
@@ -27,11 +29,12 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
                     case "canceled":
                         if (requesMeeting.user_from.id === creatorId) status = 'canceled'
                         break
+
                     default:
                         break
                 }
             })
-        }   
+        }
         return status
     }
 
