@@ -124,7 +124,7 @@ export default function MyCalendar() {
             title={<></>}
             placement='right'
             visible={open}
-            width={515}
+            width={450}
             closable={false}
             headerStyle={{border: 'none'}}
             bodyStyle={{paddingTop: 0}}

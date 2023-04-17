@@ -65,14 +65,14 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
                 <Space align='center'>
                   <Button icon={<CalendarOutlined /> } type='text'/>
                   
-                  <Typography.Text type='secondary'>
-                    {dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')} - {stateMeeting === 'scheduled' && <br/>} {dateFormat(meenting.end, 'MM/DD/YYYY hh:mm A')}
+                  <Typography.Text /* type='secondary' */ style={{fontSize: 13}}>
+                    {dateFormat(meenting.start, 'lll A')} - {dateFormat(meenting.end, 'lll A')}
                   </Typography.Text>
                 </Space>
                 <Space align='center'>
                   <Button icon={<MapMarkerRadiusOutlineIcon style={{fontSize: 18}}/>} type='text'/>
                   
-                  <Typography.Text type='secondary' style={{ textTransform: 'uppercase'}}>
+                  <Typography.Text type={meenting.place === 'no especificado' ? 'secondary' : undefined} style={{ textTransform: 'uppercase'}}>
                     {meenting.place}
                   </Typography.Text>
                 </Space>
