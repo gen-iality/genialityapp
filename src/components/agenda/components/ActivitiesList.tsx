@@ -35,6 +35,7 @@ type TruncatedAgenda = {
   DeleteSurveyAnswersButton?: FunctionComponent<{ userId: string; onAnswersDeleted: (x: boolean) => void }>;
   RibbonComponent: FunctionComponent<{ children: any }>;
   short_description?: any;
+  categories?: any;
 };
 
 interface ActivitiesListProps {
@@ -101,6 +102,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             host_picture: agenda.hosts[0]?.image,
             name_host: agenda.hosts[0]?.name,
             short_description: agenda.short_description,
+            categories: agenda.activity_categories.map((category: any) => category.name),
             ViewedStatusComponent: () => {
               const [isTaken, setIsTaken] = useState(false);
               useEffect(() => {
@@ -330,6 +332,22 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   //paddingLeft: '25px',
                 }}
               >
+                {console.log('item.categories', item.categories)}
+                <div style={{ display: 'flex', flexFlow: 'row wrap', margin: '0.5rem 0' }}>
+                  {item.categories &&
+                    item.categories.map((category: any) => {
+                      return (
+                        <Badge
+                          style={{
+                            backgroundColor: '#E86A33',
+                            fontSize: '1rem',
+                            marginRight: '0.5rem',
+                          }}
+                          count={category}
+                        />
+                      );
+                    })}
+                </div>
                 <Link to={item.link}>
                   <div style={{ fontSize: '1.6rem' }}>
                     <ActivityCustomIcon type={item.type!} className="list-icon" style={{ marginRight: '1em' }} />
