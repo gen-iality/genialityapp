@@ -211,6 +211,7 @@ const RegisterUserAndOrgMember = ({
           startingComponent();
         }
       } catch (err) {
+        console.error(err)
         DispatchMessageService({
           type: 'error',
           msj: 'Ha ocurrido un error',

@@ -114,6 +114,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           action: 'show',
         });
       } else {
+        console.error({creatingStatus, resultMessage})
         if (creatingStatus === CREATE_NEW_USER_FAIL_BECAUSE_EMAIL) {
           setIsErrorBecauseEmail(true);
         } else if (creatingStatus === CREATE_NEW_USER_FAIL) {

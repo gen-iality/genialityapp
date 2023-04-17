@@ -197,6 +197,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
           setdataEventUser({});
         }
       } catch (err) {
+        console.error(err)
         DispatchMessageService({
           type: 'error',
           msj: 'Ha ocurrido un error',
