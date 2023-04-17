@@ -208,7 +208,7 @@ const RegisterUserAndOrgMember = ({
           });
           setBasicDataUser({});
           setDataOrgMember(undefined);
-          startingComponent();
+          startingComponent && startingComponent();
         }
       } catch (err) {
         console.error(err)
