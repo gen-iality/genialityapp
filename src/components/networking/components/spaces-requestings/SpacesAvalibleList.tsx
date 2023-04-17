@@ -49,7 +49,7 @@ const SpacesAvalibleList = ({
     return false;
   };
 
-  if (spacesMeetingsToTargedUser.length === 0) return <Result title='Debe configurar los parametros del networking' />;
+  if (!spacesMeetingsToTargedUserLoading && spacesMeetingsToTargedUser.length === 0) return <Result title='Debe configurar los parametros del networking' />;
   return (
     <>
       <List loading={spacesMeetingsToTargedUserLoading || loadingButton}>
