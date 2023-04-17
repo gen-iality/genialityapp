@@ -20,35 +20,37 @@ import {
   Row,
   Space,
   Steps,
+  Switch,
   Typography,
   notification,
 } from 'antd';
 import React, { useState } from 'react';
 import { UseEventContext } from '@/context/eventContext';
-import { deleteNetworking,createConfgi, updateConfig } from '../services/configuration.service';
+import { deleteNetworking, createConfgi, updateConfig } from '../services/configuration.service';
 import { networkingGlobalConfig } from '../interfaces/Index.interfaces';
 
 const { Step } = Steps;
 
-export default function Initial({ active,ConfigTime }: networkingGlobalConfig) {
+export default function Initial({ active, ConfigTime, show }: networkingGlobalConfig) {
   const { value: Event } = UseEventContext();
   const [loading, setloading] = useState(false);
   const [modal, setModal] = useState(false);
   const [permit, setPermit] = useState(true);
-
-  const onSave = async (data: { meetingDuration: number }) => {
+  const [configShow,setConfigShow] = useState(show ?? false)
+   const onSave = async (data: { meetingDuration: number }) => {
     setloading(true);
-    const configItem : networkingGlobalConfig  = {
-      active : true,
+    const configItem: networkingGlobalConfig = {
+      show: configShow,
+      active: true,
       ConfigTime: {
         meetingDuration: data.meetingDuration,
         hourFinishSpaces: Event.datetime_to,
         hourStartSpaces: Event.datetime_from,
-      }
-    }
-    let response = false
-    if(active){
-      response = await updateConfig(Event._id,configItem);
+      },
+    };
+    let response = false;
+    if (active) {
+      response = await updateConfig(Event._id, configItem);
     } else {
       response = await createConfgi(Event._id, configItem);
     }
@@ -73,44 +75,46 @@ export default function Initial({ active,ConfigTime }: networkingGlobalConfig) {
     <>
       <Row justify='center' gutter={[16, 16]}>
         <Col span={16} style={{ margin: 30 }}>
-          
-            <Modal
-              visible={modal}
-              title={
-                <Space align='center' direction='horizontal' style={{ color: '#C62828' }}>
-                  <WarningOutlined />
-                  <Typography.Title level={5} style={{ color: '#C62828', margin: 0 }}>
-                    ¿Quieres eliminar networking?
-                  </Typography.Title>
-                </Space>
-              }
-              onCancel={() => setModal(false)}
-              onOk={onDelete}
-              okText={'Eliminar'}
-              okButtonProps={{ danger: true, disabled: permit }}
-              destroyOnClose={true}>
-              <Form>
-                <Space style={{ color: '#C62828' }} direction='vertical'>
-                  <Typography.Paragraph style={{ color: '#C62828', margin: 0 }}>
-                    Esta acción borrará permanentemente los datos de la configuracion de networking asi como las
-                    reuniones previamente establecidas.
-                  </Typography.Paragraph>
-                
+          <Modal
+            visible={modal}
+            title={
+              <Space align='center' direction='horizontal' style={{ color: '#C62828' }}>
+                <WarningOutlined />
+                <Typography.Title level={5} style={{ color: '#C62828', margin: 0 }}>
+                  ¿Quieres eliminar networking?
+                </Typography.Title>
+              </Space>
+            }
+            onCancel={() => setModal(false)}
+            onOk={onDelete}
+            okText={'Eliminar'}
+            okButtonProps={{ danger: true, disabled: permit }}
+            destroyOnClose={true}>
+            <Form>
+              <Space style={{ color: '#C62828' }} direction='vertical'>
+                <Typography.Paragraph style={{ color: '#C62828', margin: 0 }}>
+                  Esta acción borrará permanentemente los datos de la configuracion de networking asi como las reuniones
+                  previamente establecidas.
+                </Typography.Paragraph>
+
                 <Typography.Paragraph>
                   Para confirmar que deseas borrar toda la configuracion de networking, escribe la siguiente palabra:
                   <strong>Networking</strong>
                 </Typography.Paragraph>
-                </Space>
-                <Input placeholder="Networking" onChange={(e)=>{
-                  if(e.target.value === "Networking" ){
-                    setPermit(false)
+              </Space>
+              <Input
+                placeholder='Networking'
+                onChange={(e) => {
+                  if (e.target.value === 'Networking') {
+                    setPermit(false);
                   } else {
-                    setPermit(true)
+                    setPermit(true);
                   }
-                }}/>
-              </Form>
-            </Modal>
-          
+                }}
+              />
+            </Form>
+          </Modal>
+
           <Card
             hoverable
             style={{ cursor: 'auto', height: '100%', width: '100%', backgroundColor: '#FDFEFE', borderRadius: 8 }}>
@@ -132,8 +136,24 @@ export default function Initial({ active,ConfigTime }: networkingGlobalConfig) {
                   </Typography.Text>
                 }
                 initialValue={ConfigTime ? ConfigTime.meetingDuration : 5}>
+                
                 <InputNumber disabled={loading} max={60} min={5} style={{ width: '100%' }} />
               </Form.Item>
+          
+              <Row justify='start'>
+                <Typography.Paragraph strong>
+                Habilitar la visualizacion de networking: 
+                </Typography.Paragraph>
+                <Switch
+                style={{ marginLeft: 10 }}
+                  checked={configShow}
+                  checkedChildren='Si'
+                  unCheckedChildren='No'
+                  onChange={() => {
+                    setConfigShow(!configShow)
+                  }}
+                />
+                </Row>
               <Row justify='center' style={{ marginTop: 10 }}>
                 <Space align='center'>
                   <Button loading={loading} type='primary' icon={<SaveOutlined />} htmlType='submit'>
