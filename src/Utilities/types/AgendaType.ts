@@ -38,6 +38,7 @@ export default interface AgendaType {
   length: string;
   latitude: string;
   short_description?: any;
+  activity_categories?: any;
 }
 
 export interface ExtendedAgendaType extends AgendaType {
