@@ -8,7 +8,7 @@ import ConfigMeet from '../components/Configurations/ConfigMeet';
 export default function Configuration() {
   return (
     <>
-      <Row gutter={[32, 32]} wrap >
+      <Row gutter={[16, 16]} wrap >
         <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={6}>
           <ConfigMeet />
         </Col>
