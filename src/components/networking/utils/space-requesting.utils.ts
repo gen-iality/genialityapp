@@ -31,7 +31,7 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
                         break
                 }
             })
-        }
+        }   
         return status
     }
 

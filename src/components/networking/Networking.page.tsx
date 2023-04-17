@@ -23,16 +23,12 @@ export default function NetworkingPage({ eventId }: PropsNetworking) {
     }
   }, [])
 
-  useEffect(()=>{
-    console.log('globalConfig',globalConfig);
-  },[globalConfig])
-
   return (
     <NetworkingProvider>
-      {globalConfig?.ConfigTime ? (
+      {globalConfig?.active ? (
         <Tabs defaultActiveKey={'5'}>
           <Tabs.TabPane tab='Networking' key={5}>
-           <Initial ConfigTime={globalConfig.ConfigTime}/>
+           <Initial {...globalConfig}/>
           </Tabs.TabPane>
 
           <Tabs.TabPane tab='Agendar citas' key={1}>
