@@ -183,10 +183,6 @@ const RegisterUserAndOrgMember = ({
   const handleSubmit = () => {
     setCurrent(current + 1);
 
-    async function createAccount() {
-      return await createNewUser(basicDataUser);
-    }
-
     async function createOrgMember() {
       const propertiesOrgMember = { properties: { ...basicDataUser, ...dataOrgMember } };
       delete propertiesOrgMember.properties.password;
@@ -226,20 +222,25 @@ const RegisterUserAndOrgMember = ({
     if (existGenialialityUser) {
       createOrgMember();
     } else {
-      createAccount().then(({status}) => {
-        if (status === CREATE_NEW_USER_SUCCESS) {
-          createOrgMember();
-        } else {
-          setValidationGeneral({
-            status: false, // REVISAR: ¿Debe ser true, para que pueda salir la alerta?
-            isLoading: false,
-            textError: intl.formatMessage({
-              id: 'text_error.error_creating_user',
-              defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
-            }),
-          });
-        }
-      });
+      createNewUser(basicDataUser)
+        .then((createdUserInfo) => {
+          console.log('createdUserInfo returned:', {createdUserInfo})
+          const {status} = createdUserInfo
+
+          if (status === CREATE_NEW_USER_SUCCESS) {
+            createOrgMember();
+          } else {
+            setValidationGeneral({
+              status: false, // REVISAR: ¿Debe ser true, para que pueda salir la alerta?
+              isLoading: false,
+              textError: intl.formatMessage({
+                id: 'text_error.error_creating_user',
+                defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
+              }),
+            });
+          }
+        })
+        .catch((err) => console.error(err));
     }
   };
 

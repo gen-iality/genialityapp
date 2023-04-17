@@ -170,10 +170,6 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
 
   const handleSubmit = () => {
     setCurrent(current + 1);
-    const saveUserPromise = new Promise((resolve, reject) => {
-      createNewUser(basicDataUser)
-        .then(resolve)
-    });
 
     async function createEventUser() {
       const clonBasicDataUser: any = { ...basicDataUser };
@@ -209,20 +205,25 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       }
     }
 
-    saveUserPromise.then(({status}: any) => {
-      if (status === CREATE_NEW_USER_SUCCESS) {
-        createEventUser();
-      } else {
-        setValidationGeneral({
-          status: false,
-          isLoading: false,
-          textError: intl.formatMessage({
-            id: 'text_error.error_creating_user',
-            defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
-          }),
-        });
-      }
-    });
+    createNewUser(basicDataUser)
+      .then((createdUserInfo) => {
+        console.log('createdUserInfo returned:', {createdUserInfo})
+        const {status} = createdUserInfo
+
+        if (status === CREATE_NEW_USER_SUCCESS) {
+          createEventUser();
+        } else {
+          setValidationGeneral({
+            status: false,
+            isLoading: false,
+            textError: intl.formatMessage({
+              id: 'text_error.error_creating_user',
+              defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
+            }),
+          });
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   const next = () => {
