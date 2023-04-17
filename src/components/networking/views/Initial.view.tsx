@@ -7,11 +7,10 @@ import {
   SaveOutlined,
   StarOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Col, Divider, Form, InputNumber, Row, Space, Steps, Typography, notification } from 'antd';
+import { Button, Card, Col, Divider, Form, InputNumber, Modal, Row, Space, Steps, Typography, notification } from 'antd';
 import React, { useState } from 'react';
 import { UseEventContext } from '@/context/eventContext';
-import { deleteFieldConfig, updateOrCreateConfigMeet } from '../services/configuration.service';
-import { DispatchMessageService } from '@/context/MessageService';
+import { deleteNetworking, updateOrCreateConfigMeet } from '../services/configuration.service';
 import { networkingGlobalConfig } from '../interfaces/Index.interfaces';
 
 const { Step } = Steps;
@@ -19,6 +18,7 @@ const { Step } = Steps;
 export default function Initial({ ConfigTime }: networkingGlobalConfig) {
   const { value: Event } = UseEventContext();
   const [loading, setloading] = useState(false);
+  const [modal, setModal] = useState(false);
 
   const onSave = async (data: { meetingDuration: number }) => {
     setloading(true);
@@ -39,7 +39,7 @@ export default function Initial({ ConfigTime }: networkingGlobalConfig) {
   };
 
   const onDelete= async () => {
-  const response = await deleteFieldConfig(Event._id)
+  const response = await deleteNetworking(Event._id)
   notification[response ? 'success' : 'error']({
     icon: response ? <CheckCircleOutlined /> : <ExclamationCircleOutlined />,
     message: response ? 'Configuracion Eliminada' : 'No se logro eliminar la configuracion',
@@ -50,6 +50,16 @@ export default function Initial({ ConfigTime }: networkingGlobalConfig) {
     <>
       <Row justify='center' gutter={[16, 16]}>
         <Col span={16} style={{ margin: 30 }}>
+        {modal && (
+        <Modal
+          visible={modal}
+          title={"Eliminar networking"}
+          footer={false}
+          onCancel={()=>setModal(false)}
+          okText={'Guardar'}>
+          
+        </Modal>
+      )}
           <Card
             hoverable
             style={{ cursor: 'auto', height: '100%', width: '100%', backgroundColor: '#FDFEFE', borderRadius: 8 }}

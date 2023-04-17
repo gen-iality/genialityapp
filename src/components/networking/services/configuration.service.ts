@@ -134,14 +134,12 @@ export const getConfig = async <T>(eventId: string) => {
 		return null
 	}
 };
-export const deleteFieldConfig = async <T>(eventId: string) => {
+export const deleteNetworking = async <T>(eventId: string) => {
 	try {
 		await firestore
 			.collection(`networkingByEventId`)
 			.doc(eventId)
-			.update({
-				ConfigTime : firebase.firestore.FieldValue.delete()
-			})
+			.delete()
 
 		return true
 	} catch (error: any) {

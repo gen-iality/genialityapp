@@ -8,7 +8,7 @@ export interface TimeParameter {
     hourFinishSpaces: Moment
 }
 
-export type StatusSpace = 'avalible' | 'requested' | 'not_available' | 'rejected'
+export type StatusSpace = 'avalible' | 'requested' | 'not_available' | 'rejected' | 'accepted'
 
 export interface SpaceMeeting {
     dateStart: firebase.firestore.Timestamp,

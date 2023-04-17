@@ -41,7 +41,7 @@ const useGetSpacesMeetingsByUser = (date: Moment, targetEventUserId: string, cre
     useEffect(() => {
 
         if (!timeParametreLoading) {
-            const spaceRequestMeetings = generateSpaceMeetings(timeParametres, date, targetEventUserId, spacesMeetingsAgended, requestMeetings)
+            const spaceRequestMeetings = generateSpaceMeetings(timeParametres, date, targetEventUserId, creatorEventUserId, spacesMeetingsAgended, requestMeetings)
             setSpacesMeetingsToTargedUser(spaceRequestMeetings)
         }
     }, [date, targetEventUserId, timeParametreLoading, spacesMeetingsAgended, timeParametres, requestMeetings])

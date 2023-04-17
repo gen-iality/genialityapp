@@ -3,22 +3,46 @@ import { DiffBetweenTwoHours } from "./utils-hours";
 import { IMeetingRequestFirebase, SpaceMeeting, SpaceMeetingFirebase, StatusSpace, TimeParameter } from "../interfaces/space-requesting.interface";
 import firebase from 'firebase/compat';
 
-export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Moment, userId: string, spacesMeetingsAgended: SpaceMeetingFirebase[], requestMeetings: IMeetingRequestFirebase[]): SpaceMeeting[] => {
+export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Moment, userId: string, creatorId: string, spacesMeetingsAgended: SpaceMeetingFirebase[], requestMeetings: IMeetingRequestFirebase[]): SpaceMeeting[] => {
     const isAvalible = (dateStart: firebase.firestore.Timestamp) => {
         const haveAgendedMeeting = spacesMeetingsAgended.filter(spaceMeeting => (spaceMeeting.dateStart.isEqual(dateStart)))
         return haveAgendedMeeting.length === 0
     }
     const stateRequest = (dateStart: firebase.firestore.Timestamp) => {
-        const haveRequestMeeting = requestMeetings.find(requestMeeting => (requestMeeting.dateStartTimestamp.isEqual(dateStart)))
-        return haveRequestMeeting?.status
+        let status : StatusSpace = 'avalible'
+        const haveRequestMeeting = requestMeetings.filter(requestMeeting => (requestMeeting.dateStartTimestamp.isEqual(dateStart)))
+        if(haveRequestMeeting && haveRequestMeeting.length > 0) {
+            haveRequestMeeting.map((requesMeeting)=>{
+                switch (requesMeeting.status) {
+                        case "confirmed":
+                            if(requesMeeting.user_from.id === creatorId){
+                                status = 'accepted'
+                            }else {
+                                status = 'not_available'
+                            }
+                            break
+                        case "pending":
+                                if(requesMeeting.user_from.id === creatorId) status = 'requested'
+                            break
+                        case "rejected":
+                                if(requesMeeting.user_from.id === creatorId) status = 'rejected'
+                            break
+                        default :
+                        break
+                }
+            })
+        }
+        console.log('3 retornando esto',status)
+        return status
     }
 
-    const getStatusSpace = (dateStart: firebase.firestore.Timestamp): StatusSpace => {
-        if (stateRequest(dateStart) === 'pending') return 'requested'
-        if (stateRequest(dateStart) === 'rejected') return 'rejected'
-        if (stateRequest(dateStart) === 'confirmed') return 'not_available'
-        // if (!isAvalible(dateStart)) return 'not_available'
-        return 'avalible'
+    const getStatusSpace = (dateStart: firebase.firestore.Timestamp) => {
+     /*    const status = stateRequest(dateStart)
+        if (status === 'pending') return 'requested'
+        if (status === 'rejected') return 'rejected'
+        if (status === 'confirmed') return 'not_available'
+       // if (!isAvalible(dateStart)) return 'not_available'
+        return 'avalible' */
     }
     const hourStartSpaces = timeParametres.hourStartSpaces.clone()
     const hourFinishSpaces = timeParametres.hourFinishSpaces.clone()
@@ -41,7 +65,7 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
         }).toString()).toUTCString()))
     }];
 
-    timeSpaces[0].status = getStatusSpace(timeSpaces[0].dateStart)
+    timeSpaces[0].status = stateRequest(timeSpaces[0].dateStart)
 
 
     for (let i = 1; i < iteraciones; i++) {
@@ -63,7 +87,7 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
             }).toString()).toUTCString()))
         }
 
-        newSpace.status = getStatusSpace(newSpace.dateStart)
+        newSpace.status = stateRequest(newSpace.dateStart)
 
         timeSpaces.push(newSpace);
     }

@@ -61,10 +61,10 @@ export const listeningMeetingRequestByBothParticipants = (eventId: string, user_
     .doc(eventId)
     .collection('meeting_request')
     .where('user_to.id', '==',user_to_id) 
-    .where('user_from.id', '==',user_creator_id) 
     .onSnapshot(snapshot => {
       if (!snapshot.empty) {
         const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeetingRequestFirebase[];
+        console.log('data',data)
         onSet(data)
       } else {
         onSet([])
