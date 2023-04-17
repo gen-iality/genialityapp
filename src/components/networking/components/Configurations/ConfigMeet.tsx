@@ -6,7 +6,7 @@ import { generalItems } from '../../../agenda/activityType/components/manager/ev
 import { MeetConfig, networkingGlobalConfig } from '../../interfaces/Index.interfaces';
 import { INITIAL_MEET_CONFIG } from '../../utils/utils';
 import { SaveOutlined } from '@ant-design/icons';
-import { getConfig, updateOrCreateConfigMeet } from '../../services/configuration.service';
+import { getConfig, updateConfig } from '../../services/configuration.service';
 import { DispatchMessageService } from '@/context/MessageService';
 
 const { useBreakpoint } = Grid;
@@ -39,7 +39,7 @@ export default function ConfigMeet() {
 
   const uptadeConfig = async () => {
     setLoading(true);
-    const response = await updateOrCreateConfigMeet(eventId, {ConfigMeet: meetConfig});
+    const response = await updateConfig(eventId, {ConfigMeet: meetConfig});
     DispatchMessageService({
       action: 'show',
       duration: 1,

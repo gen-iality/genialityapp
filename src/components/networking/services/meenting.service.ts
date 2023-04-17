@@ -115,7 +115,6 @@ export const createMeeting = async (eventId: string, createMeetingDto: Omit<IMee
       .collection('meetings')
       .doc()
       .set(createMeetingDto);
-      console.log('Creando reunion correctamente-------------')
     return true;
   } catch (error) {
     console.log(error);
@@ -140,7 +139,6 @@ export const updateMeeting = async (eventId: string, meetingId: string, updateMe
 
 export const deleteMeeting = async (eventId: string, meetingId: string) => {
   try {
-    console.log('Epa eliminando', eventId, meetingId);
     await firestore
       .collection(`networkingByEventId`)
       .doc(eventId)

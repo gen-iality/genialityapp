@@ -55,7 +55,6 @@ export const listeningSpacesAgendedMeetings = (eventId: string, userID: string, 
     });
 }
 export const listeningMeetingRequestByBothParticipants = (eventId: string, user_to_id: string, user_creator_id: string, date: string, onSet: (data: IMeetingRequestFirebase[]) => void) => {
-  console.log('eventId',eventId)
   return firestore
     .collection(`networkingByEventId`)
     .doc(eventId)
@@ -64,7 +63,7 @@ export const listeningMeetingRequestByBothParticipants = (eventId: string, user_
     .onSnapshot(snapshot => {
       if (!snapshot.empty) {
         const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeetingRequestFirebase[];
-        console.log('data',data)
+
         onSet(data)
       } else {
         onSet([])

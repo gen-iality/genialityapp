@@ -31,8 +31,7 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
                         break
                 }
             })
-        }
-        console.log('3 retornando esto',status)
+        }   
         return status
     }
 

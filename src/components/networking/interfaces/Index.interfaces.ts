@@ -28,6 +28,7 @@ export interface MeetConfig {
 }
 
 export interface networkingGlobalConfig {
+	active?: boolean,
 	ConfigMeet?: MeetConfig
 	ConfigTime?: TimeParameter
 }

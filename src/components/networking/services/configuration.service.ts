@@ -108,8 +108,19 @@ export const updateType= async (eventId: string, typeId: string, updateTypeDto: 
 		return false
 	}
 };
-
-export const updateOrCreateConfigMeet= async (eventId: string, updateConfigDto: networkingGlobalConfig) => {
+export const createConfgi = async (eventId: string, updateConfigDto: networkingGlobalConfig) => {
+	try {
+		await firestore
+			.collection(`networkingByEventId`)
+			.doc(eventId)
+			.set(updateConfigDto);
+		return true
+	} catch (error: any) {
+		console.log(error.code)
+		return false
+	}
+}
+export const updateConfig= async (eventId: string, updateConfigDto: networkingGlobalConfig) => {
 	try {
 		await firestore
 			.collection(`networkingByEventId`)
@@ -117,7 +128,7 @@ export const updateOrCreateConfigMeet= async (eventId: string, updateConfigDto: 
 			.update(updateConfigDto);
 		return true
 	} catch (error: any) {
-		console.log(error)
+		console.log("a",error.code)
 		return false
 	}
 };
@@ -154,9 +165,7 @@ export const ListenConfig =(eventId: string,setGlogbalConfig: any) => {
       if (snapshot.exists) {
         const data = snapshot.data()
         setGlogbalConfig(data);
-      } else {
-		console.log('enviando null');
-		
+      } else {	
 		setGlogbalConfig(null)
 	  }
     })
