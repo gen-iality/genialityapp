@@ -124,9 +124,10 @@ export default function MyCalendar() {
             title={<></>}
             placement='right'
             visible={open}
-            width={500}
+            width={450}
             closable={false}
             headerStyle={{border: 'none'}}
+            bodyStyle={{paddingTop: 0}}
             extra={
               <Row gutter={[16, 16]} justify='end'>
                 <Col>
@@ -141,7 +142,7 @@ export default function MyCalendar() {
                 </Col>
                 <Col>
                   <Tooltip placement='topLeft' title='Cerrar'>
-                    <Button icon={<CloseOutlined />} onClick={onClose} type='text' />
+                    <Button icon={<CloseOutlined style={{fontSize: 25}} />} onClick={onClose} type='text' />
                   </Tooltip>
                 </Col>
               </Row>

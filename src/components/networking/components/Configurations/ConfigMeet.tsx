@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, List, Row, Tabs, Grid, Tooltip } from 'antd';
+import { Button, Card, Col, Form, List, Row, Tabs, Grid, Tooltip, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { UseEventContext } from '@/context/eventContext';
 import Toolbar from '../../../agenda/activityType/components/manager/eviusMeet/Toolbar';
@@ -44,7 +44,7 @@ export default function ConfigMeet() {
       action: 'show',
       duration: 1,
       key: 'config',
-      msj: response ? 'Configuracion guardada' : 'No se logro guardar la configuracion',
+      msj: response ? 'Configuración guardada' : 'No se logro guardar la configuración',
       type: response ? 'success' : 'error',
     });
     setLoading(false);
@@ -52,61 +52,66 @@ export default function ConfigMeet() {
 
   return (
     <>
-      <Row justify='end'>
-       <Tooltip placement='top' title='Guardar Configuracion'>
-       <Button
-          type='primary'
-          loading={loading}
-          icon={<SaveOutlined />}
-          style={{ position: 'fixed', zIndex: 1 }}
-          onClick={uptadeConfig}
-        />
-       </Tooltip>
-      </Row>
-      <Row>
-        <Col xs={24}>
-          <Tabs>
-            <Tabs.TabPane
-              className={!screens.xs ? 'desplazar' : ''}
-              style={{ height: '60vh', overflowY: 'auto' }}
-              tab='General'
-              key='item-general'>
-              <Form layout='vertical'>
-                <Card bordered={false}>
-                  <List
-                    size='small'
-                    dataSource={generalItems}
-                    renderItem={(option: any) => (
-                      <List.Item
-                        style={{ padding: '0px' }}
-                        key={option.key}
-                        extra={
-                          <Form.Item style={{ margin: '10px' }}>
-                            {option.element({ meetConfig, setMeetConfig })}
-                          </Form.Item>
-                        }>
-                        <List.Item.Meta title={option.label} />
-                      </List.Item>
-                    )}
-                  />
-                </Card>
-              </Form>
-            </Tabs.TabPane>
-            <Tabs.TabPane
-              className={!screens.xs ? 'desplazar' : ''}
-              style={{ overflowY: 'auto', height: 380 }}
-              tab='Toolbar'
-              key='item-toolbar'>
-              <Toolbar
-                values={meetConfig.config.toolbarButtons}
-                onChange={(list: any) =>
-                  setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, toolbarButtons: list } }))
-                }
-              />
-            </Tabs.TabPane>
-          </Tabs>
-        </Col>
-      </Row>
+      <Card 
+        hoverable 
+        style={{ height: "100%", backgroundColor: '#FDFEFE'}} 
+        title={
+          <Tooltip placement='top' title='Configuración de meet'><Typography.Text strong>Configuración de meet</Typography.Text></Tooltip>}
+        headStyle={{border: 'none'}}
+        extra={
+          <Tooltip placement='top' title='Guardar configuración'>
+            <Button
+              type='primary'
+              loading={loading}
+              icon={<SaveOutlined />}
+              onClick={uptadeConfig}
+            >
+              Guardar
+            </Button>
+          </Tooltip>
+        }
+      >
+        <Tabs>
+          <Tabs.TabPane
+            className={!screens.xs ? 'desplazar' : ''}
+            style={{ height: '40vh', overflowY: 'auto' }}
+            tab='General'
+            key='item-general'>
+            <Form layout='vertical'>
+              <Card bordered={false}>
+                <List
+                  size='small'
+                  dataSource={generalItems}
+                  renderItem={(option: any) => (
+                    <List.Item
+                      style={{ padding: '0px' }}
+                      key={option.key}
+                      extra={
+                        <Form.Item style={{ margin: '10px' }}>
+                          {option.element({ meetConfig, setMeetConfig })}
+                        </Form.Item>
+                      }>
+                      <List.Item.Meta title={option.label} />
+                    </List.Item>
+                  )}
+                />
+              </Card>
+            </Form>
+          </Tabs.TabPane>
+          <Tabs.TabPane
+            className={!screens.xs ? 'desplazar' : ''}
+            style={{ overflowY: 'auto', height: 380 }}
+            tab='Herramientas'
+            key='item-toolbar'>
+            <Toolbar
+              values={meetConfig.config.toolbarButtons}
+              onChange={(list: any) =>
+                setMeetConfig((prev) => ({ ...prev, config: { ...prev.config, toolbarButtons: list } }))
+              }
+            />
+          </Tabs.TabPane>
+        </Tabs>
+      </Card>
     </>
   );
 }
