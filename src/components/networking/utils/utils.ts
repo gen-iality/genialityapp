@@ -4,67 +4,69 @@ import { MeetConfig } from "../interfaces/Index.interfaces";
 
 
 export const filterOption = (inputValue: string, option: TransferType) => {
-    return option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
+	return option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
 }
 
 export const generateRandomKey = () => {
-    return Math.random().toString(36).substring(2, 10);
+	return Math.random().toString(36).substring(2, 10);
 }
 
-export const shortName = ( name = 'usuario',splitter = ' ') => {
-  const names = name.split(splitter)
-  const simpleName = `${names[0]} ${names[1] || ''}`
-  return simpleName
+export const shortName = (name = 'usuario', splitter = ' ') => {
+	const names = name.split(splitter)
+	const simpleName = `${names[0]} ${names[1] || ''}`
+	return simpleName
 }
 
 export const formLayout = {
-    labelCol: { span: 24 },
-    wrapperCol: { span: 24 },
-  };
+	labelCol: { span: 24 },
+	wrapperCol: { span: 24 },
+};
 
 export const columnsParticipants: ColumnsType<IParticipants> = [
-    {
-      title: 'Participante',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-    },
-    {
-      title: 'Asistencia',
-      dataIndex: 'attendance',
-    },
-  ];
+	{
+		title: 'Participante',
+		dataIndex: 'name',
+	},
+	{
+		title: 'Email',
+		dataIndex: 'email',
+	},
+	{
+		title: 'Asistencia',
+		dataIndex: 'attendance',
+	},
+];
 
-export const attendesOption = [{label : 'ninguno', value : '0'}]
+export const attendesOption = [{ label: 'ninguno', value: '0' }]
 
 export const defaultType = {
-  id : '',
-  nameType : 'Seleccione una opción', //'default',
-  style : '#406D85'
+	id: '',
+	nameType: 'Seleccione una opción', //'default',
+	style: '#406D85'
 }
 export const defaultPlace = {
-  id: "",
-  value: "no especificado",
-  label: "No especificado"
+	id: "",
+	value: "no especificado",
+	label: "No especificado"
 }
 export const meetingSelectedInitial: Omit<IMeeting, 'startTimestap'> = {
-  start: '',
-  end : '',
-  id: '',
-  name: '',
-  participants: [],
-  place: defaultPlace.value,
-  type: defaultType,
-  dateUpdated: 0,
-  participantsIds : ['']
+	start: '',
+	id_request_meetings: '',
+	end: '',
+	id: '',
+	name: '',
+	participants: [],
+	place: defaultPlace.value,
+	type: defaultType,
+	dateUpdated: 0,
+	participantsIds: ['']
 };
 
 export const RequestMeetingState = {
-  confirmed:'confirmed',
-  rejected:'rejected',
-  pending:'pending'
+	confirmed: 'confirmed',
+	rejected: 'rejected',
+	pending: 'pending',
+	canceled: 'canceled',
 }
 export const INITIAL_MEET_CONFIG: MeetConfig = {
 	openMeet: false,

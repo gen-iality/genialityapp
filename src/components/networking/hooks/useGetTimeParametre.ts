@@ -7,9 +7,9 @@ import { networkingGlobalConfig } from '../interfaces/Index.interfaces'
 
 const useGetTimeParameter = (EventId: string) => {
     const [timeParametres, setTimeParametres] = useState<TimeParameter>({
-        meetingDuration: 20,
+        meetingDuration: 0,
         hourStartSpaces: moment('00:00 am', 'h:mm a'),
-        hourFinishSpaces: moment('11:59 pm', 'h:mm a'),
+        hourFinishSpaces: moment('11:59 pm', 'h:mm a')
     })
     const [timeParametreLoading, setTimeParametreLoading] = useState(true)
 
@@ -28,6 +28,7 @@ const useGetTimeParameter = (EventId: string) => {
                 meetingDuration: 20,
                 hourStartSpaces: moment('2:30 am', 'h:mm a'),
                 hourFinishSpaces: moment('11:59 pm', 'h:mm a'),
+                withouParameters:true
             })
         }
         setTimeParametreLoading(false)

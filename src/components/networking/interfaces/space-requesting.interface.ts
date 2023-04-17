@@ -1,14 +1,16 @@
 import { Moment } from "moment";
 import firebase from 'firebase/compat';
 import { IMeeting } from "./Meetings.interfaces";
+import { RequestMeetingState } from "../utils/utils";
 
 export interface TimeParameter {
     meetingDuration: number;
     hourStartSpaces: Moment
     hourFinishSpaces: Moment
+    withouParameters?: boolean
 }
 
-export type StatusSpace = 'avalible' | 'requested' | 'not_available' | 'rejected' | 'accepted'
+export type StatusSpace = 'avalible' | 'requested' | 'not_available' | 'rejected' | 'accepted' | 'canceled'
 
 export interface SpaceMeeting {
     dateStart: firebase.firestore.Timestamp,
@@ -38,5 +40,5 @@ export interface IUserMeetingRequest {
     name: string;
     email: string;
 }
-
-export type TRequestMeetingState = 'pending' | 'rejected' | 'confirmed' 
+// export type TRequestMeetingState = 'pending' | 'rejected' | 'confirmed' 
+export type TRequestMeetingState = keyof typeof RequestMeetingState;

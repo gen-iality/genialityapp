@@ -108,9 +108,6 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
               disabledDate={disabledDate}
               onChange={setDate}
             />
-            <Button type='primary' onClick={onSubmit} loading={loading}>
-              Agendar cita
-            </Button>
           </Row>
           <Row>
             {date && (
@@ -120,6 +117,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                 targetUserName={targetEventUser?.user?.names}
                 onSubmit={onSubmit}
                 creatorEventUserId={cEventUser.value._id}
+                loadingButton={loading}
               />
             )}
           </Row>

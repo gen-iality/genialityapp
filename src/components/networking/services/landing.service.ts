@@ -24,7 +24,7 @@ export const getMeetingRequest = async (
   }
 };
 
-export const updateRequestMeeting = async (eventId: string, requestId: string, updateRequest: IRequestMeenting) => {
+export const updateRequestMeeting = async (eventId: string, requestId: string, updateRequest: Partial<IRequestMeenting>) => {
   try {
     await firestore
       .collection(`networkingByEventId`)
