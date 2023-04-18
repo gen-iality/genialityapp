@@ -25,7 +25,7 @@ import { ColumnsType } from 'antd/lib/table';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 /** Helpers and utils */
-import { EventsApi, PositionsApi, UsersApi, CerticationsApi } from '@helpers/request';
+import { EventsApi, PositionsApi, UsersApi, CerticationsApi, CerticationLogsApi } from '@helpers/request';
 
 /** Components */
 import Header from '@antdComponents/Header';
@@ -62,6 +62,9 @@ function CurrentOrganizationPositionCertificationUserPage(
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmiting, setIsSubmiting] = useState(false);
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [certification, setCertification] = useState<any | null>({});
+
   const [form] = Form.useForm();
 
   const openModal = () => setIsModalOpened(true);
@@ -91,7 +94,7 @@ function CurrentOrganizationPositionCertificationUserPage(
     );
   };
 
-  const onFormFinish = (values: any) => {
+  const onFormFinish = async (values: any) => {
     if (!currentUser) {
       alert('No se ha cargado el usuario con anterioridad');
       return;
@@ -100,7 +103,49 @@ function CurrentOrganizationPositionCertificationUserPage(
     console.debug('form submit', { values });
 
     setIsSubmiting(true);
-    CerticationsApi.create(values).finally(() => {
+
+    if (isEditing) {
+      CerticationsApi.update(certification._id, values).finally(() => {
+        setIsSubmiting(false);
+        setIsLoading(true);
+
+        //Edit certificationLog too
+        const lastCertificationLog = [...certification.certification_logs].pop();
+        CerticationLogsApi.update(lastCertificationLog._id, values);
+
+        loadData().finally(() => setIsLoading(false));
+
+        setIsEditing(false);
+      });
+    } else {
+      CerticationsApi.create(values).finally(() => {
+        setIsSubmiting(false);
+        setIsLoading(true);
+        loadData().finally(() => setIsLoading(false));
+      });
+    }
+  };
+
+  const editUserCertification = (values: any) => {
+    const certification = values.certification;
+    setCertification(certification);
+    openModal();
+
+    form.setFieldsValue({
+      event_id: values._id,
+      description: certification.description,
+      entity: certification.entity,
+      hours: certification.hours ?? 1,
+      approved_from_date: dayjs(certification.approved_from_date),
+      approved_until_date: dayjs(certification.approved_until_date),
+      file_url: certification.file_url,
+    });
+
+    setIsEditing(true);
+  };
+
+  const deleteUserCertification = (values: any) => {
+    CerticationsApi.deleteOne(values.certification._id).finally(() => {
       setIsSubmiting(false);
       setIsLoading(true);
       loadData().finally(() => setIsLoading(false));
@@ -225,7 +270,8 @@ function CurrentOrganizationPositionCertificationUserPage(
                   type="primary"
                   size="small"
                   onClick={(e) => {
-                    alert('No implementado aún');
+                    if(!event.certification) return;
+                    else editUserCertification(event);
                   }}
                   icon={<EditOutlined />}
                 />
@@ -238,7 +284,8 @@ function CurrentOrganizationPositionCertificationUserPage(
                   type="primary"
                   size="small"
                   onClick={(e) => {
-                    alert('No implementado aún');
+                    if(!event.certification) return;
+                    else deleteUserCertification(event);
                     // Little future people, please implement the deleting of FireStorage too.
                     // You SHOULD check if the last url pathname element stars with "documents/" and try to
                     // decode it and use this path (that stats with "documents/") to request a deleting
