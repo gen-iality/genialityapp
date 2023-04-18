@@ -308,7 +308,7 @@ function OrgRegisteredUsers(props) {
           <Form.Item name="hours" label="Horas" rules={[{ required: true, message: 'Agrega el número de horas' }]}>
             <InputNumber min={1} />
           </Form.Item>
-          <Form.Item name="entity" label="Entidad" rules={[{ required: true, message: 'Agrega la entidad' }]}>
+          <Form.Item name="entity" label="Entidad">
             <Input />
           </Form.Item>
           <Form.Item
