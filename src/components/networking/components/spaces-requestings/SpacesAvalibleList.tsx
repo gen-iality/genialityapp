@@ -56,22 +56,23 @@ const SpacesAvalibleList = ({
       <List loading={spacesMeetingsToTargedUserLoading || loadingButton}>
         {!spacesMeetingsToTargedUserLoading &&
           spacesMeetingsToTargedUser?.map((spaceMeeting, index) => (
-            <List.Item key={index}>
-              <Row gutter={20}>
-                <Col>
-                  <Typography>
+            <List.Item
+              key={index}
+              extra={
+                <Button
+                  disabled={getDisabledAccionButton(spaceMeeting.status)}
+                  onClick={() => onSubmit(spaceMeeting.dateStart, spaceMeeting.dateEnd)}>
+                  {getAccionButton(spaceMeeting.status)}
+                </Button>
+              }>
+              <List.Item.Meta
+                title={
+                  <Typography.Paragraph>
                     Reunion entre {moment(spaceMeeting.dateStart.toDate()).format('h:mm a')} y las{' '}
                     {moment(spaceMeeting.dateEnd.toDate()).format('h:mm a')}
-                  </Typography>
-                </Col>
-                <Col>
-                  <Button
-                    disabled={getDisabledAccionButton(spaceMeeting.status)}
-                    onClick={() => onSubmit(spaceMeeting.dateStart, spaceMeeting.dateEnd)}>
-                    {getAccionButton(spaceMeeting.status)}
-                  </Button>
-                </Col>
-              </Row>
+                  </Typography.Paragraph>
+                }
+              />
             </List.Item>
           ))}
       </List>

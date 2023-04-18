@@ -23,9 +23,9 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
                     case "pending":
                         if (requesMeeting.user_from.id === creatorId) status = 'requested'
                         break
-                    case "rejected":
+                    /* case "rejected":
                         if (requesMeeting.user_from.id === creatorId) status = 'rejected'
-                        break
+                        break */
                     default:
                         break
                 }

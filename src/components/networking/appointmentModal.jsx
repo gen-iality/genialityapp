@@ -109,8 +109,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
               onChange={setDate}
             />
           </Row>
-          <Row>
-            {date && (
+          {date && (
               <SpacesAvalibleList
                 date={date}
                 targetEventUserId={targetEventUserId}
@@ -120,7 +119,6 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                 loadingButton={loading}
               />
             )}
-          </Row>
         </div>
       </div>
     </Modal>
