@@ -5,8 +5,7 @@ import Meta from 'antd/lib/card/Meta';
 import { IMeeting } from '../../interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 import * as service from '../../services/meenting.service';
-import { updateRequestMeeting } from '../../services/landing.service';
-import { RequestMeetingState } from '../../utils/utils';
+import { deleteRequestMeeting } from '../../services/landing.service';
 
 interface AcceptedCardProps {
   data: IMeeting;
@@ -17,7 +16,6 @@ interface AcceptedCardProps {
 }
 
 const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom }: AcceptedCardProps) => {
-  
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
 
@@ -42,10 +40,10 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
     if (!loading) {
       setLoading(true);
       const response = await service.deleteMeeting(eventId, data.id);
-      
+
       if (response) {
         setDeleted(true);
-        await updateRequestMeeting(eventId, data.id_request_meetings??'', { status: RequestMeetingState.canceled, id:data.id_request_meetings});
+        await deleteRequestMeeting(eventId, data.id_request_meetings ?? '');
       }
 
       DispatchMessageService({

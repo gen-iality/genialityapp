@@ -32,6 +32,7 @@ const useGetSpacesMeetingsByUser = (date: Moment, targetEventUserId: string, cre
 
     useEffect(() => {
         if (timeParametres.withouParameters && timeParametres.withouParameters === true) {
+            setspacesMeetingsToTargedUserLoading(false);
             return setSpacesMeetingsToTargedUser([])
         }
         if (!timeParametreLoading) {

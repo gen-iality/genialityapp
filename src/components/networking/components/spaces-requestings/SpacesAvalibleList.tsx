@@ -49,13 +49,14 @@ const SpacesAvalibleList = ({
     return false;
   };
 
-  if (!spacesMeetingsToTargedUserLoading && spacesMeetingsToTargedUser.length === 0) return <Result title='Debe configurar los parametros del networking' />;
+  if (!spacesMeetingsToTargedUserLoading && spacesMeetingsToTargedUser.length === 0)
+    return <Result title='Debe configurar los parametros del networking' />;
   return (
     <>
       <List loading={spacesMeetingsToTargedUserLoading || loadingButton}>
         {!spacesMeetingsToTargedUserLoading &&
-          spacesMeetingsToTargedUser?.map((spaceMeeting) => (
-            <List.Item>
+          spacesMeetingsToTargedUser?.map((spaceMeeting, index) => (
+            <List.Item key={index}>
               <Row gutter={20}>
                 <Col>
                   <Typography>

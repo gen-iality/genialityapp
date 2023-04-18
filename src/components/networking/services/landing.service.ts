@@ -38,6 +38,20 @@ export const updateRequestMeeting = async (eventId: string, requestId: string, u
     return false;
   }
 };
+export const deleteRequestMeeting = async (eventId: string, requestId: string) => {
+  try {
+    await firestore
+      .collection(`networkingByEventId`)
+      .doc(eventId)
+      .collection('meeting_request')
+      .doc(requestId)
+      .delete();
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
 
 export const listeningSpacesAgendedMeetings = (eventId: string, userID: string, date: string, onSet: (data: SpaceMeetingFirebase[]) => void) => {
   return firestore
