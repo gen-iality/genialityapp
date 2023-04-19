@@ -106,19 +106,19 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
               </Typography.Text>
             </Space>
             <Space align='center'>
-              <Button icon={<CalendarStartIcon style={{fontSize: 20}}/> } type='text' style={{cursor: 'default'}}/>
+              <Button icon={<CalendarStartIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/> } type='text' style={{cursor: 'default'}}/>
               <Typography.Text>
                 {dateFormat(meenting.start, 'lll A')}
               </Typography.Text>
             </Space>
             <Space align='center'>
-              <Button icon={<CalendarEndIcon style={{fontSize: 20}}/> } type='text' style={{cursor: 'default'}}/>
+              <Button icon={<CalendarEndIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/> } type='text' style={{cursor: 'default'}}/>
               <Typography.Text>
                 {dateFormat(meenting.end, 'lll A')}
               </Typography.Text>
             </Space>
             <Space align='center'>
-              <Button icon={<MapMarkerRadiusOutlineIcon style={{fontSize: 20}}/>} type='text' style={{cursor: 'default'}}/>
+              <Button icon={<MapMarkerRadiusOutlineIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/>} type='text' style={{cursor: 'default'}}/>
               <Typography.Text type={meenting.place === 'no especificado' ? 'secondary' : undefined} style={{ textTransform: 'uppercase'}}>
                 {meenting.place}
               </Typography.Text>

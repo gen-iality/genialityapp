@@ -82,7 +82,7 @@ export default function TypeMeenting() {
         hoverable 
         style={{ height: "100%", backgroundColor: '#FDFEFE'}} 
         title={
-          <Tooltip placement='top' title='Configuración de tipos'><Typography.Text strong>Configuración de tipos</Typography.Text></Tooltip>}
+          <Tooltip placement='top' title='Configuración de tipos'><Typography.Text strong>Configuración de <br /> tipos</Typography.Text></Tooltip>}
         headStyle={{border: 'none'}}
         extra={
           <Tooltip placement='top' title='Agregar tipos'>

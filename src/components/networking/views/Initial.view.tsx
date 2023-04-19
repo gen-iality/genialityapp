@@ -3,10 +3,8 @@ import {
   CloseCircleOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
-  FlagOutlined,
   InfoCircleOutlined,
-  SaveOutlined,
-  StarOutlined,
+  SaveOutlined
 } from '@ant-design/icons';
 import {
   Button,
@@ -18,8 +16,8 @@ import {
   Modal,
   Result,
   Row,
+  Select,
   Space,
-  Steps,
   Typography,
   notification,
 } from 'antd';
@@ -73,8 +71,8 @@ export default function Initial({ active,ConfigTime }: networkingGlobalConfig) {
   };
   return (
     <>
-      <Row justify='center' gutter={[16, 16]}>
-        <Col style={{ paddingTop: 70 }}>
+      <Row justify='center' gutter={[32, 32]}>
+        <Col span={16}>
           <Modal
             visible={modal}
             onCancel={() => setModal(false)}
@@ -121,52 +119,79 @@ export default function Initial({ active,ConfigTime }: networkingGlobalConfig) {
           </Modal>
           <Card
             hoverable
-            style={{ cursor: 'auto', height: '100%', backgroundColor: 'rgba(196, 196, 196, 0.1)'}}
-            title={
-              <Typography.Text strong> Configuración de Networking</Typography.Text>
-            }
-            headStyle={{border: 'none'}}>
-            
-            <Row justify='center' align='middle' gutter={[16, 16]}>
-              <Col span={20}>
-                <Steps labelPlacement="vertical" >
-                  <Steps.Step title={'Fecha Inicio'} description={dateFormat(Event.datetime_from, 'MM/DD/YYYY hh:mm A')} icon={<CalendarStarIcon />} status='finish' />
-                  <Steps.Step title={'Fecha Fin'} description={dateFormat(Event.datetime_to, 'MM/DD/YYYY hh:mm A')} icon={<CalendarCheckIcon />} status='finish' />
-                </Steps>
-              </Col>
-            </Row>
-            
-            <Form onFinish={onSave} layout='vertical' style={{ paddingTop: 15 }}> 
-              <Form.Item
-                name={'meetingDuration'}
-                label={'Tiempo entre reuniones'}
-                rules={[{ required: true, message: 'Debe configurar un mínimo de 5 minutos' }]}
-                help={
-                  <Typography.Link type='secondary'>
-                    <InfoCircleOutlined /> Este tiempo es en minutos y no puede ser mayor a 60 ni menor a 5
-                  </Typography.Link>
-                }
-                initialValue={ConfigTime ? ConfigTime.meetingDuration : 5}>
-                <InputNumber disabled={loading} max={60} min={5} style={{ width: '100%' }} />
-              </Form.Item>
+            style={{height: '100%'}}>
+            <Space direction='vertical' style={{width: '100%'}}>
+              {!active && <Typography.Text strong style={{fontSize: 16}}>Configuración general de networking</Typography.Text>}
+              
+              <Form onFinish={onSave} layout='vertical'> 
+                <Form.Item
+                  name={'meetingDuration'}
+                  label={'Tiempo entre reuniones'}
+                  rules={[{ required: true, message: 'Debe configurar un mínimo de 5 minutos' }]}
+                  help={
+                    <Typography.Link type='secondary'>
+                      <InfoCircleOutlined /> Intervalo de tiempo entre las reuniones donde el mínimo es de 5 minutos y un máximo de 30 minutos
+                    </Typography.Link>
+                  }
+                  initialValue={ConfigTime ? ConfigTime.meetingDuration : 5}>
+                  <Select>
+                    <Select.Option value={5}>5 minutos</Select.Option>
+                    <Select.Option value={10}>10 minutos</Select.Option>
+                    <Select.Option value={15}>15 minutos</Select.Option>
+                    <Select.Option value={20}>20 minutos</Select.Option>
+                    <Select.Option value={25}>25 minutos</Select.Option>
+                    <Select.Option value={30}>30 minutos</Select.Option>
+                  </Select>
+                  {/* <InputNumber disabled={loading} max={60} min={5} style={{ width: '100%' }} /> */}
+                </Form.Item>
 
-              <Row justify='end' gutter={[8, 8]} style={{paddingTop: 15}}>
-                <Col>
-                  <Button loading={loading} type='primary' icon={<SaveOutlined />} htmlType='submit'>
-                    Guardar
-                  </Button>
-                </Col>
-                {active ? (
+                <Row justify='end' gutter={[8, 8]} style={{paddingTop: 15}}>
                   <Col>
-                    <Button icon={<DeleteOutlined />} danger type='primary' onClick={() => setModal(true)}>
-                      Eliminar
+                    <Button loading={loading} type='primary' icon={<SaveOutlined />} htmlType='submit'>
+                      Guardar
                     </Button>
                   </Col>
-                ) : (
-                  <></>
-                )}
-              </Row>
-            </Form>
+                  {active ? (
+                    <Col>
+                      <Button icon={<DeleteOutlined />} danger type='primary' onClick={() => setModal(true)}>
+                        Eliminar
+                      </Button>
+                    </Col>
+                  ) : (
+                    <></>
+                  )}
+                </Row>
+              </Form>  
+            </Space>
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card hoverable style={{height: '100%'}}>
+            <Space direction='vertical'>
+              <Typography.Text strong>Rango de fechas para las reuniones</Typography.Text>
+              <Space align='center' >
+                <Button icon={<CalendarStarIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/> } type='text' style={{cursor: 'default'}}/>
+                <div>
+                  <Typography.Text strong>
+                    Fecha de inicio
+                  </Typography.Text> <br />
+                  <Typography.Text>
+                    {dateFormat(Event.datetime_from, 'lll A')}
+                  </Typography.Text>
+                </div>
+              </Space>
+              <Space align='center'>
+                <Button icon={<CalendarCheckIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/> } type='text' style={{cursor: 'default'}}/>
+                <div>
+                  <Typography.Text strong>
+                    Fecha final
+                  </Typography.Text> <br />
+                  <Typography.Text>
+                    {dateFormat(Event.datetime_to, 'lll A')}
+                  </Typography.Text>
+                </div>
+              </Space>
+            </Space>
           </Card>
         </Col>
       </Row>
