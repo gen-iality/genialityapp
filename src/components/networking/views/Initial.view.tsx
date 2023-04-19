@@ -133,39 +133,43 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
               )}
 
               <Form onFinish={onSave} layout='vertical'>
-                <Form.Item
-                  name={'meetingDuration'}
-                  label={'Tiempo entre reuniones'}
-                  rules={[{ required: true, message: 'Debe configurar un mínimo de 5 minutos' }]}
-                  help={
-                    <Typography.Link type='secondary'>
-                      <InfoCircleOutlined /> Intervalo de tiempo entre las reuniones donde el mínimo es de 5 minutos y
-                      un máximo de 30 minutos
-                    </Typography.Link>
-                  }
-                  initialValue={ConfigTime ? ConfigTime.meetingDuration : 5}>
-                  <Select>
-                    <Select.Option value={5}>5 minutos</Select.Option>
-                    <Select.Option value={10}>10 minutos</Select.Option>
-                    <Select.Option value={15}>15 minutos</Select.Option>
-                    <Select.Option value={20}>20 minutos</Select.Option>
-                    <Select.Option value={25}>25 minutos</Select.Option>
-                    <Select.Option value={30}>30 minutos</Select.Option>
-                  </Select>
-                  {/* <InputNumber disabled={loading} max={60} min={5} style={{ width: '100%' }} /> */}
-                </Form.Item>
-
-                <Row justify='start'>
-                  <Typography.Paragraph strong>Habilitar la visualizacion de networking:</Typography.Paragraph>
-                  <Switch
-                    style={{ marginLeft: 10 }}
-                    checked={configShow}
-                    checkedChildren='Si'
-                    unCheckedChildren='No'
-                    onChange={() => {
-                      setConfigShow(!configShow);
-                    }}
-                  />
+                <Row justify='center' gutter={[40, 40]} wrap>
+                  <Col span={16}>
+                    <Form.Item
+                      name={'meetingDuration'}
+                      label={'Tiempo entre reuniones'}
+                      rules={[{ required: true, message: 'Debe configurar un mínimo de 5 minutos' }]}
+                      help={
+                        <Typography.Link type='secondary'>
+                          <InfoCircleOutlined /> Intervalo de tiempo entre las reuniones donde el mínimo es de 5 minutos y
+                          un máximo de 30 minutos
+                        </Typography.Link>
+                      }
+                      initialValue={ConfigTime ? ConfigTime.meetingDuration : 5}>
+                      <Select>
+                        <Select.Option value={5}>5 minutos</Select.Option>
+                        <Select.Option value={10}>10 minutos</Select.Option>
+                        <Select.Option value={15}>15 minutos</Select.Option>
+                        <Select.Option value={20}>20 minutos</Select.Option>
+                        <Select.Option value={25}>25 minutos</Select.Option>
+                        <Select.Option value={30}>30 minutos</Select.Option>
+                      </Select>
+                      {/* <InputNumber disabled={loading} max={60} min={5} style={{ width: '100%' }} /> */}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label={'Habilitar la visualizacion de networking'}>
+                      <Switch
+                        style={{ marginLeft: 10 }}
+                        checked={configShow}
+                        checkedChildren='Si'
+                        unCheckedChildren='No'
+                        onChange={() => {
+                          setConfigShow(!configShow);
+                        }}
+                      />
+                    </Form.Item>
+                  </Col>
                 </Row>
                 <Row justify='end' gutter={[8, 8]} style={{ paddingTop: 15 }}>
                   <Col>
