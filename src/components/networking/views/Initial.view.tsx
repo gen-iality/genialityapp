@@ -134,7 +134,7 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
 
               <Form onFinish={onSave} layout='vertical'>
                 <Row justify='center' gutter={[40, 40]} wrap>
-                  <Col span={16}>
+                  <Col span={24}>
                     <Form.Item
                       name={'meetingDuration'}
                       label={'Tiempo entre reuniones'}
@@ -157,7 +157,7 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
                       {/* <InputNumber disabled={loading} max={60} min={5} style={{ width: '100%' }} /> */}
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col span={24}>
                     <Form.Item label={'Habilitar la visualización de networking'}
                     help={
                       <Typography.Link type='secondary'>
