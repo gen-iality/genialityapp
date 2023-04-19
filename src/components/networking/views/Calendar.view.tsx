@@ -1,4 +1,4 @@
-import { Button, Card, Col, Drawer, Modal, Row, Tooltip } from 'antd';
+import { Button, Card, Col, Drawer, Modal, Row, Space, Tag, Tooltip, Typography } from 'antd';
 import moment from 'moment';
 import React, { useContext, useState } from 'react';
 import { Calendar, View, momentLocalizer } from 'react-big-calendar';
@@ -18,6 +18,7 @@ import useGetMeetingToCalendar from '../hooks/useGetMeetingToCalendar';
 import { useGetSpaces } from '../hooks/useGetSpaces';
 import { GroupByResources } from '../interfaces/groupBy-interfaces';
 import { useGetMeetings } from '../hooks/useGetMeetings';
+import AccountGroupOutlineIcon from '@2fd/ant-design-icons/lib/AccountGroupOutline';
 
 const { confirm } = Modal;
 export default function MyCalendar() {
@@ -116,16 +117,25 @@ export default function MyCalendar() {
     if (groupBy === 'observers') return setGroupBy('spaces');
     if (groupBy === 'spaces') return setGroupBy('observers');
   };
+
   return (
     <>
-      <Row justify='center' wrap gutter={8}>
+      <Row justify='center' wrap gutter={[8, 8]}>
         <Col span={23}>
           <Drawer
-            title={<></>}
+            title={
+              <Space wrap align='center'>
+                <AccountGroupOutlineIcon style={{fontSize: 30, color: meenting.type?.style}}/>
+                <Tag color={meenting.type?.style}>
+                  {meenting.type?.nameType === 'Seleccione una opción' ? 'reunión' : meenting.type?.nameType}
+                </Tag>
+              </Space>
+            }
             placement='right'
             visible={open}
             width={450}
             closable={false}
+            onClose={() => onClose()}
             headerStyle={{border: 'none'}}
             bodyStyle={{paddingTop: 0}}
             extra={

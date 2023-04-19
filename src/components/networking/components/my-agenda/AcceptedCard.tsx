@@ -20,7 +20,6 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   const [deleted, setDeleted] = useState(false);
 
   const userName = 'Reunion';
-  const userEmail = '';
   const userImage = '';
 
   /** Entramos a la sala 1 a 1 de la reunión
@@ -56,8 +55,9 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   };
 
   const validDateRoom = (room: any) => {
-    let dateFrom = moment(room.timestamp_start).format('YYYY-MM-DD');
-
+    let dateFrom = moment(room.startTimestap).format('YYYY-MM-DD');
+    console.log('room.timestamp_start ',room.startTimestap)
+    console.log('date ',dateFrom)
     if (moment().format('YYYY-MM-DD') == dateFrom) {
       return true;
     }

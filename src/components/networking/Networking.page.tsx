@@ -1,4 +1,4 @@
-import { Tabs } from 'antd';
+import { Tabs, Typography } from 'antd';
 import Report from './report';
 import NetworkingProvider, { NetworkingContext } from './context/NetworkingContext';
 import { PropsNetworking, networkingGlobalConfig } from './interfaces/Index.interfaces';
@@ -10,6 +10,7 @@ import Initial from './views/Initial.view';
 import { UseUserEvent } from '@/context/eventUserContext';
 import Header from '@/antdComponents/Header';
 import * as serviceConfig from './services/configuration.service';
+import Loading from '@/components/profile/loading';
 
 
 export default function NetworkingPage({ eventId }: PropsNetworking) {
@@ -25,10 +26,18 @@ export default function NetworkingPage({ eventId }: PropsNetworking) {
 
   return (
     <NetworkingProvider>
+      <Header 
+        title='Networking'
+        back={!globalConfig?.active}
+      />
       {globalConfig?.active ? (
         <Tabs defaultActiveKey={'5'}>
-          <Tabs.TabPane tab='Networking' key={5}>
-           <Initial {...globalConfig}/>
+          <Tabs.TabPane tab='General' key={5}>
+            <Initial {...globalConfig}/>
+          </Tabs.TabPane>
+
+          <Tabs.TabPane tab='Configuración' key={3}>
+            <Configuration />
           </Tabs.TabPane>
 
           <Tabs.TabPane tab='Agendar citas' key={1}>
@@ -39,20 +48,16 @@ export default function NetworkingPage({ eventId }: PropsNetworking) {
             <Calendar />
           </Tabs.TabPane>
 
-          <Tabs.TabPane tab='Configuración' key={3}>
-            <Configuration />
-          </Tabs.TabPane>
-
           <Tabs.TabPane tab='Reporte de networking' key={4}>
             <Report props={eventId} />
           </Tabs.TabPane>
         </Tabs>
       ) : (
        <>
-        <Header title={'Networking'} description={''} back />
-        <div  className='animate__animated animate__backInDown' > 
+        {/* <Header title={'Networking'} description={''} back /> */}
+        {/* <div  className='animate__animated animate__backInDown' >  */}
         <Initial/>
-        </div>
+        {/* </div> */}
        </>
       )}
     </NetworkingProvider>

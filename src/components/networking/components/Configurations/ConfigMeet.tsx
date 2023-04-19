@@ -56,7 +56,7 @@ export default function ConfigMeet() {
         hoverable 
         style={{ height: "100%", backgroundColor: '#FDFEFE'}} 
         title={
-          <Tooltip placement='top' title='Configuración de meet'><Typography.Text strong>Configuración de meet</Typography.Text></Tooltip>}
+          <Tooltip placement='top' title='Configuración de meet'><Typography.Text strong>Configuración de <br /> meet</Typography.Text></Tooltip>}
         headStyle={{border: 'none'}}
         extra={
           <Tooltip placement='top' title='Guardar configuración'>

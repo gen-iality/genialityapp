@@ -1,5 +1,5 @@
 import { CalendarOutlined, CheckCircleOutlined, ClockCircleOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { Col, Row, Space, Typography, List, Divider, Checkbox, Badge, Avatar, Button } from 'antd';
+import { Col, Row, Space, Typography, List, Divider, Checkbox, Badge, Avatar, Button, Tag } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { IParticipants, IMeentingItem } from '../interfaces/Meetings.interfaces';
 import Countdown from 'antd/lib/statistic/Countdown';
@@ -8,6 +8,9 @@ import { NetworkingContext } from '../context/NetworkingContext';
 import useDateFormat from '../hooks/useDateFormat';
 import useMeetingState from '../hooks/useMeetingState';
 import MapMarkerRadiusOutlineIcon from '@2fd/ant-design-icons/lib/MapMarkerRadiusOutline';
+import CalendarStartIcon from '@2fd/ant-design-icons/lib/CalendarStart';
+import CalendarEndIcon from '@2fd/ant-design-icons/lib/CalendarEnd';
+import moment from 'moment';
 
 export default function MeetingInfo({ meenting }: IMeentingItem) {
   const [participants, setParticipants] = useState<IParticipants[]>(meenting.participants);
@@ -32,18 +35,14 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
 
   return (
     <>
-      <List>
+      {/* <List>
         <List.Item
           extra={
             stateMeeting && stateMeeting === 'scheduled' ?
             <Space direction='vertical' align='center'>
               <ClockCircleOutlined style={{fontSize: 35, color: 'rgba(0, 0, 0, 0.45)'}}/>
-              <Typography.Text type='secondary'>Pronto iniciará</Typography.Text>
-              <Countdown
-                  valueStyle={{fontSize: '11px', color: 'rgba(0, 0, 0, 0.45)'}}
-                  value={dateFormat(meenting.start, 'MM/DD/YYYY hh:mm A')}
-                  format='D [días] H [horas] m [minutos] '
-                />
+              <Typography.Text type='secondary'>Iniciará</Typography.Text>
+              <Typography.Text type='secondary'>{moment(meenting.start).from(moment())}</Typography.Text>
             </Space> : stateMeeting === 'in-progress' ?
             <Space direction='vertical' align='center'>
               <Badge dot>
@@ -61,11 +60,11 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
           <List.Item.Meta 
             title={<Typography.Title level={4}>{meenting.name}</Typography.Title>}
             description={
-              <Space direction='vertical'>
+              <Space direction='vertical' style={{width: '95%'}}>
                 <Space align='center'>
                   <Button icon={<CalendarOutlined /> } type='text'/>
                   
-                  <Typography.Text /* type='secondary' */ style={{fontSize: 13}}>
+                  <Typography.Text style={{fontSize: 13}}>
                     {dateFormat(meenting.start, 'lll A')} - {dateFormat(meenting.end, 'lll A')}
                   </Typography.Text>
                 </Space>
@@ -80,14 +79,55 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
             }
           />
         </List.Item>
-      </List>
+      </List> */}
       <Row justify='center' align='middle' gutter={[16, 16]}>
-        <Col span={23}>
-          <Divider orientation='left' style={{marginBottom: 0}}>
-            <Typography.Text strong>Lista de asistencia</Typography.Text>
-          </Divider>
+        <Col span={24}>
+          <Space direction='vertical'>
+            <Space align='center'>
+              <Typography.Text>
+                <Typography.Text strong style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.85)'}}>{meenting.name}</Typography.Text>
+                <Tag style={{marginLeft: 5}} color={
+                  stateMeeting && stateMeeting === 'scheduled' ? 'cyan'
+                  : stateMeeting === 'in-progress' ? 'geekblue'
+                  : stateMeeting === 'completed' ? 'default'
+                  : 'cyan'
+                }>
+                  {
+                    stateMeeting && stateMeeting === 'scheduled' ? 
+                    <span>Inicia {moment(meenting.start).from(moment())}</span> 
+                    : stateMeeting === 'in-progress' ?
+                    <span>En progreso</span> 
+                    : stateMeeting === 'completed' ?
+                    <span>Finalizado</span>
+                    : 
+                    <></>
+                  }
+                </Tag>
+              </Typography.Text>
+            </Space>
+            <Space align='center'>
+              <Button icon={<CalendarStartIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/> } type='text' style={{cursor: 'default'}}/>
+              <Typography.Text>
+                {dateFormat(meenting.start, 'lll A')}
+              </Typography.Text>
+            </Space>
+            <Space align='center'>
+              <Button icon={<CalendarEndIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/> } type='text' style={{cursor: 'default'}}/>
+              <Typography.Text>
+                {dateFormat(meenting.end, 'lll A')}
+              </Typography.Text>
+            </Space>
+            <Space align='center'>
+              <Button icon={<MapMarkerRadiusOutlineIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/>} type='text' style={{cursor: 'default'}}/>
+              <Typography.Text type={meenting.place === 'no especificado' ? 'secondary' : undefined} style={{ textTransform: 'uppercase'}}>
+                {meenting.place}
+              </Typography.Text>
+            </Space>
+          </Space>
+        </Col>
+        <Col span={24}>
           <List
-            style={{padding: '0px 10px'}}
+            header={<Typography.Text strong>Lista de asistencia</Typography.Text>}
             dataSource={participants}
             pagination={participants.length > 5 && { pageSize: 5 }}
             renderItem={(participant) => (
