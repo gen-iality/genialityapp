@@ -158,7 +158,12 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item label={'Habilitar la visualizacion de networking'}>
+                    <Form.Item label={'Habilitar la visualización de networking'}
+                    help={
+                      <Typography.Link type='secondary'>
+                        <InfoCircleOutlined /> Esta opción es para confirmar si desea vizualizar networking en la landing
+                      </Typography.Link>
+                    }>
                       <Switch
                         style={{ marginLeft: 10 }}
                         checked={configShow}
