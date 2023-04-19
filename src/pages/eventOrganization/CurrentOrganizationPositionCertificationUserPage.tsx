@@ -26,6 +26,7 @@ import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/ic
 
 /** Helpers and utils */
 import { EventsApi, PositionsApi, UsersApi, CerticationsApi, CerticationLogsApi } from '@helpers/request';
+import { fireStorage } from '@helpers/firebase';
 
 /** Components */
 import Header from '@antdComponents/Header';
@@ -145,9 +146,34 @@ function CurrentOrganizationPositionCertificationUserPage(
   };
 
   const deleteUserCertification = (values: any) => {
+    console.log('Se elimina certificado');
+    console.log('values', values);
     CerticationsApi.deleteOne(values.certification._id).finally(() => {
       setIsSubmiting(false);
       setIsLoading(true);
+
+      console.log('file_url', values.certification.file_url);
+
+      const decodedUrl = decodeURIComponent(values.certification.file_url);
+      console.log('decodedUrl', decodedUrl);
+
+      const urlObject = new URL(decodedUrl);
+      let path = urlObject.pathname.split('/documents/')[1].replace(/%20/g, ' ');
+      path = `/documents/${path}`;
+      console.log('path', path);
+
+      const ref = fireStorage.ref();
+      const archivoRef = ref.child(path);
+
+      archivoRef
+        .delete()
+        .then(() => {
+          console.log('Archivo eliminado correctamente');
+        })
+        .catch((error: any) => {
+          console.log('Error al eliminar el archivo: ', error);
+        });
+
       loadData().finally(() => setIsLoading(false));
     });
   };
@@ -270,7 +296,7 @@ function CurrentOrganizationPositionCertificationUserPage(
                   type="primary"
                   size="small"
                   onClick={(e) => {
-                    if(!event.certification) return;
+                    if (!event.certification) return;
                     else editUserCertification(event);
                   }}
                   icon={<EditOutlined />}
@@ -284,13 +310,8 @@ function CurrentOrganizationPositionCertificationUserPage(
                   type="primary"
                   size="small"
                   onClick={(e) => {
-                    if(!event.certification) return;
+                    if (!event.certification) return;
                     else deleteUserCertification(event);
-                    // Little future people, please implement the deleting of FireStorage too.
-                    // You SHOULD check if the last url pathname element stars with "documents/" and try to
-                    // decode it and use this path (that stats with "documents/") to request a deleting
-                    // process with the FireStorage API. Dont say that my intrustion are bad, if you don't
-                    // believe in me, then ask to ChatGPT tho
                   }}
                   icon={<DeleteOutlined />}
                   danger
