@@ -1,13 +1,12 @@
 import moment, { Moment } from "moment";
 import { DiffBetweenTwoHours } from "./utils-hours";
-import { IMeetingRequestFirebase, SpaceMeeting, SpaceMeetingFirebase, StatusSpace, TimeParameter } from "../interfaces/space-requesting.interface";
+import { IMeetingRequestFirebase, SpaceMeeting, StatusSpace, TimeParameter } from "../interfaces/space-requesting.interface";
 import firebase from 'firebase/compat';
 
 export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Moment, userId: string, creatorId: string, requestMeetings: IMeetingRequestFirebase[]): SpaceMeeting[] => {
     const stateRequest = (dateStart: firebase.firestore.Timestamp) => {
         let status: StatusSpace = 'avalible'
         const haveRequestMeeting = requestMeetings.filter(requestMeeting => (requestMeeting.dateStartTimestamp.isEqual(dateStart)))
-        console.log("🚀 ~ file: space-requesting.utils.ts:10 ~ stateRequest ~ haveRequestMeeting:", haveRequestMeeting)
         if (haveRequestMeeting && haveRequestMeeting.length > 0) {
             haveRequestMeeting.forEach((requesMeeting) => {
                 switch (requesMeeting.status) {
@@ -20,7 +19,7 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
                             status = 'accepted'
 
                         }
-
+                        if ((requesMeeting.user_from.id === creatorId || requesMeeting.user_to.id === creatorId) && requesMeeting.user_from.id!==userId)status = 'busy-schedule'
                         break
                     case "pending":
                         if (requesMeeting.user_from.id === creatorId) status = 'requested'

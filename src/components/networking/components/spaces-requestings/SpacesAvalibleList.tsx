@@ -35,6 +35,7 @@ const SpacesAvalibleList = ({
     if (status === 'rejected') return 'Rechazado';
     if (status === 'accepted') return 'Aceptado';
     if (status === 'canceled') return 'Cancelado';
+    if (status === 'busy-schedule') return 'Agenda Ocupada';
   };
 
   const getDisabledAccionButton = (status: StatusSpace) => {
@@ -43,7 +44,8 @@ const SpacesAvalibleList = ({
       status === 'requested' ||
       status === 'rejected' ||
       status === 'accepted' ||
-      status === 'canceled'
+      status === 'canceled' ||
+      status === 'busy-schedule'
     )
       return true;
     return false;
