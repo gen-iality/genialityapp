@@ -256,7 +256,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               useEffect(() => {
                 service.getConfiguration(eventId, agenda._id).then((config) => {
                   const is = config?.habilitar_ingreso === 'open_meeting_room';
-                  console.log('isLive change to:', is);
                   setIsLive(is);
                 });
               }, [agenda._id]);
@@ -332,7 +331,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   //paddingLeft: '25px',
                 }}
               >
-                {console.log('item.categories', item.categories)}
                 <div style={{ display: 'flex', flexFlow: 'row wrap', margin: '0.5rem 0' }}>
                   {item.categories &&
                     item.categories.map((category: any) => {
