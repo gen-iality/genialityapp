@@ -10,7 +10,7 @@ export interface TimeParameter {
     withouParameters?: boolean
 }
 
-export type StatusSpace = 'avalible' | 'requested' | 'not_available' | 'rejected' | 'accepted' | 'canceled' | 'have-meeting'
+export type StatusSpace = 'avalible' | 'requested' | 'not_available' | 'rejected' | 'accepted' | 'canceled' | 'busy-schedule'
 
 export interface SpaceMeeting {
     dateStart: firebase.firestore.Timestamp,

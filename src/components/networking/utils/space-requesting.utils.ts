@@ -19,8 +19,7 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
                             status = 'accepted'
 
                         }
-                        if (requesMeeting.user_from.id === creatorId && requesMeeting.user_from.id!==userId)status = 'have-meeting'
-
+                        if ((requesMeeting.user_from.id === creatorId || requesMeeting.user_to.id === creatorId) && requesMeeting.user_from.id!==userId)status = 'busy-schedule'
                         break
                     case "pending":
                         if (requesMeeting.user_from.id === creatorId) status = 'requested'
