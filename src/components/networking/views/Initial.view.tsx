@@ -26,8 +26,8 @@ import React, { useState } from 'react';
 import { UseEventContext } from '@/context/eventContext';
 import { deleteNetworking, createConfgi, updateConfig } from '../services/configuration.service';
 import { networkingGlobalConfig } from '../interfaces/Index.interfaces';
-import CalendarStarIcon from '@2fd/ant-design-icons/lib/CalendarStar';
-import CalendarCheckIcon from '@2fd/ant-design-icons/lib/CalendarCheck';
+import CalendarTodayIcon from '@2fd/ant-design-icons/lib/CalendarToday';
+import CalendarIcon from '@2fd/ant-design-icons/lib/Calendar';
 import useDateFormat from '../hooks/useDateFormat';
 
 export default function Initial({ active, ConfigTime, show }: networkingGlobalConfig) {
@@ -202,7 +202,7 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
               <Typography.Text strong>Rango de fechas para las reuniones</Typography.Text>
               <Space align='center'>
                 <Button
-                  icon={<CalendarStarIcon style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />}
+                  icon={<CalendarTodayIcon style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />}
                   type='text'
                   style={{ cursor: 'default' }}
                 />
@@ -213,7 +213,7 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
               </Space>
               <Space align='center'>
                 <Button
-                  icon={<CalendarCheckIcon style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />}
+                  icon={<CalendarIcon style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />}
                   type='text'
                   style={{ cursor: 'default' }}
                 />
