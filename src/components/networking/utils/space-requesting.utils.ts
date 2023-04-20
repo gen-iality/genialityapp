@@ -11,14 +11,11 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
             haveRequestMeeting.forEach((requesMeeting) => {
                 switch (requesMeeting.status) {
                     case "confirmed":
-                        if (requesMeeting.user_from.id === creatorId) {
+                        status = 'not_available'
+                        if ((requesMeeting.user_from.id === creatorId) || (requesMeeting.user_from.id === userId && requesMeeting.user_to.id === creatorId)) {
                             status = 'accepted'
                         }
-                        if (requesMeeting.user_from.id === userId && requesMeeting.user_to.id === creatorId) {
-                            status = 'accepted'
-                        } else {
-                            status = 'not_available'
-                        }
+
                         break
                     case "pending":
                         if (requesMeeting.user_from.id === creatorId) status = 'requested'
