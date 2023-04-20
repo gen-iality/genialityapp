@@ -2,7 +2,7 @@ import { FunctionComponent, useContext, useMemo } from 'react';
 import { Divider, List, Typography, Button, Spin, Badge, Space, Collapse } from 'antd';
 import { ReadFilled, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AgendaApi } from '@helpers/request';
 import dayjs from 'dayjs';
@@ -62,9 +62,19 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   const currentUser = useCurrentUser();
   const currentEventUser = useContext(CurrentEventUserContext);
 
+  const location = useLocation();
+
   useEffect(() => {
     if (!eventId) return;
     // if (!cEventUserId) return;
+    if (`/landing/${eventId}/evento` !== location.pathname) {
+      // This was added because the event context keeps the last event data
+      // before the component notices that the pathname was changed. After the
+      // event context sees that thhe pathname has changed and updates the
+      // event data, but for some seconds the web shows the wrong activities
+      console.warn('!!! the event cached is different of the pathname event ID')
+      return
+    }
 
     (async () => {
       setIsLoading(true);
