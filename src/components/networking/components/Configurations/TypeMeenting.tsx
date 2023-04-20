@@ -61,7 +61,7 @@ export default function TypeMeenting() {
             <Form.Item
               name={'name'}
               label={'Nombre'}
-              rules={[{ required: true, message: 'El nombre es requerido'},{max: 15, message: 'El nombre tiene un máximo de 15 caracteres'}]}
+              rules={[{ required: true, message: 'El nombre es requerido'},{max: 30, message: 'El nombre tiene un máximo de 30 caracteres'}]}
               initialValue={edit ? selected.nameType : ''}>
               <Input placeholder='Nombre del tipo de reunión' />
             </Form.Item>

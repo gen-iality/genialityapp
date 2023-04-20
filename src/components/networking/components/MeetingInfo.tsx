@@ -8,8 +8,8 @@ import { NetworkingContext } from '../context/NetworkingContext';
 import useDateFormat from '../hooks/useDateFormat';
 import useMeetingState from '../hooks/useMeetingState';
 import MapMarkerRadiusOutlineIcon from '@2fd/ant-design-icons/lib/MapMarkerRadiusOutline';
-import CalendarStartIcon from '@2fd/ant-design-icons/lib/CalendarStart';
-import CalendarEndIcon from '@2fd/ant-design-icons/lib/CalendarEnd';
+import CalendarTodayIcon from '@2fd/ant-design-icons/lib/CalendarToday';
+import CalendarIcon from '@2fd/ant-design-icons/lib/Calendar';
 import moment from 'moment';
 
 export default function MeetingInfo({ meenting }: IMeentingItem) {
@@ -35,51 +35,6 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
 
   return (
     <>
-      {/* <List>
-        <List.Item
-          extra={
-            stateMeeting && stateMeeting === 'scheduled' ?
-            <Space direction='vertical' align='center'>
-              <ClockCircleOutlined style={{fontSize: 35, color: 'rgba(0, 0, 0, 0.45)'}}/>
-              <Typography.Text type='secondary'>Iniciará</Typography.Text>
-              <Typography.Text type='secondary'>{moment(meenting.start).from(moment())}</Typography.Text>
-            </Space> : stateMeeting === 'in-progress' ?
-            <Space direction='vertical' align='center'>
-              <Badge dot>
-                <VideoCameraOutlined style={{fontSize: 35, color: '#1890ff'}}/>
-              </Badge>
-              <Typography.Text type='secondary'>En progreso</Typography.Text>
-            </Space> : stateMeeting === 'completed' ? 
-            <Space direction='vertical' align='center'>
-              <CheckCircleOutlined style={{fontSize: 35, color: '#52c41a'}}/>
-              <Typography.Text type='secondary'>Ha finalizado</Typography.Text>
-            </Space> : 
-            <></>
-          }
-        >
-          <List.Item.Meta 
-            title={<Typography.Title level={4}>{meenting.name}</Typography.Title>}
-            description={
-              <Space direction='vertical' style={{width: '95%'}}>
-                <Space align='center'>
-                  <Button icon={<CalendarOutlined /> } type='text'/>
-                  
-                  <Typography.Text style={{fontSize: 13}}>
-                    {dateFormat(meenting.start, 'lll A')} - {dateFormat(meenting.end, 'lll A')}
-                  </Typography.Text>
-                </Space>
-                <Space align='center'>
-                  <Button icon={<MapMarkerRadiusOutlineIcon style={{fontSize: 18}}/>} type='text'/>
-                  
-                  <Typography.Text type={meenting.place === 'no especificado' ? 'secondary' : undefined} style={{ textTransform: 'uppercase'}}>
-                    {meenting.place}
-                  </Typography.Text>
-                </Space>
-              </Space>
-            }
-          />
-        </List.Item>
-      </List> */}
       <Row justify='center' align='middle' gutter={[16, 16]}>
         <Col span={24}>
           <Space direction='vertical'>
@@ -106,13 +61,13 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
               </Typography.Text>
             </Space>
             <Space align='center'>
-              <Button icon={<CalendarStartIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/> } type='text' style={{cursor: 'default'}}/>
+              <Button icon={<CalendarTodayIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/> } type='text' style={{cursor: 'default'}}/>
               <Typography.Text>
                 {dateFormat(meenting.start, 'lll A')}
               </Typography.Text>
             </Space>
             <Space align='center'>
-              <Button icon={<CalendarEndIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/> } type='text' style={{cursor: 'default'}}/>
+              <Button icon={<CalendarIcon style={{fontSize: 20, color: 'rgba(0, 0, 0, 0.45)'}}/> } type='text' style={{cursor: 'default'}}/>
               <Typography.Text>
                 {dateFormat(meenting.end, 'lll A')}
               </Typography.Text>
