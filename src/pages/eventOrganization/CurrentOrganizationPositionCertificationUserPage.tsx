@@ -101,6 +101,18 @@ function CurrentOrganizationPositionCertificationUserPage(
       return;
     }
     values['user_id'] = currentUser._id;
+    values.approved_from_date = values.approved_from_date
+      .startOf('day')
+      .set('hour', 0)
+      .set('minute', 0)
+      .set('second', 0)
+      .set('millisecond', 0);
+    values.approved_until_date = values.approved_until_date
+      .startOf('day')
+      .set('hour', 0)
+      .set('minute', 0)
+      .set('second', 0)
+      .set('millisecond', 0);
     console.debug('form submit', { values });
 
     setIsSubmiting(true);
