@@ -38,8 +38,6 @@ const EventOrganization = (props) => {
   }, [orgId]);
 
   useEffect(() => {
-    console.log('cUser.value', cUser.value);
-    console.log('organization', organization);
     if (cUser.value || !organization || !orgId) return;
     // const { visibility, allow_register } = organization;
     if (!cUser.value && organization) {
