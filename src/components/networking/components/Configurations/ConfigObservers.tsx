@@ -1,8 +1,9 @@
-import { DeleteOutlined, InfoCircleOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
+import { DeleteOutlined, ExclamationCircleOutlined, InfoCircleOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Form, List, Modal, Row, Select, Typography, Space, Tooltip, Card } from 'antd';
 import React, { useState, useContext } from 'react';
 import { NetworkingContext } from '../../context/NetworkingContext';
 import { CreateObservers } from '../../interfaces/configurations.interfaces';
+import { DispatchMessageService } from '@/context/MessageService';
 
 export default function ConfigObservers() {
   const [modalConfig, setModalConfig] = useState(false);
@@ -12,11 +13,53 @@ export default function ConfigObservers() {
   const closeModal = () => {
     setModalConfig(false);
   };
+
   const onDelete = async (id : string) => {
-    setLoader(true)
-    await deleteObserver(id)
-    setLoader(false)
+    DispatchMessageService({
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere...',
+      action: 'show',
+    });
+    Modal.confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            setLoader(true);
+            await deleteObserver(id);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
+            });
+            setLoader(false);
+          } catch (e) {
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Ha ocurrido un error',
+              action: 'show',
+            });
+          }
+        };
+        onHandlerRemove();
+      },
+    });
   };
+
   const onCreate = async (data: CreateObservers) => {
     setLoader(true)
     setModalConfig(false);

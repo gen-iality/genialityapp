@@ -16,6 +16,7 @@ export default function TypeMeenting() {
   const handleColorChange = (value: IColor) => {
     setColor(value.hex);
   };
+
   const closeModal = () => {
     setColor('#406D85');
     setEdit(false);
@@ -48,6 +49,7 @@ export default function TypeMeenting() {
     });
     setModalType(false);
   };
+  
   return (
     <>
       {modalType && (

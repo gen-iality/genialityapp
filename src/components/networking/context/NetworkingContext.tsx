@@ -12,6 +12,8 @@ import { addDefaultLabels, orderFieldsByWeight } from '../components/modal-creat
 import { FieldsForm } from '../components/modal-create-user/interface/KioskRegistrationApp.interface';
 import { ISpaces, ISpacesForm } from '../interfaces/spaces-interfaces';
 import firebase from 'firebase/compat';
+import { Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 interface NetworkingContextType {
   eventId: string;
@@ -121,7 +123,7 @@ export default function NetworkingProvider(props: Props) {
     const response = await service.createMeeting(eventId, newMeenting);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la informacion',
+      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la información',
       action: 'show',
     });
   };
@@ -193,7 +195,7 @@ export default function NetworkingProvider(props: Props) {
     const response = await serviceConfig.deleteObserver(eventId, observerID);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la informacion',
+      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la información',
       action: 'show',
     });
   };
@@ -203,17 +205,52 @@ export default function NetworkingProvider(props: Props) {
     const response = await serviceConfig.creatType(eventId, type);
     DispatchMessageService({
       type: response ? 'success' : 'warning',
-      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la informacion completa',
+      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la información completa',
       action: 'show',
     });
   };
 
   const deleteType = async (typeId: string) => {
-    const response = await serviceConfig.deleteType(eventId, typeId);
     DispatchMessageService({
-      type: response ? 'success' : 'warning',
-      msj: response ? '¡Información guardada correctamente!' : 'No se logro guardar la informacion',
+      type: 'loading',
+      key: 'loading',
+      msj: 'Por favor espere...',
       action: 'show',
+    });
+    Modal.confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            await serviceConfig.deleteType(eventId, typeId);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
+            });
+          } catch (e) {
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Ha ocurrido un error',
+              action: 'show',
+            });
+          }
+        };
+        onHandlerRemove();
+      },
     });
   };
   const updateType = async (typeId: string, type: Omit<ITypeMeenting,'id'>) => {
@@ -290,17 +327,40 @@ export default function NetworkingProvider(props: Props) {
       msj: ' Por favor espere mientras se borra la información...',
       action: 'show',
     });
-
-    const response = await service.deleteSpacesByEventId(eventId, SpaceId);
-
-    DispatchMessageService({
-      key: 'loading',
-      action: 'destroy',
-    });
-    DispatchMessageService({
-      type: response ? 'success' : 'warning',
-      msj: response ? '¡Información eliminada correctamente!' : 'No ha sido posible eliminar el campo',
-      action: 'show',
+    Modal.confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            await service.deleteSpacesByEventId(eventId, SpaceId);
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'success',
+              msj: 'Se eliminó la información correctamente!',
+              action: 'show',
+            });
+          } catch (e) {
+            DispatchMessageService({
+              key: 'loading',
+              action: 'destroy',
+            });
+            DispatchMessageService({
+              type: 'error',
+              msj: 'Ha ocurrido un error',
+              action: 'show',
+            });
+          }
+        };
+        onHandlerRemove();
+      },
     });
   };
 
