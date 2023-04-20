@@ -98,11 +98,16 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
                   />
                 }>
                 <List.Item.Meta
-                  avatar={
+                  /* avatar={
                     participant?.picture ? 
                       <Avatar key={'img' + participant?.id} src={participant?.picture} style={{marginTop:7}} /> : 
                       <Avatar icon={<UserOutlined />} style={{marginTop:7}}/>
                     
+                  } */
+                  avatar={
+                    <Avatar style={{ backgroundColor: '#333F44', color: 'white', marginTop:7 }}>
+                      {participant.name && participant.name.charAt(0).toUpperCase()}
+                    </Avatar>
                   }
                   title={<Typography.Text>{participant?.name}</Typography.Text>}
                   description={participant?.email}

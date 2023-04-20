@@ -28,6 +28,7 @@ import { deleteNetworking, createConfgi, updateConfig } from '../services/config
 import { networkingGlobalConfig } from '../interfaces/Index.interfaces';
 import CalendarTodayIcon from '@2fd/ant-design-icons/lib/CalendarToday';
 import CalendarIcon from '@2fd/ant-design-icons/lib/Calendar';
+import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
 import useDateFormat from '../hooks/useDateFormat';
 
 export default function Initial({ active, ConfigTime, show }: networkingGlobalConfig) {
@@ -135,35 +136,42 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
               <Form onFinish={onSave} layout='vertical'>
                 <Row justify='center' gutter={[40, 40]} wrap>
                   <Col span={24}>
-                    <Form.Item
-                      name={'meetingDuration'}
-                      label={'Tiempo entre reuniones'}
-                      rules={[{ required: true, message: 'Debe configurar un mínimo de 5 minutos' }]}
-                      help={
-                        <Typography.Text type='secondary'>
-                          <InfoCircleOutlined /> Intervalo de tiempo entre las reuniones donde el mínimo es de 5 minutos y
-                          un máximo de 30 minutos
-                        </Typography.Text>
-                      }
-                      initialValue={ConfigTime ? ConfigTime.meetingDuration : 5}>
-                      <Select>
-                        <Select.Option value={5}>5 minutos</Select.Option>
-                        <Select.Option value={10}>10 minutos</Select.Option>
-                        <Select.Option value={15}>15 minutos</Select.Option>
-                        <Select.Option value={20}>20 minutos</Select.Option>
-                        <Select.Option value={25}>25 minutos</Select.Option>
-                        <Select.Option value={30}>30 minutos</Select.Option>
-                      </Select>
-                      {/* <InputNumber disabled={loading} max={60} min={5} style={{ width: '100%' }} /> */}
-                    </Form.Item>
+                    {!active ? 
+                      <Form.Item
+                        name={'meetingDuration'}
+                        label={'Duración de las reuniones'}
+                        rules={[{ required: true, message: 'Debe configurar un mínimo de 5 minutos' }]}
+                        help={
+                          <Typography.Text type='secondary'>
+                            <InfoCircleOutlined /> Este tiempo se verá reflejado en la sección de networking en landing
+                          </Typography.Text>
+                        }
+                        initialValue={ConfigTime ? ConfigTime.meetingDuration : 5}>
+                        <Select>
+                          <Select.Option value={5}>5 minutos</Select.Option>
+                          <Select.Option value={10}>10 minutos</Select.Option>
+                          <Select.Option value={15}>15 minutos</Select.Option>
+                          <Select.Option value={20}>20 minutos</Select.Option>
+                          <Select.Option value={25}>25 minutos</Select.Option>
+                          <Select.Option value={30}>30 minutos</Select.Option>
+                        </Select>
+                      </Form.Item>
+                      :
+                      <Space direction='vertical'>
+                        <Typography.Text strong>Duración de las reuniones</Typography.Text>
+                        <Space align='center'>
+                          <Button
+                            icon={<TimerOutlineIcon style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />}
+                            type='text'
+                            style={{ cursor: 'default' }}
+                          />
+                          <Typography.Text>{ConfigTime && ConfigTime.meetingDuration} minutos</Typography.Text>
+                        </Space>
+                      </Space>
+                    } 
                   </Col>
                   <Col span={24}>
-                    <Form.Item label={'Habilitar la visualización de networking'}
-                    help={
-                      <Typography.Text type='secondary'>
-                        <InfoCircleOutlined /> Esta opción es para confirmar si desea vizualizar networking en la landing
-                      </Typography.Text>
-                    }>
+                    <Form.Item label={'Publicar y abrir networking en landing'}>
                       <Switch
                         style={{ marginLeft: 10 }}
                         checked={configShow}
@@ -177,20 +185,21 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
                   </Col>
                 </Row>
                 <Row justify='end' gutter={[8, 8]} style={{ paddingTop: 15 }}>
-                  <Col>
-                    <Button loading={loading} type='primary' icon={<SaveOutlined />} htmlType='submit'>
-                      Guardar
-                    </Button>
-                  </Col>
-                  {active ? (
+                  {
+                    !active &&
+                    <Col>
+                      <Button loading={loading} type='primary' icon={<SaveOutlined />} htmlType='submit'>
+                        Guardar
+                      </Button>
+                    </Col>
+                  }
+                  {active && 
                     <Col>
                       <Button icon={<DeleteOutlined />} danger type='primary' onClick={() => setModal(true)}>
                         Eliminar
                       </Button>
                     </Col>
-                  ) : (
-                    <></>
-                  )}
+                  }
                 </Row>
               </Form>
             </Space>
