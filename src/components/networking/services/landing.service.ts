@@ -74,7 +74,6 @@ export const listeningMeetingRequestByBothParticipants = (eventId: string, user_
     .doc(eventId)
     .collection('meeting_request')
     .where('meeting.participantsIds', 'array-contains-any', [user_to_id, user_creator_id])
-    .where('status', '!=', 'rejected')
     .onSnapshot(snapshot => {
       if (!snapshot.empty) {
         const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IMeetingRequestFirebase[];
