@@ -176,6 +176,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
                              onChange={(check)=>{
                               handleChange(participant,check.target.checked)
                              }}
+                             style={{transform: 'scale(1.3)'}}
                           />
                         }>
                         <List.Item.Meta

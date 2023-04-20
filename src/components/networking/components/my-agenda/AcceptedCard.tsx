@@ -5,6 +5,7 @@ import Meta from 'antd/lib/card/Meta';
 import { IMeeting } from '../../interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 import * as service from '../../services/meenting.service';
+import { deleteRequestMeeting } from '../../services/landing.service';
 
 interface AcceptedCardProps {
   data: IMeeting;
@@ -15,20 +16,16 @@ interface AcceptedCardProps {
 }
 
 const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom }: AcceptedCardProps) => {
-  
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
 
-  //const userName = pathOr('', ['names','name'], data);
   const userName = 'Reunion';
-  //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
-  const userEmail = '';
   const userImage = '';
 
   /** Entramos a la sala 1 a 1 de la reunión
    *
    */
-  const accessMeetRoom = (data: any, eventUser: any) => {
+  const accessMeetRoom = (data: IMeeting, eventUser: any) => {
     if (!eventUser) {
       alert('Tenemos problemas con tu usuario, itenta recargar la página');
       return;
@@ -42,8 +39,11 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
     if (!loading) {
       setLoading(true);
       const response = await service.deleteMeeting(eventId, data.id);
-      
-      if (response) setDeleted(true);
+
+      if (response) {
+        setDeleted(true);
+        await deleteRequestMeeting(eventId, data.id_request_meetings ?? '');
+      }
 
       DispatchMessageService({
         type: response ? 'success' : 'warning',
@@ -55,8 +55,9 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   };
 
   const validDateRoom = (room: any) => {
-    let dateFrom = moment(room.timestamp_start).format('YYYY-MM-DD');
-
+    let dateFrom = moment(room.startTimestap).format('YYYY-MM-DD');
+    console.log('room.timestamp_start ',room.startTimestap)
+    console.log('date ',dateFrom)
     if (moment().format('YYYY-MM-DD') == dateFrom) {
       return true;
     }

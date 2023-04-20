@@ -1,6 +1,6 @@
-import { Button, Card, Col, Drawer, Modal, Row, Tooltip } from 'antd';
+import { Button, Card, Col, Drawer, Modal, Row, Space, Tag, Tooltip, Typography } from 'antd';
 import moment from 'moment';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Calendar, View, momentLocalizer } from 'react-big-calendar';
 import { NetworkingContext } from '../context/NetworkingContext';
 import { IEventCalendar, IMeeting, IMeetingCalendar } from '../interfaces/Meetings.interfaces';
@@ -11,12 +11,14 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import 'moment/dist/locale/es';
 import { getCorrectColor } from '@/helpers/utils';
-import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { CloseOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import MeetingInfo from '../components/MeetingInfo';
 import useGroupByCalendar from '../hooks/useGroupByCalendar';
 import useGetMeetingToCalendar from '../hooks/useGetMeetingToCalendar';
 import { useGetSpaces } from '../hooks/useGetSpaces';
 import { GroupByResources } from '../interfaces/groupBy-interfaces';
+import { useGetMeetings } from '../hooks/useGetMeetings';
+import AccountGroupOutlineIcon from '@2fd/ant-design-icons/lib/AccountGroupOutline';
 
 const { confirm } = Modal;
 export default function MyCalendar() {
@@ -26,19 +28,18 @@ export default function MyCalendar() {
   const localizer = momentLocalizer(moment);
   const now = () => new Date();
   const {
-    meetings,
     updateMeeting,
     editMeenting,
     setMeentingSelect,
     openModal,
     observers,
-    DataCalendar,
     typeMeetings,
     deleteMeeting,
   } = useContext(NetworkingContext);
+  const { meetings, loading } = useGetMeetings();
   const [groupBy, setGroupBy] = useState<GroupByResources>('spaces');
   const { spaces } = useGetSpaces();
-  const { renderEvents } = useGetMeetingToCalendar(meetings, View, observers, DataCalendar, groupBy);
+  const { renderEvents } = useGetMeetingToCalendar(meetings, View, observers, groupBy);
   const { resources, resourceAccessor, buttonGroupBy } = useGroupByCalendar(
     {
       observers: {
@@ -97,6 +98,11 @@ export default function MyCalendar() {
   };
 
   const eventStyleGetter = (event: IMeeting | IMeetingCalendar) => {
+    if(!typeMeetings) return {
+      backgroundColor: defaultType.style,
+      color: 'white',
+      border: `1px solid rgba(196, 196, 196, 0.3)`, //#C4C4C4
+    };
     const style = {
       backgroundColor: typeMeetings.find((item) => item.id === event.type?.id)?.style || defaultType.style,
       color: getCorrectColor(typeMeetings.find((item) => item.id === event.type?.id)?.style || defaultType.style),
@@ -111,33 +117,49 @@ export default function MyCalendar() {
     if (groupBy === 'observers') return setGroupBy('spaces');
     if (groupBy === 'spaces') return setGroupBy('observers');
   };
+
   return (
     <>
-      <Row justify='center' wrap gutter={8}>
+      <Row justify='center' wrap gutter={[8, 8]}>
         <Col span={23}>
           <Drawer
-            title={meenting.name}
+            title={
+              <Space wrap align='center'>
+                <AccountGroupOutlineIcon style={{fontSize: 30, color: meenting.type?.style}}/>
+                <Tag color={meenting.type?.style}>
+                  {meenting.type?.nameType === 'Seleccione una opción' ? 'reunión' : meenting.type?.nameType}
+                </Tag>
+              </Space>
+            }
             placement='right'
-            onClose={onClose}
             visible={open}
-            size='large'
+            width={450}
+            closable={false}
+            onClose={() => onClose()}
+            headerStyle={{border: 'none'}}
+            bodyStyle={{paddingTop: 0}}
             extra={
-              <Row gutter={[16, 16]}>
-                <Col span={12}>
+              <Row gutter={[16, 16]} justify='end'>
+                <Col>
                   <Tooltip placement='topLeft' title='Editar'>
-                    <Button icon={<EditOutlined />} onClick={() => onEdit()} />
+                    <Button icon={<EditOutlined />} onClick={() => onEdit()} type='text'/>
                   </Tooltip>
                 </Col>
-                <Col span={12}>
+                <Col>
                   <Tooltip placement='topLeft' title='Eliminar'>
-                    <Button icon={<DeleteOutlined />} onClick={() => onDelete()} danger type='primary' />
+                    <Button icon={<DeleteOutlined />} onClick={() => onDelete()} danger type='text' />
+                  </Tooltip>
+                </Col>
+                <Col>
+                  <Tooltip placement='topLeft' title='Cerrar'>
+                    <Button icon={<CloseOutlined style={{fontSize: 25}} />} onClick={onClose} type='text' />
                   </Tooltip>
                 </Col>
               </Row>
             }>
-            <MeetingInfo meenting={meetings.find((item) => item.id === meenting.id) || meenting} />
+            <MeetingInfo meenting={meetings.find((item) => item.id === meenting.id) || meenting}/>
           </Drawer>
-          <Card hoverable>
+          <Card hoverable loading={loading}>
             <Row justify='end' style={{ marginBottom: 10 }}>
               {(View === 'week' || View === 'day') && <Button onClick={onSetNextGroupBy}>Por {buttonGroupBy}</Button>}
             </Row>

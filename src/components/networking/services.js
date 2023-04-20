@@ -2,7 +2,7 @@ import { sortBy, prop } from 'ramda';
 import { firestore } from '../../helpers/firebase';
 import API, { UsersApi, EventsApi } from '../../helpers/request';
 import { RequestMeetingState, defaultType, shortName } from './utils/utils';
-
+import firebase from 'firebase/compat';
 const filterList = (list, currentUser) => list.find((item) => item.account_id === currentUser);
 
 // Funcion para consultar la informacion del actual usuario -------------------------------------------
@@ -52,7 +52,7 @@ export const userRequest = {
       const users = await UsersApi.getAll(eventId, '?pageSize=10000');
 
       if (users && currentUser) {
-        docs = users.data.filter((user) => user && user.account_id !== currentUser._id);
+        docs = users.data.filter((user) => user && user._id !== currentUser._id);
       }
     } catch (error) {
       console.error(error);
@@ -166,8 +166,8 @@ export const createAgendaToEventUser = ({
  * @param {string} params.message - El mensaje asociado con la solicitud de reunión.
  * @param {string} params.creatorUser - El identificador del usuario creador de la reunión.
  * @param {string} params.typeAttendace
- * @param {Date} params.startDate - La fecha y hora de inicio de la reunión.
- * @param {Date} params.endDate - La fecha y hora de finalización de la reunión.
+ * @param {firebase.firestore.Timestamp} params.startDate - La fecha y hora de inicio de la reunión.
+ * @param {firebase.firestore.Timestamp} params.endDate - La fecha y hora de finalización de la reunión.
  */
 export const createMeetingRequest = ({
   eventId,
@@ -196,13 +196,18 @@ export const createMeetingRequest = ({
             confirmed: false
           },
         ];
+        const participantsIds = [
+          creatorUser.value._id,targetUser._id
+        ]
        const timestamp = Date.now()
         const meeting = {
           name: `Reunion entre ${shortName(targetUser.user.names)} y ${shortName(creatorUser.value.user.names)} `,
           participants: participants,
+          participantsIds,
           place: 'evius meet',
-          start: startDate,
-          end: endDate,
+          start: startDate.toDate().toString(),
+          startTimestap : startDate,
+          end: endDate.toDate().toString(),
           dateUpdated: timestamp ,
           type : defaultType
         };
@@ -219,11 +224,13 @@ export const createMeetingRequest = ({
             email :creatorUser.value.user.email || ''
           },
           meeting,
-          date:startDate,
+          date:startDate.toDate().toString(),
+          dateStartTimestamp:startDate,
           message,
           status:RequestMeetingState.pending,
           timestamp : timestamp
         }
+
         const newAgendaResult = await firestore
         .collection('networkingByEventId')
         .doc(eventId)
@@ -240,10 +247,10 @@ export const createMeetingRequest = ({
           request_type: 'meeting',
           start_time: new Date(startDate).toLocaleTimeString()
         };
-    //todo: Arreglar not found de sendEmail
     await EventsApi.sendMeetingRequest(eventId, data);
      resolve(newAgendaResult.id);
       } catch (error) {
+        console.log(error)
         reject(error);
       }
     })();

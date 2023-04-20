@@ -32,11 +32,12 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
   const eventId = eventContext.value._id;
 
   const acceptRequest = async () => {
-    const response = await servicesMeenting.createMeeting(eventId, data.meeting);
+    const response = await servicesMeenting.createMeeting(eventId, {...data.meeting, id_request_meetings:data.id});
     if (response) {
       await services.updateRequestMeeting(eventId, data.id, { ...data, status: RequestMeetingState.confirmed });
+      const resSpaceAgended = await services.createSpacesAgendedMeetings(eventId,data.meeting.start, data.meeting.end, data.user_to.id)
       notificationUser();
-      setClassName('animate__animated animate__backOutLeft animate__slow');
+      setClassName('animate__animated animate__backOutRight animate__slow');
       notification.success({
         message: 'Se agendó la reunión correctamente',
         icon: <CheckCircleOutlined />,

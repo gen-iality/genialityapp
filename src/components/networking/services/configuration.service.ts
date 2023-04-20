@@ -1,6 +1,7 @@
 import { firestore } from '@/helpers/firebase';
 import { IObserver, ITypeMeenting } from '../interfaces/configurations.interfaces';
-
+import {  networkingGlobalConfig } from '../interfaces/Index.interfaces';
+import firebase from 'firebase/compat';
 export const listenObervers = (eventId: string, setObervers: any) => {
 	return firestore
 		.collection(`networkingByEventId`)
@@ -107,3 +108,67 @@ export const updateType= async (eventId: string, typeId: string, updateTypeDto: 
 		return false
 	}
 };
+export const createConfgi = async (eventId: string, updateConfigDto: networkingGlobalConfig) => {
+	try {
+		await firestore
+			.collection(`networkingByEventId`)
+			.doc(eventId)
+			.set(updateConfigDto);
+		return true
+	} catch (error: any) {
+		console.log(error.code)
+		return false
+	}
+}
+export const updateConfig= async (eventId: string, updateConfigDto: networkingGlobalConfig) => {
+	try {
+		await firestore
+			.collection(`networkingByEventId`)
+			.doc(eventId)
+			.update(updateConfigDto);
+		return true
+	} catch (error: any) {
+		console.log("a",error.code)
+		return false
+	}
+};
+
+export const getConfig = async <T>(eventId: string) => {
+	try {
+		const ConfigMeet = await firestore
+			.collection(`networkingByEventId`)
+			.doc(eventId)
+			.get();
+
+		return ConfigMeet.data() as T
+	} catch (error: any) {
+		return null
+	}
+};
+export const deleteNetworking = async <T>(eventId: string) => {
+	try {
+		await firestore
+			.collection(`networkingByEventId`)
+			.doc(eventId)
+			.delete()
+
+		return true
+	} catch (error: any) {
+		return false
+	}
+};
+export const ListenConfig =(eventId: string,setGlogbalConfig: any) => {
+	return firestore
+		.collection(`networkingByEventId`)
+		.doc(eventId)
+		.onSnapshot(snapshot => {
+      if (snapshot.exists) {
+        const data = snapshot.data()
+        setGlogbalConfig(data);
+      } else {	
+		setGlogbalConfig(null)
+	  }
+    })
+};
+
+

@@ -8,10 +8,8 @@ const useGroupByCalendar = (configuration: ObjectConfig, groupBy: GroupByResourc
     const [resources, setResources] = useState<any[]>([])
     const [resourceAccessor, setResourceAccessor] = useState('')
     const [buttonGroupBy, setButtonGroupBy] = useState('')
-    // console.log('Antes de chismosear')
+
     useEffect(() => {
-        // console.log('Iterando con',groupBy)
-        console.log('chismoseando', configuration)
         setEvents(configuration[groupBy].events ?? [])
         setResources(configuration[groupBy].resources ?? [])
         setResourceAccessor(configuration[groupBy].resourceAccessor ?? '')

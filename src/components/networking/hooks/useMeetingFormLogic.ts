@@ -19,15 +19,16 @@ export const useMeetingFormLogic = () => {
     const { formState, onInputChange, onResetForm } = useForm<IMeeting>(dataContext.meentingSelect);
     useEffect(() => {
         if (dataContext.edicion) {
-            setAttendeesKeyTarget(dataContext.meentingSelect.participants.map((item: any) => item.id));
+            setAttendeesKeyTarget(dataContext.meentingSelect.participants.map((item : IParticipants) => item.id));
         }
         //Tranformar todos los asistentes al evento para el transfer
         setDataTransfer(
             dataContext.attendees.map((asistente: any) => ({
                 id: asistente._id,
-                name: asistente.user.names,
+                name: asistente.user?.names,
                 key: asistente._id,
-                email: asistente.user.email,
+                email: asistente.user?.email,
+                picture : asistente.user?.picture,
                 confirmed: false,
             }))
         );
