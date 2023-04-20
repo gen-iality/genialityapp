@@ -7,18 +7,20 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
     const stateRequest = (dateStart: firebase.firestore.Timestamp) => {
         let status: StatusSpace = 'avalible'
         const haveRequestMeeting = requestMeetings.filter(requestMeeting => (requestMeeting.dateStartTimestamp.isEqual(dateStart)))
+        console.log("🚀 ~ file: space-requesting.utils.ts:10 ~ stateRequest ~ haveRequestMeeting:", haveRequestMeeting)
         if (haveRequestMeeting && haveRequestMeeting.length > 0) {
             haveRequestMeeting.forEach((requesMeeting) => {
                 switch (requesMeeting.status) {
                     case "confirmed":
-                        if (requesMeeting.user_from.id === creatorId) {
+                        status = 'not_available'
+                        if ((requesMeeting.user_from.id === creatorId && requesMeeting.user_to.id === userId)
+                            ||
+                            (requesMeeting.user_from.id === userId && requesMeeting.user_to.id === creatorId)
+                        ) {
                             status = 'accepted'
+
                         }
-                        if (requesMeeting.user_from.id === userId && requesMeeting.user_to.id === creatorId) {
-                            status = 'accepted'
-                        } else {
-                            status = 'not_available'
-                        }
+
                         break
                     case "pending":
                         if (requesMeeting.user_from.id === creatorId) status = 'requested'
