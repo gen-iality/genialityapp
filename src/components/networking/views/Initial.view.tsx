@@ -140,10 +140,10 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
                       label={'Tiempo entre reuniones'}
                       rules={[{ required: true, message: 'Debe configurar un mínimo de 5 minutos' }]}
                       help={
-                        <Typography.Link type='secondary'>
+                        <Typography.Text type='secondary'>
                           <InfoCircleOutlined /> Intervalo de tiempo entre las reuniones donde el mínimo es de 5 minutos y
                           un máximo de 30 minutos
-                        </Typography.Link>
+                        </Typography.Text>
                       }
                       initialValue={ConfigTime ? ConfigTime.meetingDuration : 5}>
                       <Select>
@@ -160,9 +160,9 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
                   <Col span={24}>
                     <Form.Item label={'Habilitar la visualización de networking'}
                     help={
-                      <Typography.Link type='secondary'>
+                      <Typography.Text type='secondary'>
                         <InfoCircleOutlined /> Esta opción es para confirmar si desea vizualizar networking en la landing
-                      </Typography.Link>
+                      </Typography.Text>
                     }>
                       <Switch
                         style={{ marginLeft: 10 }}
