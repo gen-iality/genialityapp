@@ -56,8 +56,6 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
 
   const validDateRoom = (room: any) => {
     let dateFrom = moment(room.startTimestap).format('YYYY-MM-DD');
-    console.log('room.timestamp_start ',room.startTimestap)
-    console.log('date ',dateFrom)
     if (moment().format('YYYY-MM-DD') == dateFrom) {
       return true;
     }

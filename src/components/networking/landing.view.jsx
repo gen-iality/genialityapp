@@ -762,32 +762,12 @@ class ListEventUser extends Component {
             tab={
               <div style={{ position: 'relative' }}>
                 Mi agenda
-                {this.props.cHelper.totalsolicitudAgenda > 0 && (
-                  <Badge
-                    style={{
-                      position: 'absolute',
-                      top: '-21px',
-                      right: '-13px',
-                    }}
-                    count={
-                      this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
-                    }></Badge>
-                )}
               </div>
             }
             key='mi-agenda'>
             {activeTab === 'mi-agenda' && (
               <>
-                {/* {this.props.cEventUser && this.props.cEventUser.value && (
-                  <AppointmentRequests
-                    eventId={this.props.cEvent.value._id}
-                    currentEventUserId={eventUserId}
-                    currentUser={this.props.currentUser}
-                    notificacion={this.props.notification}
-                    eventUsers={users}
-                    showpendingsend={false}
-                  />
-                )} */}
+                
                 {this.props.cEventUser && this.props.cEventUser.value && (
                   <MyAgenda
                     event={this.props.cEvent.value}
