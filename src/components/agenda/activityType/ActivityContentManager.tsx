@@ -145,7 +145,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
       >Forzar actualizar</Button>
       <EviusReactQuill
         name="html"
-        data={contentSource || undefined}
+        data={contentSource || ''}
         handleChange={(value: string) => setContentSource(value)}
       />
       </>
