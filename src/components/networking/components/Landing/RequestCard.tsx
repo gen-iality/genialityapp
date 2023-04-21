@@ -48,7 +48,7 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
         }
       });
       if (notAvalibleUsers) {
-        notification.warning({ message: 'No se pudo aceptar la reunion, ya tiene una reunion para la misma hora' });
+        notification.warning({ message: 'No se pudo aceptar la reunion, uno de los participantes no esta disponible' });
         await services.updateRequestMeeting(eventId, data.id, {
         ...data,
         status: RequestMeetingState.rejected,
