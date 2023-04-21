@@ -53,7 +53,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     setAgendaMessage('');
   };
 
-  const onSubmit = async (startDate, endDate) => {
+  const onSubmit = async (message,startDate, endDate) => {
     try {
       if (!date) return notification.warning({ message: 'Debes seleccionar una fecha' });
       setLoading(true);
@@ -62,7 +62,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       const idRequestMeeting = await createMeetingRequest({
         eventId: eventId,
         targetUser: targetEventUser,
-        message: agendaMessage,
+        message: message,
         creatorUser: cEventUser,
         typeAttendace,
         startDate,
