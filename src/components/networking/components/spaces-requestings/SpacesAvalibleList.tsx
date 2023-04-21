@@ -46,7 +46,7 @@ const SpacesAvalibleList = ({
     dateStart: firebase.firestore.Timestamp,
     dateEnd: firebase.firestore.Timestamp
   ) => {
-    onSubmit(values.message, dateStart, dateEnd);
+    onSubmit(values.message??'', dateStart, dateEnd);
   };
   if (!spacesMeetingsToTargedUserLoading && spacesMeetingsToTargedUser.length === 0)
     return <Result title='Debe configurar los parametros del networking' />;

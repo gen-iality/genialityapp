@@ -13,7 +13,7 @@ import moment from 'moment';
 import { RequestMeetingState } from '../../utils/utils';
 import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 const { Meta } = Card;
-const { confirm } = Modal
+const { confirm } = Modal;
 
 export default function RequestCardTs({ data, setSendRespuesta, received }: IRequestCard) {
   const statusRequestText = {
@@ -32,10 +32,33 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
   const eventId = eventContext.value._id;
 
   const acceptRequest = async () => {
-    const response = await servicesMeenting.createMeeting(eventId, {...data.meeting, id_request_meetings:data.id});
+    const meetingsForTowUsers = await services.getMeetingForUsersAtDateStart(
+      eventId,
+      [data.user_from.id, data.user_to.id],
+      data.dateStartTimestamp
+    );
+    if (meetingsForTowUsers && meetingsForTowUsers.length > 0) {
+      let notAvalibleUsers = false;
+      meetingsForTowUsers.forEach((meetings) => {
+        if (
+          meetings.participantsIds.includes(data.user_from.id) ||
+          meetings.participantsIds.includes(data.user_to.id)
+        ) {
+          notAvalibleUsers = true;
+        }
+      });
+      if (notAvalibleUsers) {
+        notification.warning({ message: 'No se pudo aceptar la reunion, ya tiene una reunion para la misma hora' });
+        await services.updateRequestMeeting(eventId, data.id, {
+        ...data,
+        status: RequestMeetingState.rejected,
+      });
+      }
+      return;
+    }
+    const response = await servicesMeenting.createMeeting(eventId, { ...data.meeting, id_request_meetings: data.id });
     if (response) {
       await services.updateRequestMeeting(eventId, data.id, { ...data, status: RequestMeetingState.confirmed });
-      const resSpaceAgended = await services.createSpacesAgendedMeetings(eventId,data.meeting.start, data.meeting.end, data.user_to.id)
       notificationUser();
       setClassName('animate__animated animate__backOutRight animate__slow');
       notification.success({

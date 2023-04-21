@@ -14,7 +14,7 @@ export interface IMeeting {
     id_request_meetings?: string;
     name: string;
     start: string
-    startTimestap?: firebase.default.firestore.Timestamp
+    startTimestap: firebase.default.firestore.Timestamp
     end: string;
     place: string;
     type: ITypeMeenting | undefined

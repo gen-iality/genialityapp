@@ -4,6 +4,7 @@ import { IMeetingRequestFirebase, SpaceMeeting, SpaceMeetingFirebase } from '../
 import firebase from 'firebase/compat';
 import event from '@/components/events/event';
 import { RequestMeetingState } from '../utils/utils';
+import { IMeeting } from '../interfaces/Meetings.interfaces';
 
 export const listenMeetingsRequest = (eventId: string,userID: string, onSet: any) => {
   return firestore
@@ -39,6 +40,43 @@ export const getMeetingRequest = async (
     return data;
   } catch (error) {
     return false;
+  }
+};
+
+export const getMeetingForUsers = async (
+  eventId: string,
+  usersIds: string[]
+) => {
+  try {
+    const requestMeetings = await firestore
+      .collection('networkingByEventId')
+      .doc(eventId)
+      .collection('meetings')
+      .where('participants', 'array-contains-any', usersIds)
+      .get();
+    const data = requestMeetings.docs.map((item) => ({ id: item.id, ...item.data() })) as IMeeting[];
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+};
+export const getMeetingForUsersAtDateStart = async (
+  eventId: string,
+  usersIds: string[],
+  dateStart: firebase.firestore.Timestamp
+) => {
+  try {
+    const requestMeetings = await firestore
+      .collection('networkingByEventId')
+      .doc(eventId)
+      .collection('meetings')
+      // .where('participants', 'array-contains-any', usersIds)
+      .where('startTimestap', '==', dateStart)
+      .get();
+    const data = requestMeetings.docs.map((item) => ({ id: item.id, ...item.data() })) as IMeeting[];
+    return data;
+  } catch (error) {
+    console.log(error)
   }
 };
 
