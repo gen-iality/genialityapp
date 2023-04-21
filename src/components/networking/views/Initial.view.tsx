@@ -36,11 +36,11 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
   const [loading, setloading] = useState(false);
   const [modal, setModal] = useState(false);
   const [permit, setPermit] = useState(true);
-  const [configShow, setConfigShow] = useState(show ?? false);
   const onSave = async (data: { meetingDuration: number }) => {
     setloading(true);
+
     const configItem: networkingGlobalConfig = {
-      show: configShow,
+      show: false,
       active: true,
       ConfigTime: {
         meetingDuration: data.meetingDuration,
@@ -49,6 +49,7 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
       },
     };
     let response = false;
+    
     if (active) {
       response = await updateConfig(Event._id, configItem);
     } else {
@@ -62,6 +63,17 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
     });
     setloading(false);
   };
+
+  const updateShowNetworking = async (show : boolean) => {
+    setloading(true);
+    const response = await updateConfig(Event._id, {show});
+      notification[response ? 'success' : 'error']({
+      icon: response ? <CheckCircleOutlined /> : <ExclamationCircleOutlined />,
+      message: response ? 'Networking configurado' : 'Problemas al configurar networking',
+      style: { color: response ? 'green' : 'orange' },
+    });
+    setloading(false);
+  }
 
   const onDelete = async () => {
     const response = await deleteNetworking(Event._id);
@@ -80,10 +92,10 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
           onCancel={() => setModal(false)}
           destroyOnClose={true}
           footer={[
-            <Button type='default' onClick={() => setModal(false)} icon={<CloseCircleOutlined />}>
+            <Button key={'btnCancelar'} type='default' onClick={() => setModal(false)} icon={<CloseCircleOutlined />}>
               Cancelar
             </Button>,
-            <Button type='primary' danger onClick={onDelete} disabled={permit} icon={<DeleteOutlined />}>
+            <Button key={'btnEliminar'} type='primary' danger onClick={onDelete} disabled={permit} icon={<DeleteOutlined />}>
               Eliminar
             </Button>,
           ]}>
@@ -125,11 +137,12 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
           />
         </Modal>
         <Row justify='end' gutter={[8, 8]} style={{ paddingBottom: 15 }}>
+          {!active && 
           <Col>
             <Button loading={loading} type='primary' icon={<SaveOutlined />} htmlType='submit'>
               Guardar
             </Button>
-          </Col>
+          </Col>}
           {active && 
             <Col>
               <Button icon={<DeleteOutlined />} danger type='primary' onClick={() => setModal(true)}>
@@ -220,11 +233,12 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
                 <Form.Item label={'Publicar y abrir networking en landing'}>
                   <Switch
                     style={{ marginLeft: 10 }}
-                    checked={configShow}
+                    checked={show}
                     checkedChildren='Si'
                     unCheckedChildren='No'
-                    onChange={() => {
-                      setConfigShow(!configShow);
+                    loading={loading}
+                    onChange={(value) => {
+                      updateShowNetworking(value);
                     }}
                   />
                 </Form.Item>
