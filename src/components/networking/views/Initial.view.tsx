@@ -12,7 +12,6 @@ import {
   Col,
   Form,
   Input,
-  InputNumber,
   Modal,
   Result,
   Row,
@@ -72,69 +71,83 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
       style: { color: response ? 'green' : 'orange' },
     });
   };
+
   return (
     <>
-      <Row justify='center' gutter={[32, 32]}>
-        <Col span={16}>
-          <Modal
-            visible={modal}
-            onCancel={() => setModal(false)}
-            destroyOnClose={true}
-            footer={[
-              <Button type='primary' onClick={() => setModal(false)} icon={<CloseCircleOutlined />}>
-                Cancelar
-              </Button>,
-              <Button type='default' danger onClick={onDelete} disabled={permit} icon={<DeleteOutlined />}>
+      <Form onFinish={onSave} layout='vertical' style={{ padding: 20}}>
+        <Modal
+          visible={modal}
+          onCancel={() => setModal(false)}
+          destroyOnClose={true}
+          footer={[
+            <Button type='default' onClick={() => setModal(false)} icon={<CloseCircleOutlined />}>
+              Cancelar
+            </Button>,
+            <Button type='primary' danger onClick={onDelete} disabled={permit} icon={<DeleteOutlined />}>
+              Eliminar
+            </Button>,
+          ]}>
+          <Result
+            status={'warning'}
+            title={
+              <Typography.Text strong type='warning' style={{ fontSize: 22 }}>
+                ¿Quieres eliminar networking?
+              </Typography.Text>
+            }
+            extra={
+              <Input
+                placeholder='Networking'
+                onChange={(e) => {
+                  if (e.target.value === 'Networking') {
+                    setPermit(false);
+                  } else {
+                    setPermit(true);
+                  }
+                }}
+              />
+            }
+            subTitle={
+              <Space style={{ textAlign: 'justify' }} direction='vertical'>
+                <Typography.Paragraph>
+                  Esta acción borrará permanentemente los datos de la configuración de networking así como las
+                  reuniones previamente establecidas.
+                </Typography.Paragraph>
+
+                <Typography.Paragraph>
+                  Para confirmar que deseas borrar toda la configuración de networking, escribe la siguiente palabra:
+                  <Typography.Text strong type='danger'>
+                    {' '}
+                    Networking
+                  </Typography.Text>
+                </Typography.Paragraph>
+              </Space>
+            }
+          />
+        </Modal>
+        <Row justify='end' gutter={[8, 8]} style={{ paddingBottom: 15 }}>
+          <Col>
+            <Button loading={loading} type='primary' icon={<SaveOutlined />} htmlType='submit'>
+              Guardar
+            </Button>
+          </Col>
+          {active && 
+            <Col>
+              <Button icon={<DeleteOutlined />} danger type='primary' onClick={() => setModal(true)}>
                 Eliminar
-              </Button>,
-            ]}>
-            <Result
-              status={'warning'}
-              title={
-                <Typography.Text strong type='warning' style={{ fontSize: 22 }}>
-                  ¿Quieres eliminar networking?
-                </Typography.Text>
-              }
-              extra={
-                <Input
-                  placeholder='Networking'
-                  onChange={(e) => {
-                    if (e.target.value === 'Networking') {
-                      setPermit(false);
-                    } else {
-                      setPermit(true);
-                    }
-                  }}
-                />
-              }
-              subTitle={
-                <Space style={{ textAlign: 'justify' }} direction='vertical'>
-                  <Typography.Paragraph>
-                    Esta acción borrará permanentemente los datos de la configuración de networking así como las
-                    reuniones previamente establecidas.
-                  </Typography.Paragraph>
-
-                  <Typography.Paragraph>
-                    Para confirmar que deseas borrar toda la configuración de networking, escribe la siguiente palabra:
-                    <Typography.Text strong type='danger'>
-                      {' '}
-                      Networking
-                    </Typography.Text>
-                  </Typography.Paragraph>
-                </Space>
-              }
-            />
-          </Modal>
-          <Card hoverable style={{ height: '100%' }}>
-            <Space direction='vertical' style={{ width: '100%' }}>
-              {!active && (
-                <Typography.Text strong style={{ fontSize: 16 }}>
-                  Configuración general de networking
-                </Typography.Text>
-              )}
-
-              <Form onFinish={onSave} layout='vertical'>
-                <Row justify='center' gutter={[40, 40]} wrap>
+              </Button>
+            </Col>
+          }
+        </Row>
+        <Row justify='center' gutter={[16, 16]}>
+          <Col span={active ? 16 : 24}>
+            <Card hoverable style={{ height: '100%', borderRadius: 20 }}>
+              <Space direction='vertical' style={{ width: '100%' }}>
+                {!active && (
+                  <Typography.Text strong style={{ fontSize: 16 }}>
+                    Configuración general de networking
+                  </Typography.Text>
+                )}
+                <Row justify='center' gutter={[16, 16]} wrap>
                   <Col span={24}>
                     {!active ? 
                       <Form.Item
@@ -171,70 +184,55 @@ export default function Initial({ active, ConfigTime, show }: networkingGlobalCo
                     } 
                   </Col>
                   <Col span={24}>
-                    <Form.Item label={'Publicar y abrir networking en landing'}>
-                      <Switch
-                        style={{ marginLeft: 10 }}
-                        checked={configShow}
-                        checkedChildren='Si'
-                        unCheckedChildren='No'
-                        onChange={() => {
-                          setConfigShow(!configShow);
-                        }}
-                      />
-                    </Form.Item>
+                    <Space direction='vertical'>
+                      <Typography.Text strong>Rango de fechas para las reuniones</Typography.Text>
+                      <Space align='center'>
+                        <Button
+                          icon={<CalendarTodayIcon style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />}
+                          type='text'
+                          style={{ cursor: 'default' }}
+                        />
+                        <div>
+                          <Typography.Text strong>Fecha de inicio</Typography.Text> <br />
+                          <Typography.Text>{dateFormat(Event.datetime_from, 'lll A')}</Typography.Text>
+                        </div>
+                      </Space>
+                      <Space align='center'>
+                        <Button
+                          icon={<CalendarIcon style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />}
+                          type='text'
+                          style={{ cursor: 'default' }}
+                        />
+                        <div>
+                          <Typography.Text strong>Fecha final</Typography.Text> <br />
+                          <Typography.Text>{dateFormat(Event.datetime_to, 'lll A')}</Typography.Text>
+                        </div>
+                      </Space>
+                    </Space>
                   </Col>
                 </Row>
-                <Row justify='end' gutter={[8, 8]} style={{ paddingTop: 15 }}>
-                  {
-                    !active &&
-                    <Col>
-                      <Button loading={loading} type='primary' icon={<SaveOutlined />} htmlType='submit'>
-                        Guardar
-                      </Button>
-                    </Col>
-                  }
-                  {active && 
-                    <Col>
-                      <Button icon={<DeleteOutlined />} danger type='primary' onClick={() => setModal(true)}>
-                        Eliminar
-                      </Button>
-                    </Col>
-                  }
-                </Row>
-              </Form>
-            </Space>
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card hoverable style={{ height: '100%' }}>
-            <Space direction='vertical'>
-              <Typography.Text strong>Rango de fechas para las reuniones</Typography.Text>
-              <Space align='center'>
-                <Button
-                  icon={<CalendarTodayIcon style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />}
-                  type='text'
-                  style={{ cursor: 'default' }}
-                />
-                <div>
-                  <Typography.Text strong>Fecha de inicio</Typography.Text> <br />
-                  <Typography.Text>{dateFormat(Event.datetime_from, 'lll A')}</Typography.Text>
-                </div>
               </Space>
-              <Space align='center'>
-                <Button
-                  icon={<CalendarIcon style={{ fontSize: 20, color: 'rgba(0, 0, 0, 0.45)' }} />}
-                  type='text'
-                  style={{ cursor: 'default' }}
-                />
-                <div>
-                  <Typography.Text strong>Fecha final</Typography.Text> <br />
-                  <Typography.Text>{dateFormat(Event.datetime_to, 'lll A')}</Typography.Text>
-                </div>
-              </Space>
-            </Space>
-          </Card>
-        </Col>
-      </Row>
+            </Card>
+          </Col>
+          {active &&
+            <Col span={8}>
+              <Card hoverable style={{ /* height: '100%',  */borderRadius: 20 }}>
+                <Form.Item label={'Publicar y abrir networking en landing'}>
+                  <Switch
+                    style={{ marginLeft: 10 }}
+                    checked={configShow}
+                    checkedChildren='Si'
+                    unCheckedChildren='No'
+                    onChange={() => {
+                      setConfigShow(!configShow);
+                    }}
+                  />
+                </Form.Item>
+              </Card>
+            </Col>
+          }
+        </Row>
+      </Form>
     </>
   );
 }
