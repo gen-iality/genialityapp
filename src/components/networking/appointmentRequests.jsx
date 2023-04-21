@@ -10,7 +10,7 @@ import { acceptOrRejectAgenda, } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
 import { RequestMeetingState } from './utils/utils';
 import RequestCardTs from './components/Landing/RequestCard';
-import { getMeetingRequest } from './services/landing.service';
+import { getMeetingRequest, listenMeetingsRequest } from './services/landing.service';
 
 const { Meta } = Card;
 
@@ -31,15 +31,16 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
 
-  useEffect(async () => {
-   const request = await getMeetingRequest('user_to.id',eventContext.value._id,userEventContext.value._id,[RequestMeetingState.pending])
+  useEffect(async() => {
+   const unSuscribeListenMeetingsRequest =  listenMeetingsRequest(eventContext.value._id,userEventContext.value._id,setPendingAgendas)
    const requestSend = await getMeetingRequest('user_from.id',eventContext.value._id,userEventContext.value._id,[RequestMeetingState.pending,RequestMeetingState.rejected,RequestMeetingState.confirmed])
-   setPendingAgendas(request)
    setPendingAgendasSent(requestSend.sort((a, b) =>  b.timestamp - a.timestamp))
 
    setLoading(false);
    setLoading1(false);
-
+    return () => {
+      unSuscribeListenMeetingsRequest()
+    }
   }, [eventContext.value, userEventContext.value, eventUsers, sendRespuesta]);
 
  

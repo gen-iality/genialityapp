@@ -2,7 +2,25 @@ import { firestore } from '@/helpers/firebase';
 import { IRequestMeenting } from '../interfaces/Landing.interfaces';
 import { IMeetingRequestFirebase, SpaceMeeting, SpaceMeetingFirebase } from '../interfaces/space-requesting.interface';
 import firebase from 'firebase/compat';
+import event from '@/components/events/event';
+import { RequestMeetingState } from '../utils/utils';
 
+export const listenMeetingsRequest = (eventId: string,userID: string, onSet: any) => {
+  return firestore
+  .collection(`networkingByEventId`)
+  .doc(eventId)
+  .collection('meeting_request')
+  .where('user_to.id', '==', userID)
+  .onSnapshot(snapshot => {
+    if (!snapshot.empty) {
+      let data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as SpaceMeetingFirebase[];
+      data = data.filter((item)=>item.status == RequestMeetingState.pending)
+      onSet(data)
+    } else {
+      onSet([])
+    }
+  });
+}
 export const getMeetingRequest = async (
   property: string,
   eventId: string,
