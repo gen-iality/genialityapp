@@ -1,4 +1,4 @@
-import { Button, Card, Col, Drawer, Modal, Row, Space, Tag, Tooltip, Typography } from 'antd';
+import { Button, Card, Col, Drawer, Dropdown, Menu, Modal, Row, Select, Space, Tag, Tooltip, Typography } from 'antd';
 import moment from 'moment';
 import React, { useContext, useState } from 'react';
 import { Calendar, View, momentLocalizer } from 'react-big-calendar';
@@ -40,7 +40,7 @@ export default function MyCalendar() {
   const [groupBy, setGroupBy] = useState<GroupByResources>('spaces');
   const { spaces } = useGetSpaces();
   const { renderEvents } = useGetMeetingToCalendar(meetings, View, observers, groupBy);
-  const { resources, resourceAccessor, buttonGroupBy } = useGroupByCalendar(
+  const { resources, resourceAccessor } = useGroupByCalendar(
     {
       observers: {
         resources: observers,
@@ -55,7 +55,7 @@ export default function MyCalendar() {
     },
     groupBy
   );
-  
+
   const ReactBigCalendar: any = withDragAndDrop(Calendar);
 
   const showDrawer = (event: IMeeting) => {
@@ -98,11 +98,12 @@ export default function MyCalendar() {
   };
 
   const eventStyleGetter = (event: IMeeting | IMeetingCalendar) => {
-    if(!typeMeetings) return {
-      backgroundColor: defaultType.style,
-      color: 'white',
-      border: `1px solid rgba(196, 196, 196, 0.3)`, //#C4C4C4
-    };
+    if (!typeMeetings)
+      return {
+        backgroundColor: defaultType.style,
+        color: 'white',
+        border: `1px solid rgba(196, 196, 196, 0.3)`, //#C4C4C4
+      };
     const style = {
       backgroundColor: typeMeetings.find((item) => item.id === event.type?.id)?.style || defaultType.style,
       color: getCorrectColor(typeMeetings.find((item) => item.id === event.type?.id)?.style || defaultType.style),
@@ -113,11 +114,20 @@ export default function MyCalendar() {
     };
   };
 
-  const onSetNextGroupBy = () => {
-    if (groupBy === 'observers') return setGroupBy('spaces');
-    if (groupBy === 'spaces') return setGroupBy('observers');
+  const FilterOptions = [
+    {
+      label: 'Espacios',
+      value: 'spaces',
+    },
+    {
+      label: 'Observadores',
+      value: 'observers',
+    },
+  ];
+  const handleProvinceChange = (value: string) => {
+    console.log(value, 'value');
+    setGroupBy(value as GroupByResources);
   };
-
   return (
     <>
       <Row justify='center' wrap gutter={[8, 8]}>
@@ -125,7 +135,7 @@ export default function MyCalendar() {
           <Drawer
             title={
               <Space wrap align='center'>
-                <AccountGroupOutlineIcon style={{fontSize: 30, color: meenting.type?.style}}/>
+                <AccountGroupOutlineIcon style={{ fontSize: 30, color: meenting.type?.style }} />
                 <Tag color={meenting.type?.style}>
                   {meenting.type?.nameType === 'Seleccione una opción' ? 'reunión' : meenting.type?.nameType}
                 </Tag>
@@ -136,13 +146,13 @@ export default function MyCalendar() {
             width={450}
             closable={false}
             onClose={() => onClose()}
-            headerStyle={{border: 'none'}}
-            bodyStyle={{paddingTop: 0}}
+            headerStyle={{ border: 'none' }}
+            bodyStyle={{ paddingTop: 0 }}
             extra={
               <Row gutter={[16, 16]} justify='end'>
                 <Col>
                   <Tooltip placement='topLeft' title='Editar'>
-                    <Button icon={<EditOutlined />} onClick={() => onEdit()} type='text'/>
+                    <Button icon={<EditOutlined />} onClick={() => onEdit()} type='text' />
                   </Tooltip>
                 </Col>
                 <Col>
@@ -152,17 +162,27 @@ export default function MyCalendar() {
                 </Col>
                 <Col>
                   <Tooltip placement='topLeft' title='Cerrar'>
-                    <Button icon={<CloseOutlined style={{fontSize: 25}} />} onClick={onClose} type='text' />
+                    <Button icon={<CloseOutlined style={{ fontSize: 25 }} />} onClick={onClose} type='text' />
                   </Tooltip>
                 </Col>
               </Row>
             }>
-            <MeetingInfo meenting={meetings.find((item) => item.id === meenting.id) || meenting}/>
+            <MeetingInfo meenting={meetings.find((item) => item.id === meenting.id) || meenting} />
           </Drawer>
           <Card hoverable loading={loading}>
             <Row justify='end' style={{ marginBottom: 10 }}>
-              {(View === 'week' || View === 'day') && <Button onClick={onSetNextGroupBy}>Por {buttonGroupBy}</Button>}
-            </Row>
+              {(View === 'week' || View === 'day') && (
+                <>
+                  <Typography.Paragraph style={{ marginRight : 10}}>Filtrar por:</Typography.Paragraph>
+                  <Select
+                    defaultValue={FilterOptions[0].value}
+                    style={{ width: 120 }}
+                    onChange={handleProvinceChange}
+                    options={FilterOptions}
+                  />
+                </>
+              )}
+              </Row>
             <ReactBigCalendar
               events={renderEvents}
               view={View}
