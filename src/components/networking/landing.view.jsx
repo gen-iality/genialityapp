@@ -15,6 +15,7 @@ import {
   Result,
   Space,
   Spin,
+  Typography,
 } from 'antd';
 import AppointmentModal from './appointmentModal';
 import MyAgenda from './myAgenda';
@@ -345,7 +346,7 @@ class ListEventUser extends Component {
     } = this.state;
 
     return (
-      <Card style={{ padding: '5px' }}>
+      <Card style={{ /* padding: '5px', */ /* height: '100%' */ padding: 0}} bodyStyle={{paddingTop: 10}}>
         <Modal visible={this.state.modalView} footer={null} closable={false}>
           <Result
             extra={
@@ -353,9 +354,16 @@ class ListEventUser extends Component {
                 Cerrar
               </Button>
             }
-            title='Información adicional'
-            subTitle='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
-                  se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
+            title={<Typography.Text strong>¡Información adicional!</Typography.Text>}
+            subTitle={
+              <Typography.Paragraph style={{textAlign: 'justify'}}>
+                Solo puedes ver una cantidad limitada de información pública de cada asistente, 
+                para ver toda la información de un asistente debes realizar una solicitud de contacto,
+                luego de ello se le informará al asistente, quien aceptará o recharazá la solicitud enviada. <br /><br />
+                Una vez el asistente haya aceptado solicitud te llegará un correo y podrás regresar
+                a esta misma sección en mis contactos a ver la información completa del nuevo contacto.
+              </Typography.Paragraph>
+            }
           />
         </Modal>
 
