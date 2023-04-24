@@ -191,7 +191,7 @@ export default function MyCalendar() {
               onSelectEvent={showDrawer}
               onEventDrop={updateEventCalendar}
               onEventResize={updateEventCalendar}
-              resources={resources}
+              resources={resources.length ? resources : undefined}
               resourceAccessor={resourceAccessor}
               resourceIdAccessor='value'
               resourceTitleAccessor='label'
