@@ -173,7 +173,7 @@ export default function MyCalendar() {
             <Row justify='end' style={{ marginBottom: 10 }}>
               {(View === 'week' || View === 'day') && (
                 <>
-                  <Typography.Paragraph style={{ marginRight : 10}}>Filtrar por:</Typography.Paragraph>
+                  <Typography.Paragraph strong style={{ marginRight : 10}}>Filtrar por:</Typography.Paragraph>
                   <Select
                     defaultValue={FilterOptions[0].value}
                     style={{ width: 120 }}
