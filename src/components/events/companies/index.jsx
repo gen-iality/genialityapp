@@ -130,33 +130,34 @@ class Company extends Component {
     }
 
     return (
-      <div className='main-exhibitor-list'>
+      <div className="main-exhibitor-list">
         <button
-          type='button'
-          className='main-stand-goback'
+          type="button"
+          className="main-stand-goback"
           onClick={() => {
             if (isFunction(goBack)) {
               this.showList();
               goBack();
             }
           }}>
-          <img src='/exhibitors/icons/baseline_arrow_back_white_18dp.png' alt='' />
+          <img src="/exhibitors/icons/baseline_arrow_back_white_18dp.png" alt="" />
           Regresar
         </button>
-        <div className='iso-exhibitor-list' ref={this.standsListRef} onScroll={this.onScrollStandsList}>
-          <div className='iso-exhibitor-list-wrap'>
+        <div className="iso-exhibitor-list" ref={this.standsListRef} onScroll={this.onScrollStandsList}>
+          <div className="iso-exhibitor-list-wrap">
             {isNonEmptyArray(companies) &&
               companies.map((company, companyIndex) => {
                 return (
                   <button
                     key={`list-item-${company.id}`}
-                    type='button'
-                    className='iso-exhibitor-list-item'
-                    onClick={() => this.showListItem(companyIndex)}>
-                    <div className='iso-exhibitor-list-item-image'>
-                      <img src={company.list_image} alt='' />
+                    type="button"
+                    className="iso-exhibitor-list-item"
+                    onClick={() => this.showListItem(companyIndex)}
+                  >
+                    <div className="iso-exhibitor-list-item-image">
+                      <img src={company.list_image} alt="" />
                     </div>
-                    <div className='iso-exhibitor-list-item-description'>
+                    <div className="iso-exhibitor-list-item-description">
                       <span></span> {company.name}
                     </div>
                   </button>
@@ -164,14 +165,14 @@ class Company extends Component {
               })}
           </div>
         </div>
-        <div className='scroll-down'>
-          <div className='scroll-down-label'>
+        <div className="scroll-down">
+          <div className="scroll-down-label">
             Haz scroll para ver
             <br />
             todos los stands
           </div>
-          <div className='scroll-down-image'>
-            <img alt='scdown' src='/exhibitors/scdown.gif' />
+          <div className="scroll-down-image">
+            <img alt="scdown" src="/exhibitors/scdown.gif" />
           </div>
         </div>
       </div>

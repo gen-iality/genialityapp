@@ -37,10 +37,10 @@ function CourseProgressBar(props: CourseProgressBarProps) {
 
   return (
     <div>
-      <div className='CourseProgressBar-container'>
-        <div className='CourseProgressBar-innerContainer'>
+      <div className="CourseProgressBar-container">
+        <div className="CourseProgressBar-innerContainer">
           {activities.map((activity, index) => (
-            <div className='CourseProgressBar-stepContainer'>
+            <div className="CourseProgressBar-stepContainer">
               <Line isActive={activitiesAttendee.filter(attende => attende.activity_id == activity._id).length} />
               <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
                 <Step
@@ -54,7 +54,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                   isSurvey={[activityContentValues.quizing, activityContentValues.survey].includes(activity.type?.name as any)}
                 >
                   <Tooltip
-                    placement='right'
+                    placement="right"
                     title={`Ir ${
                       [activityContentValues.quizing, activityContentValues.survey].includes(activity.type?.name! as any)
                         ? 'al cuestionario'

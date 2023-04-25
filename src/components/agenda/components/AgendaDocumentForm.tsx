@@ -7,8 +7,8 @@ import Document from '@components/documents/Document';
 
 export interface AgendaDocumentForm {
   eventId: string,
-  selectedDocuments: SelectOptionType[],
-  onSelectedDocuments?: (changed: SelectOptionType[]) => void,
+  selectedDocuments: string[],
+  onSelectedDocuments?: (changed: string[]) => void,
   matchUrl?: string,
 };
 
@@ -48,8 +48,8 @@ function AgendaDocumentForm(props: AgendaDocumentForm) {
     {wasLoaded && <Spin/>}
     <Select
       showArrow
-      id='nameDocuments'
-      mode='multiple'
+      id="nameDocuments"
+      mode="multiple"
       options={allNameDocuments}
       onChange={onSelectedDocuments}
       defaultValue={selectedDocuments}

@@ -57,20 +57,21 @@ export const ChangePassword = ({ email }) => {
         //   icon: <LockOutlined />,
         //   style: { backgroundColor: '#52C41A' },
         // }}
-        title='Cambiar contraseña'
+        title="Cambiar contraseña"
       />
       <div style={{ padding: '24px' }}>
-        <Typography.Paragraph type='success' style={{ fontSize: '15px' }}>
+        <Typography.Paragraph type="success" style={{ fontSize: '15px' }}>
           Puede solicitar un cambio de contraseña haciendo clic en el botón &quot;Solicitar cambio&quot;. Le enviaremos
           un correo electrónico con instrucciones sencillas.
         </Typography.Paragraph>
-        <Form onFinish={handleRecoveryPass} autoComplete='off' layout='vertical'>
+        <Form onFinish={handleRecoveryPass} autoComplete="off" layout="vertical">
           <Form.Item
-            label={'Este es el correo electrónico que recibirá la notificación'}
-            name='email'
+            label="Este es el correo electrónico que recibirá la notificación"
+            name="email"
             initialValue={email}
-            style={{ marginBottom: '10px', textAlign: 'left' }}>
-            <Input type='text' size='large' disabled />
+            style={{ marginBottom: '10px', textAlign: 'left' }}
+          >
+            <Input type="text" size="large" disabled />
           </Form.Item>
           {sendRecovery !== null && (
             <Alert
@@ -84,7 +85,7 @@ export const ChangePassword = ({ email }) => {
               message={sendRecovery}
               showIcon
               closable
-              className='animate__animated animate__pulse'
+              className="animate__animated animate__pulse"
               style={{
                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                 backgroundColor: '#FFFFFF',
@@ -104,7 +105,7 @@ export const ChangePassword = ({ email }) => {
             />
           )}
           <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
-            <Button htmlType='submit' style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+            <Button htmlType="submit" style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size="large">
               Solicitar cambio
             </Button>
           </Form.Item>

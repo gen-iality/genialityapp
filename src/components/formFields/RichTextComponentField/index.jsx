@@ -33,7 +33,7 @@ function RichTextComponentField(rawProps) {
   }, [formItemProps.required, maxLength]);
 
   return (
-    <Field name={name} validate={validate} onPaste={true}>
+    <Field name={name} validate={validate} onPaste>
       {({ field, form, meta }) => {
         const fieldError = meta.touched && meta.error;
 
@@ -42,7 +42,8 @@ function RichTextComponentField(rawProps) {
             label={formItemProps.label}
             required={formItemProps.required}
             help={fieldError}
-            validateStatus={fieldError ? 'error' : undefined}>
+            validateStatus={fieldError ? 'error' : undefined}
+          >
             <ReactQuill
               id={id}
               ref={editorRef}

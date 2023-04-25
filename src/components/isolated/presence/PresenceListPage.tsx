@@ -79,7 +79,7 @@ export function PresenceListPage (props: IPresenceListPageProps) {
       </Button>
       <List
         bordered
-        header={'Beacon list'}
+        header="Beacon list"
         dataSource={beaconList}
         renderItem={(item, index) => (
           <List.Item key={index}>
@@ -97,7 +97,7 @@ export function PresenceListPage (props: IPresenceListPageProps) {
 
       <List
         bordered
-        header={'Global list'}
+        header="Global list"
         dataSource={globalList}
         renderItem={(item, index) => (
           <List.Item key={index}>
@@ -115,7 +115,7 @@ export function PresenceListPage (props: IPresenceListPageProps) {
       
       <List
         bordered
-        header={'Local list'}
+        header="Local list"
         dataSource={localList}
         renderItem={(item, index) => (
           <List.Item key={index}>

@@ -31,11 +31,12 @@ export const logout = async ({ showNotification, params }: logoutInterface) => {
       if (currentUserConnect?.data()?.lastSignInTime === lastSignInTime) await conectionRef.doc(user.uid).delete();
       const routeUrl = window.location.href;
       const weAreOnTheLanding = routeUrl.includes('landing');
+      const weAreOnTheOrganizationLanding = routeUrl.includes('organization') && !routeUrl.includes('admin/organization');
       handleChangeTypeModal(null);
       setuserEvent(initialStateEvenUserContext);
       setCurrentUser(initialStateUserContext);
       if (showNotification) remoteLogoutNotification({ type: 'info', names: user.names, formatMessage });
-      if (!weAreOnTheLanding) {
+      if (!weAreOnTheLanding && !weAreOnTheOrganizationLanding) {
         history.push('/');
       }
     })

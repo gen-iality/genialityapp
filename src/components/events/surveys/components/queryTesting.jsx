@@ -106,19 +106,20 @@ function QueryTesting() {
   }, [data]);
 
   return (
-    <Row justify='center' align='middle' style={{ minHeight: '100vh', textAlign: 'center' }}>
+    <Row justify="center" align="middle" style={{ minHeight: '100vh', textAlign: 'center' }}>
       <Col>
         <Card>
-          <Form name='queryTesting' initialValues={{ remember: true }} onFinish={onFinish}>
+          <Form name="queryTesting" initialValues={{ remember: true }} onFinish={onFinish}>
             <Form.Item
               label='# inserciones en la Bd'
-              name='insertionNumber'
-              rules={[{ required: true, message: 'Ingrese un número de inserciones!' }]}>
+              name="insertionNumber"
+              rules={[{ required: true, message: 'Ingrese un número de inserciones!' }]}
+            >
               <InputNumber min={0} max={9999} />
             </Form.Item>
 
             <Form.Item>
-              <Button type='primary' htmlType='submit'>
+              <Button type="primary" htmlType="submit">
                 Realizar prueba
               </Button>
             </Form.Item>
@@ -127,7 +128,7 @@ function QueryTesting() {
             <div style={{ marginBottom: '25px' }}>
               <h1>Total respuestas</h1>
               {data !== null ? (
-                <Tag color='success'>
+                <Tag color="success">
                   <h1>{data.length}</h1>
                 </Tag>
               ) : (
@@ -137,7 +138,7 @@ function QueryTesting() {
             <div style={{ marginBottom: '25px' }}>
               <h1>Promedio</h1>
               {totalAveragedata !== null ? (
-                <Tag color='success'>
+                <Tag color="success">
                   <h1>{totalAveragedata}</h1>
                 </Tag>
               ) : (
@@ -147,7 +148,7 @@ function QueryTesting() {
             <div>
               <h1>Tiempo</h1>
               {totalTime !== null ? (
-                <Tag color='success'>
+                <Tag color="success">
                   <h1>{totalTime} M.Segundos</h1>
                 </Tag>
               ) : (

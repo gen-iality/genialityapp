@@ -99,31 +99,33 @@ const ModalNotifications = (props) => {
       centered
       footer={null}
       zIndex={1000}
-      closable={true}
+      closable
       visible={modalSendNotificationVisible}
       onCancel={() => {
         setModalSendNotificationVisible(false);
         resetFields();
       }}>
-      <Form onFinish={sendNotifications} form={form} autoComplete='off' layout='vertical'>
-        <Typography.Title level={4} type='secondary'>
+      <Form onFinish={sendNotifications} form={form} autoComplete="off" layout="vertical">
+        <Typography.Title level={4} type="secondary">
           Enviar notificación push
         </Typography.Title>
         <Form.Item
-          label={'Mensaje'}
-          name='notificationMessage'
+          label="Mensaje"
+          name="notificationMessage"
           style={{ marginBottom: '10px' }}
-          rules={[{ required: true, message: 'Ingrese un mensaje!' }]}>
-          <TextArea rows={8} showCount maxLength={250} placeholder={'Máximo 250 caracteres'} />
+          rules={[{ required: true, message: 'Ingrese un mensaje!' }]}
+        >
+          <TextArea rows={8} showCount maxLength={250} placeholder="Máximo 250 caracteres" />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
-            id={'submitButton'}
-            htmlType='submit'
+            id="submitButton"
+            htmlType="submit"
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size='large'
-            icon={<SendOutlined />}>
+            size="large"
+            icon={<SendOutlined />}
+          >
             Enviar notificación
           </Button>
         </Form.Item>

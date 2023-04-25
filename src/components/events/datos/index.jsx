@@ -23,6 +23,7 @@ import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { DispatchMessageService } from '@context/MessageService';
 import { createFieldForCheckInPerDocument } from './utils';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
+import DynamicFieldCreationForm from '../../dynamic-fields/DynamicFieldCreationForm';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -67,7 +68,7 @@ class Datos extends Component {
     extraFields = extraFields.sort((a, b) =>
       (a.order_weight && !b.order_weight) || (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
         ? -1
-        : 1
+        : 1,
     );
     return extraFields;
   };
@@ -114,7 +115,6 @@ class Datos extends Component {
         fields = this.orderFieldsByWeight(fieldsReplace);
         fields = this.updateIndex(fieldsReplace);
       }
-      //console.log('FIELDS==>', fields);
       this.setState({ fields, loading: false });
     } catch (e) {
       this.showError(e, 'ERROR');
@@ -144,16 +144,29 @@ class Datos extends Component {
     });
     try {
       let totaluser = {};
-      const organizationId = this?.organization?._id;
+      const organizationId = this.organization?._id;
       if (organizationId) {
-        if (this.state.edit)
+        if (this.state.edit) {
           await this.props.editField(field._id || field.id, field, this.state.isEditTemplate, this.updateTable);
-        else await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
+        } else {
+          await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
+        }
       } else {
-        if (this.state.edit) await EventFieldsApi.editOne(field, field._id || field.id, this.eventId);
-        else await EventFieldsApi.createOne(field, this.eventId);
+        if (this.state.edit) {
+          await EventFieldsApi.editOne(field, field._id || field.id, this.eventId);
+        } else {
+          await EventFieldsApi.createOne(field, this.eventId);
+        }
         totaluser = await firestore.collection(`${this.eventId}_event_attendees`).get();
       }
+
+      // Update the fields state from the new edited field
+      this.setState((previous) => ({
+        ...previous,
+        fields: previous.fields.map((_field) => (_field._id === field._id ? field : _field)),
+      }));
+      this.closeModal2(); // To force clean the form by destroying the Modal
+
       if (totaluser?.docs?.length > 0 && field?.name == 'pesovoto') {
         firestore
           .collection(`${this.eventId}_event_attendees`)
@@ -427,7 +440,7 @@ class Datos extends Component {
     <SortableContainer
       useDragHandle
       disableAutoscroll
-      helperClass='row-dragging'
+      helperClass="row-dragging"
       onSortEnd={this.onSortEnd}
       {...props}
     />
@@ -448,7 +461,6 @@ class Datos extends Component {
   //Función que se ejecuta cuando se termina de hacer drag
   onSortEnd = ({ oldIndex, newIndex }) => {
     let user_properties = this.state.user_properties;
-    console.log('FIELDSSTATE==>', this.state.fields);
     const fields =
       this.state.fields.length > 0
         ? this.state.fields
@@ -522,7 +534,7 @@ class Datos extends Component {
         render: (record, key) =>
           key.name !== 'email' && key.name !== 'names' ? (
             <Checkbox
-              name='mandatory'
+              name="mandatory"
               onChange={() => this.changeCheckBox(key, 'mandatory')}
               checked={record}
               /* disabled={key.name === 'contrasena' || key.type === 'password'} */
@@ -537,7 +549,7 @@ class Datos extends Component {
         align: 'center',
         render: (record, key) => (
           <Checkbox
-            name='visibleByContacts'
+            name="visibleByContacts"
             onChange={() => this.changeCheckBox(key, 'visibleByContacts', 'visibleByAdmin')}
             checked={record}
             disabled={
@@ -555,7 +567,7 @@ class Datos extends Component {
         align: 'center',
         render: (record, key) => (
           <Checkbox
-            name='sensibility'
+            name="sensibility"
             onChange={() => this.changeCheckBox(key, 'sensibility')}
             checked={record}
             disabled={
@@ -574,7 +586,7 @@ class Datos extends Component {
         render: (record, key) =>
           key.name !== 'email' && key.name !== 'names' ? (
             <Checkbox
-              name='visibleByAdmin'
+              name="visibleByAdmin"
               onChange={() => this.changeCheckBox(key, 'visibleByAdmin', 'visibleByContacts')}
               checked={record}
               /* disabled={key.name === 'contrasena' || key.type === 'password'} */
@@ -593,14 +605,14 @@ class Datos extends Component {
             <Row wrap gutter={[8, 8]}>
               <Col>
                 {key.name !== 'email' /* && key.name !== 'contrasena' */ && (
-                  <Tooltip placement='topLeft' title='Editar'>
+                  <Tooltip placement="topLeft" title="Editar">
                     <Button
                       key={`editAction${key.index}`}
                       id={`editAction${key.index}`}
                       onClick={() => this.editField(key)}
                       icon={<EditOutlined />}
-                      type='primary'
-                      size='small'
+                      type="primary"
+                      size="small"
                       disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                     />
                   </Tooltip>
@@ -608,14 +620,14 @@ class Datos extends Component {
               </Col>
               <Col>
                 {key.name !== 'email' && key.name !== 'names' /* && key.name !== 'contrasena' */ && (
-                  <Tooltip placement='topLeft' title='Eliminar'>
+                  <Tooltip placement="topLeft" title="Eliminar">
                     <Button
                       key={`removeAction${key.index}`}
                       id={`removeAction${key.index}`}
                       onClick={() => this.removeField(key._id || key.name)}
                       icon={<DeleteOutlined />}
-                      type='danger'
-                      size='small'
+                      type="danger"
+                      size="small"
                       disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                     />
                   </Tooltip>
@@ -644,7 +656,7 @@ class Datos extends Component {
 
     return (
       <div>
-        <Tabs defaultActiveKey='1'>
+        <Tabs defaultActiveKey="1">
           {this.state.visibleModal && (
             <ModalCreateTemplate
               visible={this.state.visibleModal}
@@ -654,9 +666,9 @@ class Datos extends Component {
           )}
 
           {this.props.type !== 'organization' && (
-            <TabPane tab='Configuración General' key='1'>
+            <TabPane tab="Configuración General" key="1">
               <Fragment>
-                <Header title={'Interacción con la plataforma'} />
+                <Header title="Interacción con la plataforma" />
                 <small>
                   {`Configure los datos que desea recolectar de los asistentes ${
                     this.organization ? 'de la organización' : 'del curso'
@@ -667,8 +679,8 @@ class Datos extends Component {
                   columns={columns}
                   dataSource={fields}
                   pagination={false}
-                  rowKey='index'
-                  size='small'
+                  rowKey="index"
+                  size="small"
                   components={{
                     body: {
                       wrapper: this.DraggableContainer,
@@ -676,10 +688,10 @@ class Datos extends Component {
                     },
                   }}
                   title={() => (
-                    <Row justify='end' wrap gutter={[8, 8]}>
+                    <Row justify="end" wrap gutter={[8, 8]}>
                       <Col>
                         <Checkbox
-                          name='checkInByDocument'
+                          name="checkInByDocument"
                           onChange={(value) =>
                             createFieldForCheckInPerDocument({
                               value,
@@ -688,7 +700,8 @@ class Datos extends Component {
                               remove: this.removeField,
                             })
                           }
-                          checked={checkInExists}>
+                          checked={checkInExists}
+                        >
                           CheckIn por documento
                         </Checkbox>
                       </Col>
@@ -696,14 +709,15 @@ class Datos extends Component {
                         <Button
                           disabled={this.state.available}
                           onClick={this.submitOrder}
-                          type='primary'
-                          icon={<SaveOutlined />}>
-                          {'Guardar orden'}
+                          type="primary"
+                          icon={<SaveOutlined />}
+                        >
+                          Guardar orden
                         </Button>
                       </Col>
                       <Col>
-                        <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addField}>
-                          {'Agregar'}
+                        <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addField}>
+                          Agregar
                         </Button>
                       </Col>
                     </Row>
@@ -715,8 +729,15 @@ class Datos extends Component {
                     title={edit ? 'Editar dato' : 'Agregar dato'}
                     footer={false}
                     onCancel={this.closeModal2}
-                    okText={'Guardar'}>
-                    <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} />
+                    okText="Guardar"
+                  >
+                    {/* <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} /> */}
+                    <DynamicFieldCreationForm
+                      onCancel={this.closeModal2}
+                      dataToEdit={info}
+                      isEditing={edit}
+                      onSave={this.saveField}
+                    />
                   </Modal>
                 )}
               </Fragment>
@@ -724,7 +745,7 @@ class Datos extends Component {
           )}
 
           {this.props.type == 'organization' && (
-            <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
+            <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key="3">
               {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (
                 <Fragment>
                   <Header
@@ -733,13 +754,14 @@ class Datos extends Component {
                         Recopilación de datos de plantillas
                         {this.props.type !== 'configMembers' && (
                           <Button
-                            type='link'
+                            type="link"
                             style={{ color: 'blue' }}
                             onClick={() =>
                               this.setState({
                                 isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] },
                               })
-                            }>
+                            }
+                          >
                             Volver a plantillas
                           </Button>
                         )}
@@ -756,8 +778,8 @@ class Datos extends Component {
                     columns={columns}
                     dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
                     pagination={false}
-                    rowKey='index'
-                    size='small'
+                    rowKey="index"
+                    size="small"
                     components={{
                       body: {
                         wrapper: this.DraggableContainer,
@@ -765,19 +787,20 @@ class Datos extends Component {
                       },
                     }}
                     title={() => (
-                      <Row justify='end' wrap gutter={[8, 8]}>
+                      <Row justify="end" wrap gutter={[8, 8]}>
                         <Col>
                           <Button
                             disabled={this.state.available}
                             onClick={this.submitOrder}
-                            type='primary'
-                            icon={<SaveOutlined />}>
-                            {'Guardar orden'}
+                            type="primary"
+                            icon={<SaveOutlined />}
+                          >
+                            Guardar orden
                           </Button>
                         </Col>
                         <Col>
-                          <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addField}>
-                            {'Agregar'}
+                          <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addField}>
+                            Agregar
                           </Button>
                         </Col>
                       </Row>
@@ -789,8 +812,15 @@ class Datos extends Component {
                       title={edit ? 'Editar dato' : 'Agregar dato'}
                       footer={false}
                       onCancel={this.closeModal2}
-                      cancelText={'Cancelar'}>
-                      <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} />
+                      cancelText="Cancelar"
+                    >
+                      {/* <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} /> */}
+                      <DynamicFieldCreationForm
+                        onCancel={this.closeModal2}
+                        dataToEdit={info}
+                        isEditing={edit}
+                        onSave={this.saveField}
+                      />
                     </Modal>
                   )}
                 </Fragment>
@@ -798,7 +828,7 @@ class Datos extends Component {
                 <CMS
                   API={OrganizationPlantillaApi}
                   eventId={this.props.event?.organizer_id ? this.props.event?.organizer_id : this.props.eventId}
-                  title={'Plantillas de recoleccion de datos'}
+                  title="Plantillas de recoleccion de datos"
                   addFn={() => this.setState({ visibleModal: true })}
                   columns={colsPlant}
                   editFn={(values) => {

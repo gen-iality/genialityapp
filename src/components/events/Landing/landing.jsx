@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
 import { useUserEvent } from '@context/eventUserContext';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, useLocation } from 'react-router-dom';
 /** ant design */
 import { Layout, Spin, notification, Button, Result, Steps, Tooltip } from 'antd';
 /* import 'react-toastify/dist/ReactToastify.css'; */
@@ -92,8 +92,13 @@ const Landing = props => {
   const [activitiesAttendee, setActivitiesAttendee] = useState([]);
   const [activities, setActivities] = useState([]);
   const history = useHistory();
+  const location = useLocation();
 
   const loadData = async () => {
+    // Reset this
+    setActivities([]);
+    setActivitiesAttendee([]);
+
     const { data } = await AgendaApi.byEvent(cEventContext.value?._id)
     setActivities(data);
     const existentActivities = data.map(async activity => {
@@ -122,12 +127,23 @@ const Landing = props => {
     loadData();
   }
 
+/*   useEffect(() => {
+    if (!cEventContext.value?._id) return
+    if (!cEventUser.value?._id) {
+      window.location.href = `/organization/${cEventContext.value?.organizer._id}/events`
+    }
+  }, [cEventUser.value, cEventContext.value]) */
+
   useEffect(() => {
     if (!cEventContext.value?._id) return;
     if (!cEventUser.value?._id) return;
-    setActivitiesAttendee([]);
     loadData();
+    console.info('event is asked', cEventContext.value?._id)
   }, [cEventContext.value, cEventUser.value]);
+
+  // useEffect(() => {
+  //   loadData()
+  // }, [location])
 
   useEffect(() => {
     DispatchMessageService({
@@ -135,13 +151,17 @@ const Landing = props => {
       msj: '¡Estamos configurando la mejor experiencia para tí!',
       action: 'show',
     });
+    return () => {
+      setActivities([]);
+      setActivitiesAttendee([]);
+    }
   }, []);
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
       <Button
-        type='primary'
-        size='small'
+        type="primary"
+        size="small"
         onClick={() =>
           window.location.replace(`${window.location.origin}/landing/${cEventContext.value._id}/activity/${activity}`)
         }
@@ -157,7 +177,7 @@ const Landing = props => {
       setRegister(urlParams.get('register'));
     }
   }, []);
-  //PARA OBTENER PARAMETRO AL LOGUEARME
+  // Para obtener parametro al loguearme
   const NotificationHelper = ({ message, type, activity }) => {
     notification.open({
       message: 'Nueva notificación',
@@ -213,14 +233,13 @@ const Landing = props => {
           });
 
         if (cEventUser.status == 'LOADED' && cEventUser.value != null && cEventContext.status == 'LOADED') {
-          // console.log(EventContext.value.type_event);
           if (cEventContext.value.type_event !== 'onlineEvent') {
             checkinAttendeeInEvent(cEventUser.value, cEventContext.value._id);
           }
         }
       });
     }
-  }, [cEventContext.status, cEventUser.status, cEventUser.value]);
+  }, [cEventContext.status, cEventUser.status, cEventUser.value, location]);
 
   if (cEventContext.status === 'LOADING') return <Spin />;
 
@@ -253,9 +272,9 @@ const Landing = props => {
         />
         <EventSectionsInnerMenu />
         <MenuTablets />
-        <Layout className='site-layout'>
+        <Layout className="site-layout">
           <Content
-            className='site-layout-background'
+            className="site-layout-background"
             style={{
               // paddingBottom: '15vh',
               backgroundSize: 'cover',

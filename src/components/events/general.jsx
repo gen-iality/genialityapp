@@ -3,19 +3,19 @@ import { Component, createRef } from 'react';
  * This solution is distributed as is:
  * https://github.com/react-component/picker/issues/123#issuecomment-728755491
  */
- import dayjs from 'dayjs';
- import advancedFormat from 'dayjs/plugin/advancedFormat';
- import customParseFormat from 'dayjs/plugin/customParseFormat';
- import localeData from 'dayjs/plugin/localeData';
- import weekday from 'dayjs/plugin/weekday';
- import weekOfYear from 'dayjs/plugin/weekOfYear';
- import weekYear from 'dayjs/plugin/weekYear';
- dayjs.extend(customParseFormat);
- dayjs.extend(advancedFormat);
- dayjs.extend(weekday);
- dayjs.extend(localeData);
- dayjs.extend(weekOfYear);
- dayjs.extend(weekYear);
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localeData from 'dayjs/plugin/localeData';
+import weekday from 'dayjs/plugin/weekday';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import weekYear from 'dayjs/plugin/weekYear';
+dayjs.extend(customParseFormat);
+dayjs.extend(advancedFormat);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
+dayjs.extend(weekOfYear);
+dayjs.extend(weekYear);
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, PlansApi, TypesApi } from '@helpers/request';
 import ErrorServe from '../modal/serverError';
@@ -60,6 +60,7 @@ import {
   disabledStartDate,
 } from '@Utilities/disableTimeAndDatePickerInEventDate';
 import { CurrentUserContext } from '@context/userContext';
+import { CardSelector } from './CardSelector';
 
 dayjs.locale('es');
 const { Title, Text } = Typography;
@@ -77,6 +78,7 @@ class General extends Component {
     this.nameInputRef = createRef();
     this.state = {
       event: this.props.event,
+      possiblePositions: [],
       optionForm: [],
       selectedOption: [],
       selectedOrganizer: {},
@@ -104,6 +106,7 @@ class General extends Component {
         privateChat: true,
         attendees: true,
       },
+      is_socialzone_opened: true,
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
       registerForm: {
@@ -114,7 +117,7 @@ class General extends Component {
         checked: false,
         permissions: 'public',
       },
-      typeEvent: 0,
+      typeEventPermit: 0,
       image: this.props.event.picture,
       iMustBlockAFunctionality: false,
       iMustValidate: true,
@@ -168,9 +171,7 @@ class General extends Component {
 
     const info = this.props.event;
     this.setState({ info });
-    this.setState({
-      checked: info.initial_page ? true : false,
-    });
+    this.setState({ checked: !!info.initial_page });
     try {
       const { event } = this.props;
       // event.picture = (typeof event.picture === 'object') ? event.picture[0] : "";
@@ -184,8 +185,9 @@ class General extends Component {
         organizers,
         types,
         categories,
-        event
+        event,
       );
+      const currentOrganization = await OrganizationApi.getOne(event.organizer_id);
       this.setState({
         categories,
         organizers,
@@ -194,6 +196,7 @@ class General extends Component {
         selectedOrganizer,
         selectedType,
         loading: false,
+        possiblePositions: currentOrganization.positions,
       });
       if (info.dates && info.dates.length > 0) {
         this.setState({ specificDates: true });
@@ -226,13 +229,13 @@ class General extends Component {
       this.state.event.allow_register
     ) {
       //Evento Público con Registro
-      this.setState({ typeEvent: 0 });
+      this.setState({ typeEventPermit: 0 });
     } else if (this.state.event.visibility === 'PUBLIC' && !this.state.event.allow_register) {
       //Cursos Público sin Registro
-      this.setState({ typeEvent: 1 });
+      this.setState({ typeEventPermit: 1 });
     } else {
       //Cursos privado con Invitación
-      this.setState({ typeEvent: 2 });
+      this.setState({ typeEventPermit: 2 });
     }
 
     if (this.nameInputRef.current) this.nameInputRef.current.focus();
@@ -260,7 +263,6 @@ class General extends Component {
     const valueData = e?.target?.value;
 
     const targetData = e?.target;
-    // console.log(e.target);
     if (targetData !== null || targetData !== undefined || targetData !== '') {
       let value = e;
       if (typeof valueData === 'string') {
@@ -376,6 +378,10 @@ class General extends Component {
     const { tabs } = this.state;
     const response = await this.validateTabs();
 
+    if (!this.state?.tabs?.attendees && !this.state?.tabs?.privateChat && !this.state?.tabs?.publicChat) {
+      this.handleChange(false, 'is_socialzone_opened');
+    }
+
     return new Promise(function(resolve) {
       if (response) {
         const updateData = { ...response, tabs: { ...tabs } };
@@ -487,15 +493,14 @@ class General extends Component {
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
       picture: image,
       video: event.video || null,
-      video_position: event.video_position === 'true' || event.video_position === true ? 'true' : 'false',
+      video_position: event.video_position === 'true' || event.video_position ? 'true' : 'false',
       venue: event.venue,
       analytics: event.analytics,
       address: event.address,
-      has_date: event.has_date === 'true' || event.has_date === true ? true : false,
+      has_date: event.has_date === 'true' || !!event.has_date,
       allow_register: event.allow_register,
-      allow_detail_calendar:
-        event.allow_detail_calendar === 'true' || event.allow_detail_calendar === true ? true : false,
-      enable_language: event.enable_language === 'true' || event.enable_language === true ? true : false,
+      allow_detail_calendar: event.allow_detail_calendar === 'true' || !!event.allow_detail_calendar,
+      enable_language: event.enable_language === 'true' || !!event.enable_language,
       homeSelectedScreen: event.homeSelectedScreen,
       visibility: event.visibility ? event.visibility : 'PRIVATE',
       description: event.description,
@@ -518,6 +523,15 @@ class General extends Component {
       googleanlyticsid: event.googleanlyticsid || null,
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
+      is_certification: event.is_certification,
+      is_examen_required: event.is_examen_required,
+      validity_days: event.validity_days,
+      default_certification_description: event.default_certification_description,
+      default_certification_hours: event.default_certification_hours,
+      default_certification_entity: event.default_certification_entity,
+      default_certification_last_hours: event.default_certification_last_hours,
+      duration: event.duration,
+      is_socialzone_opened: event.is_socialzone_opened,
     };
 
     try {
@@ -560,7 +574,6 @@ class General extends Component {
         action: 'show',
       });
       if (error?.response) {
-        console.log('ERROR ACA==>', error);
         /* console.error(error.response); */
         const { status, data } = error.response;
 
@@ -574,7 +587,6 @@ class General extends Component {
         } else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
-        console.log('ERROR DATA===>', errorData);
         /* console.error('Error', error.message); */
         if (error.request) {
           /* console.error(error.request); */
@@ -644,7 +656,7 @@ class General extends Component {
   async specificDates(checked) {
     this.setState({ specificDates: checked });
 
-    if (checked === false) {
+    if (!checked) {
       const properties = {
         dates: {},
       };
@@ -669,7 +681,7 @@ class General extends Component {
 
   //Esto es para la configuración de autenticación. Nuevo flujo de Login, cambiar los campos internamente
   changetypeEvent = (value) => {
-    this.setState({ typeEvent: value });
+    this.setState({ typeEventPermit: value });
     if (value === 0) {
       //Cursos Público con Registro
       this.setState({
@@ -711,6 +723,7 @@ class General extends Component {
     if (this.state.loading) return <Loading />;
     const {
       event,
+      possiblePositions,
       categories,
       organizers,
       types,
@@ -745,10 +758,10 @@ class General extends Component {
       <>
         {/* RESTRICIONES */}
         <Form onFinish={this.submit} {...formLayout}>
-          <Header title={'Datos del curso'} save form remove={this.deleteEvent} edit={this.state.event._id} />
-          <Tabs defaultActiveKey='1'>
-            <Tabs.TabPane tab='General' key='1'>
-              <Row justify='center' wrap gutter={[8, 8]}>
+          <Header title="Datos del curso" save form remove={this.deleteEvent} edit={this.state.event._id} />
+          <Tabs defaultActiveKey="1">
+            <Tabs.TabPane tab="General" key="1">
+              <Row justify="center" wrap gutter={[8, 8]}>
                 <Col span={16}>
                   <Form.Item
                     label={
@@ -756,28 +769,53 @@ class General extends Component {
                         Nombre <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
-                    rules={[{ required: true, message: 'El nombre es requerido' }]}>
+                    rules={[{ required: true, message: 'El nombre es requerido' }]}
+                  >
                     <Input
                       ref={this.nameInputRef}
-                      autoFocus={true}
-                      name={'name'}
-                      placeholder={'Nombre del curso'}
+                      autoFocus
+                      name="name"
+                      placeholder="Nombre del curso"
                       value={event.name}
                       onChange={(e) => this.handleChange(e, 'name')}
                     />
                   </Form.Item>
 
+                  <Form.Item
+                    label={
+                      <label style={{ marginTop: '2%' }}>
+                        Cargo <label style={{ color: 'gray' }}>(opcional)</label>
+                      </label>
+                    }
+                  >
+                    <Select
+                      mode="multiple"
+                      placeholder="Asigna un cargo para excluir"
+                      onChange={(values) => {
+                        console.log(values);
+                        EventsApi.editItsPositions(event._id, values);
+                      }}
+                      defaultValue={event.position_ids || []}
+                      options={(possiblePositions || []).map((position) => ({
+                        value: position._id,
+                        label: position.position_name,
+                      }))}
+                    />
+                  </Form.Item>
+
                   {event.app_configuration && (
-                    <Form.Item label={'¿Qué módulo desea observar en el inicio?'}>
+                    <Form.Item label="¿Qué módulo desea observar en el inicio?">
                       <Select
-                        name={'homeSelectedScreen'}
+                        name="homeSelectedScreen"
                         value={event.homeSelectedScreen}
-                        onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}>
+                        onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}
+                      >
                         <Option value={null}>Banner de inicio</Option>
                         <Option
                           value={
                             event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.ProfileScreen
                             ? event.app_configuration.ProfileScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -785,13 +823,15 @@ class General extends Component {
                         <Option
                           value={
                             event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.name : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.CalendarScreen
                             ? event.app_configuration.CalendarScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}>
+                          value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}
+                        >
                           {event.app_configuration.NewsScreen
                             ? event.app_configuration.NewsScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -801,7 +841,8 @@ class General extends Component {
                             event.app_configuration.EventPlaceScreen
                               ? event.app_configuration.EventPlaceScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.EventPlaceScreen
                             ? event.app_configuration.EventPlaceScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -809,13 +850,15 @@ class General extends Component {
                         <Option
                           value={
                             event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.name : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.SpeakerScreen
                             ? event.app_configuration.SpeakerScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}>
+                          value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}
+                        >
                           {event.app_configuration.SurveyScreen
                             ? event.app_configuration.SurveyScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -823,13 +866,15 @@ class General extends Component {
                         <Option
                           value={
                             event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.name : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.DocumentsScreen
                             ? event.app_configuration.DocumentsScreen.title
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}>
+                          value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}
+                        >
                           {event.app_configuration.WallScreen
                             ? event.app_configuration.WallScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -840,7 +885,8 @@ class General extends Component {
                             : 'Favor seleccionar items del menú para la '}
                         </Option>
                         <Option
-                          value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}>
+                          value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}
+                        >
                           {event.app_configuration.FaqsScreen
                             ? event.app_configuration.FaqsScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -849,48 +895,50 @@ class General extends Component {
                     </Form.Item>
                   )}
 
-                  {/* <Form.Item label={'Tipo de curso'}>
+                  {/* <Form.Item label="Tipo de curso">
                     <Select
                       defaultValue={event.type_event}
-                      name={'type_event'}
-                      onChange={(e) => this.handleChange(e, 'type_event')}>
-                      <Option value=''>Seleccionar...</Option>
-                      <Option value='physicalEvent'>Afianzamiento de capacidades</Option> {/* TODO * /}
-                      <Option value='onlineEvent'>Actualización </Option> {/* TODO * / }
-                      <Option value='hybridEvent'>Curso híbrido</Option>
+                      name="type_event"
+                      onChange={(e) => this.handleChange(e, 'type_event')}
+                    >
+                      <Option value="">Seleccionar...</Option>
+                      <Option value="physicalEvent">Afianzamiento de capacidades</Option> {/* TODO * /}
+                      <Option value="onlineEvent">Actualización </Option> {/* TODO * / }
+                      <Option value="hybridEvent">Curso híbrido</Option>
                     </Select>
                   </Form.Item> */}
 
                   {/* {event.type_event === 'onlineEvent' && (
-                    <Form.Item label={'Plataforma streaming del curso'}>
+                    <Form.Item label="Plataforma streaming del curso">
                       <Select
                         defaultValue={event.event_platform}
-                        name={'event_platform'}
-                        onChange={(e) => this.handleChange(e, 'event_platform')}>
+                        name="event_platform"
+                        onChange={(e) => this.handleChange(e, 'event_platform')}
+                      >
                         <Option value="">Seleccionar...</Option>
-                        <Option value='zoom'>Zoom</Option>
-                        <Option value='zoomExterno'>ZoomExterno</Option>
-                        <Option value='vimeo'>Vimeo</Option>
-                        <Option value='bigmarker'>BigMaker</Option>
+                        <Option value="zoom">Zoom</Option>
+                        <Option value="zoomExterno">ZoomExterno</Option>
+                        <Option value="vimeo">Vimeo</Option>
+                        <Option value="bigmarker">BigMaker</Option>
                       </Select>
                     </Form.Item>
                   )} */}
 
                   {/* {event.type_event !== 'onlineEvent' && (
                     <>
-                      <Form.Item label={'Dirección'}>
+                      <Form.Item label="Dirección">
                         <Input
-                          name={'address'}
-                          placeholder={'¿Cuál es la dirección del curso?'}
+                          name="address"
+                          placeholder="¿Cuál es la dirección del curso?"
                           value={event.address}
                           onChange={(e) => this.handleChange(e, 'address')}
                         />
                       </Form.Item>
 
-                      <Form.Item label={'Lugar'}>
+                      <Form.Item label="Lugar">
                         <Input
-                          name={'venue'}
-                          placeholder={'Nombre del lugar del curso'}
+                          name="venue"
+                          placeholder="Nombre del lugar del curso"
                           value={event.venue}
                           onChange={(e) => this.handleChange(e, 'venue')}
                         />
@@ -899,31 +947,31 @@ class General extends Component {
                   )} */}
 
                   {!cUser?.plan && (
-                    <Form.Item label={'Especificar fechas'}>
+                    <Form.Item label="Especificar fechas">
                       {/* <Switch defaultChecked onChange={this.specificDates} checked={specificDates} /> */}
                     </Form.Item>
                   )}
 
-                  {specificDates === false ? (
+                  {!specificDates ? (
                     <div>
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
-                          <Form.Item label={'Fecha inicio'}>
+                          <Form.Item label="Fecha inicio">
                             <DatePicker
-                              inputReadOnly={true}
-                              //RESTRICIONES
+                              inputReadOnly
+                              // Restriciones
                               // disabledDate={(date) => disabledStartDate(date, streamingHours, consumption)}
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={dayjs(event.date_start)}
-                              format={'DD/MM/YYYY'}
+                              format="DD/MM/YYYY"
                               onChange={(value) => this.changeDate(value, 'date_start')}
                             />
                           </Form.Item>
                         </Col>
                         <Col span={12}>
-                          <Form.Item label={'Hora inicio'}>
+                          <Form.Item label="Hora inicio">
                             <TimePicker
                               showNow={false}
                               inputReadOnly={true}
@@ -932,7 +980,7 @@ class General extends Component {
                               allowClear={false}
                               value={dayjs(event.hour_start)}
                               use12Hours
-                              format='h:mm a'
+                              format="h:mm a"
                               onChange={(value) => this.changeDate(value, 'hour_start')}
                             />
                           </Form.Item>
@@ -940,20 +988,20 @@ class General extends Component {
                       </Row>
                       <Row gutter={[8, 8]}>
                         <Col span={12}>
-                          <Form.Item label={'Fecha fin'}>
+                          <Form.Item label="Fecha fin">
                             <DatePicker
-                              inputReadOnly={true}
+                              inputReadOnly
                               disabled={iMustBlockAFunctionality}
                               style={{ width: '100%' }}
                               allowClear={false}
                               value={dayjs(event.date_end)}
-                              format={'DD/MM/YYYY'}
+                              format="DD/MM/YYYY"
                               onChange={(value) => this.changeDate(value, 'date_end')}
                             />
                           </Form.Item>
                         </Col>
                         <Col span={12}>
-                          <Form.Item label={'Hora fin'}>
+                          <Form.Item label="Hora fin">
                             <TimePicker
                               showNow={false}
                               inputReadOnly={true}
@@ -962,7 +1010,7 @@ class General extends Component {
                               allowClear={false}
                               value={dayjs(event.hour_end)}
                               use12Hours
-                              format='h:mm a'
+                              format="h:mm a"
                               onChange={(value) => this.changeDate(value, 'hour_end')}
                             />
                           </Form.Item>
@@ -973,50 +1021,58 @@ class General extends Component {
                     <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   )}
 
-                  <Form.Item label={'Descripción'}>
-                    <EviusReactQuill name={'description'} data={event.description} handleChange={this.chgTxt} />
+                  <Form.Item
+                    label="Duración"
+                    rules={[{ required: true, message: 'El tiempo de duración es requerido' }]}
+                  >
+                    <Input
+                      autoFocus
+                      name="duration"
+                      placeholder="Duración del curso"
+                      value={event.duration}
+                      onChange={(e) => this.handleChange(e, 'duration')}
+                    />
+                  </Form.Item>
+
+                  <Form.Item label="Descripción">
+                    <EviusReactQuill name="description" data={event.description} handleChange={this.chgTxt} />
                   </Form.Item>
 
                   <Form.Item>
                     <SelectInput
-                      name={'Organizado por:'}
+                      name="Organizado por:"
                       isMulti={false}
                       selectedOptions={selectedOrganizer}
                       selectOption={this.selectOrganizer}
                       options={organizers}
-                      required={true}
+                      required
                     />
                   </Form.Item>
 
-                  <Form.Item
-                    label={
-                      <label style={{ marginTop: '2%' }}>
-                        Imagen general - miniatura del curso
-                      </label>
-                    }>
+                  <Form.Item label={<label style={{ marginTop: '2%' }}>Imagen general - miniatura del curso</label>}>
                     <ImageUploaderDragAndDrop
                       imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
                       imageUrl={image}
-                      width='1080'
-                      height='1080'
+                      width="1080"
+                      height="1080"
                     />
                   </Form.Item>
 
-                  <Form.Item label={'Vídeo promocional'}>
+                  <Form.Item label="Vídeo promocional">
                     <Input
-                      name={'video'}
-                      placeholder={'www.ejemplo.com/watch?v=oK88Stdw0DI'}
+                      name="video"
+                      placeholder="www.ejemplo.com/watch?v=oK88Stdw0DI"
                       value={event.video}
                       onChange={(e) => this.handleChange(e, 'video')}
                     />
                   </Form.Item>
 
-                  <Form.Item label={'Posición del video'}>
+                  <Form.Item label="Posición del video">
                     <Switch
-                      name={'video_position'}
-                      checked={event.video_position === true || event.video_position === 'true'}
-                      checkedChildren='Arriba'
-                      unCheckedChildren='Abajo'
+                      name="video_position"
+                      checked={event.video_position || event.video_position === 'true'}
+                      checkedChildren="Arriba"
+                      unCheckedChildren="Abajo"
                       onChange={(checked) =>
                         this.setState({
                           event: {
@@ -1028,9 +1084,9 @@ class General extends Component {
                     />
                   </Form.Item>
 
-                  <Card title='Zona social'>
+                  <Card title="Zona social">
                     <Row style={{ padding: '8px 0px' }}>
-                      <Col xs={18}>Chat general</Col>
+                      <Col xs={18}>Habilitar chat general</Col>
                       <Col xs={6}>
                         <Switch
                           checked={this.state?.tabs?.publicChat}
@@ -1042,14 +1098,14 @@ class General extends Component {
                                   publicChat: checked,
                                 },
                               },
-                              async () => await this.upsertTabs()
+                              async () => await this.upsertTabs(),
                             )
                           }
                         />
                       </Col>
                     </Row>
                     <Row style={{ padding: '8px 0px' }}>
-                      <Col xs={18}>Chat privado</Col>
+                      <Col xs={18}>Habilitar chat privado</Col>
                       <Col xs={6}>
                         <Switch
                           checked={this.state?.tabs?.privateChat}
@@ -1061,149 +1117,194 @@ class General extends Component {
                                   privateChat: checked,
                                 },
                               },
-                              async () => await this.upsertTabs()
+                              async () => await this.upsertTabs(),
                             )
                           }
                         />
                       </Col>
                     </Row>
+                    <Row style={{ padding: '8px 0px' }}>
+                      <Col xs={18}>Habilitar lista de asistentes</Col>
+                      <Col xs={6}>
+                        <Switch
+                          checked={this.state?.tabs?.attendees}
+                          onChange={(checked) =>
+                            this.setState(
+                              {
+                                tabs: {
+                                  ...this.state.tabs,
+                                  attendees: checked,
+                                },
+                              },
+                              async () => await this.upsertTabs(),
+                            )
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row style={{ padding: '8px 0px' }}>
+                      <Col xs={18}>Mantener la zona social desplegada cada vez que se ingresa a una actividad</Col>
+                      <Col xs={6}>
+                        <Switch
+                          checked={event.is_socialzone_opened}
+                          onChange={(checked) => {
+                            if (
+                              this.state?.tabs?.attendees ||
+                              this.state?.tabs?.privateChat ||
+                              this.state?.tabs?.publicChat
+                            ) {
+                              this.handleChange(checked, 'is_socialzone_opened');
+                            }
+                          }}
+                        />
+                      </Col>
+                    </Row>
                   </Card>
+
+                  <Form.Item label="¿Es curso con examen?">
+                    <Switch
+                      checkedChildren="Evaluado"
+                      unCheckedChildren="Abierto"
+                      checked={event.is_examen_required}
+                      onChange={(checked) => {
+                        this.handleChange(checked, 'is_examen_required');
+                      }}
+                    />
+                  </Form.Item>
+
+                  <Form.Item label="¿Es curso de certificación?">
+                    <Switch
+                      checkedChildren="Certificación"
+                      unCheckedChildren="GEN.iality"
+                      checked={event.is_certification}
+                      onChange={(checked) => {
+                        this.handleChange(checked, 'is_certification');
+                      }}
+                    />
+                  </Form.Item>
+
+                  {event.is_certification && (
+                    <>
+                      <Form.Item label="Descripción de la certificación (valor por defecto)">
+                        <Input
+                          value={event.default_certification_description}
+                          onChange={(e) => {
+                            this.handleChange(e, 'default_certification_description');
+                          }}
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        label="Días de vigencia (valor por defecto)"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Necesario',
+                          },
+                        ]}
+                      >
+                        <InputNumber
+                          min={1}
+                          value={event.validity_days || 1}
+                          onChange={(e) => {
+                            this.handleChange(e, 'validity_days');
+                          }}
+                        />
+                      </Form.Item>
+
+                      <Form.Item label="Horas de la certificación (valor por defecto)">
+                        <InputNumber
+                          min={1}
+                          value={event.default_certification_hours || 1}
+                          onChange={(e) => {
+                            this.handleChange(e, 'default_certification_hours');
+                          }}
+                        />
+                      </Form.Item>
+
+                      <Form.Item label="Entidad de la certificación (valor por defecto)">
+                        <Input
+                          value={event.default_certification_entity}
+                          onChange={(e) => {
+                            this.handleChange(e, 'default_certification_entity');
+                          }}
+                        />
+                      </Form.Item>
+
+                      {/* // <Form.Item
+                      //   label="Última horas de la certificación (valor por defecto)"
+                      //   >
+                      //   <InputNumber
+                      //     min={0}
+                      //     value={event.default_certification_last_hours || 0}
+                      //     onChange={(e) => {
+                      //       this.handleChange(e, 'default_certification_last_hours')
+                      //     }}
+                      //   />
+                      // </Form.Item> */}
+                    </>
+                  )}
                 </Col>
               </Row>
               <BackTop />
             </Tabs.TabPane>
-            <Tabs.TabPane tab='Tipos de acceso' key='2'>
-              <Row justify='center' wrap gutter={[8, 8]}>
-                <Col span={16}>
-                  <Form.Item label={''}>
-                    <Row gutter={[16, 16]} wrap>
-                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge
-                          count={
-                            this.state.typeEvent === 0 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
-                            ) : (
-                              ''
-                            )
-                          }>
-                          <div
-                            style={{
-                              border: '1px solid #D3D3D3',
-                              borderRadius: '5px',
-                              padding: '10px',
-                              cursor: 'pointer',
-                              minHeight: '170px',
-                            }}>
-                            <Space direction='vertical'>
-                              <div onClick={() => this.changetypeEvent(0)}>
-                                <Text strong>Cursos Público con Registro</Text>
-                                <Divider />
-                                <Text type='secondary'>
-                                  <ul>
-                                    <li>Tiene registro para todos.</li>
-                                    <br />
-                                    <li>Tiene inicio de sesión para todos.</li>
-                                  </ul>
-                                </Text>
-                              </div>
-                              {this.state.typeEvent === 0 && (
-                                <>
-                                  <Divider />
-                                  <Checkbox
-                                    defaultChecked={this.state.event.visibility === 'ANONYMOUS'}
-                                    onChange={(e) =>
-                                      this.setState({
-                                        event: {
-                                          ...this.state.event,
-                                          visibility: e.target.checked === true ? 'ANONYMOUS' : 'PUBLIC',
-                                          allow_register: true,
-                                        },
-                                      })
-                                    }>
-                                    Registro sin autenticación de usuario (Beta)
-                                  </Checkbox>
-                                </>
-                              )}
-                            </Space>
-                          </div>
-                        </Badge>
-                      </Col>
-                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge
-                          count={
-                            this.state.typeEvent === 1 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
-                            ) : (
-                              ''
-                            )
-                          }>
-                          <div
-                            /* className='cards-type-information'  */
-                            onClick={() => this.changetypeEvent(1)}
-                            style={{
-                              border: '1px solid #D3D3D3',
-                              borderRadius: '5px',
-                              padding: '10px',
-                              cursor: 'pointer',
-                              minHeight: '170px',
-                            }}>
-                            <Space direction='vertical'>
-                              <Text strong>Cursos Público sin Registro</Text>
-                              <Divider />
-                              <Text type='secondary'>
-                                {/* Solo se mostrará el inicio de sesión. Quedará como anónimo */}
-                                <ul>
-                                  <li>Quedará como anónimo.</li>
-                                  <br />
-                                  <li>No tendrá inicio de sesión ni registro.</li>
-                                </ul>
-                              </Text>
-                            </Space>
-                          </div>
-                        </Badge>
-                      </Col>
-                      <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                        <Badge
-                          count={
-                            this.state.typeEvent === 2 ? (
-                              <CheckCircleFilled style={{ fontSize: '25px', color: '#3CC4B9' }} />
-                            ) : (
-                              ''
-                            )
-                          }>
-                          <div
-                            /* className='cards-type-information'  */
-                            onClick={() => this.changetypeEvent(2)}
-                            style={{
-                              border: '1px solid #D3D3D3',
-                              borderRadius: '5px',
-                              padding: '10px',
-                              cursor: 'pointer',
-                              minHeight: '170px',
-                            }}>
-                            <Space direction='vertical'>
-                              <Text strong>Cursos privado por invitación</Text>
-                              <Divider />
-                              <Text type='secondary'>
-                                {/* Solo se podra acceder por invitación. No tendra inicio de sesión ni registro */}
-                                <ul>
-                                  <li>Sólo se podrá acceder por invitación.</li>
-                                  <br />
-                                  <li>Sólo se mostrará el inicio de sesión.</li>
-                                </ul>
-                              </Text>
-                            </Space>
-                          </div>
-                        </Badge>
-                      </Col>
-                    </Row>
-                  </Form.Item>
-                </Col>
-              </Row>
+            <Tabs.TabPane tab="Tipos de acceso" key="2">
+              <CardSelector
+                selected={this.state.typeEventPermit.toString()}
+                options={[
+                  {
+                    id: '0',
+                    title: 'Curso Público con Registro',
+                    body: (
+                      <ul>
+                        <li>Tiene registro para todos.</li>
+                        <br />
+                        <li>Tiene inicio de sesión para todos.</li>
+                      </ul>
+                    ),
+                    checkbox: {
+                      text: 'Registro sin autenticación de usuario (Beta)',
+                      onCheck: (checked) => {
+                        this.setState({
+                          event: {
+                            ...this.state.event,
+                            visibility: checked ? 'ANONYMOUS' : 'PUBLIC',
+                            allow_register: true,
+                          },
+                        });
+                      },
+                      initialCheck: this.state.event.visibility === 'ANONYMOUS',
+                    },
+                  },
+                  {
+                    id: '1',
+                    title: 'Curso Público sin Registro',
+                    body: (
+                      <ul>
+                        <li>Quedará como anónimo.</li>
+                        <br />
+                        <li>Sólo se mostrará el inicio de sesión.</li>
+                      </ul>
+                    ),
+                  },
+                  {
+                    id: '2',
+                    title: 'Curso privado por invitación',
+                    body: (
+                      <ul>
+                        <li>Sólo se podrá acceder por invitación.</li>
+                        <br />
+                        <li>Tiene inicio de sesión para todos.</li>
+                      </ul>
+                    ),
+                  },
+                ]}
+                onSelected={(selected) => this.changetypeEvent(Number.parseInt(selected))}
+              />
             </Tabs.TabPane>
           </Tabs>
           {serverError && <ErrorServe errorData={errorData} />}
-          {this.state.fileMsgBanner && <p className='help is-success'>{this.state.fileMsgBanner}</p>}
+          {this.state.fileMsgBanner && <p className="help is-success">{this.state.fileMsgBanner}</p>}
         </Form>
       </>
     );

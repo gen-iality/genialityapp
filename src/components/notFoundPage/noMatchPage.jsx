@@ -9,12 +9,12 @@ function NoMatchPage(props) {
       status={props.match.params.withoutPermissions === 'true' ? error403 : error404}
       // icon={
       //   props.match.params.withoutPermissions === 'true' ? (
-      //     <img src={error403} alt='403'></img>
+      //     <img src={error403} alt="403"></img>
       //   ) : (
-      //     <img src={error404} alt='404'></img>
+      //     <img src={error404} alt="404"></img>
       //   )
       // }
-      title='Lo sentimos.'
+      title="Lo sentimos."
       subTitle={
         props.match.params.withoutPermissions === 'true' ? (
           <b>no está autorizado para acceder a esta página</b>
@@ -33,25 +33,25 @@ function NoMatchPage(props) {
           props.match.params.id !== 'withoutPermissions' &&
           (props?.path ? (
             <Link to={`${props.path}/main`}>
-              <Button type='primary' key='eventData'>
+              <Button type="primary" key="eventData">
                 Ir a datos del curso
               </Button>
             </Link>
           ) : (
             <>
               <Link to={`/`}>
-                <Button type='primary' key='eventData'>
+                <Button type="primary" key="eventData">
                   Ver más cursos
                 </Button>
               </Link>
               <Link to={`/landing/${props.eventId ? props.eventId : props.match.params.id}`}>
-                <Button key='moreEvents'>Ir a la landing de este curso</Button>
+                <Button key="moreEvents">Ir a la landing de este curso</Button>
               </Link>
             </>
           )),
         props.match.params.id === 'withoutPermissions' && (
           <Link to={`/`}>
-            <Button type='primary' key='eventData'>
+            <Button type="primary" key="eventData">
               Ver más cursos
             </Button>
           </Link>

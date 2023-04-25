@@ -50,10 +50,10 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
               <List.Item
                 key={item._id}
                 actions={[
-                  <Button key='btn-aceptar' onClick={() => sendResponseToInvitation(item, true)}>
+                  <Button key="btn-aceptar" onClick={() => sendResponseToInvitation(item, true)}>
                     Aceptar
                   </Button>,
-                  <Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item, false)}>
+                  <Button key="btn-noaceptar" onClick={() => sendResponseToInvitation(item, false)}>
                     Rechazar
                   </Button>,
                 ]}>
@@ -132,7 +132,6 @@ const InvitacionListSent = ({ list }) => {
                         : item.user_name_requesting
                         ? item.user_name_requesting.charAt(0).toUpperCase()
                         : item._id.charAt(0).toUpperCase()}
-                      {console.log('ITEM===>', item)}
                     </Avatar>
                   }
                   title={item.user_name_requesting || item._id}
@@ -141,7 +140,8 @@ const InvitacionListSent = ({ list }) => {
                 <div>
                   <Tag
                     icon={!item.response ? <ScheduleOutlined /> : <CloseCircleOutlined />}
-                    color={item.response === 'rejected' && 'error'}>
+                    color={item.response === 'rejected' && 'error'}
+                  >
                     {!item.response ? item.state : item.response}
                   </Tag>
                 </div>
@@ -195,7 +195,6 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       // Servicio que trae las invitaciones / solicitudes enviadas
       Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
         if (data.length > 0) {
-          console.log('DATA===>', data);
           setRequestListSent(data.filter((item) => !item.response || item.response === 'rejected'));
           setLoading(false);
         }
@@ -255,7 +254,6 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
         setRequestListReceived(requestListReceived.filter((item) => item._id != requestId._id));
       })
       .catch((err) => {
-        // console.error('ERROR API==>', err);
         DispatchMessageService({
           type: 'error',
           msj: 'Hubo un problema',
@@ -274,9 +272,9 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
     return currentUser === null ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
         <Alert
-          message='Iniciar sesión'
-          description='Para poder ver contactos es necesario iniciar sesión.'
-          type='info'
+          message="Iniciar sesión"
+          description="Para poder ver contactos es necesario iniciar sesión."
+          type="info"
           showIcon
         />
       </Col>

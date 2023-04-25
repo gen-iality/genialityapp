@@ -60,6 +60,7 @@ const ModalAuthAnonymous = (props: any) => {
   };
 
   useEffect(() => {
+    let unsubscribe: any;
     async function isModalVisible() {
       const typeEvent = recordTypeForThisEvent(cEvent);
       switch (typeEvent) {
@@ -89,7 +90,7 @@ const ModalAuthAnonymous = (props: any) => {
     }
 
     async function isUserAuth() {
-      app.auth().onAuthStateChanged((user) => {
+      unsubscribe = app.auth().onAuthStateChanged((user) => {
         if (user) {
           setmodalVisible(false);
 
@@ -101,6 +102,10 @@ const ModalAuthAnonymous = (props: any) => {
     }
 
     isUserAuth();
+
+    return () => {
+      unsubscribe && unsubscribe();
+    };
   }, [cEvent, cUser]);
 
   useEffect(() => {
@@ -116,13 +121,15 @@ const ModalAuthAnonymous = (props: any) => {
         footer={null}
         zIndex={1000}
         visible={controllerLoginVisible?.visible && props.cEvent?.value?.visibility === 'ANONYMOUS'}
-        closable={false}>
+        closable={false}
+      >
         {isVisibleRegister() && (
           <div
             style={{
               height: 'auto',
               overflowY: 'hidden',
-            }}>
+            }}
+          >
             <RegisterUserAndEventUserAnonymous
               screens={screens}
               stylePaddingMobile={stylePaddingMobile}

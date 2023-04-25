@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, message, Space, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ModalCreateOrg from './modalCreateOrg';
-import ModalOrgListCreate from '@components/events/createEvent/newEvent/modalOrgListCreate';
+import ModalOrgListCreate from '@components/events/createEvent/newEvent/ModalOrgListCreate';
 import functionCreateNewOrganization from './functionCreateNewOrganization';
 import { useContextNewEvent } from '@context/newEventContext';
 
@@ -70,7 +70,7 @@ const NewCard = (props) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Space size={5} direction='vertical' style={{ textAlign: 'center', width: '100%' }}>
+        <Space size={5} direction="vertical" style={{ textAlign: 'center', width: '100%' }}>
           <PlusOutlined style={{ fontSize: '80px', paddingTop: '10%', paddingBottom: '10%', color: '#cccccc' }} />
           <Typography.Text style={{ fontSize: '15px', width: '120px', color: '#cccccc', fontWeight: 'bold' }}>
             {entity === 'event' ? 'Nuevo curso' : 'Nueva organizacion'}

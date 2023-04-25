@@ -22,8 +22,8 @@ const CardShareLinkEviusMeet = (props: ShareMeetLinkCardProps) => {
         }
       />
       <br />
-      <Space direction='vertical' style={{ width: '100%' }}>
-        <Space direction='vertical' style={{ width: '100%' }}>
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <Space direction="vertical" style={{ width: '100%' }}>
           <Typography.Text>Enlace para host</Typography.Text>
           <Input.Group compact>
             <Input
@@ -31,7 +31,7 @@ const CardShareLinkEviusMeet = (props: ShareMeetLinkCardProps) => {
               disabled
               value={`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=1`} /* value={linkRolProductor} */
             />
-            <Tooltip title='Copiar productor url'>
+            <Tooltip title="Copiar productor url">
               <Button
                 onClick={() =>
                   copyToClipboard(`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=1`)
@@ -41,7 +41,7 @@ const CardShareLinkEviusMeet = (props: ShareMeetLinkCardProps) => {
             </Tooltip>
           </Input.Group>
         </Space>
-        <Space direction='vertical' style={{ width: '100%' }}>
+        <Space direction="vertical" style={{ width: '100%' }}>
           <Typography.Text>Enlace para speakers</Typography.Text>
           <Input.Group compact>
             <Input
@@ -49,7 +49,7 @@ const CardShareLinkEviusMeet = (props: ShareMeetLinkCardProps) => {
               disabled
               value={`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=2`} /* value={linkRolProductor} */
             />
-            <Tooltip title='Copiar speaker url'>
+            <Tooltip title="Copiar speaker url">
               <Button
                 onClick={() =>
                   copyToClipboard(`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=2`)

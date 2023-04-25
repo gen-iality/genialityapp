@@ -72,7 +72,7 @@ export const beforeUpload = (file: any) => {
       action: 'show',
     });
   }
-  return isLt5M ? true : false;
+  return isLt5M;
 };
 
 export const aditionalFields = ({ validatedFields, attendee, visibleInCms }: aditionalFieldsPropsTypes) => {

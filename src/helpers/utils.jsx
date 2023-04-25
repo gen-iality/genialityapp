@@ -10,16 +10,16 @@ export function GetIdEvent() {
 
 export function uniqueID() {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16),
   );
 }
 //Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
-export function fieldsSelect(options, list) {
-  if (Array.isArray(options)) {
-    const newOptions = options.map((option) => list.find(({ value }) => value === option));
+export function fieldsSelect(selected, allOptions) {
+  if (Array.isArray(selected)) {
+    const newOptions = allOptions.filter((option) => selected.includes(option.value));
     return newOptions[0] ? newOptions : [];
   } else {
-    const newOptions = list.find(({ value }) => value === options);
+    const newOptions = allOptions.find(({ value }) => value === selected);
     return newOptions ? newOptions : null;
   }
 }
@@ -85,9 +85,9 @@ export async function parseData2Excel(data, fields, roles = null) {
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
   data.map((item, key) => {
-    const checkedInAt = typeof item.checkedin_at === 'object' ? item.checkedin_at?.toDate() : item.checkedin_at;
-    const updatedAt = typeof item.updated_at === 'object' ? item.updated_at?.toDate() : item.updated_at;
-    const createdAt = typeof item.created_at === 'object' ? item.created_at?.toDate() : item.created_at;
+    const checkedInAt = item.checkedin_at;
+    const updatedAt = item.updated_at;
+    const createdAt = item.created_at;
     info[key] = {};
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
     info[key]['checked'] =
@@ -99,7 +99,6 @@ export async function parseData2Excel(data, fields, roles = null) {
       if (item?.properties) {
         switch (type) {
           case 'number':
-            console.log('ITEM ACA====>', item);
             str =
               item && item?.properties
                 ? item.properties[name]
@@ -110,7 +109,9 @@ export async function parseData2Excel(data, fields, roles = null) {
                 : '';
             break;
           case 'boolean':
-            str = item[name] ? item[name] : '';
+            // str = item[name] ? item[name] : '';
+            const whereIsTheValue = (item.properties ?? item)[name]
+            str = typeof whereIsTheValue === 'undefined' ? 'N/A' : whereIsTheValue ? 'Sí' : 'No';
             break;
           case 'complex':
             if (item.properties[name]?.includes('url')) {
@@ -133,7 +134,7 @@ export async function parseData2Excel(data, fields, roles = null) {
             str = Array.isArray(item.properties[name]) ? item.properties[name][0].label : item.properties[name];
             break;
           case 'codearea':
-            str = item[name];
+            str = (item.properties ?? item)[name];
             break;
           case 'file':
             str =
@@ -243,7 +244,7 @@ export function formatDataToString(data, property) {
                 {fileList.map((item, index) => {
                   return (
                     <li key={'item-files-' + index}>
-                      <a href={item.response} target='_blank' rel='noreferrer'>
+                      <a href={item.response} target="_blank" rel="noreferrer">
                         {item.name}
                       </a>
                     </li>

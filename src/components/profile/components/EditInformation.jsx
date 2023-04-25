@@ -15,7 +15,7 @@ const EditInformation = ({ cUser }) => {
     picture === 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y' ? null : picture;
 
   const [imageAvatar, setImageAvatar] = useState(
-    validateDefaultPicture ? [{ url: validateDefaultPicture }] : validateDefaultPicture
+    validateDefaultPicture ? [{ url: validateDefaultPicture }] : validateDefaultPicture,
   );
   const [sendRecovery, setSendRecovery] = useState(null);
   const [userDataSentSuccessfullyOrWrongly, setUserDataSentSuccessfullyOrWrongly] = useState('initial');
@@ -44,7 +44,7 @@ const EditInformation = ({ cUser }) => {
       `${intl.formatMessage({
         id: 'modal.restore.alert.passwordRequest',
         defaultMessage: 'Actualizando informacion.',
-      })}`
+      })}`,
     );
 
     const nuewUserPicture = await uploadNewUserPicture();
@@ -62,14 +62,14 @@ const EditInformation = ({ cUser }) => {
           `${intl.formatMessage({
             id: 'modal.restore.alert.passwordSuccess',
             defaultMessage: 'Se ha actualizado la información satisfactoriamente',
-          })}`
+          })}`,
         );
         setUserDataSentSuccessfullyOrWrongly(true);
       } catch (error) {
         console.error(
           `%c📌debugger start, element Selected : error📌`,
           'font-family:calibri; background-color:#0be881; color: #1e272e; font-size:16px; border-radius:5px; margin:5px; padding:2px;border: 5px #fff; border-style: solid dashed',
-          error
+          error,
         );
         setIsLoading(false);
         setUserDataSentSuccessfullyOrWrongly(false);
@@ -77,7 +77,7 @@ const EditInformation = ({ cUser }) => {
           `${intl.formatMessage({
             id: 'modal.restore.alert.passwordError',
             defaultMessage: 'Error al actualizar la informacion',
-          })}`
+          })}`,
         );
       }
     }, 1000);
@@ -93,14 +93,14 @@ const EditInformation = ({ cUser }) => {
         //   icon: <LockOutlined />,
         //   style: { backgroundColor: '#52C41A' },
         // }}
-        title='Editar mi información'
+        title="Editar mi información"
       />
       <div style={{ padding: '24px' }}>
-        <Form onFinish={editUserData} autoComplete='off' layout='vertical'>
+        <Form onFinish={editUserData} autoComplete="off" layout="vertical">
           <Form.Item>
-            <ImgCrop rotate shape='round'>
+            <ImgCrop rotate shape="round">
               <Upload
-                accept='image/png,image/jpeg'
+                accept="image/png,image/jpeg"
                 onChange={(file) => {
                   if (file.fileList.length > 0) {
                     setImageAvatar(file.fileList);
@@ -110,15 +110,17 @@ const EditInformation = ({ cUser }) => {
                 }}
                 customRequest={uploadImagedummyRequest}
                 multiple={false}
-                listType='picture'
+                listType="picture"
                 maxCount={1}
-                fileList={imageAvatar}>
+                fileList={imageAvatar}
+              >
                 {!imageAvatar && (
                   <Button
-                    type='primary'
-                    shape='circle'
-                    style={{ height: !imageAvatar ? '150px' : '95px', width: !imageAvatar ? '150px' : '95px' }}>
-                    <Space direction='vertical'>
+                    type="primary"
+                    shape="circle"
+                    style={{ height: !imageAvatar ? '150px' : '95px', width: !imageAvatar ? '150px' : '95px' }}
+                  >
+                    <Space direction="vertical">
                       <PictureOutlined style={{ fontSize: '40px' }} />
                       {intl.formatMessage({
                         id: 'modal.label.photo',
@@ -135,15 +137,16 @@ const EditInformation = ({ cUser }) => {
               id: 'modal.label.name',
               defaultMessage: 'Nombre',
             })}
-            name='names'
+            name="names"
             initialValue={names}
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={ruleName}>
+            rules={ruleName}
+          >
             <Input
-              type='text'
-              size='large'
-              placeholder={'¿Como te llamas?'}
+              type="text"
+              size="large"
+              placeholder="¿Como te llamas?"
               prefix={<UserOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
             />
           </Form.Item>
@@ -159,7 +162,7 @@ const EditInformation = ({ cUser }) => {
               message={sendRecovery}
               showIcon
               closable
-              className='animate__animated animate__pulse'
+              className="animate__animated animate__pulse"
               style={{
                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                 backgroundColor: '#FFFFFF',
@@ -179,7 +182,7 @@ const EditInformation = ({ cUser }) => {
             />
           )}
           <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
-            <Button htmlType='submit' style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+            <Button htmlType="submit" style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size="large">
               Guardar cambios
             </Button>
           </Form.Item>

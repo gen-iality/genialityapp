@@ -163,15 +163,16 @@ class EventUsersList extends Component {
         />
         <Space>
           <Button
-            type='primary'
+            type="primary"
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            size='small'
-            style={{ width: 90 }}>
+            size="small"
+            style={{ width: 90 }}
+          >
             Search
           </Button>
 
-          <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
+          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
         </Space>
@@ -250,7 +251,7 @@ class EventUsersList extends Component {
     this.props.setGuestSelected(attendeesForSendMessage);
     this.props.history.push(`${this.props.matchUrl}/createmessage`);
     // } else {
-    //   this.setState({ modalVisible: modalVisible === true ? false : true });
+    //   this.setState({ modalVisible: modalVisible ? false : true });
     // }
   };
 
@@ -259,11 +260,11 @@ class EventUsersList extends Component {
 
     const menu = (
       <Menu>
-        <Menu.Item key='1' icon={<UserOutlined />} onClick={this.modalUser}>
+        <Menu.Item key="1" icon={<UserOutlined />} onClick={this.modalUser}>
           Crear usuario
         </Menu.Item>
-        <Link className='dropdown-item' to={`${this.props.matchUrl}/importar-excel`}>
-          <Menu.Item key='2' icon={<UserOutlined />}>
+        <Link className="dropdown-item" to={`${this.props.matchUrl}/importar-excel`}>
+          <Menu.Item key="2" icon={<UserOutlined />}>
             Importar usuarios de Excel
           </Menu.Item>
         </Link>
@@ -289,7 +290,7 @@ class EventUsersList extends Component {
 
     return (
       <>
-        <Header title={'Enviar información o correo a asistentes'} />
+        <Header title="Enviar información o correo a asistentes" />
         <div>
           <small>
             <Tag>Seleccionados: {selectedRowKeys.length === 0 ? 'Todos' : selectedRowKeys.length}</Tag>
@@ -298,22 +299,23 @@ class EventUsersList extends Component {
 
         <Table
           scroll={{ x: 'auto' }}
-          size='small'
+          size="small"
           rowSelection={rowSelection}
           columns={columnsTable}
           dataSource={attendeesFormatedForTable}
           title={() => (
-            <Row wrap gutter={[8, 8]} justify='end'>
+            <Row wrap gutter={[8, 8]} justify="end">
               <Col>
                 <Button
                   onClick={() => this.goToSendMessage()}
-                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                >
                   Enviar comunicación a : {selectedRowKeys.length === 0 ? 'Todos' : selectedRowKeys.length}
                 </Button>
                 <ModalAdvise visible={this.state.modalVisible} />
               </Col>
               <Col>
-                <Button type='primary' onClick={this.exportFile} icon={<DownloadOutlined />}>
+                <Button type="primary" onClick={this.exportFile} icon={<DownloadOutlined />}>
                   Exportar usuario
                 </Button>
               </Col>
@@ -324,18 +326,20 @@ class EventUsersList extends Component {
                       ? ''
                       : `${this.props.matchUrl}/importar-excel`
                   }
-                  icon={<UploadOutlined />}>
-                  <Button type='primary' disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                  icon={<UploadOutlined />}
+                >
+                  <Button type="primary" disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
                     Importar usuario
                   </Button>
                 </Link>
               </Col>
               <Col>
                 <Button
-                  type='primary'
+                  type="primary"
                   onClick={this.modalUser}
                   icon={<PlusCircleOutlined />}
-                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                >
                   Agregar usuario
                 </Button>
               </Col>

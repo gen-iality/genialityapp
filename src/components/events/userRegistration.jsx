@@ -55,7 +55,7 @@ class UserRegistration extends Component {
             eventUser: eventUser,
             userTickets: tickets && tickets.data,
             loading: false,
-            registeredUser: eventUser ? true : false,
+            registeredUser: !!eventUser,
             initialValues: { names: data.names, email: data.email },
           });
         }
@@ -109,11 +109,11 @@ class UserRegistration extends Component {
         // />
       );
     return (
-      <Spin tip='Cargando...' size='large'>
-        <Skeleton.Input style={{ width: 600 }} active={true} size='default' />
+      <Spin tip="Cargando..." size="large">
+        <Skeleton.Input style={{ width: 600 }} active size="default" />
         <Skeleton active></Skeleton>
         <Skeleton active></Skeleton>
-        <Skeleton.Input style={{ width: 200 }} active={true} size='default' />
+        <Skeleton.Input style={{ width: 200 }} active size="default" />
       </Spin>
     );
   }

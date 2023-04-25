@@ -30,7 +30,6 @@ const TipoAsistente = (props) => {
     const response = await RolAttApi.getOne(eventID, locationState.edit);
     const data = response.find((tipoAsistentes) => tipoAsistentes._id === locationState.edit);
 
-    // setTipoAsistente({ event_id: '6219441bcac07f74232f5d60', name: 'nuevo hola', type: 'attendee' });
     setTipoAsistente(data);
   };
 
@@ -137,20 +136,21 @@ const TipoAsistente = (props) => {
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title={'Tipo de Asistente'} back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header title="Tipo de Asistente" back save form remove={onRemoveId} edit={locationState.edit} />
 
-      <Row justify='center' wrap gutter={18}>
+      <Row justify="center" wrap gutter={18}>
         <Col>
           <Form.Item
             label={
-              <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ marginTop: '2%' }} className="label">
                 Nombre del rol <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El nombre es requerido' }]}>
+            rules={[{ required: true, message: 'El nombre es requerido' }]}
+          >
             <Input
-              name={'name'}
-              placeholder={'Nombre del rol'}
+              name="name"
+              placeholder="Nombre del rol"
               value={tipoAsistente?.name}
               onChange={(e) => handleInputChange(e)}
             />

@@ -29,12 +29,12 @@ const CardOption = ({ id, title, description, image }: PropsOptions) => {
       : {};
 
   return (
-    <Badge.Ribbon text='Selected' color={'#2593FC'} style={badgeStyle}>
+    <Badge.Ribbon text="Selected" color={'#2593FC'} style={badgeStyle}>
       <div onClick={() => selectOption(id)} style={borderStyles}>
         <Card
-          id='cardOption'
+          id="cardOption"
           loading={loading}
-          hoverable={true}
+          hoverable
           style={{ width: '100%', borderRadius: '8px', minHeight: (description ? description.length : 0) > 0 ? '333px' : 'auto' }}
           cover={
             <img
@@ -47,7 +47,7 @@ const CardOption = ({ id, title, description, image }: PropsOptions) => {
               height={150}
             />
           }>
-          <Card.Meta title={<Typography.Title style={{ userSelect: 'none' }} level={5}>{title}</Typography.Title>} description={<Typography.Paragraph type='secondary' style={{ userSelect: 'none' }}>{description}</Typography.Paragraph>} style={{ textAlign: 'center' }} />
+          <Card.Meta title={<Typography.Title style={{ userSelect: 'none' }} level={5}>{title}</Typography.Title>} description={<Typography.Paragraph type="secondary" style={{ userSelect: 'none' }}>{description}</Typography.Paragraph>} style={{ textAlign: 'center' }} />
         </Card>
       </div>
     </Badge.Ribbon>

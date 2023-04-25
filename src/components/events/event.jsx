@@ -10,12 +10,14 @@ import { fetchPermissions } from '../../redux/permissions/actions';
 import connect from 'react-redux/es/connect/connect';
 import ChatExport from './ChatExport/';
 import Espacios from '../espacios';
+import Herramientas from '../herramientas';
 import Menu from './shared/menu';
 import Datos from './datos';
 import TipoAsistentes from './tipoUsers';
 import ConfirmacionRegistro from './registro/confirmacionRegistro';
 import ErrorServe from '../modal/serverError';
 import AgendaRoutes from '../agenda';
+import ModulePage from '../agenda/ModulePage';
 import EmpresasRoutes from '../empresas';
 import TriviaRoutes from '../trivia';
 import DocumentsRoutes from '../documents';
@@ -58,7 +60,7 @@ const Styles = loadable(() => import('../App/styles'));
 const DashboardEvent = loadable(() => import('../dashboard'));
 const BadgeEvent = loadable(() => import('../badge'));
 const OrdersEvent = loadable(() => import('../orders'));
-const ListCertificados = loadable(() => import('../certificados'));
+const CertificateRoutes = loadable(() => import('../certificates/CertificateRoutes'));
 /* const ReporteCertificados = loadable(() => import('../certificados/reporte_old')); */
 /* const ConfigurationApp = loadable(() => import('../App/configuration')); */
 const NotificationsApp = loadable(() => import('../pushNotifications/index'));
@@ -205,12 +207,12 @@ class Event extends Component {
     if (error)
       return (
         <Result
-          status='error'
-          title='Error inesperado'
+          status="error"
+          title="Error inesperado"
           subTitle={`Lo sentimos, hubo un error de tipo: ${handleRequestError(error).message}`}
           extra={[
             <Link to={`/`}>
-              <Button type='primary' key='eventData'>
+              <Button type="primary" key="eventData">
                 Ver más cursos
               </Button>
             </Link>,
@@ -219,29 +221,31 @@ class Event extends Component {
       );
 
     return (
-      <Layout className='columns'>
+      <Layout className="columns">
         <Sider
           style={{
             overflow: 'auto',
             background: '#1B1E28',
           }}
           width={250}
-          collapsed={collapsed}>
+          collapsed={collapsed}
+        >
           <Menu match={match} collapseMenu={this.collapseMenu} collapsed={collapsed} />
         </Sider>
-        <Content className='column event-main' style={{ width: 500 }}>
+        <Content className="column event-main" style={{ width: 500 }}>
           <Row gutter={[16, 16]} wrap>
             <Col>
               <Button
-                type='primary'
-                size='small'
-                target='_blank'
-                href={`${window.location.origin}/landing/${this.state.event._id}`}>
-                Ir al curso
+                type="primary"
+                size="small"
+                target="_blank"
+                href={`${window.location.origin}/landing/${this.state.event._id}`}
+              >
+                Ir al curso: {event.name}
               </Button>
             </Col>
           </Row>
-          <section className='section event-wrapper'>
+          <section className="section event-wrapper">
             <Switch>
               <Route
                 exact
@@ -254,7 +258,7 @@ class Event extends Component {
                 eventId={event._id}
                 event={event}
                 updateEvent={this.updateEvent}
-                componentKey='main'
+                componentKey="main"
               />
               {/* En esta ruta se pueden crear y ver los post de la seccion muro que hay en la landing */}
               <Protected
@@ -262,14 +266,14 @@ class Event extends Component {
                 component={Wall}
                 eventId={event._id}
                 event={event}
-                componentKey='wall'
+                componentKey="wall"
               />
               <Protected
                 path={`${match.url}/datos`}
                 component={Datos}
                 eventId={event._id}
                 event={event}
-                componentKey='datos'
+                componentKey="datos"
               />
               <Protected
                 path={`${match.url}/agenda`}
@@ -277,46 +281,54 @@ class Event extends Component {
                 eventId={event._id}
                 event={event}
                 updateEvent={this.updateEvent}
-                componentKey='agenda'
+                componentKey="agenda"
+              />
+              <Protected
+                path={`${match.url}/module`}
+                component={ModulePage}
+                eventId={event._id}
+                event={event}
+                updateEvent={this.updateEvent}
+                componentKey="module"
               />
               <Protected
                 path={`${match.url}/adminUsers`}
                 component={AdminUsers}
                 eventId={event._id}
                 event={event}
-                componentKey='adminUsers'
+                componentKey="adminUsers"
               />
               <Protected
                 path={`${match.url}/empresas`}
                 component={EmpresasRoutes}
                 event={event}
-                componentKey='empresas'
+                componentKey="empresas"
               />
-              <Protected path={`${match.url}/trivia`} component={TriviaRoutes} event={event} componentKey='trivia' />
+              <Protected path={`${match.url}/trivia`} component={TriviaRoutes} event={event} componentKey="trivia" />
               <Protected
                 path={`${match.url}/documents`}
                 component={DocumentsRoutes}
                 event={event}
-                componentKey='documents'
+                componentKey="documents"
               />
               {/* esta ruta carga en blanco */}
               <Protected
                 path={`${match.url}/conference`}
                 component={ConferenceRoute}
                 event={event}
-                componentKey='conference'
+                componentKey="conference"
               />
               <Protected
                 path={`${match.url}/menuLanding`}
                 component={MenuLanding}
                 event={event}
-                componentKey='menuLanding'
+                componentKey="menuLanding"
               />
               <Protected
                 path={`${match.url}/reportNetworking`}
                 component={ReportNetworking}
                 event={event}
-                componentKey='reportNetworking'
+                componentKey="reportNetworking"
               />
               <Protected
                 path={`${match.url}/assistants`}
@@ -341,10 +353,10 @@ class Event extends Component {
                 event={event}
                 eventId={event._id}
                 url={match.url}
-                componentKey='checkin'
-                type='activity'
+                componentKey="checkin"
+                type="activity"
                 shownAll={false}
-                componentKeyToMergingOrAdaptIt='activity-checkin'
+                componentKeyToMergingOrAdaptIt="activity-checkin"
               />
 
               <Protected
@@ -353,7 +365,7 @@ class Event extends Component {
                 eventId={event._id}
                 event={event}
                 url={match.url}
-                componentKey='checkin-actividad'
+                componentKey="checkin-actividad"
               />
 
               <Protected
@@ -369,55 +381,62 @@ class Event extends Component {
                 component={InvitedUsers}
                 eventId={event._id}
                 event={event}
-                componentKey='invitados'
+                componentKey="invitados"
               />
-              <Protected path={`${match.url}/messages`} component={Messages} event={event} componentKey='messages' />
+              <Protected path={`${match.url}/messages`} component={Messages} event={event} componentKey="messages" />
               <Protected
                 path={`${match.url}/confirmacion-registro`}
                 component={ConfirmacionRegistro}
                 event={event}
-                componentKey='tconfirmacion-registro'
+                componentKey="tconfirmacion-registro"
               />
               <Protected
                 path={`${match.url}/tipo-asistentes`}
                 component={TipoAsistentes}
                 event={event}
-                componentKey='tipo-asistentes'
+                componentKey="tipo-asistentes"
               />
               <Protected
                 path={`${match.url}/dashboard`}
                 component={DashboardEvent}
                 eventId={event._id}
                 event={event}
-                componentKey='dashboard'
+                componentKey="dashboard"
               />
               <Protected
                 path={`${match.url}/badge`}
                 component={BadgeEvent}
                 eventId={event._id}
                 event={event}
-                componentKey='badge'
+                componentKey="badge"
               />
-              <Protected path={`${match.url}/orders`} component={OrdersEvent} event={event} componentKey='orders' />
+              <Protected path={`${match.url}/orders`} component={OrdersEvent} event={event} componentKey="orders" />
               <Protected
-                path={`${match.url}/certificados`}
-                component={ListCertificados}
+                path={`${match.url}/certificates`}
+                component={CertificateRoutes}
                 event={event}
-                componentKey='certificados'
+                componentKey="certificados"
               />
               <Protected
                 path={`${match.url}/espacios`}
                 component={Espacios}
                 matchUrl={match.url}
                 event={event}
-                componentKey='espacios'
+                componentKey="espacios"
+              />
+              <Protected
+                path={`${match.url}/herramientas`}
+                component={Herramientas}
+                matchUrl={match.url}
+                event={event}
+                componentKey="herramientas"
               />
               <Protected
                 path={`${match.url}/speakers`}
                 component={Speakers}
                 event={event}
                 eventID={event._id}
-                componentKey='speakers'
+                componentKey="speakers"
               />
 
               <Protected
@@ -425,35 +444,35 @@ class Event extends Component {
                 component={Styles}
                 eventId={event._id}
                 event={event}
-                componentKey='styles'
+                componentKey="styles"
               />
               {/* Ruta no usada posiblemente es la version 1 de la ruta /menuLanding */}
               <Protected
                 path={`${match.url}/notificationsApp`}
                 component={NotificationsApp}
                 event={event}
-                componentKey='notificationsApp'
+                componentKey="notificationsApp"
               />
               <Protected
                 path={`${match.url}/news`}
                 component={NewsSectionRoutes}
                 eventId={event._id}
                 event={event}
-                componentKey='news'
+                componentKey="news"
               />
               <Protected
                 path={`${match.url}/product`}
                 component={ProductSectionRoutes}
                 eventId={event._id}
                 event={event}
-                componentKey='product'
+                componentKey="product"
               />
               <Protected
                 path={`${match.url}/faqs`}
                 matchUrl={match.url}
                 component={FAQS}
                 event={event}
-                componentKey='faqs'
+                componentKey="faqs"
               />
               <Protected
                 path={`${match.url}/ticketsEvent`}
@@ -461,19 +480,19 @@ class Event extends Component {
                 component={EventsTicket}
                 event={event}
                 eventId={event._id}
-                componentKey='ticketsEvent'
+                componentKey="ticketsEvent"
               />
               <Protected
                 path={`${match.url}/isolated`}
                 component={IsolatedRoutes}
                 event={this.state.event}
-                componentKey='isolated'
+                componentKey="isolated"
               />
               <Protected
                 path={`${match.url}/timetracking`}
                 component={TimeTrackingRoutes}
                 event={this.state.event}
-                componentKey={'timetracking'}
+                componentKey="timetracking"
               />
               {/* Este componente se muestra si una ruta no coincide */}
               <Protected
@@ -481,7 +500,7 @@ class Event extends Component {
                 component={NoMatchPage}
                 event={event}
                 eventId={event._id}
-                componentKey='NoMatch'
+                componentKey="NoMatch"
               />
             </Switch>
           </section>
@@ -497,7 +516,7 @@ const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
     render={(props) =>
       event?.user_properties && event?.user_properties?.length > 0 ? (
         <ValidateAccessRouteCms>
-          <Component key='cms' {...props} {...rest} event={event} eventId={eventId} url={url} />
+          <Component key="cms" {...props} {...rest} event={event} eventId={eventId} url={url} />
         </ValidateAccessRouteCms>
       ) : (
         <Redirect push to={`${url}/agenda`} />

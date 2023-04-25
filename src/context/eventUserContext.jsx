@@ -13,11 +13,12 @@ export function CurrentUserEventProvider({ children }) {
   const [updateUser, setUpdateUser] = useState(true);
 
   useEffect(() => {
-    app.auth().onAuthStateChanged((user) => {
+    const unsubscribe = app.auth().onAuthStateChanged((user) => {
       if (!user?.isAnonymous && user) {
         setUpdateUser(true);
       }
     });
+    return () => { unsubscribe(); }
   }, []);
 
   useEffect(() => {

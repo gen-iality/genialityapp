@@ -32,7 +32,7 @@ class InformativeSection extends Component {
       informativeSection: this.props.cEvent.value.itemsMenu.informativeSection,
       markup: this.props.cEvent.value.itemsMenu.informativeSection.markup,
     });
-    //OBTENER GALERIA
+    // Obtener galeria
     // EventsApi.getGallery(this.props.cEvent.value._id).then((resp) => {
     //   if (resp && resp.data) {
     //     this.setState({
@@ -58,7 +58,7 @@ class InformativeSection extends Component {
       isModalVisible: true,
     });
   };
-  // CUANDO SE OFRECE UN PRODUCTO
+  // Cuando se ofrece un producto
   handleOk = async () => {
     //validación para campo oferta vacío
     if (this.state.value_oferta === null || this.state.value_oferta === '') {
@@ -124,38 +124,17 @@ class InformativeSection extends Component {
     );
   };
   render() {
-    const { markup, informativeSection, ellipsis } = this.state;
-    const { Paragraph } = Typography;
+    const { markup, informativeSection } = this.state;
     return (
       <Fragment>
         {informativeSection !== null && (
-          <div className='site-card-border-less-wrapper' style={{ marginTop: 35 }}>
+          <div className="site-card-border-less-wrapper" style={{ marginTop: 35 }}>
             <Card
               title={informativeSection.name || 'clasificación'}
               bordered={false}
-              style={{ backgroundColor: 'transparent', margin: 'auto' }}>
-              {this.props.cEvent.value._id !== '611c285104f5d97d1b0f5ed2' && markup && Parser(markup)}
-
-              {this.props.cEvent.value._id == '611c285104f5d97d1b0f5ed2' && (
-                <>
-                  <h2
-                    style={{
-                      fontWeight: 700,
-                      fontSize: '20px',
-                      borderBottom: '1px solid #C0BAB9',
-                      marginTop: '15px',
-                      margin: 'auto',
-                    }}>
-                    Proyecto casos clínicos de obesidad: Adiposopatia en el Siglo XXI, más allá del peso Ideal
-                  </h2>
-                  <br></br>
-                  <ReactPlayer
-                    style={{ width: '560px', height: '445px', margin: 'auto' }}
-                    url='https://vimeo.com/589393733'
-                    controls
-                  />
-                </>
-              )}
+              style={{ backgroundColor: 'transparent', margin: 'auto' }}
+            >
+              { markup && Parser(markup)}
             </Card>
           </div>
         )}

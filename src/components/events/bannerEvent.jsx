@@ -6,7 +6,7 @@ import { Col } from 'antd';
 
 const BannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
   return (
-    <div className='headerContainer'>
+    <div className="headerContainer">
       {bgImage && (
         <Col xs={0} sm={24}>
           <img src={bgImage} alt={title} />
@@ -27,13 +27,13 @@ const BannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
 function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, type_event }) {
   return (
     <div
-      className='banner-user-text-container'
+      className="banner-user-text-container"
       style={{
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         borderRadius: '10px',
       }}>
-      <TweenOne className='banner-user-text'>
+      <TweenOne className="banner-user-text">
         {/* Fecha del curso */}
         <div>
           {dates && dates.length > 0 ? (
@@ -80,12 +80,12 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
         </div>
       </TweenOne>
 
-      <TweenOne className='banner-user-title' animation={{ y: 30, opacity: 0, type: 'from' }}>
+      <TweenOne className="banner-user-title" animation={{ y: 30, opacity: 0, type: 'from' }}>
         {/* Nombre del curso */}
         <span>{title}</span>
       </TweenOne>
 
-      <TweenOne className='banner-user-text' animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}>
+      <TweenOne className="banner-user-text" animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}>
         {/* Quien lo organiza */}
         <div>
           <span>Organizado por: {organizado}</span>

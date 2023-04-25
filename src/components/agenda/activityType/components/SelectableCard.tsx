@@ -60,7 +60,7 @@
        <div onClick={() => onSelect()} style={borderStyles}>
        <Card
            loading={!isLoaded}
-           hoverable={true}
+           hoverable
            style={cardStyles}
            cover={
              <img
@@ -80,7 +80,7 @@
                </Title>
              ) : undefined}
              description={
-               <Paragraph type='secondary' style={{ userSelect: 'none' }}>
+               <Paragraph type="secondary" style={{ userSelect: 'none' }}>
                  {description}
                </Paragraph>
              }

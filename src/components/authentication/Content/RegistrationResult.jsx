@@ -7,10 +7,10 @@ import { useUserEvent } from '@context/eventUserContext';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
 import { DispatchMessageService } from '@context/MessageService';
-import { async } from 'ramda-adjunct';
+
 import { AttendeeApi } from '@helpers/request';
 
-const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEventUser }) => {
+const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEventUser, requireAutomaticLoguin }) => {
   const [fraseLoading, setfraseLoading] = useState('');
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
     //mientras el user espera se le dan frases motivadoras
     async function FraseInpiradora() {
       try {
-        if (validationGeneral.loading) {
+        if (validationGeneral.isLoading) {
           const ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
           setfraseLoading(FrasesInspiradoras[ramdon]);
           console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon]);
@@ -48,18 +48,18 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
 
   return (
     <>
-      {validationGeneral.loading ? (
+      {validationGeneral.isLoading ? (
         <>
           <Row>
-            <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
+            <Typography.Text type="secondary" style={{ fontSize: '18px' }}>
               {fraseLoading}
             </Typography.Text>
           </Row>
         </>
       ) : (
         <>
-          <Result status='success' title='Inscripción exitosa!' />
-          <RedirectUser basicDataUser={basicDataUser} cEvent={cEvent} dataEventUser={dataEventUser} />
+          <Result status="success" title="Inscripción exitosa!" />
+          {requireAutomaticLoguin && (<RedirectUser basicDataUser={basicDataUser} cEvent={cEvent} dataEventUser={dataEventUser}/>)}
         </>
       )}
     </>
@@ -142,7 +142,7 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
   return (
     <>
       <Space>
-        <Typography.Text type='secondary' style={{ fontSize: '18px' }}>
+        <Typography.Text type="secondary" style={{ fontSize: '18px' }}>
           {signInWithEmailAndPasswordError ? (
             <Alert
               style={{ marginTop: '5px' }}
@@ -157,7 +157,7 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
                     onClick={() => {
                       helperDispatch({ type: 'showLogin' });
                     }}
-                    type='link'>
+                    type="link">
                     {intl.formatMessage({
                       id: 'modal.feedback.title.errorlink',
                       defaultMessage: 'iniciar sesión',
@@ -165,7 +165,7 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
                   </Button>
                 </>
               }
-              type='error'
+              type="error"
             />
           ) : (
             <>

@@ -190,7 +190,7 @@ function SpeakersList(props) {
 
   //FN para el draggable 2/3
   const DraggableContainer = (props) => (
-    <SortableContainer useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props} />
+    <SortableContainer useDragHandle disableAutoscroll helperClass="row-dragging" onSortEnd={onSortEnd} {...props} />
   );
 
   //FN para el draggable 3/3
@@ -213,8 +213,8 @@ function SpeakersList(props) {
   return (
     <div>
       <Header
-        title={'Conferencistas'}
-        titleTooltip={'Agregue o edite las personas que son conferencistas'}
+        title="Conferencistas"
+        titleTooltip="Agregue o edite las personas que son conferencistas"
         addUrl={{
           pathname: `${props.matchUrl}/speaker`,
           state: { new: true },
@@ -225,8 +225,8 @@ function SpeakersList(props) {
       <Table
         columns={columns(columnsData)}
         dataSource={sortAndIndexSpeakers()}
-        size='small'
-        rowKey='index'
+        size="small"
+        rowKey="index"
         loading={isLoading}
         components={{
           body: {

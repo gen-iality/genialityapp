@@ -34,7 +34,7 @@ const Agenda = (props) => {
     {
       title: 'Lección',
       dataIndex: 'name',
-      ellipsis: true,
+      //ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       ...getColumnSearchProps('name', columnsData),
     },
@@ -96,15 +96,15 @@ const Agenda = (props) => {
     <CMS
       API={AgendaApi}
       eventId={props.event._id}
-      title={'Temas'}
-      titleTooltip={'Agregue o edite las Agendas que se muestran en la aplicación'}
+      title="Temas"
+      titleTooltip="Agregue o edite las Agendas que se muestran en la aplicación"
       addUrl={{
-        pathname: `${props.matchUrl}/actividad`,
+        pathname: `${props.matchUrl}/create-activity`,
         state: { new: true },
       }}
       columns={columns}
-      // key='_id'
-      editPath={`${props.matchUrl}/actividad`}
+      // key="_id"
+      editPath={`${props.matchUrl}/activity`}
       pagination={false}
       actions
       search

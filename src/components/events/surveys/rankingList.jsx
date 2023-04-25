@@ -21,7 +21,7 @@ function RankingList(props) {
 
   return (
     <div style={{ marginTop: 16 }}>
-      <Row justify='center'>
+      <Row justify="center">
         <h1
           style={{
             fontSize: '25px',
@@ -33,13 +33,13 @@ function RankingList(props) {
         </h1>
         <Divider style={{ backgroundColor: `${styles && styles.textMenu}` }} />
       </Row>
-      <div className='container-ranking' style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
+      <div className="container-ranking" style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
         <List
-          className='demo-loadmore-list'
+          className="demo-loadmore-list"
           loading={loading}
-          itemLayout='horizontal'
+          itemLayout="horizontal"
           dataSource={gameRanking}
-          renderItem={(item, key) => <UsersCard type='ranking' item={item} />}
+          renderItem={(item, key) => <UsersCard type="ranking" item={item} />}
         />
       </div>
     </div>

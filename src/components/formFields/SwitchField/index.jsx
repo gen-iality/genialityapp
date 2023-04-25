@@ -34,7 +34,8 @@ function SwitchField(rawProps) {
       required={formItemProps.required}
       help={fieldError}
       validateStatus={fieldError ? 'error' : undefined}
-      labelCol={props.labelCol ? { span: 12 } : ''}>
+      labelCol={props.labelCol ? { span: 12 } : ''}
+    >
       <Switch
         style={switchStyle}
         {...props}

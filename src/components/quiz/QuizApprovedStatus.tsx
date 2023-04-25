@@ -10,9 +10,10 @@ import { useCurrentUser } from '@context/userContext';
 import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
 
 export interface QuizApprovedStatusProps {
-  eventId: string,
-  approvedLink?: string,
-};
+  eventId: string;
+  approvedLink?: string;
+  thereAreExam: (a: boolean) => void;
+}
 
 function QuizApprovedStatus(props: QuizApprovedStatusProps) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -46,6 +47,7 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
       }
 
       if (surveys.length > 0) {
+        props.thereAreExam(true);
         if (passed === surveys.length) {
           setStatus('Aprobado');
           setIsApproved(true);
@@ -56,18 +58,19 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
         }
       } else {
         setStatus('Curso sin exámenes');
+        props.thereAreExam(false);
         setBackgroundColor('#2C3647');
       }
 
-      setIsLoaded(true);      
+      setIsLoaded(true);
     })();
   }, [cUser?.value]);
 
   return (
     <>
-    {isLoaded && <Badge count={status} style={{ backgroundColor }} />}
-    {isLoaded && isApproved && props.approvedLink && (
-      <Link to={props.approvedLink}>
+      {isLoaded && <Badge count={status} style={{ backgroundColor }} />}
+      {isLoaded && isApproved && props.approvedLink && (
+        <Link to={props.approvedLink}>
           <Button
             style={{
               background: '#356785',
@@ -79,13 +82,13 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
               borderRadius: '10px',
               marginLeft: '2px',
             }}
-            size='small'
+            size="small"
             icon={<DownloadOutlined />}
           >
             Certificado
           </Button>
-      </Link>
-    )}
+        </Link>
+      )}
     </>
   );
 }

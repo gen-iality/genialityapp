@@ -51,7 +51,7 @@
       font-size: 1.1rem;
       border-color: transparent;
       border-width: 1px;
-      color: $evius-secundary;
+      color: $geniality-secundary;
       cursor: pointer;
       justify-content: center;
       padding-bottom: calc(1em - 3rem);
@@ -280,7 +280,7 @@
   .container-day_calendar {
     margin-bottom: 60px !important;
     .select-day {
-      background-color: $evius-secundary !important;
+      background-color: $geniality-secundary !important;
       color: white !important;
       padding: 20px 0px;
       font-weight: bold;
@@ -291,7 +291,7 @@
       &:focus {
         color: white;
         border: none;
-        background-color: $evius-secundary !important;
+        background-color: $geniality-secundary !important;
       }
     }
 
@@ -307,7 +307,7 @@
       &:focus {
         color: white;
         border: none;
-        background-color: $evius-secundary !important;
+        background-color: $geniality-secundary !important;
       }
     }
   }

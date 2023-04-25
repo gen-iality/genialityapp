@@ -134,6 +134,21 @@ class Styles extends Component {
         ],
       },
       {
+        label: 'Habiltar franja de icono, título y descripción de la organización',
+        defaultValue: true,
+        name: 'show_icon_title_and_description_container',
+        options: [
+          {
+            label: 'Si',
+            value: true,
+          },
+          {
+            label: 'No',
+            value: false,
+          },
+        ],
+      },
+      {
         label: 'Mostrar widget de videos grabados',
         defaultValue: false,
         name: 'show_video_widget',
@@ -269,6 +284,7 @@ class Styles extends Component {
           banner_footer_email: dataStyles.banner_footer_email || null,
           show_banner: dataStyles.show_banner || false,
           show_title: dataStyles?.show_title || false,
+          show_icon_title_and_description_container: dataStyles?.show_icon_title_and_description_container || false,
           show_video_widget: dataStyles?.show_video_widget || false,
           show_card_banner: dataStyles.show_card_banner || false,
           show_inscription: info?.show_inscription || false,
@@ -440,33 +456,34 @@ class Styles extends Component {
     return (
       <>
         <Form onFinish={this.submit} {...formLayout}>
-          <Header title={'Configuración de Estilos'} save form />
+          <Header title="Configuración de Estilos" save form />
 
-          <Row justify='center' wrap gutter={[8, 8]}>
+          <Row justify="center" wrap gutter={[8, 8]}>
             {stylesIsLoading ? (
               <Loading />
             ) : (
-              <Col span={12}>
+              <Col sm={20} md={12}>
                 {this.state.colorDrawer.map((item, key) => (
                   <div key={key}>
                     {item.editIsVisible && (
                       <Modal
                         closable={false}
                         footer={[
-                          <Button key='ok' type='primary' onClick={() => this.handleClickSelectColor(key)}>
+                          <Button key="ok" type="primary" onClick={() => this.handleClickSelectColor(key)}>
                             Aceptar
                           </Button>,
                         ]}
                         title={<Title level={5}>{item.title}</Title>}
-                        visible={item.editIsVisible}>
-                        <Space wrap size='large' align='start'>
+                        visible={item.editIsVisible}
+                      >
+                        <Space wrap size="large" align="start">
                           <SketchPicker
                             color={this.state.styles[item.fieldColorName]}
                             onChangeComplete={(color) => {
                               this.onColorChange(color, item.fieldColorName);
                             }}
                           />
-                          <Space direction='vertical'>
+                          <Space direction="vertical">
                             <Text
                               style={{ fontSize: '20px' }}
                               code
@@ -478,7 +495,8 @@ class Styles extends Component {
                                     msj: 'Color hexadecimal copiado',
                                     action: 'show',
                                   }),
-                              }}>{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
+                              }}
+                            >{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
                             <Text
                               style={{ fontSize: '20px' }}
                               code
@@ -492,7 +510,8 @@ class Styles extends Component {
                                     msj: 'Color rgb copiado',
                                     action: 'show',
                                   }),
-                              }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
+                              }}
+                            >{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
                               this.hexToRgb(this.state.styles[item.fieldColorName])?.g
                             },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b})`}</Text>
                           </Space>
@@ -503,7 +522,8 @@ class Styles extends Component {
                     <Form.Item
                       label={item.title}
                       help={item.description}
-                      onClick={() => this.handleClickSelectColor(key)}>
+                      onClick={() => this.handleClickSelectColor(key)}
+                    >
                       <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]}>
                         {this.state.styles[item.fieldColorName]}
                       </Tag>
@@ -519,7 +539,8 @@ class Styles extends Component {
                         value={this.state.styles[item.name]}
                         name={item.name}
                         onChange={(e) => this.handleChange(e, item.name)}
-                        style={{ width: 120 }}>
+                        style={{ width: 120 }}
+                      >
                         {item.options.map((item2, key2) => (
                           <Option key={key2} value={item2.value}>
                             {item2.label}
@@ -530,15 +551,11 @@ class Styles extends Component {
                   </div>
                 ))}
 
-                <Space direction='vertical' size={25} wrap>
+                <Space direction="vertical" size={25} wrap>
                   {this.imageDrawer.map((item, key) => (
                     <div key={key}>
                       <Form.Item
-                        label={
-                        <label style={{ paddingBottom: '30px' }}>
-                          {item.title}
-                        </label>
-                        }
+                        label={<label style={{ paddingBottom: '30px' }}>{item.title}</label>}
                         help={item.description}
                       >
                         <ImageUploaderDragAndDrop

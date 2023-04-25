@@ -28,7 +28,7 @@ class Graphics extends Component {
       chartCreated: false,
       usersRegistered: 0,
       titleQuestion: '',
-      isMobile: window.screen.width < 800 ? true : false, // determina el tamaño del dispositivo para saber si es mobile o no
+      isMobile: window.screen.width < 800, // determina el tamaño del dispositivo para saber si es mobile o no
       isTablet: window.screen.width < 1020,
       dataVotos: [],
       totalUser: 0,
@@ -200,7 +200,7 @@ class Graphics extends Component {
       */
 
       graphy.options = {
-        responsive: this.state.isMobile ? true : false,
+        responsive: !!this.state.isMobile,
         title: {
           fontSize: 16,
           display: true,
@@ -310,15 +310,15 @@ class Graphics extends Component {
     if (dataSurvey.questions)
       return (
         <>
-          <Card bodyStyle={{ padding: '0' }} className='survyCard'>
+          <Card bodyStyle={{ padding: '0' }} className="survyCard">
             <strong style={{ fontSize: '16px' }}>{titleQuestion}</strong>
             {/* esta validacion es para que tomo los estilos la torta */}
             <Card bodyStyle={{ padding: '0px' }}>
-              <Row justify='center'>
+              <Row justify="center">
                 <canvas
-                  id='chart'
-                  width='600'
-                  height='400'
+                  id="chart"
+                  width="600"
+                  height="400"
                   // style={{width:'500px', height:'700px'}}
                 ></canvas>
               </Row>

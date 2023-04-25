@@ -6,11 +6,11 @@ const ContactRequest = (props) => {
   const cUser = useCurrentUser();
 
   return (
-    <Space size='middle'>
-      <Tooltip title='Solicitar contacto'>
+    <Space size="middle">
+      <Tooltip title="Solicitar contacto">
         <Button
-          size='large'
-          shape='circle'
+          size="large"
+          shape="circle"
           onClick={async () => {
             props.collapsePerfil();
             const sendResp = await props.SendFriendship({
@@ -34,10 +34,10 @@ const ContactRequest = (props) => {
           icon={<UsergroupAddOutlined />}
         />
       </Tooltip>
-      <Tooltip title='Ir al chat privado'>
+      <Tooltip title="Ir al chat privado">
         <Button
-          size='large'
-          shape='circle'
+          size="large"
+          shape="circle"
           onClick={async () => {
             props.collapsePerfil();
             props.UpdateChat(cUser.uid, cUser.names || cUser.name, cUser._id, cUser.names || cUser.name);
@@ -45,10 +45,10 @@ const ContactRequest = (props) => {
           icon={<CommentOutlined />}
         />
       </Tooltip>
-      <Tooltip title='Solicitar cita'>
+      <Tooltip title="Solicitar cita">
         <Button
-          size='large'
-          shape='circle'
+          size="large"
+          shape="circle"
           onClick={async () => {
             if (cUser) {
               props.collapsePerfil();

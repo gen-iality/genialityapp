@@ -71,7 +71,7 @@ class RoomManager extends Component {
     const host_ids = host_list.map((host) => host.host_id);
     this.setState({ host_ids });
 
-    if (typeof event_id === 'undefined' || typeof activity_id === 'undefined' || activity_id === false) return;
+    if (typeof event_id === 'undefined' || typeof activity_id === 'undefined' || !activity_id) return;
 
     this.setState({ loading: true });
 
@@ -475,7 +475,6 @@ class RoomManager extends Component {
 
             self.restartData();
           } catch (e) {
-            console.log('EXCEPCION===>', e);
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',

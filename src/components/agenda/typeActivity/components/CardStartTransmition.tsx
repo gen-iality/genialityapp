@@ -53,7 +53,6 @@ const CardStartTransmition = (props: any) => {
         setloading(false);
         setBlockedButton(true);
         message.error('El id de la transmisión no existe!');
-        // console.log('AL TRAER EL MEETING==>', e);
         // let livestreamInitial = { state: 'Finished' };
         // setLiveStreamStatus(livestreamInitial);
       }
@@ -109,8 +108,8 @@ const CardStartTransmition = (props: any) => {
         <LoadingTypeActivity />
       ) : (
         <Result
-          title='Debes iniciar la transmisión'
-          subTitle='Tus asistentes no verán lo que transmites hasta que cambies el estado de la transmisión para tus asistentes. '
+          title="Debes iniciar la transmisión"
+          subTitle="Tus asistentes no verán lo que transmites hasta que cambies el estado de la transmisión para tus asistentes. "
           extra={
             <Space>
               {
@@ -127,9 +126,9 @@ const CardStartTransmition = (props: any) => {
                   }? `}
                   onConfirm={() => deleteStreaming()}
                   onCancel={() => console.log('cancelado')}
-                  okText='Si'
-                  cancelText='No'>
-                  <Button loading={loadingDelete} type='text' danger>
+                  okText="Si"
+                  cancelText="No">
+                  <Button loading={loadingDelete} type="text" danger>
                     {props.type === 'Transmisión' ||
                     props.type === 'EviusMeet' ||
                     props.type === 'vimeo' ||
@@ -147,7 +146,7 @@ const CardStartTransmition = (props: any) => {
                   disabled={blockedButton}
                   loading={loading}
                   onClick={() => executer_startStream()}
-                  type='primary'>
+                  type="primary">
                   Iniciar transmisión
                 </Button>
               )}

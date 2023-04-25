@@ -283,71 +283,71 @@ function CrearEditarEmpresa(props) {
         return (
           <Form onReset={handleReset} onSubmitCapture={handleSubmit} {...formLayout}>
             <Header
-              title={'Empresa'}
+              title="Empresa"
               form
               back
               save
               remove={remove}
               edit={props.location.state.edit}
-              extra={<Field name='visible' component={SwitchField} label='Visible' labelCol />}
+              extra={<Field name="visible" component={SwitchField} label="Visible" labelCol />}
             />
-            <Row justify='center'>
+            <Row justify="center">
               <Col span={20}>
                 <Field
                   required
-                  name='name'
+                  name="name"
                   component={InputField}
-                  label='Nombre empresa'
-                  placeholder='Ingrese el nombre de su empresa o stand'
+                  label="Nombre empresa"
+                  placeholder="Ingrese el nombre de su empresa o stand"
                   maxLength={NAME_MAX_LENGTH}
                 />
 
-                <Field name='video_url' component={InputField} label='Video' placeholder='Url video' />
+                <Field name="video_url" component={InputField} label="Video" placeholder="Url video" />
 
-                <ImageField required name='stand_image' label='Banner de la empresa' />
+                <ImageField required name="stand_image" label="Banner de la empresa" />
 
-                <ImageField name='list_image' label='Logo de la empresa' />
+                <ImageField name="list_image" label="Logo de la empresa" />
 
                 <RichTextComponentField
-                  name='description'
-                  label='Descripción larga'
+                  name="description"
+                  label="Descripción larga"
                   maxLength={DESCRIPTION_MAX_LENGTH}
-                  id='description'
+                  id="description"
                 />
 
                 <RichTextComponentField
-                  name='short_description'
-                  label='Descripción Corta'
+                  name="short_description"
+                  label="Descripción Corta"
                   maxLength={DESCRIPTION_MAX_LENGTH}
-                  id='short_description'
+                  id="short_description"
                 />
 
                 <Field
-                  name='telefono'
+                  name="telefono"
                   component={InputField}
-                  label='Teléfono de la empresa'
-                  placeholder='Ingrese su telefono'
+                  label="Teléfono de la empresa"
+                  placeholder="Ingrese su telefono"
                 />
                 <Field
-                  name='email'
+                  name="email"
                   component={InputField}
-                  label='correo de la empresa'
+                  label="correo de la empresa"
                   placeholder='ejemplo@ejemplo.com'
                 />
-                <Field name='webpage' component={InputField} label='Página web' placeholder='Url página web' />
+                <Field name="webpage" component={InputField} label="Página web" placeholder="Url página web" />
 
                 <Field
-                  name='stand_type'
+                  name="stand_type"
                   component={SelectField}
-                  label='Tipo de stand'
-                  placeholder='Tipo de stand'
+                  label="Tipo de stand"
+                  placeholder="Tipo de stand"
                   options={standTypesOptions}
                 />
 
-                <FileField name='brochure' label='Brochure' placeholder='' />
+                <FileField name="brochure" label="Brochure" placeholder="" />
 
                 <FieldArray
-                  name='services'
+                  name="services"
                   render={(arrayHelpers) => {
                     return !!values.services && values.services.length > 0 ? (
                       <>
@@ -358,7 +358,7 @@ function CrearEditarEmpresa(props) {
                               name={`services[${serviceIndex}].nombre`}
                               component={InputField}
                               label={`Nombre servicio ${serviceIndex + 1}`}
-                              placeholder='Nombre del servicio'
+                              placeholder="Nombre del servicio"
                               maxLength={20}
                             />
 
@@ -367,7 +367,7 @@ function CrearEditarEmpresa(props) {
                               name={`services[${serviceIndex}].category`}
                               component={SelectField}
                               label={`Categoría servicio ${serviceIndex + 1}`}
-                              placeholder='Categoría'
+                              placeholder="Categoría"
                               options={[
                                 { value: 'Servicio', label: 'Servicio' },
                                 { value: 'Producto', label: 'Producto' },
@@ -386,38 +386,40 @@ function CrearEditarEmpresa(props) {
                               name={`services[${serviceIndex}].web_url`}
                               component={InputField}
                               label={`Web url ${serviceIndex + 1}`}
-                              placeholder='Enlace para ver tu producto o servicio en tu web'
+                              placeholder="Enlace para ver tu producto o servicio en tu web"
                             />
 
                             <ImageField
                               required
                               name={`services[${serviceIndex}].image`}
                               label={`Imagen servicio ${serviceIndex + 1}`}
-                              placeholder='Url imagen'
+                              placeholder="Url imagen"
                               maxLength={URL_MAX_LENGTH}
                             />
 
                             <Form.Item {...buttonsLayout}>
                               {values.services.length > 0 && (
                                 <Button
-                                  type='danger'
+                                  type="danger"
                                   icon={<DeleteOutlined />}
                                   onClick={() => {
                                     arrayHelpers.remove(serviceIndex);
                                   }}
-                                  style={{ marginRight: '20px' }}>
-                                  {'Eliminar'}
+                                  style={{ marginRight: '20px' }}
+                                >
+                                  Eliminar
                                 </Button>
                               )}
 
                               {serviceIndex === values.services.length - 1 && (
                                 <Button
-                                  type='primary'
+                                  type="primary"
                                   icon={<PlusCircleOutlined />}
                                   onClick={() => {
                                     arrayHelpers.push({ description: '', image: '', web_url: '' });
-                                  }}>
-                                  {'Agregar servicio'}
+                                  }}
+                                >
+                                  Agregar servicio
                                 </Button>
                               )}
                             </Form.Item>
@@ -427,19 +429,20 @@ function CrearEditarEmpresa(props) {
                     ) : (
                       <Form.Item {...buttonsLayout}>
                         <Button
-                          type='primary'
+                          type="primary"
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
                             arrayHelpers.push({ description: '', image: '', web_url: '' });
-                          }}>
-                          {'Agregar servicio'}
+                          }}
+                        >
+                          Agregar servicio
                         </Button>
                       </Form.Item>
                     );
                   }}
                 />
                 <FieldArray
-                  name='social_networks'
+                  name="social_networks"
                   render={(arrayHelpers) => {
                     return !!values.social_networks && values.social_networks.length > 0 ? (
                       <>
@@ -449,7 +452,7 @@ function CrearEditarEmpresa(props) {
                               name={`social_networks[${socialNetworkIndex}].network`}
                               component={SelectField}
                               label={`Red social ${socialNetworkIndex + 1}`}
-                              placeholder='Red social'
+                              placeholder="Red social"
                               options={socialNetworksOptions}
                             />
 
@@ -457,31 +460,33 @@ function CrearEditarEmpresa(props) {
                               name={`social_networks[${socialNetworkIndex}].url`}
                               component={InputField}
                               label={`Url red social ${socialNetworkIndex + 1}`}
-                              placeholder='Url red social'
+                              placeholder="Url red social"
                               maxLength={URL_MAX_LENGTH}
                             />
 
                             <Form.Item {...buttonsLayout}>
                               {values.social_networks.length > 0 && (
                                 <Button
-                                  type='danger'
+                                  type="danger"
                                   icon={<DeleteOutlined />}
                                   onClick={() => {
                                     arrayHelpers.remove(socialNetworkIndex);
                                   }}
-                                  style={{ marginRight: '20px' }}>
-                                  {'Eliminar'}
+                                  style={{ marginRight: '20px' }}
+                                >
+                                  Eliminar
                                 </Button>
                               )}
                               {values.social_networks.length < SOCIAL_NETWORKS_LIMIT &&
                                 socialNetworkIndex === values.social_networks.length - 1 && (
                                   <Button
-                                    type='primary'
+                                    type="primary"
                                     icon={<PlusCircleOutlined />}
                                     onClick={() => {
                                       arrayHelpers.push({ url: '', network: undefined });
-                                    }}>
-                                    {'Agregar red social'}
+                                    }}
+                                  >
+                                    Agregar red social
                                   </Button>
                                 )}
                             </Form.Item>
@@ -491,19 +496,20 @@ function CrearEditarEmpresa(props) {
                     ) : (
                       <Form.Item {...buttonsLayout}>
                         <Button
-                          type='primary'
+                          type="primary"
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
                             arrayHelpers.push({ url: '', network: undefined });
-                          }}>
-                          {'Agregar red social'}
+                          }}
+                        >
+                          Agregar red social
                         </Button>
                       </Form.Item>
                     );
                   }}
                 />
                 <FieldArray
-                  name='advisor'
+                  name="advisor"
                   render={(arrayHelpers) => {
                     return !!values.advisor && values.advisor.length > 0 ? (
                       <>
@@ -514,59 +520,60 @@ function CrearEditarEmpresa(props) {
                               name={`advisor[${advisorIndex}].name`}
                               component={InputField}
                               label={`Nombre del contacto advisor ${advisorIndex + 1}`}
-                              placeholder='Nombre del contacto advisor'
+                              placeholder="Nombre del contacto advisor"
                             />
                             <Field
                               required
                               name={`advisor[${advisorIndex}].cargo`}
                               component={InputField}
                               label={`Cargo del advisor ${advisorIndex + 1}`}
-                              placeholder='Cargo advisor'
+                              placeholder="Cargo advisor"
                             />
                             <Field
                               required
                               name={`advisor[${advisorIndex}].codPais`}
                               component={InputField}
                               label={`Codigo del pais advisor ${advisorIndex + 1}`}
-                              placeholder='Ingrese el codigo internacional de su pais sin agregar (+)'
+                              placeholder="Ingrese el codigo internacional de su pais sin agregar (+)"
                             />
                             <Field
                               required
                               name={`advisor[${advisorIndex}].number`}
                               component={InputField}
                               label={`Número de contacto advisor ${advisorIndex + 1}`}
-                              placeholder='Número de contacto advisor'
+                              placeholder="Número de contacto advisor"
                             />
                             <Field
                               required
                               name={`advisor[${advisorIndex}].email`}
                               component={InputField}
                               label={`Email de contacto advisor ${advisorIndex + 1}`}
-                              placeholder='Email de contacto advisor'
+                              placeholder="Email de contacto advisor"
                             />
                             <ImageField
                               required
                               name={`advisor[${advisorIndex}].image`}
                               label={`Imagen del contacto advisor ${advisorIndex + 1}`}
-                              placeholder='Url imagen'
+                              placeholder="Url imagen"
                               maxLength={URL_MAX_LENGTH}
                             />
                             <Form.Item {...buttonsLayout}>
                               {values.advisor.length > 0 && (
                                 <Button
-                                  type='danger'
+                                  type="danger"
                                   icon={<DeleteOutlined />}
                                   onClick={() => {
                                     arrayHelpers.remove(advisorIndex);
                                   }}
-                                  style={{ marginRight: '20px' }}>
-                                  {'Eliminar'}
+                                  style={{ marginRight: '20px' }}
+                                >
+                                  Eliminar
                                 </Button>
                               )}
                               {/*values.advisor.length < ADVISOR_LIMIT && */}
                               {advisorIndex === values.advisor.length - 1 && (
                                 <Button
-                                  type='primary'
+                                  type="primary"
                                   icon={<PlusCircleOutlined />}
                                   onClick={() => {
                                     arrayHelpers.push({
@@ -577,8 +584,9 @@ function CrearEditarEmpresa(props) {
                                       email: '',
                                       cargo: '',
                                     });
-                                  }}>
-                                  {'Agregar advisor'}
+                                  }}
+                                >
+                                  Agregar advisor
                                 </Button>
                               )}
                             </Form.Item>
@@ -588,7 +596,7 @@ function CrearEditarEmpresa(props) {
                     ) : (
                       <Form.Item {...buttonsLayout}>
                         <Button
-                          type='primary'
+                          type="primary"
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
                             arrayHelpers.push({
@@ -599,8 +607,9 @@ function CrearEditarEmpresa(props) {
                               email: '',
                               cargo: '',
                             });
-                          }}>
-                          {'Agregar advisor'}
+                          }}
+                        >
+                          Agregar advisor
                         </Button>
                       </Form.Item>
                     );
@@ -608,7 +617,7 @@ function CrearEditarEmpresa(props) {
                 />
 
                 <FieldArray
-                  name='gallery'
+                  name="gallery"
                   render={(arrayHelpers) => {
                     return !!values.gallery && values.gallery.length > 0 ? (
                       <>
@@ -622,23 +631,25 @@ function CrearEditarEmpresa(props) {
                             <Form.Item {...buttonsLayout}>
                               {values.gallery.length > 1 && (
                                 <Button
-                                  type='danger'
+                                  type="danger"
                                   icon={<DeleteOutlined />}
                                   onClick={() => {
                                     arrayHelpers.remove(galleryIndex);
                                   }}
-                                  style={{ marginRight: '20px' }}>
-                                  {'Eliminar'}
+                                  style={{ marginRight: '20px' }}
+                                >
+                                  Eliminar
                                 </Button>
                               )}
                               {values.gallery.length < GALLERY_LIMIT && galleryIndex === values.gallery.length - 1 && (
                                 <Button
-                                  type='primary'
+                                  type="primary"
                                   icon={<PlusCircleOutlined />}
                                   onClick={() => {
                                     arrayHelpers.push({ image: '' });
-                                  }}>
-                                  {'Agregar imagen'}
+                                  }}
+                                >
+                                  Agregar imagen
                                 </Button>
                               )}
                             </Form.Item>
@@ -648,12 +659,13 @@ function CrearEditarEmpresa(props) {
                     ) : (
                       <Form.Item {...buttonsLayout}>
                         <Button
-                          type='primary'
+                          type="primary"
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
                             arrayHelpers.push({ image: '' });
-                          }}>
-                          {'Agregar imagen'}
+                          }}
+                        >
+                          Agregar imagen
                         </Button>
                       </Form.Item>
                     );

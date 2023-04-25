@@ -25,7 +25,7 @@ export const columns = (goToEvent) => [
     /* fixed: 'left', */
     render(val, item) {
       return (
-        <Button type='link' onClick={() => goToEvent(item._id)}>
+        <Button type="link" onClick={() => goToEvent(item._id)}>
           <span style={{ color: '#2E9AFE' }}>{item.name}</span>
         </Button>
       );
@@ -38,7 +38,7 @@ export const columns = (goToEvent) => [
     ellipsis: 'true',
     sorter: (a, b) => a.count - b.count,
   },
-  {
+  /* {
     title: 'Usuarios sin inscripción',
     dataIndex: 'checked_in_not',
     align: 'center',
@@ -47,9 +47,23 @@ export const columns = (goToEvent) => [
     /* render(val, item) {
          return item.checked_in_not;
       }, */
+  //}, */
+  {
+    title: 'Aprobaron',
+    dataIndex: 'checked_in_not',
+    align: 'center',
+    ellipsis: 'true',
+    sorter: (a, b) => a.checked_in_not - b.checked_in_not,
   },
   {
-    title: 'Usuarios con inscripción',
+    title: 'Completaron',
+    dataIndex: 'checked_in_not',
+    align: 'center',
+    ellipsis: 'true',
+    sorter: (a, b) => a.checked_in_not - b.checked_in_not,
+  },
+  {
+    title: 'Pre-registrados',
     dataIndex: 'checked_in',
     align: 'center',
     ellipsis: 'true',

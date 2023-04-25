@@ -13,7 +13,7 @@ function MemberSettings(props) {
 
   /** callback para guardar un campo */
   async function createNewField(fieldData) {
-    //FORMATEAR FECHA CREATED Y UPDATED AT
+    // Formatear fecha created y updated at
     fieldData = {
       ...fieldData,
       updated_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
@@ -39,7 +39,7 @@ function MemberSettings(props) {
   return (
     <Datos
       sendprops={props}
-      type='configMembers'
+      type="configMembers"
       getFields={getFields}
       createNewField={createNewField}
       editField={editField}

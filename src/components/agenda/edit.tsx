@@ -11,14 +11,11 @@ import { RouterPrompt } from '@antdComponents/RoutePrompt';
 import { DispatchMessageService } from '@context/MessageService';
 
 import { handleRequestError } from '@helpers/utils';
-import {
-  AgendaApi,
-  DocumentsApi,
-} from '@helpers/request';
+import { AgendaApi, DocumentsApi } from '@helpers/request';
 import { firestore } from '@helpers/firebase';
 
 import Loading from '../profile/loading';
-import RoomController from './roomManager/controller';
+import RoomController from './roomManager/RoomController';
 import Service from './roomManager/service';
 
 import TipeOfActivity from './typeActivity';
@@ -55,13 +52,14 @@ export interface AgendaEditProps {
 
 const initialInfoState: AgendaType = {
   name: '',
+  module_id: undefined,
   subtitle: '',
   bigmaker_meeting_id: null,
   datetime_start: null,
   datetime_end: null,
   space_id: '',
   image: '',
-  description: '<p><br></p>',
+  description: '',
   registration_message: '',
   capacity: 0,
   activity_categories_ids: [],
@@ -80,12 +78,14 @@ const initialInfoState: AgendaType = {
   key: '',
   requires_registration: false,
   host_ids: [],
+  tool_ids: [],
   length: '',
   latitude: '',
 };
 
 const initialFormDataState = {
   name: '',
+  module_id: undefined,
   // date: Moment(new Date()).format('YYYY-MM-DD')??new Date().,
   date: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
   space_id: '',
@@ -98,6 +98,7 @@ const initialFormDataState = {
   image: '',
   selectedRol: [],
   selectedHosts: [],
+  selectedTools: [],
   selectedTickets: [],
   selectedDocuments: [],
   selectedCategories: [],
@@ -110,7 +111,7 @@ function AgendaEdit(props: AgendaEditProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
+  // const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore));
 
   const [loadedAgenda, setLoadedAgenda] = useState<AgendaType | null>(null);
@@ -120,10 +121,10 @@ function AgendaEdit(props: AgendaEditProps) {
   /**
    * This states are used as config, I think...
    */
-  const [chat, setChat] = useState<boolean>(false);
-  const [surveys, setSurveys] = useState<boolean>(false);
-  const [games, setGames] = useState<boolean>(false);
-  const [attendees, setAttendees] = useState<boolean>(false);
+  // const [chat, setChat] = useState<boolean>(false);
+  // const [surveys, setSurveys] = useState<boolean>(false);
+  // const [games, setGames] = useState<boolean>(false);
+  // const [attendees, setAttendees] = useState<boolean>(false);
 
   const agendaContext = useContext(AgendaContext);
 
@@ -149,6 +150,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
         // Get the agenda document from current activity_id
         const agendaInfo: AgendaType = await AgendaApi.getOne(location.state.edit, props.event._id);
+        console.log('agendaInfo', agendaInfo);
 
         // Take the vimeo_id and save in info.
         const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
@@ -185,7 +187,7 @@ function AgendaEdit(props: AgendaEditProps) {
   //       had its own implementation of saveConfig. So confusing!
   useEffect(() => {
     saveConfig();
-  }, [attendees, games, surveys, chat, avalibleGames, agendaContext.isPublished]);
+  }, [agendaContext.isPublished]);
 
   const validateRoom = async () => {
     const activityId = agendaContext.activityEdit;
@@ -204,11 +206,11 @@ function AgendaEdit(props: AgendaEditProps) {
         setLoadedAgenda(loadedAgenda);
       }
 
-      setAvalibleGames(configuration.avalibleGames || []);
-      setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
-      setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);
-      setGames(configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false);
-      setAttendees(configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false);
+      // setAvalibleGames(configuration.avalibleGames || []);
+      // setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
+      // setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);
+      // setGames(configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false);
+      // setAttendees(configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false);
     }
   };
 
@@ -225,6 +227,7 @@ function AgendaEdit(props: AgendaEditProps) {
       agendaContext.setActivityName(formdata.name);
       try {
         const builtInfo = buildInfo();
+        console.debug('builtInfo final:', builtInfo);
         // setIsLoading(true);
         let agenda: AgendaType | null = null;
         if (location.state.edit || currentActivityID) {
@@ -235,7 +238,7 @@ function AgendaEdit(props: AgendaEditProps) {
           await AgendaApi.editOne(builtInfo, edit, props.event._id);
 
           await Promise.all(
-            builtInfo.selected_document.map((selected) => DocumentsApi.editOne(data, selected, props.event._id))
+            builtInfo.selected_document.map((selected) => DocumentsApi.editOne(data, selected, props.event._id)),
           );
         } else {
           agenda = await AgendaApi.create(props.event._id, builtInfo);
@@ -294,54 +297,8 @@ function AgendaEdit(props: AgendaEditProps) {
     }
   };
 
-  const handleGamesSelected = async (status: string, itemId: string, listOfGames: any[]) => {
-    if (status === 'newOrUpdate') {
-      agendaContext.setAvailableGames(listOfGames);
-      setAvalibleGames(listOfGames);
-      // await saveConfig(); // did by useEffect (avalibleGames)
-    } else {
-      const newData: object[] = listOfGames.map((items) => {
-        if (items.id === itemId) return { ...items, showGame: status };
-        else return { ...items };
-      });
-      agendaContext.setAvailableGames(newData);
-      setAvalibleGames(newData);
-      // await saveConfig(); // did by useEffect (avalibleGames)
-    }
-  };
-
   const handleDocumentChange = (value: any) => {
     setFormData((previous) => ({ ...previous, selectedDocuments: value || [] }));
-  };
-
-  // Encargado de gestionar los tabs de la video conferencia
-  const handleTabsController = (e: any, tab: string) => {
-    const valueTab = e;
-    const { chat, surveys, games, attendees } = agendaContext;
-    const tabs = { chat, surveys, games, attendees };
-
-    switch (tab) {
-      case 'chat':
-        tabs.chat = valueTab;
-        agendaContext.setChat(valueTab);
-        setChat(valueTab);
-        break;
-      case 'surveys':
-        tabs.surveys = valueTab;
-        agendaContext.setSurveys(valueTab);
-        setSurveys(valueTab);
-        break;
-      case 'games':
-        tabs.games = valueTab;
-        agendaContext.setGames(valueTab);
-        setGames(valueTab);
-        break;
-      case 'attendees':
-        tabs.attendees = valueTab;
-        agendaContext.setAttendees(valueTab);
-        setAttendees(valueTab);
-        break;
-    }
   };
 
   // Método para guarda la información de la configuración
@@ -368,11 +325,11 @@ function AgendaEdit(props: AgendaEditProps) {
           save
           form={false}
           when={showPendingChangesModal}
-          title='Tienes cambios sin guardar.'
-          description='¿Qué deseas hacer?'
-          okText='No guardar'
-          okSaveText='Guardar'
-          cancelText='Cancelar'
+          title="Tienes cambios sin guardar."
+          description="¿Qué deseas hacer?"
+          okText="No guardar"
+          okSaveText="Guardar"
+          cancelText="Cancelar"
           onOK={() => true}
           onOKSave={submit}
           onCancel={() => false}
@@ -387,13 +344,13 @@ function AgendaEdit(props: AgendaEditProps) {
           customBack={props.matchUrl}
           title={formdata.name ? `Actividad - ${formdata.name}` : 'Actividad'}
           saveName={location.state.edit || currentActivityID ? '' : 'Crear'}
-          edit={location.state.edit || currentActivityID}
+          edit={location.state.edit || currentActivityID || undefined}
           extra={
             isEditing && (
-              <Form.Item label='Publicar' labelCol={{ span: 14 }}>
+              <Form.Item label="Publicar" labelCol={{ span: 14 }}>
                 <Switch
-                  checkedChildren='Sí'
-                  unCheckedChildren='No'
+                  checkedChildren="Sí"
+                  unCheckedChildren="No"
                   checked={agendaContext.isPublished}
                   onChange={(value) => {
                     agendaContext.setIsPublished(value);
@@ -414,7 +371,7 @@ function AgendaEdit(props: AgendaEditProps) {
         ) : (
           <>
             <Tabs activeKey={currentTab} onChange={(key) => setCurrentTab(key)}>
-              <TabPane tab='Agenda' key='1'>
+              <TabPane tab="Agenda" key="1">
                 {/*
           This component will handle the formdata and save the data using
           the provided methods:
@@ -439,35 +396,32 @@ function AgendaEdit(props: AgendaEditProps) {
 
               {isEditing && (
                 <>
-                  <TabPane tab='Contenido' key='2'>
+                  <TabPane tab="Contenido" key="2">
                     <Row wrap gutter={12}>
                       <Col span={24}>
                         {currentActivityID && (
-                        <ActivityContentSelector
-                          activityId={currentActivityID}
-                          activityName={formdata.name}
-                          eventId={props.event._id}
-                          shouldLoad={currentTab === '2'}
-                          matchUrl={props.matchUrl}
-                        />
+                          <ActivityContentSelector
+                            activityId={currentActivityID}
+                            activityName={formdata.name}
+                            eventId={props.event._id}
+                            shouldLoad={currentTab === '2'}
+                            matchUrl={props.matchUrl}
+                          />
                         )}
                         <BackTop />
                       </Col>
                     </Row>
                   </TabPane>
-                  <TabPane tab='Juegos' key='3'>
-                    <Row justify='center' wrap gutter={12}>
+                  <TabPane tab="Juegos" key="3">
+                    <Row justify="center" wrap gutter={12}>
                       <Col span={20}>
-                        <RoomController
-                          handleGamesSelected={handleGamesSelected}
-                          handleTabsController={handleTabsController}
-                        />
+                        <RoomController />
                         <BackTop />
                       </Col>
                     </Row>
                   </TabPane>
-                  <TabPane tab='Encuestas' key='4'>
-                    <Row justify='center' wrap gutter={12}>
+                  <TabPane tab="Encuestas" key="4">
+                    <Row justify="center" wrap gutter={12}>
                       <Col span={20}>
                         <SurveyManager
                           event_id={props.event._id}
@@ -478,8 +432,8 @@ function AgendaEdit(props: AgendaEditProps) {
                       </Col>
                     </Row>
                   </TabPane>
-                  <TabPane tab='Documentos' key='5'>
-                    <Row justify='center' wrap gutter={12}>
+                  <TabPane tab="Documentos" key="5">
+                    <Row justify="center" wrap gutter={12}>
                       <Col span={20}>
                         <Form.Item>
                           <AgendaDocumentForm

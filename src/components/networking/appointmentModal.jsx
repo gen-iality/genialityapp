@@ -170,17 +170,18 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   return (
     <Modal
       visible={!!targetEventUserId}
-      title={'Agendar cita'}
+      title="Agendar cita"
       footer={null}
       onCancel={resetModal}
-      style={{ zIndex: 1031 }}>
+      style={{ zIndex: 1031 }}
+    >
       {loading ? (
-        <Row align='middle' justify='center' style={{ height: 300 }}>
+        <Row align="middle" justify="center" style={{ height: 300 }}>
           <Spin />
         </Row>
       ) : (
         <div>
-          <Row justify='end'>
+          <Row justify="end">
             <Select
               style={{ width: 200 }}
               value={selectedDate}
@@ -200,7 +201,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
           <div>
             <List
               bordered
-              itemLayout='vertical'
+              itemLayout="vertical"
               dataSource={timetable[selectedDate]}
               renderItem={(timetableItem) => {
                 if (timetableItem.status === 'accepted') {
@@ -211,19 +212,19 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
 
                 return (
                   <List.Item>
-                    <Row align='middle'>
+                    <Row align="middle">
                       <Col xs={16}>
-                        <Row justify='center'>
+                        <Row justify="center">
                           {`${dayjs(timetableItem.timestamp_start).format('hh:mm a')} - ${dayjs(
                             timetableItem.timestamp_end
                           ).format('hh:mm a')}`}
                         </Row>
                       </Col>
                       <Col xs={8}>
-                        <Row justify='center'>
+                        <Row justify="center">
                           <Button
-                            type='primary'
-                            shape='round'
+                            type="primary"
+                            shape="round"
                             disabled={timetableItem.status !== 'free' || openAgenda === agendaId}
                             onClick={() => {
                               if (timetableItem.status === 'free') {
@@ -253,19 +254,20 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                             }}
                           />
                         </div>
-                        <Row justify='end' style={{ paddingBottom: '20px' }}>
+                        <Row justify="end" style={{ paddingBottom: '20px' }}>
                           <Button
-                            shape='round'
+                            shape="round"
                             onClick={() => {
                               setOpenAgenda('');
                               setAgendaMessage('');
                             }}
-                            style={{ marginRight: '10px' }}>
-                            {'Cancelar'}
+                            style={{ marginRight: '10px' }}
+                          >
+                            Cancelar
                           </Button>
                           <Button
-                            type='primary'
-                            shape='round'
+                            type="primary"
+                            shape="round"
                             onClick={() => {
                               if (timetableItem.status === 'free') {
                                 setLoading(true);
@@ -297,8 +299,9 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                                     resetModal();
                                   });
                               }
-                            }}>
-                            {'Enviar solicitud'}
+                            }}
+                          >
+                            Enviar solicitud
                           </Button>
                         </Row>
                       </div>

@@ -63,7 +63,6 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
     if (eventContext && userEventContext) {
       if (eventContext.value?._id && userEventContext.value?._id) {
         setLoading1(true);
-        //setPendingAgendasSent([]);
 
         getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
           .then((agendas) => {
@@ -106,12 +105,14 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
             ))
           ) : (
             <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-            <Card style={{ textAlign: 'center' }}>{'No tienes solicitudes recibidas pendientes'}</Card>
+            <Card style={{ textAlign: 'center' }}>
+              No tienes solicitudes recibidas pendientes
+            </Card>
             </Col>
           ))}
 
         {loading && (
-          <Row align='middle' justify='center' style={{ height: 100 }}>
+          <Row align="middle" justify="center" style={{ height: 100 }}>
             <Spin />
           </Row>
         )}
@@ -128,17 +129,19 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
                   data={pendingAgenda}
                   fetching={fetching}
                   setFetching={setFetching}
-                  meSended={true}
+                  meSended
                 />
               ))
             ) : (
               <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-              <Card style={{ textAlign: 'center' }}>{'No tienes solicitudes pendientes enviadas'}</Card>
+              <Card style={{ textAlign: 'center' }}>
+                No tienes solicitudes pendientes enviadas
+              </Card>
               </Col>
             ))}
 
           {loading1 && (
-            <Row align='middle' justify='center' style={{ height: 100 }}>
+            <Row align="middle" justify="center" style={{ height: 100 }}>
               <Spin />
             </Row>
           )}
@@ -169,7 +172,6 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             state: '1',
           };
           addNotification(notificationr, eventContext.value, userCurrentContext.value);
-          // setSendRespuesta(true); -> this setter is not in this subcomponent
           setFetching(false);
         })
         .catch((error) => {
@@ -203,8 +205,8 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
   };
 
   return (
-    <Row justify='center' style={{ marginBottom: '20px' }}>
-      <Card style={{ width: 600, textAlign: 'left' }} bordered={true}>
+    <Row justify="center" style={{ marginBottom: '20px' }}>
+      <Card style={{ width: 600, textAlign: 'left' }} bordered>
         <div style={{ marginBottom: '10px' }}>{meSended ? 'Solicitud de cita a: ' : 'Solicitud de cita por: '}</div>
         <Meta
           avatar={<Avatar>{data.name ? data.name.charAt(0).toUpperCase() : '-'}</Avatar>}
@@ -234,15 +236,17 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
                       style={{ marginRight: '10px' }}
                       disabled={fetching}
                       loading={fetching}
-                      onClick={() => changeAgendaStatus('rejected')}>
-                      {'Rechazar'}
+                      onClick={() => changeAgendaStatus('rejected')}
+                    >
+                      Rechazar
                     </Button>
                     <Button
-                      type='primary'
+                      type="primary"
                       disabled={fetching}
                       loading={fetching}
-                      onClick={() => changeAgendaStatus('accepted')}>
-                      {'Aceptar'}
+                      onClick={() => changeAgendaStatus('accepted')}
+                    >
+                      Aceptar
                     </Button>
                   </Row>
                 )

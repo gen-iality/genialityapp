@@ -66,7 +66,7 @@ export const Actions = {
   },
   edit: async (url, data, unsafe) => {
     if (unsafe) return publicInstance.put(`${url}`, data).then(({ data }) => data);
-    return privateInstance.put(`${url}/${id}`, data).then(({ data }) => data);
+    return privateInstance.put(`${url}`, data).then(({ data }) => data);
   },
   post: async (url, data, unsafe) => {
     if (unsafe) return publicInstance.post(url, data).then(({ data }) => data);
@@ -240,9 +240,12 @@ export const EventsApi = {
     const token = await GetTokenUserFirebase();
     return await Actions.edit(`/api/events/${id}?token=${token}`, data, true);
   },
-  deleteOne: async (id) => {
+  editItsPositions: async (id, positionIds) => {
+    const data = {
+      position_ids: positionIds,
+    };
     const token = await GetTokenUserFirebase();
-    return await Actions.delete(`/api/events/${id}/?token=${token}`, '', true);
+    return await Actions.put(`/api/events/${id}/positions?token=${token}`, data, true);
   },
   getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`, true);
@@ -257,7 +260,7 @@ export const EventsApi = {
   metricsRegisterBydate: async (id, type, fechaInicial, fechaFinal) => {
     const token = await GetTokenUserFirebase();
     return await Actions.get(
-      `/api/events/${id}/metricsbydate/eventusers/?token=${token}&metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`
+      `/api/events/${id}/metricsbydate/eventusers/?token=${token}&metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`,
     );
   },
 
@@ -288,7 +291,7 @@ export const EventsApi = {
   },
   ofertsProduct: async (eventId, productId) => {
     return await Actions.get(
-      `api/events/${eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${productId}"}]`
+      `api/events/${eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${productId}"}]`,
     );
   },
   acceptOrRejectRequest: async (eventId, requestId, status) => {
@@ -306,7 +309,7 @@ export const EventsApi = {
       `api/events/${eventId}/eventusers${
         token ? `/?token=${token}` : '/'
       }&filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]&${new Date()}`,
-      true
+      true,
     );
   },
   recoveryPassword: async (eventId, url, email) => {
@@ -351,7 +354,7 @@ export const EventsApi = {
   requestUrlEmail: async (eventId, url, email) => {
     return await Actions.put(
       `/api/events/${eventId}/changeUserPassword?destination=${url}&firebase_password_change=true`,
-      email
+      email,
     );
   },
   signInWithEmailAndPassword: async (data) => {
@@ -361,7 +364,7 @@ export const EventsApi = {
     const token = await GetTokenUserFirebase();
     return await Actions.put(
       `/api/events/${eventId}/templateproperties/${idTemplate}/addtemplateporperties?token=${token}`,
-      {}
+      {},
     );
   },
 };
@@ -406,7 +409,7 @@ export const UsersApi = {
     const token = await GetTokenUserFirebase();
     return await Actions.get(
       `api/events/${event_id}/eventusers/${eventUser_id}/validate-attendee-data?token=${token}`,
-      true
+      true,
     );
   },
 
@@ -428,7 +431,7 @@ export const UsersApi = {
     return await Actions.post(
       `/api/events/${id}/adduserwithemailvalidation${token ? `/?token=${token}` : '/'}`,
       data,
-      true
+      true,
     );
   },
   deleteOne: async (user, id) => {
@@ -572,7 +575,7 @@ export const SurveysApi = {
   getByActivity: async (event, activity_id) => {
     const token = await GetTokenUserFirebase();
     return await Actions.getAll(
-      `/api/events/${event}/surveys/?token=${token}&indexby=activity_id&value=${activity_id}`
+      `/api/events/${event}/surveys/?token=${token}&indexby=activity_id&value=${activity_id}`,
     );
   },
   getOne: async (event, id) => {
@@ -655,6 +658,7 @@ export const OrganizationApi = {
     const data = resp.data.map((item) => {
       return {
         _id: item._id,
+        rol: item.rol,
         id: item.organization?._id,
         name: item.organization?.name,
         styles: item.organization?.styles,
@@ -735,6 +739,15 @@ export const OrganizationApi = {
     const token = await GetTokenUserFirebase();
     return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=false&token=${token}`, data);
   },
+  editDefaultPosition: async (organizationId, positionId) => {
+    const data = { position_id: positionId }
+    return await Actions.put(`/api/organizations/${organizationId}/default-position`, data)
+  },
+  Roles: {
+    getAll: async (organizationId) => {
+      return await Actions.get(`/api/organizations/${organizationId}/roles`);
+    },
+  }
 };
 export const BadgeApi = {
   create: async (data) => {
@@ -742,7 +755,7 @@ export const BadgeApi = {
     return await Actions.post(`/api/escarapelas?token=${token}`, data);
   },
   edit: async (data, id) => {
-    return await Actions.edit('/api/escarapelas/', data, id);
+    return await Actions.edit(`/api/escarapelas/${id}`, data);
   },
   get: async (id) => {
     return await Actions.getOne('/api/escarapelas/', id);
@@ -848,7 +861,7 @@ export const PushFeed = {
     return await Actions.get(`api/events/${id}/sendpush/`, id);
   },
   editOne: async (data, id) => {
-    return await Actions.edit(`api/events/${id}/sendpush`, data, id);
+    return await Actions.edit(`api/events/${id}/sendpush`, data);
   },
   deleteOne: async (id) => {
     return await Actions.delete(`api/events/${id}/sendpush`, id);
@@ -887,7 +900,7 @@ export const RolAttApi = {
     /** Se discriminan estos dos rol id debido a que no se deben editar ni eliminar y aunque el back tiene dicha validacion en el componente CMS es dificil validar dicha accion ya que es un componente que se reutiliza varias veces y puede alterar la logica de otras funcionalidades, este arreglo es temporal mientras se estructura la logica para roles */
 
     const rollsByEventFiltered = rollsByEvent.filter(
-      (rol) => rol._id !== '5c1a59b2f33bd40bb67f2322' && rol._id !== '60e8a7e74f9fb74ccd00dc22'
+      (rol) => rol._id !== '5c1a59b2f33bd40bb67f2322' && rol._id !== '60e8a7e74f9fb74ccd00dc22',
     );
     return rollsByEventFiltered;
   },
@@ -971,6 +984,28 @@ export const SpacesApi = {
     return await Actions.create(`api/events/${event}/spaces?token=${token}`, data, true);
   },
 };
+
+export const ToolsApi = {
+  byEvent: async (event) => {
+    return await Actions.getAll(`api/events/${event}/tools`).then(({ data }) => data);
+  },
+  getOne: async (id, event) => {
+    return await Actions.get(`api/events/${event}/tools/`, id);
+  },
+  editOne: async (data, id, event) => {
+    const token = await GetTokenUserFirebase();
+    return await Actions.edit(`api/events/${event}/tools/${id}?token=${token}`, data, true);
+  },
+  deleteOne: async (id, event) => {
+    const token = await GetTokenUserFirebase();
+    return await Actions.delete(`api/events/${event}/tools/${id}?token=${token}`, '', true);
+  },
+  create: async (data, event) => {
+    const token = await GetTokenUserFirebase();
+    return await Actions.create(`api/events/${event}/tools?token=${token}`, data, true);
+  },
+};
+
 export const CategoriesAgendaApi = {
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/categoryactivities`).then(({ data }) => data);
@@ -1122,7 +1157,7 @@ export const OrganizationPlantillaApi = {
   putOne: async (event, templatepropertie) => {
     const token = await GetTokenUserFirebase();
     return await Actions.put(
-      `api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties?token=${token}`
+      `api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties?token=${token}`,
     );
   },
   deleteOne: async (template, organization) => {
@@ -1188,7 +1223,7 @@ export const Activity = {
     return await Actions.put(
       `/api/eventUsers/${eventUser_id}/checkinactivity/${activityId}?token=${token}`,
       { checkedin_type },
-      true
+      true,
     );
   },
   deleteCheckIn: async (eventUser_id, activityId) => {
@@ -1264,4 +1299,161 @@ export const OrderFunctions = {
     return await Actions.post(`/api/orders`, data);
   },
 };
+
+// Endpoint for position handlering
+export const PositionsApi = {
+  getAll: async () => {
+    return await Actions.getAll('/api/positions', true);
+  },
+  getAllByOrganization: async (organizationId) => {
+    return await Actions.getAll(`/api/positions?organization_id=${organizationId || ''}`, true);
+  },
+  getOne: async (positionId) => {
+    return await Actions.get(`api/positions/${positionId}`, true);
+  },
+  getOneByOrganization: async (positionId, organizationId) => {
+    return await Actions.get(`api/positions/${positionId}?organization_id=${organizationId || ''}`, true);
+  },
+  create: async (data) => {
+    return await Actions.create('/api/positions', data, true);
+  },
+  delete: async (positionId) => {
+    return await Actions.delete('api/positions/', positionId, true);
+  },
+  update: async (positionId, data) => {
+    return await Actions.put(`api/positions/${positionId}`, data, true);
+  },
+  Organizations: {
+    getUsers: async (organizationId, positionId) => {
+      return await Actions.get(`api/positions/${positionId}/organization/${organizationId}/users`, true);
+    },
+    addUser: async (organizationId, positionId, userId) => {
+      const data = { user_id: userId };
+      return await Actions.post(`api/positions/${positionId}/organization/${organizationId}/users`, data, true);
+    },
+    deleteUser: async (organizationId, positionId, userId) => {
+      return await Actions.delete(`api/positions/${positionId}/organization/${organizationId}/users/`, userId, true);
+    },
+  },
+};
+
+// Endpoint for module handlering
+export const ModulesApi = {
+  getAll: async () => {
+    return await Actions.getAll('api/modules', true);
+  },
+  getOne: async (moduleId) => {
+    return await Actions.get(`api/modules/${moduleId}`, true);
+  },
+  create: async (moduleName, eventId) => {
+    const data = {
+      module_name: moduleName,
+      event_id: eventId || undefined,
+    };
+    return await Actions.create('/api/modules', data, true);
+  },
+  deleteOne: async (moduleId) => {
+    return await Actions.delete('api/modules/', moduleId, true);
+  },
+  update: async (moduleId, moduleName, order) => {
+    const data = {
+      module_name: moduleName,
+      order: order || 0,
+    };
+    return await Actions.put(`api/modules/${moduleId}`, data, true);
+  },
+  getActivities: async (moduleId) => {
+    return await Actions.get(`api/modules/${moduleId}/activities`, true);
+  },
+  setActivities: async (moduleId, activityIds) => {
+    const data = {
+      activity_ids: activityIds,
+    };
+    return await Actions.put(`api/modules/${moduleId}/activities`, data, true);
+  },
+  getModulesForActivity: async (activityId) => {
+    return await Actions.get(`api/modules/activity/${activityId}/modules`, true);
+  },
+  getModulesForNoActivity: async (eventId) => {
+    return await Actions.get(`api/modules/event/${eventId}/with-no-module/activities`, true);
+  },
+  byEvent: async (eventId, query) => {
+    console.log('byEvent', eventId, 'query', query);
+    return await Actions.get(`api/modules/event/${eventId}/modules`, true);
+  },
+  // createForThisEvent: async (event_id, moduleName) => {
+  //   const data = {
+  //     module_name: moduleName,
+  //   };
+  //   return await Actions.create('/api/modules', data, true);
+  // },
+};
+
+// Endpoint for certification logs handlering
+export const CerticationLogsApi = {
+  getAll: async () => {
+    return await Actions.getAll('api/certification-logs', true);
+  },
+  getOne: async (certificationLogID) => {
+    return await Actions.get(`api/certification-logs/${certificationLogID}`, true);
+  },
+  create: async (data) => {
+    return await Actions.create('/api/certification-logs', data, true);
+  },
+  deleteOne: async (certificationLogID) => {
+    return await Actions.delete('api/certification-logs/', certificationLogID, true);
+  },
+  update: async (certificationLogID, data) => {
+    return await Actions.put(`api/certification-logs/${certificationLogID}`, data, true);
+  },
+  byEvent: async (eventId, query) => {
+    console.log('byEvent', eventId, 'query', query);
+    return await Actions.get(`api/certification-logs/event-certification-logs/${eventId}`, true);
+  },
+};
+
+// Endpoints for certifications handlering
+export const CerticationsApi = {
+  getAll: async (organizationId) => {
+    return await Actions.getAll(`api/certifications/${organizationId}`, true);
+  },
+  getOne: async (certificationID) => {
+    return await Actions.get(`api/certifications/${certificationID}`, true);
+  },
+  create: async (data) => {
+    return await Actions.create('/api/certifications', data, true);
+  },
+  deleteOne: async (certificationID) => {
+    return await Actions.delete('api/certifications/', certificationID, true);
+  },
+  update: async (certificationID, data) => {
+    return await Actions.put(`api/certifications/${certificationID}`, data, true);
+  },
+  getByUserAndEvent: async (userId, eventId) => {
+    return await Actions.getAll(`api/certifications?user_id=${userId || ''}&event_id=${eventId || ''}`, true);
+  },
+  /**
+   * Requests all the certifications for an specify position events and (maybe) an user
+   * @param {string} positionId The position ID
+   * @param {string} [userId] The user ID
+   * @returns A certification list for this position and (maybe) this user
+   */
+  getByPositionAndMaybeUser: async (positionId, userId) => {
+    let url = `api/certifications/by-position/${positionId}`;
+    if (userId) {
+      url = `${url}?user_id=${userId}`;
+    }
+    return await Actions.getAll(url, true);
+  },
+};
+
 export default privateInstance;
+window.EventsApi = EventsApi;
+window.PositionsApi = PositionsApi;
+window.OrganizationApi = OrganizationApi;
+window.TicketsApi = TicketsApi;
+window.ModulesApi = ModulesApi;
+window.AgendaApi = AgendaApi;
+window.UsersApi = UsersApi;
+window.CerticationLogsApi = CerticationLogsApi;
+window.CerticationsApi = CerticationsApi;

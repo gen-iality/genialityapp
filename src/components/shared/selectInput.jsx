@@ -43,19 +43,19 @@ class SelectInput extends Component {
     const { maxReached, selectedOptions, options } = this.state;
     const { name, isMulti, required } = this.props;
     return (
-      <div className='field'>
+      <div className="field">
         <label className={`label ${required ? 'required' : ''}`}>{name}</label>
-        <div className='control'>
+        <div className="control">
           <Select
-            id={'selectOrganization'}
+            id="selectOrganization"
             onChange={this.onChange}
             options={maxReached ? selectedOptions : options}
             isMulti={isMulti}
-            placeholder={<FormattedMessage id='global.select' defaultMessage='Select...' />}
+            placeholder={<FormattedMessage id="global.select" defaultMessage="Select..." />}
             noOptionsMessage={this.noOptionsMessage}
             value={selectedOptions}
-            className='basic-multi-select'
-            classNamePrefix='select'
+            className="basic-multi-select"
+            classNamePrefix="select"
           />
         </div>
       </div>

@@ -11,7 +11,7 @@ function FeriasStand(props) {
           history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`);
         }}>
         <div
-          className='mini-banner'
+          className="mini-banner"
           style={{
             border: `2px solid  ${props.color}`,
             borderRadius: '12px',

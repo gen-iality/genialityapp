@@ -20,7 +20,7 @@ const plan = ({ plan, mine }) => {
 
       <Row gutter={[12, 12]} wrap>
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
-          <Space direction='vertical'>
+          <Space direction="vertical">
             <Space>
               <Typography.Text strong>
                 {intl.formatMessage({
@@ -115,7 +115,7 @@ const plan = ({ plan, mine }) => {
           </Space>
         </Col>
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
-          <Space direction='vertical'>
+          <Space direction="vertical">
             <Space>
               <Typography.Text strong>
                 {intl.formatMessage({
@@ -127,7 +127,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.chat === true ? (
+                    {plan?.availables?.chat ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -149,7 +149,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.schedule === true ? (
+                    {plan?.availables?.schedule ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -171,7 +171,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.social_wall === true ? (
+                    {plan?.availables?.social_wall ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -193,7 +193,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.domain === true ? (
+                    {plan?.availables?.domain ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -215,7 +215,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.cloud_recording === true ? (
+                    {plan?.availables?.cloud_recording ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -237,7 +237,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.communications === true ? (
+                    {plan?.availables?.communications ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -259,7 +259,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.checking === true ? (
+                    {plan?.availables?.checking ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -281,7 +281,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.speakers === true ? (
+                    {plan?.availables?.speakers ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -303,7 +303,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.networking === true ? (
+                    {plan?.availables?.networking ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -317,7 +317,7 @@ const plan = ({ plan, mine }) => {
           </Space>
         </Col>
         <Col xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
-          <Space direction='vertical'>
+          <Space direction="vertical">
             <Space>
               <Typography.Text strong>
                 {intl.formatMessage({
@@ -329,7 +329,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.support_email === true ? (
+                    {plan?.availables?.support_email ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -351,7 +351,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.tickets === true ? (
+                    {plan?.availables?.tickets ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -373,7 +373,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.documents === true ? (
+                    {plan?.availables?.documents ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -395,7 +395,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.faqs === true ? (
+                    {plan?.availables?.faqs ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -417,7 +417,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.informative_section === true ? (
+                    {plan?.availables?.informative_section ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -439,7 +439,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.sponsors === true ? (
+                    {plan?.availables?.sponsors ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -461,7 +461,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.news === true ? (
+                    {plan?.availables?.news ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -483,7 +483,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.products === true ? (
+                    {plan?.availables?.products ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />
@@ -505,7 +505,7 @@ const plan = ({ plan, mine }) => {
               <Typography.Text>
                 {plan ? (
                   <>
-                    {plan?.availables?.videos === true ? (
+                    {plan?.availables?.videos ? (
                       <CheckOutlined style={{ color: 'green' }} />
                     ) : (
                       <CloseOutlined style={{ color: 'red' }} />

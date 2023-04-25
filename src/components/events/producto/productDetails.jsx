@@ -65,7 +65,7 @@ function DetailsProduct(props) {
                         key={'image' + index}
                         /* style={{ objectFit: 'contain' }} */
                         src={product.image[index]}
-                        alt='arte'
+                        alt="arte"
                       />
                     ))}
               </Carousel>
@@ -73,7 +73,7 @@ function DetailsProduct(props) {
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Card>
-              <Space direction='vertical' style={{ width: '100%' }}>
+              <Space direction="vertical" style={{ width: '100%' }}>
                 <Title level={3}>{product && product.name ? product.name : 'Nombre de la obra'}</Title>
                 {product && (product.price || product.start_price) && (
                   <OfertaProduct
@@ -85,14 +85,14 @@ function DetailsProduct(props) {
                   />
                 )}
                 {product && product.by && (
-                  <Divider orientation='left'>
+                  <Divider orientation="left">
                     <Title style={{ marginBottom: '0px' }} level={5}>
                       Autor
                     </Title>
                   </Divider>
                 )}
                 {product && product.by && <Text>{product && product.by ? product.by : 'Sin autor'} </Text>}
-                <Divider orientation='left'>
+                <Divider orientation="left">
                   <Title level={5}>Descripción</Title>
                 </Divider>
                 <Text>

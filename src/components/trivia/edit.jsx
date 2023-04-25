@@ -401,7 +401,7 @@ class TriviaEdit extends Component {
         //Survey State
         freezeGame: this.state.freezeGame === 'true' ? true : false,
         open: this.state.openSurvey,
-        publish: this.state.publish === 'true' || this.state.publish === true ? 'true' : 'false',
+        publish: this.state.publish === 'true' || this.state.publish ? 'true' : 'false',
 
         minimumScore: parseInt(this.state.minimumScore),
 
@@ -773,11 +773,11 @@ class TriviaEdit extends Component {
             <>
               <div style={{ marginBottom: '10px' }}>
                 {e.correctAnswer ? (
-                  <Tag icon={<CheckCircleOutlined />} color='success'>
+                  <Tag icon={<CheckCircleOutlined />} color="success">
                     Respuesta asignada
                   </Tag>
                 ) : (
-                  <Tag icon={<CloseCircleOutlined />} color='error'>
+                  <Tag icon={<CloseCircleOutlined />} color="error">
                     Sin respuesta asignada
                   </Tag>
                 )}
@@ -807,26 +807,26 @@ class TriviaEdit extends Component {
           return (
             <Row gutter={[8, 8]}>
               <Col>
-                <Tooltip placement='topLeft' title='Editar'>
+                <Tooltip placement="topLeft" title="Editar">
                   <Button
                     icon={<EditOutlined />}
-                    type='primary'
-                    size='small'
+                    type="primary"
+                    size="small"
                     onClick={() => this.editQuestion(record.id)}
-                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                    disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
               <Col>
-                <Tooltip placement='topLeft' title='Eliminar'>
+                <Tooltip placement="topLeft" title="Eliminar">
                   <Button
                     key={`removeAction${record.index}`}
                     id={`removeAction${record.index}`}
                     onClick={() => this.deleteOneQuestion(record.id)}
                     icon={<DeleteOutlined />}
-                    type='danger'
-                    size='small'
-                    disabled={cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                    type="danger"
+                    size="small"
+                    disabled={!cEventIsActive && window.location.toString().includes('eventadmin')}
                   />
                 </Tooltip>
               </Col>
@@ -848,27 +848,27 @@ class TriviaEdit extends Component {
           remove={this.remove}
           edit={this.state.idSurvey}
           extra={
-            <Space direction='horizontal' style={{ maginRigth: '50px' }}>
+            <Space direction="horizontal" style={{ maginRigth: '50px' }}>
               {this.state.idSurvey && (
                 <>
                   <Col>
-                    <Form.Item label={'Publicar'} labelCol={{ span: 14 }}>
+                    <Form.Item label="Publicar" labelCol={{ span: 14 }}>
                       <Switch
-                        name={'publish'}
-                        checked={publish === 'true' || publish === true}
-                        checkedChildren='Sí'
-                        unCheckedChildren='No'
+                        name="publish"
+                        checked={publish === 'true' || publish}
+                        checkedChildren="Sí"
+                        unCheckedChildren="No"
                         onChange={(checked) => this.setState({ publish: checked ? 'true' : 'false' })}
                       />
                     </Form.Item>
                   </Col>
                   <Col>
-                    <Form.Item label={'Abrir'} labelCol={{ span: 14 }}>
+                    <Form.Item label="Abrir" labelCol={{ span: 14 }}>
                       <Switch
-                        name={'openSurvey'}
+                        name="openSurvey"
                         checked={openSurvey === 'true'}
-                        checkedChildren='Sí'
-                        unCheckedChildren='No'
+                        checkedChildren="Sí"
+                        unCheckedChildren="No"
                         onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
                       />
                     </Form.Item>
@@ -878,13 +878,13 @@ class TriviaEdit extends Component {
             </Space>
           }
         />
-        <Row justify='center' wrap gutter={8}>
+        <Row justify="center" wrap gutter={8}>
           <Col span={16}>
             {isLoading ? (
               <Loading />
             ) : (
               <>
-                <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
+                <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
                   {this.state.isUserUnconsciousReloading && <Spin/> }
                   <Form.Item
                     label={
@@ -892,11 +892,12 @@ class TriviaEdit extends Component {
                         Nombre <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
-                    rules={[{ required: true, message: 'El nombre es requerido' }]}>
+                    rules={[{ required: true, message: 'El nombre es requerido' }]}
+                  >
                     <Input
                       value={survey}
                       placeholder={`Nombre de la ${this.state.title.toLowerCase()}`}
-                      name={'survey'}
+                      name="survey"
                       onChange={this.changeInput}
                     />
                   </Form.Item>
@@ -906,20 +907,21 @@ class TriviaEdit extends Component {
                         Intentos permitidos <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
-                    rules={[{ required: true, message: 'Intentos permitidos es requerido' }]}>
+                    rules={[{ required: true, message: 'Intentos permitidos es requerido' }]}
+                  >
                     <InputNumber
                       style={{ width: '100%' }}
                       value={tries}
                       placeholder={`Cantidad de intentos permitidos en: ${this.state.title.toLowerCase()}`}
-                      name={'tries'}
+                      name="tries"
                       onChange={(value) => this.changeInput({ target: { name: 'tries', value: Math.max(value, 1) } })}
                     />
                   </Form.Item>
                   {this.state.idSurvey && (
                     <>
-                      <Form.Item label={'Tiempo límite en segundos por pregunta'}>
+                      <Form.Item label="Tiempo límite en segundos por pregunta">
                         <Select
-                          name={'time_limit'}
+                          name="time_limit"
                           value={time_limit}
                           onChange={(time) => {
                             this.setState({ time_limit: time });
@@ -931,12 +933,12 @@ class TriviaEdit extends Component {
                           ))}
                         </Select>
                       </Form.Item>
-                      <Row justify='space-between' wrap gutter={[8, 8]}>
+                      <Row justify="space-between" wrap gutter={[8, 8]}>
                         {/* <Col>
-                    <Form.Item label={'Permitir usuarios anónimos'}>
+                    <Form.Item label="Permitir usuarios anónimos">
                       <Switch
-                        name={'allow_anonymous_answers'}
-                        checked={allow_anonymous_answers === 'true' || allow_anonymous_answers === true}
+                        name="allow_anonymous_answers"
+                        checked={allow_anonymous_answers === 'true' || allow_anonymous_answers}
                         onChange={(checked) => this.setState({ allow_anonymous_answers: checked ? 'true' : 'false' })}
                       />
                     </Form.Item>
@@ -944,8 +946,8 @@ class TriviaEdit extends Component {
                         {/* <Col>
                     <Form.Item label={`Publicar ${this.state.title.toLowerCase()}`}>
                       <Switch
-                        name={'publish'}
-                        checked={publish === 'true' || publish === true}
+                        name="publish"
+                        checked={publish === 'true' || publish}
                         onChange={(checked) => this.setState({ publish: checked ? 'true' : 'false' })}
                       />
                     </Form.Item>
@@ -953,8 +955,8 @@ class TriviaEdit extends Component {
                         <Col>
                           <Form.Item label={`Mostar gráficas en cada ${this.state.title.toLowerCase()}`}>
                             <Switch
-                              name={'displayGraphsInSurveys'}
-                              checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys === true}
+                              name="displayGraphsInSurveys"
+                              checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys}
                               onChange={(checked) => this.toggleSwitch('displayGraphsInSurveys', checked)}
                             />
                           </Form.Item>
@@ -962,31 +964,32 @@ class TriviaEdit extends Component {
                         {/* <Col>
                           <Form.Item label={`${this.state.title} abierta`}>
                             <Switch
-                              name={'openSurvey'}
+                              name="openSurvey"
                               checked={openSurvey === 'true'}
                               onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
                             />
                           </Form.Item>
                         </Col> */}
                       </Row>
-                      {displayGraphsInSurveys === true ||
+                      {displayGraphsInSurveys ||
                         (displayGraphsInSurveys === 'true' && (
                           <>
-                            <Form.Item label={'Elegir tipo de gráfica'}>
+                            <Form.Item label="Elegir tipo de gráfica">
                               <Select
-                                name={'graphyType'}
+                                name="graphyType"
                                 defaultValue={this.state.graphyType}
                                 style={{ width: 120 }}
-                                onChange={(graphy) => this.setState({ graphyType: graphy })}>
-                                <Option value='y'>Horizontal</Option>
-                                <Option value='x'>vertical</Option>
-                                <Option value='pie'>Torta</Option>
+                                onChange={(graphy) => this.setState({ graphyType: graphy })}
+                              >
+                                <Option value="y">Horizontal</Option>
+                                <Option value="x">vertical</Option>
+                                <Option value="pie">Torta</Option>
                               </Select>
                             </Form.Item>
-                            <Form.Item label={'Mostrar porcentaje de participantes sin votar en las gráficas'}>
+                            <Form.Item label="Mostrar porcentaje de participantes sin votar en las gráficas">
                               <Switch
-                                name={'showNoVotos'}
-                                checked={showNoVotos === 'true' || showNoVotos === true}
+                                name="showNoVotos"
+                                checked={showNoVotos === 'true' || showNoVotos}
                                 onChange={(checked) => this.setState({ showNoVotos: checked ? 'true' : 'false' })}
                               />
                             </Form.Item>
@@ -995,23 +998,23 @@ class TriviaEdit extends Component {
 
                       <Form.Item label={`${this.state.title} global (visible en todas las lecciones)`}>
                         <Switch
-                          name={'isGlobal'}
-                          checked={isGlobal === 'true' || isGlobal === true}
+                          name="isGlobal"
+                          checked={isGlobal === 'true' || isGlobal}
                           onChange={(checked) => this.setState({ isGlobal: checked ? 'true' : 'false' })}
                         />
                       </Form.Item>
 
-                      {(isGlobal === 'false' || isGlobal === false) && (
+                      {(isGlobal === 'false' || !isGlobal) && (
                         <>
                           <Form.Item label={`Relacionar esta ${this.state.title.toLowerCase()} a una lección`}>
                             <Select
                               disabled={this.props.inserted}
-                              name={'activity_id'}
+                              name="activity_id"
                               value={activity_id || ''}
                               onChange={(relation) => {
                                 this.setState({ activity_id: relation });
                               }}>
-                              <Option value=''>{'No relacionar'}</Option>
+                              <Option value="">No relacionar</Option>
                               {dataAgenda.map((activity, key) => (
                                 <Option key={key} value={activity._id}>
                                   {activity.name}
@@ -1022,44 +1025,44 @@ class TriviaEdit extends Component {
                         </>
                       )}
 
-                      <Form.Item label={'Permitir valor de la respuesta por usuario'}>
+                      <Form.Item label="Permitir valor de la respuesta por usuario">
                         <Switch
-                          name={'allow_vote_value_per_user'}
-                          checked={allow_vote_value_per_user === 'true' || allow_vote_value_per_user === true}
+                          name="allow_vote_value_per_user"
+                          checked={allow_vote_value_per_user === 'true' || allow_vote_value_per_user}
                           onChange={(checked) => this.toggleSwitch('allow_vote_value_per_user', checked)}
                         />
                       </Form.Item>
                       <Form.Item label={`${this.state.title} calificable`}>
                         <Switch
-                          name={'allow_gradable_survey'}
-                          checked={allow_gradable_survey === 'true' || allow_gradable_survey === true}
+                          name="allow_gradable_survey"
+                          checked={allow_gradable_survey === 'true' || allow_gradable_survey}
                           onChange={(checked) => {
                             this.toggleSwitch('allow_gradable_survey', checked);
-                            if (ranking === 'true' || ranking === true) {
+                            if (ranking === 'true' || ranking) {
                               this.toggleSwitch('ranking', checked);
                             }
                           }}
                         />
                       </Form.Item>
-                      {(allow_gradable_survey === 'true' || allow_gradable_survey === true) && (
+                      {(allow_gradable_survey === 'true' || allow_gradable_survey) && (
                         <>
-                          <Form.Item label={'Habilitar ranking'}>
+                          <Form.Item label="Habilitar ranking">
                             <Switch
-                              name={'ranking'}
-                              checked={ranking === 'true' || ranking === true}
+                              name="ranking"
+                              checked={ranking === 'true' || ranking}
                               onChange={(checked) => this.toggleSwitch('ranking', checked)}
                             />
                           </Form.Item>
-                          <Form.Item label={'Requiere puntaje mínimo para aprobar'}>
+                          <Form.Item label="Requiere puntaje mínimo para aprobar">
                             <Switch
-                              name={'hasMinimumScore'}
-                              checked={hasMinimumScore === 'true' || hasMinimumScore === true}
+                              name="hasMinimumScore"
+                              checked={hasMinimumScore === 'true' || hasMinimumScore}
                               onChange={(checked) => this.setState({ hasMinimumScore: checked ? 'true' : 'false' })}
                             />
                           </Form.Item>
-                          {(hasMinimumScore === true || hasMinimumScore === 'true') && (
-                            <Form.Item label={'Puntaje mínimo para aprobar'}>
-                              <Input name={'minimumScore'} value={minimumScore} onChange={this.changeInput} />
+                          {(hasMinimumScore || hasMinimumScore === 'true') && (
+                            <Form.Item label="Puntaje mínimo para aprobar">
+                              <Input name="minimumScore" value={minimumScore} onChange={this.changeInput} />
                             </Form.Item>
                           )}
                           <>
@@ -1072,8 +1075,8 @@ class TriviaEdit extends Component {
                                 </label>
                               }>
                               <ReactQuill
-                                name={'initialMessage'}
-                                id={'initialMessage'}
+                                name="initialMessage"
+                                id="initialMessage"
                                 value={this.state.initialMessage}
                                 modules={toolbarEditor}
                                 onChange={this.onChange}
@@ -1081,26 +1084,26 @@ class TriviaEdit extends Component {
                             </Form.Item>
                             <Form.Item label={`Mensaje pantalla final de la ${this.state.title.toLowerCase()}`}>
                               <ReactQuill
-                                name={'neutral_Message'}
-                                id={'neutral_Message'}
+                                name="neutral_Message"
+                                id="neutral_Message"
                                 value={this.state.neutral_Message}
                                 modules={toolbarEditor}
                                 onChange={this.onChangeNeutral}
                               />
                             </Form.Item>
-                            <Form.Item label={'Mensaje al ganar'}>
+                            <Form.Item label="Mensaje al ganar">
                               <ReactQuill
-                                name={'win_Message'}
-                                id={'win_Message'}
+                                name="win_Message"
+                                id="win_Message"
                                 value={this.state.win_Message}
                                 modules={toolbarEditor}
                                 onChange={this.onChangeWin}
                               />
                             </Form.Item>
-                            <Form.Item label={'Mensaje al perder'}>
+                            <Form.Item label="Mensaje al perder">
                               <ReactQuill
-                                name={'lose_Message'}
-                                id={'lose_Message'}
+                                name="lose_Message"
+                                id="lose_Message"
                                 value={this.state.lose_Message}
                                 modules={toolbarEditor}
                                 onChange={this.onChangeLose}
@@ -1112,8 +1115,8 @@ class TriviaEdit extends Component {
                     
                     <Form.Item label={`${this.state.title} con preguntas aleatorias`}>
                       <Switch
-                        name={'random_survey'}
-                        checked={random_survey === 'true' || random_survey === true}
+                        name="random_survey"
+                        checked={random_survey === 'true' || random_survey}
                         onChange={(checked) => {
                           this.toggleSwitch('random_survey', checked);
                         }}
@@ -1126,12 +1129,13 @@ class TriviaEdit extends Component {
                             Cantidad de preguntas <label style={{ color: 'red' }}>*</label>
                           </label>
                         }
-                        rules={[{ required: true, message: 'La cantidad de preguntas es requerido' }]}>
+                        rules={[{ required: true, message: 'La cantidad de preguntas es requerido' }]}
+                      >
                         <InputNumber
                           style={{ width: '100%' }}
                           value={random_survey_count}
                           placeholder={`Cantidad de preguntas aleatorias de ${this.state.title.toLowerCase()}`}
-                          name={'random_survey_count'}
+                          name="random_survey_count"
                           onChange={(value) => this.changeInput({ target: { name: 'random_survey_count', value: Math.max(value, 0) } })}
                         />
                       </Form.Item>
@@ -1141,8 +1145,8 @@ class TriviaEdit extends Component {
                 </Card>
                 {this.state.idSurvey && (
                   <>
-                    <Card hoverable={true} style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
-                      <Header title={'Preguntas'} addFn={this.addNewQuestion} />
+                    <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
+                      <Header title="Preguntas" addFn={this.addNewQuestion} />
 
                       <Table dataSource={question} columns={columns} />
                     </Card>
@@ -1157,15 +1161,16 @@ class TriviaEdit extends Component {
                         onOk={this.sendForm}
                         onCancel={this.closeModal}
                         footer={[
-                          <Button key='back' onClick={this.closeModal}>
+                          <Button key="back" onClick={this.closeModal}>
                             Cancelar
                           </Button>,
                           <Button
-                            key='submit'
-                            type='primary'
+                            key="submit"
+                            type="primary"
                             disabled={confirmLoading}
                             loading={confirmLoading}
-                            onClick={this.sendForm}>
+                            onClick={this.sendForm}
+                          >
                             Guardar
                           </Button>,
                         ]}>
@@ -1176,7 +1181,7 @@ class TriviaEdit extends Component {
                               marginBottom: '20px',
                             }}
                             level={4}
-                            type='secondary'>
+                            type="secondary">
                             Gestionar pregunta
                           </Title>
                           <FormQuestionEdit

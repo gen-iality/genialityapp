@@ -148,8 +148,8 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
         <LoadingActivityType />
       ) : (
         <Result
-          title='Debes iniciar la transmisión'
-          subTitle='Tus asistentes no verán lo que transmites hasta que cambies el estado de la transmisión para tus asistentes. '
+          title="Debes iniciar la transmisión"
+          subTitle="Tus asistentes no verán lo que transmites hasta que cambies el estado de la transmisión para tus asistentes. "
           extra={
             <Space>
               {
@@ -157,9 +157,9 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
                   title={`¿Está seguro que desea ${popconfirmMessage.toLowerCase()}? `}
                   onConfirm={() => deleteStreaming()}
                   onCancel={() => console.info(`Eliminación en "${popconfirmMessage.toLowerCase()}" cancelado`)}
-                  okText='Sí'
-                  cancelText='No'>
-                  <Button loading={isLoadingDelete} type='text' danger>
+                  okText="Sí"
+                  cancelText="No">
+                  <Button loading={isLoadingDelete} type="text" danger>
                     {popconfirmMessage}
                   </Button>
                 </Popconfirm>
@@ -170,7 +170,7 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
                   disabled={isBlockedButton}
                   loading={isLoading}
                   onClick={() => executer_startStream()}
-                  type='primary'>
+                  type="primary">
                   Iniciar transmisión
                 </Button>
               )}

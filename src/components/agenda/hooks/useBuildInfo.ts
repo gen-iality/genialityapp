@@ -12,12 +12,14 @@ export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType 
       space_id,
       selectedCategories,
       selectedHosts,
+      selectedTools,
       selectedRol,
       selectedDocuments,
       description,
       image,
       length,
       latitude,
+      module_id,
     } = formdata;
 
     const {
@@ -54,8 +56,11 @@ export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType 
 
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
     const host_ids = selectedHosts.filter((host) => host !== null).map(({ value }) => value);
+    const tool_ids = selectedTools.filter((tool) => tool !== null).map(({ value }) => value);
+
     return {
       name,
+      module_id,
       subtitle,
       bigmaker_meeting_id,
       datetime_start,
@@ -81,6 +86,7 @@ export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType 
       key,
       requires_registration,
       host_ids,
+      tool_ids,
       length,
       latitude,
       selected_document: selectedDocuments,

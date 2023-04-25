@@ -256,8 +256,8 @@ function AddProduct(props) {
 
   return (
     <Form {...formLayout} onFinish={saveProduct}>
-      <Header title={'Producto'} back save form edit={props.match.params.id} remove={remove} />
-      <Row justify='center' wrap gutter={12}>
+      <Header title="Producto" back save form edit={props.match.params.id} remove={remove} />
+      <Row justify="center" wrap gutter={12}>
         {props.match.params.id && isLoading ? (
           <Loading />
         ) : (
@@ -268,11 +268,12 @@ function AddProduct(props) {
                   Nombre del producto <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]}>
+              rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]}
+            >
               <Input
                 value={name}
-                placeholder='Nombre del producto'
-                name={'name'}
+                placeholder="Nombre del producto"
+                name="name"
                 onChange={(e) => changeInput(e, 'name')}
               />
               {error != null && error.name && (
@@ -282,8 +283,8 @@ function AddProduct(props) {
             <Form.Item label={<label style={{ marginTop: '2%' }}>Por</label>} rules={[{ required: false }]}>
               <Input
                 value={creator}
-                placeholder='Nombre del autor, creador o descripción corta'
-                name={'creator'}
+                placeholder="Nombre del autor, creador o descripción corta"
+                name="creator"
                 onChange={(e) => changeInput(e, 'creator')}
               />
               {error != null && error.creator && <small style={{ color: 'red' }}>Este campo es requerido</small>}
@@ -294,18 +295,19 @@ function AddProduct(props) {
                   Descripción <label style={{ color: 'red' }}>*</label>
                 </label>
               }>
-              <EviusReactQuill data={description} id={'descriptionProduct'} handleChange={changeDescription} />
+              <EviusReactQuill data={description} id="descriptionProduct" handleChange={changeDescription} />
               {error != null && error.description && (
                 <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
               )}
             </Form.Item>
             <Form.Item
               label={<label style={{ marginTop: '2%' }}>Valor</label>}
-              rules={[{ required: false, message: 'Ingrese el valor del producto' }]}>
+              rules={[{ required: false, message: 'Ingrese el valor del producto' }]}
+            >
               <Input
                 value={price}
-                placeholder='Valor del producto'
-                name={'price'}
+                placeholder="Valor del producto"
+                name="price"
                 onChange={(e) => changeInput(e, 'price')}
               />{' '}
             </Form.Item>
@@ -316,8 +318,8 @@ function AddProduct(props) {
             <ImageUploaderDragAndDrop
               imageDataCallBack={(file) => changeImg(file, 'Imagen')}
               imageUrl={picture}
-              width='1080'
-              height='1080'
+              width="1080"
+              height="1080"
             />
 
             {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
@@ -327,8 +329,8 @@ function AddProduct(props) {
             <ImageUploaderDragAndDrop
               imageDataCallBack={(file) => changeImg(file, 'img_optional')}
               imageUrl={optionalPicture}
-              width='1080'
-              height='1080'
+              width="1080"
+              height="1080"
             />
           </Col>
         )}

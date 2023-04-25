@@ -69,7 +69,7 @@ class Speakers extends Component {
 
     // Si hay speakers con categorias entonces habilitamos el render agrupado de los speakers
     // sino entonces mostrasmos solo los spakers sin categorias
-    const renderSpeakerCategories = categories.length ? true : false;
+    const renderSpeakerCategories = !!categories.length;
 
     this.setState({ renderSpeakerCategories });
 
@@ -133,12 +133,13 @@ class Speakers extends Component {
     if (speaker.description !== '<p><br></p>' && speaker.description !== undefined && speaker.description !== null) {
       return (
         <Button
-          type='primary'
-          /* className='modal-button' */
+          type="primary"
+          /* className="modal-button" */
           onClick={() => this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)}
           key={'sp' + speaker._id}
           data-target='#myModal'
-          aria-haspopup='true'>
+          aria-haspopup="true"
+        >
           Ver más...
         </Button>
       );
@@ -170,7 +171,7 @@ class Speakers extends Component {
                     {speakersWithCategory.length && (
                       <>
                         {speakersWithCategory[category.order].length && (
-                          <Row wrap key={index} gutter={[16, 16]} justify='center'>
+                          <Row wrap key={index} gutter={[16, 16]} justify="center">
                             <div
                               style={{
                                 width: '98%',
@@ -179,7 +180,8 @@ class Speakers extends Component {
                                 borderRadius: '5px',
                                 backgroundColor: '#FFFFFF',
                                 boxSizing: 'border-box',
-                              }}>
+                              }}
+                            >
                               <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
                             </div>
                             {speakersWithCategory[category.order].map((speaker, key) => (
@@ -200,11 +202,11 @@ class Speakers extends Component {
                                             speaker.name,
                                             speaker.profession,
                                             speaker.description,
-                                            speaker.category
+                                            speaker.category,
                                           );
                                         }
                                       }}
-                                      hoverable={speaker.description ? true : false}
+                                      hoverable={!!speaker.description}
                                       style={{
                                         paddingTop: '30px',
                                         borderRadius: '20px',
@@ -228,7 +230,8 @@ class Speakers extends Component {
                                           />
                                         )
                                       }
-                                      actions={speaker.description && [this.btnViewMore(speaker)]}>
+                                      actions={speaker.description && [this.btnViewMore(speaker)]}
+                                    >
                                       <Meta
                                         /* title={[
                                           <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
@@ -240,7 +243,7 @@ class Speakers extends Component {
                                                 whiteSpace: 'nowrap',
                                                 overflow: 'hidden',
                                               }}>
-                                              <Tooltip placement='bottomLeft' title={speaker.name}>
+                                              <Tooltip placement="bottomLeft" title={speaker.name}>
                                                 {speaker.name}
                                               </Tooltip>
                                             </p>
@@ -249,10 +252,12 @@ class Speakers extends Component {
                                         description={[
                                           <div
                                             key={'speaker-description  ' + key}
-                                            style={{ minHeight: '100px', textAlign: 'center' }}>
+                                            style={{ minHeight: '100px', textAlign: 'center' }}
+                                          >
                                             <Title
                                               level={4}
-                                              style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
+                                              style={{ color: this.props.cEvent.value?.styles?.textMenu }}
+                                            >
                                               {speaker.name}
                                             </Title>
                                             <Paragraph style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
@@ -277,7 +282,7 @@ class Speakers extends Component {
           </>
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
-        <Row wrap gutter={[16, 16]} justify='center' style={{ padding: '40px' }}>
+        <Row wrap gutter={[16, 16]} justify="center" style={{ padding: '40px' }}>
           {/* Mapeo de datos para mostrar los Speakers */}
           {speakersWithoutCategory.length > 0 &&
             speakersWithoutCategory.map((speaker, key) => (
@@ -298,11 +303,11 @@ class Speakers extends Component {
                             speaker.name,
                             speaker.profession,
                             speaker.description,
-                            speaker.category
+                            speaker.category,
                           );
                         }
                       }}
-                      hoverable={speaker.description ? true : false}
+                      hoverable={!!speaker.description}
                       style={{
                         paddingTop: '30px',
                         borderRadius: '20px',
@@ -326,7 +331,8 @@ class Speakers extends Component {
                           />
                         )
                       }
-                      actions={speaker.description && [this.btnViewMore(speaker)]}>
+                      actions={speaker.description && [this.btnViewMore(speaker)]}
+                    >
                       <Meta
                         description={[
                           <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
@@ -351,22 +357,16 @@ class Speakers extends Component {
         <Modal
           closeIcon={<CloseOutlined style={{ color: this.props.cEvent.value?.styles?.textMenu }} />}
           bodyStyle={{ backgroundColor: this.props.cEvent.value?.styles?.toolbarDefaultBg }}
-          /* title={
-            infoSpeaker.category
-              ? infoSpeaker.category
-              : this.props.cEvent.value._id !== '60cb7c70a9e4de51ac7945a2'
-              ? 'Conferencista'
-              : 'Artista'
-          } */
           centered
           width={1000}
           visible={this.state.modalVisible}
           onCancel={() => this.setModalVisible(false)}
-          footer={null}>
+          footer={null}
+        >
           <Row>
             {/* Imagen del conferencista */}
 
-            <Col flex='1 1 auto'>
+            <Col flex="1 1 auto">
               {infoSpeaker.imagen ? (
                 <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} src={infoSpeaker.imagen} />
               ) : (
@@ -375,31 +375,32 @@ class Speakers extends Component {
             </Col>
 
             {/* Descripción del conferencista */}
-            <Col flex='1 1 600px'>
+            <Col flex="1 1 600px">
               <span>
-                <b>{infoSpeaker.nombre}</b>
+                <b style={{ color: this.props.cEvent.value?.styles?.textMenu }}>{infoSpeaker.nombre}</b>
               </span>
-              <p>
+              <p style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
                 <span>
                   <b>{infoSpeaker.cargo}</b>
                 </span>
                 <br />
                 <br />
-                <Row justify='center'>
-                  <Col span={24} id='img-description'>
+                <Row justify="center">
+                  <Col span={24} id="img-description">
                     <ReactQuill
+                      style={{ color: this.props.cEvent.value?.styles?.textMenu }}
                       value={infoSpeaker.descripcion}
-                      readOnly={true}
-                      className='hide-toolbar ql-toolbar'
-                      theme='bubble'
+                      readOnly
+                      className="hide-toolbar ql-toolbar"
+                      theme="bubble"
                     />
                   </Col>
                 </Row>
               </p>
             </Col>
             <Col span={24}>
-              <Row justify='end'>
-                <Button key='cerrar' size='large' type='primary' onClick={() => this.setModalVisible(false)}>
+              <Row justify="end">
+                <Button key="cerrar" size="large" type="primary" onClick={() => this.setModalVisible(false)}>
                   Cerrar
                 </Button>
               </Row>
@@ -422,13 +423,13 @@ class Speakers extends Component {
                       </p>
                       <p>{activities.name}</p>
                       <br />
-                      <Row justify='center'>
-                        <Col span={24} id='img-description'>
+                      <Row justify="center">
+                        <Col span={24} id="img-description">
                           <ReactQuill
                             value={activities.description}
-                            readOnly={true}
-                            className='hide-toolbar ql-toolbar'
-                            theme='bubble'
+                            readOnly
+                            className="hide-toolbar ql-toolbar"
+                            theme="bubble"
                           />
                         </Col>
                       </Row>

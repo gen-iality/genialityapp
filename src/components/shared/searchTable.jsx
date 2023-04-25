@@ -53,50 +53,42 @@ class SearchComponent extends Component {
 
   filterByAllColums(value) {
     let arrAux;
-    if (this.props.event === '5d24e15c1c9d4400004b4e0a') {
+    if (this.props.kind === 'user') {
       arrAux = this.props.data.filter((item) => {
-        if (item.properties && item.properties.dni) {
-          return item.properties.dni.search(new RegExp(value, 'i')) >= 0;
+        if (!item.properties) {
+          return false;
         }
-      });
-    } else {
-      if (this.props.kind === 'user') {
-        arrAux = this.props.data.filter((item) => {
-          if (!item.properties) {
-            return false;
-          }
 
-          let found = false;
-          //buscamos coindicencia por cada una de las propiedades
-          for (const key in item.properties) {
-            let propertyValue = item.properties[key];
-            if (!propertyValue) continue;
-            propertyValue = String(propertyValue);
-            if (item.properties['names'] == 'Brayan Triana') console.log('busqueda', item.properties);
-            found = found || propertyValue.search(new RegExp(value, 'i')) >= 0;
-          }
-          return found;
-        });
-      } else if (this.props.kind === 'invitation') {
-        arrAux = this.props.data.filter(
-          (item) => item.email.search(new RegExp(value, 'i')) >= 0 || item.state.search(new RegExp(value, 'i')) >= 0
-        );
-      } else if (this.props.kind === 'helpers') {
-        arrAux = this.props.data.filter(
-          (item) =>
-            item.user.email.search(new RegExp(value, 'i')) >= 0 ||
-            item.user.displayName.search(new RegExp(value, 'i')) >= 0
-        );
-      } else if (this.props.kind === 'agenda') {
-        arrAux = this.props.data.filter(
-          (item) =>
-            item.name.search(new RegExp(value, 'i')) >= 0 ||
-            item.space.name.search(new RegExp(value, 'i')) >= 0 ||
-            item.hosts.find(({ name }) => name.search(new RegExp(value, 'i')) >= 0)
-        );
-      } else if (this.props.kind === 'speakers')
-        arrAux = this.props.data.filter(({ name }) => name.search(new RegExp(value, 'i')) >= 0);
-    }
+        let found = false;
+        //buscamos coindicencia por cada una de las propiedades
+        for (const key in item.properties) {
+          let propertyValue = item.properties[key];
+          if (!propertyValue) continue;
+          propertyValue = String(propertyValue);
+          if (item.properties['names'] == 'Brayan Triana') console.log('busqueda', item.properties);
+          found = found || propertyValue.search(new RegExp(value, 'i')) >= 0;
+        }
+        return found;
+      });
+    } else if (this.props.kind === 'invitation') {
+      arrAux = this.props.data.filter(
+        (item) => item.email.search(new RegExp(value, 'i')) >= 0 || item.state.search(new RegExp(value, 'i')) >= 0
+      );
+    } else if (this.props.kind === 'helpers') {
+      arrAux = this.props.data.filter(
+        (item) =>
+          item.user.email.search(new RegExp(value, 'i')) >= 0 ||
+          item.user.displayName.search(new RegExp(value, 'i')) >= 0
+      );
+    } else if (this.props.kind === 'agenda') {
+      arrAux = this.props.data.filter(
+        (item) =>
+          item.name.search(new RegExp(value, 'i')) >= 0 ||
+          item.space.name.search(new RegExp(value, 'i')) >= 0 ||
+          item.hosts.find(({ name }) => name.search(new RegExp(value, 'i')) >= 0)
+      );
+    } else if (this.props.kind === 'speakers')
+      arrAux = this.props.data.filter(({ name }) => name.search(new RegExp(value, 'i')) >= 0);
     return arrAux;
   }
 
@@ -139,8 +131,8 @@ class SearchComponent extends Component {
       <div className={this.props.classes} style={{ width: '100%' }}>
         <Form.Item rules={[{ required: true }]} onSubmit={this.searchCert}>
           <Input
-            id='inputSearch'
-            type='text'
+            id="inputSearch"
+            type="text"
             size={this.props.size ? this.props.size : 'large'}
             // onChange={this.handleFilter}
             onInput={this.handleFilter}
@@ -161,8 +153,8 @@ class SearchComponent extends Component {
           />
           {this.state.showMessage && (
             <Alert
-              message={<FormattedMessage id={`global.search_${this.state.message}`} defaultMessage='Help' />}
-              type='warning'
+              message={<FormattedMessage id={`global.search_${this.state.message}`} defaultMessage="Help" />}
+              type="warning"
               showIcon
             />
           )}

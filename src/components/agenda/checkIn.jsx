@@ -53,7 +53,7 @@ class CheckAgenda extends Component {
     this.cargarUsuarios(self);
   }
 
-  //FUNCION QUE OBTIENE CHECKIN DE FIREBASE
+  // Funcion que obtiene checkin de firebase
   async obtaincheckin(user, ref) {
     const resp = await ref.doc(user._id).get();
     const userNew = {
@@ -67,7 +67,7 @@ class CheckAgenda extends Component {
     return userNew;
   }
 
-  //FUNCION QUE LLAMA A FIREBASE PARA OBTENER CHECKIN POR CADA USUARIO
+  // Funcion que llama a firebase para obtener checkin por cada usuario
   async obtenerCheckinAttende(ref, listuser) {
     const arrlist = [];
     for (const user of listuser) {
@@ -88,7 +88,6 @@ class CheckAgenda extends Component {
       const { checkIn } = this.state;
       const properties = event.user_properties;
       const rolesList = await RolAttApi.byEventRolsGeneral();
-      //console.log('ROLES==>', rolesList);
       const roles = rolesList?.map((role) => {
         return { label: role.name, value: role._id };
       });
@@ -124,7 +123,6 @@ class CheckAgenda extends Component {
       let newList = [...this.state.attendees];
 
       newList = await Activity.getActivyAssitantsAdmin(this.props.event._id, agendaID);
-      console.log('NEW LIST==>', newList);
 
       newList = newList.map((item) => {
         const attendee = item.attendee
@@ -135,11 +133,9 @@ class CheckAgenda extends Component {
         item = { ...item, ...attendee, idActivity: item._id };
         return item;
       });
-      // console.log('NEWLIST1==>', newList);
-      //NO SE ESTAN ELIMINANDO LOS USUARIOS BIEN HACK PARA QUITARLOS
+      // No se estan eliminando los usuarios bien hack para quitarlos
       newList = newList?.filter((users) => users.user !== null);
       newList = await this.obtenerCheckinAttende(userRef, newList);
-      //console.log('NEWLIST==>', newList);
 
       this.setState(() => {
         return { attendees: newList, loading: false, total: newList.length, checkIn, properties };
@@ -154,7 +150,6 @@ class CheckAgenda extends Component {
   }
 
   checkedincomponent = (text, item, index) => {
-    //console.log('ITEM==>', item);
     const self = this;
     return item.checkedin_at || item.properties?.checkedin_at ? (
       <p>{dayjs(item.checkedin_at || item.properties?.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
@@ -228,25 +223,23 @@ class CheckAgenda extends Component {
     return usersData;
   }
   openEditModalUser = (item) => {
-    //console.log('ITEM EDITAR==>', item);
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
 
   editcomponent = (text, item, index) => {
     return (
-      <Tooltip placement='topLeft' title='Editar'>
-        <Button type={'primary'} icon={<EditOutlined />} size='small' onClick={() => this.openEditModalUser(item)} />
+      <Tooltip placement="topLeft" title="Editar">
+        <Button type="primary" icon={<EditOutlined />} size="small" onClick={() => this.openEditModalUser(item)} />
       </Tooltip>
 
       /* <span
-        className='icon has-text-grey action_pointer'
-        data-tooltip={'Editar'}
+        className="icon has-text-grey action_pointer"
+        data-tooltip="Editar"
         // eslint-disable-next-line no-unused-vars
         onClick={(e) => {
-          // console.log('EDIT USER==>', item);
           this.openEditModalUser(item);
         }}>
-        <i className='fas fa-edit' />
+        <i className="fas fa-edit" />
       </span> */
     );
   };
@@ -297,7 +290,6 @@ class CheckAgenda extends Component {
   //FN para checkin
   checkIn = async (id, check = null, snap = null, edit = true) => {
     const { attendees } = this.state;
-    // console.log('ATTENDESS=>', attendees, id);
 
     //Se busca en el listado total con el id
 
@@ -393,14 +385,15 @@ class CheckAgenda extends Component {
         />
         <Space>
           <Button
-            type='primary'
+            type="primary"
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            size='small'
-            style={{ width: 90 }}>
+            size="small"
+            style={{ width: 90 }}
+          >
             Search
           </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
+          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
         </Space>
@@ -502,7 +495,7 @@ class CheckAgenda extends Component {
             extraFields={this.state.eventFields}
             spacesEvent={this.state.spacesEvent}
             edit={this.state.edit}
-            byActivity={true}
+            byActivity
             activityId={this.state.agendaID}
             updateView={this.cargarUsuarios}
             checkinActivity={this.checkIn}
@@ -536,15 +529,15 @@ class CheckAgenda extends Component {
           pagination
           scroll={{ x: 'auto' }}
           titleTable={
-            <Row gutter={[8, 8]} wrap justify='end'>
+            <Row gutter={[8, 8]} wrap justify="end">
               <Col>
-                <Button onClick={this.goToSendMessage} type='primary' icon={<SendOutlined />}>
+                <Button onClick={this.goToSendMessage} type="primary" icon={<SendOutlined />}>
                   {'Enviar comunicación/correo'}
                 </Button>
               </Col>
               <Col>
-                <Button onClick={this.exportFile} type='primary' icon={<DownloadOutlined />}>
-                  {'Exportar'}
+                <Button onClick={this.exportFile} type="primary" icon={<DownloadOutlined />}>
+                  Exportar
                 </Button>
               </Col>
               <Col>
@@ -552,14 +545,15 @@ class CheckAgenda extends Component {
                   onClick={() =>
                     this.props.history.push(`/eventadmin/${this.props.event._id}/invitados/importar-excel`)
                   }
-                  type='primary'
-                  icon={<UploadOutlined />}>
-                  {'Importar usuario'}
+                  type="primary"
+                  icon={<UploadOutlined />}
+                >
+                  Importar usuario
                 </Button>
               </Col>
               <Col>
-                <Button onClick={this.addUser} type='primary' icon={<PlusCircleOutlined />}>
-                  {'Agregar usuario'}
+                <Button onClick={this.addUser} type="primary" icon={<PlusCircleOutlined />}>
+                  Agregar usuario
                 </Button>
               </Col>
             </Row>

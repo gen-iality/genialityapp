@@ -33,7 +33,7 @@ const TransmitionOptions = (props: any) => {
         description={
           <Space>
             {isVisible && dataLive?.active && (
-              <Button loading={loadingStop} type='primary' danger onClick={() => executer_stopStream()}>
+              <Button loading={loadingStop} type="primary" danger onClick={() => executer_stopStream()}>
                 Detener
               </Button>
             )}
@@ -69,8 +69,8 @@ const TransmitionOptions = (props: any) => {
                   }
                 }}
                 onCancel={() => console.log('cancelado')}
-                okText='Sí'
-                cancelText='No'>
+                okText="Sí"
+                cancelText="No">
                 <Button loading={loadingDelete} danger>
                   Eliminar
                 </Button>

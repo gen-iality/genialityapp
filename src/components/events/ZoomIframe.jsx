@@ -16,10 +16,8 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
 
   const checkStreamStatus = async () => {
     const live_stream_status = await getLiveStreamStatus(meeting_id);
-    // setStreamStatus(live_stream_status); -> it is undefinded
 
     const live_stream_stats = await getLiveStreamStats(meeting_id);
-    // setStreamStats(live_stream_stats); -> it is undefinded
 
     setTimeout(checkStreamStatus, 5000);
   };
@@ -54,8 +52,6 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
     }
     /*
         let live_stream = await getLiveStreamConfig(meeting_id)
-
-        //console.log('resss', res.data.live_stream);
         //url = res.data.live_stream.player_embed_code;
         url = live_stream.player_hls_playback_url;
       //url =  `https://stagingeviusmeet.netlify.app/?username=${name}&email=${email}`;
@@ -75,7 +71,7 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
       ) : (
         <iframe
           src={platformurl}
-          frameBorder='0'
+          frameBorder="0"
           allow='autoplay; fullscreen; camera *;microphone *'
           allowFullScreen
           allowusermedia

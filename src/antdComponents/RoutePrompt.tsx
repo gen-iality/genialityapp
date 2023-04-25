@@ -117,13 +117,13 @@ export function RouterPrompt({
     <Modal
       visible={showPrompt}
       onCancel={handleCancel}
-      closable={true}
+      closable
       centered
       footer={[
         save && (
           <Button
-            key='link'
-            type='primary'
+            key="link"
+            type="primary"
             htmlType={form ? 'submit' : 'button'}
             onClick={() => handleOK(true)}
             icon={<ContentSave />}
@@ -134,19 +134,20 @@ export function RouterPrompt({
           </Button>
         ),
         <Button
-          key='goBack'
+          key="goBack"
           onClick={() => handleOK(false)}
           icon={<Logout />}
-          disabled={loadingAndDisablingButtons}>
+          disabled={loadingAndDisablingButtons}
+        >
           {okText ? okText : ''}
         </Button>,
-        <Button key='cancel' onClick={handleCancel} disabled={loadingAndDisablingButtons}>
+        <Button key="cancel" onClick={handleCancel} disabled={loadingAndDisablingButtons}>
           {cancelText ? cancelText : ''}
         </Button>,
       ]}>
-      <Space direction='vertical'>
+      <Space direction="vertical">
         {title ? (
-          <Title level={4} type='secondary'>
+          <Title level={4} type="secondary">
             {title}
           </Title>
         ) : (

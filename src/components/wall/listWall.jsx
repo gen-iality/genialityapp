@@ -13,7 +13,7 @@ import { WallContextProvider } from '@context/WallContext';
 import { DispatchMessageService } from '@context/MessageService';
 
 const IconText = ({ icon, text, onSubmit, color, megusta }) => (
-  <Button htmlType='submit' type='text' onClick={onSubmit} style={{ color: megusta == 1 ? color : 'gray' }}>
+  <Button htmlType="submit" type="text" onClick={onSubmit} style={{ color: megusta == 1 ? color : 'gray' }}>
     {createElement(icon, { style: { marginRight: '2px', fontSize: '20px' } })}
     {text}
   </Button>
@@ -53,7 +53,7 @@ class WallList extends Component {
       post.id,
       this.props.cEvent.value._id,
       comment,
-      this.props.cUser.value
+      this.props.cUser.value,
     );
     // this.setState({ dataPost });
     this.innershowComments(post.id, post.comments + 1);
@@ -129,7 +129,7 @@ class WallList extends Component {
             // data = doc.data();
             const picture = await this.getDataUser(doc.data().author);
             return { ...doc.data(), id: doc.id, picture: picture };
-          })
+          }),
         );
 
         this.setState({ dataPost: dataPost });
@@ -153,13 +153,13 @@ class WallList extends Component {
     return (
       <Fragment>
         <div>
-          {!dataPost && <Spin size='large' tip='Cargando...' />}
+          {!dataPost && <Spin size="large" tip="Cargando..." />}
 
           {dataPost && dataPost.length === 0 && (
             <Alert
-              message='Listos para la primera publicación'
-              description='Aún esta el lienzo el blanco para crear la primera publicación, aprovecha'
-              type='info'
+              message="Listos para la primera publicación"
+              description="Aún esta el lienzo el blanco para crear la primera publicación, aprovecha"
+              type="info"
               showIcon
             />
           )}
@@ -167,8 +167,8 @@ class WallList extends Component {
           {dataPost && dataPost.length > 0 && (
             <WallContextProvider>
               <List
-                itemLayout='vertical'
-                size='small'
+                itemLayout="vertical"
+                size="small"
                 style={{ texteAling: 'left', marginBottom: '20px' }}
                 // Aqui se llama al array del state
                 dataSource={dataPost}
@@ -187,12 +187,13 @@ class WallList extends Component {
                           user={this.props.cUser}
                         />
                       ),
-                    ]}>
+                    ]}
+                  >
                     <List.Item
                       key={item.id}
                       style={{ padding: '5px' }}
                       actions={[
-                        <Space key='opciones' wrap>
+                        <Space key="opciones" wrap>
                           {this.props.cUser.value !== null && (
                             <IconText
                               icon={
@@ -201,13 +202,13 @@ class WallList extends Component {
                                   : LikeOutlined
                               }
                               text={(item.likes || 0) + ' Me gusta'}
-                              key='list-vertical-like-o'
+                              key="list-vertical-like-o"
                               color={
                                 item.usersLikes?.find((itm) => itm == this.props.cUser.value._id) != undefined
                                   ? '#518BFB'
                                   : 'gray'
                               }
-                              megusta='1'
+                              megusta="1"
                               onSubmit={() => {
                                 this.props.increaseLikes(item.id, this.props.cUser.value._id);
                               }}
@@ -216,7 +217,7 @@ class WallList extends Component {
                           <IconText
                             icon={MessageOutlined}
                             text={(item.comments || 0) + (item.comments === 1 ? ' Comentario' : ' Comentarios')}
-                            key='list-vertical-message'
+                            key="list-vertical-message"
                             onSubmit={() => {
                               this.innershowComments(item.id, item.comments);
                             }}
@@ -225,16 +226,18 @@ class WallList extends Component {
                             {this.props.cUser.value && this.props.cUser.value._id.trim() === item.author.trim() && (
                               <>
                                 <Popconfirm
-                                  title='Seguro deseas eliminar esta publicacion?'
+                                  title="Seguro deseas eliminar esta publicacion?"
                                   onConfirm={() => this.innerDeletePost(item.id)}
-                                  okText='Eliminar'
-                                  okType='danger'
-                                  cancelText='Cancelar'>
+                                  okText="Eliminar"
+                                  okType="danger"
+                                  cancelText="Cancelar"
+                                >
                                   <Button
-                                    key='list-vertical-message'
-                                    type='text'
+                                    key="list-vertical-message"
+                                    type="text"
                                     danger
-                                    icon={<DeleteOutlined style={{ marginRight: '2px', fontSize: '20px' }} />}>
+                                    icon={<DeleteOutlined style={{ marginRight: '2px', fontSize: '20px' }} />}
+                                  >
                                     Eliminar mi publicación
                                   </Button>
                                 </Popconfirm>
@@ -243,7 +246,8 @@ class WallList extends Component {
                             )}
                           </>
                         </Space>,
-                      ]}>
+                      ]}
+                    >
                       <List.Item.Meta
                         avatar={
                           item?.authorImage ? (
@@ -258,8 +262,9 @@ class WallList extends Component {
                         title={<span>{item.authorName}</span>}
                         description={
                           <div style={{ marginTop: '-10px' }}>
-                            <Tooltip title={dayjs(new Date(item.datePost.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
-                              <span>{dayjs(dayjs(new Date(item.datePost.toMillis()))).from(dayjs(new Date()))}</span>
+                            <Tooltip title={dayjs(new Date(item.datePost.toMillis())).format('DD-MM-YYYY HH:mm:ss')}>
+                              {/* <span>{dayjs(dayjs(new Date(item.datePost.toMillis()))).from(dayjs(new Date()))}</span> */}
+                              <span>{dayjs(new Date(item.datePost.toMillis())).format('DD-MM-YYYY HH:mm:ss')}</span>
                             </Tooltip>
                           </div>
                         }
@@ -269,14 +274,14 @@ class WallList extends Component {
 
                       {item.urlImage && (
                         <Image
-                          width={'100%'}
-                          // height={'400px'}
+                          width="100%"
+                          // height="400px"
                           style={{
                             display: 'block',
                             margin: '0 auto',
                             objectFit: 'cover',
                           }}
-                          alt='logo'
+                          alt="logo"
                           src={item.urlImage}
                           preview={{ mask: <span>Ver la imagen completa</span> }}
                         />

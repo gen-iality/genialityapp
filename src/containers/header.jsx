@@ -1,19 +1,28 @@
+/** React's libraries */
 import { useEffect, useState, createElement } from 'react';
 import { useHistory } from 'react-router-dom';
-import ErrorServe from '@components/modal/serverError';
-import UserStatusAndMenu from '@components/shared/userStatusAndMenu';
+import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
+
+/** Redux imports */
 import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
-import MenuOld from '@components/events/shared/menu';
+
+/** Antd imports */
 import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
-import withContext from '@context/withContext';
-import ModalLoginHelpers from '@components/authentication/ModalLoginHelpers';
-import { recordTypeForThisEvent } from '@components/events/Landing/helpers/thisRouteCanBeDisplayed';
-import { FormattedMessage } from 'react-intl';
 import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
-import { useIntl } from 'react-intl';
+
+/** Context */
+import withContext from '@context/withContext';
+
+/** Components */
+import ModalLoginHelpers from '@components/authentication/ModalLoginHelpers';
+import MenuOld from '@components/events/shared/menu';
+import { recordTypeForThisEvent } from '@components/events/Landing/helpers/thisRouteCanBeDisplayed';
+import ErrorServe from '@components/modal/serverError';
+import UserStatusAndMenu from '@components/shared/userStatusAndMenu';
 
 const { useBreakpoint } = Grid;
 
@@ -130,15 +139,17 @@ const Headers = (props) => {
       <Menu.Item
         onClick={() => {
           helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
-        }}>
-        <FormattedMessage id='header.expired_signin' defaultMessage='Sign In' />
+        }}
+      >
+        <FormattedMessage id="header.expired_signin" defaultMessage="Sign In" />
       </Menu.Item>
 
       <Menu.Item
         onClick={() => {
           helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
-        }}>
-        <FormattedMessage id='registration.button.create' defaultMessage='Sign Up' />
+        }}
+      >
+        <FormattedMessage id="registration.button.create" defaultMessage="Sign Up" />
       </Menu.Item>
     </Menu>
   );
@@ -204,18 +215,18 @@ const Headers = (props) => {
           left: 0,
           top: 0,
           float: 'right',
-          background: 'red',
           height: '45px',
           transition: 'all 0.5s ease-out',
           opacity: fixed ? '0.9' : '1',
-        }}>
-        <Menu theme='light' mode='horizontal'>
-          <Row justify='space-between' align='middle'>
-            <Row className='logo-header' justify='space-between' align='middle'>
+        }}
+      >
+        <Menu style={{ border: '0px' }} theme="light" mode="horizontal">
+          <Row justify="space-between" align="middle">
+            <Row className="logo-header" justify="space-between" align="middle">
               {/* Menú de administrar un curso (esto debería aparecer en un curso no en todo lado) */}
               {dataGeneral?.showAdmin && (
-                <Col span={2} offset={3} data-target='navbarBasicExample'>
-                  <span className='icon icon-menu' onClick={() => handleMenuEvent()}>
+                <Col span={2} offset={3} data-target="navbarBasicExample">
+                  <span className="icon icon-menu" onClick={() => handleMenuEvent()}>
                     <Button style={zIndex} onClick={() => showDrawer()}>
                       {createElement(dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
                         className: 'trigger',
@@ -245,8 +256,8 @@ const Headers = (props) => {
                         color: '#FFFFFF',
                         border: 'none',
                       }}
-                      size='large'
-                      shape='circle'
+                      size="large"
+                      shape="circle"
                       icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
                     />
                   </Dropdown>
@@ -257,10 +268,11 @@ const Headers = (props) => {
                     <Button
                       icon={<LockOutlined />}
                       style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                      size='large'
+                      size="large"
                       onClick={() => {
                         helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
-                      }}>
+                      }}
+                    >
                       {intl.formatMessage({
                         id: 'modal.title.login',
                         defaultMessage: 'Iniciar sesión',
@@ -275,8 +287,8 @@ const Headers = (props) => {
                             color: '#FFFFFF',
                             border: 'none',
                           }}
-                          size='large'
-                          shape='circle'
+                          size="large"
+                          shape="circle"
                           icon={<AccountCircleIcon style={{ fontSize: '28px' }} />}
                         />
                       </Dropdown>
@@ -285,10 +297,11 @@ const Headers = (props) => {
 
                   {showButtons.buttonregister && (
                     <Button
-                      size='large'
+                      size="large"
                       onClick={() => {
                         helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
-                      }}>
+                      }}
+                    >
                       {intl.formatMessage({
                         id: 'modal.title.register',
                         defaultMessage: 'Registrarme',
@@ -319,14 +332,14 @@ const Headers = (props) => {
                 <UserStatusAndMenu
                   user={dataGeneral.user}
                   menuOpen={dataGeneral.menuOpen}
-                  photo={'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}
+                  photo="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
                   name={cUser.value?.names}
                   userEvent={dataGeneral.userEvent}
                   eventId={dataGeneral.eventId}
                   logout={(callBack) => userLogOut(callBack)}
                   openMenu={() => console.log('openMenu')}
                   loginInfo={loginInfo}
-                  anonimususer={true}
+                  anonimususer
                 />
               )
             )}
@@ -339,16 +352,17 @@ const Headers = (props) => {
       {/* Menu mobile */}
 
       {dataGeneral.showAdmin && dataGeneral.showEventMenu && (
-        <div id='navbarBasicExample'>
+        <div id="navbarBasicExample">
           <Drawer
-            className='hiddenMenuMobile_Landing'
-            title='Administrar curso'
-            maskClosable={true}
+            className="hiddenMenuMobile_Landing"
+            title="Administrar curso"
+            maskClosable
             bodyStyle={{ padding: '0px' }}
-            placement='left'
-            closable={true}
+            placement="left"
+            closable
             onClose={() => onClose()}
-            visible={dataGeneral.showEventMenu}>
+            visible={dataGeneral.showEventMenu}
+          >
             <MenuOld match={window.location.pathname} />
           </Drawer>
         </div>

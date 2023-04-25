@@ -15,7 +15,7 @@ function ConfirmacionRegistro(props) {
   // Se definen las variables de useState para enviar y obtener datos
   const [validateEmail, setValidateEmail] = useState(() => {
     if (props.event && props.event.validateEmail) {
-      if (props.event.validateEmail === 'true' || props.event.validateEmail === true) {
+      if (props.event.validateEmail === 'true' || props.event.validateEmail) {
         return true;
       } else {
         return false;
@@ -70,14 +70,14 @@ function ConfirmacionRegistro(props) {
     <>
       <Form onFinish={saveData} {...formLayout}>
         <Header
-          title={'Confirmación de Inscripción'}
-          description={'El siguiente mensaje le llegará a las personas inscritas en el curso o lección'}
+          title="Confirmación de Inscripción"
+          description="El siguiente mensaje le llegará a las personas inscritas en el curso o lección"
           save
           form
         />
-        <Row justify='center' wrap gutter={[8, 8]}>
+        <Row justify="center" wrap gutter={[8, 8]}>
           <Col span={18}>
-            <Form.Item label={'Mensaje de Inscripción'}>
+            <Form.Item label="Mensaje de Inscripción">
               <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />
             </Form.Item>
           </Col>

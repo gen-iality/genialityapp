@@ -78,17 +78,17 @@ export function QuizStatusEditorPage (props: QuizStatusEditorPageProps) {
   }
 
   return (
-    <Space direction='vertical'>
+    <Space direction="vertical">
       <Input
-        addonBefore='Correctas'
+        addonBefore="Correctas"
         status={isBadRight ? 'error' : undefined}
-        placeholder='Correctas'
+        placeholder="Correctas"
         value={valueRight}
         onChange={(e) => setValueRight(e.target.value)}
       />
-      <Button onClick={handleUpdate}>Update</Button>
-      {isBadAlertShown && <Alert type='error' message='No puedes enviar eso' />}
-      {isGoodAlertShown && <Alert type='success' message='Datos enviados' />}
+      <Button onClick={handleUpdate}>Actualizar</Button>
+      {isBadAlertShown && <Alert type="error" message="No puedes enviar eso" />}
+      {isGoodAlertShown && <Alert type="success" message="Datos enviados" />}
     </Space>
   );
 }

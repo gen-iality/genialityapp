@@ -203,7 +203,7 @@ function AgendaActivityItem(props) {
                   <div className='agenda-hora'>
                     {!props.hasDate && item.datetime_end && (
                       <Timeline>
-                        <Timeline.Item color='#1cdcb7'>
+                        <Timeline.Item color='#f7981d'>
                           {!props.hasDate && item.datetime_start
                             ? Moment.tz(
                                 item.datetime_start,
@@ -256,7 +256,7 @@ function AgendaActivityItem(props) {
                             </div>
                           )}
                         </Timeline.Item>
-                        <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>
+                        <Timeline.Item color='#f7981d' style={{ paddingBottom: '0px' }}>
                           {!props.hasDate &&
                             item.datetime_end &&
                             Moment.tz(

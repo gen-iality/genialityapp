@@ -155,8 +155,8 @@ export const HelperContextProvider = ({ children }) => {
       <Button
         style={{ backgroundColor: '#1CDCB7', borderColor: 'white', color: 'white', fontWeight: '700' }}
         icon={<SendOutlined />}
-        type='primary'
-        size='small'
+        type="primary"
+        size="small"
         onClick={() => {
           setisCollapsedMenuRigth(false);
           HandleChatOrAttende('1');
@@ -177,7 +177,7 @@ export const HelperContextProvider = ({ children }) => {
 
     const args = {
       message: (
-        <Row justify='space-between'>
+        <Row justify="space-between">
           <Col style={{ fontWeight: 'bold' }}>{data.remitente}</Col>
 
           <Col>{dayjs().format('h:mm A')}</Col>
@@ -290,7 +290,7 @@ export const HelperContextProvider = ({ children }) => {
     HandleGoToChat(idcurrentUser, idOtherUser, currentName, 'attendee', null);
   };
 
-  // ACA HAY UN BUG AL TRAER DATOS CON BASTANTES CAMPOS
+  // Aca hay un bug al traer datos con bastantes campos
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
     setpropertiesOtherprofile({ _id: id, properties: eventUser.properties, eventUserId: eventUser._id });
@@ -348,7 +348,6 @@ export const HelperContextProvider = ({ children }) => {
 
     if (data) {
       data = data.filter((request) => !request.response || request.response == 'accepted');
-      // console.log('DATA REQUEST==>', data);
       setRequestSend(data);
     }
   };

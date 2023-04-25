@@ -77,13 +77,13 @@ export default function AdmininformativeSection1(props) {
 
   return (
     <section>
-      <Form onFinish={() => onFinish()} autoComplete='off'>
-        <Header title={'Contenido informativo'} save form />
+      <Form onFinish={() => onFinish()} autoComplete="off">
+        <Header title="Contenido informativo" save form />
 
-        <Row justify='center' gutter={8} wrap>
+        <Row justify="center" gutter={8} wrap>
           <Col span={16}>
             <Form.Item>
-              <EviusReactQuill name='content' data={content} handleChange={(e) => handleChangeReactQuill(e)} />
+              <EviusReactQuill name="content" data={content} handleChange={(e) => handleChangeReactQuill(e)} />
             </Form.Item>
           </Col>
         </Row>

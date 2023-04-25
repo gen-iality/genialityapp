@@ -6,7 +6,7 @@ function useValideChangesInFormData(
   saved: FormDataType,
   modified: FormDataType,
   isPublished: boolean,
-  setWasChanged: (was: boolean) => void
+  setWasChanged: (was: boolean) => void,
 ) {
   const deepStateEqualityValidation = useDeepStateEqualityValidation();
   const valideChangesInFormData = () => {
@@ -24,6 +24,7 @@ function useValideChangesInFormData(
       length,
       latitude,
       selectedHosts,
+      selectedTools,
       isPhysical,
     } = modified;
 
@@ -43,12 +44,13 @@ function useValideChangesInFormData(
       length,
       latitude,
       selectedHosts,
+      selectedTools,
       isPhysical,
     };
 
     const equalityValidation = deepStateEqualityValidation(modified, formattedModified);
     console.log('equalityValidation:', equalityValidation);
-    setWasChanged(equalityValidation === false);
+    setWasChanged(!equalityValidation);
   };
 
   return valideChangesInFormData;

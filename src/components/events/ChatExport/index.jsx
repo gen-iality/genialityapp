@@ -36,7 +36,7 @@ const ChatExport = ({ eventId, event }) => {
   const { eventIsActive } = useHelper();
 
   const renderMensaje = (text, record) => (
-    <Tooltip title={record.text} placement='topLeft'>
+    <Tooltip title={record.text} placement="topLeft">
       <Tag color='#3895FA'>{record.text}</Tag>
     </Tooltip>
   );
@@ -348,8 +348,8 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   return (
-    <Tabs defaultActiveKey='1' onChange={(getChat, getBlocketdUsers)}>
-      <TabPane tab='Gestión de chats del curso' key='1'>
+    <Tabs defaultActiveKey="1" onChange={(getChat, getBlocketdUsers)}>
+      <TabPane tab="Gestión de chats del curso" key="1">
         <Table
           header={columns}
           list={datamsjevent}
@@ -357,19 +357,19 @@ const ChatExport = ({ eventId, event }) => {
           actions
           remove={remove}
           extraFn={blockUser}
-          extraFnTitle={'Bloquear usuarios'}
-          extraFnType={'ghost'}
+          extraFnTitle="Bloquear usuarios"
+          extraFnType="ghost"
           extraFnIcon={<AccountCancel />}
           titleTable={
             <Row gutter={[8, 8]} wrap>
               <Col>
-                <Button onClick={getChat} type='primary' icon={<ReloadOutlined />}>
+                <Button onClick={getChat} type="primary" icon={<ReloadOutlined />}>
                   Recargar
                 </Button>
               </Col>
               <Col>
                 {datamsjevent && datamsjevent.length > 0 && (
-                  <Button onClick={exportFile} type='primary' icon={<DownloadOutlined />}>
+                  <Button onClick={exportFile} type="primary" icon={<DownloadOutlined />}>
                     Exportar
                   </Button>
                 )}
@@ -378,9 +378,10 @@ const ChatExport = ({ eventId, event }) => {
                 {datamsjevent && datamsjevent.length > 0 && (
                   <Button
                     onClick={deleteAllChat}
-                    type='danger'
+                    type="danger"
                     icon={<DeleteOutlined />}
-                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                  >
                     Eliminar chat
                   </Button>
                 )}
@@ -397,22 +398,22 @@ const ChatExport = ({ eventId, event }) => {
             Usuarios bloqueados
           </Badge>
         }
-        key='2'>
+        key="2">
         <Table
           header={columnsUserBlocked}
           list={listUsersBlocked}
           loading={loading}
           actions
           extraFn={blockUser}
-          extraFnTitle={'Desbloquear usuario'}
-          extraFnType={'ghost'}
+          extraFnTitle="Desbloquear usuario"
+          extraFnType="ghost"
           extraFnIcon={<Account />}
           exportData
-          fileName={'Usuarios bloqueados'}
+          fileName="Usuarios bloqueados"
           titleTable={
             <Row gutter={[8, 8]} wrap>
               <Col>
-                <Button onClick={getBlocketdUsers} type='primary' icon={<ReloadOutlined />}>
+                <Button onClick={getBlocketdUsers} type="primary" icon={<ReloadOutlined />}>
                   Recargar
                 </Button>
               </Col>

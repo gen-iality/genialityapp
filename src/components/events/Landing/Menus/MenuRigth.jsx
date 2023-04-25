@@ -30,13 +30,13 @@ const MenuRigth = (props) => {
   // const animateIcon = 'animate__animated animate__bounceIn';
 
   return (
-    <Menu mode='none' theme='light' style={stylesMenuItems}>
+    <Menu mode="none" theme="light" style={stylesMenuItems}>
       <>
         {(props.generalTabs?.publicChat || props.generalTabs?.privateChat || props.generalTabs?.attendees) && (
           <Menu.Item
-            id={'openMenu'}
-            // className='animate__animated animate__headShake animate__slower animate__infinite'
-            key='0'
+            id="openMenu"
+            // className="animate__animated animate__headShake animate__slower animate__infinite"
+            key="0"
             icon={
               <>
                 <ArrowLeftOutlined
@@ -52,7 +52,7 @@ const MenuRigth = (props) => {
         )}
         {(props.generalTabs?.publicChat || props.generalTabs?.privateChat) && (
           <Menu.Item
-            key='1'
+            key="1"
             icon={
               <span>
                 <Badge count={totalPrivateMessages}>
@@ -75,7 +75,7 @@ const MenuRigth = (props) => {
         {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una lección*/}
         {props.generalTabs?.attendees && typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
           <Menu.Item
-            key='2'
+            key="2"
             icon={
               <TeamOutlined
                 // className={animateIcon + ' animate__delay-2s'}
@@ -91,11 +91,11 @@ const MenuRigth = (props) => {
               HandleChatOrAttende('2');
             }}></Menu.Item>
         )}
-        {currentActivity != null &&
+       {/*  {currentActivity != null &&
           // currentActivity.habilitar_ingreso === 'open_meeting_room' &&
           typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
             <Menu.Item
-              key='3'
+              key="3"
               icon={
                 <span>
                   <Badge dot={props.hasOpenSurveys}>
@@ -114,14 +114,14 @@ const MenuRigth = (props) => {
                 HandleOpenCloseMenuRigth(false);
                 HandleChatOrAttende('3');
               }}></Menu.Item>
-          )}
+          )} */}
         <>
           {tabsGenerals &&
             tabsGenerals.games &&
             currentActivity != null &&
             currentActivity.habilitar_ingreso === 'open_meeting_room' && (
               <Menu.Item
-                key='4'
+                key="4"
                 icon={
                   <GamepadVariantOutline
                     // className={animateIcon + ' animate__delay-4s'}

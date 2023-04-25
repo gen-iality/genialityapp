@@ -144,8 +144,8 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         }}
       >Forzar actualizar</Button>
       <EviusReactQuill
-        name='html'
-        data={contentSource}
+        name="html"
+        data={contentSource || ''}
         handleChange={(value: string) => setContentSource(value)}
       />
       </>
@@ -155,7 +155,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   if (activityContentValues.pdf === activityContentType) {
     return (
       <>
-        {!contentSource && <Alert type='info' message='Cargando contenido...' />}
+        {!contentSource && <Alert type="info" message="Cargando contenido..." />}
         <Document
           simpleMode
           notRecordFileInDocuments
@@ -195,9 +195,9 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
       </div>
       {activityContentType === activityContentValues.quizing && (
         <>
-        {(!contentSource) && (<Alert type='info' message='Cargando contenido...'/>)}
+        {(!contentSource) && (<Alert type="info" message="Cargando contenido..."/>)}
         <QuizCMS
-          title={'Evaluación'}
+          title="Evaluación"
           activityId={activityEdit}
           event={eventContext.value}
           matchUrl={props.matchUrl}
@@ -220,9 +220,9 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
       )}
       {activityContentType === activityContentValues.survey && (
         <>
-        {(!contentSource) && (<Alert type='info' message='Cargando contenido...'/>)}
+        {(!contentSource) && (<Alert type="info" message="Cargando contenido..."/>)}
         <SurveyCMS
-          title={'Encuesta'}
+          title="Encuesta"
           activityId={activityEdit}
           event={eventContext.value}
           matchUrl={props.matchUrl}
@@ -304,7 +304,7 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
                       Video cargado
                     </Typography.Text>
                   }
-                  description={'Esta es la url cargada'}
+                  description="Esta es la url cargada"
                 />
                 <br /><strong>URL:</strong>{' '}{videoURL}
               </Card>

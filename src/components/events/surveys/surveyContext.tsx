@@ -81,8 +81,6 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
     if (!cUser || !cUser.value) return;
     if (!state.survey?._id) return;
 
-    console.log('1000. Aquí se ejecuta el use Effect');
-
     getSurveyStatus(state.survey._id, cUser.value._id).then((data) => {
       dispatch({ type: SurveyContextAction.SURVEY_STATUS_LOADED, surveyStatus: data });
     });
@@ -141,7 +139,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
       console.debug('not show graphics because checkIfSurveyWasAnswered() is false');
     }
 
-    if (state.survey.displayGraphsInSurveys === 'true' || state.survey.displayGraphsInSurveys === true) {
+    if (state.survey.displayGraphsInSurveys === 'true' || state.survey.displayGraphsInSurveys) {
       console.debug('enable showing graphics');
       return true;
     }
@@ -154,7 +152,7 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({ chi
     if (!state.survey) {
       return false;
     }
-    return state.survey.rankingVisible === 'true' || state.survey.rankingVisible === true;
+    return state.survey.rankingVisible === 'true' || state.survey.rankingVisible;
   };
 
   const resetSurveyStatus = async (userId: string) => {

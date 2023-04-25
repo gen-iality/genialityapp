@@ -8,7 +8,7 @@ import { useTable, usePagination, useRowSelect } from 'react-table';
  data={[]}
  loading={loading}
  onFetchData={this.fetchData}
- showPaginationTop={true}
+ showPaginationTop
  showPaginationBottom={false}
  pages={pages}
  defaultPageSize={pageSize}
@@ -51,24 +51,24 @@ export default function EviusTable(props) {
     },
     usePagination,
     useRowSelect,
-    keyHooks
+    keyHooks,
   );
 
   return (
     <>
       <table>
-        <thead className='ant-table-thead'>
+        <thead className="ant-table-thead">
           {headerGroups.map((headerGroup, index) => (
             <tr key={index} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, key) => (
-                <th key={key} className='ant-table-header-column'>
+                <th key={key} className="ant-table-header-column">
                   {column.render('Header')}
                 </th>
               ))}
             </tr>
           ))}
         </thead>
-        <tbody className='ant-table-tbody'>
+        <tbody className="ant-table-tbody">
           {rows.map((row, keyrow) => {
             prepareRow(row);
 
@@ -79,7 +79,8 @@ export default function EviusTable(props) {
                   onRowClick && onRowClick(row);
                 }}
                 key={keyrow}
-                className='ant-table-row nt-table-row-level-0'>
+                className="ant-table-row nt-table-row-level-0"
+              >
                 {row.cells.map((cell, keycell) => {
                   return <td key={keycell}>{cell.render('Cell')}</td>;
                 })}
@@ -89,7 +90,7 @@ export default function EviusTable(props) {
         </tbody>
       </table>
 
-      <div className='pagination'>
+      <div className="pagination">
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
         </button>{' '}
@@ -111,7 +112,7 @@ export default function EviusTable(props) {
         <span>
           | Go to page:{' '}
           <input
-            type='number'
+            type="number"
             defaultValue={pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0;
@@ -124,7 +125,8 @@ export default function EviusTable(props) {
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
-          }}>
+          }}
+        >
           {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
@@ -149,7 +151,7 @@ export default function EviusTable(props) {
           })}
           className="tr"
         >
-          {row.cells.map(cell => {
+          {row.cells.map((cell) => {
             return (
               <div {...cell.getCellProps()} className="td">
                 {cell.render('Cell')}
@@ -167,9 +169,9 @@ export default function EviusTable(props) {
 <div>
     <div {...getTableProps()} className="table">
     <div>
-      {headerGroups.map(headerGroup => (
+      {headerGroups.map((headerGroup) => (
         <div {...headerGroup.getHeaderGroupProps()} className="tr">
-          {headerGroup.headers.map(column => (
+          {headerGroup.headers.map((column) => (
             <div {...column.getHeaderProps()} className="th">
               {column.render('Header')}
             </div>

@@ -34,12 +34,13 @@ function pushNotification(props) {
 
   const notifyEveryoneButton = (
     <Button
-      type='primary'
+      type="primary"
       onClick={() => {
         setUserToNotify();
         setModalSendNotificationVisible(true);
       }}
-      icon={<SendOutlined />}>
+      icon={<SendOutlined />}
+    >
       Notificación masiva
     </Button>
   );
@@ -73,13 +74,13 @@ function pushNotification(props) {
         />
       )}
       <Header
-        title={'Push notifications'}
-        titleTooltip={'Envíe notificaciones push a dispositivos móviles que tenga instalada la app de evius'}
-        description={'Se listan solo los usuarios con la app de evius o truni instalada en su dispositivo móvil'}
+        title="Push notifications"
+        titleTooltip="Envíe notificaciones push a dispositivos móviles que tenga instalada la app de evius"
+        description="Se listan solo los usuarios con la app de evius o truni instalada en su dispositivo móvil"
         extra={notifyEveryoneButton}
       />
       <Table
-        key='index'
+        key="index"
         list={listUsersWithNotifications}
         header={columns}
         setColumnsData={setColumnsData}
@@ -88,7 +89,7 @@ function pushNotification(props) {
         actions
         extraFn={extraField}
         extraFnIcon={<SendOutlined />}
-        extraFnTitle='Enviar notificación a este usuario'
+        extraFnTitle="Enviar notificación a este usuario"
       />
     </>
   );

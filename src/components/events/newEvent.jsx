@@ -169,24 +169,21 @@ class NewEvent extends Component {
           },
         },
       };
-
-      //console.log('EVENT TO CREATE==>', data);
-      //CREAR CURSO
+      // Crear curso
       try {
         const token = await GetTokenUserFirebase();
 
         const result = await Actions.create(`/api/events?token=${token}`, data);
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
-          //console.log('SECCIONES ACA==>', eventNewContext.selectOrganization?.itemsMenu, newMenu);
           const sectionsDefault = eventNewContext.selectOrganization?.itemsMenu
             ? { itemsMenu: eventNewContext.selectOrganization?.itemsMenu }
             : newMenu;
-          //HABILTAR SECCIONES POR DEFECTO
+          // Habiltar secciones por defecto
           const sections = await Actions.put(`api/events/${result._id}?token=${token}`, sectionsDefault);
           sections._id = sections._id ? sections._id : sections.data?._id;
           if (sections?._id) {
-            //CREAR LECCIÓN CON EL MISMO NOMBRE DEL CURSO
+            // Crear lección con el mismo nombre del curso
             const activity = {
               name: eventNewContext.valueInputs.name,
               subtitle: null,
@@ -198,7 +195,6 @@ class NewEvent extends Component {
               datetime_start: eventNewContext.selectedDateEvent?.from + ':00',
             };
             const agenda = await AgendaApi.create(result._id, activity);
-            //console.log("RESPUESTA AGENDA==>",agenda)
             if (agenda._id) {
               if (eventNewContext.typeTransmission == 1) {
                 const sala = await this.createZoomRoom(agenda, result._id);
@@ -218,13 +214,12 @@ class NewEvent extends Component {
                   });
                 }
               } else {
-                //CREAR TEMPLATE PARA EL CURSO
+                // Crear template para el curso
                 let template = !eventNewContext.templateId && true;
                 if (eventNewContext.templateId) {
                   template = await EventsApi.createTemplateEvent(result._id, eventNewContext.templateId);
                 }
                 if (template) {
-                  // console.log("RESPUESTA TEMPLATE==>",template)
                   DispatchMessageService({
                     type: 'success',
                     msj: 'Cursos creado correctamente...',
@@ -241,7 +236,6 @@ class NewEvent extends Component {
               }
             }
           } else {
-            //console.log('RESP API==>', result);
             DispatchMessageService({
               type: 'error',
               msj: 'Error al crear el curso',
@@ -249,7 +243,6 @@ class NewEvent extends Component {
             });
           }
         } else {
-          //console.log('RESP API==>', result);
           DispatchMessageService({
             type: 'error',
             msj: 'Error al crear el curso',
@@ -257,7 +250,6 @@ class NewEvent extends Component {
           });
         }
       } catch (error) {
-        //console.log(error);
         DispatchMessageService({
           type: 'error',
           msj: 'Error al crear el curso',
@@ -409,42 +401,42 @@ class NewEvent extends Component {
     const { current } = this.state;
     const context = this.context;
     return (
-      <Row justify='center' className='newEvent'>
+      <Row justify="center" className="newEvent">
         {/* Items del paso a paso */}
-        <div className='itemStep'>
+        <div className="itemStep">
           <Steps current={current} responsive>
             {this.state.steps.map((item) => (
               <Step key={item.title} title={item.title} icon={item.icon} />
             ))}
           </Steps>
         </div>
-        <Card className='card-container' bodyStyle={{ borderTop: '25px solid #50D3C9', borderRadius: '5px' }}>
+        <Card className="card-container" bodyStyle={{ borderTop: '25px solid #50D3C9', borderRadius: '5px' }}>
           {/* Contenido de cada item del paso a paso */}
-          <Row justify='center' style={{ marginBottom: '8px' }}>
+          <Row justify="center" style={{ marginBottom: '8px' }}>
             {this.obtainContent(this.state.steps[current])}
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
           {!this.state.loading && !context.loadingOrganization && (
-            <div className='button-container'>
+            <div className="button-container">
               {current > 0 && (
-                <Button className='button' size='large' onClick={() => this.prev()}>
+                <Button className="button" size="large" onClick={() => this.prev()}>
                   Anterior
                 </Button>
               )}
               {current < this.state.steps.length - 1 && (
-                <Button className='button' type='primary' size='large' onClick={() => this.next()}>
+                <Button className="button" type="primary" size="large" onClick={() => this.next()}>
                   Siguiente
                 </Button>
               )}
               {current === this.state.steps.length - 1 && (
-                <Button className='button' type='primary' size='large' onClick={() => this.saveEvent()}>
+                <Button className="button" type="primary" size="large" onClick={() => this.saveEvent()}>
                   Crear curso
                 </Button>
               )}
             </div>
           )}
           {(this.state.loading || context.loadingOrganization) && (
-            <Row justify='center'>
+            <Row justify="center">
               Espere.. <Spin />
             </Row>
           )}

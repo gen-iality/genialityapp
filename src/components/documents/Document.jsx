@@ -306,10 +306,8 @@ const Document = (props) => {
         setLoadPercentage(progress);
         switch (snapshot.state) {
           case 'paused':
-            // console.log('Upload is paused');
             break;
           case 'running':
-            // console.log('Upload is running');
             break;
         }
       },
@@ -396,12 +394,12 @@ const Document = (props) => {
           <>
             Por favor espere mientras cargue... <br />
             Si el problema persiste, favor de recargar <br />
-            <Button type='primary' icon={<ReloadOutlined />} onClick={() => reload()}>
+            <Button type="primary" icon={<ReloadOutlined />} onClick={() => reload()}>
               Recargar
             </Button>
           </>
         }>
-        <Row justify='center' wrap gutter={12}>
+        <Row justify="center" wrap gutter={12}>
           <Col span={14}>
             {!folder && (
               <Form.Item
@@ -410,19 +408,21 @@ const Document = (props) => {
                     Archivo <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
-                rules={[{ required: true, message: 'El archivo es requerido' }]}>
+                rules={[{ required: true, message: 'El archivo es requerido' }]}
+              >
                 <Upload
                   multiple={false}
-                  name={'file'}
-                  type='file'
+                  name="file"
+                  type="file"
                   fileList={documentList}
                   defaultValue={documentList}
                   onChange={(e) => {
                     onHandlerFile(e);
                     e.file.status = 'success';
                   }}
-                  listType='picture'
-                  maxCount={1}>
+                  listType="picture"
+                  maxCount={1}
+                >
                   <Button block icon={<UploadOutlined />}>
                     Toca para subir archivo
                   </Button>
@@ -437,9 +437,10 @@ const Document = (props) => {
                   Título <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'El título es requerido' }]}>
+              rules={[{ required: true, message: 'El título es requerido' }]}
+            >
               <Input
-                name={'title'}
+                name="title"
                 placeholder={folder ? 'Título de la carpeta' : 'Título del documento'}
                 value={document.title}
                 onChange={(e) => handleChange(e)}

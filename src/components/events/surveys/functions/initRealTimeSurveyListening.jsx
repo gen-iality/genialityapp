@@ -8,7 +8,6 @@ function initRealTimeSurveyListening(idSurvey, updateSurveyDataCallback) {
     .doc(idSurvey)
     .onSnapshot(async (doc) => {
       const surveyRealTime = { ...doc.data(), _id_firebase: doc.id };
-      console.log('surveyDataRealTime=>', surveyRealTime);
       updateSurveyDataCallback(surveyRealTime);
     });
 

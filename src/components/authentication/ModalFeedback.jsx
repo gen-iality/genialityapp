@@ -53,24 +53,25 @@ const ModalFeedback = ({ cHelper, cEvent }) => {
       centered
       footer={null}
       zIndex={1000}
-      closable={true}
+      closable
       visible={cHelper?.typeModal == 'loginSuccess' || cHelper?.typeModal == 'loginError'}
-      onCancel={() => cHelper.handleChangeTypeModal(null)}>
+      onCancel={() => cHelper.handleChangeTypeModal(null)}
+    >
       <Result
         status={status}
         title={<Typography.Title level={4}>{title}</Typography.Title>}
         subTitle={<Typography.Paragraph style={{ fontSize: '16px' }}>{description}</Typography.Paragraph>}
         extra={[
-          <Button size='large' onClick={() => cHelper.handleChangeTypeModal(null)} type='primary' key='aceptar'>
+          <Button size="large" onClick={() => cHelper.handleChangeTypeModal(null)} type="primary" key="aceptar">
             {intl.formatMessage({ id: 'modal.feedback.accept', defaultMessage: 'Aceptar' })}
           </Button>,
           cHelper?.typeModal !== 'loginError' && cHelper?.typeModal !== 'loginSuccess' && (
             <Button
-              size='large'
+              size="large"
               onClick={() => {
                 cHelper.handleChangeTypeModal('registerForTheEvent');
               }}
-              key='registrarme'>
+              key="registrarme">
               Registrarme
             </Button>
           ),

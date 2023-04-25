@@ -40,9 +40,7 @@ const CardPreview = (props: any) => {
     loadingRecord,
     record,
   } = useContext(AgendaContext);
-
-  console.log('DATALIVE ===>', dataLive);
-  //OBTENER URL A RENDERIZAR EN COMPONENTE DE VIDEO
+  // Obtener url a renderizar en componente de video
   const valideUrl = (url: string) => {
     if (url.includes('Loading2')) {
       return false;
@@ -51,19 +49,18 @@ const CardPreview = (props: any) => {
     }
   };
 
-  //PERMITE RENDERIZAR EL COMPONENTE IFRAME O REACT PLAYER GCORE
+  // Permite renderizar el componente iframe o react player gcore
   const renderPlayer = () => {
-    //OBTENER VISIBILIDAD DEL REACT PLAYER Y URL A RENDERIZAR
+    // Obtener visibilidad del react player y url a renderizar
     const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
-    // console.log('🚀 debug ~ renderPlayer ~ visibleReactPlayer', visibleReactPlayer, urlVideo);
 
-    //RENDERIZAR COMPONENTE
+    // Renderizar componente
     return (
       <>
         {errorOcurred ? (
           <Result
-            status='info'
-            title='Lo sentimos'
+            status="info"
+            title="Lo sentimos"
             subTitle={
               errorMessage === 'An error occurred.'
                 ? errorMessage
@@ -75,20 +72,19 @@ const CardPreview = (props: any) => {
           <>
             {visibleReactPlayer && (
               <ReactPlayer
-                playing={true}
-                loop={true}
+                playing
+                loop
                 onDuration={props.type === 'Video' ? handleDuration : undefined}
                 style={{ objectFit: 'cover', aspectRatio: '16/9' }}
                 width='100%'
                 height='100%'
                 url={urlVideo}
-                controls={true}
+                controls
                 // onStart={() => {
                 //   setErrorOcurred(false);
                 //   setErrorMessage('');
                 // }}
                 onError={(e) => {
-                  // console.log('🚀 debug ~ renderPlayer ~ e', props.type);
                   if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
                     setErrorOcurred(true);
                     setErrorMessage(e?.message);
@@ -104,7 +100,7 @@ const CardPreview = (props: any) => {
             style={{ aspectRatio: '16/9' }}
             width='100%'
             src={urlVideo + '?muted=1&autoplay=1'}
-            frameBorder='0'
+            frameBorder="0"
             allow='autoplay; encrypted-media'
             allowFullScreen
             onLoad={(e) => {
@@ -118,9 +114,7 @@ const CardPreview = (props: any) => {
     );
   };
 
-  console.log('99. DATA TRANSMITION===>', dataLive?.live, dataLive?.hls_playlist_url);
-
-  //PERMITE VERIFICAR IDS Y NO MOSTRAR LA URL COMPLETA DE YOUTUBE Y VIMEO
+  // Permite verificar ids y no mostrar la url completa de youtube y vimeo
   const filterData = data
     ? data.toString()?.includes('https://vimeo.com/event/') || data?.toString().includes('https://youtu.be/')
       ? data?.split('/')[data?.split('/').length - 1]
@@ -151,18 +145,19 @@ const CardPreview = (props: any) => {
         props.type === 'reunión' && (
           <img
             style={{ objectFit: 'cover' }}
-            height={'250px'}
+            height="250px"
             src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b'
           />
         )
       }
       bodyStyle={{ padding: '21px' }}
-      style={{ borderRadius: '8px', overflow: 'hidden' }}>
-      <Space direction='vertical' style={{ width: '100%' }} size='middle'>
-        <div className='mediaplayer' style={{ borderRadius: '8px' }}>
+      style={{ borderRadius: '8px', overflow: 'hidden' }}
+    >
+      <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        <div className="mediaplayer" style={{ borderRadius: '8px' }}>
           {props?.type !== 'reunión' && renderPlayer()}
         </div>
-        <Row align='top' justify='space-between'>
+        <Row align="top" justify="space-between">
           <Col span={dataLive?.live && dataLive?.active ? 16 : 24}>
             <Comment
               avatar={
@@ -207,9 +202,9 @@ const CardPreview = (props: any) => {
                 ) : props.type === 'vimeo' || props.type == 'Youtube' ? (
                   'Conexión externa'
                 ) : dataLive?.active ? (
-                  <Typography.Text type='success'>Iniciado</Typography.Text>
+                  <Typography.Text type="success">Iniciado</Typography.Text>
                 ) : (
-                  <Typography.Text type='danger'>Detenido</Typography.Text>
+                  <Typography.Text type="danger">Detenido</Typography.Text>
                 )
               }
             />
@@ -225,19 +220,20 @@ const CardPreview = (props: any) => {
                       onClick={() => {
                         startRecordTransmition();
                       }}
-                      type='primary'>
+                      type="primary">
                       Iniciar grabación
                     </Button>
                   ) : (
                     <Popconfirm
-                      title='¿Está seguro que desea detener la grabación?'
-                      okText='Si'
-                      cancelText='No'
+                      title="¿Está seguro que desea detener la grabación?"
+                      okText="Si"
+                      cancelText="No"
                       onConfirm={() => {
                         stopRecordTransmition();
                       }}
-                      onCancel={() => console.log('cancelado')}>
-                      <Button loading={loadingRecord} type='primary' danger>
+                      onCancel={() => console.log('cancelado')}
+                    >
+                      <Button loading={loadingRecord} type="primary" danger>
                         Detener grabación
                       </Button>
                     </Popconfirm>
@@ -267,19 +263,20 @@ const CardPreview = (props: any) => {
         )}
         {((dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet')) ||
           (props.type !== 'Transmisión' && props.type !== 'EviusMeet' && props.type !== 'reunión' && props.type !== 'Video')) && (
-          <Space direction='vertical' style={{ width: '100%' }}>
+          <Space direction="vertical" style={{ width: '100%' }}>
             <Typography.Text strong>Estado de la lección para tus asistentes: </Typography.Text>
             <Select
               value={roomStatus}
               onChange={(value) => {
                 setRoomStatus(value);
               }}
-              style={{ width: '100%' }}>
-              <Select.Option value=''>Lección creada</Select.Option>
-              <Select.Option value='closed_meeting_room'>Iniciará pronto</Select.Option>
-              <Select.Option value='open_meeting_room'>En vivo</Select.Option>
-              <Select.Option value='ended_meeting_room'>Finalizada</Select.Option>
-              {props.type === 'Video' && <Select.Option value='no_visibe'>Oculto</Select.Option>}
+              style={{ width: '100%' }}
+            >
+              <Select.Option value="">Lección creada</Select.Option>
+              <Select.Option value="closed_meeting_room">Iniciará pronto</Select.Option>
+              <Select.Option value="open_meeting_room">En vivo</Select.Option>
+              <Select.Option value="ended_meeting_room">Finalizada</Select.Option>
+              {props.type === 'Video' && <Select.Option value="no_visibe">Oculto</Select.Option>}
             </Select>
           </Space>
         )}

@@ -55,6 +55,12 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
+        name: 'Modulos',
+        path: '/module',
+        key: 'module',
+        onClick: handleClick,
+      },
+      {
         name: 'Aliados',
         path: '/empresas',
         key: 'empresas',
@@ -74,7 +80,7 @@ export const MenuItems = [
       // },
       {
         name: 'Certificados',
-        path: '/certificados',
+        path: '/certificates',
         key: 'certificados',
         onClick: handleClick,
       },

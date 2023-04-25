@@ -13,9 +13,10 @@ export function CurrentUserProvider({ children }) {
 
   //seteando con el auth al current user || falta eventUser
   useEffect(() => {
+    let unsubscribe;
     async function asyncdata() {
       try {
-        app.auth().onAuthStateChanged((user) => {
+        unsubscribe = app.auth().onAuthStateChanged((user) => {
           if (!user?.isAnonymous && user) {
             user.getIdToken().then(async function(idToken) {
               const lastSignInTime = (await user.getIdTokenResult()).authTime;
@@ -34,14 +35,13 @@ export function CurrentUserProvider({ children }) {
                   }
                 })
                 .catch((e) => {
-                  //ESTE CATCH SIRVE PARA CUANDO SE CAMBIA DE STAGIN A PROD//USUARIOS QUE NO SE ENCUENTRAN EN LA OTRA BD
+                  //ESTE CATCH SIRVE PARA CUANDO SE CAMBIA DE STAGIN A PROD// Usuarios que no se encuentran en la otra bd
                   app
                     .auth()
                     .signOut()
                     .then(async (resp) => {
                       const docRef = await conectionRef.where('email', '==', app.auth().currentUser?.email).get();
                       if (docRef.docs.length > 0) {
-                        //console.log('DOCUMENT ID==>', docRef.docs[0].id);
                         await conectionRef.doc(docRef.docs[0].id).delete();
                       }
 
@@ -51,7 +51,7 @@ export function CurrentUserProvider({ children }) {
                 });
             });
           } else if (user?.isAnonymous && user) {
-            //OBTENERT USER
+            // Obtenert user
             const obtainDisplayName = () => {
               if (app.auth().currentUser.displayName != null) {
                 /**para poder obtener el email y crear despues un eventUser se utiliza el parametro photoURL de firebas para almacenar el email */
@@ -80,6 +80,7 @@ export function CurrentUserProvider({ children }) {
       }
     }
     asyncdata();
+    return () => { unsubscribe && unsubscribe() }
   }, []);
 
   return (

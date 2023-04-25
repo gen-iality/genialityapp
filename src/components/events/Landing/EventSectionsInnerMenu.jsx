@@ -10,28 +10,29 @@ const EventSectionsInnerMenu = () => {
   const event = cEvent.value;
   const { eventPrivate } = useHelper();
 
-  if (!event) return <Spin size='small' />;
+  if (!event) return <Spin size="small" />;
   return (
     <>
-      <div className='hiddenMenu_Landing'>
+      <div className="hiddenMenu_Landing">
         <Sider
-          className='containerMenu_Landing'
+          className="containerMenu_Landing"
           style={{
             backgroundColor: event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
           }}
           trigger={null}
-          width={110}>
-          <Row justify='center' style={{ margin: 5 }}>
+          width={110}
+        >
+          <Row justify="center" style={{ margin: 5 }}>
             {event.styles && event.styles.event_image && (
               <Image
                 preview={{ mask: <EyeOutlined /> }}
-                alt='Logo'
+                alt="Logo"
                 src={event.styles.event_image}
                 style={{ backgroundColor: event.styles.toolbarDefaultBg, objectFit: 'cover' }}
               />
             )}
           </Row>
-          <div className='items-menu_Landing'>
+          <div className="items-menu_Landing">
             <MenuEvent eventPrivate={eventPrivate} />
           </div>
         </Sider>

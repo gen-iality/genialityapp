@@ -20,7 +20,8 @@ function InputField(rawProps) {
       label={formItemProps.label}
       required={formItemProps.required}
       help={fieldError}
-      validateStatus={fieldError ? 'error' : undefined}>
+      validateStatus={fieldError ? 'error' : undefined}
+    >
       <Input {...props} {...formikProps.field} />
     </FormItem>
   );

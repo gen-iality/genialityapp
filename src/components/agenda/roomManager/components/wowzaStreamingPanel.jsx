@@ -67,7 +67,6 @@ const WowzaStreamingPanel = ({
   const [ timerId, setTimerId ] = useState(null);
 
   const queryClient = useQueryClient();
-  // console.log('innerRender', meeting_id);
   const livestreamQuery = useQuery([ 'livestream', meeting_id ], () => getLiveStream(meeting_id));
 
   useEffect(() => {
@@ -121,7 +120,6 @@ const WowzaStreamingPanel = ({
 
   const executer_createStream = useMutation(() => createLiveStream(activity_name), {
     onSuccess: (data) => {
-      // console.log('sucks', data);
       queryClient.setQueryData('livestream', data);
       activityDispatch({ type: 'meeting_created', meeting_id: data.id });
       // Invalidate and refetch
@@ -134,7 +132,6 @@ const WowzaStreamingPanel = ({
     let live_stream_stats = null;
     try {
       live_stream_status = await getLiveStreamStatus(meeting_id);
-      // console.log('live_stream_status', live_stream_status);
       setLivestreamStatus(live_stream_status);
 
       live_stream_stats = await getLiveStreamStats(meeting_id);
@@ -196,8 +193,8 @@ const WowzaStreamingPanel = ({
   if (!livestreamQuery.data)
     return (
       <>
-        <Spin tip='Loading...' spinning={executer_createStream.isLoading}>
-          <Space direction='horizontal' wrap>
+        <Spin tip="Loading..." spinning={executer_createStream.isLoading}>
+          <Space direction="horizontal" wrap>
             <Button
               onClick={() => {
                 executer_createStream.mutate();
@@ -206,7 +203,7 @@ const WowzaStreamingPanel = ({
               Crear nueva transmisión
             </Button>
             <Dropdown
-              placement='bottomCenter'
+              placement="bottomCenter"
               overlay={
                 <Menu>
                   <Menu.Item onClick={() => setStreamAlreadyCreated(true)}>
@@ -231,7 +228,7 @@ const WowzaStreamingPanel = ({
                 ' ' +
                 executer_createStream.error?.response?.data?.meta?.message
               }
-              type='error'
+              type="error"
               showIcon
               closable
             />
@@ -254,17 +251,17 @@ const WowzaStreamingPanel = ({
                 Iniciar transmisión
               </Button>
             ) : livestreamStatus?.state === 'started' ? (
-              <Row justify='space-between'>
+              <Row justify="space-between">
                 <>
                   {linkRolAdmin && transmition !== 'RTMP' && (
                     <Button
-                      type='primary'
+                      type="primary"
                       href={
                         transmition == 'StreamYard'
                           ? 'https://streamyard.com/teams/nqMJDiHJSBnP5E7bmGs7JyZV/broadcasts'
                           : linkRolAdmin
                       }
-                      target='_blank'>
+                      target="_blank">
                       {transmition && 'Ingresar a ' + transmition + ' para transmitir'}
                     </Button>
                   )}
@@ -276,11 +273,11 @@ const WowzaStreamingPanel = ({
                       executer_stopStream();
                     }}
                     danger
-                    type='primary'>
+                    type="primary">
                     Detener transmisión
                   </Button>
 
-                  <Button type='ghost' onClick={() => ResetLiveStream(meeting_id)}>
+                  <Button type="ghost" onClick={() => ResetLiveStream(meeting_id)}>
                     Reiniciar transmisión
                   </Button>
                 </Space>
@@ -303,7 +300,7 @@ const WowzaStreamingPanel = ({
             ) : (
               <>
                 {livestreamStats?.connected.value === 'Yes' ? (
-                  <Badge.Ribbon text='En transmisión' color='red'>
+                  <Badge.Ribbon text="En transmisión" color="red">
                     <WOWZAPlayer meeting_id={meeting_id} thereIsConnection={livestreamStats?.connected.value} />
                   </Badge.Ribbon>
                 ) : (
@@ -315,23 +312,23 @@ const WowzaStreamingPanel = ({
             {/* starting */}
           </Col>
           <Col span={14}>
-            <Tabs defaultActiveKey='1'>
-              <Tabs.TabPane tab={'Datos'} key='1'>
-                <Typography.Text type='secondary'>
+            <Tabs defaultActiveKey="1">
+              <Tabs.TabPane tab="Datos" key="1">
+                <Typography.Text type="secondary">
                   Nombre:
                   <br />
                 </Typography.Text>
                 <Typography.Text>
                   <b>{livestreamQuery.data.name}</b> <br />
                 </Typography.Text>
-                <Typography.Text type='secondary'>
+                <Typography.Text type="secondary">
                   ID transmisión:
                   <br />
                 </Typography.Text>
                 <Typography.Text>
                   <b>{livestreamQuery.data.id}</b> <br />
                 </Typography.Text>
-                <Typography.Text type='secondary'>
+                <Typography.Text type="secondary">
                   Estado de la transmisión:
                   <br />
                 </Typography.Text>
@@ -344,7 +341,7 @@ const WowzaStreamingPanel = ({
                   </Space>{' '}
                   <br />
                 </Typography.Text>
-                <Typography.Text type='secondary'>
+                <Typography.Text type="secondary">
                   Origin conectado:
                   <br />
                 </Typography.Text>
@@ -354,7 +351,7 @@ const WowzaStreamingPanel = ({
                   </Space>{' '}
                   <br />
                 </Typography.Text>
-                <Typography.Text type='secondary'>
+                <Typography.Text type="secondary">
                   Estado del origen:
                   <br />
                 </Typography.Text>
@@ -364,7 +361,7 @@ const WowzaStreamingPanel = ({
                   </Space>{' '}
                   <br />
                 </Typography.Text>
-                <Typography.Text type='secondary'>
+                <Typography.Text type="secondary">
                   Información: <br />
                 </Typography.Text>
                 <Typography.Text>
@@ -376,7 +373,7 @@ const WowzaStreamingPanel = ({
               </Tabs.TabPane>
               {/* { transmition === 'EviusMeet' && ( */}
               {livestreamStatus?.state !== 'stopped' && (
-                <Tabs.TabPane tab={'RTMP'} key='2'>
+                <Tabs.TabPane tab="RTMP" key="2">
                   {livestreamStatus?.state === 'started' ? (
                     <>
                       <Typography.Text>
@@ -388,7 +385,7 @@ const WowzaStreamingPanel = ({
                           disabled
                           value={livestreamQuery.data.source_connection_information.primary_server}
                         />
-                        <Tooltip title='Copiar RTMP url'>
+                        <Tooltip title="Copiar RTMP url">
                           <Button
                             onClick={() => copyToClipboard('URL')}
                             icon={
@@ -411,7 +408,7 @@ const WowzaStreamingPanel = ({
                           disabled
                           value={livestreamQuery.data.source_connection_information.stream_name}
                         />
-                        <Tooltip title='Copiar RTMP clave'>
+                        <Tooltip title="Copiar RTMP clave">
                           <Button
                             onClick={() => copyToClipboard('Clave')}
                             icon={
@@ -447,7 +444,7 @@ const WowzaStreamingPanel = ({
                   </Typography.Text>
                   <Input.Group compact>
                     <Input style={{ width: 'calc(100% - 31px)' }} disabled value={linkRolProductor} />
-                    <Tooltip title='Copiar productor url'>
+                    <Tooltip title="Copiar productor url">
                       <Button
                         onClick={() => copyToClipboard('Productor')}
                         icon={
@@ -470,7 +467,7 @@ const WowzaStreamingPanel = ({
                   </Typography.Text>
                   <Input.Group compact>
                     <Input style={{ width: 'calc(100% - 31px)' }} disabled value={linkRolAsistente} />
-                    <Tooltip title='Copiar asistente url'>
+                    <Tooltip title="Copiar asistente url">
                       <Button
                         onClick={() => copyToClipboard('Asistente')}
                         icon={

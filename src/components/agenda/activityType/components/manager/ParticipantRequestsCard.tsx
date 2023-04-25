@@ -25,15 +25,14 @@ const ParticipantRequestsCard = (props: ParticipantRequestsCardProps) => {
 
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
-      <Space size='large'>
+      <Space size="large">
         <HumanGreetingVariantIcon style={{ fontSize: '36px' }} />
 
         <Typography.Text style={{ fontSize: '20px' }} strong>
           Solicitudes de participación de asistentes
         </Typography.Text>
-        <Badge
-          count={count}>
-          <Button onClick={() => setViewModal(true)} type='primary'>
+        <Badge count={count}>
+          <Button onClick={() => setViewModal(true)} type="primary">
             Ver solicitudes
           </Button>
         </Badge>

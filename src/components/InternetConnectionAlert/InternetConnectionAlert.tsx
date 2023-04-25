@@ -33,7 +33,7 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
 
   useEffect(() => {
     if (connectionStatus === 'initial') return;
-    if (connectionStatus === true) {
+    if (connectionStatus) {
       setTimeout(() => {
         setConnectionStatus('initial');
       }, 3500);
@@ -46,8 +46,8 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
         <>
           {connectionStatus ? (
             <Alert
-              key={'success'}
-              className='animate__animated animate__fadeInDown'
+              key="success"
+              className="animate__animated animate__fadeInDown"
               style={placement === 'top' ? positionTop : positionBotton}
               message={
                 <Space>
@@ -55,14 +55,14 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
                   <Typography.Text>Conexión a internet restablecida.</Typography.Text>{' '}
                 </Space>
               }
-              type='success'
+              type="success"
               description={description}
               action={action}
             />
           ) : (
             <Alert
-              key={'warning'}
-              className='animate__animated animate__fadeInDown'
+              key="warning"
+              className="animate__animated animate__fadeInDown"
               style={placement === 'top' ? positionTop : positionBotton}
               message={
                 <Space>
@@ -70,7 +70,7 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
                   <Typography.Text>Conexión a internet perdida.</Typography.Text>{' '}
                 </Space>
               }
-              type='error'
+              type="error"
               description={description}
               action={action}
             />

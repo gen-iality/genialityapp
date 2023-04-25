@@ -2,15 +2,15 @@ import { Card, Form, Input, Button } from 'antd';
 
 export const DolbyCard = () => {
   return (
-    <Card title='Ingresa tus datos para entrar a la transmisión'>
+    <Card title="Ingresa tus datos para entrar a la transmisión">
       <Form
         style={{ padding: '16px 8px' }}
         // onFinish={handleSignInForm}
         // {...layout}
       >
         <Form.Item
-          name='names'
-          label='Nombre'
+          name="names"
+          label="Nombre"
           rules={[
             {
               required: true,
@@ -19,8 +19,8 @@ export const DolbyCard = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          name='email'
-          label='Email'
+          name="email"
+          label="Email"
           rules={[
             {
               required: true,
@@ -31,7 +31,7 @@ export const DolbyCard = () => {
           <Input />
         </Form.Item>
         <Form.Item>
-          <Button type='primary' htmlType='submit'>
+          <Button type="primary" htmlType="submit">
             Entrar
           </Button>
         </Form.Item>

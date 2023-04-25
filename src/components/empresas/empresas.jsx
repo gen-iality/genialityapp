@@ -25,7 +25,7 @@ import { handleRequestError } from '@helpers/utils';
 const { confirm } = Modal;
 
 const tableLocale = {
-  emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No hay datos' />,
+  emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No hay datos" />,
 };
 
 function Empresas({ event, match }) {
@@ -71,7 +71,7 @@ function Empresas({ event, match }) {
             {
               ...company,
             },
-            { merge: true }
+            { merge: true },
           );
       }
       DispatchMessageService({
@@ -167,7 +167,7 @@ function Empresas({ event, match }) {
       sorter: (a, b) => a.name.localeCompare(b.name),
       render(companyName, record) {
         return (
-          <Link to={`${match.url}/editar/${record.id}`} title='Editar'>
+          <Link to={`${match.url}/editar/${record.id}`} title="Editar">
             {companyName}
           </Link>
         );
@@ -185,7 +185,7 @@ function Empresas({ event, match }) {
       width: '100px',
       ellipsis: true,
       render(visible) {
-        return visible ? <Tag color='green'>{'Visible'}</Tag> : <Tag color='red'>{'Oculto'}</Tag>;
+        return visible ? <Tag color="green">Visible</Tag> : <Tag color="red">Oculto</Tag>;
       },
     },
     {
@@ -197,27 +197,28 @@ function Empresas({ event, match }) {
         return (
           <Row gutter={[8, 8]}>
             <Col>
-              <Tooltip placement='topLeft' title='Editar'>
+              <Tooltip placement="topLeft" title="Editar">
                 <Link
                   key={`editAction${value.index}`}
                   id={`editAction${value.index}`}
                   to={{
                     pathname: `${match.url}/crear`,
                     state: { edit: value },
-                  }}>
-                  <Button icon={<EditOutlined />} type='primary' size='small' />
+                  }}
+                >
+                  <Button icon={<EditOutlined />} type="primary" size="small" />
                 </Link>
               </Tooltip>
             </Col>
             <Col>
-              <Tooltip placement='topLeft' title='Eliminar'>
+              <Tooltip placement="topLeft" title="Eliminar">
                 <Button
                   key={`removeAction${record.index}`}
                   id={`removeAction${record.index}`}
                   onClick={() => deleteCompany(value)}
                   icon={<DeleteOutlined />}
-                  type='danger'
-                  size='small'
+                  type="danger"
+                  size="small"
                   disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                 />
               </Tooltip>
@@ -243,7 +244,7 @@ function Empresas({ event, match }) {
   };
 
   const DraggableContainer = (props) => (
-    <SortableContainer useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props} />
+    <SortableContainer useDragHandle disableAutoscroll helperClass="row-dragging" onSortEnd={onSortEnd} {...props} />
   );
 
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
@@ -255,8 +256,8 @@ function Empresas({ event, match }) {
   return (
     <div>
       <Header
-        title={'Empresas'}
-        titleTooltip={'Agregue o edite las Empresas que se muestran en la aplicación'}
+        title="Empresas"
+        titleTooltip="Agregue o edite las Empresas que se muestran en la aplicación"
         addUrl={{
           pathname: `${match.url}/crear`,
           state: { new: true },
@@ -266,16 +267,17 @@ function Empresas({ event, match }) {
             <Col>
               <Button
                 onClick={() => orderCompany()}
-                type='primary'
+                type="primary"
                 icon={<SaveOutlined />}
-                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
-                {'Guardar orden'}
+                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+              >
+                Guardar orden
               </Button>
             </Col>
             <Col>
               <Link to={`${match.url}/configuration`}>
-                <Button type='primary' icon={<SettingOutlined />} id={'configuration'}>
-                  {'Configuración'}
+                <Button type="primary" icon={<SettingOutlined />} id="configuration">
+                  Configuración
                 </Button>
               </Link>
             </Col>
@@ -288,8 +290,8 @@ function Empresas({ event, match }) {
         dataSource={companyList}
         columns={companyColumns}
         pagination={false}
-        rowKey='index'
-        size='small'
+        rowKey="index"
+        size="small"
         components={{
           body: {
             wrapper: DraggableContainer,

@@ -2,7 +2,7 @@ import { Component, useState, useEffect } from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
 import { firestore } from '@helpers/firebase';
 import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request';
-import { AgendaApi } from '@helpers/request';
+import { AgendaApi, OrganizationApi } from '@helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import { utils, writeFileXLSX } from 'xlsx';
@@ -56,17 +56,19 @@ import { UsersPerEventOrActivity } from './utils/utils';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-const ModalWithLessonsInfo = ({show, onHidden, allActivities, attendee, currentUser}) => {
+const ModalWithLessonsInfo = ({ show, onHidden, allActivities, attendee, currentUser }) => {
   const [loaded, setLoaded] = useState(false);
   const [activities, setActivities] = useState([]);
 
   useEffect(async () => {
     if (!currentUser) return;
-    console.log(allActivities, 'xd', attendee)
     if (allActivities.length == 0) return;
 
     const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await firestore.collection(`${activity._id}_event_attendees`).doc(currentUser._id).get();
+      const activity_attendee = await firestore
+        .collection(`${activity._id}_event_attendees`)
+        .doc(currentUser._id)
+        .get();
       if (activity_attendee.exists) {
         return activity;
       }
@@ -74,7 +76,7 @@ const ModalWithLessonsInfo = ({show, onHidden, allActivities, attendee, currentU
     });
     // Filter non-null result that means that the user attendees them
     const viewedActivities = (await Promise.all(existentActivities)).filter((item) => item !== null);
-    setActivities(viewedActivities.map((activity) => activity.name))
+    setActivities(viewedActivities.map((activity) => activity.name));
     setLoaded(true);
   }, [allActivities, attendee, currentUser]);
 
@@ -87,35 +89,42 @@ const ModalWithLessonsInfo = ({show, onHidden, allActivities, attendee, currentU
       if (activities.length) {
         return (
           <List
-            header={<Text strong>Cursos vistos</Text>}
+            header={<Text strong>Lecciones vistas</Text>}
             // bordered
             dataSource={activities}
-            renderItem={(item) => <List.Item><CheckOutlined /> {item}</List.Item>}
+            renderItem={(item) => (
+              <List.Item>
+                <CheckOutlined /> {item}
+              </List.Item>
+            )}
           />
         );
         // return (activities.map((activity) => <p>{activity}</p>));
       }
-      return <p>Nada para mostrar</p>
+      return <p>Nada para mostrar</p>;
     }
 
-    return <p>Cargando...</p>
-  }
+    return <p>Cargando...</p>;
+  };
 
   return (
-    <Modal centered footer={null} visible={show} closable={true} onCancel={onHidden}>
-      <Space direction='vertical'>
-        <Content/>
+    <Modal centered footer={null} visible={show} closable onCancel={onHidden}>
+      <Space direction="vertical">
+        <Content />
       </Space>
     </Modal>
   );
-}
+};
 
 const ColumnProgreso = ({ shownAll, item, allActivities, onOpen, updateAttendee, updateCurrentUser, ...props }) => {
   const [attendee, setAttendee] = useState([]);
   useEffect(async () => {
     // Get all existent activities, after will filter it
     const existentActivities = await allActivities.map(async (activity) => {
-      const activity_attendee = await firestore.collection(`${activity._id}_event_attendees`).doc(item._id).get();
+      const activity_attendee = await firestore
+        .collection(`${activity._id}_event_attendees`)
+        .doc(item._id)
+        .get();
       if (activity_attendee.exists) {
         return activity_attendee.data();
       }
@@ -123,10 +132,10 @@ const ColumnProgreso = ({ shownAll, item, allActivities, onOpen, updateAttendee,
     });
     // Filter non-null result that means that the user attendees them
     const gotAttendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
-    setAttendee (gotAttendee);
+    setAttendee(gotAttendee);
   }, []);
 
-  if (!onOpen) onOpen = () => {}
+  if (!onOpen) onOpen = () => {};
 
   if (shownAll) {
     return (
@@ -138,11 +147,12 @@ const ColumnProgreso = ({ shownAll, item, allActivities, onOpen, updateAttendee,
         }}
       >
         {`${attendee.length || 0}/${allActivities.length || 0}`}
-     </Button>
+      </Button>
     );
   }
-  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
+  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>;
 };
+window.firestore = firestore
 
 class ListEventUser extends Component {
   constructor(props) {
@@ -159,6 +169,7 @@ class ListEventUser extends Component {
       totalCheckedIn: 0,
       totalCheckedInWithWeight: 0,
       extraFields: [],
+      simplifyOrgProperties: [],
       spacesEvents: [],
       addUser: false,
       editUser: false,
@@ -202,15 +213,22 @@ class ListEventUser extends Component {
   static contextType = HelperContext;
 
   // eslint-disable-next-line no-unused-vars
-  editcomponent = (text, item, index) => {
+  editcomponent = (text, item, index, badColumns) => {
+    const newItem = JSON.parse(JSON.stringify(item))
+    const filteredProperties = Object.fromEntries(
+      Object.entries(newItem.properties).filter(([key, value]) => {
+        return !(badColumns.includes(key))
+      })
+    )
+    newItem.properties = filteredProperties
     const { eventIsActive } = this.context;
     return (
-      <Tooltip placement='topLeft' title='Editar'>
+      <Tooltip placement="topLeft" title="Editar">
         <Button
-          type={'primary'}
+          type="primary"
           icon={<EditOutlined />}
-          size='small'
-          onClick={() => this.openEditModalUser(item)}
+          size="small"
+          onClick={() => this.openEditModalUser(newItem)}
           disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
         />
       </Tooltip>
@@ -220,9 +238,9 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   created_at_component = (text, item, index) => {
     if (item.created_at !== null) {
-      const createdAt = item.created_at | new Date();
+      const createdAt = item?.created_at || new Date();
 
-      return <>{createdAt ? <p>{dayjs(createdAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
+      return <>{createdAt ? <span>{dayjs(createdAt).format('D/MMM/YY h:mm:ss A ')}</span> : ''}</>;
     } else {
       return '';
     }
@@ -233,7 +251,7 @@ class ListEventUser extends Component {
       for (const role of this.state.rolesList) {
         if (item.rol_id == role._id) {
           item['rol_name'] = role.name;
-          return <p>{role.name}</p>;
+          return <span>{role.name}</span>;
         }
       }
     }
@@ -242,9 +260,9 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
     if (item.updated_at !== null) {
-      const updatedAt = item?.created_at;
+      const updatedAt = item?.updated_at;
 
-      return <>{updatedAt ? <p>{dayjs(updatedAt).format('D/MMM/YY h:mm:ss A ')}</p> : ''}</>;
+      return <>{updatedAt ? <span>{dayjs(updatedAt).format('D/MMM/YY h:mm:ss A ')}</span> : ''}</>;
     } else {
       return '';
     }
@@ -278,7 +296,7 @@ class ListEventUser extends Component {
     extraFields = extraFields.sort((a, b) =>
       (a.order_weight && !b.order_weight) || (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
         ? -1
-        : 1
+        : 1,
     );
     return extraFields;
   };
@@ -309,8 +327,13 @@ class ListEventUser extends Component {
     this.checkFirebasePersistence();
     try {
       const event = await EventsApi.getOne(this.props.event._id);
+      const orgId = event.organizer._id;
+      const org = await OrganizationApi.getOne(orgId)
 
       const properties = event.user_properties;
+      const simplifyOrgProperties = (org.user_properties || []).filter(
+        (property) => !['email', 'password', 'names'].includes(property.name)
+      )
       const rolesList = await RolAttApi.byEventRolsGeneral();
       const badgeEvent = await BadgeApi.get(this.props.event._id);
 
@@ -319,7 +342,7 @@ class ListEventUser extends Component {
       extraFields = this.addDefaultLabels(extraFields);
       extraFields = this.orderFieldsByWeight(extraFields);
       const fieldsForm = Array.from(extraFields);
-      // AGREGAR EXTRAFIELDS DE ROL Y CHECKIN
+      // Agregar extrafields de rol y checkin
       const rolesOptions = rolesList.map((rol) => {
         return {
           label: rol.name,
@@ -359,15 +382,31 @@ class ListEventUser extends Component {
         _id: { $oid: '614260d226e7862220497eac2' },
       });
 
-      let columns = [];
+      const columns = [];
       const checkInColumn = {
-        title: 'Ingreso',
+        title: 'Fecha de ingreso',
         dataIndex: 'checkedin_at',
         key: 'checkedin_at',
         width: '120px',
         ellipsis: true,
         sorter: (a, b) => a.checkedin_at - b.checkedin_at,
-        ...self.getColumnSearchProps('checkedin_at'),
+        filters: [
+          {
+            text: 'Asistentes',
+            value: 'attendees',
+          },
+          {
+            text: 'No asistentes',
+            value: 'not_attendees',
+          },
+        ],
+        filterSearch: true,
+        onFilter: (value, record) => {
+          if(value === 'attendees') {
+            return (record.checkedin_at !== null);
+          }
+          else return (record.checkedin_at === null);
+        },
         render: self.checkedincomponent,
       };
 
@@ -395,7 +434,12 @@ class ListEventUser extends Component {
         key: 'edit',
         fixed: 'right',
         width: 60,
-        render: self.editcomponent,
+        render: (...args) => (
+          self.editcomponent(
+            ...args,
+            simplifyOrgProperties.map((item) => item.name),
+          )
+        ),
       };
       /* columns.push(editColumn); */
       /** Additional columns for hybrid events */
@@ -425,7 +469,7 @@ class ListEventUser extends Component {
 
                 case 'file':
                   return (
-                    <a target='__blank' download={item?.name} href={key[item?.name]}>
+                    <a target="__blank" download={item?.name} href={key[item?.name]}>
                       {this.obtenerName(key[item?.name])}
                     </a>
                   );
@@ -439,17 +483,39 @@ class ListEventUser extends Component {
             },
           };
         });
-      columns = [...columns, ...extraColumns];
+      columns.push(...extraColumns);
+
+      // Inject the organization member properties here
+      const orgExtraColumns = simplifyOrgProperties
+        .map((property) => {
+          return {
+            title: property.label,
+            dataIndex: property.name,
+            key: property.name,
+            ellipsis: true,
+            sorter: (a, b) => a[property.name]?.length - b[property.name]?.length,
+            ...self.getColumnSearchProps(property.name),
+            render: (record, item) => {
+              const value = item.properties[property.name]
+              if (property.type === 'boolean') {
+                return typeof value === 'undefined' ? 'N/A' : value ? 'Sí' : 'No'
+              }
+              // TODO: we need check other type, and parse
+              return (item.properties || [])[property.name]
+            }
+          }
+        })
+      columns.push(...orgExtraColumns);
+      this.setState({ simplifyOrgProperties })
+
       const { data: allActivities } = await AgendaApi.byEvent(this.props.event._id);
-      this.setState({ allActivities })
+      this.setState({ allActivities });
       const progressing = {
         title: 'Progreso',
         dataIndex: 'progress_id',
         key: 'progress_id',
         ellipsis: true,
-        sorter: (a, b) => {
-          return true; // console.log('>', a, b);
-        },
+        sorter: (a, b) => true,
         render: (text, item, index) => (
           <ColumnProgreso
             shownAll={this.props.shownAll}
@@ -460,7 +526,7 @@ class ListEventUser extends Component {
             index={index}
             allActivities={allActivities}
           />
-        )
+        ),
       };
 
       const rol = {
@@ -519,6 +585,7 @@ class ListEventUser extends Component {
         async (snapshot) => {
           const currentAttendees = [...this.state.usersReq];
           const updatedAttendees = updateAttendees(currentAttendees, snapshot);
+          console.log('updatedAttendees', updatedAttendees)
 
           const totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
 
@@ -526,13 +593,13 @@ class ListEventUser extends Component {
             Math.round(
               updatedAttendees.reduce(
                 (acc, item) => acc + (item.checkedin_at ? parseFloat(item.pesovoto ? item.pesovoto : 1) : 0),
-                0
-              ) * 100
+                0,
+              ) * 100,
             ) / 100;
           //total de pesos
           const totalWithWeight =
             Math.round(
-              updatedAttendees.reduce((acc, item) => acc + parseFloat(item.pesovoto ? item.pesovoto : 1), 0) * 100
+              updatedAttendees.reduce((acc, item) => acc + parseFloat(item.pesovoto ? item.pesovoto : 1), 0) * 100,
             ) / 100;
           this.setState({
             totalCheckedIn: totalCheckedIn,
@@ -540,13 +607,9 @@ class ListEventUser extends Component {
             totalWithWeight,
           });
 
-          //console.log("ATTENDESS==>",updatedAttendees)
-          //console.log("ATTENDESSFIND==>",updatedAttendees.filter((at)=>at.email=='nieblesrafael@yahoo.com'))
-
           for (let i = 0; i < updatedAttendees.length; i++) {
             // Arreglo temporal para que se muestre el listado de usuarios sin romperse
             // algunos campos no son string y no se manejan bien
-            //console.log("FIELDS==>",extraFields)
             extraFields.forEach(function(key) {
               if (
                 !(
@@ -577,13 +640,11 @@ class ListEventUser extends Component {
                     ? '(' + updatedAttendees[i]['code'] + ')' + updatedAttendees[i].properties[codearea[0].name]
                     : updatedAttendees[i].properties[codearea[0].name];
                 } else {
-                  //console.log("KEY==>",updatedAttendees[i]['properties'][key.name])
                   if (updatedAttendees[i][key.name]) {
                     updatedAttendees[i][key.name] = Array.isArray(updatedAttendees[i]['properties'][key.name])
                       ? updatedAttendees[i]['properties'][key.name][0]
                       : updatedAttendees[i]['properties'][key.name];
-                    updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] =
-                      self.props.event._id == '60c8affc0b4f4b417d252b29' ? 'SI' : '';
+                    updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] = '';
                   }
                 }
               }
@@ -606,10 +667,56 @@ class ListEventUser extends Component {
 
           const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
 
+          // The attribute `activityProperties` looks like unused, so I get the
+          // attendee from Firebase... That's awful, but this is the effect non-thinking
+          if (activityId) {
+            const collections = await firestore.collection(`${activityId}_event_attendees`).get()
+            const docs = collections.docs
+
+            const userDataList = []
+            docs.forEach((doc) => userDataList.push(doc.data()))
+
+            const userDataIds = userDataList.map((user) => user.account_id)
+
+            while (attendees.length > 0) { attendees.pop() }
+            attendees.push(...updatedAttendees.filter((user) => userDataIds.includes(user.account_id)))
+          }
+
+
+          // Inject here the org member data
+          const extendedAttendees = []
+          {
+            // TODO: This can crashs, but I am so busy to fix
+            if (!orgId) {
+              console.warn('cannot get organization ID from event data')
+            }
+            const { data: orgUsers } = await OrganizationApi.getUsers(orgId);
+            console.log('orgUsers', orgUsers)
+
+            extendedAttendees.push(...attendees.map((eventUser) => {
+              // Find this event user in the organization member list
+              const orgMember = orgUsers.find((member) => member.account_id === eventUser.account_id)
+              if (!orgMember) {
+                console.warn('event user', eventUser, 'not found as organization member')
+                return eventUser
+              }
+
+              return {
+                ...eventUser, // Normal data
+                properties: {
+                  ...orgMember.properties, // organization member properties,
+                  ...eventUser.properties, // Overwritten event user properties
+                },
+              }
+            }))
+          }
+
+          console.info('extendedAttendees', extendedAttendees)
+
           this.setState({
             unSusCribeConFigFast,
             unSuscribeAttendees,
-            users: attendees,
+            users: extendedAttendees, // attendees,
             usersReq: updatedAttendees,
             auxArr: attendees,
             loading: false,
@@ -617,7 +724,7 @@ class ListEventUser extends Component {
         },
         () => {
           //this.setState({ timeout: true, errorData: { message: error, status: 708 } });
-        }
+        },
       );
     } catch (error) {
       const errorData = handleRequestError(error);
@@ -649,7 +756,11 @@ class ListEventUser extends Component {
 
     const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
 
-    const data = await parseData2Excel(attendees, this.state.extraFields, this.state.rolesList);
+    console.info('attendees', attendees)
+
+    const joint = [...this.state.extraFields, ...this.state.simplifyOrgProperties]
+
+    const data = await parseData2Excel(attendees, joint, this.state.rolesList);
     const ws = utils.json_to_sheet(data);
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Asistentes');
@@ -693,7 +804,7 @@ class ListEventUser extends Component {
       let resp = await TicketsApi.checkInAttendee(event._id, id);
       //message.success('Usuario Chequeado');
     } catch (e) {
-      message.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+      message.error(<FormattedMessage id="toast.error" defaultMessage='Sry :(' />);
     } */
     //return;
     const eventIdSearch = this.props.match.params.id ? this.props.match.params.id : this.props.event._id;
@@ -863,14 +974,15 @@ class ListEventUser extends Component {
         />
         <Space>
           <Button
-            type='primary'
+            type="primary"
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            size='small'
-            style={{ width: 90 }}>
+            size="small"
+            style={{ width: 90 }}
+          >
             Search
           </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
+          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
         </Space>
@@ -922,7 +1034,7 @@ class ListEventUser extends Component {
       if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
       const printBagdeUser = (...args) => {
         console.warn('printBagdeUser function was copied here but not its definition. F');
-      }
+      };
       printBagdeUser(this.ifrmPrint, badges, this.state.user);
     } else this.setState({ noBadge: true });
   };
@@ -967,21 +1079,19 @@ class ListEventUser extends Component {
         <ModalWithLessonsInfo
           show={this.state.showModalOfProgress}
           onHidden={() => {
-            this.setState({showModalOfProgress: false})
+            this.setState({ showModalOfProgress: false });
           }}
           allActivities={this.state.allActivities}
           attendee={this.state.attendee}
           currentUser={this.state.currentUser}
         />
         <Header
-          title={type == 'activity' ? 'Inscripción de ' + nameActivity : 'Inscripción de curso'}
+          title={type == 'activity' ? 'Inscripción de ' + nameActivity : ('Inscripción de curso: ')}
           titleToMergingOrAdaptIt={
             componentKey === 'activity-checkin'
               ? 'Check-in actividad: ' + nameActivity
               : `Check-in evento: ${this.props.event?.name}`
           }
-          description={`Se muestran los primeros 50 usuarios, para verlos todos por favor descargar el excel o realizar una
-          búsqueda.`}
         />
 
         {disabledPersistence && (
@@ -1029,7 +1139,8 @@ class ListEventUser extends Component {
                 paddingRight: '20px',
                 textAlign: 'end',
                 borderRadius: '3px',
-              }}>
+              }}
+            >
               <strong> Última Sincronización: </strong> <FormattedDate value={lastUpdate} />{' '}
               <FormattedTime value={lastUpdate} />
             </div>
@@ -1041,8 +1152,9 @@ class ListEventUser extends Component {
                   <Col>
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                      color='lightgrey'
-                      icon={<UsergroupAddOutlined />}>
+                      color="lightgrey"
+                      icon={<UsergroupAddOutlined />}
+                    >
                       <strong>Inscritos: </strong>
                       <span style={{ fontSize: '13px' }}>{inscritos}</span>
                     </Tag>
@@ -1050,8 +1162,9 @@ class ListEventUser extends Component {
                   <Col>
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
-                      color='lightgrey'
-                      icon={<StarOutlined />}>
+                      color="lightgrey"
+                      icon={<StarOutlined />}
+                    >
                       <strong>Participantes: </strong>
                       <span style={{ fontSize: '13px' }}>
                         {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
@@ -1076,7 +1189,7 @@ class ListEventUser extends Component {
 
               {!activityId && (
                 <Col>
-                  <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                  <Button type="ghost" icon={<FullscreenOutlined />} onClick={this.showModal}>
                     Expandir
                   </Button>
                 </Col>
@@ -1084,21 +1197,26 @@ class ListEventUser extends Component {
 
               <Col>
                 <Select
-                  name={'type-scanner'}
+                  name="type-scanner"
                   value={this.state.typeScanner}
                   defaultValue={this.state.typeScanner}
                   onChange={(e) => this.handleChange(e)}
-                  style={{ width: 220 }}>
-                  <Option value='scanner-qr'>Escanear QR</Option>
+                  style={{ width: 220 }}
+                >
+                  <Option value="scanner-qr">Escanear QR</Option>
                   {fieldsForm.map((item, index) => {
                     if (item.type === 'checkInField')
-                      return <Option key={index} value='scanner-document'>Escanear {item.label}</Option>;
+                      return (
+                        <Option key={index} value="scanner-document">
+                          Escanear {item.label}
+                        </Option>
+                      );
                   })}
                 </Select>
               </Col>
               <Col>
                 {usersReq.length > 0 && (
-                  <Button type='primary' icon={<DownloadOutlined />} onClick={this.exportFile}>
+                  <Button type="primary" icon={<DownloadOutlined />} onClick={this.exportFile}>
                     Exportar
                   </Button>
                 )}
@@ -1111,23 +1229,26 @@ class ListEventUser extends Component {
                         ? ''
                         : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`,
                     state: { activityId },
-                  }}>
+                  }}
+                >
                   <Button
-                    type='primary'
+                    type="primary"
                     icon={<UploadOutlined />}
-                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
+                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                  >
                     Importar usuarios
                   </Button>
                 </Link>
               </Col>
               <Col>
                 <Button
-                  type='primary'
+                  type="primary"
                   icon={<PlusCircleOutlined />}
-                  size='middle'
+                  size="middle"
                   onClick={this.addUser}
-                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
-                  {'Agregar usuario'}
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                >
+                  Agregar usuario
                 </Button>
               </Col>
             </Row>
@@ -1165,20 +1286,21 @@ class ListEventUser extends Component {
           visible={this.state.isModalVisible}
           closable={false}
           footer={[
-            <Button style={{ float: 'right' }} type='primary' size='large' onClick={this.hideModal} key='close'>
+            <Button style={{ float: 'right' }} type="primary" size="large" onClick={this.hideModal} key="close">
               Cerrar
             </Button>,
-            <div key='fecha' style={{ float: 'left' }}>
+            <div key="fecha" style={{ float: 'left' }}>
               <Title level={5}>
                 Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
               </Title>
             </div>,
           ]}
           style={{ top: 0, textAlign: 'center' }}
-          width='100vw'>
-          <Row align='middle' justify='center' style={{ width: '80vw' }}>
+          width="100vw"
+        >
+          <Row align="middle" justify="center" style={{ width: '80vw' }}>
             <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
-              <Row align='middle'>
+              <Row align="middle">
                 <Card
                   bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
                   cover={
@@ -1186,16 +1308,17 @@ class ListEventUser extends Component {
                       <img
                         style={{ objectFit: 'cover', width: '96vw' }}
                         src={this.props.event.styles.event_image}
-                        alt='Logo curso'
+                        alt="Logo curso"
                       />
                     ) : (
                       ''
                     )
-                  }></Card>
+                  }
+                ></Card>
               </Row>
             </Col>
             <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>
-              <Row align='middle'>
+              <Row align="middle">
                 <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                   <Card bodyStyle={{}} style={{}} bordered={false}>
                     <Statistic

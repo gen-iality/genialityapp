@@ -32,7 +32,7 @@ const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
             onSubmit(comment);
             setComment('');
           }}>
-          <Form.Item name='comment'>
+          <Form.Item name="comment">
             <Row
               style={{
                 display: 'flex',
@@ -47,27 +47,27 @@ const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
                       setItemComment(item.id);
                     }
                   }}
-                  placeholder='Escribe un comentario...'
+                  placeholder="Escribe un comentario..."
                   autoSize
                   value={itemcomment && item.id == itemcomment ? comment : ''}
                   autoFocus={itemcomment && item.id == itemcomment}
-                  id='comment'
+                  id="comment"
                   allowClear
                   showCount
                   maxLength={500}
                 />
               </Col>
               <Button
-                id='submitButton'
-                htmlType='submit'
-                type='primary'
+                id="submitButton"
+                htmlType="submit"
+                type="primary"
                 style={{ color: 'white' }}
                 icon={<SendOutlined />}
               />
             </Row>
           </Form.Item>
-          <Form.Item name='id' initialValue={item.id || ''}>
-            <Input type='hidden' />
+          <Form.Item name="id" initialValue={item.id || ''}>
+            <Input type="hidden" />
           </Form.Item>
         </Form>
       }
@@ -81,7 +81,7 @@ const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
         <p>
           <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado, inicia sesión para poder realizar
           publicaciones &nbsp;&nbsp;
-          <Button type='primary'>
+          <Button type="primary">
             <a href={AuthUrl}>Ir a Ingreso</a>
           </Button>
         </p>

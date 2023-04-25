@@ -68,7 +68,7 @@ const OfertProduts = (props) => {
   ];
   return (
     <>
-      <Header title={'Ofertas de la obra'} back />
+      <Header title="Ofertas de la obra" back />
       <Table columns={columns} dataSource={oferts.length > 0 && oferts} />
     </>
   );

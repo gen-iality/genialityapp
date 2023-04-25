@@ -174,9 +174,9 @@ const AgendaTypeCatCE = (props) => {
 
       <Row justify="center" wrap gutter={12}>
         <Col>
-          <Form.Item label={'Nombre'}>
+          <Form.Item label="Nombre">
             <Input
-              name={'name'}
+              name="name"
               placeholder={`Nombre ${
                 subject === 'addcategorias' || subject === 'editcategorias'
                   ? 'de la categoría'
@@ -187,7 +187,7 @@ const AgendaTypeCatCE = (props) => {
             />
           </Form.Item>
           {subject === 'addcategorias' || subject === 'editcategorias' ? (
-            <Form.Item label={'Color'}>
+            <Form.Item label="Color">
               <ChromePicker color={color} onChange={handleChangeComplete} />
             </Form.Item>
           ) : null}

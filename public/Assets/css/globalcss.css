@@ -63,11 +63,11 @@
 }
 
 .preloaderBg {
-  position: fixed;
+  /* position: fixed; */
   z-index: 10;
-  width: 100vw;
+  width: 100%;
   text-align: center;
-  height: 100vh;
+  height: 100%;
   opacity: 0.8;
   margin-top: 15%;
   overflow: hidden;

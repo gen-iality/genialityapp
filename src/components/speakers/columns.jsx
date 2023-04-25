@@ -44,13 +44,13 @@ export const columns = (columnsData) => [
         <Row gutter={8}>
           <Col>
             <Popover
-              placement='top'
+              placement="top"
               content={() => (
                 <>
                   {item.image ? (
                     <Image key={'img' + item._id} width={200} height={200} src={item.image} />
                   ) : (
-                    <Empty description='Imagen no encontrada' />
+                    <Empty description="Imagen no encontrada" />
                   )}
                 </>
               )}>
@@ -103,8 +103,8 @@ export const columns = (columnsData) => [
 
       return (
         <Switch
-          checkedChildren='Sí'
-          unCheckedChildren='No'
+          checkedChildren="Sí"
+          unCheckedChildren="No"
           onChange={update}
           checked={item.published}
           id={`editSwitch${item.index}`}
@@ -125,23 +125,23 @@ export const columns = (columnsData) => [
          */
         <Row wrap gutter={[8, 8]}>
           <Col>
-            <Tooltip placement='topLeft' title='Editar'>
-              <Link key='edit' to={{ pathname: `${columnsData.data.matchUrl}/speaker`, state: { edit: item._id } }}>
-                <Button icon={<EditOutlined />} type='primary' size='small' id={`editarTest${item.index}`} />
+            <Tooltip placement="topLeft" title="Editar">
+              <Link key="edit" to={{ pathname: `${columnsData.data.matchUrl}/speaker`, state: { edit: item._id } }}>
+                <Button icon={<EditOutlined />} type="primary" size="small" id={`editarTest${item.index}`} />
               </Link>
             </Tooltip>
           </Col>
           <Col>
-            <Tooltip placement='topLeft' title='Eliminar'>
+            <Tooltip placement="topLeft" title="Eliminar">
               <Button
-                key='delete'
+                key="delete"
                 id={`remove${item.index}`}
                 onClick={() => {
                   columnsData.remove(item);
                 }}
                 icon={<DeleteOutlined />}
-                type='danger'
-                size='small'
+                type="danger"
+                size="small"
                 disabled={columnsData.cEventIsActive === false && window.location.toString().includes('eventadmin')}
               />
             </Tooltip>

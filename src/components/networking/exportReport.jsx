@@ -18,14 +18,14 @@
 //   render() {
 //     const { invitations } = this.state;
 //     return (
-//       <ExcelFile element={<Button type='primary' icon={<DownloadOutlined />}>Exportar</Button>}>
-//         <ExcelSheet data={invitations} name='Employees'>
-//           <ExcelColumn label='Usuario' value='user_name_requesting' />
-//           <ExcelColumn label='Usuario quien responde' value='user_name_requested' />
-//           <ExcelColumn label='Estado' value='state' />
-//           <ExcelColumn label='Respuesta' value='response' />
-//           <ExcelColumn label='Registro creado' value='created_at' />
-//           <ExcelColumn label='Registro actualizado' value='updated_at' />
+//       <ExcelFile element={<Button type="primary" icon={<DownloadOutlined />}>Exportar</Button>}>
+//         <ExcelSheet data={invitations} name="Employees">
+//           <ExcelColumn label="Usuario" value="user_name_requesting" />
+//           <ExcelColumn label="Usuario quien responde" value="user_name_requested" />
+//           <ExcelColumn label="Estado" value="state" />
+//           <ExcelColumn label="Respuesta" value="response" />
+//           <ExcelColumn label="Registro creado" value="created_at" />
+//           <ExcelColumn label="Registro actualizado" value="updated_at" />
 //         </ExcelSheet>
 //       </ExcelFile>
 //     );

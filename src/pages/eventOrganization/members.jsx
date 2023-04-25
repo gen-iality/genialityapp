@@ -1,54 +1,103 @@
+/** React's libraries */
 import { useEffect, useState } from 'react';
-import { OrganizationApi, RolAttApi, EventsApi, AgendaApi } from '@helpers/request';
 import { FormattedDate, FormattedTime } from 'react-intl';
-import { firestore } from '@helpers/firebase';
-/** export Excel */
 import { useHistory } from 'react-router-dom';
-import { Table, Button, Row, Col, Tag } from 'antd';
-import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { columns } from './tableColums/membersTableColumns';
-import ModalMembers from '@components/modal/modalMembers';
 import dayjs from 'dayjs';
-import withContext from '@context/withContext';
+
+/** export Excel */
 import { utils, writeFileXLSX } from 'xlsx';
+
+/** Antd imports */
+import { Table, Button, Row, Col, Tag, Spin } from 'antd';
+import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
+
+/** Components */
 import Header from '@antdComponents/Header';
+import ModalMembers from '@components/modal/modalMembers';
+import { columns } from './tableColums/membersTableColumns';
+
+/** Helpers and utils */
+import { OrganizationApi, RolAttApi, EventsApi, AgendaApi, PositionsApi } from '@helpers/request';
+import { firestore } from '@helpers/firebase';
+
+/** Context */
+import withContext from '@context/withContext';
+import { async } from 'ramda-adjunct';
 
 function OrgMembers(props) {
-  const [membersData, setMembersData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [lastUpdate, setLastUpdate] = useState();
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const [addOrEditUser, setAddOrEditUser] = useState(false);
-  const [extraFields, setExtraFields] = useState([]);
-  const [roleList, setRoleList] = useState([]);
-  const [selectedUser, setSelectedUser] = useState({});
-  const [editMember, setEditMember] = useState(false);
+  console.log('Props - OrgMembers (CMS) ->', props);
   const { _id: organizationId } = props.org;
   const history = useHistory();
 
-  async function getEventsStatisticsData() {
-    const { data } = await OrganizationApi.getUsers(organizationId);
-    const { data: dataEvents } = await OrganizationApi.events(organizationId);
+  /** Data States */
+  const [membersDataSource, setMembersDataSource] = useState([]);
+  const [lastUpdate, setLastUpdate] = useState();
+  const [orgUsersList, setOrgUsersList] = useState([]);
+  const [orgEventsList, setOrgEventsList] = useState([]);
+  const [selectedUser, setSelectedUser] = useState({});
+  const [userActivities, setUserActivities] = useState({});
 
-    const fieldsMembersData = [];
-    // console.log('Array de OrgAPI - GetUsers', data);
-    // console.log('Array de OrgAPI - Events', dataEvents);
-    //console.log('Array de EventAPI - GetEventUser', dataEventUser);
-    const userActivities = {};
+  /** Flag States */
+  const [isLoading, setIsLoading] = useState(true);
+  const [isStaticsLoading, setIsStaticsLoading] = useState(true);
+  const [shouldRenderModal, setShouldRenderModel] = useState(false);
+  const [isEditingThetMember, setIsEditingThetMember] = useState(false);
 
-    for (let indexOrganization = 0; indexOrganization < data.length; indexOrganization++) {
-      const userId = data[indexOrganization].account_id;
-      const email = data[indexOrganization].user.email;
+  /** Columns CMS States */
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const [extraFields, setExtraFields] = useState([]);
+
+  const [filtersToDataSource, setFiltersToDataSource] = useState({});
+
+  useEffect(() => {
+    startingComponent();
+  }, []);
+
+  useEffect(() => {
+    updateDataMembers();
+  }, [orgUsersList, userActivities]);
+
+  useEffect(() => {
+    async function interna() {
+      const userActivitiesData = await getEventsStatisticsData(orgUsersList, orgEventsList);
+      setUserActivities(userActivitiesData);
+    }
+
+    interna();
+  }, [orgUsersList, orgEventsList]);
+
+  useEffect(() => {
+    if (Object.keys(userActivities).length === 0) {
+      console.log('El objeto está vacio');
+    } else {
+      console.log('else - setIsStaticsLoading');
+      setIsStaticsLoading(false);
+    }
+  }, [userActivities]);
+
+  async function startingComponent() {
+    setLastUpdate(new Date());
+    await setFormFields();
+    await getOrgUsersList();
+    await getOrgEventsList();
+  }
+
+  async function getEventsStatisticsData(orgUsersList, orgEventsList) {
+    const userActivitiesData = {};
+
+    for (let indexOrganization = 0; indexOrganization < orgUsersList.length; indexOrganization++) {
+      const userId = orgUsersList[indexOrganization].account_id;
+      const email = orgUsersList[indexOrganization].user.email;
 
       let totalActividades = 0;
       let totalActividadesVistas = 0;
 
-      for (let indexEvent = 0; indexEvent < dataEvents.length; indexEvent++) {
-        const eventId = dataEvents[indexEvent]._id;
+      for (let indexEvent = 0; indexEvent < orgEventsList.length; indexEvent++) {
+        const eventId = orgEventsList[indexEvent]._id;
         //const { data: dataEventUser } = await EventsApi.getEventUser(eventId, userId);
 
-        const thing = await EventsApi.getStatusRegister(eventId, email)
+        const thing = await EventsApi.getStatusRegister(eventId, email);
         if (thing.data.length === 0) continue;
         const eventUser = thing.data[0];
 
@@ -69,76 +118,176 @@ function OrgMembers(props) {
         totalActividades += activities.length;
         totalActividadesVistas += attendee.length;
       }
-      userActivities[userId] = `${totalActividadesVistas}/${totalActividades}`;
+      userActivitiesData[userId] = `${totalActividadesVistas}/${totalActividades}`;
+      console.log('2. userActivitiesData[userId]', userActivitiesData[userId]);
     }
 
-    // console.log(userActivities);
+    console.log('2. userActivitiesData', userActivitiesData);
 
-    data.map((membersData) => {
+    return userActivitiesData;
+  }
+
+  async function updateDataMembers() {
+    const allMemberFields = [];
+
+    console.log('1. orgUsersList', orgUsersList);
+
+    const positionList = await getPositionList();
+
+    orgUsersList?.map(async (orgUser) => {
+      console.log('Estado - Lista de cargos', positionList);
+
       const properties = {
-        _id: membersData._id,
-        created_at: membersData.created_at,
-        updated_at: membersData.updated_at,
-        position: membersData.rol.name,
-        // names: membersData?.user?.name || membersData?.user?.names,
-        // email: membersData?.user?.email,
-        stats: userActivities[membersData.account_id],
-        ...membersData.properties,
+        ...orgUser.properties,
+        _id: orgUser._id,
+        created_at: orgUser.created_at,
+        updated_at: orgUser.updated_at,
+        role: orgUser.rol?.name || 'Sin rol',
+        rol_id: orgUser.rol_id || null,
+        picture: orgUser.user.picture,
+        position: orgUser.position?.position_name || 'Sin cargo',
+        position_id: orgUser.position?._id || null,
+        stats: userActivities[orgUser.account_id],
       };
 
-      fieldsMembersData.push(properties);
+      allMemberFields.push(properties);
     });
 
-    dataEvents;
+    console.log('Variable - Miembros de la organización', allMemberFields);
 
-    setMembersData(fieldsMembersData);
+    setMembersDataSource(allMemberFields);
     setIsLoading(false);
   }
 
-  async function getRoleList() {
-    const roleListData = await RolAttApi.byEventRolsGeneral();
-    setRoleList(roleListData);
+  async function getOrgUsersList() {
+    const { data: orgUsers } = await OrganizationApi.getUsers(organizationId);
+    console.log('Petición de solicitud - Usuarios de la organización: ', orgUsers);
+    setOrgUsersList(orgUsers);
   }
 
-  function startingComponent() {
-    getEventsStatisticsData();
-    setLastUpdate(new Date());
-    getRoleList();
-    setExtraFields(props.org.user_properties);
+  async function getOrgEventsList() {
+    const { data: orgEvents } = await OrganizationApi.events(organizationId);
+    console.log('Petición de solicitud - Cursos de la organización: ', orgEvents);
+    setOrgEventsList(orgEvents);
   }
-  useEffect(() => {
-    startingComponent();
-  }, [props.org.user_properties]);
 
-  function goToEvent(eventId) {
-    const url = `/eventadmin/${eventId}/agenda`;
-    history.replace({ pathname: url });
+  async function getPositionList() {
+    const positionListData = await PositionsApi.getAllByOrganization(organizationId);
+    console.log('Petición de solicitud - Lista de Cargos : ', positionListData);
+
+    const positionsOptions = positionListData.map((position) => {
+      return {
+        label: position.position_name,
+        value: position._id,
+      };
+    });
+
+    return positionsOptions;
+  }
+
+  const getRolesAsOptions = async () => {
+    const roles = await OrganizationApi.Roles.getAll(organizationId);
+    return (roles || []).map((role) => ({
+      value: role._id,
+      label: role.name,
+      type: role.type,
+    }));
+  };
+
+  async function setFormFields() {
+    const positionList = await getPositionList();
+    const rolList = await getRolesAsOptions();
+
+    const positionField = {
+      name: 'position_id',
+      label: 'Cargo',
+      unique: false,
+      index: 2,
+      mandatory: false,
+      order_weight: 3,
+      type: 'list',
+      options: positionList,
+      _id: { $oid: '614260d226e7862220497eac3' },
+    };
+
+    const rolField = {
+      name: 'rol_id',
+      label: 'Rol',
+      mandatory: true,
+      type: 'list',
+      options: rolList,
+    };
+
+    setExtraFields([...props.org.user_properties, positionField, rolField]);
   }
 
   async function exportFile(e) {
     e.preventDefault();
     e.stopPropagation();
 
-    const ws = utils.json_to_sheet(membersData);
+    const ws = utils.json_to_sheet(
+      membersDataSource
+        .map((user) => {
+          delete user._id;
+          delete user.created_at;
+          delete user.updated_at;
+          delete user.position;
+          delete user.position_id;
+          delete user.rol_id;
+          delete user.stats;
+          delete user.picture;
+          // What else?
+          const { password } = user;
+          if (password) {
+            user['documento de identidad'] = password;
+            delete user.password;
+          }
+          return user;
+        })
+        .filter((user) => {
+          // Before we send the user data, we have to check if its dataIndex
+          // contains a filtered value to remove this value
+          return Object.entries(filtersToDataSource).every(([key, value]) => {
+            if (typeof user[key] === 'undefined' || user[key] === undefined) return true;
+            return user[key] === value;
+          });
+        }),
+    );
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Members');
     writeFileXLSX(wb, `Miembros_${dayjs().format('l')}.xlsx`);
   }
 
   function closeOrOpenModalMembers() {
-    setAddOrEditUser((prevState) => {
-      return !prevState;
-    });
+    setShouldRenderModel((prevState) => !prevState);
   }
 
   function addUser() {
     setSelectedUser({});
     closeOrOpenModalMembers();
+    setIsEditingThetMember(false);
   }
+
   function editModalUser(item) {
     setSelectedUser(item);
     closeOrOpenModalMembers();
-    setEditMember(true);
+    setIsEditingThetMember(true);
+  }
+
+  function thisDataIndexWasFiltered(currentDataIndex, filterValue) {
+    console.info('this dataIndex was filtered', currentDataIndex, filterValue);
+
+    setFiltersToDataSource((previous) => {
+      const clone = { ...previous };
+      if (typeof filterValue === 'undefined' || filterValue === undefined) {
+        // Remove this dataIndex if the value is undefined only
+        delete clone[currentDataIndex];
+      } else {
+        // Update the new value
+        clone[currentDataIndex] = filterValue;
+      }
+      return clone;
+    });
   }
 
   const columnsData = {
@@ -146,16 +295,12 @@ function OrgMembers(props) {
     setSearchedColumn,
     searchText,
     setSearchText,
+    thisDataIndexWasFiltered,
   };
 
   return (
     <>
-      <Header
-        title={'Miembros'}
-        description={
-          'Se muestran los primeros 50 usuarios, para verlos todos por favor descargar el excel o realizar una búsqueda.'
-        }
-      />
+      <Header title="Miembros" />
 
       <p>
         <small>
@@ -164,45 +309,44 @@ function OrgMembers(props) {
       </p>
 
       <p>
-        <Tag>Inscritos: {membersData.length || 0}</Tag>
+        <Tag>Inscritos: {membersDataSource.length || 0}</Tag>
       </p>
 
       <Table
-        columns={columns(columnsData, editModalUser)}
-        dataSource={membersData}
-        size='small'
-        rowKey='index'
-        pagination={false}
-        loading={isLoading}
+        columns={columns(columnsData, editModalUser, extraFields, userActivities, isStaticsLoading)}
+        dataSource={membersDataSource}
+        size="small"
+        rowKey="index"
+        pagination={{ pageSize: 50 }}
+        loading={isLoading || membersDataSource.length === 0}
         scroll={{ x: 'auto' }}
         title={() => (
-          <Row wrap justify='end' gutter={[8, 8]}>
+          <Row wrap justify="end" gutter={[8, 8]}>
             <Col>
-              {membersData.length > 0 && (
-                <Button type='primary' icon={<DownloadOutlined />} onClick={exportFile}>
+              {membersDataSource.length > 0 && (
+                <Button type="primary" icon={<DownloadOutlined />} onClick={exportFile}>
                   Exportar
                 </Button>
               )}
             </Col>
             <Col>
-              <Button type='primary' icon={<PlusCircleOutlined />} onClick={addUser}>
-                {'Agregar'}
+              <Button type="primary" icon={<PlusCircleOutlined />} onClick={addUser}>
+                Agregar
               </Button>
             </Col>
           </Row>
         )}
       />
-      {addOrEditUser && (
+
+      {shouldRenderModal && (
         <ModalMembers
-          handleModal={closeOrOpenModalMembers}
-          modal={addOrEditUser}
-          rolesList={roleList}
           extraFields={extraFields}
           value={selectedUser}
-          editMember={editMember}
+          editMember={isEditingThetMember}
           closeOrOpenModalMembers={closeOrOpenModalMembers}
           organizationId={organizationId}
           startingComponent={startingComponent}
+          setIsLoading={setIsLoading}
         />
       )}
     </>

@@ -11,7 +11,7 @@ const WithCode = () => {
   const [verifyLink, setVerifyLink] = useState(false);
   const conectionRef = firestore.collection(`connections`);
   useEffect(() => {
-    //REFERENCIA FIRESTORE PARA VERIFICAR SI EL USUARIO ESTA CONECTADO
+    // Referencia firestore para verificar si el usuario esta conectado
 
     const querystring = window.location.search;
     const params = new URLSearchParams(querystring);
@@ -77,14 +77,11 @@ const WithCode = () => {
 
             /*fetch(refreshLink).then((result) => {
               if (event && result) {
-                console.log('RESULTACA===>', result);
                 // window.location.href = `${window.location.origin}/landing/${event}`;
               } else {
                 window.location.href = `${window.location.origin}`;
               }
             });*/
-          } else {
-            console.log('NOT REQUEST');
           }
         });
     }
@@ -92,9 +89,9 @@ const WithCode = () => {
   return (
     <>
       {loading ? (
-        <ResultLink status='loading' verifyLink={verifyLink} data={email} />
+        <ResultLink status="loading" verifyLink={verifyLink} data={email} />
       ) : error ? (
-        <ResultLink status='error' data={email} event={event} />
+        <ResultLink status="error" data={email} event={event} />
       ) : (
         ''
       )}

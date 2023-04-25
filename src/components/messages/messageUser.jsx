@@ -18,7 +18,7 @@ const MessageUser = (props) => {
 
   return (
     <Fragment>
-      <Table header={columns} list={users} pagination exportData fileName={'ReportSends'} />
+      <Table header={columns} list={users} pagination exportData fileName="ReportSends" />
     </Fragment>
   );
 };

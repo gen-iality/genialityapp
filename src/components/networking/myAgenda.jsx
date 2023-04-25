@@ -45,7 +45,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       .collection('events')
       .doc(event._id)
       .onSnapshot(function(doc) {
-        setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
+        setEnableMeetings(doc.data() && !!(doc.data().enableMeetings));
       });
   }, [event]);
 
@@ -90,7 +90,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 
   if (loading) {
     return (
-      <Row align='middle' justify='center' style={{ height: 100 }}>
+      <Row align="middle" justify="center" style={{ height: 100 }}>
         <Spin />
         <p>Aun no se encuentran reuniones activas, vuelve mas tarde</p>
       </Row>
@@ -103,11 +103,11 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
     //
 
     return (
-      <Row align='middle'>
+      <Row align="middle">
         <Col span={24}>
           <Button
-            className='button_regresar'
-            type='primary'
+            className="button_regresar"
+            type="primary"
             onClick={() => {
               setCurrentRoom(null);
             }}>
@@ -115,8 +115,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
           </Button>
           <Row gutter={[12, 12]}>
             <Col xs={24} sm={24} md={16} xl={16} xxl={16}>
-              <div className='aspect-ratio-box' style={{ width: '100%' }}>
-                <div className='aspect-ratio-box-inside'>
+              <div className="aspect-ratio-box" style={{ width: '100%' }}>
+                <div className="aspect-ratio-box-inside">
                   <iframe
                     style={{ border: '2px solid blue' }}
                     src={
@@ -129,8 +129,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     allow='autoplay;fullscreen; camera *;microphone *'
                     allowusermedia
                     allowFullScreen
-                    title='video'
-                    className='iframe-zoom nuevo'>
+                    title="video"
+                    className="iframe-zoom nuevo">
                     <p>Your browser does not support iframes.</p>
                   </iframe>
                 </div>
@@ -139,8 +139,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             <Col xs={24} sm={24} md={8} xl={8} xxl={8}>
               {userName && (
                 <iframe
-                  title='chatevius'
-                  className='ChatEviusLan'
+                  title="chatevius"
+                  className="ChatEviusLan"
                   src={
                     'https://chatevius.netlify.app?nombre=' +
                     userName +
@@ -179,7 +179,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     {dayjs(eventDate).format('MMMM DD')}
                   </div>
                 }
-                key={`event-date-${eventDateIndex}-${eventDate}`}>
+                key={`event-date-${eventDateIndex}-${eventDate}`}
+              >
                 {isNonEmptyArray(dayAgendas) ? (
                   dayAgendas.map((acceptedAgenda) => (
                     <>
@@ -194,14 +195,18 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     </>
                   ))
                 ) : (
-                  <Card style={{ textAlign: 'center' }}>{'No tienes citas agendadas para esta fecha'}</Card>
+                  <Card style={{ textAlign: 'center' }}>
+                    No tienes citas agendadas para esta fecha
+                  </Card>
                 )}
               </TabPane>
             );
           })}
         </Tabs>
       ) : (
-        <Card>{'No tienes citas actualmente'}</Card>
+        <Card>
+          No tienes citas actualmente
+        </Card>
       )}
     </div>
   );
@@ -256,29 +261,29 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   };
 
   return (
-    <Row justify='center' style={{ marginBottom: '20px' }}>
+    <Row justify="center" style={{ marginBottom: '20px' }}>
       <Card
         headStyle={{ border: 'none' }}
         style={{ width: 600, textAlign: 'left', borderRadius: '10px' }}
         bodyStyle={{ paddingTop: '0px' }}
-        bordered={true}
+        bordered
         extra={
           <Popconfirm
-            title='¿Desea cancelar/eliminar esta cita?'
+            title="¿Desea cancelar/eliminar esta cita?"
             onConfirm={deleteThisAgenda}
-            okText='Si'
-            cancelText='No'>
-            <Button type='text' danger disabled={loading} loading={loading}>
-              {'Cancelar cita'}
+            okText="Si"
+            cancelText="No">
+            <Button type="text" danger disabled={loading} loading={loading}>
+              Cancelar cita
             </Button>
           </Popconfirm>
         }
         title={
           <Space wrap>
-            <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
+            <Typography.Text style={{ fontSize: '12px' }} type="secondary">
               {dayjs(data.timestamp_start).format('hh:mm a')}
             </Typography.Text>
-            <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
+            <Typography.Text style={{ fontSize: '12px' }} type="secondary">
               {dayjs(data.timestamp_end).format('hh:mm a')}
             </Typography.Text>
           </Space>
@@ -294,15 +299,15 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
           title={<Typography.Title level={5}>{userName || 'No registra nombre'}</Typography.Title>}
           description={
             <Typography.Paragraph style={{ marginTop: '-15px' }}>
-              <Typography.Text type='secondary' style={{ paddingRight: '20px' }}>
+              <Typography.Text type="secondary" style={{ paddingRight: '20px' }}>
                 {userEmail || 'No registra correo'}
               </Typography.Text>
               {!!data.message && (
                 <p style={{ paddingRight: '20px' }}>
-                  <Divider orientation='left' plain style={{ marginBottom: '0px' }}>
+                  <Divider orientation="left" plain style={{ marginBottom: '0px' }}>
                     Mensaje
                   </Divider>
-                  <Typography.Paragraph type='secondary' ellipsis={{ rows: 2 }}>
+                  <Typography.Paragraph type="secondary" ellipsis={{ rows: 2 }}>
                     {data.message}
                   </Typography.Paragraph>
                 </p>
@@ -311,11 +316,11 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
           }
         />
         {!deleted ? (
-          <Row justify='center'>
+          <Row justify="center">
             <Col xs={24} sm={24} md={12} xl={12}>
               <Button
                 block
-                type='primary'
+                type="primary"
                 disabled={loading || (!enableMeetings && !validDateRoom(data))}
                 loading={loading}
                 onClick={() => {

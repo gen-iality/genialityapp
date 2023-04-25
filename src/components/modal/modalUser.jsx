@@ -7,7 +7,7 @@ import { icon } from '@helpers/constants';
 import { Redirect } from 'react-router-dom';
 import { Actions } from '@helpers/request';
 import FormComponent from '../events/registrationForm/form';
-import { Modal } from 'antd';
+import { Alert, Button, Grid, Modal } from 'antd';
 import withContext from '@context/withContext';
 import { ComponentCollection } from 'survey-react';
 import { saveImageStorage } from '@helpers/helperSaveImage';
@@ -18,8 +18,21 @@ import { DispatchMessageService } from '@context/MessageService';
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent';
 import { handleRequestError } from '@helpers/utils';
 import printBagdeUser from '../badge/utils/printBagdeUser';
+import RegisterUserAndEventUser from '@components/authentication/RegisterUserAndEventUser';
 
 const { confirm } = Modal;
+const { useBreakpoint } = Grid;
+
+const stylePaddingDesktop = {
+  paddingLeft: '30px',
+  paddingRight: '30px',
+  textAlign: 'center',
+};
+const stylePaddingMobile = {
+  paddingLeft: '10px',
+  paddingRight: '10px',
+  textAlign: 'center',
+};
 
 class UserModal extends Component {
   constructor(props) {
@@ -39,6 +52,8 @@ class UserModal extends Component {
       checked_in: false,
       tickets: [],
       loadingregister: false,
+      existGenialialityUser: true,
+      makeUserRegister: false,
     };
     this.ifrmPrint = React.createRef();
   }
@@ -56,7 +71,7 @@ class UserModal extends Component {
         Object.keys(value.properties).map((obj) => {
           return (user[obj] = value.properties[obj]);
         });
-        const checked_in = value.checkedin_at ? true : false;
+        const checked_in = !!value.checkedin_at;
         user = { ...user, _id: value._id };
         this.setState({
           user,
@@ -72,7 +87,7 @@ class UserModal extends Component {
         Object.keys(value).map((obj) => {
           return (user[obj] = value[obj]);
         });
-        const checked_in = value.checkedin_at ? true : false;
+        const checked_in = !!value.checkedin_at;
         this.setState({
           user,
           ticket_id: value.ticket_id,
@@ -91,7 +106,6 @@ class UserModal extends Component {
       });
       this.setState({ found: 1, user, edit: false, ticket_id: this.props.ticket });
     }
-    //console.log('EXTRAFIELDS===>', this.props.extraFields);
   }
 
   componentWillUnmount() {
@@ -132,11 +146,11 @@ class UserModal extends Component {
         const onHandlerRemove = async () => {
           try {
             const token = await GetTokenUserFirebase();
-            !self.props.byActivity &&
-              (await Actions.delete(
-                `/api/events/${self.props.cEvent.value?._id}/eventusers`,
-                `${user._id}?token=${token}`
-              ));
+            // !self.props.byActivity &&
+            //   (await Actions.delete(
+            //     `/api/events/${self.props.cEvent.value?._id}/eventusers`,
+            //     `${user._id}?token=${token}`
+            //   ));
             // messages = { class: 'msg_warning', content: 'USER DELETED' };
             const selectedEventUserId = user._id;
 
@@ -185,7 +199,6 @@ class UserModal extends Component {
     const activityId = this.props.activityId;
     const eventId = this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent;
     this.setState({ loadingregister: true });
-    //console.log('callback=>', values);
     let resp;
     let respActivity = true;
     if (values) {
@@ -223,7 +236,7 @@ class UserModal extends Component {
           resp = await UsersApi.editEventUser(
             snap,
             this.props.cEvent?.value?._id || this.props.cEvent?.value?.idEvent,
-            this.props.value._id
+            this.props.value._id,
           );
         }
       }
@@ -233,14 +246,12 @@ class UserModal extends Component {
         respActivity = await Activity.Register(
           this.props.cEvent?.value?._id,
           resp?.data?.user?._id || resp?.user?._id,
-          this.props.activityId
+          this.props.activityId,
         );
       }
 
       if (this.props.byActivity && this.props.edit) {
-        //console.log('VALUES ACTIVITY==>', this.props.value);
         //respActivity = await Activity.Update(this.props.cEvent?.value?._id, this.props.value.idActivity, datos);
-        //console.log('RESPUESTA ACTIVITY UPDATE==>', respActivity, this.props.value.idActivity);
         resp = await AttendeeApi.update(this.props.cEvent?.value?._id, snap, this.props.value._id);
         if (resp) {
           // resp = { ...resp, data: { _id: resp._id } };
@@ -271,6 +282,24 @@ class UserModal extends Component {
     this.setState({ loadingregister: false });
   };
 
+  validateGenialityUser = async (values) => {
+    console.log('1. values', values);
+    console.log('1. values.email', values.email);
+
+    const genialityUserRequest = await UsersApi.findByEmail(values.email);
+    console.log('genialityUserRequest', genialityUserRequest)
+    const [genialityUser] = genialityUserRequest;
+    console.log('genialityUser', genialityUser)
+
+    if (!genialityUser) {
+      console.log('1. El usuario no existe, se debe crear el usuario en geniality');
+      this.setState({ existGenialialityUser: false });
+    } else {
+      this.setState({ existGenialialityUser: true });
+      this.saveUser(values);
+    }
+  }
+
   printUser = () => {
     const resp = this.props.badgeEvent;
     if (resp._id) {
@@ -283,19 +312,20 @@ class UserModal extends Component {
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
     const { modal, badgeEvent, componentKey } = this.props;
-    const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr === true);
+    const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr);
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
-      <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible={true}>
+      <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible>
         <div
-          // className='asistente-list'
+          // className="asistente-list"
           style={{
             paddingLeft: '0px',
             paddingRight: '0px',
             paddingTop: '0px',
             paddingBottom: '0px',
             marginTop: '30px',
-          }}>
+          }}
+        >
           {componentKey === 'event-checkin' || componentKey == 'activity-checkin' ? (
             <FormEnrollAttendeeToEvent
               fields={this.props.extraFields}
@@ -310,24 +340,71 @@ class UserModal extends Component {
               badgeEvent={this.props.badgeEvent}
               activityId={this.props.activityId}
             />
-          ) : (
-            <FormComponent
-              conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
-              initialOtherValue={this.props.value || {}}
-              eventUserOther={user || {}}
-              fields={this.props.extraFields}
-              organization={true}
-              options={this.options}
-              callback={this.saveUser}
-              loadingregister={this.state.loadingregister}
-              usedInCms={true}
+          ) : (this.state.makeUserRegister ? (
+            <RegisterUserAndEventUser
+              screens={[]}
+              stylePaddingMobile={stylePaddingMobile}
+              stylePaddingDesktop={stylePaddingDesktop}
+              requireAutomaticLoguin={false}
+            />
+
+            ) : (
+              <FormComponent
+                conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
+                initialOtherValue={this.props.value || {}}
+                eventUserOther={user || {}}
+                fields={this.props.extraFields}
+                organization
+                options={this.options}
+                callback={this.validateGenialityUser}
+                loadingregister={this.state.loadingregister}
+                usedInCms
+                editUser={this.props.edit}
+              />
+              )
+          )}
+        </div>
+        <div>
+        {!this.state.existGenialialityUser && (
+            <Alert
+              showIcon
+              /* style={{ marginTop: '5px' }} */
+              style={{
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                backgroundColor: '#FFFFFF',
+                color: '#000000',
+                borderLeft: '5px solid #FF4E50',
+                fontSize: '14px',
+                textAlign: 'start',
+                borderRadius: '5px',
+                marginBottom: '15px',
+              }}
+              /* closable */
+              message={
+                <>
+                  {'Usuario no está registrado en Geniality'}
+                  <Button
+                    style={{ fontWeight: 'bold', marginLeft: '2rem' }}
+                    onClick={() => {
+                      console.log('Se registra el usuario');
+                      this.setState({ makeUserRegister: true });
+                      this.setState({ existGenialialityUser: true });
+
+                    }}
+                    type="primary"
+                  >
+                    Registrar Usuario
+                  </Button>
+                </>
+              }
+              type="error"
             />
           )}
         </div>
         <div style={{ opacity: 0, display: 'none' }}>
           {user && badgeEvent && badgeEvent.BadgeFields && <QRCode value={userId} size={qrSize ? qrSize?.size : 64} />}
         </div>
-        <iframe title={'Print User'} ref={this.ifrmPrint} style={{ opacity: 0, display: 'none' }} />
+        <iframe title="Print User" ref={this.ifrmPrint} style={{ opacity: 0, display: 'none' }} />
       </Modal>
     );
   }

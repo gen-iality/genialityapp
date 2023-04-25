@@ -13,8 +13,8 @@ class PagePersonalizada extends Component {
     if (!pageInfo) return this.props.history.goBack();
     return (
       <div>
-        <h2 className='title'>{pageInfo.name}</h2>
-        <h3 className='subtitle'>{pageInfo.label}</h3>
+        <h2 className="title">{pageInfo.name}</h2>
+        <h3 className="subtitle">{pageInfo.label}</h3>
         <p>{pageInfo.description}</p>
         <EditarHtml />
       </div>

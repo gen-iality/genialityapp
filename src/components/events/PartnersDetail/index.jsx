@@ -11,11 +11,11 @@ export default function PartnerDetail({ company, handleClosePartnerDetail }) {
         <Col>
           <Button onClick={handleClosePartnerDetail}>
             <LeftOutlined style={{ fontSize: '16px' }} />
-            {'Volver'}
+            Volver
           </Button>
         </Col>
       </Row>
-      <Row gutter={[16, 16]} align='middle' wrap>
+      <Row gutter={[16, 16]} align="middle" wrap>
         <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
           <Image
             src={company.list_image ? company.list_image : 'error'}
@@ -28,14 +28,14 @@ export default function PartnerDetail({ company, handleClosePartnerDetail }) {
           <Title style={{ textAlign: 'justify', borderBottom: '2px solid' }}>{company.name}</Title>
         </Col>
       </Row>
-      <Row gutter={[8, 8]} justify='center' wrap>
+      <Row gutter={[8, 8]} justify="center" wrap>
         <Col span={24}>
           {company.video_url && (
             <div style={{ marginTop: '5vh', fontSize: '120%', fontWeight: 'bold' }}>
-              <div className='mediaplayer'>
+              <div className="mediaplayer">
                 <ReactPlayer
-                  width={'100%'}
-                  height={'40vw'}
+                  width="100%"
+                  height="40vw"
                   style={{
                     marginTop: '0px',
                     display: 'block',

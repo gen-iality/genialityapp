@@ -31,6 +31,8 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   const [selectedType, setSelectedType] = useState<ActivityType.GeneralTypeValue | undefined>(undefined);
   const [widget, setWidget] = useState<ActivityType.CardUI | ActivityType.FormUI | undefined>(undefined);
 
+  const [written, setWritten] = useState('')
+
   const {
     activityType,
     activityContentType,
@@ -65,15 +67,16 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   const handleCloseModal = (success: boolean = false) => {
     console.debug('modal is hidden', success ? 'successfully' : 'failurely');
     setIsModalShown(false);
+    setContentSource(written);
   };
 
   const handleInput = (text: string) => {
     console.debug('text will:', text);
-    setContentSource(text);
+    setWritten(text)
   };
 
   if (!activityType) {
-    return <Alert message='Primero asigne un tipo de actividad' type='error' />
+    return <Alert message="Primero asigne un tipo de actividad" type="error" />
   }
 
   if (activityContentType) {
@@ -94,7 +97,7 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
   return (
     <>
     {widget === undefined && (
-      <Alert type='error' message='No puede cargar el tipo de actividad' />
+      <Alert type="error" message="No puede cargar el tipo de actividad" />
     )}
     {widget !== undefined && (
     <ActivityContentModal
@@ -108,7 +111,7 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
     />
     )}
     <Card>
-      <Row align='middle' style={{textAlign: 'center'}}>
+      <Row align="middle" style={{textAlign: 'center'}}>
         <Col span={24} style={{marginBottom: '1em'}}>
           <h2>
           Todavía no has agregado el contenido a la actividad
@@ -116,7 +119,7 @@ function ActivityContentSelector(props: SubActivityContentSelectorProps) {
           </h2>
         </Col>
         <Col span={24} style={{marginBottom: '1em'}}>
-          <Button onClick={() => setIsModalShown(true)} type='primary'>
+          <Button onClick={() => setIsModalShown(true)} type="primary">
             Agregar contenido
           </Button>
         </Col>

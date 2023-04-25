@@ -10,7 +10,7 @@ const MenuTablets = () => {
 
   return (
     <>
-      <div className='hiddenMenuMobile_Landing'>
+      <div className="hiddenMenuMobile_Landing">
         <Button onClick={() => setisOpen(!isOpen)} block style={drawerButton}>
           <MenuOutlined style={{ fontSize: '15px' }} />
           <div>Menu</div>
@@ -18,33 +18,34 @@ const MenuTablets = () => {
       </div>
 
       <Drawer
-        width={'60%'}
+        width="60%"
         zIndex={1000}
         title={cEvent.value.name}
-        placement='left'
+        placement="left"
         closable={false}
         onClose={() => setisOpen(!isOpen)}
         visible={isOpen}
-        maskClosable={true}
+        maskClosable
         bodyStyle={{
           padding: '0px',
           backgroundColor:
             cEvent.value.styles && cEvent.value.styles.toolbarDefaultBg
               ? cEvent.value.styles.toolbarDefaultBg
               : 'white',
-        }}>
-        <Row justify='center'>
+        }}
+      >
+        <Row justify="center">
           {cEvent.value.styles && cEvent.value.styles.event_image && (
             <Image
               preview={{ mask: <EyeOutlined /> }}
-              alt='Logo'
+              alt="Logo"
               src={cEvent.value.styles.event_image}
               style={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg, objectFit: 'cover' }}
             />
           )}
         </Row>
 
-        <MenuEvent isMobile={true} />
+        <MenuEvent isMobile />
       </Drawer>
     </>
   );

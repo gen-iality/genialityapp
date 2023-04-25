@@ -27,7 +27,7 @@ class UserOneTimeLoginLinkForm extends Component {
             {handleCloseRecoveryPass && (
               <Row style={{ marginTop: '30px', marginBottom: '30px' }}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-                  <Button onClick={handleCloseRecoveryPass} type='primary' style={{ marginRight: '15px' }}>
+                  <Button onClick={handleCloseRecoveryPass} type="primary" style={{ marginRight: '15px' }}>
                     {intl.formatMessage({ id: 'button.return' })}
                   </Button>
                 </Col>
@@ -39,8 +39,8 @@ class UserOneTimeLoginLinkForm extends Component {
             <Row>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item
-                  name='email'
-                  label='E-mail'
+                  name="email"
+                  label="E-mail"
                   rules={[
                     {
                       required: true,
@@ -65,11 +65,11 @@ class UserOneTimeLoginLinkForm extends Component {
                 ) : (
                   <>
                     {handleCloseRecoveryPass && (
-                      <Button onClick={handleCloseRecoveryPass} type='default' style={{ marginRight: '15px' }}>
+                      <Button onClick={handleCloseRecoveryPass} type="default" style={{ marginRight: '15px' }}>
                         {intl.formatMessage({ id: 'button.cancel' })}
                       </Button>
                     )}
-                    <Button type='primary' htmlType='submit'>
+                    <Button type="primary" htmlType="submit">
                       {actionMsg}
                     </Button>
                   </>

@@ -7,6 +7,9 @@ import { Actions } from '@helpers/request';
 
 const { Title } = Typography;
 
+/**
+ * @deprecated nothing uses this component
+ */
 class DragDrop extends Component {
   constructor(props) {
     super(props);
@@ -82,20 +85,22 @@ class DragDrop extends Component {
       <div>
         <DragDropContext onDragEnd={this.onDragEnd} onDragUpdate={this.onDragUpdate}>
           <Title level={4}>Organiza los datos de los asistentes</Title>
-          <Droppable droppableId='droppable' type='user_properties'>
+          <Droppable droppableId="droppable" type="user_properties">
             {(provided, snapshot) => (
               <div ref={provided.innerRef} style={getQuestionListStyle(snapshot.isDraggingOver)}>
                 {user_properties.map((list, index) => (
                   <Draggable
                     key={list.uuid ? list.uuid : list._id}
                     draggableId={list.uuid ? list.uuid : list._id}
-                    index={index}>
+                    index={index}
+                  >
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}>
+                        style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                      >
                         <span style={{ marginRight: '5%' }}>
                           <DragOutlined />
                         </span>

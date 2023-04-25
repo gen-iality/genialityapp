@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Space, Upload, Alert } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import createNewUser from './ModalsFunctions/createNewUser';
+import createNewUser, { CREATE_NEW_USER_FAIL, CREATE_NEW_USER_FAIL_BECAUSE_EMAIL, CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/createNewUser';
 import { app } from '@helpers/firebase';
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useIntl } from 'react-intl';
@@ -12,7 +12,9 @@ import { uploadImagedummyRequest } from '@Utilities/imgUtils';
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl();
   const { handleChangeTypeModal } = useHelper();
-  const [errorEmail, setErrorEmail] = useState(false);
+  const [isErrorBecauseEmail, setIsErrorBecauseEmail] = useState(false);
+  // const [registrationErrorMessage, setRegistrationErrorMessage] = useState('');
+
   const ruleEmail = [
     {
       type: 'email',
@@ -61,8 +63,6 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
 
   const [form] = Form.useForm();
   const [imageAvatar, setImageAvatar] = useState(null);
-  const [modalInfo, setModalInfo] = useState(null);
-  const [openOrCloseTheModalFeedback, setOpenOrCloseTheModalFeedback] = useState(false);
 
   function resetFields() {
     form.resetFields();
@@ -79,21 +79,23 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
     const newValues = {
       ...values,
       picture: imageAvatar,
-      resetFields,
-      setModalInfo,
-      setOpenOrCloseTheModalFeedback,
     };
 
     try {
-      const resp = await createNewUser(newValues);
-      if (resp == 1) {
-        // SI SE REGISTRÓ CORRECTAMENTE LO LOGUEAMOS
+      const {
+        // user: userData,
+        message: resultMessage,
+        status: creatingStatus,
+      } = await createNewUser(newValues, resetFields);
+
+      if (creatingStatus === CREATE_NEW_USER_SUCCESS) {
+        // If the registration was successful, then login it
         app
           .auth()
           .signInWithEmailAndPassword(newValues.email, newValues.password)
           .then((login) => {
             if (login) {
-              //PERMITE VALIDAR EN QUE SECCIÓN DE EVIUS SE ENCUENTRA Y ASÍ RENDERIZAR EL MODAL CORRESPONDIENTE
+              // Let us to check in what GEN.iality section we are to render the right modal component
               if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
                 handleChangeTypeModal('loginSuccess');
               } else {
@@ -102,35 +104,25 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             }
           })
           .catch((err) => {
+            console.error(err);
             handleChangeTypeModal('loginError');
           });
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
+        DispatchMessageService({ key: 'loading', action: 'destroy' });
         DispatchMessageService({
           type: 'success',
           msj: 'Información guardada correctamente!',
           action: 'show',
         });
-      } else if (resp == 0) {
-        handleChangeTypeModal('loginError');
-        setErrorEmail(false);
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error inesperado',
-          action: 'show',
-        });
       } else {
-        setErrorEmail(true);
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
+        console.error({creatingStatus, resultMessage})
+        if (creatingStatus === CREATE_NEW_USER_FAIL_BECAUSE_EMAIL) {
+          setIsErrorBecauseEmail(true);
+        } else if (creatingStatus === CREATE_NEW_USER_FAIL) {
+          setIsErrorBecauseEmail(false);
+          handleChangeTypeModal('loginError');
+        }
+
+        DispatchMessageService({ key: 'loading', action: 'destroy' });
         DispatchMessageService({
           type: 'error',
           msj: 'Ha ocurrido un error inesperado',
@@ -138,10 +130,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         });
       }
     } catch (err) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
+      console.error(err)
+      DispatchMessageService({ key: 'loading', action: 'destroy' });
       DispatchMessageService({
         type: 'error',
         msj: 'Ha ocurrido un error inesperado',
@@ -155,13 +145,14 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
       <Form
         onFinish={onFinishCreateNewUser}
         form={form}
-        autoComplete='off'
-        layout='vertical'
-        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+        autoComplete="off"
+        layout="vertical"
+        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
+      >
         <Form.Item>
-          <ImgCrop rotate shape='round'>
+          <ImgCrop rotate shape="round">
             <Upload
-              accept='image/png,image/jpeg'
+              accept="image/png,image/jpeg"
               onChange={(file) => {
                 if (file.fileList.length > 0) {
                   setImageAvatar(file.fileList);
@@ -171,18 +162,20 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
               }}
               customRequest={uploadImagedummyRequest}
               multiple={false}
-              listType='picture'
+              listType="picture"
               maxCount={1}
-              fileList={imageAvatar}>
+              fileList={imageAvatar}
+            >
               {
                 <Button
-                  type='primary'
-                  shape='circle'
+                  type="primary"
+                  shape="circle"
                   style={{
                     height: !imageAvatar ? '150px' : '95px',
                     width: !imageAvatar ? '150px' : '95px',
-                  }}>
-                  <Space direction='vertical'>
+                  }}
+                >
+                  <Space direction="vertical">
                     <PictureOutlined style={{ fontSize: '40px' }} />
                     {intl.formatMessage({
                       id: 'modal.label.photo',
@@ -199,14 +192,15 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             id: 'modal.label.email',
             defaultMessage: 'Correo electrónico',
           })}
-          name='email'
+          name="email"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleEmail}>
+          rules={ruleEmail}
+        >
           <Input
-            type='email'
-            size='large'
-            placeholder={'micorreo@ejemplo.com'}
+            type="email"
+            size="large"
+            placeholder="micorreo@ejemplo.com"
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
@@ -215,13 +209,14 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             id: 'modal.label.password',
             defaultMessage: 'Contraseña',
           })}
-          name='password'
+          name="password"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={rulePassword}>
+          rules={rulePassword}
+        >
           <Input.Password
-            type='password'
-            size='large'
+            type="password"
+            size="large"
             placeholder={intl.formatMessage({
               id: 'modal.label.password',
               defaultMessage: 'Contraseña',
@@ -234,13 +229,14 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             id: 'modal.label.name',
             defaultMessage: 'Nombre',
           })}
-          name='names'
+          name="names"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleName}>
+          rules={ruleName}
+        >
           <Input
-            type='text'
-            size='large'
+            type="text"
+            size="large"
             placeholder={intl.formatMessage({
               id: 'modal.label.name',
               defaultMessage: 'Nombre',
@@ -250,23 +246,24 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
-            id={'submitButton'}
-            htmlType='submit'
+            id="submitButton"
+            htmlType="submit"
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size='large'>
+            size="large"
+          >
             {intl.formatMessage({
               id: 'modal.label.create_user',
               defaultMessage: 'Crear cuenta de usuario',
             })}
           </Button>
         </Form.Item>
-        {errorEmail && (
+        {isErrorBecauseEmail && (
           <Alert
             showIcon
-            onClose={() => setErrorEmail(false)}
             closable
-            className='animate__animated animate__bounceIn'
+            onClose={() => setIsErrorBecauseEmail(false)}
+            className="animate__animated animate__bounceIn"
             style={{
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
               backgroundColor: '#FFFFFF',
@@ -277,7 +274,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
               borderRadius: '5px',
               marginBottom: '15px',
             }}
-            type='error'
+            type="error"
             message={intl.formatMessage({
               id: 'modal.feedback.errorDNSNotFound',
               defaultMessage: 'El correo ingresado no es válido.',

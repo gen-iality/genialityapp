@@ -70,7 +70,6 @@ class TicketsForm extends Component {
     const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
     const ticketstoshow = tickets; //tickets.filter((ticket) => ticket.stage_id == id); //Filtrar los tiquetes del stage activo
 
-    //"5e835d9fd74d5c6cfd379992"
     //Persistencia de tiquetes seleccionados después de login
     let info = localStorage.getItem('info'); //Se trae info
     if (info && evius_token) {
@@ -147,7 +146,6 @@ class TicketsForm extends Component {
     Object.keys(this.state.ticketsadded).map((key) => {
       const info = tickets.find((ticket) => ticket._id === key);
       const amount = this.state.ticketsadded[key];
-      console.log('PRECIO==>', price);
       const price = info.price
         ? info.price === 'Gratis'
           ? 0
@@ -172,8 +170,6 @@ class TicketsForm extends Component {
   //Función botón RESERVAR
   onClick = (codeDiscount) => {
     if (this.state.summaryList.length <= 0) return; //Si no hay tiquetes no hace nada, prevenir click raro
-    console.log('SUMMARYLIST==>', this.state.summaryList);
-    console.log('AUTH==>', this.state.auth);
     if (!this.state.auth) return this.props.handleModal(); //Si no está logueado muestro popup
 
     //@TODO si no tiene sillas debe pasar derecho al checkout y si el tickete tiene silla debe ir en el tickete eso es del API y usado aca

@@ -18,7 +18,7 @@ const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) =>
   const [standsColor, setStandsColor] = useState();
   const [imageBanner, setBannerImage] = useState();
   const [typeStand, setTypeStand] = useState();
-  //EFECTO PARA OCULTAR Y MOSTRAR VIRTUAL CONFERENCE
+  // Efecto para ocultar y mostrar virtual conference
   useEffect(() => {
     setVirtualConference(false);
     setTopBanner(false);

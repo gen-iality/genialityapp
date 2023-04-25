@@ -27,46 +27,46 @@ const ModalEdit = ({ visible, data, onFinish }) => {
 
   return (
     <Modal
-      title='Editar'
+      title="Editar"
       visible={visibleModal}
       onCancel={handleCancel}
       footer={[
-        <Button key='back' onClick={handleCancel}>
+        <Button key="back" onClick={handleCancel}>
           Cerrar
         </Button>,
       ]}>
       <Form onFinish={onFinish} form={form}>
-        <Form.Item label='Lenguaje' name='language'>
+        <Form.Item label="Lenguaje" name="language">
           <Select>
-            <Option value='Ingles'>Ingles</Option>
-            <Option value='Español'>Español</Option>
-            <Option value='Frances'>Frances</Option>
-            <Option value='Portugués'>Portugués</Option>
-            <Option value='Aleman'> Aleman</Option>
+            <Option value="Ingles">Ingles</Option>
+            <Option value="Español">Español</Option>
+            <Option value="Frances">Frances</Option>
+            <Option value="Portugués">Portugués</Option>
+            <Option value="Aleman"> Aleman</Option>
           </Select>
         </Form.Item>
 
-        <Form.Item label='Id de conferencia' name='meeting_id'>
+        <Form.Item label="Id de conferencia" name="meeting_id">
           <Input disabled />
         </Form.Item>
 
-        <Form.Item label='Id de conferencia' name='vimeo_id'>
+        <Form.Item label="Id de conferencia" name="vimeo_id">
           <Input disabled />
         </Form.Item>
 
-        <Form.Item label='estado' name='state'>
+        <Form.Item label="estado" name="state">
           <Select>
-            <Option value='open_meeting_room'>Conferencia abierta</Option>
-            <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
-            <Option value='ended_meeting_room'>Conferencia terminada</Option>
+            <Option value="open_meeting_room">Conferencia abierta</Option>
+            <Option value="closed_meeting_room">Conferencia no Iniciada</Option>
+            <Option value="ended_meeting_room">Conferencia terminada</Option>
           </Select>
         </Form.Item>
 
-        <Form.Item label='Texto informativo ' name='informative_text'>
+        <Form.Item label="Texto informativo " name="informative_text">
           <Input />
         </Form.Item>
         <Form.Item>
-          <Button type='primary' htmlType='submit'>
+          <Button type="primary" htmlType="submit">
             Guardar
           </Button>
         </Form.Item>

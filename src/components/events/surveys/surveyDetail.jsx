@@ -18,11 +18,12 @@ function SurveyDetail(props) {
   return (
     <Card>
       <Button
-        style={{ backgroundColor: '#1cdcb7', color: '#ffffff' }}
-        size='large'
+        style={{ backgroundColor: '#f7981d', color: '#ffffff' }}
+        size="large"
         icon={<ArrowLeftOutlined />}
         block
-        onClick={handleClick}>
+        onClick={handleClick}
+      >
         Volver al listado de evaluaciones
       </Button>
     </Card>

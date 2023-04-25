@@ -42,7 +42,7 @@ export const useBlockedEventValidator = (event: any, cUser: any) => {
   }
 
   return {
-    isBlocked: new Date() > blockedDate ? true : false,
+    isBlocked: new Date() > blockedDate,
     formatDate: blockedEventDate,
   };
 };

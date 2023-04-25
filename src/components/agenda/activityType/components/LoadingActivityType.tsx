@@ -5,7 +5,7 @@ const LoadingActivityType = () => {
   return (
     <Result
       icon={<LoadingOutlined />}
-      title='Este proceso puede tardar unos minutos'
+      title="Este proceso puede tardar unos minutos"
     />
   );
 };

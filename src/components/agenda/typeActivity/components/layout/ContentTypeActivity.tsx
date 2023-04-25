@@ -7,7 +7,7 @@ interface propsOptions {
 
 const ContentTypeActivity = ({ options }: propsOptions) => {
   return (
-    <Row /* style={{width: '100%'}} */ gutter={[16, 16]} justify='center'>
+    <Row /* style={{width: '100%'}} */ gutter={[16, 16]} justify="center">
       {options && options.length > 0 && options.length < 4
         ? options?.map((option) => (
             <Col span={8} key={'key-' + option.title}>

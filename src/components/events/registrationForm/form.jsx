@@ -1,6 +1,10 @@
+/** React's libraries imports */
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '@helpers/request';
-import FormTags, { setSuccessMessageInRegisterForm } from './constants';
+import ReactSelect from 'react-select';
+import { useIntl } from 'react-intl';
+import PhoneInput from 'react-phone-number-input';
+
+/** Antd imports */
 import {
   Collapse,
   Form,
@@ -19,28 +23,25 @@ import {
   Typography,
   Avatar,
 } from 'antd';
-import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
-import ReactSelect from 'react-select';
-import { useIntl } from 'react-intl';
+import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 import ImgCrop from 'antd-img-crop';
 
-import { areaCode } from '@helpers/constants';
-import TypeRegister from '../../tickets/typeRegister';
-import { ButtonPayment } from './payRegister';
-import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
-import { connect } from 'react-redux';
+/** Helpers and utils imports */
+import { EventFieldsApi } from '@helpers/request';
+import { countryApi } from '@helpers/request';
+
+/** Context imports */
 import { useHelper } from '@context/helperContext/hooks/useHelper';
 import { useUserEvent } from '@context/eventUserContext';
 import { useEventContext } from '@context/eventContext';
 import { useCurrentUser } from '@context/userContext';
-import { app } from '@helpers/firebase';
 import { DispatchMessageService } from '@context/MessageService';
-import { countryApi } from '@helpers/request';
+
 /**TODO::ocaciona error en ios */
 
 const { Option } = Select;
 const { Panel } = Collapse;
-const { TextArea, Password } = Input;
+const { TextArea } = Input;
 
 const textLeft = {
   textAlign: 'left',
@@ -86,7 +87,7 @@ function OutsideAlerter(props) {
 
   return <div ref={wrapperRef}>{props.children}</div>;
 }
-//OBTENER NOMBRE ARCHIVO
+// Obtener nombre archivo
 function obtenerName(fileUrl) {
   if (typeof fileUrl == 'string') {
     const splitUrl = fileUrl?.split('/');
@@ -107,14 +108,14 @@ function isVisibleButton(basicDataUser, extraFields, cEventUser) {
 }
 
 function isRegister(initialValues, cEventUser) {
-  return (initialValues !== null && Object.keys(initialValues).length === 0) || cEventUser.value == null ? true : false;
+  return (initialValues !== null && Object.keys(initialValues).length === 0) || cEventUser.value == null;
 }
 
 function fieldsAditional(extraFields) {
   if (extraFields) {
     const countFields = extraFields.filter(
       (field) =>
-        field.name !== 'names' && field.name !== 'email' && (field.type !== 'password' || field.name === 'contrasena')
+        field.name !== 'names' && field.name !== 'email' && (field.type !== 'password' || field.name === 'contrasena'),
     );
     return countFields.length;
   }
@@ -152,60 +153,61 @@ const FormRegister = ({
   callback,
   options,
   loadingregister,
-  setSectionPermissions,
   errorRegisterUser,
   basicDataUser = {},
   dataEventUser = {},
-  HandleHookForm = () => {},
-  setvalidateEventUser = () => {},
+  dataOrgMember = {},
+  HandleHookForm = (...args) => {},
+  setvalidateEventUser = (...args) => {},
+  setValidateOrgMember = (...args) => {},
   validateEventUser,
+  validateOrgMember,
+  editUser,
 }) => {
   const intl = useIntl();
   const cEvent = useEventContext();
   const cEventUser = useUserEvent();
   const cUser = useCurrentUser();
-  const {
-    currentAuthScreen,
-    typeModal,
-    eventPrivate,
-    handleChangeTypeModal,
-    setRegister,
-    helperDispatch,
-    // eventIsActive,
-  } = useHelper();
+  const { currentAuthScreen, typeModal, helperDispatch } = useHelper();
+  const [form] = Form.useForm();
+
+  // Estado de carga para obtener los datos de pais, región y ciudad del formulario
+  const [loading, setLoading] = useState(false);
+
+  // Estados del evento - ¿Será necesario este estado? - ¿const cEvent = useEventContext()?
+  const [event, setEvent] = useState(null);
+
+  // Estado de los datos iniciales del usuario. ¿Se usará solo para el Modal?
+  const [initialValues, setinitialValues] = useState({});
+
+  // Estados de campos dinámicos
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
+  const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
+    organization ? fields : cEvent.value?.user_properties || {},
+  );
+
+  // Estados relacionados al formulario
   const [submittedForm, setSubmittedForm] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
   const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
-  const [formMessage, setFormMessage] = useState({});
-  // const [password, setPassword] = useState('');
-  const [event, setEvent] = useState(null);
-  const [loggedurl, setLogguedurl] = useState(null);
+
+  // Estados relacionados a los campos del formulario
   const [imageAvatar, setImageAvatar] = useState(null);
-  // eslint-disable-next-line prefer-const
-  let [ImgUrl, setImgUrl] = useState('');
-  const [typeRegister, setTypeRegister] = useState('pay');
-  const [payMessage, setPayMessage] = useState(false);
-  const [form] = Form.useForm();
-  const [areacodeselected, setareacodeselected] = useState('+57');
-  const [numberareacode, setnumberareacode] = useState(null);
-  const [fieldCode, setFieldCode] = useState(null);
-  const [initialValues, setinitialValues] = useState({});
   const [country, setCountry] = useState({ name: '', countryCode: '', inputName: '' });
   const [region, setRegion] = useState({ name: '', regionCode: '', inputName: '' });
   const [city, setCity] = useState({ name: '', regionCode: '', inputName: '' });
   const [countries, setCountries] = useState([]);
   const [regiones, setRegiones] = useState([]);
   const [cities, setCities] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [conditionals, setconditionals] = useState(
-    organization ? conditionalsOther : cEvent.value?.fields_conditions || []
-  );
+
+  // Estados que no creo que sean necesarios. ¿o si? -> Convertirlos a variables sin necesidad de estados
   const [eventUser, seteventUser] = useState(organization ? eventUserOther : cEventUser.value || {});
-  const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
-    organization ? fields : cEvent.value?.user_properties || {}
+  // eslint-disable-next-line prefer-const
+  let [ImgUrl, setImgUrl] = useState('');
+  const [conditionals, setconditionals] = useState(
+    organization ? conditionalsOther : cEvent.value?.fields_conditions || [],
   );
+
   const buttonSubmit = useRef(null);
   const getCountries = async () => {
     setLoading(true);
@@ -272,6 +274,7 @@ const FormRegister = ({
     }
     setLoading(false);
   };
+
   const getCitiesByCountry = async (country) => {
     setLoading(true);
     try {
@@ -283,6 +286,7 @@ const FormRegister = ({
     }
     setLoading(false);
   };
+
   useEffect(() => {
     getCountries();
     return () => {
@@ -316,7 +320,7 @@ const FormRegister = ({
         ? cEventUser?.value?.properties
         : cUser.value
         ? cUser.value
-        : initialValuesGeneral
+        : initialValuesGeneral,
     );
   }, [cUser.value, cEventUser]);
 
@@ -327,32 +331,14 @@ const FormRegister = ({
   }, [validateEventUser?.status, validateEventUser?.statusFields]);
 
   useEffect(() => {
-    const formType = !cEventUser.value?._id ? 'register' : 'transfer';
-    setFormMessage(FormTags(formType));
-    setSubmittedForm(false);
+    if (validateOrgMember?.status) {
+      buttonSubmit?.current?.click();
+    }
+  }, [validateOrgMember?.status, validateOrgMember?.statusFields]);
+
+   useEffect(() => {
     hideConditionalFieldsToDefault(conditionals, cEventUser);
-
-    !organization && getEventData(eventId);
-    form.resetFields();
-    if (window.fbq) {
-      window.fbq('track', 'CompleteRegistration');
-    }
   }, [cEventUser.value, initialValues, conditionals, cEvent.value?._id]);
-
-  useEffect(() => {
-    if (!extraFields) return;
-    const codeareafield = extraFields.filter((field) => field.type == 'codearea');
-    if (codeareafield[0]) {
-      const phonenumber =
-        eventUser && codeareafield[0] && eventUser['properties'] ? eventUser['properties'][codeareafield[0].name] : '';
-      const codeValue = eventUser && eventUser['properties'] ? eventUser['properties']['code'] : '';
-      setFieldCode(codeareafield[0].name);
-      if (phonenumber && numberareacode == null) {
-        const splitphone = phonenumber.toString().split(' ');
-        setareacodeselected(codeValue);
-      }
-    }
-  }, []);
 
   useEffect(() => {
     form.resetFields();
@@ -364,37 +350,45 @@ const FormRegister = ({
       ...validateEventUser,
       statusFields: false,
     });
+
+    setValidateOrgMember({
+      ...validateOrgMember,
+      statusFields: false,
+    });
+
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
       setGeneralFormErrorMessageVisible(false);
     }, 4000);
   };
 
-  //Funcion para traer los datos del event para obtener la variable validateEmail y enviarla al estado
-  const getEventData = async (eventId) => {
-    const data = await EventsApi.getOne(cEvent.value?._id);
-    setEvent(data);
-  };
-
   const onFinish = async (values) => {
+    console.log('onFinish - Values', values);
+    console.log('onFinish - initialValues', initialValues);
+
     values = { ...initialValues, ...values };
+    console.log('onFinish - initialValues + values', values);
+
+    console.log('onFinish - basicDataUser', basicDataUser);
     if (Object.keys(basicDataUser).length > 0) {
       setvalidateEventUser({
         statusFields: true,
         status: false,
       });
+
+      setValidateOrgMember({
+        statusFields: true,
+        status: false,
+      });
+
       return;
     }
 
-    if (values['email']) {
-      values['email'] = values['email'].toLowerCase();
+    if (values.email) {
+      values.email = values.email.toLowerCase();
     }
 
-    if (areacodeselected) {
-      values['code'] = areacodeselected;
-    }
-
-    //OBTENER RUTA ARCHIVOS FILE
+    // Obtener ruta archivos file
     Object.values(extraFields).map((value) => {
       if (value.type == 'file') {
         values[value.name] = values[value.name]?.fileList
@@ -414,229 +408,16 @@ const FormRegister = ({
     } else {
       delete values.picture;
     }
+
     if (callback) {
+      console.log('5. Esto se ejecuta?');
       callback(values);
-    } else {
-      const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
-      if (data.length == 0 || cEventUser.value) {
-        setSectionPermissions({ view: false, ticketview: false });
-        // values.password = password;
-
-        // values.files = fileSave
-
-        setGeneralFormErrorMessageVisible(false);
-        setNotLoggedAndRegister(false);
-
-        const key = 'registerUserService';
-
-        // message.loading({ content: !eventUserId ? "Registrando usuario" : "Realizando transferencia", key }, 10);
-        DispatchMessageService({
-          type: 'loading',
-          key: 'loading',
-          msj: intl.formatMessage({ id: 'registration.message.loading' }),
-          duration: 10,
-          action: 'show',
-        });
-
-        const registerBody = { ...values };
-        const eventUserBody = {
-          properties: { ...values, typeRegister: typeRegister },
-        };
-
-        const textMessage = {};
-        textMessage.key = key;
-        let eventUserId;
-
-        if (eventUserId) {
-          try {
-            await TicketsApi.transferToUser(cEvent.value?._id, eventUserId, registerBody);
-            // textMessage.content = "Transferencia realizada";
-            textMessage.content = formMessage.successMessage;
-            setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
-
-            setSubmittedForm(true);
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: textMessage,
-              action: 'show',
-            });
-            setTimeout(() => {
-              closeModal({
-                status: 'sent_transfer',
-                message: 'Transferencia hecha',
-              });
-            }, 4000);
-          } catch (err) {
-            // textMessage.content = "Error... Intentalo mas tarde";
-            textMessage.content = formMessage.errorMessage;
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'error',
-              msj: textMessage,
-              action: 'show',
-            });
-          }
-        } else {
-          try {
-            let resp = undefined;
-            switch (typeModal) {
-              case 'registerForTheEvent':
-                const registerForTheEventData = await UsersApi.createOne(eventUserBody, cEvent.value?._id);
-                resp = registerForTheEventData;
-
-                break;
-
-              case 'update':
-                const updateData = await UsersApi.editEventUser(eventUserBody, cEvent.value?._id, cEventUser.value._id);
-                resp = updateData;
-                break;
-
-              default:
-                resp = await UsersApi.createUser(registerBody, cEvent.value?._id);
-
-                break;
-            }
-
-            // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
-            // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
-            //
-            const camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
-            UpdateTakenOptionInTakeableList(camposConOpcionTomada, values, cEvent.value?._id);
-
-            if (resp && resp._id) {
-              setSuccessMessageInRegisterForm(resp.status);
-              cEventUser.setUpdateUser(true);
-              handleChangeTypeModal(null);
-              textMessage.content = 'Usuario ' + formMessage.successMessage;
-
-              const $msg =
-                organization == 1
-                  ? ''
-                  : event.registration_message ||
-                    `Fuiste registrado al curso  ${values.email || ''}, revisa tu correo para confirmar.`;
-
-              setSuccessMessage($msg);
-
-              setSubmittedForm(true);
-              DispatchMessageService({
-                type: 'success',
-                msj: intl.formatMessage({ id: 'registration.message.created' }),
-                action: 'show',
-              });
-
-              //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
-              //todo el proceso de logueo depende del token en la url por eso se recarga la página
-              if (!cEvent?.value?.validateEmail && resp._id) {
-                const loginFirebase = async () => {
-                  app
-                    .auth()
-                    .signInWithEmailAndPassword(resp.email || resp.properties.email, values.password)
-                    .then((response) => {
-                      if (response.user) {
-                        cEventUser.setUpdateUser(true);
-                        handleChangeTypeModal(null);
-                        setSubmittedForm(false);
-                        switch (typeModal) {
-                          case 'registerForTheEvent':
-                            setRegister(2);
-                            break;
-
-                          case 'update':
-                            setRegister(4);
-                            break;
-                        }
-                        // }
-                      } else {
-                        // setErrorLogin(true); -> setErrorLogin is undefined
-                      }
-                    });
-                };
-                cEvent?.value?.visibility !== 'ANONYMOUS' && loginFirebase();
-                const loginFirebaseAnonymous = async () => {
-                  app
-                    .auth()
-                    .signInAnonymously()
-                    .then((user) => {
-                      if (user) {
-                        cEventUser.setUpdateUser(true);
-                        handleChangeTypeModal(null);
-                        setSubmittedForm(false);
-                        switch (typeModal) {
-                          case 'registerForTheEvent':
-                            setRegister(2);
-                            break;
-
-                          case 'update':
-                            setRegister(4);
-                            break;
-                        }
-                        // }
-                      }
-                    });
-                };
-                cEvent?.value?.visibility === 'ANONYMOUS' && loginFirebaseAnonymous();
-              } else {
-                window.location.replace(
-                  `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ? 1 : 4}`
-                );
-              }
-            } else {
-              if (typeRegister == 'free') {
-                const msg =
-                  intl.formatMessage({
-                    id: 'registration.already.registered',
-                  }) +
-                  ' ' +
-                  intl.formatMessage({
-                    id: 'registration.message.success.subtitle',
-                  });
-
-                textMessage.content = msg;
-
-                setSuccessMessage(msg);
-                // Retorna un mensaje en caso de que ya se encuentre registrado el correo
-                setNotLoggedAndRegister(true);
-                DispatchMessageService({
-                  type: 'success',
-                  msj: msg,
-                  action: 'show',
-                });
-              } else {
-                setPayMessage(true);
-              }
-            }
-          } catch (err) {
-            textMessage.content = formMessage.errorMessage;
-            textMessage.key = key;
-            DispatchMessageService({
-              type: 'error',
-              msj: textMessage,
-              action: 'show',
-            });
-          }
-        }
-      } else {
-        setNotLoggedAndRegister(true);
-      }
     }
   };
+
   useEffect(() => {
     form.setFieldsValue(initialValues);
   }, [initialValues]);
-
-  useEffect(() => {
-    if (areacodeselected) {
-      //form.setFieldsValue({ ...form.getFieldsValue, code: areacodeselected });
-      HandleHookForm({ target: { value: areacodeselected } }, 'code', null);
-    }
-  }, [areacodeselected]);
 
   const ValidateEmptyFields = (allValues) => {
     // if (allValues.picture == '') {
@@ -673,6 +454,8 @@ const FormRegister = ({
   };
 
   const updateFieldsVisibility = (conditionals, allFields) => {
+    console.log('conditionals', conditionals);
+    console.log('extraFieldsOriginal', extraFieldsOriginal);
     let newExtraFields = [...extraFieldsOriginal];
 
     newExtraFields = newExtraFields.filter((field) => {
@@ -701,7 +484,7 @@ const FormRegister = ({
     setExtraFields(newExtraFields);
   };
 
-  const hideConditionalFieldsToDefault = (conditionals, eventUser) => {
+   const hideConditionalFieldsToDefault = (conditionals, eventUser) => {
     const allFields = eventUser && eventUser['properties'] ? eventUser['properties'] : [];
     updateFieldsVisibility(conditionals, allFields);
   };
@@ -715,13 +498,14 @@ const FormRegister = ({
         action: 'show',
       });
     }
-    return isLt5M ? true : false;
+    return isLt5M;
   };
 
   function validateUrl() {
     const url = window.location.pathname;
-    return url.includes('/landing/') ? true : false;
+    return url.includes('/landing/');
   }
+
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
@@ -729,7 +513,7 @@ const FormRegister = ({
     if (!extraFields) return '';
     const formUI = extraFields.map((m, key) => {
       /* console.log(m, key) */
-      if (m.visibleByAdmin == true) {
+      if (m.visibleByAdmin) {
         return;
       }
       //Este if es nuevo para poder validar las contraseñas viejos (nuevo flujo para no mostrar esos campos)
@@ -749,9 +533,14 @@ const FormRegister = ({
           : initialValues
           ? initialValues[target]
           : '';
-        //VISIBILIDAD DE CAMPOS
+        // Visibilidad de campos
         const visible =
-          (initialValues?.email && name == 'email') || (initialValues?.names && name == 'names') ? true : false;
+          (initialValues?.email && name == 'email') ||
+          (initialValues?.names && name == 'names') ||
+          (initialOtherValue?.email && name == 'email') //||
+            ? //(initialOtherValue?.names && name == 'names')
+              true
+            : false;
         const validations =
           (type === 'region' && regiones.length == 0) ||
           (type === 'country' && countries.length == 0) ||
@@ -761,7 +550,7 @@ const FormRegister = ({
         //no entiendo b esto para que funciona
         // if (conditionals.state === "enabled") {
         //   if (label === conditionals.field) {
-        //     if (true == true || value === [conditionals.value]) {
+        //     if (true || value === [conditionals.value]) {
         //       label = conditionals.field;
         //     } else {
         //       return;
@@ -787,61 +576,15 @@ const FormRegister = ({
         );
 
         if (type === 'codearea') {
-          const prefixSelector = (
-            <Select
-              showSearch
-              optionFilterProp='children'
-              style={{ fontSize: '12px', width: 150 }}
-              value={areacodeselected}
-              onChange={(val) => {
-                setareacodeselected(val);
-                //console.log(val);
-              }}
-              placeholder='Código de area del pais'>
-              {areaCode.map((code, key) => {
-                return (
-                  <Option key={key} value={code.value}>
-                    {`${code.label} (${code.value})`}
-                  </Option>
-                );
+          input = (
+            <PhoneInput
+              placeholder={intl.formatMessage({
+                id: 'form.phoneInput.placeholder',
+                defaultMessage: 'Ingrese número de contacto',
               })}
-            </Select>
-          );
-          input = (
-            <Input
-              addonBefore={prefixSelector}
-              //onChange={(e) => setnumberareacode(e.target.value)}
-              defaultvalue={value?.toString().split()[2]}
-              name={name}
-              //required={mandatory}
-              type='number'
-              // key={key}
-              style={{ width: '100%' }}
-              placeholder='Numero de telefono'
+              defaultCountry="CO"
+              international
             />
-          );
-        }
-
-        if (type === 'onlyCodearea') {
-          input = (
-            <Form.Item initialValue={areacodeselected} name={name} noStyle>
-              <Select
-                showSearch
-                optionFilterProp='children'
-                style={{ width: '100%' }}
-                onChange={(val) => {
-                  setareacodeselected(val);
-                }}
-                placeholder='Código de area del pais'>
-                {areaCode.map((code, key) => {
-                  return (
-                    <Option key={key} value={code.value}>
-                      {`${code.label} (${code.value})`}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
           );
         }
 
@@ -852,7 +595,8 @@ const FormRegister = ({
                 <div
                   dangerouslySetInnerHTML={{
                     __html: label,
-                  }}></div>
+                  }}
+                ></div>
               </div>
               <Divider />
             </>
@@ -868,28 +612,27 @@ const FormRegister = ({
         if (type === 'boolean') {
           if (mandatory) {
             rule = {
-              validator: (_, value) => (value == true ? Promise.resolve() : Promise.reject(textoError)),
+              validator: (_, value) => (value ? Promise.resolve() : Promise.reject(textoError)),
             };
           } else {
             rule = {
               validator: (_, value) =>
-                value == true || value == false || value == '' || value == undefined
-                  ? Promise.resolve()
-                  : Promise.reject(textoError),
+                value || !value || value == '' || value == undefined ? Promise.resolve() : Promise.reject(textoError),
             };
           }
           return (
-            <div key={'g' + key} name='field'>
+            <div key={'g' + key} name="field">
               {
                 <>
                   <Form.Item
-                    valuePropName={'checked'}
+                    valuePropName="checked"
                     name={name}
                     rules={[rule]}
                     form={form}
                     key={'l' + key}
                     htmlFor={key}
-                    initialValue={value}>
+                    initialValue={value}
+                  >
                     <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value ? value : false)}>
                       {mandatory ? (
                         <span>
@@ -901,14 +644,6 @@ const FormRegister = ({
                       )}
                     </Checkbox>
                   </Form.Item>
-                  {cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                    <Row style={{ marginTop: 20 }}>
-                      {' '}
-                      <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
-                        <PlayCircleOutlined /> Ver términos y condiciones
-                      </a>
-                    </Row>
-                  )}
                   {description && description.length < 500 && <p>{description}</p>}
                   {description && description.length > 500 && (
                     <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
@@ -916,12 +651,14 @@ const FormRegister = ({
                         header={intl.formatMessage({
                           id: 'registration.message.policy',
                         })}
-                        key='1'>
+                        key="1"
+                      >
                         <pre
                           dangerouslySetInnerHTML={{
                             __html: description,
                           }}
-                          style={{ whiteSpace: 'normal' }}></pre>
+                          style={{ whiteSpace: 'normal' }}
+                        ></pre>
                       </Panel>
                     </Collapse>
                   )}
@@ -950,10 +687,10 @@ const FormRegister = ({
         if (type === 'file') {
           input = (
             <Upload
-              accept='application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx'
-              action='https://api.evius.co/api/files/upload/'
+              accept="application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx"
+              action="https://api.evius.co/api/files/upload/"
               multiple={false}
-              listType='text'
+              listType="text"
               beforeUpload={beforeUpload}
               defaultFileList={
                 value
@@ -964,7 +701,8 @@ const FormRegister = ({
                       },
                     ]
                   : []
-              }>
+              }
+            >
               <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload>
           );
@@ -994,7 +732,7 @@ const FormRegister = ({
             : [];
           input = (
             <Select style={{ width: '100%' }} name={name} defaultValue={value}>
-              <Option value={''}>Seleccione...</Option>
+              <Option value="">Seleccione...</Option>
               {input}
             </Select>
           );
@@ -1002,10 +740,10 @@ const FormRegister = ({
 
         if (type === 'country') {
           input = (
-            <Form.Item id='country_input_form' initialValue={value} name={name} noStyle>
+            <Form.Item id="country_input_form" initialValue={value} name={name} noStyle>
               <Select
                 showSearch
-                optionFilterProp='children'
+                optionFilterProp="children"
                 style={{ width: '100%' }}
                 onChange={(nameCountry, aditionalData) => {
                   form.setFieldsValue({
@@ -1018,14 +756,13 @@ const FormRegister = ({
                 }}
                 disabled={loading || countries.length === 0}
                 loading={loading}
-                placeholder='Seleccione un país'>
-                {countries.map((country) => {
-                  return (
-                    <Option key={country.iso2} value={country.name}>
-                      {country.name}
-                    </Option>
-                  );
-                })}
+                placeholder="Seleccione un país"
+              >
+                {countries.map((country) => (
+                  <Option key={country.iso2} value={country.name}>
+                    {country.name}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           );
@@ -1035,7 +772,7 @@ const FormRegister = ({
             <Form.Item initialValue={value} name={name} noStyle>
               <Select
                 showSearch
-                optionFilterProp='children'
+                optionFilterProp="children"
                 style={{ width: '100%' }}
                 onChange={(nameRegion, aditionalData) => {
                   form.setFieldsValue({
@@ -1046,14 +783,13 @@ const FormRegister = ({
                 }}
                 disabled={loading || regiones.length === 0}
                 loading={loading}
-                placeholder='Seleccione un región'>
-                {regiones.map((regiones) => {
-                  return (
-                    <Option key={regiones.iso2} value={regiones.name}>
-                      {regiones.name}
-                    </Option>
-                  );
-                })}
+                placeholder="Seleccione un región"
+              >
+                {regiones.map((regiones) => (
+                  <Option key={regiones.iso2} value={regiones.name}>
+                    {regiones.name}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           );
@@ -1064,14 +800,15 @@ const FormRegister = ({
             <Form.Item initialValue={value} name={name} noStyle>
               <Select
                 showSearch
-                optionFilterProp='children'
+                optionFilterProp="children"
                 style={{ width: '100%' }}
                 disabled={loading || cities.length === 0}
                 loading={loading}
                 onChange={(nameCity, aditionalData) => {
                   setCity({ name: nameCity, regionCode: aditionalData.key, inputName: name });
                 }}
-                placeholder='Seleccione una ciudad'>
+                placeholder="Seleccione una ciudad"
+              >
                 {cities.map((cityCode, key) => {
                   return (
                     <Option key={key} value={cityCode.name}>
@@ -1084,21 +821,21 @@ const FormRegister = ({
           );
         }
 
-        //SE DEBE QUEDAR PARA RENDRIZAR EL CAMPO IMAGEN DENTRO DEL CMS
+        // Se debe quedar para rendrizar el campo imagen dentro del cms
         if (type === 'avatar') {
           ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
 
           input = (
             <div style={{ textAlign: 'center' }}>
-              <ImgCrop rotate shape='round'>
+              <ImgCrop rotate shape="round">
                 <Upload
-                  action={'https://api.evius.co/api/files/upload/'}
-                  accept='image/png,image/jpeg'
+                  action="https://api.evius.co/api/files/upload/"
+                  accept="image/png,image/jpeg"
                   onChange={(file) => {
                     setImageAvatar(file);
                   }}
                   multiple={false}
-                  listType='picture'
+                  listType="picture"
                   maxCount={1}
                   defaultFileList={
                     value
@@ -1110,8 +847,9 @@ const FormRegister = ({
                         ]
                       : []
                   }
-                  beforeUpload={beforeUpload}>
-                  <Button type='primary' icon={<UploadOutlined />}>
+                  beforeUpload={beforeUpload}
+                >
+                  <Button type="primary" icon={<UploadOutlined />}>
                     {intl.formatMessage({
                       id: 'form.button.avatar',
                       defaultMessage: 'Subir imagen de perfil',
@@ -1137,12 +875,11 @@ const FormRegister = ({
 
         return (
           type !== 'boolean' && (
-            <div key={'g' + key} name='field'>
+            <div key={'g' + key} name="field">
               {type === 'tituloseccion' && input}
               {type !== 'tituloseccion' && (
                 <>
                   <Form.Item
-                    // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
                     // style={eventUserId && hideFields}
                     noStyle={visible}
                     hidden={visible}
@@ -1156,7 +893,8 @@ const FormRegister = ({
                     rules={validations ? [{ required: false }] : [rule]}
                     key={'l' + key}
                     htmlFor={key}
-                    initialValue={value}>
+                    initialValue={value}
+                  >
                     {input}
                   </Form.Item>
 
@@ -1167,7 +905,8 @@ const FormRegister = ({
                         header={intl.formatMessage({
                           id: 'registration.message.policy',
                         })}
-                        key='1'>
+                        key="1"
+                      >
                         <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
                       </Panel>
                     </Collapse>
@@ -1187,36 +926,10 @@ const FormRegister = ({
     <>
       <Col xs={24} sm={22} md={24} lg={24} xl={24} style={center}>
         {!submittedForm ? (
-          <Card
-            bordered={false}
-            bodyStyle={textLeft}>
-            {eventUser !== undefined &&
-              eventUser !== null &&
-              eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
-              cEvent.value?._id &&
-              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
-                  <strong>Te invitamos a realizar el pago para poder participar en las pujas.</strong>
-                </Row>
-              )}
-            {eventUser !== undefined &&
-              eventUser !== null &&
-              eventUser.rol_id == '60e8a8b7f6817c280300dc23' &&
-              cEvent.value?._id &&
-              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
-                  <strong>Ya eres un asistente pago</strong>
-                </Row>
-              )}
-            {eventUser !== undefined &&
-              eventUser !== null &&
-              eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
-              cEvent.value?._id &&
-              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
-
+          <Card bordered={false} bodyStyle={textLeft}>
             <Form
               form={form}
-              layout='vertical'
+              layout="vertical"
               onFinish={onFinish}
               validateMessages={{
                 required: intl.formatMessage({ id: 'form.field.required' }),
@@ -1227,47 +940,56 @@ const FormRegister = ({
                   // regexp: 'malo',
                 },
               }}
-              initialValues={initialValues}
+              initialValues={organization ? initialOtherValue : initialValues}
               onFinishFailed={showGeneralMessage}
-              onValuesChange={valuesChange}>
-              {/*cEvent.value?._id && cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
-                <Row justify={'center'} style={{ marginBottom: 30 }}>
-                  <Card style={{ width: 700, margin: 'auto', background: '#F7C2C6' }}>
-                    <InfoCircleOutlined /> Una vez registrado para acceder a la puja de obras debes realizar la donación
-                  </Card>
-                </Row>
-              )*/}
+              onValuesChange={valuesChange}
+            >
               <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
                 <Col span={24}>
-                  <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
-                    <Typography.Title level={5}>
-                      {intl.formatMessage({
-                        id: 'title.user_data',
-                        defaultMessage: 'Datos del usuario',
-                      })}
-                    </Typography.Title>
-                    {/* Revisar bien que valor usamos para picture ahorita guarda todo un objeto de tipo file que no tiene sentido
-deberia ser solo la url de la imagen 
-*/}{' '}
-                    {console.log('initialValues', initialValues, cUser)}
-                    <Comment
-                      avatar={
-                        initialValues.picture ? (
-                          <Avatar
-                            src={
-                              initialValues?.picture[0]?.thumbUrl ||
-                              initialValues?.picture[0]?.url ||
-                              initialValues?.picture
-                            }
-                          />
-                        ) : cUser?.value?.picture ? (
-                          cUser?.value?.picture
-                        ) : null
-                      }
-                      author={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>}
-                      content={<Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>}
-                    />
-                  </Card>
+                  {editUser && (
+                    <Card style={{ borderRadius: '8px' }} bodyStyle={{ padding: '20px' }}>
+                      <Typography.Title level={5}>
+                        {intl.formatMessage({
+                          id: 'title.user_data',
+                          defaultMessage: 'Datos del usuario',
+                        })}
+                      </Typography.Title>
+                      {/* Revisar bien que valor usamos para picture ahorita guarda todo un objeto de tipo file que no tiene sentido deberia ser solo la url de la imagen */}
+                      {organization ? (
+                        <Comment
+                          avatar={initialOtherValue.picture ? <Avatar src={initialOtherValue?.picture} /> : null}
+                          author={
+                            <Typography.Text style={{ fontSize: '18px' }}>{initialOtherValue?.names}</Typography.Text>
+                          }
+                          content={
+                            <Typography.Text style={{ fontSize: '18px' }}>{initialOtherValue?.email}</Typography.Text>
+                          }
+                        />
+                      ) : (
+                        <Comment
+                          avatar={
+                            initialValues.picture ? (
+                              <Avatar
+                                src={
+                                  initialValues?.picture[0]?.thumbUrl ||
+                                  initialValues?.picture[0]?.url ||
+                                  initialValues?.picture
+                                }
+                              />
+                            ) : cUser?.value?.picture ? (
+                              cUser?.value?.picture
+                            ) : null
+                          }
+                          author={
+                            <Typography.Text style={{ fontSize: '18px' }}>{initialValues?.names}</Typography.Text>
+                          }
+                          content={
+                            <Typography.Text style={{ fontSize: '18px' }}>{initialValues?.email}</Typography.Text>
+                          }
+                        />
+                      )}
+                    </Card>
+                  )}
                 </Col>
                 <Col span={24}>
                   <Card
@@ -1278,8 +1000,9 @@ deberia ser solo la url de la imagen
                       overflowY: 'auto',
                       paddingRight: '0px',
                       borderRadius: '8px',
-                    }}>
-                    {fieldsAditional(extraFields) > 0 && (
+                    }}
+                  >
+                    {fieldsAditional(extraFields) > 0 && editUser && (
                       <Typography.Title level={5}>
                         {intl.formatMessage({
                           id: 'modal.title.registerevent',
@@ -1312,7 +1035,7 @@ deberia ser solo la url de la imagen
                 {generalFormErrorMessageVisible && (
                   <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                     <Alert
-                      className='animate__animated animate__bounceIn'
+                      className="animate__animated animate__bounceIn"
                       style={{
                         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                         backgroundColor: '#FFFFFF',
@@ -1324,7 +1047,7 @@ deberia ser solo la url de la imagen
                       message={intl.formatMessage({
                         id: 'form.missing.required.fields',
                       })}
-                      type='warning'
+                      type="warning"
                       showIcon
                       closable
                     />
@@ -1333,7 +1056,7 @@ deberia ser solo la url de la imagen
                 {notLoggedAndRegister && (
                   <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                     <Alert
-                      className='animate__animated animate__bounceIn'
+                      className="animate__animated animate__bounceIn"
                       style={{
                         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                         backgroundColor: '#FFFFFF',
@@ -1348,19 +1071,20 @@ deberia ser solo la url de la imagen
                       })}
                       description={
                         <Button
-                          size='middle'
-                          type='primary'
+                          size="middle"
+                          type="primary"
                           onClick={() => {
                             helperDispatch({ type: 'showLogin' });
                             setNotLoggedAndRegister(false);
-                          }}>
+                          }}
+                        >
                           {intl.formatMessage({
                             id: 'modal.title.login',
                             defaultMessage: 'Iniciar sesión',
                           })}
                         </Button>
                       }
-                      type='warning'
+                      type="warning"
                       showIcon
                       closable
                     />
@@ -1370,8 +1094,8 @@ deberia ser solo la url de la imagen
                 {errorRegisterUser && (
                   <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                     <Alert
-                      className='animate__animated animate__bounceIn'
-                      type='warning'
+                      className="animate__animated animate__bounceIn"
+                      type="warning"
                       showIcon
                       style={{
                         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
@@ -1381,23 +1105,24 @@ deberia ser solo la url de la imagen
                         fontSize: '14px',
                         borderRadius: '5px',
                       }}
-                      message={'Ya te encuetras registrado en evius'}
+                      message="Ya te encuetras registrado en evius"
                     />
                   </Col>
                 )}
-                <Col span={24} align='center'>
+                <Col span={24} align="center">
                   {!loadingregister && (
                     <Form.Item>
                       <Button
-                        size='large'
+                        size="large"
                         ref={buttonSubmit}
                         style={{
                           display: isVisibleButton(basicDataUser, extraFields, cEventUser) ? 'none' : 'block',
                         }}
-                        // RESTRICCIONES
+                        // Restricciones
                         // disabled={!eventIsActive}
-                        type='primary'
-                        htmlType='submit'>
+                        type="primary"
+                        htmlType="submit"
+                      >
                         {}
                         {isRegister(initialValues, cEventUser)
                           ? intl.formatMessage({ id: 'Button.signup' })
@@ -1418,7 +1143,8 @@ deberia ser solo la url de la imagen
                             style={{
                               marginLeft: 10,
                               marginTop: 10,
-                            }}>
+                            }}
+                          >
                             {option.text}
                           </Button>
                         ))}
@@ -1437,8 +1163,4 @@ deberia ser solo la url de la imagen
   );
 };
 
-const mapDispatchToProps = {
-  setSectionPermissions,
-};
-
-export default connect(null, mapDispatchToProps)(FormRegister);
+export default FormRegister;

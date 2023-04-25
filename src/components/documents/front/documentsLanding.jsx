@@ -60,8 +60,6 @@ class DocumentsDetail extends Component {
         description: 'Ha ocurrido un error obteniendo los documentos',
       });
     }
-
-    // console.log('DOCUMENTES_USER=>', this.props.cEventUser?.value?.properties?.documents_user);
   }
 
   removeLoader = () => {
@@ -78,23 +76,26 @@ class DocumentsDetail extends Component {
     return (
       <div style={{ paddingLeft: '25px', paddingRight: '25px' }}>
         <Tabs
-          defaultActiveKey='1'
+          defaultActiveKey="1"
           tabBarStyle={{
             backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
             borderRadius: '10px',
             paddingLeft: '25px',
-          }}>
+          }}
+        >
           <TabPane
             tab={
               <Typography.Text
                 style={{
                   color: this.props.cEvent.value.styles.textMenu,
                   backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                }}>
+                }}
+              >
                 Documentos del curso
               </Typography.Text>
             }
-            key='1'>
+            key="1"
+          >
             <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ margin: '0 auto' }}>
               {folders && folders.length > 0 && (
                 <DocumentsList
@@ -108,11 +109,12 @@ class DocumentsDetail extends Component {
               )}
 
               {(!folders || !folders.length) && (
-                <div className='site-card-border-less-wrapper'>
+                <div className="site-card-border-less-wrapper">
                   <Card
-                    title=''
+                    title=""
                     bordered={false}
-                    style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}>
+                    style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}
+                  >
                     <Result
                       title={
                         <Typography.Title level={4} style={{ color: this.props.cEvent.value.styles.textMenu }}>
@@ -133,29 +135,31 @@ class DocumentsDetail extends Component {
                   style={{
                     color: this.props.cEvent.value.styles.textMenu,
                     backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                  }}>
+                  }}
+                >
                   Mis documentos
                 </Typography.Text>
               }
-              key='2'
+              key="2"
               style={{
                 color: this.props.cEvent.value.styles.textMenu,
                 backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-              }}>
+              }}
+            >
               {this.props.cEventUser?.value?.properties?.documents_user?.length < 10 ? (
                 <List
                   style={{ padding: 10 }}
-                  itemLayout='vertical'
+                  itemLayout="vertical"
                   dataSource={this.props.cEventUser?.value?.properties?.documents_user}
                   renderItem={(item) => (
                     <List.Item>
                       <List.Item.Meta
                         avatar={
-                          <Avatar src='https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/64/000000/external-file-interface-kiranshastry-lineal-color-kiranshastry-2.png' />
+                          <Avatar src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/64/000000/external-file-interface-kiranshastry-lineal-color-kiranshastry-2.png" />
                         }
                         title={<a href={item.url}>{item.name}</a>}
                         description={
-                          <Button onClick={() => window.open(item.url)} shape='round' type='primary'>
+                          <Button onClick={() => window.open(item.url)} shape="round" type="primary">
                             Ver documento
                           </Button>
                         }
@@ -165,7 +169,7 @@ class DocumentsDetail extends Component {
                 />
               ) : this.props.cEventUser?.value?.properties?.documents_user?.length >= 10 ? (
                 <Row>
-                  <Space direction='vertical'>
+                  <Space direction="vertical">
                     <Row>
                       {`Hola ${this.props.cEventUser?.value?.properties?.displayName} tienes ${this.props.cEventUser?.value?.properties?.documents_user.length} cartones, por favor descarga el archivo para verlos`}
                     </Row>
@@ -173,8 +177,9 @@ class DocumentsDetail extends Component {
                       <Button
                         icon={<CloudDownloadOutlined />}
                         onClick={(e) => this.exportFile(e)}
-                        shape='round'
-                        type='primary'>
+                        shape="round"
+                        type="primary"
+                      >
                         Descargar lista de cartones
                       </Button>
                     </Row>
@@ -182,11 +187,12 @@ class DocumentsDetail extends Component {
                 </Row>
               ) : (
                 this.props.cEventUser?.value?.properties?.documents_user == undefined && (
-                  <div className='site-card-border-less-wrapper'>
+                  <div className="site-card-border-less-wrapper">
                     <Card
-                      title=''
+                      title=""
                       bordered={false}
-                      style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}>
+                      style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}
+                    >
                       <Result
                         icon={<ExclamationCircleOutlined style={{ color: this.props.cEvent.value.styles.textMenu }} />}
                         title={

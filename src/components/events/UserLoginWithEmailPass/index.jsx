@@ -14,12 +14,12 @@ class UserLoginWithEmailPass extends Component {
     const { handleLoginEmailPassword, onFinishFailed, errorLogin, loading, handleOpenRecoveryPass, intl } = this.props;
     return (
       <Card title={intl.formatMessage({ id: 'login.title' })}>
-        <Form onFinish={handleLoginEmailPassword} onFinishFailed={onFinishFailed} layout='vertical'>
+        <Form onFinish={handleLoginEmailPassword} onFinishFailed={onFinishFailed} layout="vertical">
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
               <Form.Item
-                label='E-Mail'
-                name='email'
+                label="E-Mail"
+                name="email"
                 rules={[
                   {
                     required: true,
@@ -33,8 +33,8 @@ class UserLoginWithEmailPass extends Component {
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
               <Form.Item
-                label='Contraseña'
-                name='password'
+                label="Contraseña"
+                name="password"
                 rules={[
                   {
                     required: true,
@@ -60,7 +60,7 @@ class UserLoginWithEmailPass extends Component {
                 {loading ? (
                   <Spin />
                 ) : (
-                  <Button type='primary' htmlType='submit'>
+                  <Button type="primary" htmlType="submit">
                     {intl.formatMessage({ id: 'button.login' })}
                   </Button>
                 )}
@@ -69,7 +69,7 @@ class UserLoginWithEmailPass extends Component {
           </Row>
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-              <Button type='default' htmlType='button' onClick={handleOpenRecoveryPass}>
+              <Button type="default" htmlType="button" onClick={handleOpenRecoveryPass}>
                 {intl.formatMessage({ id: 'button.forget.password' })}
               </Button>
             </Col>

@@ -64,11 +64,11 @@ function InvitationsList(props) {
       <CMS
         API={MessageApi}
         eventId={props.eventId}
-        title={'Comunicaciones enviadas'}
+        title="Comunicaciones enviadas"
         description={
           <Space>
             <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-            <Text type='secondary'>La información en la tabla puede demorar un tiempo en reflejarse.</Text>
+            <Text type="secondary">La información en la tabla puede demorar un tiempo en reflejarse.</Text>
           </Space>
         }
         columns={columns}
@@ -76,11 +76,11 @@ function InvitationsList(props) {
         noRemove
         extraPath={`${match.url}/detail`}
         extraPathIcon={<BarsOutlined />}
-        extraPathTitle={'Detalle'}
+        extraPathTitle="Detalle"
         extraPathUpdate={<ReloadOutlined />}
-        extraPathUpdateTitle={'Actualizar métricas'}
+        extraPathUpdateTitle="Actualizar métricas"
         exportData
-        fileName={'ComunicacionesEnviadas'}
+        fileName="ComunicacionesEnviadas"
         titleTable={
           <Row gutter={[8, 8]} wrap>
             <Col>
@@ -88,8 +88,9 @@ function InvitationsList(props) {
                 onClick={() => {
                   history.push(`/eventadmin/${eventId}/dashboard`);
                 }}
-                type='ghost'
-                icon={<LineChartOutlined />}>
+                type="ghost"
+                icon={<LineChartOutlined />}
+              >
                 Ver estadísticas
               </Button>
             </Col>

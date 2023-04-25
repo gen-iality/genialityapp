@@ -76,7 +76,6 @@ export const AgendaContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (dataLive) {
-      console.log('DATA LIVE===>', dataLive.recording);
       setRecord(dataLive.recording ? 'stop' : 'start');
     }
   }, [dataLive]);
@@ -120,15 +119,13 @@ export const AgendaContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (activityEdit) {
-      console.log('8. LECCIÓN ACA===>', activityEdit);
       obtenerDetalleActivity();
-      // setMeetingId(null); -> Why does Jaime Daniel set null the meetingId? Let me test without that
     } else {
       initializeState();
     }
   }, [activityEdit]);
 
-  //FUNCION QUE PERMITE REINICIALIZAR LOS ESTADOS YA QUE AL AGREGAR O EDITAR OTRA LECCIÓN ESTOS TOMAN VALORES ANTERIORES
+  // Funcion que permite reinicializar los estados ya que al agregar o editar otra lección estos toman valores anteriores
   const initializeState = () => {
     setIsPublished(true);
     setPlatform('wowza');
@@ -174,7 +171,6 @@ export const AgendaContextProvider = ({ children }) => {
                 active: data[requestData].active || false,
               });
             });
-            // console.log('100. LISTADO ACA==>', listRequestArray);
             setRequest(listRequest);
             setRequestList(listRequestArray);
           }
@@ -218,7 +214,7 @@ export const AgendaContextProvider = ({ children }) => {
   const prepareData = (datos) => {
     const roomInfo = {
       platform: datos?.platformNew || platform,
-      //VARIABLE QUE GUARDA LA DATA QUE SE GENERA AL CREAR UN TIPO DE LECCIÓN VALIDACIÓN QUE PERMITE CONSERVAR ESTADO O LIMPIARLO
+      // Variable que guarda la data que se genera al crear un tipo de lección validación que permite conservar estado o limpiarlo
       meeting_id: datos?.data ? datos?.data : datos?.type !== 'delete' ? meeting_id : null,
       isPublished: isPublished ? isPublished : false,
       host_id,
@@ -271,10 +267,6 @@ export const AgendaContextProvider = ({ children }) => {
     let liveLocal = false;
     try {
       live_stream_status = await getLiveStreamStatus(meeting_id);
-
-      // console.log('live_stream_status', live_stream_status);
-      console.log('10. EJECUTANDOSE EL MONITOR===>', live_stream_status.live, liveLocal);
-      console.log('10. ENTRO A DETENER');
       setDataLive(live_stream_status);
 
       liveLocal = live_stream_status?.live;
@@ -312,8 +304,7 @@ export const AgendaContextProvider = ({ children }) => {
       default:
         urlVideo = data;
     }
-    console.log('TYPE==>', type);
-    //SE VALIDA CON URL QUE CONTENGA YOUTUBE DEBIDO A QUE REACT PLAYER NO MUESTRA VIDEO DE GCORE
+    // Se valida con url que contenga youtube debido a que react player no muestra video de gcore
     const visibleReactPlayer =
       ((type == 'Youtube' ||
         (type == 'Video' && data.includes('youtube')) ||
@@ -334,7 +325,7 @@ export const AgendaContextProvider = ({ children }) => {
     try {
       const result = await service.createOrUpdateActivity(cEvent.value._id, activity_id, roomInfo, tabs);
       if (result) {
-        //CLEAN STATUS
+        // Clean status
         setTypeActivity(null);
         setMeetingId(null);
         setRoomStatus('');
@@ -406,7 +397,7 @@ export const AgendaContextProvider = ({ children }) => {
         setVimeoId,
         name_host,
         setNameHost,
-        avalibleGames,
+        avalibleGames, // availableGames*
         setAvailableGames,
         isPublished,
         setIsPublished,

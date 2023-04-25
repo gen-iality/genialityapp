@@ -52,7 +52,7 @@ const NoticiasDetails = (props) => {
       {loading && <Spin />}
       {noticia && (
         <>
-          <Row gutter={[8, 8]} wrap justify='center'>
+          <Row gutter={[8, 8]} wrap justify="center">
             <Col span={24}>
               <Card style={{ backgroundColor: '#F9F9F9' }} bordered={false}>
                 <Meta
@@ -77,13 +77,13 @@ const NoticiasDetails = (props) => {
                     (noticia.linkYoutube === null || noticia.linkYoutube === '' || noticia.linkYoutube === undefined ? (
                       <Image
                         style={{ height: `${screens.xs ? '25vh' : '55vh'}`, objectFit: 'cover' }}
-                        alt={'imagen noticia'}
+                        alt="imagen noticia"
                         src={
                           noticia && (noticia.image || noticia.picture) ? noticia.image || noticia.picture : imgNotFound
                         }
                       />
                     ) : (
-                      <div className='mediaplayer'>
+                      <div className="mediaplayer">
                         <ReactPlayer
                           style={{ height: `${screens.xs ? '25vh' : '55vh'}`, objectFit: 'cover' }}
                           width='100%'
@@ -97,13 +97,13 @@ const NoticiasDetails = (props) => {
                     title={
                       noticia && (
                         <div
-                          id='img-informative' /* style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: noticia.description_short }} */
+                          id="img-informative" /* style={{whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: noticia.description_short }} */
                         >
                           <ReactQuill
                             value={noticia.description_short}
-                            readOnly={true}
-                            className='hide-toolbar ql-toolbar'
-                            theme='bubble'
+                            readOnly
+                            className="hide-toolbar ql-toolbar"
+                            theme="bubble"
                           />
                         </div>
                       )
@@ -111,13 +111,13 @@ const NoticiasDetails = (props) => {
                     description={
                       noticia && (
                         <div
-                          id='img-informative' /* dangerouslySetInnerHTML={{ __html: noticia.description_complete }} */
+                          id="img-informative" /* dangerouslySetInnerHTML={{ __html: noticia.description_complete }} */
                         >
                           <ReactQuill
                             value={noticia.description_complete}
-                            readOnly={true}
-                            className='hide-toolbar ql-toolbar'
-                            theme='bubble'
+                            readOnly
+                            className="hide-toolbar ql-toolbar"
+                            theme="bubble"
                           />
                         </div>
                       )
@@ -125,7 +125,7 @@ const NoticiasDetails = (props) => {
                   />
                 </Card>
                 <br />
-                <Divider orientation='left' style={{ fontWeight: 'bold' }}>
+                <Divider orientation="left" style={{ fontWeight: 'bold' }}>
                   Otras noticias que te pueden interesar
                 </Divider>
                 <NoticiaList size={screens.xs ? 1 : screens.lg ? 3 : 2} newId={noticia._id} />

@@ -25,7 +25,6 @@ const reducer = (state, action) => {
 
       if (state.currentSurvey) {
         const updatedcurrentSurvey = action.payload.publishedSurveys.find(item => state.currentSurvey._id == item._id);
-        console.log('900.updatedcurrentSurvey', updatedcurrentSurvey);
         newState['currentSurvey'] = updatedcurrentSurvey;
       }
 
@@ -93,7 +92,7 @@ export function SurveysProvider({ children }) {
       !shouldDisplaySurvey() &&
       // state.currentSurvey.allow_gradable_survey === 'false' ||
       // state.currentSurvey.allow_gradable_survey === false ||
-      (state.currentSurvey.displayGraphsInSurveys === 'true' || state.currentSurvey.displayGraphsInSurveys === true)
+      (state.currentSurvey.displayGraphsInSurveys === 'true' || state.currentSurvey.displayGraphsInSurveys)
     );
   }
 
@@ -131,7 +130,7 @@ export function SurveysProvider({ children }) {
     if (!state.currentSurvey) {
       return false;
     }
-    return state.currentSurvey.rankingVisible === 'true' || state.currentSurvey.rankingVisible === true;
+    return state.currentSurvey.rankingVisible === 'true' || state.currentSurvey.rankingVisible;
   }
 
   function surveysToBeListedByActivity() {
@@ -140,7 +139,7 @@ export function SurveysProvider({ children }) {
       listOfSurveysFilteredByActivity =
         state.surveys &&
         state.surveys.filter(
-          item => item.activity_id === state.currentActivity._id || item.isGlobal === 'true' || item.isGlobal === true,
+          item => item.activity_id === state.currentActivity._id || item.isGlobal === 'true' || item.isGlobal,
         );
     }
     return listOfSurveysFilteredByActivity;
@@ -168,7 +167,6 @@ export function SurveysProvider({ children }) {
 
     async function fetchSurveys() {
       //  console.log('surveyContext', 'inicialize');
-      console.log('900. ESTE ES EL STATE', state);
       listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
       InitSurveysCompletedListener(cUser, dispatch);
     }

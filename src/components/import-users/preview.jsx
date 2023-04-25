@@ -61,10 +61,10 @@ class Preview extends Component {
 
   content = () => {
     return (
-      <Form onFinish={this.savePassword} preserve={false} layout='vertical'>
+      <Form onFinish={this.savePassword} preserve={false} layout="vertical">
         <Form.Item
-          name='password'
-          label='Contraseña'
+          name="password"
+          label="Contraseña"
           rules={[
             {
               required: true,
@@ -77,13 +77,14 @@ class Preview extends Component {
               message: 'La contraseña debe tener entre 6 a 18 caracteres',
             },
           ]}
-          hasFeedback>
+          hasFeedback
+        >
           <Input.Password />
         </Form.Item>
 
         <Form.Item
-          name='confirm'
-          label='Confirmar contraseña'
+          name="confirm"
+          label="Confirmar contraseña"
           dependencies={['password']}
           hasFeedback
           rules={[
@@ -105,7 +106,8 @@ class Preview extends Component {
                 return Promise.reject(new Error('¡Las constraseñas no coinciden!'));
               },
             }),
-          ]}>
+          ]}
+        >
           <Input.Password />
         </Form.Item>
 
@@ -115,16 +117,18 @@ class Preview extends Component {
               onClick={() => {
                 Modal.destroyAll();
                 this.setState({ showModal: false, showMessage: true });
-              }}>
+              }}
+            >
               Cancelar
             </Button>
             <Button
-              type='primary'
-              htmlType='submit'
+              type="primary"
+              htmlType="submit"
               onClick={() => {
                 Modal.destroyAll();
                 this.setState({ showMessage: false });
-              }}>
+              }}
+            >
               Continuar
             </Button>
           </Space>
@@ -245,21 +249,24 @@ class Preview extends Component {
     const self = this;
     return (
       <>
-        <Row justify='center' gutter={[24, 24]}>
+        <Row justify="center" gutter={[24, 24]}>
           <Col span={10}>
             <Badge.Ribbon
-              text='Seleccionado'
+              text="Seleccionado"
               color={'#2593FC'}
-              style={this.state.genericPassword ? { display: 'none' } : {}}>
+              style={this.state.genericPassword ? { display: 'none' } : {}}
+            >
               <div
                 style={
                   this.state.genericPassword === false
                     ? { borderColor: '#2593FC', borderStyle: 'solid', borderWidth: '4px', borderRadius: '6px' }
                     : {}
-                }>
+                }
+              >
                 <Card
                   style={{ cursor: 'pointer' }}
-                  onClick={() => this.setState({ genericPassword: false, password: null })}>
+                  onClick={() => this.setState({ genericPassword: false, password: null })}
+                >
                   <Typography.Text strong style={{ textAlign: 'justify' }}>
                     Deseo que la plataforma genere una contraseña para mis asistentes.
                   </Typography.Text>
@@ -277,18 +284,21 @@ class Preview extends Component {
           </Col>
           <Col span={10}>
             <Badge.Ribbon
-              text='Seleccionado'
+              text="Seleccionado"
               color={'#2593FC'}
-              style={!this.state.genericPassword ? { display: 'none' } : {}}>
+              style={!this.state.genericPassword ? { display: 'none' } : {}}
+            >
               <div
                 style={
-                  this.state.genericPassword === true
+                  this.state.genericPassword
                     ? { borderColor: '#2593FC', borderStyle: 'solid', borderWidth: '4px', borderRadius: '6px' }
                     : {}
-                }>
+                }
+              >
                 <Card
                   style={{ cursor: 'pointer' }}
-                  onClick={() => this.setState({ genericPassword: true, showModal: true })}>
+                  onClick={() => this.setState({ genericPassword: true, showModal: true })}
+                >
                   <Typography.Text strong style={{ textAlign: 'justify' }}>
                     Deseo específicar una contraseña para mis asistentes
                   </Typography.Text>
@@ -302,13 +312,13 @@ class Preview extends Component {
                     {this.state.genericPassword &&
                       (this.state.password === '' || this.state.password === null) &&
                       this.state.showMessage && (
-                        <Typography.Text type='secondary'>
+                        <Typography.Text type="secondary">
                           No tienes una contraseña asignada para tus asistentes, si deseas asignarla{' '}
                           <strong>haz clic aquí</strong>
                         </Typography.Text>
                       )}
                     {this.state.genericPassword && this.state.password && !this.state.showMessage && (
-                      <Typography.Text type='secondary'>
+                      <Typography.Text type="secondary">
                         Tienes una contraseña asignada para tus asistentes, si deseas cambiarla{' '}
                         <strong>haz clic aquí</strong>, ten en cuenta que por seguridad mostrará los campos vacíos.
                       </Typography.Text>
@@ -322,22 +332,24 @@ class Preview extends Component {
         <br />
         <br />
         <Button
-          type='primary'
+          type="primary"
           icon={<UploadOutlined />}
           disabled={this.state.genericPassword && (this.state.password === '' || this.state.password === null)}
           onClick={() => {
             this.props.importUsers(list, this.state.password);
-          }}>
+          }}
+        >
           Finalizar
         </Button>
 
         <Modal
-          title='Por favor ingrese la contraseña para los asistentes'
+          title="Por favor ingrese la contraseña para los asistentes"
           icon={<ExclamationCircleOutlined />}
           footer={null}
-          destroyOnClose={true}
+          destroyOnClose
           closable={false}
-          visible={this.state.showModal}>
+          visible={this.state.showModal}
+        >
           {this.content()}
         </Modal>
 

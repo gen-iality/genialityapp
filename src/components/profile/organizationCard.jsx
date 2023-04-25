@@ -1,13 +1,17 @@
+import { useState, useEffect } from 'react';
 import { EyeOutlined, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Card, Space, Typography, Grid, Skeleton } from 'antd';
+import { OrganizationApi, OrganizationFuction } from '@helpers/request';
 import { truncate } from 'lodash-es';
 const { useBreakpoint } = Grid;
 
 const OrganizationCard = (props) => {
   const screens = useBreakpoint();
+  const [eventsLength, setEventsLength] = useState(0);
+  const [isAdminUser, setIsAdminUser] = useState(false);
 
   const adminOrganization = () => {
-    window.location.href = `${window.location.origin}/admin/organization/${props.data.id}/events`;
+    window.location.href = `${window.location.origin}/admin/organization/${props.data.id}/information`;
   };
 
   const landingOrganization = () => {
@@ -15,36 +19,64 @@ const OrganizationCard = (props) => {
   };
 
   const actionAdmin = screens.xs ? (
-    <SettingOutlined key='admin' onClick={() => adminOrganization()} />
+    <SettingOutlined key="admin" onClick={() => adminOrganization()} />
   ) : (
-    <span onClick={() => adminOrganization()} key='admin'>
+    <span onClick={() => adminOrganization()} key="admin">
       Administrar
     </span>
   );
   const actionview = screens.xs ? (
-    <EyeOutlined onClick={() => landingOrganization()} key='view' />
+    <EyeOutlined onClick={() => landingOrganization()} key="view" />
   ) : (
-    <span onClick={() => landingOrganization()} key='view'>
+    <span onClick={() => landingOrganization()} key="view">
       Visitar
     </span>
   );
 
+  const fetchItem = async () => {
+    const events = await OrganizationFuction.getEventsNextByOrg(props.data.id);
+    const eventsLength = events.length;
+    setEventsLength(eventsLength);
+  };
+
+  useEffect(() => {
+    fetchItem();
+  }, []);
+
+  useEffect(() => {
+    if (!props.data) return;
+
+    OrganizationApi.getMeUser(props.data.id).then(({ data }) => {
+      const [orgUser] = data;
+
+      console.debug('EventOrganization member rol:', orgUser?.rol);
+      setIsAdminUser(orgUser?.rol?.type === 'admin');
+    });
+  }, [props.data]);
+
   return (
     <Card
-      actions={[actionAdmin, actionview]}
+      actions={[
+        ...(isAdminUser ? [actionAdmin] : []),
+        actionview,
+      ]}
       style={{ borderRadius: '10px' }}
-      bodyStyle={{ minHeight: '200px', textAlign: 'center' }}>
-      <Space size={8} direction='vertical' style={{ textAlign: 'center', width: '100%' }}>
+      bodyStyle={{ minHeight: '200px', textAlign: 'center' }}
+    >
+      <Space size={8} direction="vertical" style={{ textAlign: 'center', width: '100%' }}>
         {props.data ? (
           <Avatar
             size={{ xs: 100, sm: 100, md: 100, lg: 100, xl: 100, xxl: 100 }}
             src={props.data?.styles?.event_image || 'https://via.placeholder.com/500.png/50D3C9/FFFFFF?text=Image'}
           />
         ) : (
-          <Skeleton.Avatar active={true} size={100} shape='circle' />
+          <Skeleton.Avatar active size={100} shape="circle" />
         )}
         <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ fontSize: '14px', lineHeight: '1.15rem' }}>
           {props.data?.name}
+        </Typography.Paragraph>
+        <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ fontSize: '14px', lineHeight: '1.15rem' }}>
+          Cursos: {eventsLength}
         </Typography.Paragraph>
       </Space>
     </Card>

@@ -23,7 +23,7 @@ export function CourseProgressBarPage (props: ICourseProgressBarPageProps) {
 
   return (
     <div>
-      <Space direction='vertical'>
+      <Space direction="vertical">
         <Button onClick={increase}>Aumentar</Button>
         <Button onClick={decrease}>Disminuir</Button>
         <strong>The component CourseProgressBar was quitted by incompatibily in props</strong>

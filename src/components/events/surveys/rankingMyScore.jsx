@@ -21,10 +21,10 @@ function RankingList(props) {
   return (
     <>
       {theUserAlreadyParticipated ? (
-        <div className='card-games-ranking ranking-user'></div>
+        <div className="card-games-ranking ranking-user"></div>
       ) : (
-        <div style={{ marginTop: 16 }} className='card-games-ranking ranking-user'>
-          <Row justify='center'>
+        <div style={{ marginTop: 16 }} className="card-games-ranking ranking-user">
+          <Row justify="center">
             <h1
               style={{
                 fontSize: '25px',
@@ -36,13 +36,13 @@ function RankingList(props) {
             </h1>
             <Divider style={{ backgroundColor: `${styles && styles.textMenu}` }} />
           </Row>
-          <div className='container-ranking' style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
+          <div className="container-ranking" style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
             <List
-              className='demo-loadmore-list'
+              className="demo-loadmore-list"
               loading={loading}
-              itemLayout='horizontal'
+              itemLayout="horizontal"
               dataSource={myScore}
-              renderItem={(item, key) => <UsersCard type='ranking' item={item} />}
+              renderItem={(item, key) => <UsersCard type="ranking" item={item} />}
             />
           </div>
         </div>

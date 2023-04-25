@@ -31,21 +31,21 @@ const InitialView = (props: any) => {
 
   useEffect(() => {
     if (props.tab !== '2') return;
-    //OBTENER DETALLE DE LECCIÓN
+    // Obtener detalle de lección
     setActivityName(props.activityName);
     if (typeActivity === null) {
       setLoading(false);
     } else {
       setLoading(true);
       obtainDataInitial();
-      //MIENTRAS CARGA LOS COMPONENTES
+      // Mientras carga los componentes
     }
   }, [props.tab]);
-  //PERMITE GUARDAR LA DATA EN FIREBASE Y ACTIVAR EL SNAPSHOT CUANDO SE CAMBIA EL ESTADO DE LA LECCIÓN
+  // Permite guardar la data en firebase y activar el snapshot cuando se cambia el estado de la lección
   useEffect(() => {
     saveConfig(null, 1);
   }, [roomStatus]);
-  //OBTENER DATOS INICIALES Y SETEARLOS EN EL REDUCER
+  // Obtener datos iniciales y setearlos en el reducer
   const obtainDataInitial = async () => {
     let urlVideo;
     if (typeActivity === 'url') {
@@ -85,12 +85,12 @@ const InitialView = (props: any) => {
         return (
           <Card>
             <Title level={4} >Todavía no has definido el tipo de contenido</Title>
-            <Button onClick={() => toggleActivitySteps('type')} type='primary'>
+            <Button onClick={() => toggleActivitySteps('type')} type="primary">
               Escoge un tipo de contenido
             </Button>
             <Result
               icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
-              status='info'            />
+              status="info"            />
           </Card>
         );
     }

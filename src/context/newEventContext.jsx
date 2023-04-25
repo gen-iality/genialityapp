@@ -6,7 +6,7 @@ import { GetTokenUserFirebase } from '@helpers/HelperAuth';
 import { configEventsTemplate } from '@helpers/constants';
 
 export const cNewEventContext = createContext();
-//INITIAL STATE
+// Initial state
 const initialState = {
   loading: false,
   organizations: [],
@@ -17,7 +17,7 @@ const initialState = {
   visibility: 'PUBLIC',
   type: 0,
 };
-//REDUCERS
+// Reducers
 function reducer(state, action) {
   const organizationSelect = action.payload?.organization || null;
   const organizationIdURL = action.payload?.orgId || null;
@@ -92,7 +92,7 @@ export const NewEventProvider = ({ children }) => {
   }
 
   const createOrganization = async (data) => {
-    //CREAR ORGANIZACION------------------------------
+    // Crear organizacion------------------------------
     const create = await OrganizationApi.createOrganization(data);
     if (create) {
       return create;
@@ -312,23 +312,21 @@ export const NewEventProvider = ({ children }) => {
           },
         },
       };
-      console.log('DATA A VERIFICAR===>', state.selectOrganization?.itemsMenu, templateId, data);
-      //CREAR CURSO
+      // Crear curso
       try {
         const token = await GetTokenUserFirebase();
 
         const result = await Actions.create(`/api/events?token=${token}`, data);
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
-          //console.log('SECCIONES ACA==>', eventNewContext.selectOrganization?.itemsMenu, newMenu);
           const sectionsDefault = state.selectOrganization?.itemsMenu
             ? { itemsMenu: state.selectOrganization?.itemsMenu }
             : newMenu;
-          //HABILTAR SECCIONES POR DEFECTO
+          // Habiltar secciones por defecto
           const sections = await Actions.put(`api/events/${result._id}?token=${token}`, sectionsDefault);
           sections._id = sections._id ? sections._id : sections.data?._id;
           if (sections?._id) {
-            //CREAR LECCIÓN CON EL MISMO NOMBRE DEL CURSO
+            // Crear lección con el mismo nombre del curso
             const activity = {
               name: valueInputs.name,
               subtitle: null,
@@ -340,15 +338,13 @@ export const NewEventProvider = ({ children }) => {
               datetime_start: selectedDateEvent?.from + ':00',
             };
             const agenda = await AgendaApi.create(result._id, activity);
-            //console.log("RESPUESTA AGENDA==>",agenda)
             if (agenda._id) {
-              //CREAR TEMPLATE PARA EL CURSO
+              // Crear template para el curso
               let template = !templateId && true;
               if (templateId) {
                 template = await EventsApi.createTemplateEvent(result._id, templateId);
               }
               if (template) {
-                // console.log("RESPUESTA TEMPLATE==>",template)
                 DispatchMessageService({
                   type: 'success',
                   msj: 'Curso creado correctamente...',
@@ -364,7 +360,6 @@ export const NewEventProvider = ({ children }) => {
               }
             }
           } else {
-            //console.log('RESP API==>', result);
             DispatchMessageService({
               type: 'error',
               msj: 'Error al crear el curso',
@@ -373,7 +368,6 @@ export const NewEventProvider = ({ children }) => {
             dispatch({ type: 'COMPLETE' });
           }
         } else {
-          //console.log('RESP API==>', result);
           DispatchMessageService({
             type: 'error',
             msj: 'Error al crear el curso',
@@ -382,7 +376,6 @@ export const NewEventProvider = ({ children }) => {
           dispatch({ type: 'COMPLETE' });
         }
       } catch (error) {
-        console.log('CATCH==>', error);
         DispatchMessageService({
           type: 'error',
           msj: 'Error al crear el curso catch',

@@ -35,12 +35,12 @@ class Product extends Component {
     };
   }
   static contextType = HelperContext;
-  //DRAG TABLE
+  // Drag table
   DraggableContainer = (props) => (
     <SortableContainer
       useDragHandle
       disableAutoscroll
-      helperClass='row-dragging'
+      helperClass="row-dragging"
       onSortEnd={this.onSortEnd}
       {...props}
     />
@@ -195,23 +195,24 @@ class Product extends Component {
     return (
       <div>
         <Header
-          title={'Producto'}
-          titleTooltip={'Agregue o edite los Productos que se muestran en la aplicación'}
+          title="Producto"
+          titleTooltip="Agregue o edite los Productos que se muestran en la aplicación"
           addFn={this.newProduct}
           extra={
             <Row wrap gutter={[8, 8]}>
               <Col>
                 <Button
                   onClick={this.savePosition}
-                  type='primary'
+                  type="primary"
                   icon={<SaveOutlined />}
-                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}>
-                  {'Guardar orden'}
+                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                >
+                  Guardar orden
                 </Button>
               </Col>
               <Col>
-                <Button type='primary' icon={<SettingOutlined />} onClick={this.configuration} id={'configuration'}>
-                  {'Configuración'}
+                <Button type="primary" icon={<SettingOutlined />} onClick={this.configuration} id="configuration">
+                  Configuración
                 </Button>
               </Col>
             </Row>
@@ -222,8 +223,8 @@ class Product extends Component {
           <Loading />
         ) : (
           <Table
-            size='small'
-            rowKey='index'
+            size="small"
+            rowKey="index"
             dataSource={this.state.list}
             pagination={false} //pageSize: 6, position: ['bottomCenter'] }}
             /* scroll={{ x: 1300 }} auto*/
@@ -234,10 +235,10 @@ class Product extends Component {
               },
             }}>
             <Column
-              title=''
-              dataIndex='move'
-              width='50px'
-              align='center'
+              title=""
+              dataIndex="move"
+              width="50px"
+              align="center"
               render={(data, index) => {
                 const DragHandle = sortableHandle(() => (
                   <DragOutlined
@@ -249,19 +250,19 @@ class Product extends Component {
               }}
             />
             <Column
-              title='Posición'
-              align='center'
-              dataIndex='index'
-              width='80px'
+              title="Posición"
+              align="center"
+              dataIndex="index"
+              width="80px"
               render={(data, index) => <div>{data + 1}</div>}
             />
             <Column
-              key='_id'
-              title='Imagen'
-              align='center'
-              /* width='90px' */
+              key="_id"
+              title="Imagen"
+              align="center"
+              /* width="90px" */
               render={(data, index) => (
-                <Space key={index} size='small'>
+                <Space key={index} size="small">
                   {data.image &&
                     Array.isArray(data.image) &&
                     data.image.map((images, index) => {
@@ -271,9 +272,9 @@ class Product extends Component {
               )}
             />
             <Column
-              key='_id'
-              title='Nombre'
-              /* align='center' */
+              key="_id"
+              title="Nombre"
+              /* align="center" */
               sorter={(a, b) => a.name.localeCompare(b.name)}
               render={(data) => (
                 <Paragraph
@@ -287,54 +288,54 @@ class Product extends Component {
               )}
             />
             <Column
-              key='_id'
-              title='Por'
-              /* align='center' */
-              width='120px'
-              dataIndex='by'
-              ellipsis={true}
+              key="_id"
+              title="Por"
+              /* align="center" */
+              width="120px"
+              dataIndex="by"
+              ellipsis
               sorter={(a, b) => a.by?.localeCompare(b.by)}
             />
             <Column
-              key='_id'
-              title='Valor'
-              /* align='center' */
-              width='120px'
-              dataIndex='price'
+              key="_id"
+              title="Valor"
+              /* align="center" */
+              width="120px"
+              dataIndex="price"
               render={(data, prod) => <div>$ {prod.price}</div>}
-              ellipsis={true}
+              ellipsis
             />
             <Column
-              title='Opciones'
-              key='_id'
-              align='center'
-              fixed='right'
+              title="Opciones"
+              key="_id"
+              align="center"
+              fixed="right"
               width={150}
               render={(data, index) => {
                 return (
-                  <Space key={index} size='small'>
-                    <Tooltip key={index} placement='topLeft' title='Editar'>
+                  <Space key={index} size="small">
+                    <Tooltip key={index} placement="topLeft" title="Editar">
                       <Button
                         key={index}
                         id={`editAction${index.index}`}
                         onClick={() => this.editProduct(data)}
-                        type='primary'
+                        type="primary"
                         icon={<EditOutlined /* style={{ fontSize: 25 }} */ />}
-                        size='small'
+                        size="small"
                       />
                     </Tooltip>
-                    <Tooltip key={index} placement='topLeft' title='Eliminar'>
+                    <Tooltip key={index} placement="topLeft" title="Eliminar">
                       <Button
                         key={index}
                         id={`removeAction${index.index}`}
                         onClick={() => this.removeProduct(data)}
-                        type='danger'
+                        type="danger"
                         icon={<DeleteOutlined /* style={{ fontSize: 25 }} */ />}
-                        size='small'
+                        size="small"
                         disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
                       />
                     </Tooltip>
-                    <Tooltip key={index} placement='topLeft' title='Ofertas'>
+                    <Tooltip key={index} placement="topLeft" title="Ofertas">
                       <Button
                         key={index}
                         id={`shoppingAction${index.index}`}
@@ -343,7 +344,7 @@ class Product extends Component {
                         }
                         color={'#1890ff'}
                         icon={<ShoppingCartOutlined /* style={{ fontSize: 25 }} */ />}
-                        size='small'
+                        size="small"
                       />
                     </Tooltip>
                   </Space>

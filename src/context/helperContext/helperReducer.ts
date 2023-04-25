@@ -14,8 +14,6 @@ export const helperInitialState: HelperState = {
 };
 
 export const helperReducer = (state: HelperState, action: HelperAction) => {
-  // console.log(`🚀 REDUCER ACTION ${action?.type}`, action);
-
   switch (action.type) {
     case 'reloadTemplatesCms':
       return {
@@ -38,6 +36,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
           idOrganization: action.idOrganization,
           organization: action.organization,
           logo: action.logo,
+          defaultPositionId: action.defaultPositionId,
         },
       };
 
@@ -50,6 +49,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
           idOrganization: action.idOrganization,
           organization: action.organization,
           logo: action.logo,
+          defaultPositionId: action.defaultPositionId,
         },
       };
 
@@ -90,7 +90,6 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
     //     };
 
     default:
-      console.log('🚀 FUERA DEL REDUCER');
       return state;
   }
 };

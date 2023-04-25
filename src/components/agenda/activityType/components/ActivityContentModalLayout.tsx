@@ -107,7 +107,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
       </Content>
 
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
-        <Row justify='end' gutter={[8, 8]}>
+        <Row justify="end" gutter={[8, 8]}>
           <Col>
             <Button onClick={handleGoBack}>
               Atrás
@@ -117,7 +117,7 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
             <Button
               disabled={disabledNextButton}
               onClick={handleGoForward}
-              type='primary'
+              type="primary"
             >
               {nextButtonString}
             </Button>

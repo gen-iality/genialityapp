@@ -20,16 +20,13 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
   const [ visibleReactPlayer, setVisibleReactPlayer ] = useState(false);
   const { typeActivity, activityEdit } = useContext(AgendaContext);
   const userContext = useContext(CurrentUserContext);
-  //SE CREA ESTE ESTADO POR QUE SE NECESITA REFRESCAR ESTE COMPONENTE EN EL DETALLE DE LA LECCIÓN
+  // Se crea este estado por que se necesita refrescar este componente en el detalle de la lección
   const [ conected, setConected ] = useState('No');
   const urlDefault =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU';
-  //console.log('DATOOS PLAYER===>', meeting_id, thereIsConnection);
-  console.log('11. WOWZA PLAYER===>', typeActivity);
 
   useEffect(() => {
     if (typeActivity === 'meeting') {
-      console.log('100. INGRESA ACA===>');
       setVisibleReactPlayer(false);
       setConected('Yes');
       setPlatformurl(
@@ -37,23 +34,19 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
         }&photo=${userContext.value?.picture || urlDefault}`
       );
     }
-    //console.log('100. typeActivity=>', typeActivity, conected, meeting_id);
     if (!meeting_id) return;
     if (!thereIsConnection && ((typeActivity !== 'youTube' && typeActivity !== 'video') || !typeActivity)) {
-      console.log('100. INGRESA ACA 1===>');
       setConected('Yes');
       setLoopBackGround(typeActivity === 'url' ? true : false);
       setPlatformurl(typeActivity !== 'url' ? defaultVideo : meeting_id);
       setMuted(typeActivity !== 'url' ? true : false);
       setVisibleReactPlayer(true);
     } else if (thereIsConnection && (typeActivity !== 'youTube' || !typeActivity)) {
-      console.log('100. INGRESA ACA 2===>');
       const asyncfunction = async () => {
         setConected('Yes');
         setLoopBackGround(true);
         setPlatformurl('none');
         const live_stream = await getLiveStream(meeting_id);
-        console.log('LIVE STREAM===>', live_stream);
         const url = live_stream.iframe_url;
         visibleReactPlayer && setVisibleReactPlayer(false);
 
@@ -84,7 +77,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
 
   return (
     <>
-      <div className='mediaplayer'>
+      <div className="mediaplayer">
         {conected == 'Yes' && visibleReactPlayer ? (
           <ReactPlayer
             style={{ aspectRatio: '16/9' }}
@@ -92,7 +85,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
             playing={typeActivity !== 'url' ? true : false}
             loop={!loopBackGround}
             width='100%'
-            height={'100%'}
+            height="100%"
             url={platformurl}
             controls={loopBackGround}
           />
@@ -100,9 +93,9 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
           <iframe
             style={screens.xs && typeActivity == 'meeting' ? { aspectRatio: '10/20' } : { aspectRatio: '16/9' }}
             width='100%'
-            height={'100%'}
+            height="100%"
             src={platformurl}
-            frameborder='0'
+            frameborder="0"
             allow={typeActivity == 'meeting' ? 'camera *;microphone *' : 'autoplay; encrypted-media'}
             allowfullscreen></iframe>
         ) : (

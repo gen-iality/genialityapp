@@ -15,9 +15,11 @@ import { useEffect, useState } from 'react';
 import RegisterUser from './RegisterUser';
 import { useEventContext } from '@context/eventContext';
 import RegisterUserAndEventUser from './RegisterUserAndEventUser';
-import { isHome, useEventWithCedula } from '@helpers/helperEvent';
+import { isEvent, isHome, useEventWithCedula } from '@helpers/helperEvent';
 import { useCurrentUser } from '@context/userContext';
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import RegisterUserAndOrgMember from './RegisterUserAndOrgMember';
+import { isOrganization } from '@helpers/helperOrg';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -40,7 +42,7 @@ const ModalAuth = (props) => {
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
   const { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
- 
+
   const cEvent = useEventContext();
   const cUser = useCurrentUser();
   const [modalVisible, setmodalVisible] = useState(false);
@@ -53,7 +55,7 @@ const ModalAuth = (props) => {
       case 'PRIVATE_EVENT':
         return false;
       case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
-        return props.isPrivateRoute ? true : false;
+        return !!props.isPrivateRoute;
       case 'PUBLIC_EVENT_WITH_REGISTRATION':
         return true;
       default:
@@ -62,6 +64,7 @@ const ModalAuth = (props) => {
   };
 
   useEffect(() => {
+    let unsubscribe;
     async function isModalVisible() {
       const typeEvent = recordTypeForThisEvent(cEvent);
       switch (typeEvent) {
@@ -87,18 +90,27 @@ const ModalAuth = (props) => {
     }
 
     async function isUserAuth() {
-      app.auth().onAuthStateChanged((user) => {
+      unsubscribe = app.auth().onAuthStateChanged((user) => {
         if (user) {
           setmodalVisible(false);
 
           helperDispatch({ type: 'showLogin', visible: false });
         } else {
+          if (cEvent.value?.organiser?._id) {
+            console.log('Vaaaaamonos')
+            window.location.href =`/organization/${cEvent.value.organiser._id}/events`
+          }
+          console.debug(window.location.href, cEvent.value)
           isModalVisible();
         }
       });
     }
 
     isUserAuth();
+
+    return () => {
+      unsubscribe && unsubscribe();
+    };
   }, [cEvent, cUser]);
 
   useEffect(() => {
@@ -183,20 +195,23 @@ const ModalAuth = (props) => {
         footer={null}
         zIndex={1000}
         visible={controllerLoginVisible?.visible}
-        closable={controllerLoginVisible?.organization !== 'organization' ? true : false}>
-        <Tabs onChange={callback} centered size='large' activeKey={currentAuthScreen}>
+        closable={controllerLoginVisible?.organization !== 'organization' ? true : false}
+      >
+        <Tabs onChange={callback} centered size="large" activeKey={currentAuthScreen}>
           <TabPane
             tab={intl.formatMessage({
               id: 'modal.title.login',
               defaultMessage: 'Iniciar sesión',
             })}
-            key='login'>
+            key="login"
+          >
             <Form
               form={form1}
               onFinish={handleLoginEmailPassword}
               onFinishFailed={onFinishFailed}
-              layout='vertical'
-              style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+              layout="vertical"
+              style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
+            >
               {props.organization == 'organization' && (
                 <Form.Item>
                   <Image
@@ -214,7 +229,7 @@ const ModalAuth = (props) => {
                   id: 'modal.label.email',
                   defaultMessage: 'Correo electrónico',
                 })}
-                name='email'
+                name="email"
                 style={{ marginBottom: '15px', textAlign: 'left' }}
                 rules={[
                   {
@@ -224,11 +239,12 @@ const ModalAuth = (props) => {
                       defaultMessage: 'Ingrese un correo',
                     }),
                   },
-                ]}>
+                ]}
+              >
                 <Input
                   disabled={loading}
-                  type='email'
-                  size='large'
+                  type="email"
+                  size="large"
                   placeholder={intl.formatMessage({
                     id: 'modal.label.email',
                     defaultMessage: 'Correo electrónico',
@@ -242,7 +258,7 @@ const ModalAuth = (props) => {
                     id: 'modal.label.cedula',
                     defaultMessage: 'Cedula',
                   })}
-                  name='password'
+                  name="password"
                   style={{ marginBottom: '15px', textAlign: 'left' }}
                   rules={[
                     {
@@ -252,10 +268,11 @@ const ModalAuth = (props) => {
                         defaultMessage: 'Ingrese su numero de cedula',
                       }),
                     },
-                  ]}>
+                  ]}
+                >
                   <Input
                     disabled={loading}
-                    size='large'
+                    size="large"
                     placeholder={intl.formatMessage({
                       id: 'modal.label.cedula',
                       defaultMessage: 'Cedula',
@@ -270,7 +287,7 @@ const ModalAuth = (props) => {
                     id: 'modal.label.password',
                     defaultMessage: 'Contraseña',
                   })}
-                  name='password'
+                  name="password"
                   style={{ marginBottom: '15px', textAlign: 'left' }}
                   rules={[
                     {
@@ -280,10 +297,11 @@ const ModalAuth = (props) => {
                         defaultMessage: 'Ingrese una contraseña',
                       }),
                     },
-                  ]}>
+                  ]}
+                >
                   <Input.Password
                     disabled={loading}
-                    size='large'
+                    size="large"
                     placeholder={intl.formatMessage({
                       id: 'modal.label.password',
                       defaultMessage: 'Contraseña',
@@ -298,9 +316,10 @@ const ModalAuth = (props) => {
                   <Typography.Text
                     onClick={() => handleChangeTypeModal('recover')}
                     underline
-                    id={'forgotpassword'}
-                    type='secondary'
-                    style={{ float: 'right', cursor: 'pointer' }}>
+                    id="forgotpassword"
+                    type="secondary"
+                    style={{ float: 'right', cursor: 'pointer' }}
+                  >
                     {intl.formatMessage({
                       id: 'modal.option.restore',
                       defaultMessage: 'Olvidé mi contraseña',
@@ -313,7 +332,7 @@ const ModalAuth = (props) => {
                   showIcon
                   onClose={() => setErrorLogin(false)}
                   closable
-                  className='animate__animated animate__bounceIn'
+                  className="animate__animated animate__bounceIn"
                   style={{
                     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                     backgroundColor: '#FFFFFF',
@@ -324,18 +343,19 @@ const ModalAuth = (props) => {
                     borderRadius: '5px',
                     marginBottom: '15px',
                   }}
-                  type='error'
+                  type="error"
                   message={msjError}
                 />
               )}
               {!loading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
                   <Button
-                    id={'loginButton'}
-                    htmlType='submit'
+                    id="loginButton"
+                    htmlType="submit"
                     block
                     style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                    size='large'>
+                    size="large"
+                  >
                     {intl.formatMessage({
                       id: 'modal.title.login',
                       defaultMessage: 'Iniciar sesión',
@@ -348,14 +368,15 @@ const ModalAuth = (props) => {
             {props.organization !== 'landing' && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
             {props.organization !== 'landing' && (
               <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-                <Space direction='vertical' style={{ width: '100%' }}>
+                <Space direction="vertical" style={{ width: '100%' }}>
                   <Button
                     icon={<MailOutlined />}
                     disabled={loading}
                     onClick={() => handleChangeTypeModal('mail')}
-                    type='primary'
+                    type="primary"
                     block
-                    size='large'>
+                    size="large"
+                  >
                     {intl.formatMessage({
                       id: 'modal.option.send',
                       defaultMessage: 'Enviar acceso a mi correo',
@@ -368,7 +389,8 @@ const ModalAuth = (props) => {
           {isVisibleRegister() && (
             <TabPane
               tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })}
-              key='register'>
+              key="register"
+            >
               <div
                 style={{
                   height: 'auto',
@@ -377,19 +399,40 @@ const ModalAuth = (props) => {
                   paddingRight: '5px',
                   paddingTop: '0px',
                   paddingBottom: '0px',
-                }}>
-                {isHome() ? (
-                  <RegisterUser
-                    screens={screens}
-                    stylePaddingMobile={stylePaddingMobile}
-                    stylePaddingDesktop={stylePaddingDesktop}
-                  />
-                ) : (
-                  <RegisterUserAndEventUser
-                    screens={screens}
-                    stylePaddingMobile={stylePaddingMobile}
-                    stylePaddingDesktop={stylePaddingDesktop}
-                  />
+                }}
+              >
+                {isHome() && (
+                  <>
+                    <RegisterUser
+                      screens={screens}
+                      stylePaddingMobile={stylePaddingMobile}
+                      stylePaddingDesktop={stylePaddingDesktop}
+                      idOrganization={controllerLoginVisible.idOrganization} // New!
+                      defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
+                    />
+                  </>
+                )}
+                {isEvent() && (
+                  <>
+                    <RegisterUserAndEventUser
+                      screens={screens}
+                      stylePaddingMobile={stylePaddingMobile}
+                      stylePaddingDesktop={stylePaddingDesktop}
+                      requireAutomaticLoguin={true}
+                    />
+                  </>
+                )}
+                {isOrganization() && (
+                  <>
+                    <RegisterUserAndOrgMember
+                      screens={screens}
+                      stylePaddingMobile={stylePaddingMobile}
+                      stylePaddingDesktop={stylePaddingDesktop}
+                      idOrganization={controllerLoginVisible.idOrganization} // New!
+                      defaultPositionId={controllerLoginVisible.defaultPositionId} // New!
+                      requireAutomaticLoguin={true}
+                    />
+                  </>
                 )}
               </div>
             </TabPane>

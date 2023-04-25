@@ -52,7 +52,7 @@ const ImageUploaderDragAndDrop = ({
 
           const imagenUrl = await uploadImageData(file.originFileObj);
           setImage(imagenUrl);
-          imageDataCallBack(imagenUrl);
+          imageDataCallBack && imageDataCallBack(imagenUrl);
           setIsUploading(false);
           break;
 
@@ -61,11 +61,11 @@ const ImageUploaderDragAndDrop = ({
           break;
 
         case 'removed':
-          //ELIMINAR DE FIREBASE
+          // Eliminar de firebase
           await deleteFireStorageData(image);
           setImage(null);
           setIsUploading(false);
-          imageDataCallBack(null);
+          imageDataCallBack && imageDataCallBack(null);
           break;
 
         default:
@@ -78,25 +78,25 @@ const ImageUploaderDragAndDrop = ({
       return;
     },
     iconRender(file: any) {
-      return <FileImageOutlined style={{ color: '#009fd9' }} />;
+      return <FileImageOutlined style={{ color: '#003853' }} />;
     },
     onPreview(file: any) {},
     /**------------------------------------------------- */
   };
 
   return (
-    <Spin tip='Cargando imagen...' spinning={isUploading}>
+    <Spin tip="Cargando imagen..." spinning={isUploading}>
       <Card hoverable style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px', textAlign: 'center' }}>
         <Dragger {...draggerprops}>
           {image ? (
-            <Image preview={false} alt='preview' src={image} />
+            <Image preview={false} alt="preview" src={image} />
           ) : (
             <>
-              <p className='ant-upload-drag-icon'>
-                <FileImageOutlined style={{ color: '#009fd9' }} />
+              <p className="ant-upload-drag-icon">
+                <FileImageOutlined style={{ color: '#003853' }} />
               </p>
-              <p className='ant-upload-text'>Haga clic o arrastre el archivo a esta área para cargarlo</p>
-              <p className='ant-upload-hint'>
+              <p className="ant-upload-text">Haga clic o arrastre el archivo a esta área para cargarlo</p>
+              <p className="ant-upload-hint">
                 Dimensiones sugeridas: {width}px * {height}px
               </p>
             </>

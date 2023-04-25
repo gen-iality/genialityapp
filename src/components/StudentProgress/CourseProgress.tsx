@@ -30,7 +30,7 @@ function CourseProgress(props: CourseProgressProps | SteppedCourseProgressProps)
 
       {type === 'circle' && (
       <Progress
-        type='circle'
+        type="circle"
         percent={percentValue}
         format={() => stats}
       />
@@ -52,7 +52,7 @@ function CourseProgress(props: CourseProgressProps | SteppedCourseProgressProps)
         }}
         trailColor='#E6E6E6'
         percent={percentValue}
-        status='active'
+        status="active"
         format={() => stats}
       />
       )}
