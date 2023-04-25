@@ -65,7 +65,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        deleteMeeting(meenting.id);
+        deleteMeeting(meenting.id,meenting.id_request_meetings);
       },
     });
   };
@@ -97,7 +97,7 @@ export default function MeetingItem({ meenting }: IMeentingItem) {
             <Col>
               <Avatar.Group maxCount={4} maxStyle={{ color: 'white', backgroundColor: '#333F44' }}>
                 {participants.map((participant, key) => (
-                  <Tooltip key={key} title={participant.name} placement='top'>
+                  <Tooltip key={participant.id} title={participant.name} placement='top'>
                     <Avatar style={{ backgroundColor: '#333F44', color: 'white' }}>
                       {participant.name && participant.name.charAt(0).toUpperCase()}
                     </Avatar>

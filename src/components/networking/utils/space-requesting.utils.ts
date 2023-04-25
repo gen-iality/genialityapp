@@ -40,7 +40,6 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
 
     const diffMinutes = DiffBetweenTwoHours(hourStartSpaces, hourFinishSpaces)
     const iteraciones = diffMinutes / timeParametres.meetingDuration
-
     const timeSpaces: SpaceMeeting[] = [{
         dateStart: firebase.firestore.Timestamp.fromDate(new Date(new Date(date.set({
             hour: hourStartSpaces.hour(),

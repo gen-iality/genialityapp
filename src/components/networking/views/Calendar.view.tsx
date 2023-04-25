@@ -79,7 +79,7 @@ export default function MyCalendar() {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        deleteMeeting(meenting.id);
+        deleteMeeting(meenting.id,meenting.id_request_meetings);
         setOpen(false);
       },
     });
