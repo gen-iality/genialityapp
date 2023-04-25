@@ -1,4 +1,4 @@
-import { Button, DatePicker, Modal, notification, Row } from 'antd';
+import { Button, DatePicker, Modal, notification, Row, Typography } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
@@ -76,7 +76,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       DispatchMessageService({
         action: 'show',
         type: 'error',
-        msj: 'No se pudo programar la reunion, intentelo mas tarde',
+        msj: 'No se pudo programar la reunión, intentelo más tarde',
       });
       setLoading(false);
       closeModal();
@@ -93,34 +93,31 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   return (
     <Modal
       visible={!!targetEventUserId}
-      title={'Agendar cita'}
+      title={<Typography.Text ellipsis style={{width: 450}}>Agendar cita con <strong>{targetEventUser?.user?.names}</strong></Typography.Text>}
       footer={null}
       onCancel={resetModal}
       style={{ zIndex: 1031 }}
-      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}>
-      <div>
-        <div>
-          <Row justify='space-between' style={{ margin: 5 }}>
-            <DatePicker
-              value={date}
-              style={{ marginBottom: 10 }}
-              format={'DD-MM-YYYY'}
-              disabledDate={disabledDate}
-              onChange={setDate}
-            />
-          </Row>
-          {date && (
-              <SpacesAvalibleList
-                date={date}
-                targetEventUserId={targetEventUserId}
-                targetUserName={targetEventUser?.user?.names}
-                onSubmit={onSubmit}
-                creatorEventUserId={cEventUser.value._id}
-                loadingButton={loading}
-              />
-            )}
-        </div>
-      </div>
+      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+    >
+      <Row justify='space-between' style={{ margin: 5 }}>
+        <DatePicker
+          value={date}
+          style={{ marginBottom: 10 }}
+          format={'DD-MM-YYYY'}
+          disabledDate={disabledDate}
+          onChange={setDate}
+        />
+      </Row>
+      {date && (
+        <SpacesAvalibleList
+          date={date}
+          targetEventUserId={targetEventUserId}
+          targetUserName={targetEventUser?.user?.names}
+          onSubmit={onSubmit}
+          creatorEventUserId={cEventUser.value._id}
+          loadingButton={loading}
+        />
+      )}
     </Modal>
   );
 }
