@@ -46,10 +46,10 @@ const AgendaActividadDetalle = (props: any) => {
 	// const [activity, setactivity] = useState('');
   // Constants from hooks
 	const { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = cHelper;
-	const uid = cUser.value.uid;
+	const uid = cUser.value?.uid;
 	const activityId = props.match.params.activity_id;
-	const eventId = cEvent.value._id;
-	const isAssambleyMod = cEvent.value.user_properties.some((property: any) => property.type === 'voteWeight');	
+	const eventId = cEvent.value?._id;
+	const isAssambleyMod = cEvent.value?.user_properties.some((property: any) => property.type === 'voteWeight');
 	const voteWeight = cEventUser.value?.properties?.voteWeight ? Number(cEventUser.value?.properties?.voteWeight) : 1
 	const intl = useIntl();
 	{
