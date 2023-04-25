@@ -9,6 +9,7 @@ import { typeAttendace } from './interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 import SpacesAvalibleList from './components/spaces-requestings/SpacesAvalibleList';
 import firebase from 'firebase/compat';
+import locale from 'antd/es/date-picker/locale/es_ES';
 
 function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, closeModal, cEvent }) {
   const [agendaMessage, setAgendaMessage] = useState('');
@@ -99,13 +100,14 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       style={{ zIndex: 1031 }}
       bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
     >
-      <Row justify='space-between' style={{ margin: 5 }}>
+      <Row justify='space-between' /* style={{ margin: 5 }} */>
         <DatePicker
           value={date}
-          style={{ marginBottom: 10 }}
+          style={{ marginBottom: 10, width: '100%' }}
           format={'DD-MM-YYYY'}
           disabledDate={disabledDate}
           onChange={setDate}
+          locale={locale}
         />
       </Row>
       {date && (
