@@ -620,7 +620,7 @@ class ListEventUser extends Component {
                                       )}
                                     </div>
                                   </Col>
-                                  {eventUserId !== null && (
+                                  {(eventUserId !== null && this.props.cEventUser.value._id !==users._id) && (
                                     <Space wrap>
                                       <Button
                                         type='primary'

@@ -14,6 +14,7 @@ import { ISpaces, ISpacesForm } from '../interfaces/spaces-interfaces';
 import firebase from 'firebase/compat';
 import { Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { deleteRequestMeeting } from '../services/landing.service';
 
 interface NetworkingContextType {
   eventId: string;
@@ -34,7 +35,7 @@ interface NetworkingContextType {
   openModal: (mode?: string) => void;
   createMeeting: (meeting: Omit<IMeeting, 'id'>) => void;
   updateMeeting: (meetingId: string, meeting: IMeeting) => Promise<boolean>;
-  deleteMeeting: (meetingId: string) => void;
+  deleteMeeting: (meetingId: string, id_request_meetings? : string) => void;
   createObserver: (data: CreateObservers) => Promise<void>;
   deleteObserver: (id: string) => Promise<void>;
   createType: (type: Omit<ITypeMeenting, 'id'>) => Promise<void>;
@@ -142,7 +143,7 @@ export default function NetworkingProvider(props: Props) {
     const response = await service.updateMeeting(eventId, meetingId, newMeenting);
     return response
   };
-  const deleteMeeting = async (meetingId: string) => {
+  const deleteMeeting = async (meetingId: string, id_request_meetings? : string) => {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -151,6 +152,10 @@ export default function NetworkingProvider(props: Props) {
     });
 
     const response = await service.deleteMeeting(eventId, meetingId);
+
+    if(response && id_request_meetings){
+      await deleteRequestMeeting(eventId, id_request_meetings);
+    }
     DispatchMessageService({
       key: 'loading',
       action: 'destroy',
