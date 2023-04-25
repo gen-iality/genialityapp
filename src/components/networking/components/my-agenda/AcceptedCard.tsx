@@ -54,11 +54,12 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
     }
   };
 
-  const validDateRoom = (room: any) => {
-    let dateFrom = moment(room.startTimestap).format('YYYY-MM-DD');
-    if (moment().format('YYYY-MM-DD') == dateFrom) {
-      return true;
-    }
+  const validDateRoom = (room: IMeeting) => {
+   const start = moment(room.start)
+   const end = moment(room.end)
+   if(start.isSameOrBefore(moment()) &&  end.isSameOrAfter(moment())){
+    return true
+   }
     return false;
   };
 
