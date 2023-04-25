@@ -24,7 +24,7 @@ export default function MeetingForm() {
   } = useMeetingFormLogic();
 
   const {typeMeetings, onClickAgregarUsuario} = useContext(NetworkingContext);
-  const { loading, spaces } = useGetSpaces();
+  const { spaces } = useGetSpaces();
 
   return (
     <Fragment>
@@ -62,7 +62,7 @@ export default function MeetingForm() {
                 return Promise.resolve();
               },
             },
-            /* { required: true} */
+           
           ]}
         >
           <Transfer

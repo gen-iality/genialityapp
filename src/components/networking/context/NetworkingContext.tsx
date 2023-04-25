@@ -33,8 +33,8 @@ interface NetworkingContextType {
   onCancelModalAgregarUsuario: () => void;
   attendeesList: () => Omit<IObserver, 'id'>[];
   openModal: (mode?: string) => void;
-  createMeeting: (meeting: Omit<IMeeting, 'id'>) => void;
-  updateMeeting: (meetingId: string, meeting: IMeeting) => Promise<boolean>;
+  createMeeting: (meeting: Omit<IMeeting, 'id'| 'startTimestap'>) => void;
+  updateMeeting: (meetingId: string, meeting: Omit<IMeeting, 'startTimestap'>) => Promise<boolean>;
   deleteMeeting: (meetingId: string, id_request_meetings? : string) => void;
   createObserver: (data: CreateObservers) => Promise<void>;
   deleteObserver: (id: string) => Promise<void>;
@@ -109,7 +109,7 @@ export default function NetworkingProvider(props: Props) {
   };
 
   /* funciones crud para las reuniones */
-  const createMeeting = async (meeting: Omit<IMeeting, 'id'>) => {
+  const createMeeting = async (meeting: Omit<IMeeting, 'id' |'startTimestap'>) => {
     const newMeenting: Omit<IMeeting, 'id'> = {
       name: meeting.name,
       dateUpdated: meeting.dateUpdated,
@@ -128,7 +128,7 @@ export default function NetworkingProvider(props: Props) {
       action: 'show',
     });
   };
-  const updateMeeting = async (meetingId: string, meeting: IMeeting) => {
+  const updateMeeting = async (meetingId: string, meeting: Omit<IMeeting,'startTimestap'>) => {
     const newMeenting: Omit<IMeeting, 'id'> = {
       name: meeting.name,
       dateUpdated: meeting.dateUpdated,
@@ -272,8 +272,7 @@ export default function NetworkingProvider(props: Props) {
       const event = await EventsApi.getOne(eventId);
       const rolesList = await RolAttApi.byEventRolsGeneral();
       const properties = event.user_properties;
-      // const rolesList = await RolAttApi.byEventRolsGeneral();
-      const badgeEvent = await BadgeApi.get(eventId);
+
 
       let extraFields = fieldNameEmailFirst(properties);
 

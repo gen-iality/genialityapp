@@ -109,7 +109,7 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
               </Typography.Text>
 
               {data.participants.map((participant) => (
-                <Typography.Paragraph type='secondary'>{participant.name}</Typography.Paragraph>
+                <Typography.Paragraph key={`name-${participant.id}`} type='secondary'>{participant.name}</Typography.Paragraph>
               ))}
             </Typography.Paragraph>
           }

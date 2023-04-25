@@ -23,7 +23,7 @@ const TabComponent = ({ listTabPanels, eventUser, enableMeetings, setCurrentRoom
             <Row justify='center'>
               {dailyMeeting.meetings.length > 0 ? (
                 dailyMeeting.meetings.map((meeting) => (
-                  <Col xxl={12}>
+                  <Col xxl={12} key={`col-${meeting.id}`}>
                     <AcceptedCard
                       key={`accepted-${meeting.id}`}
                       eventId={eventId}
