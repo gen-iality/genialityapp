@@ -1,4 +1,4 @@
-import { Card, Col, Empty, Input, List, Row } from 'antd';
+import { Card, Col, Input, List, Row } from 'antd';
 import React, { useState } from 'react';
 import MeetingItem from './MeetingItem';
 import { IMeetingList } from '../interfaces/Meetings.interfaces';

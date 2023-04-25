@@ -56,7 +56,7 @@ export const useMeetingFormLogic = () => {
             const participants: IParticipants[] = attendeesTransfer.filter((attendeeTransfer: any) => AttendeesKeyTarget.includes(attendeeTransfer.key));
 
             //objeto de creacion
-            const meeting: Omit<IMeeting, 'id'> = {
+            const meeting: Omit<IMeeting, 'id' | 'startTimestap'> = {
                 name: datos.name,
                 start: datos.date[0].toString(),
                 end : datos.date[1].toString(),

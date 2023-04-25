@@ -16,7 +16,7 @@ export default function MeetingInfo({ meenting }: IMeentingItem) {
   const [participants, setParticipants] = useState<IParticipants[]>(meenting.participants);
   const { dateFormat } = useDateFormat();
   const { updateMeeting } = useContext(NetworkingContext);
-  const { resultStatus, messageByState, stateMeeting } = useMeetingState(meenting.start, meenting.end);
+  const { stateMeeting } = useMeetingState(meenting.start, meenting.end);
 
   useEffect(() => {
     setParticipants(meenting.participants);
