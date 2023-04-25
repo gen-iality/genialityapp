@@ -21,8 +21,8 @@ const { confirm } = Modal;
 
 // TypeDisplayment.EVIUS_MEET | TypeDisplayment.TRANSMISSION
 interface TransmitionStatusCardProps {
-  type: ActivityType.TypeAsDisplayment,
-};
+  type: ActivityType.TypeAsDisplayment;
+}
 
 const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -68,8 +68,8 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
         await executer_startMonitorStatus();
         setIsLoading(false);
         setIsBlockedButton(true);
-        message.error('El id de la transmisión no existe!');
-        console.error(e);
+        message.error('Gcore - error', e.message);
+        console.log({ error: e });
       }
       setIsLoadingComponent(false);
     }
@@ -131,10 +131,14 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
   };
 
   const popconfirmMessage = useMemo(() => {
-    if (props.type === TypeDisplayment.TRANSMISSION || props.type === TypeDisplayment.EVIUS_MEET || props.type === TypeDisplayment.VIMEO || props.type === TypeDisplayment.YOUTUBE)
+    if (
+      props.type === TypeDisplayment.TRANSMISSION ||
+      props.type === TypeDisplayment.EVIUS_MEET ||
+      props.type === TypeDisplayment.VIMEO ||
+      props.type === TypeDisplayment.YOUTUBE
+    )
       return 'Eliminar transmisió';
-    if (props.type === TypeDisplayment.MEETING)
-      return 'Eliminar sala de reunión';
+    if (props.type === TypeDisplayment.MEETING) return 'Eliminar sala de reunión';
     return 'Eliminar video';
   }, [props.type]);
 
