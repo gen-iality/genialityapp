@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Col, Divider, notification, Row, Spin } from 'antd';
+import { Avatar, Button, Card, Col, Divider, notification, Row, Spin, Typography } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 //context
@@ -69,8 +69,10 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
             ))}
         </Row>
         {loading && (
-          <Row align='middle' justify='center' style={{ height: 100 }}>
-            <Spin />
+          <Row justify='center' align='middle'>
+            <Col>
+              <Spin size='large' tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
+            </Col>
           </Row>
         )}
       </div>
@@ -100,8 +102,10 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
           </Row>
 
           {loading1 && (
-            <Row align='middle' justify='center' style={{ height: 100 }}>
-              <Spin />
+            <Row justify='center' align='middle'>
+              <Col>
+                <Spin size='large' tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
+              </Col>
             </Row>
           )}
         </div>

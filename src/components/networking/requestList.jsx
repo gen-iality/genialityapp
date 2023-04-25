@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from 'antd';
+import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message, Row, Typography } from 'antd';
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 /* import 'react-toastify/dist/ReactToastify.css'; */
 import { Networking, UsersApi } from '../../helpers/request';
@@ -288,5 +288,6 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
         <InvitacionListSent list={requestListSent} />
       </div>
     );
-  if (loading) return <Spin></Spin>;
+  if (loading) return <Row justify='center' align='middle'><Col><Spin size='large'
+  tip={<Typography.Text strong>Cargando...</Typography.Text>}/></Col></Row>;
 }
