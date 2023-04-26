@@ -14,6 +14,7 @@ import { ISpaces, ISpacesForm } from '../interfaces/spaces-interfaces';
 import firebase from 'firebase/compat';
 import { Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { deleteRequestMeeting } from '../services/landing.service';
 
 interface NetworkingContextType {
   eventId: string;
@@ -32,9 +33,9 @@ interface NetworkingContextType {
   onCancelModalAgregarUsuario: () => void;
   attendeesList: () => Omit<IObserver, 'id'>[];
   openModal: (mode?: string) => void;
-  createMeeting: (meeting: Omit<IMeeting, 'id'>) => void;
-  updateMeeting: (meetingId: string, meeting: IMeeting) => Promise<boolean>;
-  deleteMeeting: (meetingId: string) => void;
+  createMeeting: (meeting: Omit<IMeeting, 'id'| 'startTimestap'>) => void;
+  updateMeeting: (meetingId: string, meeting: Omit<IMeeting, 'startTimestap'>) => Promise<boolean>;
+  deleteMeeting: (meetingId: string, id_request_meetings? : string) => void;
   createObserver: (data: CreateObservers) => Promise<void>;
   deleteObserver: (id: string) => Promise<void>;
   createType: (type: Omit<ITypeMeenting, 'id'>) => Promise<void>;
@@ -108,7 +109,7 @@ export default function NetworkingProvider(props: Props) {
   };
 
   /* funciones crud para las reuniones */
-  const createMeeting = async (meeting: Omit<IMeeting, 'id'>) => {
+  const createMeeting = async (meeting: Omit<IMeeting, 'id' |'startTimestap'>) => {
     const newMeenting: Omit<IMeeting, 'id'> = {
       name: meeting.name,
       dateUpdated: meeting.dateUpdated,
@@ -127,7 +128,7 @@ export default function NetworkingProvider(props: Props) {
       action: 'show',
     });
   };
-  const updateMeeting = async (meetingId: string, meeting: IMeeting) => {
+  const updateMeeting = async (meetingId: string, meeting: Omit<IMeeting,'startTimestap'>) => {
     const newMeenting: Omit<IMeeting, 'id'> = {
       name: meeting.name,
       dateUpdated: meeting.dateUpdated,
@@ -142,7 +143,7 @@ export default function NetworkingProvider(props: Props) {
     const response = await service.updateMeeting(eventId, meetingId, newMeenting);
     return response
   };
-  const deleteMeeting = async (meetingId: string) => {
+  const deleteMeeting = async (meetingId: string, id_request_meetings? : string) => {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -151,6 +152,10 @@ export default function NetworkingProvider(props: Props) {
     });
 
     const response = await service.deleteMeeting(eventId, meetingId);
+
+    if(response && id_request_meetings){
+      await deleteRequestMeeting(eventId, id_request_meetings);
+    }
     DispatchMessageService({
       key: 'loading',
       action: 'destroy',
@@ -267,8 +272,7 @@ export default function NetworkingProvider(props: Props) {
       const event = await EventsApi.getOne(eventId);
       const rolesList = await RolAttApi.byEventRolsGeneral();
       const properties = event.user_properties;
-      // const rolesList = await RolAttApi.byEventRolsGeneral();
-      const badgeEvent = await BadgeApi.get(eventId);
+
 
       let extraFields = fieldNameEmailFirst(properties);
 

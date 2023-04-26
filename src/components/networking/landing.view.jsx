@@ -15,6 +15,7 @@ import {
   Result,
   Space,
   Spin,
+  Typography,
 } from 'antd';
 import AppointmentModal from './appointmentModal';
 import MyAgenda from './myAgenda';
@@ -33,6 +34,7 @@ import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../.
 import { setVirtualConference } from '../../redux/virtualconference/actions';
 import { connect } from 'react-redux';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -345,7 +347,7 @@ class ListEventUser extends Component {
     } = this.state;
 
     return (
-      <Card style={{ padding: '5px' }}>
+      <Card style={{ /* padding: '5px', */ /* height: '100%' */ padding: 0}} bodyStyle={{paddingTop: 10}}>
         <Modal visible={this.state.modalView} footer={null} closable={false}>
           <Result
             extra={
@@ -353,9 +355,16 @@ class ListEventUser extends Component {
                 Cerrar
               </Button>
             }
-            title='Información adicional'
-            subTitle='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
-                  se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
+            title={<Typography.Text strong>¡Información adicional!</Typography.Text>}
+            subTitle={
+              <Typography.Paragraph style={{textAlign: 'justify'}}>
+                Solo puedes ver una cantidad limitada de información pública de cada asistente, 
+                para ver toda la información de un asistente debes realizar una solicitud de contacto,
+                luego de ello se le informará al asistente, quien aceptará o recharazá la solicitud enviada. <br /><br />
+                Una vez el asistente haya aceptado solicitud te llegará un correo y podrás regresar
+                a esta misma sección en mis contactos a ver la información completa del nuevo contacto.
+              </Typography.Paragraph>
+            }
           />
         </Modal>
 
@@ -372,154 +381,148 @@ class ListEventUser extends Component {
               />
             }
 
-            <Form>
-              <Row justify='space-around' gutter={[16, 16]}>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ margin: '0 auto' }}>
-                  <Form.Item
-                    labelCol={{ span: 24 }}
-                    label='Busca aquí las personas que deseas contactar'
-                    name='searchInput'>
-                    <SearchComponent
-                      id='searchInput'
-                      placeholder={''}
-                      data={usersFiltered}
-                      kind={'user'}
-                      event={this.props.cEvent.value._id}
-                      searchResult={this.searchResult}
-                      users={this.state.users}
-                      clear={this.state.clearSearch}
-                      styles={{ width: '300px' }}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
+            {!this.state.loading && (
+              <Form>
+                <Row justify='space-around' gutter={[16, 16]}>
+                  <Col span={24} style={{ margin: '0 auto' }}>
+                    <Form.Item
+                      labelCol={{ span: 24 }}
+                      label='Busca aquí las personas que deseas contactar'
+                      name='searchInput'>
+                      <SearchComponent
+                        id='searchInput'
+                        placeholder={''}
+                        data={usersFiltered}
+                        kind={'user'}
+                        event={this.props.cEvent.value._id}
+                        searchResult={this.searchResult}
+                        users={this.state.users}
+                        clear={this.state.clearSearch}
+                        styles={{ width: '300px' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
 
-              <Row justify='space-around' gutter={[16, 16]}>
-                {/*Alerta quemado para el eventop de finanzas de clima*/}
-                {this.props.cEvent.value._id === '5f9708a2e4c9eb75713f8cc6' && (
-                  <>
-                    {/* <Alert
-                    message='Sugerencias de Busqueda'
-                    description='Te recomendamos buscar de acuerdo a las 
-                      siguientes palabras claves: Adaptación, Mitigación, 
-                      Energía, Agropecuario, Industria, Circular, TIC, Residuos, 
-                      Turismo, Transporte, Forestal,  Vivienda, Start Up, Pyme, Entes territoriales, 
-                      Gran empresa, Pública, Privada, Mixta, ONG'
-                    type='info'
-                    showIcon
-                    closable
-                  /> */}
-                    <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
-                        <FilterNetworking
-                          id='filterSector'
-                          properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'participacomo'}
-                          handleSelect={this.handleSelectFilter}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
-                        <FilterNetworking
-                          id='filterSector'
-                          properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'sector'}
-                          handleSelect={this.handleSelectFilter}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </>
-                )}
+                <Row justify='space-around' gutter={[16, 16]}>
+                  {/*Alerta quemado para el eventop de finanzas de clima*/}
+                  {this.props.cEvent.value._id === '5f9708a2e4c9eb75713f8cc6' && (
+                    <>
+                      {/* <Alert
+                      message='Sugerencias de Busqueda'
+                      description='Te recomendamos buscar de acuerdo a las 
+                        siguientes palabras claves: Adaptación, Mitigación, 
+                        Energía, Agropecuario, Industria, Circular, TIC, Residuos, 
+                        Turismo, Transporte, Forestal,  Vivienda, Start Up, Pyme, Entes territoriales, 
+                        Gran empresa, Pública, Privada, Mixta, ONG'
+                      type='info'
+                      showIcon
+                      closable
+                    /> */}
+                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                          <FilterNetworking
+                            id='filterSector'
+                            properties={this.props.cEvent.value.user_properties || []}
+                            filterProperty={'participacomo'}
+                            handleSelect={this.handleSelectFilter}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                        <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                          <FilterNetworking
+                            id='filterSector'
+                            properties={this.props.cEvent.value.user_properties || []}
+                            filterProperty={'sector'}
+                            handleSelect={this.handleSelectFilter}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </>
+                  )}
 
-                {/*Ruedas de negocio naranja videojuegos*/}
-                {this.props.cEvent.value._id === '5f92d0cee5e2552f1b7c8ea2' && (
-                  <>
-                    <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
-                        <FilterNetworking
-                          id='filterSector'
-                          properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'participascomo'}
-                          handleSelect={this.handleSelectFilter}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Tipo de participante' name='filterSector' labelCol={{ span: 24 }}>
-                        <FilterNetworking
-                          id='filterSector'
-                          properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'tipodeparticipante'}
-                          handleSelect={this.handleSelectFilter}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </>
-                )}
+                  {/*Ruedas de negocio naranja videojuegos*/}
+                  {this.props.cEvent.value._id === '5f92d0cee5e2552f1b7c8ea2' && (
+                    <>
+                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                          <FilterNetworking
+                            id='filterSector'
+                            properties={this.props.cEvent.value.user_properties || []}
+                            filterProperty={'participascomo'}
+                            handleSelect={this.handleSelectFilter}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                        <Form.Item label='Tipo de participante' name='filterSector' labelCol={{ span: 24 }}>
+                          <FilterNetworking
+                            id='filterSector'
+                            properties={this.props.cEvent.value.user_properties || []}
+                            filterProperty={'tipodeparticipante'}
+                            handleSelect={this.handleSelectFilter}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </>
+                  )}
 
-                {/*Ruedas de negocio naranja*/}
-                {this.props.cEvent.value._id === '5f7f21217828e17d80642856' && (
-                  <>
-                    <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
-                        <FilterNetworking
-                          id='filterSector'
-                          properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'participacomo'}
-                          handleSelect={this.handleSelectFilter}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
-                        <FilterNetworking
-                          id='filterSector'
-                          properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'queproductooservicioofreces'}
-                          handleSelect={this.handleSelectFilter}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </>
-                )}
+                  {/*Ruedas de negocio naranja*/}
+                  {this.props.cEvent.value._id === '5f7f21217828e17d80642856' && (
+                    <>
+                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                          <FilterNetworking
+                            id='filterSector'
+                            properties={this.props.cEvent.value.user_properties || []}
+                            filterProperty={'participacomo'}
+                            handleSelect={this.handleSelectFilter}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                        <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                          <FilterNetworking
+                            id='filterSector'
+                            properties={this.props.cEvent.value.user_properties || []}
+                            filterProperty={'queproductooservicioofreces'}
+                            handleSelect={this.handleSelectFilter}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </>
+                  )}
 
-                {/*Fenalco Meetups*/}
-                {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' && (
-                  <>
-                    <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
-                        <FilterNetworking
-                          id='filterSector'
-                          properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'asistecomo'}
-                          handleSelect={this.handleSelectFilter}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                      <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
-                        <FilterNetworking
-                          id='filterSector'
-                          properties={this.props.cEvent.value.user_properties || []}
-                          filterProperty={'sector'}
-                          handleSelect={this.handleSelectFilter}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </>
-                )}
-              </Row>
-            </Form>
-            <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
-              {/* <Alert
-                message='Información Adicicional'
-                description='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
-              se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
-                type='info'
-                closable
-              /> */}
-            </Col>
+                  {/*Fenalco Meetups*/}
+                  {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' && (
+                    <>
+                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                          <FilterNetworking
+                            id='filterSector'
+                            properties={this.props.cEvent.value.user_properties || []}
+                            filterProperty={'asistecomo'}
+                            handleSelect={this.handleSelectFilter}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                        <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                          <FilterNetworking
+                            id='filterSector'
+                            properties={this.props.cEvent.value.user_properties || []}
+                            filterProperty={'sector'}
+                            handleSelect={this.handleSelectFilter}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </>
+                  )}
+                </Row>
+              </Form>
+            )}
+            
             {!this.state.loading && !eventUserId && (
               <div>
                 <br />
@@ -534,12 +537,14 @@ class ListEventUser extends Component {
               </div>
             )}
 
-            <div style={{ marginTop: 10 }}>
+            <Row justify='center' align='middle'>
               {this.state.loading ? (
-                <Fragment>
-                  <Loading />
-                  <h2 className='has-text-centered'>Cargando...</h2>
-                </Fragment>
+                <Col>
+                  <Spin 
+                    size='large'
+                    tip={<Typography.Text strong>Cargando...</Typography.Text>}
+                  />
+                </Col>
               ) : (
                 <div className='container card-Sugeridos'>
                   <Row justify='space-between' gutter={[10, 10]}>
@@ -576,7 +581,6 @@ class ListEventUser extends Component {
                                 {!users?.user?.picture && users.properties.names
                                   ? users.properties.names.charAt(0).toUpperCase()
                                   : users.properties.names}
-                                {/* {console.log('USER ACA===>', users)} */}
                               </Avatar>
                             }
                             title={users.properties.names ? users.properties.names : 'No registra Nombre'}
@@ -616,7 +620,7 @@ class ListEventUser extends Component {
                                       )}
                                     </div>
                                   </Col>
-                                  {eventUserId !== null && (
+                                  {(eventUserId !== null && this.props.cEventUser.value._id !==users._id) && (
                                     <Space wrap>
                                       <Button
                                         type='primary'
@@ -755,39 +759,19 @@ class ListEventUser extends Component {
                   )}
                 </div>
               )}
-            </div>
+            </Row>
           </TabPane>
 
           <TabPane
             tab={
               <div style={{ position: 'relative' }}>
                 Mi agenda
-                {this.props.cHelper.totalsolicitudAgenda > 0 && (
-                  <Badge
-                    style={{
-                      position: 'absolute',
-                      top: '-21px',
-                      right: '-13px',
-                    }}
-                    count={
-                      this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
-                    }></Badge>
-                )}
               </div>
             }
             key='mi-agenda'>
             {activeTab === 'mi-agenda' && (
               <>
-                {/* {this.props.cEventUser && this.props.cEventUser.value && (
-                  <AppointmentRequests
-                    eventId={this.props.cEvent.value._id}
-                    currentEventUserId={eventUserId}
-                    currentUser={this.props.currentUser}
-                    notificacion={this.props.notification}
-                    eventUsers={users}
-                    showpendingsend={false}
-                  />
-                )} */}
+                
                 {this.props.cEventUser && this.props.cEventUser.value && (
                   <MyAgenda
                     event={this.props.cEvent.value}

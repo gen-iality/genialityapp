@@ -1,5 +1,5 @@
 import { IMeeting } from "./Meetings.interfaces";
-
+import firebase from 'firebase/compat';
 
 export interface IRequestCard {
   received : boolean;
@@ -16,9 +16,11 @@ export interface IRequestMeenting {
     user_to : userRequest,
     user_from : userRequest,
     meeting : IMeeting,
-    date: string,
-    message : string,
-    status: string
+    date: string;
+    dateStartTimestamp:firebase.firestore.Timestamp
+    message : string;
+    status: string;
+    timestamp : number
 }
 
 

@@ -52,7 +52,7 @@ export const userRequest = {
       const users = await UsersApi.getAll(eventId, '?pageSize=10000');
 
       if (users && currentUser) {
-        docs = users.data.filter((user) => user && user._id !== currentUser._id);
+        docs = users.data.filter((user) => user && user.account_id !== currentUser._id);
       }
     } catch (error) {
       console.error(error);
@@ -245,7 +245,7 @@ export const createMeetingRequest = ({
           event_id: eventId,
           state: 'send',
           request_type: 'meeting',
-          start_time: new Date(startDate).toLocaleTimeString()
+          start_time: startDate.toDate().toString()
         };
     await EventsApi.sendMeetingRequest(eventId, data);
      resolve(newAgendaResult.id);

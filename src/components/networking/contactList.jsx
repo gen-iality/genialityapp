@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spin, Alert, Col, Card, Avatar, Row, Button } from 'antd';
+import { Spin, Alert, Col, Card, Avatar, Row, Button, Typography } from 'antd';
 import { Networking } from '../../helpers/request';
 import { EventFieldsApi } from '../../helpers/request';
 import { formatDataToString } from '../../helpers/utils';
@@ -56,7 +56,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
     return userCurrentContext.value === null ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} xxl={15} style={{ margin: '0 auto' }}>
         <Alert
-          message='Iniciar Sesión'
+          message='Iniciar sesión'
           description='Para poder ver contactos es necesario iniciar sesión.'
           type='info'
           showIcon
@@ -103,7 +103,6 @@ const ContactList = ({ tabActive, agendarCita }) => {
                     avatar={
                       <Avatar size={65} src={user['picture'] ? user['picture'] : ''}>
                         {!user['picture'] && user.names ? user.names.charAt(0).toUpperCase() : user.names}
-                        {/* {console.log('USER ACA==>', user)} */}
                       </Avatar>
                     }
                     title={user.names ? user.names : 'No registra Nombre'}
@@ -160,7 +159,9 @@ const ContactList = ({ tabActive, agendarCita }) => {
         </Col>
       )
     );
-  if (userCurrentContext.value || loading) return <Spin></Spin>;
-  if (!userCurrentContext.value) return <Spin></Spin>;
+  if (userCurrentContext.value || loading) return <Row justify='center' align='middle'><Col><Spin size='large'
+  tip={<Typography.Text strong>Cargando...</Typography.Text>}/></Col></Row>;
+  if (!userCurrentContext.value) return <Row justify='center' align='middle'><Col><Spin size='large'
+  tip={<Typography.Text strong>Cargando...</Typography.Text>}/></Col></Row>;
 };
 export default ContactList;

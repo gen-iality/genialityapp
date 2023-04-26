@@ -54,13 +54,12 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
     }
   };
 
-  const validDateRoom = (room: any) => {
-    let dateFrom = moment(room.startTimestap).format('YYYY-MM-DD');
-    console.log('room.timestamp_start ',room.startTimestap)
-    console.log('date ',dateFrom)
-    if (moment().format('YYYY-MM-DD') == dateFrom) {
-      return true;
-    }
+  const validDateRoom = (room: IMeeting) => {
+   const start = moment(room.start)
+   const end = moment(room.end)
+   if(start.isSameOrBefore(moment()) &&  end.isSameOrAfter(moment())){
+    return true
+   }
     return false;
   };
 
@@ -111,7 +110,7 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
               </Typography.Text>
 
               {data.participants.map((participant) => (
-                <Typography.Paragraph type='secondary'>{participant.name}</Typography.Paragraph>
+                <Typography.Paragraph key={`name-${participant.id}`} type='secondary'>{participant.name}</Typography.Paragraph>
               ))}
             </Typography.Paragraph>
           }

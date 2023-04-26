@@ -2,7 +2,26 @@ import { firestore } from '@/helpers/firebase';
 import { IRequestMeenting } from '../interfaces/Landing.interfaces';
 import { IMeetingRequestFirebase, SpaceMeeting, SpaceMeetingFirebase } from '../interfaces/space-requesting.interface';
 import firebase from 'firebase/compat';
+import event from '@/components/events/event';
+import { RequestMeetingState } from '../utils/utils';
+import { IMeeting } from '../interfaces/Meetings.interfaces';
 
+export const listenMeetingsRequest = (eventId: string,userID: string, onSet: any) => {
+  return firestore
+  .collection(`networkingByEventId`)
+  .doc(eventId)
+  .collection('meeting_request')
+  .where('user_to.id', '==', userID)
+  .onSnapshot(snapshot => {
+    if (!snapshot.empty) {
+      let data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as SpaceMeetingFirebase[];
+      data = data.filter((item)=>item.status == RequestMeetingState.pending)
+      onSet(data)
+    } else {
+      onSet([])
+    }
+  });
+}
 export const getMeetingRequest = async (
   property: string,
   eventId: string,
@@ -21,6 +40,43 @@ export const getMeetingRequest = async (
     return data;
   } catch (error) {
     return false;
+  }
+};
+
+export const getMeetingForUsers = async (
+  eventId: string,
+  usersIds: string[]
+) => {
+  try {
+    const requestMeetings = await firestore
+      .collection('networkingByEventId')
+      .doc(eventId)
+      .collection('meetings')
+      .where('participants', 'array-contains-any', usersIds)
+      .get();
+    const data = requestMeetings.docs.map((item) => ({ id: item.id, ...item.data() })) as IMeeting[];
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+};
+export const getMeetingForUsersAtDateStart = async (
+  eventId: string,
+  usersIds: string[],
+  dateStart: firebase.firestore.Timestamp
+) => {
+  try {
+    const requestMeetings = await firestore
+      .collection('networkingByEventId')
+      .doc(eventId)
+      .collection('meetings')
+      // .where('participants', 'array-contains-any', usersIds)
+      .where('startTimestap', '==', dateStart)
+      .get();
+    const data = requestMeetings.docs.map((item) => ({ id: item.id, ...item.data() })) as IMeeting[];
+    return data;
+  } catch (error) {
+    console.log(error)
   }
 };
 

@@ -2,7 +2,6 @@ import moment from "moment";
 const useDateFormat = () => {
     
     const defaultFormat = 'DD/MM/YYYY'   
-    const defaultFormatWithHours = 'DD/MM/YYYY hh:mm A'   
     const defaultFormatHours = 'hh:mm A'   
 
     const dateFormat = (date? : string | Date, format = defaultFormat) =>{

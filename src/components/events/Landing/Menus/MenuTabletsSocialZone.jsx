@@ -48,8 +48,9 @@ const MenuTabletsSocialZone = (props) => {
       <Drawer
         /* style={{ zIndex: '200' }} */
         bodyStyle={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
-        height={'90vh'}
-        placement='bottom'
+        /* height={'90vh'}
+        placement='bottom' */
+        width={'100%'}
         closable={true}
         onClose={() => setisDrawerVisible(!isDrawerVisible)}
         visible={isDrawerVisible}

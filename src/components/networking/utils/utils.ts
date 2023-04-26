@@ -1,7 +1,7 @@
 import { ColumnsType } from "antd/lib/table";
 import { IMeeting, IParticipants, TransferType } from '../interfaces/Meetings.interfaces';
 import { MeetConfig } from "../interfaces/Index.interfaces";
-
+import firebase from 'firebase/compat';
 
 export const filterOption = (inputValue: string, option: TransferType) => {
 	return option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
@@ -49,7 +49,7 @@ export const defaultPlace = {
 	value: "no especificado",
 	label: "No especificado"
 }
-export const meetingSelectedInitial: Omit<IMeeting, 'startTimestap'> = {
+export const meetingSelectedInitial: IMeeting = {
 	start: '',
 	id_request_meetings: '',
 	end: '',
@@ -57,6 +57,7 @@ export const meetingSelectedInitial: Omit<IMeeting, 'startTimestap'> = {
 	name: '',
 	participants: [],
 	place: defaultPlace.value,
+	startTimestap :  firebase.firestore.Timestamp.fromDate(new Date()),
 	type: defaultType,
 	dateUpdated: 0,
 	participantsIds: ['']

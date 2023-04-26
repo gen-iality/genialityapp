@@ -17,12 +17,12 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
                             (requesMeeting.user_from.id === userId && requesMeeting.user_to.id === creatorId)
                         ) {
                             status = 'accepted'
-
                         }
-                        if ((requesMeeting.user_from.id === creatorId || requesMeeting.user_to.id === creatorId) && requesMeeting.user_from.id!==userId)status = 'busy-schedule'
+                        if ((requesMeeting.user_from.id === creatorId || requesMeeting.user_to.id === creatorId) && requesMeeting.user_from.id !== userId) status = 'busy-schedule'
                         break
                     case "pending":
-                        if (requesMeeting.user_from.id === creatorId) status = 'requested'
+                        if (requesMeeting.user_from.id === creatorId && requesMeeting.user_to.id === userId) status = 'requested'
+
                         break
                     /* case "rejected":
                         if (requesMeeting.user_from.id === creatorId) status = 'rejected'
@@ -40,7 +40,6 @@ export const generateSpaceMeetings = (timeParametres: TimeParameter, date: Momen
 
     const diffMinutes = DiffBetweenTwoHours(hourStartSpaces, hourFinishSpaces)
     const iteraciones = diffMinutes / timeParametres.meetingDuration
-
     const timeSpaces: SpaceMeeting[] = [{
         dateStart: firebase.firestore.Timestamp.fromDate(new Date(new Date(date.set({
             hour: hourStartSpaces.hour(),

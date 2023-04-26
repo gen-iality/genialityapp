@@ -1,4 +1,4 @@
-import { Button, Card, Col, notification, Row, Spin } from 'antd';
+import { Button, Card, Col, notification, Row, Spin, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
@@ -45,9 +45,10 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 
   if (loading) {
     return (
-      <Row align='middle' justify='center' style={{ height: 100 }}>
-        <Spin />
-        <p>Aun no se encuentran reuniones activas, vuelve mas tarde</p>
+      <Row align='middle' justify='center' >
+        <Spin 
+          size='large'
+          tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
       </Row>
     );
   }
