@@ -42,10 +42,10 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
       let message = ''
       meetingsForTowUsers.forEach((meetings) => {
         if (meetings.participantsIds.includes(data.user_from.id)) {
-          message = 'El otro participante no se encuentra disponible'
+          message = '¡El otro participante no se encuentra disponible!'
           notAvalibleUsers = true;
         } else if (meetings.participantsIds.includes(data.user_to.id)) {
-          message = 'Usted se encuentra ocupado en este espacio'          
+          message = '¡Usted se encuentra ocupado en este espacio!'          
           notAvalibleUsers = true;
         }
       });
@@ -113,7 +113,7 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
       confirm({
         title: `¿Estás seguro de que deseas rechazar la reunión?`,
         icon: <ExclamationCircleOutlined />,
-        content: 'Una vez Rechazado, no lo podrá volver a aceptar',
+        content: 'Una vez rechazado, no lo podrá volver a aceptar',
         okText: 'Rechazar',
         okType: 'danger',
         cancelText: 'Cancelar',
