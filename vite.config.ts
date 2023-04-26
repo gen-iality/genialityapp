@@ -17,6 +17,12 @@ export default defineConfig(({ mode }) => {
   //   'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV === 'production'),
   // },
 
+  const isDevMode = mode.includes('staging')
+  let titleGlobalPortal = !mode.includes('geniality') ? 'Eventos - Evius' : 'Cursos - GEN.iality'
+  if (isDevMode) {
+    titleGlobalPortal += ' - DEBUG'
+  }
+
   return {
     plugins: [
       react(),
@@ -25,7 +31,7 @@ export default defineConfig(({ mode }) => {
         inject: {
           data: {
             globalPortalClassName: !mode.includes('geniality') ? 'evius' : 'geniality',
-            titleGlobalPortal: !mode.includes('geniality') ? 'Eventos - Evius' : 'Cursos - GEN.iality',
+            titleGlobalPortal,
             contentGlobalPortalHref: !mode.includes('geniality') ? 'Eventos' : 'Cursos',
             faviconGlobalPortalHref: !mode.includes('geniality')
               ? 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Public%2FnewLogo.svg?alt=media&token=ab1ecb7f-c62b-476c-9835-214eddc41611'
