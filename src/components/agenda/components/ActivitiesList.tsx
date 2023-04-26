@@ -2,7 +2,7 @@ import { FunctionComponent, useContext, useMemo } from 'react';
 import { Divider, List, Typography, Button, Spin, Badge, Space, Collapse } from 'antd';
 import { ReadFilled, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AgendaApi } from '@helpers/request';
 import dayjs from 'dayjs';
@@ -62,9 +62,19 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   const currentUser = useCurrentUser();
   const currentEventUser = useContext(CurrentEventUserContext);
 
+  const location = useLocation();
+
   useEffect(() => {
     if (!eventId) return;
     // if (!cEventUserId) return;
+    if (`/landing/${eventId}/evento` !== location.pathname) {
+      // This was added because the event context keeps the last event data
+      // before the component notices that the pathname was changed. After the
+      // event context sees that thhe pathname has changed and updates the
+      // event data, but for some seconds the web shows the wrong activities
+      console.warn('!!! the event cached is different of the pathname event ID')
+      return
+    }
 
     (async () => {
       setIsLoading(true);
@@ -102,7 +112,10 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             host_picture: agenda.hosts[0]?.image,
             name_host: agenda.hosts[0]?.name,
             short_description: agenda.short_description,
-            categories: agenda.activity_categories.map((category: any) => category.name),
+            //categories: agenda.activity_categories.map((category: any) => category.name),
+            categories: agenda.activity_categories.map((category: any) => {
+              return { category_name: category.name, category_color: category.color };
+            }),
             ViewedStatusComponent: () => {
               const [isTaken, setIsTaken] = useState(false);
               useEffect(() => {
@@ -256,7 +269,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
               useEffect(() => {
                 service.getConfiguration(eventId, agenda._id).then((config) => {
                   const is = config?.habilitar_ingreso === 'open_meeting_room';
-                  console.log('isLive change to:', is);
                   setIsLive(is);
                 });
               }, [agenda._id]);
@@ -332,18 +344,17 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   //paddingLeft: '25px',
                 }}
               >
-                {console.log('item.categories', item.categories)}
                 <div style={{ display: 'flex', flexFlow: 'row wrap', margin: '0.5rem 0' }}>
                   {item.categories &&
                     item.categories.map((category: any) => {
                       return (
                         <Badge
                           style={{
-                            backgroundColor: '#E86A33',
+                            backgroundColor: category.category_color,
                             fontSize: '1rem',
                             marginRight: '0.5rem',
                           }}
-                          count={category}
+                          count={category.category_name}
                         />
                       );
                     })}

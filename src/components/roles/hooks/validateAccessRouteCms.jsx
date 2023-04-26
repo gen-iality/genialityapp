@@ -5,6 +5,7 @@ import { Spin } from 'antd';
 import { useUserEvent } from '@context/eventUserContext';
 import { theRoleExists } from '@Utilities/roleValidations';
 import { getOrganizationUser } from '@Utilities/organizationValidations';
+import { OrganizationApi } from '@helpers/request';
 
 function ValidateAccessRouteCms({ children }) {
   const { eventId } = children.props;
@@ -49,13 +50,23 @@ function ValidateAccessRouteCms({ children }) {
   if (!cEventUser.value && cEventUser.status === 'LOADED') return <Redirect to={`/noaccesstocms/${eventId}/true`} />;
 
   const showEventCmsComponent = async (rol) => {
+    let canClaimWithOrganizationRolAdmin = false;
+    // Take the organization rol if exists
+    const [organizationUser] = await OrganizationApi.mine();
+    if (organizationUser) {
+      const organizationRol = organizationUser.rol?._id;
+      const ifTheOrganizationRoleExists = await theRoleExists(organizationRol);
+      /** Se valida si el rol es administrador, si es asi devuelve true */
+      canClaimWithOrganizationRolAdmin = useHasRole(ifTheOrganizationRoleExists, organizationRol);
+    }
     /** obtenemos el listado de permisos para el rol del usuario actual */
     const ifTheRoleExists = await theRoleExists(rol);
 
     /** Se valida si el rol es administrador, si es asi devuelve true */
     const canClaimWithRolAdmin = useHasRole(ifTheRoleExists, rol);
+    console.log('RolAdmin:', {canClaimWithRolAdmin, canClaimWithOrganizationRolAdmin})
     if (children?.key === 'cms') {
-      if (canClaimWithRolAdmin) {
+      if (canClaimWithRolAdmin||canClaimWithOrganizationRolAdmin) {
         setComponent(children);
         setThisComponentIsLoading(false);
       } else {

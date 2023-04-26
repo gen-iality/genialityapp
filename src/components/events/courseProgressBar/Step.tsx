@@ -19,10 +19,8 @@ function Step(props: StepProps) {
   const { children, isActive, isSurvey, key, currentId, setCurrentId, id, ...rest } = props;
 
   const location = useLocation();
-  console.log('location', location);
 
   const params = useParams();
-  console.log('params', params);
 
   const className = useMemo(() => {
     if (isActive) {

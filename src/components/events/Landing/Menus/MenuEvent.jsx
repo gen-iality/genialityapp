@@ -17,8 +17,6 @@ const MenuEvent = ({ isMobile }) => {
   const [currentSection, setCurrentSection] = useState('');
   const event = cEvent.value;
 
-  console.log('1. params', params);
-
   /* useEffect(() => {
     const urlCompleta = location.pathname;
     const urlSplited = urlCompleta.split('/');

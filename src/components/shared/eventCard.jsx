@@ -108,7 +108,8 @@ class EventCard extends Component {
                       </Link>
                     </>
                   ) : (
-                    <a href={`/landing/${event._id}/evento`}>
+                    <Link to={`/landing/${event._id}/evento`}>
+                    {/* <a href={`/landing/${event._id}/evento`}> */}
                       <img
                         className="animate__animated animate__fadeIn animate__slower"
                         loading="lazy"
@@ -120,7 +121,8 @@ class EventCard extends Component {
                       {this.props.moreDetails && (
                         <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
                       )}
-                    </a>
+                    {/* </a> */}
+                    </Link>
                   )}
                 </>
               ) : (

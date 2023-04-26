@@ -109,6 +109,7 @@ function PositionsFormModal(props: PositionsFormModalProps) {
       ...values,
       organization_id: organizationId,
     }
+    data['event_ids'] = Array.isArray(data['event_ids']) ? data['event_ids'] : []
 
     try {
       let updatedPosition

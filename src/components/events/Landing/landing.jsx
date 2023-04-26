@@ -95,6 +95,10 @@ const Landing = props => {
   const location = useLocation();
 
   const loadData = async () => {
+    // Reset this
+    setActivities([]);
+    setActivitiesAttendee([]);
+
     const { data } = await AgendaApi.byEvent(cEventContext.value?._id)
     setActivities(data);
     const existentActivities = data.map(async activity => {
@@ -133,14 +137,13 @@ const Landing = props => {
   useEffect(() => {
     if (!cEventContext.value?._id) return;
     if (!cEventUser.value?._id) return;
-    setActivitiesAttendee([]);
     loadData();
     console.info('event is asked', cEventContext.value?._id)
   }, [cEventContext.value, cEventUser.value]);
 
-  useEffect(() => {
-    loadData()
-  }, [location])
+  // useEffect(() => {
+  //   loadData()
+  // }, [location])
 
   useEffect(() => {
     DispatchMessageService({
@@ -148,6 +151,10 @@ const Landing = props => {
       msj: '¡Estamos configurando la mejor experiencia para tí!',
       action: 'show',
     });
+    return () => {
+      setActivities([]);
+      setActivitiesAttendee([]);
+    }
   }, []);
 
   const ButtonRender = (status, activity) => {

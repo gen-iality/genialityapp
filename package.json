@@ -9,6 +9,7 @@
     "localgeniality": "vite --mode geniality_development",
     "prodgeniality": "vite --mode geniality_production",
     "build": "vite build",
+    "build:prodgen": "node --max-old-space-size=8192 node_modules/.bin/vite --mode geniality_production build",
     "preview": "vite preview",
     "vite:start": "vite",
     "vite:build": "vite build",
