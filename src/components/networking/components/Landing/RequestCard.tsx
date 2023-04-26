@@ -26,7 +26,7 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
   const userName = received ? data.user_from.name : data.user_to.name;
   const userEmail = received ? data.user_from.email : data.user_to.email;
   //contextos
-  let userEventContext = UseUserEvent();
+
   let eventContext = UseEventContext();
   let userCurrentContext = UseCurrentUser();
   const eventId = eventContext.value._id;
@@ -39,21 +39,24 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
     );
     if (meetingsForTowUsers && meetingsForTowUsers.length > 0) {
       let notAvalibleUsers = false;
+      let message = ''
       meetingsForTowUsers.forEach((meetings) => {
-        if (
-          meetings.participantsIds.includes(data.user_from.id) ||
-          meetings.participantsIds.includes(data.user_to.id)
-        ) {
+        if (meetings.participantsIds.includes(data.user_from.id)) {
+          message = 'El otro participante no se encuentra disponible'
+          notAvalibleUsers = true;
+        } else if (meetings.participantsIds.includes(data.user_to.id)) {
+          message = 'Usted se encuentra ocupado en este espacio'          
           notAvalibleUsers = true;
         }
       });
       if (notAvalibleUsers) {
-        notification.warning({ message: 'No se pudo aceptar la reunion, uno de los participantes no esta disponible' });
+        notification.warning({ message: `No se pudo aceptar la reunion, ${message}`});
         await services.updateRequestMeeting(eventId, data.id, {
-        ...data,
-        status: RequestMeetingState.rejected,
-      });
+          ...data,
+          status: RequestMeetingState.rejected,
+        });
       }
+      notificationUser();
       return;
     }
     const response = await servicesMeenting.createMeeting(eventId, { ...data.meeting, id_request_meetings: data.id });
@@ -83,8 +86,8 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
     } else {
       notification.warning({
         icon: <ExclamationCircleOutlined />,
-        message : 'Algo salio mal!',
-        description: 'No se logró rechazar la reunión, comuníquese con el administrador'
+        message: 'Algo salio mal!',
+        description: 'No se logró rechazar la reunión, comuníquese con el administrador',
       });
     }
 
@@ -98,13 +101,13 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
     };
     addNotification(notificationr, eventContext.value, userCurrentContext.value);
     setloader(false);
-    setSendRespuesta((status)=> !status);
+    setSendRespuesta((status) => !status);
   };
 
   const changeAgendaStatus = async (newStatus: string) => {
     setloader(true);
     if (newStatus === RequestMeetingState.confirmed) {
-      await acceptRequest()
+      await acceptRequest();
       setloader(false);
     } else {
       confirm({
@@ -115,11 +118,11 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
         okType: 'danger',
         cancelText: 'Cancelar',
         onOk() {
-          rejectRequest()
+          rejectRequest();
         },
         onCancel() {
           setloader(false);
-        }
+        },
       });
     }
   };
@@ -146,26 +149,26 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
                   <div>{moment(data.date).format('hh:mm a')}</div>
                 </Col>
               </Row>
-              {
-                received ? (
-                  <Row>
-                    <Button
-                      style={{ marginRight: '10px' }}
-                      disabled={loader}
-                      loading={loader}
-                      onClick={() => changeAgendaStatus(RequestMeetingState.rejected)}>
-                      {'Rechazar'}
-                    </Button>
-                    <Button
-                      type='primary'
-                      disabled={loader}
-                      loading={loader}
-                      onClick={() => changeAgendaStatus(RequestMeetingState.confirmed)}>
-                      {'Aceptar'}
-                    </Button>
-                  </Row>
-                ) : (<Row>{`Solicitud ${statusRequestText[data.status]}.`}</Row>)
-            }
+              {received ? (
+                <Row>
+                  <Button
+                    style={{ marginRight: '10px' }}
+                    disabled={loader}
+                    loading={loader}
+                    onClick={() => changeAgendaStatus(RequestMeetingState.rejected)}>
+                    {'Rechazar'}
+                  </Button>
+                  <Button
+                    type='primary'
+                    disabled={loader}
+                    loading={loader}
+                    onClick={() => changeAgendaStatus(RequestMeetingState.confirmed)}>
+                    {'Aceptar'}
+                  </Button>
+                </Row>
+              ) : (
+                <Row>{`Solicitud ${statusRequestText[data.status]}.`}</Row>
+              )}
             </div>
           }
         />
