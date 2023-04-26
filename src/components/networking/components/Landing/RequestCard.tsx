@@ -48,7 +48,7 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
         }
       });
       if (notAvalibleUsers) {
-        notification.warning({ message: 'No se pudo aceptar la reunion, uno de los participantes no esta disponible' });
+        notification.warning({ message: '¡No se pudo aceptar la reunión! Uno de los participantes no está disponible' });
         await services.updateRequestMeeting(eventId, data.id, {
         ...data,
         status: RequestMeetingState.rejected,
@@ -62,12 +62,12 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
       notificationUser();
       setClassName('animate__animated animate__backOutRight animate__slow');
       notification.success({
-        message: 'Se agendó la reunión correctamente',
+        message: '¡Se agendó la reunión correctamente!',
         icon: <CheckCircleOutlined />,
       });
     } else {
       notification.warning({
-        message: 'No se logró agendar la reunión ',
+        message: '¡No se logró agendar la reunión! ',
         icon: <ExclamationCircleOutlined />,
       });
     }
@@ -83,7 +83,7 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
     } else {
       notification.warning({
         icon: <ExclamationCircleOutlined />,
-        message : 'Algo salio mal!',
+        message : '¡Algo salio mal!',
         description: 'No se logró rechazar la reunión, comuníquese con el administrador'
       });
     }
