@@ -77,6 +77,9 @@
   @media only screen and (min-width: $breakpoint-mobile) {
     width: 275px;
   }
+  @media only screen and (max-width: $breakpoint-mobile) {
+    height: 60vh;
+  }
 }
 .aspect-ratio-box-inside {
   position: absolute;
