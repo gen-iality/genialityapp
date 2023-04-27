@@ -26,6 +26,7 @@ import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/ic
 
 /** Helpers and utils */
 import { EventsApi, PositionsApi, UsersApi, CerticationsApi } from '@helpers/request';
+import { fireStorage } from '@helpers/firebase';
 
 /** Components */
 import Header from '@antdComponents/Header';
@@ -63,6 +64,7 @@ function CurrentOrganizationPositionCertificationUserPage(
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   const [form] = Form.useForm();
+  const ref = fireStorage.ref();
 
   const openModal = () => setIsModalOpened(true);
   const closeModal = () => setIsModalOpened(false);
@@ -106,6 +108,23 @@ function CurrentOrganizationPositionCertificationUserPage(
       loadData().finally(() => setIsLoading(false));
     });
   };
+
+  const onDeleteCertification = (certification: any) => {
+    CerticationsApi.deleteOne(certification._id).then((result) => {
+      if (result.success) {
+        // Now remove the file in FireStorage
+        if (certification?.firestorage_path) {
+          ref.child(certification.firestorage_path).delete().then(() => {
+            console.log('This file was removed from FireStorage')
+          })
+        }
+        setIsLoading(true);
+        loadData().finally(() => setIsLoading(false));
+      } else {
+        alert(result.message)
+      }
+    })
+  }
 
   // Load all users for this position
   useEffect(() => {
@@ -237,14 +256,7 @@ function CurrentOrganizationPositionCertificationUserPage(
                   id={`deleteAction${event._id}`}
                   type="primary"
                   size="small"
-                  onClick={(e) => {
-                    alert('No implementado aún');
-                    // Little future people, please implement the deleting of FireStorage too.
-                    // You SHOULD check if the last url pathname element stars with "documents/" and try to
-                    // decode it and use this path (that stats with "documents/") to request a deleting
-                    // process with the FireStorage API. Dont say that my intrustion are bad, if you don't
-                    // believe in me, then ask to ChatGPT tho
-                  }}
+                  onClick={(e) => onDeleteCertification(event.certification)}
                   icon={<DeleteOutlined />}
                   danger
                 />
