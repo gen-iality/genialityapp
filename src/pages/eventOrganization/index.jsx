@@ -200,7 +200,7 @@ function Organization(props) {
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/positions/:positionId/user/:userId/logs`}
+                    path={`${props.match.url}/positions/:positionId/user/:userId/logs/:certificationId`}
                     component={CurrentOrganizationPositionCertificationLogsUserPage}
                     org={organization}
                     componentKey="current-positions-certification-logs-user"
