@@ -146,7 +146,7 @@ function CurrentOrganizationPositionCertificationUserPage(
             {(certification?.certification_logs || []).length === 0 ? (
               <em>Sin registros</em>
             ) : (
-              <Link to={`${props.match.url}/logs`}>
+              <Link to={`${props.match.url}/logs/${certification._id}`}>
                 <Tag color="#88f">{(certification?.certification_logs || []).length} registros</Tag>
               </Link>
             )}
