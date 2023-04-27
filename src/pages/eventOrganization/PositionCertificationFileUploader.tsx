@@ -67,7 +67,7 @@ const PositionCertificationFileUploader: React.FunctionComponent<IPositionCertif
     
     const ref = fireStorage.ref();
     // @ts-expect-error
-    const filename = dayjs().format('YYYY-DD-MM') + '-' + (file.name || 'unnamed');
+    const filename = dayjs().format('YYYY-DD-MM HH:mm:ss') + '-' + (file.name || 'unnamed');
 
     console.log('file will be uploaded as', filename);
     // Upload to FireStorage
