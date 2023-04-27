@@ -15,6 +15,7 @@ import dayjs from 'dayjs';
 interface IPositionCertificationFileUploaderProps {
   value?: string,
   onChange?: (value?: string) => void,
+  onFirebasePathChange?: (value?: string) => void,
   path: string,
 }
 
@@ -23,6 +24,7 @@ const PositionCertificationFileUploader: React.FunctionComponent<IPositionCertif
     value,
     path: targetPath,
     onChange = () => {},
+    onFirebasePathChange = () => {},
   } = props
 
   const [isUploading, setIsUploading] = useState(false)
@@ -71,6 +73,7 @@ const PositionCertificationFileUploader: React.FunctionComponent<IPositionCertif
     // Upload to FireStorage
     const newFirebasePath = `documents/${targetPath}/${filename}`
     setFirebasePath(newFirebasePath)
+    onFirebasePathChange(newFirebasePath)
 
     const uploadTaskRef = ref.child(newFirebasePath).put(file);
     // Handle the uploading
@@ -128,6 +131,8 @@ const PositionCertificationFileUploader: React.FunctionComponent<IPositionCertif
       const currentFirebasePath = decodeURIComponent(encodedCurrentFirebasePath)
       if (!currentFirebasePath.startsWith('documents/')) {
         console.warn('This url seems to be from non-Firebase URL, but it is not a problem')
+      } else {
+        onFirebasePathChange(currentFirebasePath)
       }
       setFirebasePath(currentFirebasePath)
 
@@ -164,6 +169,7 @@ const PositionCertificationFileUploader: React.FunctionComponent<IPositionCertif
                 onChange(undefined)
                 console.warn('If this URL is from Firebase, then it is a problem. But, if it is from another URL there is no problem :)')
               }
+              onFirebasePathChange(undefined)
             }}
             listType="text"
             maxCount={1}
@@ -176,7 +182,13 @@ const PositionCertificationFileUploader: React.FunctionComponent<IPositionCertif
       </Tabs.TabPane>
       <Tabs.TabPane tab="URL" key="2">
         <Form.Item label="URL del certificado" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-          <Input value={value} onChange={(e) => onChange(e.target.value)} />
+          <Input
+            value={value}
+            onChange={(e) => {
+              onChange(e.target.value)
+              onFirebasePathChange(undefined)
+            }}
+          />
         </Form.Item>
       </Tabs.TabPane>
     </Tabs>

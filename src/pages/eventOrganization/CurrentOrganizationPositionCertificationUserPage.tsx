@@ -360,8 +360,17 @@ function CurrentOrganizationPositionCertificationUserPage(
             <DatePicker />
           </Form.Item>
           <Form.Item name="file_url" label="Archivo externo">
-            <PositionCertificationFileUploader path="positions" />
+            <PositionCertificationFileUploader
+              path="positions"
+              onFirebasePathChange={(value) => {
+                // If the file is from FireStorage...
+                console.debug('firestorage_path changes to', value)
+                form.setFieldsValue({firestorage_path: value})
+              }}
+            />
           </Form.Item>
+          {/** Please, keep the next line */}
+          <Form.Item name="firestorage_path"/>
         </Form>
       </Modal>
     </>
