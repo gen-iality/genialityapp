@@ -764,7 +764,7 @@ class ListEventUser extends Component {
 
           <TabPane
             tab={
-              <Typography.Text /* style={{ position: 'relative' }} */>
+              <Typography.Text>
                 Mi agenda
               </Typography.Text>
             }
@@ -822,20 +822,17 @@ class ListEventUser extends Component {
 
           <TabPane
             tab={
-              <Typography.Text /* style={{ position: 'relative' }} */>
-                Solicitudes de citas
-                {this.props.cHelper.totalsolicitudAgenda > 0 && (
-                  <Badge
-                    style={{
-                      position: 'absolute',
-                      top: '-21px',
-                      right: '-13px',
-                    }}
-                    count={
-                      this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
-                    }></Badge>
-                )}
-              </Typography.Text>
+              <Badge
+                color={this.props.cHelper.totalsolicitudAgenda <= 0 ? 'transparent' : 'red'} //cyan
+                dot={this.props.cHelper.totalsolicitudAgenda <= 0}
+                count={
+                  this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
+                }>
+                  <Typography.Text>
+                    Solicitudes de citas
+                  </Typography.Text>
+                </Badge>
+              
             }
             key='solicitudes-de-citas'>
             {activeTab === 'solicitudes-de-citas' && (

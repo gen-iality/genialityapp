@@ -78,7 +78,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
           ))}
       </Row>
       
-      <Divider>Solicitudes de citas enviadas</Divider>
+      {pendingAgendasSent.length > 0 && <Divider><Typography.Text strong>Solicitudes de citas enviadas</Typography.Text></Divider>}
       {loading1 && (
         <Row justify='center' align='middle'>
           <Col>

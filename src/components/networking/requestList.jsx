@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message, Row, Typography } from 'antd';
+import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message, Row, Typography, Space } from 'antd';
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 /* import 'react-toastify/dist/ReactToastify.css'; */
 import { Networking, UsersApi } from '../../helpers/request';
@@ -9,6 +9,7 @@ import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { DispatchMessageService } from '../../context/MessageService';
 import { CurrentEventUserContext } from '../../context/eventUserContext';
 import { CurrentEventContext } from '@/context/eventContext';
+import { isMobile } from 'react-device-detect';
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
@@ -45,18 +46,19 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
         <Card>
           <List
+            itemLayout={isMobile ? 'vertical' : 'horizontal'}
             dataSource={invitationsReceived}
             renderItem={(item) => (
               <List.Item
                 key={item._id}
-                actions={[
-                  <Button key='btn-aceptar' onClick={() => sendResponseToInvitation(item, true)}>
+                actions={[<Row wrap gutter={[16, 16]} style={isMobile && {marginLeft: 15}}>
+                  <Col><Button key='btn-aceptar' onClick={() => sendResponseToInvitation(item, true)}>
                     Aceptar
-                  </Button>,
-                  <Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item, false)}>
+                  </Button></Col>
+                  <Col><Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item, false)}>
                     Rechazar
-                  </Button>,
-                ]}>
+                  </Button></Col>
+                </Row>]}>
                 <List.Item.Meta
                   avatar={
                     <Avatar src={item?.picture ? item.picture : null}>
