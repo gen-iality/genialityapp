@@ -245,9 +245,9 @@ export const createMeetingRequest = ({
           event_id: eventId,
           state: 'send',
           request_type: 'meeting',
-          start_time: startDate.toDate().toString()
+          start_time: startDate.toDate().toLocaleTimeString()
         };
-    await EventsApi.sendMeetingRequest(eventId, data);
+        await EventsApi.sendMeetingRequest(eventId, data);
      resolve(newAgendaResult.id);
       } catch (error) {
         console.log(error)

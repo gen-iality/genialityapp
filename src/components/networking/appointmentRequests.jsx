@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Col, Divider, notification, Row, Spin, Typography } from 'antd';
+import { Avatar, Button, Card, Col, Divider, notification, Result, Row, Spin, Typography } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 //context
@@ -46,37 +46,46 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
  
   return (
     <>
-      <Divider>Solicitudes de citas recibidas</Divider>
-      <div style={{ marginBottom: 15 }}>
-        <Row justify='center'>
-          {!loading &&
-            (pendingAgendas.length > 0 ? (
-              pendingAgendas.map((pendingAgenda) => (
-                <Col xxl={10}>
-                  <RequestCardTs
-                    setSendRespuesta={setSendRespuesta}
-                    notificacion={notificacion}
-                    key={`pending-${pendingAgenda.id}`}
-                    data={pendingAgenda}
-                    received={true}
-                  />
-                </Col>
-              ))
-            ) : (
-              <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-                <Card style={{ textAlign: 'center' }}>{'No tienes solicitudes recibidas pendientes'}</Card>
-              </Col>
-            ))}
+      {pendingAgendas.length > 0 && <Divider><Typography.Text strong>Solicitudes de citas recibidas</Typography.Text></Divider>}
+      {loading && (
+        <Row justify='center' align='middle'>
+          <Col>
+            <Spin size='large' tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
+          </Col>
         </Row>
-        {loading && (
-          <Row justify='center' align='middle'>
-            <Col>
-              <Spin size='large' tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
+      )}
+      <Row justify='center' gutter={[8, 8]}>
+        {!loading &&
+          (pendingAgendas.length > 0 ? (
+            pendingAgendas.map((pendingAgenda) => (
+              <Col xs={24} sm={22} md={18} lg={18} xl={18} xxl={10}>
+                <RequestCardTs
+                  setSendRespuesta={setSendRespuesta}
+                  notificacion={notificacion}
+                  key={`pending-${pendingAgenda.id}`}
+                  data={pendingAgenda}
+                  received={true}
+                />
+              </Col>
+            ))
+          ) : (
+            <Col >
+              <Result 
+                /* style={{padding: 0}} */
+                title={'¡No tienes solicitudes recibidas pendientes!'}
+              />
             </Col>
-          </Row>
-        )}
-      </div>
-      <Divider>Solicitudes de citas enviadas</Divider>
+          ))}
+      </Row>
+      
+      {pendingAgendasSent.length > 0 && <Divider><Typography.Text strong>Solicitudes de citas enviadas</Typography.Text></Divider>}
+      {loading1 && (
+        <Row justify='center' align='middle'>
+          <Col>
+            <Spin size='large' tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
+          </Col>
+        </Row>
+      )}
       {showpendingsend !== false && (
         <div>
           <Row justify='center'>
@@ -101,13 +110,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
               ))}
           </Row>
 
-          {loading1 && (
-            <Row justify='center' align='middle'>
-              <Col>
-                <Spin size='large' tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
-              </Col>
-            </Row>
-          )}
+          
         </div>
       )}
     </>

@@ -1,4 +1,4 @@
-import { Button, Card, Col, notification, Row, Spin, Typography } from 'antd';
+import { Button, Card, Col, Drawer, notification, Row, Spin, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
@@ -9,11 +9,13 @@ import { JitsiMeeting } from '@jitsi/react-sdk';
 import {INITIAL_MEET_CONFIG} from './utils/utils' 
 import { LeftOutlined } from '@ant-design/icons';
 import { getConfig } from './services/configuration.service';
+import { isMobile } from 'react-device-detect';
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const [meetConfig, setMeetConfig] = useState(INITIAL_MEET_CONFIG);
   const { listDays, haveMeetings, loading } = useGetMeetingConfirmed();
+  const [openChat, setOpenChat] = useState(false);
 
   const defineName = () => {
     let userName = 'Anonimo' + new Date().getTime();
@@ -28,7 +30,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   }
   const loadConfigMeet = async () => {
     const data = await getConfig(event._id);
-    console.log('configuracion',data)
+    /* console.log('configuracion',data) */
     if (data?.ConfigMeet) setMeetConfig(data.ConfigMeet);
     };
 
@@ -58,7 +60,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 
 
     return (
-      <Row align='middle'>
+      <Row align='middle' gutter={[16, 16]}>
         <Col span={24}>
           <Button
             className='button_regresar'
@@ -70,8 +72,9 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             }}>
             Regresar al listado de citas
           </Button>
-          <Row gutter={[12, 12]}>
-            <Col xs={24} sm={24} md={12} lg={24} xl={16} xxl={16}>
+          {isMobile && <Button onClick={() => setOpenChat(!openChat)} style={{marginLeft: 10}}>Chat</Button>}
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={24} md={16} lg={16} xl={16} xxl={16}>
               <div className='aspect-ratio-box' style={{ width: '100%' }}>
                 <div className='aspect-ratio-box-inside'>
                   <JitsiMeeting
@@ -93,7 +96,36 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                 </div>
               </div>
             </Col>
-            <Col xs={24} sm={24} md={8} xl={8} xxl={8}>
+            {!isMobile &&
+              <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
+                {userName && (
+                  <iframe
+                    title='chatevius'
+                    className='ChatEviusLan'
+                    src={
+                      'https://chatevius.netlify.app?nombre=' +
+                      userName +
+                      '&chatid=' +
+                      currentRoom +
+                      '&eventid=' +
+                      event._id +
+                      '&userid=' +
+                      currentEventUserId +
+                      '&version=0.0.2' +
+                      '&mode=' +
+                      isStagingOrProduccion()
+                    }></iframe>
+                )}
+              </Col>
+            }
+          </Row>
+          <Drawer
+            width={'100%'}
+            closable={true}
+            onClose={() => setOpenChat(!openChat)}
+            visible={openChat}
+            maskClosable={true}
+            className='drawerMobile'>
               {userName && (
                 <iframe
                   title='chatevius'
@@ -112,8 +144,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     isStagingOrProduccion()
                   }></iframe>
               )}
-            </Col>
-          </Row>
+          </Drawer>
         </Col>
       </Row>
     );
