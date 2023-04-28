@@ -1,178 +1,178 @@
 // new Event contenedor
 .newEvent {
-    padding: 20px;
-    .itemStep {
-      width: 45%;
-      margin-top: 20px;
-      margin-bottom: 20px;
-    }
-    .card-container {
-      width: 80vw;
-      min-height: 70vh;
-      border-radius: 5px;
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    }
-    .button-container {
-      margin-top: 0;
-      justify-content: center;
-      display: flex;
-      .button {
-        margin: 5px;
-        width: 150px;
-      }
-    }
+  padding: 20px;
+  .itemStep {
+    width: 45%;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
-  
-  //step-information
-  .step-information {
-    .text-color {
-      color: red;
-    }
-    .icon-checkout {
-      color: #50d3c9;
-      font-size: 25px;
-    }
-    .cards-type-information {
-      width: 220px;
-      height: 272px;
-      box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-      padding: 10px;
-      text-align: center;
-      font-size: 12px;
-      border-radius: 5px;
-      img {
-        width: auto;
-      }
-    }
+  .card-container {
+    width: 80vw;
+    min-height: 70vh;
+    border-radius: 5px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   }
-  // estilos del modal de calendario
-  .modal-calendar {
-    .modal-horas {
-      width: 20px;
-      text-align: right;
-    }
-  }
-  //____________________________________________________//
-  
-  // step-apariencia
-  .step-aparencia {
-    margin-top: 5%;
-    span {
-      color: #aab8c0;
-    }
-    .container-swicht {
-      margin-top: 12px;
-      .theme {
-        text-align: center;
-        margin-bottom: 0;
-        width: 110px;
-        font-size: 13px;
-      }
-      .nota {
-        font-size: x-small;
-        color: #9e9e9ea8;
-      }
-    }
-  }
-  //____________________________________________________//
-  
-  // step-transmision
-  .step-transmision {
-    margin-top: 12px;
-    .title-step {
-      font-size: 5vh;
-      margin-bottom: 0;
-      color: #607d8b;
-      text-align: center;
-    }
-    .container {
-      width: 300px;
-      height: 200px;
-      margin: auto;
-      .container-image {
-        align-items: center;
-        display: flex;
-        height: 100%;
-      }
-    }
-    .container-description {
-      width: 340px;
-      height: 220px;
-      margin: auto;
-      .descriptions {
-        align-content: center;
-        display: grid;
-        height: 100%;
-        width: 80%;
-        margin: auto;
-        padding: 12px;
-        p {
-          text-align: justify;
-          font-size: 14px;
-          color: #607d8b;
-        }
-        a {
-          text-align: justify;
-          font-size: 11px;
-          color: #50d3c9;
-          font-weight: 600;
-        }
-      }
-    }
-  }
-  .step-optTransmicion {
-    margin-top: 12px;
-    .container-option {
-      padding: 10px;
-      width: 300px;
-      height: 340px;
-      box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-      border-radius: 5px;
-    }
-    .container-img {
-      height: 156px;
-      display: grid;
-      justify-content: center;
-      align-content: center;
-      img {
-        width: 172px;
-        margin: auto;
-        display: block;
-        margin-top: 12px;
-      }
-    }
-    .title-opt {
-      justify-content: center;
-      display: flex;
-      font-size: 17px;
-      margin-bottom: 9px;
-      margin-top: 18px;
-      font-weight: 600;
-    }
-    .description {
-      width: 85%;
-      font-size: 12px;
-      display: block;
-      margin: auto;
-      text-align: center;
-    }
-  }
-  .modal-opt {
-    img {
+  .button-container {
+    margin-top: 0;
+    justify-content: center;
+    display: flex;
+    .button {
+      margin: 5px;
       width: 150px;
-      margin: auto;
-      display: block;
-    }
-    .title {
-      justify-content: center;
-      display: flex;
-      font-size: 16px;
-      margin-bottom: 14px;
-      margin-top: 18px;
-      font-weight: 600;
-    }
-    .input {
-      height: 48px;
-      font-size: 20px;
     }
   }
+}
+
+//step-information
+.step-information {
+  .text-color {
+    color: red;
+  }
+  .icon-checkout {
+    color: #50d3c9;
+    font-size: 25px;
+  }
+  .cards-type-information {
+    width: 220px;
+    height: 272px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    padding: 10px;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 5px;
+    img {
+      width: auto;
+    }
+  }
+}
+// estilos del modal de calendario
+.modal-calendar {
+  .modal-horas {
+    width: 20px;
+    text-align: right;
+  }
+}
+//____________________________________________________//
+
+// step-apariencia
+.step-aparencia {
+  margin-top: 5%;
+  span {
+    color: #aab8c0;
+  }
+  .container-swicht {
+    margin-top: 12px;
+    .theme {
+      text-align: center;
+      margin-bottom: 0;
+      width: 110px;
+      font-size: 13px;
+    }
+    .nota {
+      font-size: x-small;
+      color: #9e9e9ea8;
+    }
+  }
+}
+//____________________________________________________//
+
+// step-transmision
+.step-transmision {
+  margin-top: 12px;
+  .title-step {
+    font-size: 5vh;
+    margin-bottom: 0;
+    color: #607d8b;
+    text-align: center;
+  }
+  .container {
+    width: 300px;
+    height: 200px;
+    margin: auto;
+    .container-image {
+      align-items: center;
+      display: flex;
+      height: 100%;
+    }
+  }
+  .container-description {
+    width: 340px;
+    height: 220px;
+    margin: auto;
+    .descriptions {
+      align-content: center;
+      display: grid;
+      height: 100%;
+      width: 80%;
+      margin: auto;
+      padding: 12px;
+      p {
+        text-align: justify;
+        font-size: 14px;
+        color: #607d8b;
+      }
+      a {
+        text-align: justify;
+        font-size: 11px;
+        color: #50d3c9;
+        font-weight: 600;
+      }
+    }
+  }
+}
+.step-optTransmicion {
+  margin-top: 12px;
+  .container-option {
+    padding: 10px;
+    width: 300px;
+    height: 340px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+  }
+  .container-img {
+    height: 156px;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    img {
+      width: 172px;
+      margin: auto;
+      display: block;
+      margin-top: 12px;
+    }
+  }
+  .title-opt {
+    justify-content: center;
+    display: flex;
+    font-size: 17px;
+    margin-bottom: 9px;
+    margin-top: 18px;
+    font-weight: 600;
+  }
+  .description {
+    width: 85%;
+    font-size: 12px;
+    display: block;
+    margin: auto;
+    text-align: center;
+  }
+}
+.modal-opt {
+  img {
+    width: 150px;
+    margin: auto;
+    display: block;
+  }
+  .title {
+    justify-content: center;
+    display: flex;
+    font-size: 16px;
+    margin-bottom: 14px;
+    margin-top: 18px;
+    font-weight: 600;
+  }
+  .input {
+    height: 48px;
+    font-size: 20px;
+  }
+}

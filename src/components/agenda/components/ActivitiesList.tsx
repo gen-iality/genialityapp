@@ -112,7 +112,10 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             host_picture: agenda.hosts[0]?.image,
             name_host: agenda.hosts[0]?.name,
             short_description: agenda.short_description,
-            categories: agenda.activity_categories.map((category: any) => category.name),
+            //categories: agenda.activity_categories.map((category: any) => category.name),
+            categories: agenda.activity_categories.map((category: any) => {
+              return { category_name: category.name, category_color: category.color };
+            }),
             ViewedStatusComponent: () => {
               const [isTaken, setIsTaken] = useState(false);
               useEffect(() => {
@@ -347,11 +350,11 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                       return (
                         <Badge
                           style={{
-                            backgroundColor: '#E86A33',
+                            backgroundColor: category.category_color,
                             fontSize: '1rem',
                             marginRight: '0.5rem',
                           }}
-                          count={category}
+                          count={category.category_name}
                         />
                       );
                     })}

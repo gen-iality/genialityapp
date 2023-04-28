@@ -35,6 +35,7 @@ export interface CurrentOrganizationPositionCertificationLogsUserPageProps {
     params: {
       positionId: string;
       userId: string;
+      certificationId: string;
     };
     url: string;
   };
@@ -56,6 +57,7 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
   const organizationId: string = props.org._id;
   const positionId = props.match.params.positionId;
   const userId = props.match.params.userId;
+  const certificationId = props.match.params.certificationId;
 
   const loadData = async () => {
     const user = await UsersApi.getProfile(userId);
@@ -65,7 +67,13 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
     setCurrentPosition(position);
     console.debug('CurrentOrganizationPositionPage: loadPositionData', { position });
 
-    const certifications = await CerticationsApi.getByPositionAndMaybeUser(position._id, user._id);
+    // This SHOULD be optimized, but it needs a back-end upgrade. Then, for now we filter here.
+    // Task:
+    // - Implement the filtering mechanism in the method index of the Back-End
+    // - Update the method getAll of CerticationLogsApi to accept filters too.
+    // - Replace the CerticationsApi using for CerticationLogsApi and use getAll
+    let certifications = await CerticationsApi.getByPositionAndMaybeUser(position._id, user._id);
+    certifications = certifications.filter((c: any) => c._id === certificationId);
 
     const allEventIds = position.event_ids || [];
     const events = await Promise.all(allEventIds.map(async (eventId: string) => await EventsApi.getOne(eventId)));
@@ -118,6 +126,21 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
           <Tag color={log?.success ? 'green' : 'red'}>{log?.success ? 'Aprobado' : 'No aprobado'}</Tag>
         ),
       }, */
+      {
+        title: 'Certificación',
+        align: 'center',
+        dataIndex: 'log',
+        width: 100,
+        render: (log: any) => {
+          if (log?.file_url) {
+            return (
+              <a href={log?.file_url} target="_blank">
+                Ver certificado
+              </a>
+            );
+          } else return <em>Sin certificado</em>;
+        },
+      },
       {
         title: 'Fecha de emisión',
         align: 'center',
