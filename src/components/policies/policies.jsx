@@ -9,16 +9,16 @@ class Policies extends Component {
   render() {
     return (
       <div style={{ textaAlign: 'justify', padding: '0 150px' }}>
-        <h1 className="title"> EVIUS - PRIVACY POLICY</h1>
+        <h1 className="title"> GEN.iality - PRIVACY POLICY</h1>
         <p>
-          This is the privacy policy (&quot;Privacy Policy&quot;) that governs how we, Evius Inc. (&quot;Evius,&quot;
+          This is the privacy policy (&quot;Privacy Policy&quot;) that governs how we, GEN.iality Inc. (&quot;GEN.iality,&quot;
           &quot;we,&quot; &quot;our&quot; or &quot;us&quot;), use Personal Information (as defined below) that we
-          collect, receive and store about individuals and/or companies in connection with the use of: (i) the Evius
-          event management service (&quot;Evius Service&quot;), (ii) the website http://www.Evius.co, and any other
+          collect, receive and store about individuals and/or companies in connection with the use of: (i) the GEN.iality
+          event management service (&quot;GEN.iality Service&quot;), (ii) the website http://geniality.com.co, and any other
           website that we operate (each, together with its sub-domains, content and services, a &quot;Site&quot;); and
-          (iii) the Evius web and mobile service application (&quot;App&quot;); and any other services we provide (each
+          (iii) the GEN.iality web and mobile service application (&quot;App&quot;); and any other services we provide (each
           individually, and collectively, the &quot;Service&quot;) – all, as we will provide, develop and enhance from
-          time to time. The Evius Service, Sites, App and any additional Services are individually and collectively
+          time to time. The GEN.iality Service, Sites, App and any additional Services are individually and collectively
           referred to herein as the &quot;Services.&quot; Please read this policy carefully. By clicking &quot;I
           Agree&quot; or &quot;Next&quot;, you confirm that you have read, understood and agree to this policy. The use
           of your personal information under this policy is an integral part of the Services. You are not required by
@@ -26,7 +26,7 @@ class Policies extends Component {
           However, if you do not provide us the necessary information, we will not be able to provide you with our
           services. Therefore, if you do not agree to this Privacy Policy, please do not access or otherwise use the
           Services. We may change this Privacy Policy from time to time, to adapt it to changes in our Services, to the
-          way Evius operates, and to regulatory and technological requirements. We will provide a notice about the
+          way GEN.iality operates, and to regulatory and technological requirements. We will provide a notice about the
           updated policy within reasonable time in advance to allow you to review the changes and decide whether you
           wish to continue using the Service. Our notices will be posted, as applicable, on the Site, and we will also
           send it to you with an email message. Introduction. We have implemented this Privacy Policy because your
@@ -35,7 +35,7 @@ class Policies extends Component {
           in connection with the Services. &quot;Personal Information&quot; means any information that will be used,
           either alone or in combination with other information, to personally identify an individual, including, but
           not limited to, a first and last name, a personal profile, an email address, a home or other physical address,
-          or other contact information. Terms of Use. This Privacy Policy forms part of our Evius End User Terms of
+          or other contact information. Terms of Use. This Privacy Policy forms part of our GEN.iality End User Terms of
           Service and Organizer Terms which can be viewed on the Site and which you accepted prior to using the Service
           for the first time (collectively, &quot;Terms&quot;). Any capitalized but undefined term in this Privacy
           Policy will have the meaning given to it in the Terms. What Personal Information We Collect and How We Collect
@@ -61,23 +61,23 @@ class Policies extends Component {
           Event Organizer, whether or not you complete the registration process, and will be used by the Event Organizer
           in connection with the event or future events or other products and services. If you wish to opt-out from
           receiving email solicitations from the Event Organizer for future events or other products and services, you
-          may do so through the Event Organizer’s website or the unsubscribe link provided with the Event Organizer’s
+          may do so through the Event Organizer's website or the unsubscribe link provided with the Event Organizer's
           email solicitations. PLEASE NOTE: YOU MAY NOT UPLOAD TO YOUR ACCOUNT ANY DATA ABOUT YOU OR ABOUT OTHERS, WHICH
           CONSTITUTES SENSITIVE OR SPECIAL CATEGORIES OF DATA, INCLUDING WITHOUT LIMITATION, GOVERNMENT ISSUED IDS (SUCH
           AS A DRIVER&apos;S LICENSE), SOCIAL SECURITY NUMBERS, HEALTH-RELATED INFORMATION, FINANCIAL DATA AND FINANCIAL
           ACCOUNT LOG-IN DETAILS, BIOMETRIC AND GENETIC DATA, RELIGIOUS AND PHILOSOPHICAL BELIEFS, DATA REVEALING ETHNIC
           ORIGIN AND RACE, POLITICAL OPINIONS, TRADE UNION MEMBERSHIPS, DATA RELATED TO SEX LIFE AND SEXUAL ORIENTATION
-          AND CRIMINAL RECORDS. Evius DISCLAIMS ALL LIABILITY TO ANY USE, MISUSE, UNLAWFUL USE OR UNAUTHORIZED USE OF
+          AND CRIMINAL RECORDS. GEN.iality DISCLAIMS ALL LIABILITY TO ANY USE, MISUSE, UNLAWFUL USE OR UNAUTHORIZED USE OF
           SUCH DATA. Regardless of which method you choose to register your Account, we will send an email message to
           the email address that you have provided to instruct you how to confirm your registration. 3.2. &quot;Contact
           Us&quot; Information If you send us a &quot;Contact Us&quot; request, whether by submitting an online form
           that we make available or by sending an email to an email address that we display, you will be required to
           provide us with certain information, such as your name and email address in order to send the message to us.
-          If you wish to contact Evius by regular mail, the updated Evius physical addresses are available
-          at:https://www.Evius.co/contact. 3.3. Share with Friends Service The Services enable you to invite your
+          If you wish to contact GEN.iality by regular mail, the updated GEN.iality physical addresses are available
+          at:https://geniality.com.co/contact. 3.3. Share with Friends Service The Services enable you to invite your
           friends to use our Services by sending them an invitation email message or a text message. You may do so by:
           (i) using the Services to send or post an invitation message via your Third Party Account; and/or (ii) using
-          the Services to send an invitation email to your friend’s external email address. If you send or post an
+          the Services to send an invitation email to your friend's external email address. If you send or post an
           invitation message, we will store Personal Information about the recipient such as their email address or
           their third party website account user name and ID. 3.4. Location Data We provide certain location-based
           services (&quot;Location Services&quot;) in connection with the Services that are dependent on data related to
@@ -119,13 +119,13 @@ class Policies extends Component {
           cookies, including whether or not to accept them and how to remove them. You may set most browsers to notify
           you if you receive a cookie, or you may choose to block cookies with your browser. NOTE THAT DISABLING COOKIES
           ON YOUR BROWSER MAY AFFECT YOUR USER EXPERIENCE WITH THE SERVICES. 3.9. Mobile Device Data. We collect limited
-          information from your mobile device in order to provide the Evius Service. Such information includes your
+          information from your mobile device in order to provide the GEN.iality Service. Such information includes your
           mobile device type, mobile device ID, and date and time stamps of Services use. In addition, we deploy
           analytics technologies within the Service to help us gather aggregate statistics. Publicly Available
           Information. Publicly Available Information. Your Public Profile and any publicly available content that you
           post on or via the Services (&quot;User Submissions&quot;) will be publicly available to other users of the
           Services and will also be accessed and used by people off the Services. For instance, if you view another
-          user’s profile or &quot;like&quot; a certain event within the Services, such information can be viewed by
+          user's profile or &quot;like&quot; a certain event within the Services, such information can be viewed by
           others. The notices and tools that we provide on the Services should help inform you which information will be
           made publicly available. If you publish your contact information in any User Submissions or as part of your
           Public Profile, you may receive unsolicited messages from other users of the Services or the public. WE
@@ -152,7 +152,7 @@ class Policies extends Component {
           of such information is helpful or reasonably necessary to: (i) comply with any applicable law, regulation,
           legal process or governmental request; (ii) enforce our Terms, including investigations of potential
           violations thereof; (iii) detect, prevent, or otherwise address fraud or security issues; or (iv) protect
-          against harm to the rights, property, or safety of Evius, our users, yourself or the public. 5.8. We will use
+          against harm to the rights, property, or safety of GEN.iality, our users, yourself or the public. 5.8. We will use
           your Personal Information to provide you with features of the Service related to content and interactions and
           details about other events, in addition to the event that you have registered to. Choice and Opting Out You
           may choose not to receive future promotional, advertising or other Services-related emails from us by
@@ -169,7 +169,7 @@ class Policies extends Component {
           To the extent that you do provide us with Personal Information, we wish to maintain accurate Personal
           Information. If you would like to delete or correct any of your other Personal Information that we are
           storing, you may use the tools that we make available on the Services or you may submit an access request by
-          sending an email to support@Evius.co. Your email should include adequate details of your request.
+          sending an email to support@geniality.com.co. Your email should include adequate details of your request.
           Notwithstanding the foregoing, we will retain certain Personal Information as described in the Data Retention
           section in this policy. To assist you with your request to access and rectify your personal information, we
           will need to ask you to provide us certain credentials to make sure that you are who you claim to be. We may
@@ -181,39 +181,39 @@ class Policies extends Component {
           Third Party Services. We are not responsible for the privacy practices or the content of these sites or Third
           Party Services. Please be aware that the Third Party Services may collect Personal Information from you.
           Accordingly, we encourage you to read the terms and conditions and privacy policy of each Third Party Service
-          that you choose to use or interact with. Children’s Privacy. The Services are not structured to attract and
+          that you choose to use or interact with. Children's Privacy. The Services are not structured to attract and
           are not intended for use by children under the age of 13 years. Accordingly, we do not intend to collect
           Personal Information from anyone we know to be under 13 years. If we learn that we have collected Personal
           Information from a child under 13 years, we will delete that information as quickly as possible. If you
-          believe that we might have any such information, please contact us at support@Evius.co. Security. The security
+          believe that we might have any such information, please contact us at support@geniality.com.co. Security. The security
           of Personal Information is important to us. We follow generally accepted industry standards, including the use
           of appropriate administrative, physical and technical safeguards, to protect the Personal Information
           submitted to us. These measures and controls are governed by the ISO 27001 information security international
           standard. However, no method of transmission over the Internet, or method of electronic storage, is 100%
           secure. Therefore, while we strive to use commercially acceptable means to protect your Personal Information,
           we cannot guarantee its absolute security or confidentiality. If you have any questions about security on the
-          Service, you can contact us at support@Evius.co. Merger, Sale or Bankruptcy. In the event that we are acquired
+          Service, you can contact us at support@geniality.com.co. Merger, Sale or Bankruptcy. In the event that we are acquired
           by or merged with a third party entity, or in the event of bankruptcy or a comparable event, we will transfer
           or assign your Personal Information in connection with the foregoing events. California Privacy Rights.
           California Civil Code Section 1798.83 permits our customers who are California residents to request certain
           information regarding our disclosure of Personal Information to third parties for their direct marketing
-          purposes. To make such a request, please send an email to support@Evius.co. You can also write to us. Our
-          updated office addresses are published on our &quot;Contact Us&quot; page, at:https://www.Evius.co/contact.
+          purposes. To make such a request, please send an email to support@geniality.com.co. You can also write to us. Our
+          updated office addresses are published on our &quot;Contact Us&quot; page, at:https://geniality.com.co/contact.
           Please note that we are only required to respond to one request per customer each year. Our California Do Not
           Track Notice. We do not currently respond or take any action with respect to web browser &quot;do not
           track&quot; signals or other mechanisms that provide consumers the ability to exercise choice regarding the
-          collection of personally identifiable information about an individual consumer’s online activities over time
+          collection of personally identifiable information about an individual consumer's online activities over time
           and across third-party web sites or online services. We will allow third parties, such as companies that
-          provide us with analytics tools, to collect personally identifiable information about an individual consumer’s
+          provide us with analytics tools, to collect personally identifiable information about an individual consumer's
           online activities over time and across different websites when a consumer uses the Services. Transfer Data
           Outside Your Territory We store and process information in various sites throughout the globe, including in
-          sites operated and maintained by cloud-based service providers. Currently, Evius maintains and processes data
+          sites operated and maintained by cloud-based service providers. Currently, GEN.iality maintains and processes data
           in sites located in the US and Israel. If you are a resident in a jurisdiction where transfer of your personal
           information to another jurisdiction requires your consent, then you hereby provide us your express and
           unambiguous consent to such transfer. Additional Provisions Related to the Processing of Personal Information
           Under EU Laws If EU data protection laws apply to the processing of your personal information under this
-          policy, then the following additional details apply. For the purposes of the Services, Evius is a data
-          processor. Evius&apos;s data processing addendum, which is available at:https://www.Evius.co/privacy/dpa,
+          policy, then the following additional details apply. For the purposes of the Services, GEN.iality is a data
+          processor. GEN.iality&apos;s data processing addendum, which is available at:https://geniality.com.co/privacy/dpa,
           applies to such processing. 15.1. Where we process your personal information as a data controller, then we
           process your personal information under the following lawful grounds: 15.1.1. Where we process your personal
           information based on consent, we will ask you to provide us with the appropriate consent. 15.1.2. Performance
@@ -242,7 +242,7 @@ class Policies extends Component {
           at:https://ec.europa.eu/info/law/law-topic/data-protection/reform/rights-citizens_en. 15.3. If you are
           registered for an event through our services, then for the purposes of EU data protection laws, our processing
           of your personal data under this policy are made on behalf of the Event Organizer. Accordingly, for these
-          purposes, the Event Organizer is the data controller and Evius is the data processor. 15.4. To apply for
+          purposes, the Event Organizer is the data controller and GEN.iality is the data processor. 15.4. To apply for
           exercising your above rights in relation to the processing of your personal information in relation with a
           specific event, you should contact first the Event Organizer with your request. We will follow the Event
           Organizer&apos;s instructions. 15.5. To exercise the above rights, you will need to provide sufficient
@@ -251,7 +251,7 @@ class Policies extends Component {
           requests may be accepted or denied, in accordance with considerations and provisions in applicable laws. If we
           need to delete data following your request, it will take some time until we completely delete residual copies
           of the data from our active servers and from our backup systems. If you have any concerns about the way we
-          process your personal information, you are welcome to contact our privacy team at:privacy@Evius.co. We will
+          process your personal information, you are welcome to contact our privacy team at:privacy@geniality.com.co. We will
           look into your inquiry and make good-faith efforts to respond promptly. Data Retention As long as you use the
           Service, we will keep information about you, unless we are required by law to delete it, or if we decide to
           remove it at our discretion. At any time, you can remove data from your public profile, delete your account
@@ -271,7 +271,7 @@ class Policies extends Component {
           identifiable information, when we no longer need to process the information. Commitment. We are committed to
           protecting your privacy. Protecting your privacy online is an evolving area, and we are constantly evolving
           our Service to meet these demands. If you have any comments, concerns about the way we process your personal
-          information or questions regarding our Privacy Policy, please contact us at support@Evius.co.
+          information or questions regarding our Privacy Policy, please contact us at support@geniality.com.co.
         </p>
       </div>
     );
