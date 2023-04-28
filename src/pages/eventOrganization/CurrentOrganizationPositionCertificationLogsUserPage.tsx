@@ -127,6 +127,21 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
         ),
       }, */
       {
+        title: 'Certificación',
+        align: 'center',
+        dataIndex: 'log',
+        width: 100,
+        render: (log: any) => {
+          if (log?.file_url) {
+            return (
+              <a href={log?.file_url} target="_blank">
+                Ver certificado
+              </a>
+            );
+          } else return <em>Sin certificado</em>;
+        },
+      },
+      {
         title: 'Fecha de emisión',
         align: 'center',
         width: 100,
