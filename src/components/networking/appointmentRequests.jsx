@@ -104,8 +104,11 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
                   </Col>
                 ))
               ) : (
-                <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-                  <Card style={{ textAlign: 'center' }}>{'No tienes solicitudes pendientes enviadas'}</Card>
+                <Col >
+                  <Result 
+                    /* style={{padding: 0}} */
+                    title={'¡No tienes solicitudes pendientes enviadas!'}
+                  />
                 </Col>
               ))}
           </Row>
