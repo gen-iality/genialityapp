@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import UserOneTimeLoginLinKForm from '../UserOneTimeLoginLinkForm';
+import { Component } from 'react'
+import UserOneTimeLoginLinKForm from '../UserOneTimeLoginLinkForm'
 
 export default class UserOneTimeLoginLink extends Component {
   render() {
@@ -11,6 +11,6 @@ export default class UserOneTimeLoginLink extends Component {
         actionMsg="Solicitar ingreso"
         {...this.props}
       />
-    );
+    )
   }
 }

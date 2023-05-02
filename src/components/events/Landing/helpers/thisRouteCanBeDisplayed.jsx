@@ -1,60 +1,71 @@
-import { useEffect } from 'react';
-import { Button, Result, Typography } from 'antd';
-import { useUserEvent } from '@context/eventUserContext';
-import { useEventContext } from '@context/eventContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import Loading from '../../../profile/loading';
-import { useIntl } from 'react-intl';
+import { useEffect } from 'react'
+import { Button, Result, Typography } from 'antd'
+import { useUserEvent } from '@context/eventUserContext'
+import { useEventContext } from '@context/eventContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import Loading from '../../../profile/loading'
+import { useIntl } from 'react-intl'
 
 export function iAmRegisteredInThisEvent(cEventUser) {
-	if (!cEventUser) return;
+  if (!cEventUser) return
 
-  const { value, status } = cEventUser;
-  if (!value && status === 'LOADING') return 'LOADING';
-  if (!value && status === 'LOADED') return 'NOT_REGISTERED';
-  if (value?._id && status === 'LOADED') return 'REGISTERED';
+  const { value, status } = cEventUser
+  if (!value && status === 'LOADING') return 'LOADING'
+  if (!value && status === 'LOADED') return 'NOT_REGISTERED'
+  if (value?._id && status === 'LOADED') return 'REGISTERED'
 }
 
 export function recordTypeForThisEvent(cEvent) {
-  if (!cEvent) return;
+  if (!cEvent) return
 
-  const event = cEvent?.value;
-  if (!event) return 'LOADING';
-  if (event?.visibility === 'PUBLIC' && event?.allow_register) return 'PUBLIC_EVENT_WITH_REGISTRATION';
-  if (event?.visibility === 'PUBLIC' && event?.allow_register === false) return 'UN_REGISTERED_PUBLIC_EVENT';
-  if (event?.visibility === 'PRIVATE' && event?.allow_register === false) return 'PRIVATE_EVENT';
+  const event = cEvent?.value
+  if (!event) return 'LOADING'
+  if (event?.visibility === 'PUBLIC' && event?.allow_register)
+    return 'PUBLIC_EVENT_WITH_REGISTRATION'
+  if (event?.visibility === 'PUBLIC' && event?.allow_register === false)
+    return 'UN_REGISTERED_PUBLIC_EVENT'
+  if (event?.visibility === 'PRIVATE' && event?.allow_register === false)
+    return 'PRIVATE_EVENT'
   if (event?.visibility === 'ANONYMOUS' && event?.allow_register)
-    return 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS';
+    return 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS'
 }
 
 function ThisRouteCanBeDisplayed({ children }) {
-  const intl = useIntl();
-  const cEventUser = useUserEvent();
-  const eventUserId = cEventUser?.value?._id;
-  const eventUserStatus = cEventUser.status;
-  const cEvent = useEventContext();
-  const { handleChangeTypeModal } = useHelper();
+  const intl = useIntl()
+  const cEventUser = useUserEvent()
+  const eventUserId = cEventUser?.value?._id
+  const eventUserStatus = cEventUser.status
+  const cEvent = useEventContext()
+  const { handleChangeTypeModal } = useHelper()
 
   useEffect(() => {
     /** Abrir modal de registro al evento automaticamente para eventos con registro obligatorio */
-    (recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' ||
+    ;(recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION' ||
       recordTypeForThisEvent(cEvent) === 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS') &&
       iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED' &&
-      handleChangeTypeModal('registerForTheEvent');
-  }, [cEvent, eventUserId, eventUserStatus]);
+      handleChangeTypeModal('registerForTheEvent')
+  }, [cEvent, eventUserId, eventUserStatus])
 
   function renderTitleComponentForPublicEventWithRegistration(loading) {
     if (loading)
-      return <Typography.Title level={2}>{intl.formatMessage({ id: 'modal.no_register.title2' })}</Typography.Title>;
-    return <Typography.Title level={2}>{intl.formatMessage({ id: 'modal.no_register.title' })}</Typography.Title>;
+      return (
+        <Typography.Title level={2}>
+          {intl.formatMessage({ id: 'modal.no_register.title2' })}
+        </Typography.Title>
+      )
+    return (
+      <Typography.Title level={2}>
+        {intl.formatMessage({ id: 'modal.no_register.title' })}
+      </Typography.Title>
+    )
   }
 
   function showComponentForPublicEventWithRegistration(component, loading) {
     switch (component.key) {
       case 'evento':
-        return component;
+        return component
       case 'VirtualConference':
-        return '';
+        return ''
 
       default:
         return (
@@ -77,38 +88,38 @@ function ThisRouteCanBeDisplayed({ children }) {
               ),
             ]}
           />
-        );
+        )
     }
   }
 
   function showComponentunregisteredPublicEvent(component) {
     switch (component.key) {
       case 'evento':
-        return component;
+        return component
       case 'agenda':
-        return component;
+        return component
       case 'activity':
-        return component;
+        return component
       case 'speakers':
-        return component;
+        return component
       case 'videos':
-        return component;
+        return component
       case 'documents':
-        return component;
+        return component
       case 'noticias':
-        return component;
+        return component
       case 'faqs':
-        return component;
+        return component
       case 'ferias':
-        return component;
+        return component
       case 'partners':
-        return component;
+        return component
       case 'ChatList':
-        return component;
+        return component
       case 'VirtualConference':
-        return component;
+        return component
       case 'informativeSection1':
-        return component;
+        return component
 
       default:
         return (
@@ -121,14 +132,14 @@ function ThisRouteCanBeDisplayed({ children }) {
               </Typography.Title>
             }
           />
-        );
+        )
     }
   }
 
   function showComponentForprivateEvent(component) {
     switch (component.key) {
       case 'VirtualConference':
-        return '';
+        return ''
 
       default:
         return (
@@ -151,7 +162,7 @@ function ThisRouteCanBeDisplayed({ children }) {
               </Typography.Paragraph>
             }
           />
-        );
+        )
     }
   }
 
@@ -181,7 +192,7 @@ function ThisRouteCanBeDisplayed({ children }) {
           ? showComponentForPublicEventWithRegistration(children)
           : iAmRegisteredInThisEvent(cEventUser) === 'REGISTERED' && children)}
     </>
-  );
+  )
 }
 
-export default ThisRouteCanBeDisplayed;
+export default ThisRouteCanBeDisplayed

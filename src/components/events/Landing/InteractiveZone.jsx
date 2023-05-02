@@ -1,8 +1,8 @@
-import { Layout, Drawer, Button, Col, Row, Badge, notification, message } from 'antd';
-import { MenuUnfoldOutlined, MessageOutlined } from '@ant-design/icons';
-import SocialZone from '../../socialZone/socialZone';
-import MenuRigth from './Menus/MenuRigth';
-const { Sider } = Layout;
+import { Layout, Drawer, Button, Col, Row, Badge, notification, message } from 'antd'
+import { MenuUnfoldOutlined, MessageOutlined } from '@ant-design/icons'
+import SocialZone from '../../socialZone/socialZone'
+import MenuRigth from './Menus/MenuRigth'
+const { Sider } = Layout
 const InteractiveZone = () => {
   return (
     <>
@@ -58,8 +58,7 @@ const InteractiveZone = () => {
           theme="light"
           collapsible
           collapsed={this.state.collapsed}
-          width={400}
-        >
+          width={400}>
           <div className="Chat-Event">
             {this.state.collapsed ? (
               <>
@@ -97,7 +96,7 @@ const InteractiveZone = () => {
         </Sider>
       )}
     </>
-  );
-};
+  )
+}
 
-export default InteractiveZone;
+export default InteractiveZone

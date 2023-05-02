@@ -232,10 +232,10 @@ let countryOptions = [
   { label: 'Tuvalu' },
   { label: 'Ucrania' },
   { label: 'Uganda' },
-];
+]
 
 countryOptions = countryOptions.map((country) => {
-  return { label: country.label, value: country.label };
-});
+  return { label: country.label, value: country.label }
+})
 
-export default countryOptions;
+export default countryOptions

@@ -1,53 +1,53 @@
-import { useState, useContext, useEffect } from 'react';
-import { Redirect, useLocation, useHistory } from 'react-router-dom';
+import { useState, useContext, useEffect } from 'react'
+import { Redirect, useLocation, useHistory } from 'react-router-dom'
 
-import { Tabs, Row, Col, Form, Switch, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Tabs, Row, Col, Form, Switch, Modal } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
-import AgendaContext from '@context/AgendaContext';
-import Header from '@antdComponents/Header';
-import BackTop from '@antdComponents/BackTop';
-import { RouterPrompt } from '@antdComponents/RoutePrompt';
-import { DispatchMessageService } from '@context/MessageService';
+import AgendaContext from '@context/AgendaContext'
+import Header from '@antdComponents/Header'
+import BackTop from '@antdComponents/BackTop'
+import { RouterPrompt } from '@antdComponents/RoutePrompt'
+import { DispatchMessageService } from '@context/MessageService'
 
-import { handleRequestError } from '@helpers/utils';
-import { AgendaApi, DocumentsApi } from '@helpers/request';
-import { firestore } from '@helpers/firebase';
+import { handleRequestError } from '@helpers/utils'
+import { AgendaApi, DocumentsApi } from '@helpers/request'
+import { firestore } from '@helpers/firebase'
 
-import Loading from '../profile/loading';
-import RoomController from './roomManager/RoomController';
-import Service from './roomManager/service';
+import Loading from '../profile/loading'
+import RoomController from './roomManager/RoomController'
+import Service from './roomManager/service'
 
-import TipeOfActivity from './typeActivity';
-import SurveyManager from './surveyManager';
-import MainAgendaForm, { FormDataType } from './components/MainAgendaForm';
-import usePrepareRoomInfoData from './hooks/usePrepareRoomInfoData';
-import useBuildInfo from './hooks/useBuildInfo';
-import useValidForm from './hooks/useValidAgendaForm';
-import useDeleteActivity from './hooks/useDeleteActivity';
-import EventType from './types/EventType';
-import AgendaType from '@Utilities/types/AgendaType';
-import AgendaDocumentForm from './components/AgendaDocumentForm';
+import TipeOfActivity from './typeActivity'
+import SurveyManager from './surveyManager'
+import MainAgendaForm, { FormDataType } from './components/MainAgendaForm'
+import usePrepareRoomInfoData from './hooks/usePrepareRoomInfoData'
+import useBuildInfo from './hooks/useBuildInfo'
+import useValidForm from './hooks/useValidAgendaForm'
+import useDeleteActivity from './hooks/useDeleteActivity'
+import EventType from './types/EventType'
+import AgendaType from '@Utilities/types/AgendaType'
+import AgendaDocumentForm from './components/AgendaDocumentForm'
 
-import ActivityContentSelector from './activityType/ActivityContentSelector';
+import ActivityContentSelector from './activityType/ActivityContentSelector'
 
-import { hourWithAdditionalMinutes } from './hooks/useHourWithAdditionalMinutes';
+import { hourWithAdditionalMinutes } from './hooks/useHourWithAdditionalMinutes'
 
-const { TabPane } = Tabs;
-const { confirm } = Modal;
+const { TabPane } = Tabs
+const { confirm } = Modal
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
 interface LocationStateType {
-  edit: string | null;
+  edit: string | null
 }
 
 export interface AgendaEditProps {
-  event: EventType;
-  matchUrl: string;
+  event: EventType
+  matchUrl: string
 }
 
 const initialInfoState: AgendaType = {
@@ -81,13 +81,15 @@ const initialInfoState: AgendaType = {
   tool_ids: [],
   length: '',
   latitude: '',
-};
+}
 
 const initialFormDataState = {
   name: '',
   module_id: undefined,
   // date: Moment(new Date()).format('YYYY-MM-DD')??new Date().,
-  date: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
+  date: `${new Date().getFullYear()}-${
+    new Date().getMonth() + 1
+  }-${new Date().getDate()}`,
   space_id: '',
   hour_end: hourWithAdditionalMinutes(5),
   hour_start: hourWithAdditionalMinutes(1),
@@ -102,21 +104,21 @@ const initialFormDataState = {
   selectedTickets: [],
   selectedDocuments: [],
   selectedCategories: [],
-} as FormDataType;
+} as FormDataType
 
 function AgendaEdit(props: AgendaEditProps) {
-  const [currentActivityID, setCurrentActivityID] = useState<string | null>(null);
-  const [shouldRedirect, setShouldRedirect] = useState(false);
-  const [currentTab, setCurrentTab] = useState('1');
-  const [isLoading, setIsLoading] = useState(true);
-  const [showPendingChangesModal, setShowPendingChangesModal] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [currentActivityID, setCurrentActivityID] = useState<string | null>(null)
+  const [shouldRedirect, setShouldRedirect] = useState(false)
+  const [currentTab, setCurrentTab] = useState('1')
+  const [isLoading, setIsLoading] = useState(true)
+  const [showPendingChangesModal, setShowPendingChangesModal] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   // const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
-  const [service] = useState(new Service(firestore));
+  const [service] = useState(new Service(firestore))
 
-  const [loadedAgenda, setLoadedAgenda] = useState<AgendaType | null>(null);
-  const [formdata, setFormData] = useState<FormDataType>(initialFormDataState);
-  const [savedFormData, setSavedFormData] = useState<FormDataType>({} as FormDataType);
+  const [loadedAgenda, setLoadedAgenda] = useState<AgendaType | null>(null)
+  const [formdata, setFormData] = useState<FormDataType>(initialFormDataState)
+  const [savedFormData, setSavedFormData] = useState<FormDataType>({} as FormDataType)
 
   /**
    * This states are used as config, I think...
@@ -126,14 +128,14 @@ function AgendaEdit(props: AgendaEditProps) {
   // const [games, setGames] = useState<boolean>(false);
   // const [attendees, setAttendees] = useState<boolean>(false);
 
-  const agendaContext = useContext(AgendaContext);
+  const agendaContext = useContext(AgendaContext)
 
-  const location = useLocation<LocationStateType>();
-  const history = useHistory();
+  const location = useLocation<LocationStateType>()
+  const history = useHistory()
 
-  const buildInfo = useBuildInfo(formdata, loadedAgenda, initialInfoState);
-  const deleteActivity = useDeleteActivity();
-  const validForm = useValidForm(formdata);
+  const buildInfo = useBuildInfo(formdata, loadedAgenda, initialInfoState)
+  const deleteActivity = useDeleteActivity()
+  const validForm = useValidForm(formdata)
 
   useEffect(() => {
     /**
@@ -144,66 +146,72 @@ function AgendaEdit(props: AgendaEditProps) {
     const loading = async () => {
       // Check if the previous page passed an activity_id via route state.
       if (location.state?.edit) {
-        setIsEditing(true); // We are editing
+        setIsEditing(true) // We are editing
         // Update the activityEdit of agendaContext from passed activity_id
-        agendaContext.setActivityEdit(location.state.edit);
+        agendaContext.setActivityEdit(location.state.edit)
 
         // Get the agenda document from current activity_id
-        const agendaInfo: AgendaType = await AgendaApi.getOne(location.state.edit, props.event._id);
-        console.log('agendaInfo', agendaInfo);
+        const agendaInfo: AgendaType = await AgendaApi.getOne(
+          location.state.edit,
+          props.event._id,
+        )
+        console.log('agendaInfo', agendaInfo)
 
         // Take the vimeo_id and save in info.
-        const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : '';
+        const vimeo_id = props.event.vimeo_id ? props.event.vimeo_id : ''
         setLoadedAgenda({
           ...agendaInfo,
           vimeo_id,
           space_id: agendaInfo.space_id || '',
           requires_registration: agendaInfo.requires_registration || false,
-        });
+        })
 
         // Save the activity name
-        agendaContext.setActivityName(agendaInfo.name);
+        agendaContext.setActivityName(agendaInfo.name)
 
         // Object.keys(this.state).map((key) => (agendaInfo[key] ? this.setState({ [key]: agendaInfo[key] }) : ''));
         // Edit the current activity ID from passed activity ID via route
-        setCurrentActivityID(location.state.edit);
+        setCurrentActivityID(location.state.edit)
       }
 
-      await validateRoom();
-      setIsLoading(false);
-    };
+      await validateRoom()
+      setIsLoading(false)
+    }
 
-    loading().then();
+    loading().then()
 
     // This function is running when the component will unmount
     return () => {
-      agendaContext.setActivityEdit(null);
-    };
-  }, [props.event]);
+      agendaContext.setActivityEdit(null)
+    }
+  }, [props.event])
 
   // This exists to enable to call saveConfig (who reads from AgendaContext),
   // when the AgendaContext data are written.
   // NOTE: AgendaContext has a method called saveConfig, but the old edit.jsx
   //       had its own implementation of saveConfig. So confusing!
   useEffect(() => {
-    saveConfig();
-  }, [agendaContext.isPublished]);
+    saveConfig()
+  }, [agendaContext.isPublished])
 
   const validateRoom = async () => {
-    const activityId = agendaContext.activityEdit;
-    const hasVideoconference = await service.validateHasVideoconference(props.event._id, activityId);
+    const activityId = agendaContext.activityEdit
+    const hasVideoconference = await service.validateHasVideoconference(
+      props.event._id,
+      activityId,
+    )
 
     if (hasVideoconference) {
-      const configuration = await service.getConfiguration(props.event._id, activityId);
+      const configuration = await service.getConfiguration(props.event._id, activityId)
       setFormData((previous) => ({
         ...previous,
         platform: configuration.platform || null,
         meeting_id: configuration.meeting_id || null,
         host_id: configuration.host_id || null,
-      }));
+      }))
 
       if (loadedAgenda !== null) {
-        setLoadedAgenda(loadedAgenda);
+        setLoadedAgenda(loadedAgenda)
       }
 
       // setAvalibleGames(configuration.avalibleGames || []);
@@ -212,7 +220,7 @@ function AgendaEdit(props: AgendaEditProps) {
       // setGames(configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false);
       // setAttendees(configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false);
     }
-  };
+  }
 
   const submit = async (changePathWithoutSaving: boolean) => {
     DispatchMessageService({
@@ -220,57 +228,77 @@ function AgendaEdit(props: AgendaEditProps) {
       key: 'loading',
       msj: 'Por favor espere mientras se guarda la información...',
       action: 'show',
-    });
+    })
 
     if (validForm()) {
       // Save the activity name
-      agendaContext.setActivityName(formdata.name);
+      agendaContext.setActivityName(formdata.name)
       try {
-        const builtInfo = buildInfo();
-        console.debug('builtInfo final:', builtInfo);
+        const builtInfo = buildInfo()
+        console.debug('builtInfo final:', builtInfo)
         // setIsLoading(true);
-        let agenda: AgendaType | null = null;
+        let agenda: AgendaType | null = null
         if (location.state.edit || currentActivityID) {
           const data = {
             activity_id: location.state.edit || currentActivityID,
-          };
-          const edit = location.state.edit || currentActivityID;
-          await AgendaApi.editOne(builtInfo, edit, props.event._id);
+          }
+          const edit = location.state.edit || currentActivityID
+          await AgendaApi.editOne(builtInfo, edit, props.event._id)
 
           await Promise.all(
-            builtInfo.selected_document.map((selected) => DocumentsApi.editOne(data, selected, props.event._id)),
-          );
+            builtInfo.selected_document.map((selected) =>
+              DocumentsApi.editOne(data, selected, props.event._id),
+            ),
+          )
         } else {
-          agenda = await AgendaApi.create(props.event._id, builtInfo);
-          setLoadedAgenda(agenda);
+          agenda = await AgendaApi.create(props.event._id, builtInfo)
+          setLoadedAgenda(agenda)
         }
-        if (changePathWithoutSaving) setShowPendingChangesModal(false);
+        if (changePathWithoutSaving) setShowPendingChangesModal(false)
 
-        DispatchMessageService({ action: 'destroy', type: 'loading', key: 'loading', msj: '' });
+        DispatchMessageService({
+          action: 'destroy',
+          type: 'loading',
+          key: 'loading',
+          msj: '',
+        })
 
         if (agenda?._id) {
           /** Si es un evento recien creado se envia a la misma ruta con el
            * estado edit el cual tiene el id de la actividad para poder editar
            * */
-          console.debug('created agenda is used from origin');
-          agendaContext.setActivityEdit(agenda._id);
-          setCurrentActivityID(agenda._id);
-          setIsEditing(true);
+          console.debug('created agenda is used from origin')
+          agendaContext.setActivityEdit(agenda._id)
+          setCurrentActivityID(agenda._id)
+          setIsEditing(true)
 
-          agendaContext.setIsPublished(true);
+          agendaContext.setIsPublished(true)
 
-          setLoadedAgenda(agenda);
-          await saveConfig();
+          setLoadedAgenda(agenda)
+          await saveConfig()
         } else if (changePathWithoutSaving) {
-          history.push(`${props.matchUrl}`);
+          history.push(`${props.matchUrl}`)
         }
-        DispatchMessageService({ msj: 'Información guardada correctamente!', type: 'success', action: 'show' });
+        DispatchMessageService({
+          msj: 'Información guardada correctamente!',
+          type: 'success',
+          action: 'show',
+        })
       } catch (e) {
-        DispatchMessageService({ action: 'destroy', type: 'loading', key: 'loading', msj: '' });
-        DispatchMessageService({ msj: handleRequestError(e).message, type: 'error', action: 'show' });
+        DispatchMessageService({
+          action: 'destroy',
+          type: 'loading',
+          key: 'loading',
+          msj: '',
+        })
+        DispatchMessageService({
+          msj: handleRequestError(e).message,
+          type: 'error',
+          action: 'show',
+        })
       }
     }
-  };
+  }
 
   const remove = async () => {
     DispatchMessageService({
@@ -278,7 +306,7 @@ function AgendaEdit(props: AgendaEditProps) {
       key: 'loading',
       msj: 'Por favor espere mientras borra la información...',
       action: 'show',
-    });
+    })
     if (currentActivityID && loadedAgenda) {
       confirm({
         title: '¿Está seguro de eliminar la información?',
@@ -288,35 +316,46 @@ function AgendaEdit(props: AgendaEditProps) {
         okType: 'danger',
         cancelText: 'Cancelar',
         onOk() {
-          deleteActivity(props.event._id, currentActivityID, loadedAgenda.name).then(() => {
-            setShouldRedirect(true);
-            history.push(`${props.matchUrl}`);
-          });
+          deleteActivity(props.event._id, currentActivityID, loadedAgenda.name).then(
+            () => {
+              setShouldRedirect(true)
+              history.push(`${props.matchUrl}`)
+            },
+          )
         },
-      });
+      })
     }
-  };
+  }
 
   const handleDocumentChange = (value: any) => {
-    setFormData((previous) => ({ ...previous, selectedDocuments: value || [] }));
-  };
+    setFormData((previous) => ({ ...previous, selectedDocuments: value || [] }))
+  }
 
   // Método para guarda la información de la configuración
   const saveConfig = async () => {
-    const { roomInfo, tabs } = usePrepareRoomInfoData(agendaContext);
-    const activity_id = agendaContext.activityEdit || currentActivityID;
+    const { roomInfo, tabs } = usePrepareRoomInfoData(agendaContext)
+    const activity_id = agendaContext.activityEdit || currentActivityID
     try {
-      const result = await service.createOrUpdateActivity(props.event._id, activity_id, roomInfo, tabs);
+      const result = await service.createOrUpdateActivity(
+        props.event._id,
+        activity_id,
+        roomInfo,
+        tabs,
+      )
       if (result) {
-        DispatchMessageService({ msj: result.message, type: 'success', action: 'show' });
+        DispatchMessageService({ msj: result.message, type: 'success', action: 'show' })
       }
-      return result;
+      return result
     } catch (err) {
-      DispatchMessageService({ msj: 'Error en la configuración!', type: 'error', action: 'show' });
+      DispatchMessageService({
+        msj: 'Error en la configuración!',
+        type: 'error',
+        action: 'show',
+      })
     }
-  };
+  }
 
-  if (!location.state || shouldRedirect) return <Redirect to={props.matchUrl} />;
+  if (!location.state || shouldRedirect) return <Redirect to={props.matchUrl} />
 
   return (
     <>
@@ -353,7 +392,7 @@ function AgendaEdit(props: AgendaEditProps) {
                   unCheckedChildren="No"
                   checked={agendaContext.isPublished}
                   onChange={(value) => {
-                    agendaContext.setIsPublished(value);
+                    agendaContext.setIsPublished(value)
                     // saveConfig(); did by useEffect (isPublished)
                   }}
                 />
@@ -439,7 +478,9 @@ function AgendaEdit(props: AgendaEditProps) {
                           <AgendaDocumentForm
                             eventId={props.event._id}
                             selectedDocuments={formdata.selectedDocuments}
-                            onSelectedDocuments={(changed) => handleDocumentChange(changed)}
+                            onSelectedDocuments={(changed) =>
+                              handleDocumentChange(changed)
+                            }
                             matchUrl={props.matchUrl}
                           />
                         </Form.Item>
@@ -454,7 +495,7 @@ function AgendaEdit(props: AgendaEditProps) {
         )}
       </Form>
     </>
-  );
+  )
 }
 
-export default AgendaEdit;
+export default AgendaEdit

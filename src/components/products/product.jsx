@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { Table, Tooltip, Space, Button, Image, Modal, Typography, Row, Col } from 'antd';
+import { Component } from 'react'
+import { Table, Tooltip, Space, Button, Image, Modal, Typography, Row, Col } from 'antd'
 import {
   EditOutlined,
   DeleteOutlined,
@@ -8,33 +8,33 @@ import {
   ShoppingCartOutlined,
   SaveOutlined,
   SettingOutlined,
-} from '@ant-design/icons';
-import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
-import arrayMove from 'array-move';
-import { EventsApi } from '@helpers/request';
-import Loading from '../loaders/loading';
-import { withRouter } from 'react-router-dom';
-import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '@context/MessageService';
-import { useEventContext } from '@context/eventContext';
-import { HelperContext } from '@context/helperContext/helperContext';
+} from '@ant-design/icons'
+import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc'
+import arrayMove from 'array-move'
+import { EventsApi } from '@helpers/request'
+import Loading from '../loaders/loading'
+import { withRouter } from 'react-router-dom'
+import Header from '@antdComponents/Header'
+import { DispatchMessageService } from '@context/MessageService'
+import { useEventContext } from '@context/eventContext'
+import { HelperContext } from '@context/helperContext/helperContext'
 
-const { Column } = Table;
-const { confirm } = Modal;
-const { Paragraph } = Typography;
-const SortableItem = sortableElement((props) => <tr {...props} />);
-const SortableContainer = sortableContainer((props) => <tbody {...props} />);
+const { Column } = Table
+const { confirm } = Modal
+const { Paragraph } = Typography
+const SortableItem = sortableElement((props) => <tr {...props} />)
+const SortableContainer = sortableContainer((props) => <tbody {...props} />)
 
 class Product extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       list: [],
       loading: true,
       loadingPosition: false,
-    };
+    }
   }
-  static contextType = HelperContext;
+  static contextType = HelperContext
   // Drag table
   DraggableContainer = (props) => (
     <SortableContainer
@@ -44,44 +44,46 @@ class Product extends Component {
       onSortEnd={this.onSortEnd}
       {...props}
     />
-  );
+  )
   DraggableBodyRow = ({ className, style, ...restProps }) => {
-    const { list } = this.state;
+    const { list } = this.state
     // function findIndex base on Table rowKey props and should always be a right array index
-    const index = list.findIndex((x) => x.index === restProps['data-row-key']);
-    return <SortableItem index={index} {...restProps} />;
-  };
+    const index = list.findIndex((x) => x.index === restProps['data-row-key'])
+    return <SortableItem index={index} {...restProps} />
+  }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
-    const { list } = this.state;
+    const { list } = this.state
     if (oldIndex !== newIndex) {
-      let newData = arrayMove([].concat(list), oldIndex, newIndex).filter((el) => !!el);
+      let newData = arrayMove([].concat(list), oldIndex, newIndex).filter((el) => !!el)
       if (newData) {
         newData = newData.map((product, key) => {
-          return { ...product, index: key };
-        });
+          return { ...product, index: key }
+        })
       }
-      this.setState({ list: newData });
+      this.setState({ list: newData })
     }
-  };
+  }
 
   componentDidMount() {
-    this.fetchItem();
+    this.fetchItem()
   }
 
   fetchItem = async () => {
-    const data = await EventsApi.getProducts(this.props.eventId);
+    const data = await EventsApi.getProducts(this.props.eventId)
 
-    let listproduct = [];
+    let listproduct = []
     if (data.data) {
-      listproduct = data.data.sort((a, b) => (a.position && b.position ? a.position - b.position : true));
+      listproduct = data.data.sort((a, b) =>
+        a.position && b.position ? a.position - b.position : true,
+      )
       listproduct = listproduct.map((product, index) => {
-        return { ...product, index: product.position == index ? product.position : index };
-      });
-      listproduct = listproduct.sort((a, b) => a.index - b.index);
-      this.setState({ list: listproduct, loading: false });
+        return { ...product, index: product.position == index ? product.position : index }
+      })
+      listproduct = listproduct.sort((a, b) => a.index - b.index)
+      this.setState({ list: listproduct, loading: false })
     }
-  };
+  }
 
   savePosition = async () => {
     DispatchMessageService({
@@ -89,41 +91,43 @@ class Product extends Component {
       key: 'loading',
       msj: ' Por favor espere mientras se guarda la configuración...',
       action: 'show',
-    });
+    })
     try {
       if (this.state.list) {
         await Promise.all(
           this.state.list.map(async (product, index) => {
-            const productChange = { ...product, position: product.index + 1 };
-            await EventsApi.editProduct(productChange, this.props.eventId, product._id);
-          })
-        );
+            const productChange = { ...product, position: product.index + 1 }
+            await EventsApi.editProduct(productChange, this.props.eventId, product._id)
+          }),
+        )
       }
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
-      });
+      })
       DispatchMessageService({
         type: 'success',
         msj: 'Configuración guardada correctamente!',
         action: 'show',
-      });
+      })
     } catch (e) {
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
-      });
+      })
       DispatchMessageService({
         type: 'error',
         msj: 'Ha ocurrido un error',
         action: 'show',
-      });
+      })
     }
-  };
+  }
 
   editProduct = (cert) => {
-    this.props.history.push(`/eventadmin/${this.props.eventId}/product/addproduct/${cert._id}`);
-  };
+    this.props.history.push(
+      `/eventadmin/${this.props.eventId}/product/addproduct/${cert._id}`,
+    )
+  }
 
   removeProduct = (data) => {
     DispatchMessageService({
@@ -131,8 +135,8 @@ class Product extends Component {
       key: 'loading',
       msj: ' Por favor espere mientras se borra la configuración...',
       action: 'show',
-    });
-    const self = this;
+    })
+    const self = this
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -143,55 +147,55 @@ class Product extends Component {
       onOk() {
         return new Promise((resolve, reject) => {
           EventsApi.deleteProduct(data._id, data.event_id).then((res) => {
-            self.fetchItem();
+            self.fetchItem()
             if (res === 1) {
               DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-              });
+              })
               DispatchMessageService({
                 type: 'success',
                 msj: 'Producto eliminado correctamente',
                 action: 'show',
-              });
-              resolve(true);
+              })
+              resolve(true)
             } else {
               DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-              });
+              })
               DispatchMessageService({
                 type: 'error',
                 msj: 'Lo sentimos el producto no pudo ser eliminado intente nuevamente',
                 action: 'show',
-              });
-              reject(false);
+              })
+              reject(false)
             }
-          });
+          })
         }).catch(() => {
           DispatchMessageService({
             type: 'error',
             msj: 'Lo sentimos no hay respuesta del servidor',
             action: 'show',
-          });
-        });
+          })
+        })
       },
       onCancel() {},
-    });
-  };
+    })
+  }
 
   newProduct = () => {
-    this.props.history.push(`/eventadmin/${this.props.eventId}/product/addproduct`);
-  };
+    this.props.history.push(`/eventadmin/${this.props.eventId}/product/addproduct`)
+  }
 
   configuration = () => {
-    this.props.history.push(`/eventadmin/${this.props.eventId}/product/configuration`);
-  };
+    this.props.history.push(`/eventadmin/${this.props.eventId}/product/configuration`)
+  }
 
-  goBack = () => this.props.history.goBack();
+  goBack = () => this.props.history.goBack()
 
   render() {
-    const { eventIsActive } = this.context;
+    const { eventIsActive } = this.context
     return (
       <div>
         <Header
@@ -205,13 +209,18 @@ class Product extends Component {
                   onClick={this.savePosition}
                   type="primary"
                   icon={<SaveOutlined />}
-                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
-                >
+                  disabled={
+                    !eventIsActive && window.location.toString().includes('eventadmin')
+                  }>
                   Guardar orden
                 </Button>
               </Col>
               <Col>
-                <Button type="primary" icon={<SettingOutlined />} onClick={this.configuration} id="configuration">
+                <Button
+                  type="primary"
+                  icon={<SettingOutlined />}
+                  onClick={this.configuration}
+                  id="configuration">
                   Configuración
                 </Button>
               </Col>
@@ -245,8 +254,11 @@ class Product extends Component {
                     id={`drag${index.index}`}
                     style={{ cursor: 'grab', color: '#999', visibility: 'visible' }}
                   />
-                ));
-                return !eventIsActive && window.location.toString().includes('eventadmin') ? null : <DragHandle />;
+                ))
+                return !eventIsActive &&
+                  window.location.toString().includes('eventadmin') ? null : (
+                  <DragHandle />
+                )
               }}
             />
             <Column
@@ -266,7 +278,7 @@ class Product extends Component {
                   {data.image &&
                     Array.isArray(data.image) &&
                     data.image.map((images, index) => {
-                      return <Image key={index} width={70} src={images} />;
+                      return <Image key={index} width={70} src={images} />
                     })}
                 </Space>
               )}
@@ -281,7 +293,9 @@ class Product extends Component {
                   ellipsis={{
                     rows: 3,
                     expandable: true,
-                    symbol: <span style={{ color: '#2D7FD6', fontSize: '14px' }}>Ver más</span>,
+                    symbol: (
+                      <span style={{ color: '#2D7FD6', fontSize: '14px' }}>Ver más</span>
+                    ),
                   }}>
                   {data.name}
                 </Paragraph>
@@ -332,7 +346,10 @@ class Product extends Component {
                         type="danger"
                         icon={<DeleteOutlined /* style={{ fontSize: 25 }} */ />}
                         size="small"
-                        disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                        disabled={
+                          !eventIsActive &&
+                          window.location.toString().includes('eventadmin')
+                        }
                       />
                     </Tooltip>
                     <Tooltip key={index} placement="topLeft" title="Ofertas">
@@ -340,7 +357,9 @@ class Product extends Component {
                         key={index}
                         id={`shoppingAction${index.index}`}
                         onClick={() =>
-                          this.props.history.push(`/eventadmin/${this.props.eventId}/product/${data._id}/oferts`)
+                          this.props.history.push(
+                            `/eventadmin/${this.props.eventId}/product/${data._id}/oferts`,
+                          )
                         }
                         color={'#1890ff'}
                         icon={<ShoppingCartOutlined /* style={{ fontSize: 25 }} */ />}
@@ -348,14 +367,14 @@ class Product extends Component {
                       />
                     </Tooltip>
                   </Space>
-                );
+                )
               }}
             />
           </Table>
         )}
       </div>
-    );
+    )
   }
 }
 
-export default withRouter(Product);
+export default withRouter(Product)

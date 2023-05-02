@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Checkbox, Modal } from 'antd';
-import { CheckboxChangeEvent } from 'antd/es/checkbox';
-import dayjs from 'dayjs';
-import { AttendeeCheckInPropsTypes } from '@Utilities/types/types';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
+import { useEffect, useState } from 'react'
+import { Checkbox, Modal } from 'antd'
+import { CheckboxChangeEvent } from 'antd/es/checkbox'
+import dayjs from 'dayjs'
+import { AttendeeCheckInPropsTypes } from '@Utilities/types/types'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices'
 
 /**
  * This function is a React component that generates a checkBox, which saves the user's checkIn and allows to delete it after making a confirmation to execute the requested action
@@ -17,17 +17,17 @@ const AttendeeCheckInCheckbox = ({
   reloadComponent,
   checkInAttendeeCallbak,
 }: AttendeeCheckInPropsTypes) => {
-  const [attemdeeCheckIn, setAttemdeeCheckIn] = useState<boolean>(false);
-  const [attemdeeCheckedinAt, setAttemdeeCheckedinAt] = useState<any>('');
-  const { _id, checked_in, checkedin_at } = attendee || {};
+  const [attemdeeCheckIn, setAttemdeeCheckIn] = useState<boolean>(false)
+  const [attemdeeCheckedinAt, setAttemdeeCheckedinAt] = useState<any>('')
+  const { _id, checked_in, checkedin_at } = attendee || {}
 
   useEffect(() => {
-    setAttemdeeCheckIn(checked_in);
-    setAttemdeeCheckedinAt(checkedin_at);
-  }, [attendee]);
+    setAttemdeeCheckIn(checked_in)
+    setAttemdeeCheckedinAt(checkedin_at)
+  }, [attendee])
 
   const saveAttemdeeCheckIn = async (e: CheckboxChangeEvent) => {
-    const { checked } = e.target;
+    const { checked } = e.target
     if (checked) {
       await saveCheckInAttendee({
         _id,
@@ -37,8 +37,8 @@ const AttendeeCheckInCheckbox = ({
         checkInAttendeeCallbak,
         checkInType: 'Físico',
         activityId,
-      });
-      return;
+      })
+      return
     }
 
     Modal.confirm({
@@ -55,10 +55,10 @@ const AttendeeCheckInCheckbox = ({
           setAttemdeeCheckIn,
           checkInAttendeeCallbak,
           activityId,
-        });
+        })
       },
-    });
-  };
+    })
+  }
 
   return (
     <>
@@ -72,7 +72,7 @@ const AttendeeCheckInCheckbox = ({
         </Checkbox>
       )}
     </>
-  );
-};
+  )
+}
 
-export default AttendeeCheckInCheckbox;
+export default AttendeeCheckInCheckbox

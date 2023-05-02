@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices';
-import { AttendeeCheckInPropsTypes } from '@Utilities/types/types';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Modal } from 'antd';
+import { useState } from 'react'
+import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices'
+import { AttendeeCheckInPropsTypes } from '@Utilities/types/types'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { Button, Modal } from 'antd'
 
 /**
  * This function is a React component that generates a button, which only saves the checkIn, it doesn't delete it, if a physical checkIn is detected, the checkIn update is confirmed through a modal
@@ -15,12 +15,12 @@ const AttendeeCheckInButton = ({
   reloadComponent,
   checkInAttendeeCallbak,
 }: AttendeeCheckInPropsTypes) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { _id } = attendee || {};
+  const [loading, setLoading] = useState<boolean>(false)
+  const { _id } = attendee || {}
 
   const saveAttemdeeCheckIn = async () => {
-    setLoading(true);
-    const updateOrNot = attendee?.checkedin_type === 'Físico' ? false : true;
+    setLoading(true)
+    const updateOrNot = attendee?.checkedin_type === 'Físico' ? false : true
 
     if (updateOrNot) {
       await saveCheckInAttendee({
@@ -30,9 +30,9 @@ const AttendeeCheckInButton = ({
         checkInType: 'Físico',
         activityId,
         checkInAttendeeCallbak,
-      });
-      setLoading(false);
-      return;
+      })
+      setLoading(false)
+      return
     }
 
     Modal.confirm({
@@ -49,24 +49,29 @@ const AttendeeCheckInButton = ({
           checkInType: 'Físico',
           activityId,
           checkInAttendeeCallbak,
-        });
-        setLoading(false);
+        })
+        setLoading(false)
       },
       onCancel() {
-        setLoading(false);
+        setLoading(false)
       },
-    });
-  };
+    })
+  }
 
   return (
     <>
       {_id && (
-        <Button loading={loading} size="small" type="primary" block onClick={saveAttemdeeCheckIn}>
+        <Button
+          loading={loading}
+          size="small"
+          type="primary"
+          block
+          onClick={saveAttemdeeCheckIn}>
           CheckIn físico
         </Button>
       )}
     </>
-  );
-};
+  )
+}
 
-export default AttendeeCheckInButton;
+export default AttendeeCheckInButton

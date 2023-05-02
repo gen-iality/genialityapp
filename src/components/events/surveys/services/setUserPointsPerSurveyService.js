@@ -1,18 +1,24 @@
-import { firestore } from '@helpers/firebase';
+import { firestore } from '@helpers/firebase'
 
-async function setUserPointsPerSurvey(surveyId, user, totalPoints, totalQuestions, timeSpent) {
-  const { email, _id } = user;
-  const userName = user.names ? user.names : user.name ? user.name : 'Anonymous';
+async function setUserPointsPerSurvey(
+  surveyId,
+  user,
+  totalPoints,
+  totalQuestions,
+  timeSpent,
+) {
+  const { email, _id } = user
+  const userName = user.names ? user.names : user.name ? user.name : 'Anonymous'
   const doc = await firestore
     .collection('surveys')
     .doc(surveyId)
     .collection('ranking')
     .doc(_id)
-    .get();
+    .get()
 
-  let partialPoints = 0;
+  let partialPoints = 0
   if (doc && doc.data() && doc.data().correctAnswers) {
-    partialPoints = doc.data().correctAnswers;
+    partialPoints = doc.data().correctAnswers
   }
   //Guarda el puntaje del usuario
   firestore
@@ -28,7 +34,7 @@ async function setUserPointsPerSurvey(surveyId, user, totalPoints, totalQuestion
       correctAnswers: totalPoints + partialPoints,
       registerDate: new Date(),
       timeSpent: timeSpent,
-    });
+    })
 }
 
-export default setUserPointsPerSurvey;
+export default setUserPointsPerSurvey

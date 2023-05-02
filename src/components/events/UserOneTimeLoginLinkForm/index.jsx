@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import { Card, Form, Input, Col, Row, Button, Spin } from 'antd';
-import { injectIntl } from 'react-intl';
+import { Component } from 'react'
+import { Card, Form, Input, Col, Row, Button, Spin } from 'antd'
+import { injectIntl } from 'react-intl'
 
 class UserOneTimeLoginLinkForm extends Component {
   render() {
@@ -14,7 +14,7 @@ class UserOneTimeLoginLinkForm extends Component {
       errorRecovery,
       successRecovery,
       intl,
-    } = this.props;
+    } = this.props
     return (
       <Card title={title}>
         {successRecovery ? (
@@ -26,8 +26,13 @@ class UserOneTimeLoginLinkForm extends Component {
             </Row>
             {handleCloseRecoveryPass && (
               <Row style={{ marginTop: '30px', marginBottom: '30px' }}>
-                <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-                  <Button onClick={handleCloseRecoveryPass} type="primary" style={{ marginRight: '15px' }}>
+                <Col
+                  span={24}
+                  style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  <Button
+                    onClick={handleCloseRecoveryPass}
+                    type="primary"
+                    style={{ marginRight: '15px' }}>
                     {intl.formatMessage({ id: 'button.return' })}
                   </Button>
                 </Col>
@@ -53,8 +58,12 @@ class UserOneTimeLoginLinkForm extends Component {
             </Row>
             {errorRecovery && (
               <Row gutter={[24, 24]}>
-                <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-                  <span style={{ color: 'red' }}>{intl.formatMessage({ id: 'restore.email.not.registered' })}</span>
+                <Col
+                  span={24}
+                  style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  <span style={{ color: 'red' }}>
+                    {intl.formatMessage({ id: 'restore.email.not.registered' })}
+                  </span>
                 </Col>
               </Row>
             )}
@@ -65,7 +74,10 @@ class UserOneTimeLoginLinkForm extends Component {
                 ) : (
                   <>
                     {handleCloseRecoveryPass && (
-                      <Button onClick={handleCloseRecoveryPass} type="default" style={{ marginRight: '15px' }}>
+                      <Button
+                        onClick={handleCloseRecoveryPass}
+                        type="default"
+                        style={{ marginRight: '15px' }}>
                         {intl.formatMessage({ id: 'button.cancel' })}
                       </Button>
                     )}
@@ -79,8 +91,8 @@ class UserOneTimeLoginLinkForm extends Component {
           </Form>
         )}
       </Card>
-    );
+    )
   }
 }
 
-export default injectIntl(UserOneTimeLoginLinkForm);
+export default injectIntl(UserOneTimeLoginLinkForm)

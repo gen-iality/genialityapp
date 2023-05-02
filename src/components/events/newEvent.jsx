@@ -1,29 +1,35 @@
-import { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Actions, OrganizationFuction, UsersApi, AgendaApi, EventsApi } from '@helpers/request';
-import { host_list } from '@helpers/constants';
-import { Steps, Button, Card, Row, Spin } from 'antd';
-import { PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
+import { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import {
+  Actions,
+  OrganizationFuction,
+  UsersApi,
+  AgendaApi,
+  EventsApi,
+} from '@helpers/request'
+import { host_list } from '@helpers/constants'
+import { Steps, Button, Card, Row, Spin } from 'antd'
+import { PictureOutlined, ScheduleOutlined } from '@ant-design/icons'
 /*vistas de paso a paso */
-import Informacion from './newEvent/informacion';
-import Apariencia from './newEvent/apariencia';
-import Tranmitir from './newEvent/transmitir';
+import Informacion from './newEvent/informacion'
+import Apariencia from './newEvent/apariencia'
+import Tranmitir from './newEvent/transmitir'
 /*vista de resultado de la creacion de un curso */
-import { cNewEventContext } from '@context/newEventContext';
-import Service from '@components/agenda/roomManager/service';
-import { firestore } from '@helpers/firebase';
-import { GetTokenUserFirebase } from '@helpers/HelperAuth';
-import { DispatchMessageService } from '@context/MessageService';
+import { cNewEventContext } from '@context/newEventContext'
+import Service from '@components/agenda/roomManager/service'
+import { firestore } from '@helpers/firebase'
+import { GetTokenUserFirebase } from '@helpers/HelperAuth'
+import { DispatchMessageService } from '@context/MessageService'
 
-const { Step } = Steps;
+const { Step } = Steps
 
 /* Objeto que compone el paso a paso y su contenido */
 
 class NewEvent extends Component {
   constructor(props) {
-    super(props);
-    const valores = window.location.search;
-    const urlParams = new URLSearchParams(valores);
+    super(props)
+    const valores = window.location.search
+    const urlParams = new URLSearchParams(valores)
 
     this.state = {
       orgId: urlParams.get('orgId'),
@@ -48,38 +54,40 @@ class NewEvent extends Component {
         },*/
       ],
       loading: false,
-    };
-    this.saveEvent = this.saveEvent.bind(this);
+    }
+    this.saveEvent = this.saveEvent.bind(this)
   }
 
   async componentDidMount() {
     if (this.props.match.params.user) {
-      const profileUser = await UsersApi.getProfile(this.props.match.params.user);
-      this.setState({ currentUser: profileUser });
+      const profileUser = await UsersApi.getProfile(this.props.match.params.user)
+      this.setState({ currentUser: profileUser })
     }
-    const valores = window.location.search;
-    const urlParams = new URLSearchParams(valores);
-    const orgId = urlParams.get('orgId');
+    const valores = window.location.search
+    const urlParams = new URLSearchParams(valores)
+    const orgId = urlParams.get('orgId')
     if (orgId) {
-      const eventNewContext = this.context;
-      let organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
+      const eventNewContext = this.context
+      let organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)
       if (organization) {
-        organization = { ...organization, id: organization._id };
-        eventNewContext.selectedOrganization(organization);
-        eventNewContext.eventByOrganization(false);
+        organization = { ...organization, id: organization._id }
+        eventNewContext.selectedOrganization(organization)
+        eventNewContext.eventByOrganization(false)
       }
     }
   }
   obtainContent = (step) => {
     switch (step.title) {
       case 'Información':
-        return <Informacion orgId={this.state.orgId} currentUser={this.state.currentUser} />;
+        return (
+          <Informacion orgId={this.state.orgId} currentUser={this.state.currentUser} />
+        )
       case 'Apariencia':
-        return <Apariencia currentUser={this.state.currentUser} />;
+        return <Apariencia currentUser={this.state.currentUser} />
       case 'Transmisión':
-        return <Tranmitir currentUser={this.state.currentUser} />;
+        return <Tranmitir currentUser={this.state.currentUser} />
     }
-  };
+  }
 
   /*  nextStep = (field, data, next) => {
     this.setState(
@@ -93,8 +101,8 @@ class NewEvent extends Component {
   }; */
 
   async saveEvent(fields) {
-    const eventNewContext = this.context;
-    this.setState({ loading: true });
+    const eventNewContext = this.context
+    this.setState({ loading: true })
     if (eventNewContext.selectOrganization) {
       const data = {
         name: eventNewContext.valueInputs.name,
@@ -108,7 +116,8 @@ class NewEvent extends Component {
         visibility: 'PUBLIC',
         description: eventNewContext.valueInputs?.description || '',
         category_ids: [],
-        organizer_id: eventNewContext.selectOrganization.id || eventNewContext.selectOrganization._id,
+        organizer_id:
+          eventNewContext.selectOrganization.id || eventNewContext.selectOrganization._id,
         event_type_id: '5bf47203754e2317e4300b68',
         user_properties: [],
         allow_register: true,
@@ -148,7 +157,7 @@ class NewEvent extends Component {
           data_loader_page: null,
           show_title: true,
         },
-      };
+      }
       const newMenu = {
         itemsMenu: {
           evento: {
@@ -168,20 +177,23 @@ class NewEvent extends Component {
             permissions: 'public',
           },
         },
-      };
+      }
       // Crear curso
       try {
-        const token = await GetTokenUserFirebase();
+        const token = await GetTokenUserFirebase()
 
-        const result = await Actions.create(`/api/events?token=${token}`, data);
-        result._id = result._id ? result._id : result.data?._id;
+        const result = await Actions.create(`/api/events?token=${token}`, data)
+        result._id = result._id ? result._id : result.data?._id
         if (result._id) {
           const sectionsDefault = eventNewContext.selectOrganization?.itemsMenu
             ? { itemsMenu: eventNewContext.selectOrganization?.itemsMenu }
-            : newMenu;
+            : newMenu
           // Habiltar secciones por defecto
-          const sections = await Actions.put(`api/events/${result._id}?token=${token}`, sectionsDefault);
-          sections._id = sections._id ? sections._id : sections.data?._id;
+          const sections = await Actions.put(
+            `api/events/${result._id}?token=${token}`,
+            sectionsDefault,
+          )
+          sections._id = sections._id ? sections._id : sections.data?._id
           if (sections?._id) {
             // Crear lección con el mismo nombre del curso
             const activity = {
@@ -193,45 +205,52 @@ class NewEvent extends Component {
               event_id: result._id,
               datetime_end: eventNewContext.selectedDateEvent?.at + ':00',
               datetime_start: eventNewContext.selectedDateEvent?.from + ':00',
-            };
-            const agenda = await AgendaApi.create(result._id, activity);
+            }
+            const agenda = await AgendaApi.create(result._id, activity)
             if (agenda._id) {
               if (eventNewContext.typeTransmission == 1) {
-                const sala = await this.createZoomRoom(agenda, result._id);
+                const sala = await this.createZoomRoom(agenda, result._id)
                 if (sala) {
                   DispatchMessageService({
                     type: 'success',
                     msj: 'Cursos creado correctamente...',
                     action: 'show',
-                  });
-                  alert('ACA');
-                  window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
+                  })
+                  alert('ACA')
+                  window.location.replace(
+                    `${window.location.origin}/eventadmin/${result._id}`,
+                  )
                 } else {
                   DispatchMessageService({
                     type: 'error',
                     msj: 'Error al crear sala',
                     action: 'show',
-                  });
+                  })
                 }
               } else {
                 // Crear template para el curso
-                let template = !eventNewContext.templateId && true;
+                let template = !eventNewContext.templateId && true
                 if (eventNewContext.templateId) {
-                  template = await EventsApi.createTemplateEvent(result._id, eventNewContext.templateId);
+                  template = await EventsApi.createTemplateEvent(
+                    result._id,
+                    eventNewContext.templateId,
+                  )
                 }
                 if (template) {
                   DispatchMessageService({
                     type: 'success',
                     msj: 'Cursos creado correctamente...',
                     action: 'show',
-                  });
-                  window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
+                  })
+                  window.location.replace(
+                    `${window.location.origin}/eventadmin/${result._id}`,
+                  )
                 } else {
                   DispatchMessageService({
                     type: 'error',
                     msj: 'Error al crear curso con su template',
                     action: 'show',
-                  });
+                  })
                 }
               }
             }
@@ -240,40 +259,40 @@ class NewEvent extends Component {
               type: 'error',
               msj: 'Error al crear el curso',
               action: 'show',
-            });
+            })
           }
         } else {
           DispatchMessageService({
             type: 'error',
             msj: 'Error al crear el curso',
             action: 'show',
-          });
+          })
         }
       } catch (error) {
         DispatchMessageService({
           type: 'error',
           msj: 'Error al crear el curso',
           action: 'show',
-        });
+        })
       }
     } else {
       DispatchMessageService({
         type: 'error',
         msj: 'Seleccione una organización',
         action: 'show',
-      });
+      })
     }
   }
 
   createZoomRoom = async (activity, event_id) => {
-    const service = new Service(firestore);
-    const evius_token = await GetTokenUserFirebase();
+    const service = new Service(firestore)
+    const evius_token = await GetTokenUserFirebase()
     // Se valida si es el host se selecciona de manera manual o automáticamente
     // Si la seleccion del host es manual se envia el campo host_id con el id del host tipo string
     // Si la seleccion del host es automática se envia el campo host_ids con un array de strings con los ids de los hosts
-    const host_field = 'host_ids';
-    const host_ids = host_list.map((host) => host.host_id);
-    const host_value = host_ids;
+    const host_field = 'host_ids'
+    const host_ids = host_list.map((host) => host.host_id)
+    const host_value = host_ids
 
     const body = {
       token: evius_token,
@@ -284,9 +303,9 @@ class NewEvent extends Component {
       date_start_zoom: activity.date_start_zoom,
       date_end_zoom: activity.date_end_zoom,
       [host_field]: host_value,
-    };
+    }
 
-    const response = await service.setZoomRoom(evius_token, body);
+    const response = await service.setZoomRoom(evius_token, body)
 
     if (
       Object.keys(response).length > 0 &&
@@ -296,16 +315,16 @@ class NewEvent extends Component {
     ) {
       // const configuration = await service.getConfiguration(event_id, activity._id);
 
-      const isPublished = true;
-      const platform = 'zoom';
-      const meeting_id = response.meeting_id;
-      const roomStatus = true;
-      const chat = true;
-      const surveys = true;
-      const games = false;
-      const attendees = true;
-      const host_id = response.zoom_host_id;
-      const host_name = response.zoom_host_name;
+      const isPublished = true
+      const platform = 'zoom'
+      const meeting_id = response.meeting_id
+      const roomStatus = true
+      const chat = true
+      const surveys = true
+      const games = false
+      const attendees = true
+      const host_id = response.zoom_host_id
+      const host_name = response.zoom_host_name
 
       const roomInfo = {
         roomStatus,
@@ -314,29 +333,34 @@ class NewEvent extends Component {
         isPublished,
         host_id,
         host_name,
-      };
-      const tabs = { chat, surveys, games, attendees };
+      }
+      const tabs = { chat, surveys, games, attendees }
 
-      const result = await service.createOrUpdateActivity(event_id, activity._id, roomInfo, tabs);
+      const result = await service.createOrUpdateActivity(
+        event_id,
+        activity._id,
+        roomInfo,
+        tabs,
+      )
       if (result) {
-        return true;
+        return true
       } else {
         DispatchMessageService({
           type: 'error',
           msj: result.message,
           action: 'show',
-        });
-        return false;
+        })
+        return false
       }
     } else {
       DispatchMessageService({
         type: 'error',
         msj: response.message,
         action: 'show',
-      });
-      return false;
+      })
+      return false
     }
-  };
+  }
 
   /* prevStep = (field, data, prev) => {
     this.setState({ [field]: data }, () => {
@@ -350,7 +374,7 @@ class NewEvent extends Component {
 
   /*Funciones para navegar en el paso a paso */
   next = () => {
-    const eventNewContext = this.context;
+    const eventNewContext = this.context
     switch (this.state.current) {
       case 0:
         if (
@@ -367,39 +391,39 @@ class NewEvent extends Component {
             type: 'error',
             msj: 'Error en los campos...',
             action: 'show',
-          });
+          })
         } else {
-          this.nextPage();
+          this.nextPage()
         }
-        break;
+        break
       case 1:
-        eventNewContext.changeTransmision(false);
-        this.nextPage();
-        console.log(eventNewContext.valueInputs);
-        break;
+        eventNewContext.changeTransmision(false)
+        this.nextPage()
+        console.log(eventNewContext.valueInputs)
+        break
       case 2:
-        break;
+        break
     }
-  };
+  }
 
   nextPage = () => {
-    const current = this.state.current + 1;
-    this.setState({ current });
-  };
+    const current = this.state.current + 1
+    this.setState({ current })
+  }
 
   prev = () => {
-    const eventNewContext = this.context;
+    const eventNewContext = this.context
     if (eventNewContext.optTransmitir && this.state.current == 2) {
-      eventNewContext.changeTransmision(false);
+      eventNewContext.changeTransmision(false)
     } else {
-      const current = this.state.current - 1;
-      this.setState({ current });
+      const current = this.state.current - 1
+      this.setState({ current })
     }
-  };
+  }
 
   render() {
-    const { current } = this.state;
-    const context = this.context;
+    const { current } = this.state
+    const context = this.context
     return (
       <Row justify="center" className="newEvent">
         {/* Items del paso a paso */}
@@ -410,7 +434,9 @@ class NewEvent extends Component {
             ))}
           </Steps>
         </div>
-        <Card className="card-container" bodyStyle={{ borderTop: '25px solid #50D3C9', borderRadius: '5px' }}>
+        <Card
+          className="card-container"
+          bodyStyle={{ borderTop: '25px solid #50D3C9', borderRadius: '5px' }}>
           {/* Contenido de cada item del paso a paso */}
           <Row justify="center" style={{ marginBottom: '8px' }}>
             {this.obtainContent(this.state.steps[current])}
@@ -424,12 +450,20 @@ class NewEvent extends Component {
                 </Button>
               )}
               {current < this.state.steps.length - 1 && (
-                <Button className="button" type="primary" size="large" onClick={() => this.next()}>
+                <Button
+                  className="button"
+                  type="primary"
+                  size="large"
+                  onClick={() => this.next()}>
                   Siguiente
                 </Button>
               )}
               {current === this.state.steps.length - 1 && (
-                <Button className="button" type="primary" size="large" onClick={() => this.saveEvent()}>
+                <Button
+                  className="button"
+                  type="primary"
+                  size="large"
+                  onClick={() => this.saveEvent()}>
                   Crear curso
                 </Button>
               )}
@@ -442,8 +476,8 @@ class NewEvent extends Component {
           )}
         </Card>
       </Row>
-    );
+    )
   }
 }
-NewEvent.contextType = cNewEventContext;
-export default withRouter(NewEvent);
+NewEvent.contextType = cNewEventContext
+export default withRouter(NewEvent)

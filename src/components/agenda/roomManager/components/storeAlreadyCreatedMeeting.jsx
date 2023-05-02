@@ -1,58 +1,53 @@
-import { CheckCircleOutlined } from "@ant-design/icons";
-import { getLiveStream } from "@adaptors/wowzaStreamingAPI";
-import { Form, Input,  Alert } from "antd";
-import { useState, useContext } from "react";
-import AgendaContext from "@context/AgendaContext";
-import { DispatchMessageService } from '@context/MessageService';
+import { CheckCircleOutlined } from '@ant-design/icons'
+import { getLiveStream } from '@adaptors/wowzaStreamingAPI'
+import { Form, Input, Alert } from 'antd'
+import { useState, useContext } from 'react'
+import AgendaContext from '@context/AgendaContext'
+import { DispatchMessageService } from '@context/MessageService'
 
-export default function StoreAlreadyCreatedMeeting({
-  setMeetingId,
-  meeting_id,
-}) {
-  const [meetingValue, setMeetingValue] = useState();
-  const { platform } = useContext(AgendaContext);
+export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id }) {
+  const [meetingValue, setMeetingValue] = useState()
+  const { platform } = useContext(AgendaContext)
   return (
     <>
       <Form.Item
         name="meeting_id"
-        label={"Ingrese el identificador de la conferencia/streaming"}
-      >
+        label={'Ingrese el identificador de la conferencia/streaming'}>
         <Input
           type="text"
           addonAfter={
             <div
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
               onClick={async () => {
-                if (meetingValue && platform == "wowza") {
+                if (meetingValue && platform == 'wowza') {
                   try {
-                    const exist = await getLiveStream(meetingValue);
+                    const exist = await getLiveStream(meetingValue)
                     if (exist) {
-                      setMeetingId(meetingValue);
+                      setMeetingId(meetingValue)
                     } else {
                       DispatchMessageService({
                         type: 'error',
                         msj: 'El id de la transmisión es incorrecto!',
                         action: 'show',
-                      });
+                      })
                     }
                   } catch (e) {
                     DispatchMessageService({
                       type: 'error',
                       msj: 'El id de la transmisión es incorrecto!',
                       action: 'show',
-                    });
+                    })
                   }
-                } else if (meetingValue && platform != "wowza") {
-                  setMeetingId(meetingValue);
+                } else if (meetingValue && platform != 'wowza') {
+                  setMeetingId(meetingValue)
                 } else {
                   DispatchMessageService({
                     type: 'error',
                     msj: 'Ingrese un id para la transmisión!',
                     action: 'show',
-                  });
+                  })
                 }
-              }}
-            >
+              }}>
               <CheckCircleOutlined /> Crear
             </div>
           }
@@ -70,5 +65,5 @@ export default function StoreAlreadyCreatedMeeting({
         showIcon
       />
     </>
-  );
+  )
 }

@@ -1,6 +1,11 @@
 /** ant design */
-import { notification } from 'antd';
-import { WifiOutlined, PlayCircleOutlined, LoadingOutlined, DiffOutlined } from '@ant-design/icons';
+import { notification } from 'antd'
+import {
+  WifiOutlined,
+  PlayCircleOutlined,
+  LoadingOutlined,
+  DiffOutlined,
+} from '@ant-design/icons'
 
 function notifications(setNotification, viewNotification) {
   notification.open({
@@ -24,7 +29,7 @@ function notifications(setNotification, viewNotification) {
               setNotification({
                 message: null,
                 type: null,
-              });
+              })
             }
           }
         : viewNotification.type == 'survey'
@@ -36,7 +41,7 @@ function notifications(setNotification, viewNotification) {
           }
         : null,
     onClose: () => {},
-  });
+  })
 }
 
-export default notifications;
+export default notifications

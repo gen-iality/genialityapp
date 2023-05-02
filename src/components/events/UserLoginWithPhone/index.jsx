@@ -1,16 +1,16 @@
-import { Component } from 'react';
-import { Form, Input, Col, Row, Button, Spin, Card } from 'antd';
-import { app } from '@helpers/firebase';
-import FormTags from './constants';
-import { injectIntl } from 'react-intl';
+import { Component } from 'react'
+import { Form, Input, Col, Row, Button, Spin, Card } from 'antd'
+import { app } from '@helpers/firebase'
+import FormTags from './constants'
+import { injectIntl } from 'react-intl'
 
 const textLeft = {
   textAlign: 'left',
-};
+}
 
 class UserLogin extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     //this.reCaptchaRef = createRef();
     this.state = {
       user: {},
@@ -30,11 +30,11 @@ class UserLogin extends Component {
       errorValidation: false,
       eventId: this.props.eventId,
       formTexts: FormTags('login'),
-    };
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { loading } = this.state;
+    const { loading } = this.state
 
     if (prevState.loading !== loading) {
       if (!loading) {
@@ -45,31 +45,34 @@ class UserLogin extends Component {
   }
 
   initializeCaptcha = () => {
-    const { initialValues } = this.state;
+    const { initialValues } = this.state
     if (Object.entries(initialValues).length == 0) {
       //
-      window.recaptchaVerifier = new app.auth.RecaptchaVerifier(this.reCaptchaRef.current.id, {
-        size: 'invisible',
-        callback: function(response) {},
-        'expired-callback': function() {},
-      });
+      window.recaptchaVerifier = new app.auth.RecaptchaVerifier(
+        this.reCaptchaRef.current.id,
+        {
+          size: 'invisible',
+          callback: function (response) {},
+          'expired-callback': function () {},
+        },
+      )
 
-      window.recaptchaVerifier.render().then(function(widgetId) {
-        window.recaptchaWidgetId = widgetId;
-      });
+      window.recaptchaVerifier.render().then(function (widgetId) {
+        window.recaptchaWidgetId = widgetId
+      })
     }
-  };
+  }
 
   handleLoginWithPhoneNumber = (values) => {
     app
       .auth()
       .signInWithEmailAndPassword(values.email, values.password)
-      .catch(function(error) {
+      .catch(function (error) {
         // Handle errors here.
-        console.error(error.code);
-        console.error(error.message);
+        console.error(error.code)
+        console.error(error.message)
         // ...
-      });
+      })
 
     /* El script comentariado en este método corresponde al método de autenticacion con celular
     NO BORRAR
@@ -96,46 +99,46 @@ class UserLogin extends Component {
     //   this.setState({loading: true})
     //   this.setState({enabledVerificationForm: true})
     // },1000)
-  };
+  }
 
   loginEmailPassword = (data) => {
     //
-    this.setState({ errorLogin: false });
+    this.setState({ errorLogin: false })
     app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
 
       .catch(() => {
-        console.error('Error: Email or password invalid');
-        this.setState({ errorLogin: true });
-        this.setState({ loading: false });
-      });
+        console.error('Error: Email or password invalid')
+        this.setState({ errorLogin: true })
+        this.setState({ loading: false })
+      })
     //
-  };
+  }
 
   handleLoginEmailPassword = async (values) => {
-    this.setState({ loading: true });
-    this.loginEmailPassword(values);
+    this.setState({ loading: true })
+    this.loginEmailPassword(values)
     setTimeout(() => {
-      this.setState({ loading: false });
-    }, 3000);
-  };
+      this.setState({ loading: false })
+    }, 3000)
+  }
 
   handleVerificationWithPhoneNumber = (values) => {
-    this.setState({ loading: false });
+    this.setState({ loading: false })
     const credential = app.auth.PhoneAuthProvider.credential(
       window.confirmationResult.verificationId,
-      values.verificationCode
-    );
+      values.verificationCode,
+    )
     app
       .auth()
       .signInWithCredential(credential)
       .then((response) => {
-        this.setState({ errorValidation: false });
+        this.setState({ errorValidation: false })
       })
       .catch((err) => {
-        this.setState({ errorValidation: true });
-      });
+        this.setState({ errorValidation: true })
+      })
     // window.confirmationResult.confirm(values.verificationCode)
     // .then(function (result) {
     //   const user = result.user;
@@ -150,20 +153,24 @@ class UserLogin extends Component {
     // .catch(function (error) {
     //  console.error(error)
     // });
-  };
+  }
 
   onFinishFailed = (errorInfo) => {
-    console.error('Failed:', errorInfo);
-  };
+    console.error('Failed:', errorInfo)
+  }
 
   render() {
-    const { formTexts } = this.state;
-    const { intl } = this.props;
+    const { formTexts } = this.state
+    const { intl } = this.props
     return (
-      <Card title={intl.formatMessage({ id: 'restore.login.title' })} bodyStyle={textLeft}>
+      <Card
+        title={intl.formatMessage({ id: 'restore.login.title' })}
+        bodyStyle={textLeft}>
         {/* Inicio  de formulario para autenticación con Email y contraseña */}
         {this.state.enabledLoginForm && (
-          <Form onFinish={this.handleLoginEmailPassword} onFinishFailed={this.onFinishFailed}>
+          <Form
+            onFinish={this.handleLoginEmailPassword}
+            onFinishFailed={this.onFinishFailed}>
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item
@@ -196,8 +203,12 @@ class UserLogin extends Component {
             </Row>
             {this.state.errorLogin && (
               <Row gutter={[24, 24]}>
-                <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-                  <span style={{ color: 'red' }}>{formTexts.errorLoginEmailPassword}</span>
+                <Col
+                  span={24}
+                  style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  <span style={{ color: 'red' }}>
+                    {formTexts.errorLoginEmailPassword}
+                  </span>
                 </Col>
               </Row>
             )}
@@ -240,7 +251,9 @@ class UserLogin extends Component {
             </Row>
             {this.state.errorValidation && (
               <Row gutter={[24, 24]}>
-                <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                <Col
+                  span={24}
+                  style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <span style={{ color: 'red' }}>Código de verificación invalido</span>
                 </Col>
               </Row>
@@ -257,8 +270,8 @@ class UserLogin extends Component {
           </Form>
         )}
       </Card>
-    );
+    )
   }
 }
 
-export default injectIntl(UserLogin);
+export default injectIntl(UserLogin)

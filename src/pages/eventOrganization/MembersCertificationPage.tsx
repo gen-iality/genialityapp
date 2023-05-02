@@ -1,7 +1,7 @@
 /** React's libraries */
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import dayjs from 'dayjs';
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import dayjs from 'dayjs'
 
 /** Antd imports */
 import {
@@ -20,130 +20,141 @@ import {
   InputNumber,
   Input,
   DatePicker,
-} from 'antd';
-import { ColumnsType } from 'antd/lib/table';
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
+} from 'antd'
+import { ColumnsType } from 'antd/lib/table'
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
 
 /** Helpers and utils */
-import { EventsApi, PositionsApi, UsersApi, CerticationsApi, CerticationLogsApi } from '@helpers/request';
-import { fireStorage } from '@helpers/firebase';
+import {
+  EventsApi,
+  PositionsApi,
+  UsersApi,
+  CerticationsApi,
+  CerticationLogsApi,
+} from '@helpers/request'
+import { fireStorage } from '@helpers/firebase'
 
 /** Components */
-import Header from '@antdComponents/Header';
-import PositionCertificationFileUploader from './PositionCertificationFileUploader';
+import Header from '@antdComponents/Header'
+import PositionCertificationFileUploader from './PositionCertificationFileUploader'
 
-const { TextArea } = Input;
+const { TextArea } = Input
 
 export interface MembersCertificationPageProps {
-  org: any;
+  org: any
   match: {
     params: {
-      positionId: string;
-      userId: string;
-    };
-    url: string;
-  };
+      positionId: string
+      userId: string
+    }
+    url: string
+  }
 }
 
-function MembersCertificationPage(
-  props: MembersCertificationPageProps,
-) {
-  const organizationId: string = props.org._id;
-  const positionId = props.match.params.positionId;
-  const userId = props.match.params.userId;
+function MembersCertificationPage(props: MembersCertificationPageProps) {
+  const organizationId: string = props.org._id
+  const positionId = props.match.params.positionId
+  const userId = props.match.params.userId
 
-  const [columns, setColumns] = useState<ColumnsType<any>>([]);
-  const [allPositionEvents, setAllPositionEvents] = useState<any[]>([]);
-  const [allEvents, setAllEvents] = useState<any[]>([]);
-  const [currentUser, setCurrentUser] = useState<any | null>(null);
-  const [currentPosition, setCurrentPosition] = useState<any | null>(null);
+  const [columns, setColumns] = useState<ColumnsType<any>>([])
+  const [allPositionEvents, setAllPositionEvents] = useState<any[]>([])
+  const [allEvents, setAllEvents] = useState<any[]>([])
+  const [currentUser, setCurrentUser] = useState<any | null>(null)
+  const [currentPosition, setCurrentPosition] = useState<any | null>(null)
 
-  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [isModalOpened, setIsModalOpened] = useState(false)
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmiting, setIsSubmiting] = useState(false)
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [certification, setCertification] = useState<any | null>({});
+  const [isEditing, setIsEditing] = useState(false)
+  const [certification, setCertification] = useState<any | null>({})
 
-  const [form] = Form.useForm();
-  const ref = fireStorage.ref();
+  const [form] = Form.useForm()
+  const ref = fireStorage.ref()
 
-  const openModal = () => setIsModalOpened(true);
-  const closeModal = () => setIsModalOpened(false);
+  const openModal = () => setIsModalOpened(true)
+  const closeModal = () => setIsModalOpened(false)
 
   const loadData = async () => {
-    const user = await UsersApi.getProfile(userId);
-    setCurrentUser(user);
+    const user = await UsersApi.getProfile(userId)
+    setCurrentUser(user)
 
-    const position = await PositionsApi.getOne(positionId);
-    setCurrentPosition(position);
-    console.debug('CurrentOrganizationPositionPage: loadPositionData', { position });
+    const position = await PositionsApi.getOne(positionId)
+    setCurrentPosition(position)
+    console.debug('CurrentOrganizationPositionPage: loadPositionData', { position })
 
-    const certifications = await CerticationsApi.getByPositionAndMaybeUser(position._id, user._id);
+    const certifications = await CerticationsApi.getByPositionAndMaybeUser(
+      position._id,
+      user._id,
+    )
 
-    const allEventIds = position.event_ids || [];
-    const events = await Promise.all(allEventIds.map(async (eventId: string) => await EventsApi.getOne(eventId)));
-    setAllEvents(events.filter((event) => event.is_certification));
+    const allEventIds = position.event_ids || []
+    const events = await Promise.all(
+      allEventIds.map(async (eventId: string) => await EventsApi.getOne(eventId)),
+    )
+    setAllEvents(events.filter((event) => event.is_certification))
     setAllPositionEvents(
       events.map((event) => {
-        const filteredCertification = certifications.find((certification: any) => certification.event_id === event._id);
+        const filteredCertification = certifications.find(
+          (certification: any) => certification.event_id === event._id,
+        )
         return {
           ...event,
           certification: filteredCertification,
-        };
+        }
       }),
-    );
-  };
+    )
+  }
 
   const onFormFinish = async (values: any) => {
     if (!currentUser) {
-      alert('No se ha cargado el usuario con anterioridad');
-      return;
+      alert('No se ha cargado el usuario con anterioridad')
+      return
     }
-    values['user_id'] = currentUser._id;
+    values['user_id'] = currentUser._id
     values.approved_from_date = values.approved_from_date
       .startOf('day')
       .set('hour', 0)
       .set('minute', 0)
       .set('second', 0)
-      .set('millisecond', 0);
+      .set('millisecond', 0)
     values.approved_until_date = values.approved_until_date
       .startOf('day')
       .set('hour', 0)
       .set('minute', 0)
       .set('second', 0)
-      .set('millisecond', 0);
-    console.debug('form submit', { values });
+      .set('millisecond', 0)
+    console.debug('form submit', { values })
 
-    setIsSubmiting(true);
+    setIsSubmiting(true)
 
     if (isEditing) {
       CerticationsApi.update(certification._id, values).finally(() => {
-        setIsSubmiting(false);
-        setIsLoading(true);
+        setIsSubmiting(false)
+        setIsLoading(true)
 
         //Edit certificationLog too
-        const lastCertificationLog = [...certification.certification_logs].pop();
-        CerticationLogsApi.update(lastCertificationLog._id, values);
+        const lastCertificationLog = [...certification.certification_logs].pop()
+        CerticationLogsApi.update(lastCertificationLog._id, values)
 
-        loadData().finally(() => setIsLoading(false));
+        loadData().finally(() => setIsLoading(false))
 
-        setIsEditing(false);
-      });
+        setIsEditing(false)
+      })
     } else {
       CerticationsApi.create(values).finally(() => {
-        setIsSubmiting(false);
-        setIsLoading(true);
-        loadData().finally(() => setIsLoading(false));
-      });
+        setIsSubmiting(false)
+        setIsLoading(true)
+        loadData().finally(() => setIsLoading(false))
+      })
     }
-  };
+  }
 
   const editUserCertification = (values: any) => {
-    const certification = values.certification;
-    setCertification(certification);
-    openModal();
+    const certification = values.certification
+    setCertification(certification)
+    openModal()
 
     form.setFieldsValue({
       event_id: values._id,
@@ -154,22 +165,25 @@ function MembersCertificationPage(
       approved_until_date: dayjs(certification.approved_until_date),
       file_url: certification.file_url,
       firestorage_path: certification.firestorage_path,
-    });
+    })
 
-    setIsEditing(true);
-  };
+    setIsEditing(true)
+  }
 
   const onDeleteCertification = (certification: any) => {
     CerticationsApi.deleteOne(certification._id).then((result) => {
       if (result.success) {
         // Now remove the file in FireStorage
         if (certification?.firestorage_path) {
-          ref.child(certification.firestorage_path).delete().then(() => {
-            console.log('This file was removed from FireStorage')
-          })
+          ref
+            .child(certification.firestorage_path)
+            .delete()
+            .then(() => {
+              console.log('This file was removed from FireStorage')
+            })
         }
-        setIsLoading(true);
-        loadData().finally(() => setIsLoading(false));
+        setIsLoading(true)
+        loadData().finally(() => setIsLoading(false))
       } else {
         alert(result.message)
       }
@@ -178,17 +192,17 @@ function MembersCertificationPage(
 
   // Load all users for this position
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(true)
 
-    loadData().finally(() => setIsLoading(false));
-  }, []);
+    loadData().finally(() => setIsLoading(false))
+  }, [])
 
   useEffect(() => {
     const newColumns: ColumnsType = [
       {
         title: 'Certificación de',
         render: (event: any) => {
-          return <span>{event.name}</span>;
+          return <span>{event.name}</span>
         },
       },
       {
@@ -201,8 +215,8 @@ function MembersCertificationPage(
               <a href={event.certification.file_url} target="_blank">
                 Ver certificado
               </a>
-            );
-          } else return <em>Sin certificado</em>;
+            )
+          } else return <em>Sin certificado</em>
         },
       },
       {
@@ -216,7 +230,9 @@ function MembersCertificationPage(
               <em>Sin registros</em>
             ) : (
               <Link to={`${props.match.url}/logs/${certification._id}`}>
-                <Tag color="#88f">{(certification?.certification_logs || []).length} registros</Tag>
+                <Tag color="#88f">
+                  {(certification?.certification_logs || []).length} registros
+                </Tag>
               </Link>
             )}
           </>
@@ -269,17 +285,17 @@ function MembersCertificationPage(
         width: 100,
         dataIndex: 'certification',
         render: (certification: any) => {
-          let lema = 'Inactivo';
+          let lema = 'Inactivo'
           if (certification?.approved_until_date) {
             if (dayjs(certification?.approved_until_date) > dayjs(Date.now())) {
-              lema = 'Activo';
+              lema = 'Activo'
             }
           }
           return (
             <>
               <Tag color={lema === 'Inactivo' ? 'red' : 'green'}>{lema}</Tag>
             </>
-          );
+          )
         },
       },
       {
@@ -294,8 +310,8 @@ function MembersCertificationPage(
                   type="primary"
                   size="small"
                   onClick={(e) => {
-                    if (!event.certification) return;
-                    else editUserCertification(event);
+                    if (!event.certification) return
+                    else editUserCertification(event)
                   }}
                   icon={<EditOutlined />}
                 />
@@ -316,10 +332,10 @@ function MembersCertificationPage(
           </Row>
         ),
       },
-    ];
+    ]
 
-    setColumns(newColumns);
-  }, [allPositionEvents]);
+    setColumns(newColumns)
+  }, [allPositionEvents])
 
   return (
     <>
@@ -333,9 +349,13 @@ function MembersCertificationPage(
           </>
         }
       />
-      <Typography.Paragraph>Estos son los certificados de dicho usuario.</Typography.Paragraph>
+      <Typography.Paragraph>
+        Estos son los certificados de dicho usuario.
+      </Typography.Paragraph>
 
-      <Typography.Paragraph>Este cargo requiere {allPositionEvents.length} certificaciones.</Typography.Paragraph>
+      <Typography.Paragraph>
+        Este cargo requiere {allPositionEvents.length} certificaciones.
+      </Typography.Paragraph>
 
       <Table
         columns={columns}
@@ -352,8 +372,8 @@ function MembersCertificationPage(
                 type="primary"
                 icon={<PlusCircleOutlined />}
                 onClick={() => {
-                  form.resetFields();
-                  openModal();
+                  form.resetFields()
+                  openModal()
                 }}>
                 Agregar certificación
               </Button>
@@ -367,12 +387,15 @@ function MembersCertificationPage(
         visible={isModalOpened}
         title={`Agrega una certificación a usuario: ${currentUser?.names}`}
         onOk={() => {
-          form.submit();
-          closeModal();
+          form.submit()
+          closeModal()
         }}
         onCancel={() => closeModal()}>
         <Form form={form} onFinish={onFormFinish} layout="vertical">
-          <Form.Item name="event_id" label="Curso a dar certificación" rules={[{ required: true, message: 'Esto' }]}>
+          <Form.Item
+            name="event_id"
+            label="Curso a dar certificación"
+            rules={[{ required: true, message: 'Esto' }]}>
             <Select
               onChange={(value) => {
                 /**
@@ -380,17 +403,20 @@ function MembersCertificationPage(
                  * then this code will update the default value for description,
                  * entity and hours.
                  */
-                const event = allEvents.find((event) => event._id == value);
-                console.log('value changed to:', value, event);
+                const event = allEvents.find((event) => event._id == value)
+                console.log('value changed to:', value, event)
                 if (event) {
                   form.setFieldsValue({
                     description: event.default_certification_description,
                     entity: event.default_certification_entity,
                     hours: event.default_certification_hours ?? 1,
-                  });
+                  })
                 }
               }}
-              options={allEvents.map((event) => ({ label: event.name, value: event._id }))}
+              options={allEvents.map((event) => ({
+                label: event.name,
+                value: event._id,
+              }))}
             />
           </Form.Item>
           <Form.Item name="success" label="Exitoso" valuePropName="checked">
@@ -402,10 +428,16 @@ function MembersCertificationPage(
             rules={[{ required: true, message: 'Agrega la descripción' }]}>
             <TextArea rows={4} />
           </Form.Item>
-          <Form.Item name="hours" label="Horas" rules={[{ required: true, message: 'Agrega el número de horas' }]}>
+          <Form.Item
+            name="hours"
+            label="Horas"
+            rules={[{ required: true, message: 'Agrega el número de horas' }]}>
             <InputNumber min={1} />
           </Form.Item>
-          <Form.Item name="entity" label="Entidad" rules={[{ required: true, message: 'Agrega la entidad' }]}>
+          <Form.Item
+            name="entity"
+            label="Entidad"
+            rules={[{ required: true, message: 'Agrega la entidad' }]}>
             <Input />
           </Form.Item>
           <Form.Item
@@ -428,16 +460,16 @@ function MembersCertificationPage(
               onFirebasePathChange={(value) => {
                 // If the file is from FireStorage...
                 console.debug('firestorage_path changes to', value)
-                form.setFieldsValue({firestorage_path: value})
+                form.setFieldsValue({ firestorage_path: value })
               }}
             />
           </Form.Item>
           {/** Please, keep the next line */}
-          <Form.Item name="firestorage_path"/>
+          <Form.Item name="firestorage_path" />
         </Form>
       </Modal>
     </>
-  );
+  )
 }
 
-export default MembersCertificationPage;
+export default MembersCertificationPage

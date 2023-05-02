@@ -1,8 +1,12 @@
-import dayjs from 'dayjs';
-import AgendaType from '@Utilities/types/AgendaType';
-import { FormDataType } from '../components/MainAgendaForm';
+import dayjs from 'dayjs'
+import AgendaType from '@Utilities/types/AgendaType'
+import { FormDataType } from '../components/MainAgendaForm'
 
-export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType | null, defaultAgenda: AgendaType) {
+export default function useBuildInfo(
+  formdata: FormDataType,
+  agenda: AgendaType | null,
+  defaultAgenda: AgendaType,
+) {
   const buildInfo: () => AgendaType = () => {
     const {
       name,
@@ -20,7 +24,7 @@ export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType 
       length,
       latitude,
       module_id,
-    } = formdata;
+    } = formdata
 
     const {
       meeting_id,
@@ -39,24 +43,29 @@ export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType 
       subtitle,
       bigmaker_meeting_id,
       has_date,
-    } = agenda || defaultAgenda;
+    } = agenda || defaultAgenda
 
     // const registration_message_storage = window.sessionStorage.getItem('registration_message');
     // const description_storage = window.sessionStorage.getItem('description');
     /* console.log(date, '========================== date'); */
-    const datetime_start = date + ' ' + dayjs(hour_start).format('HH:mm');
-    const datetime_end = date + ' ' + dayjs(hour_end).format('HH:mm');
+    const datetime_start = date + ' ' + dayjs(hour_start).format('HH:mm')
+    const datetime_end = date + ' ' + dayjs(hour_end).format('HH:mm')
 
     const activity_categories_ids =
       selectedCategories !== undefined && selectedCategories !== null
         ? selectedCategories[0] === undefined
           ? []
           : selectedCategories.map(({ value }) => value)
-        : [];
+        : []
 
-    const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
-    const host_ids = selectedHosts.filter((host) => host !== null).map(({ value }) => value);
-    const tool_ids = selectedTools.filter((tool) => tool !== null).map(({ value }) => value);
+    const access_restriction_rol_ids =
+      access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : []
+    const host_ids = selectedHosts
+      .filter((host) => host !== null)
+      .map(({ value }) => value)
+    const tool_ids = selectedTools
+      .filter((tool) => tool !== null)
+      .map(({ value }) => value)
 
     return {
       name,
@@ -90,8 +99,8 @@ export default function useBuildInfo(formdata: FormDataType, agenda: AgendaType 
       length,
       latitude,
       selected_document: selectedDocuments,
-    };
-  };
+    }
+  }
 
-  return buildInfo;
+  return buildInfo
 }

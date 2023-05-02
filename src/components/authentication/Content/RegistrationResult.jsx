@@ -1,50 +1,56 @@
-import { useEffect, useState } from 'react';
-import { Result, Row, Space, Typography, Alert, Button } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
-import { FrasesInspiradoras } from '../ModalsFunctions/utils';
-import { app } from '@helpers/firebase';
-import { useUserEvent } from '@context/eventUserContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useIntl } from 'react-intl';
-import { DispatchMessageService } from '@context/MessageService';
+import { useEffect, useState } from 'react'
+import { Result, Row, Space, Typography, Alert, Button } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
+import { FrasesInspiradoras } from '../ModalsFunctions/utils'
+import { app } from '@helpers/firebase'
+import { useUserEvent } from '@context/eventUserContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { useIntl } from 'react-intl'
+import { DispatchMessageService } from '@context/MessageService'
 
-import { AttendeeApi } from '@helpers/request';
+import { AttendeeApi } from '@helpers/request'
 
-const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEventUser, requireAutomaticLoguin }) => {
-  const [fraseLoading, setfraseLoading] = useState('');
+const RegistrationResult = ({
+  validationGeneral,
+  basicDataUser,
+  cEvent,
+  dataEventUser,
+  requireAutomaticLoguin,
+}) => {
+  const [fraseLoading, setfraseLoading] = useState('')
 
   useEffect(() => {
-    const random = Math.floor(Math.random() * FrasesInspiradoras.length);
-    setfraseLoading(FrasesInspiradoras[random]);
-  }, []);
+    const random = Math.floor(Math.random() * FrasesInspiradoras.length)
+    setfraseLoading(FrasesInspiradoras[random])
+  }, [])
 
   useEffect(() => {
     //mientras el user espera se le dan frases motivadoras
     async function FraseInpiradora() {
       try {
         if (validationGeneral.isLoading) {
-          const ramdon = Math.floor(Math.random() * FrasesInspiradoras.length);
-          setfraseLoading(FrasesInspiradoras[ramdon]);
-          console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon]);
+          const ramdon = Math.floor(Math.random() * FrasesInspiradoras.length)
+          setfraseLoading(FrasesInspiradoras[ramdon])
+          console.log('FrasesInspiradoras[ramdon]', FrasesInspiradoras[ramdon])
         }
       } catch (err) {
-        console.log(err);
+        console.log(err)
         DispatchMessageService({
           type: 'error',
           msj: 'Ha ocurrido un error',
           action: 'show',
-        });
+        })
       }
     }
 
     const intervalFrase = setTimeout(() => {
-      FraseInpiradora();
-    }, 8000);
+      FraseInpiradora()
+    }, 8000)
 
     return () => {
-      clearInterval(intervalFrase);
-    };
-  });
+      clearInterval(intervalFrase)
+    }
+  })
 
   return (
     <>
@@ -59,36 +65,43 @@ const RegistrationResult = ({ validationGeneral, basicDataUser, cEvent, dataEven
       ) : (
         <>
           <Result status="success" title="Inscripción exitosa!" />
-          {requireAutomaticLoguin && (<RedirectUser basicDataUser={basicDataUser} cEvent={cEvent} dataEventUser={dataEventUser}/>)}
+          {requireAutomaticLoguin && (
+            <RedirectUser
+              basicDataUser={basicDataUser}
+              cEvent={cEvent}
+              dataEventUser={dataEventUser}
+            />
+          )}
         </>
       )}
     </>
-  );
-};
+  )
+}
 
 const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
-  const cEventUser = useUserEvent();
-  const { helperDispatch } = useHelper();
-  const intl = useIntl();
-  const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(false);
+  const cEventUser = useUserEvent()
+  const { helperDispatch } = useHelper()
+  const intl = useIntl()
+  const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] =
+    useState(false)
 
   useEffect(() => {
-    setSignInWithEmailAndPasswordError(false);
+    setSignInWithEmailAndPasswordError(false)
     const loginFirebase = async () => {
       app
         .auth()
         .signInWithEmailAndPassword(basicDataUser.email, basicDataUser.password)
         .then((response) => {
           if (response.user) {
-            cEventUser.setUpdateUser(true);
-            helperDispatch({ type: 'showLogin', visible: false });
+            cEventUser.setUpdateUser(true)
+            helperDispatch({ type: 'showLogin', visible: false })
           }
         })
         .catch((err) => {
-          console.log(err);
-          setSignInWithEmailAndPasswordError(true);
-        });
-    };
+          console.log(err)
+          setSignInWithEmailAndPasswordError(true)
+        })
+    }
     const loginFirebaseAnonymous = async () => {
       app
         .auth()
@@ -98,7 +111,9 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
             .auth()
             .currentUser.updateProfile({
               displayName: basicDataUser.names,
-              photoURL: basicDataUser.picture ? basicDataUser.picture : basicDataUser.email,
+              photoURL: basicDataUser.picture
+                ? basicDataUser.picture
+                : basicDataUser.email,
               email: basicDataUser.email,
             })
             .then(async () => {
@@ -112,32 +127,32 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
                     names: basicDataUser.names,
                     ...dataEventUser,
                   },
-                };
-                await app.auth().currentUser?.reload();
-                await AttendeeApi.create(cEvent.value._id, body);
-                cEventUser.setUpdateUser(true);
-                helperDispatch({ type: 'showLogin', visible: false });
+                }
+                await app.auth().currentUser?.reload()
+                await AttendeeApi.create(cEvent.value._id, body)
+                cEventUser.setUpdateUser(true)
+                helperDispatch({ type: 'showLogin', visible: false })
               }
-            });
+            })
         })
         .catch((err) => {
-          console.log(err);
-          setSignInWithEmailAndPasswordError(true);
-        });
-    };
+          console.log(err)
+          setSignInWithEmailAndPasswordError(true)
+        })
+    }
 
     const loginInterval = setTimeout(() => {
       if (basicDataUser.password) {
-        loginFirebase();
+        loginFirebase()
       } else {
-        loginFirebaseAnonymous();
+        loginFirebaseAnonymous()
       }
-    }, 5000);
+    }, 5000)
 
     return () => {
-      clearInterval(loginInterval);
-    };
-  }, []);
+      clearInterval(loginInterval)
+    }
+  }, [])
 
   return (
     <>
@@ -150,12 +165,13 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
                 <>
                   {intl.formatMessage({
                     id: 'modal.feedback.errorAutomaticSession',
-                    defaultMessage: 'Ha fallado el inicio de sesión automático, por favor',
+                    defaultMessage:
+                      'Ha fallado el inicio de sesión automático, por favor',
                   })}
                   <Button
                     style={{ padding: 4, color: '#333F44', fontWeight: 'bold' }}
                     onClick={() => {
-                      helperDispatch({ type: 'showLogin' });
+                      helperDispatch({ type: 'showLogin' })
                     }}
                     type="link">
                     {intl.formatMessage({
@@ -179,7 +195,7 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
         </Typography.Text>
       </Space>
     </>
-  );
-};
+  )
+}
 
-export default RegistrationResult;
+export default RegistrationResult

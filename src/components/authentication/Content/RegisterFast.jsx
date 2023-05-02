@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import {
   PictureOutlined,
   MailOutlined,
@@ -7,42 +7,52 @@ import {
   IdcardOutlined,
   CameraOutlined,
   DeleteOutlined,
-} from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload, Avatar, Image } from 'antd';
-import ImgCrop from 'antd-img-crop';
-import { useIntl } from 'react-intl';
-import { useEventWithCedula } from '@helpers/helperEvent';
-import { useEventContext } from '@context/eventContext';
-import { uploadImagedummyRequest } from '@Utilities/imgUtils';
-import Camera from 'react-html5-camera-photo';
-import 'react-html5-camera-photo/build/css/index.css';
-import './RegisterFast.css';
+} from '@ant-design/icons'
+import { Form, Input, Button, Space, Upload, Avatar, Image } from 'antd'
+import ImgCrop from 'antd-img-crop'
+import { useIntl } from 'react-intl'
+import { useEventWithCedula } from '@helpers/helperEvent'
+import { useEventContext } from '@context/eventContext'
+import { uploadImagedummyRequest } from '@Utilities/imgUtils'
+import Camera from 'react-html5-camera-photo'
+import 'react-html5-camera-photo/build/css/index.css'
+import './RegisterFast.css'
 
 function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
+  const reader = new FileReader()
+  reader.addEventListener('load', () => callback(reader.result))
+  reader.readAsDataURL(img)
 }
 
 const RegisterFast = ({ basicDataUser, formDataHandler }) => {
-  const intl = useIntl();
-  const cEvent = useEventContext();
-  const [takingPhoto, setTakingPhoto] = useState(false);
-  const [imageAvatar, setImageAvatar] = useState(null);
-  const [form] = Form.useForm();
+  const intl = useIntl()
+  const cEvent = useEventContext()
+  const [takingPhoto, setTakingPhoto] = useState(false)
+  const [imageAvatar, setImageAvatar] = useState(null)
+  const [form] = Form.useForm()
 
   /* Toca hacerlo, porque por alguna razón cuando se actualiza basicDataUser.picture  no se renderiza el componente 
    y no se ve la imagen en el preview
   */
   useEffect(() => {
-    if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].originFileObj) {
-      getBase64(basicDataUser.picture[0].originFileObj, (imageUrl) => setImageAvatar(imageUrl));
-    } else if (basicDataUser.picture && basicDataUser.picture[0] && basicDataUser.picture[0].url) {
-      setImageAvatar(basicDataUser.picture[0].url);
+    if (
+      basicDataUser.picture &&
+      basicDataUser.picture[0] &&
+      basicDataUser.picture[0].originFileObj
+    ) {
+      getBase64(basicDataUser.picture[0].originFileObj, (imageUrl) =>
+        setImageAvatar(imageUrl),
+      )
+    } else if (
+      basicDataUser.picture &&
+      basicDataUser.picture[0] &&
+      basicDataUser.picture[0].url
+    ) {
+      setImageAvatar(basicDataUser.picture[0].url)
     } else {
-      setImageAvatar(null);
+      setImageAvatar(null)
     }
-  }, [basicDataUser.picture]);
+  }, [basicDataUser.picture])
 
   const handleTakePhotoAnimationDone = (dataUri) => {
     const pic = [
@@ -53,11 +63,11 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
         url: dataUri,
         thumbUrl: dataUri,
       },
-    ];
-    formDataHandler(null, 'picture', pic);
-    setImageAvatar(dataUri);
-    setTakingPhoto(false);
-  };
+    ]
+    formDataHandler(null, 'picture', pic)
+    setImageAvatar(dataUri)
+    setTakingPhoto(false)
+  }
 
   const ruleEmail = [
     {
@@ -74,7 +84,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
         defaultMessage: 'Ingrese un email para su cuenta en Evius',
       }),
     },
-  ];
+  ]
 
   const rulePassword = [
     {
@@ -93,7 +103,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
         defaultMessage: 'La contraseña debe tener entre 6 a 18 caracteres',
       }),
     },
-  ];
+  ]
 
   const ruleCedula = [
     { required: true, message: 'Ingrese una cedula para su cuenta en Evius' },
@@ -103,7 +113,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
       max: 12,
       message: 'La cedula debe tener entre 6 a 18 caracteres',
     },
-  ];
+  ]
   const ruleName = [
     {
       required: true,
@@ -112,7 +122,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
         defaultMessage: 'Ingrese su nombre completo para su cuenta en Evius',
       }),
     },
-  ];
+  ]
 
   function onFinish(values) {
     // handleNext(values); it is undefined
@@ -129,8 +139,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
         form={form}
         autoComplete="on"
         layout="vertical"
-        onFinish={onFinish}
-      >
+        onFinish={onFinish}>
         <Form.Item>
           <ImgCrop rotate shape="round">
             <Upload
@@ -138,21 +147,22 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
               accept="image/png,image/jpeg"
               onChange={(info) => {
                 if (info.fileList.length > 0) {
-                  getBase64(info.file.originFileObj, (imageUrl) => setImageAvatar(imageUrl));
-                  formDataHandler(null, 'picture', info.fileList);
+                  getBase64(info.file.originFileObj, (imageUrl) =>
+                    setImageAvatar(imageUrl),
+                  )
+                  formDataHandler(null, 'picture', info.fileList)
                 } else {
-                  formDataHandler(null, 'picture', null);
-                  setImageAvatar(null);
+                  formDataHandler(null, 'picture', null)
+                  setImageAvatar(null)
                 }
               }}
               onRemove={() => {
-                formDataHandler(null, 'picture', null);
+                formDataHandler(null, 'picture', null)
               }}
               customRequest={uploadImagedummyRequest}
               multiple={false}
               listType="picture"
-              maxCount={1}
-            >
+              maxCount={1}>
               {!takingPhoto && (
                 <Space direction="vertical">
                   <Button
@@ -162,9 +172,8 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
                       height: !imageAvatar ? '120px' : '95px',
                       width: !imageAvatar ? '120px' : '95px',
                       padding: '0px',
-                      border:'0px'
-                    }}
-                  >
+                      border: '0px',
+                    }}>
                     {!imageAvatar && <PictureOutlined style={{ fontSize: '50px' }} />}
                     {imageAvatar && <Avatar src={imageAvatar} size={95} />}
                   </Button>
@@ -184,7 +193,10 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
         <Form.Item>
           {takingPhoto && (
             <div className="avatarCamera">
-              <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone} isFullscreen={false} />
+              <Camera
+                onTakePhotoAnimationDone={handleTakePhotoAnimationDone}
+                isFullscreen={false}
+              />
             </div>
           )}
           <Button
@@ -202,8 +214,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
           name="email"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleEmail}
-        >
+          rules={ruleEmail}>
           <Input
             onChange={(e) => formDataHandler(e, 'email')}
             type="email"
@@ -221,8 +232,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
             name="password"
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={ruleCedula}
-          >
+            rules={ruleCedula}>
             <Input
               onChange={(e) => formDataHandler(e, 'password')}
               type="number"
@@ -241,8 +251,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
             name="password"
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={rulePassword}
-          >
+            rules={rulePassword}>
             <Input.Password
               onChange={(e) => formDataHandler(e, 'password')}
               type="password"
@@ -263,8 +272,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
           name="names"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleName}
-        >
+          rules={ruleName}>
           <Input
             onChange={(e) => formDataHandler(e, 'names')}
             type="text"
@@ -278,7 +286,7 @@ const RegisterFast = ({ basicDataUser, formDataHandler }) => {
         </Form.Item>
       </Form>
     </>
-  );
-};
+  )
+}
 
-export default RegisterFast;
+export default RegisterFast

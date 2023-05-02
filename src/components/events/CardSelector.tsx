@@ -1,23 +1,27 @@
 /** AntD's imports */
-import { CheckCircleFilled } from '@ant-design/icons';
-import { Badge, Checkbox, Col, Divider, Form, Row, Space, Typography } from 'antd';
-import { ReactNode, useState } from 'react';
+import { CheckCircleFilled } from '@ant-design/icons'
+import { Badge, Checkbox, Col, Divider, Form, Row, Space, Typography } from 'antd'
+import { ReactNode, useState } from 'react'
 
-const { Text } = Typography;
+const { Text } = Typography
 
 export interface CardSelectorProps {
-  selected?: string;
+  selected?: string
   options: {
-    id: string;
-    title: string;
-    body: string | ReactNode;
-    checkbox?: { text: string; onCheck: (checked: boolean) => void; initialCheck?: boolean };
-  }[];
-  onSelected: (id: string) => void;
+    id: string
+    title: string
+    body: string | ReactNode
+    checkbox?: {
+      text: string
+      onCheck: (checked: boolean) => void
+      initialCheck?: boolean
+    }
+  }[]
+  onSelected: (id: string) => void
 }
 
 export const CardSelector = (props: CardSelectorProps) => {
-  const [currentSelected, setCurrentSelected] = useState(props.selected);
+  const [currentSelected, setCurrentSelected] = useState(props.selected)
 
   return (
     <Row justify="center" wrap gutter={[8, 8]}>
@@ -33,8 +37,7 @@ export const CardSelector = (props: CardSelectorProps) => {
                     ) : (
                       ''
                     )
-                  }
-                >
+                  }>
                   <div
                     style={{
                       border: '1px solid #D3D3D3',
@@ -43,15 +46,13 @@ export const CardSelector = (props: CardSelectorProps) => {
                       cursor: 'pointer',
                       minHeight: '170px',
                       maxWidth: '220px',
-                    }}
-                  >
+                    }}>
                     <Space direction="vertical">
                       <div
                         onClick={() => {
-                          props.onSelected(option.id);
-                          setCurrentSelected(option.id);
-                        }}
-                      >
+                          props.onSelected(option.id)
+                          setCurrentSelected(option.id)
+                        }}>
                         <Text strong>{option.title}</Text>
                         <Divider />
                         <Text type="secondary">{option.body}</Text>
@@ -61,8 +62,7 @@ export const CardSelector = (props: CardSelectorProps) => {
                           <Divider />
                           <Checkbox
                             checked={option.checkbox.initialCheck}
-                            onChange={(e) => option.checkbox!.onCheck(e.target.checked)}
-                          >
+                            onChange={(e) => option.checkbox!.onCheck(e.target.checked)}>
                             {option.checkbox.text}
                           </Checkbox>
                         </>
@@ -76,5 +76,5 @@ export const CardSelector = (props: CardSelectorProps) => {
         </Form.Item>
       </Col>
     </Row>
-  );
-};
+  )
+}

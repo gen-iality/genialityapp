@@ -1,24 +1,24 @@
-import { Select } from 'antd';
-import * as React from 'react';
-import { useMemo } from 'react';
-import DynamicFormItem from './DynamicFormItem';
-import useMandatoryRule from './hooks/useMandatoryRule';
-import useSearchInSelectOptions from './hooks/useSearchInSelectComponent';
-import { IDynamicFieldProps } from './types';
+import { Select } from 'antd'
+import * as React from 'react'
+import { useMemo } from 'react'
+import DynamicFormItem from './DynamicFormItem'
+import useMandatoryRule from './hooks/useMandatoryRule'
+import useSearchInSelectOptions from './hooks/useSearchInSelectComponent'
+import { IDynamicFieldProps } from './types'
 
 type OptionLike = {
-  label: string,
-  value: any,
-  [k: string]: any,
+  label: string
+  value: any
+  [k: string]: any
 }
 
 interface IDynamicSelectFieldProps extends IDynamicFieldProps {
-  items?: any[],
-  isLoading?: boolean,
-  placeholder?: string,
-  onChange?: (value: string, option: any) => void,
-  transformOption?: (option: any) => OptionLike,
-  afterTransformOptions?: (options: any[]) => OptionLike[],
+  items?: any[]
+  isLoading?: boolean
+  placeholder?: string
+  onChange?: (value: string, option: any) => void
+  transformOption?: (option: any) => OptionLike
+  afterTransformOptions?: (options: any[]) => OptionLike[]
 }
 
 const DynamicSelectField: React.FunctionComponent<IDynamicSelectFieldProps> = (props) => {
@@ -33,10 +33,7 @@ const DynamicSelectField: React.FunctionComponent<IDynamicSelectFieldProps> = (p
     afterTransformOptions = (options) => options,
   } = props
 
-  const {
-    name,
-    options: importedOptions,
-  } = fieldData
+  const { name, options: importedOptions } = fieldData
 
   const searchInSelectOptions = useSearchInSelectOptions()
 
@@ -44,7 +41,7 @@ const DynamicSelectField: React.FunctionComponent<IDynamicSelectFieldProps> = (p
 
   const options = useMemo(() => {
     if (items && items.length > 0) return items
-    if (importedOptions && importedOptions.length > 0 ) return importedOptions
+    if (importedOptions && importedOptions.length > 0) return importedOptions
     return []
   }, [items, importedOptions])
 
@@ -52,8 +49,7 @@ const DynamicSelectField: React.FunctionComponent<IDynamicSelectFieldProps> = (p
     <DynamicFormItem
       fieldData={fieldData}
       initialValue={allInitialValues[name]}
-      rules={options.length === 0 ? [{ required: false }] : [basicRule]}
-    >
+      rules={options.length === 0 ? [{ required: false }] : [basicRule]}>
       <Select
         showSearch
         optionFilterProp="children"
@@ -66,7 +62,7 @@ const DynamicSelectField: React.FunctionComponent<IDynamicSelectFieldProps> = (p
         onChange={onChange}
       />
     </DynamicFormItem>
-  );
-};
+  )
+}
 
-export default DynamicSelectField;
+export default DynamicSelectField

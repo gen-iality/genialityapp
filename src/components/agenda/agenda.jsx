@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { AgendaApi } from '@helpers/request';
-import CMS from '../newComponent/CMS';
-import { getColumnSearchProps } from '../speakers/getColumnSearch';
-import { Tag } from 'antd';
-import dayjs from 'dayjs';
+import { useState } from 'react'
+import { AgendaApi } from '@helpers/request'
+import CMS from '../newComponent/CMS'
+import { getColumnSearchProps } from '../speakers/getColumnSearch'
+import { Tag } from 'antd'
+import dayjs from 'dayjs'
 
-import lessonTypeToString from '../events/lessonTypeToString';
+import lessonTypeToString from '../events/lessonTypeToString'
 
 const Agenda = (props) => {
-  const [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({})
 
   const columns = [
     {
@@ -18,7 +18,7 @@ const Agenda = (props) => {
       sorter: (a, b) => a.datetime_start.localeCompare(b.datetime_start),
       ...getColumnSearchProps('datetime_start', columnsData),
       render(record, key) {
-        return <div>{dayjs(record).format('DD/MM/YYYY')}</div>;
+        return <div>{dayjs(record).format('DD/MM/YYYY')}</div>
       },
     },
     {
@@ -28,7 +28,7 @@ const Agenda = (props) => {
       sorter: (a, b) => a.datetime_end.localeCompare(b.datetime_end),
       ...getColumnSearchProps('datetime_end', columnsData),
       render(record, key) {
-        return <div>{dayjs(record).format('DD/MM/YYYY')}</div>;
+        return <div>{dayjs(record).format('DD/MM/YYYY')}</div>
       },
     },
     {
@@ -44,9 +44,9 @@ const Agenda = (props) => {
         if (record.type === null) {
           return <div>Genérico</div>
         }
-        const typeName = lessonTypeToString(record.type.name) || 'Genérico';
+        const typeName = lessonTypeToString(record.type.name) || 'Genérico'
         return <div>{typeName}</div>
-      }
+      },
     },
     {
       title: 'Categorias',
@@ -61,7 +61,7 @@ const Agenda = (props) => {
               </Tag>
             ))}
           </>
-        );
+        )
       },
     },
     {
@@ -73,7 +73,7 @@ const Agenda = (props) => {
           <>
             <div>{record?.name}</div>
           </>
-        );
+        )
       },
     },
     {
@@ -87,10 +87,10 @@ const Agenda = (props) => {
               <Tag key={key}>{item.name}</Tag>
             ))}
           </>
-        );
+        )
       },
     },
-  ];
+  ]
 
   return (
     <CMS
@@ -111,7 +111,7 @@ const Agenda = (props) => {
       setColumnsData={setColumnsData}
       scroll={{ x: 'auto' }}
     />
-  );
-};
+  )
+}
 
-export default Agenda;
+export default Agenda

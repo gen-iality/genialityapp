@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
-import { Layout, Row, Col, Divider, List, Typography, Space } from 'antd';
-import { FacebookFilled, InstagramFilled, LinkedinFilled } from '@ant-design/icons';
-import { imageUtils } from '../Utilities/ImageUtils';
+import { Link } from 'react-router-dom'
+import { Layout, Row, Col, Divider, List, Typography, Space } from 'antd'
+import { FacebookFilled, InstagramFilled, LinkedinFilled } from '@ant-design/icons'
+import { imageUtils } from '../Utilities/ImageUtils'
 
 const Footer = () => {
   return (
@@ -14,25 +14,36 @@ const Footer = () => {
                 GENIALITY
               </Typography.Title>
             }
-            bordered={false}
-          >
+            bordered={false}>
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}>
                 Inicio
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}>
                 Tipos de cursos
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}>
                 Casos de éxito
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}>
                 Solicitar demo
               </a>
             </List.Item>
@@ -45,10 +56,12 @@ const Footer = () => {
                 Ayuda
               </Typography.Title>
             }
-            bordered={false}
-          >
+            bordered={false}>
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}>
                 ¿Quiénes somos?
               </a>
             </List.Item>
@@ -66,8 +79,7 @@ const Footer = () => {
                 Legal
               </Typography.Title>
             }
-            bordered={false}
-          >
+            bordered={false}>
             <List.Item style={{ border: 'none' }}>
               <Link to="/terms" style={{ color: '#fff' }}>
                 Términos y condiciones
@@ -94,8 +106,7 @@ const Footer = () => {
           md={{ order: 1 }}
           lg={{ order: 1 }}
           xl={{ order: 1 }}
-          xxl={{ order: 1 }}
-        >
+          xxl={{ order: 1 }}>
           <img src={import.meta.env.VITE_IMAGE_FOOTER} width={200} />
         </Col>
         <Col
@@ -104,35 +115,31 @@ const Footer = () => {
           md={{ order: 2 }}
           lg={{ order: 2 }}
           xl={{ order: 2 }}
-          xxl={{ order: 2 }}
-        >
+          xxl={{ order: 2 }}>
           <Space wrap>
             <a
-              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
-              style={{ color: '#fff' }}
-            >
+              style={{ color: '#fff' }}>
               <FacebookFilled style={{ fontSize: '35px' }} />
             </a>
             <a
-              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
-              style={{ color: '#fff' }}
-            >
+              style={{ color: '#fff' }}>
               <InstagramFilled style={{ fontSize: '35px' }} />
             </a>
             <a
-              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
-              style={{ color: '#fff' }}
-            >
+              style={{ color: '#fff' }}>
               <LinkedinFilled style={{ fontSize: '35px' }} />
             </a>
           </Space>
         </Col>
       </Row>
     </Layout.Footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

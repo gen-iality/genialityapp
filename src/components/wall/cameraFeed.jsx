@@ -1,21 +1,21 @@
-import { Component } from 'react';
+import { Component } from 'react'
 //custom
-import { Button } from 'antd';
-import { CameraOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '@context/MessageService';
+import { Button } from 'antd'
+import { CameraOutlined } from '@ant-design/icons'
+import { DispatchMessageService } from '@context/MessageService'
 
-const imageWidh = 1280;
-const imageheigh = 960;
+const imageWidh = 1280
+const imageheigh = 960
 
 class CameraFeed extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       image: '',
       hidden: true,
       hiddeVideo: false,
       stream: null,
-    };
+    }
   }
   /**
    * Processes available devices and identifies one by the label
@@ -24,8 +24,8 @@ class CameraFeed extends Component {
    */
   processDevices(devices) {
     devices.forEach((device) => {
-      this.setDevice(device);
-    });
+      this.setDevice(device)
+    })
   }
 
   /**
@@ -34,10 +34,13 @@ class CameraFeed extends Component {
    * @instance
    */
   async setDevice(device) {
-    const { deviceId } = device;
-    this.stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { deviceId } });
-    this.videoPlayer.srcObject = this.stream;
-    this.videoPlayer.play();
+    const { deviceId } = device
+    this.stream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: { deviceId },
+    })
+    this.videoPlayer.srcObject = this.stream
+    this.videoPlayer.play()
   }
 
   /**
@@ -47,8 +50,8 @@ class CameraFeed extends Component {
    * @override
    */
   async componentDidMount() {
-    const cameras = await navigator.mediaDevices.enumerateDevices();
-    this.processDevices(cameras);
+    const cameras = await navigator.mediaDevices.enumerateDevices()
+    this.processDevices(cameras)
   }
 
   /**
@@ -57,42 +60,42 @@ class CameraFeed extends Component {
    * @instance
    */
   takePhoto = () => {
-    const { sendFile, getImage } = this.props;
-    const context = this.canvas.getContext('2d');
-    context.drawImage(this.videoPlayer, 0, 0, imageWidh, imageheigh);
-    this.canvas.toBlob(sendFile);
-    const image = this.canvas.toDataURL();
-    this.setState({ image, hidden: false, hiddeVideo: true });
+    const { sendFile, getImage } = this.props
+    const context = this.canvas.getContext('2d')
+    context.drawImage(this.videoPlayer, 0, 0, imageWidh, imageheigh)
+    this.canvas.toBlob(sendFile)
+    const image = this.canvas.toDataURL()
+    this.setState({ image, hidden: false, hiddeVideo: true })
     DispatchMessageService({
       type: 'success',
       msj: 'Imagen salvada',
       action: 'show',
-    });
+    })
 
     //Detiene el stream del video
-    this.videoPlayer.srcObject = null;
-    this.stream.getTracks().forEach((track) => track.stop());
-    getImage(image);
-  };
+    this.videoPlayer.srcObject = null
+    this.stream.getTracks().forEach((track) => track.stop())
+    getImage(image)
+  }
 
   async clearImage() {
-    await this.setState({ hidden: true, image: '' });
+    await this.setState({ hidden: true, image: '' })
 
     DispatchMessageService({
       type: 'error',
       msj: 'Imagen eliminada',
       action: 'show',
-    });
+    })
   }
 
   async renderingCode() {
-    const cameras = await navigator.mediaDevices.enumerateDevices();
-    this.processDevices(cameras);
-    this.setState({ hidden: true, image: '', hiddeVideo: false });
-    this.forceUpdate();
+    const cameras = await navigator.mediaDevices.enumerateDevices()
+    this.processDevices(cameras)
+    this.setState({ hidden: true, image: '', hiddeVideo: false })
+    this.forceUpdate()
   }
   render() {
-    const { image, hidden, hide } = this.state;
+    const { image, hidden, hide } = this.state
     return (
       <div className="c-camera-feed" hidden={hide}>
         {/* camara */}
@@ -102,7 +105,12 @@ class CameraFeed extends Component {
 
         <div>
           <div className="c-camera-feed__viewer">
-            <video hidden={this.state.hiddeVideo} ref={(ref) => (this.videoPlayer = ref)} width="1280" heigh="960" />
+            <video
+              hidden={this.state.hiddeVideo}
+              ref={(ref) => (this.videoPlayer = ref)}
+              width="1280"
+              heigh="960"
+            />
           </div>
         </div>
         {/* Imagen capturada  */}
@@ -114,7 +122,14 @@ class CameraFeed extends Component {
             hidden={hidden}
             ref={(ref) => (this.canvas = ref)}
           />
-          <img alt="camara" width={imageWidh} height={imageheigh} id="getImage" hidden src={image} />
+          <img
+            alt="camara"
+            width={imageWidh}
+            height={imageheigh}
+            id="getImage"
+            hidden
+            src={image}
+          />
         </div>
 
         <div style={{ textAlign: 'center' }}>
@@ -123,22 +138,21 @@ class CameraFeed extends Component {
             type="primary"
             size="large"
             style={{ display: 'block', margin: '20px auto' }}
-            onClick={this.takePhoto}
-          >
+            onClick={this.takePhoto}>
             <CameraOutlined style={{ fontSize: '2rem' }} />
           </Button>
           {this.state.image && (
             <Button
               onClick={() => {
-                this.renderingCode();
+                this.renderingCode()
               }}>
               Tomar otra foto
             </Button>
           )}
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default CameraFeed;
+export default CameraFeed

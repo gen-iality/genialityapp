@@ -1,25 +1,20 @@
-import { Checkbox, Typography } from 'antd';
-import { Rule } from 'antd/lib/form';
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import DynamicFormItem from './DynamicFormItem';
-import { IDynamicFieldProps } from './types';
-import useMandatoryRule from './hooks/useMandatoryRule';
-import { FormattedMessage } from 'react-intl';
+import { Checkbox, Typography } from 'antd'
+import { Rule } from 'antd/lib/form'
+import * as React from 'react'
+import { useEffect, useState } from 'react'
+import DynamicFormItem from './DynamicFormItem'
+import { IDynamicFieldProps } from './types'
+import useMandatoryRule from './hooks/useMandatoryRule'
+import { FormattedMessage } from 'react-intl'
 
-interface IDynamicMultipleListFieldProps extends IDynamicFieldProps {
-}
+interface IDynamicMultipleListFieldProps extends IDynamicFieldProps {}
 
-const DynamicMultipleListField: React.FunctionComponent<IDynamicMultipleListFieldProps> = (props) => {
-  const {
-    fieldData,
-    allInitialValues,
-  } = props
+const DynamicMultipleListField: React.FunctionComponent<
+  IDynamicMultipleListFieldProps
+> = (props) => {
+  const { fieldData, allInitialValues } = props
 
-  const {
-    name,
-    options = []
-  } = fieldData
+  const { name, options = [] } = fieldData
 
   const [rules, setRules] = useState<Rule[]>([])
 
@@ -51,11 +46,10 @@ const DynamicMultipleListField: React.FunctionComponent<IDynamicMultipleListFiel
     <DynamicFormItem
       fieldData={fieldData}
       rules={rules}
-      initialValue={allInitialValues[name]}
-    >
+      initialValue={allInitialValues[name]}>
       <Checkbox.Group options={options} />
     </DynamicFormItem>
-  );
-};
+  )
+}
 
-export default DynamicMultipleListField;
+export default DynamicMultipleListField

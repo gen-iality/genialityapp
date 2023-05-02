@@ -1,38 +1,30 @@
-import * as React from 'react';
-import {
-  FunctionComponent,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-} from 'react'
+import * as React from 'react'
+import { FunctionComponent, useState, useEffect, useCallback, useMemo } from 'react'
 
-import { dynamicFieldOptions } from '@components/dynamic-fields/constants';
-import { Checkbox, Form, Input, Select, InputNumber, Button, Row, Divider } from 'antd';
-import { DispatchMessageService } from '@context/MessageService';
-import { FieldType, IDynamicFieldData } from '@components/dynamic-fields/types';
-import { Rule } from 'antd/lib/form';
+import { dynamicFieldOptions } from '@components/dynamic-fields/constants'
+import { Checkbox, Form, Input, Select, InputNumber, Button, Row, Divider } from 'antd'
+import { DispatchMessageService } from '@context/MessageService'
+import { FieldType, IDynamicFieldData } from '@components/dynamic-fields/types'
+import { Rule } from 'antd/lib/form'
 
-
-const { TextArea } = Input;
+const { TextArea } = Input
 
 interface IDynamicFieldDataWithAux extends IDynamicFieldData {
-  fieldName: string,
-  triggerValues: string[],
+  fieldName: string
+  triggerValues: string[]
 }
 
 interface IDynamicFieldCreationFormProps {
-  isEditing?: boolean,
-  dataToEdit?: IDynamicFieldData,
-  onCancel?: () => void,
-  onSave?: (data: IDynamicFieldData) => void,
+  isEditing?: boolean
+  dataToEdit?: IDynamicFieldData
+  onCancel?: () => void
+  onSave?: (data: IDynamicFieldData) => void
 }
-
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
 const extraInputs = {
   country: [
@@ -119,42 +111,50 @@ const extraInputs = {
       visibleByContacts: undefined,
     },
   ],
-};
+}
 
 const toCapitalizeLower = (str: string) => {
-  const splitted = str.split(' ');
-  const init = splitted[0].toLowerCase();
+  const splitted = str.split(' ')
+  const init = splitted[0].toLowerCase()
   const end = splitted.slice(1).map((item) => {
-    item = item.toLowerCase();
-    return item.charAt(0).toUpperCase() + item.substr(1);
-  });
-  return [init, ...end].join('');
+    item = item.toLowerCase()
+    return item.charAt(0).toUpperCase() + item.substr(1)
+  })
+  return [init, ...end].join('')
 }
 
 const generateFieldNameForLabel = (value: string) => {
   const generatedFieldName = toCapitalizeLower(value)
     .normalize('NFD')
-    .replace(/[^a-z0-9_]+/gi, '');
-  return generatedFieldName;
+    .replace(/[^a-z0-9_]+/gi, '')
+  return generatedFieldName
 }
 
-const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps> = (props) => {
+const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps> = (
+  props,
+) => {
   const {
     isEditing,
     onCancel = () => {},
-    onSave = (data: any) => { console.warn('cannot save data:', data) },
+    onSave = (data: any) => {
+      console.warn('cannot save data:', data)
+    },
     dataToEdit,
   } = props
 
   const [info, setInfo] = useState<IDynamicFieldData>({} as IDynamicFieldData)
   const [isDependent, setIsDependent] = useState(false)
-  const [currentFieldType, setCurrentFieldType] = useState<FieldType | undefined>(undefined)
+  const [currentFieldType, setCurrentFieldType] = useState<FieldType | undefined>(
+    undefined,
+  )
   const [isLoading, setIsLoading] = useState(false)
 
-  const [basicRules] = useState<Rule[]>([{
-    required: true,
-    message: 'Este campo es obligatorio',
-  }])
+  const [basicRules] = useState<Rule[]>([
+    {
+      required: true,
+      message: 'Este campo es obligatorio',
+    },
+  ])
 
   const [form] = Form.useForm<IDynamicFieldDataWithAux>()
 
@@ -174,15 +174,20 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
       labelPosition: values.labelPosition,
       link: values.link,
       mandatory: !!values.mandatory,
-      options: values.options && values.options.map((option) => {
-        if (typeof option === 'string' || (typeof option.label !== 'string' && typeof option.value !== 'string')) {
-          return {
-            label: option.toString(),
-            value: option.toString(),
+      options:
+        values.options &&
+        values.options.map((option) => {
+          if (
+            typeof option === 'string' ||
+            (typeof option.label !== 'string' && typeof option.value !== 'string')
+          ) {
+            return {
+              label: option.toString(),
+              value: option.toString(),
+            }
           }
-        }
-        return option
-      }),
+          return option
+        }),
       props: values.props,
       type: values.type,
       visibleByAdmin: !!values.visibleByAdmin,
@@ -196,7 +201,7 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
 
     form.resetFields()
 
-    setIsLoading(false)    
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -218,18 +223,12 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
   }, [])
 
   return (
-    <Form
-      form={form}
-      autoComplete="off"
-      onFinish={onFinish}
-      {...formLayout}
-    >
+    <Form form={form} autoComplete="off" onFinish={onFinish} {...formLayout}>
       <Form.Item
         name="label"
         label="Nombre del campo"
         rules={basicRules}
-        initialValue={dataToEdit?.name}
-      >
+        initialValue={dataToEdit?.name}>
         <Input
           placeholder="Ej: Teléfono"
           onChange={(e) => {
@@ -249,11 +248,12 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         name="type"
         label="Tipo de dato"
         rules={basicRules}
-        initialValue={dataToEdit?.type}
-      >
+        initialValue={dataToEdit?.type}>
         <Select
           options={dynamicFieldOptions}
-          disabled={!!dataToEdit && ['picture', 'names', 'email'].includes(dataToEdit.name)}
+          disabled={
+            !!dataToEdit && ['picture', 'names', 'email'].includes(dataToEdit.name)
+          }
           onChange={(type) => setCurrentFieldType(type)}
         />
       </Form.Item>
@@ -261,80 +261,77 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
       <Form.Item>
         <Checkbox
           checked={isDependent || !!dataToEdit?.dependency?.fieldName}
-          onChange={(e) => setIsDependent(e.target.checked)}
-        >
+          onChange={(e) => setIsDependent(e.target.checked)}>
           Marca este campo como dependiente de otro campo
         </Checkbox>
       </Form.Item>
 
       {(isDependent || dataToEdit?.dependency?.fieldName) && (
         <>
-        <Form.Item
-          label="Nombre del otro campo"
-          name="fieldName"
-          rules={basicRules}
-          initialValue={dataToEdit?.dependency?.fieldName}
-        >
-          <Input placeholder="Escribe el nombre, en base de datos, exacto del otro campo" />
-        </Form.Item>
+          <Form.Item
+            label="Nombre del otro campo"
+            name="fieldName"
+            rules={basicRules}
+            initialValue={dataToEdit?.dependency?.fieldName}>
+            <Input placeholder="Escribe el nombre, en base de datos, exacto del otro campo" />
+          </Form.Item>
 
-        <Form.Item
-          name="triggerValues"
-          label="Valores exactos"
-          rules={[
-            {
-              required: true,
-              message: 'Al menos un valor',
-              validator: (_, ones?: any[], ) => {
-                if (!ones || ones.length === 0) return Promise.reject('triggerValues')
-                return Promise.resolve()
-              }
-            }
-          ]}
-        >
-          <Select
-            mode="tags"
-            open={false}
-            placeholder="Escribe la opción y presiona Enter o Tab..."
-            aria-required
-          />
-        </Form.Item>
+          <Form.Item
+            name="triggerValues"
+            label="Valores exactos"
+            rules={[
+              {
+                required: true,
+                message: 'Al menos un valor',
+                validator: (_, ones?: any[]) => {
+                  if (!ones || ones.length === 0) return Promise.reject('triggerValues')
+                  return Promise.resolve()
+                },
+              },
+            ]}>
+            <Select
+              mode="tags"
+              open={false}
+              placeholder="Escribe la opción y presiona Enter o Tab..."
+              aria-required
+            />
+          </Form.Item>
 
-        <Divider />
+          <Divider />
         </>
       )}
 
-      {!!currentFieldType && ['list', 'multiplelist', 'multiplelisttable'].includes(currentFieldType) && (
-        <>
-        <Form.Item name="options" label="Opciones">
-          <Select
-            mode="tags"
-            open={false}
-            placeholder="Escribe la opción y presiona Enter o Tab..."
-            aria-required
-          />
-        </Form.Item>
+      {!!currentFieldType &&
+        ['list', 'multiplelist', 'multiplelisttable'].includes(currentFieldType) && (
+          <>
+            <Form.Item name="options" label="Opciones">
+              <Select
+                mode="tags"
+                open={false}
+                placeholder="Escribe la opción y presiona Enter o Tab..."
+                aria-required
+              />
+            </Form.Item>
 
-        <Form.Item
-          name="justonebyattendee"
-          initialValue={dataToEdit?.justonebyattendee}
-          valuePropName="checked"
-        >
-          <Checkbox>
-            Solo una opción por usuario (cuando un asistente selecciona una opción esta desaparece del listado)
-          </Checkbox>
-        </Form.Item>
-        <Divider />
-        </>
-      )}
+            <Form.Item
+              name="justonebyattendee"
+              initialValue={dataToEdit?.justonebyattendee}
+              valuePropName="checked">
+              <Checkbox>
+                Solo una opción por usuario (cuando un asistente selecciona una opción
+                esta desaparece del listado)
+              </Checkbox>
+            </Form.Item>
+            <Divider />
+          </>
+        )}
 
-      {(currentFieldType === 'TTCC') && (
+      {currentFieldType === 'TTCC' && (
         <Form.Item
           name="link"
           label="Enlace para los términos y condiciones"
           rules={basicRules}
-          initialValue={dataToEdit?.link}
-        >
+          initialValue={dataToEdit?.link}>
           <Input placeholder="Enlace (esto depende el tipo de campo)" />
           <Divider />
         </Form.Item>
@@ -344,8 +341,7 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         label="¿Obligatorio?"
         name="mandatory"
         initialValue={dataToEdit?.mandatory}
-        valuePropName="checked"
-      >
+        valuePropName="checked">
         <Checkbox />
       </Form.Item>
 
@@ -353,8 +349,7 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         label="Visible para contactos?"
         name="visibleByContacts"
         initialValue={dataToEdit?.visibleByContacts}
-        valuePropName="checked"
-      >
+        valuePropName="checked">
         <Checkbox />
       </Form.Item>
 
@@ -362,23 +357,18 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         label="Visible para admins?"
         name="visibleByAdmin"
         initialValue={dataToEdit?.visibleByAdmin}
-        valuePropName="checked"
-      >
+        valuePropName="checked">
         <Checkbox />
       </Form.Item>
 
       <Form.Item
         name="description"
         label="Descripción corta"
-        initialValue={dataToEdit?.description}
-      >
+        initialValue={dataToEdit?.description}>
         <TextArea placeholder="Descripción corta" />
       </Form.Item>
 
-      <Form.Item
-        name="order_weight"
-        label="Posición / Orden"
-      >
+      <Form.Item name="order_weight" label="Posición / Orden">
         <InputNumber min={0} placeholder="1" />
       </Form.Item>
 
@@ -389,8 +379,7 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
             type="primary"
             htmlType="submit"
             disabled={isLoading}
-            loading={isLoading}
-          >
+            loading={isLoading}>
             Guardar
           </Button>
 
@@ -400,7 +389,7 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         </Row>
       </Form.Item>
     </Form>
-  );
-};
+  )
+}
 
-export default DynamicFieldCreationForm;
+export default DynamicFieldCreationForm

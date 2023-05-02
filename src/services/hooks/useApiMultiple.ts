@@ -1,32 +1,43 @@
-import axios from 'axios';
-import { useState } from 'react';
-import { ApiService, isError, multipleRequest } from '../interfaces/interfaces';
-import { ApiUrl } from '@helpers/constants';
+import axios from 'axios'
+import { useState } from 'react'
+import { ApiService, isError, multipleRequest } from '../interfaces/interfaces'
+import { ApiUrl } from '@helpers/constants'
 
 export const useApiMultiple = () => {
-  const [responseData, setresponseData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [responseData, setresponseData] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState<isError>({
     status: false,
     message: '',
-  });
-  const [isSuccess, setIsSuccess] = useState(false);
+  })
+  const [isSuccess, setIsSuccess] = useState(false)
 
-  const RequestPromise = async ({ payload, method, request, withCredentials }: ApiService) => {
-    return axios[method](`${ApiUrl}${request}`, payload, { withCredentials });
-  };
+  const RequestPromise = async ({
+    payload,
+    method,
+    request,
+    withCredentials,
+  }: ApiService) => {
+    return axios[method](`${ApiUrl}${request}`, payload, { withCredentials })
+  }
 
   const handleError = (error: any) => {
-    setIsLoading(false);
-    setIsSuccess(false);
+    setIsLoading(false)
+    setIsSuccess(false)
     setIsError({
       status: true,
       message: error.message,
-    });
-  };
+    })
+  }
 
-  const handleRequest = async ({ payloads, methods, requests, withCredentials, keys }: multipleRequest) => {
-    setIsLoading(true);
+  const handleRequest = async ({
+    payloads,
+    methods,
+    requests,
+    withCredentials,
+    keys,
+  }: multipleRequest) => {
+    setIsLoading(true)
     /* setIsError({
       status: false,
       message: '',
@@ -34,8 +45,14 @@ export const useApiMultiple = () => {
     setIsSuccess(false); */
     try {
       const requestToMake = requests.map((request, index) => {
-        return [request, methods[index], keys[index], payloads[index], withCredentials[index]];
-      });
+        return [
+          request,
+          methods[index],
+          keys[index],
+          payloads[index],
+          withCredentials[index],
+        ]
+      })
 
       requestToMake.map(([request, method, key, payload, withCredentials]) => {
         RequestPromise({ payload, method, request, withCredentials, key }).then((res) => {
@@ -43,24 +60,24 @@ export const useApiMultiple = () => {
             return {
               ...prevState,
               [key]: res.data.data,
-            };
-          });
-        });
-      });
-      setIsLoading(false);
+            }
+          })
+        })
+      })
+      setIsLoading(false)
       setIsError({
         status: false,
         message: '',
-      });
-      setIsSuccess(true);
+      })
+      setIsSuccess(true)
     } catch (error) {
-      handleError(error);
+      handleError(error)
     }
-  };
+  }
 
   const useResponse = (key: string): [] => {
-    return responseData[key as keyof typeof responseData];
-  };
+    return responseData[key as keyof typeof responseData]
+  }
 
   return {
     isLoading,
@@ -69,5 +86,5 @@ export const useApiMultiple = () => {
     responseData,
     useResponse,
     handleRequest,
-  };
-};
+  }
+}

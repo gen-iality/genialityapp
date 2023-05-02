@@ -1,117 +1,128 @@
-import { Col, Row, Typography, Badge, Grid, Space, Divider, Image, Empty, Button, Modal } from 'antd';
-import { useState, useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { OrganizationFuction } from '@helpers/request';
-import EventCard from '../shared/eventCard';
-import dayjs from 'dayjs';
-import ModalAuth from '../authentication/ModalAuth';
-import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
-import { EditOutlined } from '@ant-design/icons';
-import Loading from '@components/profile/loading';
-import { useCurrentUser } from '@context/userContext';
-import { OrganizationApi } from '@helpers/request';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import RegisterMemberFromOrganizationUserModal from './RegisterMemberFromOrganizationUserModal';
+import {
+  Col,
+  Row,
+  Typography,
+  Badge,
+  Grid,
+  Space,
+  Divider,
+  Image,
+  Empty,
+  Button,
+  Modal,
+} from 'antd'
+import { useState, useEffect } from 'react'
+import { Link, withRouter } from 'react-router-dom'
+import { OrganizationFuction } from '@helpers/request'
+import EventCard from '../shared/eventCard'
+import dayjs from 'dayjs'
+import ModalAuth from '../authentication/ModalAuth'
+import ModalLoginHelpers from '../authentication/ModalLoginHelpers'
+import { EditOutlined } from '@ant-design/icons'
+import Loading from '@components/profile/loading'
+import { useCurrentUser } from '@context/userContext'
+import { OrganizationApi } from '@helpers/request'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import RegisterMemberFromOrganizationUserModal from './RegisterMemberFromOrganizationUserModal'
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text, Paragraph } = Typography
 
 const EventOrganization = (props) => {
-  const orgId = props.match.params.id;
+  const orgId = props.match.params.id
 
-  const [upcomingEvents, setUpcomingEvents] = useState([]);
-  const [lastEvents, setLastEvents] = useState([]);
-  const [organization, setOrganization] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [view, setView] = useState(false);
-  const [isVisibleRegister, setIsVisibleRegister] = useState(false);
-  const [organizationUser, setOrganizationUser] = useState(null);
+  const [upcomingEvents, setUpcomingEvents] = useState([])
+  const [lastEvents, setLastEvents] = useState([])
+  const [organization, setOrganization] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [view, setView] = useState(false)
+  const [isVisibleRegister, setIsVisibleRegister] = useState(false)
+  const [organizationUser, setOrganizationUser] = useState(null)
 
-  const [isAdminUser, setIsAdminUser] = useState(false);
+  const [isAdminUser, setIsAdminUser] = useState(false)
 
-  const cUser = useCurrentUser();
-  const { helperDispatch } = useHelper();
+  const cUser = useCurrentUser()
+  const { helperDispatch } = useHelper()
 
   useEffect(() => {
     if (orgId) {
-      fetchItem(orgId).then(() => setIsLoading(false));
+      fetchItem(orgId).then(() => setIsLoading(false))
     }
-  }, [orgId]);
+  }, [orgId])
 
   useEffect(() => {
-    if (cUser.value || !organization || !orgId) return;
+    if (cUser.value || !organization || !orgId) return
     // const { visibility, allow_register } = organization;
     if (!cUser.value && organization) {
       // helperDispatch({ type: 'showLogin', visible: true });
 
-      let positionId;
+      let positionId
       if (organization.default_position_id) {
-        positionId = organization.default_position_id;
+        positionId = organization.default_position_id
       }
-      console.log('5. positionId', positionId, 'orgId', orgId);
+      console.log('5. positionId', positionId, 'orgId', orgId)
       helperDispatch({
         type: 'showRegister',
         visible: true,
         idOrganization: orgId,
         defaultPositionId: positionId,
-      });
+      })
     }
-  }, [cUser.value, organization, orgId]);
+  }, [cUser.value, organization, orgId])
 
   useEffect(() => {
-    if (!organization) return;
-    if (!cUser.value) return;
-    if (organizationUser) return;
-    const { visibility, allow_register } = organization;
-    console.log('organization access', { visibility, allow_register });
+    if (!organization) return
+    if (!cUser.value) return
+    if (organizationUser) return
+    const { visibility, allow_register } = organization
+    console.log('organization access', { visibility, allow_register })
     if (visibility === 'PUBLIC' && allow_register) {
       //helperDispatch({ type: 'showRegister', visible: true });
-      setIsVisibleRegister(true);
+      setIsVisibleRegister(true)
     }
-  }, [organizationUser, organization, cUser.value]);
+  }, [organizationUser, organization, cUser.value])
 
   useEffect(() => {
-    if (!cUser.value) return;
-    if (!orgId) return;
+    if (!cUser.value) return
+    if (!orgId) return
 
     OrganizationApi.getMeUser(orgId).then(({ data }) => {
-      const [orgUser] = data;
+      const [orgUser] = data
 
-      setOrganizationUser(orgUser);
-      console.debug('EventOrganization member rol:', orgUser?.rol);
-      setIsAdminUser(orgUser?.rol?.type === 'admin');
-    });
-  }, [cUser.value, orgId]);
+      setOrganizationUser(orgUser)
+      console.debug('EventOrganization member rol:', orgUser?.rol)
+      setIsAdminUser(orgUser?.rol?.type === 'admin')
+    })
+  }, [cUser.value, orgId])
 
   // Obtener los datos necesarios de la organización
   const fetchItem = async (orgId) => {
-    const events = await OrganizationFuction.getEventsNextByOrg(orgId);
-    const _upcomingEvents = [];
-    const _lastEvents = [];
-    const currentDateNow = dayjs();
+    const events = await OrganizationFuction.getEventsNextByOrg(orgId)
+    const _upcomingEvents = []
+    const _lastEvents = []
+    const currentDateNow = dayjs()
     events.forEach((event) => {
       if (dayjs(event.datetime_from).isAfter(currentDateNow)) {
-        _upcomingEvents.push(event);
+        _upcomingEvents.push(event)
       } else {
-        _lastEvents.push(event);
+        _lastEvents.push(event)
       }
-    });
+    })
 
-    const _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
+    const _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)
     if (events) {
-      setUpcomingEvents(_upcomingEvents);
-      setLastEvents(_lastEvents); // Reverse that list to show older events as first ._.
-      setOrganization(_organization);
-      setIsLoading(false);
+      setUpcomingEvents(_upcomingEvents)
+      setLastEvents(_lastEvents) // Reverse that list to show older events as first ._.
+      setOrganization(_organization)
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div
       style={{
         backgroundImage: `url(${organization?.styles?.BackgroundImage})`,
         backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
-      }}
-    >
+      }}>
       <ModalLoginHelpers />
       {/* <RegisterMemberFromOrganizationUserModal
         organization={organization}
@@ -146,8 +157,7 @@ const EventOrganization = (props) => {
               paddingRight: '5vw',
               paddingBottom: '5vw',
               paddingTop: '0.5vw',
-            }}
-          >
+            }}>
             {isAdminUser && (
               <Link
                 to={`/admin/organization/${props.match.params.id}`}
@@ -155,8 +165,7 @@ const EventOrganization = (props) => {
                   marginBottom: '-15px',
                   fontSize: '20px',
                   cursor: 'pointer',
-                }}
-              >
+                }}>
                 <Button type="text" icon={<EditOutlined />}>
                   Administrar
                 </Button>
@@ -171,8 +180,7 @@ const EventOrganization = (props) => {
                   backgroundColor: '#FFFFFF',
                   padding: '10px',
                   borderRadius: '20px',
-                }}
-              >
+                }}>
                 <Col xs={24} sm={24} md={24} lg={8} xl={4} xxl={4}>
                   <Row justify="start">
                     <Image
@@ -199,17 +207,19 @@ const EventOrganization = (props) => {
                         fontWeight: '600',
                         lineHeight: '2.25rem',
                       }}
-                      type="secondary"
-                    >
+                      type="secondary">
                       {organization.name}
                     </Text>
                     <Paragraph
                       ellipsis={{
                         rows: 3,
                         expandable: true,
-                        symbol: <span style={{ color: '#2D7FD6', fontSize: '12px' }}>Ver más</span>,
-                      }}
-                    >
+                        symbol: (
+                          <span style={{ color: '#2D7FD6', fontSize: '12px' }}>
+                            Ver más
+                          </span>
+                        ),
+                      }}>
                       {organization?.description || ''}
                     </Paragraph>
                   </Space>
@@ -222,8 +232,7 @@ const EventOrganization = (props) => {
                 backgroundColor: '#FFFFFF',
                 padding: '20px',
                 borderRadius: '20px',
-              }}
-            >
+              }}>
               <Badge offset={[60, 22]} count={`${lastEvents.length} Cursos`}>
                 <Title level={2}>Disponibles</Title>
               </Badge>
@@ -248,8 +257,7 @@ const EventOrganization = (props) => {
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
-                    }}
-                  >
+                    }}>
                     <Empty description="No hay cursos pasados" />
                   </div>
                 )}
@@ -262,8 +270,7 @@ const EventOrganization = (props) => {
                 backgroundColor: '#FFFFFF',
                 padding: '20px',
                 borderRadius: '20px',
-              }}
-            >
+              }}>
               <Badge offset={[60, 22]} count={`${upcomingEvents.length} Cursos`}>
                 <Title level={2}>Próximos</Title>
               </Badge>
@@ -289,8 +296,7 @@ const EventOrganization = (props) => {
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
-                    }}
-                  >
+                    }}>
                     <Empty description="No hay cursos próximos agendados" />
                   </div>
                 )}
@@ -317,10 +323,10 @@ const EventOrganization = (props) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default withRouter(EventOrganization);
+export default withRouter(EventOrganization)
 
 /**
  * 

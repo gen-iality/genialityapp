@@ -1,23 +1,23 @@
-import { useEffect, useState } from 'react';
-import { Alert } from 'antd';
+import { useEffect, useState } from 'react'
+import { Alert } from 'antd'
 
 function WithUserEventRegistered(Component) {
   return function WihLoadingComponent(props) {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [usuarioRegistrado, setUsuarioRegistrado] = useState(null);
-    const [event, setEvent] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null)
+    const [usuarioRegistrado, setUsuarioRegistrado] = useState(null)
+    const [event, setEvent] = useState(null)
 
     useEffect(() => {
-      (async () => {
+      ;(async () => {
         try {
-          setCurrentUser(props.currentUser);
-          setUsuarioRegistrado(props.usuarioRegistrado);
-          setEvent(props.event);
+          setCurrentUser(props.currentUser)
+          setUsuarioRegistrado(props.usuarioRegistrado)
+          setEvent(props.event)
         } catch (e) {
-          e;
+          e
         }
-      })();
-    }, [props.usuarioRegistrado]);
+      })()
+    }, [props.usuarioRegistrado])
 
     return (
       <div>
@@ -29,8 +29,9 @@ function WithUserEventRegistered(Component) {
                 description={
                   <p>
                     <b>Curso restringido:</b>
-                    debes estar previamente registrado al curso para acceder al espacio en vivo, si estas registrado en
-                    el curso ingresa al sistema con tu usuario para poder acceder al curso, &nbsp;&nbsp;
+                    debes estar previamente registrado al curso para acceder al espacio en
+                    vivo, si estas registrado en el curso ingresa al sistema con tu
+                    usuario para poder acceder al curso, &nbsp;&nbsp;
                   </p>
                 }
                 type="info"
@@ -44,8 +45,9 @@ function WithUserEventRegistered(Component) {
                 description={
                   <p>
                     <b>Curso restringido:</b>
-                    debes estar previamente registrado al curso para acceder al espacio en vivo, si estas registrado y
-                    no tienes acceso comunicate con el organizador &nbsp;&nbsp;
+                    debes estar previamente registrado al curso para acceder al espacio en
+                    vivo, si estas registrado y no tienes acceso comunicate con el
+                    organizador &nbsp;&nbsp;
                   </p>
                 }
                 type="warning"
@@ -55,9 +57,14 @@ function WithUserEventRegistered(Component) {
           </div>
         )}
 
-        <Component {...props} event={event} currentUser={currentUser} usuarioRegistrado={usuarioRegistrado} />
+        <Component
+          {...props}
+          event={event}
+          currentUser={currentUser}
+          usuarioRegistrado={usuarioRegistrado}
+        />
       </div>
-    );
-  };
+    )
+  }
 }
-export default WithUserEventRegistered;
+export default WithUserEventRegistered

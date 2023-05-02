@@ -1,17 +1,17 @@
-import { useMemo } from 'react';
+import { useMemo } from 'react'
 
-import { Button, Card, Typography } from 'antd';
-import { useCurrentUser } from '@context/userContext';
-import { useContext } from 'react';
-import AgendaContext from '@context/AgendaContext';
-import type { ActivityType } from '@context/activityType/types/activityType';
+import { Button, Card, Typography } from 'antd'
+import { useCurrentUser } from '@context/userContext'
+import { useContext } from 'react'
+import AgendaContext from '@context/AgendaContext'
+import type { ActivityType } from '@context/activityType/types/activityType'
 
 export interface GoToMeetProps {
-  activityId: string,
-  type: ActivityType.TypeAsDisplayment,
-};
+  activityId: string
+  type: ActivityType.TypeAsDisplayment
+}
 
-const baseUrl = 'https://stagingeviusmeet.netlify.app/prepare';
+const baseUrl = 'https://stagingeviusmeet.netlify.app/prepare'
 
 /**
  * Crea un componente que permite ir al Meet.
@@ -19,21 +19,22 @@ const baseUrl = 'https://stagingeviusmeet.netlify.app/prepare';
  * @returns Un componente de React.
  */
 const GoToMeet = (props: GoToMeetProps) => {
-  const { dataLive } = useContext(AgendaContext);
+  const { dataLive } = useContext(AgendaContext)
 
-  const user = useCurrentUser();
+  const user = useCurrentUser()
 
-  const urlReunion = useMemo(() => (
-    `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rol=1`),
+  const urlReunion = useMemo(
+    () => `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rol=1`,
     [props.activityId, user, dataLive],
-  );
+  )
 
-  const urlEviusTransmision = useMemo(() => (
-    `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rtmp=${dataLive?.push_url}&rol=1`),
+  const urlEviusTransmision = useMemo(
+    () =>
+      `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rtmp=${dataLive?.push_url}&rol=1`,
     [props.activityId, user, dataLive],
-  );
+  )
 
-  console.debug('GoToMeet:props:', props);
+  console.debug('GoToMeet:props:', props)
 
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
@@ -45,7 +46,12 @@ const GoToMeet = (props: GoToMeetProps) => {
         }
         description={
           <Button
-            onClick={() => window.open(props.type === 'reunión' ? urlReunion : urlEviusTransmision, '_blank')}
+            onClick={() =>
+              window.open(
+                props.type === 'reunión' ? urlReunion : urlEviusTransmision,
+                '_blank',
+              )
+            }
             type="primary">
             {props.type === 'reunión' && 'Entrar a la reunión'}
             {props.type === 'EviusMeet' && 'Entrar para transmitir'}
@@ -53,7 +59,7 @@ const GoToMeet = (props: GoToMeetProps) => {
         }
       />
     </Card>
-  );
-};
+  )
+}
 
-export default GoToMeet;
+export default GoToMeet

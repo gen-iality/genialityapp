@@ -1,8 +1,8 @@
 import { DynamicFieldOptionsType } from './types'
 
 type EmptyOptionType = {
-  value: '',
-  label: string,
+  value: ''
+  label: string
 }
 
 export const dynamicFieldOptions: (DynamicFieldOptionsType | EmptyOptionType)[] = [
@@ -26,4 +26,4 @@ export const dynamicFieldOptions: (DynamicFieldOptionsType | EmptyOptionType)[] 
   { value: 'codearea', label: 'Código de área para números' },
   { value: 'TTCC', label: 'Términos y condiciones' },
   /* { value: 'avatar', label: 'Imagen de perfil' }, */
-];
+]

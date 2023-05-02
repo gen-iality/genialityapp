@@ -1,4 +1,4 @@
-import { Card, Form, Input, Button } from 'antd';
+import { Card, Form, Input, Button } from 'antd'
 
 export const DolbyCard = () => {
   return (
@@ -37,5 +37,5 @@ export const DolbyCard = () => {
         </Form.Item>
       </Form>
     </Card>
-  );
-};
+  )
+}

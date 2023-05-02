@@ -66,7 +66,7 @@ const colorBars = {
     'rgba(153, 102, 255)',
     'rgba(255, 159, 64)',
   ],
-};
+}
 
 const alphabet = {
   alphabet: [
@@ -97,7 +97,7 @@ const alphabet = {
     'Y',
     'Z',
   ],
-};
+}
 
 export const graphicsFrame = {
   horizontalBar: {
@@ -250,4 +250,4 @@ export const graphicsFrame = {
       },
     },
   },
-};
+}

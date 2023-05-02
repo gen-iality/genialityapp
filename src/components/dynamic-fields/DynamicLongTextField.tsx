@@ -4,14 +4,12 @@ import DynamicFormItem from './DynamicFormItem'
 import { IDynamicFieldProps } from './types'
 import useMandatoryRule from './hooks/useMandatoryRule'
 
-interface IDynamicLongTextFieldProps extends IDynamicFieldProps {
-}
+interface IDynamicLongTextFieldProps extends IDynamicFieldProps {}
 
-const DynamicLongTextField: React.FunctionComponent<IDynamicLongTextFieldProps> = (props) => {
-  const {
-    fieldData,
-    allInitialValues,
-  } = props
+const DynamicLongTextField: React.FunctionComponent<IDynamicLongTextFieldProps> = (
+  props,
+) => {
+  const { fieldData, allInitialValues } = props
 
   const { name } = fieldData
 
@@ -21,12 +19,8 @@ const DynamicLongTextField: React.FunctionComponent<IDynamicLongTextFieldProps> 
     <DynamicFormItem
       fieldData={fieldData}
       rules={[basicRule]}
-      initialValue={allInitialValues[name]}
-    >
-      <Input.TextArea
-          rows={4}
-          autoSize={{ minRows: 3, maxRows: 25 }}
-        />
+      initialValue={allInitialValues[name]}>
+      <Input.TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} />
     </DynamicFormItem>
   )
 }

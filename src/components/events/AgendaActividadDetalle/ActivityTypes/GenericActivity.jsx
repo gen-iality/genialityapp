@@ -1,22 +1,25 @@
-import { useState } from 'react';
-import { SmileOutlined } from '@ant-design/icons';
-import { Result, Grid } from 'antd';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import HeaderColumnswithContext from '../HeaderColumns';
+import { useState } from 'react'
+import { SmileOutlined } from '@ant-design/icons'
+import { Result, Grid } from 'antd'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import HeaderColumnswithContext from '../HeaderColumns'
 
-const { useBreakpoint } = Grid;
+const { useBreakpoint } = Grid
 
 const GenericActivity = () => {
-  const { currentActivity } = useHelper();
-  const screens = useBreakpoint();
-  const [activityState, setactivityState] = useState('');
+  const { currentActivity } = useHelper()
+  const screens = useBreakpoint()
+  const [activityState, setactivityState] = useState('')
 
   return (
     <>
       <HeaderColumnswithContext isVisible activityState={activityState} />
-      <Result icon={<SmileOutlined />} title="Puedes asignar un contenido audiovisual a esta lección" />
+      <Result
+        icon={<SmileOutlined />}
+        title="Puedes asignar un contenido audiovisual a esta lección"
+      />
     </>
-  );
-};
+  )
+}
 
-export default GenericActivity;
+export default GenericActivity

@@ -1,5 +1,7 @@
 :root {
-  --main-height: calc(100vh - 0px); /* calc(100vh - 64px): Calculamos el alto 100% incluyendo el header principal */
+  --main-height: calc(
+    100vh - 0px
+  ); /* calc(100vh - 64px): Calculamos el alto 100% incluyendo el header principal */
 }
 
 .main-stand {

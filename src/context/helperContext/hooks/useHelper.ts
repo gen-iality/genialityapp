@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { HelperContext } from '../helperContext';
+import { useContext } from 'react'
+import { HelperContext } from '../helperContext'
 
 export const useHelper = () => {
   const {
@@ -61,7 +61,7 @@ export const useHelper = () => {
     HandleControllerLoginVisible,
     controllerLoginVisible,
     eventIsActive,
-  } = useContext(HelperContext);
+  } = useContext(HelperContext)
 
   return {
     helperDispatch,
@@ -122,5 +122,5 @@ export const useHelper = () => {
     HandleControllerLoginVisible,
     controllerLoginVisible,
     eventIsActive,
-  };
-};
+  }
+}

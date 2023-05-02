@@ -1,31 +1,31 @@
-import { useState } from 'react';
-import { Button, notification, Drawer } from 'antd';
+import { useState } from 'react'
+import { Button, notification, Drawer } from 'antd'
 
 const surveyNotification = () => {
-  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [drawerVisible, setDrawerVisible] = useState(false)
 
   // función que abre el drawer
   function clearStates(visible) {
-    setDrawerVisible(visible);
+    setDrawerVisible(visible)
   }
 
   // función que cierra el notificación
-  const close = () => {};
+  const close = () => {}
 
   function surveyVisible(key, visible) {
-    notification.close(key);
-    clearStates(visible);
+    notification.close(key)
+    clearStates(visible)
   }
 
   // Esta funcion construye la notificación.
 
   const openNotification = () => {
-    const key = `open${Date.now()}`;
+    const key = `open${Date.now()}`
     const btn = (
       <Button type="primary" size="small" onClick={() => surveyVisible(key, true)}>
         Contestar
       </Button>
-    );
+    )
     notification.open({
       message: 'Evaluación en vivo',
       description: 'Se encuentra activa la evaluación',
@@ -33,8 +33,8 @@ const surveyNotification = () => {
       key,
       duration: 0,
       onClose: close,
-    });
-  };
+    })
+  }
 
   return (
     <>
@@ -50,7 +50,7 @@ const surveyNotification = () => {
         onClose={() => clearStates()}
         visible={drawerVisible}></Drawer>
     </>
-  );
-};
+  )
+}
 
-export default surveyNotification;
+export default surveyNotification

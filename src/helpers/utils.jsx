@@ -1,101 +1,107 @@
 //Función para generar UUID
-import dayjs from 'dayjs';
-import { Actions } from './request';
-import { Modal, Spin } from 'antd';
+import dayjs from 'dayjs'
+import { Actions } from './request'
+import { Modal, Spin } from 'antd'
 
 export function GetIdEvent() {
-  const path = window.location.pathname;
-  return path.substr(9);
+  const path = window.location.pathname
+  return path.substr(9)
 }
 
 export function uniqueID() {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
     (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16),
-  );
+  )
 }
 //Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
 export function fieldsSelect(selected, allOptions) {
   if (Array.isArray(selected)) {
-    const newOptions = allOptions.filter((option) => selected.includes(option.value));
-    return newOptions[0] ? newOptions : [];
+    const newOptions = allOptions.filter((option) => selected.includes(option.value))
+    return newOptions[0] ? newOptions : []
   } else {
-    const newOptions = allOptions.find(({ value }) => value === selected);
-    return newOptions ? newOptions : null;
+    const newOptions = allOptions.find(({ value }) => value === selected)
+    return newOptions ? newOptions : null
   }
 }
 
 export function handleSelect(data) {
-  const list = [];
+  const list = []
   data.map((item) => {
-    return list.push({ value: item._id, label: item.name, item });
-  });
-  return list;
+    return list.push({ value: item._id, label: item.name, item })
+  })
+  return list
 }
 
 export function loadImage(src, cb) {
-  const i = new Image();
+  const i = new Image()
   i.onload = () => {
-    const reader = new FileReader();
-    reader.readAsDataURL(src);
-    reader.onload = () => cb(reader.result);
-  };
-  i.src = src.preview;
+    const reader = new FileReader()
+    reader.readAsDataURL(src)
+    reader.onload = () => cb(reader.result)
+  }
+  i.src = src.preview
 }
 
 export function uploadImage(file) {
   return new Promise((resolve, reject) => {
-    const data = new FormData();
-    data.append('file', file);
+    const data = new FormData()
+    data.append('file', file)
     Actions.post('/api/files/upload', data)
       .then((image) => resolve(image))
-      .catch((e) => reject(e));
-  });
+      .catch((e) => reject(e))
+  })
 }
 
 export function fieldNameEmailFirst(array) {
-  const fields = [...array];
-  const idxName = array.findIndex(({ name }) => name === 'names');
-  fields.splice(0, 0, fields.splice(idxName, 1)[0]);
-  const idxEmail = fields.findIndex(({ name }) => name === 'email');
-  fields.splice(1, 0, fields.splice(idxEmail, 1)[0]);
-  return fields;
+  const fields = [...array]
+  const idxName = array.findIndex(({ name }) => name === 'names')
+  fields.splice(0, 0, fields.splice(idxName, 1)[0])
+  const idxEmail = fields.findIndex(({ name }) => name === 'email')
+  fields.splice(1, 0, fields.splice(idxEmail, 1)[0])
+  return fields
 }
 
 export function handleRequestError(error) {
-  console.log('error', error);
-  const info = {};
+  console.log('error', error)
+  const info = {}
   if (error.response) {
-    info.status = error.response.status;
-    info.message = error.response.data.message ? error.response.data.message : JSON.stringify(error.response.data);
+    info.status = error.response.status
+    info.message = error.response.data.message
+      ? error.response.data.message
+      : JSON.stringify(error.response.data)
   } else if (error.request) {
-    info.status = 700;
-    info.message = 'Network error';
+    info.status = 700
+    info.message = 'Network error'
   } else {
-    info.status = 800;
-    info.message = error.message;
+    info.status = 800
+    info.message = error.message
   }
 
-  return info;
+  return info
 }
 
 export async function parseData2Excel(data, fields, roles = null) {
-  const info = [];
+  const info = []
 
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
   data.map((item, key) => {
-    const checkedInAt = item.checkedin_at;
-    const updatedAt = item.updated_at;
-    const createdAt = item.created_at;
-    info[key] = {};
-    info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
+    const checkedInAt = item.checkedin_at
+    const updatedAt = item.updated_at
+    const createdAt = item.created_at
+    info[key] = {}
+    info[key]['_id'] = item._id ? item._id : 'UNDEFINED'
     info[key]['checked'] =
-      item.checkedin_at !== 'null' && item.checkedin_at != null && item.checkedin_at != '' ? 'TRUE' : 'FALSE';
+      item.checkedin_at !== 'null' && item.checkedin_at != null && item.checkedin_at != ''
+        ? 'TRUE'
+        : 'FALSE'
 
-    info[key]['Hora checkIn'] = item.checkedin_at ? dayjs(checkedInAt).format('DD/MM/YYYY H:mm:ss A') : '';
+    info[key]['Hora checkIn'] = item.checkedin_at
+      ? dayjs(checkedInAt).format('DD/MM/YYYY H:mm:ss A')
+      : ''
     fields.map(({ name, type, label, _id }) => {
-      let str;
+      let str
       if (item?.properties) {
         switch (type) {
           case 'number':
@@ -106,42 +112,54 @@ export async function parseData2Excel(data, fields, roles = null) {
                   : item?.user
                   ? item?.user[name]
                   : ''
-                : '';
-            break;
+                : ''
+            break
           case 'boolean':
             // str = item[name] ? item[name] : '';
             const whereIsTheValue = (item.properties ?? item)[name]
-            str = typeof whereIsTheValue === 'undefined' ? 'N/A' : whereIsTheValue ? 'Sí' : 'No';
-            break;
+            str =
+              typeof whereIsTheValue === 'undefined'
+                ? 'N/A'
+                : whereIsTheValue
+                ? 'Sí'
+                : 'No'
+            break
           case 'complex':
             if (item.properties[name]?.includes('url')) {
               const document =
-                item.properties[name] && item.properties[name]?.includes('url') && JSON.parse(item.properties[name]);
-              str = (document[0]
-                ? document[0]?.url
-                : item.properties[name]
-                ? item.properties[name].response
-                : item?.user[name]
-              ).toString();
+                item.properties[name] &&
+                item.properties[name]?.includes('url') &&
+                JSON.parse(item.properties[name])
+              str = (
+                document[0]
+                  ? document[0]?.url
+                  : item.properties[name]
+                  ? item.properties[name].response
+                  : item?.user[name]
+              ).toString()
             } else {
-              str = '';
+              str = ''
             }
-            break;
+            break
           case 'multiplelist':
-            str = Array.isArray(item.properties[name]) ? item.properties[name].join() : item.properties[name];
-            break;
+            str = Array.isArray(item.properties[name])
+              ? item.properties[name].join()
+              : item.properties[name]
+            break
           case 'multiplelisttable':
-            str = Array.isArray(item.properties[name]) ? item.properties[name][0].label : item.properties[name];
-            break;
+            str = Array.isArray(item.properties[name])
+              ? item.properties[name][0].label
+              : item.properties[name]
+            break
           case 'codearea':
-            str = (item.properties ?? item)[name];
-            break;
+            str = (item.properties ?? item)[name]
+            break
           case 'file':
             str =
               item.properties[name] && item.properties[name].file
                 ? item.properties[name].file.response
-                : item.properties[name];
-            break;
+                : item.properties[name]
+            break
           default:
             str =
               name === 'id'
@@ -150,7 +168,7 @@ export async function parseData2Excel(data, fields, roles = null) {
                 ? item?.properties[name]
                 : item?.user
                 ? item?.user[name]
-                : '';
+                : ''
         }
       }
 
@@ -158,28 +176,30 @@ export async function parseData2Excel(data, fields, roles = null) {
         /* Object.keys(str).map((prop) => {
            return (info[key][prop] = Array.isArray(str[prop]) ? str[prop].join() : str[prop]);
          });*/
-        return (info[key][label] = str);
-      } else return (info[key][label] = str);
+        return (info[key][label] = str)
+      } else return (info[key][label] = str)
 
-      return null;
-    });
-    if (item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : '';
-    info[key]['Tipo asistente'] = roles?.filter((role) => role._id == item.rol_id)[0]?.name;
-    info[key]['Actualizado'] = updatedAt;
-    info[key]['Creado'] = createdAt;
-    info[key]['Tipo de checkIn'] = item.checkedin_type;
-    return info;
-  });
-  return info;
+      return null
+    })
+    if (item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : ''
+    info[key]['Tipo asistente'] = roles?.filter(
+      (role) => role._id == item.rol_id,
+    )[0]?.name
+    info[key]['Actualizado'] = updatedAt
+    info[key]['Creado'] = createdAt
+    info[key]['Tipo de checkIn'] = item.checkedin_type
+    return info
+  })
+  return info
 }
 
-let modal = null;
+let modal = null
 export const sweetAlert = {
   showLoading: (title, text) => {
     modal = Modal.success({
       title: title,
       content: <Spin>{text}</Spin>,
-    });
+    })
   },
 
   hideLoading: () => modal != null && modal.destroy(),
@@ -195,42 +215,42 @@ export const sweetAlert = {
   showError: (error) => Modal.error({ title: error.status, content: error.message }),
   simple: (title, html, confirmLabel, cb) =>
     Modal.info({ title: title, content: html, onOk: () => cb(), okText: confirmLabel }),
-};
+}
 
 export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-MM-DD') {
-  const startDate = dayjs(rangeStartDate);
-  const endDate = dayjs(rangeEndDate);
+  const startDate = dayjs(rangeStartDate)
+  const endDate = dayjs(rangeEndDate)
 
   if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate)) {
-    const datesRange = [startDate.format(dateFormat)];
-    let nextDay = startDate.add(1, 'day');
+    const datesRange = [startDate.format(dateFormat)]
+    let nextDay = startDate.add(1, 'day')
 
     while (nextDay.isBefore(endDate)) {
       if (!datesRange.includes(nextDay.format(dateFormat))) {
-        datesRange.push(nextDay.format(dateFormat));
-        nextDay = nextDay.add(1, 'day');
+        datesRange.push(nextDay.format(dateFormat))
+        nextDay = nextDay.add(1, 'day')
       }
     }
-    return datesRange;
+    return datesRange
   } else if (startDate.isValid() && endDate.isValid() && startDate.isSame(endDate)) {
-    return [startDate.format(dateFormat)];
+    return [startDate.format(dateFormat)]
   }
 
-  return [];
+  return []
 }
 
 export function formatDataToString(data, property) {
   //
-  const validationType = typeof data;
-  let result = '';
+  const validationType = typeof data
+  let result = ''
   if (validationType === 'object') {
     if (!(data === null)) {
       if (Array.isArray(data)) {
         for (let i = 0; i < data.length; i++) {
           if (data[i].label) {
-            result += data[i].label + '\n';
+            result += data[i].label + '\n'
           } else {
-            result += data[i] + '\n';
+            result += data[i] + '\n'
           }
         }
       } else {
@@ -238,7 +258,7 @@ export function formatDataToString(data, property) {
 
         if (property) {
           if (property.type === 'file') {
-            const { fileList } = data;
+            const { fileList } = data
             result = (
               <ul>
                 {fileList.map((item, index) => {
@@ -248,35 +268,36 @@ export function formatDataToString(data, property) {
                         {item.name}
                       </a>
                     </li>
-                  );
+                  )
                 })}
               </ul>
-            );
+            )
           }
         } else {
-          result = JSON.stringify(data);
+          result = JSON.stringify(data)
         }
       }
     }
   } else {
-    result = data;
+    result = data
   }
-  return result;
+  return result
 }
 
 const hexToRgb = (hex) => {
   // turn hex val to RGB
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
   return result
     ? {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),
         b: parseInt(result[3], 16),
       }
-    : null;
-};
-const setContrast = (rgb) => ((rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000 > 125 ? 'black' : 'white');
+    : null
+}
+const setContrast = (rgb) =>
+  (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000 > 125 ? 'black' : 'white'
 
 export const getCorrectColor = (color) => {
-  return setContrast(hexToRgb(color));
-};
+  return setContrast(hexToRgb(color))
+}

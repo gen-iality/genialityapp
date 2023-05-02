@@ -4,6 +4,6 @@ const QuizStatusMessage = {
   NO_QUESTIONS: 'Sin preguntas',
   NO_REQUIRED: 'Sin requisitos',
   PROCESSING: 'Procesando...',
-};
+}
 
-export default QuizStatusMessage;
+export default QuizStatusMessage

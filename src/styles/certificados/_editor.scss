@@ -1,7 +1,7 @@
-.editor-certificado{
-  .editor{
+.editor-certificado {
+  .editor {
     background-color: #f0f0f0;
-    border: 1px solid rgba(0,0,0,0.2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
     z-index: 65535;
     left: 115px;
     top: 229px;
@@ -9,18 +9,18 @@
     height: 36px;
     display: block;
   }
-  .edit-option{
+  .edit-option {
     display: inline-block;
     margin: 2px 0 0 2px;
     padding: 0;
     background: transparent;
-    &:not(:first-child){
+    &:not(:first-child) {
       border-left: 1px solid #d9d9d9;
       padding-left: 3px;
       margin-left: 3px;
     }
   }
-  .edit-element{
+  .edit-element {
     display: inline-block;
     padding: 4px 8px;
     font-size: 14px;
@@ -30,13 +30,13 @@
     text-align: center;
     overflow: visible;
     border: 1px solid transparent;
-    &:hover{
+    &:hover {
       color: #333;
       background-color: #e3e3e3;
       border-color: #ccc;
     }
   }
-  .contenedor{
+  .contenedor {
     position: relative;
     width: 800px;
     height: 560px;
@@ -44,20 +44,20 @@
     margin: auto;
     border: 1px solid black;
   }
-  .bg{
+  .bg {
     position: absolute;
     width: 100%;
     height: 100%;
     z-index: -1;
   }
-  .texto-certificado{
+  .texto-certificado {
     height: 70%;
     margin: auto;
     position: relative;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     line-height: 0;
-    p{
+    p {
       line-height: 19px;
       padding-left: 180px;
       margin-right: 180px;
@@ -66,15 +66,15 @@
     }
   }
 }
-.tags-certificado{
-  dl{
+.tags-certificado {
+  dl {
     margin-top: 0;
     margin-bottom: 20px;
   }
-  dt{
+  dt {
     line-height: 20px;
   }
-  dd{
+  dd {
     margin-bottom: 10px;
     font-size: 13px;
     padding-left: 9px;

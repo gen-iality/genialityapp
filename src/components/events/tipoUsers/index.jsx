@@ -1,14 +1,18 @@
-import { Fragment } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
-import TipoAsistentes from './TipoAsistentes';
-import TipoAsistente from './TipoAsistente';
+import { Fragment } from 'react'
+import { Route, Switch, withRouter } from 'react-router-dom'
+import TipoAsistentes from './TipoAsistentes'
+import TipoAsistente from './TipoAsistente'
 
 function TipoUsersRoutes(props) {
-  const { event, match } = props;
+  const { event, match } = props
   return (
     <Fragment>
       <Switch>
-        <Route exact path={`${match.url}/`} render={() => <TipoAsistentes event={event} matchUrl={match.url} />} />
+        <Route
+          exact
+          path={`${match.url}/`}
+          render={() => <TipoAsistentes event={event} matchUrl={match.url} />}
+        />
         <Route
           exact
           path={`${match.url}/tipoAsistente`}
@@ -16,7 +20,7 @@ function TipoUsersRoutes(props) {
         />
       </Switch>
     </Fragment>
-  );
+  )
 }
 
-export default withRouter(TipoUsersRoutes);
+export default withRouter(TipoUsersRoutes)

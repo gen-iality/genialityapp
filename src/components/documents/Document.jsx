@@ -1,52 +1,67 @@
-import { useState, useEffect } from 'react';
-import { useHistory, withRouter } from 'react-router-dom';
-import { DocumentsApi } from '@helpers/request';
-import { handleRequestError } from '@helpers/utils';
-import { Form, Row, Col, Input, Modal, Upload, Button, Checkbox, Spin, Progress } from 'antd';
-import { ExclamationCircleOutlined, UploadOutlined, ReloadOutlined } from '@ant-design/icons';
-import { fireStorage } from '@helpers/firebase';
-import Header from '@antdComponents/Header';
-import dayjs from 'dayjs';
-import { DispatchMessageService } from '@context/MessageService';
+import { useState, useEffect } from 'react'
+import { useHistory, withRouter } from 'react-router-dom'
+import { DocumentsApi } from '@helpers/request'
+import { handleRequestError } from '@helpers/utils'
+import {
+  Form,
+  Row,
+  Col,
+  Input,
+  Modal,
+  Upload,
+  Button,
+  Checkbox,
+  Spin,
+  Progress,
+} from 'antd'
+import {
+  ExclamationCircleOutlined,
+  UploadOutlined,
+  ReloadOutlined,
+} from '@ant-design/icons'
+import { fireStorage } from '@helpers/firebase'
+import Header from '@antdComponents/Header'
+import dayjs from 'dayjs'
+import { DispatchMessageService } from '@context/MessageService'
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
 const Document = (props) => {
-  const locationState = props.location.state;
-  const history = useHistory();
-  const [document, setDocument] = useState({});
-  const [documentList, setDocumentList] = useState([]);
-  const [files, setFiles] = useState('');
-  const [fileName, setFileName] = useState('');
-  const [extention, setExtention] = useState('');
-  const [folder, setFolder] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [loadPercentage, setLoadPercentage] = useState(0);
-  const [fromEditing, setFromEditing] = useState(false);
+  const locationState = props.location.state
+  const history = useHistory()
+  const [document, setDocument] = useState({})
+  const [documentList, setDocumentList] = useState([])
+  const [files, setFiles] = useState('')
+  const [fileName, setFileName] = useState('')
+  const [extention, setExtention] = useState('')
+  const [folder, setFolder] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [loadPercentage, setLoadPercentage] = useState(0)
+  const [fromEditing, setFromEditing] = useState(false)
 
   useEffect(() => {
     if (locationState?.edit && !props.simpleMode) {
-      getDocument();
+      getDocument()
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    if (!props.fromPDFDocumentURL) return;
+    if (!props.fromPDFDocumentURL) return
 
     // "Load" the file from URL.
-    const url = props.fromPDFDocumentURL;
+    const url = props.fromPDFDocumentURL
 
-    let filename = url.substring(url.lastIndexOf('/') + 1);
+    let filename = url.substring(url.lastIndexOf('/') + 1)
     if (filename.indexOf('?') !== -1) {
-      filename = filename.substring(0, filename.indexOf('?'));
+      filename = filename.substring(0, filename.indexOf('?'))
     }
     if (filename.indexOf('#') !== -1) {
-      filename = filename.substring(0, filename.indexOf('#'));
+      filename = filename.substring(0, filename.indexOf('#'))
     }
     const fakeDocument = {
       format: 'pdf',
@@ -69,42 +84,42 @@ const Document = (props) => {
           // },
           status: 'success',
           thumbUrl: null,
-        }
+        },
       ],
       state: 'father',
-    };
-    
-    setDocument(fakeDocument);
-    setFolder(fakeDocument.folder);
-    setFiles([fakeDocument.file]);
-    setDocumentList(fakeDocument.documentList);
-  }, [props.fromPDFDocumentURL]);
+    }
+
+    setDocument(fakeDocument)
+    setFolder(fakeDocument.folder)
+    setFiles([fakeDocument.file])
+    setDocumentList(fakeDocument.documentList)
+  }, [props.fromPDFDocumentURL])
 
   const getDocument = async () => {
-    const response = await DocumentsApi.getOne(locationState.edit, props.event._id);
-    setDocument(response);
-    setFolder(response.folder);
-    setFiles([response.file]);
-    setDocumentList(response.documentList);
-    setLoading(false);
-    setFromEditing(true);
-  };
+    const response = await DocumentsApi.getOne(locationState.edit, props.event._id)
+    setDocument(response)
+    setFolder(response.folder)
+    setFiles([response.file])
+    setDocumentList(response.documentList)
+    setLoading(false)
+    setFromEditing(true)
+  }
 
   const resetDocument = () => {
-    console.debug('reset all the Document component');
-    setDocument({});
-    setFolder(false);
-    setFiles('');
-    setDocumentList([]);
-    setLoading(false);
-    setFromEditing(false);
-    setLoadPercentage(0);
+    console.debug('reset all the Document component')
+    setDocument({})
+    setFolder(false)
+    setFiles('')
+    setDocumentList([])
+    setLoading(false)
+    setFromEditing(false)
+    setLoadPercentage(0)
   }
 
   const onSubmit = async () => {
-    setLoading(true);
+    setLoading(true)
     if (folder) {
-      setDocument({ ...document, type: 'folder', folder });
+      setDocument({ ...document, type: 'folder', folder })
     }
 
     if (!document.title) {
@@ -112,79 +127,79 @@ const Document = (props) => {
         type: 'error',
         msj: 'El título es requerido',
         action: 'show',
-      });
+      })
     } else if (!files && document.type !== 'folder') {
       DispatchMessageService({
         type: 'error',
         msj: 'El archivo es requerido',
         action: 'show',
-      });
+      })
     } else {
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
         msj: ' Por favor espere mientras se guarda la información...',
         action: 'show',
-      });
+      })
 
       try {
         if (!props.notRecordFileInDocuments) {
           if (locationState.edit && !props.simpleMode) {
-            console.debug('document editing');
+            console.debug('document editing')
             await DocumentsApi.editOne(
               !folder ? document : { title: document.title, type: 'folder', folder },
               locationState.edit,
-              props.event._id
-            );
-            console.debug('document edited');
+              props.event._id,
+            )
+            console.debug('document edited')
           } else {
-            console.debug('document creating');
+            console.debug('document creating')
             await DocumentsApi.create(
               !folder ? document : { title: document.title, type: 'folder', folder },
-              props.event._id
-            );
-            console.debug('document created');
+              props.event._id,
+            )
+            console.debug('document created')
             if (typeof props.cbUploaded === 'function') {
-              props.cbUploaded();
-              resetDocument();
+              props.cbUploaded()
+              resetDocument()
             }
           }
 
           DispatchMessageService({
             key: 'loading',
             action: 'destroy',
-          });
+          })
           DispatchMessageService({
             type: 'success',
             msj: 'Información guardada correctamente!',
             action: 'show',
-          });
+          })
         }
 
-        if (!props.simpleMode) history.push(`${props.matchUrl}`);
-        setLoading(false);
+        if (!props.simpleMode) history.push(`${props.matchUrl}`)
+        setLoading(false)
       } catch (e) {
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
-        });
+        })
         DispatchMessageService({
           type: 'error',
           msj: handleRequestError(e).message,
           action: 'show',
-        });
+        })
       }
     }
-  };
+  }
 
   const remove = () => {
-    console.debug('call Document.remove');
+    console.debug('call Document.remove')
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
       msj: ' Por favor espere mientras se borra la información...',
       action: 'show',
-    });
+    })
     if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -215,44 +230,44 @@ const Document = (props) => {
                 });
               } */
               if (!props.notRecordFileInDocuments) {
-                await DocumentsApi.deleteOne(locationState.edit, props.event._id);
+                await DocumentsApi.deleteOne(locationState.edit, props.event._id)
                 DispatchMessageService({
                   key: 'loading',
                   action: 'destroy',
-                });
+                })
                 DispatchMessageService({
                   type: 'success',
                   msj: 'Se eliminó la información correctamente!',
                   action: 'show',
-                });
+                })
               }
-              if (!props.simpleMode) history.push(`${props.matchUrl}`);
+              if (!props.simpleMode) history.push(`${props.matchUrl}`)
               if (typeof props.onRemoveDocumentContent === 'function') {
-                props.onRemoveDocumentContent();
+                props.onRemoveDocumentContent()
               }
-              lazyResetDocument();
+              lazyResetDocument()
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-              });
+              })
               DispatchMessageService({
                 type: 'error',
                 msj: handleRequestError(e).message,
                 action: 'show',
-              });
+              })
             }
-          };
-          onHandlerRemove();
+          }
+          onHandlerRemove()
         },
-      });
+      })
     } else {
       if (typeof props.onRemoveDocumentContent === 'function') {
-        props.onRemoveDocumentContent();
+        props.onRemoveDocumentContent()
       }
-      lazyResetDocument();
+      lazyResetDocument()
     }
-  };
+  }
 
   const lazyResetDocument = () => {
     setTimeout(() => {
@@ -261,38 +276,38 @@ const Document = (props) => {
       // progress (and other states), and we NEED avoid that re-calling, but we
       // can not because `onHandlerFile` listens the event `onChange` and it
       // does not check if that changing is from uploading or removing.
-      resetDocument();
-    }, 3000);
+      resetDocument()
+    }, 3000)
   }
 
   const handleChange = (e) => {
-    const { name } = e.target;
-    const { value } = e.target;
+    const { name } = e.target
+    const { value } = e.target
     setDocument({
       ...document,
       [name]: value,
-    });
-  };
+    })
+  }
 
   const onHandlerFile = async (e) => {
     console.log('onHandlerFile calling...', e)
     /* console.log(e.file.originFileObj); */
-    setLoading(true);
-    setDocumentList(e.fileList);
+    setLoading(true)
+    setDocumentList(e.fileList)
 
-    const ref = fireStorage.ref();
-    setFiles(e.file.originFileObj);
+    const ref = fireStorage.ref()
+    setFiles(e.file.originFileObj)
 
     //Se crea el nombre con base a la fecha y nombre del archivo
-    const name = dayjs().format('YYYY-DD-MM') + '-' + (files.name || 'unnamed');
-    setFileName(name);
+    const name = dayjs().format('YYYY-DD-MM') + '-' + (files.name || 'unnamed')
+    setFileName(name)
     //Se extrae la extencion del archivo por necesidad del aplicativo
 
-    setExtention(name.split('.').pop());
+    setExtention(name.split('.').pop())
 
     /* this.setState({ fileName: name }); */
     /* console.log(fileName, name); */
-    const uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files);
+    const uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files)
     /* setUploadTask(uploadTaskRef); */
     /* console.log(uploadTaskRef); */
     //Se envia a firebase y se pasa la validacion para poder saber el estado del documento
@@ -302,37 +317,39 @@ const Document = (props) => {
       (snapshot) => {
         // Observe state change events such as progress, pause, and resume
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        setLoadPercentage(progress);
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+        )
+        setLoadPercentage(progress)
         switch (snapshot.state) {
           case 'paused':
-            break;
+            break
           case 'running':
-            break;
+            break
         }
       },
       (error) => {
         // Handle unsuccessful uploads
-        console.error('You tried upload things to firestore:', error);
+        console.error('You tried upload things to firestore:', error)
       },
       () => {
-        console.log('calling succesUploadFile');
-        succesUploadFile(uploadTaskRef);
-        console.log('succesUploadFile called');
-      }
-    );
-  };
+        console.log('calling succesUploadFile')
+        succesUploadFile(uploadTaskRef)
+        console.log('succesUploadFile called')
+      },
+    )
+  }
 
   const succesUploadFile = async (uploadTaskRef) => {
-    let file;
+    let file
     try {
-      await uploadTaskRef.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        file = downloadURL;
-        console.log(downloadURL);
+      await uploadTaskRef.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+        file = downloadURL
+        console.log(downloadURL)
         // Send the URL to the parent component. Save it.
-        if (typeof props.onSave === 'function') props.onSave(downloadURL);
-        setLoading(false);
-      });
+        if (typeof props.onSave === 'function') props.onSave(downloadURL)
+        setLoading(false)
+      })
       setDocument({
         ...document,
         format: extention,
@@ -341,13 +358,13 @@ const Document = (props) => {
         file: file,
         type: 'file',
         documentList: documentList,
-      });
+      })
       // if (props.simpleMode) setInterval(() => onSubmit(), 1000);
     } catch (e) {
-      console.error('cannot re get file', e);
-      setLoading(true);
+      console.error('cannot re get file', e)
+      setLoading(true)
     }
-  };
+  }
 
   /* const createFolder = async () => {
     let value = document.getElementById('folderName').value;
@@ -364,24 +381,24 @@ const Document = (props) => {
   }; */
 
   const reload = () => {
-    history.go(0);
-  };
+    history.go(0)
+  }
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
       <Header
         title={props.simpleMode ? 'Cargar documento' : 'Documento'}
         back={!props.simpleMode}
-        save={props.simpleMode || ((loadPercentage > 0 && true) || fromEditing)}
+        save={props.simpleMode || (loadPercentage > 0 && true) || fromEditing}
         saveMethod={props.simpleMode && onSubmit}
         form={!props.simpleMode}
         remove={() => {
           if (props.notRecordFileInDocuments) {
-            remove();
+            remove()
           } else if (props.simpleMode) {
-            history.push(`${props.matchUrl.replace('agenda', 'documents')}`);
+            history.push(`${props.matchUrl.replace('agenda', 'documents')}`)
           } else {
-            remove();
+            remove()
           }
         }}
         edit={locationState?.edit}
@@ -408,8 +425,7 @@ const Document = (props) => {
                     Archivo <label style={{ color: 'red' }}>*</label>
                   </label>
                 }
-                rules={[{ required: true, message: 'El archivo es requerido' }]}
-              >
+                rules={[{ required: true, message: 'El archivo es requerido' }]}>
                 <Upload
                   multiple={false}
                   name="file"
@@ -417,12 +433,11 @@ const Document = (props) => {
                   fileList={documentList}
                   defaultValue={documentList}
                   onChange={(e) => {
-                    onHandlerFile(e);
-                    e.file.status = 'success';
+                    onHandlerFile(e)
+                    e.file.status = 'success'
                   }}
                   listType="picture"
-                  maxCount={1}
-                >
+                  maxCount={1}>
                   <Button block icon={<UploadOutlined />}>
                     Toca para subir archivo
                   </Button>
@@ -437,8 +452,7 @@ const Document = (props) => {
                   Título <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'El título es requerido' }]}
-            >
+              rules={[{ required: true, message: 'El título es requerido' }]}>
               <Input
                 name="title"
                 placeholder={folder ? 'Título de la carpeta' : 'Título del documento'}
@@ -451,7 +465,7 @@ const Document = (props) => {
         </Row>
       </Spin>
     </Form>
-  );
-};
+  )
+}
 
-export default withRouter(Document);
+export default withRouter(Document)

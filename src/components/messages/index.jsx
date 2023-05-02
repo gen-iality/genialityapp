@@ -1,10 +1,10 @@
-import { Fragment } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
-import InvitationDetail from './invitationDetail';
-import InvitationsList from './list';
+import { Fragment } from 'react'
+import { Route, Switch, withRouter } from 'react-router-dom'
+import InvitationDetail from './invitationDetail'
+import InvitationsList from './list'
 
 function Messages(props) {
-  const { match } = props;
+  const { match } = props
 
   return (
     <Fragment>
@@ -20,11 +20,13 @@ function Messages(props) {
         <Route
           exact
           path={`${match.url}/detail/:id`}
-          render={() => <InvitationDetail event={props.event} matchUrl={match.url} {...props} />}
+          render={() => (
+            <InvitationDetail event={props.event} matchUrl={match.url} {...props} />
+          )}
         />
       </Switch>
     </Fragment>
-  );
+  )
 }
 
-export default withRouter(Messages);
+export default withRouter(Messages)

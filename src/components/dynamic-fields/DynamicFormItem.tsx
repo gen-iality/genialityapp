@@ -1,27 +1,24 @@
 import * as React from 'react'
 import { injectIntl, WrappedComponentProps } from 'react-intl'
-import {
-  Form
-} from 'antd'
+import { Form } from 'antd'
 import { Rule } from 'antd/lib/form'
 import { IDynamicFieldProps } from './types'
 import DynamicFormDescription from './DynamicFormDescription'
 
-
-export interface IDynamicFormItemProps extends Omit<IDynamicFieldProps, 'allInitialValues'> {
-  rules: Rule[],
-  noStyle?: boolean,
-  hidden?: boolean,
+export interface IDynamicFormItemProps
+  extends Omit<IDynamicFieldProps, 'allInitialValues'> {
+  rules: Rule[]
+  noStyle?: boolean
+  hidden?: boolean
   valuePropName?: string
-  initialValue?: any,
+  initialValue?: any
 }
-
 
 const DynamicFormItem: React.FunctionComponent<IDynamicFormItemProps> = (props) => {
   const {
     noStyle,
     hidden,
-    valuePropName = "value",
+    valuePropName = 'value',
     rules,
     initialValue,
     fieldData,
@@ -37,8 +34,7 @@ const DynamicFormItem: React.FunctionComponent<IDynamicFormItemProps> = (props) 
         label={fieldData.label}
         name={fieldData.name}
         rules={rules}
-        initialValue={initialValue}
-      >
+        initialValue={initialValue}>
         {children}
       </Form.Item>
 

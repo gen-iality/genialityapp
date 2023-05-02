@@ -9,10 +9,7 @@ import {
   useState,
 } from 'react'
 
-import {
-  Col,
-  Form, Input, Row, Select, TimePicker,
-} from 'antd'
+import { Col, Form, Input, Row, Select, TimePicker } from 'antd'
 import { useHistory } from 'react-router'
 import AgendaContext from '@context/AgendaContext'
 import { hourWithAdditionalMinutes } from './hooks/useHourWithAdditionalMinutes'
@@ -34,14 +31,15 @@ const formLayout = {
 }
 
 interface IAgendaCreatorPageProps {
-  event: any,
-  matchUrl: string,
+  event: any
+  matchUrl: string
 }
 
 const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) => {
   const [shouldRedirect, setShouldRedirect] = useState(false)
   const [currentAgenda, setCurrentAgenda] = useState<AgendaType | undefined>()
-  const [selectedActivityType, setSelectedActivityType] = useState<ActivityType.Name | null>(null)
+  const [selectedActivityType, setSelectedActivityType] =
+    useState<ActivityType.Name | null>(null)
 
   const [form] = Form.useForm<FormValues>()
   const allDays = useAvailableDaysFromEvent(props.event)
@@ -52,7 +50,10 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
 
   const cAgenda = useContext(AgendaContext)
 
-  const somethingWasSelected = useMemo(() => selectedActivityType !== null, [selectedActivityType]);
+  const somethingWasSelected = useMemo(
+    () => selectedActivityType !== null,
+    [selectedActivityType],
+  )
 
   const onWidgetChange = useCallback((widget: ActivityType.CardUI) => {
     // In this case, the keys are the same of the activity type value
@@ -84,9 +85,18 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
     setShouldRedirect(true)
     cAgenda.setActivityEdit(_agenda._id)
 
-    DispatchMessageService({ action: 'destroy', type: 'loading', key: 'loading', msj: '' })
+    DispatchMessageService({
+      action: 'destroy',
+      type: 'loading',
+      key: 'loading',
+      msj: '',
+    })
 
-    DispatchMessageService({ msj: 'Información guardada correctamente!', type: 'success', action: 'show' })
+    DispatchMessageService({
+      msj: 'Información guardada correctamente!',
+      type: 'success',
+      action: 'show',
+    })
   }, [])
 
   useEffect(() => {
@@ -96,7 +106,7 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
 
     if (selectedActivityType) {
       saveActivityType()
-    }    
+    }
 
     console.debug('redirecting to /activity')
     history.push(`${props.matchUrl}/activity`, { edit: currentAgenda._id })
@@ -107,11 +117,7 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
   }, [selectedActivityType])
 
   return (
-    <Form
-      form={form}
-      onFinish={(values) => onFinish(values)}
-      { ...formLayout }
-    >
+    <Form form={form} onFinish={(values) => onFinish(values)} {...formLayout}>
       <Header
         back
         save
@@ -127,30 +133,30 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
             hideSelectButton
             somethingWasSelected={somethingWasSelected}
             title={formWidgetFlow.MainTitle}
-            render={() => <ActivityTypeSelectableCards
-              selected={selectedActivityType}
-              widget={formWidgetFlow}
-              onWidgetChange={onWidgetChange}
-            />}
+            render={() => (
+              <ActivityTypeSelectableCards
+                selected={selectedActivityType}
+                widget={formWidgetFlow}
+                onWidgetChange={onWidgetChange}
+              />
+            )}
           />
         </Col>
         <Col span={20}>
           <Form.Item
             label="Nombre"
             name="name"
-            rules={[{ required: true, message: 'Nombre de la lección requerida' }]}
-          >
+            rules={[{ required: true, message: 'Nombre de la lección requerida' }]}>
             <Input autoFocus placeholder="Nombre de la lección" />
           </Form.Item>
           <Form.Item
             label="Día"
             name="date"
-            initialValue={`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`}
-            rules={[{ required: true, message: 'La fecha es requerida' }]}
-          >
-            <Select
-              options={allDays}
-            />
+            initialValue={`${new Date().getFullYear()}-${
+              new Date().getMonth() + 1
+            }-${new Date().getDate()}`}
+            rules={[{ required: true, message: 'La fecha es requerida' }]}>
+            <Select options={allDays} />
           </Form.Item>
           <Row wrap justify="center" gutter={[8, 8]}>
             <Col span={12}>
@@ -158,9 +164,13 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
                 label="Hora inicio"
                 name="hour_start"
                 initialValue={hourWithAdditionalMinutes(0)}
-                rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
-              >
-                <TimePicker use12Hours format="h:mm a" allowClear={false} style={{ width: '100%' }} />
+                rules={[{ required: true, message: 'La hora de inicio es requerida' }]}>
+                <TimePicker
+                  use12Hours
+                  format="h:mm a"
+                  allowClear={false}
+                  style={{ width: '100%' }}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -168,9 +178,13 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
                 label="Hora fin"
                 name="hour_end"
                 initialValue={hourWithAdditionalMinutes(19)}
-                rules={[{ required: true, message: 'La hora final es requerida' }]}
-              >
-                <TimePicker use12Hours format="h:mm a" allowClear={false} style={{ width: '100%' }} />
+                rules={[{ required: true, message: 'La hora final es requerida' }]}>
+                <TimePicker
+                  use12Hours
+                  format="h:mm a"
+                  allowClear={false}
+                  style={{ width: '100%' }}
+                />
               </Form.Item>
             </Col>
           </Row>

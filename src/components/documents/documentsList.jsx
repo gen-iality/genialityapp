@@ -1,66 +1,71 @@
-import { Component } from 'react';
+import { Component } from 'react'
 
 //custom
-import { List, Card, Button, Table, Typography } from 'antd';
-import { DownloadOutlined, FileTextOutlined, FolderOutlined, DownOutlined } from '@ant-design/icons';
+import { List, Card, Button, Table, Typography } from 'antd'
+import {
+  DownloadOutlined,
+  FileTextOutlined,
+  FolderOutlined,
+  DownOutlined,
+} from '@ant-design/icons'
 
 const columns = [
   {
     title: 'Documento',
     dataIndex: 'document',
     key: 'document',
-    render: function(text, record) {
-      console.log('record', record);
+    render: function (text, record) {
+      console.log('record', record)
       return (
         <a href={record?.file} target="_blank" rel="noopener noreferrer">
           {text}
         </a>
-      );
+      )
     },
   },
   {
     title: 'Descargar',
     dataIndex: 'file',
     key: 'document',
-    render: function(text, record) {
-      console.log('record', record);
+    render: function (text, record) {
+      console.log('record', record)
       return (
         <a target="_blank" href={record?.file} rel="noopener noreferrer">
           <IconText text="Descargar" icon={<DownloadOutlined />} href={record?.file} />
         </a>
-      );
+      )
     },
   },
-];
+]
 
 // Estructura de boton para descargar documentos
 const IconText = ({ icon, text, onSubmit }) => (
   <Button icon={icon} htmlType="submit" type="link" href={onSubmit} target="_blank">
     {text}
   </Button>
-);
+)
 
 class DocumentsList extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       data: this.props.data || [],
       documentDates: [],
       loading: true,
-    };
+    }
   }
 
   removeLoader = () => {
-    this.setState({ loading: false });
-  };
+    this.setState({ loading: false })
+  }
 
   componentDidMount() {
-    this.getDatesFromDocumentList();
+    this.getDatesFromDocumentList()
   }
 
   async getDatesFromDocumentList() {
-    const { data } = this.state;
-    const documentDates = [];
+    const { data } = this.state
+    const documentDates = []
     for (let i = 0; i < data.length; i++) {
       //if (data[i].activity_id) {
       try {
@@ -69,20 +74,20 @@ class DocumentsList extends Component {
           //activity: agenda.name,
           document: data[i].title ? data[i].title : data[i].name,
           file: data[i].file,
-        });
+        })
       } catch (e) {
-        console.error(e);
+        console.error(e)
       }
       // }
     }
-    this.setState({ documentDates }, this.removeLoader);
+    this.setState({ documentDates }, this.removeLoader)
   }
 
   render() {
-    const { documentDates, data, loading } = this.state;
-    const { files } = this.props;
+    const { documentDates, data, loading } = this.state
+    const { files } = this.props
 
-    console.log('props', this.props);
+    console.log('props', this.props)
 
     return (
       <div>
@@ -91,8 +96,7 @@ class DocumentsList extends Component {
         ) : (
           <>
             <Card //bodyStyle={{ backgroundColor: this.props.colors.backgroundColor }}
-              style={{ textAlign: 'left' }}
-            >
+              style={{ textAlign: 'left' }}>
               <List
                 itemLayout="horizontal"
                 size="small"
@@ -111,8 +115,7 @@ class DocumentsList extends Component {
                           target="_blank"
                           href={item.file}
                           download
-                          rel="noopener noreferrer"
-                        >
+                          rel="noopener noreferrer">
                           {item.type == 'folder' ? (
                             ''
                           ) : (
@@ -140,8 +143,7 @@ class DocumentsList extends Component {
                         //         icon={EyeOutlined}
                         //     />
                         // </a>
-                      ]}
-                    >
+                      ]}>
                       <List.Item.Meta
                         style={{ marginRight: '10%', fontSize: '20px' }}
                         avatar={
@@ -158,8 +160,7 @@ class DocumentsList extends Component {
                             <span
                               style={{
                                 fontSize: '20px', //color: this.props.colors.texto
-                              }}
-                            >
+                              }}>
                               {' '}
                               {item.title}{' '}
                             </span>
@@ -167,8 +168,7 @@ class DocumentsList extends Component {
                             <span
                               style={{
                                 fontSize: '20px', //color: this.props.colors.texto
-                              }}
-                            >
+                              }}>
                               {' '}
                               {item.name}{' '}
                             </span>
@@ -193,8 +193,7 @@ class DocumentsList extends Component {
                                 target="_blank"
                                 href={files.file}
                                 download
-                                rel="noopener noreferrer"
-                              >
+                                rel="noopener noreferrer">
                                 {files.type == 'folder' ? (
                                   <DownOutlined />
                                 ) : (
@@ -212,11 +211,16 @@ class DocumentsList extends Component {
                                   />
                                 )}
                               </a>,
-                            ]}
-                          >
+                            ]}>
                             <List.Item.Meta
                               style={{ marginRight: '10%' }}
-                              avatar={files.type == 'folder' ? <FolderOutlined /> : <FileTextOutlined />}
+                              avatar={
+                                files.type == 'folder' ? (
+                                  <FolderOutlined />
+                                ) : (
+                                  <FileTextOutlined />
+                                )
+                              }
                               title={files.title ? files.title : files.name}
                             />
                           </List.Item>
@@ -228,7 +232,7 @@ class DocumentsList extends Component {
           </>
         )}
       </div>
-    );
+    )
   }
 }
-export default DocumentsList;
+export default DocumentsList

@@ -1,38 +1,43 @@
 /** React's libraries */
-import { useEffect, useState, createElement } from 'react';
-import { useHistory } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
-import { useIntl } from 'react-intl';
+import { useEffect, useState, createElement } from 'react'
+import { useHistory } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
+import { useIntl } from 'react-intl'
 
 /** Redux imports */
-import { connect } from 'react-redux';
-import * as userActions from '../redux/user/actions';
-import * as eventActions from '../redux/event/actions';
+import { connect } from 'react-redux'
+import * as userActions from '../redux/user/actions'
+import * as eventActions from '../redux/event/actions'
 
 /** Antd imports */
-import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
-import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Grid, Dropdown } from 'antd'
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  LockOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons'
+import AccountCircleIcon from '@2fd/ant-design-icons/lib/AccountCircle'
 
 /** Context */
-import withContext from '@context/withContext';
+import withContext from '@context/withContext'
 
 /** Components */
-import ModalLoginHelpers from '@components/authentication/ModalLoginHelpers';
-import MenuOld from '@components/events/shared/menu';
-import { recordTypeForThisEvent } from '@components/events/Landing/helpers/thisRouteCanBeDisplayed';
-import ErrorServe from '@components/modal/serverError';
-import UserStatusAndMenu from '@components/shared/userStatusAndMenu';
+import ModalLoginHelpers from '@components/authentication/ModalLoginHelpers'
+import MenuOld from '@components/events/shared/menu'
+import { recordTypeForThisEvent } from '@components/events/Landing/helpers/thisRouteCanBeDisplayed'
+import ErrorServe from '@components/modal/serverError'
+import UserStatusAndMenu from '@components/shared/userStatusAndMenu'
 
-const { useBreakpoint } = Grid;
+const { useBreakpoint } = Grid
 
-const { setEventData } = eventActions;
-const { addLoginInformation, showMenu } = userActions;
+const { setEventData } = eventActions
+const { addLoginInformation, showMenu } = userActions
 
-const { Header } = Layout;
+const { Header } = Layout
 const zIndex = {
   zIndex: '1',
-};
+}
 const initialDataGeneral = {
   selection: [],
   name: '',
@@ -51,51 +56,52 @@ const initialDataGeneral = {
   modalVisible: false,
   tabModal: '1',
   anonimususer: false,
-};
+}
 
 const Headers = (props) => {
-  const { showMenu, loginInfo, cHelper, cEvent, cEventUser, cUser } = props;
-  const { helperDispatch } = cHelper;
+  const { showMenu, loginInfo, cHelper, cEvent, cEventUser, cUser } = props
+  const { helperDispatch } = cHelper
 
-  const [headerIsLoading, setHeaderIsLoading] = useState(true);
-  const [dataGeneral, setdataGeneral] = useState(initialDataGeneral);
+  const [headerIsLoading, setHeaderIsLoading] = useState(true)
+  const [dataGeneral, setdataGeneral] = useState(initialDataGeneral)
   const [showButtons, setshowButtons] = useState({
     buttonregister: true,
     buttonlogin: true,
-  });
-  const [fixed, setFixed] = useState(false);
-  const screens = useBreakpoint();
-  const history = useHistory();
-  const intl = useIntl();
+  })
+  const [fixed, setFixed] = useState(false)
+  const screens = useBreakpoint()
+  const history = useHistory()
+  const intl = useIntl()
   const openMenu = () => {
     setdataGeneral({
       ...dataGeneral,
       menuOpen: !dataGeneral.menuOpen,
       filterOpen: false,
-    });
-  };
+    })
+  }
 
   const handleMenuEvent = () => {
     setdataGeneral({
       ...dataGeneral,
       showEventMenu: !dataGeneral.showEventMenu,
-    });
-    showMenu();
-  };
+    })
+    showMenu()
+  }
 
   const showDrawer = () => {
-    setdataGeneral({ ...dataGeneral, showEventMenu: true });
-  };
+    setdataGeneral({ ...dataGeneral, showEventMenu: true })
+  }
 
   const onClose = () => {
-    setdataGeneral({ ...dataGeneral, showEventMenu: false });
-  };
+    setdataGeneral({ ...dataGeneral, showEventMenu: false })
+  }
 
   async function LoadCurrentUser() {
-    const { value, status } = cUser;
+    const { value, status } = cUser
 
-    if (!value && status === 'LOADED') return setHeaderIsLoading(false), setdataGeneral(initialDataGeneral);
-    if (!value) return;
+    if (!value && status === 'LOADED')
+      return setHeaderIsLoading(false), setdataGeneral(initialDataGeneral)
+    if (!value) return
 
     setdataGeneral({
       name: value?.names || value?.name,
@@ -107,15 +113,15 @@ const Headers = (props) => {
       id: value?.user?._id,
       user: true,
       anonimususer: value?.isAnonymous || false,
-    });
-    setHeaderIsLoading(false);
+    })
+    setHeaderIsLoading(false)
     // }
   }
 
   const WhereHerePath = () => {
-    const containtorganization = window.location.pathname.includes('/organization');
-    return containtorganization ? 'organization' : 'landing';
-  };
+    const containtorganization = window.location.pathname.includes('/organization')
+    return containtorganization ? 'organization' : 'landing'
+  }
 
   const userLogOut = (callBack) => {
     const params = {
@@ -125,85 +131,91 @@ const Headers = (props) => {
       formatMessage: intl.formatMessage,
       handleChangeTypeModal: cHelper.handleChangeTypeModal,
       history,
-    };
+    }
 
     helperDispatch({
       type: 'logout',
       showNotification: callBack,
       params,
-    });
-  };
+    })
+  }
 
   const MenuMobile = (
     <Menu>
       <Menu.Item
         onClick={() => {
-          helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
-        }}
-      >
+          helperDispatch({
+            type: 'showLogin',
+            visible: true,
+            organization: WhereHerePath(),
+          })
+        }}>
         <FormattedMessage id="header.expired_signin" defaultMessage="Sign In" />
       </Menu.Item>
 
       <Menu.Item
         onClick={() => {
-          helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
-        }}
-      >
+          helperDispatch({
+            type: 'showRegister',
+            visible: true,
+            organization: WhereHerePath(),
+          })
+        }}>
         <FormattedMessage id="registration.button.create" defaultMessage="Sign Up" />
       </Menu.Item>
     </Menu>
-  );
+  )
 
   useEffect(() => {
-    LoadCurrentUser();
-  }, [cUser?.value]);
+    LoadCurrentUser()
+  }, [cUser?.value])
 
   useEffect(() => {
     async function RenderButtonsForTypeEvent() {
-      const typeEvent = recordTypeForThisEvent(cEvent);
+      const typeEvent = recordTypeForThisEvent(cEvent)
       switch (typeEvent) {
         case 'PRIVATE_EVENT':
           setshowButtons({
             buttonregister: false,
             buttonlogin: true,
-          });
-          break;
+          })
+          break
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION':
           setshowButtons({
             buttonregister: true,
             buttonlogin: true,
-          });
-          break;
+          })
+          break
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
           setshowButtons({
             buttonregister: true,
             buttonlogin: true,
-          });
-          break;
+          })
+          break
 
         default:
           setshowButtons({
             buttonregister: true,
             buttonlogin: true,
-          });
-          break;
+          })
+          break
       }
     }
 
     if (cEvent?.value) {
-      RenderButtonsForTypeEvent();
+      RenderButtonsForTypeEvent()
     }
-  }, [cEvent]);
+  }, [cEvent])
 
   useEffect(() => {
     const onScroll = (e) => {
-      const showHeaderFixed = window.scrollY > 64;
-      fixed != showHeaderFixed && setFixed(showHeaderFixed);
-    };
-    document.addEventListener('scroll', onScroll);
-  }, [fixed]);
+      const showHeaderFixed = window.scrollY > 64
+      fixed != showHeaderFixed && setFixed(showHeaderFixed)
+    }
+    document.addEventListener('scroll', onScroll)
+  }, [fixed])
 
   return (
     <>
@@ -218,8 +230,7 @@ const Headers = (props) => {
           height: '45px',
           transition: 'all 0.5s ease-out',
           opacity: fixed ? '0.9' : '1',
-        }}
-      >
+        }}>
         <Menu style={{ border: '0px' }} theme="light" mode="horizontal">
           <Row justify="space-between" align="middle">
             <Row className="logo-header" justify="space-between" align="middle">
@@ -228,12 +239,15 @@ const Headers = (props) => {
                 <Col span={2} offset={3} data-target="navbarBasicExample">
                   <span className="icon icon-menu" onClick={() => handleMenuEvent()}>
                     <Button style={zIndex} onClick={() => showDrawer()}>
-                      {createElement(dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                        className: 'trigger',
-                        onClick: () => {
-                          console.log('CERRAR');
+                      {createElement(
+                        dataGeneral.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined,
+                        {
+                          className: 'trigger',
+                          onClick: () => {
+                            console.log('CERRAR')
+                          },
                         },
-                      })}
+                      )}
                     </Button>
                   </span>
                 </Col>
@@ -270,9 +284,12 @@ const Headers = (props) => {
                       style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
                       size="large"
                       onClick={() => {
-                        helperDispatch({ type: 'showLogin', visible: true, organization: WhereHerePath() });
-                      }}
-                    >
+                        helperDispatch({
+                          type: 'showLogin',
+                          visible: true,
+                          organization: WhereHerePath(),
+                        })
+                      }}>
                       {intl.formatMessage({
                         id: 'modal.title.login',
                         defaultMessage: 'Iniciar sesión',
@@ -299,9 +316,12 @@ const Headers = (props) => {
                     <Button
                       size="large"
                       onClick={() => {
-                        helperDispatch({ type: 'showRegister', visible: true, organization: WhereHerePath() });
-                      }}
-                    >
+                        helperDispatch({
+                          type: 'showRegister',
+                          visible: true,
+                          organization: WhereHerePath(),
+                        })
+                      }}>
                       {intl.formatMessage({
                         id: 'modal.title.register',
                         defaultMessage: 'Registrarme',
@@ -361,8 +381,7 @@ const Headers = (props) => {
             placement="left"
             closable
             onClose={() => onClose()}
-            visible={dataGeneral.showEventMenu}
-          >
+            visible={dataGeneral.showEventMenu}>
             <MenuOld match={window.location.pathname} />
           </Drawer>
         </div>
@@ -372,8 +391,8 @@ const Headers = (props) => {
       {/* where is errorData?, I think that it was `dataGeneral.serverError` */}
       {dataGeneral.serverError && <ErrorServe errorData={dataGeneral.serverError} />}
     </>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => ({
   categories: state.categories.items,
@@ -384,13 +403,13 @@ const mapStateToProps = (state) => ({
   error: state.categories.error,
   event: state.event.data,
   modalVisible: state.stage.modal,
-});
+})
 
 const mapDispatchToProps = {
   setEventData,
   addLoginInformation,
   showMenu,
-};
+}
 
-const HeaderWithContext = withContext(Headers);
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderWithContext);
+const HeaderWithContext = withContext(Headers)
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderWithContext)

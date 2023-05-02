@@ -1,15 +1,18 @@
-import { Button, Drawer, Modal, Result, Typography } from 'antd';
-import { CheckCircleTwoTone } from '@ant-design/icons';
-import { ButtonPayment } from '../registrationForm/payRegister';
+import { Button, Drawer, Modal, Result, Typography } from 'antd'
+import { CheckCircleTwoTone } from '@ant-design/icons'
+import { ButtonPayment } from '../registrationForm/payRegister'
 
 const ModalRegister = ({ register, setRegister, event }) => {
-  const titleModal = register == 4 ? `¡Información Actualizada!` : `Inscripción Exitosa!`;
+  const titleModal = register == 4 ? `¡Información Actualizada!` : `Inscripción Exitosa!`
 
   const message =
-    register == 1 ? `Se ha mandado un correo de confirmación que te permitirá acceder al curso`
-      : register == 2 ? `Bienvenido al curso ${event?.name}.`.concat('')
-      : register == 3 ? `Su registro ha sido exitoso, click al siguiente enlace para realizar la donación`
-      : `value ${register} is unknown!`;
+    register == 1
+      ? `Se ha mandado un correo de confirmación que te permitirá acceder al curso`
+      : register == 2
+      ? `Bienvenido al curso ${event?.name}.`.concat('')
+      : register == 3
+      ? `Su registro ha sido exitoso, click al siguiente enlace para realizar la donación`
+      : `value ${register} is unknown!`
   // Recibirá en su correo el link de acceso al curso
   const infoButton =
     register == 1
@@ -18,7 +21,7 @@ const ModalRegister = ({ register, setRegister, event }) => {
       ? `Disfrutar del curso`
       : register == 3
       ? `REGISTRO PAGO`
-      : `Disfrutar del curso`;
+      : `Disfrutar del curso`
 
   return (
     <Modal
@@ -26,8 +29,7 @@ const ModalRegister = ({ register, setRegister, event }) => {
       footer={null}
       zIndex={999999999}
       visible={register !== null}
-      closable={false}
-    >
+      closable={false}>
       <Result
         icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
         status="success"
@@ -39,17 +41,15 @@ const ModalRegister = ({ register, setRegister, event }) => {
               onClick={() => setRegister(null)}
               style={{ backgroundColor: '#52C41A', color: '#FFFFFF', marginTop: '10px' }}
               size="large"
-              key="console"
-            >
+              key="console">
               {infoButton}
             </Button>
           ) : (
             <ButtonPayment />
           ),
-        ]}
-      ></Result>
+        ]}></Result>
     </Modal>
-  );
-};
+  )
+}
 
-export default ModalRegister;
+export default ModalRegister

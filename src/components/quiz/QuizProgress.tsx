@@ -1,48 +1,48 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react'
 
-import { SurveyStats } from '@components/events/surveys/types';
-import QuizBadge from './QuizBadge';
-import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats';
+import { SurveyStats } from '@components/events/surveys/types'
+import QuizBadge from './QuizBadge'
+import useAsyncPrepareQuizStats from './useAsyncPrepareQuizStats'
 
 interface QuizProgressProps {
   /**
    * The event ID
    */
-  eventId: string;
+  eventId: string
   /**
    * The current survey ID
    */
-  surveyId: string;
+  surveyId: string
   /**
    * The current user ID
    */
-  userId: string;
+  userId: string
   /**
    * Mark as short badge
    */
-  short?: boolean;
-  isAnswersDeleted?: boolean;
+  short?: boolean
+  isAnswersDeleted?: boolean
 }
 
 function QuizProgress(props: QuizProgressProps) {
-  const [totalAnswers, setTotalAnswers] = useState(0);
-  const [goodAnswers, setGoodAnswers] = useState(0);
-  const [requiredMinimum, setRequiredMinimum] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [totalAnswers, setTotalAnswers] = useState(0)
+  const [goodAnswers, setGoodAnswers] = useState(0)
+  const [requiredMinimum, setRequiredMinimum] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     useAsyncPrepareQuizStats(props.eventId, props.surveyId, props.userId)
       .then((stats: SurveyStats) => {
         // Update stats
-        setTotalAnswers(stats.total);
-        setGoodAnswers(stats.right);
-        setRequiredMinimum(stats.minimum);
-        setIsLoading(false);
+        setTotalAnswers(stats.total)
+        setGoodAnswers(stats.right)
+        setRequiredMinimum(stats.minimum)
+        setIsLoading(false)
       })
       .catch((err: any) => {
-        console.error('Cannot request with SurveysApi or Firestore:', err);
-      });
-  }, [props.eventId, props.surveyId, props.userId, isLoading, props.isAnswersDeleted]);
+        console.error('Cannot request with SurveysApi or Firestore:', err)
+      })
+  }, [props.eventId, props.surveyId, props.userId, isLoading, props.isAnswersDeleted])
 
   return (
     <QuizBadge
@@ -52,7 +52,7 @@ function QuizProgress(props: QuizProgressProps) {
       isLoading={isLoading}
       short={props.short}
     />
-  );
+  )
 }
 
-export default QuizProgress;
+export default QuizProgress

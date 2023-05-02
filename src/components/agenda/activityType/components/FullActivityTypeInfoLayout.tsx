@@ -1,36 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
-import {
-  Row,
-  Col,
-  Typography,
-} from 'antd';
+import { Row, Col, Typography } from 'antd'
 
-import type { ActivityType } from '@context/activityType/types/activityType';
+import type { ActivityType } from '@context/activityType/types/activityType'
 
-const {
-  Title,
-  Paragraph,
-} = Typography;
+const { Title, Paragraph } = Typography
 
 export interface FullActivityTypeInfoLayoutProps {
-  form: ActivityType.FormUI,
-  onLoaded: () => void,
-};
+  form: ActivityType.FormUI
+  onLoaded: () => void
+}
 
 function FullActivityTypeInfoLayout(props: FullActivityTypeInfoLayoutProps) {
   const {
-    form: {
-      description,
-      image,
-      title,
-    },
+    form: { description, image, title },
     onLoaded,
-  } = props;
+  } = props
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => onLoaded(), []);
+  useEffect(() => onLoaded(), [])
 
   return (
     <Row justify="space-around" align="middle" style={{ margin: '0px 40px 0px 40px' }}>
@@ -42,12 +31,15 @@ function FullActivityTypeInfoLayout(props: FullActivityTypeInfoLayoutProps) {
         <img
           onLoad={() => setIsLoading(false)}
           src={image}
-          style={{ objectFit: 'contain', backgroundColor: isLoading ? '#F2F2F2' : 'transparent' }}
+          style={{
+            objectFit: 'contain',
+            backgroundColor: isLoading ? '#F2F2F2' : 'transparent',
+          }}
           width="400"
         />
       </Col>
     </Row>
-  );
+  )
 }
 
-export default FullActivityTypeInfoLayout;
+export default FullActivityTypeInfoLayout

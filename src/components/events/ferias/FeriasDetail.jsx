@@ -1,59 +1,59 @@
-import { useEffect } from 'react';
-import { Tabs, Row, Col, Card, Image, Typography, Space, Grid } from 'antd';
-import FeriasBanner from './feriaBanner.jsx';
-import Information from './information.jsx';
-import Product from './product';
-import Contact from './contact';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
-import { setTopBanner } from '../../../redux/topBanner/actions';
-import { getEventCompany } from '../../empresas/services.js';
-import { useState } from 'react';
-import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import Feedback from './feedback.jsx';
-import { useEventContext } from '@context/eventContext';
-import ReactPlayer from 'react-player';
+import { useEffect } from 'react'
+import { Tabs, Row, Col, Card, Image, Typography, Space, Grid } from 'antd'
+import FeriasBanner from './feriaBanner.jsx'
+import Information from './information.jsx'
+import Product from './product'
+import Contact from './contact'
+import { withRouter } from 'react-router'
+import { connect } from 'react-redux'
+import { setTopBanner } from '../../../redux/topBanner/actions'
+import { getEventCompany } from '../../empresas/services.js'
+import { useState } from 'react'
+import { setVirtualConference } from '../../../redux/virtualconference/actions'
+import Feedback from './feedback.jsx'
+import { useEventContext } from '@context/eventContext'
+import ReactPlayer from 'react-player'
 
-const { useBreakpoint } = Grid;
+const { useBreakpoint } = Grid
 
 const FeriasDetail = (props) => {
-  const screens = useBreakpoint();
-  const [companyDetail, setCompanyDetail] = useState();
-  const [visibleTab, setVisibleTab] = useState(true);
+  const screens = useBreakpoint()
+  const [companyDetail, setCompanyDetail] = useState()
+  const [visibleTab, setVisibleTab] = useState(true)
 
-  const { Title } = Typography;
+  const { Title } = Typography
 
-  const cEvent = useEventContext();
+  const cEvent = useEventContext()
 
-  const colorTexto = cEvent.value.styles.textMenu;
-  const colorFondo = cEvent.value.styles.toolbarDefaultBg;
+  const colorTexto = cEvent.value.styles.textMenu
+  const colorFondo = cEvent.value.styles.toolbarDefaultBg
 
   useEffect(() => {
-    props.setTopBanner(false);
-    props.setVirtualConference(false);
+    props.setTopBanner(false)
+    props.setVirtualConference(false)
     return () => {
-      props.setTopBanner(true);
-      props.setVirtualConference(true);
-    };
-  });
+      props.setTopBanner(true)
+      props.setVirtualConference(true)
+    }
+  })
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const { match } = props;
-    const eventId = match.params.event_id;
-    const idCompany = match.params.id;
+    window.scrollTo(0, 0)
+    const { match } = props
+    const eventId = match.params.event_id
+    const idCompany = match.params.id
 
     obtenerEmpresa(eventId, idCompany).then((resp) => {
-      setCompanyDetail(resp);
-    });
-  }, []);
+      setCompanyDetail(resp)
+    })
+  }, [])
 
   const obtenerEmpresa = async (eventId, idCompany) => {
-    const resp = await getEventCompany(eventId, idCompany);
-    return resp;
-  };
+    const resp = await getEventCompany(eventId, idCompany)
+    return resp
+  }
 
-  const { TabPane } = Tabs;
+  const { TabPane } = Tabs
 
   return (
     <div className="feriasdetail">
@@ -88,7 +88,12 @@ const FeriasDetail = (props) => {
               {companyDetail && (companyDetail.video_url || companyDetail.description) ? (
                 <div style={{ aspectRatio: '16/9', width: '100%' }}>
                   {companyDetail && companyDetail.video_url && (
-                    <ReactPlayer width='100%' className="video" height="100%" url={companyDetail.video_url} />
+                    <ReactPlayer
+                      width="100%"
+                      className="video"
+                      height="100%"
+                      url={companyDetail.video_url}
+                    />
                   )}
                   <Row style={{ paddingTop: '10px' }}>
                     <Space direction="vertical">
@@ -115,7 +120,14 @@ const FeriasDetail = (props) => {
                     <Row gutter={[16, 16]}>
                       {companyDetail &&
                         companyDetail.services.map((prod, index) => (
-                          <Col xs={24} sm={12} md={8} lg={8} xl={6} xxl={6} key={'PoS-' + index}>
+                          <Col
+                            xs={24}
+                            sm={12}
+                            md={8}
+                            lg={8}
+                            xl={6}
+                            xxl={6}
+                            key={'PoS-' + index}>
                             <Product
                               key={index}
                               imgProduct={prod.image}
@@ -158,14 +170,20 @@ const FeriasDetail = (props) => {
           )}
           {visibleTab && (
             <TabPane tab="Galería" key="4">
-              <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1.5vw' }}>
+              <div
+                style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1.5vw' }}>
                 <Row gutter={[16, 16]}>
                   <Image.PreviewGroup>
                     {companyDetail && companyDetail.gallery.length > 0 ? (
                       companyDetail.gallery.map((imagen, index) => (
                         <Col key={'gallery-' + index}>
                           <Image
-                            alt={'Imagen' + index + '-Galeria-' + companyDetail.name.replace(/\s+/g, '-')}
+                            alt={
+                              'Imagen' +
+                              index +
+                              '-Galeria-' +
+                              companyDetail.name.replace(/\s+/g, '-')
+                            }
                             src={imagen.image}
                             style={{
                               height: '200px',
@@ -187,18 +205,18 @@ const FeriasDetail = (props) => {
         </Tabs>
       </div>
     </div>
-  );
-};
+  )
+}
 const mapStateToProps = (state, { params }) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
   view: state.topBannerReducer.view,
   params: params,
-});
+})
 
 const mapDispatchToProps = {
   setTopBanner,
   setVirtualConference,
-};
+}
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FeriasDetail));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FeriasDetail))

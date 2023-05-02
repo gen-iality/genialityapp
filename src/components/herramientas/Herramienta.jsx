@@ -1,36 +1,38 @@
-import { useEffect, useState } from 'react';
-import { ToolsApi } from '@helpers/request';
-import { useHistory } from 'react-router-dom';
-import { handleRequestError } from '@helpers/utils';
-import { Row, Col, Form, Input, message, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '@context/MessageService';
+import { useEffect, useState } from 'react'
+import { ToolsApi } from '@helpers/request'
+import { useHistory } from 'react-router-dom'
+import { handleRequestError } from '@helpers/utils'
+import { Row, Col, Form, Input, message, Modal } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import Header from '@antdComponents/Header'
+import { DispatchMessageService } from '@context/MessageService'
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
 const Herramienta = (props) => {
-  const eventID = props.event._id;
-  const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
-  const history = useHistory();
-  const [herramienta, setHerramienta] = useState({});
+  const eventID = props.event._id
+  const locationState = props.location.state //si viene new o edit en el state, si es edit es un id
+  const history = useHistory()
+  const [herramienta, setHerramienta] = useState({})
 
   useEffect(() => {
     if (locationState.edit) {
-      getOne();
+      getOne()
     }
-  }, []);
+  }, [])
 
   const getOne = async () => {
-    const response = await ToolsApi.getOne(locationState.edit, eventID);
-    const data = response.data.find((herramientas) => herramientas._id === locationState.edit);
-    setHerramienta(data);
-  };
+    const response = await ToolsApi.getOne(locationState.edit, eventID)
+    const data = response.data.find(
+      (herramientas) => herramientas._id === locationState.edit,
+    )
+    setHerramienta(data)
+  }
 
   const onSubmit = async () => {
     if (herramienta.name) {
@@ -39,54 +41,54 @@ const Herramienta = (props) => {
         key: 'loading',
         msj: 'Por favor espere mientras se guarda la información...',
         action: 'show',
-      });
+      })
 
       try {
         if (locationState.edit) {
-          const resp = await ToolsApi.editOne(herramienta, locationState.edit, eventID);
-          console.log('resp', resp);
+          const resp = await ToolsApi.editOne(herramienta, locationState.edit, eventID)
+          console.log('resp', resp)
         } else {
-          const resp = await ToolsApi.create(herramienta, eventID);
-          console.log('resp', resp);
+          const resp = await ToolsApi.create(herramienta, eventID)
+          console.log('resp', resp)
         }
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
-        });
+        })
         DispatchMessageService({
           type: 'success',
           msj: 'Información guardada correctamente!',
           action: 'show',
-        });
-        history.push(`${props.matchUrl}/herramientas`);
+        })
+        history.push(`${props.matchUrl}/herramientas`)
       } catch (e) {
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
-        });
+        })
         DispatchMessageService({
           type: 'error',
           msj: handleRequestError(e).message,
           action: 'show',
-        });
+        })
       }
     } else {
       DispatchMessageService({
         type: 'error',
         msj: 'El nombre es requerido',
         action: 'show',
-      });
+      })
     }
-  };
+  }
 
   const handleChangeName = (e) => {
-    setHerramienta({ ...herramienta, name: e.target.value });
-  };
+    setHerramienta({ ...herramienta, name: e.target.value })
+  }
 
   const handleChangeLink = (e) => {
-    console.log('Se ejecuta esto');
-    setHerramienta({ ...herramienta, link: e.target.value });
-  };
+    console.log('Se ejecuta esto')
+    setHerramienta({ ...herramienta, link: e.target.value })
+  }
 
   const onRemoveId = () => {
     DispatchMessageService({
@@ -94,7 +96,7 @@ const Herramienta = (props) => {
       key: 'loading',
       msj: 'Por favor espere mientras se borra la información...',
       action: 'show',
-    });
+    })
     if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -106,38 +108,45 @@ const Herramienta = (props) => {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await ToolsApi.deleteOne(locationState.edit, eventID);
+              await ToolsApi.deleteOne(locationState.edit, eventID)
               DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-              });
+              })
               DispatchMessageService({
                 type: 'success',
                 msj: 'Se eliminó la información correctamente!',
                 action: 'show',
-              });
-              history.push(`${props.matchUrl}/herramientas`);
+              })
+              history.push(`${props.matchUrl}/herramientas`)
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-              });
+              })
               DispatchMessageService({
                 type: 'error',
                 msj: handleRequestError(e).message,
                 action: 'show',
-              });
+              })
             }
-          };
-          onHandlerRemove();
+          }
+          onHandlerRemove()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title="Herramienta" back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header
+        title="Herramienta"
+        back
+        save
+        form
+        remove={onRemoveId}
+        edit={locationState.edit}
+      />
 
       <Row justify="center" wrap gutter={12}>
         <Col span={12}>
@@ -147,8 +156,7 @@ const Herramienta = (props) => {
                 Nombre <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El nombre es requerido' }]}
-          >
+            rules={[{ required: true, message: 'El nombre es requerido' }]}>
             <Input
               value={herramienta.name}
               name="name"
@@ -162,8 +170,7 @@ const Herramienta = (props) => {
               <label style={{ marginTop: '2%' }} className="label">
                 Enlace (Opcional)
               </label>
-            }
-          >
+            }>
             <Input
               value={herramienta.link}
               name="link"
@@ -174,7 +181,7 @@ const Herramienta = (props) => {
         </Col>
       </Row>
     </Form>
-  );
-};
+  )
+}
 
-export default Herramienta;
+export default Herramienta

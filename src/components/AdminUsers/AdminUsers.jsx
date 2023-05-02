@@ -1,3 +1,3 @@
 export const AdminUsers = () => {
-  return <div>AdminUsers</div>;
-};
+  return <div>AdminUsers</div>
+}

@@ -1,9 +1,9 @@
-import { Spin } from 'antd';
+import { Spin } from 'antd'
 
 function WithLoading(Component) {
   return function WihLoadingComponent({ isLoading, ...props }) {
-    if (isLoading) return <Spin></Spin>;
-    return <Component {...props} />;
-  };
+    if (isLoading) return <Spin></Spin>
+    return <Component {...props} />
+  }
 }
-export default WithLoading;
+export default WithLoading

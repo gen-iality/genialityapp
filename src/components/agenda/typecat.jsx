@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import { CategoriesAgendaApi, TypesAgendaApi } from '@helpers/request';
-import { Tag } from 'antd';
-import CMS from '../newComponent/CMS';
+import { useState, useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
+import { CategoriesAgendaApi, TypesAgendaApi } from '@helpers/request'
+import { Tag } from 'antd'
+import CMS from '../newComponent/CMS'
 
 const AgendaTypeCat = (props) => {
   const columnsOriginal = [
@@ -10,11 +10,11 @@ const AgendaTypeCat = (props) => {
       title: 'Nombre',
       dataIndex: 'name',
     },
-  ];
-  const [columns, setColumns] = useState([]);
-  const eventID = props.event._id;
-  const subject = props.match.url.split('/').slice(-1)[0];
-  const apiURL = subject === 'categorias' ? CategoriesAgendaApi : TypesAgendaApi;
+  ]
+  const [columns, setColumns] = useState([])
+  const eventID = props.event._id
+  const subject = props.match.url.split('/').slice(-1)[0]
+  const apiURL = subject === 'categorias' ? CategoriesAgendaApi : TypesAgendaApi
 
   useEffect(() => {
     if (subject === 'categorias') {
@@ -27,12 +27,12 @@ const AgendaTypeCat = (props) => {
             <Tag color={val} style={{ width: '70px' }}>
               {val}
             </Tag>
-          );
+          )
         },
-      });
+      })
     }
-    setColumns(columnsOriginal);
-  }, []);
+    setColumns(columnsOriginal)
+  }, [])
 
   return (
     <CMS
@@ -51,7 +51,7 @@ const AgendaTypeCat = (props) => {
       pagination={false}
       actions
     />
-  );
-};
+  )
+}
 
-export default withRouter(AgendaTypeCat);
+export default withRouter(AgendaTypeCat)

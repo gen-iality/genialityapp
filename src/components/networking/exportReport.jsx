@@ -33,5 +33,5 @@
 // }
 
 export const exportReport = () => {
-  return <div></div>;
-};
+  return <div></div>
+}

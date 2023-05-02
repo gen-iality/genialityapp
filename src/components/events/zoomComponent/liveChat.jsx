@@ -1,5 +1,5 @@
 export default function LiveChat(props) {
-  if (!props.event || !props.activity) return <></>;
+  if (!props.event || !props.activity) return <></>
   return (
     <>
       {props.meeting_id && (
@@ -9,5 +9,5 @@ export default function LiveChat(props) {
           frameBorder="0"></iframe>
       )}
     </>
-  );
+  )
 }

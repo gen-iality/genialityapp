@@ -1,8 +1,7 @@
-
-import { CurrentUserContext } from './userContext';
-import { CurrentEventContext } from './eventContext';
-import { CurrentEventUserContext } from './eventUserContext';
-import { HelperContext } from './helperContext/helperContext';
+import { CurrentUserContext } from './userContext'
+import { CurrentEventContext } from './eventContext'
+import { CurrentEventUserContext } from './eventUserContext'
+import { HelperContext } from './helperContext/helperContext'
 
 // eslint-disable-next-line no-undef
 export default function WithEviusContext<T>(Component: (props: any) => JSX.Element) {
@@ -33,6 +32,6 @@ export default function WithEviusContext<T>(Component: (props: any) => JSX.Eleme
           </CurrentUserContext.Consumer>
         )}
       </CurrentEventContext.Consumer>
-    );
-  };
+    )
+  }
 }

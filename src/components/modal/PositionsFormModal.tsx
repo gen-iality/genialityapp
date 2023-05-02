@@ -17,23 +17,25 @@ const formLayout = {
 }
 
 type PositionsFormFields = {
-  position_name: string,
-  event_ids: string[],
+  position_name: string
+  event_ids: string[]
 }
 
 type PositionsFormModalHandler = {
-  currentPosition?: PositionResponseType,
-  open: (position?: PositionResponseType) => void,
-  close: () => void,
-  isOpened: boolean,
-  isEditing: boolean,
-  form: FormInstance<PositionsFormFields>,
+  currentPosition?: PositionResponseType
+  open: (position?: PositionResponseType) => void
+  close: () => void
+  isOpened: boolean
+  isEditing: boolean
+  form: FormInstance<PositionsFormFields>
 }
 
 function usePositionsFormModal(): PositionsFormModalHandler {
   const [isOpened, setIsOpened] = useState(false)
 
-  const [currentPosition, setCurrentPosition] = useState<PositionResponseType | undefined>()
+  const [currentPosition, setCurrentPosition] = useState<
+    PositionResponseType | undefined
+  >()
 
   const [form] = Form.useForm<PositionsFormFields>()
 
@@ -78,17 +80,13 @@ function usePositionsFormModal(): PositionsFormModalHandler {
 }
 
 export interface PositionsFormModalProps {
-  organizationId: string,
-  handler: PositionsFormModalHandler,
-  onSubmit?: (position: PositionResponseType) => void,
+  organizationId: string
+  handler: PositionsFormModalHandler
+  onSubmit?: (position: PositionResponseType) => void
 }
 
 function PositionsFormModal(props: PositionsFormModalProps) {
-  const {
-    handler,
-    organizationId,
-    onSubmit: onSubmitCallback,
-  } = props
+  const { handler, organizationId, onSubmit: onSubmitCallback } = props
 
   const [possibleEvents, setPossibleEvents] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -190,46 +188,49 @@ function PositionsFormModal(props: PositionsFormModalProps) {
       closable
       footer={false}
       visible={handler.isOpened}
-      onCancel={() => handler.close()}
-    >
+      onCancel={() => handler.close()}>
       {/**
       I am finding for a Loading component, but I get be lazy to find the Loading that
       has a circle and it's turning 🔄
       */}
       {isLoading ? (
-          <Loading />
+        <Loading />
       ) : (
-      <Form onFinish={onSubmit} {...formLayout} form={handler.form}>
-        <Header title="Cargo" save form remove={onRemoveId} edit={!!handler.currentPosition} />
+        <Form onFinish={onSubmit} {...formLayout} form={handler.form}>
+          <Header
+            title="Cargo"
+            save
+            form
+            remove={onRemoveId}
+            edit={!!handler.currentPosition}
+          />
 
-        <Row justify="center" wrap gutter={12}>
-          <Col>
-            <Form.Item
-              initialValue={handler.currentPosition?.position_name}
-              name="position_name"
-              label="Nombre del cargo"
-              rules={[{ required: true, message: 'El nombre es requerido' }]}
-            >
-              <Input placeholder="Nombre del cargo" />
-            </Form.Item>
+          <Row justify="center" wrap gutter={12}>
+            <Col>
+              <Form.Item
+                initialValue={handler.currentPosition?.position_name}
+                name="position_name"
+                label="Nombre del cargo"
+                rules={[{ required: true, message: 'El nombre es requerido' }]}>
+                <Input placeholder="Nombre del cargo" />
+              </Form.Item>
 
-            <Form.Item
-              initialValue={handler.currentPosition?.event_ids || []}
-              name="event_ids"
-              label="Cursos asignados"
-            >
-              <Select
-                mode="multiple"
-                placeholder="Asigna los cursos al cargo"
-                options={(possibleEvents || []).map((event) => ({
-                  value: event._id,
-                  label: event.name,
-                }))}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form>
+              <Form.Item
+                initialValue={handler.currentPosition?.event_ids || []}
+                name="event_ids"
+                label="Cursos asignados">
+                <Select
+                  mode="multiple"
+                  placeholder="Asigna los cursos al cargo"
+                  options={(possibleEvents || []).map((event) => ({
+                    value: event._id,
+                    label: event.name,
+                  }))}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
       )}
     </Modal>
   )

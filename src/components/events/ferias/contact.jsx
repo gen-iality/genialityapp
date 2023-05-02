@@ -1,20 +1,25 @@
-import { Row, Col, Button, Typography, Modal, Space, Card } from 'antd';
-import { PhoneOutlined, MailOutlined, CopyOutlined, CheckCircleOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '@context/MessageService';
+import { Row, Col, Button, Typography, Modal, Space, Card } from 'antd'
+import {
+  PhoneOutlined,
+  MailOutlined,
+  CopyOutlined,
+  CheckCircleOutlined,
+} from '@ant-design/icons'
+import { DispatchMessageService } from '@context/MessageService'
 
 function Contact(props) {
-  const numWhatsapp = props.codPais + props.tel;
-  const urlNum = `https://wa.me/${numWhatsapp}`;
+  const numWhatsapp = props.codPais + props.tel
+  const urlNum = `https://wa.me/${numWhatsapp}`
 
-  const { Text } = Typography;
+  const { Text } = Typography
 
   const copyText = (campo) => {
     DispatchMessageService({
       type: 'success',
       msj: campo + ' Copiado',
       action: 'show',
-    });
-  };
+    })
+  }
 
   function showModal(info) {
     Modal.info({
@@ -57,7 +62,7 @@ function Contact(props) {
           </Space>
         </Space>
       ),
-    });
+    })
   }
 
   return (
@@ -67,7 +72,11 @@ function Contact(props) {
           <div className="img-contact">
             <img
               className="img"
-              src={props.img === '' ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Item' : props.img}
+              src={
+                props.img === ''
+                  ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Item'
+                  : props.img
+              }
             />
           </div>
         </Col>
@@ -88,7 +97,10 @@ function Contact(props) {
                   onCopy: () => copyText('Numero'),
                   icon: [
                     <CopyOutlined style={{ fontSize: '14px' }} key="copy-icon" />,
-                    <CheckCircleOutlined style={{ fontSize: '14px' }} key="copied-icon" />,
+                    <CheckCircleOutlined
+                      style={{ fontSize: '14px' }}
+                      key="copied-icon"
+                    />,
                   ],
                   tooltips: ['Copiar numero', 'Numero copiado'],
                 }}>
@@ -106,7 +118,10 @@ function Contact(props) {
                   onCopy: () => copyText('Email'),
                   icon: [
                     <CopyOutlined style={{ fontSize: '14px' }} key="copy-icon" />,
-                    <CheckCircleOutlined style={{ fontSize: '14px' }} key="copied-icon" />,
+                    <CheckCircleOutlined
+                      style={{ fontSize: '14px' }}
+                      key="copied-icon"
+                    />,
                   ],
                   tooltips: ['Copiar email', 'Email copiado'],
                 }}
@@ -115,13 +130,17 @@ function Contact(props) {
               </Text>
             )}
           </div>
-          <Button type="default" className="boton" size="large" onClick={() => showModal(props)}>
+          <Button
+            type="default"
+            className="boton"
+            size="large"
+            onClick={() => showModal(props)}>
             Información de contacto
           </Button>
         </Col>
       </Row>
     </Card>
-  );
+  )
 }
 
-export default Contact;
+export default Contact

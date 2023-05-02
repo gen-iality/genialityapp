@@ -1,78 +1,80 @@
-import { Empty, Spin, Col, Row, Tag, Badge } from 'antd';
-import Companylist from './companyList';
-import { useEffect } from 'react';
-import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
-import MiniBanner from './MiniBanner';
-import { useState } from 'react';
-import { connect } from 'react-redux';
-import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import FeriaStand from './FeriasStand';
-import { setTopBanner } from '../../../redux/topBanner/actions';
-import { firestore } from '@helpers/firebase';
-import withContext from '@context/withContext';
+import { Empty, Spin, Col, Row, Tag, Badge } from 'antd'
+import Companylist from './companyList'
+import { useEffect } from 'react'
+import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies'
+import MiniBanner from './MiniBanner'
+import { useState } from 'react'
+import { connect } from 'react-redux'
+import { setVirtualConference } from '../../../redux/virtualconference/actions'
+import FeriaStand from './FeriasStand'
+import { setTopBanner } from '../../../redux/topBanner/actions'
+import { firestore } from '@helpers/firebase'
+import withContext from '@context/withContext'
 
 const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) => {
-  const [companies, loadingCompanies] = useGetEventCompanies(event_id);
-  const [companiesEvent, setCompaniesEvent] = useState([]);
-  const [config, setConfig] = useState(null);
-  const [standsColor, setStandsColor] = useState();
-  const [imageBanner, setBannerImage] = useState();
-  const [typeStand, setTypeStand] = useState();
+  const [companies, loadingCompanies] = useGetEventCompanies(event_id)
+  const [companiesEvent, setCompaniesEvent] = useState([])
+  const [config, setConfig] = useState(null)
+  const [standsColor, setStandsColor] = useState()
+  const [imageBanner, setBannerImage] = useState()
+  const [typeStand, setTypeStand] = useState()
   // Efecto para ocultar y mostrar virtual conference
   useEffect(() => {
-    setVirtualConference(false);
-    setTopBanner(false);
-    setBannerImage(cEvent.value.styles.banner_image);
+    setVirtualConference(false)
+    setTopBanner(false)
+    setBannerImage(cEvent.value.styles.banner_image)
     return () => {
-      setVirtualConference(true);
-      setTopBanner(true);
-    };
-  }, []);
+      setVirtualConference(true)
+      setTopBanner(true)
+    }
+  }, [])
   useEffect(() => {
     if (!loadingCompanies) {
       firestore
         .collection('event_companies')
         .doc(event_id)
         .onSnapshot((resp) => {
-          const standTypesOptions = resp.data()?.stand_types;
-          setTypeStand(standTypesOptions);
-          setStandsColor(standTypesOptions);
-          setConfig(resp.data()?.config);
-          const companiesSort = companies.sort((a, b) => a.index && b.index && a.index - b.index);
-          setCompaniesEvent(companiesSort);
-        });
+          const standTypesOptions = resp.data()?.stand_types
+          setTypeStand(standTypesOptions)
+          setStandsColor(standTypesOptions)
+          setConfig(resp.data()?.config)
+          const companiesSort = companies.sort(
+            (a, b) => a.index && b.index && a.index - b.index,
+          )
+          setCompaniesEvent(companiesSort)
+        })
     }
-  }, [loadingCompanies]);
+  }, [loadingCompanies])
   const obtenerColor = (stand) => {
     if (standsColor) {
-      const colorList = standsColor.filter((colors) => colors.label === stand);
+      const colorList = standsColor.filter((colors) => colors.label === stand)
       if (colorList.length > 0) {
-        return colorList[0].color;
+        return colorList[0].color
       }
     }
 
-    return '#2C2A29';
-  };
+    return '#2C2A29'
+  }
   const obtenertLabel = (stand) => {
     if (typeStand) {
-      const labelList = typeStand.filter((colors) => colors.label === stand);
+      const labelList = typeStand.filter((colors) => colors.label === stand)
       if (labelList.length > 0) {
-        return labelList[0].label;
+        return labelList[0].label
       }
     }
 
-    return 'Stand';
-  };
+    return 'Stand'
+  }
 
   const isListVisualization = () => {
     if (!config) {
-      return true;
+      return true
     } else if (config.visualization === 'list' || !config.visualization) {
-      return true;
+      return true
     } else {
-      return false;
+      return false
     }
-  };
+  }
   return (
     <div style={{ paddingBottom: '30px' }}>
       <MiniBanner banner={imageBanner} />
@@ -99,7 +101,7 @@ const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) =>
                 colorStand={obtenerColor(company.stand_type)}
                 text={obtenertLabel(company.stand_type)}
               />
-            )
+            ),
         )}
       {/*PARA OTRO TIPO DE VISUALIZACION */}
 
@@ -123,15 +125,15 @@ const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) =>
                     text={obtenertLabel(company.stand_type)}
                   />
                 </Col>
-              )
+              ),
           )}
       </Row>
       {companiesEvent.length == 0 && <Empty />}
     </div>
-  );
-};
+  )
+}
 const mapDispatchToProps = {
   setVirtualConference,
   setTopBanner,
-};
-export default connect(null, mapDispatchToProps)(withContext(FeriasList));
+}
+export default connect(null, mapDispatchToProps)(withContext(FeriasList))

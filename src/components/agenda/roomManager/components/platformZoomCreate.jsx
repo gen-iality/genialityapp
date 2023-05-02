@@ -1,5 +1,5 @@
-import ZoomOptions from './zoomOptions';
-import { Button } from 'antd';
+import ZoomOptions from './zoomOptions'
+import { Button } from 'antd'
 export default function PlatformZoomCreate({
   createZoomRoom,
   useAlreadyCreated,
@@ -13,7 +13,15 @@ export default function PlatformZoomCreate({
   return (
     <>
       {requiresCreateRoom && (
-        <ZoomOptions {...{ hasVideoconference, select_host_manual, handleChange, host_id, host_list }} />
+        <ZoomOptions
+          {...{
+            hasVideoconference,
+            select_host_manual,
+            handleChange,
+            host_id,
+            host_list,
+          }}
+        />
       )}
 
       {!useAlreadyCreated && requiresCreateRoom && (
@@ -22,5 +30,5 @@ export default function PlatformZoomCreate({
         </Button>
       )}
     </>
-  );
+  )
 }

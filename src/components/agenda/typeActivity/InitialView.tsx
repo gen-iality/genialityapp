@@ -1,16 +1,16 @@
-import { Card, Result, Button, Spin, Typography } from 'antd';
-import ModalStepByStep from './ModalStepByStep';
-import ManagerView from './ManagerView';
-import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
-import { useContext, useEffect, useState } from 'react';
-import AgendaContext from '@context/AgendaContext';
+import { Card, Result, Button, Spin, Typography } from 'antd'
+import ModalStepByStep from './ModalStepByStep'
+import ManagerView from './ManagerView'
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
+import { useContext, useEffect, useState } from 'react'
+import AgendaContext from '@context/AgendaContext'
 
-import InitialSVG from './components/svg/InitialSVG';
-import { AgendaApi } from '@helpers/request';
-import { CurrentEventContext } from '@context/eventContext';
-import ModalPreviewVideo from './ModalPreviewVideo';
+import InitialSVG from './components/svg/InitialSVG'
+import { AgendaApi } from '@helpers/request'
+import { CurrentEventContext } from '@context/eventContext'
+import ModalPreviewVideo from './ModalPreviewVideo'
 
-const { Title } = Typography;
+const { Title } = Typography
 
 const objecKeys: object = {
   url: 'Video',
@@ -21,36 +21,43 @@ const objecKeys: object = {
   RTMP: 'Transmisión',
   cargarvideo: 'Video',
   video: 'Video',
-};
+}
 
 const InitialView = (props: any) => {
-  const { toggleActivitySteps, selectedKey, previewKey } = useTypeActivity();
-  const [loading, setLoading] = useState(true);
-  const { typeActivity, meeting_id, setActivityName, activityEdit, roomStatus, saveConfig } = useContext(AgendaContext);
-  const cEvent = useContext(CurrentEventContext);
+  const { toggleActivitySteps, selectedKey, previewKey } = useTypeActivity()
+  const [loading, setLoading] = useState(true)
+  const {
+    typeActivity,
+    meeting_id,
+    setActivityName,
+    activityEdit,
+    roomStatus,
+    saveConfig,
+  } = useContext(AgendaContext)
+  const cEvent = useContext(CurrentEventContext)
 
   useEffect(() => {
-    if (props.tab !== '2') return;
+    if (props.tab !== '2') return
     // Obtener detalle de lección
-    setActivityName(props.activityName);
+    setActivityName(props.activityName)
     if (typeActivity === null) {
-      setLoading(false);
+      setLoading(false)
     } else {
-      setLoading(true);
-      obtainDataInitial();
+      setLoading(true)
+      obtainDataInitial()
       // Mientras carga los componentes
     }
-  }, [props.tab]);
+  }, [props.tab])
   // Permite guardar la data en firebase y activar el snapshot cuando se cambia el estado de la lección
   useEffect(() => {
-    saveConfig(null, 1);
-  }, [roomStatus]);
+    saveConfig(null, 1)
+  }, [roomStatus])
   // Obtener datos iniciales y setearlos en el reducer
   const obtainDataInitial = async () => {
-    let urlVideo;
+    let urlVideo
     if (typeActivity === 'url') {
-      const dataActivity = await obtainUrlVideo();
-      urlVideo = dataActivity.video || meeting_id;
+      const dataActivity = await obtainUrlVideo()
+      urlVideo = dataActivity.video || meeting_id
     }
     toggleActivitySteps('initial', {
       openModal: false,
@@ -61,14 +68,14 @@ const InitialView = (props: any) => {
       data: typeActivity !== 'url' ? meeting_id : urlVideo,
       buttonsTextNextOrCreate: '',
       buttonTextPreviousOrCancel: '',
-    });
-    setTimeout(() => setLoading(false), 500);
-  };
+    })
+    setTimeout(() => setLoading(false), 500)
+  }
   // (SE PUEDE OPTIMIZAR) X AHORA EL VIDEO SE ESTA GUARDANDO EN MONGO
   const obtainUrlVideo = async () => {
-    const resp = await AgendaApi.getOne(activityEdit, cEvent?.value._id);
-    return resp;
-  };
+    const resp = await AgendaApi.getOne(activityEdit, cEvent?.value._id)
+    return resp
+  }
 
   const renderComponet = () => {
     switch (selectedKey) {
@@ -80,21 +87,22 @@ const InitialView = (props: any) => {
             activityId={props.activityId}
             onDelete={props.onDelete}
           />
-        );
+        )
       default:
         return (
           <Card>
-            <Title level={4} >Todavía no has definido el tipo de contenido</Title>
+            <Title level={4}>Todavía no has definido el tipo de contenido</Title>
             <Button onClick={() => toggleActivitySteps('type')} type="primary">
               Escoge un tipo de contenido
             </Button>
             <Result
               icon={<InitialSVG style={{ width: '255px', height: '277px' }} />}
-              status="info"            />
+              status="info"
+            />
           </Card>
-        );
+        )
     }
-  };
+  }
 
   return (
     <>
@@ -102,7 +110,7 @@ const InitialView = (props: any) => {
       <ModalStepByStep activityName={props.activityName} />
       {!loading ? renderComponet() : <Spin />}
     </>
-  );
-};
+  )
+}
 
-export default InitialView;
+export default InitialView

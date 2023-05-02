@@ -1,9 +1,9 @@
 /* globals process */
-import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/tracing';
+import * as Sentry from '@sentry/react'
+import { BrowserTracing } from '@sentry/tracing'
 
 function sentry() {
-  const dns = process.env.REACT_APP_SENTRY;
+  const dns = process.env.REACT_APP_SENTRY
 
   Sentry.init({
     dsn: dns,
@@ -15,7 +15,7 @@ function sentry() {
         //   eventId: event.event_id,
         // });
       }
-      return event;
+      return event
     },
     integrations: [new BrowserTracing()],
 
@@ -23,7 +23,7 @@ function sentry() {
     // of transactions for performance monitoring.
     // We recommend adjusting this value in production
     tracesSampleRate: 1.0,
-  });
+  })
 }
 
-export default sentry;
+export default sentry

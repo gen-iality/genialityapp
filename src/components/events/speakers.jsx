@@ -1,20 +1,20 @@
-import { Component } from 'react';
+import { Component } from 'react'
 
 //custom
-import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '@helpers/request';
-import dayjs from 'dayjs';
-import { Card, Avatar, Button, Modal, Row, Col, Tooltip, Typography } from 'antd';
-import { CloseOutlined, UserOutlined } from '@ant-design/icons';
-import withContext from '@context/withContext';
-import ReactQuill from 'react-quill';
+import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '@helpers/request'
+import dayjs from 'dayjs'
+import { Card, Avatar, Button, Modal, Row, Col, Tooltip, Typography } from 'antd'
+import { CloseOutlined, UserOutlined } from '@ant-design/icons'
+import withContext from '@context/withContext'
+import ReactQuill from 'react-quill'
 
-const { Meta } = Card;
-const { Paragraph, Text, Title } = Typography;
+const { Meta } = Card
+const { Paragraph, Text, Title } = Typography
 
 class Speakers extends Component {
   constructor(props) {
     //Se realiza constructor para traer props desde landing.jsx
-    super(props);
+    super(props)
     this.state = {
       speakers: [],
       infoSpeaker: [],
@@ -24,93 +24,99 @@ class Speakers extends Component {
       speakersWithoutCategory: [],
       speakerCategories: [],
       renderSpeakerCategories: false,
-    };
+    }
   }
 
   async componentDidMount() {
     //Se hace la consulta a la api de speakers
-    const speakers = await SpeakersApi.byEvent(this.props.cEvent.value._id);
+    const speakers = await SpeakersApi.byEvent(this.props.cEvent.value._id)
 
     //consultamos las categorias del curso
-    const categories = await CategoriesAgendaApi.byEvent(this.props.cEvent.value._id);
+    const categories = await CategoriesAgendaApi.byEvent(this.props.cEvent.value._id)
 
     //Recorremos las categorias si tienen el campo orden
     //en caso que no lo tengan le asignamos el ultimo orden basado en el maximo valor que exista
 
     const categoriesFixedOrder = categories.map((category, index) => {
-      const maxOrder = this.calcMaxOrder(categories);
+      const maxOrder = this.calcMaxOrder(categories)
       if (!category.order) {
-        categories[index].order = maxOrder + 1;
+        categories[index].order = maxOrder + 1
       }
-      return category;
-    });
+      return category
+    })
 
-    const categoriesOrderByOrder = categoriesFixedOrder.sort((a, b) => a.order - b.order);
+    const categoriesOrderByOrder = categoriesFixedOrder.sort((a, b) => a.order - b.order)
 
     //Constantes donde vamos a almacenar a los speakers que tengan asignada una categoria o no tenga categoria
-    const speakersWithCategory = [];
-    const speakersWithoutCategory = [];
+    const speakersWithCategory = []
+    const speakersWithoutCategory = []
 
     // se crea un array de arrays posicionados segun el orden de la categoria
     // en caso que dos categorias tengan el mismo orden podrian colisionar o perderse los datos
 
     categoriesOrderByOrder.map((category, index) => {
-      speakersWithCategory[category.order] = [];
+      speakersWithCategory[category.order] = []
 
-      const hasSpeaker = speakers.filter((speaker) => speaker.category_id === category._id);
+      const hasSpeaker = speakers.filter(
+        (speaker) => speaker.category_id === category._id,
+      )
       if (hasSpeaker.length) {
-        categoriesOrderByOrder[index].hasSpeaker = true;
+        categoriesOrderByOrder[index].hasSpeaker = true
       } else {
-        categoriesOrderByOrder[index].hasSpeaker = false;
+        categoriesOrderByOrder[index].hasSpeaker = false
       }
-    });
+    })
 
-    this.setState({ speakerCategories: categoriesOrderByOrder });
+    this.setState({ speakerCategories: categoriesOrderByOrder })
 
     // Si hay speakers con categorias entonces habilitamos el render agrupado de los speakers
     // sino entonces mostrasmos solo los spakers sin categorias
-    const renderSpeakerCategories = !!categories.length;
+    const renderSpeakerCategories = !!categories.length
 
-    this.setState({ renderSpeakerCategories });
+    this.setState({ renderSpeakerCategories })
 
     speakers.map((speaker, index) => {
       //Solo funciona si la relacion es uno a uno -> a un speaker una categoria
-      const categorySpeaker = categoriesOrderByOrder.filter((category) => category._id === speaker.category_id);
+      const categorySpeaker = categoriesOrderByOrder.filter(
+        (category) => category._id === speaker.category_id,
+      )
 
       if (categorySpeaker.length > 0) {
-        speakers[index].category = categorySpeaker[0].name;
-        speakersWithCategory[categorySpeaker[0].order].push(speaker);
+        speakers[index].category = categorySpeaker[0].name
+        speakersWithCategory[categorySpeaker[0].order].push(speaker)
       } else {
-        speakersWithoutCategory.push(speaker);
+        speakersWithoutCategory.push(speaker)
       }
-    });
-    this.setState({ speakersWithCategory });
-    this.setState({ speakersWithoutCategory });
+    })
+    this.setState({ speakersWithCategory })
+    this.setState({ speakersWithoutCategory })
   }
 
   //funcion para obtener el valor maximo del orden de una categoria
   calcMaxOrder(data) {
-    const arrayWithOrderField = data.filter((category) => category.order);
-    let maxOrder = 0;
+    const arrayWithOrderField = data.filter((category) => category.order)
+    let maxOrder = 0
     if (arrayWithOrderField.length) {
-      const arrayToCalcMaxOrder = arrayWithOrderField.map((category) => parseInt(category.order));
-      maxOrder = Math.max(...arrayToCalcMaxOrder);
+      const arrayToCalcMaxOrder = arrayWithOrderField.map((category) =>
+        parseInt(category.order),
+      )
+      maxOrder = Math.max(...arrayToCalcMaxOrder)
     }
-    return maxOrder;
+    return maxOrder
   }
 
   async activitySpeakers(eventId, id) {
     //Se consulta la api para traer la informacion de lecciones por conferencista
-    const InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(eventId, id);
+    const InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(eventId, id)
     //Se manda al estado la consulta
     this.setState({
       activityesBySpeaker: InfoActivityesBySpeaker.data,
-    });
+    })
   }
 
   modal(eventId, id, image, name, profession, description, category) {
     //Se llama esta funcion para cargar la consulta de lecciones por conferencista
-    this.activitySpeakers(this.props.cEvent.value._id, id);
+    this.activitySpeakers(this.props.cEvent.value._id, id)
     // Se envian los datos al estado para mostrarlos en el modal, Esto para hacer el modal dinamico
     this.setState({
       infoSpeaker: {
@@ -122,29 +128,40 @@ class Speakers extends Component {
       },
 
       modalVisible: true,
-    });
+    })
   }
 
   setModalVisible(modalVisible) {
-    this.setState({ modalVisible });
+    this.setState({ modalVisible })
   }
 
   btnViewMore = (speaker) => {
-    if (speaker.description !== '<p><br></p>' && speaker.description !== undefined && speaker.description !== null) {
+    if (
+      speaker.description !== '<p><br></p>' &&
+      speaker.description !== undefined &&
+      speaker.description !== null
+    ) {
       return (
         <Button
           type="primary"
           /* className="modal-button" */
-          onClick={() => this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)}
+          onClick={() =>
+            this.modal(
+              speaker._id,
+              speaker.image,
+              speaker.name,
+              speaker.profession,
+              speaker.description,
+            )
+          }
           key={'sp' + speaker._id}
-          data-target='#myModal'
-          aria-haspopup="true"
-        >
+          data-target="#myModal"
+          aria-haspopup="true">
           Ver más...
         </Button>
-      );
+      )
     }
-  };
+  }
 
   render() {
     const {
@@ -154,11 +171,11 @@ class Speakers extends Component {
       speakersWithCategory,
       speakersWithoutCategory,
       renderSpeakerCategories,
-    } = this.state;
+    } = this.state
 
-    const eventId = this.props.cEvent.value._id;
+    const eventId = this.props.cEvent.value._id
 
-    const eventColor = this.props.cEvent.value.styles.toolbarDefaultBg; // outline:`5px dotted ${eventColor}`, outlineOffset:'10px' a los avatar
+    const eventColor = this.props.cEvent.value.styles.toolbarDefaultBg // outline:`5px dotted ${eventColor}`, outlineOffset:'10px' a los avatar
 
     return (
       <div style={{ padding: '20px' }}>
@@ -180,14 +197,22 @@ class Speakers extends Component {
                                 borderRadius: '5px',
                                 backgroundColor: '#FFFFFF',
                                 boxSizing: 'border-box',
-                              }}
-                            >
-                              <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
+                              }}>
+                              <span style={{ fontSize: '18px', fontWeight: '700' }}>
+                                {category.name}
+                              </span>
                             </div>
                             {speakersWithCategory[category.order].map((speaker, key) => (
                               <>
                                 {speaker.published && (
-                                  <Col key={key} xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
+                                  <Col
+                                    key={key}
+                                    xs={24}
+                                    sm={12}
+                                    md={12}
+                                    lg={12}
+                                    xl={12}
+                                    xxl={12}>
                                     <Card
                                       onClick={() => {
                                         if (
@@ -203,7 +228,7 @@ class Speakers extends Component {
                                             speaker.profession,
                                             speaker.description,
                                             speaker.category,
-                                          );
+                                          )
                                         }
                                       }}
                                       hoverable={!!speaker.description}
@@ -213,25 +238,42 @@ class Speakers extends Component {
                                         /* paddingLeft: '50px',
                                         paddingRight: '50px', */
                                         minHeight: '428px',
-                                        backgroundColor: this.props.cEvent.value?.styles?.toolbarDefaultBg,
+                                        backgroundColor:
+                                          this.props.cEvent.value?.styles
+                                            ?.toolbarDefaultBg,
                                       }}
                                       cover={
                                         speaker.image ? (
                                           <Avatar
                                             style={{ display: 'block', margin: 'auto' }}
-                                            size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                                            size={{
+                                              xs: 130,
+                                              sm: 160,
+                                              md: 120,
+                                              lg: 170,
+                                              xl: 210,
+                                              xxl: 210,
+                                            }}
                                             /* size={210} */ src={speaker.image}
                                           />
                                         ) : (
                                           <Avatar
                                             style={{ display: 'block', margin: 'auto' }}
-                                            size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                                            size={{
+                                              xs: 130,
+                                              sm: 160,
+                                              md: 120,
+                                              lg: 170,
+                                              xl: 210,
+                                              xxl: 210,
+                                            }}
                                             /* size={210} */ icon={<UserOutlined />}
                                           />
                                         )
                                       }
-                                      actions={speaker.description && [this.btnViewMore(speaker)]}
-                                    >
+                                      actions={
+                                        speaker.description && [this.btnViewMore(speaker)]
+                                      }>
                                       <Meta
                                         /* title={[
                                           <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
@@ -252,15 +294,25 @@ class Speakers extends Component {
                                         description={[
                                           <div
                                             key={'speaker-description  ' + key}
-                                            style={{ minHeight: '100px', textAlign: 'center' }}
-                                          >
+                                            style={{
+                                              minHeight: '100px',
+                                              textAlign: 'center',
+                                            }}>
                                             <Title
                                               level={4}
-                                              style={{ color: this.props.cEvent.value?.styles?.textMenu }}
-                                            >
+                                              style={{
+                                                color:
+                                                  this.props.cEvent.value?.styles
+                                                    ?.textMenu,
+                                              }}>
                                               {speaker.name}
                                             </Title>
-                                            <Paragraph style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
+                                            <Paragraph
+                                              style={{
+                                                color:
+                                                  this.props.cEvent.value?.styles
+                                                    ?.textMenu,
+                                              }}>
                                               {speaker.profession}
                                             </Paragraph>
                                           </div>,
@@ -304,7 +356,7 @@ class Speakers extends Component {
                             speaker.profession,
                             speaker.description,
                             speaker.category,
-                          );
+                          )
                         }
                       }}
                       hoverable={!!speaker.description}
@@ -314,32 +366,55 @@ class Speakers extends Component {
                         /* paddingLeft: '50px',
                           paddingRight: '50px', */
                         minHeight: '428px',
-                        backgroundColor: this.props.cEvent.value?.styles?.toolbarDefaultBg,
+                        backgroundColor:
+                          this.props.cEvent.value?.styles?.toolbarDefaultBg,
                       }}
                       cover={
                         speaker.image ? (
                           <Avatar
                             style={{ display: 'block', margin: 'auto' }}
-                            size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                            size={{
+                              xs: 130,
+                              sm: 160,
+                              md: 120,
+                              lg: 170,
+                              xl: 210,
+                              xxl: 210,
+                            }}
                             /* size={210} */ src={speaker.image}
                           />
                         ) : (
                           <Avatar
                             style={{ display: 'block', margin: 'auto' }}
-                            size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                            size={{
+                              xs: 130,
+                              sm: 160,
+                              md: 120,
+                              lg: 170,
+                              xl: 210,
+                              xxl: 210,
+                            }}
                             /* size={210} */ icon={<UserOutlined />}
                           />
                         )
                       }
-                      actions={speaker.description && [this.btnViewMore(speaker)]}
-                    >
+                      actions={speaker.description && [this.btnViewMore(speaker)]}>
                       <Meta
                         description={[
-                          <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
-                            <Title level={4} style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
+                          <div
+                            key={'speaker-description  ' + key}
+                            style={{ minHeight: '100px', textAlign: 'center' }}>
+                            <Title
+                              level={4}
+                              style={{
+                                color: this.props.cEvent.value?.styles?.textMenu,
+                              }}>
                               {speaker.name}
                             </Title>
-                            <Paragraph style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
+                            <Paragraph
+                              style={{
+                                color: this.props.cEvent.value?.styles?.textMenu,
+                              }}>
                               {speaker.profession}
                             </Paragraph>
                           </div>,
@@ -355,29 +430,42 @@ class Speakers extends Component {
         {/* Modal de Speakers para mostrar la información del conferencista junto con sus lecciones */}
 
         <Modal
-          closeIcon={<CloseOutlined style={{ color: this.props.cEvent.value?.styles?.textMenu }} />}
-          bodyStyle={{ backgroundColor: this.props.cEvent.value?.styles?.toolbarDefaultBg }}
+          closeIcon={
+            <CloseOutlined style={{ color: this.props.cEvent.value?.styles?.textMenu }} />
+          }
+          bodyStyle={{
+            backgroundColor: this.props.cEvent.value?.styles?.toolbarDefaultBg,
+          }}
           centered
           width={1000}
           visible={this.state.modalVisible}
           onCancel={() => this.setModalVisible(false)}
-          footer={null}
-        >
+          footer={null}>
           <Row>
             {/* Imagen del conferencista */}
 
             <Col flex="1 1 auto">
               {infoSpeaker.imagen ? (
-                <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} src={infoSpeaker.imagen} />
+                <Avatar
+                  style={{ display: 'block', margin: '0 auto' }}
+                  size={210}
+                  src={infoSpeaker.imagen}
+                />
               ) : (
-                <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} icon={<UserOutlined />} />
+                <Avatar
+                  style={{ display: 'block', margin: '0 auto' }}
+                  size={210}
+                  icon={<UserOutlined />}
+                />
               )}
             </Col>
 
             {/* Descripción del conferencista */}
             <Col flex="1 1 600px">
               <span>
-                <b style={{ color: this.props.cEvent.value?.styles?.textMenu }}>{infoSpeaker.nombre}</b>
+                <b style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
+                  {infoSpeaker.nombre}
+                </b>
               </span>
               <p style={{ color: this.props.cEvent.value?.styles?.textMenu }}>
                 <span>
@@ -400,7 +488,11 @@ class Speakers extends Component {
             </Col>
             <Col span={24}>
               <Row justify="end">
-                <Button key="cerrar" size="large" type="primary" onClick={() => this.setModalVisible(false)}>
+                <Button
+                  key="cerrar"
+                  size="large"
+                  type="primary"
+                  onClick={() => this.setModalVisible(false)}>
                   Cerrar
                 </Button>
               </Row>
@@ -413,7 +505,8 @@ class Speakers extends Component {
                         */}
               {activityesBySpeaker.map((activities, key) => (
                 <div key={key}>
-                  <Card style={{ padding: '24px 40px', top: '50px', marginBottom: '30px' }}>
+                  <Card
+                    style={{ padding: '24px 40px', top: '50px', marginBottom: '30px' }}>
                     <div>
                       <p>
                         <b>
@@ -441,9 +534,9 @@ class Speakers extends Component {
           )}
         </Modal>
       </div>
-    );
+    )
   }
 }
 
-const SpeakerswithContext = withContext(Speakers);
-export default SpeakerswithContext;
+const SpeakerswithContext = withContext(Speakers)
+export default SpeakerswithContext

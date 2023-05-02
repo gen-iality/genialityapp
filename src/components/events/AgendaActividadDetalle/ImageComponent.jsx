@@ -1,34 +1,34 @@
-import { useState, useEffect } from 'react';
-import WithEviusContext from '@context/withContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { Result } from 'antd';
+import { useState, useEffect } from 'react'
+import WithEviusContext from '@context/withContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { Result } from 'antd'
 
 const ImageComponent = (props) => {
-  const { willStartSoon } = props;
-  const { currentActivity } = useHelper();
-  const [activityState, setactivityState] = useState('');
+  const { willStartSoon } = props
+  const { currentActivity } = useHelper()
+  const [activityState, setactivityState] = useState('')
 
   useEffect(() => {
-    setactivityState(currentActivity?.habilitar_ingreso);
+    setactivityState(currentActivity?.habilitar_ingreso)
     return () => {
-      setactivityState('');
-    };
-  }, [currentActivity]);
+      setactivityState('')
+    }
+  }, [currentActivity])
 
   function RenderTextActivity(state) {
     switch (state) {
       case 'closed_meeting_room':
-        return 'Esta lección esta por iniciar';
+        return 'Esta lección esta por iniciar'
 
       case '':
-        return 'Esta lección esta siendo configurada';
+        return 'Esta lección esta siendo configurada'
 
       default:
-        break;
+        break
     }
   }
 
-  let imagePlaceHolder = '';
+  let imagePlaceHolder = ''
   if (props.cEvent.value.styles.toolbarDefaultBg) {
     imagePlaceHolder =
       'https://via.placeholder.com/1500x540/' +
@@ -36,7 +36,7 @@ const ImageComponent = (props) => {
       '/' +
       props.cEvent.value.styles.textMenu.replace('#', '') +
       '?text=' +
-      props.cEvent.value.name;
+      props.cEvent.value.name
   }
   const imageToShow = willStartSoon
     ? currentActivity?.image
@@ -46,11 +46,12 @@ const ImageComponent = (props) => {
       : props.cEvent.value.styles.event_image
       ? props.cEvent.value.styles.event_image
       : imagePlaceHolder
-    : props.cEvent.value.styles?.banner_image;
+    : props.cEvent.value.styles?.banner_image
 
   return (
     <div className="mediaplayer">
-      {props.cEvent.value.styles.toolbarDefaultBg != undefined || props.cEvent.value.styles.toolbarDefaultBg != '' ? (
+      {props.cEvent.value.styles.toolbarDefaultBg != undefined ||
+      props.cEvent.value.styles.toolbarDefaultBg != '' ? (
         imageToShow && (
           <img
             className="activity_image"
@@ -67,8 +68,8 @@ const ImageComponent = (props) => {
         <Result title={RenderTextActivity(activityState)} />
       )}
     </div>
-  );
-};
+  )
+}
 
-const ImageComponentwithContext = WithEviusContext(ImageComponent);
-export default ImageComponentwithContext;
+const ImageComponentwithContext = WithEviusContext(ImageComponent)
+export default ImageComponentwithContext

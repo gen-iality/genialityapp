@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { ToolsApi } from '@helpers/request';
-import CMS from '../newComponent/CMS';
-import { getColumnSearchProps } from '../speakers/getColumnSearch';
-import dayjs from 'dayjs';
+import { useState } from 'react'
+import { ToolsApi } from '@helpers/request'
+import CMS from '../newComponent/CMS'
+import { getColumnSearchProps } from '../speakers/getColumnSearch'
+import dayjs from 'dayjs'
 
 const Herramientas = (props) => {
-  const [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({})
 
   const columns = [
     {
@@ -23,10 +23,10 @@ const Herramientas = (props) => {
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
       render(val, item) {
-        return <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>;
+        return <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>
       },
     },
-  ];
+  ]
 
   return (
     <CMS
@@ -46,7 +46,7 @@ const Herramientas = (props) => {
       search
       setColumnsData={setColumnsData}
     />
-  );
-};
+  )
+}
 
-export default Herramientas;
+export default Herramientas

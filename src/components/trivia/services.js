@@ -1,50 +1,50 @@
-import { firestore, fireRealtime } from '@helpers/firebase';
-import dayjs from 'dayjs';
+import { firestore, fireRealtime } from '@helpers/firebase'
+import dayjs from 'dayjs'
 
-const refSurvey = firestore.collection('surveys');
+const refSurvey = firestore.collection('surveys')
 
 export const validateSurveyCreated = (surveyId) => {
   return new Promise((resolve) => {
     refSurvey.doc(surveyId).onSnapshot((survey) => {
       if (!survey.exists) {
-        resolve(false);
+        resolve(false)
       }
-      resolve(true);
-    });
-  });
-};
+      resolve(true)
+    })
+  })
+}
 
 export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
   return new Promise((resolve) => {
     //Abril 2021 @todo migracion de estados de firestore a firebaserealtime
     //let eventId = surveyInfo.eventId || 'general';
-    const eventId = 'general';
-    fireRealtime.ref('events/' + eventId + '/surveys/' + surveyId).update(surveyInfo);
+    const eventId = 'general'
+    fireRealtime.ref('events/' + eventId + '/surveys/' + surveyId).update(surveyInfo)
 
     validateSurveyCreated(surveyId).then((existSurvey) => {
       if (existSurvey) {
         refSurvey
           .doc(surveyId)
           .update({ ...status })
-          .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }));
+          .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }))
       } else {
         refSurvey
           .doc(surveyId)
           .set({ ...surveyInfo, ...status })
-          .then(() => resolve({ message: 'Evaluación creada', state: 'created' }));
+          .then(() => resolve({ message: 'Evaluación creada', state: 'created' }))
       }
-    });
-  });
-};
+    })
+  })
+}
 
 export const deleteSurvey = (surveyId) => {
   return new Promise((resolve) => {
     refSurvey
       .doc(surveyId)
       .delete()
-      .then(() => resolve({ message: 'Evaluación eliminada', state: 'deleted' }));
-  });
-};
+      .then(() => resolve({ message: 'Evaluación eliminada', state: 'deleted' }))
+  })
+}
 
 export const getTotalVotes = (surveyId, question) => {
   return new Promise((resolve, reject) => {
@@ -53,42 +53,44 @@ export const getTotalVotes = (surveyId, question) => {
       .get()
       .then((result) => {
         if (result.empty) {
-          resolve({ ...question, quantityResponses: 0 });
+          resolve({ ...question, quantityResponses: 0 })
         }
-        resolve({ ...question, quantityResponses: result.size });
+        resolve({ ...question, quantityResponses: result.size })
       })
       .catch((err) => {
-        reject('Hubo un problema ', err);
-      });
-  });
-};
+        reject('Hubo un problema ', err)
+      })
+  })
+}
 
 export const getAnswersByQuestion = (surveyId, questionId) => {
   return new Promise((resolve, reject) => {
-    const docs = [];
+    const docs = []
     firestore
       .collection(`surveys/${surveyId}/answers/${questionId}/responses`)
       .orderBy('created', 'desc')
       .get()
       .then((result) => {
         if (result.empty) {
-          resolve(false);
+          resolve(false)
         }
         result.forEach((infoDoc) => {
-          const creation_date_text = dayjs.unix(infoDoc.data().created.seconds).format('DD MMM YYYY hh:mm a');
-          docs.push({ ...infoDoc.data(), creation_date_text });
-        });
-        resolve(docs);
+          const creation_date_text = dayjs
+            .unix(infoDoc.data().created.seconds)
+            .format('DD MMM YYYY hh:mm a')
+          docs.push({ ...infoDoc.data(), creation_date_text })
+        })
+        resolve(docs)
       })
       .catch((err) => {
-        reject('Hubo un problema ', err);
-      });
-  });
-};
+        reject('Hubo un problema ', err)
+      })
+  })
+}
 
 export const getTriviaRanking = (surveyId) => {
   return new Promise((resolve, reject) => {
-    const list = [];
+    const list = []
     firestore
       .collection('surveys')
       .doc(surveyId)
@@ -97,24 +99,26 @@ export const getTriviaRanking = (surveyId) => {
       .then((result) => {
         if (!result.empty) {
           result.forEach((item) => {
-            const registerDate = dayjs.unix(item.data().registerDate.seconds).format('DD MMM YYYY hh:mm:ss a');
+            const registerDate = dayjs
+              .unix(item.data().registerDate.seconds)
+              .format('DD MMM YYYY hh:mm:ss a')
 
-            list.push({ ...item.data(), registerDate });
-          });
+            list.push({ ...item.data(), registerDate })
+          })
 
-          resolve(list);
+          resolve(list)
         }
       })
       .catch((err) => {
-        reject(err);
-      });
-  });
-};
+        reject(err)
+      })
+  })
+}
 
 export const getSurveyConfiguration = (surveyId) => {
   return new Promise((resolve, reject) => {
     if (!surveyId) {
-      reject('Survey ID required');
+      reject('Survey ID required')
     }
 
     firestore
@@ -123,9 +127,9 @@ export const getSurveyConfiguration = (surveyId) => {
       .get()
       .then((result) => {
         if (result?.exists) {
-          const data = result.data();
-          resolve(data);
+          const data = result.data()
+          resolve(data)
         }
-      });
-  });
-};
+      })
+  })
+}

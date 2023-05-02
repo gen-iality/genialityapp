@@ -1,6 +1,6 @@
 /** React's libraries */
-import { useState, useEffect } from 'react';
-import dayjs from 'dayjs';
+import { useState, useEffect } from 'react'
+import dayjs from 'dayjs'
 
 /** Antd imports */
 import {
@@ -19,144 +19,155 @@ import {
   InputNumber,
   Input,
   DatePicker,
-} from 'antd';
-import { ColumnsType } from 'antd/lib/table';
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
+} from 'antd'
+import { ColumnsType } from 'antd/lib/table'
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
 
 /** Helpers and utils */
-import { EventsApi, PositionsApi, UsersApi, CerticationsApi, CerticationLogsApi } from '@helpers/request';
+import {
+  EventsApi,
+  PositionsApi,
+  UsersApi,
+  CerticationsApi,
+  CerticationLogsApi,
+} from '@helpers/request'
 
 /** Components */
-import Header from '@antdComponents/Header';
+import Header from '@antdComponents/Header'
 
 export interface MemberCertificationLogsPageProps {
-  org: any;
+  org: any
   match: {
     params: {
-      positionId: string;
-      userId: string;
-      certificationId: string;
-    };
-    url: string;
-  };
+      positionId: string
+      userId: string
+      certificationId: string
+    }
+    url: string
+  }
 }
 
-function MemberCertificationLogsPage(
-  props: MemberCertificationLogsPageProps,
-) {
-  const [columns, setColumns] = useState<ColumnsType<any>>([]);
-  const [allPositionEvents, setAllPositionEvents] = useState<any[]>([]);
-  const [allEvents, setAllEvents] = useState<any[]>([]);
-  const [currentUser, setCurrentUser] = useState<any | null>(null);
-  const [currentPosition, setCurrentPosition] = useState<any | null>(null);
+function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
+  const [columns, setColumns] = useState<ColumnsType<any>>([])
+  const [allPositionEvents, setAllPositionEvents] = useState<any[]>([])
+  const [allEvents, setAllEvents] = useState<any[]>([])
+  const [currentUser, setCurrentUser] = useState<any | null>(null)
+  const [currentPosition, setCurrentPosition] = useState<any | null>(null)
 
-  const [dataSource, setDataSource] = useState<any[]>([]);
+  const [dataSource, setDataSource] = useState<any[]>([])
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
-  const [isModalOpened, setIsModalOpened] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [certificationLog, setCertificationLog] = useState<any | null>({});
+  const [isModalOpened, setIsModalOpened] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [certificationLog, setCertificationLog] = useState<any | null>({})
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
 
-  const openModal = () => setIsModalOpened(true);
-  const closeModal = () => setIsModalOpened(false);
+  const openModal = () => setIsModalOpened(true)
+  const closeModal = () => setIsModalOpened(false)
 
-  const organizationId: string = props.org._id;
-  const positionId = props.match.params.positionId;
-  const userId = props.match.params.userId;
-  const certificationId = props.match.params.certificationId;
+  const organizationId: string = props.org._id
+  const positionId = props.match.params.positionId
+  const userId = props.match.params.userId
+  const certificationId = props.match.params.certificationId
 
   const loadData = async () => {
-    const user = await UsersApi.getProfile(userId);
-    setCurrentUser(user);
+    const user = await UsersApi.getProfile(userId)
+    setCurrentUser(user)
 
-    const position = await PositionsApi.getOne(positionId);
-    setCurrentPosition(position);
-    console.debug('CurrentOrganizationPositionPage: loadPositionData', { position });
+    const position = await PositionsApi.getOne(positionId)
+    setCurrentPosition(position)
+    console.debug('CurrentOrganizationPositionPage: loadPositionData', { position })
 
     // This SHOULD be optimized, but it needs a back-end upgrade. Then, for now we filter here.
     // Task:
     // - Implement the filtering mechanism in the method index of the Back-End
     // - Update the method getAll of CerticationLogsApi to accept filters too.
     // - Replace the CerticationsApi using for CerticationLogsApi and use getAll
-    let certifications = await CerticationsApi.getByPositionAndMaybeUser(position._id, user._id);
-    certifications = certifications.filter((c: any) => c._id === certificationId);
+    let certifications = await CerticationsApi.getByPositionAndMaybeUser(
+      position._id,
+      user._id,
+    )
+    certifications = certifications.filter((c: any) => c._id === certificationId)
 
-    const allEventIds = position.event_ids || [];
-    const events = await Promise.all(allEventIds.map(async (eventId: string) => await EventsApi.getOne(eventId)));
-    setAllEvents(events.filter((event) => event.is_certification));
+    const allEventIds = position.event_ids || []
+    const events = await Promise.all(
+      allEventIds.map(async (eventId: string) => await EventsApi.getOne(eventId)),
+    )
+    setAllEvents(events.filter((event) => event.is_certification))
     setAllPositionEvents(
       events.map((event) => {
-        const filteredCertification = certifications.find((certification: any) => certification.event_id === event._id);
+        const filteredCertification = certifications.find(
+          (certification: any) => certification.event_id === event._id,
+        )
         return {
           ...event,
           certification: filteredCertification,
-        };
+        }
       }),
-    );
-  };
+    )
+  }
 
   const onFormFinish = async (values: any) => {
     if (!currentUser) {
-      alert('No se ha cargado el usuario con anterioridad');
-      return;
+      alert('No se ha cargado el usuario con anterioridad')
+      return
     }
-    values['user_id'] = currentUser._id;
-    console.debug('form submit', { values });
+    values['user_id'] = currentUser._id
+    console.debug('form submit', { values })
 
     if (isEditing) {
       CerticationLogsApi.update(certificationLog._id, values).finally(() => {
-        setIsLoading(true);
-        loadData().finally(() => setIsLoading(false));
-        setIsEditing(false);
-      });
+        setIsLoading(true)
+        loadData().finally(() => setIsLoading(false))
+        setIsEditing(false)
+      })
     }
-  };
+  }
 
   const editUserCertificationLog = (values: any) => {
-    const certificationLog = values.log;
-    openModal();
+    const certificationLog = values.log
+    openModal()
 
     form.setFieldsValue({
       approved_from_date: dayjs(certificationLog.approved_from_date),
       approved_until_date: dayjs(certificationLog.approved_until_date),
-    });
+    })
 
-    setCertificationLog(certificationLog);
-    setIsEditing(true);
-  };
+    setCertificationLog(certificationLog)
+    setIsEditing(true)
+  }
 
   const deleteUserCertificationLog = (values: any) => {
     CerticationLogsApi.deleteOne(values.log._id).finally(() => {
-      setIsLoading(true);
-      loadData().finally(() => setIsLoading(false));
-    });
+      setIsLoading(true)
+      loadData().finally(() => setIsLoading(false))
+    })
     // TODO: delete the certification file from FireStorage with:
     // values.log.firestorage_path
-  };
+  }
 
   // Load all users for this position
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(true)
 
-    loadData().finally(() => setIsLoading(false));
-  }, []);
+    loadData().finally(() => setIsLoading(false))
+  }, [])
 
   useEffect(() => {
-    const data: any[] = [];
+    const data: any[] = []
     allPositionEvents.forEach((event) => {
-      const { certification } = event;
+      const { certification } = event
       // If there is not certification, ignore this event
-      if (!certification) return;
+      if (!certification) return
       // Build a data with: event, certification, certification log, to use in the table
-      (certification.certification_logs || []).forEach((log: any) => {
-        data.push({ event, certification, log });
-      });
-    });
-    setDataSource(data);
-  }, [allPositionEvents]);
+      ;(certification.certification_logs || []).forEach((log: any) => {
+        data.push({ event, certification, log })
+      })
+    })
+    setDataSource(data)
+  }, [allPositionEvents])
 
   useEffect(() => {
     const newColumns: ColumnsType = [
@@ -185,8 +196,8 @@ function MemberCertificationLogsPage(
               <a href={log?.file_url} target="_blank">
                 Ver certificado
               </a>
-            );
-          } else return <em>Sin certificado</em>;
+            )
+          } else return <em>Sin certificado</em>
         },
       },
       {
@@ -195,7 +206,11 @@ function MemberCertificationLogsPage(
         width: 100,
         dataIndex: 'log',
         render: (log: any) => (
-          <>{log?.approved_from_date ? dayjs(log?.approved_from_date).format('DD/MM/YYYY') : 'sin fecha'}</>
+          <>
+            {log?.approved_from_date
+              ? dayjs(log?.approved_from_date).format('DD/MM/YYYY')
+              : 'sin fecha'}
+          </>
         ),
       },
       {
@@ -204,7 +219,11 @@ function MemberCertificationLogsPage(
         width: 100,
         dataIndex: 'log',
         render: (log: any) => (
-          <>{log?.approved_until_date ? dayjs(log?.approved_until_date).format('DD/MM/YYYY') : 'sin fecha'}</>
+          <>
+            {log?.approved_until_date
+              ? dayjs(log?.approved_until_date).format('DD/MM/YYYY')
+              : 'sin fecha'}
+          </>
         ),
       },
       {
@@ -213,17 +232,17 @@ function MemberCertificationLogsPage(
         width: 100,
         dataIndex: 'log',
         render: (log: any) => {
-          let lema = 'Inactivo';
+          let lema = 'Inactivo'
           if (log?.approved_until_date) {
             if (dayjs(log?.approved_until_date) > dayjs(Date.now())) {
-              lema = 'Activo';
+              lema = 'Activo'
             }
           }
           return (
             <>
               <Tag color={lema === 'Inactivo' ? 'red' : 'green'}>{lema}</Tag>
             </>
-          );
+          )
         },
       },
       {
@@ -238,9 +257,9 @@ function MemberCertificationLogsPage(
                   type="primary"
                   size="small"
                   onClick={(e) => {
-                    console.log('event', event);
-                    if (!event.certification) return;
-                    else editUserCertificationLog(event);
+                    console.log('event', event)
+                    if (!event.certification) return
+                    else editUserCertificationLog(event)
                   }}
                   icon={<EditOutlined />}
                 />
@@ -253,9 +272,9 @@ function MemberCertificationLogsPage(
                   type="primary"
                   size="small"
                   onClick={(e) => {
-                    console.log('event', event);
-                    if (!event.certification) return;
-                    else deleteUserCertificationLog(event);
+                    console.log('event', event)
+                    if (!event.certification) return
+                    else deleteUserCertificationLog(event)
                   }}
                   icon={<DeleteOutlined />}
                   danger
@@ -265,10 +284,10 @@ function MemberCertificationLogsPage(
           </Row>
         ),
       },
-    ];
+    ]
 
-    setColumns(newColumns);
-  }, [dataSource]);
+    setColumns(newColumns)
+  }, [dataSource])
 
   return (
     <>
@@ -282,7 +301,9 @@ function MemberCertificationLogsPage(
           </>
         }
       />
-      <Typography.Paragraph>Este es el historial de certificaciones.</Typography.Paragraph>
+      <Typography.Paragraph>
+        Este es el historial de certificaciones.
+      </Typography.Paragraph>
 
       <Table
         columns={columns}
@@ -298,8 +319,8 @@ function MemberCertificationLogsPage(
         visible={isModalOpened}
         title={`Edita el registro de certificación a usuario: ${currentUser?.names}`}
         onOk={() => {
-          form.submit();
-          closeModal();
+          form.submit()
+          closeModal()
         }}
         onCancel={() => closeModal()}>
         <Form form={form} onFinish={onFormFinish} layout="vertical">
@@ -320,7 +341,7 @@ function MemberCertificationLogsPage(
         </Form>
       </Modal>
     </>
-  );
+  )
 }
 
-export default MemberCertificationLogsPage;
+export default MemberCertificationLogsPage

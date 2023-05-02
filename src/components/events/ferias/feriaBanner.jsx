@@ -12,7 +12,7 @@ function feriaBanner(props) {
         }}
       />
     </div>
-  );
+  )
 }
 
-export default feriaBanner;
+export default feriaBanner

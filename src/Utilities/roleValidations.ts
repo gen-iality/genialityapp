@@ -1,4 +1,4 @@
-import { RolAttApi } from '@helpers/request';
+import { RolAttApi } from '@helpers/request'
 
 /**
  * Get the permissions for a role in a given event.
@@ -6,9 +6,9 @@ import { RolAttApi } from '@helpers/request';
  * @returns The array of permissions for this role.
  */
 export async function rolHasPermissions(rolId: string) {
-  if (!rolId) return;
-  const permissionsForThisRole = await RolAttApi.getRoleHasPermissionsinThisEvent(rolId);
-  return permissionsForThisRole;
+  if (!rolId) return
+  const permissionsForThisRole = await RolAttApi.getRoleHasPermissionsinThisEvent(rolId)
+  return permissionsForThisRole
 }
 
 /**
@@ -17,8 +17,8 @@ export async function rolHasPermissions(rolId: string) {
  * @returns The role object data.
  */
 export async function theRoleExists(rolId: string) {
-  if (!rolId) return;
-  const ifTheRoleExists = await RolAttApi.ifTheRoleExists(rolId);
+  if (!rolId) return
+  const ifTheRoleExists = await RolAttApi.ifTheRoleExists(rolId)
 
-  return ifTheRoleExists;
+  return ifTheRoleExists
 }

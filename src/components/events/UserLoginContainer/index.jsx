@@ -1,11 +1,11 @@
-import { Component } from 'react';
-import { app } from '@helpers/firebase';
-import UserLogin from '../UserLogin';
-import FormTags from './constants';
-import { Actions } from '@helpers/request';
+import { Component } from 'react'
+import { app } from '@helpers/firebase'
+import UserLogin from '../UserLogin'
+import FormTags from './constants'
+import { Actions } from '@helpers/request'
 class UserLoginContainer extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     //this.reCaptchaRef = createRef();
     this.state = {
       user: {},
@@ -28,74 +28,75 @@ class UserLoginContainer extends Component {
       errorRecovery: false,
       successRecovery: false,
       eventId: this.props.eventId,
-    };
+    }
   }
 
   async componentDidMount() {
-    this.setState({ successRecovery: false });
+    this.setState({ successRecovery: false })
   }
 
   //Método ejecutado en el curso onSubmit (onFinish) del formulario de login
   handleLoginEmailPassword = async (values) => {
-    this.setState({ loading: true });
-    await this.loginEmailPassword(values);
+    this.setState({ loading: true })
+    await this.loginEmailPassword(values)
     setTimeout(() => {
-      this.setState({ loading: false });
-    }, 3000);
-  };
+      this.setState({ loading: false })
+    }, 3000)
+  }
 
   //Realiza la validación del email y password con firebase
   loginEmailPassword = (data) => {
-    this.setState({ errorLogin: false });
+    this.setState({ errorLogin: false })
     app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
       // .then(response =>
       .catch(() => {
-        console.error('Error: Email or password invalid');
-        this.setState({ errorLogin: true });
-        this.setState({ loading: false });
-      });
-  };
+        console.error('Error: Email or password invalid')
+        this.setState({ errorLogin: true })
+        this.setState({ loading: false })
+      })
+  }
 
   //Se ejecuta en caso que haya un error en el formulario de login en el curso onSubmit
   onFinishFailed = (errorInfo) => {
-    console.error('Failed:', errorInfo);
-  };
+    console.error('Failed:', errorInfo)
+  }
 
   handleOpenRecoveryPass = () => {
-    this.setState({ loading: true, enabledFormLoginWithEmailPass: false });
+    this.setState({ loading: true, enabledFormLoginWithEmailPass: false })
     setTimeout(() => {
       this.setState({
         enabledFormRecoveryPass: true,
         loading: false,
-      });
-    }, 500);
-  };
+      })
+    }, 500)
+  }
 
   handleCloseRecoveryPass = () => {
-    this.setState({ loading: true, enabledFormRecoveryPass: false });
+    this.setState({ loading: true, enabledFormRecoveryPass: false })
     setTimeout(() => {
       this.setState({
         enabledFormLoginWithEmailPass: true,
         loading: false,
-      });
-    }, 500);
-  };
+      })
+    }, 500)
+  }
 
   handleRecoveryPass = async ({ email }) => {
-    this.setState({ loading: true, errorRecovery: false, successRecovery: false });
+    this.setState({ loading: true, errorRecovery: false, successRecovery: false })
     const urlRequest =
-      `https://api.evius.co/api/events/${this.state.eventId}/changeUserPassword?destination=` + window.location.origin;
+      `https://api.evius.co/api/events/${this.state.eventId}/changeUserPassword?destination=` +
+      window.location.origin
     await Actions.put(urlRequest, { email })
       .then(() => {
-        this.setState({ loading: false, successRecovery: true });
+        this.setState({ loading: false, successRecovery: true })
       })
       .catch((err) => {
-        console.error(err);
-        this.setState({ loading: false, errorRecovery: true });
-      });
-  };
+        console.error(err)
+        this.setState({ loading: false, errorRecovery: true })
+      })
+  }
 
   render() {
     const {
@@ -106,7 +107,7 @@ class UserLoginContainer extends Component {
       enabledFormRecoveryPass,
       errorRecovery,
       successRecovery,
-    } = this.state;
+    } = this.state
 
     return (
       <UserLogin
@@ -124,7 +125,7 @@ class UserLoginContainer extends Component {
         errorRecovery={errorRecovery}
         successRecovery={successRecovery}
       />
-    );
+    )
   }
 }
-export default UserLoginContainer;
+export default UserLoginContainer

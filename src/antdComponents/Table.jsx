@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import arrayMove from 'array-move';
-import { sortableContainer, sortableElement } from 'react-sortable-hoc';
-import { Table as TableAnt, Row, Col, Tooltip, Button } from 'antd';
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import arrayMove from 'array-move'
+import { sortableContainer, sortableElement } from 'react-sortable-hoc'
+import { Table as TableAnt, Row, Col, Tooltip, Button } from 'antd'
 import {
   EditOutlined,
   DeleteOutlined,
@@ -10,19 +10,19 @@ import {
   DownloadOutlined,
   SettingOutlined,
   CrownOutlined,
-} from '@ant-design/icons';
-import { sortableHandle } from 'react-sortable-hoc';
-import dayjs from 'dayjs';
-import { Suspense } from 'react';
-import { ExportExcel } from '@components/newComponent/ExportExcel';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
+} from '@ant-design/icons'
+import { sortableHandle } from 'react-sortable-hoc'
+import dayjs from 'dayjs'
+import { Suspense } from 'react'
+import { ExportExcel } from '@components/newComponent/ExportExcel'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
 
-const SortableItem = sortableElement((props) => <tr {...props} />);
-const SortableContainer = sortableContainer((props) => <tbody {...props} />);
+const SortableItem = sortableElement((props) => <tr {...props} />)
+const SortableContainer = sortableContainer((props) => <tbody {...props} />)
 
 const Table = (props) => {
   //const cUser = useCurrentUser();
-  const { eventIsActive } = useHelper();
+  const { eventIsActive } = useHelper()
   const {
     header,
     list,
@@ -59,11 +59,11 @@ const Table = (props) => {
     updateMails,
     takeOriginalHeader,
     footer = undefined,
-  } = props;
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const [components, setComponents] = useState('');
-  const [headerState, setHeaderState] = useState(header);
+  } = props
+  const [searchText, setSearchText] = useState('')
+  const [searchedColumn, setSearchedColumn] = useState('')
+  const [components, setComponents] = useState('')
+  const [headerState, setHeaderState] = useState(header)
 
   useEffect(() => {
     const options = {
@@ -84,7 +84,9 @@ const Table = (props) => {
                     icon={extraFnIcon ? extraFnIcon : <SettingOutlined />}
                     type={extraFnType ? extraFnType : 'primary'}
                     size="small"
-                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                    disabled={
+                      !eventIsActive && window.location.toString().includes('eventadmin')
+                    }
                   />
                 </Tooltip>
               </Col>
@@ -132,9 +134,15 @@ const Table = (props) => {
                   <Link
                     key={`extraPathAction${item.index}`}
                     id={`extraPathAction${item.index}`}
-                    to={{ pathname: `${extraPathStateName}/${item._id}`, state: { report: item._id } }}
-                  >
-                    <Button icon={<CrownOutlined />} type={extraPathType ? extraPathType : 'primary'} size="small" />
+                    to={{
+                      pathname: `${extraPathStateName}/${item._id}`,
+                      state: { report: item._id },
+                    }}>
+                    <Button
+                      icon={<CrownOutlined />}
+                      type={extraPathType ? extraPathType : 'primary'}
+                      size="small"
+                    />
                   </Link>
                 </Tooltip>
               </Col>
@@ -160,8 +168,7 @@ const Table = (props) => {
                   <Link
                     key={`editAction${item.index}`}
                     id={`editAction${item.index}`}
-                    to={{ pathname: editPath, state: { edit: item._id } }}
-                  >
+                    to={{ pathname: editPath, state: { edit: item._id } }}>
                     <Button icon={<EditOutlined />} type="primary" size="small" />
                   </Link>
                 </Tooltip>
@@ -187,46 +194,50 @@ const Table = (props) => {
                   <Button
                     key={`removeAction${item.index}`}
                     id={`removeAction${item.index}`}
-                    onClick={() => remove(item.chatId ? item.chatId : item._id, item.name)}
+                    onClick={() =>
+                      remove(item.chatId ? item.chatId : item._id, item.name)
+                    }
                     icon={<DeleteOutlined />}
                     type="danger"
                     size="small"
-                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                    disabled={
+                      !eventIsActive && window.location.toString().includes('eventadmin')
+                    }
                   />
                 </Tooltip>
               </Col>
             )}
           </Row>
-        );
+        )
       },
-    };
+    }
     if (actions) {
-      const auxHeader = header;
+      const auxHeader = header
       if (!auxHeader.includes(options)) {
-        auxHeader.push(options);
-        setHeaderState(auxHeader);
+        auxHeader.push(options)
+        setHeaderState(auxHeader)
       } else {
-        setHeaderState(auxHeader);
+        setHeaderState(auxHeader)
       }
     }
-  }, [header]);
+  }, [header])
 
   useEffect(() => {
     if (list && list.length) {
       list.map((list, index) => {
         if (!list.index) {
-          list.index = index;
+          list.index = index
         }
-      });
+      })
     }
     if (draggable) {
-      draggableFn();
+      draggableFn()
     }
 
     if (search) {
-      searchFn();
+      searchFn()
     }
-  }, []);
+  }, [])
 
   const draggableFn = () => {
     headerState.unshift(
@@ -236,29 +247,32 @@ const Table = (props) => {
         width: '50px',
         render(val, item) {
           const DragHandle = sortableHandle(() => (
-            <DragOutlined id={`drag${item.index}`} style={{ cursor: 'grab', color: '#999', visibility: 'visible' }} />
-          ));
-          return <DragHandle />;
+            <DragOutlined
+              id={`drag${item.index}`}
+              style={{ cursor: 'grab', color: '#999', visibility: 'visible' }}
+            />
+          ))
+          return <DragHandle />
         },
       },
       {
         title: 'Orden',
         dataIndex: 'index',
         render(val, item) {
-          return <div>{val + 1}</div>;
+          return <div>{val + 1}</div>
         },
-      }
-    );
+      },
+    )
 
     const componentFunctions = {
       body: {
         wrapper: DraggableContainer,
         row: DraggableBodyRow,
       },
-    };
+    }
 
-    setComponents(draggable ? componentFunctions : '');
-  };
+    setComponents(draggable ? componentFunctions : '')
+  }
 
   const searchFn = () => {
     setColumnsData({
@@ -268,45 +282,51 @@ const Table = (props) => {
       handleReset,
       searchText: searchText,
       list: list,
-    });
-  };
+    })
+  }
 
   //FN para búsqueda en la tabla 2/3
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
+    confirm()
+    setSearchText(selectedKeys[0])
+    setSearchedColumn(dataIndex)
+  }
 
   //FN para búsqueda en la tabla 3/3
   const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchText('');
-  };
+    clearFilters()
+    setSearchText('')
+  }
 
   //FN para el draggable 1/3
   function onSortEnd({ oldIndex, newIndex }) {
     if (oldIndex !== newIndex) {
-      let newData = arrayMove([].concat(list), oldIndex, newIndex).filter((el) => !!el);
+      let newData = arrayMove([].concat(list), oldIndex, newIndex).filter((el) => !!el)
       if (newData) {
         newData = newData.map((data, key) => {
-          return { ...data, index: key };
-        });
+          return { ...data, index: key }
+        })
       }
-      setList(newData);
+      setList(newData)
     }
   }
 
   //FN para el draggable 2/3
   const DraggableContainer = (props) => (
-    <SortableContainer useDragHandle disableAutoscroll helperClass="row-dragging" onSortEnd={onSortEnd} {...props} />
-  );
+    <SortableContainer
+      useDragHandle
+      disableAutoscroll
+      helperClass="row-dragging"
+      onSortEnd={onSortEnd}
+      {...props}
+    />
+  )
 
   //FN para el draggable 3/3
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
-    const index = list.findIndex((x) => x.index === restProps['data-row-key']);
-    return <SortableItem index={index} {...restProps} />;
-  };
+    const index = list.findIndex((x) => x.index === restProps['data-row-key'])
+    return <SortableItem index={index} {...restProps} />
+  }
 
   return (
     <Suspense fallback={<h1>Cargando ...</h1>}>
@@ -322,7 +342,10 @@ const Table = (props) => {
           <Row wrap justify="end" gutter={[8, 8]}>
             {exportData && (
               <Col>
-                <ExportExcel list={list} fileName={`${fileName}${dayjs(new Date()).format('YYYY-DD-MM')}`} />
+                <ExportExcel
+                  list={list}
+                  fileName={`${fileName}${dayjs(new Date()).format('YYYY-DD-MM')}`}
+                />
               </Col>
             )}
             {titleTable && <Col>{titleTable}</Col>}
@@ -332,7 +355,7 @@ const Table = (props) => {
         footer={() => footer}
       />
     </Suspense>
-  );
-};
+  )
+}
 
-export default Table;
+export default Table

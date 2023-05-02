@@ -1,26 +1,24 @@
-import { UploadOutlined } from '@ant-design/icons';
-import { Button, Upload } from 'antd';
-import { FormInstance } from 'antd/lib/form';
-import { RcFile } from 'antd/lib/upload';
-import * as React from 'react';
-import { useCallback, useMemo } from 'react';
-import { FormattedMessage } from 'react-intl';
-import DynamicFormItem from './DynamicFormItem';
-import { IDynamicFieldProps } from './types';
-import useCheckFileSize from './hooks/useCheckFileSize';
-import useMandatoryRule from './hooks/useMandatoryRule';
-import { UploadChangeParam, UploadFile } from 'antd/lib/upload/interface';
+import { UploadOutlined } from '@ant-design/icons'
+import { Button, Upload } from 'antd'
+import { FormInstance } from 'antd/lib/form'
+import { RcFile } from 'antd/lib/upload'
+import * as React from 'react'
+import { useCallback, useMemo } from 'react'
+import { FormattedMessage } from 'react-intl'
+import DynamicFormItem from './DynamicFormItem'
+import { IDynamicFieldProps } from './types'
+import useCheckFileSize from './hooks/useCheckFileSize'
+import useMandatoryRule from './hooks/useMandatoryRule'
+import { UploadChangeParam, UploadFile } from 'antd/lib/upload/interface'
 
 interface IDynamicFileUploaderFieldProps extends IDynamicFieldProps {
-  form?: FormInstance,
+  form?: FormInstance
 }
 
-const DynamicFileUploaderField: React.FunctionComponent<IDynamicFileUploaderFieldProps> = (props) => {
-  const {
-    fieldData,
-    form,
-    allInitialValues,
-  } = props
+const DynamicFileUploaderField: React.FunctionComponent<
+  IDynamicFileUploaderFieldProps
+> = (props) => {
+  const { fieldData, form, allInitialValues } = props
 
   const { name } = fieldData
 
@@ -34,20 +32,25 @@ const DynamicFileUploaderField: React.FunctionComponent<IDynamicFileUploaderFiel
 
   const checkFileSize = useCheckFileSize()
 
-  const handleBeforeUpload = useCallback((file: RcFile) => {
-    return checkFileSize(file)
-  }, [checkFileSize])
+  const handleBeforeUpload = useCallback(
+    (file: RcFile) => {
+      return checkFileSize(file)
+    },
+    [checkFileSize],
+  )
 
   const initialValue = useMemo(() => {
     const fileList: any[] = []
     const value = allInitialValues[name]
     if (value) {
-      fileList.push(...[
-        {
-          name: typeof value == 'string' ? getFilenameFromURL(value) : null,
-          url: typeof value == 'string' ? value : null,
-        },
-      ])
+      fileList.push(
+        ...[
+          {
+            name: typeof value == 'string' ? getFilenameFromURL(value) : null,
+            url: typeof value == 'string' ? value : null,
+          },
+        ],
+      )
     }
     return fileList
   }, [allInitialValues, name])
@@ -56,8 +59,7 @@ const DynamicFileUploaderField: React.FunctionComponent<IDynamicFileUploaderFiel
     <DynamicFormItem
       fieldData={fieldData}
       rules={[basicRule]}
-      initialValue={initialValue}
-    >
+      initialValue={initialValue}>
       <Upload
         accept="application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx"
         action="https://api.evius.co/api/files/upload/"
@@ -75,17 +77,13 @@ const DynamicFileUploaderField: React.FunctionComponent<IDynamicFileUploaderFiel
               })
             }
           }
-        }}
-      >
+        }}>
         <Button icon={<UploadOutlined />}>
-          <FormattedMessage
-            id="form.button.upload-file"
-            defaultMessage="Subir archivo"
-          />
+          <FormattedMessage id="form.button.upload-file" defaultMessage="Subir archivo" />
         </Button>
       </Upload>
     </DynamicFormItem>
-  );
-};
+  )
+}
 
-export default DynamicFileUploaderField;
+export default DynamicFileUploaderField

@@ -1,24 +1,27 @@
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import { IntlProvider } from 'react-intl'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
-import './styles/main.scss';
-import App from './App/App';
-import { unregister as unregisterServiceWorker } from './registerServiceWorker';
-import localeData from './helpers/locale.json';
-import sentry from './helpers/sentry';
-import store from './redux/store';
-import { CurrentUserProvider } from './context/userContext';
+import './styles/main.scss'
+import App from './App/App'
+import { unregister as unregisterServiceWorker } from './registerServiceWorker'
+import localeData from './helpers/locale.json'
+import sentry from './helpers/sentry'
+import store from './redux/store'
+import { CurrentUserProvider } from './context/userContext'
 
-const queryClient = new QueryClient();
-const language = (navigator.languages && navigator.languages[0]) || navigator.language;
+const queryClient = new QueryClient()
+const language = (navigator.languages && navigator.languages[0]) || navigator.language
 
-const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
-const messages = (localeData as any)[languageWithoutRegionCode] || (localeData as any)[language] || localeData.en;
+const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0]
+const messages =
+  (localeData as any)[languageWithoutRegionCode] ||
+  (localeData as any)[language] ||
+  localeData.en
 
 /* A helper function that will send errors to Sentry.io. */
-sentry();
+sentry()
 ReactDOM.render(
   <IntlProvider locale={languageWithoutRegionCode} messages={messages} defaultLocale="es">
     <QueryClientProvider client={queryClient}>
@@ -29,7 +32,7 @@ ReactDOM.render(
       </CurrentUserProvider>
     </QueryClientProvider>
   </IntlProvider>,
-  document.getElementById('root')
-);
+  document.getElementById('root'),
+)
 
-unregisterServiceWorker();
+unregisterServiceWorker()

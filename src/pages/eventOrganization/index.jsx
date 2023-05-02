@@ -1,9 +1,9 @@
 /** React's libraries */
-import { useState, useEffect } from 'react';
-import { Route, NavLink, Redirect, Switch, withRouter } from 'react-router-dom';
+import { useState, useEffect } from 'react'
+import { Route, NavLink, Redirect, Switch, withRouter } from 'react-router-dom'
 
 /** Antd imports */
-import { Tag, Menu, Button, Layout } from 'antd';
+import { Tag, Menu, Button, Layout } from 'antd'
 import {
   DoubleRightOutlined,
   MenuUnfoldOutlined,
@@ -16,46 +16,46 @@ import {
   ProjectOutlined,
   MenuOutlined,
   DeleteOutlined,
-} from '@ant-design/icons';
+} from '@ant-design/icons'
 
 /** Helpers and utils */
-import { OrganizationApi } from '@helpers/request';
+import { OrganizationApi } from '@helpers/request'
 
 /** Components */
-import Loading from '@components/profile/loading';
-import OrganizationProfile from './profile';
-import OrgEvents from './events';
-import Styles from '@components/App/styles';
-import OrgMembers from './members';
-import OrganizationPositionsPage from './OrganizationPositionsPage';
-import PositionedUsersPage from './PositionedUsersPage';
-import MembersCertificationPage from './MembersCertificationPage';
-import MemberCertificationLogsPage from './MemberCertificationLogsPage';
-import OrgRegisteredUsers from './OrgRegisteredUsers';
-import OrganizationPropertiesIsolatedPage from './OrganizationPropertiesIsolatedPage';
-import MemberSettings from './memberSettings';
-import TemplateMemberSettings from './templateMemberSettings';
-import MenuLanding from '@components/menuLanding/index';
-import NoMatchPage from '@components/notFoundPage/noMatchPage';
-import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteCms';
-import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage';
+import Loading from '@components/profile/loading'
+import OrganizationProfile from './profile'
+import OrgEvents from './events'
+import Styles from '@components/App/styles'
+import OrgMembers from './members'
+import OrganizationPositionsPage from './OrganizationPositionsPage'
+import PositionedUsersPage from './PositionedUsersPage'
+import MembersCertificationPage from './MembersCertificationPage'
+import MemberCertificationLogsPage from './MemberCertificationLogsPage'
+import OrgRegisteredUsers from './OrgRegisteredUsers'
+import OrganizationPropertiesIsolatedPage from './OrganizationPropertiesIsolatedPage'
+import MemberSettings from './memberSettings'
+import TemplateMemberSettings from './templateMemberSettings'
+import MenuLanding from '@components/menuLanding/index'
+import NoMatchPage from '@components/notFoundPage/noMatchPage'
+import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteCms'
+import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage'
 
 function Organization(props) {
-  const organizationId = props.match.params.id;
+  const organizationId = props.match.params.id
 
-  const [organization, setOrganization] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [collapseMenu, setCollapseMenu] = useState(false);
+  const [organization, setOrganization] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
+  const [collapseMenu, setCollapseMenu] = useState(false)
 
   async function getOrganizationData() {
-    const org = await OrganizationApi.getOne(organizationId);
-    setOrganization(org);
-    setIsLoading(false);
+    const org = await OrganizationApi.getOne(organizationId)
+    setOrganization(org)
+    setIsLoading(false)
   }
 
   useEffect(() => {
-    getOrganizationData();
-  }, [props.location.pathname]);
+    getOrganizationData()
+  }, [props.location.pathname])
 
   return (
     <>
@@ -130,8 +130,13 @@ function Organization(props) {
               <Loading />
             ) : (
               <div style={{ padding: '5px' }}>
-                <Tag color="#003853" icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft: 20 }}>
-                  <a target="_blank" href={`${window.location.origin}/organization/${organization._id}/events`}>
+                <Tag
+                  color="#003853"
+                  icon={<DoubleRightOutlined />}
+                  style={{ marginBottom: 10, marginLeft: 20 }}>
+                  <a
+                    target="_blank"
+                    href={`${window.location.origin}/organization/${organization._id}/events`}>
                     {`Ir al landing de la organización: ${organization.name}`}
                   </a>
                 </Tag>
@@ -256,7 +261,7 @@ function Organization(props) {
         </Layout>
       )}
     </>
-  );
+  )
 }
 
 const Protected = ({ component: Component, org, ...rest }) => (
@@ -273,6 +278,6 @@ const Protected = ({ component: Component, org, ...rest }) => (
       )
     }
   />
-);
+)
 
-export default withRouter(Organization);
+export default withRouter(Organization)

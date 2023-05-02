@@ -10,7 +10,7 @@
 .chaport-container.chaport-container-positioned .chaport-window {
   right: 6% !important;
   top: auto !important;
-  bottom: -229px !important;  
+  bottom: -229px !important;
 }
 
 // chatport button//
@@ -21,14 +21,20 @@
 }
 
 // icono chat //
-.chaport-container .chaport-launcher .chaport-launcher-button .chaport-launcher-chat-icon {
+.chaport-container
+  .chaport-launcher
+  .chaport-launcher-button
+  .chaport-launcher-chat-icon {
   left: 10px !important;
   width: 26px !important;
   height: 24px !important;
 }
 
 // icono close//
-.chaport-container .chaport-launcher .chaport-launcher-button .chaport-launcher-close-icon {
+.chaport-container
+  .chaport-launcher
+  .chaport-launcher-button
+  .chaport-launcher-close-icon {
   top: -5px !important;
   right: -9px !important;
 }

@@ -1,55 +1,62 @@
-import { useState, useEffect, Fragment } from 'react';
-import { withRouter } from 'react-router';
-import { Modal, Row, Col, Avatar, Button } from 'antd';
-import { SpeakersApi } from '@helpers/request';
-import { UserOutlined } from '@ant-design/icons';
+import { useState, useEffect, Fragment } from 'react'
+import { withRouter } from 'react-router'
+import { Modal, Row, Col, Avatar, Button } from 'antd'
+import { SpeakersApi } from '@helpers/request'
+import { UserOutlined } from '@ant-design/icons'
 
 const ModalSpeakers = (props) => {
-  const [speakers, setSpeakers] = useState({});
-  const [modalVisible, setModalVisible] = useState(false);
+  const [speakers, setSpeakers] = useState({})
+  const [modalVisible, setModalVisible] = useState(false)
 
   useEffect(() => {
-    (async () => {
-      const speakers = await SpeakersApi.getOne(props.speakerId, props.eventId);
-      setSpeakers(speakers);
-      setModalVisible(true);
-    })();
-  }, [props.speakerId]);
+    ;(async () => {
+      const speakers = await SpeakersApi.getOne(props.speakerId, props.eventId)
+      setSpeakers(speakers)
+      setModalVisible(true)
+    })()
+  }, [props.speakerId])
 
   function clearStates() {
-    setSpeakers({});
-    setModalVisible(false);
-    props.setIdSpeaker(null);
+    setSpeakers({})
+    setModalVisible(false)
+    props.setIdSpeaker(null)
   }
 
   return (
     <Fragment>
       <Modal
-        title='Conferencista'
+        title="Conferencista"
         centered
         width={1000}
         visible={modalVisible}
         onCancel={() => clearStates()}
         onOk={() => clearStates()}
         footer={[
-          <Button key='cerrar' type='primary' onClick={() => clearStates()}>
+          <Button key="cerrar" type="primary" onClick={() => clearStates()}>
             Cerrar
           </Button>,
-        ]}
-      >
+        ]}>
         <Row>
           {/* Imagen del conferencista */}
 
-          <Col flex='1 1 auto'>
+          <Col flex="1 1 auto">
             {speakers.image ? (
-              <Avatar style={{ display: 'block', margin: '0 auto' }} size={130} src={speakers.image} />
+              <Avatar
+                style={{ display: 'block', margin: '0 auto' }}
+                size={130}
+                src={speakers.image}
+              />
             ) : (
-              <Avatar style={{ display: 'block', margin: '0 auto' }} size={130} icon={<UserOutlined />} />
+              <Avatar
+                style={{ display: 'block', margin: '0 auto' }}
+                size={130}
+                icon={<UserOutlined />}
+              />
             )}
           </Col>
 
           {/* Descripción del conferencista */}
-          <Col flex='1 1 600px'>
+          <Col flex="1 1 600px">
             <span>
               <b>{speakers.name}</b>
             </span>
@@ -59,13 +66,16 @@ const ModalSpeakers = (props) => {
               </span>
               <br />
               <br />
-              <div style={{ width: '90%' }} dangerouslySetInnerHTML={{ __html: speakers.description }} />
+              <div
+                style={{ width: '90%' }}
+                dangerouslySetInnerHTML={{ __html: speakers.description }}
+              />
             </p>
           </Col>
         </Row>
       </Modal>
     </Fragment>
-  );
-};
+  )
+}
 
-export default withRouter(ModalSpeakers);
+export default withRouter(ModalSpeakers)

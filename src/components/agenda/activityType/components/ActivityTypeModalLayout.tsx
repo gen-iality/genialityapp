@@ -1,17 +1,17 @@
-import { ReactNode } from 'react';
+import { ReactNode } from 'react'
 
-import { Typography, Layout, Row, Col, Button, Spin } from 'antd';
+import { Typography, Layout, Row, Col, Button, Spin } from 'antd'
 
-import { ModalWrapperUIProps } from '../interfaces/ModalWrapperUIProps';
+import { ModalWrapperUIProps } from '../interfaces/ModalWrapperUIProps'
 
-const { Header, Content, Footer } = Layout;
-const { Title } = Typography;
+const { Header, Content, Footer } = Layout
+const { Title } = Typography
 
 export interface ActivityTypeModalLayoutProps extends ModalWrapperUIProps {
-  somethingWasSelected: boolean,
-  render: () => ReactNode,
-  hideSelectButton?: boolean,
-};
+  somethingWasSelected: boolean
+  render: () => ReactNode
+  hideSelectButton?: boolean
+}
 
 function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {
   const {
@@ -22,28 +22,24 @@ function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {
     title,
     onClose = () => {},
     onConfirm = () => {},
-  } = props;
+  } = props
 
   const handleSelectButton = () => {
-    console.debug('somethingWasSelected', somethingWasSelected);
+    console.debug('somethingWasSelected', somethingWasSelected)
     if (somethingWasSelected) {
-      onConfirm();
-      onClose(true);
-      console.debug('confirm & close modal');
+      onConfirm()
+      onClose(true)
+      console.debug('confirm & close modal')
     }
-  };
+  }
 
   return (
     <Layout>
       <Header style={{ textAlign: 'center', padding: '20px 0px 20px 0px' }}>
-        <Title level={3}>
-          {title}
-        </Title>
+        <Title level={3}>{title}</Title>
       </Header>
 
-      <Content style={{ padding: '60px 50px 60px 50px' }}>
-        {render()}
-      </Content>
+      <Content style={{ padding: '60px 50px 60px 50px' }}>{render()}</Content>
 
       <Footer style={{ backgroundColor: '#fff', padding: '20px 0px 0px 0px' }}>
         <Row justify="end" gutter={[8, 8]}>
@@ -52,8 +48,7 @@ function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {
               <Button
                 disabled={!somethingWasSelected}
                 type="primary"
-                onClick={handleSelectButton}
-              >
+                onClick={handleSelectButton}>
                 Seleccionar
               </Button>
             )}
@@ -61,7 +56,7 @@ function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {
         </Row>
       </Footer>
     </Layout>
-  );
+  )
 }
 
-export default ActivityTypeModalLayout;
+export default ActivityTypeModalLayout

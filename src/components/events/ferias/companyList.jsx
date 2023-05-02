@@ -1,22 +1,22 @@
-import { Row, Col, Modal, Button, Typography, Space, Tag, Badge, Card } from 'antd';
-import { PhoneOutlined, MailOutlined, GlobalOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Row, Col, Modal, Button, Typography, Space, Tag, Badge, Card } from 'antd'
+import { PhoneOutlined, MailOutlined, GlobalOutlined } from '@ant-design/icons'
+import { useHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 
 function Companylist(props) {
-  const { Text, Paragraph } = Typography;
-  const history = useHistory();
+  const { Text, Paragraph } = Typography
+  const history = useHistory()
 
   function stripHtml(html) {
     // Crea un nuevo elemento div
-    const temporalDivElement = document.createElement('div');
+    const temporalDivElement = document.createElement('div')
     // Establecer el contenido HTML con el div
-    temporalDivElement.innerHTML = html;
+    temporalDivElement.innerHTML = html
     // Recuperar la propiedad de texto del elemento
-    return temporalDivElement.textContent || temporalDivElement.innerText || '';
+    return temporalDivElement.textContent || temporalDivElement.innerText || ''
   }
 
-  const description = stripHtml(props.description);
+  const description = stripHtml(props.description)
 
   function showModal(info) {
     Modal.info({
@@ -49,7 +49,7 @@ function Companylist(props) {
           )}
         </Space>
       ),
-    });
+    })
   }
 
   return (
@@ -74,7 +74,9 @@ function Companylist(props) {
               xl={6}
               className="col"
               onClick={() => {
-                history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`);
+                history.push(
+                  `/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`,
+                )
               }}>
               <div className="img-contact">
                 <img className="img" src={props.img} />
@@ -96,7 +98,8 @@ function Companylist(props) {
                   {description}
                 </Paragraph>
                 <span style={{ marginTop: 15 }}>
-                  <Link to={`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`}>
+                  <Link
+                    to={`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`}>
                     <Button type="primary">Visitar stand</Button>
                   </Link>
                 </span>
@@ -121,7 +124,7 @@ function Companylist(props) {
                       <a
                         rel="noreferrer"
                         onClick={() => {
-                          window.open(`${props.pagweb}`, '_blank');
+                          window.open(`${props.pagweb}`, '_blank')
                         }}
                         target="_blank">
                         <Text style={{ width: '20vw' }} ellipsis>
@@ -132,7 +135,11 @@ function Companylist(props) {
                   )}
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <Button type="default" className="boton" size="large" onClick={() => showModal(props)}>
+                  <Button
+                    type="default"
+                    className="boton"
+                    size="large"
+                    onClick={() => showModal(props)}>
                     Información de contacto
                   </Button>
                 </div>
@@ -144,7 +151,7 @@ function Companylist(props) {
         </Card>
       </Badge.Ribbon>
     </div>
-  );
+  )
 }
 
-export default Companylist;
+export default Companylist

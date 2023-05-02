@@ -1,6 +1,6 @@
-import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm';
-import { OrganizationApi } from '@helpers/request';
-import { Button, Modal, Space, Typography } from 'antd';
+import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm'
+import { OrganizationApi } from '@helpers/request'
+import { Button, Modal, Space, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import sample from '@components/organization/forms/sample-dynamic-fields'
 
@@ -47,8 +47,7 @@ function OrganizationPropertiesIsolatedPage(props: any) {
       <Button
         onClick={() => {
           setOpened(true)
-        }}
-      >
+        }}>
         Abrir formulario
       </Button>
 
@@ -56,8 +55,7 @@ function OrganizationPropertiesIsolatedPage(props: any) {
         <Modal
           visible={opened}
           onCancel={() => setOpened(false)}
-          onOk={() => setOpened(false)}
-        >
+          onOk={() => setOpened(false)}>
           <OrganizationPropertiesForm
             basicDataUser={{}}
             orgMember={member}

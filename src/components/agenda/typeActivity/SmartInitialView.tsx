@@ -1,14 +1,14 @@
-import { Card, Result, Button, Spin } from 'antd';
-import SmartModalStepByStep from './SmartModalStepByStep';
-import ManagerView from './ManagerView';
-import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
-import { useContext, useEffect, useState } from 'react';
-import AgendaContext from '@context/AgendaContext';
+import { Card, Result, Button, Spin } from 'antd'
+import SmartModalStepByStep from './SmartModalStepByStep'
+import ManagerView from './ManagerView'
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
+import { useContext, useEffect, useState } from 'react'
+import AgendaContext from '@context/AgendaContext'
 
-import InitialSVG from './components/svg/InitialSVG';
-import { AgendaApi } from '@helpers/request';
-import { CurrentEventContext } from '@context/eventContext';
-import ModalPreviewVideo from './ModalPreviewVideo';
+import InitialSVG from './components/svg/InitialSVG'
+import { AgendaApi } from '@helpers/request'
+import { CurrentEventContext } from '@context/eventContext'
+import ModalPreviewVideo from './ModalPreviewVideo'
 
 const objecKeys: object = {
   url: 'Video',
@@ -19,16 +19,12 @@ const objecKeys: object = {
   RTMP: 'Transmisión',
   cargarvideo: 'Video',
   video: 'Video',
-};
+}
 
 const SmartInitialView = (props: any) => {
-  const {
-    toggleActivitySteps,
-    selectedKey,
-    previewKey,
-    createTypeActivity,
-  } = useTypeActivity();
-  const [loading, setLoading] = useState(true);
+  const { toggleActivitySteps, selectedKey, previewKey, createTypeActivity } =
+    useTypeActivity()
+  const [loading, setLoading] = useState(true)
   const {
     typeActivity,
     meeting_id,
@@ -36,20 +32,20 @@ const SmartInitialView = (props: any) => {
     activityEdit,
     roomStatus,
     saveConfig,
-  } = useContext(AgendaContext);
-  const cEvent = useContext(CurrentEventContext);
+  } = useContext(AgendaContext)
+  const cEvent = useContext(CurrentEventContext)
 
   useEffect(() => {
     if (activityEdit) {
       // Guardamos
-      createTypeActivity();
+      createTypeActivity()
     }
-  }, [props.hasActivityName, activityEdit]);
+  }, [props.hasActivityName, activityEdit])
 
   useEffect(() => {
-    if (!props.hasActivityName) return;
+    if (!props.hasActivityName) return
     // Obtener detalles de la lección
-    setActivityName(props.activityName);
+    setActivityName(props.activityName)
     // if (typeActivity === null) {
     //   setLoading(false);
     // } else {
@@ -57,27 +53,27 @@ const SmartInitialView = (props: any) => {
     //   obtainDataInitial();
     //   // Mientras carga los componentes
     // }
-  }, [props.hasActivityName]); // props.tabs ignored
+  }, [props.hasActivityName]) // props.tabs ignored
 
   // Permite guardar la data en firebase y activar el snapshot cuando se cambia
   // el estado de la lección
   useEffect(() => {
-    saveConfig(null, 1);
-  }, [roomStatus]);
+    saveConfig(null, 1)
+  }, [roomStatus])
 
   // Show the popup via prop
   useEffect(() => {
     if (props.showForm) {
       toggleActivitySteps('type')
     }
-  }, [props.showForm]);
+  }, [props.showForm])
 
   // Obtiene datos iniciales y guarda en el Reducer
   const obtainDataInitial = async () => {
-    let urlVideo;
+    let urlVideo
     if (typeActivity === 'url') {
-      const dataActivity = await obtainUrlVideo();
-      urlVideo = dataActivity.video || meeting_id;
+      const dataActivity = await obtainUrlVideo()
+      urlVideo = dataActivity.video || meeting_id
     }
     toggleActivitySteps('initial', {
       openModal: false,
@@ -88,14 +84,14 @@ const SmartInitialView = (props: any) => {
       data: typeActivity !== 'url' ? meeting_id : urlVideo,
       buttonsTextNextOrCreate: '',
       buttonTextPreviousOrCancel: '',
-    });
-    setTimeout(() => setLoading(false), 500);
-  };
+    })
+    setTimeout(() => setLoading(false), 500)
+  }
   // (SE PUEDE OPTIMIZAR) X AHORA EL VIDEO SE ESTA GUARDANDO EN MONGO
   const obtainUrlVideo = async () => {
-    const resp = await AgendaApi.getOne(activityEdit, cEvent?.value._id);
-    return resp;
-  };
+    const resp = await AgendaApi.getOne(activityEdit, cEvent?.value._id)
+    return resp
+  }
 
   return (
     <>
@@ -106,7 +102,7 @@ const SmartInitialView = (props: any) => {
         onClosedForm={props.onClosedForm}
       />
     </>
-  );
-};
+  )
+}
 
-export default SmartInitialView;
+export default SmartInitialView

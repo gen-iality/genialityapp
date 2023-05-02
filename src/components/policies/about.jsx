@@ -1,9 +1,9 @@
-import { Component } from 'react';
+import { Component } from 'react'
 
 class About extends Component {
   constructor(props) {
-    super(props);
-    this.state = {};
+    super(props)
+    this.state = {}
   }
 
   render() {
@@ -11,13 +11,13 @@ class About extends Component {
       <div style={{ textaAlign: 'justify', padding: '0 150px' }}>
         <h1 className="title"> Quienes somos</h1>
         <p>
-          <a href='https://drive.google.com/file/d/0B3lty2WUnoHtZXNNUzBIRENOTGM/view?ts=5c5b440c'>
+          <a href="https://drive.google.com/file/d/0B3lty2WUnoHtZXNNUzBIRENOTGM/view?ts=5c5b440c">
             Click! Para conocer más sobre GEN.iality
           </a>
         </p>
       </div>
-    );
+    )
   }
 }
 
-export default About;
+export default About

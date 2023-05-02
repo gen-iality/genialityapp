@@ -6,14 +6,12 @@ import DynamicFormItem from './DynamicFormItem'
 import useMandatoryRule from './hooks/useMandatoryRule'
 import { IDynamicFieldProps } from './types'
 
-interface IDynamicMultipleListTableFieldProps extends IDynamicFieldProps {
-}
+interface IDynamicMultipleListTableFieldProps extends IDynamicFieldProps {}
 
-const DynamicMultipleListTableField: React.FunctionComponent<IDynamicMultipleListTableFieldProps> = (props) => {
-  const {
-    fieldData,
-    allInitialValues,
-  } = props
+const DynamicMultipleListTableField: React.FunctionComponent<
+  IDynamicMultipleListTableFieldProps
+> = (props) => {
+  const { fieldData, allInitialValues } = props
 
   const { name, options } = fieldData
 
@@ -41,12 +39,8 @@ const DynamicMultipleListTableField: React.FunctionComponent<IDynamicMultipleLis
     <DynamicFormItem
       rules={rules}
       fieldData={fieldData}
-      initialValue={allInitialValues[name]}
-    >
-      <ReactSelect
-        isMulti
-        options={options}
-      />
+      initialValue={allInitialValues[name]}>
+      <ReactSelect isMulti options={options} />
     </DynamicFormItem>
   )
 }

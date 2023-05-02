@@ -1,35 +1,38 @@
-import { PlusCircleFilled } from '@ant-design/icons';
-import { Button, List, Typography } from 'antd';
-import { CertRow } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types';
-import { useState } from 'react';
-import CertificateRow from './CertificateRow';
+import { PlusCircleFilled } from '@ant-design/icons'
+import { Button, List, Typography } from 'antd'
+import { CertRow } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types'
+import { useState } from 'react'
+import CertificateRow from './CertificateRow'
 
 interface ICertificateRowsProps {
-  value?: CertRow[],
-  onChange?: (data: CertRow[]) => void,
+  value?: CertRow[]
+  onChange?: (data: CertRow[]) => void
 }
 
 const CertificateRows: React.FunctionComponent<ICertificateRowsProps> = (props) => {
-  const {
-    value: certRows = [],
-    onChange = () => {},
-  } = props
+  const { value: certRows = [], onChange = () => {} } = props
 
   const [possibleType, setPossibleType] = useState<CertRow['type'][]>([
-    'break', 'h1', 'h2', 'h3', 'h4', 'text',
+    'break',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'text',
   ])
 
   return (
     <List
       header={<Typography.Title>Filas</Typography.Title>}
-      footer={(
+      footer={
         <Button
           onClick={() => {
             onChange([...certRows, { type: 'text', content: '...' }])
           }}
-          icon={<PlusCircleFilled />}
-        >Agregar</Button>
-      )}
+          icon={<PlusCircleFilled />}>
+          Agregar
+        </Button>
+      }
       bordered
       dataSource={certRows}
       renderItem={(item, index) => (
@@ -52,7 +55,7 @@ const CertificateRows: React.FunctionComponent<ICertificateRowsProps> = (props) 
         />
       )}
     />
-  );
-};
+  )
+}
 
-export default CertificateRows;
+export default CertificateRows

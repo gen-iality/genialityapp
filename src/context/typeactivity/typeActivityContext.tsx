@@ -1,4 +1,6 @@
-import { createContext } from 'react';
-import { TypeActivityContextProps } from './types/types';
+import { createContext } from 'react'
+import { TypeActivityContextProps } from './types/types'
 
-export const TypeActivityContext = createContext<TypeActivityContextProps>({} as TypeActivityContextProps);
+export const TypeActivityContext = createContext<TypeActivityContextProps>(
+  {} as TypeActivityContextProps,
+)

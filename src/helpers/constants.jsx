@@ -1,36 +1,37 @@
 /* globals process */
-export const ApiUrl = process.env.VITE_API_URL;
-export const ApiDEVUrl = process.env.VITE_API_DEV_URL;
-export const AuthUrl = process.env.VITE_APP_AUTH_URL;
-export const BaseUrl = process.env.VITE_APP_BASE_URL;
-export const EVIUS_GOOGLE_MAPS_KEY = process.env.EVIUS_GOOGLE_MAPS_KEY || 'AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk';
-export const ApiEviusZoomServer = process.env.VITE_APP_API_EVIUS_ZOOM_SERVER;
-export const ApiGoogleDocuments = process.env.VITE_APP_API_GOOGLE_API_DOCUMENTS;
-export const ApiEviusZoomHosts = process.env.VITE_APP_API_EVIUS_ZOOM_HOSTS;
-export const ApiEviusZoomSurvey = process.env.VITE_APP_API_EVIUS_ZOOM_SURVEY;
-export const ApiUrlCountry = process.env.VITE_API_COUNTRY_URL;
-export const KeyCountry = process.env.VITE_API_KEY_COUNTRY;
+export const ApiUrl = process.env.VITE_API_URL
+export const ApiDEVUrl = process.env.VITE_API_DEV_URL
+export const AuthUrl = process.env.VITE_APP_AUTH_URL
+export const BaseUrl = process.env.VITE_APP_BASE_URL
+export const EVIUS_GOOGLE_MAPS_KEY =
+  process.env.EVIUS_GOOGLE_MAPS_KEY || 'AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk'
+export const ApiEviusZoomServer = process.env.VITE_APP_API_EVIUS_ZOOM_SERVER
+export const ApiGoogleDocuments = process.env.VITE_APP_API_GOOGLE_API_DOCUMENTS
+export const ApiEviusZoomHosts = process.env.VITE_APP_API_EVIUS_ZOOM_HOSTS
+export const ApiEviusZoomSurvey = process.env.VITE_APP_API_EVIUS_ZOOM_SURVEY
+export const ApiUrlCountry = process.env.VITE_API_COUNTRY_URL
+export const KeyCountry = process.env.VITE_API_KEY_COUNTRY
 export const parseUrl = (url) => {
   try {
-    const temporal = {};
+    const temporal = {}
     url
       .split('?')[1]
       .split('&')
       .map((obj) => {
-        return (temporal[obj.split('=')[0]] = obj.split('=')[1]);
-      });
-    return temporal;
+        return (temporal[obj.split('=')[0]] = obj.split('=')[1])
+      })
+    return temporal
   } catch (error) {
-    return {};
+    return {}
   }
-};
+}
 export const parseCookies = (cookies) => {
-  const temporal = [];
+  const temporal = []
   cookies.split('&').map((obj) => {
-    return temporal.push({ [obj.split('=')[0]]: obj.split('=')[1] });
-  });
-  return temporal;
-};
+    return temporal.push({ [obj.split('=')[0]]: obj.split('=')[1] })
+  })
+  return temporal
+}
 export const networks = [
   {
     name: 'Facebook',
@@ -52,7 +53,7 @@ export const networks = [
     path: 'linkedIn',
     icon: <i className="fab fa-linkedin"></i>,
   },
-];
+]
 export const rolPermissions = {
   admin_activity: {
     _id: '60a5256e5f7827f40e29ff6a',
@@ -102,7 +103,7 @@ export const rolPermissions = {
     _id: '5c092624f33bd415e22dcdb3',
     name: 'Metricas del curso',
   },
-};
+}
 
 export const toolbarEditor = {
   toolbar: [
@@ -115,12 +116,12 @@ export const toolbarEditor = {
     [{ list: 'ordered' }, { list: 'bullet' }],
     ['link', 'image'],
   ],
-};
+}
 
 export const imageBox =
   '<svg id="Layer_1" style="enable-background:new 0 0 64 64;" version="1.1" viewBox="0 0 64 64" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css">\n' +
   '\t.st0{fill:#134563;}\n' +
-  '</style><g><g id="Icon-Image" transform="translate(278.000000, 232.000000)"><path class="st0" d="M-226.2-181.6h-39.5c-2.3,0-4.2-1.9-4.2-4.2v-28.2c0-2.3,1.9-4.2,4.2-4.2h39.5     c2.3,0,4.2,1.9,4.2,4.2v28.2C-222-183.5-223.9-181.6-226.2-181.6L-226.2-181.6z M-265.8-215.5c-0.8,0-1.4,0.6-1.4,1.4v28.2     c0,0.8,0.6,1.4,1.4,1.4h39.5c0.8,0,1.4-0.6,1.4-1.4v-28.2c0-0.8-0.6-1.4-1.4-1.4H-265.8L-265.8-215.5z" id="Fill-12"/><path class="st0" d="M-238.9-201.5c-3.1,0-5.5-2.5-5.5-5.5s2.5-5.5,5.5-5.5s5.5,2.5,5.5,5.5     S-235.9-201.5-238.9-201.5L-238.9-201.5z M-238.9-210c-1.6,0-2.9,1.3-2.9,2.9c0,1.6,1.3,2.9,2.9,2.9c1.6,0,2.9-1.3,2.9-2.9     C-236-208.7-237.3-210-238.9-210L-238.9-210z" id="Fill-13"/><polyline class="st0" id="Fill-14" points="-231.4,-182.1 -254.5,-203.8 -267.7,-191.6 -269.5,-193.5 -254.5,-207.4 -229.6,-184      -231.4,-182.1    "/><polyline class="st0" id="Fill-15" points="-224.2,-189.3 -231.9,-195.5 -238.3,-190.2 -240,-192.3 -231.9,-198.9 -222.6,-191.3      -224.2,-189.3    "/></g></g></svg>';
+  '</style><g><g id="Icon-Image" transform="translate(278.000000, 232.000000)"><path class="st0" d="M-226.2-181.6h-39.5c-2.3,0-4.2-1.9-4.2-4.2v-28.2c0-2.3,1.9-4.2,4.2-4.2h39.5     c2.3,0,4.2,1.9,4.2,4.2v28.2C-222-183.5-223.9-181.6-226.2-181.6L-226.2-181.6z M-265.8-215.5c-0.8,0-1.4,0.6-1.4,1.4v28.2     c0,0.8,0.6,1.4,1.4,1.4h39.5c0.8,0,1.4-0.6,1.4-1.4v-28.2c0-0.8-0.6-1.4-1.4-1.4H-265.8L-265.8-215.5z" id="Fill-12"/><path class="st0" d="M-238.9-201.5c-3.1,0-5.5-2.5-5.5-5.5s2.5-5.5,5.5-5.5s5.5,2.5,5.5,5.5     S-235.9-201.5-238.9-201.5L-238.9-201.5z M-238.9-210c-1.6,0-2.9,1.3-2.9,2.9c0,1.6,1.3,2.9,2.9,2.9c1.6,0,2.9-1.3,2.9-2.9     C-236-208.7-237.3-210-238.9-210L-238.9-210z" id="Fill-13"/><polyline class="st0" id="Fill-14" points="-231.4,-182.1 -254.5,-203.8 -267.7,-191.6 -269.5,-193.5 -254.5,-207.4 -229.6,-184      -231.4,-182.1    "/><polyline class="st0" id="Fill-15" points="-224.2,-189.3 -231.9,-195.5 -238.3,-190.2 -240,-192.3 -231.9,-198.9 -222.6,-191.3      -224.2,-189.3    "/></g></g></svg>'
 
 export const icon =
   '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
@@ -148,7 +149,7 @@ export const icon =
   '\t<rect x="3" y="161.3" style="fill:#50D3C9" width="12.7" height="15.4"/>\n' +
   '\t<text transform="matrix(1 0 0 1 871.8398 189.939)"><tspan x="0" y="0" style="fill:#50D3C9;font-family:\'Montserrat\';font-size:122.7092px;letter-spacing:24;">.C</tspan><tspan x="159.4" y="0" style="fill:#50D3C9;font-family:\'Montserrat\';font-size:122.7092px;letter-spacing:24;">O</tspan></text>\n' +
   '</g>\n' +
-  '</svg>';
+  '</svg>'
 
 //new constants dolph
 
@@ -187,7 +188,7 @@ export const fakeEventTimetable = {
       timestamp_end: '2020-09-24T23:00:00Z',
     },
   ],
-};
+}
 
 export const areaCode = [
   {
@@ -1642,7 +1643,7 @@ export const areaCode = [
     value: '+358',
     code: 'AX',
   },
-];
+]
 
 export const host_list = [
   {
@@ -1665,16 +1666,23 @@ export const host_list = [
     host_id: 'mSkbi8PmSSqQEWsm6FQiAA',
     host_name: 'host5@evius.co',
   },
-];
+]
 
 export const activitiesCode = [
   '6172f2b78794bf51952c74f3',
   '6172f2548794bf51952c74f2',
   '61732b4cfbe4ff412315beb6',
   '6172f380c5c23b745b6a3905',
-];
-export const cityValid = ['medellin', 'Medellin', 'medellín', 'Medellín'];
-export const codeActivity = ['EDC21CF110', 'EDC21IPH', 'EDC21MID7', 'EDC21CV48', '1EDC21OFF', '1EDC50OF21'];
+]
+export const cityValid = ['medellin', 'Medellin', 'medellín', 'Medellín']
+export const codeActivity = [
+  'EDC21CF110',
+  'EDC21IPH',
+  'EDC21MID7',
+  'EDC21CV48',
+  '1EDC21OFF',
+  '1EDC50OF21',
+]
 
 export const femaleicons = [
   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Ffemale%2F002-woman.png?alt=media&token=e01354bd-9119-4a91-983b-321424a7fe0c',
@@ -1699,7 +1707,7 @@ export const femaleicons = [
   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Ffemale%2F039-woman-19.png?alt=media&token=b4966d3e-c180-4cd3-8a60-c036c3b64c84',
   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Ffemale%2F045-woman-20.png?alt=media&token=381b215c-f83d-40dd-99c4-e8c552dc6382',
   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Ffemale%2F046-woman-21.png?alt=media&token=a437fa30-1536-40be-8cba-9617fbaf6d2c',
-];
+]
 
 export const maleIcons = [
   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F001-man.png?alt=media&token=4471955c-11bc-429a-af49-69db9450a8b7',
@@ -1726,7 +1734,7 @@ export const maleIcons = [
   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F042-man-21.png?alt=media&token=868491e3-37e3-4e84-8ba1-fed260f845f3',
   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F043-man-22.png?alt=media&token=bfb07e21-cf2f-4724-84ef-c3397c87530c',
   'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F044-man-23.png?alt=media&token=44016456-1872-468a-8290-eb64bbb9aa07',
-];
+]
 export const configEventsTemplate = {
   BackgroundImage:
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2FBackgroud.jpg?alt=media&token=cae37ed9-9817-4300-87e9-e9cac7106b05',
@@ -1736,6 +1744,7 @@ export const configEventsTemplate = {
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2FLogoEvius.jpeg?alt=media&token=8633227f-74d2-4798-ae48-3f1b74d38d9c',
   banner_image:
     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/template%2Fbanner.jpg?alt=media&token=8642d0ed-61e2-4fed-97fa-1cdd5687aeaf',
-};
+}
 
-export const imageforDefaultProfile = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+export const imageforDefaultProfile =
+  'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'

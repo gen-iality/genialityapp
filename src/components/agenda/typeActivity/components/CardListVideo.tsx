@@ -1,9 +1,9 @@
-import { deleteVideo } from '@adaptors/gcoreStreamingApi';
-import AgendaContext from '@context/AgendaContext';
-import { CurrentEventContext } from '@context/eventContext';
-import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
-import { milisegundosTohour } from '@helpers/helperFormatMseconds';
-import { AgendaApi } from '@helpers/request';
+import { deleteVideo } from '@adaptors/gcoreStreamingApi'
+import AgendaContext from '@context/AgendaContext'
+import { CurrentEventContext } from '@context/eventContext'
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
+import { milisegundosTohour } from '@helpers/helperFormatMseconds'
+import { AgendaApi } from '@helpers/request'
 import {
   BorderOutlined,
   CheckSquareOutlined,
@@ -14,56 +14,73 @@ import {
   LoadingOutlined,
   ClockCircleOutlined,
   CalendarOutlined,
-} from '@ant-design/icons';
-import { Card, List, Button, Image, Tooltip, Typography, message, Spin, Popconfirm, Tag, Space, Skeleton } from 'antd';
-import dayjs from 'dayjs';
-import { useContext, useEffect, useState } from 'react';
+} from '@ant-design/icons'
+import {
+  Card,
+  List,
+  Button,
+  Image,
+  Tooltip,
+  Typography,
+  message,
+  Spin,
+  Popconfirm,
+  Tag,
+  Space,
+  Skeleton,
+} from 'antd'
+import dayjs from 'dayjs'
+import { useContext, useEffect, useState } from 'react'
 
 const CardListVideo = (props: any) => {
-  const { visualizeVideo } = useTypeActivity();
-  const { activityEdit } = useContext(AgendaContext);
-  const cEvent = useContext(CurrentEventContext);
-  const [selectVideo, setSelectVideo] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [keyVideo, setKeyVideo] = useState<string | null>(null);
+  const { visualizeVideo } = useTypeActivity()
+  const { activityEdit } = useContext(AgendaContext)
+  const cEvent = useContext(CurrentEventContext)
+  const [selectVideo, setSelectVideo] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [keyVideo, setKeyVideo] = useState<string | null>(null)
 
   useEffect(() => {
     if (activityEdit) {
-      obtenerDetalleActivity();
+      obtenerDetalleActivity()
     }
     async function obtenerDetalleActivity() {
-      const agenda = await AgendaApi.getOne(activityEdit);
+      const agenda = await AgendaApi.getOne(activityEdit)
       if (agenda.video) {
-        setSelectVideo(agenda.video);
+        setSelectVideo(agenda.video)
       }
     }
-  }, [props?.videos]);
+  }, [props?.videos])
   const obtenerStatus = (status: string) => {
-    return status == 'ready' ? 'Procesado' : 'Procesando...';
-  };
+    return status == 'ready' ? 'Procesado' : 'Procesando...'
+  }
 
   const asignarVideo = async (url: string) => {
-    setKeyVideo(url);
-    setLoading(true);
+    setKeyVideo(url)
+    setLoading(true)
     try {
       if (activityEdit && cEvent?.value?._id && url) {
-        const urlVideo = url === selectVideo ? null : url;
-        const video = await AgendaApi.editOne({ video: urlVideo }, activityEdit, cEvent?.value?._id);
+        const urlVideo = url === selectVideo ? null : url
+        const video = await AgendaApi.editOne(
+          { video: urlVideo },
+          activityEdit,
+          cEvent?.value?._id,
+        )
         if (video) {
-          setSelectVideo(urlVideo);
-          message.success('Asignado correctamente el video');
+          setSelectVideo(urlVideo)
+          message.success('Asignado correctamente el video')
         } else {
-          message.error('Error al asignar el video');
+          message.error('Error al asignar el video')
         }
       } else {
-        message.error('No se puede asignar el video');
+        message.error('No se puede asignar el video')
       }
     } catch (e) {
-      message.error('Error al asignar el video');
+      message.error('Error al asignar el video')
     }
-    setLoading(false);
-    setKeyVideo(null);
-  };
+    setLoading(false)
+    setKeyVideo(null)
+  }
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       {props.videos && (
@@ -113,7 +130,9 @@ const CardListVideo = (props: any) => {
                           size="large"
                           type="text"
                           icon={<PlaySquareOutlined />}
-                          onClick={() => visualizeVideo(item.hls_url, item.created_at, item.name)}
+                          onClick={() =>
+                            visualizeVideo(item.hls_url, item.created_at, item.name)
+                          }
                           key="option-preview"></Button>
                       </Tooltip>,
                       ,
@@ -121,12 +140,12 @@ const CardListVideo = (props: any) => {
                         title="¿Está seguro que deseas eliminar esta grabación?"
                         onCancel={() => console.log('cancelado')}
                         onConfirm={async () => {
-                          const resp = await deleteVideo(item.id);
+                          const resp = await deleteVideo(item.id)
                           if (resp) {
-                            await props.refreshData();
-                            message.success('Video borrado correctamente.');
+                            await props.refreshData()
+                            message.success('Video borrado correctamente.')
                           } else {
-                            message.error('Error al eliminar video');
+                            message.error('Error al eliminar video')
                           }
                         }}
                         okText="Si"
@@ -155,12 +174,22 @@ const CardListVideo = (props: any) => {
                     fallback="https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg"
                   />
                 }
-                title={item?.status === 'ready' ? item.name : <Skeleton active paragraph={{ rows: 1 }} />}
+                title={
+                  item?.status === 'ready' ? (
+                    item.name
+                  ) : (
+                    <Skeleton active paragraph={{ rows: 1 }} />
+                  )
+                }
                 description={
                   item?.status === 'ready' && (
                     <Space direction="vertical">
-                      <Tag icon={<ClockCircleOutlined />}>{milisegundosTohour(item?.duration)}</Tag>
-                      <Tag icon={<CalendarOutlined />}>{dayjs(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}</Tag>
+                      <Tag icon={<ClockCircleOutlined />}>
+                        {milisegundosTohour(item?.duration)}
+                      </Tag>
+                      <Tag icon={<CalendarOutlined />}>
+                        {dayjs(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}
+                      </Tag>
                     </Space>
                   )
                 }
@@ -170,7 +199,7 @@ const CardListVideo = (props: any) => {
         />
       )}
     </Card>
-  );
-};
+  )
+}
 
-export default CardListVideo;
+export default CardListVideo

@@ -5,160 +5,178 @@ import {
   LoadingOutlined,
   LockOutlined,
   MailOutlined,
-} from '@ant-design/icons';
-import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Image } from 'antd';
-import withContext from '@context/withContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { app } from '@helpers/firebase';
-import { useIntl } from 'react-intl';
-import { useEffect, useState } from 'react';
-import RegisterUser from './RegisterUser';
-import { useEventContext } from '@context/eventContext';
-import RegisterUserAndEventUser from './RegisterUserAndEventUser';
-import { isEvent, isHome, useEventWithCedula } from '@helpers/helperEvent';
-import { useCurrentUser } from '@context/userContext';
-import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
-import RegisterUserAndOrgMember from './RegisterUserAndOrgMember';
-import { isOrganization } from '@helpers/helperOrg';
+} from '@ant-design/icons'
+import {
+  Modal,
+  Tabs,
+  Form,
+  Input,
+  Button,
+  Divider,
+  Typography,
+  Space,
+  Grid,
+  Alert,
+  Image,
+} from 'antd'
+import withContext from '@context/withContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { app } from '@helpers/firebase'
+import { useIntl } from 'react-intl'
+import { useEffect, useState } from 'react'
+import RegisterUser from './RegisterUser'
+import { useEventContext } from '@context/eventContext'
+import RegisterUserAndEventUser from './RegisterUserAndEventUser'
+import { isEvent, isHome, useEventWithCedula } from '@helpers/helperEvent'
+import { useCurrentUser } from '@context/userContext'
+import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed'
+import RegisterUserAndOrgMember from './RegisterUserAndOrgMember'
+import { isOrganization } from '@helpers/helperOrg'
 
-const { TabPane } = Tabs;
-const { useBreakpoint } = Grid;
+const { TabPane } = Tabs
+const { useBreakpoint } = Grid
 
 const stylePaddingDesktop = {
   paddingLeft: '30px',
   paddingRight: '30px',
   textAlign: 'center',
-};
+}
 const stylePaddingMobile = {
   paddingLeft: '10px',
   paddingRight: '10px',
   textAlign: 'center',
-};
+}
 
 const ModalAuth = (props) => {
-  const screens = useBreakpoint();
-  const [loading, setLoading] = useState(false);
-  const [errorLogin, setErrorLogin] = useState(false);
-  const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
-  const [form1] = Form.useForm();
-  const { handleChangeTypeModal, typeModal, controllerLoginVisible, helperDispatch, currentAuthScreen } = useHelper();
+  const screens = useBreakpoint()
+  const [loading, setLoading] = useState(false)
+  const [errorLogin, setErrorLogin] = useState(false)
+  const [errorRegisterUSer, setErrorRegisterUSer] = useState(false)
+  const [form1] = Form.useForm()
+  const {
+    handleChangeTypeModal,
+    typeModal,
+    controllerLoginVisible,
+    helperDispatch,
+    currentAuthScreen,
+  } = useHelper()
 
-  const cEvent = useEventContext();
-  const cUser = useCurrentUser();
-  const [modalVisible, setmodalVisible] = useState(false);
-  const [msjError, setmsjError] = useState('');
-  const intl = useIntl();
+  const cEvent = useEventContext()
+  const cUser = useCurrentUser()
+  const [modalVisible, setmodalVisible] = useState(false)
+  const [msjError, setmsjError] = useState('')
+  const intl = useIntl()
 
   const isVisibleRegister = () => {
-    const typeEvent = recordTypeForThisEvent(cEvent);
+    const typeEvent = recordTypeForThisEvent(cEvent)
     switch (typeEvent) {
       case 'PRIVATE_EVENT':
-        return false;
+        return false
       case 'PUBLIC_EVENT_WITH_REGISTRATION_ANONYMOUS':
-        return !!props.isPrivateRoute;
+        return !!props.isPrivateRoute
       case 'PUBLIC_EVENT_WITH_REGISTRATION':
-        return true;
+        return true
       default:
-        return true;
+        return true
     }
-  };
+  }
 
   useEffect(() => {
-    let unsubscribe;
+    let unsubscribe
     async function isModalVisible() {
-      const typeEvent = recordTypeForThisEvent(cEvent);
+      const typeEvent = recordTypeForThisEvent(cEvent)
       switch (typeEvent) {
         case 'PRIVATE_EVENT':
-          setmodalVisible(true);
-          helperDispatch({ type: 'showLogin', visible: true });
-          break;
+          setmodalVisible(true)
+          helperDispatch({ type: 'showLogin', visible: true })
+          break
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION':
-          setmodalVisible(true);
-          helperDispatch({ type: 'showRegister', visible: true });
-          break;
+          setmodalVisible(true)
+          helperDispatch({ type: 'showRegister', visible: true })
+          break
 
         case 'UN_REGISTERED_PUBLIC_EVENT':
-          setmodalVisible(true);
-          helperDispatch({ type: 'showLogin', visible: false });
-          break;
+          setmodalVisible(true)
+          helperDispatch({ type: 'showLogin', visible: false })
+          break
 
         default:
-          setmodalVisible(true);
-          break;
+          setmodalVisible(true)
+          break
       }
     }
 
     async function isUserAuth() {
       unsubscribe = app.auth().onAuthStateChanged((user) => {
         if (user) {
-          setmodalVisible(false);
+          setmodalVisible(false)
 
-          helperDispatch({ type: 'showLogin', visible: false });
+          helperDispatch({ type: 'showLogin', visible: false })
         } else {
           if (cEvent.value?.organiser?._id) {
             console.log('Vaaaaamonos')
-            window.location.href =`/organization/${cEvent.value.organiser._id}/events`
+            window.location.href = `/organization/${cEvent.value.organiser._id}/events`
           }
           console.debug(window.location.href, cEvent.value)
-          isModalVisible();
+          isModalVisible()
         }
-      });
+      })
     }
 
-    isUserAuth();
+    isUserAuth()
 
     return () => {
-      unsubscribe && unsubscribe();
-    };
-  }, [cEvent, cUser]);
+      unsubscribe && unsubscribe()
+    }
+  }, [cEvent, cUser])
 
   useEffect(() => {
-    form1.resetFields();
-    setErrorRegisterUSer(false);
-    setErrorLogin(false);
-  }, [typeModal, currentAuthScreen]);
+    form1.resetFields()
+    setErrorRegisterUSer(false)
+    setErrorLogin(false)
+  }, [typeModal, currentAuthScreen])
 
   const DetecError = (code) => {
     switch (code) {
       case 'auth/wrong-password':
-        setmsjError(intl.formatMessage({ id: 'auth.error.wrongPassword' }));
-        break;
+        setmsjError(intl.formatMessage({ id: 'auth.error.wrongPassword' }))
+        break
       case 'auth/user-not-found':
-        setmsjError(intl.formatMessage({ id: 'auth.error.userNotFound' }));
+        setmsjError(intl.formatMessage({ id: 'auth.error.userNotFound' }))
 
-        break;
+        break
       case 'auth/invalid-email':
-        setmsjError(intl.formatMessage({ id: 'auth.error.invalidEmail' }));
-        break;
+        setmsjError(intl.formatMessage({ id: 'auth.error.invalidEmail' }))
+        break
 
       case 'auth/too-many-requests':
-        setmsjError(intl.formatMessage({ id: 'auth.error.tooManyRequests' }));
-        break;
+        setmsjError(intl.formatMessage({ id: 'auth.error.tooManyRequests' }))
+        break
     }
-  };
+  }
 
   const callback = (key) => {
-    form1.resetFields();
+    form1.resetFields()
     switch (key) {
       case 'login':
-        helperDispatch({ type: 'showLogin', visible: true });
-        break;
+        helperDispatch({ type: 'showLogin', visible: true })
+        break
 
       case 'register':
-        helperDispatch({ type: 'showRegister', visible: true });
-        break;
+        helperDispatch({ type: 'showRegister', visible: true })
+        break
 
       default:
-        return key;
+        return key
     }
-  };
+  }
 
   //Método ejecutado en el curso onSubmit (onFinish) del formulario de login
   const handleLoginEmailPassword = async (values) => {
-    setLoading(true);
-    loginFirebase(values);
-  };
+    setLoading(true)
+    loginFirebase(values)
+  }
 
   //Realiza la validación del email y password con firebase
   const loginFirebase = async (data) => {
@@ -167,23 +185,23 @@ const ModalAuth = (props) => {
       .signInWithEmailAndPassword(data.email, data.password)
       .then(async (response) => {
         if (response.user) {
-          setLoading(false);
-          helperDispatch({ type: 'showLogin', visible: false });
-          form1.resetFields();
+          setLoading(false)
+          helperDispatch({ type: 'showLogin', visible: false })
+          form1.resetFields()
         }
       })
       .catch((error) => {
-        console.log('error', error);
-        DetecError(error.code);
-        setErrorLogin(true);
-        setLoading(false);
-      });
-  };
+        console.log('error', error)
+        DetecError(error.code)
+        setErrorLogin(true)
+        setLoading(false)
+      })
+  }
 
   //Se ejecuta en caso que haya un error en el formulario de login en el curso onSubmit
   const onFinishFailed = (errorInfo) => {
-    console.error('Failed:', errorInfo);
-  };
+    console.error('Failed:', errorInfo)
+  }
 
   return (
     modalVisible && (
@@ -195,30 +213,27 @@ const ModalAuth = (props) => {
         footer={null}
         zIndex={1000}
         visible={controllerLoginVisible?.visible}
-        closable={controllerLoginVisible?.organization !== 'organization' ? true : false}
-      >
+        closable={controllerLoginVisible?.organization !== 'organization' ? true : false}>
         <Tabs onChange={callback} centered size="large" activeKey={currentAuthScreen}>
           <TabPane
             tab={intl.formatMessage({
               id: 'modal.title.login',
               defaultMessage: 'Iniciar sesión',
             })}
-            key="login"
-          >
+            key="login">
             <Form
               form={form1}
               onFinish={handleLoginEmailPassword}
               onFinishFailed={onFinishFailed}
               layout="vertical"
-              style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
-            >
+              style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
               {props.organization == 'organization' && (
                 <Form.Item>
                   <Image
                     style={{ borderRadius: '100px', objectFit: 'cover' }}
                     preview={{ maskClassName: 'circularMask' }}
                     src={props.logo ? props.logo : 'error'}
-                    fallback='http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image'
+                    fallback="http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image"
                     width={200}
                     height={200}
                   />
@@ -239,8 +254,7 @@ const ModalAuth = (props) => {
                       defaultMessage: 'Ingrese un correo',
                     }),
                   },
-                ]}
-              >
+                ]}>
                 <Input
                   disabled={loading}
                   type="email"
@@ -268,8 +282,7 @@ const ModalAuth = (props) => {
                         defaultMessage: 'Ingrese su numero de cedula',
                       }),
                     },
-                  ]}
-                >
+                  ]}>
                   <Input
                     disabled={loading}
                     size="large"
@@ -277,7 +290,9 @@ const ModalAuth = (props) => {
                       id: 'modal.label.cedula',
                       defaultMessage: 'Cedula',
                     })}
-                    prefix={<IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                    prefix={
+                      <IdcardOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />
+                    }
                     iconRender={<IdcardOutlined />}
                   />
                 </Form.Item>
@@ -297,8 +312,7 @@ const ModalAuth = (props) => {
                         defaultMessage: 'Ingrese una contraseña',
                       }),
                     },
-                  ]}
-                >
+                  ]}>
                   <Input.Password
                     disabled={loading}
                     size="large"
@@ -306,8 +320,12 @@ const ModalAuth = (props) => {
                       id: 'modal.label.password',
                       defaultMessage: 'Contraseña',
                     })}
-                    prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                    prefix={
+                      <LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />
+                    }
+                    iconRender={(visible) =>
+                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                    }
                   />
                 </Form.Item>
               )}
@@ -318,8 +336,7 @@ const ModalAuth = (props) => {
                     underline
                     id="forgotpassword"
                     type="secondary"
-                    style={{ float: 'right', cursor: 'pointer' }}
-                  >
+                    style={{ float: 'right', cursor: 'pointer' }}>
                     {intl.formatMessage({
                       id: 'modal.option.restore',
                       defaultMessage: 'Olvidé mi contraseña',
@@ -354,8 +371,7 @@ const ModalAuth = (props) => {
                     htmlType="submit"
                     block
                     style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                    size="large"
-                  >
+                    size="large">
                     {intl.formatMessage({
                       id: 'modal.title.login',
                       defaultMessage: 'Iniciar sesión',
@@ -365,7 +381,9 @@ const ModalAuth = (props) => {
               )}
               {loading && <LoadingOutlined style={{ fontSize: '50px' }} />}
             </Form>
-            {props.organization !== 'landing' && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
+            {props.organization !== 'landing' && (
+              <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
+            )}
             {props.organization !== 'landing' && (
               <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
                 <Space direction="vertical" style={{ width: '100%' }}>
@@ -375,8 +393,7 @@ const ModalAuth = (props) => {
                     onClick={() => handleChangeTypeModal('mail')}
                     type="primary"
                     block
-                    size="large"
-                  >
+                    size="large">
                     {intl.formatMessage({
                       id: 'modal.option.send',
                       defaultMessage: 'Enviar acceso a mi correo',
@@ -388,9 +405,11 @@ const ModalAuth = (props) => {
           </TabPane>
           {isVisibleRegister() && (
             <TabPane
-              tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })}
-              key="register"
-            >
+              tab={intl.formatMessage({
+                id: 'modal.title.register',
+                defaultMessage: 'Registrarme',
+              })}
+              key="register">
               <div
                 style={{
                   height: 'auto',
@@ -399,8 +418,7 @@ const ModalAuth = (props) => {
                   paddingRight: '5px',
                   paddingTop: '0px',
                   paddingBottom: '0px',
-                }}
-              >
+                }}>
                 {isHome() && (
                   <>
                     <RegisterUser
@@ -440,10 +458,10 @@ const ModalAuth = (props) => {
         </Tabs>
       </Modal>
     )
-  );
-};
+  )
+}
 
-export default withContext(ModalAuth);
+export default withContext(ModalAuth)
 
 const fieldsUser = [
   {
@@ -545,4 +563,4 @@ const fieldsUser = [
     index: 2,
     order_weight: 1,
   },
-];
+]

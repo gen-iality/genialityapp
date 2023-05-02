@@ -1,36 +1,36 @@
 /** Hooks, CustomHooks  and react libraries*/
-import { useState, useEffect, FunctionComponent } from 'react';
-import * as Survey from 'survey-react';
-import { Link, useHistory } from 'react-router-dom';
+import { useState, useEffect, FunctionComponent } from 'react'
+import * as Survey from 'survey-react'
+import { Link, useHistory } from 'react-router-dom'
 
 /** Helpers and services */
-import { setCurrentPage } from './services/surveys';
+import { setCurrentPage } from './services/surveys'
 
 /** Antd services */
-import { Result, Spin, Button, Col } from 'antd';
+import { Result, Spin, Button, Col } from 'antd'
 
 /** Funciones externas */
-import stateMessages from './functions/stateMessagesV2';
-import messageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
-import getResponsesIndex from './functions/getResponsesIndex';
-import savingResponseByUserId from './functions/savingResponseByUserId';
+import stateMessages from './functions/stateMessagesV2'
+import messageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey'
+import getResponsesIndex from './functions/getResponsesIndex'
+import savingResponseByUserId from './functions/savingResponseByUserId'
 
 /** Contexts */
-import { useEventContext } from '@context/eventContext';
-import { useCurrentUser } from '@context/userContext';
+import { useEventContext } from '@context/eventContext'
+import { useCurrentUser } from '@context/userContext'
 
 /** Componentes */
-import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent';
-import { addTriesNumber, addRightPoints  } from './services/surveyStatus';
-import { useSurveyContext } from './surveyContext';
-import SurveyQuestionsFeedback from './SurveyQuestionsFeedback';
-import { SurveyPreModel } from './models/types';
-import { LoadingOutlined } from '@ant-design/icons';
+import assignStylesToSurveyFromEvent from './components/assignStylesToSurveyFromEvent'
+import { addTriesNumber, addRightPoints } from './services/surveyStatus'
+import { useSurveyContext } from './surveyContext'
+import SurveyQuestionsFeedback from './SurveyQuestionsFeedback'
+import { SurveyPreModel } from './models/types'
+import { LoadingOutlined } from '@ant-design/icons'
 
 // Configuración para poder relacionar el id de la pregunta en la base de datos
 // con la encuesta visible para poder almacenar las respuestas
-Survey.JsonObject.metaData.addProperty('question', 'id');
-Survey.JsonObject.metaData.addProperty('question', 'points');
+Survey.JsonObject.metaData.addProperty('question', 'id')
+Survey.JsonObject.metaData.addProperty('question', 'points')
 
 /**
  * Create a Survey Modal from a survey data.
@@ -38,101 +38,103 @@ Survey.JsonObject.metaData.addProperty('question', 'points');
  * @returns A Survey Modal object.
  */
 function createSurveyModel(survey: SurveyPreModel) {
-  const surveyModelData = new Survey.Model(survey);
-  surveyModelData.currentPageNo = survey.currentPage;
-  surveyModelData.locale = 'es';
+  const surveyModelData = new Survey.Model(survey)
+  surveyModelData.currentPageNo = survey.currentPage
+  surveyModelData.locale = 'es'
   // Este se esta implementando para no usar el titulo de la encuesta y se muestre dos veces
   // uno en el header y otro encima del botón de inicio de encuesta
-  delete surveyModelData.localizableStrings.title.values.default;
-  return surveyModelData;
+  delete surveyModelData.localizableStrings.title.values.default
+  return surveyModelData
 }
 
 export interface SurveyComponentProps {
-  eventId: string,
-  queryData: any,
-};
+  eventId: string
+  queryData: any
+}
 
 const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
   const {
     eventId, // The event id
     queryData, // The survey data
-  } = props;
+  } = props
 
-  const cEvent = useEventContext();
-  const currentUser = useCurrentUser();
-  const history = useHistory();
-  const cSurvey = useSurveyContext();
+  const cEvent = useEventContext()
+  const currentUser = useCurrentUser()
+  const history = useHistory()
+  const cSurvey = useSurveyContext()
 
-  const [surveyModel, setSurveyModel] = useState<Survey.SurveyModel | undefined>();
-  const [showingFeedback, setShowingFeedback] = useState(false);
-  const [currentQuestionsForFeedback, setCurrentQuestionsForFeedback] = useState([]); /** @type any[] */
+  const [surveyModel, setSurveyModel] = useState<Survey.SurveyModel | undefined>()
+  const [showingFeedback, setShowingFeedback] = useState(false)
+  const [currentQuestionsForFeedback, setCurrentQuestionsForFeedback] = useState([])
 
-  const [isSaveButtonShown, setIsSaveButtonShown] = useState(false);
-  const [isSavingPoints, setIsSavingPoints] = useState(false);
+  /** @type any[] */
 
-  const [eventUsers, setEventUsers] = useState([]);
-  const [voteWeight, setVoteWeight] = useState(0); // Inquietud: Es util?
+  const [isSaveButtonShown, setIsSaveButtonShown] = useState(false)
+  const [isSavingPoints, setIsSavingPoints] = useState(false)
+
+  const [eventUsers, setEventUsers] = useState([])
+  const [voteWeight, setVoteWeight] = useState(0) // Inquietud: Es util?
 
   useEffect(() => {
     // Asigna los colores configurables a  la UI de la encuesta
-    const eventStyles = cEvent.value.styles;
-    assignStylesToSurveyFromEvent(eventStyles);
-  }, []);
+    const eventStyles = cEvent.value.styles
+    assignStylesToSurveyFromEvent(eventStyles)
+  }, [])
 
   /**
    * Take questions and create the model for the Survey component. If the settings
    * says that it must be getting randomly, then only some questions will be taken.
    */
   useEffect(() => {
-    if (!(queryData?.questions.length > 0)) return;
-    setSurveyModel(createSurveyModel(queryData));
-  }, [queryData]);
+    if (!(queryData?.questions.length > 0)) return
+    setSurveyModel(createSurveyModel(queryData))
+  }, [queryData])
 
   const displayFeedbackAfterEachQuestion = (sender: Survey.SurveyModel, options: any) => {
     if (showingFeedback !== true) {
-      stopChangeToNextQuestion(options);
-      hideTimerPanel();
-      displayFeedback();
-      setCurrentQuestionsForFeedback(sender.currentPage.questions);
-      setReadOnlyTheQuestions(sender.currentPage.questions);
+      stopChangeToNextQuestion(options)
+      hideTimerPanel()
+      displayFeedback()
+      setCurrentQuestionsForFeedback(sender.currentPage.questions)
+      setReadOnlyTheQuestions(sender.currentPage.questions)
     } else {
-      showTimerPanel();
+      showTimerPanel()
     }
-  };
+  }
 
   function stopChangeToNextQuestion(options: any) {
-    options.allowChanging = false;
+    options.allowChanging = false
   }
 
   function hideTimerPanel() {
-    if (surveyModel === undefined) return;
-    surveyModel.showTimerPanel = 'none';
-    surveyModel.stopTimer();
+    if (surveyModel === undefined) return
+    surveyModel.showTimerPanel = 'none'
+    surveyModel.stopTimer()
   }
 
   function displayFeedback() {
-    setShowingFeedback(true);
+    setShowingFeedback(true)
   }
 
   function setReadOnlyTheQuestions(questions: any[]) {
     // Volvemos de solo lectura las respuestas
     questions.forEach((question, index) => {
-      if (index === 0) return;
-      question.readOnly = true;
-    });
+      if (index === 0) return
+      question.readOnly = true
+    })
   }
 
   function showTimerPanel() {
-    if (surveyModel === undefined) return;
-    surveyModel.showTimerPanel = 'top';
-    surveyModel.startTimer();
+    if (surveyModel === undefined) return
+    surveyModel.showTimerPanel = 'top'
+    surveyModel.startTimer()
   }
 
   async function saveSurveyStatus() {
-    if (surveyModel === undefined) return;
+    if (surveyModel === undefined) return
 
-    const status = surveyModel.state;
-    console.debug('200.status', status);
+    const status = surveyModel.state
+    console.debug('200.status', status)
     // await SetCurrentUserSurveyStatus(queryData, currentUser, status);
     await addTriesNumber(
       queryData._id, // Survey ID
@@ -140,108 +142,130 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
       cSurvey.surveyStatus?.tried || 0, // Tried amount
       cSurvey.survey.tries || 1, // Max tries
       status,
-    );
+    )
   }
 
   async function saveSurveyCurrentPage() {
-    if (surveyModel === undefined) return;
+    if (surveyModel === undefined) return
     if (!(Object.keys(currentUser).length === 0)) {
       // Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
-      await setCurrentPage(queryData._id, currentUser.value._id, surveyModel.currentPageNo + 1);
+      await setCurrentPage(
+        queryData._id,
+        currentUser.value._id,
+        surveyModel.currentPageNo + 1,
+      )
     }
   }
 
   async function saveGainedSurveyPoints(surveyQuestions: Survey.SurveyQuestion[]) {
-    if (surveyModel === undefined) return;
-  
-    let question;
+    if (surveyModel === undefined) return
+
+    let question
     if (surveyQuestions.length === 1) {
-      question = surveyModel.currentPage.questions[0];
+      question = surveyModel.currentPage.questions[0]
     } else {
-      question = surveyModel.currentPage.questions[1];
+      question = surveyModel.currentPage.questions[1]
     }
 
-    const correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
+    const correctAnswer =
+      question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined
 
-    setIsSavingPoints(true);
+    setIsSavingPoints(true)
     try {
-      const value = parseInt(question.points) || 0;
-      await addRightPoints(queryData._id, currentUser.value._id, correctAnswer ? value : 0);
-      console.log('600 savedGainedSurveyPoints value', value);
-      setIsSavingPoints(false);
+      const value = parseInt(question.points) || 0
+      await addRightPoints(
+        queryData._id,
+        currentUser.value._id,
+        correctAnswer ? value : 0,
+      )
+      console.log('600 savedGainedSurveyPoints value', value)
+      setIsSavingPoints(false)
     } catch (err) {
-      console.error(err);
-      setIsSavingPoints(false);
+      console.error(err)
+      setIsSavingPoints(false)
     }
   }
 
   async function saveSurveyAnswers(surveyQuestions: Survey.SurveyQuestion[]) {
-    if (surveyModel === undefined) return;
+    if (surveyModel === undefined) return
 
-    let question;
-    let optionQuantity = 0;
-    let correctAnswer = false;
+    let question
+    let optionQuantity = 0
+    let correctAnswer = false
 
     if (surveyQuestions.length === 1) {
-      question = surveyModel.currentPage.questions[0];
+      question = surveyModel.currentPage.questions[0]
     } else {
-      question = surveyModel.currentPage.questions[1];
+      question = surveyModel.currentPage.questions[1]
     }
 
     // Funcion que retorna si la opcion escogida es la respuesta correcta
-    correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
+    correctAnswer =
+      question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined
 
     /** funcion para validar tipo de respuesta multiple o unica */
-    const responseIndex = await getResponsesIndex(question);
-    const optionIndex = responseIndex;
+    const responseIndex = await getResponsesIndex(question)
+    const optionIndex = responseIndex
 
-    optionQuantity = question.choices.length;
+    optionQuantity = question.choices.length
 
     const infoOptionQuestion =
       queryData.allow_gradable_survey === 'true'
         ? { optionQuantity, optionIndex, correctAnswer }
-        : { optionQuantity, optionIndex };
+        : { optionQuantity, optionIndex }
 
     // Se envia al servicio el id de la encuesta, de la pregunta y los datos
     // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
     if (!(Object.keys(currentUser).length === 0)) {
-      savingResponseByUserId(queryData, question, currentUser, eventUsers, voteWeight, infoOptionQuestion);
+      savingResponseByUserId(
+        queryData,
+        question,
+        currentUser,
+        eventUsers,
+        voteWeight,
+        infoOptionQuestion,
+      )
     }
   }
 
   async function saveSurveyData(sender: Survey.SurveyModel) {
-
-    await saveSurveyCurrentPage();
-    await saveSurveyAnswers(sender.currentPage.questions);
+    await saveSurveyCurrentPage()
+    await saveSurveyAnswers(sender.currentPage.questions)
     await saveGainedSurveyPoints(sender.currentPage.questions)
       .then(() => console.log('600 saveSurveyData puntos enviados para este quiz'))
-      .catch(err => console.error('600 saveSurveyData saveGainedSurveyPoints error:', err));
+      .catch((err) =>
+        console.error('600 saveSurveyData saveGainedSurveyPoints error:', err),
+      )
   }
 
   async function onSurveyCompleted(sender: Survey.SurveyModel) {
-    await saveSurveyData(sender);
-    await messageWhenCompletingSurvey(surveyModel, queryData, currentUser.value._id);
+    await saveSurveyData(sender)
+    await messageWhenCompletingSurvey(surveyModel, queryData, currentUser.value._id)
   }
 
   return (
     <>
       {surveyModel && (
         <>
-          {isSavingPoints && <p>Guardando puntos <LoadingOutlined /></p>}
+          {isSavingPoints && (
+            <p>
+              Guardando puntos <LoadingOutlined />
+            </p>
+          )}
           {showingFeedback && (
             <SurveyQuestionsFeedback
               questions={currentQuestionsForFeedback}
               onNextClick={() => {
-                setShowingFeedback(false);
-                surveyModel.nextPage();
+                setShowingFeedback(false)
+                surveyModel.nextPage()
                 if (surveyModel.state === 'completed') {
-                  setIsSaveButtonShown(true);
-                  setCurrentPage(queryData._id, currentUser.value._id, 0);
+                  setIsSaveButtonShown(true)
+                  setCurrentPage(queryData._id, currentUser.value._id, 0)
                 }
               }}
             />
           )}
-          <div style={{ display: (showingFeedback || isSavingPoints) ? 'none' : 'block' }}>
+          <div style={{ display: showingFeedback || isSavingPoints ? 'none' : 'block' }}>
             <Survey.Survey
               model={surveyModel}
               onCurrentPageChanging={displayFeedbackAfterEachQuestion}
@@ -255,9 +279,10 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
               <Button
                 type="primary"
                 onClick={() => {
-                  saveSurveyStatus().then(() => history.push(`/landing/${eventId}/evento`))
-                }}
-              >
+                  saveSurveyStatus().then(() =>
+                    history.push(`/landing/${eventId}/evento`),
+                  )
+                }}>
                 Volver al curso {isSavingPoints && <Spin />}
               </Button>
             </div>
@@ -265,7 +290,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
         </>
       )}
     </>
-  );
+  )
 }
 
-export default SurveyComponent;
+export default SurveyComponent

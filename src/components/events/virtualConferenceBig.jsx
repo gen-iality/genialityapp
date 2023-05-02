@@ -1,28 +1,45 @@
-import { useState, useEffect } from 'react';
-import { Card, Button, Avatar, Row, Col, Tooltip, Typography, Badge, Space, Grid } from 'antd';
-import { AgendaApi } from '@helpers/request';
-import { firestore } from '@helpers/firebase';
-import Moment from 'moment-timezone';
-import { CaretRightOutlined, FieldTimeOutlined } from '@ant-design/icons';
-import { FormattedMessage } from 'react-intl';
-import { useEventContext } from '@context/eventContext';
-import { useUserEvent } from '@context/eventUserContext';
-import { Link } from 'react-router-dom';
-import * as StageActions from '../../redux/stage/actions';
-import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint';
-import ThisRouteCanBeDisplayed from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import { useState, useEffect } from 'react'
+import {
+  Card,
+  Button,
+  Avatar,
+  Row,
+  Col,
+  Tooltip,
+  Typography,
+  Badge,
+  Space,
+  Grid,
+} from 'antd'
+import { AgendaApi } from '@helpers/request'
+import { firestore } from '@helpers/firebase'
+import Moment from 'moment-timezone'
+import { CaretRightOutlined, FieldTimeOutlined } from '@ant-design/icons'
+import { FormattedMessage } from 'react-intl'
+import { useEventContext } from '@context/eventContext'
+import { useUserEvent } from '@context/eventUserContext'
+import { Link } from 'react-router-dom'
+import * as StageActions from '../../redux/stage/actions'
+import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint'
+import ThisRouteCanBeDisplayed from '../events/Landing/helpers/thisRouteCanBeDisplayed'
 
-const { gotoActivity } = StageActions;
-const { Title } = Typography;
-const { useBreakpoint } = Grid;
+const { gotoActivity } = StageActions
+const { Title } = Typography
+const { useBreakpoint } = Grid
 
-const MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setActivity, eventUser }) => {
-  const [infoActivity, setInfoActivity] = useState({});
-  const screens = useBreakpoint();
+const MeetingConferenceButton = ({
+  activity,
+  zoomExternoHandleOpen,
+  event,
+  setActivity,
+  eventUser,
+}) => {
+  const [infoActivity, setInfoActivity] = useState({})
+  const screens = useBreakpoint()
 
   useEffect(() => {
-    setInfoActivity(activity);
-  }, [activity, event]);
+    setInfoActivity(activity)
+  }, [activity, event])
 
   switch (infoActivity.habilitar_ingreso) {
     case 'open_meeting_room':
@@ -39,48 +56,48 @@ const MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setAc
             className="buttonVirtualConference"
             onClick={() => {
               if (activity.platform === 'zoomExterno') {
-                zoomExternoHandleOpen(activity, eventUser);
+                zoomExternoHandleOpen(activity, eventUser)
               } else {
-                setActivity(activity);
+                setActivity(activity)
               }
             }}>
             <FormattedMessage id="live.join" defaultMessage="Ingresa aquí" />
           </Button>
         </>
-      );
+      )
 
     case 'closed_meeting_room':
-      return <></>;
+      return <></>
 
     case 'ended_meeting_room':
-      return <></>;
+      return <></>
 
     default:
-      return <h1 style={{ fontWeight: '400', fontSize: '45px' }}></h1>;
+      return <h1 style={{ fontWeight: '400', fontSize: '45px' }}></h1>
   }
-};
+}
 
 const VirtualConference = () => {
-  const cEvent = useEventContext();
-  const cEventUser = useUserEvent();
-  const urlactivity = `/landing/${cEvent.value._id}/activity/`;
-  const urlAgenda = `/landing/${cEvent.value._id}/agenda/`;
+  const cEvent = useEventContext()
+  const cEventUser = useUserEvent()
+  const urlactivity = `/landing/${cEvent.value._id}/activity/`
+  const urlAgenda = `/landing/${cEvent.value._id}/agenda/`
 
-  const [infoAgendaArr, setinfoAgenda] = useState([]);
-  const [agendageneral, setagendageneral] = useState(null);
-  const [bandera, setbandera] = useState(false);
-  const screens = useBreakpoint();
+  const [infoAgendaArr, setinfoAgenda] = useState([])
+  const [agendageneral, setagendageneral] = useState(null)
+  const [bandera, setbandera] = useState(false)
+  const screens = useBreakpoint()
 
   useEffect(() => {
     async function fetchData() {
-      const response = await AgendaApi.byEvent(cEvent.value._id);
+      const response = await AgendaApi.byEvent(cEvent.value._id)
       // let withMetting = response.data.filter((activity) => activity.meeting_id != null || '' || undefined);
-      setagendageneral(response.data);
+      setagendageneral(response.data)
 
-      setbandera(!bandera);
+      setbandera(!bandera)
     }
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   useEffect(() => {
     agendageneral &&
@@ -89,33 +106,40 @@ const VirtualConference = () => {
         .doc(cEvent.value._id)
         .collection('activities')
         .onSnapshot((infoActivity) => {
-          const arratem = [];
+          const arratem = []
 
           infoActivity.docs.map((doc) => {
             agendageneral.map((item) => {
               if (item._id == doc.id) {
-                let activity;
-                const { habilitar_ingreso, isPublished, meeting_id, platform, vimeo_id } = doc.data();
+                let activity
+                const { habilitar_ingreso, isPublished, meeting_id, platform, vimeo_id } =
+                  doc.data()
                 if (
                   habilitar_ingreso != 'ended_meeting_room' &&
                   isPublished &&
                   habilitar_ingreso != '' &&
                   (meeting_id != null || vimeo_id != null)
                 ) {
-                  activity = { ...item, habilitar_ingreso, isPublished, meeting_id, platform };
-                  arratem.push(activity);
+                  activity = {
+                    ...item,
+                    habilitar_ingreso,
+                    isPublished,
+                    meeting_id,
+                    platform,
+                  }
+                  arratem.push(activity)
                 }
               }
-            });
-          });
+            })
+          })
 
           //ordenar
-          const activitiesorder = arratem.sort((a, b) => a.updated_at - b.updated_at);
+          const activitiesorder = arratem.sort((a, b) => a.updated_at - b.updated_at)
           //let orderactivities = [];
           //orderactivities.push(activitiesorder);
-          setinfoAgenda(activitiesorder);
-        });
-  }, [agendageneral, firestore]);
+          setinfoAgenda(activitiesorder)
+        })
+  }, [agendageneral, firestore])
 
   return (
     <ThisRouteCanBeDisplayed>
@@ -134,9 +158,10 @@ const VirtualConference = () => {
             .filter((item) => {
               return (
                 item?.habilitar_ingreso &&
-                (item?.habilitar_ingreso == 'open_meeting_room' || item?.habilitar_ingreso == 'closed_meeting_room') &&
+                (item?.habilitar_ingreso == 'open_meeting_room' ||
+                  item?.habilitar_ingreso == 'closed_meeting_room') &&
                 (item?.isPublished || item?.isPublished === 'true')
-              );
+              )
             })
 
             .map((item, key) => (
@@ -145,7 +170,11 @@ const VirtualConference = () => {
                   className="animate__animated animate__bounceIn animate__delay-2s"
                   placement={screens.xs ? 'start' : 'end'}
                   style={{ height: 'auto' }}
-                  color={item.habilitar_ingreso == 'open_meeting_room' ? '#FF4E50' : 'transparent'}
+                  color={
+                    item.habilitar_ingreso == 'open_meeting_room'
+                      ? '#FF4E50'
+                      : 'transparent'
+                  }
                   text={
                     item.habilitar_ingreso == 'open_meeting_room' ? (
                       <Space>
@@ -177,15 +206,25 @@ const VirtualConference = () => {
                     }}
                     className="animate__animated animate__backInUp">
                     <Link
-                      to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}` : `${urlAgenda}`}
-                    >
+                      to={
+                        item.habilitar_ingreso == 'open_meeting_room'
+                          ? `${urlactivity}${item._id}`
+                          : `${urlAgenda}`
+                      }>
                       <Row justify="center" align="middle" gutter={[4, 4]}>
                         <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
-                          <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
+                          <div
+                            style={{
+                              justifyContent: 'center',
+                              alignContent: 'center',
+                              display: 'grid',
+                            }}>
                             {item.habilitar_ingreso == 'open_meeting_room' ? (
                               <>
                                 {!screens.xs && (
-                                  <CaretRightOutlined style={{ fontSize: '50px', color: '#FF4E50' }} />
+                                  <CaretRightOutlined
+                                    style={{ fontSize: '50px', color: '#FF4E50' }}
+                                  />
                                 )}
                                 <span style={{ textAlign: 'center', fontSize: '15px' }}>
                                   <MeetingConferenceButton
@@ -198,9 +237,16 @@ const VirtualConference = () => {
                               </>
                             ) : item.habilitar_ingreso == 'closed_meeting_room' ? (
                               <>
-                                <FieldTimeOutlined style={{ fontSize: '50px', color: '#FAAD14' }} />
+                                <FieldTimeOutlined
+                                  style={{ fontSize: '50px', color: '#FAAD14' }}
+                                />
                                 <span style={{ textAlign: 'center', fontSize: '15px' }}>
-                                  {<FormattedMessage id="live.closed" defaultMessage="Iniciará pronto" />}
+                                  {
+                                    <FormattedMessage
+                                      id="live.closed"
+                                      defaultMessage="Iniciará pronto"
+                                    />
+                                  }
                                 </span>
                               </>
                             ) : (
@@ -210,8 +256,12 @@ const VirtualConference = () => {
                         </Col>
                         <Col xs={16} sm={16} md={12} lg={12} xl={12} xxl={12}>
                           <div
-                            style={{ alignContent: 'center', display: 'grid', height: '100%', alignItems: 'center' }}
-                          >
+                            style={{
+                              alignContent: 'center',
+                              display: 'grid',
+                              height: '100%',
+                              alignItems: 'center',
+                            }}>
                             <Title
                               level={screens.xs ? 5 : 4}
                               ellipsis={{
@@ -219,7 +269,9 @@ const VirtualConference = () => {
                                 expandable: true,
                                 symbol: (
                                   <span style={{ color: '#2D7FD6', fontSize: '12px' }}>
-                                    {Moment.locale() == 'en' ? 'More activities' : 'Ver más'}
+                                    {Moment.locale() == 'en'
+                                      ? 'More activities'
+                                      : 'Ver más'}
                                     {/* Se valido de esta forma porque el componente FormattedMessage no hacia
                              efecto en la prop del componente de Ant design */}
                                   </span>
@@ -228,18 +280,34 @@ const VirtualConference = () => {
                               {item.name}
                             </Title>
 
-                            <h2 style={{ color: '#7c909a', fontSize: `${screens.xs ? '12px' : '14px'}` }}>
+                            <h2
+                              style={{
+                                color: '#7c909a',
+                                fontSize: `${screens.xs ? '12px' : '14px'}`,
+                              }}>
                               {Moment(item.datetime_start).format('LL')}
                               <span>&nbsp;&nbsp;&nbsp;</span>
-                              {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                              {Moment.tz(
+                                item.datetime_start,
+                                'YYYY-MM-DD h:mm',
+                                'America/Bogota',
+                              )
                                 .tz(Moment.tz.guess())
                                 .format('h:mm A')}
                               {' - '}
-                              {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                              {Moment.tz(
+                                item.datetime_end,
+                                'YYYY-MM-DD h:mm',
+                                'America/Bogota',
+                              )
                                 .tz(Moment.tz.guess())
                                 .format('h:mm A')}
                               <span className="ultrasmall-mobile">
-                                {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                                {Moment.tz(
+                                  item.datetime_end,
+                                  'YYYY-MM-DD HH:mm',
+                                  'America/Bogota',
+                                )
                                   .tz(Moment.tz.guess())
                                   .format(' (Z)')}
                               </span>
@@ -258,19 +326,35 @@ const VirtualConference = () => {
                               <div className="Virtual-Conferences">
                                 <Avatar.Group
                                   maxCount={2}
-                                  size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 60, xxl: 60 }}
-                                  maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}
-                                >
+                                  size={{
+                                    xs: 20,
+                                    sm: 20,
+                                    md: 40,
+                                    lg: 50,
+                                    xl: 60,
+                                    xxl: 60,
+                                  }}
+                                  maxStyle={{
+                                    backgroundColor: '#50D3C9',
+                                    fontSize: '3vw',
+                                  }}>
                                   {item.hosts.length < 3
                                     ? item.hosts.map((host, key) => {
                                         return (
                                           <Tooltip title={host.name} key={key}>
                                             <Avatar
                                               src={host.image}
-                                              size={{ xs: 50, sm: 50, md: 50, lg: 60, xl: 60, xxl: 60 }}
+                                              size={{
+                                                xs: 50,
+                                                sm: 50,
+                                                md: 50,
+                                                lg: 60,
+                                                xl: 60,
+                                                xxl: 60,
+                                              }}
                                             />
                                           </Tooltip>
-                                        );
+                                        )
                                       })
                                     : item.hosts.map((host, key) => {
                                         return (
@@ -278,10 +362,17 @@ const VirtualConference = () => {
                                             <Avatar
                                               key={key}
                                               src={host.image}
-                                              size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 60, xxl: 60 }}
+                                              size={{
+                                                xs: 20,
+                                                sm: 20,
+                                                md: 40,
+                                                lg: 50,
+                                                xl: 60,
+                                                xxl: 60,
+                                              }}
                                             />
                                           </Tooltip>
-                                        );
+                                        )
                                       })}
                                 </Avatar.Group>
                               </div>
@@ -296,7 +387,7 @@ const VirtualConference = () => {
             ))}
       </div>
     </ThisRouteCanBeDisplayed>
-  );
-};
+  )
+}
 
-export default VirtualConference;
+export default VirtualConference

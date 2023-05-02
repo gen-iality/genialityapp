@@ -1,22 +1,22 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { Modal, Form, Input, Button, Table, Space, Typography, Tooltip } from 'antd';
-import { ModulesApi } from '@helpers/request';
-import { ColumnsType } from 'antd/lib/table';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { Modal, Form, Input, Button, Table, Space, Typography, Tooltip } from 'antd'
+import { ModulesApi } from '@helpers/request'
+import { ColumnsType } from 'antd/lib/table'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 
 import { MenuOutlined } from '@ant-design/icons'
 
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider, useDrag, useDrop } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import './ModulePage.css'
 
 interface DraggableBodyRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
-  index: number;
-  moveRow: (dragIndex: number, hoverIndex: number) => void;
+  index: number
+  moveRow: (dragIndex: number, hoverIndex: number) => void
 }
 
-const type = 'DraggableBodyRow';
+const type = 'DraggableBodyRow'
 
 const DraggableBodyRow = ({
   index,
@@ -25,31 +25,31 @@ const DraggableBodyRow = ({
   style,
   ...restProps
 }: DraggableBodyRowProps) => {
-  const ref = useRef<HTMLTableRowElement>(null);
+  const ref = useRef<HTMLTableRowElement>(null)
   const [{ isOver, dropClassName }, drop] = useDrop({
     accept: type,
     collect: (monitor: any) => {
-      const { index: dragIndex } = monitor.getItem() || {};
+      const { index: dragIndex } = monitor.getItem() || {}
       if (dragIndex === index) {
-        return {};
+        return {}
       }
       return {
         isOver: monitor.isOver(),
         dropClassName: dragIndex < index ? ' drop-over-downward' : ' drop-over-upward',
-      };
+      }
     },
     drop: (item: { index: number }) => {
-      moveRow(item.index, index);
+      moveRow(item.index, index)
     },
-  });
+  })
   const [, drag] = useDrag({
     type,
     item: { index },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
-  });
-  drop(drag(ref));
+  })
+  drop(drag(ref))
 
   return (
     <tr
@@ -58,32 +58,32 @@ const DraggableBodyRow = ({
       style={{ cursor: 'move', ...style }}
       {...restProps}
     />
-  );
-};
+  )
+}
 
 function ModulePage(props: any) {
-  const [columnsData, setColumnsData] = useState<ColumnsType<any>>([]);
-  const [dataSource, setDataSource] = useState<any[]>([]);
+  const [columnsData, setColumnsData] = useState<ColumnsType<any>>([])
+  const [dataSource, setDataSource] = useState<any[]>([])
 
-  const [currentEditingItem, setCurrentEditingItem] = useState<any | null>(null);
-  const [isOpened, setIsOpened] = useState(false);
+  const [currentEditingItem, setCurrentEditingItem] = useState<any | null>(null)
+  const [isOpened, setIsOpened] = useState(false)
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
 
   const openModal = () => {
-    setIsOpened(true);
-  };
+    setIsOpened(true)
+  }
 
   const closeModal = () => {
-    setIsOpened(false);
-  };
+    setIsOpened(false)
+  }
 
   const cancelModel = () => {
-    form.resetFields();
-    setCurrentEditingItem(null);
-    closeModal();
-  };
-  
+    form.resetFields()
+    setCurrentEditingItem(null)
+    closeModal()
+  }
+
   const loadAllModules = async () => {
     const modules: any[] = await ModulesApi.byEvent(props.event._id)
     const data = modules.sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
@@ -91,55 +91,63 @@ function ModulePage(props: any) {
   }
 
   const onFormFinish = (values: any) => {
-    values.event_id = props.event._id;
-    console.log('finish', values);
+    values.event_id = props.event._id
+    console.log('finish', values)
 
     if (currentEditingItem === null) {
       ModulesApi.create(values.moduleName, props.event._id).finally(() => {
-        closeModal();
-        form.resetFields();
-        loadAllModules();
-      });
+        closeModal()
+        form.resetFields()
+        loadAllModules()
+      })
     } else {
       ModulesApi.update(currentEditingItem._id, values.moduleName).finally(() => {
-        closeModal();
-        setCurrentEditingItem(null);
-        form.resetFields();
-        loadAllModules();
-      });
+        closeModal()
+        setCurrentEditingItem(null)
+        form.resetFields()
+        loadAllModules()
+      })
     }
   }
 
   const sortDataSource = (oldIndex: number, newIndex: number) => {
-    const currentDataSource = [...dataSource.slice()]; // redundant?
+    const currentDataSource = [...dataSource.slice()] // redundant?
     if (oldIndex !== newIndex) {
       const item = currentDataSource.splice(oldIndex, 1)[0]
       currentDataSource.splice(newIndex, 0, item)
-      console.log('Sorted items: ', currentDataSource);
+      console.log('Sorted items: ', currentDataSource)
       // setDataSource(currentDataSource);
 
       // Update the order
       // currentDataSource.forEach((module: any, index: number) => {
       //   ModulesApi.update(module._id, module.module_name, index).then()
       // })
-      ModulesApi.update(dataSource[oldIndex]._id, dataSource[oldIndex].module_name, newIndex).then()
-      ModulesApi.update(dataSource[newIndex]._id, dataSource[newIndex].module_name, oldIndex).then()
+      ModulesApi.update(
+        dataSource[oldIndex]._id,
+        dataSource[oldIndex].module_name,
+        newIndex,
+      ).then()
+      ModulesApi.update(
+        dataSource[newIndex]._id,
+        dataSource[newIndex].module_name,
+        oldIndex,
+      ).then()
     }
     return currentDataSource
   }
 
   const moveRow = useCallback(
     (dragIndex: number, hoverIndex: number) => {
-      setDataSource(sortDataSource(dragIndex, hoverIndex));
+      setDataSource(sortDataSource(dragIndex, hoverIndex))
     },
     [dataSource],
-  );
+  )
 
   useEffect(() => {
     const columns: ColumnsType = [
       {
         key: 'sort',
-        render: () => <MenuOutlined />
+        render: () => <MenuOutlined />,
       },
       {
         key: 'name',
@@ -157,7 +165,7 @@ function ModulePage(props: any) {
                 type="primary"
                 onClick={() => {
                   setCurrentEditingItem(module)
-                  openModal();
+                  openModal()
                 }}
               />
             </Tooltip>
@@ -172,7 +180,7 @@ function ModulePage(props: any) {
               />
             </Tooltip>
           </Space>
-        )
+        ),
       },
     ]
     setColumnsData(columns)
@@ -181,18 +189,22 @@ function ModulePage(props: any) {
 
   useEffect(() => {
     if (currentEditingItem) {
-      form.setFields([{ name: 'moduleName', value: currentEditingItem.module_name }]);
-      openModal();
+      form.setFields([{ name: 'moduleName', value: currentEditingItem.module_name }])
+      openModal()
     }
-  }, [currentEditingItem]);
+  }, [currentEditingItem])
 
   return (
     <>
-      <Space direction="horizontal" style={{display: 'flex', justifyContent: 'space-between'}}>
+      <Space
+        direction="horizontal"
+        style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography.Text>
           Agregue o edite los modules disponibles en este curso
         </Typography.Text>
-        <Button type="primary" onClick={openModal}>Agregar módulo</Button>
+        <Button type="primary" onClick={openModal}>
+          Agregar módulo
+        </Button>
       </Space>
       <DndProvider backend={HTML5Backend}>
         <Table
@@ -209,8 +221,8 @@ function ModulePage(props: any) {
             const attr = {
               index,
               moveRow,
-            };
-            return attr as React.HTMLAttributes<any>;
+            }
+            return attr as React.HTMLAttributes<any>
           }}
         />
       </DndProvider>
@@ -218,20 +230,18 @@ function ModulePage(props: any) {
         visible={isOpened}
         title={currentEditingItem === null ? 'Agregar nuevo modulo' : 'Editar módulo'}
         onCancel={cancelModel}
-        onOk={() => form.submit()}
-      >
+        onOk={() => form.submit()}>
         <Form form={form} onFinish={onFormFinish}>
           <Form.Item
             name="moduleName"
             label="Nombre del módulo"
-            rules={[{ required: true, message: 'Es necesario el nombre de módulo' }]}
-          >
+            rules={[{ required: true, message: 'Es necesario el nombre de módulo' }]}>
             <Input />
           </Form.Item>
         </Form>
       </Modal>
     </>
-  );
+  )
 }
 
-export default ModulePage;
+export default ModulePage

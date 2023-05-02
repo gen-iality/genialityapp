@@ -1,5 +1,5 @@
-import NoticiasSectionRoutes from './NoticiasSectionRoutes';
+import NoticiasSectionRoutes from './NoticiasSectionRoutes'
 const Noticias = () => {
-  return <NoticiasSectionRoutes />;
-};
-export default Noticias;
+  return <NoticiasSectionRoutes />
+}
+export default Noticias

@@ -1,34 +1,34 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Modal, Button, Space, Typography } from 'antd';
-import Logout from '@2fd/ant-design-icons/lib/Logout';
-import ContentSave from '@2fd/ant-design-icons/lib/ContentSave';
+import { useCallback, useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { Modal, Button, Space, Typography } from 'antd'
+import Logout from '@2fd/ant-design-icons/lib/Logout'
+import ContentSave from '@2fd/ant-design-icons/lib/ContentSave'
 
-const { Title } = Typography;
+const { Title } = Typography
 
 interface RouterPromptPropsOptions {
   /** indicates when the modal should be displayed */
-  when: boolean;
+  when: boolean
   /** custom text for modal title */
-  title?: string;
+  title?: string
   /** custom text for modal body */
-  description?: string;
+  description?: string
   /** custom text for ok button */
-  okText?: string;
+  okText?: string
   /** custom text for ok save button */
-  okSaveText?: string;
+  okSaveText?: string
   /** custom text for cancel button */
-  cancelText?: string;
+  cancelText?: string
   /** true with which it is validated if the route can be abandoned by clicking on the ok button */
-  onOK: () => boolean;
+  onOK: () => boolean
   /** submit function, saveChanges by clicking on the ok button */
-  onOKSave?: any;
+  onOKSave?: any
   /** false with which it is validated if we stay in the current route by clicking the cancel button */
-  onCancel: () => boolean;
+  onCancel: () => boolean
   /** indicates if the save and exit button should be shown */
-  save: boolean;
+  save: boolean
   /** if it comes, it is to be able to know if the save button place it as "submit" */
-  form: boolean;
+  form: boolean
 }
 
 /**
@@ -62,56 +62,56 @@ export function RouterPrompt({
   save,
   form = false,
 }: RouterPromptPropsOptions): JSX.Element | null {
-  const history = useHistory();
+  const history = useHistory()
 
-  const [showPrompt, setShowPrompt] = useState(false);
-  const [loadingAndDisablingButtons, setLoadingAndDisablingButtons] = useState(false);
-  const [currentPath, setCurrentPath] = useState('');
+  const [showPrompt, setShowPrompt] = useState(false)
+  const [loadingAndDisablingButtons, setLoadingAndDisablingButtons] = useState(false)
+  const [currentPath, setCurrentPath] = useState('')
 
   useEffect(() => {
     if (when) {
       history.block((prompt) => {
-        setCurrentPath(prompt.pathname);
-        setShowPrompt(true);
-        return 'true';
-      });
+        setCurrentPath(prompt.pathname)
+        setShowPrompt(true)
+        return 'true'
+      })
     } else {
-      history.block(() => { });
+      history.block(() => {})
     }
 
     return () => {
-      history.block(() => { });
-    };
-  }, [history, when]);
+      history.block(() => {})
+    }
+  }, [history, when])
 
   const handleOK = useCallback(
     async (mustSave) => {
       if (onOK) {
         if (mustSave) {
-          setLoadingAndDisablingButtons(true);
-          onOKSave && (await onOKSave(false));
+          setLoadingAndDisablingButtons(true)
+          onOKSave && (await onOKSave(false))
         }
 
-        const canRoute = await Promise.resolve(onOK());
+        const canRoute = await Promise.resolve(onOK())
         if (canRoute) {
-          history.block(() => { });
-          history.push(currentPath);
+          history.block(() => {})
+          history.push(currentPath)
         }
       }
     },
-    [currentPath, history, onOK]
-  );
+    [currentPath, history, onOK],
+  )
 
   const handleCancel = useCallback(async () => {
     if (onCancel) {
-      const canRoute = await Promise.resolve(onCancel());
+      const canRoute = await Promise.resolve(onCancel())
       if (canRoute) {
-        history.block(() => { });
-        history.push(currentPath);
+        history.block(() => {})
+        history.push(currentPath)
       }
     }
-    setShowPrompt(false);
-  }, [currentPath, history, onCancel]);
+    setShowPrompt(false)
+  }, [currentPath, history, onCancel])
 
   return showPrompt ? (
     <Modal
@@ -128,8 +128,7 @@ export function RouterPrompt({
             onClick={() => handleOK(true)}
             icon={<ContentSave />}
             loading={loadingAndDisablingButtons}
-            disabled={loadingAndDisablingButtons}
-          >
+            disabled={loadingAndDisablingButtons}>
             {okSaveText ? okSaveText : ''}
           </Button>
         ),
@@ -137,8 +136,7 @@ export function RouterPrompt({
           key="goBack"
           onClick={() => handleOK(false)}
           icon={<Logout />}
-          disabled={loadingAndDisablingButtons}
-        >
+          disabled={loadingAndDisablingButtons}>
           {okText ? okText : ''}
         </Button>,
         <Button key="cancel" onClick={handleCancel} disabled={loadingAndDisablingButtons}>
@@ -156,5 +154,5 @@ export function RouterPrompt({
         {description ? description : ''}
       </Space>
     </Modal>
-  ) : null;
+  ) : null
 }

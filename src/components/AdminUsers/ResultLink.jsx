@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { Result, Button, Typography, Grid } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
-import { firestore } from '@helpers/firebase';
-import { useIntl } from 'react-intl';
-import { imageUtils } from '../../Utilities/ImageUtils';
+import { useState } from 'react'
+import { Result, Button, Typography, Grid } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
+import { firestore } from '@helpers/firebase'
+import { useIntl } from 'react-intl'
+import { imageUtils } from '../../Utilities/ImageUtils'
 
-const { useBreakpoint } = Grid;
+const { useBreakpoint } = Grid
 
 const ResultLink = ({ status, data, event, verifyLink }) => {
-  const screens = useBreakpoint();
-  const [loading, setLoading] = useState(false);
-  const intl = useIntl();
+  const screens = useBreakpoint()
+  const [loading, setLoading] = useState(false)
+  const intl = useIntl()
   // statust -> loading || error
-  status = status ? status : 'loading';
+  status = status ? status : 'loading'
   return (
     <div
       style={{
@@ -37,7 +37,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
         }}>
         <img
           onClick={() => {
-            window.location.href = `${window.location.origin}`;
+            window.location.href = `${window.location.origin}`
           }}
           style={{
             cursor: 'pointer',
@@ -77,8 +77,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                 style={{
                   fontSize: `${screens.xs ? '14px' : '18px'}`,
                   overflowWrap: 'anywhere',
-                }}
-              >
+                }}>
                 {intl.formatMessage({
                   id: 'result_link.description',
                   defaultMessage:
@@ -93,7 +92,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
               : [
                   <Button
                     onClick={() => {
-                      window.location.href = `${window.location.origin}`;
+                      window.location.href = `${window.location.origin}`
                     }}
                     size="large"
                     type="text"
@@ -106,15 +105,15 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                   </Button>,
                   <Button
                     onClick={async () => {
-                      setLoading(true);
-                      const conectionRef = firestore.collection(`connections`);
-                      const docRef = await conectionRef.where('email', '==', data).get();
+                      setLoading(true)
+                      const conectionRef = firestore.collection(`connections`)
+                      const docRef = await conectionRef.where('email', '==', data).get()
                       if (docRef.docs.length > 0) {
-                        await conectionRef.doc(docRef.docs[0].id).delete();
-                        setLoading(false);
-                        window.location.href = window.location.href;
+                        await conectionRef.doc(docRef.docs[0].id).delete()
+                        setLoading(false)
+                        window.location.href = window.location.href
                       }
-                      setLoading(false);
+                      setLoading(false)
                     }}
                     size="large"
                     loading={loading}
@@ -130,7 +129,7 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ResultLink;
+export default ResultLink

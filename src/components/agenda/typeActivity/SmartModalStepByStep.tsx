@@ -1,13 +1,13 @@
-import { Modal } from 'antd';
-import SmartLayoutTypeActivity from './components/layout/SmartLayoutTypeActivity';
-import ContentTypeActivity from '../typeActivity/components/layout/ContentTypeActivity';
-import ResultTypeActivity from '../typeActivity/components/ResultTypeActivity';
-import LoadingTypeActivity from '../typeActivity/components/LoadingTypeActivity';
-import ContentSource from '../typeActivity/components/layout/ContentSource';
-import ContentInformative from '../typeActivity/components/layout/ContentInformative';
-import { LinkOutlined, YoutubeOutlined } from '@ant-design/icons'; //Este icono para el addonBefore
-import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
-import InputUploadVideo from './components/InputUploadVideo';
+import { Modal } from 'antd'
+import SmartLayoutTypeActivity from './components/layout/SmartLayoutTypeActivity'
+import ContentTypeActivity from '../typeActivity/components/layout/ContentTypeActivity'
+import ResultTypeActivity from '../typeActivity/components/ResultTypeActivity'
+import LoadingTypeActivity from '../typeActivity/components/LoadingTypeActivity'
+import ContentSource from '../typeActivity/components/layout/ContentSource'
+import ContentInformative from '../typeActivity/components/layout/ContentInformative'
+import { LinkOutlined, YoutubeOutlined } from '@ant-design/icons' //Este icono para el addonBefore
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
+import InputUploadVideo from './components/InputUploadVideo'
 
 const newContentSource = {
   title: 'Titulo principal',
@@ -15,40 +15,44 @@ const newContentSource = {
   subtitle: 'Descripción del contenido',
   placeholder: 'llene el campo',
   icon: <YoutubeOutlined />,
-};
+}
 interface mapContentSource {
-  key: string;
-  addonBefore: string;
-  placeholder: string;
-  title: string;
-  subtitle: string;
-  image: string;
+  key: string
+  addonBefore: string
+  placeholder: string
+  title: string
+  subtitle: string
+  image: string
 }
 
 const SmartModalStepByStep = (props: any) => {
-  const { openModal, closeModal, typeOptions, selectedKey } = useTypeActivity();
+  const { openModal, closeModal, typeOptions, selectedKey } = useTypeActivity()
 
   return (
     <Modal
       centered
       visible={openModal}
       onCancel={() => {
-        closeModal();
-        props.onClosedForm();
+        closeModal()
+        props.onClosedForm()
       }}
       width={1200}
-      footer={null}
-    >
+      footer={null}>
       <SmartLayoutTypeActivity
         onSetType={props.onSetType}
         title={typeOptions?.MainTitle}
-        onClosedForm={props.onClosedForm}
-      >
-        {typeOptions.key !== 'vimeo' && typeOptions.key !== 'youTube' && typeOptions.key !== 'url' ? (
+        onClosedForm={props.onClosedForm}>
+        {typeOptions.key !== 'vimeo' &&
+        typeOptions.key !== 'youTube' &&
+        typeOptions.key !== 'url' ? (
           <ContentTypeActivity options={typeOptions.typeOptions} />
         ) : null}
-        {typeOptions.key === 'cargarvideo' ? <InputUploadVideo activityName={props.activityName} /> : null}
-        {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube' || typeOptions.key === 'url'
+        {typeOptions.key === 'cargarvideo' ? (
+          <InputUploadVideo activityName={props.activityName} />
+        ) : null}
+        {typeOptions.key === 'vimeo' ||
+        typeOptions.key === 'youTube' ||
+        typeOptions.key === 'url'
           ? typeOptions.typeOptions.map((options: mapContentSource) => {
               if (options.key === typeOptions.key) {
                 return (
@@ -59,7 +63,7 @@ const SmartModalStepByStep = (props: any) => {
                     icon={options.image}
                     subtitle={options.subtitle}
                   />
-                );
+                )
               }
             })
           : null}
@@ -77,7 +81,7 @@ const SmartModalStepByStep = (props: any) => {
         )}
       </SmartLayoutTypeActivity>
     </Modal>
-  );
-};
+  )
+}
 
-export default SmartModalStepByStep;
+export default SmartModalStepByStep

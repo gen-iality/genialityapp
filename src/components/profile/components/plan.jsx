@@ -1,9 +1,9 @@
-import { Row, Col, Card, Typography, Divider, Space } from 'antd';
-import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
-import { useIntl } from 'react-intl';
+import { Row, Col, Card, Typography, Divider, Space } from 'antd'
+import { CloseOutlined, CheckOutlined } from '@ant-design/icons'
+import { useIntl } from 'react-intl'
 
 const plan = ({ plan, mine }) => {
-  const intl = useIntl();
+  const intl = useIntl()
   return (
     <Card style={{ borderRadius: '15px' }}>
       {mine && (
@@ -29,7 +29,9 @@ const plan = ({ plan, mine }) => {
                 })}
                 :{' '}
               </Typography.Text>
-              <Typography.Text>{plan?.availables?.organizers || 'Personalizado'}</Typography.Text>
+              <Typography.Text>
+                {plan?.availables?.organizers || 'Personalizado'}
+              </Typography.Text>
             </Space>
             <Space>
               <Typography.Text strong>
@@ -39,7 +41,9 @@ const plan = ({ plan, mine }) => {
                 })}
                 :{' '}
               </Typography.Text>
-              <Typography.Text>{plan?.availables?.access_type || 'Personalizado'}</Typography.Text>
+              <Typography.Text>
+                {plan?.availables?.access_type || 'Personalizado'}
+              </Typography.Text>
             </Space>
             <Space>
               <Typography.Text strong>
@@ -49,7 +53,9 @@ const plan = ({ plan, mine }) => {
                 })}
                 :{' '}
               </Typography.Text>
-              <Typography.Text>{plan?.availables?.look_and_feel || 'Personalizado'}</Typography.Text>
+              <Typography.Text>
+                {plan?.availables?.look_and_feel || 'Personalizado'}
+              </Typography.Text>
             </Space>
             <Space>
               <Typography.Text strong>
@@ -59,7 +65,9 @@ const plan = ({ plan, mine }) => {
                 })}
                 :{' '}
               </Typography.Text>
-              <Typography.Text>{plan?.availables?.simultaneous_rooms || 'Personalizado'}</Typography.Text>
+              <Typography.Text>
+                {plan?.availables?.simultaneous_rooms || 'Personalizado'}
+              </Typography.Text>
             </Space>
             <Space>
               <Typography.Text strong>
@@ -82,7 +90,9 @@ const plan = ({ plan, mine }) => {
                 })}
                 :{' '}
               </Typography.Text>
-              <Typography.Text>{plan?.availables?.mini_games || 'Personalizado'}</Typography.Text>
+              <Typography.Text>
+                {plan?.availables?.mini_games || 'Personalizado'}
+              </Typography.Text>
             </Space>
             <Space>
               <Typography.Text strong>
@@ -110,7 +120,9 @@ const plan = ({ plan, mine }) => {
                 })}
                 :{' '}
               </Typography.Text>
-              <Typography.Text>{plan?.availables?.later_days || 'Personalizado'}</Typography.Text>
+              <Typography.Text>
+                {plan?.availables?.later_days || 'Personalizado'}
+              </Typography.Text>
             </Space>
           </Space>
         </Col>
@@ -520,7 +532,7 @@ const plan = ({ plan, mine }) => {
         </Col>
       </Row>
     </Card>
-  );
-};
+  )
+}
 
-export default plan;
+export default plan

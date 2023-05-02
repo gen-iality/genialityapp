@@ -3,9 +3,9 @@
  */
 export const uploadImagedummyRequest = ({ file, onSuccess }: any) => {
   setTimeout(() => {
-    onSuccess('done');
-  }, 1000);
-};
+    onSuccess('done')
+  }, 1000)
+}
 
 /**
  * It takes a file object, reads it, and then sets the image data to the state.
@@ -13,13 +13,13 @@ export const uploadImagedummyRequest = ({ file, onSuccess }: any) => {
  * @param {any} - setImage - set de image url preview
  */
 export function readUrlImg({ files, setImage }: any) {
-  const reader = new FileReader();
+  const reader = new FileReader()
   reader.onloadend = function async() {
-    const imageData = reader.result;
-    setImage(imageData);
-  };
+    const imageData = reader.result
+    setImage(imageData)
+  }
   if (files) {
-    reader.readAsDataURL(files);
+    reader.readAsDataURL(files)
   }
 }
 
@@ -31,20 +31,25 @@ export function readUrlImg({ files, setImage }: any) {
  */
 export const handleImageName = (imageUrl?: string) => {
   if (imageUrl && typeof imageUrl === 'string') {
-    const url = new URL(imageUrl);
-    const name = url.pathname.split('/');
-    return name[name.length - 1];
+    const url = new URL(imageUrl)
+    const name = url.pathname.split('/')
+    return name[name.length - 1]
   }
-};
+}
 
 export const renderTypeImage = (name: string, imageFile: []): any => {
-  const imageFilter: any = imageFile && imageFile.filter((image: any) => image.name === name);
+  const imageFilter: any =
+    imageFile && imageFile.filter((image: any) => image.name === name)
   if (imageFilter.length > 0) {
-    return imageFilter[0].file;
+    return imageFilter[0].file
   }
-};
+}
 
-export const removeObjectFromArray = (name: string, array: [], callback: (data: any) => void) => {
-  const filtered = array.filter((item: any) => item.name !== name);
-  callback(filtered);
-};
+export const removeObjectFromArray = (
+  name: string,
+  array: [],
+  callback: (data: any) => void,
+) => {
+  const filtered = array.filter((item: any) => item.name !== name)
+  callback(filtered)
+}

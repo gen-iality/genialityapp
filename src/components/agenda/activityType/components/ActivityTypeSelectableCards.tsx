@@ -1,24 +1,21 @@
-import { Row, Col, Alert } from 'antd';
+import { Row, Col, Alert } from 'antd'
 
-import SelectableCard from './SelectableCard';
-import type { ActivityType } from '@context/activityType/types/activityType';
+import SelectableCard from './SelectableCard'
+import type { ActivityType } from '@context/activityType/types/activityType'
 
-import { WidgetType } from '@context/activityType/constants/enum';
+import { WidgetType } from '@context/activityType/constants/enum'
 
 export interface ActivityTypeSelectableCardsProps {
-  widget: ActivityType.CardUI | ActivityType.MainUI, // Only here
-  onWidgetChange: (widget: ActivityType.CardUI) => void,
-  selected: string | null, // TODO: define the right type
-};
+  widget: ActivityType.CardUI | ActivityType.MainUI // Only here
+  onWidgetChange: (widget: ActivityType.CardUI) => void
+  selected: string | null // TODO: define the right type
+}
 
 function ActivityTypeSelectableCards(props: ActivityTypeSelectableCardsProps) {
-  const {
-    widget,
-    onWidgetChange,
-    selected,
-  } = props;
+  const { widget, onWidgetChange, selected } = props
 
-  const buildSelectionHandler = (selectedWidget: ActivityType.CardUI) => () => onWidgetChange(selectedWidget);
+  const buildSelectionHandler = (selectedWidget: ActivityType.CardUI) => () =>
+    onWidgetChange(selectedWidget)
 
   if (widget.key !== 'type') {
     // Then widget is ActivityTypeCard, not FormWidgetFlow
@@ -27,7 +24,7 @@ function ActivityTypeSelectableCards(props: ActivityTypeSelectableCardsProps) {
     }
   }
 
-  const cards: ActivityType.CardUI[] = widget.cards;
+  const cards: ActivityType.CardUI[] = widget.cards
 
   return (
     <Row justify="center" gutter={[16, 16]}>
@@ -36,8 +33,7 @@ function ActivityTypeSelectableCards(props: ActivityTypeSelectableCardsProps) {
         <Col
           span={cards.length < 3 ? 6 : 7}
           offset={cards.length < 3 ? 2 : 1}
-          key={'key-' + (card.title || `${index}`)}
-        >
+          key={'key-' + (card.title || `${index}`)}>
           <SelectableCard
             title={card.title}
             description={card.description}
@@ -48,7 +44,7 @@ function ActivityTypeSelectableCards(props: ActivityTypeSelectableCardsProps) {
         </Col>
       ))}
     </Row>
-  );
+  )
 }
 
-export default ActivityTypeSelectableCards;
+export default ActivityTypeSelectableCards

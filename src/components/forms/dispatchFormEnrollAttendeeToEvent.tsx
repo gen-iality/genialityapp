@@ -1,15 +1,15 @@
-import { useReducer } from 'react';
-import { helperInitialState, helperReducer } from './reducerFormEnrollAttendeeToEvent';
+import { useReducer } from 'react'
+import { helperInitialState, helperReducer } from './reducerFormEnrollAttendeeToEvent'
 
 const dispatchFormEnrollAttendeeToEvent = () => {
-  const [formState, formDispatch] = useReducer(helperReducer, helperInitialState);
+  const [formState, formDispatch] = useReducer(helperReducer, helperInitialState)
 
   const reducer = {
     formState,
     formDispatch,
-  };
+  }
 
-  return reducer;
-};
+  return reducer
+}
 
-export default dispatchFormEnrollAttendeeToEvent;
+export default dispatchFormEnrollAttendeeToEvent

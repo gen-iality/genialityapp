@@ -1,5 +1,5 @@
-import { Card } from 'antd';
-import { Component } from 'react';
+import { Card } from 'antd'
+import { Component } from 'react'
 
 const tabList = [
   {
@@ -10,12 +10,12 @@ const tabList = [
     key: 'tab2',
     tab: 'tab2',
   },
-];
+]
 
 const contentList = {
   tab1: <p>content1</p>,
   tab2: <p>content2</p>,
-};
+}
 
 const tabListNoTitle = [
   {
@@ -30,23 +30,23 @@ const tabListNoTitle = [
     key: 'project',
     tab: 'project',
   },
-];
+]
 
 const contentListNoTitle = {
   article: <p>article content</p>,
   app: <p>app content</p>,
   project: <p>project content</p>,
-};
+}
 
 export default class TabsCard extends Component {
   state = {
     key: 'tab1',
     noTitleKey: 'app',
-  };
+  }
 
   onTabChange = (key, type) => {
-    this.setState({ [type]: key });
-  };
+    this.setState({ [type]: key })
+  }
 
   render() {
     return (
@@ -54,11 +54,11 @@ export default class TabsCard extends Component {
         <Card
           style={{ width: '100%' }}
           title="Card title"
-          extra={<a href='#'>More</a>}
+          extra={<a href="#">More</a>}
           tabList={tabList}
           activeTabKey={this.state.key}
           onTabChange={(key) => {
-            this.onTabChange(key, 'key');
+            this.onTabChange(key, 'key')
           }}>
           {contentList[this.state.key]}
         </Card>
@@ -68,13 +68,13 @@ export default class TabsCard extends Component {
           style={{ width: '100%' }}
           tabList={tabListNoTitle}
           activeTabKey={this.state.noTitleKey}
-          tabBarExtraContent={<a href='#'>More</a>}
+          tabBarExtraContent={<a href="#">More</a>}
           onTabChange={(key) => {
-            this.onTabChange(key, 'noTitleKey');
+            this.onTabChange(key, 'noTitleKey')
           }}>
           {contentListNoTitle[this.state.noTitleKey]}
         </Card>
       </>
-    );
+    )
   }
 }

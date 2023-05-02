@@ -1,14 +1,14 @@
 /** React's libraries */
-import { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useIntl } from 'react-intl';
-import Moment from 'moment-timezone';
-import dayjs from 'dayjs';
+import { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useIntl } from 'react-intl'
+import Moment from 'moment-timezone'
+import dayjs from 'dayjs'
 
 /** export Excel */
 
 /** Antd imports */
-import { Button, Col, Modal, Row, Spin } from 'antd';
+import { Button, Col, Modal, Row, Spin } from 'antd'
 import {
   ArrowLeftOutlined,
   CaretRightOutlined,
@@ -16,27 +16,27 @@ import {
   ClockCircleOutlined,
   ExclamationCircleOutlined,
   LoadingOutlined,
-} from '@ant-design/icons';
-import HumanGreetingVariantIcon from '@2fd/ant-design-icons/lib/HumanGreetingVariant';
-import CancelIcon from '@2fd/ant-design-icons/lib/Cancel';
+} from '@ant-design/icons'
+import HumanGreetingVariantIcon from '@2fd/ant-design-icons/lib/HumanGreetingVariant'
+import CancelIcon from '@2fd/ant-design-icons/lib/Cancel'
 
 /** Helpers and utils */
-import { imageUtils } from '../../../Utilities/ImageUtils';
-import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed';
+import { imageUtils } from '../../../Utilities/ImageUtils'
+import { recordTypeForThisEvent } from '../Landing/helpers/thisRouteCanBeDisplayed'
 
 /** Context */
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useEventContext } from '@context/eventContext';
-import WithEviusContext from '@context/withContext';
-import AgendaContext from '@context/AgendaContext';
-import { CurrentEventUserContext } from '@context/eventUserContext';
-import { DispatchMessageService } from '@context/MessageService';
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { useEventContext } from '@context/eventContext'
+import WithEviusContext from '@context/withContext'
+import AgendaContext from '@context/AgendaContext'
+import { CurrentEventUserContext } from '@context/eventUserContext'
+import { DispatchMessageService } from '@context/MessageService'
 
 const HeaderColumns = (props) => {
-  const { currentActivity } = useHelper();
-  const cEvent = useEventContext();
-  const cEventUSer = useContext(CurrentEventUserContext);
-  const [loading, setLoading] = useState(false);
+  const { currentActivity } = useHelper()
+  const cEvent = useEventContext()
+  const cEventUSer = useContext(CurrentEventUserContext)
+  const [loading, setLoading] = useState(false)
   const {
     request,
     transmition,
@@ -47,7 +47,7 @@ const HeaderColumns = (props) => {
     removeRequest,
     setActivityEdit,
     typeActivity,
-  } = useContext(AgendaContext);
+  } = useContext(AgendaContext)
 
   function showPropsConfirm() {
     Modal.confirm({
@@ -59,65 +59,65 @@ const HeaderColumns = (props) => {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        setLoading(true);
-        removeRequestTransmision();
+        setLoading(true)
+        removeRequestTransmision()
         async function removeRequestTransmision() {
-          await removeRequest(refActivity, cEventUSer.value?._id);
-          setLoading(false);
+          await removeRequest(refActivity, cEventUSer.value?._id)
+          setLoading(false)
         }
       },
       onCancel() {
-        console.log('Cancel');
+        console.log('Cancel')
       },
-    });
+    })
   }
 
   // Se ejecuta cuando tiene una lección para establecer la referencia y obtener los request
   useEffect(() => {
     if (currentActivity) {
       // Se setea el currentactivity para detectar si la transmision es por eviusmeet u otro
-      setActivityEdit(currentActivity._id);
+      setActivityEdit(currentActivity._id)
 
-      console.log('1. SE EJECUTA ESTO');
+      console.log('1. SE EJECUTA ESTO')
     }
-    if (!currentActivity || typeActivity !== 'eviusMeet') return;
-    const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`;
-    setRefActivity(refActivity);
-    getRequestByActivity(refActivity);
+    if (!currentActivity || typeActivity !== 'eviusMeet') return
+    const refActivity = `request/${cEvent.value?._id}/activities/${currentActivity?._id}`
+    setRefActivity(refActivity)
+    getRequestByActivity(refActivity)
     return () => {
-      setActivityEdit(null);
-    };
-  }, [currentActivity, typeActivity]);
+      setActivityEdit(null)
+    }
+  }, [currentActivity, typeActivity])
 
   const haveRequest = () => {
     if ((request && !request[cEventUSer.value?._id]) || !request) {
-      return false;
+      return false
     }
-    return true;
-  };
+    return true
+  }
 
   const sendOrCancelRequest = async () => {
-    setLoading(true);
+    setLoading(true)
     if (!haveRequest() && cEventUSer.value?._id) {
       await addRequest(refActivity + '/' + cEventUSer.value?._id, {
         id: cEventUSer.value?._id,
         name: cEventUSer.value?.user?.names,
         date: new Date().getTime(),
-      });
+      })
     } else if (haveRequest() && cEventUSer.value?._id) {
       // Remover o cancelar request
-      await removeRequest(refActivity, cEventUSer.value?._id);
+      await removeRequest(refActivity, cEventUSer.value?._id)
     } else {
       DispatchMessageService({
         type: 'error',
         msj: 'Error al enviar solicitud',
         action: 'show',
-      });
+      })
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
-  const intl = useIntl();
+  const intl = useIntl()
   return (
     <Row align="middle">
       <Link
@@ -125,8 +125,7 @@ const HeaderColumns = (props) => {
           cEvent && !cEvent?.isByname
             ? `/landing/${props.cEvent.value._id}/evento`
             : `/event/${cEvent?.nameEvent}/agenda`
-        }
-      >
+        }>
         <Button type="primary" shape="round" icon={<ArrowLeftOutlined />} size="small">
           {intl.formatMessage({ id: 'button.back.agenda' })}
         </Button>
@@ -138,15 +137,22 @@ const HeaderColumns = (props) => {
         md={{ order: 1, span: 2 }}
         lg={{ order: 1, span: 2 }}
         xl={{ order: 1, span: 2 }}
-        style={{ padding: '4px' }}
-      >
+        style={{ padding: '4px' }}>
         <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Col>
-            {props.activityState === 'open_meeting_room' || props.activityState === 'game' ? (
-              <img style={{ height: '4vh', width: '4vh' }} src={imageUtils.EnVivo} alt="React logo" />
-            ) : props.activityState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video ? (
+            {props.activityState === 'open_meeting_room' ||
+            props.activityState === 'game' ? (
+              <img
+                style={{ height: '4vh', width: '4vh' }}
+                src={imageUtils.EnVivo}
+                alt="React logo"
+              />
+            ) : props.activityState === 'ended_meeting_room' &&
+              currentActivity !== null &&
+              currentActivity.video ? (
               <CaretRightOutlined style={{ fontSize: '30px' }} />
-            ) : props.activityState === 'ended_meeting_room' && currentActivity !== null ? (
+            ) : props.activityState === 'ended_meeting_room' &&
+              currentActivity !== null ? (
               <CheckCircleOutlined style={{ fontSize: '30px' }} />
             ) : (props.activityState === '' || props.activityState == null) &&
               currentActivity?.type?.name !== ('url' || 'video') ? (
@@ -165,11 +171,12 @@ const HeaderColumns = (props) => {
             fontWeight: 'normal',
             alignItems: 'center',
             justifyContent: 'center',
-          }}
-        >
+          }}>
           {props.activityState === 'open_meeting_room' || props.activityState === 'game'
             ? 'En vivo'
-            : props.activityState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video
+            : props.activityState === 'ended_meeting_room' &&
+              currentActivity !== null &&
+              currentActivity.video
             ? 'Grabado'
             : props.activityState === 'ended_meeting_room' && currentActivity !== null
             ? 'Terminada'
@@ -185,29 +192,31 @@ const HeaderColumns = (props) => {
         md={{ order: 2, span: 18 }}
         lg={{ order: 2, span: 16 }}
         xl={{ order: 2, span: 18 }}
-        style={{ display: 'flex' }}
-      >
+        style={{ display: 'flex' }}>
         <div style={{ padding: '8px' }}>
-          <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>{currentActivity && currentActivity?.name}</Row>
+          <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
+            {currentActivity && currentActivity?.name}
+          </Row>
           <Row
             style={{
               height: '2.5vh',
               fontSize: 10,
               fontWeight: 'normal',
-            }}
-          >
+            }}>
             <div
               xs={{ order: 1, span: 24 }}
               sm={{ order: 1, span: 24 }}
               md={{ order: 1, span: 24 }}
               lg={{ order: 3, span: 6 }}
-              xl={{ order: 3, span: 4 }}
-            >
+              xl={{ order: 3, span: 4 }}>
               {props.isVisible && (
                 <div>
                   {currentActivity?.type?.name === ('url' || 'video') ? (
                     <>
-                      {intl.formatMessage({ id: 'label.posted.date', defaultMessage: 'Publicado ' })}{' '}
+                      {intl.formatMessage({
+                        id: 'label.posted.date',
+                        defaultMessage: 'Publicado ',
+                      })}{' '}
                       {dayjs(currentActivity?.datetime_start).fromNow()}
                     </>
                   ) : (
@@ -240,7 +249,9 @@ const HeaderColumns = (props) => {
               )}
             </div>
 
-            {currentActivity !== null && currentActivity?.space && currentActivity?.space?.name}
+            {currentActivity !== null &&
+              currentActivity?.space &&
+              currentActivity?.space?.name}
           </Row>
           <Col>
             {typeActivity == 'eviusMeet' &&
@@ -261,8 +272,7 @@ const HeaderColumns = (props) => {
                     )
                   }
                   disabled={request && request[cEventUSer.value?._id]?.active}
-                  type={!haveRequest() ? 'primary' : 'danger'}
-                >
+                  type={!haveRequest() ? 'primary' : 'danger'}>
                   {!haveRequest() && !loading
                     ? 'Solicitar participar en la transmisión'
                     : !loading
@@ -283,8 +293,7 @@ const HeaderColumns = (props) => {
                       <CancelIcon style={{ fontSize: '16px' }} />
                     )
                   }
-                  type={!haveRequest() ? 'primary' : 'danger'}
-                >
+                  type={!haveRequest() ? 'primary' : 'danger'}>
                   Cambiar a modo transmisión en vivo
                 </Button>
               )}
@@ -292,9 +301,9 @@ const HeaderColumns = (props) => {
         </div>
       </Col>
     </Row>
-  );
-};
+  )
+}
 
-const HeaderColumnswithContext = WithEviusContext(HeaderColumns);
+const HeaderColumnswithContext = WithEviusContext(HeaderColumns)
 
-export default HeaderColumnswithContext;
+export default HeaderColumnswithContext

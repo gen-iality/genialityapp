@@ -109,7 +109,9 @@
  * Mobile
  */
 @media (max-width: 768px) {
-  .main-exhibitor-list .scroll-down { display: none; }
+  .main-exhibitor-list .scroll-down {
+    display: none;
+  }
 
   .iso-exhibitor-list-item {
     display: block;

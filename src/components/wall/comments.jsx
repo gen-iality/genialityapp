@@ -1,13 +1,23 @@
-import { Component } from 'react';
-import { firestore } from '@helpers/firebase';
-import { Avatar, List, Card, Spin, Row, Comment, Tooltip, Typography, Divider } from 'antd';
-import dayjs from 'dayjs';
-import withContext from '@context/withContext';
-import { UsersApi } from '@helpers/request';
+import { Component } from 'react'
+import { firestore } from '@helpers/firebase'
+import {
+  Avatar,
+  List,
+  Card,
+  Spin,
+  Row,
+  Comment,
+  Tooltip,
+  Typography,
+  Divider,
+} from 'antd'
+import dayjs from 'dayjs'
+import withContext from '@context/withContext'
+import { UsersApi } from '@helpers/request'
 
 class CommentsList extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       avatar:
@@ -16,20 +26,20 @@ class CommentsList extends Component {
       postId: this.props.postId,
       eventId: this.props.eventId,
       commentsCount: this.props.commentsCount || 0,
-    };
+    }
   }
   async getDataUser(iduser) {
-    const user = await UsersApi.getProfile(iduser);
+    const user = await UsersApi.getProfile(iduser)
     if (user) {
-      return user.picture;
+      return user.picture
     } else {
-      return undefined;
+      return undefined
     }
   }
   // se obtienen los comentarios, Se realiza la muestra del modal y se envian los datos a dataComment del state
   async getComments(postId, eventId) {
     try {
-      let dataComment = [];
+      let dataComment = []
 
       const admincommentsRef = firestore
         .collection('adminPost')
@@ -37,41 +47,48 @@ class CommentsList extends Component {
         .collection('comment')
         .doc(postId)
         .collection('comments')
-        .orderBy('date', 'asc');
+        .orderBy('date', 'asc')
 
-      const snapshot = await admincommentsRef.get();
+      const snapshot = await admincommentsRef.get()
 
       dataComment = await Promise.all(
         snapshot.docs.map(async (doc) => {
           const picture =
-            this.props.cEvent.value.visibility !== 'ANONYMOUS' && (await this.getDataUser(doc.data().author));
-          return { id: doc.id, ...doc.data(), picture: picture };
-        })
-      );
-      this.setState({ dataComment });
+            this.props.cEvent.value.visibility !== 'ANONYMOUS' &&
+            (await this.getDataUser(doc.data().author))
+          return { id: doc.id, ...doc.data(), picture: picture }
+        }),
+      )
+      this.setState({ dataComment })
     } catch (err) {
-      this.setState({ dataComment: [] });
+      this.setState({ dataComment: [] })
     }
   }
 
   async componentDidUpdate(prevProps) {
     if (prevProps.commentsCount !== this.props.commentsCount) {
-      this.getComments(this.props.postId, this.props.eventId);
+      this.getComments(this.props.postId, this.props.eventId)
     }
   }
 
   async componentDidMount() {
-    this.getComments(this.props.postId, this.props.eventId);
+    this.getComments(this.props.postId, this.props.eventId)
   }
 
   render() {
-    const { dataComment } = this.state;
+    const { dataComment } = this.state
     return (
       <div style={{ textAlign: 'left' }}>
         {!dataComment && <Spin tip="Loading..." />}
 
         {dataComment && dataComment.length === 0 && (
-          <Card style={{ display: 'block', margin: '0 auto', textAlign: 'left', padding: '0px 30px' }}>
+          <Card
+            style={{
+              display: 'block',
+              margin: '0 auto',
+              textAlign: 'left',
+              padding: '0px 30px',
+            }}>
             Aún sin comentarios
           </Card>
         )}
@@ -89,16 +106,28 @@ class CommentsList extends Component {
                     item?.picture ? (
                       <Avatar src={item.picture ? item.picture : null}>
                         {!item.picture &&
-                          item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
+                          item.authorName.charAt(0).toUpperCase() +
+                            item.authorName.charAt(1).toLowerCase()}
                       </Avatar>
                     ) : (
-                      <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
+                      <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
                     )
                   }
-                  author={<Typography.Paragraph style={{ fontSize: '14px' }}>{item.authorName}</Typography.Paragraph>}
+                  author={
+                    <Typography.Paragraph style={{ fontSize: '14px' }}>
+                      {item.authorName}
+                    </Typography.Paragraph>
+                  }
                   datetime={
-                    <Tooltip title={dayjs(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
-                      <span>{dayjs(dayjs(new Date(item.date.toMillis()))).from(dayjs(new Date()))}</span>
+                    <Tooltip
+                      title={dayjs(new Date(item.date.toMillis())).format(
+                        'YYYY-MM-DD HH:mm:ss',
+                      )}>
+                      <span>
+                        {dayjs(dayjs(new Date(item.date.toMillis()))).from(
+                          dayjs(new Date()),
+                        )}
+                      </span>
                     </Tooltip>
                   }
                   content={item.comment}
@@ -108,7 +137,7 @@ class CommentsList extends Component {
           />
         )}
       </div>
-    );
+    )
   }
 }
-export default withContext(CommentsList);
+export default withContext(CommentsList)

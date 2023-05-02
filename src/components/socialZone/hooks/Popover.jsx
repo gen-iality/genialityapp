@@ -1,23 +1,32 @@
-import { useEffect, useState } from 'react';
-import { Tooltip, Skeleton, Card, Avatar, notification, Spin } from 'antd';
-import { UserOutlined, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { InitialsNameUser } from './index';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { setViewPerfil } from '../../../redux/viewPerfil/actions';
-import { addNotification, haveRequest, isMyContacts, SendFriendship } from '@helpers/netWorkingFunctions';
-import { useUserEvent } from '@context/eventUserContext';
-import { useEventContext } from '@context/eventContext';
-import { setUserAgenda } from '../../../redux/networking/actions';
-import { EventsApi } from '@helpers/request';
+import { useEffect, useState } from 'react'
+import { Tooltip, Skeleton, Card, Avatar, notification, Spin } from 'antd'
+import {
+  UserOutlined,
+  UsergroupAddOutlined,
+  VideoCameraOutlined,
+} from '@ant-design/icons'
+import { InitialsNameUser } from './index'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { setViewPerfil } from '../../../redux/viewPerfil/actions'
+import {
+  addNotification,
+  haveRequest,
+  isMyContacts,
+  SendFriendship,
+} from '@helpers/netWorkingFunctions'
+import { useUserEvent } from '@context/eventUserContext'
+import { useEventContext } from '@context/eventContext'
+import { setUserAgenda } from '../../../redux/networking/actions'
+import { EventsApi } from '@helpers/request'
 
-const { Meta } = Card;
+const { Meta } = Card
 
 const PopoverInfoUser = (props) => {
-  const [userSelected, setUserSelected] = useState();
-  const eventUserContext = useUserEvent();
-  const eventContext = useEventContext();
+  const [userSelected, setUserSelected] = useState()
+  const eventUserContext = useUserEvent()
+  const eventContext = useEventContext()
   const {
     containtNetworking,
     getPropertiesUserWithId,
@@ -26,19 +35,24 @@ const PopoverInfoUser = (props) => {
     requestSend,
     obtenerContactos,
     contacts,
-  } = useHelper();
+  } = useHelper()
 
   useEffect(() => {
-    const user = { _id: props.item.iduser, properties: props.item.properties, eventUserId: props.item._id, send: 0 };
-    setUserSelected(user);
-    obtainContacts();
+    const user = {
+      _id: props.item.iduser,
+      properties: props.item.properties,
+      eventUserId: props.item._id,
+      send: 0,
+    }
+    setUserSelected(user)
+    obtainContacts()
     async function obtainContacts() {
-      await obtenerContactos();
+      await obtenerContactos()
     }
     return () => {
-      setUserSelected(null);
-    };
-  }, [props.item.iduser]);
+      setUserSelected(null)
+    }
+  }, [props.item.iduser])
 
   return (
     <Skeleton loading={false} avatar active>
@@ -48,7 +62,9 @@ const PopoverInfoUser = (props) => {
         actions={
           containtNetworking && [
             userSelected ? (
-              <Tooltip title="Ver perfil" onClick={() => props.setViewPerfil({ view: true, perfil: userSelected })}>
+              <Tooltip
+                title="Ver perfil"
+                onClick={() => props.setViewPerfil({ view: true, perfil: userSelected })}>
                 <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />
               </Tooltip>
             ) : (
@@ -62,38 +78,54 @@ const PopoverInfoUser = (props) => {
                   isMyContacts(userSelected, contacts)
                     ? null
                     : async () => {
-                        setViewPerfil({ view: false, perfil: userSelected });
-                        const userSelectedTwo = { ...userSelected, loading: true };
-                        setUserSelected(userSelectedTwo);
+                        setViewPerfil({ view: false, perfil: userSelected })
+                        const userSelectedTwo = { ...userSelected, loading: true }
+                        setUserSelected(userSelectedTwo)
                         const userReceive = {
                           eventUserIdReceiver: userSelected.eventUserId,
                           userName:
                             userSelected.properties.names ||
                             userSelected.properties.name ||
                             userSelected.properties.email,
-                        };
-                        const sendResp = await SendFriendship(userReceive, eventUserContext.value, eventContext.value);
+                        }
+                        const sendResp = await SendFriendship(
+                          userReceive,
+                          eventUserContext.value,
+                          eventContext.value,
+                        )
                         if (sendResp._id) {
                           const notificationR = {
                             idReceive: userSelected._id,
                             idEmited: sendResp._id,
-                            emailEmited: eventUserContext.value.email || eventUserContext.value.user.email,
+                            emailEmited:
+                              eventUserContext.value.email ||
+                              eventUserContext.value.user.email,
                             message:
                               (eventUserContext.value.names ||
                                 eventUserContext.value.user.names ||
-                                eventUserContext.value.user.name) + ' te ha enviado solicitud de contacto',
+                                eventUserContext.value.user.name) +
+                              ' te ha enviado solicitud de contacto',
                             name: 'notification.name',
                             type: 'amistad',
                             state: '0',
-                          };
-                          const userSelectedTwo = { ...userSelected, loading: false, send: 1 };
-                          setUserSelected(userSelectedTwo);
+                          }
+                          const userSelectedTwo = {
+                            ...userSelected,
+                            loading: false,
+                            send: 1,
+                          }
+                          setUserSelected(userSelectedTwo)
 
-                          addNotification(notificationR, eventContext.value, eventUserContext.value);
+                          addNotification(
+                            notificationR,
+                            eventContext.value,
+                            eventUserContext.value,
+                          )
                           notification['success']({
                             message: 'Correcto!',
-                            description: 'Se ha enviado la solicitud de amistad correctamente',
-                          });
+                            description:
+                              'Se ha enviado la solicitud de amistad correctamente',
+                          })
                         }
                       }
                 }
@@ -101,7 +133,8 @@ const PopoverInfoUser = (props) => {
                   !userSelected.loading
                     ? isMyContacts(userSelected, contacts)
                       ? 'Ya es tu contacto'
-                      : haveRequest(userSelected, requestSend, 1) || (userSelected.send && userSelected.send == 1)
+                      : haveRequest(userSelected, requestSend, 1) ||
+                        (userSelected.send && userSelected.send == 1)
                       ? 'Solicitud de contacto enviada'
                       : 'Enviar solicitud Contacto'
                     : ''
@@ -129,15 +162,15 @@ const PopoverInfoUser = (props) => {
               <Tooltip title="Agendar cita">
                 <VideoCameraOutlined
                   onClick={async () => {
-                    setViewPerfil({ view: false, perfil: userSelected });
+                    setViewPerfil({ view: false, perfil: userSelected })
                     // Se crea el objeto con id invertido para que el componente appoint modal funcione correctamente
-                    const evetuser = userSelected._id;
+                    const evetuser = userSelected._id
                     const userReview = {
                       ...userSelected,
                       _id: userSelected.eventUserId,
                       evetuserId: evetuser,
-                    };
-                    props.setUserAgenda(userReview);
+                    }
+                    props.setUserAgenda(userReview)
                   }}
                   style={{ fontSize: '20px', color: '#1890FF' }}
                 />
@@ -163,7 +196,7 @@ const PopoverInfoUser = (props) => {
               onClick={
                 props.containNetWorking
                   ? () => {
-                      props.perfil(props.item);
+                      props.perfil(props.item)
                     }
                   : null
               }>
@@ -174,12 +207,12 @@ const PopoverInfoUser = (props) => {
         />
       </Card>
     </Skeleton>
-  );
-};
+  )
+}
 
 const mapDispatchToProps = {
   setViewPerfil,
   setUserAgenda,
-};
+}
 
-export default connect(null, mapDispatchToProps)(withRouter(PopoverInfoUser));
+export default connect(null, mapDispatchToProps)(withRouter(PopoverInfoUser))

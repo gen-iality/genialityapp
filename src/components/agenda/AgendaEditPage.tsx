@@ -4,22 +4,9 @@
 
 import * as React from 'react'
 
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-} from 'react'
+import { useState, useEffect, useCallback, useContext } from 'react'
 
-import {
-  Form,
-  Tabs,
-  Col,
-  Row,
-  Switch,
-  Modal,
-  BackTop,
-} from 'antd'
+import { Form, Tabs, Col, Row, Switch, Modal, BackTop } from 'antd'
 
 import Header from '@antdComponents/Header'
 import { RouterPrompt } from '@antdComponents/RoutePrompt'
@@ -44,21 +31,21 @@ const formLayout = {
 }
 
 interface LocationStateType {
-  edit?: string,
+  edit?: string
 }
 
 interface IAgendaEditPageProps {
-  event: any,
-  matchUrl: string,
+  event: any
+  matchUrl: string
 }
 
 /**
  * Create a page component that enable create/edit an activity.
- * 
+ *
  * This component needs to check the location state for the prop `edit` to know
  * if it is needed edit an activity. If this location prop is empty, then the
  * page will config itself to create a new activity.
- * 
+ *
  * @param props the props.
  * @returns A React component that enable to edit stuffs of an activity.
  */
@@ -86,68 +73,87 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
 
   /**
    * Take the form data and submit to Back-End.
-   * 
+   *
    * Note: Some vars should be preprocessed before to submit.
-   * 
+   *
    * @param values Data from the form.
    * @param changePathWithoutSaving If the path should be changed.
    */
-  const onFinish = useCallback(async (values: FormValues, changePathWithoutSaving: boolean) => {
-    if (currentTab !== '1') {
-      setCurrentTab('1')
-      setTimeout(() => form.submit(), 2000)
-      return
-    }
-    console.log('form submiting:', { values })
-    // Fix the datetime values
-    values.datetime_start = values.date + ' ' + dayjs(values.hour_start).format('HH:mm')
-    values.datetime_end = values.date + ' ' + dayjs(values.hour_end).format('HH:mm')
-    values.selected_document = selectedDocuments
-
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
-
-    let _agenda: AgendaType | undefined = undefined
-    if (location.state?.edit || currentAgenda?._id) {
-      const activityId = location.state?.edit || currentAgenda?._id
-      await AgendaApi.editOne(values, activityId, props.event._id)
-      console.log('agenda edited')
-      
-      const payloadForDocument = {
-        activity_id: location.state?.edit || currentAgenda?._id,
+  const onFinish = useCallback(
+    async (values: FormValues, changePathWithoutSaving: boolean) => {
+      if (currentTab !== '1') {
+        setCurrentTab('1')
+        setTimeout(() => form.submit(), 2000)
+        return
       }
-      console.log('will save', selectedDocuments.length, 'selectedDocuments:', values.selected_document)
-      await Promise.all(
-        selectedDocuments.map((selected) => DocumentsApi.editOne(payloadForDocument, selected, props.event._id)),
-      );
-    } else {
-      _agenda = await AgendaApi.create(props.event._id, values)
-      setCurrentAgenda(_agenda)
-      console.log('agenda created')
-    }
+      console.log('form submiting:', { values })
+      // Fix the datetime values
+      values.datetime_start = values.date + ' ' + dayjs(values.hour_start).format('HH:mm')
+      values.datetime_end = values.date + ' ' + dayjs(values.hour_end).format('HH:mm')
+      values.selected_document = selectedDocuments
 
-    console.debug('changePathWithoutSaving:', changePathWithoutSaving)
-    if (changePathWithoutSaving) {
-      setIsNeededConfirmRedirection(false)
-    }
+      DispatchMessageService({
+        type: 'loading',
+        key: 'loading',
+        msj: 'Por favor espere mientras se guarda la información...',
+        action: 'show',
+      })
 
-    DispatchMessageService({ action: 'destroy', type: 'loading', key: 'loading', msj: '' })
+      let _agenda: AgendaType | undefined = undefined
+      if (location.state?.edit || currentAgenda?._id) {
+        const activityId = location.state?.edit || currentAgenda?._id
+        await AgendaApi.editOne(values, activityId, props.event._id)
+        console.log('agenda edited')
 
-    if (_agenda?._id) {
-      console.log('agenda created (2)')
-      setIsEditing(true)
-      cAgenda.setIsPublished(true)
-    } else if (changePathWithoutSaving) {
-      console.log('go to', props.matchUrl)
-      history.push(`${props.matchUrl}`)
-    }
+        const payloadForDocument = {
+          activity_id: location.state?.edit || currentAgenda?._id,
+        }
+        console.log(
+          'will save',
+          selectedDocuments.length,
+          'selectedDocuments:',
+          values.selected_document,
+        )
+        await Promise.all(
+          selectedDocuments.map((selected) =>
+            DocumentsApi.editOne(payloadForDocument, selected, props.event._id),
+          ),
+        )
+      } else {
+        _agenda = await AgendaApi.create(props.event._id, values)
+        setCurrentAgenda(_agenda)
+        console.log('agenda created')
+      }
 
-    DispatchMessageService({ msj: 'Información guardada correctamente!', type: 'success', action: 'show' })
-  }, [selectedDocuments])
+      console.debug('changePathWithoutSaving:', changePathWithoutSaving)
+      if (changePathWithoutSaving) {
+        setIsNeededConfirmRedirection(false)
+      }
+
+      DispatchMessageService({
+        action: 'destroy',
+        type: 'loading',
+        key: 'loading',
+        msj: '',
+      })
+
+      if (_agenda?._id) {
+        console.log('agenda created (2)')
+        setIsEditing(true)
+        cAgenda.setIsPublished(true)
+      } else if (changePathWithoutSaving) {
+        console.log('go to', props.matchUrl)
+        history.push(`${props.matchUrl}`)
+      }
+
+      DispatchMessageService({
+        msj: 'Información guardada correctamente!',
+        type: 'success',
+        action: 'show',
+      })
+    },
+    [selectedDocuments],
+  )
 
   /**
    * Load the activity data from the location prop `edit` if this contains an ID.
@@ -186,11 +192,19 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       setIsEditing(true)
       console.log('this agenda data is from editing status')
     }
-  }, [location, cAgenda, setSelectedDocuments, setCurrentAgenda, form, setSavedForm, setIsEditing])
+  }, [
+    location,
+    cAgenda,
+    setSelectedDocuments,
+    setCurrentAgenda,
+    form,
+    setSavedForm,
+    setIsEditing,
+  ])
 
   /**
    * Handle the removing of an activity.
-   * 
+   *
    * This function will show a modal dialog to confirm if the user wants to
    * remove the current activity.
    */
@@ -210,10 +224,12 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         okType: 'danger',
         cancelText: 'Cancelar',
         onOk() {
-          deleteActivity(props.event._id, currentAgenda._id!, currentAgenda.name).then(() => {
-            setShouldRedirect(true)
-            history.push(`${props.matchUrl}`)
-          })
+          deleteActivity(props.event._id, currentAgenda._id!, currentAgenda.name).then(
+            () => {
+              setShouldRedirect(true)
+              history.push(`${props.matchUrl}`)
+            },
+          )
         },
       })
     }
@@ -242,15 +258,15 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         if (Object.keys({}).length === 0) {
           setSavedForm(values) // First updating
           setIsNeededConfirmRedirection(true)
-        } if (values !== savedForm) {
+        }
+        if (values !== savedForm) {
           setIsNeededConfirmRedirection(true)
         }
       }}
       onLoad={() => {
         setSavedForm(form.getFieldsValue())
       }}
-      { ...formLayout }
-    >
+      {...formLayout}>
       <RouterPrompt
         save
         form={false}
@@ -295,7 +311,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       />
 
       {isLoading ? (
-          <Loading />
+        <Loading />
       ) : (
         <Tabs activeKey={currentTab} onChange={(key) => setCurrentTab(key)}>
           <Tabs.TabPane tab="Agenda" key="1">

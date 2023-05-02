@@ -1,11 +1,11 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent } from 'react'
 
 export interface OnlineProps {
-  isOnline: boolean | null | undefined;
-};
+  isOnline: boolean | null | undefined
+}
 
 const Online: FunctionComponent<OnlineProps> = (props) => {
-  const { isOnline } = props;
+  const { isOnline } = props
 
   return (
     <div
@@ -15,9 +15,8 @@ const Online: FunctionComponent<OnlineProps> = (props) => {
         height: '16px',
         borderRadius: '8px',
         backgroundColor: isOnline === null ? 'gray' : isOnline ? 'green' : 'red',
-      }}
-    ></div>
-  );
-};
+      }}></div>
+  )
+}
 
-export default Online;
+export default Online

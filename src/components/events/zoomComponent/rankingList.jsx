@@ -1,21 +1,23 @@
-import { useState, useEffect } from 'react';
-import { Row, Col, Avatar } from 'antd';
+import { useState, useEffect } from 'react'
+import { Row, Col, Avatar } from 'antd'
 
 export default function RankingList({ data }) {
   function formatName(name) {
-    const result = decodeURIComponent(name);
-    return result;
+    const result = decodeURIComponent(name)
+    return result
   }
 
-  const [list, setList] = useState([]);
+  const [list, setList] = useState([])
 
   useEffect(() => {
-    setList(data);
-  }, [data]);
+    setList(data)
+  }, [data])
 
   return (
     <div style={{ marginTop: 16 }}>
-      <h3 style={{ fontSize: '14px', fontWeight: '700', color: 'red !important' }}>Ranking de jugadores</h3>
+      <h3 style={{ fontSize: '14px', fontWeight: '700', color: 'red !important' }}>
+        Ranking de jugadores
+      </h3>
       <div className="container-ranking" style={{ marginTop: 16 }}>
         {list.length > 0 ? (
           list.map((item, key) => (
@@ -24,7 +26,11 @@ export default function RankingList({ data }) {
                 <Col span={6}>
                   <Avatar size={35}>
                     {item.name && item.name.charAt(0).toUpperCase()}
-                    {item.name && item.name.substring(item.name.indexOf(' ') + 1, item.name.indexOf(' ') + 2)}
+                    {item.name &&
+                      item.name.substring(
+                        item.name.indexOf(' ') + 1,
+                        item.name.indexOf(' ') + 2,
+                      )}
                   </Avatar>
                 </Col>
                 <Col span={12}>
@@ -45,5 +51,5 @@ export default function RankingList({ data }) {
         )}
       </div>
     </div>
-  );
+  )
 }

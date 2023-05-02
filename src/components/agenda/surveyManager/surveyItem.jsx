@@ -1,4 +1,4 @@
-import { Row, Col, Switch } from 'antd';
+import { Row, Col, Switch } from 'antd'
 
 export default function SurveyItem({ survey, onChange }) {
   return (
@@ -9,15 +9,19 @@ export default function SurveyItem({ survey, onChange }) {
       <Col xs={4} lg={3}>
         <Switch
           checked={survey.isPublished === 'true' || survey.isPublished}
-          onChange={(checked) => onChange(survey.survey_id, { isPublished: checked ? 'true' : 'false' })}
+          onChange={(checked) =>
+            onChange(survey.survey_id, { isPublished: checked ? 'true' : 'false' })
+          }
         />
       </Col>
       <Col xs={4} lg={2}>
         <Switch
           checked={survey.isOpened === 'true' || survey.isOpened}
-          onChange={(checked) => onChange(survey.survey_id, { isOpened: checked ? 'true' : 'false' })}
+          onChange={(checked) =>
+            onChange(survey.survey_id, { isOpened: checked ? 'true' : 'false' })
+          }
         />
       </Col>
     </Row>
-  );
+  )
 }

@@ -1,62 +1,82 @@
-import { useEffect, useState } from 'react';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useIntl } from 'react-intl';
-import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row, Grid, Space, Result } from 'antd';
-import WithEviusContext from '@context/withContext';
-import SurveyList from '../surveys/surveyList';
-import { connect } from 'react-redux';
-import ModalSpeaker from '../modalSpeakers';
-import DocumentsList from '../../documents/documentsList';
-import { UserOutlined } from '@ant-design/icons';
-import ReactQuill from 'react-quill';
-import ClipboardTextOffIcon from '@2fd/ant-design-icons/lib/ClipboardTextOff';
-import { DocumentsApi } from '@helpers/request';
-const { TabPane } = Tabs;
-const { Title } = Typography;
-const { useBreakpoint } = Grid;
+import { useEffect, useState } from 'react'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { useIntl } from 'react-intl'
+import {
+  Button,
+  Tabs,
+  Typography,
+  Badge,
+  Col,
+  Card,
+  List,
+  Avatar,
+  Alert,
+  Row,
+  Grid,
+  Space,
+  Result,
+} from 'antd'
+import WithEviusContext from '@context/withContext'
+import SurveyList from '../surveys/surveyList'
+import { connect } from 'react-redux'
+import ModalSpeaker from '../modalSpeakers'
+import DocumentsList from '../../documents/documentsList'
+import { UserOutlined } from '@ant-design/icons'
+import ReactQuill from 'react-quill'
+import ClipboardTextOffIcon from '@2fd/ant-design-icons/lib/ClipboardTextOff'
+import { DocumentsApi } from '@helpers/request'
+const { TabPane } = Tabs
+const { Title } = Typography
+const { useBreakpoint } = Grid
 
 const AditionalInformation = (props) => {
-  const { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useHelper();
-  const intl = useIntl();
-  const [activeTab, setActiveTab] = useState('description');
-  const [idSpeaker, setIdSpeaker] = useState(null);
-  const [document, setDocument] = useState({});
-  const screens = useBreakpoint();
+  const { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useHelper()
+  const intl = useIntl()
+  const [activeTab, setActiveTab] = useState('description')
+  const [idSpeaker, setIdSpeaker] = useState(null)
+  const [document, setDocument] = useState({})
+  const screens = useBreakpoint()
 
   useEffect(() => {
-    getDocuments();
-  }, [currentActivity?.selected_document]);
+    getDocuments()
+  }, [currentActivity?.selected_document])
 
   async function getDocuments() {
-    const allDocuments = await DocumentsApi.getAll(props.cEvent.value._id);
-    const document = allDocuments.data.filter((document) => document._id === currentActivity?.selected_document[0]);
-    setDocument(document);
+    const allDocuments = await DocumentsApi.getAll(props.cEvent.value._id)
+    const document = allDocuments.data.filter(
+      (document) => document._id === currentActivity?.selected_document[0],
+    )
+    setDocument(document)
   }
 
   function handleChangeLowerTabs(tab) {
-    setActiveTab(tab);
+    setActiveTab(tab)
 
     if (tab === 'games') {
-      HandleChatOrAttende('4');
+      HandleChatOrAttende('4')
     }
   }
 
   async function getSpeakers(idSpeaker) {
-    setIdSpeaker(idSpeaker);
+    setIdSpeaker(idSpeaker)
   }
 
   return (
     <Card bordered={false} bodyStyle={{ margin: '0', padding: '0px' }}>
-      <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={handleChangeLowerTabs}>
+      <Tabs
+        defaultActiveKey={activeTab}
+        activeKey={activeTab}
+        onChange={handleChangeLowerTabs}>
         {
           <TabPane
             tab={
               <>
-                <p style={{ marginBottom: '0px' }}>{intl.formatMessage({ id: 'title.description' })}</p>
+                <p style={{ marginBottom: '0px' }}>
+                  {intl.formatMessage({ id: 'title.description' })}
+                </p>
               </>
             }
-            key="description"
-          >
+            key="description">
             {currentActivity?.description !== '<p><br></p>' && (
               <Row justify="center">
                 <Col span={24} id="img-description">
@@ -106,7 +126,9 @@ const AditionalInformation = (props) => {
                                 {item.description !== '<p><br></p>' &&
                                   item.description !== null &&
                                   item.description !== undefined && (
-                                    <Button className="button_lista" onClick={() => getSpeakers(item._id)}>
+                                    <Button
+                                      className="button_lista"
+                                      onClick={() => getSpeakers(item._id)}>
                                       {intl.formatMessage({
                                         id: 'button.more.information',
                                       })}
@@ -137,23 +159,24 @@ const AditionalInformation = (props) => {
           </TabPane>
         }
 
-        {currentActivity !== null && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
-          <TabPane
-            tab={
-              <>
-                <p style={{ marginBottom: '0px' }}>Documentos</p>
-              </>
-            }
-            key="docs"
-          >
-            <div>
-              <div style={{ marginTop: '5%', marginBottom: '5%' }}>
-                <b>Documentos:</b> &nbsp;
-                <DocumentsList data={document} />
+        {currentActivity !== null &&
+          currentActivity.selected_document &&
+          currentActivity.selected_document.length > 0 && (
+            <TabPane
+              tab={
+                <>
+                  <p style={{ marginBottom: '0px' }}>Documentos</p>
+                </>
+              }
+              key="docs">
+              <div>
+                <div style={{ marginTop: '5%', marginBottom: '5%' }}>
+                  <b>Documentos:</b> &nbsp;
+                  <DocumentsList data={document} />
+                </div>
               </div>
-            </div>
-          </TabPane>
-        )}
+            </TabPane>
+          )}
 
         {/*  {props.tabs && (
           // && (props.tabs.surveys || props.tabs.surveys === 'true')
@@ -198,11 +221,11 @@ const AditionalInformation = (props) => {
         )} */}
       </Tabs>
     </Card>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => ({
   tabs: state.stage.data.tabs,
-});
+})
 
-export default connect(mapStateToProps, null)(WithEviusContext(AditionalInformation));
+export default connect(mapStateToProps, null)(WithEviusContext(AditionalInformation))

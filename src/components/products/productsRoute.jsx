@@ -1,16 +1,16 @@
-import { BrowserRouter as Router, Route, Switch, useRouteMatch } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, useRouteMatch } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 /** --------------------
  *  secciones del curso
  * ---------------------*/
-import Product from './product';
-import AddProduct from './addProduct';
-import Configuration from './configuration';
-import OfertProduts from './oferts';
+import Product from './product'
+import AddProduct from './addProduct'
+import Configuration from './configuration'
+import OfertProduts from './oferts'
 
 const ProductSectionRoutes = (props) => {
-  const { path } = useRouteMatch();
+  const { path } = useRouteMatch()
 
   return (
     <Switch>
@@ -27,6 +27,6 @@ const ProductSectionRoutes = (props) => {
         <OfertProduts {...props} />
       </Route>
     </Switch>
-  );
-};
-export default withRouter(ProductSectionRoutes);
+  )
+}
+export default withRouter(ProductSectionRoutes)

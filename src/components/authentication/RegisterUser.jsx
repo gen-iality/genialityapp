@@ -1,18 +1,27 @@
-import { useState } from 'react';
-import { PictureOutlined, MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Upload, Alert } from 'antd';
-import ImgCrop from 'antd-img-crop';
-import createNewUser, { CREATE_NEW_USER_FAIL, CREATE_NEW_USER_FAIL_BECAUSE_EMAIL, CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/createNewUser';
-import { app } from '@helpers/firebase';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useIntl } from 'react-intl';
-import { DispatchMessageService } from '@context/MessageService';
-import { uploadImagedummyRequest } from '@Utilities/imgUtils';
+import { useState } from 'react'
+import {
+  PictureOutlined,
+  MailOutlined,
+  LockOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
+import { Form, Input, Button, Space, Upload, Alert } from 'antd'
+import ImgCrop from 'antd-img-crop'
+import createNewUser, {
+  CREATE_NEW_USER_FAIL,
+  CREATE_NEW_USER_FAIL_BECAUSE_EMAIL,
+  CREATE_NEW_USER_SUCCESS,
+} from './ModalsFunctions/createNewUser'
+import { app } from '@helpers/firebase'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { useIntl } from 'react-intl'
+import { DispatchMessageService } from '@context/MessageService'
+import { uploadImagedummyRequest } from '@Utilities/imgUtils'
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
-  const intl = useIntl();
-  const { handleChangeTypeModal } = useHelper();
-  const [isErrorBecauseEmail, setIsErrorBecauseEmail] = useState(false);
+  const intl = useIntl()
+  const { handleChangeTypeModal } = useHelper()
+  const [isErrorBecauseEmail, setIsErrorBecauseEmail] = useState(false)
   // const [registrationErrorMessage, setRegistrationErrorMessage] = useState('');
 
   const ruleEmail = [
@@ -30,7 +39,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         defaultMessage: 'Ingrese un email para su cuenta en Evius',
       }),
     },
-  ];
+  ]
 
   const rulePassword = [
     {
@@ -49,7 +58,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         defaultMessage: 'La contraseña debe tener entre 6 a 18 caracteres',
       }),
     },
-  ];
+  ]
 
   const ruleName = [
     {
@@ -59,14 +68,14 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         defaultMessage: 'Ingrese su nombre completo para su cuenta en Evius',
       }),
     },
-  ];
+  ]
 
-  const [form] = Form.useForm();
-  const [imageAvatar, setImageAvatar] = useState(null);
+  const [form] = Form.useForm()
+  const [imageAvatar, setImageAvatar] = useState(null)
 
   function resetFields() {
-    form.resetFields();
-    setImageAvatar(null);
+    form.resetFields()
+    setImageAvatar(null)
   }
 
   const onFinishCreateNewUser = async (values) => {
@@ -75,18 +84,18 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
       key: 'loading',
       msj: ' Por favor espere...',
       action: 'show',
-    });
+    })
     const newValues = {
       ...values,
       picture: imageAvatar,
-    };
+    }
 
     try {
       const {
         // user: userData,
         message: resultMessage,
         status: creatingStatus,
-      } = await createNewUser(newValues, resetFields);
+      } = await createNewUser(newValues, resetFields)
 
       if (creatingStatus === CREATE_NEW_USER_SUCCESS) {
         // If the registration was successful, then login it
@@ -96,49 +105,52 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           .then((login) => {
             if (login) {
               // Let us to check in what GEN.iality section we are to render the right modal component
-              if (window.location.toString().includes('landing') || window.location.toString().includes('event')) {
-                handleChangeTypeModal('loginSuccess');
+              if (
+                window.location.toString().includes('landing') ||
+                window.location.toString().includes('event')
+              ) {
+                handleChangeTypeModal('loginSuccess')
               } else {
-                handleChangeTypeModal('loginSuccess');
+                handleChangeTypeModal('loginSuccess')
               }
             }
           })
           .catch((err) => {
-            console.error(err);
-            handleChangeTypeModal('loginError');
-          });
-        DispatchMessageService({ key: 'loading', action: 'destroy' });
+            console.error(err)
+            handleChangeTypeModal('loginError')
+          })
+        DispatchMessageService({ key: 'loading', action: 'destroy' })
         DispatchMessageService({
           type: 'success',
           msj: 'Información guardada correctamente!',
           action: 'show',
-        });
+        })
       } else {
-        console.error({creatingStatus, resultMessage})
+        console.error({ creatingStatus, resultMessage })
         if (creatingStatus === CREATE_NEW_USER_FAIL_BECAUSE_EMAIL) {
-          setIsErrorBecauseEmail(true);
+          setIsErrorBecauseEmail(true)
         } else if (creatingStatus === CREATE_NEW_USER_FAIL) {
-          setIsErrorBecauseEmail(false);
-          handleChangeTypeModal('loginError');
+          setIsErrorBecauseEmail(false)
+          handleChangeTypeModal('loginError')
         }
 
-        DispatchMessageService({ key: 'loading', action: 'destroy' });
+        DispatchMessageService({ key: 'loading', action: 'destroy' })
         DispatchMessageService({
           type: 'error',
           msj: 'Ha ocurrido un error inesperado',
           action: 'show',
-        });
+        })
       }
     } catch (err) {
       console.error(err)
-      DispatchMessageService({ key: 'loading', action: 'destroy' });
+      DispatchMessageService({ key: 'loading', action: 'destroy' })
       DispatchMessageService({
         type: 'error',
         msj: 'Ha ocurrido un error inesperado',
         action: 'show',
-      });
+      })
     }
-  };
+  }
   return (
     <>
       {' '}
@@ -147,25 +159,23 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         form={form}
         autoComplete="off"
         layout="vertical"
-        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
-      >
+        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
         <Form.Item>
           <ImgCrop rotate shape="round">
             <Upload
               accept="image/png,image/jpeg"
               onChange={(file) => {
                 if (file.fileList.length > 0) {
-                  setImageAvatar(file.fileList);
+                  setImageAvatar(file.fileList)
                 } else {
-                  setImageAvatar(null);
+                  setImageAvatar(null)
                 }
               }}
               customRequest={uploadImagedummyRequest}
               multiple={false}
               listType="picture"
               maxCount={1}
-              fileList={imageAvatar}
-            >
+              fileList={imageAvatar}>
               {
                 <Button
                   type="primary"
@@ -173,8 +183,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
                   style={{
                     height: !imageAvatar ? '150px' : '95px',
                     width: !imageAvatar ? '150px' : '95px',
-                  }}
-                >
+                  }}>
                   <Space direction="vertical">
                     <PictureOutlined style={{ fontSize: '40px' }} />
                     {intl.formatMessage({
@@ -195,8 +204,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           name="email"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleEmail}
-        >
+          rules={ruleEmail}>
           <Input
             type="email"
             size="large"
@@ -212,8 +220,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           name="password"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={rulePassword}
-        >
+          rules={rulePassword}>
           <Input.Password
             type="password"
             size="large"
@@ -232,8 +239,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           name="names"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleName}
-        >
+          rules={ruleName}>
           <Input
             type="text"
             size="large"
@@ -250,8 +256,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             htmlType="submit"
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size="large"
-          >
+            size="large">
             {intl.formatMessage({
               id: 'modal.label.create_user',
               defaultMessage: 'Crear cuenta de usuario',
@@ -283,7 +288,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         )}
       </Form>
     </>
-  );
-};
+  )
+}
 
-export default RegisterUser;
+export default RegisterUser

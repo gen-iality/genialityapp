@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import {
   Avatar,
   Card,
@@ -14,7 +14,7 @@ import {
   Divider,
   Skeleton,
   Menu,
-} from 'antd';
+} from 'antd'
 import {
   AppstoreFilled,
   CarryOutOutlined,
@@ -22,167 +22,174 @@ import {
   LockOutlined,
   SettingOutlined,
   UserOutlined,
-} from '@ant-design/icons';
-import OrganizationCard from './organizationCard';
-import NewCard from './newCard';
-import ExploreEvents from './exploreEvents';
-import withContext from '@context/withContext';
-import { EventsApi, TicketsApi, OrganizationApi, SurveysApi } from '@helpers/request';
-import EventCard from '../shared/eventCard';
-import { Link } from 'react-router-dom';
-import dayjs from 'dayjs';
-import Loading from './loading';
-import ChangePassword from './components/changePassword';
-import EditInformation from './components/EditInformation';
-import MyPlan from './components/myPlan';
-import { imageUtils } from '../../Utilities/ImageUtils';
-import CashCheckIcon from '@2fd/ant-design-icons/lib/CashCheck';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { featureBlockingListener } from '@/services/featureBlocking/featureBlocking';
-import eventCard from '../shared/eventCard';
-import QuizzesProgress from '../quiz/QuizzesProgress';
+} from '@ant-design/icons'
+import OrganizationCard from './organizationCard'
+import NewCard from './newCard'
+import ExploreEvents from './exploreEvents'
+import withContext from '@context/withContext'
+import { EventsApi, TicketsApi, OrganizationApi, SurveysApi } from '@helpers/request'
+import EventCard from '../shared/eventCard'
+import { Link } from 'react-router-dom'
+import dayjs from 'dayjs'
+import Loading from './loading'
+import ChangePassword from './components/changePassword'
+import EditInformation from './components/EditInformation'
+import MyPlan from './components/myPlan'
+import { imageUtils } from '../../Utilities/ImageUtils'
+import CashCheckIcon from '@2fd/ant-design-icons/lib/CashCheck'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { featureBlockingListener } from '@/services/featureBlocking/featureBlocking'
+import eventCard from '../shared/eventCard'
+import QuizzesProgress from '../quiz/QuizzesProgress'
 
-import { CerticationsApi } from '@helpers/request';
+import { CerticationsApi } from '@helpers/request'
 
-const { Content, Sider } = Layout;
-const { TabPane } = Tabs;
-const { useBreakpoint } = Grid;
+const { Content, Sider } = Layout
+const { TabPane } = Tabs
+const { useBreakpoint } = Grid
 
 const MainProfile = (props) => {
-  const [activeTab, setActiveTab] = useState();
-  const [events, setevents] = useState([]);
-  const [tickets, settickets] = useState([]);
-  const [organizations, setorganizations] = useState([]);
-  const [eventsLimited, seteventsLimited] = useState([]);
-  const [ticketsLimited, setticketsLimited] = useState([]);
-  const [organizationsLimited, setorganizationsLimited] = useState([]);
-  const [organizationsIsLoading, setOrganizationsIsLoading] = useState(true);
-  const [eventsIHaveCreatedIsLoading, setEventsIHaveCreatedIsLoading] = useState(true);
-  const [eventsThatIHaveParticipatedIsLoading, setEventsThatIHaveParticipatedIsLoading] = useState(true);
-  const [userEventSurveys, setUserEventSurveys] = useState([]);
-  const [collapsed, setCollapsed] = useState(false);
-  const [content, setContent] = useState('ACCOUNT_ACTIVITY');
+  const [activeTab, setActiveTab] = useState()
+  const [events, setevents] = useState([])
+  const [tickets, settickets] = useState([])
+  const [organizations, setorganizations] = useState([])
+  const [eventsLimited, seteventsLimited] = useState([])
+  const [ticketsLimited, setticketsLimited] = useState([])
+  const [organizationsLimited, setorganizationsLimited] = useState([])
+  const [organizationsIsLoading, setOrganizationsIsLoading] = useState(true)
+  const [eventsIHaveCreatedIsLoading, setEventsIHaveCreatedIsLoading] = useState(true)
+  const [eventsThatIHaveParticipatedIsLoading, setEventsThatIHaveParticipatedIsLoading] =
+    useState(true)
+  const [userEventSurveys, setUserEventSurveys] = useState([])
+  const [collapsed, setCollapsed] = useState(false)
+  const [content, setContent] = useState('ACCOUNT_ACTIVITY')
 
-  const [allCertifications, setAllCertifications] = useState([]);
+  const [allCertifications, setAllCertifications] = useState([])
 
-  const screens = useBreakpoint();
-  const selectedTab = props.match.params.tab;
-  const { helperDispatch } = useHelper();
+  const screens = useBreakpoint()
+  const selectedTab = props.match.params.tab
+  const { helperDispatch } = useHelper()
 
   const showSider = () => {
     if (!collapsed) {
-      setCollapsed(true);
+      setCollapsed(true)
     } else {
-      setCollapsed(false);
+      setCollapsed(false)
     }
-  };
+  }
 
   const showContent = (key) => {
-    setContent(key);
-  };
+    setContent(key)
+  }
 
   const eventsIHaveCreated = async () => {
-    const events = await EventsApi.mine();
+    const events = await EventsApi.mine()
 
     if (events.length > 0) {
       events.map((event) => {
-        featureBlockingListener(event._id, helperDispatch, 'map');
-      });
+        featureBlockingListener(event._id, helperDispatch, 'map')
+      })
     }
-    const eventsDataSorted = events.sort((a, b) => dayjs(b.datetime_from) - dayjs(a.datetime_from));
-    setevents(eventsDataSorted);
-    seteventsLimited(events.slice(0, 3));
-    setEventsIHaveCreatedIsLoading(false);
-  };
+    const eventsDataSorted = events.sort(
+      (a, b) => dayjs(b.datetime_from) - dayjs(a.datetime_from),
+    )
+    setevents(eventsDataSorted)
+    seteventsLimited(events.slice(0, 3))
+    setEventsIHaveCreatedIsLoading(false)
+  }
 
   const eventsThatIHaveParticipated = async () => {
-    const ticketsall = await TicketsApi.getAll();
+    const ticketsall = await TicketsApi.getAll()
 
     if (ticketsall.length === 0) {
-      settickets(ticketsall);
-      setEventsThatIHaveParticipatedIsLoading(false);
-      return;
+      settickets(ticketsall)
+      setEventsThatIHaveParticipatedIsLoading(false)
+      return
     }
 
     ticketsall.map((event) => {
-      featureBlockingListener(event.event_id, helperDispatch, 'map');
-    });
+      featureBlockingListener(event.event_id, helperDispatch, 'map')
+    })
 
-    const ticketsDataSorted = ticketsall.sort((a, b) => dayjs(b.created_at) - dayjs(a.created_at));
-    const usersInscription = [];
+    const ticketsDataSorted = ticketsall.sort(
+      (a, b) => dayjs(b.created_at) - dayjs(a.created_at),
+    )
+    const usersInscription = []
     ticketsDataSorted.forEach(async (element) => {
-      const eventByTicket = await EventsApi.getOne(element.event_id);
+      const eventByTicket = await EventsApi.getOne(element.event_id)
       if (eventByTicket) {
-        usersInscription.push(eventByTicket);
+        usersInscription.push(eventByTicket)
       }
-      settickets(usersInscription);
-      setticketsLimited(usersInscription.slice(0, 4));
-      setEventsThatIHaveParticipatedIsLoading(false);
-    });
-  };
+      settickets(usersInscription)
+      setticketsLimited(usersInscription.slice(0, 4))
+      setEventsThatIHaveParticipatedIsLoading(false)
+    })
+  }
 
   const myOrganizations = async () => {
-    const organizations = await OrganizationApi.mine();
-    const organizationsFilter = organizations.filter((orgData) => orgData.id);
-    const organizationDataSorted = organizationsFilter.sort((a, b) => dayjs(b.created_at) - dayjs(a.created_at));
-    setorganizations(organizationDataSorted);
-    setorganizationsLimited(organizationDataSorted.slice(0, 5));
-    setOrganizationsIsLoading(false);
-  };
+    const organizations = await OrganizationApi.mine()
+    const organizationsFilter = organizations.filter((orgData) => orgData.id)
+    const organizationDataSorted = organizationsFilter.sort(
+      (a, b) => dayjs(b.created_at) - dayjs(a.created_at),
+    )
+    setorganizations(organizationDataSorted)
+    setorganizationsLimited(organizationDataSorted.slice(0, 5))
+    setOrganizationsIsLoading(false)
+  }
 
   const fetchItem = async () => {
     /* Cursos creados por el usuario    */
-    eventsIHaveCreated();
+    eventsIHaveCreated()
     /* ----------------------------------*/
     /* Cursos en los que esta registrado el usuario */
 
-    eventsThatIHaveParticipated();
+    eventsThatIHaveParticipated()
     /* ----------------------------------*/
     /* Organizaciones del usuario */
-    myOrganizations();
+    myOrganizations()
     /* ----------------------------------*/
     /* Surveys del usuario */
-    eventsWithSurveys();
-  };
+    eventsWithSurveys()
+  }
 
   useEffect(() => {
-    fetchItem();
+    fetchItem()
     switch (selectedTab) {
       case 'organization':
-        setActiveTab('2');
-        break;
+        setActiveTab('2')
+        break
       case 'events':
-        setActiveTab('3');
-        break;
+        setActiveTab('3')
+        break
       case 'tickets':
-        setActiveTab('4');
-        break;
+        setActiveTab('4')
+        break
       default:
-        setActiveTab('1');
+        setActiveTab('1')
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    if (!props?.cUser?.value?._id) return;
+    if (!props?.cUser?.value?._id) return
     CerticationsApi.getByUserAndEvent(props.cUser.value._id).then(setAllCertifications)
-  }, [props?.cUser?.value]);
+  }, [props?.cUser?.value])
 
   useEffect(() => {
-    if (activeTab !== '2') return;
-    fetchItem();
-  }, [activeTab]);
+    if (activeTab !== '2') return
+    fetchItem()
+  }, [activeTab])
 
   const eventsWithSurveys = async () => {
     const surveys = (
       await Promise.all(
         tickets.map(async (tickets) => {
-          const surveysByEvent = await SurveysApi.byEvent(tickets._id);
-          return surveysByEvent;
-        })
+          const surveysByEvent = await SurveysApi.byEvent(tickets._id)
+          return surveysByEvent
+        }),
       )
-    ).flat();
+    ).flat()
 
-    setUserEventSurveys(surveys);
+    setUserEventSurveys(surveys)
   }
 
   return (
@@ -194,29 +201,36 @@ const MainProfile = (props) => {
         style={{ backgroundColor: '#ffffff', paddingTop: '10px', paddingBottom: '10px' }}
         breakpoint="lg"
         collapsedWidth="0"
-        zeroWidthTriggerStyle={{ top: '-40px', width: '50px' }}
-      >
+        zeroWidthTriggerStyle={{ top: '-40px', width: '50px' }}>
         <Row justify="center" gutter={[10, 20]}>
           <Space
             size={5}
             direction="vertical"
-            style={{ textAlign: 'center', paddingLeft: '15px', paddingRight: '15px' }}
-          >
+            style={{ textAlign: 'center', paddingLeft: '15px', paddingRight: '15px' }}>
             {props?.cUser?.value ? (
               <>
                 {props?.cUser?.value?.picture ? (
                   <Avatar size={150} src={props?.cUser?.value?.picture} />
                 ) : (
-                  <Avatar style={{ backgroundColor: '#50D3C9' }} size={150} icon={<UserOutlined />} />
+                  <Avatar
+                    style={{ backgroundColor: '#50D3C9' }}
+                    size={150}
+                    icon={<UserOutlined />}
+                  />
                 )}
               </>
             ) : (
               <Skeleton.Avatar active size={150} shape="circle" />
             )}
-            <Typography.Text style={{ fontSize: '20px', width: '250px', overflowWrap: 'anywhere' }}>
-              {props?.cUser?.value?.names || props?.cUser?.value?.displayName || props?.cUser?.value?.name}
+            <Typography.Text
+              style={{ fontSize: '20px', width: '250px', overflowWrap: 'anywhere' }}>
+              {props?.cUser?.value?.names ||
+                props?.cUser?.value?.displayName ||
+                props?.cUser?.value?.name}
             </Typography.Text>
-            <Typography.Text type="secondary" style={{ fontSize: '16px', width: '220px', wordBreak: 'break-all' }}>
+            <Typography.Text
+              type="secondary"
+              style={{ fontSize: '16px', width: '220px', wordBreak: 'break-all' }}>
               {props?.cUser?.value?.email}
             </Typography.Text>
           </Space>
@@ -225,34 +239,31 @@ const MainProfile = (props) => {
               <Menu.Item
                 title={null}
                 onClick={() => {
-                  showContent('ACCOUNT_ACTIVITY');
-                  screens.xs && showSider();
+                  showContent('ACCOUNT_ACTIVITY')
+                  screens.xs && showSider()
                 }}
                 key="actividad"
-                icon={<CarryOutOutlined style={{ fontSize: '18px' }} />}
-              >
+                icon={<CarryOutOutlined style={{ fontSize: '18px' }} />}>
                 Lección en GEN.iality
               </Menu.Item>
               <Menu.Item
                 title={null}
                 onClick={() => {
-                  showContent('EDIT_INFORMATION');
-                  screens.xs && showSider();
+                  showContent('EDIT_INFORMATION')
+                  screens.xs && showSider()
                 }}
                 key="editarInfo"
-                icon={<EditOutlined style={{ fontSize: '18px' }} />}
-              >
+                icon={<EditOutlined style={{ fontSize: '18px' }} />}>
                 Editar mi información
               </Menu.Item>
               <Menu.Item
                 title={null}
                 onClick={() => {
-                  showContent('CHANGE_PASSWORD');
-                  screens.xs && showSider();
+                  showContent('CHANGE_PASSWORD')
+                  screens.xs && showSider()
                 }}
                 key="cambiarPassword"
-                icon={<LockOutlined style={{ fontSize: '18px' }} />}
-              >
+                icon={<LockOutlined style={{ fontSize: '18px' }} />}>
                 Cambiar contraseña
               </Menu.Item>
             </Menu>
@@ -260,7 +271,7 @@ const MainProfile = (props) => {
           <Col>
             <img
               onClick={() => {
-                window.location.href = `${window.location.origin}`;
+                window.location.href = `${window.location.origin}`
               }}
               style={{
                 cursor: 'pointer',
@@ -277,14 +288,16 @@ const MainProfile = (props) => {
       </Sider>
       <Layout>
         <Content style={{ margin: '0px', padding: '10px', overflowY: 'auto' }}>
-          {content === 'CHANGE_PASSWORD' && <ChangePassword email={props?.cUser?.value?.email} />}
+          {content === 'CHANGE_PASSWORD' && (
+            <ChangePassword email={props?.cUser?.value?.email} />
+          )}
           {content === 'EDIT_INFORMATION' && <EditInformation cUser={props.cUser} />}
           {content === 'ACCOUNT_ACTIVITY' && (
             <Tabs
               defaultActiveKey={activeTab}
               activeKey={activeTab}
               onTabClick={(key) => {
-                setActiveTab(key);
+                setActiveTab(key)
               }}>
               {!screens.xs && (
                 <TabPane
@@ -304,12 +317,17 @@ const MainProfile = (props) => {
                           md={12}
                           lg={8}
                           xl={8}
-                          xxl={8}
-                        >
+                          xxl={8}>
                           <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
                             <Statistic
-                              title={<span style={{ fontSize: '16px' }}>Organizaciones</span>}
-                              value={organizations.length && organizations.length > 0 ? organizations.length : 0}
+                              title={
+                                <span style={{ fontSize: '16px' }}>Organizaciones</span>
+                              }
+                              value={
+                                organizations.length && organizations.length > 0
+                                  ? organizations.length
+                                  : 0
+                              }
                               // loading={tickets.length ? false : true}
                               precision={0}
                               valueStyle={{ color: '#3f8600', fontSize: '40px' }}
@@ -323,12 +341,15 @@ const MainProfile = (props) => {
                           md={12}
                           lg={8}
                           xl={8}
-                          xxl={8}
-                        >
+                          xxl={8}>
                           <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
                             <Statistic
-                              title={<span style={{ fontSize: '16px' }}>Cursos creados</span>}
-                              value={events.length && events.length > 0 ? events.length : 0}
+                              title={
+                                <span style={{ fontSize: '16px' }}>Cursos creados</span>
+                              }
+                              value={
+                                events.length && events.length > 0 ? events.length : 0
+                              }
                               // loading={events.length ? false : true}
                               precision={0}
                               valueStyle={{ color: '#3f8600', fontSize: '40px' }}
@@ -342,12 +363,17 @@ const MainProfile = (props) => {
                           md={24}
                           lg={8}
                           xl={8}
-                          xxl={8}
-                        >
+                          xxl={8}>
                           <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
                             <Statistic
-                              title={<span style={{ fontSize: '16px' }}>Cursos en los que estoy registrado</span>}
-                              value={tickets.length && tickets.length > 0 ? tickets.length : 0}
+                              title={
+                                <span style={{ fontSize: '16px' }}>
+                                  Cursos en los que estoy registrado
+                                </span>
+                              }
+                              value={
+                                tickets.length && tickets.length > 0 ? tickets.length : 0
+                              }
                               // loading={tickets.length ? false : true}
                               precision={0}
                               valueStyle={{ color: '#3f8600', fontSize: '40px' }}
@@ -365,7 +391,11 @@ const MainProfile = (props) => {
                           <>
                             <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                               {organizationsLimited.length > 0 ? (
-                                <NewCard entityType="event" cUser={props.cUser} org={organizationsLimited} />
+                                <NewCard
+                                  entityType="event"
+                                  cUser={props.cUser}
+                                  org={organizationsLimited}
+                                />
                               ) : (
                                 <NewCard entityType="event" cUser={props.cUser} />
                               )}
@@ -379,7 +409,10 @@ const MainProfile = (props) => {
                                       isAdmin
                                       bordered={false}
                                       event={event}
-                                      action={{ name: 'Ver', url: `landing/${event._id}` }}
+                                      action={{
+                                        name: 'Ver',
+                                        url: `landing/${event._id}`,
+                                      }}
                                       right={[
                                         <div key="admin">
                                           <Link to={`/eventadmin/${event._id}`}>
@@ -391,11 +424,12 @@ const MainProfile = (props) => {
                                         </div>,
                                       ]}
                                       blockedEvent={
-                                        props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                                        props?.cUser?.value?.plan?.availables
+                                          ?.later_days || eventCard.value?.later_days
                                       }
                                     />
                                   </Col>
-                                );
+                                )
                               })}
                             {/* aqui termina el mapeo de eventCard.jsx maximo 4  */}
                           </>
@@ -404,7 +438,9 @@ const MainProfile = (props) => {
                     </Col>
 
                     <Col span={24}>
-                      <Divider orientation="left">Cursos en los que estoy registrado</Divider>
+                      <Divider orientation="left">
+                        Cursos en los que estoy registrado
+                      </Divider>
                       <Row gutter={[16, 16]}>
                         {eventsThatIHaveParticipatedIsLoading ? (
                           <Loading />
@@ -418,13 +454,17 @@ const MainProfile = (props) => {
                                       moreDetails
                                       bordered={false}
                                       event={event}
-                                      action={{ name: 'Ver', url: `landing/${event._id}` }}
+                                      action={{
+                                        name: 'Ver',
+                                        url: `landing/${event._id}`,
+                                      }}
                                       blockedEvent={
-                                        props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                                        props?.cUser?.value?.plan?.availables
+                                          ?.later_days || eventCard.value?.later_days
                                       }
                                     />
                                   </Col>
-                                );
+                                )
                               })
                             ) : (
                               <Col span={24}>
@@ -444,16 +484,27 @@ const MainProfile = (props) => {
                         ) : (
                           <>
                             <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                              <NewCard entityType="organization" cUser={props.cUser} fetchItem={fetchItem} />
+                              <NewCard
+                                entityType="organization"
+                                cUser={props.cUser}
+                                fetchItem={fetchItem}
+                              />
                             </Col>
                             {/* aqui empieza el mapeo maximo 6 */}
                             {organizationsLimited.length > 0 &&
                               organizationsLimited.map((organization, index) => {
                                 return (
-                                  <Col key={index} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
+                                  <Col
+                                    key={index}
+                                    xs={12}
+                                    sm={8}
+                                    md={8}
+                                    lg={6}
+                                    xl={4}
+                                    xxl={4}>
                                     <OrganizationCard data={organization} />
                                   </Col>
-                                );
+                                )
                               })}
                             {/* aqui termina el mapeo maximo 6 */}
                           </>
@@ -469,7 +520,11 @@ const MainProfile = (props) => {
                 ) : (
                   <Row gutter={[16, 16]}>
                     <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                      <NewCard entityType="organization" cUser={props.cUser} fetchItem={fetchItem} />
+                      <NewCard
+                        entityType="organization"
+                        cUser={props.cUser}
+                        fetchItem={fetchItem}
+                      />
                     </Col>
                     {organizations.length > 0 &&
                       organizations.map((organization, index) => {
@@ -477,7 +532,7 @@ const MainProfile = (props) => {
                           <Col key={index} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                             <OrganizationCard data={organization} />
                           </Col>
-                        );
+                        )
                       })}
                   </Row>
                 )}
@@ -489,7 +544,11 @@ const MainProfile = (props) => {
                   <Row gutter={[16, 16]}>
                     <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                       {organizationsLimited.length > 0 ? (
-                        <NewCard entityType="event" cUser={props.cUser} org={organizationsLimited} />
+                        <NewCard
+                          entityType="event"
+                          cUser={props.cUser}
+                          org={organizationsLimited}
+                        />
                       ) : (
                         <NewCard entityType="event" cUser={props.cUser} />
                       )}
@@ -513,11 +572,12 @@ const MainProfile = (props) => {
                               </div>,
                             ]}
                             blockedEvent={
-                              props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                              props?.cUser?.value?.plan?.availables?.later_days ||
+                              eventCard.value?.later_days
                             }
                           />
                         </Col>
-                      );
+                      )
                     })}
                   </Row>
                 )}
@@ -537,11 +597,12 @@ const MainProfile = (props) => {
                               event={event}
                               action={{ name: 'Ver', url: `landing/${event._id}` }}
                               blockedEvent={
-                                props?.cUser?.value?.plan?.availables?.later_days || eventCard.value?.later_days
+                                props?.cUser?.value?.plan?.availables?.later_days ||
+                                eventCard.value?.later_days
                               }
                             />
                           </Col>
-                        );
+                        )
                       })
                     ) : (
                       <Col span={24}>
@@ -552,23 +613,27 @@ const MainProfile = (props) => {
                 )}
               </TabPane>
 
-              {userEventSurveys.length > 0  && (
+              {userEventSurveys.length > 0 && (
                 <TabPane tab="Calificaciones" key="5">
-                {tickets.length === 0 && (
-                  <Typography.Text strong>Sin cursos</Typography.Text>
-                )}
-                {!(props?.cUser?.value?._id) ? (
-                  <Loading />
-                ) : (
-                  tickets.map((tickets) => (
-                    <>
-                    <QuizzesProgress eventId={tickets._id} eventName={tickets.name} userId={props?.cUser?.value?._id} />
-                    </>
-                  ))
-                )}
-              </TabPane>
+                  {tickets.length === 0 && (
+                    <Typography.Text strong>Sin cursos</Typography.Text>
+                  )}
+                  {!props?.cUser?.value?._id ? (
+                    <Loading />
+                  ) : (
+                    tickets.map((tickets) => (
+                      <>
+                        <QuizzesProgress
+                          eventId={tickets._id}
+                          eventName={tickets.name}
+                          userId={props?.cUser?.value?._id}
+                        />
+                      </>
+                    ))
+                  )}
+                </TabPane>
               )}
-              
+
               {/* <TabPane tab="Certificaciones" key="6">
                 {!(props?.cUser?.value?._id) ? (
                   <Loading />
@@ -630,7 +695,7 @@ const MainProfile = (props) => {
         </Content>
       </Layout>
     </Layout>
-  );
-};
+  )
+}
 
-export default withContext(MainProfile);
+export default withContext(MainProfile)

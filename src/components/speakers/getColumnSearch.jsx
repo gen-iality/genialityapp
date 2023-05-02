@@ -1,6 +1,6 @@
-import { Button, Input, Space } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import Highlighter from 'react-highlight-words';
+import { Button, Input, Space } from 'antd'
+import { SearchOutlined } from '@ant-design/icons'
+import Highlighter from 'react-highlight-words'
 
 //FN para búsqueda en la tabla 1/3
 export const getColumnSearchProps = (dataIndex, columnsData) => ({
@@ -20,25 +20,27 @@ export const getColumnSearchProps = (dataIndex, columnsData) => ({
           onClick={() => columnsData.handleSearch(selectedKeys, confirm, dataIndex)}
           icon={<SearchOutlined />}
           size="small"
-          style={{ width: 90 }}
-        >
+          style={{ width: 90 }}>
           Buscar
         </Button>
-        <Button onClick={() => columnsData.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+        <Button
+          onClick={() => columnsData.handleReset(clearFilters)}
+          size="small"
+          style={{ width: 90 }}>
           Borrar
         </Button>
       </Space>
     </div>
   ),
   filterIcon: (filtered) => (
-    <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} id={`searchIcon${dataIndex}`} />
+    <SearchOutlined
+      style={{ color: filtered ? '#1890ff' : undefined }}
+      id={`searchIcon${dataIndex}`}
+    />
   ),
   onFilter: (value, record) =>
     record[dataIndex]
-      ? record[dataIndex]
-          .toString()
-          .toLowerCase()
-          .includes(value.toLowerCase())
+      ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
       : '',
   render: (text) =>
     columnsData.searchedColumn === dataIndex ? (
@@ -51,4 +53,4 @@ export const getColumnSearchProps = (dataIndex, columnsData) => ({
     ) : (
       text
     ),
-});
+})

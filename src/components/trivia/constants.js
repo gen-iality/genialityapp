@@ -28,7 +28,7 @@ export const selectOptions = [
     value: 'text',
     text: 'Texto',
   },
-];
+]
 
 // Lista de los tiempos predeterminados para el select de la encuesta
 export const surveyTimeOptions = [
@@ -52,11 +52,13 @@ export const surveyTimeOptions = [
     value: 600,
     text: '10 minutos',
   },
-];
+]
 
 // Funcion que filtra los tipos de pregunta para la encuesta
 const filterBy = (data, field, exclude) =>
-  exclude ? data.filter(({ value }) => !field.includes(value)) : data.filter(({ value }) => field.includes(value));
+  exclude
+    ? data.filter(({ value }) => !field.includes(value))
+    : data.filter(({ value }) => field.includes(value))
 
 // Lista de los campos para la creacion de una pregunta
 export const fieldsFormQuestion = [
@@ -68,10 +70,17 @@ export const fieldsFormQuestion = [
 
   {
     label: 'Tipo de Pregunta',
-    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'matrix', 'text', 'ranking', 'rating']),
+    selectOptions: filterBy(selectOptions, [
+      'checkbox',
+      'radiogroup',
+      'matrix',
+      'text',
+      'ranking',
+      'rating',
+    ]),
     name: 'type',
   },
-];
+]
 
 export const fieldsFormQuestionWithPoints = [
   {
@@ -82,7 +91,14 @@ export const fieldsFormQuestionWithPoints = [
 
   {
     label: 'Tipo de Pregunta',
-    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'matrix', 'text', 'ranking', 'rating']),
+    selectOptions: filterBy(selectOptions, [
+      'checkbox',
+      'radiogroup',
+      'matrix',
+      'text',
+      'ranking',
+      'rating',
+    ]),
     name: 'type',
   },
   {
@@ -90,24 +106,24 @@ export const fieldsFormQuestionWithPoints = [
     type: 'number',
     name: 'points',
   },
-];
+]
 
 // Funcion que retorna los valores iniciales para los campos de la creacion de la pregunta
 export const initValues = () => {
-  const valuesFields = {};
+  const valuesFields = {}
   fieldsFormQuestion.forEach(({ name }) => {
-    valuesFields[name] = '';
-  });
-  return valuesFields;
-};
+    valuesFields[name] = ''
+  })
+  return valuesFields
+}
 
 export const searchWithMultipleIndex = (arr, arrIndex) => {
-  const response = [];
+  const response = []
   for (let index = 0; index < arrIndex.length; index++) {
-    response.push(arr[arrIndex[index]]);
+    response.push(arr[arrIndex[index]])
   }
-  return response;
-};
+  return response
+}
 
 export const operationType = [
   {
@@ -118,4 +134,4 @@ export const operationType = [
     value: 'participationPercentage',
     text: 'Mostrar porcentaje de participación',
   },
-];
+]

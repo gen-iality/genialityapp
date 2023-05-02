@@ -1,20 +1,30 @@
-import { Component } from 'react';
-import { Card, Form, Input, Col, Row, Button, Spin } from 'antd';
-import { injectIntl } from 'react-intl';
+import { Component } from 'react'
+import { Card, Form, Input, Col, Row, Button, Spin } from 'antd'
+import { injectIntl } from 'react-intl'
 
 class UserLoginWithEmailPass extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       formTexts: this.props.FormTags('login'),
-    };
+    }
   }
 
   render() {
-    const { handleLoginEmailPassword, onFinishFailed, errorLogin, loading, handleOpenRecoveryPass, intl } = this.props;
+    const {
+      handleLoginEmailPassword,
+      onFinishFailed,
+      errorLogin,
+      loading,
+      handleOpenRecoveryPass,
+      intl,
+    } = this.props
     return (
       <Card title={intl.formatMessage({ id: 'login.title' })}>
-        <Form onFinish={handleLoginEmailPassword} onFinishFailed={onFinishFailed} layout="vertical">
+        <Form
+          onFinish={handleLoginEmailPassword}
+          onFinishFailed={onFinishFailed}
+          layout="vertical">
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
               <Form.Item
@@ -49,7 +59,9 @@ class UserLoginWithEmailPass extends Component {
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <span style={{ color: 'red' }}>
-                  {intl.formatMessage({ id: 'form.validate.message.email.password.error' })}
+                  {intl.formatMessage({
+                    id: 'form.validate.message.email.password.error',
+                  })}
                 </span>
               </Col>
             </Row>
@@ -76,8 +88,8 @@ class UserLoginWithEmailPass extends Component {
           </Row>
         </Form>
       </Card>
-    );
+    )
   }
 }
 
-export default injectIntl(UserLoginWithEmailPass);
+export default injectIntl(UserLoginWithEmailPass)

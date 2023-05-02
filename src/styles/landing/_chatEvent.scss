@@ -49,7 +49,9 @@
 }
 
 .Chat-Event {
-  .ant-tabs, .ant-tabs-content-holder, .ant-tabs-content {
+  .ant-tabs,
+  .ant-tabs-content-holder,
+  .ant-tabs-content {
     width: 100%;
     height: 100%;
   }
@@ -146,7 +148,10 @@
   // }
 }
 .ant-menu-inline-collapsed > .ant-menu-item,
-.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item,
+.ant-menu-inline-collapsed
+  > .ant-menu-item-group
+  > .ant-menu-item-group-list
+  > .ant-menu-item,
 .ant-menu-inline-collapsed
   > .ant-menu-item-group
   > .ant-menu-item-group-list
