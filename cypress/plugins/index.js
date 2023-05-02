@@ -19,8 +19,8 @@
 module.exports = (on, config) => {
   on('before:browser:launch', (browser = {}, args) => {
     if (browser.name === 'chrome') {
-      args.push('--disable-blink-features=RootLayerScrolling');
-      return args;
+      args.push('--disable-blink-features=RootLayerScrolling')
+      return args
     }
-  });
-};
+  })
+}
