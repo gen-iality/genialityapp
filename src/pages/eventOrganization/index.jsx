@@ -29,7 +29,7 @@ import Styles from '@components/App/styles';
 import OrgMembers from './members';
 import OrganizationPositionsPage from './OrganizationPositionsPage';
 import CurrentOrganizationPositionPage from './CurrentOrganizationPositionPage';
-import MembersCertificationPage from './CurrentOrganizationPositionCertificationUserPage';
+import MembersCertificationPage from './MembersCertificationPage';
 import MemberCertificationLogsPage from './MemberCertificationLogsPage';
 import OrgRegisteredUsers from './OrgRegisteredUsers';
 import OrganizationPropertiesIsolatedPage from './OrganizationPropertiesIsolatedPage';
