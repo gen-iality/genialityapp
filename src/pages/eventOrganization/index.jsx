@@ -28,7 +28,7 @@ import OrgEvents from './events';
 import Styles from '@components/App/styles';
 import OrgMembers from './members';
 import OrganizationPositionsPage from './OrganizationPositionsPage';
-import CurrentOrganizationPositionPage from './CurrentOrganizationPositionPage';
+import OrganizationPositionPage from './CurrentOrganizationPositionPage';
 import MembersCertificationPage from './MembersCertificationPage';
 import MemberCertificationLogsPage from './MemberCertificationLogsPage';
 import OrgRegisteredUsers from './OrgRegisteredUsers';
@@ -187,7 +187,7 @@ function Organization(props) {
                   <Protected
                     exact
                     path={`${props.match.url}/positions/:positionId`}
-                    component={CurrentOrganizationPositionPage}
+                    component={OrganizationPositionPage}
                     org={organization}
                     componentKey="current-positions"
                   />

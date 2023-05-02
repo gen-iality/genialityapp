@@ -12,7 +12,7 @@ import { PositionsApi, EventsApi, OrganizationApi } from '@helpers/request';
 
 /** Components */
 import Header from '@antdComponents/Header';
-export interface CurrentOrganizationPositionPageProps {
+export interface OrganizationPositionPageProps {
   org: any;
   match: {
     params: {
@@ -34,7 +34,7 @@ const CertificationTag: FunctionComponent<{ value: number; total: number }> = (p
   return <Tag color={color}>{props.children}</Tag>;
 };
 
-function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageProps) {
+function OrganizationPositionPage(props: OrganizationPositionPageProps) {
   const organizationId: string = props.org._id;
   const positionId = props.match.params.positionId;
 
@@ -215,4 +215,4 @@ function CurrentOrganizationPositionPage(props: CurrentOrganizationPositionPageP
   );
 }
 
-export default CurrentOrganizationPositionPage;
+export default OrganizationPositionPage;
