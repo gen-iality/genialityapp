@@ -185,7 +185,6 @@ const EventOrganization = (props) => {
                         borderRadius: '20px',
                         objectFit: 'cover',
                         border: '4px solid #FFFFFF',
-                        //boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
                         backgroundColor: '#FFFFFF',
                       }}
                       preview={{ maskClassName: 'roundedMask' }}

@@ -286,7 +286,6 @@ const NewCE = (props) => {
                 id="description_complete"
                 name="description_complete"
                 data={(notice && notice.description_complete) || ''}
-                //modules={toolbarEditor}
                 handleChange={(e) => changeDescription(e, 'description_complete')}
               />
             </Form.Item>

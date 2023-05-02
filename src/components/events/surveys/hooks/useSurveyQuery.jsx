@@ -38,7 +38,6 @@ function useSurveyQuery(eventId, idSurvey, isResetingSurvey) {
         idSurvey,
         currentUser.value._id,
       )
-      //loadedSurvey.currentPage = 0;
       loadedSurvey.currentPage = await getUserCurrentSurveyPage(
         idSurvey,
         currentUser.value._id,

@@ -125,8 +125,6 @@ const WowzaStreamingPanel = ({
     onSuccess: (data) => {
       queryClient.setQueryData('livestream', data)
       activityDispatch({ type: 'meeting_created', meeting_id: data.id })
-      // Invalidate and refetch
-      //queryClient.invalidateQueries('todos')
     },
   })
 

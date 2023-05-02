@@ -82,7 +82,6 @@ const Informacion = (props) => {
     }
   }
   const createNewOrganization = async (value) => {
-    //alert(value);
     setLoadingAdd(true)
     const addOrganization = await createOrganization(value.name)
     if (addOrganization) {

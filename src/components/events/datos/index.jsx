@@ -387,26 +387,9 @@ class Datos extends Component {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        //self.onHandlerRemove(loading, item);
         onHandlerRemove()
       },
     })
-    /* try {
-      const organizationId = this?.organization?._id;
-      if (organizationId) {
-        await this.props.deleteField(this.state.deleteModal, this.state.isEditTemplate, this.updateTable);
-        this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
-      } else {
-        await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventId);
-        this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
-      }
-      await this.fetchFields();
-      setTimeout(() => {
-        this.setState({ message: {}, deleteModal: false });
-      }, 800);
-    } catch (e) {
-      this.showError(e);
-    } */
   }
 
   closeDelete = () => {

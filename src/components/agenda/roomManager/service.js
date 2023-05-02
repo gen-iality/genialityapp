@@ -1,7 +1,6 @@
 class Service {
   constructor(instance) {
     this.firestore = instance
-    //this.validateHasVideoconference=this.validateHasVideoconference.bind(this);
   }
 
   validateHasVideoconference = (event_id, activity_id) => {

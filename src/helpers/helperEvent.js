@@ -46,8 +46,6 @@ export function listenSurveysData(
       const publishedSurveys = eventSurveys
 
       dispatch({ type: 'data_loaded', payload: { publishedSurveys, changeInSurvey } })
-      //if (activity)
-      //publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser);
     })
 }
 
@@ -152,8 +150,6 @@ export const zoomExternoHandleOpen = (
 
   try {
     if (eventUser) {
-      // TicketsApi.checkInAttendee(event._id, eventUser._id);
-      //Activity.checkInAttendeeActivity(this.props.cEvent._id, props.currentActivity._id, eventUser.account_id);
     }
   } catch (e) {
     console.error('fallo el checkin:', e)

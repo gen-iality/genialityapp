@@ -13,7 +13,6 @@ const AttendeeNotAllowedCheck = (props) => {
     <>
       {!currentUser && !event.allow_register && (
         <Alert
-          //onClick={() => (window.location.href = "https://eviusauth.netlify.com")}
           message="Curso restringido. requiere usuario"
           description={
             <p>

@@ -41,7 +41,6 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
   const toggleActivitySteps = async (id: string, payload?: TypeActivityState) => {
     switch (id) {
       case 'initial':
-        //await deleteTypeActivity();
         typeActivityDispatch({ type: 'initial', payload: { activityState: payload! } })
         break
       case 'type':
@@ -137,20 +136,16 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
       })
       setDataLive(data)
       activityDispatch({ type: 'meeting_created', meeting_id: data.id })
-      // Invalidate and refetch
-      //queryClient.invalidateQueries('todos')
     },
   })
 
   const executer_stopStream = async () => {
-    //await removeAllRequest(refActivity);
     setLoadingStop(true)
     const liveStreamresponse = await stopLiveStream(meeting_id)
     setDataLive(liveStreamresponse)
     setLoadingStop(false)
     setHabilitarIngreso('ended_meeting_room')
     await saveConfig({ habilitar_ingreso: 'ended_meeting_room' })
-    //queryClient.setQueryData('livestream', null);
   }
 
   const saveTypeActivity = async () => {
@@ -199,7 +194,6 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         }
 
         setLoadingCreate(false)
-        //setMeetingId(typeActivityState?.data);
         ////Type:url
         break
       case 'vimeo':

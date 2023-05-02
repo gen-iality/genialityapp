@@ -362,9 +362,7 @@ function Speaker(props) {
               <Form.Item label="phone" name="phone">
                 <Input
                   addonBefore={prefixSelector}
-                  //onChange={(e) => setnumberareacode(e.target.value)}
                   value={data?.phone || ''}
-                  //required={mandatory}
                   type="number"
                   key="tel"
                   style={{ width: '100%' }}

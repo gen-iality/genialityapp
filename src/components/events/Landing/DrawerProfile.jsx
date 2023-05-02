@@ -206,8 +206,6 @@ const DrawerProfile = (props) => {
             )}
 
             {
-              //userSelected._id == cUser.value._id ? (
-
               <List
                 bordered
                 style={{ borderRadius: '8px' }}

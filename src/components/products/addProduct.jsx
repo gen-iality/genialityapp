@@ -83,7 +83,6 @@ function AddProduct(props) {
     if (description.length < 10000) {
       setDescription(e)
     } else {
-      //alert('NO PUEDE ESCRIBIR MAS');
     }
   }
 

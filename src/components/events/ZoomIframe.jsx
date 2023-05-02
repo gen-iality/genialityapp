@@ -68,15 +68,7 @@ const IframeZoomComponent = ({
       case 'streaming':
         break
     }
-    /*
-        let live_stream = await getLiveStreamConfig(meeting_id)
-        //url = res.data.live_stream.player_embed_code;
-        url = live_stream.player_hls_playback_url;
-      //url =  `https://stagingeviusmeet.netlify.app/?username=${name}&email=${email}`;
-      setWowsaplayer(live_stream.player_id)
-    }
 
-    setPlatformurl(url);*/
     setPlatformurl(url)
   }
 

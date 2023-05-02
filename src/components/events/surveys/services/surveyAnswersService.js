@@ -118,7 +118,6 @@ const surveyAnswers = {
             break
 
           case 'registeredPercentage':
-            //result = result;
             break
         }
         updateData({ answer_count: result, options, optionsIndex })

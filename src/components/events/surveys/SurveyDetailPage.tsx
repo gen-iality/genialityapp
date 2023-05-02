@@ -57,7 +57,6 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
   useEffect(() => {
     if (!cEvent.value?._id) return
     if (!currentUser?.value?._id) return
-
     ;(async () => {
       const surveys = await SurveysApi.byEvent(cEvent.value._id)
 
@@ -158,12 +157,7 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
       ) : cSurvey.shouldDisplaySurveyClosedMenssage() ? (
         <Result title="Esta evaluación ha sido cerrada" />
       ) : (
-        //cSurvey.shouldDisplayGraphics() ? (
-        //   <>
-        //     <Divider />
-        //     <Graphics idSurvey={surveyId} eventId={cEvent.value?._id} operation="participationPercentage" />
-        //   </>
-        /* ) :*/ <Card className="surveyCard">
+        <Card className="surveyCard">
           <SurveyComponent eventId={cEvent.value?._id} queryData={query.data} />
           <em>{cSurvey.surveyStatsString}</em>
         </Card>

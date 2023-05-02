@@ -490,7 +490,6 @@ class General extends Component {
 
     const { event, path, image } = this.state
     const self = this
-    //this.setState({loading:true});
     const hour_start = dayjs(event.hour_start).format('HH:mm')
     const date_start = dayjs(event.date_start).format('YYYY-MM-DD')
     const hour_end = dayjs(event.hour_end).format('HH:mm')

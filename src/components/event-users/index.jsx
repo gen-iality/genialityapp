@@ -785,7 +785,6 @@ class ListEventUser extends Component {
           })
         },
         () => {
-          //this.setState({ timeout: true, errorData: { message: error, status: 708 } });
         },
       )
     } catch (error) {
@@ -862,13 +861,7 @@ class ListEventUser extends Component {
     const { qrData } = this.state
     const { event } = this.props
     qrData.another = true
-    /*  try {
-      let resp = await TicketsApi.checkInAttendee(event._id, id);
-      //message.success('Usuario Chequeado');
-    } catch (e) {
-      message.error(<FormattedMessage id="toast.error" defaultMessage='Sry :(' />);
-    } */
-    //return;
+   
     const eventIdSearch = this.props.match.params.id
       ? this.props.match.params.id
       : this.props.event._id

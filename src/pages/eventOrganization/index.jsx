@@ -80,9 +80,7 @@ function Organization(props) {
               defaultSelectedKeys={['1']}
               defaultOpenKeys={['1']}
               mode="inline"
-              theme="dark"
-              //inlineCollapsed={collapseMenu}
-            >
+              theme="dark">
               <Menu.Item key="1" icon={<BarsOutlined />}>
                 Información
                 <NavLink to={`${props.match.url}/information`} />

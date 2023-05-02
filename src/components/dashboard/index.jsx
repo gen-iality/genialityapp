@@ -254,11 +254,6 @@ class DashboardEvent extends Component {
           )
         })
       })
-
-      // Mostrar graficas iniciales
-      //this.graficRegistros();
-      //this.graficAttendees();
-      //this.graficPrintouts();
     }
   }
   //Función que permite obtener las métricas generales del curso

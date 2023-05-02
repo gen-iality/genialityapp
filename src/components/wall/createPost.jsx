@@ -138,7 +138,6 @@ class CreatePost extends Component {
             keyList: Date.now(),
           }),
         )
-        //this.setState({ showInfo: false, visible: false, keyList: Date.now(),value:'' });
         // Reset formulario
         this.formRef.current.resetFields()
         DispatchMessageService({
@@ -153,8 +152,6 @@ class CreatePost extends Component {
           action: 'show',
         })
       }
-
-      //this.props.addPosts(newPost);
     } else {
       this.setState({ errNote: true })
     }
@@ -164,18 +161,9 @@ class CreatePost extends Component {
   previewImage(event) {
     console.log(event)
     const permitFile = ['png', 'jpg', 'jpeg', 'gif']
-    //event.preventDefault();
     const file = event.fileList[0]
     const extension = file.name.split('.').pop()
-    /* if (permitFile.indexOf(extension) > -1) {
-      let reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        this.setState({ image: reader.result, inputKey: Date.now(), errimage: false });
-      };
-    } else {
-      this.setState({ errimage: true });
-    } */
+
     if (file) {
       const reader = new FileReader()
       reader.readAsDataURL(file.originFileObj)

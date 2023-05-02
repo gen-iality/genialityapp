@@ -413,8 +413,6 @@ class ListEventUser extends Component {
                                       <Button
                                         type="primary"
                                         onClick={() => {
-                                          //alert("ACAAA")
-
                                           this.setState({
                                             eventUserIdToMakeAppointment: users._id,
                                             eventUserToMakeAppointment: users,

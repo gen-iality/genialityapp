@@ -24,8 +24,6 @@ export const columns = (
 
   const dynamicColumns = extraFields
     .map((extraField) => {
-      //if (extraField.name === 'role') return null;
-
       const dataIndex = () => {
         switch (extraField.name) {
           case 'position_id':

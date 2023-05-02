@@ -269,7 +269,6 @@ class UserModal extends Component {
       }
 
       if (this.props.byActivity && this.props.edit) {
-        //respActivity = await Activity.Update(this.props.cEvent?.value?._id, this.props.value.idActivity, datos);
         resp = await AttendeeApi.update(
           this.props.cEvent?.value?._id,
           snap,

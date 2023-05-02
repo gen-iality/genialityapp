@@ -203,8 +203,6 @@ class Graphics extends Component {
       graphy.data.datasets[0].data = Object.values(totalPercentResponse || [])
       graphy.options.title.text = formatterTitle
 
-      //Chart.pluginService.register(customPlugin);
-
       /* Fin del codigo de referencia para registrar la configuracion
         de lo métodos de la API  de ChartJS
       */

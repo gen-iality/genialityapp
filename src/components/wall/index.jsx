@@ -33,7 +33,6 @@ class Wall extends Component {
   // };
 
   deletePost = async (postId) => {
-    //window.confirm("Seguro deseas borrar esta publicación");
     //se borra en el API
     await saveFirebase.deletePost(postId, this.props.cEvent.value._id)
 
@@ -41,7 +40,6 @@ class Wall extends Component {
     const updatedPost = this.state.dataPost.filter(function (value) {
       return value.id !== postId
     })
-    //this.setState({ dataPost: updatedPost });
     return true
   }
 
@@ -70,7 +68,6 @@ class Wall extends Component {
     updatedPost = this.state.dataPost.map(function (value) {
       return value.id !== postId ? value : updatedPost
     })
-    //this.setState({ dataPost: updatedPost });
     return true
   }
 

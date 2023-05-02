@@ -116,7 +116,6 @@ function ModalMembers(props) {
     let resp
 
     if (props.editMember) {
-      //values.rol_id = values.role;
       resp = await OrganizationApi.editUser(organizationId, userId, values)
       if (values.position_id) {
         await PositionsApi.Organizations.addUser(

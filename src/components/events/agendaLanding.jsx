@@ -194,7 +194,6 @@ class Agenda extends Component {
             meeting_id,
             platform,
           }
-          //this.props.setTabs(tabs);
           arr[index] = updatedActivityInfo
           const filtered = this.filterByDay(this.state.days[0], arr)
           this.setState({ list: arr, filtered, toShow: filtered })
@@ -225,7 +224,6 @@ class Agenda extends Component {
           meeting_id,
           platform,
         }
-        //this.props.setTabs(tabs);
         return updatedActivityInfo
       }),
     )
@@ -234,7 +232,6 @@ class Agenda extends Component {
   }
 
   exchangeCode = async () => {
-    //this.state.discountCode
     const code = this.state.discountCode
     const codeTemplateId = '5fc93d5eccba7b16a74bd538'
 

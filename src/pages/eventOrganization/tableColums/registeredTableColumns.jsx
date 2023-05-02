@@ -84,7 +84,6 @@ export const columns = (columnsData, extraFields = [], addNewCertificationModal)
     title: 'Fecha de emisión',
     dataIndex: 'approved_from_date',
     align: 'center',
-    //width: 150,
     ellipsis: true,
     sorter: (a, b) => {
       if (a.approved_from_date === null) return -1
@@ -106,7 +105,6 @@ export const columns = (columnsData, extraFields = [], addNewCertificationModal)
     title: 'Fecha de vencimiento',
     dataIndex: 'approved_until_date',
     align: 'center',
-    //width: 150,
     ellipsis: true,
     sorter: (a, b) => {
       if (a.approved_until_date === null) return -1
@@ -200,7 +198,6 @@ export const columns = (columnsData, extraFields = [], addNewCertificationModal)
       title: field.label,
       dataIndex: field.name,
       ellipsis: true,
-      //filterSearch: true,
       // This sorter is generic and it can crash when you are in a selling
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       render: (record, item) => {

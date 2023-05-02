@@ -384,7 +384,6 @@ class DatosModal extends Component {
           </Form.Item>
           <Form.Item
             initialValue={this.props.info?.label}
-            //value={info?.label + 'h' || 'value'}
             label="Nombre campo"
             name="label"
             rules={[{ required: true }]}>

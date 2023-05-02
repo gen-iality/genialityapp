@@ -127,23 +127,7 @@ export const getCurrentUser = async () => {
               msj: 'Tu token a caducado, redirigiendo al login!',
               action: 'show',
             })
-            /* message.error('🔑 Tu token a caducado, redirigiendo al login!', {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            }); */
-            // YA NO DE REDIRIGIR EL TOKEN CADUCADO
-            /* alert('RELOAD ACA');
-            setTimeout(() => {
-              window.location.reload();
-            }, 2000);*/
-            //this.setState({ timeout: true, loader: false })
           } else {
-            //this.setState({ serverError: true, loader: false, errorData: data })
             DispatchMessageService({
               type: 'error',
               msj: 'Ocurrió un error distinto al token!',
@@ -170,7 +154,6 @@ export const getCurrentUser = async () => {
             })
           }
           errorData.status = 708
-          //this.setState({ serverError: true, loader: false, errorData });
         }
         console.error(error.config)
       }
@@ -1437,7 +1420,6 @@ export const Activity = {
 
   checkInAttendeeActivity: async (event_id, activity_id, user_id) => {
     const token = await GetTokenUserFirebase()
-    //let data = { checkedin_at: new Date().toISOString() };
     const data = {
       user_id,
       activity_id,

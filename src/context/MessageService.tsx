@@ -22,10 +22,6 @@ interface PropsOptions {
   key?: string
 }
 
-// Tipos de mensajes
-//success, error, warning, info, loading
-//api doc=> https://ant.design/components/message/
-
 export const DispatchMessageService = ({
   type,
   msj,

@@ -284,7 +284,6 @@ function OrgRegisteredUsers(props) {
       setIsSubmiting(false)
       setIsLoading(true)
       closeModal()
-      //loadData().finally(() => setIsLoading(false));
     })
   }
 

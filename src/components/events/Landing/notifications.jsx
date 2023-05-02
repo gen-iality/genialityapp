@@ -33,12 +33,7 @@ function notifications(setNotification, viewNotification) {
             }
           }
         : viewNotification.type == 'survey'
-        ? () => {
-            //
-            //this.props.gotoActivity(this.props.viewNotification.activity);
-            //this.props.setCurrentSurvey(this.props.viewNotification.survey)
-            // alert("CLICK SURVEY")
-          }
+        ? () => {}
         : null,
     onClose: () => {},
   })

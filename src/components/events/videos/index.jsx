@@ -51,7 +51,6 @@ const Videos = () => {
                       />
                     </Col>
                   )
-                  //return <VideoCard key={index} activity={activity} />;
                 }
               })}
         </Row>

@@ -110,8 +110,6 @@ class SurveyForm extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    //this.listenSurveysData(prevProps);
-
     //Método que permite al componente conectar con un componente superior y subir el estado  de la encuesta actual seleccionada
     /* if (prevState.selectedSurvey !== this.state.selectedSurvey) {
       this.props.mountCurrentSurvey(this.state.selectedSurvey);
@@ -238,30 +236,12 @@ class SurveyForm extends Component {
     const { currentUser } = this.props
 
     if (this.props.currentSurvey !== null)
-      return (
-        this.props.surveyVisible !== false && (
-          <SurveyDetailPage
-          //selectedSurvey={selectedSurvey} // -> modificado en rootpage por currentsurvey
-          //userHasVoted={selectedSurvey.userHasVoted} // -> modificado en rootpage por currentsurvey
-          //idSurvey={selectedSurvey._id}
-          //toggleSurvey={this.toggleSurvey}
-          //eventId={event._id}
-          //currentUser={currentUser}
-          //eventUser={eventUser}
-          //openSurvey={selectedSurvey.isOpened}
-          //surveyLabel={surveyLabel}
-          //Metodo que permite reasignar el estado (currentSurvey) del componente superior al desmontar el componente SurveyComponent
-          />
-        )
-      )
-
-    //if (!publishedSurveys) return <Loading />;
+      return this.props.surveyVisible !== false && <SurveyDetailPage />
 
     return (
       <div>
         <Card>
           <SurveyList
-            //jsonData={publishedSurveys}
             currentUser={currentUser}
             eventUser={eventUser}
             showSurvey={this.toggleSurvey}

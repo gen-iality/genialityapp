@@ -11,7 +11,6 @@ const textLeft = {
 class UserLogin extends Component {
   constructor(props) {
     super(props)
-    //this.reCaptchaRef = createRef();
     this.state = {
       user: {},
       emailError: false,
@@ -39,7 +38,6 @@ class UserLogin extends Component {
     if (prevState.loading !== loading) {
       if (!loading) {
         // Inicializa el captcha para la autenticacion por SMS
-        //this.initializeCaptcha();
       }
     }
   }
