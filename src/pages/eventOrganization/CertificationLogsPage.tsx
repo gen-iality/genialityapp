@@ -29,7 +29,7 @@ import { EventsApi, PositionsApi, UsersApi, CerticationsApi, CerticationLogsApi 
 /** Components */
 import Header from '@antdComponents/Header';
 
-export interface CertificationLogsPageProps {
+export interface UserCertificationLogsPageProps {
   org: any;
   match: {
     params: {
@@ -41,8 +41,8 @@ export interface CertificationLogsPageProps {
   };
 }
 
-function CertificationLogsPage(
-  props: CertificationLogsPageProps,
+function UserCertificationLogsPage(
+  props: UserCertificationLogsPageProps,
 ) {
   const [columns, setColumns] = useState<ColumnsType<any>>([]);
   const [allPositionEvents, setAllPositionEvents] = useState<any[]>([]);
@@ -323,4 +323,4 @@ function CertificationLogsPage(
   );
 }
 
-export default CertificationLogsPage;
+export default UserCertificationLogsPage;

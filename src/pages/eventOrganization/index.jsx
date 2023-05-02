@@ -30,7 +30,7 @@ import OrgMembers from './members';
 import OrganizationPositionsPage from './OrganizationPositionsPage';
 import CurrentOrganizationPositionPage from './CurrentOrganizationPositionPage';
 import CurrentOrganizationPositionCertificationUserPage from './CurrentOrganizationPositionCertificationUserPage';
-import CertificationLogsPage from './CertificationLogsPage';
+import UserCertificationLogsPage from './CertificationLogsPage';
 import OrgRegisteredUsers from './OrgRegisteredUsers';
 import OrganizationPropertiesIsolatedPage from './OrganizationPropertiesIsolatedPage';
 import MemberSettings from './memberSettings';
@@ -201,7 +201,7 @@ function Organization(props) {
                   <Protected
                     exact
                     path={`${props.match.url}/positions/:positionId/user/:userId/logs/:certificationId`}
-                    component={CertificationLogsPage}
+                    component={UserCertificationLogsPage}
                     org={organization}
                     componentKey="current-positions-certification-logs-user"
                   />
