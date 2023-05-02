@@ -100,12 +100,8 @@ class ZoomComponent extends Component {
       await this.props.dispatch(fetchRol())
       const eventId = this.props.match.params.event
       await this.props.dispatch(fetchPermissions(eventId))
-      // const event = await EventsApi.getOne(eventId);
-      // const eventWithExtraFields = this.addNewFieldsToEvent(event);
-      // this.setState({ event: eventWithExtraFields, loading: false });
     } catch (e) {
       console.error(e.response)
-      // this.setState({ timeout: true, loading: false });
     }
 
     this.setUpUserForConference()

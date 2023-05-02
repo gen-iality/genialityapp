@@ -108,7 +108,6 @@ function OrgMembers(props) {
 
       for (let indexEvent = 0; indexEvent < orgEventsList.length; indexEvent++) {
         const eventId = orgEventsList[indexEvent]._id
-        //const { data: dataEventUser } = await EventsApi.getEventUser(eventId, userId);
 
         const thing = await EventsApi.getStatusRegister(eventId, email)
         if (thing.data.length === 0) continue

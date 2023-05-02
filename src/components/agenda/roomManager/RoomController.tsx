@@ -25,7 +25,6 @@ const Table = lazy(() => import('../../../antdComponents/Table'))
  * TODO: check that switch component can change the current game status
  */
 export default function RoomController() {
-  // const [loadedGameList, setLoadedGameList] = useState([]);
   const [isAvailableChanges, setIsAvailableChanges] = useState(false)
   const [columnsData, setColumnsData] = useState({})
   const [isLoading, setIsLoading] = useState(true)

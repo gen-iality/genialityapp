@@ -82,14 +82,7 @@ function QuizzesProgress(props: QuizzesProgressProps) {
     ;(async () => {
       const surveys: SurveyData[] = await SurveysApi.byEvent(props.eventId)
       setTotalCourses(surveys.length)
-      // const surveys = [
-      //   {
-      //     survey: 'survey 2',
-      //     _id: 'survey-2',
-      //     minimumScore: 7,
-      //     questions: { length: 10 },
-      //   },
-      // ];
+
       console.debug('surveys', surveys)
 
       const caughtRows: RowData[] = []

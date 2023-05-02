@@ -4,20 +4,12 @@ import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 export function fetchPermissions(event) {
   return async (dispatch) => {
     const token = await GetTokenUserFirebase()
-    //const permissions = [rolPermissions.admin_badge]; //ESCARAPELA
-    //const permissions = [rolPermissions.admin_staff]; //STAFF
-    //const permissions = [rolPermissions.history_invitations]; //HISTORIAL INVITACIONS
-    //const permissions = [rolPermissions.admin_invitations]; //ADMINISTRAR INVITACIÓN
-    //const permissions = [rolPermissions.admin_ticket]; //TIQUETES
-    //const permissions = [rolPermissions.add_attendees]; //AGREGAR ASISTENTE
-    //dispatch(fetchPermissionsSuccess(permissions));
+
     dispatch(fetchPermissionsBegin())
     Actions.get(`api/contributors/events/${event}/me?token=${token}`)
       .then((data) => {
         let roles = data.role ? data.role.permission_ids : ['5c19242ff33bd46c102ec975']
         roles = ['5c19242ff33bd46c102ec975']
-        //space:data.space
-        //space:data.space
 
         dispatch(fetchPermissionsSuccess({ ids: roles, space: [] }))
       })

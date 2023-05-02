@@ -5,37 +5,6 @@ import CreateMessage from './send'
 import ImportUsers from '../import-users/importUser'
 import { EventsApi } from '@helpers/request'
 
-// function Tabla(props) {
-//   const [guests, setGuests] = useState([]);
-
-//   const columns = [
-//     {
-//       Header: "Email",
-//       accessor: "email" // accessor is the "key" in the data
-//     },
-//     {
-//       Header: "Names",
-//       accessor: "names"
-//     }
-//   ];
-
-//   useEffect(() => {
-//
-
-//     async function fetchData(props) {
-//       const guestsResult = await UsersApi.getAll(
-//         props.event._id,
-//         "?pageSize=1000"
-//       );
-//       setGuests(guestsResult.data);
-//
-//     }
-//     fetchData(props);
-//   }, []);
-
-//   return <EviusTable columns={columns} data={guests} />;
-// }
-
 function ListaInvitados({ ...props }) {
   const { eventId, event, match, location } = props
 

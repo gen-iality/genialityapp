@@ -219,19 +219,16 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   const [loading, setLoading] = useState(false)
   const [deleted, setDeleted] = useState(false)
 
-  //const userName = pathOr('', ['names','name'], data);
   const userName =
     data.owner_id == eventUser._id
       ? data.name ?? 'Sin nombre'
       : data.name_requesting ?? 'Sin nombre'
-  //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
   const userEmail =
     (data.otherEventUser && data.otherEventUser.properties.email) || data.email
   const userImage =
     (data.otherEventUser && data.otherEventUser.properties.picture) || undefined
 
   /** Entramos a la sala 1 a 1 de la reunión
-   *
    */
   const accessMeetRoom = (data, eventUser) => {
     if (!eventUser) {

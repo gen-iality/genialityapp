@@ -995,12 +995,10 @@ export const CertsApi = {
 
 export const NewsFeed = {
   byEvent: async (eventId) => {
-    //let token = await GetTokenUserFirebase();
     //ESTE ENDPOINT ES PÚBLICO
     return await Actions.getAll(`api/events/${eventId}/newsfeed`).then(({ data }) => data)
   },
   getOne: async (eventId, idnew) => {
-    //let token = await GetTokenUserFirebase();
     //ESTE ENDPOINT ES PÚBLICO
     return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}`)
   },
@@ -1666,12 +1664,6 @@ export const ModulesApi = {
     console.log('byEvent', eventId, 'query', query)
     return await Actions.get(`api/modules/event/${eventId}/modules`, true)
   },
-  // createForThisEvent: async (event_id, moduleName) => {
-  //   const data = {
-  //     module_name: moduleName,
-  //   };
-  //   return await Actions.create('/api/modules', data, true);
-  // },
 }
 
 // Endpoint for certification logs handlering

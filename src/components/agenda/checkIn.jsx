@@ -272,39 +272,20 @@ class CheckAgenda extends Component {
   exportFile = async (e) => {
     e.preventDefault()
     e.stopPropagation()
-    //Se trae el listado total y se ordenan por fecha de creación
-    // let attendessFilter = this.state.attendees;
-    // attendessFilter = attendessFilter.filter((attendes) => attendes.user !== null);
-    // const attendees = [...attendessFilter].sort((a, b) => b.created_at - a.created_at);
-    // const data = await parseData2Excel(attendees, this.state.eventFields, this.state.rolesList);
-    // const ws = await XLSX.utils.json_to_sheet(data);
-    // const wb = await XLSX.utils.book_new();
-    // await XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
-    // await XLSX.writeFile(
-    //   wb,
-    //   `asistentes_actividad_${
-    //     this.props.location.state.name ? this.props.location.state.name : this.props.location.state.item.name
-    //   }.xls`
-    // );
   }
 
-  //FN Modal, abre y cierra
-  //Falta actualizar este modulo
-  /* checkModal = () => {
-    this.setState((prevState) => {
-      return { qrModal: !prevState.qrModal };
-    });
-  }; */
   addUser = () => {
     this.setState((prevState) => {
       return { editUser: !prevState.editUser, edit: false }
     })
   }
+
   closeQRModal = () => {
     this.setState((prevState) => {
       return { qrModal: !prevState.qrModal }
     })
   }
+
   modalUser = () => {
     this.setState((prevState) => {
       return { editUser: !prevState.editUser, edit: undefined }

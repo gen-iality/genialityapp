@@ -16,7 +16,6 @@ export interface ActivityVideoUploadFieldProps {
 }
 
 function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
-  // const { selectOption, typeOptions } = useTypeActivity();
   const { setContentSource } = useActivityType()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -24,7 +23,6 @@ function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
     const { status, response } = info.file
     switch (status) {
       case 'done':
-        // selectOption(typeOptions.key, `${response.video.iframe_url}*${response.video.id}`);
         const finalURL = `${response.video.iframe_url}*${response.video.id}`
         setContentSource(finalURL)
         console.debug('file uploaded to', finalURL)

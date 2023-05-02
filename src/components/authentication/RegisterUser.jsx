@@ -22,7 +22,6 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   const intl = useIntl()
   const { handleChangeTypeModal } = useHelper()
   const [isErrorBecauseEmail, setIsErrorBecauseEmail] = useState(false)
-  // const [registrationErrorMessage, setRegistrationErrorMessage] = useState('');
 
   const ruleEmail = [
     {

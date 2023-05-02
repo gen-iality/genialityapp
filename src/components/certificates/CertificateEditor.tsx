@@ -255,7 +255,6 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
   const toDataURL_Legacy = (src: string, outputFormat?: string): Promise<string> => {
     const p = new Promise<string>((resolve, reject) => {
       const img = new Image()
-      // const img = document.createElement('IMG') as HTMLImageElement;
       img.crossOrigin = 'Anonymous'
       img.onload = function () {
         const canvas = document.createElement('CANVAS') as HTMLCanvasElement

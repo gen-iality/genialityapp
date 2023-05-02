@@ -51,9 +51,6 @@ const TipoAsistente = (props) => {
       })
       try {
         if (locationState.edit) {
-          /* const data = {
-            name: tipoAsistente.name
-          } */
           await RolAttApi.editOne(tipoAsistente, locationState.edit, eventID)
         } else {
           await RolAttApi.create(tipoAsistente, eventID)

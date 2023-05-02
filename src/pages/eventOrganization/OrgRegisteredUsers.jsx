@@ -38,7 +38,6 @@ function OrgRegisteredUsers(props) {
   const { _id: organizationId } = props.org
 
   const [usersSuscribedData, setUsersSuscribedData] = useState([])
-  //const [orgEventsList, setOrgEventsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true)
   const [selectedOrgMember, setSelectedOrgMember] = useState({})
   const [isModalOpened, setIsModalOpened] = useState(false)

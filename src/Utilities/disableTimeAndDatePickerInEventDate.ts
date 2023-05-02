@@ -118,7 +118,6 @@ const disableEndHoursRange = (event: eventProps, streamingHours: number) => {
   let limit = 0
   const hourStart = event?.hour_start
 
-  // const endDate = event?.date_end;
   if (!streamingHours) return
   /** We add 60 more minutes to discriminate the current time, this affects the free plans */
   //   if(){}

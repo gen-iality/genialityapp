@@ -23,7 +23,6 @@ const VirtualConference = () => {
   useEffect(() => {
     async function fetchData() {
       const response = await AgendaApi.byEvent(cEvent.value._id)
-      // let withMetting = response.data.filter((activity) => activity.meeting_id != null || '' || undefined);
       setagendageneral(response.data)
 
       setbandera(!bandera)

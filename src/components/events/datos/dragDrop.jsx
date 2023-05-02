@@ -28,14 +28,6 @@ class DragDrop extends Component {
     }
   }
 
-  // async componentDidMount() {
-  //     const { eventId } = this.props
-  //     let user_properties
-  //     user_properties = await EventFieldsApi.getAll(eventId)
-  //     this.setState({ user_properties })
-
-  // }
-
   //Funcion para guardar el orden de los datos
   async submit() {
     await Actions.put(`api/events/${this.props.eventId}`, this.state.properties)

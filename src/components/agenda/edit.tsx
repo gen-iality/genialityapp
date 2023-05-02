@@ -113,20 +113,11 @@ function AgendaEdit(props: AgendaEditProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [showPendingChangesModal, setShowPendingChangesModal] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  // const [avalibleGames, setAvalibleGames] = useState<any[]>([]); // Used in Games
   const [service] = useState(new Service(firestore))
 
   const [loadedAgenda, setLoadedAgenda] = useState<AgendaType | null>(null)
   const [formdata, setFormData] = useState<FormDataType>(initialFormDataState)
   const [savedFormData, setSavedFormData] = useState<FormDataType>({} as FormDataType)
-
-  /**
-   * This states are used as config, I think...
-   */
-  // const [chat, setChat] = useState<boolean>(false);
-  // const [surveys, setSurveys] = useState<boolean>(false);
-  // const [games, setGames] = useState<boolean>(false);
-  // const [attendees, setAttendees] = useState<boolean>(false);
 
   const agendaContext = useContext(AgendaContext)
 

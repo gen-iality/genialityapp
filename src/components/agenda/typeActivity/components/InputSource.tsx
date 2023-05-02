@@ -44,21 +44,6 @@ const rules = {
       max: 10,
       message: 'El ID debe tener entre 8 a 10 dígitos.',
     },
-
-    // () => ({
-    //   validator(_: any, value: string) {
-    //     //Aqui validamos si el ID es valido o si la url es validad si cualquiera de los dos es valido entonces retornamos true si no  retornamos el error
-    //     // let regUrl = new RegExp(
-    //     //   /(?:http:|https:|)\/\/(?:player.|www.)?vimeo\.com\/(?:.|event\/|embed\/|watch\?\S*v=|v\/)?(\d*)/
-    //     // );
-    //     // este regex validad las las urls de vimeo
-    //     let regId = new RegExp(/^[0-9]{1,}$/);
-    //     if (regId.test(value)) {
-    //       return Promise.resolve();
-    //     }
-    //     return Promise.reject(new Error('Por favor ingrese un ID valido de Vimeo.'));
-    //   },
-    // }),
   ],
   url: [
     { required: true, message: 'Por favor ingrese la URL del video.' },

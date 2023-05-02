@@ -2,21 +2,6 @@ import { EventsApi } from '../../helpers/request'
 import dayjs from 'dayjs'
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth'
 
-//METRICAS QUE SE PUEDEN OBTENER
-/*let startDate = '7daysAgo'
-    let endDate = 'today'
-    let metrics = [
-      'ga:users', //The total number of users for the requested time period.
-      'ga:newUsers', //The number of sessions marked as a user's first sessions.
-      'ga:pageviews', //The total number of pageviews for the property.
-      'ga:entrances', //The number of entrances to the property measured as the first pageview in a session, typically used with landingPagePath
-      'ga:entranceRate', //The percentage of pageviews in which this page was the entrance.
-      'ga:avgTimeOnPage', //The average time users spent viewing this page or a set of pages.
-      'ga:pageviewsPerSession', //The average number of pages viewed during a session, including repeated views of a single page.
-      'ga:sessions', //The total number of sessions.
-      'ga:sessionDuration', //Total duration (in seconds) of users' sessions.
-      'ga:avgSessionDuration', //The average duration (in seconds) of users' sessions.    
-    ]*/
 //CONSTANTES COLORES DE GRAFICAS
 const backgroud = 'rgba(80, 211, 201, 0.7)'
 const lineBackground = 'rgba(80, 211, 201, 1)'

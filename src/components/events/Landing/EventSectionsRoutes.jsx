@@ -104,11 +104,6 @@ const EventSectionRoutes = (props) => {
     if (props.cEvent.value && cUser.value) {
       initUserPresence(props.cEvent.value)
     }
-    /** RESTRICIONES */
-    // let { isBlocked, formatDate } = useBlockedEventValidator(props.cEvent, cUser);
-    // if (isBlocked) {
-    //   history.push(`/blockedEvent/${props.cEvent.value._id}`, formatDate);
-    // }
   }, [props.cEvent.value, cUser.value])
 
   useEffect(() => {

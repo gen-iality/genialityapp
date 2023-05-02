@@ -111,8 +111,6 @@ export default ({
 
       if (resp.message === 'OK') {
         setSuccessMessageInRegisterForm(resp.status)
-        // let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
-        // textMessage.content = "Usuario " + statusMessage;
         textMessage.content = 'Usuario ' + formMessage.successMessage
 
         setSuccessMessage(
@@ -375,10 +373,6 @@ export default ({
 
       //esogemos el tipo de validación para email
       rule = type == 'email' ? { ...rule, type: 'email' } : rule
-
-      //rule = (type == "password") ? { ...rule, type: "password" } : rule;
-      // let hideFields =
-      //   mandatory || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
 
       if (type == 'boolean' && mandatory) {
         const textoError = 'Debes llenar este  campo es obligatorio'

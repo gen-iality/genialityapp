@@ -30,13 +30,9 @@ const Header = loadable(() => import('./header'))
 const Home = loadable(() => import('../pages/home'))
 const Landing = loadable(() => import('../components/events/Landing/landing'))
 const Transition = loadable(() => import('../components/shared/Animate_Img/index'))
-/* const Events = loadable(() => import('../components/events')); */
 const NewEventPage = loadable(() =>
   import('../components/events/createEvent/NewEventPage'),
 )
-/* const MyProfile = loadable(() => import('../components/profile/index_old')); */
-/* const Purchase = loadable(() => import('../components/profile/purchase_old')); */
-/* const EventEdit = loadable(() => import('../components/profile/events_old')); */
 const Terms = loadable(() => import('../components/policies/termsService'))
 const Privacy = loadable(() => import('../components/policies/privacyPolicy'))
 const Policies = loadable(() => import('../components/policies/policies'))

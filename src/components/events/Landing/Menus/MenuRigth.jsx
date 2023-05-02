@@ -32,8 +32,6 @@ const MenuRigth = (props) => {
     settypeEvent(recordTypeForThisEvent(cEvent))
   }, [cEvent])
 
-  // const animateIcon = 'animate__animated animate__bounceIn';
-
   return (
     <Menu mode="none" theme="light" style={stylesMenuItems}>
       <>

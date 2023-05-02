@@ -35,7 +35,6 @@ const ModalPermission = (props) => {
       properties: { ...values },
     }
 
-    //const resp = await UsersApi.editEventUser(eventUserBody, cEvent.value?._id, cEventUser.value._id);
     const resp = await UsersApi.createOne(eventUserBody, cEvent.value?._id)
 
     if (resp._id) {

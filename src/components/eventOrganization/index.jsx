@@ -51,10 +51,7 @@ const EventOrganization = (props) => {
 
   useEffect(() => {
     if (cUser.value || !organization || !orgId) return
-    // const { visibility, allow_register } = organization;
     if (!cUser.value && organization) {
-      // helperDispatch({ type: 'showLogin', visible: true });
-
       let positionId
       if (organization.default_position_id) {
         positionId = organization.default_position_id

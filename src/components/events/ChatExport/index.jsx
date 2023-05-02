@@ -326,7 +326,6 @@ const ChatExport = ({ eventId, event }) => {
             try {
               setLoading(true)
               //Código de bloqueo
-              //let path = cEvent.value._id + '_event_attendees/' + item.idparticipant;
               await firestore
                 .doc(path)
                 .update({

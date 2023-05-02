@@ -20,23 +20,6 @@ function GameRanking(props) {
 
   useEffect(() => {
     const gameId = '0biWfCwWbUGhbZmfhkvu'
-    // let unsubscribeCurrentUserScore;
-    // //Consulta del puntaje del currentUser
-    // if (!(Object.keys(currentUser).length === 0)) {
-    //   unsubscribeCurrentUserScore = firestore
-    //     .collection('juegos/' + gameId + '/puntajes/')
-    //     .doc(currentUser._id)
-    //     .onSnapshot(function(response) {
-    //       const myScore = response.data();
-    //       if (myScore) {
-    //         let userScore = {
-    //           ...myScore,
-    //           score: myScore.puntaje,
-    //         };
-    //         setMyScore(userScore);
-    //       }
-    //     });
-    // }
     //Consulta de todos los puntajes
     const unsubscribeAllScores = firestore
       .collection('juegos/' + gameId + '/puntajes/')

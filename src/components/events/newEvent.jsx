@@ -313,7 +313,6 @@ class NewEvent extends Component {
       typeof response.zoom_host_id !== 'undefined' &&
       typeof response.zoom_host_name !== 'undefined'
     ) {
-      // const configuration = await service.getConfiguration(event_id, activity._id);
 
       const isPublished = true
       const platform = 'zoom'

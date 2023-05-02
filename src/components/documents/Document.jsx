@@ -361,20 +361,6 @@ const Document = (props) => {
     }
   }
 
-  /* const createFolder = async () => {
-    let value = document.getElementById('folderName').value;
-
-    const data = {
-      type: 'folder',
-      title: value,
-    };
-    await DocumentsApi.create(this.props.event._id, data);
-    this.getDocuments();
-    this.setState({
-      visible: false,
-    });
-  }; */
-
   const reload = () => {
     history.go(0)
   }

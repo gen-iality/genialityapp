@@ -66,27 +66,9 @@ const OfertaProduct = ({
   }, [eventId, product])
 
   const obtenerValor = () => {
-    return product && product.price /* && product.price.includes('COP')
-      ? product.price
-          .split('COP $ ')[1]
-          .replace(`’`, '')
-          .replace('.', '')
-          .replace(',', '')
-      : product && product.price && product.price.includes('USD')?
-      product.price
-          .split('USD $ ')[1]
-          .replace(`’`, '')
-          .replace('.', '').replace(',', ''):0;*/
+    return product && product.price
   }
 
-  /*const formatPrecioInitial=(value)=>{
-    let valueFormat;
-   if(value){    
-    let valor= value.split(' ');    
-    valueFormat=valor.slice(2)     
-      return valueFormat;        
-   }
-  }*/
   // Valores para subir en la puja
   const valuesPuja = [
     {

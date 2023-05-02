@@ -97,7 +97,6 @@ const ModalLoginHelpers = (props) => {
     } else {
       // Enviar acceso al correo
       try {
-        //const resp = await EventsApi.requestUrlEmail(props.cEvent.value?._id, window.location.origin, { email:values.email });
         let resp
         // Se valida de esta manera para
         if (cEvent.value !== null && cEvent.value !== undefined) {

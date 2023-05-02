@@ -44,8 +44,6 @@ const auth = eviusaauth.auth()
 const ServerValue = app.database.ServerValue
 const FieldValue = app.firestore.FieldValue
 
-//const firestoreDB = getFirestore(app);
-
 const firestoreeviuschat = eviuschat.firestore()
 const realTimeviuschat = eviuschat.database()
 

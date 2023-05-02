@@ -4,16 +4,6 @@ import { SendOutlined } from '@ant-design/icons'
 import { AuthUrl } from '@helpers/constants'
 import WallContext, { WallContextProvider } from '@context/WallContext'
 
-/*let innerOnSubmit = (onSubmit, comment, setComment, user, setVisibleNoUser) => {
-  if (!user) {
-    setVisibleNoUser(true);
-    return;
-  } else {
-    onSubmit(comment);
-   // setComment("")
-  }
-};*/
-
 const { TextArea } = Input
 const CommentEditor = ({ onSubmit, item }) => {
   const [visibleNoUser, setVisibleNoUser] = useState(false)

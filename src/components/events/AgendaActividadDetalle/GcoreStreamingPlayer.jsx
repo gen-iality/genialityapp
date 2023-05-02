@@ -19,7 +19,6 @@ function GcoreStreamingPlayer({ meeting_id, transmition, activity }) {
   const [visibleMeets, setVisibleMeets] = useState(false)
   const [timer_id, setTimerId] = useState(null)
 
-  //   const [livestreamStatus, setLivestreamStatus] = useState(null);
   const urlDefault =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU'
 

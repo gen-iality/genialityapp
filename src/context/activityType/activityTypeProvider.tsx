@@ -69,7 +69,6 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const [activityType, setActivityType] = useState<ActivityType.Name | null>(null)
   const [activityContentType, setActivityContentType] =
     useState<ActivityType.ContentValue | null>(null)
-  // const [contentSource, setContentSource] = useState<string | null>(meetingId || null);
   const contentSource: string | null = meetingId
   const setContentSource: (data: string | null) => void = setMeetingId
 
@@ -245,11 +244,9 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
 
     setIsUpdatingActivityContent(true)
 
-    /* const agenda = */ editActivityType(
-      cEvent.value._id,
-      activityEdit,
-      contentType,
-    ).then(() => console.debug('editActivityType called during saving'))
+    editActivityType(cEvent.value._id, activityEdit, contentType).then(() =>
+      console.debug('editActivityType called during saving'),
+    )
 
     switch (contentType) {
       case activityContentValues.url: {

@@ -101,10 +101,6 @@ class ListEventUser extends Component {
     this.setState({ modalView: showModal })
     // No borrar es un avance  para optimizar las peticiones a la api de la seccion networking
     let eventUserList = []
-    // const response = await UsersApi.getAll(event._id);
-    // if(response.data){
-    //   eventUserList = response.data.filter(user => user.account_id !== )
-    // }
 
     //Servicio que trae la lista de asistentes excluyendo el usuario logeado
     const evius_token = await GetTokenUserFirebase()
@@ -219,12 +215,6 @@ class ListEventUser extends Component {
     nativeInputValueSetter.call(inputSearch, '')
     const ev1 = new Event('input', { bubbles: true })
     inputSearch.dispatchEvent(ev1)
-
-    // let filterSector = document.getElementById('filterSector')
-    // let nativeInputValueSetter2 = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, "value").set;
-    // nativeInputValueSetter2.call(filterSector, '');
-    // let ev2 = new Event('select', { bubbles: true});
-    // filterSector.dispatchEvent(ev2);
   }
 
   haveRequestUser(user) {

@@ -44,9 +44,7 @@ const DESCRIPTION_MAX_LENGTH = 1000
 const TIMES_AND_VENUES_MAX_LENGTH = 100
 const URL_MAX_LENGTH = 500
 const SERVICE_DESCRIPTION_MAX_LENGTH = 1000
-//const SERVICES_LIMIT = 4
 const SOCIAL_NETWORKS_LIMIT = 4
-//const ADVISOR_LIMIT = 3
 const GALLERY_LIMIT = 30
 const CONTACT_INFO_DESCRIPTION_MAX_LENGTH = 1000
 
@@ -137,7 +135,6 @@ export const companyFormKeys = keys(defaultInitialValues)
 function CrearEditarEmpresa(props) {
   const { event, match, history } = props
   const { companyId } = match.params
-  /* const locationState = props.location.state; */
   const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(
     event._id,
   )

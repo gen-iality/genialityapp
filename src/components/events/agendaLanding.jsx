@@ -282,10 +282,8 @@ class Agenda extends Component {
 
     const listFiltered = await this.filterStateMeetingRoom(data)
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
-    //const filtered = this.filterByDay(this.state.days[0], data);
     await this.listeningStateMeetingRoom(data)
 
-    //this.setState({ data, filtered, toShow: filtered, spaces: space });
     this.setState({ data, spaces: space }, () =>
       this.setDaysWithAllActivities(listFiltered),
     )

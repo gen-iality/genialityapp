@@ -370,7 +370,6 @@ export const getUserEventbyEmail = async (email, eventid) => {
     eventid,
     `?filtered=[{"field":"email","value":"${email}"}]`,
   )
-  // let user = dataUser.data.filter((u) => u.email && u.email.trim() == email.trim())[0];
   return dataUser
 }
 

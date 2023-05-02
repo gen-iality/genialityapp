@@ -45,8 +45,6 @@ export default function useBuildInfo(
       has_date,
     } = agenda || defaultAgenda
 
-    // const registration_message_storage = window.sessionStorage.getItem('registration_message');
-    // const description_storage = window.sessionStorage.getItem('description');
     const datetime_start = date + ' ' + dayjs(hour_start).format('HH:mm')
     const datetime_end = date + ' ' + dayjs(hour_end).format('HH:mm')
 

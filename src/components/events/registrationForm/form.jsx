@@ -434,31 +434,8 @@ const FormRegister = ({
     form.setFieldsValue(initialValues)
   }, [initialValues])
 
-  const ValidateEmptyFields = (allValues) => {
-    // if (allValues.picture == '') {
-    //   delete allValues.picture;
-    // }
-    // if (basicDataUser || dataEventUser) {
-    //   let noneEmpyFields = Object.keys(allValues).filter((m) => allValues[m] == '' || allValues[m] == undefined).length;
-    //   console.log('leng', noneEmpyFields, Object.keys(allValues).length);
-    //   if (noneEmpyFields == 0) {
-    //     console.log('activelo');
-    //     hookValidations(false, '');
-    //   } else {
-    //     hookValidations(
-    //       true,
-    //       intl.formatMessage({
-    //         id: 'feedback.title.error',
-    //         defaultMessage: 'Complete los campos solicitados correctamente.',
-    //       })
-    //     );
-    //   }
-    // }
-  }
-
   const valuesChange = (changedValues, allValues) => {
     //validar que todos los campos de event user esten llenos
-    ValidateEmptyFields(allValues)
     const e = {
       target: {
         value: changedValues[Object.keys(changedValues)[0]],

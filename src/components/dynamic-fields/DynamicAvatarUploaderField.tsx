@@ -16,7 +16,6 @@ interface IDynamicAvatarUploaderFieldProps extends IDynamicFieldProps {
   form: FormInstance
 }
 
-// const imageUrl = [{ url: value }]
 const DynamicAvatarUploaderField: React.FunctionComponent<
   IDynamicAvatarUploaderFieldProps
 > = (props) => {

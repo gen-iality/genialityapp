@@ -12,7 +12,6 @@ const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
   //Link para eviusmeet dónde se origina el video
   const eviusmeets = `https://stagingeviusmeet.netlify.app/prepare`
   const cUser = useCurrentUser()
-  //   const eventContext = useContext(CurrentEventContext);
   const { transmition } = useContext(AgendaContext)
   const { names, email, picture } = cUser.value
   const linkAdmin =

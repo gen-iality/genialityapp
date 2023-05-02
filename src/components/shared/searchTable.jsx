@@ -15,36 +15,6 @@ class SearchComponent extends Component {
     }
   }
 
-  // componentDidMount = () => {
-  //   this.setState({
-  //     data: this.props.data,
-  //     kind: this.props.kind })
-  // }
-
-  // componentWillReceiveProps(nextProps) {
-  //   const { filtered } = this.state;
-  //   //Fix
-  //   if (nextProps.data !== this.props.data) {
-  //     this.setState({ auxArr: nextProps.data });
-  //     if (nextProps.clear && this.state.value.length === 0) {
-  //       this.setState({ value: "" });
-  //       if (filtered.length > 0) this.props.searchResult(filtered);
-  //     }
-  //   }
-  //   if (nextProps.clear !== this.props.clear) {
-  //     if (this.state.value.length >= 3) {
-  //       // Validate if state is empty
-  //       if (this.state.value) {
-  //         // Run function filter by all columns
-  //         let filtered = this.filterByAllColums(this.state.value);
-  //         this.setState({ filtered });
-  //         // Call function search result and set filtered variable
-  //         if (filtered.length > 0) this.props.searchResult(filtered);
-  //       }
-  //     } else this.setState({ value: "" });
-  //   }
-  // }
-
   componentDidUpdate = (prevProps) => {
     if (this.props.data !== prevProps.data) {
       //
@@ -101,12 +71,6 @@ class SearchComponent extends Component {
     const value = input.target.value
     this.setState({ value })
 
-    // if(value === '*'){
-    //   let filtered = this.filterByAllColums('');
-    //   if (filtered.length > 0) this.setState({ showMessage: false, message: "", filtered });
-    //   else this.setState({ showMessage: true, message: "not" });
-    //   this.props.searchResult(filtered);
-    // }
     if (value.length >= 3) {
       const filtered = this.filterByAllColums(value)
       if (filtered.length > 0)

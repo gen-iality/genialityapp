@@ -135,9 +135,7 @@ class UserModal extends Component {
 
   deleteUser = async (user) => {
     const activityId = this.props.activityId
-    // const { substractSyncQuantity } = this.props;
     const messages = {}
-    // let resultado = null;
     const self = this
 
     confirm({

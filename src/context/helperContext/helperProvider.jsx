@@ -72,27 +72,6 @@ export const HelperContextProvider = ({ children }) => {
     setTypeModal(type)
   }
 
-  /** useEffect used to validate remote disconnection */
-  // useEffect(() => {
-  //   if (!cUser.value) return;
-
-  //   const params = {
-  //     user: cUser.value,
-  //     setCurrentUser: cUser.setCurrentUser,
-  //     setuserEvent: cEventuser.setuserEvent,
-  //     formatMessage: intl.formatMessage,
-  //     handleChangeTypeModal,
-  //     history,
-  //     helperDispatch,
-  //   };
-  //   /** If you have more than one session on a different domain or device, sign out of the previous session */
-  //   // const unsubscribe = remoteLogOutValidator(params);
-
-  //   return () => {
-  //     // unsubscribe();
-  //   };
-  // }, [cUser.value]);
-
   useEffect(() => {
     if (!cEvent.value) return
     const firstroute = Object.keys(cEvent.value.itemsMenu)

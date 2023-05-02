@@ -49,7 +49,6 @@ const { Sider, Content } = Layout
 
 // Code splitting
 const General = loadable(() => import('./general'))
-/* const Badge = loadable(() => import('../badge')); */
 const Informativesection = loadable(() =>
   import('../events/informativeSections/adminInformativeSection'),
 )
@@ -60,14 +59,11 @@ const InvitedUsers = loadable(() => import('../invitations'))
 //Messages
 const Messages = loadable(() => import('../messages'))
 
-/* const TicketInfo = loadable(() => import('../tickets/index_old')); */
 const Styles = loadable(() => import('../App/styles'))
 const DashboardEvent = loadable(() => import('../dashboard'))
 const BadgeEvent = loadable(() => import('../badge'))
 const OrdersEvent = loadable(() => import('../orders'))
 const CertificateRoutes = loadable(() => import('../certificates/CertificateRoutes'))
-/* const ReporteCertificados = loadable(() => import('../certificados/reporte_old')); */
-/* const ConfigurationApp = loadable(() => import('../App/configuration')); */
 const NotificationsApp = loadable(() => import('../pushNotifications/index'))
 const Wall = loadable(() => import('../wall/index'))
 

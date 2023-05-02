@@ -84,7 +84,6 @@ function Speaker(props) {
   const [event, setEvent] = useState()
   const [areacodeselected, setareacodeselected] = useState(57)
   const [editDataIsLoading, setEditDataIsLoading] = useState(true)
-  /* const [messageHeaderAlert, setMessageHeaderAlert] = useState(''); */
 
   useEffect(() => {
     dataTheLoaded()
@@ -94,7 +93,6 @@ function Speaker(props) {
     console.log('getting data to eventID:', eventID)
     let categoriesData = await CategoriesAgendaApi.byEvent(eventID)
     const event = await EventsApi.getOne(eventID)
-    //const typeEvent = await TypesApi.getAll();
     if (event) {
       setEvent(event)
     }

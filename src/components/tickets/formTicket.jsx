@@ -199,7 +199,6 @@ class TicketsForm extends Component {
     if (!this.state.auth) return this.props.handleModal() //Si no está logueado muestro popup
 
     //@TODO si no tiene sillas debe pasar derecho al checkout y si el tickete tiene silla debe ir en el tickete eso es del API y usado aca
-    //Construyo body de acuerdo a peticiones de api
     let tienesilla = false
     this.state.summaryList.map((item) => {
       if (item.name !== 'General') {
@@ -221,7 +220,6 @@ class TicketsForm extends Component {
   //Función COMPRAR, recibe sillas si tiene o no
   submit = (seats) => {
     const data = { tickets: [] }
-    //Construyo body de acuerdo a peticiones de api
     this.state.summaryList.map((item) => {
       data[`ticket_${item.id}`] = item.quantity
       return data.tickets.push(item.id)

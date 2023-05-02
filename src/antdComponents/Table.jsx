@@ -21,7 +21,6 @@ const SortableItem = sortableElement((props) => <tr {...props} />)
 const SortableContainer = sortableContainer((props) => <tbody {...props} />)
 
 const Table = (props) => {
-  //const cUser = useCurrentUser();
   const { eventIsActive } = useHelper()
   const {
     header,

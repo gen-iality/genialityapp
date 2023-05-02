@@ -24,17 +24,10 @@ async function messageWhenCompletingSurvey(surveyModel, surveyConfig, userId) {
 
   const textOnCompleted = surveyModel.completedHtml
 
-  /* survey.currentPage.questions.forEach((question) => {
-    let correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
-    if (correctAnswer) totalPoints += parseInt(question.points);
-  }); */
-
   const totalPoints = await getRightPoints(surveyConfig._id, userId)
   console.log('600 MessageWhenCompletingSurvey getRightPoints totalPoints', totalPoints)
 
   if (surveyConfig.allow_gradable_survey === 'true') {
-    //const { minimumScore } = surveyConfig;
-
     let text = `Has obtenido ${totalPoints} de ${totalSurveyPoints} puntos </br>`
     if (surveyConfig.hasMinimumScore === 'true') {
       text +=

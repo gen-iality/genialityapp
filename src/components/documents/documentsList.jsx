@@ -67,18 +67,14 @@ class DocumentsList extends Component {
     const { data } = this.state
     const documentDates = []
     for (let i = 0; i < data.length; i++) {
-      //if (data[i].activity_id) {
       try {
-        //const agenda = await AgendaApi.getOne(data[i].activity_id, data[i].event_id)
         documentDates.push({
-          //activity: agenda.name,
           document: data[i].title ? data[i].title : data[i].name,
           file: data[i].file,
         })
       } catch (e) {
         console.error(e)
       }
-      // }
     }
     this.setState({ documentDates }, this.removeLoader)
   }

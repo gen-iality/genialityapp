@@ -46,15 +46,12 @@ const CardStartTransmition = (props: any) => {
       try {
         const status = await getLiveStream(meeting_id)
         setDataLive(status)
-        // await saveConfig(1);
         await executer_startMonitorStatus()
       } catch (e) {
         await executer_startMonitorStatus()
         setloading(false)
         setBlockedButton(true)
         message.error('El id de la transmisión no existe!')
-        // let livestreamInitial = { state: 'Finished' };
-        // setLiveStreamStatus(livestreamInitial);
       }
       setloadingComponent(false)
     }

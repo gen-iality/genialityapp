@@ -53,7 +53,6 @@ export default class SurveyManager extends Component {
   updateSurvey = (survey_id, data) => {
     return new Promise((resolve) => {
       //Abril 2021 @todo migracion de estados de firestore a firebaserealtime
-      //let eventId = surveyInfo.eventId || 'general';
       const eventId = data.eventId || 'general'
       fireRealtime.ref('events/' + eventId + '/surveys/' + survey_id).update(data)
       firestore

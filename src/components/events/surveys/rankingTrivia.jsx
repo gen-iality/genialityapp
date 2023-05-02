@@ -17,35 +17,6 @@ function RankingTrivia(props) {
   const currentUser = cUser.value
   const currentEvent = eventContext.value
 
-  // useEffect(() => {
-  //   let unsubscribe;
-  //   if (!currentSurvey) return;
-  //   if (!(Object.keys(currentUser).length === 0)) {
-  //     const initialValues = {
-  //       name: currentUser.names ? currentUser.names : currentUser.name,
-  //       score: 0,
-  //     };
-
-  //     unsubscribe = firestore
-  //       .collection('surveys')
-  //       .doc(currentSurvey._id)
-  //       .collection('ranking')
-  //       .doc(currentUser._id)
-  //       .onSnapshot(function(result) {
-  //         if (result?.exists) {
-  //           const data = result.data();
-  //           setMyScore({ ...initialValues, score: data.correctAnswers });
-  //         } else {
-  //           setMyScore(initialValues);
-  //         }
-  //       });
-  //   }
-  //   return () => {
-  //     unsubscribe();
-  //     setMyScore({ name: '', score: 0 });
-  //   };
-  // }, [currentUser, currentSurvey]);
-
   useEffect(() => {
     let unsubscribe
     if (!(Object.keys(currentUser).length === 0)) {

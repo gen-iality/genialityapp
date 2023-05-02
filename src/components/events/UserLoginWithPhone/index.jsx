@@ -139,20 +139,6 @@ class UserLogin extends Component {
       .catch((err) => {
         this.setState({ errorValidation: true })
       })
-    // window.confirmationResult.confirm(values.verificationCode)
-    // .then(function (result) {
-    //   const user = result.user;
-    //   return  user.refreshToken
-
-    //   //window.localStorage.setItem('refresh_token', user.refreshToken)
-    // })
-    // .then((refreshToken)=>{
-    //   this.setState({refreshToken: refreshToken})
-    //
-    // })
-    // .catch(function (error) {
-    //  console.error(error)
-    // });
   }
 
   onFinishFailed = (errorInfo) => {

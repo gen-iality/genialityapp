@@ -214,7 +214,6 @@ const mapDispatchToProps = {
   setHasOpenSurveys,
 }
 
-// let AgendaActividadDetalleWithContext = WithEviusContext(AgendaActividadDetalle);
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
