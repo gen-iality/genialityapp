@@ -24,7 +24,7 @@ import { ColumnsType } from 'antd/lib/table';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 /** Helpers and utils */
-import { EventsApi, PositionsApi, UsersApi, CerticationsApi } from '@helpers/request';
+import { EventsApi, PositionsApi, UsersApi, CerticationsApi, CerticationLogsApi } from '@helpers/request';
 
 /** Components */
 import Header from '@antdComponents/Header';
@@ -53,6 +53,15 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
   const [dataSource, setDataSource] = useState<any[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [certificationLog, setCertificationLog] = useState<any | null>({});
+
+  const [form] = Form.useForm();
+
+  const openModal = () => setIsModalOpened(true);
+  const closeModal = () => setIsModalOpened(false);
 
   const organizationId: string = props.org._id;
   const positionId = props.match.params.positionId;
@@ -87,6 +96,45 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
         };
       }),
     );
+  };
+
+  const onFormFinish = async (values: any) => {
+    if (!currentUser) {
+      alert('No se ha cargado el usuario con anterioridad');
+      return;
+    }
+    values['user_id'] = currentUser._id;
+    console.debug('form submit', { values });
+
+    if (isEditing) {
+      CerticationLogsApi.update(certificationLog._id, values).finally(() => {
+        setIsLoading(true);
+        loadData().finally(() => setIsLoading(false));
+        setIsEditing(false);
+      });
+    }
+  };
+
+  const editUserCertificationLog = (values: any) => {
+    const certificationLog = values.log;
+    openModal();
+
+    form.setFieldsValue({
+      approved_from_date: dayjs(certificationLog.approved_from_date),
+      approved_until_date: dayjs(certificationLog.approved_until_date),
+    });
+
+    setCertificationLog(certificationLog);
+    setIsEditing(true);
+  };
+
+  const deleteUserCertificationLog = (values: any) => {
+    CerticationLogsApi.deleteOne(values.log._id).finally(() => {
+      setIsLoading(true);
+      loadData().finally(() => setIsLoading(false));
+    });
+    // TODO: delete the certification file from FireStorage with:
+    // values.log.firestorage_path
   };
 
   // Load all users for this position
@@ -190,7 +238,9 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
                   type="primary"
                   size="small"
                   onClick={(e) => {
-                    alert('No implementado aún');
+                    console.log('event', event);
+                    if (!event.certification) return;
+                    else editUserCertificationLog(event);
                   }}
                   icon={<EditOutlined />}
                 />
@@ -203,12 +253,9 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
                   type="primary"
                   size="small"
                   onClick={(e) => {
-                    alert('No implementado aún');
-                    // Little future people, please implement the deleting of FireStorage too.
-                    // You SHOULD check if the last url pathname element stars with "documents/" and try to
-                    // decode it and use this path (that stats with "documents/") to request a deleting
-                    // process with the FireStorage API. Dont say that my intrustion are bad, if you don't
-                    // believe in me, then ask to ChatGPT tho
+                    console.log('event', event);
+                    if (!event.certification) return;
+                    else deleteUserCertificationLog(event);
                   }}
                   icon={<DeleteOutlined />}
                   danger
@@ -246,6 +293,32 @@ function CurrentOrganizationPositionCertificationLogsUserPage(
         loading={isLoading}
         scroll={{ x: 'auto' }}
       />
+
+      <Modal
+        visible={isModalOpened}
+        title={`Edita el registro de certificación a usuario: ${currentUser?.names}`}
+        onOk={() => {
+          form.submit();
+          closeModal();
+        }}
+        onCancel={() => closeModal()}>
+        <Form form={form} onFinish={onFormFinish} layout="vertical">
+          <Form.Item
+            name="approved_from_date"
+            label="Fecha de aprobación"
+            rules={[{ required: true, message: 'Agrega la fecha' }]}
+            initialValue={dayjs(Date.now())}>
+            <DatePicker />
+          </Form.Item>
+          <Form.Item
+            name="approved_until_date"
+            label="Fecha de vencimiento"
+            rules={[{ required: true, message: 'Agrega la fecha' }]}
+            initialValue={dayjs(Date.now())}>
+            <DatePicker />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 }
