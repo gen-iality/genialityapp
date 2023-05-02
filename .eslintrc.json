@@ -28,6 +28,7 @@
     "no-undef": "error",
     "prefer-const": "error",
     "no-var": "error",
+    "jsx-closing-bracket-newline": ["error", { "multiline": "always" }],
     "cypress/no-unnecessary-waiting": "off"
   }
 }
