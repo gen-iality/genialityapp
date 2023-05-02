@@ -28,7 +28,7 @@ import OrgEvents from './events';
 import Styles from '@components/App/styles';
 import OrgMembers from './members';
 import OrganizationPositionsPage from './OrganizationPositionsPage';
-import PositionedUsersPage from './OrganizationPositionPage';
+import PositionedUsersPage from './PositionedUsersPage';
 import MembersCertificationPage from './MembersCertificationPage';
 import MemberCertificationLogsPage from './MemberCertificationLogsPage';
 import OrgRegisteredUsers from './OrgRegisteredUsers';
