@@ -168,7 +168,6 @@ class SendRsvp extends Component {
         }
       }
 
-      /* console.log('Dataenviar', data); */
       await EventsApi.sendRsvp(JSON.stringify(data), event._id)
       this.setState({
         disabled: false,

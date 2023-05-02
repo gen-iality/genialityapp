@@ -162,7 +162,6 @@ function CrearEditarEmpresa(props) {
 
   const onSubmit = useCallback(
     (values, { setSubmitting }) => {
-      /* console.log(values, 'vals') */
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
@@ -286,7 +285,6 @@ function CrearEditarEmpresa(props) {
       validationSchema={validationSchema}
       onSubmit={onSubmit}>
       {({ isSubmitting, errors, values, handleSubmit, handleReset }) => {
-        /* console.error(errors); */
         return (
           <Form onReset={handleReset} onSubmitCapture={handleSubmit} {...formLayout}>
             <Header

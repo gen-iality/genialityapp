@@ -331,7 +331,6 @@ class Styles extends Component {
     const thereIsAnOrganization = this.props.org?._id
 
     this.state.data = { styles: this.state.styles }
-    /* console.log('save data', this.state.data) */
     try {
       if (thereIsAnOrganization) {
         info = await OrganizationApi.editOne(this.state.data, thereIsAnOrganization)
@@ -383,9 +382,7 @@ class Styles extends Component {
         action: 'show',
       })
       if (error.response) {
-        /* console.error(error.response); */
         const { status, data } = error.response
-        /* console.error('STATUS', status, status === 401); */
         if (status === 401) {
           DispatchMessageService({
             key: 'loading',
@@ -399,9 +396,7 @@ class Styles extends Component {
         } else this.setState({ serverError: true, loader: false, errorData: data })
       } else {
         let errorData = error.message
-        /* console.error('Error', error.message); */
         if (error.request) {
-          /* console.error(error.request); */
           errorData = error.request
         }
         this.setState({ serverError: true, loader: false, errorData })
@@ -446,14 +441,8 @@ class Styles extends Component {
   }
 
   handleChange(value, name) {
-    /* console.log(value, name); */
-    /* let name = e.target.name; */
-    /* let value = e.target.value; */
-    /* let value = e; */
-
     const styles = { ...this.state.styles }
     styles[name] = value
-    /* console.log(styles[name], styles) */
 
     this.setState({ styles: styles })
   }

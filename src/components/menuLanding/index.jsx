@@ -214,17 +214,14 @@ class MenuLanding extends Component {
       )
     } else {
       // Obtener de organización
-      // alert("ORGANIZATION")
 
       menuLanding.itemsMenu = this.props.organizationObj.itemsMenu || []
-      /* console.log('ITEMS==>', menuLanding.itemsMenu); */
       this.state.itemsMenu = menuLanding.itemsMenu
       const items = menuLanding.itemsMenu
     }
     for (const prop in menuBase) {
       for (const prop1 in menuLanding.itemsMenu) {
         if (prop1 === prop) {
-          /* console.log('INGRESO ACA'); */
           this.mapActiveItemsToAvailable(prop)
           this.changeNameMenu(prop, menuLanding.itemsMenu[prop1]?.name)
           this.changePositionMenu(prop, menuLanding.itemsMenu[prop1].position)
@@ -297,7 +294,7 @@ class MenuLanding extends Component {
         updateOrganization._id,
       )
       if (resp) {
-        /* console.log('MENU GUARDADDO==>', newMenu); */
+        console.log(resp)
       }
     }
     DispatchMessageService({
@@ -314,10 +311,6 @@ class MenuLanding extends Component {
   async mapActiveItemsToAvailable(key) {
     const menuBase = { ...this.state.menu }
     const itemsMenuDB = { ...this.state.itemsMenu }
-    /* console.log('ITEMSMENUTOAVAILABLE==>', this.state.itemsMenu);
-    console.log('items menù', itemsMenuDB);
-    menuBase[key].checked = !menuBase[key].checked;
-    /* console.log('segundo=>', menuBase[key]); */
 
     if (menuBase[key].checked) {
       itemsMenuDB[key] = menuBase[key]
@@ -331,7 +324,7 @@ class MenuLanding extends Component {
   changeNameMenu(key, name) {
     const menuBase = { ...this.state.menu }
     const itemsMenuDB = { ...this.state.itemsMenu }
-    /* console.log('CHANGEMENU==>', key, name); */
+
     if (name !== '') {
       if (itemsMenuDB[key]) {
         itemsMenuDB[key].name = name
@@ -366,7 +359,7 @@ class MenuLanding extends Component {
   changePermissions(key, access) {
     const menuBase = { ...this.state.menu }
     const itemsMenuDB = { ...this.state.itemsMenu }
-    /* console.log('itemsMenuDB', itemsMenuDB); */
+
     if (itemsMenuDB[key]) {
       itemsMenuDB[key].permissions = access
       menuBase[key].permissions = itemsMenuDB[key].permissions || access

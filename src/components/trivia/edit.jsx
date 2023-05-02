@@ -209,7 +209,6 @@ class TriviaEdit extends Component {
       surveyId && (await this.getSurveyFromEditing(surveyId))
     } else {
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id)
-      /* console.log(dataAgenda, 'dataAgenda'); */
       this.setState({
         dataAgenda: dataAgenda.data,
       })
@@ -478,7 +477,6 @@ class TriviaEdit extends Component {
             msj: 'Ha ocurrido un inconveniente',
             action: 'show',
           })
-          /* console.error('Hubo un error', err); */
         })
     } else {
       if (!isValid) {

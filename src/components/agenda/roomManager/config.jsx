@@ -106,12 +106,6 @@ export default function RoomConfig(props) {
    * Creación de una conferencia
    */
 
-  /* console.log('GENERAL DATA =>>', {
-    platform: platform,
-    host_name: host_name,
-    meeting_id: meeting_id,
-    hasVideoconference: hasVideoconference,
-  }); */
   return (
     <>
       <Form onFinish={handleClick} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>

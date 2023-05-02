@@ -294,8 +294,6 @@ class General extends Component {
     //     value = valueData;
     //   }
     // }
-
-    /* console.log(name, value, '2'); */
   }
   //Validación
   valid = () => {
@@ -503,8 +501,6 @@ class General extends Component {
       return item.value
     })
 
-    /* console.log(event.visibility, event.allow_register, 'hola') */
-
     const data = {
       name: event.name,
       datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
@@ -596,10 +592,8 @@ class General extends Component {
         action: 'show',
       })
       if (error?.response) {
-        /* console.error(error.response); */
         const { status, data } = error.response
 
-        /* console.error('STATUS', status, status === 401); */
         if (status === 401) {
           DispatchMessageService({
             type: 'error',
@@ -609,15 +603,12 @@ class General extends Component {
         } else this.setState({ serverError: true, loader: false, errorData: data })
       } else {
         let errorData = error.message
-        /* console.error('Error', error.message); */
         if (error.request) {
-          /* console.error(error.request); */
           errorData = error.request
         }
         errorData.status = 708
         this.setState({ serverError: true, loader: false, errorData })
       }
-      /*  console.error(error.config); */
     }
   }
   //Delete event

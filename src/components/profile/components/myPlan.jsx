@@ -603,19 +603,16 @@ const myPlan = ({ cUser }) => {
     /* Planes adicionales */
     const plans = await PlansApi.getAll()
     setPlans(plans)
-    /* console.log('plans', plans); */
 
     /* Notificaciones/Alertas */
     const notifications = await AlertsPlanApi.getByUser(cUser.value?._id)
     setNotifications(notifications.data)
     setLoadingNotification(false)
-    /* console.log(notifications.data, 'notifications'); */
 
     /* Facturas/Comprobantes */
     const bills = await BillssPlanApi.getByUser(cUser.value?._id)
     setBills(bills.data)
     setLoadingBill(false)
-    /* console.log('bills', bills.data); */
     //dollarToday
 
     /* Consumos del usuario */
@@ -625,16 +622,13 @@ const myPlan = ({ cUser }) => {
       )
       setConsumption(consumption)
       setLoadingConsumption(false)
-      /* console.log('consumption', consumption); */
     } catch (error) {
-      /* console.log(error, 'error'); */
       setLoadingConsumption(false)
     }
 
     /* Total de registros de usuario */
     const totalUsersByPlan = await PlansApi.getTotalRegisterdUsers()
     setTotalUsersByPlan(totalUsersByPlan)
-    /* console.log(totalUsersByPlan, 'aqui'); */
   }
 
   return (

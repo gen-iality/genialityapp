@@ -98,7 +98,6 @@ const Informacion = (props) => {
     // Crear organizacion------------------------------
     const create = await OrganizationApi.createOrganization(newOrganization)
 
-    /* console.log('CREATE==>', create); */
     if (create) {
       return create
     }

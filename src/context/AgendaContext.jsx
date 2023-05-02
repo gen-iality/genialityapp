@@ -51,10 +51,8 @@ export const AgendaContextProvider = ({ children }) => {
   const [record, setRecord] = useState('start')
 
   function reducer(state, action) {
-    /* console.log('actiondata', action); */
     switch (action.type) {
       case 'meeting_created':
-        /* console.log('meeting_created', action); */
         return { ...state, meeting_id: action.meeting_id }
       case 'meeting_delete':
         return { ...state, meeting_id: null }

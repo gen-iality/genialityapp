@@ -260,7 +260,6 @@ class EventUsersList extends Component {
   //Funcion para enviar la data de los usuarios al componente send.jsx
   goToSendMessage = () => {
     const { attendeesForSendMessage, modalVisible } = this.state
-    /* console.log('lista', attendeesForSendMessage); */
     //Actualizar el estado del padre
 
     // if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {

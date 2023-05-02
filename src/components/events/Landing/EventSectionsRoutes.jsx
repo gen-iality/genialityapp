@@ -114,8 +114,6 @@ const EventSectionRoutes = (props) => {
   useEffect(() => {
     // seperar la url en un arrary
 
-    /* console.log(props); */
-
     if (props.cEvent.value && props.currentActivity) {
       if (
         props.location.pathname !==

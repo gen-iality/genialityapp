@@ -153,7 +153,6 @@ class Datos extends Component {
   }
   //Guardar campo en el curso
   saveField = async (field) => {
-    /* console.log('FIELD==>', field); */
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -524,7 +523,6 @@ class Datos extends Component {
   }
 
   onChange1 = async (e, plantId) => {
-    /* console.log('e, radio checked', plantId); */
     this.setState({ value: '' })
     await OrganizationPlantillaApi.putOne(this.props.eventId, plantId)
   }

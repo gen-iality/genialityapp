@@ -1016,7 +1016,6 @@ class ListEventUser extends Component {
   }
 
   handleChange = (e) => {
-    /* console.log(e); */
     this.setState({ typeScanner: e })
     this.checkModal()
   }

@@ -7,7 +7,6 @@ export const CurrentEventContext = createContext()
 
 export function CurrentEventProvider({ children }) {
   const { event_id, event_name, event } = useParams()
-  /* console.log('params=>>', useParams()); */
   let eventNameFormated = null
   let initialContextState = { status: 'LOADING', value: null, nameEvent: '' }
 
@@ -48,7 +47,6 @@ export function CurrentEventProvider({ children }) {
             nameEvent: event_name,
             isByname: true,
           }
-          /* console.log('evne', eventGlobal.data[0]); */
           break
 
         case 'eventadmin':
@@ -64,8 +62,6 @@ export function CurrentEventProvider({ children }) {
       }
       setEventContext(dataevent)
     }
-
-    /* console.log('event_id', event_id); */
 
     if (event_id) {
       fetchEvent('id')

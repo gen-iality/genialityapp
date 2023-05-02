@@ -220,7 +220,6 @@ class UserModal extends Component {
     let resp
     let respActivity = true
     if (values) {
-      /* console.log("ACA VALUES==>",values) */
       const snap = { rol_id: values.rol_id, properties: values }
 
       if (this.props.organizationId && !this.props.edit) {

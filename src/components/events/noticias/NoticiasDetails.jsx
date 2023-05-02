@@ -42,7 +42,6 @@ const NoticiasDetails = (props) => {
     const data = await NewsFeed.getOne(eventId, props?.match?.params?.id)
     if (data) {
       setNoticia(data)
-      /* console.log(data, noticia, 'data-noticia', match.params.id) */
       setLoading(false)
     }
   }

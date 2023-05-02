@@ -527,7 +527,6 @@ const FormRegister = ({
   const renderForm = useCallback(() => {
     if (!extraFields) return ''
     const formUI = extraFields.map((m, key) => {
-      /* console.log(m, key) */
       if (m.visibleByAdmin) {
         return
       }
@@ -560,7 +559,6 @@ const FormRegister = ({
           (type === 'region' && regiones.length == 0) ||
           (type === 'country' && countries.length == 0) ||
           (type === 'city' && cities.length == 0)
-        /* console.log(initialValues, 'initialValues', m) */
 
         //no entiendo b esto para que funciona
         // if (conditionals.state === "enabled") {

@@ -291,7 +291,6 @@ const Document = (props) => {
 
   const onHandlerFile = async (e) => {
     console.log('onHandlerFile calling...', e)
-    /* console.log(e.file.originFileObj); */
     setLoading(true)
     setDocumentList(e.fileList)
 
@@ -305,11 +304,7 @@ const Document = (props) => {
 
     setExtention(name.split('.').pop())
 
-    /* this.setState({ fileName: name }); */
-    /* console.log(fileName, name); */
     const uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files)
-    /* setUploadTask(uploadTaskRef); */
-    /* console.log(uploadTaskRef); */
     //Se envia a firebase y se pasa la validacion para poder saber el estado del documento
 
     uploadTaskRef.on(

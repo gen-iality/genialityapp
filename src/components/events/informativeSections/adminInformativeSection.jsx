@@ -13,8 +13,6 @@ export default function AdmininformativeSection1(props) {
 
   const onFinish = (values) => {
     async function save() {
-      /* console.log('minu', eventContext.value.itemsMenu); */
-
       let informativeMenu = {
         name: 'Sección informativa 2',
         position: 30,
@@ -36,7 +34,6 @@ export default function AdmininformativeSection1(props) {
           informativeSection1: informativeMenu,
         },
       }
-      /* console.log('minu', data); */
 
       try {
         const result = await EventsApi.editOne(data, eventContext.value._id)

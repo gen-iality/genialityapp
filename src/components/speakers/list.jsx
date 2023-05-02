@@ -27,14 +27,12 @@ function SpeakersList(props) {
   const cEventIsActive = eventIsActive
 
   useEffect(() => {
-    /* console.log('dataSpeakers', data); */
     setdataSpeakers(data)
   }, [data])
 
   const queryClient = useQueryClient()
 
   function sortAndIndexSpeakers() {
-    //  let { data } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
     const data = dataSpeakers
     let list = []
     if (data) {
