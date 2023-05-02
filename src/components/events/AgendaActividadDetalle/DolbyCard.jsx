@@ -15,7 +15,8 @@ export const DolbyCard = () => {
             {
               required: true,
             },
-          ]}>
+          ]}
+        >
           <Input />
         </Form.Item>
         <Form.Item
@@ -27,7 +28,8 @@ export const DolbyCard = () => {
               type: 'email',
               message: 'Ingrese un email valido',
             },
-          ]}>
+          ]}
+        >
           <Input />
         </Form.Item>
         <Form.Item>

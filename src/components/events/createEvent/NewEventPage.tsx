@@ -144,11 +144,13 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
         height: '100vh',
         width: '100vw',
         backgroundColor: '#FCEAD9',
-      }}>
+      }}
+    >
       <Row
         justify="center"
         className="newEvent"
-        style={{ transition: 'all 1.5s ease-out' }}>
+        style={{ transition: 'all 1.5s ease-out' }}
+      >
         {/* Items del paso a paso */}
         <div className="itemStep">
           <Steps current={current} responsive>
@@ -168,7 +170,8 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
             height: `80%`,
             borderRadius: '25px',
           }}
-          className="card-container">
+          className="card-container"
+        >
           {/* Contenido de cada item del paso a paso */}
           <Row justify="center" style={{ marginBottom: '8px' }}>
             {obtainContent(steps[current])}
@@ -183,7 +186,8 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
                   size="large"
                   onClick={() =>
                     window.history.length == 1 ? window.close() : window.history.back()
-                  }>
+                  }
+                >
                   {window.history.length == 1 ? 'Salir' : 'Cancelar'}
                 </Button>
               )}
@@ -197,7 +201,8 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
                   className="button"
                   type="primary"
                   size="large"
-                  onClick={() => goNext()}>
+                  onClick={() => goNext()}
+                >
                   Siguiente
                 </Button>
               )}
@@ -206,7 +211,8 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
                   className="button"
                   type="primary"
                   size="large"
-                  onClick={async () => await eventNewContext.saveEvent()}>
+                  onClick={async () => await eventNewContext.saveEvent()}
+                >
                   Crear curso
                 </Button>
               )}

@@ -36,7 +36,8 @@ export default class ModalRelation extends Component {
           title="Basic modal"
           visible={this.state.visible}
           onOk={this.handleOk}
-          onCancel={this.handleCancel}>
+          onCancel={this.handleCancel}
+        >
           <p>Some contents...</p>
           <p>Some contents...</p>
           <p>Some contents...</p>

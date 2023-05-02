@@ -280,7 +280,8 @@ function CrearEditarEmpresa(props) {
       enableReinitialize
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={onSubmit}>
+      onSubmit={onSubmit}
+    >
       {({ isSubmitting, errors, values, handleSubmit, handleReset }) => {
         return (
           <Form onReset={handleReset} onSubmitCapture={handleSubmit} {...formLayout}>
@@ -419,7 +420,8 @@ function CrearEditarEmpresa(props) {
                                   onClick={() => {
                                     arrayHelpers.remove(serviceIndex)
                                   }}
-                                  style={{ marginRight: '20px' }}>
+                                  style={{ marginRight: '20px' }}
+                                >
                                   Eliminar
                                 </Button>
                               )}
@@ -434,7 +436,8 @@ function CrearEditarEmpresa(props) {
                                       image: '',
                                       web_url: '',
                                     })
-                                  }}>
+                                  }}
+                                >
                                   Agregar servicio
                                 </Button>
                               )}
@@ -449,7 +452,8 @@ function CrearEditarEmpresa(props) {
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
                             arrayHelpers.push({ description: '', image: '', web_url: '' })
-                          }}>
+                          }}
+                        >
                           Agregar servicio
                         </Button>
                       </Form.Item>
@@ -488,7 +492,8 @@ function CrearEditarEmpresa(props) {
                                   onClick={() => {
                                     arrayHelpers.remove(socialNetworkIndex)
                                   }}
-                                  style={{ marginRight: '20px' }}>
+                                  style={{ marginRight: '20px' }}
+                                >
                                   Eliminar
                                 </Button>
                               )}
@@ -500,7 +505,8 @@ function CrearEditarEmpresa(props) {
                                     icon={<PlusCircleOutlined />}
                                     onClick={() => {
                                       arrayHelpers.push({ url: '', network: undefined })
-                                    }}>
+                                    }}
+                                  >
                                     Agregar red social
                                   </Button>
                                 )}
@@ -515,7 +521,8 @@ function CrearEditarEmpresa(props) {
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
                             arrayHelpers.push({ url: '', network: undefined })
-                          }}>
+                          }}
+                        >
                           Agregar red social
                         </Button>
                       </Form.Item>
@@ -579,7 +586,8 @@ function CrearEditarEmpresa(props) {
                                   onClick={() => {
                                     arrayHelpers.remove(advisorIndex)
                                   }}
-                                  style={{ marginRight: '20px' }}>
+                                  style={{ marginRight: '20px' }}
+                                >
                                   Eliminar
                                 </Button>
                               )}
@@ -597,7 +605,8 @@ function CrearEditarEmpresa(props) {
                                       email: '',
                                       cargo: '',
                                     })
-                                  }}>
+                                  }}
+                                >
                                   Agregar advisor
                                 </Button>
                               )}
@@ -619,7 +628,8 @@ function CrearEditarEmpresa(props) {
                               email: '',
                               cargo: '',
                             })
-                          }}>
+                          }}
+                        >
                           Agregar advisor
                         </Button>
                       </Form.Item>
@@ -647,7 +657,8 @@ function CrearEditarEmpresa(props) {
                                   onClick={() => {
                                     arrayHelpers.remove(galleryIndex)
                                   }}
-                                  style={{ marginRight: '20px' }}>
+                                  style={{ marginRight: '20px' }}
+                                >
                                   Eliminar
                                 </Button>
                               )}
@@ -658,7 +669,8 @@ function CrearEditarEmpresa(props) {
                                     icon={<PlusCircleOutlined />}
                                     onClick={() => {
                                       arrayHelpers.push({ image: '' })
-                                    }}>
+                                    }}
+                                  >
                                     Agregar imagen
                                   </Button>
                                 )}
@@ -673,7 +685,8 @@ function CrearEditarEmpresa(props) {
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
                             arrayHelpers.push({ image: '' })
-                          }}>
+                          }}
+                        >
                           Agregar imagen
                         </Button>
                       </Form.Item>

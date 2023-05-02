@@ -452,7 +452,8 @@ class DashboardEvent extends Component {
             gutter={(32, 32)}
             align="middle"
             justify="space-between"
-            style={{ paddingTop: '20px' }}>
+            style={{ paddingTop: '20px' }}
+          >
             <Col span={this.state.printButton ? 18 : 24}>
               <Tooltip title={this.state.desc1} placement="top" mouseEnterDelay={0.5}>
                 <Card>
@@ -469,7 +470,8 @@ class DashboardEvent extends Component {
                             'register',
                             'registerByDay',
                           )
-                        }>
+                        }
+                      >
                         Exportar
                       </Button>
                     </Row>
@@ -526,10 +528,12 @@ class DashboardEvent extends Component {
             gutter={(32, 32)}
             align="middle"
             justify="space-between"
-            style={{ paddingTop: '20px' }}>
+            style={{ paddingTop: '20px' }}
+          >
             <Col
               className={this.state.printButton ? '' : 'pagebreak'}
-              span={this.state.printButton ? 18 : 24}>
+              span={this.state.printButton ? 18 : 24}
+            >
               <Tooltip title={this.state.desc4} placement="top" mouseEnterDelay={0.5}>
                 <Card>
                   {this.state.printButton && (
@@ -545,7 +549,8 @@ class DashboardEvent extends Component {
                             'views',
                             'ViewsByDay',
                           )
-                        }>
+                        }
+                      >
                         Exportar
                       </Button>
                     </Row>
@@ -593,7 +598,8 @@ class DashboardEvent extends Component {
                             'time',
                             'visitasByDia',
                           )
-                        }>
+                        }
+                      >
                         Exportar
                       </Button>
                     </Row>
@@ -626,12 +632,14 @@ class DashboardEvent extends Component {
             gutter={(32, 32)}
             align="middle"
             justify="space-between"
-            style={{ paddingTop: '20px' }}>
+            style={{ paddingTop: '20px' }}
+          >
             <Col span={24}>
               <Card
                 headStyle={{ border: 'none' }}
                 title="Métricas por lecciones del curso"
-                extra={<MoreOutlined />}>
+                extra={<MoreOutlined />}
+              >
                 <Table
                   dataSource={this.state.metricsActivity}
                   columns={columns}
@@ -645,7 +653,8 @@ class DashboardEvent extends Component {
             gutter={(32, 32)}
             align="middle"
             justify="space-between"
-            style={{ paddingTop: '20px' }}>
+            style={{ paddingTop: '20px' }}
+          >
             <Col span={24}>
               <Card headStyle={{ border: 'none' }} title="Métricas de correos">
                 {this.state.printButton && (
@@ -721,7 +730,8 @@ class DashboardEvent extends Component {
                         this.props.history.push(
                           `/eventadmin/${this.props.eventId}/messages`,
                         )
-                      }>
+                      }
+                    >
                       Ver correos
                     </Button>
                   </Row>
@@ -767,7 +777,8 @@ class DashboardEvent extends Component {
                   disabled={
                     this.state.metricsGaByActivity?.length == 0 ||
                     !this.state.metricsGaByActivity
-                  }>
+                  }
+                >
                   Exportar métricas
                 </Button>
               </Row>

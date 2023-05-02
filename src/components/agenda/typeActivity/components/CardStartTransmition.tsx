@@ -124,7 +124,8 @@ const CardStartTransmition = (props: any) => {
                   onConfirm={() => deleteStreaming()}
                   onCancel={() => console.log('cancelado')}
                   okText="Si"
-                  cancelText="No">
+                  cancelText="No"
+                >
                   <Button loading={loadingDelete} type="text" danger>
                     {props.type === 'Transmisión' ||
                     props.type === 'EviusMeet' ||
@@ -143,7 +144,8 @@ const CardStartTransmition = (props: any) => {
                   disabled={blockedButton}
                   loading={loading}
                   onClick={() => executer_startStream()}
-                  type="primary">
+                  type="primary"
+                >
                   Iniciar transmisión
                 </Button>
               )}

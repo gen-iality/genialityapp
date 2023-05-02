@@ -19,7 +19,8 @@ const DynamicLongTextField: React.FunctionComponent<IDynamicLongTextFieldProps> 
     <DynamicFormItem
       fieldData={fieldData}
       rules={[basicRule]}
-      initialValue={allInitialValues[name]}>
+      initialValue={allInitialValues[name]}
+    >
       <Input.TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} />
     </DynamicFormItem>
   )

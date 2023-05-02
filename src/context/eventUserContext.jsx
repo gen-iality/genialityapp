@@ -55,7 +55,8 @@ export function CurrentUserEventProvider({ children }) {
         ...userEvent,
         setuserEvent: setuserEvent,
         setUpdateUser: setUpdateUser,
-      }}>
+      }}
+    >
       {children}
     </CurrentEventUserContext.Provider>
   )

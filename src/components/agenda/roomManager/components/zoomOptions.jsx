@@ -14,7 +14,8 @@ export default function ZoomOptions({
             defaultValue={select_host_manual}
             value={select_host_manual}
             name="select_host_manual"
-            onChange={(e) => handleChange(e, 'select_host_manual')}>
+            onChange={(e) => handleChange(e, 'select_host_manual')}
+          >
             <Option value>Si</Option>
             <Option value={false}>No</Option>
           </Select>
@@ -29,7 +30,8 @@ export default function ZoomOptions({
                 defaultValue={host_id}
                 value={host_id}
                 name="host_id"
-                onChange={(e) => handleChange(e, 'host_id')}>
+                onChange={(e) => handleChange(e, 'host_id')}
+              >
                 <Option value={null}>Seleccione...</Option>
                 {host_list.length > 0 &&
                   host_list.map((host) => (

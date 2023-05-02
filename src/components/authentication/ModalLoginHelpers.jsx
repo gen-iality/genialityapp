@@ -149,7 +149,8 @@ const ModalLoginHelpers = (props) => {
       footer={null}
       zIndex={1005}
       closable={false}
-      visible={typeModal === 'mail' || typeModal === 'recover'}>
+      visible={typeModal === 'mail' || typeModal === 'recover'}
+    >
       <PageHeader
         className={
           (sendRecovery != null || registerUser) &&
@@ -163,7 +164,8 @@ const ModalLoginHelpers = (props) => {
               setSendRecovery(null)
               setRegisterUser(false)
               form.resetFields()
-            }}>
+            }}
+          >
             <LeftCircleOutlined style={{ color: '#6B7283', fontSize: '20px' }} />
             <span style={{ fontSize: '16px', color: '#6B7283' }}>
               {intl.formatMessage({
@@ -182,7 +184,8 @@ const ModalLoginHelpers = (props) => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         layout="vertical"
-        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
+      >
         <Typography.Title level={4} type="secondary">
           {textoTitle}
         </Typography.Title>
@@ -208,7 +211,8 @@ const ModalLoginHelpers = (props) => {
                 defaultMessage: 'Ingrese un email válido',
               }),
             },
-          ]}>
+          ]}
+        >
           <Input
             type="email"
             size="large"
@@ -246,7 +250,8 @@ const ModalLoginHelpers = (props) => {
                     setSendRecovery(null)
                     setRegisterUser(false)
                     form.resetFields()
-                  }}>
+                  }}
+                >
                   {intl.formatMessage({
                     id: 'modal.title.register',
                     defaultMessage: 'Registrarme',
@@ -285,7 +290,8 @@ const ModalLoginHelpers = (props) => {
                   setSendRecovery(null)
                   setRegisterUser(false)
                   form.resetFields()
-                }}>
+                }}
+              >
                 {intl.formatMessage({
                   id: 'modal.title.register',
                   defaultMessage: 'Registrarme',
@@ -301,7 +307,8 @@ const ModalLoginHelpers = (props) => {
               htmlType="submit"
               block
               style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-              size="large">
+              size="large"
+            >
               {textoButton}
             </Button>
           </Form.Item>

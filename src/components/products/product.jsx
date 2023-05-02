@@ -211,7 +211,8 @@ class Product extends Component {
                   icon={<SaveOutlined />}
                   disabled={
                     !eventIsActive && window.location.toString().includes('eventadmin')
-                  }>
+                  }
+                >
                   Guardar orden
                 </Button>
               </Col>
@@ -220,7 +221,8 @@ class Product extends Component {
                   type="primary"
                   icon={<SettingOutlined />}
                   onClick={this.configuration}
-                  id="configuration">
+                  id="configuration"
+                >
                   Configuración
                 </Button>
               </Col>
@@ -242,7 +244,8 @@ class Product extends Component {
                 wrapper: this.DraggableContainer,
                 row: this.DraggableBodyRow,
               },
-            }}>
+            }}
+          >
             <Column
               title=""
               dataIndex="move"
@@ -296,7 +299,8 @@ class Product extends Component {
                     symbol: (
                       <span style={{ color: '#2D7FD6', fontSize: '14px' }}>Ver más</span>
                     ),
-                  }}>
+                  }}
+                >
                   {data.name}
                 </Paragraph>
               )}

@@ -66,13 +66,15 @@ class RelationshipFields extends Component {
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
-            style={{ width: 90 }}>
+            style={{ width: 90 }}
+          >
             Search
           </Button>
           <Button
             onClick={() => this.handleReset(clearFilters)}
             size="small"
-            style={{ width: 90 }}>
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
         </Space>
@@ -194,7 +196,8 @@ class RelationshipFields extends Component {
               <select
                 defaultValue="disabled"
                 name="state"
-                onChange={(e) => this.handleChange(e)}>
+                onChange={(e) => this.handleChange(e)}
+              >
                 <option value="enabled">Habilitado</option>
                 <option value="disabled">Inhabilitado</option>
               </select>
@@ -211,7 +214,8 @@ class RelationshipFields extends Component {
                       <select
                         defaultValue=""
                         name="fieldToValidate"
-                        onChange={(e) => this.handleChange(e)}>
+                        onChange={(e) => this.handleChange(e)}
+                      >
                         <option value="">Seleccione...</option>
                         <option key={key} value={item.name}>
                           {item.label}
@@ -224,7 +228,8 @@ class RelationshipFields extends Component {
                       <select
                         defaultValue=""
                         name="value"
-                        onChange={(e) => this.handleChange(e)}>
+                        onChange={(e) => this.handleChange(e)}
+                      >
                         <option value="">Seleccione...</option>
                         {item.options.map((item, key) => (
                           <option key={key} value={item.value}>

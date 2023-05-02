@@ -54,7 +54,8 @@ const DynamicTextField: React.FunctionComponent<IDynamicTextFieldProps> = (props
       fieldData={fieldData}
       rules={rules}
       hidden={isHiddenField}
-      initialValue={allInitialValues[name]}>
+      initialValue={allInitialValues[name]}
+    >
       <Input
         {...secondProps}
         addonBefore={

@@ -37,11 +37,13 @@ const SmartModalStepByStep = (props: any) => {
         props.onClosedForm()
       }}
       width={1200}
-      footer={null}>
+      footer={null}
+    >
       <SmartLayoutTypeActivity
         onSetType={props.onSetType}
         title={typeOptions?.MainTitle}
-        onClosedForm={props.onClosedForm}>
+        onClosedForm={props.onClosedForm}
+      >
         {typeOptions.key !== 'vimeo' &&
         typeOptions.key !== 'youTube' &&
         typeOptions.key !== 'url' ? (

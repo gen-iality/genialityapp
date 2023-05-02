@@ -82,7 +82,8 @@ class Preview extends Component {
               message: 'La contraseña debe tener entre 6 a 18 caracteres',
             },
           ]}
-          hasFeedback>
+          hasFeedback
+        >
           <Input.Password />
         </Form.Item>
 
@@ -110,7 +111,8 @@ class Preview extends Component {
                 return Promise.reject(new Error('¡Las constraseñas no coinciden!'))
               },
             }),
-          ]}>
+          ]}
+        >
           <Input.Password />
         </Form.Item>
 
@@ -120,7 +122,8 @@ class Preview extends Component {
               onClick={() => {
                 Modal.destroyAll()
                 this.setState({ showModal: false, showMessage: true })
-              }}>
+              }}
+            >
               Cancelar
             </Button>
             <Button
@@ -129,7 +132,8 @@ class Preview extends Component {
               onClick={() => {
                 Modal.destroyAll()
                 this.setState({ showMessage: false })
-              }}>
+              }}
+            >
               Continuar
             </Button>
           </Space>
@@ -255,7 +259,8 @@ class Preview extends Component {
             <Badge.Ribbon
               text="Seleccionado"
               color={'#2593FC'}
-              style={this.state.genericPassword ? { display: 'none' } : {}}>
+              style={this.state.genericPassword ? { display: 'none' } : {}}
+            >
               <div
                 style={
                   this.state.genericPassword === false
@@ -266,12 +271,14 @@ class Preview extends Component {
                         borderRadius: '6px',
                       }
                     : {}
-                }>
+                }
+              >
                 <Card
                   style={{ cursor: 'pointer' }}
                   onClick={() =>
                     this.setState({ genericPassword: false, password: null })
-                  }>
+                  }
+                >
                   <Typography.Text strong style={{ textAlign: 'justify' }}>
                     Deseo que la plataforma genere una contraseña para mis asistentes.
                   </Typography.Text>
@@ -292,7 +299,8 @@ class Preview extends Component {
             <Badge.Ribbon
               text="Seleccionado"
               color={'#2593FC'}
-              style={!this.state.genericPassword ? { display: 'none' } : {}}>
+              style={!this.state.genericPassword ? { display: 'none' } : {}}
+            >
               <div
                 style={
                   this.state.genericPassword
@@ -303,12 +311,14 @@ class Preview extends Component {
                         borderRadius: '6px',
                       }
                     : {}
-                }>
+                }
+              >
                 <Card
                   style={{ cursor: 'pointer' }}
                   onClick={() =>
                     this.setState({ genericPassword: true, showModal: true })
-                  }>
+                  }
+                >
                   <Typography.Text strong style={{ textAlign: 'justify' }}>
                     Deseo específicar una contraseña para mis asistentes
                   </Typography.Text>
@@ -355,7 +365,8 @@ class Preview extends Component {
           }
           onClick={() => {
             this.props.importUsers(list, this.state.password)
-          }}>
+          }}
+        >
           Finalizar
         </Button>
 
@@ -365,7 +376,8 @@ class Preview extends Component {
           footer={null}
           destroyOnClose
           closable={false}
-          visible={this.state.showModal}>
+          visible={this.state.showModal}
+        >
           {this.content()}
         </Modal>
 

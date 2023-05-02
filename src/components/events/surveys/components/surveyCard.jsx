@@ -42,7 +42,8 @@ function SurveyCard(props) {
                   marginBottom: '8px',
                   border: '1px solid',
                   borderColor: '#0000001c',
-                }}>
+                }}
+              >
                 <List.Item key={survey._id}>
                   <List.Item.Meta
                     title={<Title level={5}>{survey.name}</Title>}
@@ -112,7 +113,8 @@ function SurveyCard(props) {
                                 }`}
                                 onClick={() => {
                                   handleClick(survey)
-                                }}>
+                                }}
+                              >
                                 {(currentSurveyStatus &&
                                   currentSurveyStatus[survey._id] &&
                                   currentSurveyStatus[survey._id].surveyCompleted ===

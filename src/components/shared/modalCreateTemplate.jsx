@@ -41,7 +41,8 @@ const ModalCreateTemplate = (props) => {
       zIndex={1000}
       closable
       onCancel={() => props.handlevisibleModal()}
-      visible={props.visible}>
+      visible={props.visible}
+    >
       <Form onFinish={onFinish} layout="vertical">
         <Typography.Title level={4} type="secondary">
           Nuevo template de datos a recolectar
@@ -49,7 +50,8 @@ const ModalCreateTemplate = (props) => {
         <Form.Item
           label="Nombre del template"
           name="name"
-          style={{ marginBottom: '10px', marginTop: '20px' }}>
+          style={{ marginBottom: '10px', marginTop: '20px' }}
+        >
           <Input type="text" size="large" placeholder="Nombre del template" />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
@@ -61,7 +63,8 @@ const ModalCreateTemplate = (props) => {
               htmlType="submit"
               block
               style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-              size="large">
+              size="large"
+            >
               Crear template
             </Button>
           )}

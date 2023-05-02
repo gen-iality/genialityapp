@@ -154,7 +154,8 @@ class CheckSpace extends Component {
                 </Button>
               )}
             </>,
-          ]}>
+          ]}
+        >
           {!qrData.another && (
             <>
               {qrData.user ? (
@@ -182,11 +183,13 @@ class CheckSpace extends Component {
                           Camara
                         </>
                       }
-                      key="1">
+                      key="1"
+                    >
                       <Form.Item>
                         <Select
                           value={facingMode}
-                          onChange={(e) => this.setState({ facingMode: e })}>
+                          onChange={(e) => this.setState({ facingMode: e })}
+                        >
                           <Option value="user">Selfie</Option>
                           <Option value="environment">Rear</Option>
                         </Select>
@@ -208,7 +211,8 @@ class CheckSpace extends Component {
                           Pistola
                         </>
                       }
-                      key="2">
+                      key="2"
+                    >
                       <Form.Item label="Código">
                         <Input
                           name="searchCC"
@@ -227,7 +231,8 @@ class CheckSpace extends Component {
                         <Col>
                           <Button
                             type="primary"
-                            onClick={() => this.handleScan(this.state.newCC)}>
+                            onClick={() => this.handleScan(this.state.newCC)}
+                          >
                             Buscar
                           </Button>
                         </Col>

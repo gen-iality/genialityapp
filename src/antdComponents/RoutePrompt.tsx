@@ -128,7 +128,8 @@ export function RouterPrompt({
             onClick={() => handleOK(true)}
             icon={<ContentSave />}
             loading={loadingAndDisablingButtons}
-            disabled={loadingAndDisablingButtons}>
+            disabled={loadingAndDisablingButtons}
+          >
             {okSaveText ? okSaveText : ''}
           </Button>
         ),
@@ -136,13 +137,15 @@ export function RouterPrompt({
           key="goBack"
           onClick={() => handleOK(false)}
           icon={<Logout />}
-          disabled={loadingAndDisablingButtons}>
+          disabled={loadingAndDisablingButtons}
+        >
           {okText ? okText : ''}
         </Button>,
         <Button key="cancel" onClick={handleCancel} disabled={loadingAndDisablingButtons}>
           {cancelText ? cancelText : ''}
         </Button>,
-      ]}>
+      ]}
+    >
       <Space direction="vertical">
         {title ? (
           <Title level={4} type="secondary">

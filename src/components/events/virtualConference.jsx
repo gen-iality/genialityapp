@@ -91,13 +91,15 @@ const VirtualConference = () => {
               <div
                 key={key}
                 hoverable
-                className="animate__animated animate__slideInRight">
+                className="animate__animated animate__slideInRight"
+              >
                 <Link
                   to={
                     item.habilitar_ingreso == 'open_meeting_room'
                       ? `${urlactivity}${item._id}`
                       : `${urlAgenda}`
-                  }>
+                  }
+                >
                   <Row justify="center" align="middle" gutter={[8, 8]}>
                     <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                       <div
@@ -106,13 +108,15 @@ const VirtualConference = () => {
                           justifyContent: 'center',
                           alignContent: 'center',
                           display: 'grid',
-                        }}>
+                        }}
+                      >
                         {item.habilitar_ingreso == 'open_meeting_room' ? (
                           <>
                             <img src={imageUtils.EnVivo} style={{ height: '30px' }} />
                             <span
                               className="ultrasmall-mobile"
-                              style={{ textAlign: 'center' }}>
+                              style={{ textAlign: 'center' }}
+                            >
                               {<FormattedMessage id="live" defaultMessage="En vivo" />}
                             </span>
                           </>
@@ -123,7 +127,8 @@ const VirtualConference = () => {
                             />
                             <span
                               className="ultrasmall-mobile"
-                              style={{ textAlign: 'center' }}>
+                              style={{ textAlign: 'center' }}
+                            >
                               {
                                 <FormattedMessage
                                   id="live.closed"
@@ -145,7 +150,8 @@ const VirtualConference = () => {
                           display: 'grid',
                           height: '100%',
                           alignItems: 'center',
-                        }}>
+                        }}
+                      >
                         <Text strong={truncate} ellipsis={{ rows: 1, expandable: true }}>
                           <a>{item.name}</a>
                         </Text>
@@ -190,13 +196,15 @@ const VirtualConference = () => {
                           justifyContent: 'center',
                           alignContent: 'center',
                           display: 'grid',
-                        }}>
+                        }}
+                      >
                         {item.hosts && (
                           <div className="Virtual-Conferences">
                             <Avatar.Group
                               maxCount={2}
                               size={{ xs: 18, sm: 18, md: 35, lg: 50, xl: 50, xxl: 50 }}
-                              maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}>
+                              maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}
+                            >
                               {item.hosts.length < 3
                                 ? item.hosts.map((host, key) => {
                                     return (

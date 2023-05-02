@@ -88,7 +88,8 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
               marginLeft: '2px',
             }}
             size="small"
-            icon={<DownloadOutlined />}>
+            icon={<DownloadOutlined />}
+          >
             Certificado
           </Button>
         </Link>

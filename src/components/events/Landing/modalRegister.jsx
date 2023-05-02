@@ -29,7 +29,8 @@ const ModalRegister = ({ register, setRegister, event }) => {
       footer={null}
       zIndex={999999999}
       visible={register !== null}
-      closable={false}>
+      closable={false}
+    >
       <Result
         icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
         status="success"
@@ -41,13 +42,15 @@ const ModalRegister = ({ register, setRegister, event }) => {
               onClick={() => setRegister(null)}
               style={{ backgroundColor: '#52C41A', color: '#FFFFFF', marginTop: '10px' }}
               size="large"
-              key="console">
+              key="console"
+            >
               {infoButton}
             </Button>
           ) : (
             <ButtonPayment />
           ),
-        ]}></Result>
+        ]}
+      ></Result>
     </Modal>
   )
 }

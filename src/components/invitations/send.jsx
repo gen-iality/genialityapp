@@ -242,7 +242,8 @@ class SendRsvp extends Component {
             ) : (
               <Col span={14}>
                 <Form.Item
-                  label={`Asunto del correo (Por defecto será el nombre del curso)`}>
+                  label={`Asunto del correo (Por defecto será el nombre del curso)`}
+                >
                   <Input
                     name="subject"
                     placeholder="Escribe aquí el asunto del correo"
@@ -341,13 +342,15 @@ class SendRsvp extends Component {
                     {!this.state.showimgDefault ? (
                       <Button
                         onClick={() => this.setState({ showimgDefault: true })}
-                        type="success">
+                        type="success"
+                      >
                         Mostrar imagen por defecto
                       </Button>
                     ) : (
                       <Button
                         onClick={() => this.setState({ showimgDefault: false })}
-                        danger>
+                        danger
+                      >
                         Quitar imagen por defecto
                       </Button>
                     )}
@@ -437,7 +440,8 @@ class SendRsvp extends Component {
             okButtonProps={{ disabled: this.state.disabled }}
             confirmLoading={this.state.disabled}
             cancelText="Cancelar"
-            okText="Enviar">
+            okText="Enviar"
+          >
             <p>
               Se van a enviar{' '}
               {this.state.selection === 'Todos'

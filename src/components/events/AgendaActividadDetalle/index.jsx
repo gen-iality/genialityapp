@@ -177,7 +177,8 @@ const AgendaActividadDetalle = (props) => {
               style={{ marginTop: '1rem' }}
               type="primary"
               size="large"
-              onClick={nextActivity}>
+              onClick={nextActivity}
+            >
               {intl.formatMessage({
                 id: 'activity.button.next',
                 defaultMessage: 'Siguiente',

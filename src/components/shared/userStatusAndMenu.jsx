@@ -130,7 +130,8 @@ const UserStatusAndMenu = (props) => {
             title={intl.formatMessage({
               id: 'header.title.Event',
               defaultMessage: 'Curso',
-            })}>
+            })}
+          >
             {props.location.pathname.includes('landing') &&
               cEventUser.value &&
               cEventUser.status === 'LOADED' && (
@@ -138,7 +139,8 @@ const UserStatusAndMenu = (props) => {
                   count={intl.formatMessage({
                     id: 'header.new',
                     defaultMessage: 'Nuevo',
-                  })}>
+                  })}
+                >
                   <Menu.Item
                     onClick={() => {
                       props.setViewPerfil({
@@ -149,7 +151,8 @@ const UserStatusAndMenu = (props) => {
                         },
                       })
                     }}
-                    icon={<BadgeAccountOutlineIcon style={{ fontSize: '18px' }} />}>
+                    icon={<BadgeAccountOutlineIcon style={{ fontSize: '18px' }} />}
+                  >
                     <FormattedMessage
                       id="header.my_data_event"
                       defaultMessage="Mi perfil en el curso"
@@ -163,11 +166,13 @@ const UserStatusAndMenu = (props) => {
         title={intl.formatMessage({
           id: 'header.title.Management',
           defaultMessage: 'Administración',
-        })}>
+        })}
+      >
         {visible && (
           <Menu.Item
             icon={<TicketConfirmationOutlineIcon style={{ fontSize: '18px' }} />}
-            onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}>
+            onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}
+          >
             <FormattedMessage
               id={import.meta.env.VITE_HEADER_MENU_FIRST_ITEM_MANAGEMENT}
               defaultMessage={
@@ -179,7 +184,8 @@ const UserStatusAndMenu = (props) => {
         {visible && !isAtOrganizationLanding && (
           <Menu.Item
             icon={<CalendarCheckOutlineIcon style={{ fontSize: '18px' }} />}
-            onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
+            onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}
+          >
             <FormattedMessage
               id={import.meta.env.VITE_HEADER_MENU_SECOND_ITEM_MANAGEMENT}
               defaultMessage={
@@ -193,7 +199,8 @@ const UserStatusAndMenu = (props) => {
             icon={<HexagonMultipleOutlineIcon style={{ fontSize: '18px' }} />}
             onClick={() => {
               linkToTheMenuRouteS(`/myprofile/organization`)
-            }}>
+            }}
+          >
             <FormattedMessage
               id="header.my_organizations"
               defaultMessage="Administrar mis cursos"
@@ -214,7 +221,8 @@ const UserStatusAndMenu = (props) => {
                   ? `/create-event/${props.userEvent._id}/?orgId=${props.eventId}`
                   : `/create-event/${props.userEvent._id}`,
               )
-            }>
+            }
+          >
             <Button block type="primary" size="medium">
               <FormattedMessage id="header.create_event" defaultMessage="Crear curso" />
             </Button>
@@ -226,15 +234,18 @@ const UserStatusAndMenu = (props) => {
         title={intl.formatMessage({
           id: 'header.title.User',
           defaultMessage: 'Usuario',
-        })}>
+        })}
+      >
         <Badge
           count={intl.formatMessage({
             id: 'header.new',
             defaultMessage: 'Nuevo',
-          })}>
+          })}
+        >
           <Menu.Item
             icon={<AccountOutlineIcon style={{ fontSize: '18px' }} />}
-            onClick={() => linkToTheMenuRouteS(`/myprofile`)}>
+            onClick={() => linkToTheMenuRouteS(`/myprofile`)}
+          >
             <FormattedMessage id="header.profile" defaultMessage="Cuenta de usuario" />
           </Menu.Item>
         </Badge>
@@ -242,7 +253,8 @@ const UserStatusAndMenu = (props) => {
         <Menu.Item
           danger
           icon={<LogoutIcon style={{ fontSize: '18px' }} />}
-          onClick={() => showPropsConfirm()}>
+          onClick={() => showPropsConfirm()}
+        >
           <FormattedMessage id="header.logout" defaultMessage="Salir" />
         </Menu.Item>
       </Menu.ItemGroup>
@@ -251,12 +263,14 @@ const UserStatusAndMenu = (props) => {
     <Menu>
       {!props.anonimususer ? (
         <Menu.Item
-          style={ItemStyle}>{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
+          style={ItemStyle}
+        >{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
       ) : (
         <Menu.Item
           danger
           icon={<LogoutIcon style={{ fontSize: '18px' }} />}
-          onClick={() => showPropsConfirm()}>
+          onClick={() => showPropsConfirm()}
+        >
           <FormattedMessage id="header.logout" defaultMessage="Salir" />
         </Menu.Item>
       )}
@@ -279,7 +293,8 @@ const UserStatusAndMenu = (props) => {
                 padding: '15px',
                 border: '1px solid #e8e8e8',
                 background: '#f5f5f5',
-              }}>
+              }}
+            >
               {photo ? (
                 <Avatar src={photo} />
               ) : (
@@ -363,11 +378,13 @@ const UserStatusAndMenu = (props) => {
               <Space justify="end">
                 <Link
                   title="Ir a la organización"
-                  to={`/organization/${cEvent.value?.organizer._id}/events`}>
+                  to={`/organization/${cEvent.value?.organizer._id}/events`}
+                >
                   <Button
                     style={{ borderRadius: '10px' }}
                     size="middle"
-                    icon={<ArrowLeftOutlined />}>
+                    icon={<ArrowLeftOutlined />}
+                  >
                     Todos los cursos
                   </Button>
                 </Link>

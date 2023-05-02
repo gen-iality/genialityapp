@@ -46,7 +46,8 @@ const DynamicMultipleListField: React.FunctionComponent<
     <DynamicFormItem
       fieldData={fieldData}
       rules={rules}
-      initialValue={allInitialValues[name]}>
+      initialValue={allInitialValues[name]}
+    >
       <Checkbox.Group options={options} />
     </DynamicFormItem>
   )

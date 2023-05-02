@@ -47,7 +47,8 @@ const ProductList = (props) => {
             marginRight: 60,
             marginLeft: 60,
             marginTop: 50,
-          }}>
+          }}
+        >
           Aún no existen artículos en la galería
         </Card>
       )}

@@ -79,7 +79,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
                 md={24}
                 lg={10}
                 xl={10}
-                xxl={10}>
+                xxl={10}
+              >
                 <Card
                   // extra={
                   //   ((user.telefono && user.telefono !== null && user.telefono.length === 10) ||
@@ -109,7 +110,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
                   //   )
                   // }
                   style={{ width: '100%', textAlign: 'left' }}
-                  bordered>
+                  bordered
+                >
                   <Meta
                     avatar={
                       <Avatar size={65} src={user['picture'] ? user['picture'] : ''}>
@@ -154,7 +156,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
                       block
                       size="large"
                       style={{ backgroundColor: '#363636', color: 'white' }}
-                      onClick={() => agendarCita(contact._id, contact)}>
+                      onClick={() => agendarCita(contact._id, contact)}
+                    >
                       Agendar cita
                     </Button>
                   </Col>

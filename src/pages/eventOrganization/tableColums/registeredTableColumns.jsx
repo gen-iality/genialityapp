@@ -147,7 +147,8 @@ export const columns = (columnsData, extraFields = [], addNewCertificationModal)
           <Tag
             color={
               vigencia > 10 ? 'green' : vigencia < 10 && vigencia > 0 ? 'orange' : 'red'
-            }>
+            }
+          >
             {`${vigencia} días`}
           </Tag>
         )
@@ -185,7 +186,8 @@ export const columns = (columnsData, extraFields = [], addNewCertificationModal)
               onClick={(e) => {
                 addNewCertificationModal(item)
               }}
-              icon={<FileAddOutlined />}></Button>
+              icon={<FileAddOutlined />}
+            ></Button>
           </Tooltip>
         </>
       )

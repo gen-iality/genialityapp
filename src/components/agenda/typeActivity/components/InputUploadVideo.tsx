@@ -52,7 +52,8 @@ const InputUploadVideo = (props: any) => {
 
         if (status == 'error') {
         }
-      }}>
+      }}
+    >
       <Result
         icon={<FileVideoOutlineIcon />}
         title="Haga clic o arrastre el video a esta área para cargarlo"

@@ -357,7 +357,8 @@ const DynamicForm: React.FunctionComponent<IDynamicFormProps> = (props) => {
         setWasFormChanged(true)
         console.log('setWasFormChanged called')
         onValueChange(...args)
-      }}>
+      }}
+    >
       {Fields.filter((field) => !!field)}
 
       {!noSubmitButton && (

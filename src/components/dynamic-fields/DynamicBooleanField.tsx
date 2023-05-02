@@ -54,7 +54,8 @@ const DynamicBooleanField: React.FunctionComponent<IDynamicBooleanFieldProps> = 
       fieldData={fieldDataWithoutLabel}
       rules={rules}
       valuePropName="checked"
-      initialValue={allInitialValues[name]}>
+      initialValue={allInitialValues[name]}
+    >
       <Checkbox
         {...secondProps}
         name={name}

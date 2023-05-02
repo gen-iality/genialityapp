@@ -88,7 +88,8 @@ class CommentsList extends Component {
               margin: '0 auto',
               textAlign: 'left',
               padding: '0px 30px',
-            }}>
+            }}
+          >
             Aún sin comentarios
           </Card>
         )}
@@ -122,7 +123,8 @@ class CommentsList extends Component {
                     <Tooltip
                       title={dayjs(new Date(item.date.toMillis())).format(
                         'YYYY-MM-DD HH:mm:ss',
-                      )}>
+                      )}
+                    >
                       <span>
                         {dayjs(dayjs(new Date(item.date.toMillis()))).from(
                           dayjs(new Date()),

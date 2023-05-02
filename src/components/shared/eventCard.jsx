@@ -96,7 +96,8 @@ class EventCard extends Component {
                 </Space>
               </div>
             </span>
-          }>
+          }
+        >
           <Card
             bordered={bordered}
             loading={loading}
@@ -197,7 +198,8 @@ class EventCard extends Component {
               )
             }
             actions={right}
-            bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}>
+            bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
+          >
             <Meta
               style={{}}
               description={
@@ -221,7 +223,8 @@ class EventCard extends Component {
                         </span>
                         <Typography.Text
                           ellipsis={!!isAdmin}
-                          style={isAdmin ? styleAdmin : styleNormal}>
+                          style={isAdmin ? styleAdmin : styleNormal}
+                        >
                           {event.name}
                         </Typography.Text>
                         <span>
@@ -252,7 +255,8 @@ class EventCard extends Component {
                         </span>
                         <Typography.Text
                           ellipsis={!!isAdmin}
-                          style={isAdmin ? styleAdmin : styleNormal}>
+                          style={isAdmin ? styleAdmin : styleNormal}
+                        >
                           {event.name}
                         </Typography.Text>
                         <span>
@@ -276,7 +280,8 @@ class EventCard extends Component {
             closable
             footer={false}
             visible
-            onCancel={() => this.closeModal()}>
+            onCancel={() => this.closeModal()}
+          >
             El evento será habilitado próximamente
           </Modal>
         )}

@@ -48,7 +48,8 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
               />
             }
             actions={right}
-            bodyStyle={{ paddingRight: '0px' }}>
+            bodyStyle={{ paddingRight: '0px' }}
+          >
             <Meta
               style={{}}
               description={
@@ -70,7 +71,8 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
                         color: '#ffffff',
                         borderRadius: '2px',
                         fontSize: '12px',
-                      }}>
+                      }}
+                    >
                       {videoDuration(parseInt(duration))}
                     </span>
                   </Space>
@@ -94,7 +96,8 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
                 url={activity.video}
                 onDuration={handleDuration}
               />
-            }>
+            }
+          >
             <Meta
               description={
                 <div>

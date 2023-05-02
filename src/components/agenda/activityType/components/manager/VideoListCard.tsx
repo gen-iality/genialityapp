@@ -114,7 +114,8 @@ const VideoListCard = (props: any) => {
                           }
                           type="text"
                           onClick={() => asignarVideo(item.hls_url)}
-                          key="option-assign"></Button>
+                          key="option-assign"
+                        ></Button>
                       </Tooltip>,
                       <Tooltip title="Descargar">
                         <Button
@@ -123,7 +124,8 @@ const VideoListCard = (props: any) => {
                           type="link"
                           download="video.mp4"
                           href={item.download}
-                          key="option-dowload"></Button>
+                          key="option-dowload"
+                        ></Button>
                       </Tooltip>,
                       <Tooltip title="Visualizar">
                         <Button
@@ -133,7 +135,8 @@ const VideoListCard = (props: any) => {
                           onClick={() =>
                             visualizeVideo(item.hls_url, item.created_at, item.name)
                           }
-                          key="option-preview"></Button>
+                          key="option-preview"
+                        ></Button>
                       </Tooltip>,
                       ,
                       <Popconfirm
@@ -149,19 +152,22 @@ const VideoListCard = (props: any) => {
                           }
                         }}
                         okText="Si"
-                        cancelText="No">
+                        cancelText="No"
+                      >
                         <Tooltip color="red" title="Eliminar video">
                           <Button
                             danger
                             size="large"
                             icon={<DeleteOutlined />}
                             type="text"
-                            key="option-delete"></Button>
+                            key="option-delete"
+                          ></Button>
                         </Tooltip>
                       </Popconfirm>,
                     ]
                   : [<Spin indicator={<LoadingOutlined />} tip="Procesando..." />]
-              }>
+              }
+            >
               <List.Item.Meta
                 avatar={
                   <Image

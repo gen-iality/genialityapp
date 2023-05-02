@@ -11,11 +11,13 @@ const ModalPreviewVideo = () => {
       width="680px"
       bodyStyle={{ paddingTop: '40px' }}
       visible={videoObject !== null}
-      footer={null}>
+      footer={null}
+    >
       <Row gutter={[0, 0]}>
         <Col
           style={{ borderRadius: '5px', overflow: 'hidden', aspectRatio: '16/9' }}
-          span={24}>
+          span={24}
+        >
           <ReactPlayer
             controls
             width="100%"

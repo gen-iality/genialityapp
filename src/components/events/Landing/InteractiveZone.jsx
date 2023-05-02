@@ -17,7 +17,8 @@ const InteractiveZone = () => {
           }
           size="large"
           onClick={this.showDrawerMobile}
-          style={this.state.visibleChat ? { display: 'none' } : {}}></Button>
+          style={this.state.visibleChat ? { display: 'none' } : {}}
+        ></Button>
       </div>
       <Drawer
         height={450}
@@ -26,7 +27,8 @@ const InteractiveZone = () => {
         onClose={this.onClose}
         visible={this.state.visibleChat}
         maskClosable
-        className="drawerMobile">
+        className="drawerMobile"
+      >
         <SocialZone
           updateChat={this.state.updateChat}
           collapse={this.state.collapsed}
@@ -58,7 +60,8 @@ const InteractiveZone = () => {
           theme="light"
           collapsible
           collapsed={this.state.collapsed}
-          width={400}>
+          width={400}
+        >
           <div className="Chat-Event">
             {this.state.collapsed ? (
               <>

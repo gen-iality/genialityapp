@@ -167,7 +167,8 @@ const ColumnProgreso = ({
           updateAttendee(attendee)
           updateCurrentUser(item)
           onOpen()
-        }}>
+        }}
+      >
         {`${attendee.length || 0}/${allActivities.length || 0}`}
       </Button>
     )
@@ -784,8 +785,7 @@ class ListEventUser extends Component {
             loading: false,
           })
         },
-        () => {
-        },
+        () => {},
       )
     } catch (error) {
       const errorData = handleRequestError(error)
@@ -861,7 +861,7 @@ class ListEventUser extends Component {
     const { qrData } = this.state
     const { event } = this.props
     qrData.another = true
-   
+
     const eventIdSearch = this.props.match.params.id
       ? this.props.match.params.id
       : this.props.event._id
@@ -1044,13 +1044,15 @@ class ListEventUser extends Component {
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
-            style={{ width: 90 }}>
+            style={{ width: 90 }}
+          >
             Search
           </Button>
           <Button
             onClick={() => this.handleReset(clearFilters)}
             size="small"
-            style={{ width: 90 }}>
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
         </Space>
@@ -1217,7 +1219,8 @@ class ListEventUser extends Component {
                 paddingRight: '20px',
                 textAlign: 'end',
                 borderRadius: '3px',
-              }}>
+              }}
+            >
               <strong> Última Sincronización: </strong>{' '}
               <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
             </div>
@@ -1230,7 +1233,8 @@ class ListEventUser extends Component {
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
                       color="lightgrey"
-                      icon={<UsergroupAddOutlined />}>
+                      icon={<UsergroupAddOutlined />}
+                    >
                       <strong>Inscritos: </strong>
                       <span style={{ fontSize: '13px' }}>{inscritos}</span>
                     </Tag>
@@ -1239,7 +1243,8 @@ class ListEventUser extends Component {
                     <Tag
                       style={{ color: 'black', fontSize: '13px', borderRadius: '4px' }}
                       color="lightgrey"
-                      icon={<StarOutlined />}>
+                      icon={<StarOutlined />}
+                    >
                       <strong>Participantes: </strong>
                       <span style={{ fontSize: '13px' }}>
                         {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}{' '}
@@ -1274,7 +1279,8 @@ class ListEventUser extends Component {
                   <Button
                     type="ghost"
                     icon={<FullscreenOutlined />}
-                    onClick={this.showModal}>
+                    onClick={this.showModal}
+                  >
                     Expandir
                   </Button>
                 </Col>
@@ -1286,7 +1292,8 @@ class ListEventUser extends Component {
                   value={this.state.typeScanner}
                   defaultValue={this.state.typeScanner}
                   onChange={(e) => this.handleChange(e)}
-                  style={{ width: 220 }}>
+                  style={{ width: 220 }}
+                >
                   <Option value="scanner-qr">Escanear QR</Option>
                   {fieldsForm.map((item, index) => {
                     if (item.type === 'checkInField')
@@ -1303,7 +1310,8 @@ class ListEventUser extends Component {
                   <Button
                     type="primary"
                     icon={<DownloadOutlined />}
-                    onClick={this.exportFile}>
+                    onClick={this.exportFile}
+                  >
                     Exportar
                   </Button>
                 )}
@@ -1316,13 +1324,15 @@ class ListEventUser extends Component {
                         ? ''
                         : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`,
                     state: { activityId },
-                  }}>
+                  }}
+                >
                   <Button
                     type="primary"
                     icon={<UploadOutlined />}
                     disabled={
                       !eventIsActive && window.location.toString().includes('eventadmin')
-                    }>
+                    }
+                  >
                     Importar usuarios
                   </Button>
                 </Link>
@@ -1335,7 +1345,8 @@ class ListEventUser extends Component {
                   onClick={this.addUser}
                   disabled={
                     !eventIsActive && window.location.toString().includes('eventadmin')
-                  }>
+                  }
+                >
                   Agregar usuario
                 </Button>
               </Col>
@@ -1383,7 +1394,8 @@ class ListEventUser extends Component {
               type="primary"
               size="large"
               onClick={this.hideModal}
-              key="close">
+              key="close"
+            >
               Cerrar
             </Button>,
             <div key="fecha" style={{ float: 'left' }}>
@@ -1394,7 +1406,8 @@ class ListEventUser extends Component {
             </div>,
           ]}
           style={{ top: 0, textAlign: 'center' }}
-          width="100vw">
+          width="100vw"
+        >
           <Row align="middle" justify="center" style={{ width: '80vw' }}>
             <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
               <Row align="middle">
@@ -1410,7 +1423,8 @@ class ListEventUser extends Component {
                     ) : (
                       ''
                     )
-                  }></Card>
+                  }
+                ></Card>
               </Row>
             </Col>
             <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>
@@ -1422,7 +1436,8 @@ class ListEventUser extends Component {
                       title={
                         <Title
                           level={2}
-                          style={{ textAlign: 'center', color: '#b5b5b5' }}>
+                          style={{ textAlign: 'center', color: '#b5b5b5' }}
+                        >
                           Inscritos
                         </Title>
                       }
@@ -1437,7 +1452,8 @@ class ListEventUser extends Component {
                       title={
                         <Title
                           level={2}
-                          style={{ textAlign: 'center', color: '#b5b5b5' }}>
+                          style={{ textAlign: 'center', color: '#b5b5b5' }}
+                        >
                           Participantes
                         </Title>
                       }
@@ -1454,7 +1470,8 @@ class ListEventUser extends Component {
                       title={
                         <Title
                           level={2}
-                          style={{ textAlign: 'center', color: '#b5b5b5' }}>
+                          style={{ textAlign: 'center', color: '#b5b5b5' }}
+                        >
                           Asistencia por Coeficientes
                         </Title>
                       }

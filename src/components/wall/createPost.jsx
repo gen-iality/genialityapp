@@ -55,7 +55,8 @@ const Editor = ({
           style={{ background: loadingsave ? 'white' : '#333F44' }}
           htmlType="submit"
           loading={submitting}
-          type="primary">
+          type="primary"
+        >
           Enviar
         </Button>
       )}
@@ -231,7 +232,8 @@ class CreatePost extends Component {
             <Button
               style={{ marginBottom: '3%', marginTop: '3%' }}
               type="primary"
-              onClick={this.showModal}>
+              onClick={this.showModal}
+            >
               Crear publicación
             </Button>
           )}
@@ -256,7 +258,8 @@ class CreatePost extends Component {
             title="Publicaciones"
             onOk={this.handleOk}
             onCancel={this.handleCancel}
-            footer={[]}>
+            footer={[]}
+          >
             <Row>
               <Col
                 style={{ textAlign: 'center' }}
@@ -264,7 +267,8 @@ class CreatePost extends Component {
                 sm={24}
                 md={24}
                 lg={24}
-                xl={24}>
+                xl={24}
+              >
                 <Space>
                   {/* Boton para subir foto desde la galeria del dispositivo */}
                   <Upload
@@ -272,7 +276,8 @@ class CreatePost extends Component {
                     accept="image/*"
                     multiple={false}
                     showUploadList={false}
-                    onChange={(e) => this.previewImage(e)}>
+                    onChange={(e) => this.previewImage(e)}
+                  >
                     <Button type="primary" icon={<CloudUploadOutlined />}>
                       Subir foto
                     </Button>
@@ -283,7 +288,8 @@ class CreatePost extends Component {
                       style={{ marginLeft: '3%' }}
                       onClick={(e) => {
                         this.setState({ hidden: true }, this.setModal2Visible(true))
-                      }}>
+                      }}
+                    >
                       <CameraOutlined />
                     </Button>
                   </Space>
@@ -307,10 +313,12 @@ class CreatePost extends Component {
                           type="primary"
                           onClick={(e) => {
                             this.setState({ hidden: false }, this.setModal2Visible(false))
-                          }}>
+                          }}
+                        >
                           Listo usar esta
                         </Button>,
-                      ]}>
+                      ]}
+                    >
                       <CameraFeed getImage={this.getImage} sendFile={this.uploadImage} />
                     </Modal>
                   </div>
@@ -320,7 +328,8 @@ class CreatePost extends Component {
                     <Card
                       hoverable
                       style={{ marginRight: 'auto', marginLeft: 'auto', width: '100%' }}
-                      cover={<img key={this.state.keyImage} src={image} />}>
+                      cover={<img key={this.state.keyImage} src={image} />}
+                    >
                       <Button onClick={this.cancelUploadImage}>Eliminar foto</Button>
                     </Card>
                   )}

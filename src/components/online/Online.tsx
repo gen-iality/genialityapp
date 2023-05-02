@@ -15,7 +15,8 @@ const Online: FunctionComponent<OnlineProps> = (props) => {
         height: '16px',
         borderRadius: '8px',
         backgroundColor: isOnline === null ? 'gray' : isOnline ? 'green' : 'red',
-      }}></div>
+      }}
+    ></div>
   )
 }
 

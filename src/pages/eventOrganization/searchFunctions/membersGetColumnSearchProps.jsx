@@ -39,13 +39,15 @@ export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
           onClick={() => handleSearch(selectedKeys, confirm, dataIndex, columnsData)}
           icon={<SearchOutlined />}
           size="small"
-          style={{ width: 90 }}>
+          style={{ width: 90 }}
+        >
           Search
         </Button>
         <Button
           onClick={() => handleReset(clearFilters, columnsData, dataIndex)}
           size="small"
-          style={{ width: 90 }}>
+          style={{ width: 90 }}
+        >
           Reset
         </Button>
         <Button
@@ -53,7 +55,8 @@ export const membersGetColumnSearchProps = (dataIndex, columnsData) => ({
           size="small"
           onClick={() =>
             handleSearch(selectedKeys, confirm, dataIndex, columnsData, false)
-          }>
+          }
+        >
           Filter
         </Button>
       </Space>

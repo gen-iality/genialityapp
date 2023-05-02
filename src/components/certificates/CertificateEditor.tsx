@@ -409,7 +409,8 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
                     console.log('Dont upload', { file })
                     handleImage(file)
                     return false
-                  }}>
+                  }}
+                >
                   <Button type="primary" icon={<UploadOutlined />}>
                     Imagen de Fondo
                   </Button>
@@ -419,7 +420,8 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
                 <Button
                   type="primary"
                   icon={isGenerating ? <LoadingOutlined /> : undefined}
-                  onClick={() => generatePDF()}>
+                  onClick={() => generatePDF()}
+                >
                   Generar
                 </Button>
               </Col>
@@ -434,7 +436,8 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
             name="name"
             label="Nombre del certificado"
             initialValue={certificateData.name}
-            rules={[{ required: true, message: 'Necesario' }]}>
+            rules={[{ required: true, message: 'Necesario' }]}
+          >
             <Input placeholder="Nombre del certificado" />
           </Form.Item>
         </Col>
@@ -489,10 +492,12 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
                     background: defaultCertificateBackground,
                   })
                 }
-                icon={<CloseCircleOutlined />}>
+                icon={<CloseCircleOutlined />}
+              >
                 Cambiar a Imagen original
               </Button>
-            }>
+            }
+          >
             <ImageAntD src={certificateData.background} alt="Imagen certificado" />
           </Form.Item>
         </Col>

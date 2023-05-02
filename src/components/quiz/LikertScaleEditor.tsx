@@ -206,7 +206,8 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
                       newSourceData,
                     )
                     setSourceData(newSourceData)
-                  }}>
+                  }}
+                >
                   <DeleteOutlined />
                 </Button>
               ) : (
@@ -222,7 +223,8 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
                     }
                     setSourceData(newSourceData)
                   }}
-                  checked={sourceData.values[value.row] === value.column}>
+                  checked={sourceData.values[value.row] === value.column}
+                >
                   {/*value.row*/}
                 </Checkbox>
               )}
@@ -255,7 +257,8 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
                 newSourceData.rows.splice(i, 1)
                 console.debug('LikertScaleEditor.delete', i, 'at rows', newSourceData)
                 setSourceData(newSourceData)
-              }}>
+              }}
+            >
               <DeleteOutlined />
             </Button>
           )}

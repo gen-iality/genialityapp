@@ -71,7 +71,8 @@ const DynamicTermsAndCondictionsField: React.FunctionComponent<
       fieldData={fieldDataWithoutLabel}
       rules={rules}
       valuePropName="checked"
-      initialValue={allInitialValues[name]}>
+      initialValue={allInitialValues[name]}
+    >
       <Checkbox
         {...secondProps}
         name={name}

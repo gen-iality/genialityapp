@@ -156,7 +156,8 @@ class Speakers extends Component {
           }
           key={'sp' + speaker._id}
           data-target="#myModal"
-          aria-haspopup="true">
+          aria-haspopup="true"
+        >
           Ver más...
         </Button>
       )
@@ -197,7 +198,8 @@ class Speakers extends Component {
                                 borderRadius: '5px',
                                 backgroundColor: '#FFFFFF',
                                 boxSizing: 'border-box',
-                              }}>
+                              }}
+                            >
                               <span style={{ fontSize: '18px', fontWeight: '700' }}>
                                 {category.name}
                               </span>
@@ -212,7 +214,8 @@ class Speakers extends Component {
                                     md={12}
                                     lg={12}
                                     xl={12}
-                                    xxl={12}>
+                                    xxl={12}
+                                  >
                                     <Card
                                       onClick={() => {
                                         if (
@@ -273,7 +276,8 @@ class Speakers extends Component {
                                       }
                                       actions={
                                         speaker.description && [this.btnViewMore(speaker)]
-                                      }>
+                                      }
+                                    >
                                       <Meta
                                         /* title={[
                                           <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
@@ -297,14 +301,16 @@ class Speakers extends Component {
                                             style={{
                                               minHeight: '100px',
                                               textAlign: 'center',
-                                            }}>
+                                            }}
+                                          >
                                             <Title
                                               level={4}
                                               style={{
                                                 color:
                                                   this.props.cEvent.value?.styles
                                                     ?.textMenu,
-                                              }}>
+                                              }}
+                                            >
                                               {speaker.name}
                                             </Title>
                                             <Paragraph
@@ -312,7 +318,8 @@ class Speakers extends Component {
                                                 color:
                                                   this.props.cEvent.value?.styles
                                                     ?.textMenu,
-                                              }}>
+                                              }}
+                                            >
                                               {speaker.profession}
                                             </Paragraph>
                                           </div>,
@@ -398,23 +405,27 @@ class Speakers extends Component {
                           />
                         )
                       }
-                      actions={speaker.description && [this.btnViewMore(speaker)]}>
+                      actions={speaker.description && [this.btnViewMore(speaker)]}
+                    >
                       <Meta
                         description={[
                           <div
                             key={'speaker-description  ' + key}
-                            style={{ minHeight: '100px', textAlign: 'center' }}>
+                            style={{ minHeight: '100px', textAlign: 'center' }}
+                          >
                             <Title
                               level={4}
                               style={{
                                 color: this.props.cEvent.value?.styles?.textMenu,
-                              }}>
+                              }}
+                            >
                               {speaker.name}
                             </Title>
                             <Paragraph
                               style={{
                                 color: this.props.cEvent.value?.styles?.textMenu,
-                              }}>
+                              }}
+                            >
                               {speaker.profession}
                             </Paragraph>
                           </div>,
@@ -440,7 +451,8 @@ class Speakers extends Component {
           width={1000}
           visible={this.state.modalVisible}
           onCancel={() => this.setModalVisible(false)}
-          footer={null}>
+          footer={null}
+        >
           <Row>
             {/* Imagen del conferencista */}
 
@@ -492,7 +504,8 @@ class Speakers extends Component {
                   key="cerrar"
                   size="large"
                   type="primary"
-                  onClick={() => this.setModalVisible(false)}>
+                  onClick={() => this.setModalVisible(false)}
+                >
                   Cerrar
                 </Button>
               </Row>
@@ -506,7 +519,8 @@ class Speakers extends Component {
               {activityesBySpeaker.map((activities, key) => (
                 <div key={key}>
                   <Card
-                    style={{ padding: '24px 40px', top: '50px', marginBottom: '30px' }}>
+                    style={{ padding: '24px 40px', top: '50px', marginBottom: '30px' }}
+                  >
                     <div>
                       <p>
                         <b>

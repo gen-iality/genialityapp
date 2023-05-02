@@ -92,7 +92,8 @@ class DocumentsList extends Component {
         ) : (
           <>
             <Card //bodyStyle={{ backgroundColor: this.props.colors.backgroundColor }}
-              style={{ textAlign: 'left' }}>
+              style={{ textAlign: 'left' }}
+            >
               <List
                 itemLayout="horizontal"
                 size="small"
@@ -111,7 +112,8 @@ class DocumentsList extends Component {
                           target="_blank"
                           href={item.file}
                           download
-                          rel="noopener noreferrer">
+                          rel="noopener noreferrer"
+                        >
                           {item.type == 'folder' ? (
                             ''
                           ) : (
@@ -139,7 +141,8 @@ class DocumentsList extends Component {
                         //         icon={EyeOutlined}
                         //     />
                         // </a>
-                      ]}>
+                      ]}
+                    >
                       <List.Item.Meta
                         style={{ marginRight: '10%', fontSize: '20px' }}
                         avatar={
@@ -156,7 +159,8 @@ class DocumentsList extends Component {
                             <span
                               style={{
                                 fontSize: '20px', //color: this.props.colors.texto
-                              }}>
+                              }}
+                            >
                               {' '}
                               {item.title}{' '}
                             </span>
@@ -164,7 +168,8 @@ class DocumentsList extends Component {
                             <span
                               style={{
                                 fontSize: '20px', //color: this.props.colors.texto
-                              }}>
+                              }}
+                            >
                               {' '}
                               {item.name}{' '}
                             </span>
@@ -189,7 +194,8 @@ class DocumentsList extends Component {
                                 target="_blank"
                                 href={files.file}
                                 download
-                                rel="noopener noreferrer">
+                                rel="noopener noreferrer"
+                              >
                                 {files.type == 'folder' ? (
                                   <DownOutlined />
                                 ) : (
@@ -207,7 +213,8 @@ class DocumentsList extends Component {
                                   />
                                 )}
                               </a>,
-                            ]}>
+                            ]}
+                          >
                             <List.Item.Meta
                               style={{ marginRight: '10%' }}
                               avatar={

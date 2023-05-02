@@ -20,13 +20,15 @@ export const getColumnSearchProps = (dataIndex, columnsData) => ({
           onClick={() => columnsData.handleSearch(selectedKeys, confirm, dataIndex)}
           icon={<SearchOutlined />}
           size="small"
-          style={{ width: 90 }}>
+          style={{ width: 90 }}
+        >
           Buscar
         </Button>
         <Button
           onClick={() => columnsData.handleReset(clearFilters)}
           size="small"
-          style={{ width: 90 }}>
+          style={{ width: 90 }}
+        >
           Borrar
         </Button>
       </Space>

@@ -349,7 +349,8 @@ class UserModal extends Component {
             paddingTop: '0px',
             paddingBottom: '0px',
             marginTop: '30px',
-          }}>
+          }}
+        >
           {componentKey === 'event-checkin' || componentKey == 'activity-checkin' ? (
             <FormEnrollAttendeeToEvent
               fields={this.props.extraFields}
@@ -412,7 +413,8 @@ class UserModal extends Component {
                       this.setState({ makeUserRegister: true })
                       this.setState({ existGenialialityUser: true })
                     }}
-                    type="primary">
+                    type="primary"
+                  >
                     Registrar Usuario
                   </Button>
                 </>

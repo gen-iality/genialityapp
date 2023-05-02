@@ -49,7 +49,8 @@ function NoMatchPage(props) {
                 </Button>
               </Link>
               <Link
-                to={`/landing/${props.eventId ? props.eventId : props.match.params.id}`}>
+                to={`/landing/${props.eventId ? props.eventId : props.match.params.id}`}
+              >
                 <Button key="moreEvents">Ir a la landing de este curso</Button>
               </Link>
             </>

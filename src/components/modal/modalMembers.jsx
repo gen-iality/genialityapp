@@ -150,7 +150,8 @@ function ModalMembers(props) {
         closable
         footer={false}
         visible
-        onCancel={() => props.closeOrOpenModalMembers()}>
+        onCancel={() => props.closeOrOpenModalMembers()}
+      >
         <div
           style={{
             paddingLeft: '0px',
@@ -158,7 +159,8 @@ function ModalMembers(props) {
             paddingTop: '0px',
             paddingBottom: '0px',
             marginTop: '30px',
-          }}>
+          }}
+        >
           {!props.editMember ? (
             <RegisterUserAndOrgMember
               screens={screens}

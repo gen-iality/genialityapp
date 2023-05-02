@@ -116,7 +116,8 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
           paddingTop: '0.5rem',
         }}
         text={nodeIfCompleted}
-        color="#fb8500">
+        color="#fb8500"
+      >
         {render()}
       </Badge.Ribbon>
     )

@@ -26,7 +26,8 @@ const DynamicFormDescription: React.FunctionComponent<
             key="1"
             header={intl.formatMessage({
               id: 'registration.message.policy',
-            })}>
+            })}
+          >
             <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
           </Collapse.Panel>
         </Collapse>

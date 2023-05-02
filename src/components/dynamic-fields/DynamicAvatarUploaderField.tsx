@@ -60,7 +60,8 @@ const DynamicAvatarUploaderField: React.FunctionComponent<
     <DynamicFormItem
       fieldData={fieldData}
       rules={[basicRule]}
-      initialValue={initialValue}>
+      initialValue={initialValue}
+    >
       <ImgCrop rotate shape="round">
         <Upload
           action="https://api.evius.co/api/files/upload/"
@@ -84,7 +85,8 @@ const DynamicAvatarUploaderField: React.FunctionComponent<
             console.log('remove', { file })
             form.setFieldsValue({ [name]: undefined })
           }}
-          beforeUpload={handleBeforeUpload}>
+          beforeUpload={handleBeforeUpload}
+        >
           <Button type="primary" icon={<UploadOutlined />}>
             <FormattedMessage
               id="form.button.avatar"

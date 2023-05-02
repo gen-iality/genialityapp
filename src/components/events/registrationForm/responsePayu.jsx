@@ -70,7 +70,8 @@ const ResponsePayu = (props) => {
       }}
       closable={false}
       visible={visible}
-      footer={null}>
+      footer={null}
+    >
       <Result
         icon={
           response &&
@@ -129,7 +130,8 @@ const ResponsePayu = (props) => {
               !isDeclined()
                 ? (window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/evento`)
                 : (window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/tickets`)
-            }}>
+            }}
+          >
             Aceptar
           </Button>,
         ]}

@@ -28,7 +28,8 @@ function MeetingPlayer({ activity }) {
           allow="camera *;microphone *"
           frameborder="0"
           allowfullscreen
-          src={eviusmeetUrl}></iframe>
+          src={eviusmeetUrl}
+        ></iframe>
       </div>
     </>
   )

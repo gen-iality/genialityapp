@@ -28,11 +28,13 @@ class UserOneTimeLoginLinkForm extends Component {
               <Row style={{ marginTop: '30px', marginBottom: '30px' }}>
                 <Col
                   span={24}
-                  style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  style={{ display: 'inline-flex', justifyContent: 'center' }}
+                >
                   <Button
                     onClick={handleCloseRecoveryPass}
                     type="primary"
-                    style={{ marginRight: '15px' }}>
+                    style={{ marginRight: '15px' }}
+                  >
                     {intl.formatMessage({ id: 'button.return' })}
                   </Button>
                 </Col>
@@ -51,7 +53,8 @@ class UserOneTimeLoginLinkForm extends Component {
                       required: true,
                       message: intl.formatMessage({ id: 'form.field.required' }),
                     },
-                  ]}>
+                  ]}
+                >
                   <Input />
                 </Form.Item>
               </Col>
@@ -60,7 +63,8 @@ class UserOneTimeLoginLinkForm extends Component {
               <Row gutter={[24, 24]}>
                 <Col
                   span={24}
-                  style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  style={{ display: 'inline-flex', justifyContent: 'center' }}
+                >
                   <span style={{ color: 'red' }}>
                     {intl.formatMessage({ id: 'restore.email.not.registered' })}
                   </span>
@@ -77,7 +81,8 @@ class UserOneTimeLoginLinkForm extends Component {
                       <Button
                         onClick={handleCloseRecoveryPass}
                         type="default"
-                        style={{ marginRight: '15px' }}>
+                        style={{ marginRight: '15px' }}
+                      >
                         {intl.formatMessage({ id: 'button.cancel' })}
                       </Button>
                     )}

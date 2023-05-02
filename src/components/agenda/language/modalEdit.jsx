@@ -34,7 +34,8 @@ const ModalEdit = ({ visible, data, onFinish }) => {
         <Button key="back" onClick={handleCancel}>
           Cerrar
         </Button>,
-      ]}>
+      ]}
+    >
       <Form onFinish={onFinish} form={form}>
         <Form.Item label="Lenguaje" name="language">
           <Select>

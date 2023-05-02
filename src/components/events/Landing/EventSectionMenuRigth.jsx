@@ -21,7 +21,8 @@ const EventSectionMenuRigth = (props) => {
       id="button_open_menu"
       className="animate__animated animate__headShake animate__slower animate__infinite"
       type="link"
-      onClick={() => HandleOpenCloseMenuRigth(true)}>
+      onClick={() => HandleOpenCloseMenuRigth(true)}
+    >
       <ArrowRightOutlined
         style={{ fontSize: '20px', color: cEvent.value.styles.textMenu }}
       />
@@ -34,7 +35,8 @@ const EventSectionMenuRigth = (props) => {
       style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
       trigger={null}
       width={400}
-      collapsed={isCollapsedMenuRigth}>
+      collapsed={isCollapsedMenuRigth}
+    >
       {!props.viewPerfil ? (
         <div className="Chat-Event" style={{ height: '100%' }}>
           {isCollapsedMenuRigth ? (

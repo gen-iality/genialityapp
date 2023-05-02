@@ -104,7 +104,8 @@ function Transmitir(props) {
               cancelText="Cerrar"
               title="Organización"
               visible={organization && !isbyOrganization}
-              onCancel={() => changeOrganization(false)}>
+              onCancel={() => changeOrganization(false)}
+            >
               <List
                 style={{ height: 400, overflowY: 'auto' }}
                 size="small"
@@ -120,7 +121,8 @@ function Transmitir(props) {
                           : 'rgba(0, 0, 0, 0.85)',
                       background: selectOrganization?.id == item.id ? '#40a9ff' : 'white',
                     }}
-                    onClick={() => selectedOrganization(item)}>
+                    onClick={() => selectedOrganization(item)}
+                  >
                     {item.name}
                   </List.Item>
                 )}

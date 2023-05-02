@@ -134,7 +134,8 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
                 block
                 onClick={() =>
                   dispatch({ type: 'VISIBLE_MODAL', payload: { visible: true } })
-                }>
+                }
+              >
                 Cambiar de organización
               </Button>
             </div>
@@ -169,7 +170,8 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
         onOk={handleOk}
         cancelText="Cancelar"
         onCancel={handleCancel}
-        width={600}>
+        width={600}
+      >
         <Row gutter={[16, 16]} justify="center" align="top">
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Title level={4} type="secondary">

@@ -27,7 +27,8 @@ const EventHome = (props) => {
         <Row justify="center">
           <Col
             span={24}
-            /* sm={24} md={16} lg={18} xl={18} */ style={{ padding: '1rem' }}>
+            /* sm={24} md={16} lg={18} xl={18} */ style={{ padding: '1rem' }}
+          >
             <EventLanding setActivitiesAttendee={setActivitiesAttendee} />
           </Col>
         </Row>

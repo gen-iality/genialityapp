@@ -191,7 +191,8 @@ function AppointmentModal({
       title="Agendar cita"
       footer={null}
       onCancel={resetModal}
-      style={{ zIndex: 1031 }}>
+      style={{ zIndex: 1031 }}
+    >
       {loading ? (
         <Row align="middle" justify="center" style={{ height: 300 }}>
           <Spin />
@@ -206,7 +207,8 @@ function AppointmentModal({
                 setSelectedDate(newSelectedDate)
                 setAgendaMessage('')
                 setOpenAgenda('')
-              }}>
+              }}
+            >
               {eventDatesRange &&
                 eventDatesRange.map((eventDate) => (
                   <Option value={eventDate} key={eventDate}>
@@ -250,7 +252,8 @@ function AppointmentModal({
                                 setAgendaMessage('')
                                 setOpenAgenda(agendaId)
                               }
-                            }}>
+                            }}
+                          >
                             {buttonStatusText[timetableItem.status]}
                           </Button>
                         </Row>
@@ -280,7 +283,8 @@ function AppointmentModal({
                               setOpenAgenda('')
                               setAgendaMessage('')
                             }}
-                            style={{ marginRight: '10px' }}>
+                            style={{ marginRight: '10px' }}
+                          >
                             Cancelar
                           </Button>
                           <Button
@@ -318,7 +322,8 @@ function AppointmentModal({
                                     resetModal()
                                   })
                               }
-                            }}>
+                            }}
+                          >
                             Enviar solicitud
                           </Button>
                         </Row>

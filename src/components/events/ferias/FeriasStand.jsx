@@ -11,7 +11,8 @@ function FeriasStand(props) {
           history.push(
             `/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`,
           )
-        }}>
+        }}
+      >
         <div
           className="mini-banner"
           style={{
@@ -23,7 +24,8 @@ function FeriasStand(props) {
             transform: 'translateX(-50%)',
             top: '20px',
             backgroundColor: 'white',
-          }}>
+          }}
+        >
           <Badge.Ribbon text={props.text} color={props.color}>
             <img
               src={props.image}

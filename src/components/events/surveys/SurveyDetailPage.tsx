@@ -111,7 +111,8 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
           direction="vertical"
           size="middle"
           align="center"
-          style={{ display: 'flex' }}>
+          style={{ display: 'flex' }}
+        >
           <em>{cSurvey.surveyStatsString}</em>
           <Result
             style={{ height: '50%', padding: '75px 75px 20px' }}
@@ -137,7 +138,8 @@ const SurveyDetailPage = ({ surveyId, cEvent }: SurveyDetailPageProps) => {
               }}
               type="primary"
               key="console"
-              disabled={isResetingSurvey}>
+              disabled={isResetingSurvey}
+            >
               Responder de nuevo {isResetingSurvey && <Spin />}
             </Button>
           )}

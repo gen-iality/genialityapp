@@ -34,7 +34,8 @@ const DynamicFormItem: React.FunctionComponent<IDynamicFormItemProps> = (props) 
         label={fieldData.label}
         name={fieldData.name}
         rules={rules}
-        initialValue={initialValue}>
+        initialValue={initialValue}
+      >
         {children}
       </Form.Item>
 

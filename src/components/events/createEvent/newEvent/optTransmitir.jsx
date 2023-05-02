@@ -70,7 +70,8 @@ function OptionTransmitir() {
         className="modal-opt"
         visible={isModalLink}
         onOk={handleOklink}
-        onCancel={handleCancellink}>
+        onCancel={handleCancellink}
+      >
         <img
           src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceLink.png?alt=media&token=dd26eb19-8440-430b-a7bf-bf542883a5c9"
           alt=""
@@ -79,7 +80,8 @@ function OptionTransmitir() {
         <Form name="basic">
           <Form.Item
             name="link"
-            rules={[{ required: true, message: 'Please input your username!' }]}>
+            rules={[{ required: true, message: 'Please input your username!' }]}
+          >
             <Input className="input" placeholder="https://www.youtube.com/" />
           </Form.Item>
         </Form>
@@ -90,7 +92,8 @@ function OptionTransmitir() {
         className="modal-opt"
         visible={isModalRtmp}
         onOk={handleOkRtmp}
-        onCancel={handleCancelRmtmp}>
+        onCancel={handleCancelRmtmp}
+      >
         <img
           src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceRtmp.png?alt=media&token=58dca6ce-6671-41ef-bda4-40ae4546e0e3"
           alt=""
@@ -100,7 +103,8 @@ function OptionTransmitir() {
           <Space direction="vertical">
             <Form.Item
               name="link"
-              rules={[{ required: true, message: 'Please input your username!' }]}>
+              rules={[{ required: true, message: 'Please input your username!' }]}
+            >
               <Input
                 className="input"
                 placeholder="https://www.youtube.com/asdakdjijdaks"
@@ -108,7 +112,8 @@ function OptionTransmitir() {
             </Form.Item>
             <Form.Item
               name="link"
-              rules={[{ required: true, message: 'Please input your code!' }]}>
+              rules={[{ required: true, message: 'Please input your code!' }]}
+            >
               <Input className="input" placeholder="Clave45215485232" />
             </Form.Item>
           </Space>

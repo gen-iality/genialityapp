@@ -68,14 +68,16 @@ const Home = () => {
               onClick={() => settypeEvent('nextEvents')}
               type={typeEvent === 'nextEvents' ? 'primary' : 'text'}
               size="large"
-              shape="round">
+              shape="round"
+            >
               Próximos
             </Button>
             <Button
               onClick={() => settypeEvent('oldEvents')}
               type={typeEvent === 'oldEvents' ? 'primary' : 'text'}
               size="large"
-              shape="round">
+              shape="round"
+            >
               Pasados
             </Button>
           </Space>
@@ -91,7 +93,8 @@ const Home = () => {
                     <Row
                       justify="center"
                       align="middle"
-                      style={{ width: '100%', height: '400px' }}>
+                      style={{ width: '100%', height: '400px' }}
+                    >
                       <Result title="No hay cursos próximos" />
                     </Row>
                   ) : (
@@ -118,7 +121,8 @@ const Home = () => {
                   size="large"
                   block
                   loading={isLoading}
-                  onClick={() => SeeMoreEvents()}>
+                  onClick={() => SeeMoreEvents()}
+                >
                   {!isLoading ? 'Ver más'.toUpperCase() : 'Cargando...'.toUpperCase()}
                 </Button>
               ) : typeEvent === 'next' ? (

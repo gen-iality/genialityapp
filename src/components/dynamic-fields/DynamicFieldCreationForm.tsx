@@ -228,7 +228,8 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         name="label"
         label="Nombre del campo"
         rules={basicRules}
-        initialValue={dataToEdit?.name}>
+        initialValue={dataToEdit?.name}
+      >
         <Input
           placeholder="Ej: Teléfono"
           onChange={(e) => {
@@ -248,7 +249,8 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         name="type"
         label="Tipo de dato"
         rules={basicRules}
-        initialValue={dataToEdit?.type}>
+        initialValue={dataToEdit?.type}
+      >
         <Select
           options={dynamicFieldOptions}
           disabled={
@@ -261,7 +263,8 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
       <Form.Item>
         <Checkbox
           checked={isDependent || !!dataToEdit?.dependency?.fieldName}
-          onChange={(e) => setIsDependent(e.target.checked)}>
+          onChange={(e) => setIsDependent(e.target.checked)}
+        >
           Marca este campo como dependiente de otro campo
         </Checkbox>
       </Form.Item>
@@ -272,7 +275,8 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
             label="Nombre del otro campo"
             name="fieldName"
             rules={basicRules}
-            initialValue={dataToEdit?.dependency?.fieldName}>
+            initialValue={dataToEdit?.dependency?.fieldName}
+          >
             <Input placeholder="Escribe el nombre, en base de datos, exacto del otro campo" />
           </Form.Item>
 
@@ -288,7 +292,8 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
                   return Promise.resolve()
                 },
               },
-            ]}>
+            ]}
+          >
             <Select
               mode="tags"
               open={false}
@@ -316,7 +321,8 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
             <Form.Item
               name="justonebyattendee"
               initialValue={dataToEdit?.justonebyattendee}
-              valuePropName="checked">
+              valuePropName="checked"
+            >
               <Checkbox>
                 Solo una opción por usuario (cuando un asistente selecciona una opción
                 esta desaparece del listado)
@@ -331,7 +337,8 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
           name="link"
           label="Enlace para los términos y condiciones"
           rules={basicRules}
-          initialValue={dataToEdit?.link}>
+          initialValue={dataToEdit?.link}
+        >
           <Input placeholder="Enlace (esto depende el tipo de campo)" />
           <Divider />
         </Form.Item>
@@ -341,7 +348,8 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         label="¿Obligatorio?"
         name="mandatory"
         initialValue={dataToEdit?.mandatory}
-        valuePropName="checked">
+        valuePropName="checked"
+      >
         <Checkbox />
       </Form.Item>
 
@@ -349,7 +357,8 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         label="Visible para contactos?"
         name="visibleByContacts"
         initialValue={dataToEdit?.visibleByContacts}
-        valuePropName="checked">
+        valuePropName="checked"
+      >
         <Checkbox />
       </Form.Item>
 
@@ -357,14 +366,16 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
         label="Visible para admins?"
         name="visibleByAdmin"
         initialValue={dataToEdit?.visibleByAdmin}
-        valuePropName="checked">
+        valuePropName="checked"
+      >
         <Checkbox />
       </Form.Item>
 
       <Form.Item
         name="description"
         label="Descripción corta"
-        initialValue={dataToEdit?.description}>
+        initialValue={dataToEdit?.description}
+      >
         <TextArea placeholder="Descripción corta" />
       </Form.Item>
 
@@ -379,7 +390,8 @@ const DynamicFieldCreationForm: FunctionComponent<IDynamicFieldCreationFormProps
             type="primary"
             htmlType="submit"
             disabled={isLoading}
-            loading={isLoading}>
+            loading={isLoading}
+          >
             Guardar
           </Button>
 

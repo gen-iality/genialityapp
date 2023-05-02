@@ -114,7 +114,8 @@ function ActivityContentModalLayout(props: ActivityContentModalLayoutProps) {
             <Button
               disabled={disabledNextButton}
               onClick={handleGoForward}
-              type="primary">
+              type="primary"
+            >
               {nextButtonString}
             </Button>
           </Col>

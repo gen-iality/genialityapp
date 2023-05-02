@@ -69,7 +69,8 @@ function Organization(props) {
             collapsed={collapseMenu}
             theme="dark"
             /* style={{ backgroundColor: '#fff' }} */
-            width={220}>
+            width={220}
+          >
             <Button
               type="primary"
               onClick={() => setCollapseMenu(!collapseMenu)}
@@ -80,7 +81,8 @@ function Organization(props) {
               defaultSelectedKeys={['1']}
               defaultOpenKeys={['1']}
               mode="inline"
-              theme="dark">
+              theme="dark"
+            >
               <Menu.Item key="1" icon={<BarsOutlined />}>
                 Información
                 <NavLink to={`${props.match.url}/information`} />
@@ -131,10 +133,12 @@ function Organization(props) {
                 <Tag
                   color="#003853"
                   icon={<DoubleRightOutlined />}
-                  style={{ marginBottom: 10, marginLeft: 20 }}>
+                  style={{ marginBottom: 10, marginLeft: 20 }}
+                >
                   <a
                     target="_blank"
-                    href={`${window.location.origin}/organization/${organization._id}/events`}>
+                    href={`${window.location.origin}/organization/${organization._id}/events`}
+                  >
                     {`Ir al landing de la organización: ${organization.name}`}
                   </a>
                 </Tag>

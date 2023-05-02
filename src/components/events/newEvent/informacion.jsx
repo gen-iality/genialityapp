@@ -174,7 +174,8 @@ const Informacion = (props) => {
               <Input.TextArea
                 id="description"
                 value={valueInputs['description'] || ''}
-                onChange={(e) => handleInput(e, 'description')}></Input.TextArea>
+                onChange={(e) => handleInput(e, 'description')}
+              ></Input.TextArea>
               {containsError('description') && (
                 <Col>
                   {' '}
@@ -212,7 +213,8 @@ const Informacion = (props) => {
                     newOrganization(false)
                     changeOrganization(true)
                   }}
-                  block>
+                  block
+                >
                   Cambiar de organización
                 </Button>
               </div>
@@ -229,7 +231,8 @@ const Informacion = (props) => {
                         <Button
                           key="submit"
                           type="primary"
-                          onClick={selectOrganizationOK}>
+                          onClick={selectOrganizationOK}
+                        >
                           Seleccionar
                         </Button>,
                       ]
@@ -239,7 +242,8 @@ const Informacion = (props) => {
                 cancelText="Cerrar"
                 title="Organizaciónes"
                 visible={organization && !isbyOrganization}
-                onCancel={() => changeOrganization(false)}>
+                onCancel={() => changeOrganization(false)}
+              >
                 {!createOrganizationF && (
                   <Row style={{ marginBottom: 10 }} justify="end">
                     <Button onClick={() => newOrganization(true)}>
@@ -271,7 +275,8 @@ const Informacion = (props) => {
                           background:
                             selectOrganization?.id == item.id ? '#40a9ff' : 'white',
                         }}
-                        onClick={() => selectedOrganization(item)}>
+                        onClick={() => selectedOrganization(item)}
+                      >
                         {item.name}
                       </List.Item>
                     )}
@@ -287,7 +292,8 @@ const Informacion = (props) => {
                       initialValues={{ remember: false }}
                       onFinish={createNewOrganization}
                       onFinishFailed={null}
-                      autoComplete="off">
+                      autoComplete="off"
+                    >
                       <Form.Item
                         label="Nombre"
                         name="name"
@@ -296,7 +302,8 @@ const Informacion = (props) => {
                             required: true,
                             message: 'Ingrese un nombre válido',
                           },
-                        ]}>
+                        ]}
+                      >
                         <Input></Input>
                       </Form.Item>
                       {!loadingAdd && (
@@ -325,7 +332,8 @@ const Informacion = (props) => {
             <Select
               value={templateId}
               style={{ minWidth: '400px' }}
-              onChange={handleChange}>
+              onChange={handleChange}
+            >
               {selectOrganization.template_properties.map((template) => (
                 <Option key={template._id['$oid']} value={template._id['$oid']}>
                   {template.name}
@@ -345,7 +353,8 @@ const Informacion = (props) => {
         onOk={handleOk}
         cancelText="Cancelar"
         onCancel={handleCancel}
-        width={600}>
+        width={600}
+      >
         <Row gutter={[16, 16]} justify="center" align="top">
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <DayPicker

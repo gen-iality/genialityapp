@@ -100,7 +100,8 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
                 // sandbox='allow-scripts;allow-presentation; allow-modals'
                 allowFullScreen
                 allowusermedia
-                src={eviusmeetUrl}></iframe>
+                src={eviusmeetUrl}
+              ></iframe>
             </div>
           )}
         </>
@@ -122,7 +123,8 @@ function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
                 // sandbox='allow-scripts;allow-presentation; allow-modals'
                 allowFullScreen
                 allowusermedia
-                src={eviusmeetUrl}></iframe>
+                src={eviusmeetUrl}
+              ></iframe>
             </div>
           )}
         </>

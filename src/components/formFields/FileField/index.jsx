@@ -82,7 +82,8 @@ function FileField(rawProps) {
             label={formItemProps.label}
             required={formItemProps.required}
             help={fieldError}
-            validateStatus={fieldError ? 'error' : undefined}>
+            validateStatus={fieldError ? 'error' : undefined}
+          >
             <Spin tip="Cargando imagen..." spinning={isUploading}>
               <Card
                 hoverable
@@ -91,7 +92,8 @@ function FileField(rawProps) {
                   marginBottom: '20px',
                   borderRadius: '20px',
                   textAlign: 'center',
-                }}>
+                }}
+              >
                 <Upload.Dragger
                   {...draggerprops}
                   defaultFileList={[
@@ -99,7 +101,8 @@ function FileField(rawProps) {
                   ]}
                   onChange={(files) => {
                     saveEventImage(files, form, field)
-                  }}>
+                  }}
+                >
                   <>
                     <p className="ant-upload-drag-icon">
                       <FileImageOutlined style={{ color: '#003853' }} />

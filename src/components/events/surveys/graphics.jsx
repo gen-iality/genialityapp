@@ -352,7 +352,8 @@ class Graphics extends Component {
                       boxShadow: '0px 4px 4px 0px #00000040',
                       marginTop: '12px',
                       marginBottom: '12px',
-                    }}>
+                    }}
+                  >
                     <Row>
                       <Col span={votos.option == 2 ? 8 : 5} style={{ width: '100%' }}>
                         <div
@@ -361,7 +362,8 @@ class Graphics extends Component {
                             width: '100%',
                             backgroundColor: `${votos.color}`,
                             borderRadius: '4px 0px 0px 4px',
-                          }}>
+                          }}
+                        >
                           <span
                             style={{
                               justifyContent: 'center',
@@ -370,7 +372,8 @@ class Graphics extends Component {
                               color: 'white',
                               display: 'grid',
                               fontSize: '24px',
-                            }}>
+                            }}
+                          >
                             {votos?.option?.toUpperCase()}{' '}
                           </span>
                         </div>
@@ -382,7 +385,8 @@ class Graphics extends Component {
                             marginRight: '12px',
                             fontWeight: '600',
                             marginTop: '4px',
-                          }}>
+                          }}
+                        >
                           <div style={{ fontSize: '14px', fontWeight: '600' }}>
                             <span>{votos.voto} respuesta(s)</span>
                             <span style={{ float: 'right', fontSize: '16px' }}>
@@ -394,7 +398,8 @@ class Graphics extends Component {
                               style={{ color: 'gray ' }}
                               ellipsis={
                                 true && { rows: 2, expandable: true, symbol: 'more' }
-                              }>
+                              }
+                            >
                               {votos.answer}
                             </Paragraph>
                           </div>
@@ -415,7 +420,8 @@ class Graphics extends Component {
                       width: '320px',
                       borderRadius: '6px',
                       boxShadow: '0px 4px 4px 0px #00000040',
-                    }}>
+                    }}
+                  >
                     <Row>
                       <Col span={8}>
                         <div
@@ -424,7 +430,8 @@ class Graphics extends Component {
                             width: '100%',
                             backgroundColor: '#9e9e9e',
                             borderRadius: '4px 0px 0px 4px',
-                          }}>
+                          }}
+                        >
                           <span
                             style={{
                               justifyContent: 'center',
@@ -434,7 +441,8 @@ class Graphics extends Component {
                               display: 'grid',
                               fontSize: '18px',
                               textAlign: 'center',
-                            }}>
+                            }}
+                          >
                             Sin responder
                           </span>
                         </div>
@@ -448,7 +456,8 @@ class Graphics extends Component {
                             display: 'grid',
                             alignContent: 'center',
                             height: '100%',
-                          }}>
+                          }}
+                        >
                           <div>
                             <span style={{ fontSize: '22px', fontWeight: '500' }}>
                               {this.state.resultVotos.usuariosSinRespuesta} respuest(s)
@@ -458,7 +467,8 @@ class Graphics extends Component {
                                 fontSize: '22px',
                                 fontWeight: '500',
                                 float: 'right',
-                              }}>
+                              }}
+                            >
                               {this.state.resultVotos.porcentajevotos} %{' '}
                             </span>
                           </div>

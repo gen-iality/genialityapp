@@ -87,7 +87,8 @@ const NoticiasList = (props) => {
                 md={12}
                 lg={8}
                 xl={8}
-                xxl={8}>
+                xxl={8}
+              >
                 {dayjs().format('YYYY-MM-DD') ===
                 dayjs(news.created_at).format('YYYY-MM-DD') ? (
                   <Badge.Ribbon text="Nuevo" color="cyan">
@@ -107,10 +108,12 @@ const NoticiasList = (props) => {
                             pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`,
                             state: { id: news._id },
                           }}
-                          key="viewMore">
+                          key="viewMore"
+                        >
                           Ver más
                         </Link>,
-                      ]}>
+                      ]}
+                    >
                       <div>
                         <Space direction="vertical" style={{ width: '100%' }}>
                           <h2 style={{ fontWeight: '700', marginBottom: '0px' }}>
@@ -118,11 +121,13 @@ const NoticiasList = (props) => {
                           </h2>
                           <Paragraph
                             style={{ color: '#9e9e9e' }}
-                            ellipsis={(ellipsis, { rows: 3 })}>
+                            ellipsis={(ellipsis, { rows: 3 })}
+                          >
                             <div
                               dangerouslySetInnerHTML={{
                                 __html: news && news.descriptionShort,
-                              }}></div>
+                              }}
+                            ></div>
                           </Paragraph>
                         </Space>
                       </div>
@@ -131,7 +136,8 @@ const NoticiasList = (props) => {
                         <Row
                           style={{
                             color: 'rgba(0, 0, 0, 0.6)',
-                          }}>{`Fecha publicación: ${dayjs(news.time).format(
+                          }}
+                        >{`Fecha publicación: ${dayjs(news.time).format(
                           'YYYY-MM-DD',
                         )}`}</Row>
                       </Space>
@@ -153,10 +159,12 @@ const NoticiasList = (props) => {
                           pathname: `/landing/${eventId}/noticias/${news._id}/detailsNoticia`,
                           state: { id: news._id },
                         }}
-                        key="viewMore">
+                        key="viewMore"
+                      >
                         Ver más
                       </Link>,
-                    ]}>
+                    ]}
+                  >
                     <div>
                       <Space direction="vertical" style={{ width: '100%' }}>
                         <h2 style={{ fontWeight: '700', marginBottom: '0px' }}>
@@ -164,11 +172,13 @@ const NoticiasList = (props) => {
                         </h2>
                         <Paragraph
                           style={{ color: '#9e9e9e' }}
-                          ellipsis={(ellipsis, { rows: 3 })}>
+                          ellipsis={(ellipsis, { rows: 3 })}
+                        >
                           <div
                             dangerouslySetInnerHTML={{
                               __html: news && news.descriptionShort,
-                            }}></div>
+                            }}
+                          ></div>
                         </Paragraph>
                       </Space>
                     </div>
@@ -177,7 +187,8 @@ const NoticiasList = (props) => {
                       <Row
                         style={{
                           color: 'rgba(0, 0, 0, 0.6)',
-                        }}>{`Fecha publicación: ${dayjs(news.time).format(
+                        }}
+                      >{`Fecha publicación: ${dayjs(news.time).format(
                         'YYYY-MM-DD',
                       )}`}</Row>
                     </Space>
@@ -194,7 +205,8 @@ const NoticiasList = (props) => {
             type="primary"
             block
             onClick={viewAll}
-            style={{ fontSize: '18px', height: 'auto' }}>
+            style={{ fontSize: '18px', height: 'auto' }}
+          >
             {!viewMenos ? 'Ver más' : 'Ver menos'}
           </Button>
         )}

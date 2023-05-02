@@ -30,7 +30,8 @@ function ActivityExternalUrlField(props: ActivityExternalUrlFieldProps) {
               (rules[type as keyof typeof rules] as unknown as undefined) || [
                 { required: true },
               ]
-            }>
+            }
+          >
             <Input
               type={type === 'vimeo' ? 'number' : 'text'}
               addonBefore={addonBefore}

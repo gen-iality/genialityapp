@@ -28,7 +28,8 @@ const ModalListOrg = (props) => {
       visible={props.modalListOrgIsVisible}
       onCancel={() => {
         props.setModalListOrgIsVisible(false)
-      }}>
+      }}
+    >
       <Form onFinish={selectOrganization} autoComplete="off" layout="vertical">
         <Typography.Title level={4} type="secondary">
           Organizaciones a las que pertenezco
@@ -44,7 +45,8 @@ const ModalListOrg = (props) => {
               message:
                 'Por favor seleccione una organización bajo la cual se creara este curso!',
             },
-          ]}>
+          ]}
+        >
           {props.org && props.org.length > 0 && (
             <Select placeholder="Por favor seleccione una organización">
               {props?.org?.map((orgItem, key) => {
@@ -63,7 +65,8 @@ const ModalListOrg = (props) => {
             htmlType="submit"
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size="large">
+            size="large"
+          >
             Crear curso
           </Button>
         </Form.Item>

@@ -49,7 +49,8 @@ function ActivityTypeModal(props: ActivityTypeModalProps) {
       width={1200}
       footer={null}
       visible={props.visible}
-      onCancel={handleCancel}>
+      onCancel={handleCancel}
+    >
       <ActivityTypeModalLayout
         somethingWasSelected={somethingWasSelected}
         title={formWidgetFlow.MainTitle}

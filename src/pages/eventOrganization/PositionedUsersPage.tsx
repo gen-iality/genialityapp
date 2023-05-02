@@ -140,7 +140,8 @@ function PositionedUsersPage(props: PositionedUsersPageProps) {
           <Link to={`${props.match.url}/user/${orgUser.account_id}`}>
             <CertificationTag
               value={orgUser.user.certifications.length}
-              total={allPositionEvents.length}>
+              total={allPositionEvents.length}
+            >
               {orgUser.user.certifications.length} de {allPositionEvents.length}
             </CertificationTag>
           </Link>
@@ -200,7 +201,8 @@ function PositionedUsersPage(props: PositionedUsersPageProps) {
               <Button
                 type="primary"
                 icon={<PlusCircleOutlined />}
-                onClick={onAddOrganizationUser}>
+                onClick={onAddOrganizationUser}
+              >
                 Agregar usuario
               </Button>
             </Col>
@@ -211,7 +213,8 @@ function PositionedUsersPage(props: PositionedUsersPageProps) {
         visible={isModalOpened}
         title="Agrega miembro"
         onCancel={closeModal}
-        onOk={() => form.submit()}>
+        onOk={() => form.submit()}
+      >
         <Typography.Paragraph>
           Agrega miembros de la organización a este cargo.
         </Typography.Paragraph>
@@ -231,11 +234,13 @@ function PositionedUsersPage(props: PositionedUsersPageProps) {
               }),
             ).finally(() => loadUsers().finally(() => setIsLoading(false)))
             closeModal()
-          }}>
+          }}
+        >
           <Form.Item
             label="Usuario"
             name="orgUsers"
-            rules={[{ required: true, message: 'Es necesario agregar al menos algo' }]}>
+            rules={[{ required: true, message: 'Es necesario agregar al menos algo' }]}
+          >
             <Select
               mode="multiple"
               options={allOrgUsers.map((orgUser: any) => {

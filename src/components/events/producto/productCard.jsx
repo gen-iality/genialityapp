@@ -26,7 +26,8 @@ const ProductCard = ({ galery, eventId, history }) => {
           src={galery && galery.image && galery.image[0]}
           style={{ height: '250px', objectFit: 'cover' }}
         />
-      }>
+      }
+    >
       <Meta
         description={
           <Space direction="vertical">

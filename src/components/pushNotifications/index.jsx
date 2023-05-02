@@ -39,7 +39,8 @@ function pushNotification(props) {
         setUserToNotify()
         setModalSendNotificationVisible(true)
       }}
-      icon={<SendOutlined />}>
+      icon={<SendOutlined />}
+    >
       Notificación masiva
     </Button>
   )

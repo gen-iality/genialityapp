@@ -401,7 +401,8 @@ class MenuLanding extends Component {
                   <Card
                     title={this.state.menu[key].name}
                     bordered
-                    style={{ maxHeight: '350px' }}>
+                    style={{ maxHeight: '350px' }}
+                  >
                     {(this.state.menu[key].section === 'networking' ||
                       this.state.menu[key].section === 'interviews' ||
                       this.state.menu[key].section === 'my_sesions') &&
@@ -416,7 +417,8 @@ class MenuLanding extends Component {
                           <Button
                             onClick={() => {
                               this.mapActiveItemsToAvailable(key)
-                            }}>
+                            }}
+                          >
                             {this.state.menu[key].checked ? 'Deshabilitar' : 'Habilitar'}
                           </Button>
                         </Form.Item>
@@ -439,7 +441,8 @@ class MenuLanding extends Component {
                             value={this.state.menu[key].permissions}
                             onChange={(e) => {
                               this.changePermissions(key, e)
-                            }}>
+                            }}
+                          >
                             <Option value="public">Abierto para todos</Option>
                             <Option value="assistants">
                               Usuarios inscritos al curso

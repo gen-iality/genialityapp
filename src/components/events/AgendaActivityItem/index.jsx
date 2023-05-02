@@ -172,7 +172,8 @@ function AgendaActivityItem(props) {
               // props.gotoActivity(item);
               HandleGoActivity(item._id)
             }
-          }}>
+          }}
+        >
           {/* aquie empieza la agenda en estilo mobile */}
           <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
             {/* card de agenda en mobile */}
@@ -197,7 +198,8 @@ function AgendaActivityItem(props) {
                 ) : (
                   ''
                 )
-              }>
+              }
+            >
               <Card
                 hoverable
                 style={{ backgroundColor: 'transparent' }}
@@ -207,13 +209,15 @@ function AgendaActivityItem(props) {
                   border: `solid 2px ${cEvent.value.styles.textMenu}`,
                   borderRadius: '15px',
                   backgroundColor: cEvent.value.styles.toolbarDefaultBg,
-                }}>
+                }}
+              >
                 <Row gutter={[8, 8]}>
                   <Col span={6}>
                     {!props.hasDate && (
                       <div
                         className="agenda-hora"
-                        style={{ color: cEvent.value.styles.textMenu }}>
+                        style={{ color: cEvent.value.styles.textMenu }}
+                      >
                         {item.datetime_start
                           ? Moment.tz(
                               item.datetime_start,
@@ -244,7 +248,8 @@ function AgendaActivityItem(props) {
                     {item.platform && (
                       <div
                         style={{ textAlign: 'center' }}
-                        className="contenedor-estado-agenda">
+                        className="contenedor-estado-agenda"
+                      >
                         <Space direction="vertical" size={1}>
                           {meetingState == 'open_meeting_room' ? (
                             <CaretRightOutlined
@@ -286,7 +291,8 @@ function AgendaActivityItem(props) {
                             style={{
                               fontSize: '10px',
                               color: cEvent.value.styles.textMenu,
-                            }}>
+                            }}
+                          >
                             {meetingState == 'open_meeting_room'
                               ? intl.formatMessage({ id: 'live' })
                               : meetingState == 'ended_meeting_room' && item.video
@@ -307,12 +313,14 @@ function AgendaActivityItem(props) {
                         <Col span={24}>
                           <div
                             className="tituloM"
-                            style={{ color: cEvent.value.styles.textMenu }}>
+                            style={{ color: cEvent.value.styles.textMenu }}
+                          >
                             {item.name}.
                           </div>
                           <span
                             className="lugarM"
-                            style={{ color: cEvent.value.styles.textMenu }}>
+                            style={{ color: cEvent.value.styles.textMenu }}
+                          >
                             {item && item.space && item.space.name}
                           </span>
                         </Col>
@@ -340,7 +348,8 @@ function AgendaActivityItem(props) {
                                   maxStyle={{
                                     color: '#ffffff',
                                     backgroundColor: '#1CDCB7',
-                                  }}>
+                                  }}
+                                >
                                   {item.hosts.map((speaker, key) => (
                                     <Avatar key={key} src={speaker.image} />
                                   ))}
@@ -379,7 +388,8 @@ function AgendaActivityItem(props) {
                 ) : (
                   ''
                 )
-              }>
+              }
+            >
               <Card
                 style={{
                   border: `solid 1px rgb(240,240,240)`, // color: ${cEvent.value.styles.textMenu}
@@ -391,7 +401,8 @@ function AgendaActivityItem(props) {
                   padding: '10px',
                   borderRadius: '5px',
                   backgroundColor: cEvent.value.styles.toolbarDefaultBg,
-                }}>
+                }}
+              >
                 <Row gutter={[8, 8]} style={{ paddingLeft: '10px' }}>
                   <Col md={24} lg={24} xl={24} className="agenda-contenido">
                     <Space direction="vertical">
@@ -406,7 +417,8 @@ function AgendaActivityItem(props) {
                             style={{
                               color: cEvent.value.styles.textMenu,
                               marginRight: '1rem',
-                            }}>
+                            }}
+                          >
                             {item.name}
                           </div>
                           <div style={{ marginRight: '1rem' }}>
@@ -448,7 +460,8 @@ function AgendaActivityItem(props) {
                           </div>
                           <span
                             className="lugar"
-                            style={{ color: cEvent.value.styles.textMenu }}>
+                            style={{ color: cEvent.value.styles.textMenu }}
+                          >
                             {item && item.space && item.space.name}
                           </span>
                         </Row>
@@ -461,13 +474,15 @@ function AgendaActivityItem(props) {
                                 <Space
                                   key={key}
                                   style={{ marginRight: '8px' }}
-                                  direction="horizontal">
+                                  direction="horizontal"
+                                >
                                   <Avatar size={24} src={speaker.image} />
                                   <Typography.Text
                                     style={{
                                       color: cEvent.value.styles.textMenu,
                                       fontWeight: '400',
-                                    }}>
+                                    }}
+                                  >
                                     {speaker.name}
                                   </Typography.Text>
                                 </Space>
@@ -481,7 +496,8 @@ function AgendaActivityItem(props) {
                                   maxStyle={{
                                     color: '#ffffff',
                                     backgroundColor: '#1CDCB7',
-                                  }}>
+                                  }}
+                                >
                                   {item.hosts.map((speaker, key) => (
                                     <Avatar key={key} src={speaker.image} />
                                   ))}
@@ -506,7 +522,8 @@ function AgendaActivityItem(props) {
                                 // props.gotoActivity(item);
                                 HandleGoActivity(item._id)
                               }
-                            }}>
+                            }}
+                          >
                             <FormattedMessage
                               id="live.join"
                               defaultMessage="Ingresa aquí"

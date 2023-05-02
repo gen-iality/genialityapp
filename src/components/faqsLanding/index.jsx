@@ -52,7 +52,8 @@ class Faqs extends Component {
                   ? this.props.cEvent.value.styles.toolbarDefaultBg
                   : '#7d8485d4',
             }} */
-            defaultActiveKey={['3']}>
+            defaultActiveKey={['3']}
+          >
             {faqsData.map((faqs, key) => (
               <Panel
                 key={key}
@@ -62,7 +63,8 @@ class Faqs extends Component {
                     <br />
                     {faqs.title}
                   </span>
-                }>
+                }
+              >
                 <b>Respuesta:</b>{' '}
                 <Row>
                   <Col span={24} id="img-informative">

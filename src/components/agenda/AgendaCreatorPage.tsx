@@ -146,7 +146,8 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
           <Form.Item
             label="Nombre"
             name="name"
-            rules={[{ required: true, message: 'Nombre de la lección requerida' }]}>
+            rules={[{ required: true, message: 'Nombre de la lección requerida' }]}
+          >
             <Input autoFocus placeholder="Nombre de la lección" />
           </Form.Item>
           <Form.Item
@@ -155,7 +156,8 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
             initialValue={`${new Date().getFullYear()}-${
               new Date().getMonth() + 1
             }-${new Date().getDate()}`}
-            rules={[{ required: true, message: 'La fecha es requerida' }]}>
+            rules={[{ required: true, message: 'La fecha es requerida' }]}
+          >
             <Select options={allDays} />
           </Form.Item>
           <Row wrap justify="center" gutter={[8, 8]}>
@@ -164,7 +166,8 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
                 label="Hora inicio"
                 name="hour_start"
                 initialValue={hourWithAdditionalMinutes(0)}
-                rules={[{ required: true, message: 'La hora de inicio es requerida' }]}>
+                rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
+              >
                 <TimePicker
                   use12Hours
                   format="h:mm a"
@@ -178,7 +181,8 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
                 label="Hora fin"
                 name="hour_end"
                 initialValue={hourWithAdditionalMinutes(19)}
-                rules={[{ required: true, message: 'La hora final es requerida' }]}>
+                rules={[{ required: true, message: 'La hora final es requerida' }]}
+              >
                 <TimePicker
                   use12Hours
                   format="h:mm a"

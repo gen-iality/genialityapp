@@ -147,14 +147,16 @@ class Company extends Component {
               this.showList()
               goBack()
             }
-          }}>
+          }}
+        >
           <img src="/exhibitors/icons/baseline_arrow_back_white_18dp.png" alt="" />
           Regresar
         </button>
         <div
           className="iso-exhibitor-list"
           ref={this.standsListRef}
-          onScroll={this.onScrollStandsList}>
+          onScroll={this.onScrollStandsList}
+        >
           <div className="iso-exhibitor-list-wrap">
             {isNonEmptyArray(companies) &&
               companies.map((company, companyIndex) => {
@@ -163,7 +165,8 @@ class Company extends Component {
                     key={`list-item-${company.id}`}
                     type="button"
                     className="iso-exhibitor-list-item"
-                    onClick={() => this.showListItem(companyIndex)}>
+                    onClick={() => this.showListItem(companyIndex)}
+                  >
                     <div className="iso-exhibitor-list-item-image">
                       <img src={company.list_image} alt="" />
                     </div>

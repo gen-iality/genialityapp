@@ -29,7 +29,8 @@ const VideoActivity = () => {
             src={urlVideo + '?muted=1&autoplay=0'}
             frameBorder="0"
             allow="autoplay; encrypted-media"
-            allowFullScreen></iframe>
+            allowFullScreen
+          ></iframe>
         ) : (
           <ReactPlayer
             style={{ objectFit: 'cover' }}

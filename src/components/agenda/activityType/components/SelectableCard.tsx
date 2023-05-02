@@ -61,7 +61,8 @@ function SelectableCard(props: SelectableCardProps) {
               src={image}
               height={150}
             />
-          }>
+          }
+        >
           <Card.Meta
             style={{ textAlign: 'center' }}
             title={

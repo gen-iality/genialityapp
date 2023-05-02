@@ -97,7 +97,8 @@ const ImageUploaderDragAndDrop = ({
           marginBottom: '20px',
           borderRadius: '20px',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <Dragger {...draggerprops}>
           {image ? (
             <Image preview={false} alt="preview" src={image} />

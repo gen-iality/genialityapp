@@ -59,7 +59,8 @@ export default class TabsCard extends Component {
           activeTabKey={this.state.key}
           onTabChange={(key) => {
             this.onTabChange(key, 'key')
-          }}>
+          }}
+        >
           {contentList[this.state.key]}
         </Card>
         <br />
@@ -71,7 +72,8 @@ export default class TabsCard extends Component {
           tabBarExtraContent={<a href="#">More</a>}
           onTabChange={(key) => {
             this.onTabChange(key, 'noTitleKey')
-          }}>
+          }}
+        >
           {contentListNoTitle[this.state.noTitleKey]}
         </Card>
       </>

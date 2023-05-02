@@ -101,19 +101,22 @@ function OrganizationInformation(props: { org: any }) {
                 <Form.Item
                   name={['organization', 'name']}
                   label="Nombre"
-                  initialValue={name}>
+                  initialValue={name}
+                >
                   <Input />
                 </Form.Item>
                 <Form.Item
                   name={['organization', 'description']}
                   label="Descripción"
-                  initialValue={description}>
+                  initialValue={description}
+                >
                   <Input.TextArea />
                 </Form.Item>
                 <Form.Item
                   label="Tipo de cursos"
                   initialValue={type_event || 'Corporativo'}
-                  name={['organization', 'type_event']}>
+                  name={['organization', 'type_event']}
+                >
                   <Select
                     options={typeEvents.map((type) => ({
                       value: type.label,
@@ -125,7 +128,8 @@ function OrganizationInformation(props: { org: any }) {
                 <Form.Item
                   label="Proveedor de sistema de notificación de caducidad de certificaciones (optional)"
                   name={['organization', 'enable_notification_providers']}
-                  initialValue={enable_notification_providers}>
+                  initialValue={enable_notification_providers}
+                >
                   <Select
                     mode="multiple"
                     style={{ width: '100%' }}

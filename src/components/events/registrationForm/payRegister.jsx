@@ -88,7 +88,8 @@ export const ButtonPayment = ({ eventId, user }) => {
             style={{ width: '170px' }}
             method="post"
             action="https://checkout.payulatam.com/ppp-web-gateway-payu/"
-            acceptCharset="UTF-8">
+            acceptCharset="UTF-8"
+          >
             {' '}
             <input
               style={{ width: '100%' }}

@@ -127,7 +127,8 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
                 loading={is.stoppingStreaming}
                 type="primary"
                 danger
-                onClick={() => executer_stopStream()}>
+                onClick={() => executer_stopStream()}
+              >
                 Detener
               </Button>
             )}
@@ -137,7 +138,8 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
                 onConfirm={handleConfirmDeleting}
                 onCancel={() => console.log('cancelado')}
                 okText="Sí"
-                cancelText="No">
+                cancelText="No"
+              >
                 <Button loading={isDeleting} danger>
                   Eliminar
                 </Button>

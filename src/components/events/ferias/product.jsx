@@ -39,7 +39,8 @@ function products(props) {
             }
           />
         }
-        className="product-company">
+        className="product-company"
+      >
         <Card.Meta
           avatar={
             props.etiqueta && props.etiqueta === 'Producto' ? (
@@ -59,11 +60,13 @@ function products(props) {
                 rows: 2,
                 expandable: true,
                 symbol: <Badge count="Ver más"></Badge>,
-              }}>
+              }}
+            >
               <p
                 dangerouslySetInnerHTML={{
                   __html: props.description && props.description,
-                }}></p>
+                }}
+              ></p>
             </Paragraph>
           }
         />

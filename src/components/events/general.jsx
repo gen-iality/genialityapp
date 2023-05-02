@@ -787,7 +787,8 @@ class General extends Component {
                         Nombre <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
-                    rules={[{ required: true, message: 'El nombre es requerido' }]}>
+                    rules={[{ required: true, message: 'El nombre es requerido' }]}
+                  >
                     <Input
                       ref={this.nameInputRef}
                       autoFocus
@@ -803,7 +804,8 @@ class General extends Component {
                       <label style={{ marginTop: '2%' }}>
                         Cargo <label style={{ color: 'gray' }}>(opcional)</label>
                       </label>
-                    }>
+                    }
+                  >
                     <Select
                       mode="multiple"
                       placeholder="Asigna un cargo para excluir"
@@ -824,14 +826,16 @@ class General extends Component {
                       <Select
                         name="homeSelectedScreen"
                         value={event.homeSelectedScreen}
-                        onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}>
+                        onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}
+                      >
                         <Option value={null}>Banner de inicio</Option>
                         <Option
                           value={
                             event.app_configuration.ProfileScreen
                               ? event.app_configuration.ProfileScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.ProfileScreen
                             ? event.app_configuration.ProfileScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -841,7 +845,8 @@ class General extends Component {
                             event.app_configuration.CalendarScreen
                               ? event.app_configuration.CalendarScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.CalendarScreen
                             ? event.app_configuration.CalendarScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -851,7 +856,8 @@ class General extends Component {
                             event.app_configuration.NewsScreen
                               ? event.app_configuration.NewsScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.NewsScreen
                             ? event.app_configuration.NewsScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -861,7 +867,8 @@ class General extends Component {
                             event.app_configuration.EventPlaceScreen
                               ? event.app_configuration.EventPlaceScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.EventPlaceScreen
                             ? event.app_configuration.EventPlaceScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -871,7 +878,8 @@ class General extends Component {
                             event.app_configuration.SpeakerScreen
                               ? event.app_configuration.SpeakerScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.SpeakerScreen
                             ? event.app_configuration.SpeakerScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -881,7 +889,8 @@ class General extends Component {
                             event.app_configuration.SurveyScreen
                               ? event.app_configuration.SurveyScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.SurveyScreen
                             ? event.app_configuration.SurveyScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -891,7 +900,8 @@ class General extends Component {
                             event.app_configuration.DocumentsScreen
                               ? event.app_configuration.DocumentsScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.DocumentsScreen
                             ? event.app_configuration.DocumentsScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -901,7 +911,8 @@ class General extends Component {
                             event.app_configuration.WallScreen
                               ? event.app_configuration.WallScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.WallScreen
                             ? event.app_configuration.WallScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -911,7 +922,8 @@ class General extends Component {
                             event.app_configuration.WebScreen
                               ? event.app_configuration.WebScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.WebScreen
                             ? event.app_configuration.WebScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -921,7 +933,8 @@ class General extends Component {
                             event.app_configuration.FaqsScreen
                               ? event.app_configuration.FaqsScreen.name
                               : ''
-                          }>
+                          }
+                        >
                           {event.app_configuration.FaqsScreen
                             ? event.app_configuration.FaqsScreen.title
                             : 'Favor seleccionar items del menú para la '}
@@ -1063,7 +1076,8 @@ class General extends Component {
                     label="Duración"
                     rules={[
                       { required: true, message: 'El tiempo de duración es requerido' },
-                    ]}>
+                    ]}
+                  >
                     <Input
                       autoFocus
                       name="duration"
@@ -1097,7 +1111,8 @@ class General extends Component {
                       <label style={{ marginTop: '2%' }}>
                         Imagen general - miniatura del curso
                       </label>
-                    }>
+                    }
+                  >
                     <ImageUploaderDragAndDrop
                       imageDataCallBack={(imageUrl) => this.handleImage(imageUrl)}
                       imageUrl={image}
@@ -1252,7 +1267,8 @@ class General extends Component {
                             required: true,
                             message: 'Necesario',
                           },
-                        ]}>
+                        ]}
+                      >
                         <InputNumber
                           min={1}
                           value={event.validity_days || 1}

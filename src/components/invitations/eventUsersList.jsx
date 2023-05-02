@@ -182,14 +182,16 @@ class EventUsersList extends Component {
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
-            style={{ width: 90 }}>
+            style={{ width: 90 }}
+          >
             Search
           </Button>
 
           <Button
             onClick={() => this.handleReset(clearFilters)}
             size="small"
-            style={{ width: 90 }}>
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
         </Space>
@@ -328,7 +330,8 @@ class EventUsersList extends Component {
                   onClick={() => this.goToSendMessage()}
                   disabled={
                     !eventIsActive && window.location.toString().includes('eventadmin')
-                  }>
+                  }
+                >
                   Enviar comunicación a :{' '}
                   {selectedRowKeys.length === 0 ? 'Todos' : selectedRowKeys.length}
                 </Button>
@@ -338,7 +341,8 @@ class EventUsersList extends Component {
                 <Button
                   type="primary"
                   onClick={this.exportFile}
-                  icon={<DownloadOutlined />}>
+                  icon={<DownloadOutlined />}
+                >
                   Exportar usuario
                 </Button>
               </Col>
@@ -349,12 +353,14 @@ class EventUsersList extends Component {
                       ? ''
                       : `${this.props.matchUrl}/importar-excel`
                   }
-                  icon={<UploadOutlined />}>
+                  icon={<UploadOutlined />}
+                >
                   <Button
                     type="primary"
                     disabled={
                       !eventIsActive && window.location.toString().includes('eventadmin')
-                    }>
+                    }
+                  >
                     Importar usuario
                   </Button>
                 </Link>
@@ -366,7 +372,8 @@ class EventUsersList extends Component {
                   icon={<PlusCircleOutlined />}
                   disabled={
                     !eventIsActive && window.location.toString().includes('eventadmin')
-                  }>
+                  }
+                >
                   Agregar usuario
                 </Button>
               </Col>

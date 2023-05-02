@@ -111,7 +111,8 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
                 ? 'camera *;microphone *'
                 : 'autoplay; encrypted-media'
             }
-            allowfullscreen></iframe>
+            allowfullscreen
+          ></iframe>
         ) : (
           <Spin />
         )}

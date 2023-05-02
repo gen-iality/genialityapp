@@ -144,13 +144,15 @@ const ModalAuthAnonymous = (props: any) => {
           controllerLoginVisible?.visible &&
           props.cEvent?.value?.visibility === 'ANONYMOUS'
         }
-        closable={false}>
+        closable={false}
+      >
         {isVisibleRegister() && (
           <div
             style={{
               height: 'auto',
               overflowY: 'hidden',
-            }}>
+            }}
+          >
             <RegisterUserAndEventUserAnonymous
               screens={screens}
               stylePaddingMobile={stylePaddingMobile}

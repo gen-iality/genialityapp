@@ -59,7 +59,8 @@ const ContentContainer = () => {
       basename="/"
       getUserConfirmation={() => {
         /* Empty callback to block the default browser prompt, it is necessary to be able to use in custon hook RouterPrompt */
-      }}>
+      }}
+    >
       <main className="main">
         <Switch>
           <RouteContext
@@ -157,7 +158,8 @@ const RouteContext = ({ component: Component, ...rest }) => (
                   <Layout
                     style={{
                       minHeight: '100vh',
-                    }}>
+                    }}
+                  >
                     <Header />
                     <Component {...props} />
                     <ModalAuth />

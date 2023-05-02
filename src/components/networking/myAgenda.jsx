@@ -116,7 +116,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             type="primary"
             onClick={() => {
               setCurrentRoom(null)
-            }}>
+            }}
+          >
             Regresar al listado de citas
           </Button>
           <Row gutter={[12, 12]}>
@@ -136,7 +137,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     allowusermedia
                     allowFullScreen
                     title="video"
-                    className="iframe-zoom nuevo">
+                    className="iframe-zoom nuevo"
+                  >
                     <p>Your browser does not support iframes.</p>
                   </iframe>
                 </div>
@@ -159,7 +161,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     '&version=0.0.2' +
                     '&mode=' +
                     isStagingOrProduccion()
-                  }></iframe>
+                  }
+                ></iframe>
               )}
             </Col>
           </Row>
@@ -185,7 +188,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     {dayjs(eventDate).format('MMMM DD')}
                   </div>
                 }
-                key={`event-date-${eventDateIndex}-${eventDate}`}>
+                key={`event-date-${eventDateIndex}-${eventDate}`}
+              >
                 {isNonEmptyArray(dayAgendas) ? (
                   dayAgendas.map((acceptedAgenda) => (
                     <>
@@ -277,7 +281,8 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
             title="¿Desea cancelar/eliminar esta cita?"
             onConfirm={deleteThisAgenda}
             okText="Si"
-            cancelText="No">
+            cancelText="No"
+          >
             <Button type="text" danger disabled={loading} loading={loading}>
               Cancelar cita
             </Button>
@@ -292,7 +297,8 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
               {dayjs(data.timestamp_end).format('hh:mm a')}
             </Typography.Text>
           </Space>
-        }>
+        }
+      >
         <Meta
           avatar={
             userImage ? (
@@ -336,7 +342,8 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                 loading={loading}
                 onClick={() => {
                   accessMeetRoom(data, eventUser)
-                }}>
+                }}
+              >
                 {validDateRoom(data) && !enableMeetings
                   ? 'Ingresar a reunión'
                   : !validDateRoom(data) && !enableMeetings

@@ -96,7 +96,8 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
                   size="middle"
                   disabled={
                     !eventIsActive && window.location.toString().includes('eventadmin')
-                  }>
+                  }
+                >
                   Agregar
                 </Button>
               </Link>
@@ -109,7 +110,8 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
                 onClick={addFn}
                 disabled={
                   !eventIsActive && window.location.toString().includes('eventadmin')
-                }>
+                }
+              >
                 Agregar
               </Button>
             )}
@@ -128,7 +130,8 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
                 !eventIsActive && window.location.toString().includes('eventadmin')
                   ? true
                   : loadingSave
-              }>
+              }
+            >
               {saveName ? saveName : 'Guardar'}
             </Button>
           </Col>
@@ -143,7 +146,8 @@ const Header: FunctionComponent<HeaderProps> = (props) => {
               icon={<DeleteOutlined />}
               disabled={
                 !eventIsActive && window.location.toString().includes('eventadmin')
-              }>
+              }
+            >
               Eliminar
             </Button>
           </Col>

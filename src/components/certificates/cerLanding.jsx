@@ -241,7 +241,8 @@ class CertificadoLanding extends Component {
                 alignItems: 'center',
                 display: 'flex',
                 fontWeight: 'bold',
-              }}>
+              }}
+            >
               Debes estar registrado en el curso para poder descargar tu certificado{' '}
             </h1>
           )}
@@ -256,7 +257,8 @@ class CertificadoLanding extends Component {
                 fontSize: '27px',
                 alignItems: 'center',
                 display: 'flex',
-              }}>
+              }}
+            >
               Debes haber asistido para descargar el certificado
             </h1>
           )}

@@ -7,7 +7,8 @@ const MiniBanner = (props) => (
       display: 'block',
       margin: 'auto',
       marginBottom: '25px',
-    }}>
+    }}
+  >
     <img
       src={props.banner}
       style={{

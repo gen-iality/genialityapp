@@ -52,7 +52,8 @@ export default function ConferenceConfig({
                 onChange={(value) => {
                   setRoomStatus(value)
                 }}
-                style={{ width: '180px' }}>
+                style={{ width: '180px' }}
+              >
                 <Option value="">Lección creada</Option>
                 <Option value="closed_meeting_room">Iniciará pronto</Option>
                 <Option value="open_meeting_room">En vivo</Option>
@@ -68,7 +69,8 @@ export default function ConferenceConfig({
                   request && Object.keys(request).length > 0
                     ? Object.keys(request).length
                     : 0
-                }>
+                }
+              >
                 <Button type="primary">Solicitudes de participación</Button>
               </Badge>
             </Col>

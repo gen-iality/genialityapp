@@ -64,7 +64,8 @@ function Companylist(props) {
             paddingTop: '12px',
             margin: 'auto',
             borderRadius: '5px',
-          }}>
+          }}
+        >
           <Row className="container" gutter={[10, 10]}>
             <Col
               xs={24}
@@ -77,7 +78,8 @@ function Companylist(props) {
                 history.push(
                   `/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`,
                 )
-              }}>
+              }}
+            >
               <div className="img-contact">
                 <img className="img" src={props.img} />
               </div>
@@ -94,12 +96,14 @@ function Companylist(props) {
                     rows: 3, // Determina la cantidad de filas que se muestran antes de cortar el texto.
                     expandable: false,
                   }}
-                  className="description">
+                  className="description"
+                >
                   {description}
                 </Paragraph>
                 <span style={{ marginTop: 15 }}>
                   <Link
-                    to={`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`}>
+                    to={`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`}
+                  >
                     <Button type="primary">Visitar stand</Button>
                   </Link>
                 </span>
@@ -126,7 +130,8 @@ function Companylist(props) {
                         onClick={() => {
                           window.open(`${props.pagweb}`, '_blank')
                         }}
-                        target="_blank">
+                        target="_blank"
+                      >
                         <Text style={{ width: '20vw' }} ellipsis>
                           {props.pagweb}
                         </Text>
@@ -139,7 +144,8 @@ function Companylist(props) {
                     type="default"
                     className="boton"
                     size="large"
-                    onClick={() => showModal(props)}>
+                    onClick={() => showModal(props)}
+                  >
                     Información de contacto
                   </Button>
                 </div>

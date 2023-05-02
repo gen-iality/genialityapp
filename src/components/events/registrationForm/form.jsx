@@ -585,7 +585,8 @@ const FormRegister = ({
                 <div
                   dangerouslySetInnerHTML={{
                     __html: label,
-                  }}></div>
+                  }}
+                ></div>
               </div>
               <Divider />
             </>
@@ -626,12 +627,14 @@ const FormRegister = ({
                     form={form}
                     key={'l' + key}
                     htmlFor={key}
-                    initialValue={value}>
+                    initialValue={value}
+                  >
                     <Checkbox
                       {...props}
                       key={key}
                       name={name}
-                      defaultChecked={Boolean(value ? value : false)}>
+                      defaultChecked={Boolean(value ? value : false)}
+                    >
                       {mandatory ? (
                         <span>
                           <span style={{ color: 'red' }}>* </span>
@@ -649,12 +652,14 @@ const FormRegister = ({
                         header={intl.formatMessage({
                           id: 'registration.message.policy',
                         })}
-                        key="1">
+                        key="1"
+                      >
                         <pre
                           dangerouslySetInnerHTML={{
                             __html: description,
                           }}
-                          style={{ whiteSpace: 'normal' }}></pre>
+                          style={{ whiteSpace: 'normal' }}
+                        ></pre>
                       </Panel>
                     </Collapse>
                   )}
@@ -704,7 +709,8 @@ const FormRegister = ({
                       },
                     ]
                   : []
-              }>
+              }
+            >
               <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload>
           )
@@ -762,7 +768,8 @@ const FormRegister = ({
                 }}
                 disabled={loading || countries.length === 0}
                 loading={loading}
-                placeholder="Seleccione un país">
+                placeholder="Seleccione un país"
+              >
                 {countries.map((country) => (
                   <Option key={country.iso2} value={country.name}>
                     {country.name}
@@ -792,7 +799,8 @@ const FormRegister = ({
                 }}
                 disabled={loading || regiones.length === 0}
                 loading={loading}
-                placeholder="Seleccione un región">
+                placeholder="Seleccione un región"
+              >
                 {regiones.map((regiones) => (
                   <Option key={regiones.iso2} value={regiones.name}>
                     {regiones.name}
@@ -819,7 +827,8 @@ const FormRegister = ({
                     inputName: name,
                   })
                 }}
-                placeholder="Seleccione una ciudad">
+                placeholder="Seleccione una ciudad"
+              >
                 {cities.map((cityCode, key) => {
                   return (
                     <Option key={key} value={cityCode.name}>
@@ -863,7 +872,8 @@ const FormRegister = ({
                         ]
                       : []
                   }
-                  beforeUpload={beforeUpload}>
+                  beforeUpload={beforeUpload}
+                >
                   <Button type="primary" icon={<UploadOutlined />}>
                     {intl.formatMessage({
                       id: 'form.button.avatar',
@@ -910,7 +920,8 @@ const FormRegister = ({
                     rules={validations ? [{ required: false }] : [rule]}
                     key={'l' + key}
                     htmlFor={key}
-                    initialValue={value}>
+                    initialValue={value}
+                  >
                     {input}
                   </Form.Item>
 
@@ -921,7 +932,8 @@ const FormRegister = ({
                         header={intl.formatMessage({
                           id: 'registration.message.policy',
                         })}
-                        key="1">
+                        key="1"
+                      >
                         <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
                       </Panel>
                     </Collapse>
@@ -957,7 +969,8 @@ const FormRegister = ({
               }}
               initialValues={organization ? initialOtherValue : initialValues}
               onFinishFailed={showGeneralMessage}
-              onValuesChange={valuesChange}>
+              onValuesChange={valuesChange}
+            >
               <Row style={{ paddingBottom: '5px' }} gutter={[8, 8]}>
                 <Col span={24}>
                   {editUser && (
@@ -1026,7 +1039,8 @@ const FormRegister = ({
                       overflowY: 'auto',
                       paddingRight: '0px',
                       borderRadius: '8px',
-                    }}>
+                    }}
+                  >
                     {fieldsAditional(extraFields) > 0 && editUser && (
                       <Typography.Title level={5}>
                         {intl.formatMessage({
@@ -1062,7 +1076,8 @@ const FormRegister = ({
                 {generalFormErrorMessageVisible && (
                   <Col
                     span={24}
-                    style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                    style={{ display: 'inline-flex', justifyContent: 'center' }}
+                  >
                     <Alert
                       className="animate__animated animate__bounceIn"
                       style={{
@@ -1085,7 +1100,8 @@ const FormRegister = ({
                 {notLoggedAndRegister && (
                   <Col
                     span={24}
-                    style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                    style={{ display: 'inline-flex', justifyContent: 'center' }}
+                  >
                     <Alert
                       className="animate__animated animate__bounceIn"
                       style={{
@@ -1107,7 +1123,8 @@ const FormRegister = ({
                           onClick={() => {
                             helperDispatch({ type: 'showLogin' })
                             setNotLoggedAndRegister(false)
-                          }}>
+                          }}
+                        >
                           {intl.formatMessage({
                             id: 'modal.title.login',
                             defaultMessage: 'Iniciar sesión',
@@ -1124,7 +1141,8 @@ const FormRegister = ({
                 {errorRegisterUser && (
                   <Col
                     span={24}
-                    style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                    style={{ display: 'inline-flex', justifyContent: 'center' }}
+                  >
                     <Alert
                       className="animate__animated animate__bounceIn"
                       type="warning"
@@ -1155,7 +1173,8 @@ const FormRegister = ({
                         // Restricciones
                         // disabled={!eventIsActive}
                         type="primary"
-                        htmlType="submit">
+                        htmlType="submit"
+                      >
                         {}
                         {isRegister(initialValues, cEventUser)
                           ? intl.formatMessage({ id: 'Button.signup' })
@@ -1176,7 +1195,8 @@ const FormRegister = ({
                             style={{
                               marginLeft: 10,
                               marginTop: 10,
-                            }}>
+                            }}
+                          >
                             {option.text}
                           </Button>
                         ))}

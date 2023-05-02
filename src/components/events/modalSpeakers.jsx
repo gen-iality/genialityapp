@@ -35,7 +35,8 @@ const ModalSpeakers = (props) => {
           <Button key="cerrar" type="primary" onClick={() => clearStates()}>
             Cerrar
           </Button>,
-        ]}>
+        ]}
+      >
         <Row>
           {/* Imagen del conferencista */}
 

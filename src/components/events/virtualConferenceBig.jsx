@@ -60,7 +60,8 @@ const MeetingConferenceButton = ({
               } else {
                 setActivity(activity)
               }
-            }}>
+            }}
+          >
             <FormattedMessage id="live.join" defaultMessage="Ingresa aquí" />
           </Button>
         </>
@@ -150,7 +151,8 @@ const VirtualConference = () => {
           marginLeft: '20px',
           marginRight: '20px',
           flexDirection: 'column',
-        }}>
+        }}
+      >
         {infoAgendaArr.length > 0 &&
           infoAgendaArr
             .filter((item) => {
@@ -187,7 +189,8 @@ const VirtualConference = () => {
                     ) : (
                       ''
                     )
-                  }>
+                  }
+                >
                   <Card
                     key={key}
                     hoverable
@@ -202,13 +205,15 @@ const VirtualConference = () => {
                       borderLeft: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                       borderRight: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                     }}
-                    className="animate__animated animate__backInUp">
+                    className="animate__animated animate__backInUp"
+                  >
                     <Link
                       to={
                         item.habilitar_ingreso == 'open_meeting_room'
                           ? `${urlactivity}${item._id}`
                           : `${urlAgenda}`
-                      }>
+                      }
+                    >
                       <Row justify="center" align="middle" gutter={[4, 4]}>
                         <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
                           <div
@@ -216,7 +221,8 @@ const VirtualConference = () => {
                               justifyContent: 'center',
                               alignContent: 'center',
                               display: 'grid',
-                            }}>
+                            }}
+                          >
                             {item.habilitar_ingreso == 'open_meeting_room' ? (
                               <>
                                 {!screens.xs && (
@@ -259,7 +265,8 @@ const VirtualConference = () => {
                               display: 'grid',
                               height: '100%',
                               alignItems: 'center',
-                            }}>
+                            }}
+                          >
                             <Title
                               level={screens.xs ? 5 : 4}
                               ellipsis={{
@@ -274,7 +281,8 @@ const VirtualConference = () => {
                              efecto en la prop del componente de Ant design */}
                                   </span>
                                 ),
-                              }}>
+                              }}
+                            >
                               {item.name}
                             </Title>
 
@@ -282,7 +290,8 @@ const VirtualConference = () => {
                               style={{
                                 color: '#7c909a',
                                 fontSize: `${screens.xs ? '12px' : '14px'}`,
-                              }}>
+                              }}
+                            >
                               {Moment(item.datetime_start).format('LL')}
                               <span>&nbsp;&nbsp;&nbsp;</span>
                               {Moment.tz(
@@ -319,7 +328,8 @@ const VirtualConference = () => {
                               alignContent: 'center',
                               display: 'grid',
                               height: '153px',
-                            }}>
+                            }}
+                          >
                             {item.hosts && (
                               <div className="Virtual-Conferences">
                                 <Avatar.Group
@@ -335,7 +345,8 @@ const VirtualConference = () => {
                                   maxStyle={{
                                     backgroundColor: '#50D3C9',
                                     fontSize: '3vw',
-                                  }}>
+                                  }}
+                                >
                                   {item.hosts.length < 3
                                     ? item.hosts.map((host, key) => {
                                         return (

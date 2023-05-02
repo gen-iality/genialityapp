@@ -75,7 +75,8 @@ function OrganizationPositionsPage(props: Props) {
         const positionId = e.target.value
         onDefaultPositionChange(positionId)
       }}
-      defaultValue={props.org.default_position_id}>
+      defaultValue={props.org.default_position_id}
+    >
       <Header title="Cargos" />
       <Table
         columns={positionsTableColumns(modalHandler.open, orgEventsData, props.path)}
@@ -91,7 +92,8 @@ function OrganizationPositionsPage(props: Props) {
               <Button
                 type="primary"
                 icon={<PlusCircleOutlined />}
-                onClick={() => modalHandler.open()}>
+                onClick={() => modalHandler.open()}
+              >
                 Agregar cargo
               </Button>
             </Col>

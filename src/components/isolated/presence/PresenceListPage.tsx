@@ -104,7 +104,8 @@ export function PresenceListPage(props: IPresenceListPageProps) {
             <Typography.Text
               style={{
                 textDecorationLine: hasTwoDate(item) ? 'line-through' : undefined,
-              }}>
+              }}
+            >
               {item.status}: {item.userId} ({calcTime(item)})
             </Typography.Text>
             <Button danger onClick={() => onDelete('global', item._id)}>
@@ -123,7 +124,8 @@ export function PresenceListPage(props: IPresenceListPageProps) {
             <Typography.Text
               style={{
                 textDecorationLine: hasTwoDate(item) ? 'line-through' : undefined,
-              }}>
+              }}
+            >
               {item.status}: {item.userId} ({calcTime(item)})
             </Typography.Text>
             <Button danger onClick={() => onDelete('local', item._id)}>

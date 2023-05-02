@@ -166,7 +166,8 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
                     )
                   }
                   okText="Sí"
-                  cancelText="No">
+                  cancelText="No"
+                >
                   <Button loading={isLoadingDelete} type="text" danger>
                     {popconfirmMessage}
                   </Button>
@@ -178,7 +179,8 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
                   disabled={isBlockedButton}
                   loading={isLoading}
                   onClick={() => executer_startStream()}
-                  type="primary">
+                  type="primary"
+                >
                   Iniciar transmisión
                 </Button>
               )}

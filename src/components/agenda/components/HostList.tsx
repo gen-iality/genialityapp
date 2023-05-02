@@ -69,7 +69,8 @@ const HostList = () => {
           border: '2px solid #bae637',
           margin: '0px 10px',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <Space direction="vertical" align="center">
           <AlertOutlined style={{ fontSize: '2rem' }} />
           <Text style={{ fontSize: '1.5rem' }}>

@@ -55,11 +55,13 @@ const MenuEvent = ({ isMobile }) => {
                   <Badge
                     key={event.itemsMenu[key].section}
                     count={totalsolicitudes}
-                    offset={[-30, -2]}>
+                    offset={[-30, -2]}
+                  >
                     <Link
                       className="menuEvent_section-text"
                       style={{ color: event.styles.textMenu }}
-                      to={`${url}/${event.itemsMenu[key].section}`}>
+                      to={`${url}/${event.itemsMenu[key].section}`}
+                    >
                       <IconoComponente
                         style={{
                           fontSize: '22px',
@@ -97,14 +99,16 @@ const MenuEvent = ({ isMobile }) => {
                       <Link
                         className="menuEvent_section-text"
                         style={{ color: event.styles.textMenu }}
-                        to={`${url}/${event.itemsMenu[key].section}`}>
+                        to={`${url}/${event.itemsMenu[key].section}`}
+                      >
                         <span
                           style={{
                             display: 'flex',
                             alignItems: 'center',
                             color: event.styles.textMenu,
                             justifyContent: 'center',
-                          }}>
+                          }}
+                        >
                           {` ${event.itemsMenu[key].name}`}
                         </span>
                       </Link>
@@ -138,7 +142,8 @@ const MenuEvent = ({ isMobile }) => {
                       color: event.styles.textMenu,
                     }}
                     key={event.itemsMenu[key].section}
-                    className="MenuItem_event">
+                    className="MenuItem_event"
+                  >
                     <IconoComponente
                       style={{
                         margin: '0 auto',
@@ -150,7 +155,8 @@ const MenuEvent = ({ isMobile }) => {
                     <Link
                       className="menuEvent_section-text"
                       style={{ color: event.styles.textMenu }}
-                      to={`${url}/${event.itemsMenu[key].section}`}>
+                      to={`${url}/${event.itemsMenu[key].section}`}
+                    >
                       {` ${event.itemsMenu[key].name}`}
                     </Link>
                   </Menu.Item>

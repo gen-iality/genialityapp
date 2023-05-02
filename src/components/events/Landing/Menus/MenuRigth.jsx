@@ -53,7 +53,8 @@ const MenuRigth = (props) => {
               </>
             }
             style={{ marginTop: '12px', marginBottom: '22px' }}
-            onClick={() => HandleOpenCloseMenuRigth(false)}></Menu.Item>
+            onClick={() => HandleOpenCloseMenuRigth(false)}
+          ></Menu.Item>
         )}
         {(props.generalTabs?.publicChat || props.generalTabs?.privateChat) && (
           <Menu.Item
@@ -75,7 +76,8 @@ const MenuRigth = (props) => {
             onClick={() => {
               HandleOpenCloseMenuRigth(false)
               HandleChatOrAttende('1')
-            }}></Menu.Item>
+            }}
+          ></Menu.Item>
         )}
         {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una lección*/}
         {props.generalTabs?.attendees && typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
@@ -94,7 +96,8 @@ const MenuRigth = (props) => {
             onClick={() => {
               HandleOpenCloseMenuRigth(false)
               HandleChatOrAttende('2')
-            }}></Menu.Item>
+            }}
+          ></Menu.Item>
         )}
         {/*  {currentActivity != null &&
           // currentActivity.habilitar_ingreso === 'open_meeting_room' &&
@@ -140,7 +143,8 @@ const MenuRigth = (props) => {
                 onClick={() => {
                   HandleOpenCloseMenuRigth(false)
                   HandleChatOrAttende('4')
-                }}></Menu.Item>
+                }}
+              ></Menu.Item>
             )}
         </>
       </>

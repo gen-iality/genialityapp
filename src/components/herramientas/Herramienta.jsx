@@ -156,7 +156,8 @@ const Herramienta = (props) => {
                 Nombre <label style={{ color: 'red' }}>*</label>
               </label>
             }
-            rules={[{ required: true, message: 'El nombre es requerido' }]}>
+            rules={[{ required: true, message: 'El nombre es requerido' }]}
+          >
             <Input
               value={herramienta.name}
               name="name"
@@ -170,7 +171,8 @@ const Herramienta = (props) => {
               <label style={{ marginTop: '2%' }} className="label">
                 Enlace (Opcional)
               </label>
-            }>
+            }
+          >
             <Input
               value={herramienta.link}
               name="link"

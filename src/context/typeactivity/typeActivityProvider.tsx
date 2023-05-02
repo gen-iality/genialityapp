@@ -347,7 +347,8 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         videoObject,
         visualizeVideo,
         loadingCreate,
-      }}>
+      }}
+    >
       {children}
     </TypeActivityContext.Provider>
   )

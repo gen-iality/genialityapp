@@ -209,7 +209,8 @@ function Empresas({ event, match }) {
                   to={{
                     pathname: `${match.url}/crear`,
                     state: { edit: value },
-                  }}>
+                  }}
+                >
                   <Button icon={<EditOutlined />} type="primary" size="small" />
                 </Link>
               </Tooltip>
@@ -285,7 +286,8 @@ function Empresas({ event, match }) {
                 icon={<SaveOutlined />}
                 disabled={
                   !eventIsActive && window.location.toString().includes('eventadmin')
-                }>
+                }
+              >
                 Guardar orden
               </Button>
             </Col>

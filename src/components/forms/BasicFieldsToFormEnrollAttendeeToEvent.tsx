@@ -21,7 +21,8 @@ const BasicFieldsToFormEnrollAttendeeToEvent = ({ basicFields, attendee }: any) 
             cursor: 'auto',
           }}
           bodyStyle={{ padding: '20px' }}
-          hoverable>
+          hoverable
+        >
           <Title level={4} style={{ marginBottom: '30px' }}>
             {intl.formatMessage({
               id: 'title.user_data',

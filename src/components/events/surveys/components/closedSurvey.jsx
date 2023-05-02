@@ -14,7 +14,8 @@ function ClosedSurvey(props) {
         alignItems: 'center',
         justifyContent: 'center',
         height: '80vh',
-      }}>
+      }}
+    >
       <Result
         icon={<SmileOutlined />}
         title={

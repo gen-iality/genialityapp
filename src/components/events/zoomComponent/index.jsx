@@ -290,7 +290,8 @@ class ZoomComponent extends Component {
       <div
         className={`content-zoom ${isMedium ? 'mediumScreen' : ''} ${
           isMinimize ? 'minimizeScreen' : ''
-        }`}>
+        }`}
+      >
         <div className="buttons-header">
           <div>
             <div className="title-header">
@@ -329,7 +330,8 @@ class ZoomComponent extends Component {
               allow="autoplay; fullscreen; camera *;microphone *"
               allowUserMedia
               allowFullScreen
-              className="iframe-zoom nuevo">
+              className="iframe-zoom nuevo"
+            >
               <p>Your browser does not support iframes.</p>
             </iframe>
           )}
@@ -342,7 +344,8 @@ class ZoomComponent extends Component {
                 allow="autoplay; fullscreen; camera *;microphone *"
                 allowFullScreen
                 allowusermedia
-                style={conferenceStyles}></iframe>
+                style={conferenceStyles}
+              ></iframe>
 
               {this.state.contentDisplayed && this.state.contentDisplayed == 'game' && (
                 <iframe
@@ -354,7 +357,8 @@ class ZoomComponent extends Component {
                   allow="autoplay; fullscreen; camera *;microphone *"
                   allowFullScreen
                   allowusermedia
-                  style={{ zIndex: '9999', width: '150px', height: '100%' }}></iframe>
+                  style={{ zIndex: '9999', width: '150px', height: '100%' }}
+                ></iframe>
               )}
 
               {this.state.contentDisplayed && this.state.contentDisplayed == 'games' && (
@@ -374,7 +378,8 @@ class ZoomComponent extends Component {
                   allow="autoplay; fullscreen; camera *;microphone *"
                   allowFullScreen
                   allowusermedia
-                  style={{ zIndex: '10', width: '99vw', height: '100%' }}></iframe>
+                  style={{ zIndex: '10', width: '99vw', height: '100%' }}
+                ></iframe>
               )}
 
               {this.state.contentDisplayed &&
@@ -430,7 +435,8 @@ class ZoomComponent extends Component {
                   allow="autoplay; fullscreen; camera *;microphone *"
                   allowFullScreen
                   allowusermedia
-                  className="iframe-zoom nuevo"></iframe>
+                  className="iframe-zoom nuevo"
+                ></iframe>
               )}
             </>
           )}

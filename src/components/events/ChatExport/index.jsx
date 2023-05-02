@@ -398,7 +398,8 @@ const ChatExport = ({ eventId, event }) => {
                     icon={<DeleteOutlined />}
                     disabled={
                       !eventIsActive && window.location.toString().includes('eventadmin')
-                    }>
+                    }
+                  >
                     Eliminar chat
                   </Button>
                 )}
@@ -415,7 +416,8 @@ const ChatExport = ({ eventId, event }) => {
             Usuarios bloqueados
           </Badge>
         }
-        key="2">
+        key="2"
+      >
         <Table
           header={columnsUserBlocked}
           list={listUsersBlocked}
@@ -433,7 +435,8 @@ const ChatExport = ({ eventId, event }) => {
                 <Button
                   onClick={getBlocketdUsers}
                   type="primary"
-                  icon={<ReloadOutlined />}>
+                  icon={<ReloadOutlined />}
+                >
                   Recargar
                 </Button>
               </Col>

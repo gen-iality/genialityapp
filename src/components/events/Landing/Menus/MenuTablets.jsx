@@ -32,7 +32,8 @@ const MenuTablets = () => {
             cEvent.value.styles && cEvent.value.styles.toolbarDefaultBg
               ? cEvent.value.styles.toolbarDefaultBg
               : 'white',
-        }}>
+        }}
+      >
         <Row justify="center">
           {cEvent.value.styles && cEvent.value.styles.event_image && (
             <Image

@@ -45,7 +45,8 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
     <Row
       wrap
       gutter={[16, 16]}
-      style={{ borderColor: '#eee', borderWidth: 1, borderStyle: 'solid' }}>
+      style={{ borderColor: '#eee', borderWidth: 1, borderStyle: 'solid' }}
+    >
       <Col md={1} xs={4}>
         {showDeleteButton ? (
           <Button danger onClick={() => onDelete()} icon={<DeleteFilled />} />

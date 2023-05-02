@@ -124,7 +124,8 @@ const EditInformation = ({ cUser }) => {
                 multiple={false}
                 listType="picture"
                 maxCount={1}
-                fileList={imageAvatar}>
+                fileList={imageAvatar}
+              >
                 {!imageAvatar && (
                   <Button
                     type="primary"
@@ -132,7 +133,8 @@ const EditInformation = ({ cUser }) => {
                     style={{
                       height: !imageAvatar ? '150px' : '95px',
                       width: !imageAvatar ? '150px' : '95px',
-                    }}>
+                    }}
+                  >
                     <Space direction="vertical">
                       <PictureOutlined style={{ fontSize: '40px' }} />
                       {intl.formatMessage({
@@ -154,7 +156,8 @@ const EditInformation = ({ cUser }) => {
             initialValue={names}
             hasFeedback
             style={{ marginBottom: '10px', textAlign: 'left' }}
-            rules={ruleName}>
+            rules={ruleName}
+          >
             <Input
               type="text"
               size="large"
@@ -197,7 +200,8 @@ const EditInformation = ({ cUser }) => {
             <Button
               htmlType="submit"
               style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-              size="large">
+              size="large"
+            >
               Guardar cambios
             </Button>
           </Form.Item>

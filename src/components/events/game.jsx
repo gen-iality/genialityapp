@@ -42,7 +42,8 @@ function Game(props) {
         width: '100%',
         height: '65vh',
         overscrollBehavior: 'none',
-      }}></iframe>
+      }}
+    ></iframe>
   )
 }
 

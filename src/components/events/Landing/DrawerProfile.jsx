@@ -115,12 +115,14 @@ const DrawerProfile = (props) => {
           closable
           footer={false}
           visible
-          onCancel={() => closeOrOpenModal()}>
+          onCancel={() => closeOrOpenModal()}
+        >
           <div
             style={{
               padding: '0px',
               marginTop: '30px',
-            }}>
+            }}
+          >
             <FormComponent callback={updateEventUser} />
           </div>
         </Modal>
@@ -159,7 +161,8 @@ const DrawerProfile = (props) => {
         closable
         onClose={() => props.setViewPerfil({ view: false, perfil: null })}
         width="52vh"
-        bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
+        bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}
+      >
         <Row justify="center" style={{ paddingLeft: '15px', paddingRight: '10px' }}>
           <Col span={24}>
             <Typography.Paragraph>
@@ -178,7 +181,8 @@ const DrawerProfile = (props) => {
                 }}
                 type="text"
                 size="middle"
-                style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}>
+                style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}
+              >
                 {props.cEvent.value.visibility === 'PUBLIC' && (
                   <>
                     {intl.formatMessage({
@@ -200,7 +204,8 @@ const DrawerProfile = (props) => {
               height: '50vh',
               maxHeight: '50vh',
               overflowY: 'auto',
-            }}>
+            }}
+          >
             {(!userSelected || !userPropertiesProfile) && (
               <Spin style={{ padding: '50px' }} size="large" tip="Cargando..."></Spin>
             )}

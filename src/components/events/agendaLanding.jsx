@@ -567,7 +567,8 @@ class Agenda extends Component {
         <div
           key={index}
           className="container_agenda-information"
-          style={{ marginBottom: 0 }}>
+          style={{ marginBottom: 0 }}
+        >
           {(item.requires_registration || item.requires_registration === 'true') &&
           !this.props.cUser ? (
             <Badge.Ribbon color="red" placement="end" text="Requiere registro">
@@ -691,10 +692,12 @@ class Agenda extends Component {
               key="submit"
               type="primary"
               loading={loading}
-              onClick={this.props.handleOpenRegisterForm}>
+              onClick={this.props.handleOpenRegisterForm}
+            >
               Registrarme
             </Button>,
-          ]}>
+          ]}
+        >
           <p>
             Para poder disfrutar de este contenido debes estar registrado e iniciar sesión
           </p>
@@ -713,7 +716,8 @@ class Agenda extends Component {
             <Button key="login" onClick={this.handleOpenModalExchangeCode}>
               Canjear código
             </Button>,
-          ]}>
+          ]}
+        >
           <p>
             Para poder disfrutar de este contenido debes haber pagado y tener un código
             por favor ingresalo a continuación, Si aún no has comprado el código lo puedes
@@ -734,7 +738,8 @@ class Agenda extends Component {
             <Button key="cancel" onClick={this.handleCloseModalRestrictedDevices}>
               Cancelar
             </Button>,
-          ]}>
+          ]}
+        >
           <p>Has excedido el número de dispositivos permitido</p>
         </Modal>
 
@@ -751,7 +756,8 @@ class Agenda extends Component {
             <Button key="login" onClick={this.exchangeCode}>
               Canjear código
             </Button>,
-          ]}>
+          ]}
+        >
           <div>
             {this.state.exchangeCodeMessage && (
               <Alert
@@ -796,7 +802,8 @@ class Agenda extends Component {
                           <Card style={{ marginBottom: '20px', height: 'auto' }}>
                             <Divider
                               orientation="left"
-                              style={{ fontSize: '18px', color: '#f7981d' }}>
+                              style={{ fontSize: '18px', color: '#f7981d' }}
+                            >
                               <p>
                                 <Space>
                                   <CalendarOutlined />
@@ -821,7 +828,8 @@ class Agenda extends Component {
                       <div
                         style={{
                           backgroundColor: 'white',
-                        }}>
+                        }}
+                      >
                         <ActivitiesList
                           agendaList={this.state.data}
                           eventId={this.props.cEvent.value._id}

@@ -374,7 +374,8 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
                 onClick={() => {
                   form.resetFields()
                   openModal()
-                }}>
+                }}
+              >
                 Agregar certificación
               </Button>
               {isSubmiting && <Spin />}
@@ -390,12 +391,14 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
           form.submit()
           closeModal()
         }}
-        onCancel={() => closeModal()}>
+        onCancel={() => closeModal()}
+      >
         <Form form={form} onFinish={onFormFinish} layout="vertical">
           <Form.Item
             name="event_id"
             label="Curso a dar certificación"
-            rules={[{ required: true, message: 'Esto' }]}>
+            rules={[{ required: true, message: 'Esto' }]}
+          >
             <Select
               onChange={(value) => {
                 /**
@@ -425,33 +428,38 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
           <Form.Item
             name="description"
             label="Descripción"
-            rules={[{ required: true, message: 'Agrega la descripción' }]}>
+            rules={[{ required: true, message: 'Agrega la descripción' }]}
+          >
             <TextArea rows={4} />
           </Form.Item>
           <Form.Item
             name="hours"
             label="Horas"
-            rules={[{ required: true, message: 'Agrega el número de horas' }]}>
+            rules={[{ required: true, message: 'Agrega el número de horas' }]}
+          >
             <InputNumber min={1} />
           </Form.Item>
           <Form.Item
             name="entity"
             label="Entidad"
-            rules={[{ required: true, message: 'Agrega la entidad' }]}>
+            rules={[{ required: true, message: 'Agrega la entidad' }]}
+          >
             <Input />
           </Form.Item>
           <Form.Item
             name="approved_from_date"
             label="Fecha de aprobación"
             rules={[{ required: true, message: 'Agrega la fecha' }]}
-            initialValue={dayjs(Date.now())}>
+            initialValue={dayjs(Date.now())}
+          >
             <DatePicker />
           </Form.Item>
           <Form.Item
             name="approved_until_date"
             label="Fecha de vencimiento"
             rules={[{ required: true, message: 'Agrega la fecha' }]}
-            initialValue={dayjs(Date.now())}>
+            initialValue={dayjs(Date.now())}
+          >
             <DatePicker />
           </Form.Item>
           <Form.Item name="file_url" label="Archivo externo">

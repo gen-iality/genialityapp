@@ -158,7 +158,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
         form={form}
         autoComplete="off"
         layout="vertical"
-        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+        style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
+      >
         <Form.Item>
           <ImgCrop rotate shape="round">
             <Upload
@@ -174,7 +175,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
               multiple={false}
               listType="picture"
               maxCount={1}
-              fileList={imageAvatar}>
+              fileList={imageAvatar}
+            >
               {
                 <Button
                   type="primary"
@@ -182,7 +184,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
                   style={{
                     height: !imageAvatar ? '150px' : '95px',
                     width: !imageAvatar ? '150px' : '95px',
-                  }}>
+                  }}
+                >
                   <Space direction="vertical">
                     <PictureOutlined style={{ fontSize: '40px' }} />
                     {intl.formatMessage({
@@ -203,7 +206,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           name="email"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleEmail}>
+          rules={ruleEmail}
+        >
           <Input
             type="email"
             size="large"
@@ -219,7 +223,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           name="password"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={rulePassword}>
+          rules={rulePassword}
+        >
           <Input.Password
             type="password"
             size="large"
@@ -238,7 +243,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           name="names"
           hasFeedback
           style={{ marginBottom: '10px', textAlign: 'left' }}
-          rules={ruleName}>
+          rules={ruleName}
+        >
           <Input
             type="text"
             size="large"
@@ -255,7 +261,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             htmlType="submit"
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-            size="large">
+            size="large"
+          >
             {intl.formatMessage({
               id: 'modal.label.create_user',
               defaultMessage: 'Crear cuenta de usuario',

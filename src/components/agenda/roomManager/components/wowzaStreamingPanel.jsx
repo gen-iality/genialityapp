@@ -204,7 +204,8 @@ const WowzaStreamingPanel = ({
               onClick={() => {
                 executer_createStream.mutate()
                 setStreamAlreadyCreated(false)
-              }}>
+              }}
+            >
               Crear nueva transmisión
             </Button>
             <Dropdown
@@ -215,7 +216,8 @@ const WowzaStreamingPanel = ({
                     Tengo ya una transmisión que quiero usar
                   </Menu.Item>
                 </Menu>
-              }>
+              }
+            >
               <Button>Avanzado</Button>
             </Dropdown>
           </Space>
@@ -254,7 +256,8 @@ const WowzaStreamingPanel = ({
               <Button
                 onClick={() => {
                   executer_startStream()
-                }}>
+                }}
+              >
                 Iniciar transmisión
               </Button>
             ) : livestreamStatus?.state === 'started' ? (
@@ -268,7 +271,8 @@ const WowzaStreamingPanel = ({
                           ? 'https://streamyard.com/teams/nqMJDiHJSBnP5E7bmGs7JyZV/broadcasts'
                           : linkRolAdmin
                       }
-                      target="_blank">
+                      target="_blank"
+                    >
                       {transmition && 'Ingresar a ' + transmition + ' para transmitir'}
                     </Button>
                   )}
@@ -282,7 +286,8 @@ const WowzaStreamingPanel = ({
                       executer_stopStream()
                     }}
                     danger
-                    type="primary">
+                    type="primary"
+                  >
                     Detener transmisión
                   </Button>
 

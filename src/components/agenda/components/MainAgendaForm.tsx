@@ -358,7 +358,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                   Nombre <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'Nombre de la lección requerida' }]}>
+              rules={[{ required: true, message: 'Nombre de la lección requerida' }]}
+            >
               <Input
                 autoFocus
                 ref={nameInputRef}
@@ -392,7 +393,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                   Día <RequiredStar />
                 </label>
               }
-              rules={[{ required: true, message: 'La fecha es requerida' }]}>
+              rules={[{ required: true, message: 'La fecha es requerida' }]}
+            >
               <SelectAntd
                 options={allDays}
                 value={formdata.date}
@@ -409,7 +411,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                       Hora Inicio <RequiredStar />
                     </label>
                   }
-                  rules={[{ required: true, message: 'La hora de inicio es requerida' }]}>
+                  rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
+                >
                   <TimePicker
                     use12Hours
                     format="h:mm a"
@@ -428,7 +431,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                       Hora Fin <RequiredStar />
                     </label>
                   }
-                  rules={[{ required: true, message: 'La hora final es requerida' }]}>
+                  rules={[{ required: true, message: 'La hora final es requerida' }]}
+                >
                   <TimePicker
                     use12Hours
                     style={{ width: '100%' }}
@@ -504,7 +508,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 <Modal
                   visible={isSpeakerModalShown}
                   onCancel={() => setIsSpeakerModalShown(false)}
-                  okButtonProps={{ disabled: true }}>
+                  okButtonProps={{ disabled: true }}
+                >
                   <Speaker
                     eventID={props.event._id}
                     matchUrl={props.matchUrl}
@@ -527,7 +532,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 <Col span={23}>
                   <SelectAntd
                     value={formdata.space_id}
-                    onChange={(value) => handleChangeFormData('space_id', value)}>
+                    onChange={(value) => handleChangeFormData('space_id', value)}
+                  >
                     <Option value="">Seleccione un lugar/salón ...</Option>
                     {allSpaces.map((space) => (
                       <Option key={space.value} value={space.value}>

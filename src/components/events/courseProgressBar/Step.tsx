@@ -49,7 +49,8 @@ function Step(props: StepProps) {
       onClick={() => {
         setCurrentId(id)
         props.onClick && props.onClick()
-      }}>
+      }}
+    >
       {children}
     </div>
   )

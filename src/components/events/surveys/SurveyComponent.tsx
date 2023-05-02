@@ -282,7 +282,8 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
                   saveSurveyStatus().then(() =>
                     history.push(`/landing/${eventId}/evento`),
                   )
-                }}>
+                }}
+              >
                 Volver al curso {isSavingPoints && <Spin />}
               </Button>
             </div>

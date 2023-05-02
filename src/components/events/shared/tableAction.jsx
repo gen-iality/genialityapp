@@ -8,7 +8,8 @@ export default function TableAction({ ...props }) {
             className="icon"
             onClick={() => {
               saveItem(object)
-            }}>
+            }}
+          >
             <i className="fas fa-save" />
           </span>
         </button>
@@ -31,7 +32,8 @@ export default function TableAction({ ...props }) {
             className="icon"
             onClick={() => {
               removeItem(object._id)
-            }}>
+            }}
+          >
             <i className="far fa-trash-alt" />
           </span>
         </button>

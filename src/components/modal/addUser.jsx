@@ -104,7 +104,8 @@ class AddUser extends Component {
             <Form.Item
               label={name}
               htmlFor={name}
-              style={{ textTransform: 'capitalize' }}>
+              style={{ textTransform: 'capitalize' }}
+            >
               <Checkbox
                 name={name}
                 id={name}
@@ -131,7 +132,8 @@ class AddUser extends Component {
             value={value}
             onChange={(e) => {
               this.onChange(e, type, name)
-            }}>
+            }}
+          >
             <Option value="">Seleccione...</Option>
             {input}
           </Select>
@@ -144,7 +146,8 @@ class AddUser extends Component {
               label={name}
               htmlFor={key}
               key={'l' + key}
-              style={{ textTransform: 'capitalize' }}>
+              style={{ textTransform: 'capitalize' }}
+            >
               {input}
             </Form.Item>
           )}
@@ -211,10 +214,12 @@ class AddUser extends Component {
               type="primary"
               onClick={this.handleSubmit}
               disabled={this.state.create}
-              loading={this.state.create}>
+              loading={this.state.create}
+            >
               {this.state.edit ? 'Guardar' : 'Crear'}
             </Button>,
-          ]}>
+          ]}
+        >
           <Form {...formLayout}>
             {Object.keys(this.state.user).length > 0 && this.renderForm()}
             {tickets.length > 0 && (
@@ -222,7 +227,8 @@ class AddUser extends Component {
                 <Select
                   onChange={(e) => this.onChange(e, 'select', 'ticketid')}
                   name="ticketid"
-                  defaultValue="">
+                  defaultValue=""
+                >
                   <Option value="">..Seleccione</Option>
                   {tickets.map((item, key) => {
                     return (

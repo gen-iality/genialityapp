@@ -369,7 +369,8 @@ export const HelperContextProvider = ({ children }) => {
           )
           // ReadMessages(data);
           notification.destroy()
-        }}>
+        }}
+      >
         Responder
       </Button>
     )
@@ -919,7 +920,8 @@ export const HelperContextProvider = ({ children }) => {
         setcurrenActivity,
         getOrganizationUser,
         logout,
-      }}>
+      }}
+    >
       {children}
     </HelperContext.Provider>
   )

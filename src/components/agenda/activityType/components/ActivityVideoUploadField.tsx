@@ -59,7 +59,8 @@ function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
       accept="video/*"
       name="video"
       onRemove={() => {}}
-      onChange={handleOnChange}>
+      onChange={handleOnChange}
+    >
       <Result
         icon={<FileVideoOutlineIcon />}
         title="Haga clic o arrastre el video a esta área para cargarlo"

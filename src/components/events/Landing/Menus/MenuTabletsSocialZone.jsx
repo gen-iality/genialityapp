@@ -38,7 +38,8 @@ const MenuTabletsSocialZone = (props) => {
               onClick={() => {
                 setOptionselected('1')
                 setisDrawerVisible(!isDrawerVisible)
-              }}></Button>
+              }}
+            ></Button>
           )}
           {/* {props.currentActivity && (
             <Button
@@ -68,7 +69,8 @@ const MenuTabletsSocialZone = (props) => {
         onClose={() => setisDrawerVisible(!isDrawerVisible)}
         visible={isDrawerVisible}
         maskClosable
-        className="drawerMobile">
+        className="drawerMobile"
+      >
         <SocialZone
           totalMessages={props.totalNewMessages}
           optionselected={optionselected}

@@ -23,7 +23,8 @@ function TextAreaField(rawProps) {
       label={formItemProps.label}
       required={formItemProps.required}
       help={fieldError}
-      validateStatus={fieldError ? 'error' : undefined}>
+      validateStatus={fieldError ? 'error' : undefined}
+    >
       <TextArea {...props} {...formikProps.field} />
     </FormItem>
   )

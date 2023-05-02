@@ -38,7 +38,8 @@ const TransmitionOptions = (props: any) => {
                 loading={loadingStop}
                 type="primary"
                 danger
-                onClick={() => executer_stopStream()}>
+                onClick={() => executer_stopStream()}
+              >
                 Detener
               </Button>
             )}
@@ -82,7 +83,8 @@ const TransmitionOptions = (props: any) => {
                 }}
                 onCancel={() => console.log('cancelado')}
                 okText="Sí"
-                cancelText="No">
+                cancelText="No"
+              >
                 <Button loading={loadingDelete} danger>
                   Eliminar
                 </Button>

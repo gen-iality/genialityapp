@@ -71,7 +71,8 @@ function DetailsProduct(props) {
                   product.image.filter((img) => img != null).length === 1
                     ? false
                     : true
-                }>
+                }
+              >
                 {product &&
                   product.image &&
                   product.image
@@ -122,7 +123,8 @@ function DetailsProduct(props) {
                         product && product.description
                           ? product.description
                           : 'Sin descripción',
-                    }}></div>
+                    }}
+                  ></div>
                 </Text>
               </Space>
             </Card>
@@ -131,7 +133,8 @@ function DetailsProduct(props) {
       )}
       {!product && !loading && (
         <Card
-          style={{ textAlign: 'center', marginLeft: 30, marginRight: 30, marginTop: 60 }}>
+          style={{ textAlign: 'center', marginLeft: 30, marginRight: 30, marginTop: 60 }}
+        >
           <IssuesCloseOutlined style={{ marginRight: 20, fontSize: 20 }} />
           No existe detalle de este producto
         </Card>

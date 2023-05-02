@@ -28,7 +28,8 @@ class EventCard extends Component {
                 </Space>
               </div>
             </span>
-          }>
+          }
+        >
           <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
             <Card
               bordered={bordered}
@@ -63,7 +64,8 @@ class EventCard extends Component {
                 )
               }
               actions={right}
-              bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}>
+              bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
+            >
               <Meta
                 style={{}}
                 description={

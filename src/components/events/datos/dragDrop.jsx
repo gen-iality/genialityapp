@@ -89,12 +89,14 @@ class DragDrop extends Component {
             {(provided, snapshot) => (
               <div
                 ref={provided.innerRef}
-                style={getQuestionListStyle(snapshot.isDraggingOver)}>
+                style={getQuestionListStyle(snapshot.isDraggingOver)}
+              >
                 {user_properties.map((list, index) => (
                   <Draggable
                     key={list.uuid ? list.uuid : list._id}
                     draggableId={list.uuid ? list.uuid : list._id}
-                    index={index}>
+                    index={index}
+                  >
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
@@ -103,7 +105,8 @@ class DragDrop extends Component {
                         style={getItemStyle(
                           snapshot.isDragging,
                           provided.draggableProps.style,
-                        )}>
+                        )}
+                      >
                         <span style={{ marginRight: '5%' }}>
                           <DragOutlined />
                         </span>

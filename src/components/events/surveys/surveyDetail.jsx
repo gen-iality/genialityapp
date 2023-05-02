@@ -22,7 +22,8 @@ function SurveyDetail(props) {
         size="large"
         icon={<ArrowLeftOutlined />}
         block
-        onClick={handleClick}>
+        onClick={handleClick}
+      >
         Volver al listado de evaluaciones
       </Button>
     </Card>

@@ -64,7 +64,8 @@ const DynamicPhoneInputField: React.FunctionComponent<IDynamicPhoneInputFieldPro
     <DynamicFormItem
       rules={rules}
       fieldData={fieldData}
-      initialValue={allInitialValues[name]}>
+      initialValue={allInitialValues[name]}
+    >
       <PhoneInput
         placeholder={intl.formatMessage({
           id: 'form.phone',

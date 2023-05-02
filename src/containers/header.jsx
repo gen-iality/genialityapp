@@ -149,7 +149,8 @@ const Headers = (props) => {
             visible: true,
             organization: WhereHerePath(),
           })
-        }}>
+        }}
+      >
         <FormattedMessage id="header.expired_signin" defaultMessage="Sign In" />
       </Menu.Item>
 
@@ -160,7 +161,8 @@ const Headers = (props) => {
             visible: true,
             organization: WhereHerePath(),
           })
-        }}>
+        }}
+      >
         <FormattedMessage id="registration.button.create" defaultMessage="Sign Up" />
       </Menu.Item>
     </Menu>
@@ -230,7 +232,8 @@ const Headers = (props) => {
           height: '45px',
           transition: 'all 0.5s ease-out',
           opacity: fixed ? '0.9' : '1',
-        }}>
+        }}
+      >
         <Menu style={{ border: '0px' }} theme="light" mode="horizontal">
           <Row justify="space-between" align="middle">
             <Row className="logo-header" justify="space-between" align="middle">
@@ -289,7 +292,8 @@ const Headers = (props) => {
                           visible: true,
                           organization: WhereHerePath(),
                         })
-                      }}>
+                      }}
+                    >
                       {intl.formatMessage({
                         id: 'modal.title.login',
                         defaultMessage: 'Iniciar sesión',
@@ -321,7 +325,8 @@ const Headers = (props) => {
                           visible: true,
                           organization: WhereHerePath(),
                         })
-                      }}>
+                      }}
+                    >
                       {intl.formatMessage({
                         id: 'modal.title.register',
                         defaultMessage: 'Registrarme',
@@ -381,7 +386,8 @@ const Headers = (props) => {
             placement="left"
             closable
             onClose={() => onClose()}
-            visible={dataGeneral.showEventMenu}>
+            visible={dataGeneral.showEventMenu}
+          >
             <MenuOld match={window.location.pathname} />
           </Drawer>
         </div>

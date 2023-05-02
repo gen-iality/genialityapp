@@ -54,7 +54,8 @@ function AnonymousEvenUserForm() {
       {...layout}
       name="basic"
       initialValues={{ remember: true }}
-      onFinish={onFinish}>
+      onFinish={onFinish}
+    >
       <Row justify="start" style={{ marginBottom: 15 }}>
         <Col>
           <Text type="secondary">
@@ -69,14 +70,16 @@ function AnonymousEvenUserForm() {
       <Form.Item
         label="Nombre"
         name="name"
-        rules={[{ required: true, message: 'Ingrese su nombre' }]}>
+        rules={[{ required: true, message: 'Ingrese su nombre' }]}
+      >
         <Input />
       </Form.Item>
 
       <Form.Item
         label="Email"
         name="email"
-        rules={[{ required: true, message: 'Ingrese su email' }]}>
+        rules={[{ required: true, message: 'Ingrese su email' }]}
+      >
         <Input />
       </Form.Item>
 

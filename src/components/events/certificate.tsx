@@ -195,9 +195,7 @@ function Certificate(props: CertificateProps) {
 
   useEffect(() => {
     if (!props.cUser?.value?._id) return
-    if (!props.cEvent?.value?._id) return
-
-    // Take data to the evaluation certificates
+    if (!props.cEvent?.value?._id) return // Take data to the evaluation certificates
     ;(async () => {
       const surveys: SurveyData[] = await SurveysApi.byEvent(props.cEvent?.value?._id)
 

@@ -386,7 +386,8 @@ class DatosModal extends Component {
             initialValue={this.props.info?.label}
             label="Nombre campo"
             name="label"
-            rules={[{ required: true }]}>
+            rules={[{ required: true }]}
+          >
             <Input
               name="label"
               type="text"
@@ -406,7 +407,8 @@ class DatosModal extends Component {
             initialValue={info?.type}
             label="Tipo de dato"
             name="type"
-            rules={[{ required: true, message: 'Seleccione un tipo de dato válido' }]}>
+            rules={[{ required: true, message: 'Seleccione un tipo de dato válido' }]}
+          >
             <Select
               options={dynamicFieldOptions}
               disabled={
@@ -416,7 +418,8 @@ class DatosModal extends Component {
               }
               onChange={(value) =>
                 this.handleChange({ target: { name: 'type', value: value } })
-              }></Select>
+              }
+            ></Select>
           </Form.Item>
 
           {/* Mark this field as dependent */}
@@ -424,7 +427,8 @@ class DatosModal extends Component {
             <Checkbox
               name="isDependent"
               checked={isDependent || info?.dependency?.fieldName}
-              onChange={this.changeFieldAsDependent}>
+              onChange={this.changeFieldAsDependent}
+            >
               Marca este campo como dependiente de otro campo
             </Checkbox>
           </Form.Item>
@@ -494,7 +498,8 @@ class DatosModal extends Component {
               <Checkbox
                 name="justonebyattendee"
                 checked={info.justonebyattendee}
-                onChange={this.changeFieldjustonebyattendee}>
+                onChange={this.changeFieldjustonebyattendee}
+              >
                 Solo una opción por usuario (cuando un asistente selecciona una opción
                 esta desaparece del listado)
               </Checkbox>
@@ -525,7 +530,8 @@ class DatosModal extends Component {
             label="Obligatorio"
             initialValue={info.mandatory || false}
             htmlFor="mandatoryModal"
-            name="mandatory">
+            name="mandatory"
+          >
             <Checkbox
               id="mandatoryModal"
               //name="mandatory"
@@ -536,7 +542,8 @@ class DatosModal extends Component {
           <Form.Item
             label="Visible para Contactos"
             htmlFor="visibleByContactsModal"
-            name="visibleByContacts">
+            name="visibleByContacts"
+          >
             <Checkbox
               id="visibleByContactsModal"
               name="visibleByContacts"
@@ -547,7 +554,8 @@ class DatosModal extends Component {
           <Form.Item
             label="Visible para Admin"
             htmlFor="visibleByAdminModal"
-            name="visibleByAdmin">
+            name="visibleByAdmin"
+          >
             <Checkbox
               id="visibleByAdminModal"
               name="visibleByAdmin"
@@ -576,14 +584,16 @@ class DatosModal extends Component {
           </Form.Item>
           <Form.Item>
             <Row
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
               <Button
                 style={{ marginRight: 20 }}
                 type="primary"
                 htmlType="submit"
                 id="btnSave"
                 disabled={loading}
-                loading={loading}>
+                loading={loading}
+              >
                 Guardar
               </Button>
 

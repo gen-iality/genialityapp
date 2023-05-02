@@ -218,7 +218,8 @@ const OfertaProduct = ({
                         style={{ cursor: 'pointer', padding: '5px', fontSize: '14px' }}
                         color={selectedValue === val.value ? '#2db7f5' : ''}
                         onClick={() => setSelectedValue(val.value)}
-                        key={'val' + index}>
+                        key={'val' + index}
+                      >
                         {val.name}
                       </Tag>
                     ))}
@@ -228,7 +229,8 @@ const OfertaProduct = ({
                         style={{ cursor: 'pointer', padding: '5px', fontSize: '14px' }}
                         color={selectedValue === val.value ? '#2db7f5' : ''}
                         onClick={() => setSelectedValue(val.value)}
-                        key={'val' + index}>
+                        key={'val' + index}
+                      >
                         {val.name}
                       </Tag>
                     ))}
@@ -246,7 +248,8 @@ const OfertaProduct = ({
                         type="dashed"
                         shape="circle"
                         icon={<MinusOutlined style={{ color: '#2db7f5' }} />}
-                        onClick={() => (!bloquerPuja ? downvalue() : null)}></Button>
+                        onClick={() => (!bloquerPuja ? downvalue() : null)}
+                      ></Button>
                       <Input
                         readOnly
                         type="number"
@@ -260,7 +263,8 @@ const OfertaProduct = ({
                         type="dashed"
                         shape="circle"
                         icon={<PlusOutlined style={{ color: '#2db7f5' }} />}
-                        onClick={() => (!bloquerPuja ? upvalue() : null)}></Button>
+                        onClick={() => (!bloquerPuja ? upvalue() : null)}
+                      ></Button>
                     </Space>
                   </Col>
                 )}
@@ -301,7 +305,8 @@ const OfertaProduct = ({
                     <a
                       target="_blank"
                       rel="noreferrer"
-                      href="https://tiempodejuego.org/tyclaventana/">
+                      href="https://tiempodejuego.org/tyclaventana/"
+                    >
                       <PlayCircleOutlined /> Ver términos y condiciones
                     </a>
                   </Col>
@@ -328,7 +333,8 @@ const OfertaProduct = ({
                 <div
                   dangerouslySetInnerHTML={{
                     __html: messageF ? messageF : 'Sin mensaje',
-                  }}></div>
+                  }}
+                ></div>
               )}
             </div>
           )}

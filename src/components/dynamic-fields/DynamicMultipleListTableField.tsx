@@ -39,7 +39,8 @@ const DynamicMultipleListTableField: React.FunctionComponent<
     <DynamicFormItem
       rules={rules}
       fieldData={fieldData}
-      initialValue={allInitialValues[name]}>
+      initialValue={allInitialValues[name]}
+    >
       <ReactSelect isMulti options={options} />
     </DynamicFormItem>
   )

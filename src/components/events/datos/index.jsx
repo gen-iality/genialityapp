@@ -734,7 +734,8 @@ class Datos extends Component {
                               remove: this.removeField,
                             })
                           }
-                          checked={checkInExists}>
+                          checked={checkInExists}
+                        >
                           CheckIn por documento
                         </Checkbox>
                       </Col>
@@ -743,7 +744,8 @@ class Datos extends Component {
                           disabled={this.state.available}
                           onClick={this.submitOrder}
                           type="primary"
-                          icon={<SaveOutlined />}>
+                          icon={<SaveOutlined />}
+                        >
                           Guardar orden
                         </Button>
                       </Col>
@@ -752,7 +754,8 @@ class Datos extends Component {
                           type="primary"
                           icon={<PlusCircleOutlined />}
                           size="middle"
-                          onClick={this.addField}>
+                          onClick={this.addField}
+                        >
                           Agregar
                         </Button>
                       </Col>
@@ -765,7 +768,8 @@ class Datos extends Component {
                     title={edit ? 'Editar dato' : 'Agregar dato'}
                     footer={false}
                     onCancel={this.closeModal2}
-                    okText="Guardar">
+                    okText="Guardar"
+                  >
                     {/* <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} /> */}
                     <DynamicFieldCreationForm
                       onCancel={this.closeModal2}
@@ -786,7 +790,8 @@ class Datos extends Component {
                   ? 'Configuración Miembros'
                   : 'Plantillas'
               }
-              key="3">
+              key="3"
+            >
               {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (
                 <Fragment>
                   <Header
@@ -805,7 +810,8 @@ class Datos extends Component {
                                   datafields: [],
                                 },
                               })
-                            }>
+                            }
+                          >
                             Volver a plantillas
                           </Button>
                         )}
@@ -841,7 +847,8 @@ class Datos extends Component {
                             disabled={this.state.available}
                             onClick={this.submitOrder}
                             type="primary"
-                            icon={<SaveOutlined />}>
+                            icon={<SaveOutlined />}
+                          >
                             Guardar orden
                           </Button>
                         </Col>
@@ -850,7 +857,8 @@ class Datos extends Component {
                             type="primary"
                             icon={<PlusCircleOutlined />}
                             size="middle"
-                            onClick={this.addField}>
+                            onClick={this.addField}
+                          >
                             Agregar
                           </Button>
                         </Col>
@@ -863,7 +871,8 @@ class Datos extends Component {
                       title={edit ? 'Editar dato' : 'Agregar dato'}
                       footer={false}
                       onCancel={this.closeModal2}
-                      cancelText="Cancelar">
+                      cancelText="Cancelar"
+                    >
                       {/* <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} /> */}
                       <DynamicFieldCreationForm
                         onCancel={this.closeModal2}

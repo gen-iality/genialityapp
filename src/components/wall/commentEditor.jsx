@@ -21,14 +21,16 @@ const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
           onFinish={(values) => {
             onSubmit(comment)
             setComment('')
-          }}>
+          }}
+        >
           <Form.Item name="comment">
             <Row
               style={{
                 display: 'flex',
                 justifyContent: 'center',
                 marginTop: 20,
-              }}>
+              }}
+            >
               <Col span={21}>
                 <TextArea
                   onChange={(e) => {
@@ -67,7 +69,8 @@ const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
         cancelButtonProps={{ hidden: true }}
         onOk={() => {
           // setVisibleNoUser(false); -> it is not defined in this subcomponent
-        }}>
+        }}
+      >
         <p>
           <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado, inicia
           sesión para poder realizar publicaciones &nbsp;&nbsp;

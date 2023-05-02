@@ -82,7 +82,8 @@ function ThisRouteCanBeDisplayed({ children }) {
                   onClick={() => handleChangeTypeModal('registerForTheEvent')}
                   size="large"
                   type="primary"
-                  key="goToEvent">
+                  key="goToEvent"
+                >
                   {intl.formatMessage({ id: 'modal.feedback.enroll' })}
                 </Button>
               ),
@@ -157,7 +158,8 @@ function ThisRouteCanBeDisplayed({ children }) {
                 style={{
                   fontSize: '18px',
                   overflowWrap: 'anywhere',
-                }}>
+                }}
+              >
                 {intl.formatMessage({ id: 'modal.no_register.msg_private' })}
               </Typography.Paragraph>
             }

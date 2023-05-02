@@ -89,7 +89,8 @@ export function CurrentUserProvider({ children }) {
 
   return (
     <CurrentUserContext.Provider
-      value={{ ...currentUser, setCurrentUser: setCurrentUser }}>
+      value={{ ...currentUser, setCurrentUser: setCurrentUser }}
+    >
       {children}
     </CurrentUserContext.Provider>
   )

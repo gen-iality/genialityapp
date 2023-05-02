@@ -266,7 +266,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       onLoad={() => {
         setSavedForm(form.getFieldsValue())
       }}
-      {...formLayout}>
+      {...formLayout}
+    >
       <RouterPrompt
         save
         form={false}

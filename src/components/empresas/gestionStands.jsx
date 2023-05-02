@@ -326,7 +326,8 @@ const Stands = (props) => {
             <Select
               value={visualization}
               style={{ width: 220, marginLeft: 30 }}
-              onChange={handleChange}>
+              onChange={handleChange}
+            >
               <Option value="list">Listado</Option>
               <Option value="stand">Stand</Option>
             </Select>
@@ -336,7 +337,8 @@ const Stands = (props) => {
               icon={<SaveOutlined />}
               disabled={
                 !eventIsActive && window.location.toString().includes('eventadmin')
-              }>
+              }
+            >
               Guardar
             </Button>
           </Row>
@@ -358,11 +360,13 @@ const Stands = (props) => {
                 icon={<PlusCircleOutlined />}
                 disabled={
                   !eventIsActive && window.location.toString().includes('eventadmin')
-                }>
+                }
+              >
                 Agregar
               </Button>
             }
-            bordered={false}>
+            bordered={false}
+          >
             <Table
               columns={columns}
               dataSource={standsList}
@@ -374,11 +378,13 @@ const Stands = (props) => {
               title={selectedStand ? 'Editar stand' : 'Agregar stand'}
               visible={editStands}
               onOk={editStand}
-              onCancel={handleCancel}>
+              onCancel={handleCancel}
+            >
               <Form>
                 <Form.Item
                   validateStatus={!noValid ? 'success' : 'error'}
-                  label={<span style={{ width: 70 }}>Nombre</span>}>
+                  label={<span style={{ width: 70 }}>Nombre</span>}
+                >
                   <Input
                     value={nameStand && nameStand}
                     onChange={(e) => HandlerEditText(e)}
@@ -408,7 +414,8 @@ const Stands = (props) => {
                         bottom: '0px',
                         left: '600px',
                         zIndex: 10000,
-                      }}>
+                      }}
+                    >
                       <Card size="small" style={{ width: '250px' }}>
                         <SketchPicker
                           color={colorStand}
@@ -418,7 +425,8 @@ const Stands = (props) => {
                         />
                         <Button
                           style={{ marginTop: 20 }}
-                          onClick={() => setViewModalColor(false)}>
+                          onClick={() => setViewModalColor(false)}
+                        >
                           Aceptar
                         </Button>
                       </Card>

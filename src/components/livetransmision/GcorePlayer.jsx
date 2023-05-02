@@ -81,7 +81,8 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
               src={platformurl}
               frameBorder="0"
               allow="autoplay; encrypted-media"
-              allowFullScreen></iframe>
+              allowFullScreen
+            ></iframe>
           </>
         ) : (
           <Spin />

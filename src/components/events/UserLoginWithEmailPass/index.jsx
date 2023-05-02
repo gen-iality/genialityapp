@@ -24,7 +24,8 @@ class UserLoginWithEmailPass extends Component {
         <Form
           onFinish={handleLoginEmailPassword}
           onFinishFailed={onFinishFailed}
-          layout="vertical">
+          layout="vertical"
+        >
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
               <Form.Item
@@ -35,7 +36,8 @@ class UserLoginWithEmailPass extends Component {
                     required: true,
                     message: intl.formatMessage({ id: 'form.field.required' }),
                   },
-                ]}>
+                ]}
+              >
                 <Input style={{ width: '300px' }} />
               </Form.Item>
             </Col>
@@ -50,7 +52,8 @@ class UserLoginWithEmailPass extends Component {
                     required: true,
                     message: intl.formatMessage({ id: 'form.field.required' }),
                   },
-                ]}>
+                ]}
+              >
                 <Input.Password style={{ width: '300px' }} />
               </Form.Item>
             </Col>

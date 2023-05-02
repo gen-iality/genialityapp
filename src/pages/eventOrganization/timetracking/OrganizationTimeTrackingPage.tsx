@@ -141,7 +141,8 @@ const OrganizationTimeTrackingPage: FunctionComponent<
               onClick={() => {
                 setSelectedEvent(item)
                 openModal()
-              }}></Button>
+              }}
+            ></Button>
           </Tooltip>
         )
       },
@@ -419,13 +420,15 @@ const OrganizationTimeTrackingPage: FunctionComponent<
         title={
           <Space
             direction="horizontal"
-            style={{ justifyContent: 'space-between', display: 'flex' }}>
+            style={{ justifyContent: 'space-between', display: 'flex' }}
+          >
             <Space direction="horizontal">
               <Online isOnline={userInfo.isOnline} />
               <Avatar
                 style={{ backgroundColor: '#87d068' }}
                 icon={<UserOutlined />}
-                src={userInfo.picture}>
+                src={userInfo.picture}
+              >
                 {userInfo.name}
               </Avatar>
               <Typography.Text>{userInfo.name}</Typography.Text>
@@ -435,20 +438,23 @@ const OrganizationTimeTrackingPage: FunctionComponent<
               <Select
                 onChange={(mode) => setTimeMode(mode)}
                 defaultValue={timeMode}
-                style={{ minWidth: 120 }}>
+                style={{ minWidth: 120 }}
+              >
                 <Select.Option value="minutes">Minutos</Select.Option>
                 <Select.Option value="hours">Horas</Select.Option>
                 <Select.Option value="days">Días</Select.Option>
               </Select>
             </Space>
           </Space>
-        }>
+        }
+      >
         <Space
           style={{
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-          }}></Space>
+          }}
+        ></Space>
         <Space direction="vertical">
           <Typography.Text>{closedGlobalSessionLogs.length} ingresos</Typography.Text>
           <Space direction="horizontal">
@@ -472,7 +478,8 @@ const OrganizationTimeTrackingPage: FunctionComponent<
         title={(selectedEvent?.name && `Evento: ${selectedEvent.name}`) || 'Cargando...'}
         footer={null}
         onCancel={closeModalAndResetSelectedEvent}
-        onOk={closeModalAndResetSelectedEvent}>
+        onOk={closeModalAndResetSelectedEvent}
+      >
         {activityDataSource.length ? (
           <Table columns={activityColumns} dataSource={activityDataSource} />
         ) : (

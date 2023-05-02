@@ -29,7 +29,8 @@ const CertificateRows: React.FunctionComponent<ICertificateRowsProps> = (props) 
           onClick={() => {
             onChange([...certRows, { type: 'text', content: '...' }])
           }}
-          icon={<PlusCircleFilled />}>
+          icon={<PlusCircleFilled />}
+        >
           Agregar
         </Button>
       }

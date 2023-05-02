@@ -99,7 +99,8 @@ const NoticiasDetails = (props) => {
                         />
                       </div>
                     ))
-                  }>
+                  }
+                >
                   <Meta
                     title={
                       noticia && (

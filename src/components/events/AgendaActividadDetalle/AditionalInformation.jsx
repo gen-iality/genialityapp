@@ -66,7 +66,8 @@ const AditionalInformation = (props) => {
       <Tabs
         defaultActiveKey={activeTab}
         activeKey={activeTab}
-        onChange={handleChangeLowerTabs}>
+        onChange={handleChangeLowerTabs}
+      >
         {
           <TabPane
             tab={
@@ -76,7 +77,8 @@ const AditionalInformation = (props) => {
                 </p>
               </>
             }
-            key="description">
+            key="description"
+          >
             {currentActivity?.description !== '<p><br></p>' && (
               <Row justify="center">
                 <Col span={24} id="img-description">
@@ -128,7 +130,8 @@ const AditionalInformation = (props) => {
                                   item.description !== undefined && (
                                     <Button
                                       className="button_lista"
-                                      onClick={() => getSpeakers(item._id)}>
+                                      onClick={() => getSpeakers(item._id)}
+                                    >
                                       {intl.formatMessage({
                                         id: 'button.more.information',
                                       })}
@@ -168,7 +171,8 @@ const AditionalInformation = (props) => {
                   <p style={{ marginBottom: '0px' }}>Documentos</p>
                 </>
               }
-              key="docs">
+              key="docs"
+            >
               <div>
                 <div style={{ marginTop: '5%', marginBottom: '5%' }}>
                   <b>Documentos:</b> &nbsp;

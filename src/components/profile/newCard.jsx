@@ -69,11 +69,13 @@ const NewCard = (props) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-        }}>
+        }}
+      >
         <Space
           size={5}
           direction="vertical"
-          style={{ textAlign: 'center', width: '100%' }}>
+          style={{ textAlign: 'center', width: '100%' }}
+        >
           <PlusOutlined
             style={{
               fontSize: '80px',
@@ -88,7 +90,8 @@ const NewCard = (props) => {
               width: '120px',
               color: '#cccccc',
               fontWeight: 'bold',
-            }}>
+            }}
+          >
             {entity === 'event' ? 'Nuevo curso' : 'Nueva organizacion'}
           </Typography.Text>
         </Space>

@@ -125,12 +125,14 @@ export default function RoomConfig(props) {
                       videos, crear su perfil y realizar otras configuraciones.
                     </Typography.Text>
                   ),
-                }}>
+                }}
+              >
                 <Select
                   defaultValue={platform}
                   value={platform}
                   name="platform"
-                  onChange={(e) => setPlatform(e)}>
+                  onChange={(e) => setPlatform(e)}
+                >
                   <Option value="wowza">
                     GEN streaming{' '}
                     <Typography.Text type="secondary">(recomendado)</Typography.Text>
@@ -151,7 +153,8 @@ export default function RoomConfig(props) {
                       streaming.
                     </Typography.Text>
                   ),
-                }}>
+                }}
+              >
                 <List itemLayout="horizontal" bordered={false}>
                   <List.Item
                     style={{
@@ -165,7 +168,8 @@ export default function RoomConfig(props) {
                         checked={transmition === 'EviusMeet'}
                         onChange={(e) => setTransmition('EviusMeet')}
                       />,
-                    ]}>
+                    ]}
+                  >
                     <List.Item.Meta title={<b>GEN Meet</b>} />
                   </List.Item>
                   <List.Item
@@ -180,7 +184,8 @@ export default function RoomConfig(props) {
                         checked={transmition === 'StreamYard'}
                         onChange={(e) => setTransmition('StreamYard')}
                       />,
-                    ]}>
+                    ]}
+                  >
                     <List.Item.Meta title={<b>StreamYard</b>} />
                   </List.Item>
                   <List.Item
@@ -194,7 +199,8 @@ export default function RoomConfig(props) {
                         checked={transmition === 'RTMP'}
                         onChange={(e) => setTransmition('RTMP')}
                       />,
-                    ]}>
+                    ]}
+                  >
                     <List.Item.Meta title={<b>RTMP</b>} />
                   </List.Item>
                 </List>

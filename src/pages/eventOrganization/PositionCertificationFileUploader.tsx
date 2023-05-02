@@ -156,7 +156,8 @@ const PositionCertificationFileUploader: React.FunctionComponent<
         <Form.Item
           label="Subir archivo"
           labelCol={{ span: 24 }}
-          wrapperCol={{ span: 24 }}>
+          wrapperCol={{ span: 24 }}
+        >
           <Upload
             disabled={isUploading}
             multiple={false}
@@ -183,7 +184,8 @@ const PositionCertificationFileUploader: React.FunctionComponent<
               onFirebasePathChange(undefined)
             }}
             listType="text"
-            maxCount={1}>
+            maxCount={1}
+          >
             <Button block disabled={isUploading} icon={<UploadOutlined />}>
               Toca para subir archivo
             </Button>
@@ -194,7 +196,8 @@ const PositionCertificationFileUploader: React.FunctionComponent<
         <Form.Item
           label="URL del certificado"
           labelCol={{ span: 24 }}
-          wrapperCol={{ span: 24 }}>
+          wrapperCol={{ span: 24 }}
+        >
           <Input
             value={value}
             onChange={(e) => {

@@ -880,7 +880,8 @@ class TriviaEdit extends Component {
     return (
       <Form
         onFinish={this.state.idSurvey ? this.submitWithQuestions : this.submit}
-        {...formLayout}>
+        {...formLayout}
+      >
         <Header
           title={this.state.title}
           back={!this.props.inserted}
@@ -937,7 +938,8 @@ class TriviaEdit extends Component {
               <>
                 <Card
                   hoverable
-                  style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}>
+                  style={{ cursor: 'auto', marginBottom: '20px', borderRadius: '20px' }}
+                >
                   {this.state.isUserUnconsciousReloading && <Spin />}
                   <Form.Item
                     label={
@@ -945,7 +947,8 @@ class TriviaEdit extends Component {
                         Nombre <label style={{ color: 'red' }}>*</label>
                       </label>
                     }
-                    rules={[{ required: true, message: 'El nombre es requerido' }]}>
+                    rules={[{ required: true, message: 'El nombre es requerido' }]}
+                  >
                     <Input
                       value={survey}
                       placeholder={`Nombre de la ${this.state.title.toLowerCase()}`}
@@ -961,7 +964,8 @@ class TriviaEdit extends Component {
                     }
                     rules={[
                       { required: true, message: 'Intentos permitidos es requerido' },
-                    ]}>
+                    ]}
+                  >
                     <InputNumber
                       style={{ width: '100%' }}
                       value={tries}
@@ -982,7 +986,8 @@ class TriviaEdit extends Component {
                           value={time_limit}
                           onChange={(time) => {
                             this.setState({ time_limit: time })
-                          }}>
+                          }}
+                        >
                           {surveyTimeOptions.map((values, key) => (
                             <Option key={key} value={values.value}>
                               {values.text}
@@ -1011,7 +1016,8 @@ class TriviaEdit extends Component {
                   </Col> */}
                         <Col>
                           <Form.Item
-                            label={`Mostar gráficas en cada ${this.state.title.toLowerCase()}`}>
+                            label={`Mostar gráficas en cada ${this.state.title.toLowerCase()}`}
+                          >
                             <Switch
                               name="displayGraphsInSurveys"
                               checked={
@@ -1044,7 +1050,8 @@ class TriviaEdit extends Component {
                                 style={{ width: 120 }}
                                 onChange={(graphy) =>
                                   this.setState({ graphyType: graphy })
-                                }>
+                                }
+                              >
                                 <Option value="y">Horizontal</Option>
                                 <Option value="x">vertical</Option>
                                 <Option value="pie">Torta</Option>
@@ -1065,7 +1072,8 @@ class TriviaEdit extends Component {
                         ))}
 
                       <Form.Item
-                        label={`${this.state.title} global (visible en todas las lecciones)`}>
+                        label={`${this.state.title} global (visible en todas las lecciones)`}
+                      >
                         <Switch
                           name="isGlobal"
                           checked={isGlobal === 'true' || isGlobal}
@@ -1078,14 +1086,16 @@ class TriviaEdit extends Component {
                       {(isGlobal === 'false' || !isGlobal) && (
                         <>
                           <Form.Item
-                            label={`Relacionar esta ${this.state.title.toLowerCase()} a una lección`}>
+                            label={`Relacionar esta ${this.state.title.toLowerCase()} a una lección`}
+                          >
                             <Select
                               disabled={this.props.inserted}
                               name="activity_id"
                               value={activity_id || ''}
                               onChange={(relation) => {
                                 this.setState({ activity_id: relation })
-                              }}>
+                              }}
+                            >
                               <Option value="">No relacionar</Option>
                               {dataAgenda.map((activity, key) => (
                                 <Option key={key} value={activity._id}>
@@ -1162,7 +1172,8 @@ class TriviaEdit extends Component {
                                   {` ${this.state.title.toLowerCase()} `}
                                   <label style={{ color: 'red' }}>*</label>
                                 </label>
-                              }>
+                              }
+                            >
                               <ReactQuill
                                 name="initialMessage"
                                 id="initialMessage"
@@ -1172,7 +1183,8 @@ class TriviaEdit extends Component {
                               />
                             </Form.Item>
                             <Form.Item
-                              label={`Mensaje pantalla final de la ${this.state.title.toLowerCase()}`}>
+                              label={`Mensaje pantalla final de la ${this.state.title.toLowerCase()}`}
+                            >
                               <ReactQuill
                                 name="neutral_Message"
                                 id="neutral_Message"
@@ -1225,7 +1237,8 @@ class TriviaEdit extends Component {
                               required: true,
                               message: 'La cantidad de preguntas es requerido',
                             },
-                          ]}>
+                          ]}
+                        >
                           <InputNumber
                             style={{ width: '100%' }}
                             value={random_survey_count}
@@ -1253,7 +1266,8 @@ class TriviaEdit extends Component {
                         cursor: 'auto',
                         marginBottom: '20px',
                         borderRadius: '20px',
-                      }}>
+                      }}
+                    >
                       <Header title="Preguntas" addFn={this.addNewQuestion} />
 
                       <Table dataSource={question} columns={columns} />
@@ -1278,10 +1292,12 @@ class TriviaEdit extends Component {
                               type="primary"
                               disabled={confirmLoading}
                               loading={confirmLoading}
-                              onClick={this.sendForm}>
+                              onClick={this.sendForm}
+                            >
                               Guardar
                             </Button>,
-                          ]}>
+                          ]}
+                        >
                           <>
                             <Title
                               style={{
@@ -1289,7 +1305,8 @@ class TriviaEdit extends Component {
                                 marginBottom: '20px',
                               }}
                               level={4}
-                              type="secondary">
+                              type="secondary"
+                            >
                               Gestionar pregunta
                             </Title>
                             <FormQuestionEdit

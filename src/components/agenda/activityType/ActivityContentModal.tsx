@@ -112,7 +112,8 @@ function ActivityContentModal(props: ActivityContentModalProps) {
       width={1200}
       footer={null}
       visible={isVisible}
-      onCancel={handleCancel}>
+      onCancel={handleCancel}
+    >
       <ActivityContentModalLayout
         disabledNextButton={selected === null}
         title={title}

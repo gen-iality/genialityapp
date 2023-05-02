@@ -83,7 +83,8 @@ class Wall extends Component {
                 display: 'flex',
                 justifyContent: 'center',
                 marginBottom: '20px',
-              }}>
+              }}
+            >
               <Col xs={24} sm={20} md={20} lg={20} xl={12}>
                 <CreatePost event={event} addPosts={this.addPosts} />
                 <ListWall

@@ -23,7 +23,8 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
         height: '100vh',
         width: '100vw',
         backgroundColor: '#ECF2F7',
-      }}>
+      }}
+    >
       <div
         style={{
           display: 'flex',
@@ -34,7 +35,8 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
           width: `${screens.xs ? '90%' : '60%'}`,
           height: `${screens.xs ? '80%' : '70%'}`,
           borderRadius: '25px',
-        }}>
+        }}
+      >
         <img
           onClick={() => {
             window.location.href = `${window.location.origin}`
@@ -77,7 +79,8 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                 style={{
                   fontSize: `${screens.xs ? '14px' : '18px'}`,
                   overflowWrap: 'anywhere',
-                }}>
+                }}
+              >
                 {intl.formatMessage({
                   id: 'result_link.description',
                   defaultMessage:
@@ -97,7 +100,8 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                     size="large"
                     type="text"
                     disabled={loading}
-                    key="goToEvius">
+                    key="goToEvius"
+                  >
                     {intl.formatMessage({
                       id: 'header.confirm.cancelText',
                       defaultMessage: 'Cancelar',
@@ -118,7 +122,8 @@ const ResultLink = ({ status, data, event, verifyLink }) => {
                     size="large"
                     loading={loading}
                     type="primary"
-                    key="goToEvius">
+                    key="goToEvius"
+                  >
                     {intl.formatMessage({
                       id: 'result_link.continue',
                       defaultMessage: 'Continuar',

@@ -31,14 +31,16 @@ function RankingList(props) {
                 fontWeight: 'bold',
                 lineHeight: '3px',
                 color: `${styles && styles.textMenu}`,
-              }}>
+              }}
+            >
               Mi puntaje
             </h1>
             <Divider style={{ backgroundColor: `${styles && styles.textMenu}` }} />
           </Row>
           <div
             className="container-ranking"
-            style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
+            style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}
+          >
             <List
               className="demo-loadmore-list"
               loading={loading}

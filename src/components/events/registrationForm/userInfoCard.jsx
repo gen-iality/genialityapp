@@ -281,7 +281,8 @@ export default ({
           <>
             <p
               style={{ fontSize: '1.3em' }}
-              className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
+              className={`label has-text-grey ${mandatory ? 'required' : ''}`}
+            >
               <strong>{label}</strong>
             </p>
             <Divider />
@@ -346,7 +347,8 @@ export default ({
             onChange={showRequest}
             multiple={false}
             listType="text"
-            beforeUpload={beforeUpload}>
+            beforeUpload={beforeUpload}
+          >
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         )
@@ -399,7 +401,8 @@ export default ({
                 name={name}
                 rules={[rule]}
                 key={'l' + key}
-                htmlFor={key}>
+                htmlFor={key}
+              >
                 {input}
               </Form.Item>
               {description && description.length < 500 && <p>{description}</p>}
@@ -444,7 +447,8 @@ export default ({
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
               onFieldsChange={fieldsChange}
-              onValuesChange={valuesChange}>
+              onValuesChange={valuesChange}
+            >
               {renderForm()}
               <br />
               <br />
@@ -452,7 +456,8 @@ export default ({
               <Row gutter={[24, 24]}>
                 <Col
                   span={24}
-                  style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  style={{ display: 'inline-flex', justifyContent: 'center' }}
+                >
                   {generalFormErrorMessageVisible && (
                     <Alert
                       message="Falto por completar algunos campos. "
@@ -465,7 +470,8 @@ export default ({
               <Row gutter={[24, 24]}>
                 <Col
                   span={24}
-                  style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  style={{ display: 'inline-flex', justifyContent: 'center' }}
+                >
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
                       Actualizar datos

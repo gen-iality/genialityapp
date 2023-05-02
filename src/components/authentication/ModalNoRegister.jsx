@@ -44,7 +44,8 @@ const ModalNoRegister = (props) => {
             }}
             key="sign_off"
             type="text"
-            size="large">
+            size="large"
+          >
             <b>
               {intl.formatMessage({
                 id: 'modal.no_register.gotoevius',
@@ -56,7 +57,8 @@ const ModalNoRegister = (props) => {
       ]}
       zIndex={1000}
       closable
-      visible={whenToOpenTheModal()}>
+      visible={whenToOpenTheModal()}
+    >
       <Result
         status="warning"
         icon={null}

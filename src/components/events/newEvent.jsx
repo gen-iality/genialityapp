@@ -313,7 +313,6 @@ class NewEvent extends Component {
       typeof response.zoom_host_id !== 'undefined' &&
       typeof response.zoom_host_name !== 'undefined'
     ) {
-
       const isPublished = true
       const platform = 'zoom'
       const meeting_id = response.meeting_id
@@ -435,7 +434,8 @@ class NewEvent extends Component {
         </div>
         <Card
           className="card-container"
-          bodyStyle={{ borderTop: '25px solid #50D3C9', borderRadius: '5px' }}>
+          bodyStyle={{ borderTop: '25px solid #50D3C9', borderRadius: '5px' }}
+        >
           {/* Contenido de cada item del paso a paso */}
           <Row justify="center" style={{ marginBottom: '8px' }}>
             {this.obtainContent(this.state.steps[current])}
@@ -453,7 +453,8 @@ class NewEvent extends Component {
                   className="button"
                   type="primary"
                   size="large"
-                  onClick={() => this.next()}>
+                  onClick={() => this.next()}
+                >
                   Siguiente
                 </Button>
               )}
@@ -462,7 +463,8 @@ class NewEvent extends Component {
                   className="button"
                   type="primary"
                   size="large"
-                  onClick={() => this.saveEvent()}>
+                  onClick={() => this.saveEvent()}
+                >
                   Crear curso
                 </Button>
               )}

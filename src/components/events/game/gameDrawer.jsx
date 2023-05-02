@@ -71,7 +71,8 @@ function GameDrawer(props) {
         placement="right"
         visible={gameVisible}
         onClose={closeDrawer}
-        width={window.screen.width >= 768 ? (!rankingVisible ? '100%' : '70%') : '100%'}>
+        width={window.screen.width >= 768 ? (!rankingVisible ? '100%' : '70%') : '100%'}
+      >
         <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
           {
             <Button type="primary" onClick={showRanking}>

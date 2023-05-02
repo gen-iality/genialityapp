@@ -89,7 +89,8 @@ const ManagerView = (props: any) => {
               dataLive?.active) ||
               (props.type !== 'EviusMeet' && props.type !== 'Transmisión')) && (
               <Col
-                span={props.type !== 'EviusMeet' && props.type !== 'reunión' ? 24 : 14}>
+                span={props.type !== 'EviusMeet' && props.type !== 'reunión' ? 24 : 14}
+              >
                 <TransmitionOptions type={props.type} onDelete={props.onDelete} />
               </Col>
             )}

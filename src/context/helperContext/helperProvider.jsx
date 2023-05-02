@@ -171,7 +171,8 @@ export const HelperContextProvider = ({ children }) => {
           )
           // ReadMessages(data);
           notification.destroy()
-        }}>
+        }}
+      >
         Responder
       </Button>
     )
@@ -701,7 +702,8 @@ export const HelperContextProvider = ({ children }) => {
         setUpdateEventUser,
         register,
         setRegister,
-      }}>
+      }}
+    >
       {children}
     </HelperContext.Provider>
   )

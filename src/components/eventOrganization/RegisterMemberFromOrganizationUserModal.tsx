@@ -79,7 +79,8 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<Props> = (props
         visible={visible}
         title="Usuario ya inscrito"
         onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}>
+        onCancel={() => setVisible(false)}
+      >
         El usuario ya está inscrito como miembro
       </Modal>
     )
@@ -92,7 +93,8 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<Props> = (props
         title="Registrarse como miembro de esta organización"
         okText="Inscribirse"
         onOk={() => form.submit()}
-        onCancel={closeModal}>
+        onCancel={closeModal}
+      >
         <Form form={form} onFinish={onFormSubmit}>
           {user ? (
             <Alert message="No se requieren más datos" />
@@ -101,65 +103,72 @@ const RegisterMemberFromOrganizationUserModal: FunctionComponent<Props> = (props
               <Form.Item
                 label="Nombre"
                 name="name"
-                rules={[{ required: true, message: 'Falta el nombre' }]}>
+                rules={[{ required: true, message: 'Falta el nombre' }]}
+              >
                 <Input />
               </Form.Item>
 
               <Form.Item
                 label="Correo"
                 name="email"
-                rules={[{ required: true, message: 'Falta el correo' }]}>
+                rules={[{ required: true, message: 'Falta el correo' }]}
+              >
                 <Input />
               </Form.Item>
 
               <Form.Item
                 label="Indicativo"
                 name="indicative"
-                rules={[{ required: true, message: 'Falta el indicativo' }]}>
+                rules={[{ required: true, message: 'Falta el indicativo' }]}
+              >
                 <Select options={indicativeCountryOptions}></Select>
               </Form.Item>
 
               <Form.Item
                 label="Numero de contacto"
                 name="number_cel"
-                rules={[{ required: true, message: 'Falta el numero de contacto' }]}>
+                rules={[{ required: true, message: 'Falta el numero de contacto' }]}
+              >
                 <Input />
               </Form.Item>
 
               <Form.Item
                 label="País"
                 name="country"
-                rules={[{ required: true, message: 'Falta el país' }]}>
+                rules={[{ required: true, message: 'Falta el país' }]}
+              >
                 <Select options={countryOptions}></Select>
               </Form.Item>
 
               <Form.Item
                 label="Ciudad"
                 name="city"
-                rules={[{ required: true, message: 'Falta la ciudad' }]}>
+                rules={[{ required: true, message: 'Falta la ciudad' }]}
+              >
                 <Select options={cityOptions}></Select>
               </Form.Item>
 
               <Form.Item
                 label="Perfil profesional"
                 name="professional_profile"
-                rules={[{ required: true, message: 'Falta el perfil pofesional' }]}>
+                rules={[{ required: true, message: 'Falta el perfil pofesional' }]}
+              >
                 <Select options={professionalProfilOptions}></Select>
               </Form.Item>
 
               <Form.Item
                 label="Especialidad"
                 name="speciality"
-                rules={[{ required: true, message: 'Falta la especialidad' }]}>
+                rules={[{ required: true, message: 'Falta la especialidad' }]}
+              >
                 <Select options={mainSpecialistOptions}></Select>
               </Form.Item>
 
               <Form.Item
                 label="Cédula"
                 name="identification_card"
-                rules={[
-                  { required: true, message: 'Falta el número de identificación' },
-                ]}>
+                rules={[{ required: true, message: 'Falta el número de identificación' }]}
+              >
                 <Input />
               </Form.Item>
             </>

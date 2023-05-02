@@ -47,7 +47,8 @@ export default function ConferenceTabsComponent(props) {
                     <p style={{ marginBottom: '0px' }}>Chat</p>
                   </>
                 }
-                key="chat">
+                key="chat"
+              >
                 <LiveChat {...props} />
               </TabPane>
             )}
@@ -60,7 +61,8 @@ export default function ConferenceTabsComponent(props) {
                     <p style={{ marginBottom: '0px' }}>Asistentes</p>
                   </>
                 }
-                key="attendees">
+                key="attendees"
+              >
                 Asistentes
               </TabPane>
             )}
@@ -76,7 +78,8 @@ export default function ConferenceTabsComponent(props) {
                     <p style={{ marginBottom: '0px' }}>Juego</p>
                   </>
                 }
-                key="games">
+                key="games"
+              >
                 <ListadoJuegos {...props} />
               </TabPane>
             )}

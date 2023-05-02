@@ -39,7 +39,8 @@ class ModalInvitationError extends Component {
               <Button key="submit" type="primary" onClick={this.handleOk}>
                 Cerrar
               </Button>,
-            ]}>
+            ]}
+          >
             <p>
               Por favor Selecciona un usuario para poder envíar una invitación e intenta
               nuevamente

@@ -108,7 +108,8 @@ class EventLanding extends Component {
               />
             ) : undefined}
             <Card
-              style={{ display: this.state.thereAreQuizingOrSurveys ? 'block' : 'none' }}>
+              style={{ display: this.state.thereAreQuizingOrSurveys ? 'block' : 'none' }}
+            >
               <Typography.Text>Estado del curso:</Typography.Text>{' '}
               <QuizApprovedStatus
                 thereAreExam={(param) => {
@@ -132,7 +133,8 @@ class EventLanding extends Component {
               this.props.cEvent.value.styles.show_card_banner
                 ? { marginTop: '2%' }
                 : { marginTop: '0px' }
-            }>
+            }
+          >
             {/*Lanzandome un nuevo diseno Sept 2022 */}
             <Row gutter={32}>
               <Col sm={24} md={6} style={{ width: '100%', padding: '0 5px' }}>

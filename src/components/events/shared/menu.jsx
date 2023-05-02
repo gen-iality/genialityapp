@@ -54,7 +54,8 @@ const MenuConfig = (props) => {
         overflow: 'auto',
         background: '#1B1E28',
       }}
-      inlineCollapsed={props.collapsed}>
+      inlineCollapsed={props.collapsed}
+    >
       <div style={{ textAlign: 'end', marginBottom: '15px', marginTop: '15px' }}>
         <Button
           type="primary"
@@ -64,7 +65,8 @@ const MenuConfig = (props) => {
             textAlign: 'end',
             background: '#1B1E28',
             border: 'none',
-          }}>
+          }}
+        >
           {props.collapsed ? (
             <RightOutlined style={{ fontSize: '20px' }} />
           ) : (
@@ -89,7 +91,8 @@ const MenuConfig = (props) => {
             type="primary"
             size="middle"
             target="_blank"
-            href={`${window.location.origin}/landing/${eventId}`}>
+            href={`${window.location.origin}/landing/${eventId}`}
+          >
             {props.collapsed ? '' : 'Ir al curso'}
           </Button>
         </Col>
@@ -104,12 +107,14 @@ const MenuConfig = (props) => {
             <ApartmentOutlined />
             <span>Administrar organizaciones</span>
           </span>
-        }>
+        }
+      >
         <Menu.Item key="30">
           Panel de administración
           <NavLink
             onClick={handleClick}
-            to={`/admin/organization/${controller.organizationId}`}></NavLink>
+            to={`/admin/organization/${controller.organizationId}`}
+          ></NavLink>
         </Menu.Item>
       </SubMenu>
     </Menu>
@@ -132,7 +137,8 @@ const renderMenuItems = (controller, props) => {
                 {item.icon}
                 <span>{item.name}</span>
               </span>
-            }>
+            }
+          >
             {item.items.map((subItem) => (
               <Menu.Item key={subItem.key}>
                 <NavLink to={props.match.url + subItem.path}>{subItem.name}</NavLink>

@@ -400,13 +400,15 @@ class CheckAgenda extends Component {
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
-            style={{ width: 90 }}>
+            style={{ width: 90 }}
+          >
             Search
           </Button>
           <Button
             onClick={() => this.handleReset(clearFilters)}
             size="small"
-            style={{ width: 90 }}>
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
         </Space>
@@ -550,7 +552,8 @@ class CheckAgenda extends Component {
                 <Button
                   onClick={this.goToSendMessage}
                   type="primary"
-                  icon={<SendOutlined />}>
+                  icon={<SendOutlined />}
+                >
                   {'Enviar comunicación/correo'}
                 </Button>
               </Col>
@@ -558,7 +561,8 @@ class CheckAgenda extends Component {
                 <Button
                   onClick={this.exportFile}
                   type="primary"
-                  icon={<DownloadOutlined />}>
+                  icon={<DownloadOutlined />}
+                >
                   Exportar
                 </Button>
               </Col>
@@ -570,7 +574,8 @@ class CheckAgenda extends Component {
                     )
                   }
                   type="primary"
-                  icon={<UploadOutlined />}>
+                  icon={<UploadOutlined />}
+                >
                   Importar usuario
                 </Button>
               </Col>
@@ -578,7 +583,8 @@ class CheckAgenda extends Component {
                 <Button
                   onClick={this.addUser}
                   type="primary"
-                  icon={<PlusCircleOutlined />}>
+                  icon={<PlusCircleOutlined />}
+                >
                   Agregar usuario
                 </Button>
               </Col>

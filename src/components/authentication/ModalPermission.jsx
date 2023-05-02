@@ -66,7 +66,8 @@ const ModalPermission = (props) => {
         typeModal == 'register' ||
         typeModal == 'update' ||
         typeModal === 'registerForTheEvent'
-      }>
+      }
+    >
       <div
         // className="asistente-list"
         style={{
@@ -76,7 +77,8 @@ const ModalPermission = (props) => {
           paddingRight: '5px',
           paddingTop: '8px',
           paddingBottom: '8px',
-        }}>
+        }}
+      >
         <FormComponent callback={saveEventUser} />
       </div>
     </Modal>

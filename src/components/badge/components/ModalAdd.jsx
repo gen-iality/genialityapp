@@ -14,7 +14,8 @@ export default function ModalAdd({
       visible={isVisible}
       destroyOnClose
       footer={null}
-      onCancel={() => setIsVisible(false)}>
+      onCancel={() => setIsVisible(false)}
+    >
       <Form onFinish={addField}>
         <Form.Item label="Campo" name="id_properties" rules={[{ required: true }]}>
           <Select placeholder="Selecciona un campo">
@@ -24,7 +25,8 @@ export default function ModalAdd({
                 value={option.name}
                 disabled={badges.find(
                   (bagde) => bagde.id_properties.value === option.name,
-                )}>
+                )}
+              >
                 {option.label}
               </Option>
             ))}

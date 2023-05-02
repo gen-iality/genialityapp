@@ -66,7 +66,8 @@ const SmartLayoutTypeActivity = (props: SmartLayoutTypeActivityProps) => {
         style={{
           backgroundColor: '#fff',
           padding: '20px 0px 0px 0px',
-        }}>
+        }}
+      >
         <Row justify="end" gutter={[8, 8]}>
           <Col>
             <Button onClick={handleButtonPreviousClick}>
@@ -82,7 +83,8 @@ const SmartLayoutTypeActivity = (props: SmartLayoutTypeActivityProps) => {
               <Button
                 disabled={disableNextButton}
                 onClick={handleButtonNextClick}
-                type="primary">
+                type="primary"
+              >
                 {buttonsTextNextOrCreate}
               </Button>
             )}

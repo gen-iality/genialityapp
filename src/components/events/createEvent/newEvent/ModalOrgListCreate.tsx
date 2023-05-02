@@ -105,7 +105,8 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
               key="back"
               onClick={() =>
                 dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })
-              }>
+              }
+            >
               Cerrar
             </Button>,
             <Button
@@ -116,7 +117,8 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                   redirectOrganization()
                 }
                 dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })
-              }}>
+              }}
+            >
               Seleccionar
             </Button>,
           ]
@@ -133,10 +135,12 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
       okText="Seleccionar"
       cancelText="Cerrar"
       visible={state?.visible}
-      onCancel={() => dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })}>
+      onCancel={() => dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })}
+    >
       <Tabs
         activeKey={state?.tab}
-        onChange={(key) => dispatch({ type: 'SELECT_TAB', payload: { tab: key } })}>
+        onChange={(key) => dispatch({ type: 'SELECT_TAB', payload: { tab: key } })}
+      >
         <TabPane tab="Mis organizaciones" key="list">
           <List
             style={{ height: 350, overflowY: 'auto', borderRadius: '8px' }}
@@ -160,7 +164,8 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                     type: 'SELECT_ORGANIZATION',
                     payload: { orgId: null, organization: item },
                   })
-                }>
+                }
+              >
                 {item.name}
               </List.Item>
             )}
@@ -174,13 +179,15 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
               alignItems: 'center',
               flexDirection: 'column',
               textAlign: 'center',
-            }}>
+            }}
+          >
             <Form
               onFinish={createNewOrganization}
               form={form}
               autoComplete="off"
               style={{ width: '80%' }}
-              layout="vertical">
+              layout="vertical"
+            >
               <Form.Item>
                 <ImgCrop rotate shape="round">
                   <Upload
@@ -200,12 +207,14 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                     listType="picture"
                     maxCount={1}
                     fileList={imageAvatar}
-                    beforeUpload={beforeUpload}>
+                    beforeUpload={beforeUpload}
+                  >
                     {imageAvatar === null && (
                       <Button
                         type="primary"
                         shape="circle"
-                        style={{ height: '150px', width: '150px' }}>
+                        style={{ height: '150px', width: '150px' }}
+                      >
                         <Space direction="vertical">
                           <PictureOutlined style={{ fontSize: '40px' }} />
                           Subir logo
@@ -221,7 +230,8 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                 style={{ marginBottom: '10px' }}
                 rules={[
                   { required: true, message: 'Ingrese un nombre para su organización!' },
-                ]}>
+                ]}
+              >
                 <Input type="text" size="large" placeholder="Nombre de la organizacion" />
               </Form.Item>
               {!state.loading ? (
@@ -231,7 +241,8 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                     htmlType="submit"
                     block
                     style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                    size="large">
+                    size="large"
+                  >
                     Crear organizacion
                   </Button>
                 </Form.Item>

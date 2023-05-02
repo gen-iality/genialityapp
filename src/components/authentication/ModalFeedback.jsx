@@ -63,7 +63,8 @@ const ModalFeedback = ({ cHelper, cEvent }) => {
       zIndex={1000}
       closable
       visible={cHelper?.typeModal == 'loginSuccess' || cHelper?.typeModal == 'loginError'}
-      onCancel={() => cHelper.handleChangeTypeModal(null)}>
+      onCancel={() => cHelper.handleChangeTypeModal(null)}
+    >
       <Result
         status={status}
         title={<Typography.Title level={4}>{title}</Typography.Title>}
@@ -77,7 +78,8 @@ const ModalFeedback = ({ cHelper, cEvent }) => {
             size="large"
             onClick={() => cHelper.handleChangeTypeModal(null)}
             type="primary"
-            key="aceptar">
+            key="aceptar"
+          >
             {intl.formatMessage({
               id: 'modal.feedback.accept',
               defaultMessage: 'Aceptar',
@@ -90,7 +92,8 @@ const ModalFeedback = ({ cHelper, cEvent }) => {
                 onClick={() => {
                   cHelper.handleChangeTypeModal('registerForTheEvent')
                 }}
-                key="registrarme">
+                key="registrarme"
+              >
                 Registrarme
               </Button>
             ),

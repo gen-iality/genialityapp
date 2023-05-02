@@ -18,7 +18,8 @@ const CardParticipantRequests = (props: any) => {
               ? Object.values(request).filter((request: any) => request.active != true)
                   .length
               : 0
-          }>
+          }
+        >
           <Button onClick={() => setViewModal(true)} type="primary">
             Ver solicitudes
           </Button>

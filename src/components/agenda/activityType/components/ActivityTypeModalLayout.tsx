@@ -48,7 +48,8 @@ function ActivityTypeModalLayout(props: ActivityTypeModalLayoutProps) {
               <Button
                 disabled={!somethingWasSelected}
                 type="primary"
-                onClick={handleSelectButton}>
+                onClick={handleSelectButton}
+              >
                 Seleccionar
               </Button>
             )}

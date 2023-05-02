@@ -483,7 +483,8 @@ export const AgendaContextProvider = ({ children }) => {
         stopRecordTransmition,
         loadingRecord,
         record,
-      }}>
+      }}
+    >
       {children}
     </AgendaContext.Provider>
   )

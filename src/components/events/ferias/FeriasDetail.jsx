@@ -68,7 +68,8 @@ const FeriasDetail = (props) => {
               <div
                 dangerouslySetInnerHTML={{
                   __html: companyDetail && companyDetail.short_description,
-                }}></div>
+                }}
+              ></div>
             }
           />
         </div>
@@ -81,7 +82,8 @@ const FeriasDetail = (props) => {
           marginTop: '2vw',
           marginBottom: '4vw',
           paddingBottom: '4vw',
-        }}>
+        }}
+      >
         <Tabs defaultActiveKey="1" tabPosition="top" type="card">
           <TabPane tab="Información" key="1">
             <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
@@ -102,7 +104,8 @@ const FeriasDetail = (props) => {
                         style={{ fontSize: '18px' }}
                         dangerouslySetInnerHTML={{
                           __html: companyDetail && companyDetail.description,
-                        }}></div>
+                        }}
+                      ></div>
                     </Space>
                   </Row>
                 </div>
@@ -127,7 +130,8 @@ const FeriasDetail = (props) => {
                             lg={8}
                             xl={6}
                             xxl={6}
-                            key={'PoS-' + index}>
+                            key={'PoS-' + index}
+                          >
                             <Product
                               key={index}
                               imgProduct={prod.image}
@@ -171,7 +175,8 @@ const FeriasDetail = (props) => {
           {visibleTab && (
             <TabPane tab="Galería" key="4">
               <div
-                style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1.5vw' }}>
+                style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1.5vw' }}
+              >
                 <Row gutter={[16, 16]}>
                   <Image.PreviewGroup>
                     {companyDetail && companyDetail.gallery.length > 0 ? (

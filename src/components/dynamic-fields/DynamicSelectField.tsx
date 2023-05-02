@@ -49,7 +49,8 @@ const DynamicSelectField: React.FunctionComponent<IDynamicSelectFieldProps> = (p
     <DynamicFormItem
       fieldData={fieldData}
       initialValue={allInitialValues[name]}
-      rules={options.length === 0 ? [{ required: false }] : [basicRule]}>
+      rules={options.length === 0 ? [{ required: false }] : [basicRule]}
+    >
       <Select
         showSearch
         optionFilterProp="children"

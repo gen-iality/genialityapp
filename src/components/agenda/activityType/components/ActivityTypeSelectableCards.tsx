@@ -33,7 +33,8 @@ function ActivityTypeSelectableCards(props: ActivityTypeSelectableCardsProps) {
         <Col
           span={cards.length < 3 ? 6 : 7}
           offset={cards.length < 3 ? 2 : 1}
-          key={'key-' + (card.title || `${index}`)}>
+          key={'key-' + (card.title || `${index}`)}
+        >
           <SelectableCard
             title={card.title}
             description={card.description}

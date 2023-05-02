@@ -20,7 +20,8 @@ export default function FilterNetWorking({ properties, filterProperty, handleSel
       size="middle"
       onChange={handleSelect}
       placeholder={`Seleccione ${filterProperty}`}
-      defaultValue="">
+      defaultValue=""
+    >
       <option key={0} value="">
         Ver todo
       </option>

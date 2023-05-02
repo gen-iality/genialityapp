@@ -213,20 +213,23 @@ const ModalAuth = (props) => {
         footer={null}
         zIndex={1000}
         visible={controllerLoginVisible?.visible}
-        closable={controllerLoginVisible?.organization !== 'organization' ? true : false}>
+        closable={controllerLoginVisible?.organization !== 'organization' ? true : false}
+      >
         <Tabs onChange={callback} centered size="large" activeKey={currentAuthScreen}>
           <TabPane
             tab={intl.formatMessage({
               id: 'modal.title.login',
               defaultMessage: 'Iniciar sesión',
             })}
-            key="login">
+            key="login"
+          >
             <Form
               form={form1}
               onFinish={handleLoginEmailPassword}
               onFinishFailed={onFinishFailed}
               layout="vertical"
-              style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+              style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
+            >
               {props.organization == 'organization' && (
                 <Form.Item>
                   <Image
@@ -254,7 +257,8 @@ const ModalAuth = (props) => {
                       defaultMessage: 'Ingrese un correo',
                     }),
                   },
-                ]}>
+                ]}
+              >
                 <Input
                   disabled={loading}
                   type="email"
@@ -282,7 +286,8 @@ const ModalAuth = (props) => {
                         defaultMessage: 'Ingrese su numero de cedula',
                       }),
                     },
-                  ]}>
+                  ]}
+                >
                   <Input
                     disabled={loading}
                     size="large"
@@ -312,7 +317,8 @@ const ModalAuth = (props) => {
                         defaultMessage: 'Ingrese una contraseña',
                       }),
                     },
-                  ]}>
+                  ]}
+                >
                   <Input.Password
                     disabled={loading}
                     size="large"
@@ -336,7 +342,8 @@ const ModalAuth = (props) => {
                     underline
                     id="forgotpassword"
                     type="secondary"
-                    style={{ float: 'right', cursor: 'pointer' }}>
+                    style={{ float: 'right', cursor: 'pointer' }}
+                  >
                     {intl.formatMessage({
                       id: 'modal.option.restore',
                       defaultMessage: 'Olvidé mi contraseña',
@@ -371,7 +378,8 @@ const ModalAuth = (props) => {
                     htmlType="submit"
                     block
                     style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                    size="large">
+                    size="large"
+                  >
                     {intl.formatMessage({
                       id: 'modal.title.login',
                       defaultMessage: 'Iniciar sesión',
@@ -393,7 +401,8 @@ const ModalAuth = (props) => {
                     onClick={() => handleChangeTypeModal('mail')}
                     type="primary"
                     block
-                    size="large">
+                    size="large"
+                  >
                     {intl.formatMessage({
                       id: 'modal.option.send',
                       defaultMessage: 'Enviar acceso a mi correo',
@@ -409,7 +418,8 @@ const ModalAuth = (props) => {
                 id: 'modal.title.register',
                 defaultMessage: 'Registrarme',
               })}
-              key="register">
+              key="register"
+            >
               <div
                 style={{
                   height: 'auto',
@@ -418,7 +428,8 @@ const ModalAuth = (props) => {
                   paddingRight: '5px',
                   paddingTop: '0px',
                   paddingBottom: '0px',
-                }}>
+                }}
+              >
                 {isHome() && (
                   <>
                     <RegisterUser

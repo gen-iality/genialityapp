@@ -265,7 +265,8 @@ class ListEventUser extends Component {
         <Tabs
           style={{ background: '#FFFFFF' }}
           activeKey={activeTab}
-          onChange={this.changeActiveTab}>
+          onChange={this.changeActiveTab}
+        >
           <TabPane tab="Participantes" key="asistentes">
             {
               <AppointmentModal
@@ -283,7 +284,8 @@ class ListEventUser extends Component {
                   <Form.Item
                     labelCol={{ span: 24 }}
                     label="Busca aquí las personas que deseas contactar"
-                    name="searchInput">
+                    name="searchInput"
+                  >
                     <SearchComponent
                       id="searchInput"
                       placeholder=""
@@ -305,7 +307,8 @@ class ListEventUser extends Component {
               md={10}
               lg={10}
               xl={10}
-              style={{ margin: '0 auto' }}></Col>
+              style={{ margin: '0 auto' }}
+            ></Col>
             {!this.state.loading && !eventUserId && (
               <div>
                 <br />
@@ -339,7 +342,8 @@ class ListEventUser extends Component {
                         md={24}
                         lg={12}
                         xl={12}
-                        xxl={8}>
+                        xxl={8}
+                      >
                         <Card
                           hoverable={8}
                           headStyle={
@@ -356,12 +360,14 @@ class ListEventUser extends Component {
                             marginBottom: '2%',
                             textAlign: 'left',
                           }}
-                          bordered>
+                          bordered
+                        >
                           <Meta
                             avatar={
                               <Avatar
                                 size={65}
-                                src={users?.user?.picture ? users?.user?.picture : ''}>
+                                src={users?.user?.picture ? users?.user?.picture : ''}
+                              >
                                 {!users?.user?.picture && users.properties.names
                                   ? users.properties.names.charAt(0).toUpperCase()
                                   : users.properties.names}
@@ -390,7 +396,8 @@ class ListEventUser extends Component {
                                           property.name !== 'imagendeperfil' &&
                                           property.type !== 'avatar' && (
                                             <div
-                                              key={`public-field-${userIndex}-${propertyIndex}`}>
+                                              key={`public-field-${userIndex}-${propertyIndex}`}
+                                            >
                                               <p>
                                                 <b>{`${property.label}: `}</b>
                                                 {formatDataToString(
@@ -417,7 +424,8 @@ class ListEventUser extends Component {
                                             eventUserIdToMakeAppointment: users._id,
                                             eventUserToMakeAppointment: users,
                                           })
-                                        }}>
+                                        }}
+                                      >
                                         Agendar cita
                                       </Button>
                                       <Button
@@ -512,7 +520,8 @@ class ListEventUser extends Component {
                                                 }
                                               }
                                             : null
-                                        }>
+                                        }
+                                      >
                                         {!users.loading ? (
                                           this.isMyContact(users) ? (
                                             'Ya es tu contacto'
@@ -559,7 +568,8 @@ class ListEventUser extends Component {
                         md={18}
                         lg={18}
                         xl={18}
-                        style={{ margin: '0 auto' }}>
+                        style={{ margin: '0 auto' }}
+                      >
                         <Card style={{ textAlign: 'center' }}>No existen usuarios</Card>
                       </Col>
                     )}
@@ -591,11 +601,13 @@ class ListEventUser extends Component {
                     count={
                       this.props.cHelper.totalsolicitudAgenda > 0 &&
                       this.props.cHelper.totalsolicitudAgenda
-                    }></Badge>
+                    }
+                  ></Badge>
                 )}
               </div>
             }
-            key="mi-agenda">
+            key="mi-agenda"
+          >
             {activeTab === 'mi-agenda' && (
               <>
                 {this.props.cEventUser && this.props.cEventUser.value && (
@@ -643,11 +655,13 @@ class ListEventUser extends Component {
                       this.props.cHelper.totalSolicitudAmistad > 0
                         ? this.props.cHelper.totalSolicitudAmistad
                         : ''
-                    }></Badge>
+                    }
+                  ></Badge>
                 )}
               </div>
             }
-            key="solicitudes">
+            key="solicitudes"
+          >
             <RequestList
               currentUser={this.props.cEventUser.value}
               currentUserAc={this.props.cUser.value}
@@ -672,11 +686,13 @@ class ListEventUser extends Component {
                     count={
                       this.props.cHelper.totalsolicitudAgenda > 0 &&
                       this.props.cHelper.totalsolicitudAgenda
-                    }></Badge>
+                    }
+                  ></Badge>
                 )}
               </div>
             }
-            key="solicitudes-de-citas">
+            key="solicitudes-de-citas"
+          >
             {activeTab === 'solicitudes-de-citas' && (
               <AppointmentRequests
                 eventId={this.props.cEvent.value._id}

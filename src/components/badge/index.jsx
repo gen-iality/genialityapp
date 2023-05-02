@@ -143,7 +143,8 @@ export default function Index(props) {
             <Button
               type="primary"
               onClick={() => saveBadge(event, badges, message)}
-              block>
+              block
+            >
               Guardar
             </Button>
             {!qrExist && <Button onClick={addQR}>Agregar QR</Button>}
@@ -161,7 +162,8 @@ export default function Index(props) {
               border: '1px solid rgb(211, 211, 211)',
               borderRadius: '5px',
               padding: '10px',
-            }}>
+            }}
+          >
             {renderPrint(badges)}
           </div>
         </Col>

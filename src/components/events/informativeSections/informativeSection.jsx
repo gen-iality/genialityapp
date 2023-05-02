@@ -136,7 +136,8 @@ class InformativeSection extends Component {
             <Card
               title={informativeSection.name || 'clasificación'}
               bordered={false}
-              style={{ backgroundColor: 'transparent', margin: 'auto' }}>
+              style={{ backgroundColor: 'transparent', margin: 'auto' }}
+            >
               {markup && Parser(markup)}
             </Card>
           </div>

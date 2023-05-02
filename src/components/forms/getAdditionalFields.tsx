@@ -179,7 +179,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               onChange={(val) => {
                 areacodeselected = val
               }}
-              placeholder="Código de area del pais">
+              placeholder="Código de area del pais"
+            >
               {areaCode.map((code: any, key: any) => {
                 return (
                   <Option key={key} value={code.value}>
@@ -214,7 +215,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               onChange={(val) => {
                 onlyAreacodeselected = val
               }}
-              placeholder="Código de area del pais">
+              placeholder="Código de area del pais"
+            >
               {areaCode.map((code: any, key: any) => {
                 return (
                   <Option key={key} value={code.value}>
@@ -234,7 +236,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               <div
                 dangerouslySetInnerHTML={{
                   __html: label,
-                }}></div>
+                }}
+              ></div>
             </div>
             <Divider />
           </>
@@ -260,7 +263,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             <Select
               mode="multiple"
               placeholder="Selecciona una o mas opciones"
-              style={{ width: '100%' }}>
+              style={{ width: '100%' }}
+            >
               {input}
             </Select>
           </Form.Item>
@@ -295,7 +299,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   rules={[rule]}
                   key={'l' + key}
                   htmlFor={key}
-                  initialValue={value}>
+                  initialValue={value}
+                >
                   <Checkbox key={key} name={name}>
                     {mandatory ? (
                       <span>
@@ -318,12 +323,14 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       header={intl.formatMessage({
                         id: 'registration.message.policy',
                       })}
-                      key="1">
+                      key="1"
+                    >
                       <pre
                         dangerouslySetInnerHTML={{
                           __html: description,
                         }}
-                        style={{ whiteSpace: 'normal' }}></pre>
+                        style={{ whiteSpace: 'normal' }}
+                      ></pre>
                     </Panel>
                   </Collapse>
                 )}
@@ -378,7 +385,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       },
                     ]
                   : []
-              }>
+              }
+            >
               <>
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined style={{ color: '#003853' }} />
@@ -428,7 +436,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               }}
               disabled={loading || countries.length === 0}
               loading={loading}
-              placeholder="Seleccione un país">
+              placeholder="Seleccione un país"
+            >
               {countries.map((country: any) => {
                 return (
                   <Option key={country.iso2} value={country.name}>
@@ -457,7 +466,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               }}
               disabled={loading || regiones.length === 0}
               loading={loading}
-              placeholder="Seleccione un región">
+              placeholder="Seleccione un región"
+            >
               {regiones.map((regiones: any) => {
                 return (
                   <Option key={regiones.iso2} value={regiones.name}>
@@ -486,7 +496,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   inputName: name,
                 })
               }}
-              placeholder="Seleccione una ciudad">
+              placeholder="Seleccione una ciudad"
+            >
               {cities.map((cityCode: any, key: any) => {
                 return (
                   <Option key={key} value={cityCode.name}>
@@ -528,7 +539,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       ]
                     : []
                 }
-                beforeUpload={beforeUpload}>
+                beforeUpload={beforeUpload}
+              >
                 <Button type="primary" icon={<UploadOutlined />}>
                   {intl.formatMessage({
                     id: 'form.button.avatar',
@@ -578,7 +590,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   name={name}
                   rules={validations ? [{ required: false }] : [rule]}
                   key={'l' + key}
-                  htmlFor={key}>
+                  htmlFor={key}
+                >
                   {input}
                 </Form.Item>
 
@@ -592,7 +605,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                       header={intl.formatMessage({
                         id: 'registration.message.policy',
                       })}
-                      key="1">
+                      key="1"
+                    >
                       <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
                     </Panel>
                   </Collapse>

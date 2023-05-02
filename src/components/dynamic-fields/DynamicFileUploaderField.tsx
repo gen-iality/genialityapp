@@ -59,7 +59,8 @@ const DynamicFileUploaderField: React.FunctionComponent<
     <DynamicFormItem
       fieldData={fieldData}
       rules={[basicRule]}
-      initialValue={initialValue}>
+      initialValue={initialValue}
+    >
       <Upload
         accept="application/pdf,image/png, image/jpeg,image/jpg,application/msword,.docx"
         action="https://api.evius.co/api/files/upload/"
@@ -77,7 +78,8 @@ const DynamicFileUploaderField: React.FunctionComponent<
               })
             }
           }
-        }}>
+        }}
+      >
         <Button icon={<UploadOutlined />}>
           <FormattedMessage id="form.button.upload-file" defaultMessage="Subir archivo" />
         </Button>

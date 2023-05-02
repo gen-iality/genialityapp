@@ -66,7 +66,8 @@ const AttendeeCheckInButton = ({
           size="small"
           type="primary"
           block
-          onClick={saveAttemdeeCheckIn}>
+          onClick={saveAttemdeeCheckIn}
+        >
           CheckIn físico
         </Button>
       )}

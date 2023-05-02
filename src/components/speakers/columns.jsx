@@ -67,7 +67,8 @@ export const columns = (columnsData) => [
                     <Empty description="Imagen no encontrada" />
                   )}
                 </>
-              )}>
+              )}
+            >
               {item.image ? (
                 <Avatar key={'img' + item._id} src={item.image} />
               ) : (
@@ -152,7 +153,8 @@ export const columns = (columnsData) => [
                 to={{
                   pathname: `${columnsData.data.matchUrl}/speaker`,
                   state: { edit: item._id },
-                }}>
+                }}
+              >
                 <Button
                   icon={<EditOutlined />}
                   type="primary"

@@ -316,7 +316,8 @@ function OrgRegisteredUsers(props) {
         onOk={() => {
           form.submit()
         }}
-        onCancel={() => closeModal()}>
+        onCancel={() => closeModal()}
+      >
         {isSettingFormValues ? (
           <>
             Cargando datos por defecto... <Spin />
@@ -333,13 +334,15 @@ function OrgRegisteredUsers(props) {
           <Form.Item
             name="description"
             label="Descripción"
-            rules={[{ required: true, message: 'Agrega la descripción' }]}>
+            rules={[{ required: true, message: 'Agrega la descripción' }]}
+          >
             <TextArea rows={4} />
           </Form.Item>
           <Form.Item
             name="hours"
             label="Horas"
-            rules={[{ required: true, message: 'Agrega el número de horas' }]}>
+            rules={[{ required: true, message: 'Agrega el número de horas' }]}
+          >
             <InputNumber min={1} />
           </Form.Item>
           <Form.Item name="entity" label="Entidad">
@@ -349,14 +352,16 @@ function OrgRegisteredUsers(props) {
             name="approved_from_date"
             label="Fecha de aprobación"
             rules={[{ required: true, message: 'Agrega la fecha' }]}
-            initialValue={dayjs(Date.now())}>
+            initialValue={dayjs(Date.now())}
+          >
             <DatePicker />
           </Form.Item>
           <Form.Item
             name="approved_until_date"
             label="Fecha de vencimiento"
             rules={[{ required: true, message: 'Agrega la fecha' }]}
-            initialValue={dayjs(Date.now())}>
+            initialValue={dayjs(Date.now())}
+          >
             <DatePicker />
           </Form.Item>
           <Form.Item name="file_url" label="Archivo externo">

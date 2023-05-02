@@ -12,7 +12,8 @@ export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id })
     <>
       <Form.Item
         name="meeting_id"
-        label={'Ingrese el identificador de la conferencia/streaming'}>
+        label={'Ingrese el identificador de la conferencia/streaming'}
+      >
         <Input
           type="text"
           addonAfter={
@@ -47,7 +48,8 @@ export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id })
                     action: 'show',
                   })
                 }
-              }}>
+              }}
+            >
               <CheckCircleOutlined /> Crear
             </div>
           }

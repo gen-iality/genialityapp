@@ -87,7 +87,8 @@ const IframeZoomComponent = ({
           allowusermedia
           width="100%"
           height="100%"
-          style={{ aspectRatio: '16/9' }}></iframe>
+          style={{ aspectRatio: '16/9' }}
+        ></iframe>
       )}
     </>
   )

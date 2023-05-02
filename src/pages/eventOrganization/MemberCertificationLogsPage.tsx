@@ -160,8 +160,8 @@ function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
     allPositionEvents.forEach((event) => {
       const { certification } = event
       // If there is not certification, ignore this event
-      if (!certification) return
-      // Build a data with: event, certification, certification log, to use in the table
+      if (!certification)
+        return // Build a data with: event, certification, certification log, to use in the table
       ;(certification.certification_logs || []).forEach((log: any) => {
         data.push({ event, certification, log })
       })
@@ -322,20 +322,23 @@ function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
           form.submit()
           closeModal()
         }}
-        onCancel={() => closeModal()}>
+        onCancel={() => closeModal()}
+      >
         <Form form={form} onFinish={onFormFinish} layout="vertical">
           <Form.Item
             name="approved_from_date"
             label="Fecha de aprobación"
             rules={[{ required: true, message: 'Agrega la fecha' }]}
-            initialValue={dayjs(Date.now())}>
+            initialValue={dayjs(Date.now())}
+          >
             <DatePicker />
           </Form.Item>
           <Form.Item
             name="approved_until_date"
             label="Fecha de vencimiento"
             rules={[{ required: true, message: 'Agrega la fecha' }]}
-            initialValue={dayjs(Date.now())}>
+            initialValue={dayjs(Date.now())}
+          >
             <DatePicker />
           </Form.Item>
         </Form>

@@ -201,12 +201,14 @@ const MainProfile = (props) => {
         style={{ backgroundColor: '#ffffff', paddingTop: '10px', paddingBottom: '10px' }}
         breakpoint="lg"
         collapsedWidth="0"
-        zeroWidthTriggerStyle={{ top: '-40px', width: '50px' }}>
+        zeroWidthTriggerStyle={{ top: '-40px', width: '50px' }}
+      >
         <Row justify="center" gutter={[10, 20]}>
           <Space
             size={5}
             direction="vertical"
-            style={{ textAlign: 'center', paddingLeft: '15px', paddingRight: '15px' }}>
+            style={{ textAlign: 'center', paddingLeft: '15px', paddingRight: '15px' }}
+          >
             {props?.cUser?.value ? (
               <>
                 {props?.cUser?.value?.picture ? (
@@ -223,14 +225,16 @@ const MainProfile = (props) => {
               <Skeleton.Avatar active size={150} shape="circle" />
             )}
             <Typography.Text
-              style={{ fontSize: '20px', width: '250px', overflowWrap: 'anywhere' }}>
+              style={{ fontSize: '20px', width: '250px', overflowWrap: 'anywhere' }}
+            >
               {props?.cUser?.value?.names ||
                 props?.cUser?.value?.displayName ||
                 props?.cUser?.value?.name}
             </Typography.Text>
             <Typography.Text
               type="secondary"
-              style={{ fontSize: '16px', width: '220px', wordBreak: 'break-all' }}>
+              style={{ fontSize: '16px', width: '220px', wordBreak: 'break-all' }}
+            >
               {props?.cUser?.value?.email}
             </Typography.Text>
           </Space>
@@ -243,7 +247,8 @@ const MainProfile = (props) => {
                   screens.xs && showSider()
                 }}
                 key="actividad"
-                icon={<CarryOutOutlined style={{ fontSize: '18px' }} />}>
+                icon={<CarryOutOutlined style={{ fontSize: '18px' }} />}
+              >
                 Lección en GEN.iality
               </Menu.Item>
               <Menu.Item
@@ -253,7 +258,8 @@ const MainProfile = (props) => {
                   screens.xs && showSider()
                 }}
                 key="editarInfo"
-                icon={<EditOutlined style={{ fontSize: '18px' }} />}>
+                icon={<EditOutlined style={{ fontSize: '18px' }} />}
+              >
                 Editar mi información
               </Menu.Item>
               <Menu.Item
@@ -263,7 +269,8 @@ const MainProfile = (props) => {
                   screens.xs && showSider()
                 }}
                 key="cambiarPassword"
-                icon={<LockOutlined style={{ fontSize: '18px' }} />}>
+                icon={<LockOutlined style={{ fontSize: '18px' }} />}
+              >
                 Cambiar contraseña
               </Menu.Item>
             </Menu>
@@ -298,7 +305,8 @@ const MainProfile = (props) => {
               activeKey={activeTab}
               onTabClick={(key) => {
                 setActiveTab(key)
-              }}>
+              }}
+            >
               {!screens.xs && (
                 <TabPane
                   tab={
@@ -306,7 +314,8 @@ const MainProfile = (props) => {
                       <AppstoreFilled /> Todos
                     </Space>
                   }
-                  key="1">
+                  key="1"
+                >
                   <Row gutter={[16, 2]}>
                     <Col span={24}>
                       <Row gutter={[0, 16]}>
@@ -317,7 +326,8 @@ const MainProfile = (props) => {
                           md={12}
                           lg={8}
                           xl={8}
-                          xxl={8}>
+                          xxl={8}
+                        >
                           <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
                             <Statistic
                               title={
@@ -341,7 +351,8 @@ const MainProfile = (props) => {
                           md={12}
                           lg={8}
                           xl={8}
-                          xxl={8}>
+                          xxl={8}
+                        >
                           <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
                             <Statistic
                               title={
@@ -363,7 +374,8 @@ const MainProfile = (props) => {
                           md={24}
                           lg={8}
                           xl={8}
-                          xxl={8}>
+                          xxl={8}
+                        >
                           <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
                             <Statistic
                               title={
@@ -501,7 +513,8 @@ const MainProfile = (props) => {
                                     md={8}
                                     lg={6}
                                     xl={4}
-                                    xxl={4}>
+                                    xxl={4}
+                                  >
                                     <OrganizationCard data={organization} />
                                   </Col>
                                 )

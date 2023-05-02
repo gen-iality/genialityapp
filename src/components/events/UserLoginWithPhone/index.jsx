@@ -149,12 +149,14 @@ class UserLogin extends Component {
     return (
       <Card
         title={intl.formatMessage({ id: 'restore.login.title' })}
-        bodyStyle={textLeft}>
+        bodyStyle={textLeft}
+      >
         {/* Inicio  de formulario para autenticación con Email y contraseña */}
         {this.state.enabledLoginForm && (
           <Form
             onFinish={this.handleLoginEmailPassword}
-            onFinishFailed={this.onFinishFailed}>
+            onFinishFailed={this.onFinishFailed}
+          >
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                 <Form.Item
@@ -165,7 +167,8 @@ class UserLogin extends Component {
                       required: true,
                       message: 'Ingrese E-Mail',
                     },
-                  ]}>
+                  ]}
+                >
                   <Input style={{ width: '300px' }} />
                 </Form.Item>
               </Col>
@@ -180,7 +183,8 @@ class UserLogin extends Component {
                       required: true,
                       message: 'Ingrese su contraseña',
                     },
-                  ]}>
+                  ]}
+                >
                   <Input type="password" style={{ width: '300px' }} />
                 </Form.Item>
               </Col>
@@ -189,7 +193,8 @@ class UserLogin extends Component {
               <Row gutter={[24, 24]}>
                 <Col
                   span={24}
-                  style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  style={{ display: 'inline-flex', justifyContent: 'center' }}
+                >
                   <span style={{ color: 'red' }}>
                     {formTexts.errorLoginEmailPassword}
                   </span>
@@ -228,7 +233,8 @@ class UserLogin extends Component {
                       required: true,
                       message: 'Ingrese el código de verificación',
                     },
-                  ]}>
+                  ]}
+                >
                   <Input />
                 </Form.Item>
               </Col>
@@ -237,7 +243,8 @@ class UserLogin extends Component {
               <Row gutter={[24, 24]}>
                 <Col
                   span={24}
-                  style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  style={{ display: 'inline-flex', justifyContent: 'center' }}
+                >
                   <span style={{ color: 'red' }}>Código de verificación invalido</span>
                 </Col>
               </Row>

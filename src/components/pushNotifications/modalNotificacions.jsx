@@ -109,7 +109,8 @@ const ModalNotifications = (props) => {
       onCancel={() => {
         setModalSendNotificationVisible(false)
         resetFields()
-      }}>
+      }}
+    >
       <Form onFinish={sendNotifications} form={form} autoComplete="off" layout="vertical">
         <Typography.Title level={4} type="secondary">
           Enviar notificación push
@@ -118,7 +119,8 @@ const ModalNotifications = (props) => {
           label="Mensaje"
           name="notificationMessage"
           style={{ marginBottom: '10px' }}
-          rules={[{ required: true, message: 'Ingrese un mensaje!' }]}>
+          rules={[{ required: true, message: 'Ingrese un mensaje!' }]}
+        >
           <TextArea
             rows={8}
             showCount
@@ -133,7 +135,8 @@ const ModalNotifications = (props) => {
             block
             style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
             size="large"
-            icon={<SendOutlined />}>
+            icon={<SendOutlined />}
+          >
             Enviar notificación
           </Button>
         </Form.Item>

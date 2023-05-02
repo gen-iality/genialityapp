@@ -47,7 +47,8 @@ function OrganizationPropertiesIsolatedPage(props: any) {
       <Button
         onClick={() => {
           setOpened(true)
-        }}>
+        }}
+      >
         Abrir formulario
       </Button>
 
@@ -55,7 +56,8 @@ function OrganizationPropertiesIsolatedPage(props: any) {
         <Modal
           visible={opened}
           onCancel={() => setOpened(false)}
-          onOk={() => setOpened(false)}>
+          onOk={() => setOpened(false)}
+        >
           <OrganizationPropertiesForm
             basicDataUser={{}}
             orgMember={member}

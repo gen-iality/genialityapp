@@ -77,7 +77,8 @@ export const ChangePassword = ({ email }) => {
             label="Este es el correo electrónico que recibirá la notificación"
             name="email"
             initialValue={email}
-            style={{ marginBottom: '10px', textAlign: 'left' }}>
+            style={{ marginBottom: '10px', textAlign: 'left' }}
+          >
             <Input type="text" size="large" disabled />
           </Form.Item>
           {sendRecovery !== null && (
@@ -115,7 +116,8 @@ export const ChangePassword = ({ email }) => {
             <Button
               htmlType="submit"
               style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-              size="large">
+              size="large"
+            >
               Solicitar cambio
             </Button>
           </Form.Item>

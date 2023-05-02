@@ -52,15 +52,18 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
                 actions={[
                   <Button
                     key="btn-aceptar"
-                    onClick={() => sendResponseToInvitation(item, true)}>
+                    onClick={() => sendResponseToInvitation(item, true)}
+                  >
                     Aceptar
                   </Button>,
                   <Button
                     key="btn-noaceptar"
-                    onClick={() => sendResponseToInvitation(item, false)}>
+                    onClick={() => sendResponseToInvitation(item, false)}
+                  >
                     Rechazar
                   </Button>,
-                ]}>
+                ]}
+              >
                 <List.Item.Meta
                   avatar={
                     <Avatar src={item?.picture ? item.picture : null}>
@@ -144,7 +147,8 @@ const InvitacionListSent = ({ list }) => {
                 <div>
                   <Tag
                     icon={!item.response ? <ScheduleOutlined /> : <CloseCircleOutlined />}
-                    color={item.response === 'rejected' && 'error'}>
+                    color={item.response === 'rejected' && 'error'}
+                  >
                     {!item.response ? item.state : item.response}
                   </Tag>
                 </div>

@@ -199,7 +199,8 @@ export const SurveyProvider: FunctionComponent<{ children: ReactNode }> = ({
         startAnswering,
         stopAnswering,
         resetSurveyStatus,
-      }}>
+      }}
+    >
       {children}
     </SurveyContext.Provider>
   )

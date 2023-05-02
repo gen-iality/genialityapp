@@ -177,7 +177,8 @@ const Landing = (props) => {
           window.location.replace(
             `${window.location.origin}/landing/${cEventContext.value._id}/activity/${activity}`,
           )
-        }>
+        }
+      >
         Ir a la lección
       </Button>
     ) : null
@@ -313,7 +314,8 @@ const Landing = (props) => {
               backgroundImage: `url(${
                 cEventContext.value && cEventContext.value?.styles?.BackgroundImage
               })`,
-            }}>
+            }}
+          >
             {props.view && <TopBanner currentActivity={currentActivity} />}
             <EventSectionRoutes
               generaltabs={generaltabs}

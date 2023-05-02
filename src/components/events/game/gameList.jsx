@@ -37,7 +37,8 @@ function GameList(props) {
               marginBottom: '8px',
               border: '1px solid',
               borderColor: '#0000001c',
-            }}>
+            }}
+          >
             <UsersCard type="gameList" item={item} />
           </Card>
         )}

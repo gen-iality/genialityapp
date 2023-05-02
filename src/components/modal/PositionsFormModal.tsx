@@ -188,7 +188,8 @@ function PositionsFormModal(props: PositionsFormModalProps) {
       closable
       footer={false}
       visible={handler.isOpened}
-      onCancel={() => handler.close()}>
+      onCancel={() => handler.close()}
+    >
       {/**
       I am finding for a Loading component, but I get be lazy to find the Loading that
       has a circle and it's turning 🔄
@@ -211,14 +212,16 @@ function PositionsFormModal(props: PositionsFormModalProps) {
                 initialValue={handler.currentPosition?.position_name}
                 name="position_name"
                 label="Nombre del cargo"
-                rules={[{ required: true, message: 'El nombre es requerido' }]}>
+                rules={[{ required: true, message: 'El nombre es requerido' }]}
+              >
                 <Input placeholder="Nombre del cargo" />
               </Form.Item>
 
               <Form.Item
                 initialValue={handler.currentPosition?.event_ids || []}
                 name="event_ids"
-                label="Cursos asignados">
+                label="Cursos asignados"
+              >
                 <Select
                   mode="multiple"
                   placeholder="Asigna los cursos al cargo"

@@ -84,18 +84,21 @@ class DocumentsDetail extends Component {
             backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
             borderRadius: '10px',
             paddingLeft: '25px',
-          }}>
+          }}
+        >
           <TabPane
             tab={
               <Typography.Text
                 style={{
                   color: this.props.cEvent.value.styles.textMenu,
                   backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                }}>
+                }}
+              >
                 Documentos del curso
               </Typography.Text>
             }
-            key="1">
+            key="1"
+          >
             <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ margin: '0 auto' }}>
               {folders && folders.length > 0 && (
                 <DocumentsList
@@ -115,12 +118,14 @@ class DocumentsDetail extends Component {
                     bordered={false}
                     style={{
                       backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                    }}>
+                    }}
+                  >
                     <Result
                       title={
                         <Typography.Title
                           level={4}
-                          style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                          style={{ color: this.props.cEvent.value.styles.textMenu }}
+                        >
                           Aún no se han agregado archivos.
                         </Typography.Title>
                       }
@@ -142,7 +147,8 @@ class DocumentsDetail extends Component {
                   style={{
                     color: this.props.cEvent.value.styles.textMenu,
                     backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                  }}>
+                  }}
+                >
                   Mis documentos
                 </Typography.Text>
               }
@@ -150,7 +156,8 @@ class DocumentsDetail extends Component {
               style={{
                 color: this.props.cEvent.value.styles.textMenu,
                 backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-              }}>
+              }}
+            >
               {this.props.cEventUser?.value?.properties?.documents_user?.length < 10 ? (
                 <List
                   style={{ padding: 10 }}
@@ -167,7 +174,8 @@ class DocumentsDetail extends Component {
                           <Button
                             onClick={() => window.open(item.url)}
                             shape="round"
-                            type="primary">
+                            type="primary"
+                          >
                             Ver documento
                           </Button>
                         }
@@ -187,7 +195,8 @@ class DocumentsDetail extends Component {
                         icon={<CloudDownloadOutlined />}
                         onClick={(e) => this.exportFile(e)}
                         shape="round"
-                        type="primary">
+                        type="primary"
+                      >
                         Descargar lista de cartones
                       </Button>
                     </Row>
@@ -201,7 +210,8 @@ class DocumentsDetail extends Component {
                       bordered={false}
                       style={{
                         backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                      }}>
+                      }}
+                    >
                       <Result
                         icon={
                           <ExclamationCircleOutlined
@@ -211,7 +221,8 @@ class DocumentsDetail extends Component {
                         title={
                           <Typography.Title
                             level={4}
-                            style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                            style={{ color: this.props.cEvent.value.styles.textMenu }}
+                          >
                             Hola, No tienes documentos asignados
                           </Typography.Title>
                         }

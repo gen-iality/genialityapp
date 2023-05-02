@@ -39,7 +39,8 @@ function QrAndDocumentForm({
                   Camara
                 </>
               }
-              key="1">
+              key="1"
+            >
               <Form.Item>
                 <Row justify="center" wrap gutter={8}>
                   <Col>
@@ -50,7 +51,8 @@ function QrAndDocumentForm({
                         facingMode === 'user'
                           ? setFacingMode('environment')
                           : setFacingMode('user')
-                      }>
+                      }
+                    >
                       {facingMode === 'user' ? ' Front' : 'Rear'} Camera
                     </Button>
                   </Col>
@@ -76,7 +78,8 @@ function QrAndDocumentForm({
                   Pistola
                 </>
               }
-              key="2">
+              key="2"
+            >
               <>
                 <Form.Item
                   label="Id Usuario"
@@ -86,7 +89,8 @@ function QrAndDocumentForm({
                       required: true,
                       message: 'El campo Id Usuario no debe estar vacío!',
                     },
-                  ]}>
+                  ]}
+                >
                   <Input autoFocus allowClear />
                 </Form.Item>
               </>
@@ -100,7 +104,8 @@ function QrAndDocumentForm({
             name="document"
             rules={[
               { required: true, message: 'El campo documentó no debe estar vacío!' },
-            ]}>
+            ]}
+          >
             <Input
               onKeyDown={(event: any) =>
                 divideInformationObtainedByTheCodeReader({ event })

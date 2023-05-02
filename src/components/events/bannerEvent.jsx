@@ -40,7 +40,8 @@ function HeaderEventInfo({
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         borderRadius: '10px',
-      }}>
+      }}
+    >
       <TweenOne className="banner-user-text">
         {/* Fecha del curso */}
         <div>
@@ -93,14 +94,16 @@ function HeaderEventInfo({
 
       <TweenOne
         className="banner-user-title"
-        animation={{ y: 30, opacity: 0, type: 'from' }}>
+        animation={{ y: 30, opacity: 0, type: 'from' }}
+      >
         {/* Nombre del curso */}
         <span>{title}</span>
       </TweenOne>
 
       <TweenOne
         className="banner-user-text"
-        animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}>
+        animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}
+      >
         {/* Quien lo organiza */}
         <div>
           <span>Organizado por: {organizado}</span>

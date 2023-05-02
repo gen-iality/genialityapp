@@ -201,7 +201,8 @@ export function SurveysProvider({ children }) {
         shouldDisplayRanking,
         surveysToBeListedByActivity,
         shouldDisplaysurveyAssignedToThisActivity,
-      }}>
+      }}
+    >
       {children}
     </SurveysContext.Provider>
   )

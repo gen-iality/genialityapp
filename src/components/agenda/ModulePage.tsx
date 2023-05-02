@@ -198,7 +198,8 @@ function ModulePage(props: any) {
     <>
       <Space
         direction="horizontal"
-        style={{ display: 'flex', justifyContent: 'space-between' }}>
+        style={{ display: 'flex', justifyContent: 'space-between' }}
+      >
         <Typography.Text>
           Agregue o edite los modules disponibles en este curso
         </Typography.Text>
@@ -230,12 +231,14 @@ function ModulePage(props: any) {
         visible={isOpened}
         title={currentEditingItem === null ? 'Agregar nuevo modulo' : 'Editar módulo'}
         onCancel={cancelModel}
-        onOk={() => form.submit()}>
+        onOk={() => form.submit()}
+      >
         <Form form={form} onFinish={onFormFinish}>
           <Form.Item
             name="moduleName"
             label="Nombre del módulo"
-            rules={[{ required: true, message: 'Es necesario el nombre de módulo' }]}>
+            rules={[{ required: true, message: 'Es necesario el nombre de módulo' }]}
+          >
             <Input />
           </Form.Item>
         </Form>

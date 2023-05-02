@@ -16,7 +16,8 @@ const EventAccessTypeSection: FunctionComponent = () => {
       style={{ marginTop: '50px', marginBottom: '50px' }}
       gutter={[16, 16]}
       justify="center"
-      align="stretch">
+      align="stretch"
+    >
       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
         <Badge
           onClick={() => dispatch({ type: 'TYPE_EVENT', payload: { type: 0 } })}
@@ -26,7 +27,8 @@ const EventAccessTypeSection: FunctionComponent = () => {
             ) : (
               ''
             )
-          }>
+          }
+        >
           <Card
             style={{
               border: '1px solid #D3D3D3',
@@ -34,7 +36,8 @@ const EventAccessTypeSection: FunctionComponent = () => {
               padding: '10px',
               cursor: 'pointer',
               minHeight: '235px',
-            }}>
+            }}
+          >
             <Space direction="vertical">
               <div onClick={() => this.changetypeEvent(0)}>
                 <Typography.Text strong>
@@ -69,7 +72,8 @@ const EventAccessTypeSection: FunctionComponent = () => {
             ) : (
               ''
             )
-          }>
+          }
+        >
           <Card
             style={{
               border: '1px solid #D3D3D3',
@@ -77,7 +81,8 @@ const EventAccessTypeSection: FunctionComponent = () => {
               padding: '10px',
               cursor: 'pointer',
               minHeight: '235px',
-            }}>
+            }}
+          >
             <Space direction="vertical">
               <Typography.Text strong>
                 Cursos público sin registro obligatorio
@@ -104,7 +109,8 @@ const EventAccessTypeSection: FunctionComponent = () => {
             ) : (
               ''
             )
-          }>
+          }
+        >
           <Card
             style={{
               border: '1px solid #D3D3D3',
@@ -112,7 +118,8 @@ const EventAccessTypeSection: FunctionComponent = () => {
               padding: '10px',
               cursor: 'pointer',
               minHeight: '235px',
-            }}>
+            }}
+          >
             <Space direction="vertical">
               <Typography.Text strong>Cursos privado por invitación</Typography.Text>
               <Divider />

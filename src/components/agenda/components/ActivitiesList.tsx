@@ -272,7 +272,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                         onAnswersDeleted(true)
                         setIsDeleting(false)
                       })
-                    }}>
+                    }}
+                  >
                     {isDeleted ? 'Respuestas eliminadas' : 'Eliminar respuestas'}
                     {isDeleting && (
                       <>
@@ -316,7 +317,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                     ) : (
                       ''
                     )
-                  }>
+                  }
+                >
                   {children}
                 </Badge.Ribbon>
               )
@@ -349,7 +351,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   borderRadius: '50%',
                   marginRight: '1rem',
                 }}
-                src={item.host_picture}></img>
+                src={item.host_picture}
+              ></img>
             )}
             <div
               style={{
@@ -358,7 +361,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                 alignItems: 'center',
                 width: '100%',
                 flexFlow: 'row wrap',
-              }}>
+              }}
+            >
               <div
                 style={{
                   display: 'flex',
@@ -366,9 +370,11 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   flexFlow: 'column wrap',
                   marginRight: '1rem',
                   //paddingLeft: '25px',
-                }}>
+                }}
+              >
                 <div
-                  style={{ display: 'flex', flexFlow: 'row wrap', margin: '0.5rem 0' }}>
+                  style={{ display: 'flex', flexFlow: 'row wrap', margin: '0.5rem 0' }}
+                >
                   {item.categories &&
                     item.categories.map((category: any) => {
                       return (
@@ -465,7 +471,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             key={index}
             extra={`${
               props.list.filter((item) => item.module_name === name).length
-            } elemento(s)`}>
+            } elemento(s)`}
+          >
             {props.render(name)}
           </Collapse.Panel>
         ))}

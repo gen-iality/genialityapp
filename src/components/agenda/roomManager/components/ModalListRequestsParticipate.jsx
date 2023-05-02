@@ -66,7 +66,8 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
       closable
       onCancel={() => handleModal(false)}
       visible={visible}
-      footer={null}>
+      footer={null}
+    >
       <Row gutter={[8, 8]}>
         <Col>
           <Typography.Title level={4}>

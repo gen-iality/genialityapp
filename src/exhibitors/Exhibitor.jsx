@@ -134,7 +134,8 @@ class Exhibitor extends Component {
           <button
             type="button"
             className="main-stand-go-button go-previous"
-            onClick={() => [this.handleHideStandImage(), showPrevious()]}>
+            onClick={() => [this.handleHideStandImage(), showPrevious()]}
+          >
             Anterior
           </button>
         )}
@@ -142,7 +143,8 @@ class Exhibitor extends Component {
           <button
             type="button"
             className="main-stand-go-button go-next"
-            onClick={() => [this.handleHideStandImage(), showNext()]}>
+            onClick={() => [this.handleHideStandImage(), showNext()]}
+          >
             Siguiente
           </button>
         )}
@@ -155,7 +157,8 @@ class Exhibitor extends Component {
                 className="main-stand-social-networks-item"
                 target="_blank"
                 rel="noreferrer"
-                key={`social-network-${index}`}>
+                key={`social-network-${index}`}
+              >
                 <img src={snIcons[item.network]} alt={item.network} />
               </a>
             ))}
@@ -193,7 +196,8 @@ class Exhibitor extends Component {
               href={brochure}
               target="_blank"
               rel="noreferrer"
-              className="main-stand-navigation-item">
+              className="main-stand-navigation-item"
+            >
               <div className="main-stand-navigation-item-icon">
                 <img src="/exhibitors/icons/ic_library_books_24px.png" alt="" />
               </div>
@@ -206,7 +210,8 @@ class Exhibitor extends Component {
               href={webpage}
               target="_blank"
               rel="noreferrer"
-              className="main-stand-navigation-item">
+              className="main-stand-navigation-item"
+            >
               <div className="main-stand-navigation-item-icon">
                 <img src="/exhibitors/icons/ic_public_24px.png" alt="" />
               </div>
@@ -219,7 +224,8 @@ class Exhibitor extends Component {
             className="main-stand-chat"
             href={'https://api.whatsapp.com/send?phone=' + advisorNumber}
             target="_blank"
-            rel="noreferrer">
+            rel="noreferrer"
+          >
             <img
               className="chat-image"
               src={advisorImage ? advisorImage : `/exhibitors/person.png`}
@@ -245,7 +251,8 @@ class Exhibitor extends Component {
             <div className="main-stand-gallery-overlay" />
             <div
               className="main-stand-gallery-close-window"
-              onClick={this.handleHideGallery}>
+              onClick={this.handleHideGallery}
+            >
               <img src="/exhibitors/icons/ic_close_24px.png" alt="" />
             </div>
             <div className="main-stand-gallery-container">
@@ -253,7 +260,8 @@ class Exhibitor extends Component {
                 spaceBetween={0}
                 slidesPerView={1}
                 navigation
-                pagination={{ clickable: true }}>
+                pagination={{ clickable: true }}
+              >
                 {gallery.map((slide, index) => (
                   <SwiperSlide key={index}>
                     <div className="main-stand-gallery-slide">
@@ -278,7 +286,8 @@ class Exhibitor extends Component {
                 <div className="main-stand-modal-header-title">Servicios</div>
                 <div
                   className="main-stand-modal-close-window"
-                  onClick={this.handleHideServices}>
+                  onClick={this.handleHideServices}
+                >
                   <img src="/exhibitors/icons/ic_close_24px.png" alt="" />
                 </div>
               </div>
@@ -294,7 +303,8 @@ class Exhibitor extends Component {
                   return (
                     <div
                       className="main-stand-services-item"
-                      key={`service-item-${index}`}>
+                      key={`service-item-${index}`}
+                    >
                       {!!service && !!service.image && (
                         <div className={infoClassName}>
                           <img src={service.image} alt="" />
@@ -316,14 +326,16 @@ class Exhibitor extends Component {
         <div
           className={`main-stand-modal main-stand-modal-contact-info ${
             this.state.showInfo ? 'active' : ''
-          }`}>
+          }`}
+        >
           <div className="main-stand-modal-overlay" onClick={this.handleHideInfo} />
           <div className={`main-stand-modal-container`}>
             <div className="main-stand-modal-header">
               <div className="main-stand-modal-header-title">Información de contacto</div>
               <div
                 className="main-stand-modal-close-window"
-                onClick={this.handleHideInfo}>
+                onClick={this.handleHideInfo}
+              >
                 <img src="/exhibitors/icons/ic_close_24px.png" alt="" />
               </div>
             </div>
@@ -349,7 +361,8 @@ class Exhibitor extends Component {
         <div
           className={`main-stand-modal main-stand-modal-video ${
             this.state.showVideo ? 'active' : ''
-          }`}>
+          }`}
+        >
           <div className="main-stand-modal-overlay" onClick={this.handleHideVideo} />
           <div className="main-stand-modal-close-window" onClick={this.handleHideVideo}>
             <img src="/exhibitors/icons/ic_close_24px.png" alt="" />

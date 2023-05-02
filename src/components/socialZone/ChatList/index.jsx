@@ -75,7 +75,8 @@ const ChatList = (props) => {
               <FormattedMessage id="tabs.public.socialzone" defaultMessage="Público" />
             </div>
           }
-          key="public">
+          key="public"
+        >
           <iframe
             title="chatevius"
             className="ChatEviusLan"
@@ -95,7 +96,8 @@ const ChatList = (props) => {
               anonymous +
               '&mode=' +
               isStagingOrProduccion()
-            }></iframe>
+            }
+          ></iframe>
         </TabPane>
       )}
 
@@ -112,7 +114,8 @@ const ChatList = (props) => {
                     padding: '0px',
                     color: cEvent.value.styles.textMenu,
                   }}
-                  count={0}>
+                  count={0}
+                >
                   <div style={{ color: cEvent.value.styles.textMenu }}>
                     <FormattedMessage
                       id="tabs.private.socialzone"
@@ -127,7 +130,8 @@ const ChatList = (props) => {
                 </Badge>
               </>
             }
-            key="private">
+            key="private"
+          >
             {!chatActual.chatname && (
               <ThisRouteCanBeDisplayed>
                 <List
@@ -160,7 +164,8 @@ const ChatList = (props) => {
                     chatActual?.chatname +
                     '&mode=' +
                     isStagingOrProduccion()
-                  }></iframe>
+                  }
+                ></iframe>
               </>
             )}
           </TabPane>

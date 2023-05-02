@@ -58,7 +58,8 @@ const OrganizationCard = (props) => {
     <Card
       actions={[...(isAdminUser ? [actionAdmin] : []), actionview]}
       style={{ borderRadius: '10px' }}
-      bodyStyle={{ minHeight: '200px', textAlign: 'center' }}>
+      bodyStyle={{ minHeight: '200px', textAlign: 'center' }}
+    >
       <Space size={8} direction="vertical" style={{ textAlign: 'center', width: '100%' }}>
         {props.data ? (
           <Avatar
@@ -73,12 +74,14 @@ const OrganizationCard = (props) => {
         )}
         <Typography.Paragraph
           ellipsis={{ rows: 2 }}
-          style={{ fontSize: '14px', lineHeight: '1.15rem' }}>
+          style={{ fontSize: '14px', lineHeight: '1.15rem' }}
+        >
           {props.data?.name}
         </Typography.Paragraph>
         <Typography.Paragraph
           ellipsis={{ rows: 2 }}
-          style={{ fontSize: '14px', lineHeight: '1.15rem' }}>
+          style={{ fontSize: '14px', lineHeight: '1.15rem' }}
+        >
           Cursos: {eventsLength}
         </Typography.Paragraph>
       </Space>

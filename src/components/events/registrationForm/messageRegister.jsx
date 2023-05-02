@@ -20,7 +20,8 @@ const MessageRegister = (props) => {
               <h2 style={{ fontSize: '20px' }}>
                 {intl.formatMessage({ id: 'registration.message.success.subtitle' })}
               </h2>
-            }></Result>
+            }
+          ></Result>
         </Card>
       )}
     </>

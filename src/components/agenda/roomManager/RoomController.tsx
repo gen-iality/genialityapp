@@ -98,7 +98,8 @@ export default function RoomController() {
                       <Empty description="Imagen no encontrada" />
                     )}
                   </>
-                )}>
+                )}
+              >
                 {item.picture ? (
                   <Avatar key={`img ${item._id}`} src={item.picture} />
                 ) : (

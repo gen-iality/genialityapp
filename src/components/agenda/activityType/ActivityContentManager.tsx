@@ -146,7 +146,8 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
         <Button
           onClick={() => {
             saveActivityContent(activityContentType, contentSource)
-          }}>
+          }}
+        >
           Forzar actualizar
         </Button>
         <EviusReactQuill
@@ -316,7 +317,8 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
                   type !== TypeDisplayment.EVIUS_MEET && type !== TypeDisplayment.MEETING
                     ? 24
                     : 14
-                }>
+                }
+              >
                 <TransmitionOptionsCard type={type} />
               </Col>
             )}

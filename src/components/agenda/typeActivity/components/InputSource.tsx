@@ -78,7 +78,8 @@ const InputSource = ({ type, addonBefore, placeholder }: propsOptions) => {
     <Form>
       <Form.Item
         name="url"
-        rules={(rules as any)[typeOptions.key] || [{ required: true }]}>
+        rules={(rules as any)[typeOptions.key] || [{ required: true }]}
+      >
         <Input
           type={type === 'vimeo' ? 'number' : 'text'}
           addonBefore={addonBefore}

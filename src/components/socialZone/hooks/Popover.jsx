@@ -64,7 +64,8 @@ const PopoverInfoUser = (props) => {
             userSelected ? (
               <Tooltip
                 title="Ver perfil"
-                onClick={() => props.setViewPerfil({ view: true, perfil: userSelected })}>
+                onClick={() => props.setViewPerfil({ view: true, perfil: userSelected })}
+              >
                 <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />
               </Tooltip>
             ) : (
@@ -138,7 +139,8 @@ const PopoverInfoUser = (props) => {
                       ? 'Solicitud de contacto enviada'
                       : 'Enviar solicitud Contacto'
                     : ''
-                }>
+                }
+              >
                 {!userSelected.loading ? (
                   <UsergroupAddOutlined
                     style={{
@@ -179,7 +181,8 @@ const PopoverInfoUser = (props) => {
               <Spin />
             ),
           ]
-        }>
+        }
+      >
         <Meta
           avatar={
             props.item.user?.image || props.item.imageProfile ? (
@@ -199,7 +202,8 @@ const PopoverInfoUser = (props) => {
                       props.perfil(props.item)
                     }
                   : null
-              }>
+              }
+            >
               {props.item.name ? props.item.name : props.item.names}
             </a>
           }

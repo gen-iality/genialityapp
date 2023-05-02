@@ -37,7 +37,8 @@ export const CardSelector = (props: CardSelectorProps) => {
                     ) : (
                       ''
                     )
-                  }>
+                  }
+                >
                   <div
                     style={{
                       border: '1px solid #D3D3D3',
@@ -46,13 +47,15 @@ export const CardSelector = (props: CardSelectorProps) => {
                       cursor: 'pointer',
                       minHeight: '170px',
                       maxWidth: '220px',
-                    }}>
+                    }}
+                  >
                     <Space direction="vertical">
                       <div
                         onClick={() => {
                           props.onSelected(option.id)
                           setCurrentSelected(option.id)
-                        }}>
+                        }}
+                      >
                         <Text strong>{option.title}</Text>
                         <Divider />
                         <Text type="secondary">{option.body}</Text>
@@ -62,7 +65,8 @@ export const CardSelector = (props: CardSelectorProps) => {
                           <Divider />
                           <Checkbox
                             checked={option.checkbox.initialCheck}
-                            onChange={(e) => option.checkbox!.onCheck(e.target.checked)}>
+                            onChange={(e) => option.checkbox!.onCheck(e.target.checked)}
+                          >
                             {option.checkbox.text}
                           </Checkbox>
                         </>

@@ -119,7 +119,8 @@ const EventOrganization = (props) => {
       style={{
         backgroundImage: `url(${organization?.styles?.BackgroundImage})`,
         backgroundColor: `${organization?.styles?.containerBgColor || '#FFFFFF'}`,
-      }}>
+      }}
+    >
       <ModalLoginHelpers />
       {/* <RegisterMemberFromOrganizationUserModal
         organization={organization}
@@ -154,7 +155,8 @@ const EventOrganization = (props) => {
               paddingRight: '5vw',
               paddingBottom: '5vw',
               paddingTop: '0.5vw',
-            }}>
+            }}
+          >
             {isAdminUser && (
               <Link
                 to={`/admin/organization/${props.match.params.id}`}
@@ -162,7 +164,8 @@ const EventOrganization = (props) => {
                   marginBottom: '-15px',
                   fontSize: '20px',
                   cursor: 'pointer',
-                }}>
+                }}
+              >
                 <Button type="text" icon={<EditOutlined />}>
                   Administrar
                 </Button>
@@ -177,7 +180,8 @@ const EventOrganization = (props) => {
                   backgroundColor: '#FFFFFF',
                   padding: '10px',
                   borderRadius: '20px',
-                }}>
+                }}
+              >
                 <Col xs={24} sm={24} md={24} lg={8} xl={4} xxl={4}>
                   <Row justify="start">
                     <Image
@@ -203,7 +207,8 @@ const EventOrganization = (props) => {
                         fontWeight: '600',
                         lineHeight: '2.25rem',
                       }}
-                      type="secondary">
+                      type="secondary"
+                    >
                       {organization.name}
                     </Text>
                     <Paragraph
@@ -215,7 +220,8 @@ const EventOrganization = (props) => {
                             Ver más
                           </span>
                         ),
-                      }}>
+                      }}
+                    >
                       {organization?.description || ''}
                     </Paragraph>
                   </Space>
@@ -228,7 +234,8 @@ const EventOrganization = (props) => {
                 backgroundColor: '#FFFFFF',
                 padding: '20px',
                 borderRadius: '20px',
-              }}>
+              }}
+            >
               <Badge offset={[60, 22]} count={`${lastEvents.length} Cursos`}>
                 <Title level={2}>Disponibles</Title>
               </Badge>
@@ -253,7 +260,8 @@ const EventOrganization = (props) => {
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
-                    }}>
+                    }}
+                  >
                     <Empty description="No hay cursos pasados" />
                   </div>
                 )}
@@ -266,7 +274,8 @@ const EventOrganization = (props) => {
                 backgroundColor: '#FFFFFF',
                 padding: '20px',
                 borderRadius: '20px',
-              }}>
+              }}
+            >
               <Badge offset={[60, 22]} count={`${upcomingEvents.length} Cursos`}>
                 <Title level={2}>Próximos</Title>
               </Badge>
@@ -292,7 +301,8 @@ const EventOrganization = (props) => {
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
-                    }}>
+                    }}
+                  >
                     <Empty description="No hay cursos próximos agendados" />
                   </div>
                 )}

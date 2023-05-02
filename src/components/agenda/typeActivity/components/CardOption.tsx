@@ -51,7 +51,8 @@ const CardOption = ({ id, title, description, image }: PropsOptions) => {
               }
               height={150}
             />
-          }>
+          }
+        >
           <Card.Meta
             title={
               <Typography.Title style={{ userSelect: 'none' }} level={5}>

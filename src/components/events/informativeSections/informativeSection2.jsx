@@ -33,7 +33,8 @@ class InformativeSection2 extends Component {
                 title={
                   <Typography.Title
                     level={4}
-                    style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                    style={{ color: this.props.cEvent.value.styles.textMenu }}
+                  >
                     {informativeSection1 && informativeSection1.name
                       ? informativeSection1.name
                       : 'Sección informativa'}
@@ -43,7 +44,8 @@ class InformativeSection2 extends Component {
               >
                 <div
                   id="img-informative"
-                  style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                  style={{ color: this.props.cEvent.value.styles.textMenu }}
+                >
                   {markup != null && Parser(markup)}
                 </div>
               </Card>

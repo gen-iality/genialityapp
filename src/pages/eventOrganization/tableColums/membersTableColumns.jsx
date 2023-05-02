@@ -69,7 +69,8 @@ export const columns = (
                     <Empty description="Imagen no encontrada" />
                   )}
                 </>
-              )}>
+              )}
+            >
               {item.picture ? (
                 <Avatar key={'img' + item._id} src={item.picture} />
               ) : (
@@ -123,7 +124,8 @@ export const columns = (
               onClick={() => {
                 history.push(`./members/timetracking/${item._id}`)
               }}
-              icon={<ClockCircleOutlined />}></Button>
+              icon={<ClockCircleOutlined />}
+            ></Button>
           </Tooltip>
           <Tooltip title="Editar">
             <Button
@@ -133,7 +135,8 @@ export const columns = (
               onClick={(e) => {
                 editModalUser(item)
               }}
-              icon={<EditOutlined />}></Button>
+              icon={<EditOutlined />}
+            ></Button>
           </Tooltip>
         </>
       )

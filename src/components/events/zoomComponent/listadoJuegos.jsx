@@ -52,10 +52,12 @@ export default function ListadoJuegos(props) {
       <Card
         hoverable
         onClick={() => props.changeContentDisplayed('games')}
-        style={{ cursor: 'pointer', marginTop: '12px' }}>
+        style={{ cursor: 'pointer', marginTop: '12px' }}
+      >
         <Row
           justify="space-between"
-          onClick={() => props.changeContentDisplayed('games')}>
+          onClick={() => props.changeContentDisplayed('games')}
+        >
           <Col span={6}>
             <Avatar size={38} style={{ backgroundColor: '#87d068' }}>
               {' '}

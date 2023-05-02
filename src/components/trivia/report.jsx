@@ -88,10 +88,12 @@ class TriviaReport extends Component {
                         titleQuestion: item.title,
                         surveyId: location.state.report,
                       },
-                    }}>
+                    }}
+                  >
                     <Card
                       title={item.title ? item.title : 'Pregunta sin Titulo'}
-                      hoverable>
+                      hoverable
+                    >
                       {item.quantityResponses === 0
                         ? 'No se ha respondido aun la pregunta'
                         : `${item.quantityResponses} usuarios han respondido la pregunta`}

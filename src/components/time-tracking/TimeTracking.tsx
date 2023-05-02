@@ -68,7 +68,6 @@ function TimeTracking(props: TimeTrackingProps) {
     if (!cUser.value?._id) return
 
     setSubtitleLoading('Espere mientras se carga el listado de asistentes')
-
     ;(async () => {
       await requestAllAttendees(cEvent.value?._id)
       LOG('all users loaded')
@@ -123,7 +122,8 @@ function TimeTracking(props: TimeTrackingProps) {
               setIsLoading(true)
               requestAllAttendees(cEvent.value._id)
             }
-          }}>
+          }}
+        >
           Recargar
         </Button>
         <List

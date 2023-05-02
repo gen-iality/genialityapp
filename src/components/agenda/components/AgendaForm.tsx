@@ -184,7 +184,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
         <Form.Item
           label="Nombre"
           name="name"
-          rules={[{ required: true, message: 'Nombre de la lección requerida' }]}>
+          rules={[{ required: true, message: 'Nombre de la lección requerida' }]}
+        >
           <Input autoFocus ref={ref} placeholder="Nombre de la lección" />
         </Form.Item>
         <Form.Item
@@ -195,7 +196,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             handleChange: (short_description: any) => {
               props.form.setFieldsValue({ short_description })
             },
-          })}>
+          })}
+        >
           <EviusReactQuill />
           {/* <TextArea autoFocus allowClear autoSize placeholder="Descripción corta" /> */}
         </Form.Item>
@@ -215,7 +217,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
         <Form.Item
           label="¿Actividad informativa (opcional)?"
           name="is_info_only"
-          valuePropName="checked">
+          valuePropName="checked"
+        >
           <Switch checkedChildren="Informativa" unCheckedChildren="Normal" />
         </Form.Item>
 
@@ -225,7 +228,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
           initialValue={`${new Date().getFullYear()}-${
             new Date().getMonth() + 1
           }-${new Date().getDate()}`}
-          rules={[{ required: true, message: 'La fecha es requerida' }]}>
+          rules={[{ required: true, message: 'La fecha es requerida' }]}
+        >
           <Select options={allDays} />
         </Form.Item>
         <Row wrap justify="center" gutter={[8, 8]}>
@@ -234,7 +238,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               label="Hora inicio"
               name="hour_start"
               initialValue={hourWithAdditionalMinutes(0)}
-              rules={[{ required: true, message: 'La hora de inicio es requerida' }]}>
+              rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
+            >
               <TimePicker
                 use12Hours
                 format="h:mm a"
@@ -248,7 +253,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               label="Hora fin"
               name="hour_end"
               initialValue={hourWithAdditionalMinutes(19)}
-              rules={[{ required: true, message: 'La hora final es requerida' }]}>
+              rules={[{ required: true, message: 'La hora final es requerida' }]}
+            >
               <TimePicker
                 use12Hours
                 format="h:mm a"
@@ -302,7 +308,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             <Modal
               visible={isSpeakerModalOpened}
               onCancel={() => setIsSpeakerModalOpened(false)}
-              okButtonProps={{ disabled: true }}>
+              okButtonProps={{ disabled: true }}
+            >
               <Speaker
                 eventID={props.event._id}
                 matchUrl={props.matchUrl}
@@ -374,7 +381,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
                 Esta información no es visible en la Agenda/Lección en versión Mobile.
               </Typography.Text>
             </Space>
-          }>
+          }
+        >
           {/*
           If THERE IS problem with this component, comment `getValueProps` at
           the `Form.Item` component, and uncomment the next commented code, please
@@ -419,7 +427,8 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
                   })
                   props.form.setFieldsValue({ image })
                 },
-              })}>
+              })}
+            >
               <ImageUploaderDragAndDrop
                 // imageDataCallBack={handleImageChange}
                 // imageUrl={props.form.getFieldValue('image')}

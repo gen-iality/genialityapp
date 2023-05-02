@@ -19,7 +19,8 @@ const EnVivoSvg = () => (
     height="40"
     viewBox="0 0 40 40"
     fill="none"
-    xmlns="http://www.w3.org/2000/svg">
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -97,14 +98,16 @@ function AgendaActivityItem(props) {
             } else {
               props.gotoActivity(item)
             }
-          }}>
+          }}
+        >
           {/* aquí empieza la agenda en estilo mobile */}
           <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
             {/* card de agenda en mobile */}
             <Card
               hoverable
               className="card-agenda-mobile agendaHover efect-scale"
-              bodyStyle={{ padding: '10px' }}>
+              bodyStyle={{ padding: '10px' }}
+            >
               <Row gutter={[8, 8]}>
                 <Col span={4}>
                   {!props.hasDate && (
@@ -197,7 +200,8 @@ function AgendaActivityItem(props) {
                                           marginLeft: '12px',
                                           fontSize: '9px',
                                           marginRight: '12px',
-                                        }}>
+                                        }}
+                                      >
                                         {speaker.name}
                                       </div>
                                     </th>
@@ -214,7 +218,8 @@ function AgendaActivityItem(props) {
                                 maxStyle={{
                                   color: '#ffffff',
                                   backgroundColor: '#1CDCB7',
-                                }}>
+                                }}
+                              >
                                 {item.hosts.map((speaker, key) => (
                                   <Avatar key={key} src={speaker.image} />
                                 ))}
@@ -234,7 +239,8 @@ function AgendaActivityItem(props) {
             <Card
               hoverable
               className="card-agenda-desktop agendaHover efect-scale"
-              bodyStyle={{ padding: '10px' }}>
+              bodyStyle={{ padding: '10px' }}
+            >
               <Row gutter={[8, 8]}>
                 <Col md={4} lg={4} xl={4}>
                   <div className="agenda-hora">
@@ -356,7 +362,8 @@ function AgendaActivityItem(props) {
                                 item.description !== '<p><br></p>'
                                   ? {}
                                   : { display: '' }
-                              }>
+                              }
+                            >
                               {
                                 <>
                                   <Comment
@@ -389,7 +396,8 @@ function AgendaActivityItem(props) {
                                 <Space
                                   key={key}
                                   style={{ marginRight: '8px' }}
-                                  direction="horizontal">
+                                  direction="horizontal"
+                                >
                                   <Avatar size={25} src={speaker.image} />
                                   {speaker.name}
                                 </Space>
@@ -403,7 +411,8 @@ function AgendaActivityItem(props) {
                                   maxStyle={{
                                     color: '#ffffff',
                                     backgroundColor: '#1CDCB7',
-                                  }}>
+                                  }}
+                                >
                                   {item.hosts.map((speaker, key) => (
                                     <Avatar key={key} src={speaker.image} />
                                   ))}

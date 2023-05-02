@@ -38,7 +38,8 @@ function Contact(props) {
                   <CheckCircleOutlined style={{ fontSize: '16px' }} key="copied-icon" />,
                 ],
                 tooltips: ['Copiar numero', 'Numero copiado'],
-              }}>
+              }}
+            >
               <a href={urlNum} target="_blank" rel="noopener noreferrer">
                 {props.tel + '  |'}
               </a>
@@ -56,7 +57,8 @@ function Contact(props) {
                   <CheckCircleOutlined style={{ fontSize: '16px' }} key="copied-icon" />,
                 ],
                 tooltips: ['Copiar email', 'Email copiado'],
-              }}>
+              }}
+            >
               {props.email + ' |'}
             </Text>
           </Space>
@@ -103,7 +105,8 @@ function Contact(props) {
                     />,
                   ],
                   tooltips: ['Copiar numero', 'Numero copiado'],
-                }}>
+                }}
+              >
                 <PhoneOutlined className="icono" />
                 <a href={urlNum} target="_blank" rel="noopener noreferrer">
                   {props.tel + ' |'}
@@ -125,7 +128,8 @@ function Contact(props) {
                   ],
                   tooltips: ['Copiar email', 'Email copiado'],
                 }}
-                className="email">
+                className="email"
+              >
                 <MailOutlined className="icono" /> {props.email + ' |'}
               </Text>
             )}
@@ -134,7 +138,8 @@ function Contact(props) {
             type="default"
             className="boton"
             size="large"
-            onClick={() => showModal(props)}>
+            onClick={() => showModal(props)}
+          >
             Información de contacto
           </Button>
         </Col>

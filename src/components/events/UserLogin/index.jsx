@@ -65,7 +65,8 @@ class UserLogin extends Component {
               <Result
                 icon={<SmileOutlined />}
                 title="Bienvenido..!"
-                subTitle="Desde ahora puedes disfrutar de nuestro curso"></Result>
+                subTitle="Desde ahora puedes disfrutar de nuestro curso"
+              ></Result>
             )}
 
             {enabledFormRecoveryPass && (

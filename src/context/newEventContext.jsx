@@ -474,7 +474,8 @@ export const NewEventProvider = ({ children }) => {
         dispatch,
         createOrganization,
         saveEvent,
-      }}>
+      }}
+    >
       {children}
     </cNewEventContext.Provider>
   )

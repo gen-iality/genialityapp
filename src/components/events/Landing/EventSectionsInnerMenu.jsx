@@ -23,7 +23,8 @@ const EventSectionsInnerMenu = () => {
                 : 'white',
           }}
           trigger={null}
-          width={110}>
+          width={110}
+        >
           <Row justify="center" style={{ margin: 5 }}>
             {event.styles && event.styles.event_image && (
               <Image

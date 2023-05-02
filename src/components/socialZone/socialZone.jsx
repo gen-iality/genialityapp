@@ -94,7 +94,8 @@ const SocialZone = (props) => {
         onTabClick={(key) => {
           HandleChatOrAttende(key)
         }}
-        tabBarExtraContent={{ left: props.ToggleVisibilityButton }}>
+        tabBarExtraContent={{ left: props.ToggleVisibilityButton }}
+      >
         <>
           {typeEvent !== 'UN_REGISTERED_PUBLIC_EVENT' && (
             <TabPane
@@ -112,7 +113,8 @@ const SocialZone = (props) => {
                   )}
                 </>
               }
-              key="2">
+              key="2"
+            >
               <ThisRouteCanBeDisplayed>
                 <div key="AttendeList">
                   <Row>
@@ -127,7 +129,8 @@ const SocialZone = (props) => {
                             marginRight: '5px',
                             color: 'white',
                             width: '100%',
-                          }}>
+                          }}
+                        >
                           <input
                             style={{ color: cEvent.value.styles.textMenu }}
                             ref={busquedaRef}
@@ -145,7 +148,8 @@ const SocialZone = (props) => {
                             <Button
                               icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
                               shape="round"
-                              onClick={searhAttende}>
+                              onClick={searhAttende}
+                            >
                               {!isFiltered && 'Buscar'}
                               {isFiltered && 'Borrar'}
                             </Button>
@@ -184,13 +188,15 @@ const SocialZone = (props) => {
                 <Badge
                   onClick={() => HandleChatOrAttende('1')}
                   size="small"
-                  count={totalPrivateMessages}>
+                  count={totalPrivateMessages}
+                >
                   <div style={{ color: cEvent.value.styles.textMenu }}>Chats</div>
                 </Badge>
               )}
             </>
           }
-          key="1">
+          key="1"
+        >
           <ThisRouteCanBeDisplayed>
             <ChatList
               typeEvent={typeEvent}
@@ -261,7 +267,8 @@ const SocialZone = (props) => {
                     style={{
                       marginBottom: '0px',
                       color: cEvent.value.styles.textMenu,
-                    }}>
+                    }}
+                  >
                     <FormattedMessage
                       id="tabs.games.socialzone"
                       defaultMessage="Juegos"
@@ -269,7 +276,8 @@ const SocialZone = (props) => {
                   </p>
                 </>
               }
-              key="4">
+              key="4"
+            >
               <ThisRouteCanBeDisplayed>
                 <GameList key="GameList" />
               </ThisRouteCanBeDisplayed>

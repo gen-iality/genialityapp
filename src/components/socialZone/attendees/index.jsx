@@ -129,13 +129,15 @@ const AttendeList = function (props) {
       pageStart={0}
       loadMore={() => handleInfiniteOnLoad()}
       hasMore={!loading && hasMore}
-      useWindow={false}>
+      useWindow={false}
+    >
       <List
         itemLayout="horizontal"
         dataSource={filteredlist && filteredlist}
         renderItem={(item) => (
           <UsersCard type="attendees" item={item} propsAttendees={props} />
-        )}></List>
+        )}
+      ></List>
     </InfiniteScroll>
   )
 }

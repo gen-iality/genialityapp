@@ -96,7 +96,8 @@ function InvitationsList(props) {
                   history.push(`/eventadmin/${eventId}/dashboard`)
                 }}
                 type="ghost"
-                icon={<LineChartOutlined />}>
+                icon={<LineChartOutlined />}
+              >
                 Ver estadísticas
               </Button>
             </Col>

@@ -173,7 +173,8 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
                     onClick={() => {
                       helperDispatch({ type: 'showLogin' })
                     }}
-                    type="link">
+                    type="link"
+                  >
                     {intl.formatMessage({
                       id: 'modal.feedback.title.errorlink',
                       defaultMessage: 'iniciar sesión',

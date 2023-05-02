@@ -64,7 +64,8 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                   isSurvey={[
                     activityContentValues.quizing,
                     activityContentValues.survey,
-                  ].includes(activity.type?.name as any)}>
+                  ].includes(activity.type?.name as any)}
+                >
                   <Tooltip
                     placement="right"
                     title={`Ir ${
@@ -77,7 +78,8 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                     } "${activity.name}", tipo ${(activity.type?.name
                       ? lessonTypeToString(activity.type?.name)
                       : 'sin contenido'
-                    ).toLowerCase()}`}>
+                    ).toLowerCase()}`}
+                  >
                     {index + 1}
                   </Tooltip>
                 </Step>

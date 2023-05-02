@@ -71,12 +71,14 @@ function ResultsPanel(props) {
                   <p
                     style={{
                       fontWeight: '700',
-                    }}>{`Respuesta correcta: ${answer.correctAnswer}`}</p>
+                    }}
+                  >{`Respuesta correcta: ${answer.correctAnswer}`}</p>
                   <p
                     style={{
                       fontWeight: '700',
                       color: answer.isCorrectAnswer ? 'green' : 'red',
-                    }}>{`Tu respuesta: ${answer.answer}`}</p>
+                    }}
+                  >{`Tu respuesta: ${answer.answer}`}</p>
                 </Card>
               )
             })}

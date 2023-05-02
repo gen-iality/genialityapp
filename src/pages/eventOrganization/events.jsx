@@ -53,7 +53,8 @@ function OrgEvents(props) {
                   linkToTheMenuRouteS(
                     `/create-event/${props.cUser?.value?._id}?orgId=${organizationId}`,
                   )
-                }>
+                }
+              >
                 Agregar
               </Button>
             </Col>

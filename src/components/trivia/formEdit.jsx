@@ -483,7 +483,8 @@ const FormEdit = (
                         {
                           validator: fieldValidation,
                         },
-                      ]}>
+                      ]}
+                    >
                       <Input />
                     </Form.Item>
                   ) : (
@@ -497,10 +498,12 @@ const FormEdit = (
                           {
                             validator: fieldValidation,
                           },
-                        ]}>
+                        ]}
+                      >
                         <Select
                           placeholder="Seleccione una Opcion"
-                          onChange={handleFunction}>
+                          onChange={handleFunction}
+                        >
                           {field.selectOptions.map((option, index) =>
                             option.text ? (
                               <Option key={`type${index}`} value={option.value}>
@@ -531,7 +534,8 @@ const FormEdit = (
                         {
                           validator: fieldValidation,
                         },
-                      ]}>
+                      ]}
+                    >
                       <Input />
                     </Form.Item>
                   ) : (
@@ -545,10 +549,12 @@ const FormEdit = (
                           {
                             validator: fieldValidation,
                           },
-                        ]}>
+                        ]}
+                      >
                         <Select
                           placeholder="Seleccione una Opción"
-                          onChange={handleFunction}>
+                          onChange={handleFunction}
+                        >
                           {field.selectOptions.map((option, index) =>
                             option.text ? (
                               <Option key={`type${index}`} value={option.value}>
@@ -589,7 +595,8 @@ const FormEdit = (
                     }}
                     customRequest={uploadImagedummyRequest}
                     fileList={defaultImgValue}
-                    onRemove={handleRemoveImg}>
+                    onRemove={handleRemoveImg}
+                  >
                     <Button icon={<UploadOutlined />}>Cargar imagen</Button>
                   </Upload>
                   <Tooltip
@@ -607,7 +614,8 @@ const FormEdit = (
                           size="small"
                         />
                       </div>
-                    }>
+                    }
+                  >
                     <QuestionCircleOutlined
                       style={{ color: '#faad14', marginRight: '10px' }}
                     />
@@ -661,18 +669,21 @@ const FormEdit = (
                           ? 'abc-ranking'
                           : undefined
                       }
-                      style={questionType === 'ranking' ? { width: '100%' } : undefined}>
+                      style={questionType === 'ranking' ? { width: '100%' } : undefined}
+                    >
                       {questionType === 'radiogroup' ? (
                         <Radio.Group
                           onChange={handleRadio}
                           disabled={!allowGradableSurvey}
                           value={correctAnswerIndex}
-                          style={{ display: 'block', marginRight: 0 }}>
+                          style={{ display: 'block', marginRight: 0 }}
+                        >
                           {fields.map((field, index) => (
                             <Form.Item
                               label={<Text type="secondary">Respuesta {index + 1}</Text>}
                               required={false}
-                              key={field.key}>
+                              key={field.key}
+                            >
                               <Radio value={index} style={{ width: '100%' }}>
                                 <Form.Item
                                   {...field}
@@ -689,7 +700,8 @@ const FormEdit = (
                                       validator: fieldValidation,
                                     },
                                   ]}
-                                  noStyle>
+                                  noStyle
+                                >
                                   <Input
                                     placeholder="Asingar respuesta"
                                     style={{ width: '100%' }}
@@ -711,12 +723,14 @@ const FormEdit = (
                           onChange={handleCheckbox}
                           disabled={!allowGradableSurvey}
                           value={correctAnswerIndex}
-                          style={{ display: 'block' }}>
+                          style={{ display: 'block' }}
+                        >
                           {fields.map((field, index) => (
                             <Form.Item
                               label={<Text type="secondary">Respuesta {index + 1}</Text>}
                               required={false}
-                              key={field.key}>
+                              key={field.key}
+                            >
                               <Checkbox value={index} style={{ width: '100%' }}>
                                 <Form.Item
                                   {...field}
@@ -733,7 +747,8 @@ const FormEdit = (
                                       validator: fieldValidation,
                                     },
                                   ]}
-                                  noStyle>
+                                  noStyle
+                                >
                                   <Input
                                     placeholder="Asingar respuesta"
                                     style={{ width: '100%' }}
@@ -761,7 +776,8 @@ const FormEdit = (
                             <Form.Item
                               label={<Text type="secondary">Opción</Text>}
                               required={false}
-                              key={field.key}>
+                              key={field.key}
+                            >
                               <Space direction="horizontal" key={`space_${field.key}`}>
                                 {allowGradableSurvey && (
                                   <InputNumber
@@ -785,7 +801,8 @@ const FormEdit = (
                                     {
                                       validator: fieldValidation,
                                     },
-                                  ]}>
+                                  ]}
+                                >
                                   <Input
                                     placeholder="Asingar opción"
                                     style={{ width: '100%' }}
@@ -829,7 +846,8 @@ const FormEdit = (
                                 Descripción de la valuación máxima
                               </Text>
                             }
-                            required>
+                            required
+                          >
                             <Input
                               value={maxRateDescription}
                               onChange={(e) => setMaxRateDescription(e.target.value)}
@@ -841,7 +859,8 @@ const FormEdit = (
                           {/* The max value */}
                           <Form.Item
                             label={<Text type="secondary">Valor máxima</Text>}
-                            required>
+                            required
+                          >
                             <InputNumber
                               // style={{ maxWidth: '5em' }}
                               value={rateMax}
@@ -859,7 +878,8 @@ const FormEdit = (
                                 Descripción de la valuación mínima
                               </Text>
                             }
-                            required>
+                            required
+                          >
                             <Input
                               value={minRateDescription}
                               onChange={(e) => setMinRateDescription(e.target.value)}
@@ -871,7 +891,8 @@ const FormEdit = (
                           {/* The min value */}
                           <Form.Item
                             label={<Text type="secondary">Valor mínima</Text>}
-                            required>
+                            required
+                          >
                             <InputNumber
                               // style={{ maxWidth: '5em' }}
                               value={rateMin}
@@ -886,7 +907,8 @@ const FormEdit = (
                           {allowGradableSurvey && (
                             <Form.Item
                               label={<Text type="secondary">Valoración correcta</Text>}
-                              required>
+                              required
+                            >
                               <InputNumber
                                 // style={{ maxWidth: '5em' }}
                                 value={ratingCorrectAnswer || ''}
@@ -928,7 +950,8 @@ const FormEdit = (
                               // Only for ranking
                               buildFakeCorrectAnswerIndexForRankingType(fields.length + 1)
                             }
-                          }}>
+                          }}
+                        >
                           <PlusOutlined /> Agregar otra{' '}
                           {questionType === 'ranking' ? 'opción' : 'respuesta'}
                         </Button>

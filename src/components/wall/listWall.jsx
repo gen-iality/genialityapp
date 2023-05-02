@@ -34,7 +34,8 @@ const IconText = ({ icon, text, onSubmit, color, megusta }) => (
     htmlType="submit"
     type="text"
     onClick={onSubmit}
-    style={{ color: megusta == 1 ? color : 'gray' }}>
+    style={{ color: megusta == 1 ? color : 'gray' }}
+  >
     {createElement(icon, { style: { marginRight: '2px', fontSize: '20px' } })}
     {text}
   </Button>
@@ -212,7 +213,8 @@ class WallList extends Component {
                           user={this.props.cUser}
                         />
                       ),
-                    ]}>
+                    ]}
+                  >
                     <List.Item
                       key={item.id}
                       style={{ padding: '5px' }}
@@ -266,7 +268,8 @@ class WallList extends Component {
                                     onConfirm={() => this.innerDeletePost(item.id)}
                                     okText="Eliminar"
                                     okType="danger"
-                                    cancelText="Cancelar">
+                                    cancelText="Cancelar"
+                                  >
                                     <Button
                                       key="list-vertical-message"
                                       type="text"
@@ -275,7 +278,8 @@ class WallList extends Component {
                                         <DeleteOutlined
                                           style={{ marginRight: '2px', fontSize: '20px' }}
                                         />
-                                      }>
+                                      }
+                                    >
                                       Eliminar mi publicación
                                     </Button>
                                   </Popconfirm>
@@ -284,7 +288,8 @@ class WallList extends Component {
                               )}
                           </>
                         </Space>,
-                      ]}>
+                      ]}
+                    >
                       <List.Item.Meta
                         avatar={
                           item?.authorImage ? (
@@ -306,7 +311,8 @@ class WallList extends Component {
                             <Tooltip
                               title={dayjs(new Date(item.datePost.toMillis())).format(
                                 'DD-MM-YYYY HH:mm:ss',
-                              )}>
+                              )}
+                            >
                               {/* <span>{dayjs(dayjs(new Date(item.datePost.toMillis()))).from(dayjs(new Date()))}</span> */}
                               <span>
                                 {dayjs(new Date(item.datePost.toMillis())).format(

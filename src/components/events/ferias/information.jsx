@@ -41,7 +41,8 @@ function feriaInformation(props) {
                     marginTop: '18px',
                     fontSize: '16px',
                     color: '#9e9e9e',
-                  }}></Paragraph>
+                  }}
+                ></Paragraph>
                 <span className="parrafo">{props.Description}</span>
                 {props.companyDetail &&
                 (props.companyDetail.telefono ||
@@ -72,7 +73,8 @@ function feriaInformation(props) {
                             onClick={() => {
                               window.open(`${props.companyDetail.pagweb}`, '_blank')
                             }}
-                            target="_blank">
+                            target="_blank"
+                          >
                             <Text style={{ width: '35vh' }} ellipsis>
                               {props.companyDetail.webpage}
                             </Text>

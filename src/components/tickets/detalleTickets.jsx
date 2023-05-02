@@ -51,11 +51,13 @@ class DetailTickets extends Component {
             <Button key="back" type="primary" onClick={this.handleOk}>
               Ok
             </Button>,
-          ]}>
+          ]}
+        >
           <Descriptions
             title={item.event}
             size="small"
-            column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+            column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
+          >
             {
               <Descriptions.Item label="Rol">
                 {item.rol ? item.rol : 'No tienes un rol asignado'}

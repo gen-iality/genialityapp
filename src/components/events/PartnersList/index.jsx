@@ -25,7 +25,8 @@ function PartnerItemList({ company, handleOpenPartnerDetail, companyId }) {
               fontSize: '12px',
               borderLeft: '5px solid',
               padding: '18px',
-            }}>
+            }}
+          >
             <h1 style={{ fontSize: '22px', fontWeight: '300' }}>{company.name}</h1>
             <div dangerouslySetInnerHTML={{ __html: company.short_description }} />
           </Col>

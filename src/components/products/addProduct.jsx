@@ -280,7 +280,8 @@ function AddProduct(props) {
                   Nombre del producto <label style={{ color: 'red' }}>*</label>
                 </label>
               }
-              rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]}>
+              rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]}
+            >
               <Input
                 value={name}
                 placeholder="Nombre del producto"
@@ -295,7 +296,8 @@ function AddProduct(props) {
             </Form.Item>
             <Form.Item
               label={<label style={{ marginTop: '2%' }}>Por</label>}
-              rules={[{ required: false }]}>
+              rules={[{ required: false }]}
+            >
               <Input
                 value={creator}
                 placeholder="Nombre del autor, creador o descripción corta"
@@ -311,7 +313,8 @@ function AddProduct(props) {
                 <label style={{ marginTop: '2%' }}>
                   Descripción <label style={{ color: 'red' }}>*</label>
                 </label>
-              }>
+              }
+            >
               <EviusReactQuill
                 data={description}
                 id="descriptionProduct"
@@ -325,7 +328,8 @@ function AddProduct(props) {
             </Form.Item>
             <Form.Item
               label={<label style={{ marginTop: '2%' }}>Valor</label>}
-              rules={[{ required: false, message: 'Ingrese el valor del producto' }]}>
+              rules={[{ required: false, message: 'Ingrese el valor del producto' }]}
+            >
               <Input
                 value={price}
                 placeholder="Valor del producto"
