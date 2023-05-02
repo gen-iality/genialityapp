@@ -370,7 +370,7 @@ class ListEventUser extends Component {
 
         {/* Componente de busqueda */}
         <Tabs style={{ background: '#FFFFFF' }} activeKey={activeTab} onChange={this.changeActiveTab}>
-          <TabPane tab='Participantes' key='asistentes'>
+          <TabPane tab={<Typography.Text>Participantes</Typography.Text>} key='asistentes'>
             {
               <AppointmentModal
                 targetEventUserId={this.state.eventUserIdToMakeAppointment}
@@ -784,7 +784,7 @@ class ListEventUser extends Component {
             )}
           </TabPane>
 
-          <TabPane tab='Mis contactos' key='mis-contactos'>
+          <TabPane tab={<Typography.Text>Mis contactos</Typography.Text>} key='mis-contactos'>
             <ContactList
               agendarCita={this.agendarCita}
               eventId={this.props.cEvent.value._id}
@@ -794,20 +794,14 @@ class ListEventUser extends Component {
 
           <TabPane
             tab={
-              <div style={{ position: 'relative' }}>
-                Solicitudes de contacto
-                {this.props.cHelper.totalSolicitudAmistad !== '0' && (
-                  <Badge
-                    style={{
-                      position: 'absolute',
-                      top: '-21px',
-                      right: '-13px',
-                    }}
-                    count={
-                      this.props.cHelper.totalSolicitudAmistad > 0 ? this.props.cHelper.totalSolicitudAmistad : ''
-                    }></Badge>
-                )}
-              </div>
+              <Badge
+                color={this.props.cHelper.totalSolicitudAmistad <= 0 ? 'transparent' : 'red'}
+                dot={this.props.cHelper.totalSolicitudAmistad <= 0}
+                count={
+                  this.props.cHelper.totalSolicitudAmistad > 0 && this.props.cHelper.totalSolicitudAmistad}
+              >
+                <Typography.Text>Solicitudes de contacto</Typography.Text>
+              </Badge>
             }
             key='solicitudes'>
             <RequestList
