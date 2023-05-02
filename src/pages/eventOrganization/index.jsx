@@ -30,7 +30,7 @@ import OrgMembers from './members';
 import OrganizationPositionsPage from './OrganizationPositionsPage';
 import CurrentOrganizationPositionPage from './CurrentOrganizationPositionPage';
 import CurrentOrganizationPositionCertificationUserPage from './CurrentOrganizationPositionCertificationUserPage';
-import CertificationLogsPage from './CurrentOrganizationPositionCertificationLogsUserPage';
+import CertificationLogsPage from './CertificationLogsPage';
 import OrgRegisteredUsers from './OrgRegisteredUsers';
 import OrganizationPropertiesIsolatedPage from './OrganizationPropertiesIsolatedPage';
 import MemberSettings from './memberSettings';
