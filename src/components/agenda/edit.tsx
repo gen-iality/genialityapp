@@ -374,7 +374,7 @@ function AgendaEdit(props: AgendaEditProps) {
           customBack={props.matchUrl}
           title={formdata.name ? `Actividad - ${formdata.name}` : 'Actividad'}
           saveName={location.state.edit || currentActivityID ? '' : 'Crear'}
-          edit={location.state.edit || currentActivityID || undefined}
+          edit={Boolean(location.state.edit || currentActivityID || undefined)}
           extra={
             isEditing && (
               <Form.Item label="Publicar" labelCol={{ span: 14 }}>
@@ -468,7 +468,9 @@ function AgendaEdit(props: AgendaEditProps) {
                         <Form.Item>
                           <AgendaDocumentForm
                             eventId={props.event._id}
-                            selectedDocuments={formdata.selectedDocuments}
+                            selectedDocuments={formdata.selectedDocuments.map(
+                              (document) => document.value,
+                            )}
                             onSelectedDocuments={(changed) =>
                               handleDocumentChange(changed)
                             }
