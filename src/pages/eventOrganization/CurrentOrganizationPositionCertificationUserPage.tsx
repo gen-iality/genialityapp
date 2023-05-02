@@ -34,7 +34,7 @@ import PositionCertificationFileUploader from './PositionCertificationFileUpload
 
 const { TextArea } = Input;
 
-export interface CurrentOrganizationPositionCertificationUserPageProps {
+export interface MembersCertificationPageProps {
   org: any;
   match: {
     params: {
@@ -45,8 +45,8 @@ export interface CurrentOrganizationPositionCertificationUserPageProps {
   };
 }
 
-function CurrentOrganizationPositionCertificationUserPage(
-  props: CurrentOrganizationPositionCertificationUserPageProps,
+function MembersCertificationPage(
+  props: MembersCertificationPageProps,
 ) {
   const organizationId: string = props.org._id;
   const positionId = props.match.params.positionId;
@@ -440,4 +440,4 @@ function CurrentOrganizationPositionCertificationUserPage(
   );
 }
 
-export default CurrentOrganizationPositionCertificationUserPage;
+export default MembersCertificationPage;
