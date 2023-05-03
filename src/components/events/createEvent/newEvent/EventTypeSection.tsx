@@ -54,6 +54,7 @@ const EventTypeSection: FunctionComponent<EventTypeSectionProps> = (props) => {
     setSelectedEventType(et)
     onEventTypeSectionChange(et)
     console.log('user select event type:', et)
+    dispatch({ type: 'EVENT_TYPE', payload: { event_type: et } })
   }
 
   return (
