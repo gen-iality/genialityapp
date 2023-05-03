@@ -1,7 +1,13 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, Dispatch } from 'react'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { Badge, Card, Col, Divider, Row, Space, Typography, Checkbox } from 'antd'
-import { useContextNewEvent } from '@context/newEventContext'
+import {
+  useContextNewEvent,
+  NewEventActionEnum,
+  NewEventAccessTypeEnum,
+  NewEventAction,
+  NewEventState,
+} from '@context/newEventContext'
 
 const EventAccessTypeSection: FunctionComponent = () => {
   /**
@@ -9,7 +15,10 @@ const EventAccessTypeSection: FunctionComponent = () => {
    * accessType === 1 -> Publico sin registro obligatorio
    * accessType === 2 -> Privado por invitacion
    */
-  const { dispatch, state } = useContextNewEvent()
+  const {
+    dispatch,
+    state,
+  }: { dispatch: Dispatch<NewEventAction>; state: NewEventState } = useContextNewEvent()
 
   return (
     <Row
@@ -20,7 +29,6 @@ const EventAccessTypeSection: FunctionComponent = () => {
     >
       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
         <Badge
-          onClick={() => dispatch({ type: 'TYPE_EVENT', payload: { type: 0 } })}
           count={
             state.type === 0 ? (
               <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} />
@@ -37,6 +45,12 @@ const EventAccessTypeSection: FunctionComponent = () => {
               cursor: 'pointer',
               minHeight: '235px',
             }}
+            onClick={() =>
+              dispatch({
+                type: NewEventActionEnum.EVENT_ACCESS,
+                payload: { accessType: NewEventAccessTypeEnum.PUBLIC },
+              })
+            }
           >
             <Space direction="vertical">
               <div onClick={() => this.changetypeEvent(0)}>
@@ -54,7 +68,11 @@ const EventAccessTypeSection: FunctionComponent = () => {
               {state.type === 0 && (
                 <>
                   <Divider />
-                  <Checkbox onChange={() => dispatch({ type: 'TYPE_AUTHENTICATION' })}>
+                  <Checkbox
+                    onChange={() =>
+                      dispatch({ type: NewEventActionEnum.TYPE_AUTHENTICATION })
+                    }
+                  >
                     Registros sin autenticación de usuario (Beta)
                   </Checkbox>
                 </>
@@ -65,7 +83,6 @@ const EventAccessTypeSection: FunctionComponent = () => {
       </Col>
       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
         <Badge
-          onClick={() => dispatch({ type: 'TYPE_EVENT', payload: { type: 1 } })}
           count={
             state.type === 1 ? (
               <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} />
@@ -82,6 +99,12 @@ const EventAccessTypeSection: FunctionComponent = () => {
               cursor: 'pointer',
               minHeight: '235px',
             }}
+            onClick={() =>
+              dispatch({
+                type: NewEventActionEnum.EVENT_ACCESS,
+                payload: { accessType: NewEventAccessTypeEnum.ANONYMOUS },
+              })
+            }
           >
             <Space direction="vertical">
               <Typography.Text strong>
@@ -102,7 +125,6 @@ const EventAccessTypeSection: FunctionComponent = () => {
 
       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
         <Badge
-          onClick={() => dispatch({ type: 'TYPE_EVENT', payload: { type: 2 } })}
           count={
             state.type === 2 ? (
               <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} />
@@ -119,6 +141,12 @@ const EventAccessTypeSection: FunctionComponent = () => {
               cursor: 'pointer',
               minHeight: '235px',
             }}
+            onClick={() =>
+              dispatch({
+                type: NewEventActionEnum.EVENT_ACCESS,
+                payload: { accessType: NewEventAccessTypeEnum.PRIVATE },
+              })
+            }
           >
             <Space direction="vertical">
               <Typography.Text strong>Cursos privado por invitación</Typography.Text>

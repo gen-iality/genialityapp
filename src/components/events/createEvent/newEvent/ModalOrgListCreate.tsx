@@ -15,7 +15,7 @@ import {
 } from 'antd'
 import { useCurrentUser } from '@context/userContext'
 import { useState, useEffect, FunctionComponent } from 'react'
-import { useContextNewEvent } from '@context/newEventContext'
+import { useContextNewEvent, NewEventActionEnum } from '@context/newEventContext'
 import ImgCrop from 'antd-img-crop'
 import functionCreateNewOrganization from '@components/profile/functionCreateNewOrganization'
 
@@ -66,28 +66,31 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
       }
       const createOrganizationR = await createOrganization(newOrganization)
       dispatch({
-        type: 'ORGANIZATIONS',
+        type: NewEventActionEnum.ORGANIZATIONS,
         payload: { organizationList: [createOrganizationR] },
       })
       dispatch({
-        type: 'SELECT_ORGANIZATION',
+        type: NewEventActionEnum.SELECT_ORGANIZATION,
         payload: { orgId: orgId, organization: createOrganizationR },
       })
     } else {
-      dispatch({ type: 'SELECT_ORGANIZATION', payload: { orgId: orgId } })
+      dispatch({
+        type: NewEventActionEnum.SELECT_ORGANIZATION,
+        payload: { orgId: orgId },
+      })
     }
   }
 
   const createNewOrganization = async (value: any) => {
-    dispatch({ type: 'LOADING' })
+    dispatch({ type: NewEventActionEnum.LOADING })
     await functionCreateNewOrganization({ name: value.name, logo: imageAvatar })
     setTimeout(async () => {
       await obtainOrganizations()
       resetFields()
       newOrganization(false)
     }, 500)
-    dispatch({ type: 'SELECT_TAB', payload: { tab: 'list' } })
-    dispatch({ type: 'COMPLETE' })
+    dispatch({ type: NewEventActionEnum.SELECT_TAB, payload: { tab: 'list' } })
+    dispatch({ type: NewEventActionEnum.COMPLETE })
   }
 
   useEffect(() => {
@@ -99,12 +102,15 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
   return (
     <Modal
       footer={
-        state?.tab == 'create' ? null : !state.loading ? (
+        state?.tab == 'create' ? null : !state.isLoading ? (
           [
             <Button
               key="back"
               onClick={() =>
-                dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })
+                dispatch({
+                  type: NewEventActionEnum.VISIBLE_MODAL,
+                  payload: { visible: false },
+                })
               }
             >
               Cerrar
@@ -116,7 +122,10 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                 if (modalListOrgIsVisible) {
                   redirectOrganization()
                 }
-                dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })
+                dispatch({
+                  type: NewEventActionEnum.VISIBLE_MODAL,
+                  payload: { visible: false },
+                })
               }}
             >
               Seleccionar
@@ -130,16 +139,20 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
         if (modalListOrgIsVisible) {
           redirectOrganization()
         }
-        dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })
+        dispatch({ type: NewEventActionEnum.VISIBLE_MODAL, payload: { visible: false } })
       }}
       okText="Seleccionar"
       cancelText="Cerrar"
       visible={state?.visible}
-      onCancel={() => dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })}
+      onCancel={() =>
+        dispatch({ type: NewEventActionEnum.VISIBLE_MODAL, payload: { visible: false } })
+      }
     >
       <Tabs
         activeKey={state?.tab}
-        onChange={(key) => dispatch({ type: 'SELECT_TAB', payload: { tab: key } })}
+        onChange={(key) =>
+          dispatch({ type: NewEventActionEnum.SELECT_TAB, payload: { tab: key } })
+        }
       >
         <TabPane tab="Mis organizaciones" key="list">
           <List
@@ -161,7 +174,7 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                 }}
                 onClick={() =>
                   dispatch({
-                    type: 'SELECT_ORGANIZATION',
+                    type: NewEventActionEnum.SELECT_ORGANIZATION,
                     payload: { orgId: null, organization: item },
                   })
                 }
@@ -234,7 +247,7 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
               >
                 <Input type="text" size="large" placeholder="Nombre de la organizacion" />
               </Form.Item>
-              {!state.loading ? (
+              {!state.isLoading ? (
                 <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
                   <Button
                     id="submitButton"

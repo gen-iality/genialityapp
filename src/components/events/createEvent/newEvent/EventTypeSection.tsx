@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import type { FunctionComponent } from 'react'
 import { Card, Col, Row } from 'antd'
-import { useContextNewEvent } from '@context/newEventContext'
-
-type EventTypeType = 'certification' | 'onlineEvent' | undefined
+import {
+  useContextNewEvent,
+  EventTypeType,
+  NewEventActionEnum,
+} from '@context/newEventContext'
 
 type CardType = {
   title: string
@@ -54,7 +56,7 @@ const EventTypeSection: FunctionComponent<EventTypeSectionProps> = (props) => {
     setSelectedEventType(et)
     onEventTypeSectionChange(et)
     console.log('user select event type:', et)
-    dispatch({ type: 'EVENT_TYPE', payload: { event_type: et } })
+    dispatch({ type: NewEventActionEnum.EVENT_TYPE, payload: { event_type: et } })
   }
 
   return (
