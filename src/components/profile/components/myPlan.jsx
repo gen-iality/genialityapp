@@ -1,47 +1,62 @@
-import { useEffect, useState } from 'react';
-import { PlansApi, AlertsPlanApi, BillssPlanApi } from '@helpers/request';
-import PlanCard from './planCard';
-import Plan from './plan';
-import { Row, Col, Tabs, Space, Table, Tooltip, Button, Tag, Card, Divider, Typography, Modal } from 'antd';
+import { useEffect, useState } from 'react'
+import { PlansApi, AlertsPlanApi, BillssPlanApi } from '@helpers/request'
+import PlanCard from './planCard'
+import Plan from './plan'
+import {
+  Row,
+  Col,
+  Tabs,
+  Space,
+  Table,
+  Tooltip,
+  Button,
+  Tag,
+  Card,
+  Divider,
+  Typography,
+  Modal,
+} from 'antd'
 import {
   DeleteOutlined,
   DownOutlined,
   ExclamationCircleOutlined,
   FileDoneOutlined,
   RightOutlined,
-} from '@ant-design/icons';
-import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup';
-import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline';
-import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda';
-import { Link } from 'react-router-dom';
-import { GetTokenUserFirebase } from '@helpers/HelperAuth';
-import dayjs from 'dayjs';
-import { useIntl } from 'react-intl';
-import { DispatchMessageService } from '@context/MessageService';
-import { handleRequestError } from '@helpers/utils';
+} from '@ant-design/icons'
+import AccountGroupIcon from '@2fd/ant-design-icons/lib/AccountGroup'
+import TimerOutlineIcon from '@2fd/ant-design-icons/lib/TimerOutline'
+import ViewAgendaIcon from '@2fd/ant-design-icons/lib/ViewAgenda'
+import { Link } from 'react-router-dom'
+import { GetTokenUserFirebase } from '@helpers/HelperAuth'
+import dayjs from 'dayjs'
+import { useIntl } from 'react-intl'
+import { DispatchMessageService } from '@context/MessageService'
+import { handleRequestError } from '@helpers/utils'
 
 const myPlan = ({ cUser }) => {
-  const plan = cUser.value?.plan;
-  const [plans, setPlans] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [bills, setBills] = useState([]);
-  const [consumption, setConsumption] = useState([]);
-  const [totalUsersByPlan, setTotalUsersByPlan] = useState({});
-  const [loadingNotification, setLoadingNotification] = useState(true);
-  const [loadingBill, setLoadingBill] = useState(true);
-  const [loadingConsumption, setLoadingConsumption] = useState(true);
-  const [show, setShow] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [toShow, setToShow] = useState(0);
-  const [toShowModal, setToShowModal] = useState('');
-  const [UrlAdditional, setUrlAdditional] = useState('');
-  const [token, setToken] = useState('');
-  const goBackUrlPayment = window.location.toString().includes('https://staging.evius.co/')
+  const plan = cUser.value?.plan
+  const [plans, setPlans] = useState([])
+  const [notifications, setNotifications] = useState([])
+  const [bills, setBills] = useState([])
+  const [consumption, setConsumption] = useState([])
+  const [totalUsersByPlan, setTotalUsersByPlan] = useState({})
+  const [loadingNotification, setLoadingNotification] = useState(true)
+  const [loadingBill, setLoadingBill] = useState(true)
+  const [loadingConsumption, setLoadingConsumption] = useState(true)
+  const [show, setShow] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [toShow, setToShow] = useState(0)
+  const [toShowModal, setToShowModal] = useState('')
+  const [UrlAdditional, setUrlAdditional] = useState('')
+  const [token, setToken] = useState('')
+  const goBackUrlPayment = window.location
+    .toString()
+    .includes('https://staging.evius.co/')
     ? 'https://staging.evius.co/myprofile/events'
     : window.location.toString().includes('https://app.evius.co/myprofile/events')
     ? 'https://app.evius.co/myprofile/events'
-    : 'http://localhost:3000/myprofile/events';
-  const intl = useIntl();
+    : 'http://localhost:3000/myprofile/events'
+  const intl = useIntl()
 
   const deleteNotification = async (id) => {
     Modal.confirm({
@@ -69,17 +84,17 @@ const myPlan = ({ cUser }) => {
             defaultMessage: 'Por favor espere mientras se borra la notificación...',
           }),
           action: 'show',
-        });
+        })
         const onHandlerRemove = async () => {
           try {
             await AlertsPlanApi.editOne(id, {
               status: 'INACTIVE',
               user_id: cUser.value?._id,
-            });
+            })
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',
-            });
+            })
             DispatchMessageService({
               type: 'success',
               msj: intl.formatMessage({
@@ -87,24 +102,24 @@ const myPlan = ({ cUser }) => {
                 defaultMessage: 'Se eliminó la notificación correctamente!',
               }),
               action: 'show',
-            });
-            getInfoPlans();
+            })
+            getInfoPlans()
           } catch (e) {
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',
-            });
+            })
             DispatchMessageService({
               type: 'error',
               msj: handleRequestError(e).message,
               action: 'show',
-            });
+            })
           }
-        };
-        onHandlerRemove();
+        }
+        onHandlerRemove()
       },
-    });
-  };
+    })
+  }
 
   //Notifications
   const columns = [
@@ -140,9 +155,9 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'created_at',
       key: 'created_at',
       render(val, item) {
-        const date = dayjs(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours');
+        const date = dayjs(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours')
 
-        return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>;
+        return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>
       },
     },
     {
@@ -160,14 +175,19 @@ const myPlan = ({ cUser }) => {
               title={intl.formatMessage({
                 id: 'button.delete',
                 defaultMessage: 'Eliminar',
-              })}>
-              <Button danger icon={<DeleteOutlined />} onClick={() => deleteNotification(item._id)} />
+              })}
+            >
+              <Button
+                danger
+                icon={<DeleteOutlined />}
+                onClick={() => deleteNotification(item._id)}
+              />
             </Tooltip>
           </Space>
-        );
+        )
       },
     },
-  ];
+  ]
 
   const columnsBills = [
     {
@@ -178,7 +198,7 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'reference_evius',
       key: 'reference_evius',
       render(val, item) {
-        return <>{item.billing.reference_evius}</>;
+        return <>{item.billing.reference_evius}</>
       },
     },
     {
@@ -189,12 +209,12 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'reason',
       key: 'reason',
       render(val, item) {
-        const payment = item.billing.payment_method || item.payment || {};
+        const payment = item.billing.payment_method || item.payment || {}
         return (
           <>
             {payment['address']?.name} {payment['address']?.last_name}
           </>
-        );
+        )
       },
     },
     {
@@ -220,17 +240,17 @@ const myPlan = ({ cUser }) => {
         const color = () => {
           switch (val) {
             case 'APPROVED':
-              return 'green';
+              return 'green'
             case 'VOIDED':
             case 'PENDING':
-              return 'orange';
+              return 'orange'
             case 'DECLINED':
             case 'ERROR':
-              return 'red';
+              return 'red'
           }
-        };
+        }
 
-        return <Tag color={color()}>{item.status}</Tag>;
+        return <Tag color={color()}>{item.status}</Tag>
       },
     },
     {
@@ -241,13 +261,13 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'value',
       key: 'value',
       render(val, item) {
-        const tax = item?.billing?.tax === 0 ? 1 : item?.billing?.tax * 10;
-        const total = parseFloat(item?.billing?.base_value * tax).toFixed(2);
+        const tax = item?.billing?.tax === 0 ? 1 : item?.billing?.tax * 10
+        const total = parseFloat(item?.billing?.base_value * tax).toFixed(2)
         return (
           <div>
             {item?.billing?.currency} ${total}
           </div>
-        );
+        )
       },
     },
     {
@@ -258,9 +278,9 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'created_at',
       key: 'created_at',
       render(val, item) {
-        const date = dayjs(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours');
+        const date = dayjs(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours')
 
-        return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>;
+        return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>
       },
     },
     {
@@ -271,9 +291,9 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'details',
       key: 'details',
       render(val, item) {
-        const payment = item.billing.payment_method || item.payment || {};
-        const tax = item?.billing?.tax === 0 ? 1 : item?.billing?.tax * 10;
-        const total = parseFloat(item?.billing?.base_value * tax).toFixed(2);
+        const payment = item.billing.payment_method || item.payment || {}
+        const tax = item?.billing?.tax === 0 ? 1 : item?.billing?.tax * 10
+        const total = parseFloat(item?.billing?.base_value * tax).toFixed(2)
         return (
           <Space wrap>
             <Tooltip
@@ -281,12 +301,13 @@ const myPlan = ({ cUser }) => {
               title={intl.formatMessage({
                 id: 'my_plan.preview',
                 defaultMessage: 'Previsualización',
-              })}>
+              })}
+            >
               <Button
                 icon={<FileDoneOutlined />}
                 onClick={() => {
-                  setShowModal(!showModal);
-                  setToShowModal(item._id);
+                  setShowModal(!showModal)
+                  setToShowModal(item._id)
                 }}
               />
             </Tooltip>
@@ -294,8 +315,8 @@ const myPlan = ({ cUser }) => {
               visible={showModal && toShowModal === item._id}
               footer={null}
               onCancel={() => {
-                setShowModal(!showModal);
-                setToShowModal('');
+                setShowModal(!showModal)
+                setToShowModal('')
               }}
               width="100%"
             >
@@ -328,7 +349,8 @@ const myPlan = ({ cUser }) => {
                         })}
                         :
                       </Typography.Text>{' '}
-                      {payment['address']?.identification['type']} {payment['address']?.identification['value']}
+                      {payment['address']?.identification['type']}{' '}
+                      {payment['address']?.identification['value']}
                     </Typography.Text>
                     <Typography.Text>
                       <Typography.Text strong>
@@ -341,7 +363,8 @@ const myPlan = ({ cUser }) => {
                       +{payment['address']?.prefix} {payment['address']?.phone_number}
                     </Typography.Text>
                     <Typography.Text>
-                      <Typography.Text strong>E-mail:</Typography.Text> {payment['address']?.email}
+                      <Typography.Text strong>E-mail:</Typography.Text>{' '}
+                      {payment['address']?.email}
                     </Typography.Text>
                     <Typography.Text>
                       <Typography.Text strong>
@@ -352,8 +375,8 @@ const myPlan = ({ cUser }) => {
                         :
                       </Typography.Text>{' '}
                       ({payment['address']?.country}) {payment['address']?.address_line_1}{' '}
-                      {payment['address']?.address_line_2}, {payment['address']?.city} {payment['address']?.postal_code}
-                      -{payment['address']?.region}
+                      {payment['address']?.address_line_2}, {payment['address']?.city}{' '}
+                      {payment['address']?.postal_code}-{payment['address']?.region}
                     </Typography.Text>
                     <Typography.Text>
                       <Typography.Text strong>
@@ -374,8 +397,11 @@ const myPlan = ({ cUser }) => {
                         })}
                         :
                       </Typography.Text>{' '}
-                      {item?.billing?.currency} ${total} con ({item?.billing?.tax * 100}% de impuesto){' '}
-                      {item?.billing?.total_discount && <>y un descuento de ${item?.billing?.total_discount}</>}
+                      {item?.billing?.currency} ${total} con ({item?.billing?.tax * 100}%
+                      de impuesto){' '}
+                      {item?.billing?.total_discount && (
+                        <>y un descuento de ${item?.billing?.total_discount}</>
+                      )}
                     </Typography.Text>
                     <Typography.Text>
                       <Typography.Text strong>
@@ -399,7 +425,8 @@ const myPlan = ({ cUser }) => {
                         })}
                         :
                       </Typography.Text>{' '}
-                      {item?.billing?.reference_evius} (evius) / {item?.billing?.reference_wompi} (wompi)
+                      {item?.billing?.reference_evius} (evius) /{' '}
+                      {item?.billing?.reference_wompi} (wompi)
                     </Typography.Text>
                     <Typography.Text>
                       <Space direction="vertical">
@@ -413,7 +440,8 @@ const myPlan = ({ cUser }) => {
 
                         {item?.action === 'SUBSCRIPTION' && (
                           <Typography.Text>
-                            Plan: {item?.billing?.details['plan'].amount} (${item?.billing?.details['plan'].price})
+                            Plan: {item?.billing?.details['plan'].amount} ($
+                            {item?.billing?.details['plan'].price})
                           </Typography.Text>
                         )}
 
@@ -423,11 +451,14 @@ const myPlan = ({ cUser }) => {
                               id: 'my_plan.additional.users',
                               defaultMessage: 'Usuarios adicionales',
                             })}
-                            : {item?.billing?.details['users'].amount} ({item?.billing?.currency} $
+                            : {item?.billing?.details['users'].amount} (
+                            {item?.billing?.currency} $
                             {item?.billing?.details['users'].price}){' '}
                             <small>
                               (Total: {item?.billing?.currency} $
-                              {item?.billing?.details['users'].amount * item?.billing?.details['users'].price})
+                              {item?.billing?.details['users'].amount *
+                                item?.billing?.details['users'].price}
+                              )
                             </small>
                           </Typography.Text>
                         )}
@@ -480,10 +511,10 @@ const myPlan = ({ cUser }) => {
               </Row>
             </Modal>
           </Space>
-        );
+        )
       },
     },
-  ];
+  ]
 
   const columnsEvents = [
     {
@@ -498,7 +529,7 @@ const myPlan = ({ cUser }) => {
           <Link to={`/eventadmin/${item.ID}`} style={{ color: '#1890ff' }}>
             {val}
           </Link>
-        );
+        )
       },
     },
     {
@@ -530,12 +561,12 @@ const myPlan = ({ cUser }) => {
         const color = () => {
           switch (val) {
             case 'ACTIVE':
-              return 'green';
+              return 'green'
             default:
-              return 'orange';
+              return 'orange'
           }
-        };
-        return <Tag color={color()}>{val}</Tag>;
+        }
+        return <Tag color={color()}>{val}</Tag>
       },
     },
     {
@@ -554,58 +585,54 @@ const myPlan = ({ cUser }) => {
       dataIndex: 'endDate',
       key: 'endDate',
     },
-  ];
+  ]
 
   useEffect(() => {
-    getInfoPlans();
+    getInfoPlans()
 
     GetTokenUserFirebase().then((token) => {
       if (token) {
-        setToken(token);
+        setToken(token)
         const urlRedirect = new URL(
           `?redirect=additional&additionalUsers=${1}&goBack=${goBackUrlPayment}&goForward=${goBackUrlPayment}&token=${token}`,
-          `https://pay.evius.co/`
-        );
-        setUrlAdditional(urlRedirect.href);
+          `https://pay.evius.co/`,
+        )
+        setUrlAdditional(urlRedirect.href)
       }
-    });
-  }, []);
+    })
+  }, [])
 
   const getInfoPlans = async () => {
     /* Planes adicionales */
-    const plans = await PlansApi.getAll();
-    setPlans(plans);
-    /* console.log('plans', plans); */
+    const plans = await PlansApi.getAll()
+    setPlans(plans)
 
     /* Notificaciones/Alertas */
-    const notifications = await AlertsPlanApi.getByUser(cUser.value?._id);
-    setNotifications(notifications.data);
-    setLoadingNotification(false);
-    /* console.log(notifications.data, 'notifications'); */
+    const notifications = await AlertsPlanApi.getByUser(cUser.value?._id)
+    setNotifications(notifications.data)
+    setLoadingNotification(false)
 
     /* Facturas/Comprobantes */
-    const bills = await BillssPlanApi.getByUser(cUser.value?._id);
-    setBills(bills.data);
-    setLoadingBill(false);
-    /* console.log('bills', bills.data); */
+    const bills = await BillssPlanApi.getByUser(cUser.value?._id)
+    setBills(bills.data)
+    setLoadingBill(false)
     //dollarToday
 
     /* Consumos del usuario */
     try {
-      const consumption = await PlansApi.getCurrentConsumptionPlanByUsers(cUser.value?._id);
-      setConsumption(consumption);
-      setLoadingConsumption(false);
-      /* console.log('consumption', consumption); */
+      const consumption = await PlansApi.getCurrentConsumptionPlanByUsers(
+        cUser.value?._id,
+      )
+      setConsumption(consumption)
+      setLoadingConsumption(false)
     } catch (error) {
-      /* console.log(error, 'error'); */
-      setLoadingConsumption(false);
+      setLoadingConsumption(false)
     }
 
     /* Total de registros de usuario */
-    const totalUsersByPlan = await PlansApi.getTotalRegisterdUsers();
-    setTotalUsersByPlan(totalUsersByPlan);
-    /* console.log(totalUsersByPlan, 'aqui'); */
-  };
+    const totalUsersByPlan = await PlansApi.getTotalRegisterdUsers()
+    setTotalUsersByPlan(totalUsersByPlan)
+  }
 
   return (
     <Tabs defaultActiveKey="plan">
@@ -677,19 +704,25 @@ const myPlan = ({ cUser }) => {
                   {consumption?.start_date && consumption?.end_date && (
                     <Typography.Text>
                       Tu plan se encuentra activo desde{' '}
-                      {consumption?.start_date && dayjs(consumption?.start_date).format('DD-MM-YYYY')} hasta el{' '}
-                      {consumption?.end_date && dayjs(consumption?.end_date).format('DD-MM-YYYY')}
+                      {consumption?.start_date &&
+                        dayjs(consumption?.start_date).format('DD-MM-YYYY')}{' '}
+                      hasta el{' '}
+                      {consumption?.end_date &&
+                        dayjs(consumption?.end_date).format('DD-MM-YYYY')}
                     </Typography.Text>
                   )}
                   {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users > 0 && (
                     <Typography.Text strong>
-                      Has comprado {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users} usuarios adicionales
-                      en tu plan. El plan cuenta inicialmente con {plan?.availables?.users} usuarios en total.
+                      Has comprado{' '}
+                      {totalUsersByPlan?.totalAllowedUsers - plan?.availables?.users}{' '}
+                      usuarios adicionales en tu plan. El plan cuenta inicialmente con{' '}
+                      {plan?.availables?.users} usuarios en total.
                     </Typography.Text>
                   )}
                   {totalUsersByPlan?.totalRegisteredUsers > 0 && (
                     <Tag icon={<ExclamationCircleOutlined />} color="warning">
-                      {totalUsersByPlan?.totalRegisteredUsers === totalUsersByPlan?.totalAllowedUsers
+                      {totalUsersByPlan?.totalRegisteredUsers ===
+                      totalUsersByPlan?.totalAllowedUsers
                         ? 'Has alcanzado el límite de usuarios permitidos en tu plan'
                         : `Has registrado ${totalUsersByPlan?.totalRegisteredUsers} de usuarios en total de tu plan`}
                     </Tag>
@@ -717,7 +750,12 @@ const myPlan = ({ cUser }) => {
         })}
         key="bills"
       >
-        <Table dataSource={bills} columns={columnsBills} scroll={{ x: 'auto' }} loading={loadingBill} />
+        <Table
+          dataSource={bills}
+          columns={columnsBills}
+          scroll={{ x: 'auto' }}
+          loading={loadingBill}
+        />
       </Tabs.TabPane>
       <Tabs.TabPane
         tab={intl.formatMessage({
@@ -726,7 +764,12 @@ const myPlan = ({ cUser }) => {
         })}
         key="notifications"
       >
-        <Table dataSource={notifications} columns={columns} scroll={{ x: 'auto' }} loading={loadingNotification} />
+        <Table
+          dataSource={notifications}
+          columns={columns}
+          scroll={{ x: 'auto' }}
+          loading={loadingNotification}
+        />
       </Tabs.TabPane>
       <Tabs.TabPane
         tab={intl.formatMessage({
@@ -751,13 +794,14 @@ const myPlan = ({ cUser }) => {
                       {plan2?.name}
                     </strong>
                   </Divider>
-                  {plan2?._id !== '6285536ce040156b63d517e5' && plan2?.index > plan?.index ? (
+                  {plan2?._id !== '6285536ce040156b63d517e5' &&
+                  plan2?.index > plan?.index ? (
                     <a
                       href={
                         plan2?._id !== '629e1dd4f8fceb1d688c35d5'
                           ? new URL(
                               `?redirect=subscription&planType=${plan2?._id}&goBack=${goBackUrlPayment}&goForward=${goBackUrlPayment}&token=${token}`,
-                              `https://pay.evius.co/`
+                              `https://pay.evius.co/`,
                             )
                           : 'https://evius.co/contacto/'
                       }
@@ -778,7 +822,11 @@ const myPlan = ({ cUser }) => {
                   <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
                     <PlanCard
                       title={`Plan ${plan2?.name}`}
-                      value={plan2?.price !== 'Personalizado' ? `US $ ${plan2?.price}` : plan2?.price}
+                      value={
+                        plan2?.price !== 'Personalizado'
+                          ? `US $ ${plan2?.price}`
+                          : plan2?.price
+                      }
                     />
                   </Col>
                   <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={6}>
@@ -830,11 +878,12 @@ const myPlan = ({ cUser }) => {
                     <Typography.Text
                       style={{ cursor: 'pointer' }}
                       onClick={() => {
-                        setShow(!show);
-                        setToShow(index);
-                      }}>
-                      {!show ? <RightOutlined /> : <DownOutlined />} Aquí puedes conocer más información del plan{' '}
-                      <strong>{plan2?.name}</strong>.
+                        setShow(!show)
+                        setToShow(index)
+                      }}
+                    >
+                      {!show ? <RightOutlined /> : <DownOutlined />} Aquí puedes conocer
+                      más información del plan <strong>{plan2?.name}</strong>.
                     </Typography.Text>
                     {show && toShow === index && (
                       <>
@@ -850,7 +899,7 @@ const myPlan = ({ cUser }) => {
           ))}
       </Tabs.TabPane>
     </Tabs>
-  );
-};
+  )
+}
 
-export default myPlan;
+export default myPlan

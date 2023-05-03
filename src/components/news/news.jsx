@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { NewsFeed } from '@helpers/request';
-import { withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
-import CMS from '../newComponent/CMS';
-import { getColumnSearchProps } from '../speakers/getColumnSearch';
+import { useState } from 'react'
+import { NewsFeed } from '@helpers/request'
+import { withRouter } from 'react-router-dom'
+import dayjs from 'dayjs'
+import CMS from '../newComponent/CMS'
+import { getColumnSearchProps } from '../speakers/getColumnSearch'
 
 const News = (props) => {
-  const [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({})
 
   const columns = [
     {
@@ -24,10 +24,10 @@ const News = (props) => {
       sorter: (a, b) => a.time.localeCompare(b.time),
       ...getColumnSearchProps('time', columnsData),
       render(val, item) {
-        return <div>{dayjs(item.time).format('YYYY-DD-MM')}</div>;
+        return <div>{dayjs(item.time).format('YYYY-DD-MM')}</div>
       },
     },
-  ];
+  ]
 
   return (
     <CMS
@@ -47,7 +47,7 @@ const News = (props) => {
       search
       setColumnsData={setColumnsData}
     />
-  );
-};
+  )
+}
 
-export default withRouter(News);
+export default withRouter(News)

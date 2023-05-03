@@ -6,10 +6,10 @@ import {
   EditOutlined,
   BarChartOutlined,
   PrinterOutlined,
-} from '@ant-design/icons';
+} from '@ant-design/icons'
 const handleClick = (e) => {
-  if (!navigator.onLine) e.preventDefault();
-};
+  if (!navigator.onLine) e.preventDefault()
+}
 
 export const MenuItems = [
   {
@@ -228,4 +228,4 @@ export const MenuItems = [
       },
     ],
   },
-];
+]

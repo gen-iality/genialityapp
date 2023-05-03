@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react'; /* 
+import { Component, Fragment } from 'react' /* 
 import 'react-toastify/dist/ReactToastify.css'; */
 import {
   Row,
@@ -15,30 +15,35 @@ import {
   Result,
   Space,
   Spin,
-} from 'antd';
-import AppointmentModal from './appointmentModal';
-import MyAgenda from './myAgenda';
-import AppointmentRequests from './appointmentRequests';
-import SearchComponent from '../shared/searchTable';
-import Pagination from '../shared/pagination';
-import Loading from '../loaders/loading';
-import FilterNetworking from './FilterNetworking';
-import { EventFieldsApi } from '@helpers/request';
-import { formatDataToString } from '@helpers/utils';
-import { userRequest } from './services';
-import ContactList from './contactList';
-import RequestList from './requestList';
-import withContext from '@context/withContext';
-import { addNotification, haveRequest, isMyContacts, SendFriendship } from '@helpers/netWorkingFunctions';
-const { Meta } = Card;
-const { TabPane } = Tabs;
-import { setVirtualConference } from '../../redux/virtualconference/actions';
-import { connect } from 'react-redux';
-import { GetTokenUserFirebase } from '@helpers/HelperAuth';
+} from 'antd'
+import AppointmentModal from './appointmentModal'
+import MyAgenda from './myAgenda'
+import AppointmentRequests from './appointmentRequests'
+import SearchComponent from '../shared/searchTable'
+import Pagination from '../shared/pagination'
+import Loading from '../loaders/loading'
+import FilterNetworking from './FilterNetworking'
+import { EventFieldsApi } from '@helpers/request'
+import { formatDataToString } from '@helpers/utils'
+import { userRequest } from './services'
+import ContactList from './contactList'
+import RequestList from './requestList'
+import withContext from '@context/withContext'
+import {
+  addNotification,
+  haveRequest,
+  isMyContacts,
+  SendFriendship,
+} from '@helpers/netWorkingFunctions'
+const { Meta } = Card
+const { TabPane } = Tabs
+import { setVirtualConference } from '../../redux/virtualconference/actions'
+import { connect } from 'react-redux'
+import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 
 class ListEventUser extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       userReq: [], //Almacena el request original
       usersFiltered: [],
@@ -60,44 +65,50 @@ class ListEventUser extends Component {
       modalView: false,
       listTotalUser: [],
       updatetable: false,
-    };
+    }
   }
 
   async componentDidMount() {
-    await this.getInfoCurrentUser();
-    this.loadData();
-    await this.props.cHelper.obtenerContactos();
-    this.props.setVirtualConference(false);
+    await this.getInfoCurrentUser()
+    this.loadData()
+    await this.props.cHelper.obtenerContactos()
+    this.props.setVirtualConference(false)
   }
 
   changeActiveTab = async (activeTab) => {
-    this.setState({ activeTab });
+    this.setState({ activeTab })
     if (activeTab == 'asistentes') {
-      this.setState({ loading: true });
-      await this.loadData();
-      await this.props.cHelper.obtenerContactos();
+      this.setState({ loading: true })
+      await this.loadData()
+      await this.props.cHelper.obtenerContactos()
     }
-  };
+  }
   closeAppointmentModal = () => {
-    this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
-  };
+    this.setState({
+      eventUserIdToMakeAppointment: null,
+      eventUserToMakeAppointment: null,
+    })
+  }
   agendarCita = (iduser, user) => {
-    this.setState({ eventUserIdToMakeAppointment: iduser, eventUserToMakeAppointment: user });
-  };
+    this.setState({
+      eventUserIdToMakeAppointment: iduser,
+      eventUserToMakeAppointment: user,
+    })
+  }
   loadData = async () => {
-    const { changeItem } = this.state;
-    const showModal = window.sessionStorage.getItem('message') === null;
-    this.setState({ modalView: showModal });
+    const { changeItem } = this.state
+    const showModal = window.sessionStorage.getItem('message') === null
+    this.setState({ modalView: showModal })
     // No borrar es un avance  para optimizar las peticiones a la api de la seccion networking
-    let eventUserList = [];
-    // const response = await UsersApi.getAll(event._id);
-    // if(response.data){
-    //   eventUserList = response.data.filter(user => user.account_id !== )
-    // }
+    let eventUserList = []
 
     //Servicio que trae la lista de asistentes excluyendo el usuario logeado
-    const evius_token = await GetTokenUserFirebase();
-    eventUserList = await userRequest.getEventUserList(this.props.cEvent.value._id, evius_token, this.state.eventUser);
+    const evius_token = await GetTokenUserFirebase()
+    eventUserList = await userRequest.getEventUserList(
+      this.props.cEvent.value._id,
+      evius_token,
+      this.state.eventUser,
+    )
 
     /** Inicia destacados
      * Búscamos usuarios destacados para colocarlos de primeros en la lista(destacados), tiene varios usos cómo publicitarios
@@ -106,16 +117,18 @@ class ListEventUser extends Component {
      */
 
     if (eventUserList && eventUserList.length > 0) {
-      let destacados = [];
-      destacados = eventUserList.filter((asistente) => asistente.destacado && asistente.destacado);
+      let destacados = []
+      destacados = eventUserList.filter(
+        (asistente) => asistente.destacado && asistente.destacado,
+      )
       if (destacados && destacados.length >= 0) {
-        eventUserList = [...destacados, ...eventUserList];
+        eventUserList = [...destacados, ...eventUserList]
       }
       //Finaliza destacados
 
       /*** INICIO CONTACTOS SUGERIDOS ***/
 
-      const asistantData = await EventFieldsApi.getAll(this.props.cEvent.value._id);
+      const asistantData = await EventFieldsApi.getAll(this.props.cEvent.value._id)
 
       this.setState((prevState) => {
         return {
@@ -129,92 +142,96 @@ class ListEventUser extends Component {
           clearSearch: !prevState.clearSearch,
           asistantData,
           matches: [],
-        };
-      });
+        }
+      })
     } else {
       this.setState({
         loading: false,
-      });
+      })
     }
-  };
+  }
 
   // Funcion que trae el eventUserId del usuario actual
   getInfoCurrentUser = async () => {
-    const eventUser = this.props.cEventUser.value;
+    const eventUser = this.props.cEventUser.value
     if (eventUser) {
       if (eventUser !== null) {
         this.setState({
           eventUser,
           eventUserId: eventUser._id,
           currentUserName: eventUser.names || eventUser.email,
-        });
+        })
       }
     }
-  };
+  }
 
   closeModal = () => {
-    window.sessionStorage.setItem('message', true);
-    this.setState({ modalView: false });
-  };
+    window.sessionStorage.setItem('message', true)
+    this.setState({ modalView: false })
+  }
 
   onChangePage = (pageOfItems) => {
-    this.setState({ pageOfItems: pageOfItems });
-  };
+    this.setState({ pageOfItems: pageOfItems })
+  }
 
   //Se ejecuta cuando se selecciona el filtro
   handleSelectFilter = (value) => {
-    const inputSearch = document.getElementById('inputSearch');
-    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-    nativeInputValueSetter.call(inputSearch, value);
-    const ev2 = new Event('input', { bubbles: true });
-    inputSearch.dispatchEvent(ev2);
-  };
+    const inputSearch = document.getElementById('inputSearch')
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value',
+    ).set
+    nativeInputValueSetter.call(inputSearch, value)
+    const ev2 = new Event('input', { bubbles: true })
+    inputSearch.dispatchEvent(ev2)
+  }
 
   //Search records at third column
   searchResult = (data, search = 0) => {
-    !data ? this.setState({ users: [] }) : this.setState({ pageOfItems: data, users: data });
-  };
+    !data
+      ? this.setState({ users: [] })
+      : this.setState({ pageOfItems: data, users: data })
+  }
 
   //Método que se ejecuta cuando se selecciona el tipo de usuario
   handleSelectTypeUser = async (typeUser) => {
-    const { userReq } = this.state;
+    const { userReq } = this.state
     if (typeUser === '') {
-      this.setState({ usersFiltered: userReq });
-      this.searchResult(userReq);
+      this.setState({ usersFiltered: userReq })
+      this.searchResult(userReq)
     } else {
-      const listByTypeuser = await userReq.filter((item) => item.properties.participacomo === typeUser);
-      this.setState({ usersFiltered: listByTypeuser });
-      this.searchResult(listByTypeuser);
+      const listByTypeuser = await userReq.filter(
+        (item) => item.properties.participacomo === typeUser,
+      )
+      this.setState({ usersFiltered: listByTypeuser })
+      this.searchResult(listByTypeuser)
     }
 
-    const inputSearch = document.getElementById('inputSearch');
-    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-    nativeInputValueSetter.call(inputSearch, '');
-    const ev1 = new Event('input', { bubbles: true });
-    inputSearch.dispatchEvent(ev1);
-
-    // let filterSector = document.getElementById('filterSector')
-    // let nativeInputValueSetter2 = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, "value").set;
-    // nativeInputValueSetter2.call(filterSector, '');
-    // let ev2 = new Event('select', { bubbles: true});
-    // filterSector.dispatchEvent(ev2);
-  };
+    const inputSearch = document.getElementById('inputSearch')
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value',
+    ).set
+    nativeInputValueSetter.call(inputSearch, '')
+    const ev1 = new Event('input', { bubbles: true })
+    inputSearch.dispatchEvent(ev1)
+  }
 
   haveRequestUser(user) {
-    return haveRequest(user, this.props.cHelper.requestSend);
+    return haveRequest(user, this.props.cHelper.requestSend)
   }
 
   isMyContact(user) {
-    const formatUSer = { ...user, eventUserId: user._id };
-    const isContact = isMyContacts(formatUSer, this.props.cHelper.contacts);
-    return isContact;
+    const formatUSer = { ...user, eventUserId: user._id }
+    const isContact = isMyContacts(formatUSer, this.props.cHelper.contacts)
+    return isContact
   }
   componentWillUnmount() {
-    this.props.setVirtualConference(true);
+    this.props.setVirtualConference(true)
   }
 
   render() {
-    const { event } = this.props;
+    const { event } = this.props
 
     const {
       usersFiltered,
@@ -227,7 +244,7 @@ class ListEventUser extends Component {
       eventUserToMakeAppointment,
       activeTab,
       matches,
-    } = this.state;
+    } = this.state
 
     return (
       <Card style={{ padding: '5px' }}>
@@ -239,13 +256,17 @@ class ListEventUser extends Component {
               </Button>
             }
             title="Información adicional"
-            subTitle='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
-                  se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
+            subTitle="Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
+                  se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto."
           />
         </Modal>
 
         {/* Componente de busqueda */}
-        <Tabs style={{ background: '#FFFFFF' }} activeKey={activeTab} onChange={this.changeActiveTab}>
+        <Tabs
+          style={{ background: '#FFFFFF' }}
+          activeKey={activeTab}
+          onChange={this.changeActiveTab}
+        >
           <TabPane tab="Participantes" key="asistentes">
             {
               <AppointmentModal
@@ -263,7 +284,8 @@ class ListEventUser extends Component {
                   <Form.Item
                     labelCol={{ span: 24 }}
                     label="Busca aquí las personas que deseas contactar"
-                    name="searchInput">
+                    name="searchInput"
+                  >
                     <SearchComponent
                       id="searchInput"
                       placeholder=""
@@ -279,8 +301,14 @@ class ListEventUser extends Component {
                 </Col>
               </Row>
             </Form>
-            <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
-            </Col>
+            <Col
+              xs={22}
+              sm={22}
+              md={10}
+              lg={10}
+              xl={10}
+              style={{ margin: '0 auto' }}
+            ></Col>
             {!this.state.loading && !eventUserId && (
               <div>
                 <br />
@@ -322,7 +350,8 @@ class ListEventUser extends Component {
                             users.destacado && users.destacado
                               ? { backgroundColor: '#6ddab5' }
                               : {
-                                  backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                                  backgroundColor:
+                                    this.props.cEvent.value.styles.toolbarDefaultBg,
                                 }
                           }
                           style={{
@@ -335,13 +364,20 @@ class ListEventUser extends Component {
                         >
                           <Meta
                             avatar={
-                              <Avatar size={65} src={users?.user?.picture ? users?.user?.picture : ''}>
+                              <Avatar
+                                size={65}
+                                src={users?.user?.picture ? users?.user?.picture : ''}
+                              >
                                 {!users?.user?.picture && users.properties.names
                                   ? users.properties.names.charAt(0).toUpperCase()
                                   : users.properties.names}
                               </Avatar>
                             }
-                            title={users.properties.names ? users.properties.names : 'No registra Nombre'}
+                            title={
+                              users.properties.names
+                                ? users.properties.names
+                                : 'No registra Nombre'
+                            }
                             description={[
                               <div key={`ug-${userIndex}`}>
                                 <br />
@@ -353,12 +389,15 @@ class ListEventUser extends Component {
                                           (property.visibleByContacts == false ||
                                             property?.visibleByContacts == undefined ||
                                             property.visibleByContacts == 'public') &&
-                                          (property?.sensibility == false || property?.sensibility == undefined) &&
+                                          (property?.sensibility == false ||
+                                            property?.sensibility == undefined) &&
                                           users.properties[property.name] &&
                                           property.name !== 'picture' &&
                                           property.name !== 'imagendeperfil' &&
                                           property.type !== 'avatar' && (
-                                            <div key={`public-field-${userIndex}-${propertyIndex}`}>
+                                            <div
+                                              key={`public-field-${userIndex}-${propertyIndex}`}
+                                            >
                                               <p>
                                                 <b>{`${property.label}: `}</b>
                                                 {formatDataToString(
@@ -368,11 +407,11 @@ class ListEventUser extends Component {
                                                         users.properties['code'] +
                                                         ')' +
                                                         users.properties[property.name],
-                                                  property
+                                                  property,
                                                 )}
                                               </p>
                                             </div>
-                                          )
+                                          ),
                                       )}
                                     </div>
                                   </Col>
@@ -381,12 +420,10 @@ class ListEventUser extends Component {
                                       <Button
                                         type="primary"
                                         onClick={() => {
-                                          //alert("ACAAA")
-
                                           this.setState({
                                             eventUserIdToMakeAppointment: users._id,
                                             eventUserToMakeAppointment: users,
-                                          });
+                                          })
                                         }}
                                       >
                                         Agendar cita
@@ -405,18 +442,20 @@ class ListEventUser extends Component {
                                                 this.state.users[userIndex] = {
                                                   ...this.state.users[userIndex],
                                                   loading: true,
-                                                };
-                                                this.setState({ users: this.state.users });
+                                                }
+                                                this.setState({ users: this.state.users })
                                                 const sendResp = await SendFriendship(
                                                   {
                                                     eventUserIdReceiver: users._id,
-                                                    userName: users.properties.names || users.properties.email,
+                                                    userName:
+                                                      users.properties.names ||
+                                                      users.properties.email,
                                                   },
                                                   this.props.cEventUser.value,
-                                                  this.props.cEvent.value
-                                                );
+                                                  this.props.cEvent.value,
+                                                )
 
-                                                const us = users;
+                                                const us = users
 
                                                 if (sendResp._id) {
                                                   const notificationR = {
@@ -424,52 +463,70 @@ class ListEventUser extends Component {
                                                     idEmited: sendResp._id,
                                                     emailEmited:
                                                       this.props.cEventUser.value.email ||
-                                                      this.props.cEventUser.value.user.email,
+                                                      this.props.cEventUser.value.user
+                                                        .email,
                                                     message:
-                                                      (this.props.cEventUser.value.names ||
-                                                        this.props.cEventUser.value.user.names) +
+                                                      (this.props.cEventUser.value
+                                                        .names ||
+                                                        this.props.cEventUser.value.user
+                                                          .names) +
                                                       ' te ha enviado solicitud de amistad',
                                                     name: 'notification.name',
                                                     type: 'amistad',
                                                     state: '0',
-                                                  };
+                                                  }
 
                                                   addNotification(
                                                     notificationR,
                                                     this.props.cEvent.value,
-                                                    this.props.cEventUser.value
-                                                  );
+                                                    this.props.cEventUser.value,
+                                                  )
                                                   notification['success']({
                                                     message: 'Correcto!',
-                                                    description: 'Se ha enviado la solicitud de amistad correctamente',
-                                                  });
+                                                    description:
+                                                      'Se ha enviado la solicitud de amistad correctamente',
+                                                  })
 
-                                                  for (let i = 0; i < this.state.users.length; i++) {
-                                                    if (this.state.users[i]._id == users._id) {
+                                                  for (
+                                                    let i = 0;
+                                                    i < this.state.users.length;
+                                                    i++
+                                                  ) {
+                                                    if (
+                                                      this.state.users[i]._id == users._id
+                                                    ) {
                                                       this.state.users[i] = {
                                                         ...this.state.users[i],
                                                         send: 1,
                                                         loading: false,
-                                                      };
+                                                      }
                                                       //  console.log("USER_CHANGE==>",this.state.users[i])
                                                     } else {
                                                       this.state.users[i] = {
                                                         ...this.state.users[i],
                                                         loading: false,
-                                                      };
+                                                      }
                                                     }
                                                   }
-                                                  this.setState({ users: this.state.users }, () => {
-                                                    this.setState({ updatetable: !this.state.updatetable });
-                                                  });
+                                                  this.setState(
+                                                    { users: this.state.users },
+                                                    () => {
+                                                      this.setState({
+                                                        updatetable:
+                                                          !this.state.updatetable,
+                                                      })
+                                                    },
+                                                  )
                                                 }
                                               }
                                             : null
-                                        }>
+                                        }
+                                      >
                                         {!users.loading ? (
                                           this.isMyContact(users) ? (
                                             'Ya es tu contacto'
-                                          ) : this.haveRequestUser(users) || (users.send && users.send == 1) ? (
+                                          ) : this.haveRequestUser(users) ||
+                                            (users.send && users.send == 1) ? (
                                             'Confrimación pendiente'
                                           ) : (
                                             'Enviar solicitud de contacto'
@@ -491,21 +548,31 @@ class ListEventUser extends Component {
                   </Row>
 
                   {/* Paginacion para mostrar datos de una manera mas ordenada */}
-                  {!this.state.loading && users.length > 0 && pageOfItems.length > 0 && this.props.cEventUser.value && (
-                    <Pagination
-                      updatetable={this.state.updatetable}
-                      items={users}
-                      change={this.state.changeItem}
-                      onChangePage={this.onChangePage}
-                    />
-                  )}
-                  {!this.state.loading && users.length == 0 && this.props.cEventUser.value && (
-                    <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-                      <Card style={{ textAlign: 'center' }}>
-                        No existen usuarios
-                      </Card>
-                    </Col>
-                  )}
+                  {!this.state.loading &&
+                    users.length > 0 &&
+                    pageOfItems.length > 0 &&
+                    this.props.cEventUser.value && (
+                      <Pagination
+                        updatetable={this.state.updatetable}
+                        items={users}
+                        change={this.state.changeItem}
+                        onChangePage={this.onChangePage}
+                      />
+                    )}
+                  {!this.state.loading &&
+                    users.length == 0 &&
+                    this.props.cEventUser.value && (
+                      <Col
+                        xs={24}
+                        sm={22}
+                        md={18}
+                        lg={18}
+                        xl={18}
+                        style={{ margin: '0 auto' }}
+                      >
+                        <Card style={{ textAlign: 'center' }}>No existen usuarios</Card>
+                      </Col>
+                    )}
 
                   {!this.state.loading && !this.props.cEventUser.value && (
                     <Alert
@@ -532,12 +599,15 @@ class ListEventUser extends Component {
                       right: '-13px',
                     }}
                     count={
-                      this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
-                    }></Badge>
+                      this.props.cHelper.totalsolicitudAgenda > 0 &&
+                      this.props.cHelper.totalsolicitudAgenda
+                    }
+                  ></Badge>
                 )}
               </div>
             }
-            key="mi-agenda">
+            key="mi-agenda"
+          >
             {activeTab === 'mi-agenda' && (
               <>
                 {this.props.cEventUser && this.props.cEventUser.value && (
@@ -582,12 +652,16 @@ class ListEventUser extends Component {
                       right: '-13px',
                     }}
                     count={
-                      this.props.cHelper.totalSolicitudAmistad > 0 ? this.props.cHelper.totalSolicitudAmistad : ''
-                    }></Badge>
+                      this.props.cHelper.totalSolicitudAmistad > 0
+                        ? this.props.cHelper.totalSolicitudAmistad
+                        : ''
+                    }
+                  ></Badge>
                 )}
               </div>
             }
-            key="solicitudes">
+            key="solicitudes"
+          >
             <RequestList
               currentUser={this.props.cEventUser.value}
               currentUserAc={this.props.cUser.value}
@@ -610,12 +684,15 @@ class ListEventUser extends Component {
                       right: '-13px',
                     }}
                     count={
-                      this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
-                    }></Badge>
+                      this.props.cHelper.totalsolicitudAgenda > 0 &&
+                      this.props.cHelper.totalsolicitudAgenda
+                    }
+                  ></Badge>
                 )}
               </div>
             }
-            key="solicitudes-de-citas">
+            key="solicitudes-de-citas"
+          >
             {activeTab === 'solicitudes-de-citas' && (
               <AppointmentRequests
                 eventId={this.props.cEvent.value._id}
@@ -628,12 +705,15 @@ class ListEventUser extends Component {
           </TabPane>
         </Tabs>
       </Card>
-    );
+    )
   }
 }
 const mapDispatchToProps = {
   setVirtualConference,
-};
+}
 
-const ListEventUserWithContext = connect(null, mapDispatchToProps)(withContext(ListEventUser));
-export default ListEventUserWithContext;
+const ListEventUserWithContext = connect(
+  null,
+  mapDispatchToProps,
+)(withContext(ListEventUser))
+export default ListEventUserWithContext

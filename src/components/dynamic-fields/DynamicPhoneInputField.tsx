@@ -9,11 +9,11 @@ import { Alert } from 'antd'
 import { FormInstance, Rule } from 'antd/lib/form'
 
 /** Hooks, helpers and utils */
-import useMandatoryRule from './hooks/useMandatoryRule';
-import { IDynamicFieldProps } from './types';
+import useMandatoryRule from './hooks/useMandatoryRule'
+import { IDynamicFieldProps } from './types'
 
 /** Components */
-import DynamicFormItem from './DynamicFormItem';
+import DynamicFormItem from './DynamicFormItem'
 
 interface IDynamicPhoneInputFieldProps extends IDynamicFieldProps {
   form?: FormInstance
@@ -34,16 +34,16 @@ const DynamicPhoneInputField: React.FunctionComponent<IDynamicPhoneInputFieldPro
     amountMin,
   } = props
 
-  const { name } = fieldData;
-  const intl = useIntl();
-  const { basicRule } = useMandatoryRule(fieldData);
+  const { name } = fieldData
+  const intl = useIntl()
+  const { basicRule } = useMandatoryRule(fieldData)
 
-  const [valuePhone, setValuePhone] = useState(false);
+  const [valuePhone, setValuePhone] = useState(false)
 
   const validatePhoneNumber = (value: any) => {
-    const isValid = isPossiblePhoneNumber(form?.getFieldValue(name)) ? true : false;
-    setValuePhone(isValid);
-  };
+    const isValid = isPossiblePhoneNumber(form?.getFieldValue(name)) ? true : false
+    setValuePhone(isValid)
+  }
 
   const rules: Rule[] = useMemo(() => {
     return [
@@ -75,16 +75,22 @@ const DynamicPhoneInputField: React.FunctionComponent<IDynamicPhoneInputFieldPro
           if (phone && form) {
             form.setFieldsValue({
               [name]: phone,
-            });
-            validatePhoneNumber(form?.getFieldValue(name));
+            })
+            validatePhoneNumber(form?.getFieldValue(name))
           }
         }}
-        defaultCountry={(defaultCountry as unknown) as any}
+        defaultCountry={defaultCountry as unknown as any}
         international
       />
-      {!valuePhone && <Alert style={{ marginTop: '1rem' }} message="Debe ser un numero valido" type="error" />}
+      {!valuePhone && (
+        <Alert
+          style={{ marginTop: '1rem' }}
+          message="Debe ser un numero valido"
+          type="error"
+        />
+      )}
     </DynamicFormItem>
-  );
-};
+  )
+}
 
-export default DynamicPhoneInputField;
+export default DynamicPhoneInputField

@@ -1,30 +1,45 @@
-import { Component } from 'react';
-import { Redirect, Link, withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
-import 'dayjs/locale/es-us';
-import { EventsApi } from '@helpers/request';
+import { Component } from 'react'
+import { Redirect, Link, withRouter } from 'react-router-dom'
+import dayjs from 'dayjs'
+import 'dayjs/locale/es-us'
+import { EventsApi } from '@helpers/request'
 /* import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; */
-import { FormattedMessage } from 'react-intl';
-import Quill from 'react-quill';
-import EviusReactQuill from '../shared/eviusReactQuill';
-import { Button, Checkbox, Row, Col, Form, Input, Modal, Spin, Card, Typography } from 'antd';
-dayjs.locale('es-us');
-import Header from '@antdComponents/Header';
-import BackTop from '@antdComponents/BackTop';
-import { CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '@context/MessageService';
-import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
-import Loading from '../profile/loading';
+import { FormattedMessage } from 'react-intl'
+import Quill from 'react-quill'
+import EviusReactQuill from '../shared/eviusReactQuill'
+import {
+  Button,
+  Checkbox,
+  Row,
+  Col,
+  Form,
+  Input,
+  Modal,
+  Spin,
+  Card,
+  Typography,
+} from 'antd'
+dayjs.locale('es-us')
+import Header from '@antdComponents/Header'
+import BackTop from '@antdComponents/BackTop'
+import {
+  CalendarOutlined,
+  FieldTimeOutlined,
+  EnvironmentOutlined,
+} from '@ant-design/icons'
+import { DispatchMessageService } from '@context/MessageService'
+import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
+import Loading from '../profile/loading'
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
 class SendRsvp extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       rsvp: {},
       include_date: true,
@@ -32,13 +47,16 @@ class SendRsvp extends Component {
       showimgDefault: true,
       loading_image: false,
       isLoading: true,
-    };
-    this.submit = this.submit.bind(this);
-    this.onChangeDate = this.onChangeDate.bind(this);
+    }
+    this.submit = this.submit.bind(this)
+    this.onChangeDate = this.onChangeDate.bind(this)
   }
 
   componentDidMount() {
-    const default_header = ' Has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> ';
+    const default_header =
+      ' Has sido invitado a: <br /> <span className="strong">' +
+      this.props.event.name +
+      '</span> '
     this.setState({
       rsvp: {
         ...this.state.rsvp,
@@ -59,7 +77,7 @@ class SendRsvp extends Component {
       },
       selection: this.props.selection === undefined ? 'Todos' : this.props.selection,
       isLoading: false,
-    });
+    })
   }
 
   changeImg = (imageUrl) => {
@@ -68,8 +86,8 @@ class SendRsvp extends Component {
         ...this.state.rsvp,
         image: imageUrl,
       },
-    });
-  };
+    })
+  }
 
   changeImgHeader = (imageUrl) => {
     this.setState({
@@ -77,8 +95,8 @@ class SendRsvp extends Component {
         ...this.state.rsvp,
         image_header: imageUrl,
       },
-    });
-  };
+    })
+  }
 
   changeImgFooter = (imageUrl) => {
     this.setState({
@@ -86,25 +104,25 @@ class SendRsvp extends Component {
         ...this.state.rsvp,
         image_footer: imageUrl,
       },
-    });
-  };
+    })
+  }
 
   handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     this.setState({
       rsvp: { ...this.state.rsvp, [name]: value },
-    });
-  };
+    })
+  }
 
   QuillComplement2 = (content) =>
     this.setState({
       rsvp: { ...this.state.rsvp, message: content },
-    });
+    })
 
   QuillComplement1 = (content) =>
     this.setState({
       rsvp: { ...this.state.rsvp, content_header: content },
-    });
+    })
 
   async submit() {
     DispatchMessageService({
@@ -112,20 +130,20 @@ class SendRsvp extends Component {
       key: 'loading',
       msj: ' Por favor espere mientras se envíe la información...',
       action: 'show',
-    });
-    const { event } = this.props;
-    const { rsvp, include_date, selection } = this.state;
-    let users = [];
+    })
+    const { event } = this.props
+    const { rsvp, include_date, selection } = this.state
+    let users = []
     if (selection === 'Todos') {
-      users = 'all';
+      users = 'all'
     } else {
       selection.map((item) => {
-        return users.push(item._id);
-      });
+        return users.push(item._id)
+      })
     }
-    this.setState({ dataMail: users, disabled: true });
+    this.setState({ dataMail: users, disabled: true })
     try {
-      let data;
+      let data
 
       if (this.state.showimgDefault) {
         data = {
@@ -137,7 +155,7 @@ class SendRsvp extends Component {
           image: rsvp.image,
           eventUsersIds: users,
           include_date: include_date,
-        };
+        }
       } else {
         data = {
           content_header: rsvp.content_header,
@@ -147,40 +165,47 @@ class SendRsvp extends Component {
           image_footer: rsvp.image_footer,
           eventUsersIds: users,
           include_date: include_date,
-        };
+        }
       }
 
-      /* console.log('Dataenviar', data); */
-      await EventsApi.sendRsvp(JSON.stringify(data), event._id);
-      this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
+      await EventsApi.sendRsvp(JSON.stringify(data), event._id)
+      this.setState({
+        disabled: false,
+        redirect: true,
+        url_redirect: '/eventadmin/' + event._id + '/messages',
+      })
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
-      });
+      })
       DispatchMessageService({
         type: 'success',
         msj: 'Las notificaciones se mandaron de manera satisfactoria',
         action: 'show',
-      });
+      })
     } catch (e) {
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
-      });
+      })
       DispatchMessageService({
         type: 'error',
         msj: `Lo sentimos las notificaciones no pudieron ser enviadas, código de error ${e.response.status}`,
         action: 'show',
-      });
-      this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
+      })
+      this.setState({
+        disabled: false,
+        redirect: true,
+        url_redirect: '/eventadmin/' + event._id + '/messages',
+      })
     }
   }
 
   closeModal = () => {
     this.setState((prevState) => {
-      return { modal: !prevState.modal };
-    });
-  };
+      return { modal: !prevState.modal }
+    })
+  }
 
   /*PLANTILLAS  en lenguaje MJML
     https://mjml.io/try-it-live/templates/austin
@@ -192,12 +217,13 @@ class SendRsvp extends Component {
   onChangeDate(e) {
     this.setState({
       include_date: e.target.checked,
-    });
+    })
   }
 
   render() {
-    const { disabled, include_date, isLoading } = this.state;
-    if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
+    const { disabled, include_date, isLoading } = this.state
+    if (this.state.redirect)
+      return <Redirect to={{ pathname: this.state.url_redirect }} />
     return (
       <>
         <Form {...formLayout}>
@@ -215,7 +241,9 @@ class SendRsvp extends Component {
               <Loading />
             ) : (
               <Col span={14}>
-                <Form.Item label={`Asunto del correo (Por defecto será el nombre del curso)`}>
+                <Form.Item
+                  label={`Asunto del correo (Por defecto será el nombre del curso)`}
+                >
                   <Input
                     name="subject"
                     placeholder="Escribe aquí el asunto del correo"
@@ -226,7 +254,8 @@ class SendRsvp extends Component {
 
                 <Form.Item>
                   <label>
-                    Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small>
+                    Sube una imagen <br />{' '}
+                    <small>(Por defecto será la imagen del banner)</small>
                   </label>
 
                   <ImageUploaderDragAndDrop
@@ -246,7 +275,11 @@ class SendRsvp extends Component {
                 </Form.Item>
 
                 <Form.Item label="Específicar fecha del curso">
-                  <Checkbox style={{ marginRight: '2%' }} defaultChecked={include_date} onChange={this.onChangeDate} />
+                  <Checkbox
+                    style={{ marginRight: '2%' }}
+                    defaultChecked={include_date}
+                    onChange={this.onChangeDate}
+                  />
                 </Form.Item>
 
                 {include_date && (
@@ -256,28 +289,36 @@ class SendRsvp extends Component {
                         {' '}
                         <CalendarOutlined /> Fecha inicio
                       </p>
-                      <p className="date">{dayjs(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
+                      <p className="date">
+                        {dayjs(this.props.event.datetime_from).format('DD MMM YYYY')}
+                      </p>
                     </Col>
                     <Col span={12}>
                       <p>
                         {' '}
                         <FieldTimeOutlined /> Hora
                       </p>
-                      <p className="date">{dayjs(this.props.event.datetime_from).format('HH:mm')}</p>
+                      <p className="date">
+                        {dayjs(this.props.event.datetime_from).format('HH:mm')}
+                      </p>
                     </Col>
                     <Col span={12}>
                       <p>
                         {' '}
                         <CalendarOutlined /> Fecha fin
                       </p>
-                      <p className="date">{dayjs(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
+                      <p className="date">
+                        {dayjs(this.props.event.datetime_to).format('DD MMM YYYY')}
+                      </p>
                     </Col>
                     <Col span={12}>
                       <p>
                         {' '}
                         <FieldTimeOutlined /> Hora
                       </p>
-                      <p className="date">{dayjs(this.props.event.datetime_to).format('HH:mm')}</p>
+                      <p className="date">
+                        {dayjs(this.props.event.datetime_to).format('HH:mm')}
+                      </p>
                     </Col>
                   </Row>
                 )}
@@ -287,7 +328,8 @@ class SendRsvp extends Component {
                     Ubicación del curso
                     <br />
                     <span className="rsvp-location">
-                      {this.props.event.location !== null && this.props.event.location.FormattedAddress}
+                      {this.props.event.location !== null &&
+                        this.props.event.location.FormattedAddress}
                     </span>
                   </Col>
                 </Row>
@@ -298,11 +340,17 @@ class SendRsvp extends Component {
 
                   <Row style={{ margin: 10 }}>
                     {!this.state.showimgDefault ? (
-                      <Button onClick={() => this.setState({ showimgDefault: true })} type="success">
+                      <Button
+                        onClick={() => this.setState({ showimgDefault: true })}
+                        type="success"
+                      >
                         Mostrar imagen por defecto
                       </Button>
                     ) : (
-                      <Button onClick={() => this.setState({ showimgDefault: false })} danger>
+                      <Button
+                        onClick={() => this.setState({ showimgDefault: false })}
+                        danger
+                      >
                         Quitar imagen por defecto
                       </Button>
                     )}
@@ -330,7 +378,8 @@ class SendRsvp extends Component {
                   <label>
                     Sube una imagen <br />{' '}
                     <small>
-                      (Por defecto será la imagen footer del curso o la image del organizador, la que este disponible)
+                      (Por defecto será la imagen footer del curso o la image del
+                      organizador, la que este disponible)
                     </small>
                   </label>
                   <ImageUploaderDragAndDrop
@@ -346,14 +395,18 @@ class SendRsvp extends Component {
                     <Col span={24}>
                       <Typography.Paragraph>
                         Seleccionados{' '}
-                        <span>{this.state.selection === 'Todos' ? 'Todos' : this.state.selection.length}</span>
+                        <span>
+                          {this.state.selection === 'Todos'
+                            ? 'Todos'
+                            : this.state.selection.length}
+                        </span>
                       </Typography.Paragraph>
                     </Col>
                     <Typography.Paragraph>
                       {this.state.selection === 'Todos'
                         ? null
                         : this.state.selection?.map((el) => {
-                            return el.properties.email + ', ';
+                            return el.properties.email + ', '
                           })}
                     </Typography.Paragraph>
                   </Row>
@@ -366,7 +419,7 @@ class SendRsvp extends Component {
                           <p key={key} className="selection">
                             {item.email}
                           </p>
-                        );
+                        )
                       })
                     )}
                   </Row>
@@ -390,15 +443,18 @@ class SendRsvp extends Component {
             okText="Enviar"
           >
             <p>
-              Se van a enviar {this.state.selection === 'Todos' ? 'a todos las' : this.state.selection.length}{' '}
+              Se van a enviar{' '}
+              {this.state.selection === 'Todos'
+                ? 'a todos las'
+                : this.state.selection.length}{' '}
               {this.state.selection?.length === 1 ? 'invitación' : 'invitaciones'}
             </p>
           </Modal>
           <BackTop />
         </Form>
       </>
-    );
+    )
   }
 }
 
-export default withRouter(SendRsvp);
+export default withRouter(SendRsvp)

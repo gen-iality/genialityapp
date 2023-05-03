@@ -1,10 +1,12 @@
-import { Row, Col, Avatar } from 'antd';
+import { Row, Col, Avatar } from 'antd'
 
 export default function RankingMyScore({ myScore }) {
-  const { name, score } = myScore;
+  const { name, score } = myScore
   return (
     <div style={{ marginTop: 16 }}>
-      <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi puntaje</h3>
+      <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>
+        Mi puntaje
+      </h3>
       {name !== '' && (
         <div className="card-games-ranking ranking-user">
           <Row justify="space-between">
@@ -24,5 +26,5 @@ export default function RankingMyScore({ myScore }) {
         </div>
       )}
     </div>
-  );
+  )
 }

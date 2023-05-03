@@ -1032,10 +1032,10 @@ let cityOptions = [
   { label: 'Zipaquirá' },
   { label: 'Zona Bananera' },
   { label: 'Útica' },
-];
+]
 
 cityOptions = cityOptions.map((city) => {
-  return { label: city.label, value: city.label };
-});
+  return { label: city.label, value: city.label }
+})
 
-export default cityOptions;
+export default cityOptions

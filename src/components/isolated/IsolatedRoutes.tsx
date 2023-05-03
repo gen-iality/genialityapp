@@ -1,27 +1,27 @@
-import { ReactElement } from 'react';
-import { Fragment } from 'react';
-import { Route, Switch, withRouter, useHistory } from 'react-router-dom';
-import { Button, Typography } from 'antd';
+import { ReactElement } from 'react'
+import { Fragment } from 'react'
+import { Route, Switch, withRouter, useHistory } from 'react-router-dom'
+import { Button, Typography } from 'antd'
 
-import { QuizProgressPage } from './quiz/QuizProgressPage';
-import { QuizStatusEditorPage } from './quiz/QuizStatusEditorPage';
-import { CourseProgressBarPage } from './progresses/CourseProgressBarPage';
-import { DatePickerAndDayJSPage } from './date/DatePickerAndDayJSPage';
-import { LikertScaleEditorPage } from './quiz/LikertScaleEditorPage';
-import { PresencePage } from './presence/PresencePage';
-import { PresenceListPage } from './presence/PresenceListPage';
-import { PresenceUsersPage } from './presence/PresenceUsersPage';
+import { QuizProgressPage } from './quiz/QuizProgressPage'
+import { QuizStatusEditorPage } from './quiz/QuizStatusEditorPage'
+import { CourseProgressBarPage } from './progresses/CourseProgressBarPage'
+import { DatePickerAndDayJSPage } from './date/DatePickerAndDayJSPage'
+import { LikertScaleEditorPage } from './quiz/LikertScaleEditorPage'
+import { PresencePage } from './presence/PresencePage'
+import { PresenceListPage } from './presence/PresenceListPage'
+import { PresenceUsersPage } from './presence/PresenceUsersPage'
 
 type UI = {
-  url: string;
-  text: string;
-  Component: (props: any) => ReactElement;
-};
+  url: string
+  text: string
+  Component: (props: any) => ReactElement
+}
 
 interface HomeProps {
-  matchUrl: string,
-  event: any,
-};
+  matchUrl: string
+  event: any
+}
 
 /** Edit only this 🤨🔥 */
 const uiSet: UI[] = [
@@ -65,35 +65,41 @@ const uiSet: UI[] = [
     text: 'PresenceUsersPage',
     Component: PresenceUsersPage,
   },
-];
+]
 
 function Home(props: HomeProps) {
-  const history = useHistory();
+  const history = useHistory()
 
   const createHandler = (url: string) => {
-    return () => history.push(`${props.matchUrl}/${url}`);
+    return () => history.push(`${props.matchUrl}/${url}`)
   }
 
   const CustomButton = (ui: UI) => (
-    <Button key={`key_${ui.url}`} onClick={createHandler(ui.url)}>{ui.text}</Button>
-  );
+    <Button key={`key_${ui.url}`} onClick={createHandler(ui.url)}>
+      {ui.text}
+    </Button>
+  )
 
   return (
     <>
-    <section>
-      <Typography.Title>Isolated Component</Typography.Title>
-      {uiSet.map((ui) => CustomButton(ui))}
-    </section>
+      <section>
+        <Typography.Title>Isolated Component</Typography.Title>
+        {uiSet.map((ui) => CustomButton(ui))}
+      </section>
     </>
-  );
+  )
 }
 
 function IsolatedRoutes({ ...props }) {
-  const { event, match } = props;
+  const { event, match } = props
   return (
     <Fragment>
       <Switch>
-        <Route exact path={`${match.url}/`} render={() => <Home event={event} matchUrl={match.url} />} />
+        <Route
+          exact
+          path={`${match.url}/`}
+          render={() => <Home event={event} matchUrl={match.url} />}
+        />
         {uiSet.map((ui, index) => (
           <Route
             exact
@@ -104,7 +110,7 @@ function IsolatedRoutes({ ...props }) {
         ))}
       </Switch>
     </Fragment>
-  );
+  )
 }
 
-export default withRouter(IsolatedRoutes);
+export default withRouter(IsolatedRoutes)

@@ -1,9 +1,9 @@
-import { Col, Modal, Row, List } from 'antd';
-import { useEffect, useState } from 'react';
-import { useContextNewEvent } from '@context/newEventContext';
-import { OrganizationApi } from '@helpers/request';
-import OptTranmitir from './optTransmitir';
-import { DispatchMessageService } from '@context/MessageService';
+import { Col, Modal, Row, List } from 'antd'
+import { useEffect, useState } from 'react'
+import { useContextNewEvent } from '@context/newEventContext'
+import { OrganizationApi } from '@helpers/request'
+import OptTranmitir from './optTransmitir'
+import { DispatchMessageService } from '@context/MessageService'
 
 function Transmitir(props) {
   const {
@@ -15,41 +15,41 @@ function Transmitir(props) {
     selectedOrganization,
     isbyOrganization,
     isLoadingOrganization,
-  } = useContextNewEvent();
-  const [organizations, setOrganizations] = useState([]);
+  } = useContextNewEvent()
+  const [organizations, setOrganizations] = useState([])
 
   useEffect(() => {
     if (props.currentUser) {
-      obtainOrganizations();
+      obtainOrganizations()
     }
 
     async function obtainOrganizations() {
       if (!selectOrganization) {
-        isLoadingOrganization(true);
-        let organizations = await OrganizationApi.mine();
+        isLoadingOrganization(true)
+        let organizations = await OrganizationApi.mine()
         if (organization.length == 0) {
-          await createOrganization();
-          organizations = await OrganizationApi.mine();
+          await createOrganization()
+          organizations = await OrganizationApi.mine()
         }
 
-        setOrganizations(organizations);
-        selectedOrganization(organizations && organizations[0]);
-        isLoadingOrganization(false);
+        setOrganizations(organizations)
+        selectedOrganization(organizations && organizations[0])
+        isLoadingOrganization(false)
       }
     }
-  }, [props.currentUser]);
+  }, [props.currentUser])
 
   const createOrganization = async () => {
     const newOrganization = {
       name: props.currentUser?.names || props.currentUser?.name,
-    };
-    // Crear organizacion------------------------------
-    const create = await OrganizationApi.createOrganization(newOrganization);
-    if (create) {
-      return create;
     }
-    return null;
-  };
+    // Crear organizacion------------------------------
+    const create = await OrganizationApi.createOrganization(newOrganization)
+    if (create) {
+      return create
+    }
+    return null
+  }
 
   const selectOrganizationOK = () => {
     if (!selectOrganization || selectOrganization == null) {
@@ -57,11 +57,11 @@ function Transmitir(props) {
         type: 'error',
         msj: 'Por favor seleccione una organización',
         action: 'show',
-      });
+      })
     } else {
-      changeOrganization(false);
+      changeOrganization(false)
     }
-  };
+  }
 
   return (
     <>
@@ -74,7 +74,7 @@ function Transmitir(props) {
                 <div className="container-image">
                   <img
                     style={{ width: '60%', margin: 'auto' }}
-                    src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceEvius.png?alt=media&token=caecef6c-e177-47aa-bcd5-347c754fe409'
+                    src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ceEvius.png?alt=media&token=caecef6c-e177-47aa-bcd5-347c754fe409"
                     alt=""
                   />
                 </div>
@@ -84,11 +84,15 @@ function Transmitir(props) {
               <div className="container-description">
                 <div className="descriptions">
                   <p>
-                    Tu curso será transmitido desde GEN.iality usando tus camara y teniendo la posibilidad de agregar
-                    efectos profesionales
+                    Tu curso será transmitido desde GEN.iality usando tus camara y
+                    teniendo la posibilidad de agregar efectos profesionales
                   </p>
                   {/*<a onClick={() => changeTransmision(true)}>Ver opciones de transmisión externas</a>*/}
-                  {<a onClick={() => changeOrganization(true)}>Organización: {selectOrganization?.name}</a>}
+                  {
+                    <a onClick={() => changeOrganization(true)}>
+                      Organización: {selectOrganization?.name}
+                    </a>
+                  }
                 </div>
               </div>
             </Col>
@@ -111,7 +115,10 @@ function Transmitir(props) {
                   <List.Item
                     style={{
                       cursor: 'pointer',
-                      color: selectOrganization?.id == item.id ? 'white' : 'rgba(0, 0, 0, 0.85)',
+                      color:
+                        selectOrganization?.id == item.id
+                          ? 'white'
+                          : 'rgba(0, 0, 0, 0.85)',
                       background: selectOrganization?.id == item.id ? '#40a9ff' : 'white',
                     }}
                     onClick={() => selectedOrganization(item)}
@@ -127,7 +134,7 @@ function Transmitir(props) {
         <OptTranmitir />
       )}
     </>
-  );
+  )
 }
 
-export default Transmitir;
+export default Transmitir

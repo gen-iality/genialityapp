@@ -56,10 +56,10 @@ let specialistOptions = [
   { label: 'Toxicología' },
   { label: 'Traumatología' },
   { label: 'Urología' },
-];
+]
 
 specialistOptions = specialistOptions.map((specialist) => {
-  return { label: specialist.label, value: specialist.label };
-});
+  return { label: specialist.label, value: specialist.label }
+})
 
-export default specialistOptions;
+export default specialistOptions

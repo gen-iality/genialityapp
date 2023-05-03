@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
-import { AgendaApi } from '@helpers/request';
-import { Select, Table as TableA, Row, Col } from 'antd';
-import { RightOutlined } from '@ant-design/icons';
-import CMS from '../newComponent/CMS';
-import { getColumnSearchProps } from '@components/speakers/getColumnSearch';
+import { useState } from 'react'
+import { withRouter } from 'react-router-dom'
+import dayjs from 'dayjs'
+import { AgendaApi } from '@helpers/request'
+import { Select, Table as TableA, Row, Col } from 'antd'
+import { RightOutlined } from '@ant-design/icons'
+import CMS from '../newComponent/CMS'
+import { getColumnSearchProps } from '@components/speakers/getColumnSearch'
 
-const { Option } = Select;
+const { Option } = Select
 
 const ReportList = (props) => {
-  const [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({})
   const columns = [
     {
       title: 'Fecha inicio',
@@ -47,7 +47,7 @@ const ReportList = (props) => {
         </Link>
       ),
     }, */
-  ];
+  ]
 
   return (
     <div>
@@ -68,7 +68,7 @@ const ReportList = (props) => {
         fileName="CheckInActivity"
       />
     </div>
-  );
-};
+  )
+}
 
-export default withRouter(ReportList);
+export default withRouter(ReportList)

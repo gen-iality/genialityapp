@@ -16,13 +16,10 @@ interface IDynamicAvatarUploaderFieldProps extends IDynamicFieldProps {
   form: FormInstance
 }
 
-// const imageUrl = [{ url: value }]
-const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploaderFieldProps> = (props) => {
-  const {
-    form,
-    fieldData,
-    allInitialValues,
-  } = props
+const DynamicAvatarUploaderField: React.FunctionComponent<
+  IDynamicAvatarUploaderFieldProps
+> = (props) => {
+  const { form, fieldData, allInitialValues } = props
 
   const { name } = fieldData
 
@@ -36,20 +33,25 @@ const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploader
 
   const checkFileSize = useCheckFileSize()
 
-  const handleBeforeUpload = useCallback((file: RcFile) => {
-    return checkFileSize(file)
-  }, [checkFileSize])
+  const handleBeforeUpload = useCallback(
+    (file: RcFile) => {
+      return checkFileSize(file)
+    },
+    [checkFileSize],
+  )
 
   const initialValue = useMemo(() => {
     const fileList: any[] = []
     const value = allInitialValues[name]
     if (value) {
-      fileList.push(...[
-        {
-          name: typeof value == 'string' ? getFilenameFromURL(value) : null,
-          url: typeof value == 'string' ? value : null,
-        },
-      ])
+      fileList.push(
+        ...[
+          {
+            name: typeof value == 'string' ? getFilenameFromURL(value) : null,
+            url: typeof value == 'string' ? value : null,
+          },
+        ],
+      )
     }
     return fileList
   }, [allInitialValues, name])
@@ -60,10 +62,7 @@ const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploader
       rules={[basicRule]}
       initialValue={initialValue}
     >
-      <ImgCrop
-        rotate
-        shape="round"
-      >
+      <ImgCrop rotate shape="round">
         <Upload
           action="https://api.evius.co/api/files/upload/"
           accept="image/png,image/jpeg"
@@ -83,7 +82,7 @@ const DynamicAvatarUploaderField: React.FunctionComponent<IDynamicAvatarUploader
           listType="picture"
           maxCount={1}
           onRemove={(file) => {
-            console.log('remove', {file})
+            console.log('remove', { file })
             form.setFieldsValue({ [name]: undefined })
           }}
           beforeUpload={handleBeforeUpload}

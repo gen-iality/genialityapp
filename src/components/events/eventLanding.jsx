@@ -1,55 +1,58 @@
-import { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
-import { Card, Typography } from 'antd';
-import ReactQuill from 'react-quill';
-import ReactPlayer from 'react-player';
-import { Row, Col } from 'antd';
-import { AgendaApi } from '@helpers/request';
-import { parseUrl } from '@helpers/constants';
-import withContext from '@context/withContext';
-import ActivitiesList from '@components/agenda/components/ActivitiesList';
-import HostList from '@components/agenda/components/HostList';
-import StudentSelfCourseProgress from '../StudentProgress/StudentSelfCourseProgress';
-import { activityContentValues } from '@context/activityType/constants/ui';
-import QuizApprovedStatus from '../quiz/QuizApprovedStatus';
+import { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+import { Card, Typography } from 'antd'
+import ReactQuill from 'react-quill'
+import ReactPlayer from 'react-player'
+import { Row, Col } from 'antd'
+import { AgendaApi } from '@helpers/request'
+import { parseUrl } from '@helpers/constants'
+import withContext from '@context/withContext'
+import ActivitiesList from '@components/agenda/components/ActivitiesList'
+import HostList from '@components/agenda/components/HostList'
+import StudentSelfCourseProgress from '../StudentProgress/StudentSelfCourseProgress'
+import { activityContentValues } from '@context/activityType/constants/ui'
+import QuizApprovedStatus from '../quiz/QuizApprovedStatus'
 
 class EventLanding extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       onPage: 'event',
       activityId: null,
       activityDetail: null,
       thereAreQuizingOrSurveys: false,
-    };
-    this.onChangePage = this.onChangePage.bind(this);
+    }
+    this.onChangePage = this.onChangePage.bind(this)
   }
 
   async componentDidMount() {
-    this.setState({ onPage: 'event' });
+    this.setState({ onPage: 'event' })
   }
 
   async componentDidUpdate() {
     // Utilizada para concatenar parametros
-    this.currentUrl = window.location.href;
-    this.urlParams = parseUrl(this.currentUrl);
+    this.currentUrl = window.location.href
+    this.urlParams = parseUrl(this.currentUrl)
     // Si existe el activity_id por urlParams entonces seteamos el estado
     if (this.urlParams.activity_id) {
-      const activity = await AgendaApi.getOne(this.urlParams.activity_id, this.props.cEvent.value._id);
+      const activity = await AgendaApi.getOne(
+        this.urlParams.activity_id,
+        this.props.cEvent.value._id,
+      )
       this.setState({
         activityId: this.urlParams.activity_id,
         activityDetail: activity,
-      });
+      })
     }
   }
 
   onChangePage(value) {
-    this.props.showSection(value);
+    this.props.showSection(value)
   }
 
   onClick() {
-    this.setState({ onClick: true });
+    this.setState({ onClick: true })
   }
   isVisible() {
     if (
@@ -66,9 +69,9 @@ class EventLanding extends Component {
         this.props.cEvent.value.description === `<p class="ql-align-justify"><br></p>`) &&
         this.props.cEvent.value.video)
     ) {
-      return true;
+      return true
     }
-    return false;
+    return false
   }
 
   render() {
@@ -81,7 +84,9 @@ class EventLanding extends Component {
               hasProgressLabel
               customTitle="Avance"
               activityFilter={(a) =>
-                ![activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+                ![activityContentValues.quizing, activityContentValues.survey].includes(
+                  a.type?.name,
+                )
               }
               nodeIfCompleted={
                 <Link to={`/landing/${this.props.cEvent.value._id}/certificate`}>
@@ -96,15 +101,19 @@ class EventLanding extends Component {
                 hasProgressLabel
                 customTitle="Avance de exámenes"
                 activityFilter={(a) =>
-                  [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+                  [activityContentValues.quizing, activityContentValues.survey].includes(
+                    a.type?.name,
+                  )
                 }
               />
             ) : undefined}
-            <Card style={{ display: this.state.thereAreQuizingOrSurveys ? 'block' : 'none' }}>
+            <Card
+              style={{ display: this.state.thereAreQuizingOrSurveys ? 'block' : 'none' }}
+            >
               <Typography.Text>Estado del curso:</Typography.Text>{' '}
               <QuizApprovedStatus
                 thereAreExam={(param) => {
-                  this.setState({ thereAreQuizingOrSurveys: param });
+                  this.setState({ thereAreQuizingOrSurveys: param })
                 }}
                 eventId={this.props.cEvent.value._id}
                 approvedLink={`/landing/${this.props.cEvent.value._id}/certificate`}
@@ -143,26 +152,30 @@ class EventLanding extends Component {
             </Row>
             {/* FIN Lanzandome un nuevo diseno Sept 2022 */}
             {/* Si event video existe */}
-            {this.props.cEvent.value?.video_position == 'true' && this.props.cEvent.value.video && (
-              <div className="mediaplayer">
-                <ReactPlayer
-                  width="100%"
-                  height="100%"
-                  style={{
-                    aspectRatio: '16/9',
-                    objectFit: 'cover',
-                  }}
-                  url={this.props.cEvent.value.video}
-                  controls
-                />
-              </div>
-            )}
+            {this.props.cEvent.value?.video_position == 'true' &&
+              this.props.cEvent.value.video && (
+                <div className="mediaplayer">
+                  <ReactPlayer
+                    width="100%"
+                    height="100%"
+                    style={{
+                      aspectRatio: '16/9',
+                      objectFit: 'cover',
+                    }}
+                    url={this.props.cEvent.value.video}
+                    controls
+                  />
+                </div>
+              )}
 
             {this.props.cEvent.value.description !== '<p><br></p>' &&
             this.props.cEvent.value.description !== null &&
-            this.props.cEvent.value.description !== `<p class="ql-align-center"><br></p>` &&
-            this.props.cEvent.value.description !== `<p class="ql-align-right"><br></p>` &&
-            this.props.cEvent.value.description !== `<p class="ql-align-justify"><br></p>` ? (
+            this.props.cEvent.value.description !==
+              `<p class="ql-align-center"><br></p>` &&
+            this.props.cEvent.value.description !==
+              `<p class="ql-align-right"><br></p>` &&
+            this.props.cEvent.value.description !==
+              `<p class="ql-align-justify"><br></p>` ? (
               <Row justify="center">
                 <Col span={24} id="img-informative">
                   <ReactQuill
@@ -197,9 +210,9 @@ class EventLanding extends Component {
           <div style={{ height: '150px' }} />
         )}
       </div>
-    );
+    )
   }
 }
 
-const EventLandingWithContext = withContext(EventLanding);
-export default withRouter(EventLandingWithContext);
+const EventLandingWithContext = withContext(EventLanding)
+export default withRouter(EventLandingWithContext)

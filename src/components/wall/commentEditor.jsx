@@ -1,50 +1,42 @@
-import { useContext, useState } from 'react';
-import { Button, Form, Input, Row, Col, Modal } from 'antd';
-import { SendOutlined } from '@ant-design/icons';
-import { AuthUrl } from '@helpers/constants';
-import WallContext, { WallContextProvider } from '@context/WallContext';
+import { useContext, useState } from 'react'
+import { Button, Form, Input, Row, Col, Modal } from 'antd'
+import { SendOutlined } from '@ant-design/icons'
+import { AuthUrl } from '@helpers/constants'
+import WallContext, { WallContextProvider } from '@context/WallContext'
 
-/*let innerOnSubmit = (onSubmit, comment, setComment, user, setVisibleNoUser) => {
-  if (!user) {
-    setVisibleNoUser(true);
-    return;
-  } else {
-    onSubmit(comment);
-   // setComment("")
-  }
-};*/
-
-const { TextArea } = Input;
+const { TextArea } = Input
 const CommentEditor = ({ onSubmit, item }) => {
-  const [visibleNoUser, setVisibleNoUser] = useState(false);
+  const [visibleNoUser, setVisibleNoUser] = useState(false)
 
-  return <RenderEditor onSubmit={onSubmit} item={item} visibleNoUser={visibleNoUser} />;
-};
+  return <RenderEditor onSubmit={onSubmit} item={item} visibleNoUser={visibleNoUser} />
+}
 
 const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
-  const { comment, setComment, itemcomment, setItemComment } = useContext(WallContext);
+  const { comment, setComment, itemcomment, setItemComment } = useContext(WallContext)
   return (
     <>
       {' '}
       {
         <Form
           onFinish={(values) => {
-            onSubmit(comment);
-            setComment('');
-          }}>
+            onSubmit(comment)
+            setComment('')
+          }}
+        >
           <Form.Item name="comment">
             <Row
               style={{
                 display: 'flex',
                 justifyContent: 'center',
                 marginTop: 20,
-              }}>
+              }}
+            >
               <Col span={21}>
                 <TextArea
                   onChange={(e) => {
-                    setComment(e.target.value);
+                    setComment(e.target.value)
                     if (itemcomment !== item.id) {
-                      setItemComment(item.id);
+                      setItemComment(item.id)
                     }
                   }}
                   placeholder="Escribe un comentario..."
@@ -72,22 +64,23 @@ const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
         </Form>
       }
       <Modal
-        title='Necesitas estar autenticad@'
+        title="Necesitas estar autenticad@"
         visible={visibleNoUser}
         cancelButtonProps={{ hidden: true }}
         onOk={() => {
           // setVisibleNoUser(false); -> it is not defined in this subcomponent
-        }}>
+        }}
+      >
         <p>
-          <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado, inicia sesión para poder realizar
-          publicaciones &nbsp;&nbsp;
+          <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado, inicia
+          sesión para poder realizar publicaciones &nbsp;&nbsp;
           <Button type="primary">
             <a href={AuthUrl}>Ir a Ingreso</a>
           </Button>
         </p>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default CommentEditor;
+export default CommentEditor

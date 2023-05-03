@@ -1,32 +1,32 @@
-import { Card, Space, Typography, Badge } from 'antd';
-import { Link } from 'react-router-dom';
-import dayjs from 'dayjs';
-import './videoCard.css';
-import { useEventContext } from '@context/eventContext';
-import ReactPlayer from 'react-player';
-import { CalendarOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { Card, Space, Typography, Badge } from 'antd'
+import { Link } from 'react-router-dom'
+import dayjs from 'dayjs'
+import './videoCard.css'
+import { useEventContext } from '@context/eventContext'
+import ReactPlayer from 'react-player'
+import { CalendarOutlined } from '@ant-design/icons'
+import { useState } from 'react'
 
 const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
-  const { Meta } = Card;
-  const { Paragraph } = Typography;
-  const forma = shape || 'horizontal';
-  const [duration, setDuration] = useState(0);
+  const { Meta } = Card
+  const { Paragraph } = Typography
+  const forma = shape || 'horizontal'
+  const [duration, setDuration] = useState(0)
 
   const handleDuration = (duration) => {
-    console.log('onDuration', duration);
-    setDuration(duration);
-  };
+    console.log('onDuration', duration)
+    setDuration(duration)
+  }
 
   function videoDuration(seconds) {
-    let hour = Math.floor(seconds / 3600);
-    let minute = Math.floor((seconds / 60) % 60);
-    let second = seconds % 60;
-    hour = hour < 10 ? '0' + hour : hour;
-    minute = minute < 10 ? '0' + minute : minute;
-    second = second < 10 ? '0' + second : second;
-    if (hour == 0) return minute + ':' + second;
-    return hour + ':' + minute + ':' + second;
+    let hour = Math.floor(seconds / 3600)
+    let minute = Math.floor((seconds / 60) % 60)
+    let second = seconds % 60
+    hour = hour < 10 ? '0' + hour : hour
+    minute = minute < 10 ? '0' + minute : minute
+    second = second < 10 ? '0' + second : second
+    if (hour == 0) return minute + ':' + second
+    return hour + ':' + minute + ':' + second
   }
 
   return (
@@ -71,7 +71,8 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
                         color: '#ffffff',
                         borderRadius: '2px',
                         fontSize: '12px',
-                      }}>
+                      }}
+                    >
                       {videoDuration(parseInt(duration))}
                     </span>
                   </Space>
@@ -95,7 +96,8 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
                 url={activity.video}
                 onDuration={handleDuration}
               />
-            }>
+            }
+          >
             <Meta
               description={
                 <div>
@@ -117,7 +119,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
         </Badge.Ribbon>
       )}
     </Link>
-  );
-};
+  )
+}
 
-export default VideoCard;
+export default VideoCard

@@ -1,7 +1,7 @@
-import Carousel from 'react-slick/lib/index';
+import Carousel from 'react-slick/lib/index'
 
 function NextArrow(props) {
-  const { onClick } = props;
+  const { onClick } = props
   return (
     <div className="arrows" onClick={onClick}>
       <span className="arrow right">
@@ -10,11 +10,11 @@ function NextArrow(props) {
         </svg>
       </span>
     </div>
-  );
+  )
 }
 
 function PrevArrow(props) {
-  const { onClick } = props;
+  const { onClick } = props
   return (
     <div className="arrows" onClick={onClick}>
       <span className="arrow left">
@@ -23,7 +23,7 @@ function PrevArrow(props) {
         </svg>
       </span>
     </div>
-  );
+  )
 }
 
 export default function Slider(props) {
@@ -36,7 +36,7 @@ export default function Slider(props) {
     autoplaySpeed: 4500,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-  };
+  }
   return (
     <Carousel {...settings}>
       {props.images.map((image, key) => {
@@ -46,8 +46,8 @@ export default function Slider(props) {
               <img src={image} alt="Evius.co" />
             </figure>
           </div>
-        );
+        )
       })}
     </Carousel>
-  );
+  )
 }

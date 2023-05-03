@@ -1,23 +1,26 @@
-import { Layout, Spin, Row, Image } from 'antd';
-import MenuEvent from './Menus/MenuEvent';
-import { EyeOutlined } from '@ant-design/icons';
-import { useEventContext } from '@context/eventContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-const { Sider } = Layout;
+import { Layout, Spin, Row, Image } from 'antd'
+import MenuEvent from './Menus/MenuEvent'
+import { EyeOutlined } from '@ant-design/icons'
+import { useEventContext } from '@context/eventContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+const { Sider } = Layout
 
 const EventSectionsInnerMenu = () => {
-  const cEvent = useEventContext();
-  const event = cEvent.value;
-  const { eventPrivate } = useHelper();
+  const cEvent = useEventContext()
+  const event = cEvent.value
+  const { eventPrivate } = useHelper()
 
-  if (!event) return <Spin size="small" />;
+  if (!event) return <Spin size="small" />
   return (
     <>
       <div className="hiddenMenu_Landing">
         <Sider
           className="containerMenu_Landing"
           style={{
-            backgroundColor: event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+            backgroundColor:
+              event.styles && event.styles.toolbarDefaultBg
+                ? event.styles.toolbarDefaultBg
+                : 'white',
           }}
           trigger={null}
           width={110}
@@ -28,7 +31,10 @@ const EventSectionsInnerMenu = () => {
                 preview={{ mask: <EyeOutlined /> }}
                 alt="Logo"
                 src={event.styles.event_image}
-                style={{ backgroundColor: event.styles.toolbarDefaultBg, objectFit: 'cover' }}
+                style={{
+                  backgroundColor: event.styles.toolbarDefaultBg,
+                  objectFit: 'cover',
+                }}
               />
             )}
           </Row>
@@ -38,6 +44,6 @@ const EventSectionsInnerMenu = () => {
         </Sider>
       </div>
     </>
-  );
-};
-export default EventSectionsInnerMenu;
+  )
+}
+export default EventSectionsInnerMenu

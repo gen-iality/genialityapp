@@ -1,42 +1,50 @@
-import { useEffect } from 'react';
-import withContext from '@context/withContext';
-import { Grid } from 'antd';
+import { useEffect } from 'react'
+import withContext from '@context/withContext'
+import { Grid } from 'antd'
 
-const { useBreakpoint } = Grid;
+const { useBreakpoint } = Grid
 
 function Game(props) {
-  const screens = useBreakpoint();
-  const { cUser, cHelper } = props;
-  const { gameData } = cHelper;
-  const currentUser = cUser.value;
+  const screens = useBreakpoint()
+  const { cUser, cHelper } = props
+  const { gameData } = cHelper
+  const currentUser = cUser.value
 
   useEffect(() => {
-    const evius_body = document.getElementById('evius-body');
+    const evius_body = document.getElementById('evius-body')
     evius_body.style.cssText = `overflow-y: ${
       screens.xs || (screens.sm && !screens.md && !screens.lg) ? 'visible;' : 'hidden;'
-    }`;
+    }`
     return () => {
-      evius_body.style.cssText = 'overflow-y: visible;';
-    };
-  }, [screens]);
+      evius_body.style.cssText = 'overflow-y: visible;'
+    }
+  }, [screens])
 
   return (
     <iframe
       src={
         `${gameData.baseUrl}` +
         ('/?uid=' +
-          (currentUser && currentUser._id ? currentUser._id : '5e9caaa1d74d5c2f6a02a3c2') +
+          (currentUser && currentUser._id
+            ? currentUser._id
+            : '5e9caaa1d74d5c2f6a02a3c2') +
           '&displayName=' +
           (currentUser ? currentUser.names : 'anonimo') +
           '&email=' +
           (currentUser ? currentUser.email : 'evius@evius.co'))
       }
       frameBorder="0"
-      allow='autoplay; fullscreen; camera *;microphone *'
+      allow="autoplay; fullscreen; camera *;microphone *"
       allowFullScreen
       allowusermedia
-      style={{ zIndex: '10', width: '100%', height: '65vh', overscrollBehavior: 'none' }}></iframe>
-  );
+      style={{
+        zIndex: '10',
+        width: '100%',
+        height: '65vh',
+        overscrollBehavior: 'none',
+      }}
+    ></iframe>
+  )
 }
 
-export default withContext(Game);
+export default withContext(Game)

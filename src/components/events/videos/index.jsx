@@ -1,32 +1,32 @@
-import { Card, Space, Col, Row, Result, PageHeader } from 'antd';
-import { useEventContext } from '@context/eventContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useState, useEffect } from 'react';
-import VideoCard from '../../shared/videoCard';
-import Feedback from '../ferias/feedback';
+import { Card, Space, Col, Row, Result, PageHeader } from 'antd'
+import { useEventContext } from '@context/eventContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { useState, useEffect } from 'react'
+import VideoCard from '../../shared/videoCard'
+import Feedback from '../ferias/feedback'
 
 const Videos = () => {
-  const cEvent = useEventContext();
-  const { activitiesEvent } = useHelper();
-  const [existActivity, setexistActivity] = useState(0);
+  const cEvent = useEventContext()
+  const { activitiesEvent } = useHelper()
+  const [existActivity, setexistActivity] = useState(0)
 
   function ExistvideoInActivity() {
     activitiesEvent &&
       activitiesEvent.map((activity) => {
         if (activity.video != undefined || activity.video != null) {
           {
-            setexistActivity(1);
+            setexistActivity(1)
           }
         }
-      });
+      })
   }
 
   useEffect(() => {
-    ExistvideoInActivity();
-  }, [activitiesEvent]);
+    ExistvideoInActivity()
+  }, [activitiesEvent])
 
   if (!cEvent.value) {
-    return <>Cargando...</>;
+    return <>Cargando...</>
   }
 
   return (
@@ -50,8 +50,7 @@ const Videos = () => {
                         shape="vertical"
                       />
                     </Col>
-                  );
-                  //return <VideoCard key={index} activity={activity} />;
+                  )
                 }
               })}
         </Row>
@@ -59,7 +58,7 @@ const Videos = () => {
         <Feedback message="No hay vídeos grabados" />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Videos;
+export default Videos

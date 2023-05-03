@@ -1,6 +1,6 @@
-import { Component, Fragment } from 'react';
-import WithUserEventRegistered from '../shared/withUserEventRegistered';
-import { List, Avatar } from 'antd';
+import { Component, Fragment } from 'react'
+import WithUserEventRegistered from '../shared/withUserEventRegistered'
+import { List, Avatar } from 'antd'
 
 const data = [
   {
@@ -15,14 +15,14 @@ const data = [
   {
     title: 'Ant design title 4',
   },
-];
+]
 
 class ComponentTest extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isLoading: true,
-    };
+    }
   }
 
   render() {
@@ -34,16 +34,18 @@ class ComponentTest extends Component {
           renderItem={(item) => (
             <List.Item>
               <List.Item.Meta
-                avatar={<Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />}
-                title={<a href='https://ant.design'>{item.title}</a>}
+                avatar={
+                  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                }
+                title={<a href="https://ant.design">{item.title}</a>}
                 description="Ant design, a design language for background applications, is refined by Ant UED Team"
               />
             </List.Item>
           )}
         />
       </Fragment>
-    );
+    )
   }
 }
 
-export default WithUserEventRegistered(ComponentTest);
+export default WithUserEventRegistered(ComponentTest)

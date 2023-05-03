@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
-import { handleRequestError } from '@helpers/utils';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Modal } from 'antd';
-import Header from '@antdComponents/Header';
-import Table from '@antdComponents/Table';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { DispatchMessageService } from '@context/MessageService';
-import Loading from '../profile/loading';
-import Service from '../agenda/roomManager/service';
-import { firestore, fireRealtime } from '@helpers/firebase';
-import { deleteLiveStream, deleteAllVideos } from '@adaptors/gcoreStreamingApi';
-const { confirm } = Modal;
+import { useEffect, useState } from 'react'
+import { handleRequestError } from '@helpers/utils'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { Modal } from 'antd'
+import Header from '@antdComponents/Header'
+import Table from '@antdComponents/Table'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { DispatchMessageService } from '@context/MessageService'
+import Loading from '../profile/loading'
+import Service from '../agenda/roomManager/service'
+import { firestore, fireRealtime } from '@helpers/firebase'
+import { deleteLiveStream, deleteAllVideos } from '@adaptors/gcoreStreamingApi'
+const { confirm } = Modal
 
 const CMS = (props) => {
   const {
@@ -57,33 +57,37 @@ const CMS = (props) => {
     extraPathUpdateTitle,
     listLenght,
     messageHeaderAlert,
-  } = props;
+  } = props
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
-  const [list, setList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { reloadTemplatesCms } = useHelper();
+  const [list, setList] = useState([])
+  const [loading, setLoading] = useState(true)
+  const { reloadTemplatesCms } = useHelper()
 
   useEffect(() => {
-    getList();
-  }, [reloadTemplatesCms]);
+    getList()
+  }, [reloadTemplatesCms])
 
   const getList = async () => {
-    const data = await API.byEvent(eventId);
+    const data = await API.byEvent(eventId)
     if (data.data) {
       setList(
-        data.data.sort(function(a, b) {
-          return a.created_at.localeCompare(-b.created_at);
-        }).map((it, index) => ({ ...it, key: `table_cms_${index}`}))
-      );
+        data.data
+          .sort(function (a, b) {
+            return a.created_at.localeCompare(-b.created_at)
+          })
+          .map((it, index) => ({ ...it, key: `table_cms_${index}` })),
+      )
     } else {
       setList(
-        data.sort(function(a, b) {
-          return a.created_at.localeCompare(-b.created_at);
-        }).map((it, index) => ({ ...it, key: `table_cms_${index}`}))
-      );
+        data
+          .sort(function (a, b) {
+            return a.created_at.localeCompare(-b.created_at)
+          })
+          .map((it, index) => ({ ...it, key: `table_cms_${index}` })),
+      )
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   const remove = (id, name) => {
     confirm({
@@ -99,57 +103,58 @@ const CMS = (props) => {
           key: 'loading',
           msj: 'Por favor espere mientras se borra la información...',
           action: 'show',
-        });
+        })
         const onHandlerRemove = async () => {
           try {
-            const refActivity = `request/${eventId}/activities/${id}`;
-            const service = new Service(firestore);
-            const configuration = await service.getConfiguration(eventId, id);
+            const refActivity = `request/${eventId}/activities/${id}`
+            const service = new Service(firestore)
+            const configuration = await service.getConfiguration(eventId, id)
             if (configuration && configuration.typeActivity === 'eviusMeet') {
-              await deleteAllVideos(name, configuration.meeting_id), await deleteLiveStream(configuration.meeting_id);
+              await deleteAllVideos(name, configuration.meeting_id),
+                await deleteLiveStream(configuration.meeting_id)
             }
-            if (deleteCallback) await deleteCallback(id);
-            await fireRealtime.ref(refActivity).remove();
-            await service.deleteActivity(eventId, id);
-            await API.deleteOne(id, eventId);
+            if (deleteCallback) await deleteCallback(id)
+            await fireRealtime.ref(refActivity).remove()
+            await service.deleteActivity(eventId, id)
+            await API.deleteOne(id, eventId)
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',
-            });
+            })
             DispatchMessageService({
               type: 'success',
               msj: 'Se eliminó la información correctamente!',
               action: 'show',
-            });
-            getList();
+            })
+            getList()
           } catch (e) {
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',
-            });
+            })
             DispatchMessageService({
               type: 'error',
               msj: handleRequestError(e).message,
               action: 'show',
-            });
+            })
           }
-        };
-        onHandlerRemove();
+        }
+        onHandlerRemove()
       },
-    });
-  };
+    })
+  }
 
   const updateMails = async (idMessage) => {
-    setLoading(true);
-    const updateMails = await API.updateOne(eventId, idMessage);
-    await getList();
+    setLoading(true)
+    const updateMails = await API.updateOne(eventId, idMessage)
+    await getList()
     DispatchMessageService({
       type: 'success',
       msj: updateMails?.message,
       action: 'show',
-    });
-    setLoading(false);
-  };
+    })
+    setLoading(false)
+  }
 
   return (
     <div>
@@ -204,7 +209,7 @@ const CMS = (props) => {
         updateMails={updateMails}
       />
     </div>
-  );
-};
+  )
+}
 
-export default CMS;
+export default CMS

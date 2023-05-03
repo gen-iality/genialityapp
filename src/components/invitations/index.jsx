@@ -1,57 +1,26 @@
-import { useEffect, useState } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
-import InvitedUsers from './eventUsersList';
-import CreateMessage from './send';
-import ImportUsers from '../import-users/importUser';
-import { EventsApi } from '@helpers/request';
-
-// function Tabla(props) {
-//   const [guests, setGuests] = useState([]);
-
-//   const columns = [
-//     {
-//       Header: "Email",
-//       accessor: "email" // accessor is the "key" in the data
-//     },
-//     {
-//       Header: "Names",
-//       accessor: "names"
-//     }
-//   ];
-
-//   useEffect(() => {
-//
-
-//     async function fetchData(props) {
-//       const guestsResult = await UsersApi.getAll(
-//         props.event._id,
-//         "?pageSize=1000"
-//       );
-//       setGuests(guestsResult.data);
-//
-//     }
-//     fetchData(props);
-//   }, []);
-
-//   return <EviusTable columns={columns} data={guests} />;
-// }
+import { useEffect, useState } from 'react'
+import { Route, Switch, withRouter } from 'react-router-dom'
+import InvitedUsers from './eventUsersList'
+import CreateMessage from './send'
+import ImportUsers from '../import-users/importUser'
+import { EventsApi } from '@helpers/request'
 
 function ListaInvitados({ ...props }) {
-  const { eventId, event, match, location } = props;
+  const { eventId, event, match, location } = props
 
   useEffect(() => {
     if (match.path === `/eventAdmin/${eventId}/invitados`) {
-      obtenerEvento();
+      obtenerEvento()
     }
 
     async function obtenerEvento() {
-      const respEvento = await EventsApi.getOne(eventId);
-      setUserProperties(respEvento.user_properties);
+      const respEvento = await EventsApi.getOne(eventId)
+      setUserProperties(respEvento.user_properties)
     }
-  }, [match]);
+  }, [match])
 
-  const [guestSelected, setGuestSelected] = useState([]);
-  const [userProperties, setUserProperties] = useState([]);
+  const [guestSelected, setGuestSelected] = useState([])
+  const [userProperties, setUserProperties] = useState([])
 
   return (
     <>
@@ -60,14 +29,24 @@ function ListaInvitados({ ...props }) {
           exact
           path={`${match.url}/`}
           render={() => (
-            <InvitedUsers event={event} eventID={eventId} matchUrl={match.url} setGuestSelected={setGuestSelected} />
+            <InvitedUsers
+              event={event}
+              eventID={eventId}
+              matchUrl={match.url}
+              setGuestSelected={setGuestSelected}
+            />
           )}
         />
         <Route
           exact
           path={`${match.url}/createmessage`}
           render={() => (
-            <CreateMessage event={event} eventID={eventId} matchUrl={match.url} selection={guestSelected} />
+            <CreateMessage
+              event={event}
+              eventID={eventId}
+              matchUrl={match.url}
+              selection={guestSelected}
+            />
           )}
         />
 
@@ -86,7 +65,7 @@ function ListaInvitados({ ...props }) {
         />
       </Switch>
     </>
-  );
+  )
 }
 
-export default withRouter(ListaInvitados);
+export default withRouter(ListaInvitados)

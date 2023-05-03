@@ -1,8 +1,8 @@
-import { Row, Col, Button, Image, Typography } from 'antd';
-import { LeftOutlined } from '@ant-design/icons';
-import ReactPlayer from 'react-player';
+import { Row, Col, Button, Image, Typography } from 'antd'
+import { LeftOutlined } from '@ant-design/icons'
+import ReactPlayer from 'react-player'
 // https://youtu.be/d6ssSYyld4o
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph } = Typography
 
 export default function PartnerDetail({ company, handleClosePartnerDetail }) {
   return (
@@ -25,7 +25,9 @@ export default function PartnerDetail({ company, handleClosePartnerDetail }) {
           />
         </Col>
         <Col xs={24} sm={24} md={18} lg={18} xl={18} xxl={18}>
-          <Title style={{ textAlign: 'justify', borderBottom: '2px solid' }}>{company.name}</Title>
+          <Title style={{ textAlign: 'justify', borderBottom: '2px solid' }}>
+            {company.name}
+          </Title>
         </Col>
       </Row>
       <Row gutter={[8, 8]} justify="center" wrap>
@@ -54,5 +56,5 @@ export default function PartnerDetail({ company, handleClosePartnerDetail }) {
         </Col>
       </Row>
     </div>
-  );
+  )
 }

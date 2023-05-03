@@ -1,15 +1,20 @@
-import { useEffect, useState } from 'react';
-import { List, Avatar, Badge, Image, Tooltip, Popover, Typography } from 'antd';
-import { MessageTwoTone, EyeOutlined, CrownFilled, FileImageOutlined } from '@ant-design/icons';
-import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
-import PopoverInfoUser from '../socialZone/hooks/Popover';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useCurrentUser } from '@context/userContext';
-import { useEventContext } from '@context/eventContext';
-import { imageforDefaultProfile } from '@helpers/constants';
-import dayjs from 'dayjs';
+import { useEffect, useState } from 'react'
+import { List, Avatar, Badge, Image, Tooltip, Popover, Typography } from 'antd'
+import {
+  MessageTwoTone,
+  EyeOutlined,
+  CrownFilled,
+  FileImageOutlined,
+} from '@ant-design/icons'
+import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline'
+import PopoverInfoUser from '../socialZone/hooks/Popover'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { useCurrentUser } from '@context/userContext'
+import { useEventContext } from '@context/eventContext'
+import { imageforDefaultProfile } from '@helpers/constants'
+import dayjs from 'dayjs'
 
-const { Paragraph, Title, Text } = Typography;
+const { Paragraph, Title, Text } = Typography
 
 /** estilos list item */
 const styleList = {
@@ -23,7 +28,7 @@ const styleList = {
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
   transition: '500ms all',
-};
+}
 
 const styleListPointer = {
   background: 'white',
@@ -37,19 +42,28 @@ const styleListPointer = {
   textOverflow: 'ellipsis',
   cursor: 'pointer',
   transition: '300ms all',
-};
+}
 
 function UsersCard(props) {
-  const cUser = useCurrentUser();
-  const cEvent = useEventContext();
-  const eventValues = cEvent.value;
+  const cUser = useCurrentUser()
+  const cEvent = useEventContext()
+  const eventValues = cEvent.value
 
-  const eventColor = eventValues?.styles?.containerBgColor !== '#FFFFFF' ? eventValues?.styles.containerBgColor : '';
-  const { createNewOneToOneChat, HandleChatOrAttende, HandlePublicPrivate, HandleGoToChat, setGameData } = useHelper();
-  const [actionCapture, setActionCapture] = useState([]);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [avatar, setAvatar] = useState('');
+  const eventColor =
+    eventValues?.styles?.containerBgColor !== '#FFFFFF'
+      ? eventValues?.styles.containerBgColor
+      : ''
+  const {
+    createNewOneToOneChat,
+    HandleChatOrAttende,
+    HandlePublicPrivate,
+    HandleGoToChat,
+    setGameData,
+  } = useHelper()
+  const [actionCapture, setActionCapture] = useState([])
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [avatar, setAvatar] = useState('')
   const {
     names,
     name,
@@ -62,37 +76,43 @@ function UsersCard(props) {
     time,
     picture,
     index,
-  } = props.item;
+  } = props.item
 
-  const isAnImage = ultimo_mensaje ? ultimo_mensaje.includes('https://firebasestorage.googleapis.com') : false;
+  const isAnImage = ultimo_mensaje
+    ? ultimo_mensaje.includes('https://firebasestorage.googleapis.com')
+    : false
 
   function getPrivateChatImg() {
-    let userLogo = null;
+    let userLogo = null
 
     if (participants) {
-      const filtererdImg = participants?.filter((part) => part.idparticipant != cUser.value.uid);
+      const filtererdImg = participants?.filter(
+        (part) => part.idparticipant != cUser.value.uid,
+      )
 
-      userLogo = filtererdImg[0]?.profilePicUrl ? filtererdImg[0]?.profilePicUrl : imageforDefaultProfile;
-      return userLogo;
+      userLogo = filtererdImg[0]?.profilePicUrl
+        ? filtererdImg[0]?.profilePicUrl
+        : imageforDefaultProfile
+      return userLogo
     }
-    return true;
+    return true
   }
 
   function formatName(name) {
-    const result = decodeURIComponent(name);
-    return result;
+    const result = decodeURIComponent(name)
+    return result
   }
 
   function podiumValidate() {
     switch (index) {
       case 1:
-        return <CrownFilled style={{ fontSize: '30px', color: '#FFD800' }} rotate={-45} />;
+        return <CrownFilled style={{ fontSize: '30px', color: '#FFD800' }} rotate={-45} />
       case 2:
-        return <CrownFilled style={{ fontSize: '30px', color: '#DADDE9' }} rotate={-45} />;
+        return <CrownFilled style={{ fontSize: '30px', color: '#DADDE9' }} rotate={-45} />
       case 3:
-        return <CrownFilled style={{ fontSize: '30px', color: '#D36A62' }} rotate={-45} />;
+        return <CrownFilled style={{ fontSize: '30px', color: '#D36A62' }} rotate={-45} />
       default:
-        break;
+        break
     }
   }
 
@@ -109,19 +129,20 @@ function UsersCard(props) {
                   cUser.value.names || cUser.value.name,
                   uid,
                   names || name,
-                  imageProfile
-                );
-                HandleChatOrAttende('1');
-                HandlePublicPrivate('private');
-              }}>
+                  imageProfile,
+                )
+                HandleChatOrAttende('1')
+                HandlePublicPrivate('private')
+              }}
+            >
               <Tooltip title="Chatear">
                 {/* <MessageTwoTone style={{ fontSize: '24px' }} /> */}
               </Tooltip>
             </a>
           ) : null}
         </>
-      );
-    });
+      )
+    })
     setTitle(() => {
       return (
         <>
@@ -140,7 +161,8 @@ function UsersCard(props) {
                   fontSize: '15px',
                   // whiteSpace: 'break-spaces'
                 }}
-                key="list-loadmore-edit">
+                key="list-loadmore-edit"
+              >
                 {name || names}
               </Text>
             </Popover>
@@ -153,20 +175,21 @@ function UsersCard(props) {
                 fontSize: '15px',
                 // whiteSpace: 'break-spaces'
               }}
-              key="list-loadmore-edit">
+              key="list-loadmore-edit"
+            >
               {name || names}
             </Text>
           )}
         </>
-      );
-    });
+      )
+    })
     setDescription(() => {
       return status === 'online' ? (
         <span style={{ color: '#52C41A' }}>En linea</span>
       ) : (
         <span style={{ color: '#CCCCCC' }}>Desconectado</span>
-      );
-    });
+      )
+    })
     setAvatar(() => {
       return (
         <Avatar
@@ -174,15 +197,15 @@ function UsersCard(props) {
           src={<Image src={imageProfile} preview={{ mask: <EyeOutlined /> }} />}
           size={45}
         />
-      );
-    });
+      )
+    })
   }
 
   function privateChats() {
     setActionCapture(() => {
       /** Validar que la hora se guarde en firebase */
-      return time && <span>{time}</span>;
-    });
+      return time && <span>{time}</span>
+    })
     setTitle(() => {
       return (
         <Text
@@ -193,11 +216,12 @@ function UsersCard(props) {
             fontSize: '15px',
             // whiteSpace: 'break-spaces'
           }}
-          key="list-loadmore-edit">
+          key="list-loadmore-edit"
+        >
           {names || name}
         </Text>
-      );
-    });
+      )
+    })
     setDescription(() => {
       return ultimo_mensaje ? (
         isAnImage ? (
@@ -213,23 +237,27 @@ function UsersCard(props) {
         <Text ellipsis={{ rows: 1 }} style={{ color: '#CCCCCC', width: '90%' }}>
           No hay mensajes nuevos
         </Text>
-      );
-    });
+      )
+    })
     setAvatar(() => {
       return (
         <Avatar
           style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))' }}
           src={
             <Image
-              src={getPrivateChatImg() !== imageforDefaultProfile ? getPrivateChatImg() : 'error'}
+              src={
+                getPrivateChatImg() !== imageforDefaultProfile
+                  ? getPrivateChatImg()
+                  : 'error'
+              }
               preview={{ mask: <EyeOutlined /> }}
               fallback={getPrivateChatImg()}
             />
           }
           size={45}
         />
-      );
-    });
+      )
+    })
   }
 
   function ranking() {
@@ -237,12 +265,21 @@ function UsersCard(props) {
       <Text
         style={{
           fontSize: '24px',
-          color: `${index === 1 ? '#FFD800' : index === 2 ? '#DADDE9' : index === 3 ? '#D36A62' : '#DDDDDD'}`,
+          color: `${
+            index === 1
+              ? '#FFD800'
+              : index === 2
+              ? '#DADDE9'
+              : index === 3
+              ? '#D36A62'
+              : '#DDDDDD'
+          }`,
           fontWeight: '600',
-        }}>
+        }}
+      >
         {index}
-      </Text>
-    );
+      </Text>,
+    )
     setTitle(() => {
       return (
         <Text
@@ -253,18 +290,19 @@ function UsersCard(props) {
             fontSize: '15px',
             // whiteSpace: 'break-spaces'
           }}
-          key="list-loadmore-edit">
+          key="list-loadmore-edit"
+        >
           {formatName(name || names)}
         </Text>
-      );
-    });
+      )
+    })
     setDescription(() => {
       return (
         <div className="animate__animated animate__bounceIn" style={{ color: '#52C41A' }}>
           {score} Pts
         </div>
-      );
-    });
+      )
+    })
     setAvatar(() => {
       return (
         <Badge offset={[-40, 3]} count={podiumValidate()}>
@@ -274,8 +312,8 @@ function UsersCard(props) {
             size={45}
           />
         </Badge>
-      );
-    });
+      )
+    })
   }
 
   function gameList() {
@@ -284,14 +322,15 @@ function UsersCard(props) {
         <a
           key="list-loadmore-edit"
           onClick={() => {
-            setGameData(props.item);
-          }}>
+            setGameData(props.item)
+          }}
+        >
           <Tooltip title="Jugar">
             <GamepadVariantOutline style={{ fontSize: '32px', color: '#178BF7' }} />
           </Tooltip>
         </a>
-      );
-    });
+      )
+    })
     setTitle(() => {
       return (
         <Text
@@ -302,51 +341,55 @@ function UsersCard(props) {
             fontSize: '15px',
             // whiteSpace: 'break-spaces'
           }}
-          key="list-loadmore-edit">
+          key="list-loadmore-edit"
+        >
           {formatName(name)}
         </Text>
-      );
-    });
+      )
+    })
 
     setAvatar(() => {
       return (
         <Badge offset={[-40, 3]}>
           <Avatar
             src={picture && picture}
-            style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))', backgroundColor: eventColor }}
+            style={{
+              filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))',
+              backgroundColor: eventColor,
+            }}
             size={45}
           >
             {!picture && name && name.charAt(0).toUpperCase()}
           </Avatar>
         </Badge>
-      );
-    });
+      )
+    })
   }
 
   function initComponent() {
     switch (props.type) {
       case 'attendees':
-        attendeeRender();
-        break;
+        attendeeRender()
+        break
       case 'privateChat':
-        privateChats();
-        break;
+        privateChats()
+        break
       case 'ranking':
-        ranking();
-        break;
+        ranking()
+        break
       case 'gameList':
-        gameList();
-        break;
+        gameList()
+        break
 
       default:
-        attendeeRender();
-        break;
+        attendeeRender()
+        break
     }
   }
 
   useEffect(() => {
-    initComponent();
-  }, [props]);
+    initComponent()
+  }, [props])
 
   return (
     <List.Item
@@ -358,9 +401,9 @@ function UsersCard(props) {
               cUser.value.name ? cUser.value.name : cUser.value.names,
               'private',
               props.item,
-              null
+              null,
             )
-          : '';
+          : ''
       }}
       className="efect-scale"
       style={props.type == 'privateChat' ? styleListPointer : styleList}
@@ -368,7 +411,7 @@ function UsersCard(props) {
     >
       <List.Item.Meta title={title} description={description} avatar={avatar} />
     </List.Item>
-  );
+  )
 }
 
-export default UsersCard;
+export default UsersCard

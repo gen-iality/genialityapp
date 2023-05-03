@@ -1,34 +1,42 @@
-import { useContext, useEffect, useState, lazy, useCallback } from 'react';
-import { Card, Row, Col, Switch, Popover, Avatar, Empty, Image, Alert, Select, Form } from 'antd';
-import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
-import { getColumnSearchProps } from '@components/speakers/getColumnSearch';
-import { firestore } from '@helpers/firebase';
-import AgendaContext from '@context/AgendaContext';
-import { Suspense } from 'react';
+import { useContext, useEffect, useState, lazy, useCallback } from 'react'
+import {
+  Card,
+  Row,
+  Col,
+  Switch,
+  Popover,
+  Avatar,
+  Empty,
+  Image,
+  Alert,
+  Select,
+  Form,
+} from 'antd'
+import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline'
+import { getColumnSearchProps } from '@components/speakers/getColumnSearch'
+import { firestore } from '@helpers/firebase'
+import AgendaContext from '@context/AgendaContext'
+import { Suspense } from 'react'
 
-const Header = lazy(() => import('../../../antdComponents/Header'));
-const Table = lazy(() => import('../../../antdComponents/Table'));
+const Header = lazy(() => import('../../../antdComponents/Header'))
+const Table = lazy(() => import('../../../antdComponents/Table'))
 
 /**
  * TODO: check that switch component can change the current game status
  */
 export default function RoomController() {
-  // const [loadedGameList, setLoadedGameList] = useState([]);
-  const [isAvailableChanges, setIsAvailableChanges] = useState(false);
-  const [columnsData, setColumnsData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [isAvailableChanges, setIsAvailableChanges] = useState(false)
+  const [columnsData, setColumnsData] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
 
   const [columns, setColumns] = useState<any[]>([])
 
-  const agendaContext = useContext(AgendaContext);
-  const {
-    games: isGamesActived,
-    avalibleGames: availableGames,
-  } = agendaContext;
+  const agendaContext = useContext(AgendaContext)
+  const { games: isGamesActived, avalibleGames: availableGames } = agendaContext
 
-  const requestGames = async() => {
-    const newAvailableGames: any[] = [];
-    const docRef = firestore.collection('gamesAvailable');
+  const requestGames = async () => {
+    const newAvailableGames: any[] = []
+    const docRef = firestore.collection('gamesAvailable')
     const querySnapshot = await docRef.get() // async does not bite)))
 
     querySnapshot.forEach((doc) => {
@@ -39,18 +47,18 @@ export default function RoomController() {
     agendaContext.setAvailableGames(newAvailableGames)
     setIsAvailableChanges(true)
 
-    setIsLoading(false);
+    setIsLoading(false)
   }
 
   const updateStatusOfGame = (status: boolean, gameId: string, allGames: any[]) => {
     console.debug('allGames', allGames)
     const newData = allGames.map((game: any) => {
-      if (game.id === gameId) return { ...game, showGame: status };
-      else return { ...game };
-    });
+      if (game.id === gameId) return { ...game, showGame: status }
+      else return { ...game }
+    })
     console.debug('new allGames', newData)
-    agendaContext.setAvailableGames(newData);
-    setIsAvailableChanges(false);
+    agendaContext.setAvailableGames(newData)
+    setIsAvailableChanges(false)
   }
 
   // We need to load the game list
@@ -80,12 +88,18 @@ export default function RoomController() {
                 content={() => (
                   <>
                     {item.picture ? (
-                      <Image key={`img ${item._id}`} width={200} height={200} src={item.picture} />
+                      <Image
+                        key={`img ${item._id}`}
+                        width={200}
+                        height={200}
+                        src={item.picture}
+                      />
                     ) : (
                       <Empty description="Imagen no encontrada" />
                     )}
                   </>
-                )}>
+                )}
+              >
                 {item.picture ? (
                   <Avatar key={`img ${item._id}`} src={item.picture} />
                 ) : (
@@ -115,10 +129,10 @@ export default function RoomController() {
               checked={item.showGame}
               id={`editSwitch ${item.index}`}
             />
-          );
+          )
         },
       },
-    ];
+    ]
 
     setColumns(newColumns)
   }, [availableGames])
@@ -176,5 +190,5 @@ export default function RoomController() {
         </>
       )}
     </Card>
-  );
+  )
 }

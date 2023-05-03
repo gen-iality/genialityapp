@@ -1,10 +1,29 @@
-import { useEffect, useState } from 'react';
-import { Redirect, withRouter } from 'react-router-dom';
-import EviusReactQuill from '../shared/eviusReactQuill';
-import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '@helpers/utils';
-import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '@helpers/request';
-import Creatable from 'react-select';
-import { Button, Typography, Row, Col, Form, Input, Image, Empty, Switch, Modal, Tooltip, Select } from 'antd';
+import { useEffect, useState } from 'react'
+import { Redirect, withRouter } from 'react-router-dom'
+import EviusReactQuill from '../shared/eviusReactQuill'
+import {
+  fieldsSelect,
+  handleRequestError,
+  sweetAlert,
+  uploadImage,
+  handleSelect,
+} from '@helpers/utils'
+import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '@helpers/request'
+import Creatable from 'react-select'
+import {
+  Button,
+  Typography,
+  Row,
+  Col,
+  Form,
+  Input,
+  Image,
+  Empty,
+  Switch,
+  Modal,
+  Tooltip,
+  Select,
+} from 'antd'
 import {
   LeftOutlined,
   UserOutlined,
@@ -13,22 +32,22 @@ import {
   PlusCircleOutlined,
   UpOutlined,
   EditOutlined,
-} from '@ant-design/icons';
-import Header from '@antdComponents/Header';
-import BackTop from '@antdComponents/BackTop';
-import { areaCode } from '@helpers/constants';
-import { DispatchMessageService } from '@context/MessageService';
-import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
-import Loading from '../profile/loading';
+} from '@ant-design/icons'
+import Header from '@antdComponents/Header'
+import BackTop from '@antdComponents/BackTop'
+import { areaCode } from '@helpers/constants'
+import { DispatchMessageService } from '@context/MessageService'
+import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop'
+import Loading from '../profile/loading'
 
-const { Title } = Typography;
-const { confirm } = Modal;
-const { Option } = Select;
+const { Title } = Typography
+const { confirm } = Modal
+const { Option } = Select
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
 function Speaker(props) {
   const {
@@ -37,9 +56,9 @@ function Speaker(props) {
     history,
     matchUrl,
     justCreate,
-  } = props;
-  const match = matchUrl.split('/').slice(0)[1];
-  const newCategoryUrl = `/${match}/` + eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
+  } = props
+  const match = matchUrl.split('/').slice(0)[1]
+  const newCategoryUrl = `/${match}/` + eventID // Ruta creada para el boton de nueva categoria /event/[eventID]
 
   const [data, setData] = useState({
     name: '',
@@ -52,84 +71,85 @@ function Speaker(props) {
     category_id: '',
     index: 0,
     newItem: true,
-  });
-  const [showDescription_activity, setShowDescription_activity] = useState(false);
-  const [redirect, setRedirect] = useState(false);
-  const [errorImage, setErrorImage] = useState('');
-  const [categories, setCategories] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [isloadingSelect, setIsloadingSelect] = useState({ types: true, categories: true });
-  const [event, setEvent] = useState();
-  const [areacodeselected, setareacodeselected] = useState(57);
-  const [editDataIsLoading, setEditDataIsLoading] = useState(true);
-  /* const [messageHeaderAlert, setMessageHeaderAlert] = useState(''); */
+  })
+  const [showDescription_activity, setShowDescription_activity] = useState(false)
+  const [redirect, setRedirect] = useState(false)
+  const [errorImage, setErrorImage] = useState('')
+  const [categories, setCategories] = useState([])
+  const [selectedCategories, setSelectedCategories] = useState([])
+  const [isloadingSelect, setIsloadingSelect] = useState({
+    types: true,
+    categories: true,
+  })
+  const [event, setEvent] = useState()
+  const [areacodeselected, setareacodeselected] = useState(57)
+  const [editDataIsLoading, setEditDataIsLoading] = useState(true)
 
   useEffect(() => {
-    dataTheLoaded();
-  }, []);
+    dataTheLoaded()
+  }, [])
 
   async function dataTheLoaded() {
     console.log('getting data to eventID:', eventID)
-    let categoriesData = await CategoriesAgendaApi.byEvent(eventID);
-    const event = await EventsApi.getOne(eventID);
-    //const typeEvent = await TypesApi.getAll();
+    let categoriesData = await CategoriesAgendaApi.byEvent(eventID)
+    const event = await EventsApi.getOne(eventID)
     if (event) {
-      setEvent(event);
+      setEvent(event)
     }
 
     //Filtrado de categorias
-    categoriesData = handleSelect(categoriesData);
+    categoriesData = handleSelect(categoriesData)
 
     if (state.edit && !justCreate) {
-      setEditDataIsLoading(true);
-      const info = await SpeakersApi.getOne(state.edit, eventID);
+      setEditDataIsLoading(true)
+      const info = await SpeakersApi.getOne(state.edit, eventID)
 
-      info ? setData({ ...info, newItem: false }) : '';
+      info ? setData({ ...info, newItem: false }) : ''
 
-      setShowDescription_activity(info?.description_activity);
-      const field = fieldsSelect(info.category_id, categoriesData);
+      setShowDescription_activity(info?.description_activity)
+      const field = fieldsSelect(info.category_id, categoriesData)
 
-      setSelectedCategories(field);
+      setSelectedCategories(field)
 
       if (info.description === '<p><br></p>') {
         setData({
           ...data,
           description: '',
-        });
+        })
       }
     }
-    const isloadingSelectChanged = { types: '', categories: '' };
+    const isloadingSelectChanged = { types: '', categories: '' }
 
-    setCategories(categoriesData);
-    setIsloadingSelect(isloadingSelectChanged);
-    setEditDataIsLoading(false);
+    setCategories(categoriesData)
+    setIsloadingSelect(isloadingSelectChanged)
+    setEditDataIsLoading(false)
   }
 
   function handleChange(e) {
-    const { name } = e.target;
-    const { value } = e.target;
+    const { name } = e.target
+    const { value } = e.target
     setData({
       ...data,
       [name]: value,
-    });
+    })
   }
 
   function chgTxt(content) {
-    let description = content;
+    let description = content
     if (description === '<p><br></p>') {
-      description = '';
+      description = ''
     }
     setData({
       ...data,
       description,
-    });
+    })
   }
 
   async function handleImage(imageUrl) {
     setData({
       ...data,
       image: imageUrl,
-    });
+    })
   }
 
   async function submit(values) {
@@ -139,9 +159,9 @@ function Speaker(props) {
         key: 'loading',
         msj: 'Por favor espere mientras guarda la información...',
         action: 'show',
-      });
+      })
 
-      const { name, profession, description, order, published, image } = values;
+      const { name, profession, description, order, published, image } = values
 
       const body = {
         name,
@@ -153,31 +173,32 @@ function Speaker(props) {
         category_id: selectedCategories?.value,
         order: parseInt(order),
         index: parseInt(order),
-      };
+      }
       try {
-        if (state.edit && !justCreate) await SpeakersApi.editOne(body, state.edit, eventID);
-        else await SpeakersApi.create(eventID, body);
+        if (state.edit && !justCreate)
+          await SpeakersApi.editOne(body, state.edit, eventID)
+        else await SpeakersApi.create(eventID, body)
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
-        });
+        })
         DispatchMessageService({
           type: 'success',
           msj: 'Conferencista guardado correctamente!',
           action: 'show',
-        });
-        if (!justCreate) history.push(`/${match}/${eventID}/speakers`);
-        else if (props.onCreated) props.onCreated();
+        })
+        if (!justCreate) history.push(`/${match}/${eventID}/speakers`)
+        else if (props.onCreated) props.onCreated()
       } catch (e) {
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
-        });
+        })
         DispatchMessageService({
           type: 'error',
           msj: handleRequestError(e).message,
           action: 'show',
-        });
+        })
         /* if (handleRequestError(e).message === 'Speakers/host limit reached')
           setMessageHeaderAlert(handleRequestError(e).message); */
       }
@@ -186,7 +207,7 @@ function Speaker(props) {
         type: 'error',
         msj: 'El nombre es requerido',
         action: 'show',
-      });
+      })
     }
   }
 
@@ -196,7 +217,7 @@ function Speaker(props) {
       key: 'loading',
       msj: 'Por favor espere mientras se borra la información...',
       action: 'show',
-    });
+    })
     if (state.edit && !justCreate) {
       confirm({
         title: `¿Está seguro de eliminar al conferencista?`,
@@ -208,43 +229,43 @@ function Speaker(props) {
         onOk() {
           const onHandlerRemoveSpeaker = async () => {
             try {
-              await SpeakersApi.deleteOne(state.edit, eventID);
-              setRedirect(true);
+              await SpeakersApi.deleteOne(state.edit, eventID)
+              setRedirect(true)
               DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-              });
+              })
               DispatchMessageService({
                 type: 'success',
                 msj: 'Se eliminó al conferencista correctamente!',
                 action: 'show',
-              });
+              })
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-              });
+              })
               DispatchMessageService({
                 type: 'error',
                 msj: handleRequestError(e).message,
                 action: 'show',
-              });
+              })
             }
-          };
-          onHandlerRemoveSpeaker();
+          }
+          onHandlerRemoveSpeaker()
         },
-      });
-    } else setRedirect(true);
+      })
+    } else setRedirect(true)
   }
 
   //FN para guardar en el estado la opcion seleccionada
   function selectCategory(selectedCategories) {
-    setSelectedCategories(selectedCategories);
+    setSelectedCategories(selectedCategories)
   }
 
   //FN para ir a una ruta específica (ruedas en los select)
   function goSection(path, state) {
-    history.push(path, state);
+    history.push(path, state)
   }
 
   const prefixSelector = (
@@ -254,26 +275,27 @@ function Speaker(props) {
       style={{ fontSize: '12px', width: 150 }}
       value={areacodeselected}
       onChange={(val) => {
-        setareacodeselected(val);
-        console.log(val);
+        setareacodeselected(val)
+        console.log(val)
       }}
-      placeholder="Codigo de area del pais">
+      placeholder="Codigo de area del pais"
+    >
       {areaCode.map((code, key) => {
         return (
           <Option key={key} value={code.value}>
             {`${code.label} (+${code.value})`}
           </Option>
-        );
+        )
       })}
     </Select>
-  );
+  )
 
-  if (!props.location.state || redirect) return <Redirect to={matchUrl} />;
+  if (!props.location.state || redirect) return <Redirect to={matchUrl} />
 
   return (
     <Form onFinish={() => submit(data)} {...formLayout}>
       <Header
-        title={'Conferencistas' + (justCreate ? ' - crear nuevo': '')}
+        title={'Conferencistas' + (justCreate ? ' - crear nuevo' : '')}
         back
         save
         form
@@ -342,9 +364,7 @@ function Speaker(props) {
               <Form.Item label="phone" name="phone">
                 <Input
                   addonBefore={prefixSelector}
-                  //onChange={(e) => setnumberareacode(e.target.value)}
                   value={data?.phone || ''}
-                  //required={mandatory}
                   type="number"
                   key="tel"
                   style={{ width: '100%' }}
@@ -365,12 +385,14 @@ function Speaker(props) {
                     {!showDescription_activity && !data.newItem ? (
                       <div>
                         {' '}
-                        <EditOutlined style={{ marginRight: '5px' }} /> Editar/mostrar descripción{' '}
+                        <EditOutlined style={{ marginRight: '5px' }} /> Editar/mostrar
+                        descripción{' '}
                       </div>
                     ) : (
                       <div>
                         {' '}
-                        <PlusCircleOutlined style={{ marginRight: '5px' }} /> Agregar/mostrar descripción{' '}
+                        <PlusCircleOutlined style={{ marginRight: '5px' }} />{' '}
+                        Agregar/mostrar descripción{' '}
                       </div>
                     )}
                   </Button>
@@ -379,7 +401,11 @@ function Speaker(props) {
                     placement="top"
                     text="Si oculta la infomación da a entender que no desea mostrar el contenido de la misma"
                   >
-                    <Button type="link" onClick={() => setShowDescription_activity(false)} style={{ color: 'blue' }}>
+                    <Button
+                      type="link"
+                      onClick={() => setShowDescription_activity(false)}
+                      style={{ color: 'blue' }}
+                    >
                       <div>
                         <UpOutlined style={{ marginRight: '5px' }} />
                         Ocultar descripción{' '}
@@ -403,7 +429,7 @@ function Speaker(props) {
       </Row>
       <BackTop />
     </Form>
-  );
+  )
 }
 
 //Estilos para el tipo
@@ -418,11 +444,11 @@ const dot = (color = 'transparent') => ({
     height: 10,
     width: 10,
   },
-});
+})
 
 const catStyles = {
   menu: (styles) => ({ ...styles, maxHeight: 'inherit' }),
   multiValue: (styles, { data }) => ({ ...styles, ...dot(data.item.color) }),
-};
+}
 
-export default withRouter(Speaker);
+export default withRouter(Speaker)

@@ -1,7 +1,7 @@
-import { Component } from 'react';
-import Moment from 'moment-timezone';
-import { connect } from 'react-redux';
-import withContext from '@context/withContext';
+import { Component } from 'react'
+import Moment from 'moment-timezone'
+import { connect } from 'react-redux'
+import withContext from '@context/withContext'
 import {
   AgendaApi,
   SpacesApi,
@@ -10,16 +10,34 @@ import {
   DocumentsApi,
   AttendeeApi,
   discountCodesApi,
-} from '@helpers/request';
-import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge, Row } from 'antd';
-import { firestore } from '@helpers/firebase';
-import AgendaActivityItem from './AgendaActivityItem/index';
-import { ArrowRightOutlined, CalendarOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
-import * as notificationsActions from '../../redux/notifications/actions';
-import { setTabs } from '../../redux/stage/actions';
-import ActivitiesList from '../agenda/components/ActivitiesList';
+} from '@helpers/request'
+import {
+  Modal,
+  Button,
+  Card,
+  Spin,
+  notification,
+  Input,
+  Alert,
+  Divider,
+  Space,
+  Tabs,
+  Badge,
+  Row,
+} from 'antd'
+import { firestore } from '@helpers/firebase'
+import AgendaActivityItem from './AgendaActivityItem/index'
+import {
+  ArrowRightOutlined,
+  CalendarOutlined,
+  DoubleLeftOutlined,
+  DoubleRightOutlined,
+} from '@ant-design/icons'
+import * as notificationsActions from '../../redux/notifications/actions'
+import { setTabs } from '../../redux/stage/actions'
+import ActivitiesList from '../agenda/components/ActivitiesList'
 
-const { TabPane } = Tabs;
+const { TabPane } = Tabs
 
 const attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
@@ -27,13 +45,13 @@ const attendee_states = {
   STATE_RESERVED: '5ba8d200aac5b12a5a8ce748', //"RESERVED";
   ROL_ATTENDEE: '5d7ac3f56b364a4042de9b08', //"rol id";
   STATE_BOOKED: '5b859ed02039276ce2b996f0', //"BOOKED";
-};
+}
 
-const { setNotification } = notificationsActions;
+const { setNotification } = notificationsActions
 
 class Agenda extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       list: [],
 
@@ -69,27 +87,27 @@ class Agenda extends Component {
       status: 'in_progress',
       hideBtnDetailAgenda: true,
       userId: null,
-    };
+    }
 
-    this.returnList = this.returnList.bind(this);
-    this.selectionSpace = this.selectionSpace.bind(this);
-    this.survey = this.survey.bind(this);
-    this.gotoActivity = this.gotoActivity.bind(this);
-    this.gotoActivityList = this.gotoActivityList.bind(this);
+    this.returnList = this.returnList.bind(this)
+    this.selectionSpace = this.selectionSpace.bind(this)
+    this.survey = this.survey.bind(this)
+    this.gotoActivity = this.gotoActivity.bind(this)
+    this.gotoActivityList = this.gotoActivityList.bind(this)
   }
 
   async componentDidMount() {
-    this.props.setVirtualConference(false);
-    this.setState({ loading: true });
-    await this.fetchAgenda();
+    this.props.setVirtualConference(false)
+    this.setState({ loading: true })
+    await this.fetchAgenda()
 
     //Si hay currentUser pasado por props entonces inicializamos el estado userId
     if (this.props.currentUser) {
-      const { currentUser } = this.props;
-      this.setState({ userId: currentUser._id });
+      const { currentUser } = this.props
+      this.setState({ userId: currentUser._id })
     }
 
-    this.setState({ loading: false });
+    this.setState({ loading: false })
 
     this.setState({
       show_inscription:
@@ -97,59 +115,64 @@ class Agenda extends Component {
           ? this.props.cEvent.value.styles.show_inscription
           : false,
       hideBtnDetailAgenda:
-        this.props.cEvent.value.styles && this.props.cEvent.value.styles.hideBtnDetailAgenda
+        this.props.cEvent.value.styles &&
+        this.props.cEvent.value.styles.hideBtnDetailAgenda
           ? this.props.cEvent.value.styles.hideBtnDetailAgenda
           : true,
-    });
+    })
 
-    const surveysData = await SurveysApi.getAll(this.props.cEvent.value._id);
-    const documentsData = await DocumentsApi.getAll(this.props.cEvent.value._id);
+    const surveysData = await SurveysApi.getAll(this.props.cEvent.value._id)
+    const documentsData = await DocumentsApi.getAll(this.props.cEvent.value._id)
 
     if (surveysData.data.length >= 1) {
-      this.setState({ survey: surveysData.data });
+      this.setState({ survey: surveysData.data })
     }
 
     if (documentsData.data.length >= 1) {
-      this.setState({ documents: documentsData.data });
+      this.setState({ documents: documentsData.data })
     }
 
-    this.getAgendaUser();
+    this.getAgendaUser()
   }
 
   componentWillUnmount() {
-    this.props.setVirtualConference(true);
+    this.props.setVirtualConference(true)
   }
   /** extraemos los días en los que pasan lecciones */
-  setDaysWithAllActivities = data => {
-    const dayswithactivities = [];
-    data.map(activity => {
-      const datestring = Moment.tz(activity.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+  setDaysWithAllActivities = (data) => {
+    const dayswithactivities = []
+    data.map((activity) => {
+      const datestring = Moment.tz(
+        activity.datetime_start,
+        'YYYY-MM-DD HH:mm',
+        'America/Bogota',
+      )
         .tz(Moment.tz.guess())
-        .format('YYYY-MM-DD');
+        .format('YYYY-MM-DD')
 
       //Revisamos que no hayamos extraido el día de otra lección previa
-      const result = dayswithactivities.filter(item => item === datestring);
+      const result = dayswithactivities.filter((item) => item === datestring)
       if (result.length === 0) {
         if (data.isPublished || data.isPublished == undefined) {
-          dayswithactivities.push(datestring);
+          dayswithactivities.push(datestring)
         }
       }
-    });
-    this.setState({ days: dayswithactivities });
-  };
+    })
+    this.setState({ days: dayswithactivities })
+  }
 
   componentDidUpdate(prevProps) {
-    const { data } = this.state;
+    const { data } = this.state
     //Cargamos solamente los espacios virtuales de la agenda
 
     //Si aún no ha cargado el curso no podemos hacer nada más
-    if (!this.props.cEvent.value) return;
+    if (!this.props.cEvent.value) return
 
     //Revisamos si el curso sigue siendo el mismo, no toca cargar nada
-    if (prevProps.event && this.props.cEvent.value._id === prevProps.event._id) return;
+    if (prevProps.event && this.props.cEvent.value._id === prevProps.event._id) return
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
-    const filtered = this.filterByDay(this.state.days[0], this.state.list);
+    const filtered = this.filterByDay(this.state.days[0], this.state.list)
     // this.setState({ data, filtered, toShow: filtered });
   }
 
@@ -160,17 +183,22 @@ class Agenda extends Component {
         .doc(this.props.cEvent.value._id)
         .collection('activities')
         .doc(activity._id)
-        .onSnapshot(infoActivity => {
-          if (!infoActivity.exists) return;
-          const data = infoActivity.data();
-          const { habilitar_ingreso, isPublished, meeting_id, platform } = data;
-          const updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id, platform };
-          //this.props.setTabs(tabs);
-          arr[index] = updatedActivityInfo;
-          const filtered = this.filterByDay(this.state.days[0], arr);
-          this.setState({ list: arr, filtered, toShow: filtered });
-        });
-    });
+        .onSnapshot((infoActivity) => {
+          if (!infoActivity.exists) return
+          const data = infoActivity.data()
+          const { habilitar_ingreso, isPublished, meeting_id, platform } = data
+          const updatedActivityInfo = {
+            ...arr[index],
+            habilitar_ingreso,
+            isPublished,
+            meeting_id,
+            platform,
+          }
+          arr[index] = updatedActivityInfo
+          const filtered = this.filterByDay(this.state.days[0], arr)
+          this.setState({ list: arr, filtered, toShow: filtered })
+        })
+    })
   }
 
   async filterStateMeetingRoom(list) {
@@ -181,156 +209,169 @@ class Agenda extends Component {
           .doc(this.props.cEvent.value._id)
           .collection('activities')
           .doc(activity._id)
-          .get();
+          .get()
         //if (!infoActivity.exists) return;
-        const data = infoActivity.data();
-        const habilitar_ingreso = data?.habilitar_ingreso;
-        const isPublished = data?.isPublished;
-        const meeting_id = data?.meeting_id;
-        const platform = data?.platform;
+        const data = infoActivity.data()
+        const habilitar_ingreso = data?.habilitar_ingreso
+        const isPublished = data?.isPublished
+        const meeting_id = data?.meeting_id
+        const platform = data?.platform
 
-        const updatedActivityInfo = { ...activity, habilitar_ingreso, isPublished, meeting_id, platform };
-        //this.props.setTabs(tabs);
-        return updatedActivityInfo;
+        const updatedActivityInfo = {
+          ...activity,
+          habilitar_ingreso,
+          isPublished,
+          meeting_id,
+          platform,
+        }
+        return updatedActivityInfo
       }),
-    );
+    )
 
-    return lista.filter(lf => lf.isPublished || lf.isPublished == undefined);
+    return lista.filter((lf) => lf.isPublished || lf.isPublished == undefined)
   }
 
   exchangeCode = async () => {
-    //this.state.discountCode
-    const code = this.state.discountCode;
-    const codeTemplateId = '5fc93d5eccba7b16a74bd538';
+    const code = this.state.discountCode
+    const codeTemplateId = '5fc93d5eccba7b16a74bd538'
 
     try {
-      await discountCodesApi.exchangeCode(codeTemplateId, { code: code, event_id: this.props.cEvent.value._id });
-      const eventUser = this.props.this.props.cUser;
-      const eventId = this.props.cEvent.value._id;
-      const data = { state_id: attendee_states.STATE_BOOKED };
-      AttendeeApi.update(eventId, data, eventUser._id);
+      await discountCodesApi.exchangeCode(codeTemplateId, {
+        code: code,
+        event_id: this.props.cEvent.value._id,
+      })
+      const eventUser = this.props.this.props.cUser
+      const eventId = this.props.cEvent.value._id
+      const data = { state_id: attendee_states.STATE_BOOKED }
+      AttendeeApi.update(eventId, data, eventUser._id)
 
       this.setState({
         exchangeCodeMessage: {
           type: 'success',
           message: 'Código canjeado, habilitando el acceso...',
         },
-      });
-      setTimeout(() => window.location.reload(), 500);
+      })
+      setTimeout(() => window.location.reload(), 500)
     } catch (e) {
-      const { status } = e.response;
-      let msg = 'Tuvimos un problema canjenado el código intenta nuevamente';
+      const { status } = e.response
+      let msg = 'Tuvimos un problema canjenado el código intenta nuevamente'
       if (status == '404') {
-        msg = 'Código no encontrado';
+        msg = 'Código no encontrado'
       } else {
-        msg = 'Código ya fue usado';
+        msg = 'Código ya fue usado'
       }
       this.setState({
         exchangeCodeMessage: {
           type: 'error',
           message: msg,
         },
-      });
+      })
     }
-  };
+  }
 
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
 
-    const { data } = await AgendaApi.byEvent(this.props.cEvent.value._id);
+    const { data } = await AgendaApi.byEvent(this.props.cEvent.value._id)
     //se consulta la api de espacios para
-    const space = await SpacesApi.byEvent(this.props.cEvent.value._id);
+    const space = await SpacesApi.byEvent(this.props.cEvent.value._id)
     // Filtro
 
-    const listFiltered = await this.filterStateMeetingRoom(data);
+    const listFiltered = await this.filterStateMeetingRoom(data)
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
-    //const filtered = this.filterByDay(this.state.days[0], data);
-    await this.listeningStateMeetingRoom(data);
+    await this.listeningStateMeetingRoom(data)
 
-    //this.setState({ data, filtered, toShow: filtered, spaces: space });
-    this.setState({ data, spaces: space }, () => this.setDaysWithAllActivities(listFiltered));
-  };
+    this.setState({ data, spaces: space }, () =>
+      this.setDaysWithAllActivities(listFiltered),
+    )
+  }
 
   returnList() {
     //con la lista previamente cargada en el estado se retorna a la constante to Show para mostrar la lista completa
-    this.setState({ toShow: this.state.listDay, nameSpace: 'inicio' });
+    this.setState({ toShow: this.state.listDay, nameSpace: 'inicio' })
   }
 
   filterByDay = (day, agenda) => {
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
-      .filter(a => day && day.format && a.datetime_start && a.datetime_start.includes(day.format('YYYY-MM-DD')))
+      .filter(
+        (a) =>
+          day &&
+          day.format &&
+          a.datetime_start &&
+          a.datetime_start.includes(day.format('YYYY-MM-DD')),
+      )
       .sort(
         (a, b) =>
           Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
           Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY'),
-      );
+      )
     // this.setState({ listDay: list });
 
     for (let i = 0; list.length > i; i++) {
       list[i].hosts.sort((a, b) => {
-        return a.order - b.order;
-      });
+        return a.order - b.order
+      })
     }
 
     //Se mapea la lista para poder retornar los datos ya filtrados
-    list.map(item => {
+    list.map((item) => {
       item.restriction =
         item.access_restriction_type === 'EXCLUSIVE'
           ? 'Exclusiva para: '
           : item.access_restriction_type === 'SUGGESTED'
           ? 'Sugerida para: '
-          : 'Abierta';
-      item.roles = item.access_restriction_roles.map(({ name }) => name);
-      return item;
-    });
-    return list;
-  };
+          : 'Abierta'
+      item.roles = item.access_restriction_roles.map(({ name }) => name)
+      return item
+    })
+    return list
+  }
 
   //Fn para manejar cuando se selecciona un dia, ejecuta el filtrado
-  selectDay = day => {
-    const filtered = this.filterByDay(day, this.state.data);
-    this.setState({ filtered, toShow: filtered, day });
-  };
+  selectDay = (day) => {
+    const filtered = this.filterByDay(day, this.state.data)
+    this.setState({ filtered, toShow: filtered, day })
+  }
 
   //Funcion para ejecutar el filtro por espacio y mandar el espacio a filtrar
   selectSpace(space) {
-    const filtered = this.filterBySpace(space, this.state.list);
-    this.setState({ filtered, toShow: filtered, space });
+    const filtered = this.filterBySpace(space, this.state.list)
+    this.setState({ filtered, toShow: filtered, space })
   }
 
   //Se realiza funcion para filtrar mediante dropdown
   selectionSpace() {
-    const space = document.getElementById('selectedSpace').value;
+    const space = document.getElementById('selectedSpace').value
 
-    const filtered = this.filterBySpace(space, this.state.list);
-    this.setState({ filtered, toShow: filtered, space });
+    const filtered = this.filterBySpace(space, this.state.list)
+    this.setState({ filtered, toShow: filtered, space })
   }
 
   //Funcion que realiza el filtro por espacio, teniendo en cuenta el dia
   // eslint-disable-next-line no-unused-vars
   filterBySpace = (space, dates) => {
     //Se filta la lista anterior para esta vez filtrar por espacio
-    const list = this.state.listDay.filter(a => a.space.name === space);
+    const list = this.state.listDay.filter((a) => a.space.name === space)
 
-    this.setState({ nameSpace: space });
+    this.setState({ nameSpace: space })
 
     //Se mapea la lista para poder retornar la lista filtrada por espacio
-    list.map(item => {
+    list.map((item) => {
       item.restriction =
         item.access_restriction_type === 'EXCLUSIVE'
           ? 'Exclusiva para: '
           : item.access_restriction_type === 'SUGGESTED'
           ? 'Sugerida para: '
-          : 'Abierta';
-      item.roles = item.access_restriction_roles.map(({ name }) => name);
-      return item;
-    });
-    return list;
-  };
+          : 'Abierta'
+      item.roles = item.access_restriction_roles.map(({ name }) => name)
+      return item
+    })
+    return list
+  }
 
   //Fn para el resultado de la búsqueda
-  searchResult = data => this.setState({ toShow: !data ? [] : data });
+  searchResult = (data) => this.setState({ toShow: !data ? [] : data })
 
   // Funcion para registrar usuario en la lección
   registerInActivity = async (activityId, eventId, userId, callback) => {
@@ -338,178 +379,198 @@ class Agenda extends Component {
       .then(() => {
         notification.open({
           message: 'Inscripción realizada',
-        });
-        callback(true);
+        })
+        callback(true)
       })
-      .catch(err => {
+      .catch((err) => {
         notification.open({
           message: err,
-        });
-      });
-  };
+        })
+      })
+  }
 
   //Fn para el resultado de la búsqueda
-  searchResult = data => this.setState({ toShow: !data ? [] : data });
+  searchResult = (data) => this.setState({ toShow: !data ? [] : data })
 
-  redirect = () => this.setState({ redirect: true });
+  redirect = () => this.setState({ redirect: true })
 
   async selected() {}
 
   gotoActivity(activity) {
-    this.setState({ currentActivity: activity });
-    this.props.activeActivity(activity);
+    this.setState({ currentActivity: activity })
+    this.props.activeActivity(activity)
 
     //Se trae la funcion survey para pasarle el objeto activity y asi retornar los datos que consulta la funcion survey
-    this.survey(activity);
+    this.survey(activity)
   }
 
   gotoActivityList = () => {
-    this.setState({ currentActivity: null });
-  };
+    this.setState({ currentActivity: null })
+  }
 
   //Funcion survey para traer las encuestas de a lección
   async survey(activity) {
     //Con el objeto activity se extrae el _id para consultar la api y traer la encuesta de ese curso
-    const survey = await SurveysApi.getByActivity(this.props.cEvent.value._id, activity._id);
-    this.setState({ survey: survey });
+    const survey = await SurveysApi.getByActivity(
+      this.props.cEvent.value._id,
+      activity._id,
+    )
+    this.setState({ survey: survey })
   }
 
   showDrawer = () => {
     this.setState({
       visible: true,
-    });
-  };
+    })
+  }
 
   handleOk = () => {
-    this.setState({ visible: false });
-  };
+    this.setState({ visible: false })
+  }
 
   onClose = () => {
     this.setState({
       visible: false,
-    });
-  };
+    })
+  }
 
   capitalizeDate(val) {
-    val = val.format('MMMM DD').toUpperCase();
+    val = val.format('MMMM DD').toUpperCase()
     return val
       .toLowerCase()
       .trim()
       .split(' ')
-      .map(v => v[0].toUpperCase() + v.substr(1))
-      .join(' ');
+      .map((v) => v[0].toUpperCase() + v.substr(1))
+      .join(' ')
   }
 
   async getAgendaUser() {
     try {
-      const infoUserAgenda = await Activity.GetUserActivity(this.props.cEvent.value._id, this.props.cUser._id);
-      this.setState({ userAgenda: infoUserAgenda.data });
+      const infoUserAgenda = await Activity.GetUserActivity(
+        this.props.cEvent.value._id,
+        this.props.cUser._id,
+      )
+      this.setState({ userAgenda: infoUserAgenda.data })
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
   }
 
   checkInscriptionStatus(activityId) {
-    const { userAgenda } = this.state;
-    if (!userAgenda) return false;
-    const checkInscription = userAgenda.filter(activity => activity.activity_id === activityId);
-    const statusInscription = !!checkInscription.length;
-    return statusInscription;
+    const { userAgenda } = this.state
+    if (!userAgenda) return false
+    const checkInscription = userAgenda.filter(
+      (activity) => activity.activity_id === activityId,
+    )
+    const statusInscription = !!checkInscription.length
+    return statusInscription
   }
 
   //Start modal methods
 
   handleCancelModal = () => {
-    this.setState({ visibleModal: false });
-  };
+    this.setState({ visibleModal: false })
+  }
   handleCancelModalRestricted = () => {
-    this.setState({ visibleModalRestricted: false });
-  };
+    this.setState({ visibleModalRestricted: false })
+  }
   handleCancelModalExchangeCode = () => {
-    this.setState({ visibleModalExchangeCode: false });
-  };
+    this.setState({ visibleModalExchangeCode: false })
+  }
 
   handleOpenModal = () => {
-    this.setState({ visibleModal: true });
-  };
+    this.setState({ visibleModal: true })
+  }
 
   handleOpenModalRestricted = () => {
-    this.setState({ visibleModalRestricted: true });
-  };
+    this.setState({ visibleModalRestricted: true })
+  }
   handleOpenModalExchangeCode = () => {
-    this.setState({ visibleModalExchangeCode: true });
-  };
+    this.setState({ visibleModalExchangeCode: true })
+  }
 
   handleCloseModalRestrictedDevices = () => {
-    this.setState({ visibleModalRegisteredDevices: false });
-  };
+    this.setState({ visibleModalRegisteredDevices: false })
+  }
 
-  validationRegisterAndExchangeCode = activity => {
+  validationRegisterAndExchangeCode = (activity) => {
     const hasPayment =
-      this.props.cEvent.value.has_payment || this.props.cEvent.value.has_payment === 'true' ? true : false;
+      this.props.cEvent.value.has_payment ||
+      this.props.cEvent.value.has_payment === 'true'
+        ? true
+        : false
 
     // Listado de cursos que requieren validación
     if (hasPayment) {
       if (this.props.cUser === null) {
-        this.handleOpenModal();
-        return false;
+        this.handleOpenModal()
+        return false
       }
 
       if (this.props.cUser.state_id !== attendee_states.STATE_BOOKED) {
-        this.handleOpenModalRestricted();
-        return false;
+        this.handleOpenModalRestricted()
+        return false
       }
 
       if (this.props.cUser.registered_devices) {
-        const checkRegisterDevice = window.localStorage.getItem('eventUser_id');
+        const checkRegisterDevice = window.localStorage.getItem('eventUser_id')
         if (this.props.cUser.registered_devices < 2) {
           if (!checkRegisterDevice || checkRegisterDevice !== this.props.cUser._id) {
-            this.props.cUser.registered_devices = this.props.cUser.registered_devices + 1;
-            window.localStorage.setItem('eventUser_id', this.props.cUser._id);
-            AttendeeApi.update(event._id, this.props.cUser, this.props.cUser._id);
+            this.props.cUser.registered_devices = this.props.cUser.registered_devices + 1
+            window.localStorage.setItem('eventUser_id', this.props.cUser._id)
+            AttendeeApi.update(event._id, this.props.cUser, this.props.cUser._id)
           }
         } else {
           if (!checkRegisterDevice) {
-            this.setState({ visibleModalRegisteredDevices: true });
-            return false;
+            this.setState({ visibleModalRegisteredDevices: true })
+            return false
           }
         }
       } else {
-        this.props.cUser.registered_devices = 1;
-        window.localStorage.setItem('eventUser_id', this.props.cUser._id);
-        AttendeeApi.update(event._id, this.props.cUser, this.props.cUser._id);
+        this.props.cUser.registered_devices = 1
+        window.localStorage.setItem('eventUser_id', this.props.cUser._id)
+        AttendeeApi.update(event._id, this.props.cUser, this.props.cUser._id)
       }
 
-      this.gotoActivity(activity);
+      this.gotoActivity(activity)
     } else {
-      this.gotoActivity(activity);
+      this.gotoActivity(activity)
     }
-  };
+  }
 
-  getActivitiesByDay = date => {
-    const { toggleConference } = this.props;
-    const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
+  getActivitiesByDay = (date) => {
+    const { toggleConference } = this.props
+    const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state
 
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list =
       date != null
         ? data
             .filter(
-              a => date && date.format && a.datetime_start && a.datetime_start.includes(date.format('YYYY-MM-DD')),
+              (a) =>
+                date &&
+                date.format &&
+                a.datetime_start &&
+                a.datetime_start.includes(date.format('YYYY-MM-DD')),
             )
             .sort(
               (a, b) =>
                 Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
                 Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY'),
             )
-        : data;
+        : data
 
     const renderList = list.map((item, index) => {
-      const isRegistered = this.checkInscriptionStatus(item._id) && true;
+      const isRegistered = this.checkInscriptionStatus(item._id) && true
 
       return (
-        <div key={index} className="container_agenda-information" style={{ marginBottom: 0 }}>
-          {(item.requires_registration || item.requires_registration === 'true') && !this.props.cUser ? (
+        <div
+          key={index}
+          className="container_agenda-information"
+          style={{ marginBottom: 0 }}
+        >
+          {(item.requires_registration || item.requires_registration === 'true') &&
+          !this.props.cUser ? (
             <Badge.Ribbon color="red" placement="end" text="Requiere registro">
               <AgendaActivityItem
                 hasDate={
@@ -571,22 +632,22 @@ class Agenda extends Component {
             />
           )}
         </div>
-      );
-    });
-    return renderList;
-  };
+      )
+    })
+    return renderList
+  }
   // Funcion que permite verificar si existen lecciones publicadas por dia
   // Sirve para mostrar u ocultar fechas
-  getActivitiesByDayVisibility = date => {
-    const { toggleConference } = this.props;
-    const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
+  getActivitiesByDayVisibility = (date) => {
+    const { toggleConference } = this.props
+    const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state
 
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list =
       date != null
         ? data
             .filter(
-              a =>
+              (a) =>
                 date &&
                 date.format &&
                 a.datetime_start &&
@@ -598,18 +659,18 @@ class Agenda extends Component {
                 Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
                 Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY'),
             )
-        : data;
-    return list;
-  };
+        : data
+    return list
+  }
 
   //End modal methods
 
   render() {
-    const { toggleConference, currentActivity } = this.props;
-    const { days, loading, survey } = this.state;
+    const { toggleConference, currentActivity } = this.props
+    const { days, loading, survey } = this.state
 
     {
-      Moment.locale(window.navigator.language);
+      Moment.locale(window.navigator.language)
     }
 
     return (
@@ -627,12 +688,19 @@ class Agenda extends Component {
             <Button key="login" onClick={this.props.handleOpenLogin}>
               Iniciar sesión
             </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={this.props.handleOpenRegisterForm}>
+            <Button
+              key="submit"
+              type="primary"
+              loading={loading}
+              onClick={this.props.handleOpenRegisterForm}
+            >
               Registrarme
             </Button>,
           ]}
         >
-          <p>Para poder disfrutar de este contenido debes estar registrado e iniciar sesión</p>
+          <p>
+            Para poder disfrutar de este contenido debes estar registrado e iniciar sesión
+          </p>
         </Modal>
 
         <Modal
@@ -651,9 +719,10 @@ class Agenda extends Component {
           ]}
         >
           <p>
-            Para poder disfrutar de este contenido debes haber pagado y tener un código por favor ingresalo a
-            continuación, Si aún no has comprado el código lo puedes comprar en el siguiente link
-            <a href='https://www.eticketablanca.com/evento/magic-land/'>
+            Para poder disfrutar de este contenido debes haber pagado y tener un código
+            por favor ingresalo a continuación, Si aún no has comprado el código lo puedes
+            comprar en el siguiente link
+            <a href="https://www.eticketablanca.com/evento/magic-land/">
               https://www.eticketablanca.com/evento/magic-land/
             </a>
           </p>
@@ -698,7 +767,10 @@ class Agenda extends Component {
               />
             )}
             <p>Ingresa el código de pago</p>
-            <Input value={this.state.discountCode} onChange={e => this.setState({ discountCode: e.target.value })} />
+            <Input
+              value={this.state.discountCode}
+              onChange={(e) => this.setState({ discountCode: e.target.value })}
+            />
           </div>
         </Modal>
 
@@ -720,7 +792,7 @@ class Agenda extends Component {
                   this.props.cEvent.value.styles &&
                   (this.props.cEvent.value.styles.hideDatesAgenda === 'false' ||
                     this.props.cEvent.value.styles.hideDatesAgenda === false) &&
-                  days.map(day => (
+                  days.map((day) => (
                     <>
                       {this.props.cEvent.value.styles.hideDatesAgendaItem === 'true' ||
                       this.props.cEvent.value.styles.hideDatesAgendaItem ? (
@@ -728,13 +800,14 @@ class Agenda extends Component {
                       ) : (
                         <>
                           <Card style={{ marginBottom: '20px', height: 'auto' }}>
-                            <Divider orientation="left" style={{ fontSize: '18px', color: '#f7981d' }}>
+                            <Divider
+                              orientation="left"
+                              style={{ fontSize: '18px', color: '#f7981d' }}
+                            >
                               <p>
                                 <Space>
                                   <CalendarOutlined />
-                                  {Moment(day)
-                                    .format('LL')
-                                    .toUpperCase()}
+                                  {Moment(day).format('LL').toUpperCase()}
                                 </Space>
                               </p>
                             </Divider>
@@ -771,17 +844,17 @@ class Agenda extends Component {
           </div>
         )}
       </div>
-    );
+    )
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
-});
+})
 const mapDispatchToProps = {
   setNotification,
   setTabs,
-};
+}
 
-const AgendaWithContext = withContext(Agenda);
-export default connect(mapStateToProps, mapDispatchToProps)(AgendaWithContext);
+const AgendaWithContext = withContext(Agenda)
+export default connect(mapStateToProps, mapDispatchToProps)(AgendaWithContext)

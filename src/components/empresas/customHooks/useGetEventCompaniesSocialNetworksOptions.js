@@ -1,50 +1,50 @@
-import { notification } from 'antd';
+import { notification } from 'antd'
 import { capitalize } from 'lodash'
-import { map } from 'ramda';
-import { isNonEmptyArray } from 'ramda-adjunct';
-import { useCallback, useEffect, useState } from 'react';
+import { map } from 'ramda'
+import { isNonEmptyArray } from 'ramda-adjunct'
+import { useCallback, useEffect, useState } from 'react'
 
-import { getEventCompaniesSocialNetworks } from '../services';
+import { getEventCompaniesSocialNetworks } from '../services'
 
 function stringToOptionMapper(value) {
   return {
     value,
     label: capitalize(value),
-  };
+  }
 }
 
 function useGetEventCompaniesSocialNetworksOptions(eventId) {
-  const [data, setData] = useState([]);
-  const [loadingData, setLoadingData] = useState(true);
-  const [reloadFlag, setReloadFlag] = useState(true);
+  const [data, setData] = useState([])
+  const [loadingData, setLoadingData] = useState(true)
+  const [reloadFlag, setReloadFlag] = useState(true)
 
   const reloadData = useCallback(() => {
-    setReloadFlag(!reloadFlag);
-  }, [reloadFlag]);
+    setReloadFlag(!reloadFlag)
+  }, [reloadFlag])
 
   useEffect(() => {
-    setLoadingData(true);
-    setData([]);
+    setLoadingData(true)
+    setData([])
 
     getEventCompaniesSocialNetworks(eventId)
       .then((res) => {
         if (isNonEmptyArray(res)) {
-          const options = map(stringToOptionMapper, res);
-          setData(options);
+          const options = map(stringToOptionMapper, res)
+          setData(options)
         }
       })
       .catch((error) => {
-        console.error(error);
+        console.error(error)
 
-      /*  notification.error({
+        /*  notification.error({
           message: 'Error',
           description: 'Error obteniendo las redes sociales',
         });*/
       })
-      .finally(() => setLoadingData(false));
-  }, [reloadFlag, eventId]);
+      .finally(() => setLoadingData(false))
+  }, [reloadFlag, eventId])
 
-  return [data, loadingData, reloadData];
+  return [data, loadingData, reloadData]
 }
 
-export default useGetEventCompaniesSocialNetworksOptions;
+export default useGetEventCompaniesSocialNetworksOptions

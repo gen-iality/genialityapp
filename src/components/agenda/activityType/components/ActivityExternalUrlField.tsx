@@ -1,28 +1,21 @@
-import { ReactNode } from 'react';
-import { Input, Form, Result, Typography } from 'antd';
-import rules from '../utils/formValidatorRules';
-import urlProcessorSet from '../utils/urlProcessorSet';
+import { ReactNode } from 'react'
+import { Input, Form, Result, Typography } from 'antd'
+import rules from '../utils/formValidatorRules'
+import urlProcessorSet from '../utils/urlProcessorSet'
 
-const { Paragraph } = Typography;
+const { Paragraph } = Typography
 
 export interface ActivityExternalUrlFieldProps {
-  type: string,
-  subtitle?: string,
-  iconSrc?: string,
-  placeholder?: string,
-  addonBefore: ReactNode,
-  onInput: (input: string) => void,
-};
+  type: string
+  subtitle?: string
+  iconSrc?: string
+  placeholder?: string
+  addonBefore: ReactNode
+  onInput: (input: string) => void
+}
 
 function ActivityExternalUrlField(props: ActivityExternalUrlFieldProps) {
-  const {
-    type,
-    subtitle,
-    iconSrc,
-    placeholder,
-    addonBefore,
-    onInput,
-  } = props;
+  const { type, subtitle, iconSrc, placeholder, addonBefore, onInput } = props
 
   return (
     <Result
@@ -31,7 +24,14 @@ function ActivityExternalUrlField(props: ActivityExternalUrlFieldProps) {
       subTitle={<Paragraph>{subtitle}</Paragraph>}
       title={
         <Form>
-          <Form.Item name="url" rules={rules[type as keyof typeof rules] as unknown as undefined || [{ required: true }]}>
+          <Form.Item
+            name="url"
+            rules={
+              (rules[type as keyof typeof rules] as unknown as undefined) || [
+                { required: true },
+              ]
+            }
+          >
             <Input
               type={type === 'vimeo' ? 'number' : 'text'}
               addonBefore={addonBefore}
@@ -39,14 +39,14 @@ function ActivityExternalUrlField(props: ActivityExternalUrlFieldProps) {
               size="large"
               onChange={(e) => {
                 // This is for send the ID only if the URL is from YouTube or Vimeo
-                onInput(urlProcessorSet[type](e));
+                onInput(urlProcessorSet[type](e))
               }}
             />
           </Form.Item>
         </Form>
       }
     />
-  );
+  )
 }
 
-export default ActivityExternalUrlField;
+export default ActivityExternalUrlField

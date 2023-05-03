@@ -1,8 +1,8 @@
-import Moment from 'moment-timezone';
-import TweenOne from 'rc-tween-one';
-import 'rc-banner-anim/assets/index.css';
-import { EnvironmentOutlined, LaptopOutlined } from '@ant-design/icons';
-import { Col } from 'antd';
+import Moment from 'moment-timezone'
+import TweenOne from 'rc-tween-one'
+import 'rc-banner-anim/assets/index.css'
+import { EnvironmentOutlined, LaptopOutlined } from '@ant-design/icons'
+import { Col } from 'antd'
 
 const BannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
   return (
@@ -21,10 +21,18 @@ const BannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
         <HeaderEventInfo title={title} {...props} />
       )}
     </div>
-  );
-};
+  )
+}
 
-function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, type_event }) {
+function HeaderEventInfo({
+  title,
+  organizado,
+  place,
+  dateStart,
+  dateEnd,
+  dates,
+  type_event,
+}) {
   return (
     <div
       className="banner-user-text-container"
@@ -32,19 +40,23 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         borderRadius: '10px',
-      }}>
+      }}
+    >
       <TweenOne className="banner-user-text">
         {/* Fecha del curso */}
         <div>
           {dates && dates.length > 0 ? (
             <>
               {dates.map((item, key) => (
-                <span key={key}>{Moment(item).format('DD MMMM') + (dates.length - 1 > key ? ', ' : '')}</span>
+                <span key={key}>
+                  {Moment(item).format('DD MMMM') + (dates.length - 1 > key ? ', ' : '')}
+                </span>
               ))}
             </>
           ) : (
             <>
-              {Moment(dateStart).format('YYYY-MM-DD') == Moment(dateEnd).format('YYYY-MM-DD') ? (
+              {Moment(dateStart).format('YYYY-MM-DD') ==
+              Moment(dateEnd).format('YYYY-MM-DD') ? (
                 <span>
                   {Moment(dateStart).format('DD')}
                   {' de '} {Moment(dateEnd).format('MMMM YYYY')}
@@ -80,12 +92,18 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
         </div>
       </TweenOne>
 
-      <TweenOne className="banner-user-title" animation={{ y: 30, opacity: 0, type: 'from' }}>
+      <TweenOne
+        className="banner-user-title"
+        animation={{ y: 30, opacity: 0, type: 'from' }}
+      >
         {/* Nombre del curso */}
         <span>{title}</span>
       </TweenOne>
 
-      <TweenOne className="banner-user-text" animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}>
+      <TweenOne
+        className="banner-user-text"
+        animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}
+      >
         {/* Quien lo organiza */}
         <div>
           <span>Organizado por: {organizado}</span>
@@ -108,7 +126,7 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
         </div>
       </TweenOne>
     </div>
-  );
+  )
 }
 
-export default BannerEvent;
+export default BannerEvent

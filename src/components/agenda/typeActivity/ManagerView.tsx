@@ -1,39 +1,46 @@
-import { Row, Col, Card, Typography, List, Spin, Affix } from 'antd';
-import CardPreview from '../typeActivity/components/CardPreview';
-import GoToEviusMeet from './components/GoToEviusMeet';
-import TransmitionOptions from './components/TransmitionOptions';
-import CardShareLinkEviusMeet from './components/CardShareLinkEviusMeet';
-import CardParticipantRequests from './components/CardParticipantRequests';
-import CardRTMP from './components/CardRTMP';
-import CardStartTransmition from './components/CardStartTransmition';
-import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
-import { useState, useContext, useEffect } from 'react';
-import AgendaContext from '@context/AgendaContext';
-import { CurrentEventContext } from '@context/eventContext';
-import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate';
-import { obtenerVideos } from '@adaptors/gcoreStreamingApi';
-import CardListVideo from './components/CardListVideo';
-import LoadingTypeActivity from './components/LoadingTypeActivity';
+import { Row, Col, Card, Typography, List, Spin, Affix } from 'antd'
+import CardPreview from '../typeActivity/components/CardPreview'
+import GoToEviusMeet from './components/GoToEviusMeet'
+import TransmitionOptions from './components/TransmitionOptions'
+import CardShareLinkEviusMeet from './components/CardShareLinkEviusMeet'
+import CardParticipantRequests from './components/CardParticipantRequests'
+import CardRTMP from './components/CardRTMP'
+import CardStartTransmition from './components/CardStartTransmition'
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
+import { useState, useContext, useEffect } from 'react'
+import AgendaContext from '@context/AgendaContext'
+import { CurrentEventContext } from '@context/eventContext'
+import ModalListRequestsParticipate from '../roomManager/components/ModalListRequestsParticipate'
+import { obtenerVideos } from '@adaptors/gcoreStreamingApi'
+import CardListVideo from './components/CardListVideo'
+import LoadingTypeActivity from './components/LoadingTypeActivity'
 const ManagerView = (props: any) => {
-  const eventContext = useContext(CurrentEventContext);
-  const { data, toggleActivitySteps } = useTypeActivity();
-  const { activityEdit, getRequestByActivity, request, dataLive, roomStatus, meeting_id } = useContext(AgendaContext);
-  const [viewModal, setViewModal] = useState(false);
-  const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
-  const [videos, setVideos] = useState<any[] | null>(null);
+  const eventContext = useContext(CurrentEventContext)
+  const { data, toggleActivitySteps } = useTypeActivity()
+  const {
+    activityEdit,
+    getRequestByActivity,
+    request,
+    dataLive,
+    roomStatus,
+    meeting_id,
+  } = useContext(AgendaContext)
+  const [viewModal, setViewModal] = useState(false)
+  const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`
+  const [videos, setVideos] = useState<any[] | null>(null)
   useEffect(() => {
-    meeting_id && obtenerListadodeVideos();
-    if (props.type !== 'EviusMeet') return;
-    getRequestByActivity(refActivity);
-  }, [props.type, meeting_id]);
+    meeting_id && obtenerListadodeVideos()
+    if (props.type !== 'EviusMeet') return
+    getRequestByActivity(refActivity)
+  }, [props.type, meeting_id])
 
   const obtenerListadodeVideos = async () => {
-    setVideos(null);
-    const listVideos = await obtenerVideos(props.activityName, meeting_id);
+    setVideos(null)
+    const listVideos = await obtenerVideos(props.activityName, meeting_id)
     if (listVideos) {
-      setVideos(listVideos);
+      setVideos(listVideos)
     }
-  };
+  }
 
   return (
     <>
@@ -46,11 +53,12 @@ const ManagerView = (props: any) => {
 
         <Col span={14}>
           <Row gutter={[16, 16]}>
-            {(props.type == 'Transmisión' || props.type == 'EviusMeet') && !dataLive?.active && (
-              <Col span={24}>
-                <CardStartTransmition type={props.type} />
-              </Col>
-            )}
+            {(props.type == 'Transmisión' || props.type == 'EviusMeet') &&
+              !dataLive?.active && (
+                <Col span={24}>
+                  <CardStartTransmition type={props.type} />
+                </Col>
+              )}
 
             {(props.type === 'EviusMeet' || props.type === 'Transmisión') &&
               !dataLive?.active &&
@@ -71,14 +79,18 @@ const ManagerView = (props: any) => {
               ))}
           </Row>
           <Row gutter={[16, 16]}>
-            {(props.type == 'reunión' || (props.type == 'EviusMeet' && dataLive?.active)) && (
+            {(props.type == 'reunión' ||
+              (props.type == 'EviusMeet' && dataLive?.active)) && (
               <Col span={10}>
                 <GoToEviusMeet type={props.type} activityId={props.activityId} />
               </Col>
             )}
-            {(((props.type === 'EviusMeet' || props.type === 'Transmisión') && dataLive?.active) ||
+            {(((props.type === 'EviusMeet' || props.type === 'Transmisión') &&
+              dataLive?.active) ||
               (props.type !== 'EviusMeet' && props.type !== 'Transmisión')) && (
-              <Col span={props.type !== 'EviusMeet' && props.type !== 'reunión' ? 24 : 14}>
+              <Col
+                span={props.type !== 'EviusMeet' && props.type !== 'reunión' ? 24 : 14}
+              >
                 <TransmitionOptions type={props.type} onDelete={props.onDelete} />
               </Col>
             )}
@@ -95,7 +107,11 @@ const ManagerView = (props: any) => {
                   />
                   <br />
                   <strong>Url:</strong>{' '}
-                  {props.type == 'Video' ? (data?.includes('youtube') ? data : data?.split('*')[0]) : data}
+                  {props.type == 'Video'
+                    ? data?.includes('youtube')
+                      ? data
+                      : data?.split('*')[0]
+                    : data}
                 </Card>
               </Col>
             )}
@@ -116,17 +132,22 @@ const ManagerView = (props: any) => {
                 <CardParticipantRequests request={request} setViewModal={setViewModal} />
               </Col>
             )}
-            {(props.type == 'Transmisión' || props.type == 'EviusMeet') && dataLive?.active && (
-              <Col span={24}>
-                <CardRTMP />
-              </Col>
-            )}
+            {(props.type == 'Transmisión' || props.type == 'EviusMeet') &&
+              dataLive?.active && (
+                <Col span={24}>
+                  <CardRTMP />
+                </Col>
+              )}
           </Row>
         </Col>
       </Row>
-      <ModalListRequestsParticipate refActivity={refActivity} visible={viewModal} handleModal={setViewModal} />
+      <ModalListRequestsParticipate
+        refActivity={refActivity}
+        visible={viewModal}
+        handleModal={setViewModal}
+      />
     </>
-  );
-};
+  )
+}
 
-export default ManagerView;
+export default ManagerView

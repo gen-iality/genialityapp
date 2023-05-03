@@ -1,21 +1,21 @@
-import { Component } from 'react';
-import { Result, Spin } from 'antd';
-import UserLoginWithEmailPass from '../UserLoginWithEmailPass';
+import { Component } from 'react'
+import { Result, Spin } from 'antd'
+import UserLoginWithEmailPass from '../UserLoginWithEmailPass'
 
-import UserLoginRecoveryPass from '../UserLoginRecoveryPass';
-import UserOneTimeLoginLink from '../UserOneTimeLoginLink';
-import withContext from '@context/withContext';
-import { SmileOutlined } from '@ant-design/icons';
+import UserLoginRecoveryPass from '../UserLoginRecoveryPass'
+import UserOneTimeLoginLink from '../UserOneTimeLoginLink'
+import withContext from '@context/withContext'
+import { SmileOutlined } from '@ant-design/icons'
 
 class UserLogin extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     // Estado provisional para el manejo de los sistemas de autenticación
     this.state = {
       enabledWithEmailPass: true,
       enabledOneTimeLoginLink: false,
       UserLoginRecoveryPass: false,
-    };
+    }
   }
 
   componentDidMount() {
@@ -23,7 +23,7 @@ class UserLogin extends Component {
       enabledWithEmailPass: false,
       UserLoginRecoveryPass: false,
       enabledOneTimeLoginLink: true,
-    });
+    })
   }
 
   render() {
@@ -41,9 +41,9 @@ class UserLogin extends Component {
       handleRecoveryPass,
       errorRecovery,
       successRecovery,
-    } = this.props;
+    } = this.props
 
-    const { enabledOneTimeLoginLink, enabledWithEmailPass } = this.state;
+    const { enabledOneTimeLoginLink, enabledWithEmailPass } = this.state
 
     return (
       <>
@@ -65,7 +65,8 @@ class UserLogin extends Component {
               <Result
                 icon={<SmileOutlined />}
                 title="Bienvenido..!"
-                subTitle="Desde ahora puedes disfrutar de nuestro curso"></Result>
+                subTitle="Desde ahora puedes disfrutar de nuestro curso"
+              ></Result>
             )}
 
             {enabledFormRecoveryPass && (
@@ -89,8 +90,8 @@ class UserLogin extends Component {
           />
         )}
       </>
-    );
+    )
   }
 }
 
-export default withContext(UserLogin);
+export default withContext(UserLogin)

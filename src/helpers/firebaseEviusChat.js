@@ -1,9 +1,9 @@
 /* globals process */
-import app from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-import 'firebase/storage';
-import 'firebase/database';
+import app from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/firestore'
+import 'firebase/storage'
+import 'firebase/database'
 
 const config = {
   apiKey: process.env.VITE_FB_APIKEY_EVIUSAUTH,
@@ -14,28 +14,28 @@ const config = {
   appId: process.env.VITE_APPID_EVIUSAUTH,
   messagingSenderId: process.env.VITE_MESSAGINGSENDER_EVIUSAUTH,
   measurementId: process.env.VITE_MEASUREMENTID_EVIUSAUTH,
-};
+}
 
-app.initializeApp(config);
+app.initializeApp(config)
 
-const firestore = app.firestore();
-const fireStorage = app.storage();
-const fireRealtime = app.database();
-const auth = app.auth();
+const firestore = app.firestore()
+const fireStorage = app.storage()
+const fireRealtime = app.database()
+const auth = app.auth()
 
 firestore.settings({
   cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
-});
+})
 firestore
   .enablePersistence({ synchronizeTabs: true })
   .then(() => {
-    window.eviusFailedPersistenceEnabling = false;
+    window.eviusFailedPersistenceEnabling = false
   })
   .catch((err) => {
-    console.error(err);
-    window.eviusFailedPersistenceEnabling = true;
-  });
+    console.error(err)
+    window.eviusFailedPersistenceEnabling = true
+  })
 
-window.firebase = app;
+window.firebase = app
 
-export { app, auth, firestore, fireStorage, fireRealtime };
+export { app, auth, firestore, fireStorage, fireRealtime }

@@ -1,12 +1,12 @@
-import { SET_SECTION_PERMISSIONS, GET_SECTION_PERMISSIONS } from './actions';
+import { SET_SECTION_PERMISSIONS, GET_SECTION_PERMISSIONS } from './actions'
 
 const initialState = {
   view: false,
   loading: false,
   error: null,
   section: null,
-  ticketview:false,
-};
+  ticketview: false,
+}
 
 export default function viewSectionPermissions(state = initialState, action) {
   switch (action.type) {
@@ -15,8 +15,8 @@ export default function viewSectionPermissions(state = initialState, action) {
         ...state,
         view: action.payload.view,
         section: action.payload.section,
-        ticketview:action.payload.ticketview,
-      };
+        ticketview: action.payload.ticketview,
+      }
 
     case GET_SECTION_PERMISSIONS:
       return {
@@ -24,9 +24,9 @@ export default function viewSectionPermissions(state = initialState, action) {
         loading: true,
         error: null,
         section: state.section,
-        ticketview:state.ticketview,
-      };
+        ticketview: state.ticketview,
+      }
     default:
-      return state;
+      return state
   }
 }

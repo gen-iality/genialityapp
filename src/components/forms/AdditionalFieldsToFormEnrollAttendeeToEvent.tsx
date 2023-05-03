@@ -3,10 +3,10 @@ const AdditionalFieldsToFormEnrollAttendeeToEvent = ({ aditionalFields }: any) =
     <>
       {aditionalFields?.length > 0 &&
         aditionalFields.map((field: any) => {
-          return field;
+          return field
         })}
     </>
-  );
-};
+  )
+}
 
-export default AdditionalFieldsToFormEnrollAttendeeToEvent;
+export default AdditionalFieldsToFormEnrollAttendeeToEvent

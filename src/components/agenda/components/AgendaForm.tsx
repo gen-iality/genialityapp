@@ -1,18 +1,37 @@
 import dayjs, { Dayjs } from 'dayjs'
 
-import { Button, Card, Col, Form, FormInstance, InputRef, Modal, Row, Space, Switch, TimePicker, Typography } from 'antd'
-
 import {
-  Select,
-  Input,
-  InputNumber,
+  Button,
+  Card,
+  Col,
+  Form,
+  FormInstance,
+  InputRef,
+  Modal,
+  Row,
+  Space,
+  Switch,
+  TimePicker,
+  Typography,
 } from 'antd'
+
+import { Select, Input, InputNumber } from 'antd'
 
 import * as React from 'react'
 import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react'
-import { CategoriesAgendaApi, ModulesApi, SpacesApi, SpeakersApi, ToolsApi } from '@helpers/request'
+import {
+  CategoriesAgendaApi,
+  ModulesApi,
+  SpacesApi,
+  SpeakersApi,
+  ToolsApi,
+} from '@helpers/request'
 import AgendaType from '@Utilities/types/AgendaType'
-import { ExclamationCircleOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons'
+import {
+  ExclamationCircleOutlined,
+  PlusOutlined,
+  SettingOutlined,
+} from '@ant-design/icons'
 import EviusReactQuill from '@components/shared/eviusReactQuill'
 import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 import { DispatchMessageService } from '@context/MessageService'
@@ -23,34 +42,34 @@ import { hourWithAdditionalMinutes } from '../hooks/useHourWithAdditionalMinutes
 import Speaker from '@components/speakers/speaker'
 import { Link, useHistory } from 'react-router-dom'
 
-const {TextArea} = Input;
+const { TextArea } = Input
 
 export interface FormValues {
-  name: string,
-  module_id: string,
-  is_info_only?: boolean,
-  datetime_start: string, // real
-  datetime_end: string, // real
-  date: string, // clone
-  hour_start: Dayjs,
-  hour_end: Dayjs,
-  tool_ids: string[],
-  host_ids: string[],
-  space_id: string,
-  activity_categories_ids: string[],
-  description: string,
-  image?: string,
-  vimeo_id?: string,
-  selected_document: string[],
-  short_description?: any,
+  name: string
+  module_id: string
+  is_info_only?: boolean
+  datetime_start: string // real
+  datetime_end: string // real
+  date: string // clone
+  hour_start: Dayjs
+  hour_end: Dayjs
+  tool_ids: string[]
+  host_ids: string[]
+  space_id: string
+  activity_categories_ids: string[]
+  description: string
+  image?: string
+  vimeo_id?: string
+  selected_document: string[]
+  short_description?: any
 }
 
 interface IAgendaFormProps {
-  form: FormInstance<FormValues>,
-  matchUrl?: string,
-  activityId?: string,
-  event?: any,
-  agenda?: AgendaType | null,
+  form: FormInstance<FormValues>
+  matchUrl?: string
+  activityId?: string
+  event?: any
+  agenda?: AgendaType | null
 }
 
 const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
@@ -69,7 +88,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
   const history = useHistory()
 
   const goSection = useCallback((path: string, state?: any) => {
-    history.push(path, state);
+    history.push(path, state)
   }, [])
 
   useEffect(() => {
@@ -92,8 +111,10 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
       const hour_start = dayjs(props.agenda.datetime_start)
       const hour_end = dayjs(props.agenda.datetime_end)
       props.form.setFieldsValue({
-        date, hour_end, hour_start,
-      })      
+        date,
+        hour_end,
+        hour_start,
+      })
     }
   }, [props.agenda])
 
@@ -122,9 +143,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
       // Convert all days between this range
       const newDays: any[] = []
       for (let i = 0; i < dayDiff + 1; i++) {
-        const formatDate = dayjs(initMoment)
-          .add(i, 'd')
-          .format('YYYY-MM-DD')
+        const formatDate = dayjs(initMoment).add(i, 'd').format('YYYY-MM-DD')
         newDays.push({ value: formatDate, label: formatDate })
       }
       setAllDays(newDays)
@@ -135,35 +154,32 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
     })
 
     SpeakersApi.byEvent(eventId).then((speakers) => {
-      setAllHosts(speakers.map((speaker: any) => (
-        { label: speaker.name, value: speaker._id }
-      )))
+      setAllHosts(
+        speakers.map((speaker: any) => ({ label: speaker.name, value: speaker._id })),
+      )
     })
 
     SpacesApi.byEvent(eventId).then((spaces) => {
-      setAllSpaces(spaces.map((space: any) => (
-        { label: space.name, value: space._id }
-      )))
+      setAllSpaces(spaces.map((space: any) => ({ label: space.name, value: space._id })))
     })
 
     ToolsApi.byEvent(eventId).then((tools) => {
-      setAllTools(tools.map((tool: any) => (
-        { label: tool.name, value: tool._id }
-      )))
+      setAllTools(tools.map((tool: any) => ({ label: tool.name, value: tool._id })))
     })
 
     CategoriesAgendaApi.byEvent(eventId).then((categories) => {
-      setAllCategories(categories.map((category: any) => (
-        { label: category.name, value: category._id }
-      )))
+      setAllCategories(
+        categories.map((category: any) => ({
+          label: category.name,
+          value: category._id,
+        })),
+      )
     })
   }, [])
 
   return (
     <Row justify="center" wrap gutter={12}>
-      <Col span={20}>
-        {props.activityId && <ActivityTypeSelector />}
-      </Col>
+      <Col span={20}>{props.activityId && <ActivityTypeSelector />}</Col>
       <Col span={20}>
         <Form.Item
           label="Nombre"
@@ -185,10 +201,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
           <EviusReactQuill />
           {/* <TextArea autoFocus allowClear autoSize placeholder="Descripción corta" /> */}
         </Form.Item>
-        <Form.Item
-          label="Módulo (opcional)"
-          name="module_id"
-        >
+        <Form.Item label="Módulo (opcional)" name="module_id">
           <Select
             options={[
               { label: 'Seleccionar...', value: null },
@@ -206,21 +219,18 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
           name="is_info_only"
           valuePropName="checked"
         >
-          <Switch
-            checkedChildren="Informativa"
-            unCheckedChildren="Normal"
-          />
+          <Switch checkedChildren="Informativa" unCheckedChildren="Normal" />
         </Form.Item>
 
         <Form.Item
           label="Día"
           name="date"
-          initialValue={`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`}
+          initialValue={`${new Date().getFullYear()}-${
+            new Date().getMonth() + 1
+          }-${new Date().getDate()}`}
           rules={[{ required: true, message: 'La fecha es requerida' }]}
         >
-          <Select
-            options={allDays}
-          />
+          <Select options={allDays} />
         </Form.Item>
         <Row wrap justify="center" gutter={[8, 8]}>
           <Col span={12}>
@@ -230,7 +240,12 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               initialValue={hourWithAdditionalMinutes(0)}
               rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
             >
-              <TimePicker use12Hours format="h:mm a" allowClear={false} style={{ width: '100%' }} />
+              <TimePicker
+                use12Hours
+                format="h:mm a"
+                allowClear={false}
+                style={{ width: '100%' }}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -240,7 +255,12 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               initialValue={hourWithAdditionalMinutes(19)}
               rules={[{ required: true, message: 'La hora final es requerida' }]}
             >
-              <TimePicker use12Hours format="h:mm a" allowClear={false} style={{ width: '100%' }} />
+              <TimePicker
+                use12Hours
+                format="h:mm a"
+                allowClear={false}
+                style={{ width: '100%' }}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -248,17 +268,15 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
           <Row wrap gutter={[8, 8]}>
             <Col span={23}>
               <Form.Item name="tool_ids">
-                <Select
-                  options={allTools}
-                  mode="multiple"
-                />
+                <Select options={allTools} mode="multiple" />
               </Form.Item>
             </Col>
             <Col span={1}>
-              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'herramientas')}
-            >
-                <Button icon={<SettingOutlined />} />
-              </Link>}
+              {props.matchUrl && (
+                <Link to={props.matchUrl.replace('agenda', 'herramientas')}>
+                  <Button icon={<SettingOutlined />} />
+                </Link>
+              )}
             </Col>
           </Row>
         </Form.Item>
@@ -278,7 +296,10 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             </Col>
             <Col span={1}>
               <Button
-                onClick={() => props.matchUrl && goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })}
+                onClick={() =>
+                  props.matchUrl &&
+                  goSection(props.matchUrl.replace('agenda', 'speakers'), { child: true })
+                }
                 icon={<SettingOutlined />}
                 title="Configurar en otra página"
               />
@@ -295,13 +316,15 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
                 onCreated={() => {
                   const loading = async () => {
                     const incommingHosts = await SpeakersApi.byEvent(props.event._id)
-                    setAllHosts(incommingHosts.map((host: any) => ({
-                      value: host._id,
-                      label: host.name,
-                    })))
-                  };
+                    setAllHosts(
+                      incommingHosts.map((host: any) => ({
+                        value: host._id,
+                        label: host.name,
+                      })),
+                    )
+                  }
                   loading().then(() => console.log('hosts reloaded'))
-                  setIsSpeakerModalOpened(false);
+                  setIsSpeakerModalOpened(false)
                 }}
                 justCreate
               />
@@ -313,19 +336,15 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
           <Row wrap gutter={[8, 8]}>
             <Col span={23}>
               <Form.Item name="space_id">
-                <Select
-                  options={[
-                    { label: 'Seleccionar', value: null },
-                    ...allSpaces,
-                  ]}
-                />
+                <Select options={[{ label: 'Seleccionar', value: null }, ...allSpaces]} />
               </Form.Item>
             </Col>
             <Col span={1}>
-              {props.matchUrl && <Link to={props.matchUrl.replace('agenda', 'espacios')}
-            >
-                <Button icon={<SettingOutlined />} />
-              </Link>}
+              {props.matchUrl && (
+                <Link to={props.matchUrl.replace('agenda', 'espacios')}>
+                  <Button icon={<SettingOutlined />} />
+                </Link>
+              )}
             </Col>
           </Row>
         </Form.Item>
@@ -334,14 +353,14 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
           <Row wrap gutter={[8, 8]}>
             <Col span={23}>
               <Form.Item name="activity_categories_ids">
-                <Select
-                  options={allCategories}
-                  mode="multiple"
-                />
+                <Select options={allCategories} mode="multiple" />
               </Form.Item>
             </Col>
             <Col span={1}>
-              <Button onClick={() => goSection(`${props.matchUrl}/categorias`)} icon={<SettingOutlined />} />
+              <Button
+                onClick={() => goSection(`${props.matchUrl}/categorias`)}
+                icon={<SettingOutlined />}
+              />
             </Col>
           </Row>
         </Form.Item>
@@ -355,37 +374,40 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               props.form.setFieldsValue({ description })
             },
           })}
-          extra={(
+          extra={
             <Space>
               <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-              <Typography.Text type="secondary">Esta información no es visible en la Agenda/Lección en versión Mobile.</Typography.Text>
+              <Typography.Text type="secondary">
+                Esta información no es visible en la Agenda/Lección en versión Mobile.
+              </Typography.Text>
             </Space>
-          )}
+          }
         >
           {/*
           If THERE IS problem with this component, comment `getValueProps` at
           the `Form.Item` component, and uncomment the next commented code, please
           */}
           <EviusReactQuill
-            // handleChange={(description: string) => {
-            //   props.form.setFieldsValue({ description })
-            // }}
-            // data={props.form.getFieldValue('description') || ''}
+          // handleChange={(description: string) => {
+          //   props.form.setFieldsValue({ description })
+          // }}
+          // data={props.form.getFieldValue('description') || ''}
           />
         </Form.Item>
         <Form.Item label="Imagen">
           <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
             <p>
-              Dimensiones:
-              {' '}
+              Dimensiones:{' '}
               <b>
-                <small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small>
+                <small>
+                  600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...
+                </small>
               </b>{' '}
             </p>
             <p>
               <small>
-                Se recomienda que la imagen debe tener dimensiones iguales (cuadradas) para su mejor
-                funcionamiento
+                Se recomienda que la imagen debe tener dimensiones iguales (cuadradas)
+                para su mejor funcionamiento
               </small>
             </p>
             <p>

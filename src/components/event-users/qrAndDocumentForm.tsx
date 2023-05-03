@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
-import { Form, Row, Select, Tabs, Input, Button, Col } from 'antd';
-import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
-import CameraFlipOutlineIcon from '@2fd/ant-design-icons/lib/CameraFlipOutline';
-import { SearchAndCleanButtons } from './buttonsQrModal';
+import { useEffect } from 'react'
+import { Form, Row, Select, Tabs, Input, Button, Col } from 'antd'
+import { CameraOutlined, ExpandOutlined } from '@ant-design/icons'
+import CameraFlipOutlineIcon from '@2fd/ant-design-icons/lib/CameraFlipOutline'
+import { SearchAndCleanButtons } from './buttonsQrModal'
 // @ts-ignore: Unreachable code error
-import QrReader from 'react-qr-reader';
-import { divideInformationObtainedByTheCodeReader } from '@Utilities/checkInUtils';
+import QrReader from 'react-qr-reader'
+import { divideInformationObtainedByTheCodeReader } from '@Utilities/checkInUtils'
 
-const { TabPane } = Tabs;
+const { TabPane } = Tabs
 
 function QrAndDocumentForm({
   form,
@@ -39,14 +39,19 @@ function QrAndDocumentForm({
                   Camara
                 </>
               }
-              key="1">
+              key="1"
+            >
               <Form.Item>
                 <Row justify="center" wrap gutter={8}>
                   <Col>
                     <Button
                       type="primary"
                       icon={<CameraFlipOutlineIcon />}
-                      onClick={() => (facingMode === 'user' ? setFacingMode('environment') : setFacingMode('user'))}
+                      onClick={() =>
+                        facingMode === 'user'
+                          ? setFacingMode('environment')
+                          : setFacingMode('user')
+                      }
                     >
                       {facingMode === 'user' ? ' Front' : 'Rear'} Camera
                     </Button>
@@ -73,12 +78,18 @@ function QrAndDocumentForm({
                   Pistola
                 </>
               }
-              key="2">
+              key="2"
+            >
               <>
                 <Form.Item
                   label="Id Usuario"
                   name="qr"
-                  rules={[{ required: true, message: 'El campo Id Usuario no debe estar vacío!' }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'El campo Id Usuario no debe estar vacío!',
+                    },
+                  ]}
                 >
                   <Input autoFocus allowClear />
                 </Form.Item>
@@ -91,10 +102,14 @@ function QrAndDocumentForm({
           <Form.Item
             label={label}
             name="document"
-            rules={[{ required: true, message: 'El campo documentó no debe estar vacío!' }]}
+            rules={[
+              { required: true, message: 'El campo documentó no debe estar vacío!' },
+            ]}
           >
             <Input
-              onKeyDown={(event: any) => divideInformationObtainedByTheCodeReader({ event })}
+              onKeyDown={(event: any) =>
+                divideInformationObtainedByTheCodeReader({ event })
+              }
               id="document"
               allowClear
               autoFocus
@@ -104,7 +119,7 @@ function QrAndDocumentForm({
       )}
       <SearchAndCleanButtons cleanInputSearch={cleanInputSearch} />
     </Form>
-  );
+  )
 }
 
-export default QrAndDocumentForm;
+export default QrAndDocumentForm

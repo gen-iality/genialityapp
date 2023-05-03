@@ -1,11 +1,11 @@
-import { useState, FunctionComponent } from 'react';
-import { CertsApi, RolAttApi } from '@helpers/request';
-import CMS from '../newComponent/CMS';
-import { getColumnSearchProps } from '../speakers/getColumnSearch';
-import dayjs from 'dayjs';
+import { useState, FunctionComponent } from 'react'
+import { CertsApi, RolAttApi } from '@helpers/request'
+import CMS from '../newComponent/CMS'
+import { getColumnSearchProps } from '../speakers/getColumnSearch'
+import dayjs from 'dayjs'
 
 const CertificateListPage: FunctionComponent<any> = (props) => {
-  const [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({})
 
   const columns = [
     {
@@ -13,7 +13,7 @@ const CertificateListPage: FunctionComponent<any> = (props) => {
       dataIndex: 'name',
       ellipsis: true,
       sorter: (a: any, b: any) => a.name.localeCompare(b.name),
-      ...getColumnSearchProps('name', columnsData)
+      ...getColumnSearchProps('name', columnsData),
     },
     {
       title: 'Rol',
@@ -22,9 +22,7 @@ const CertificateListPage: FunctionComponent<any> = (props) => {
       sorter: (a: any, b: any) => a.rol.name.localeCompare(b.rol.name),
       ...getColumnSearchProps('rol', columnsData),
       render(val: any, item: any) {
-        return (
-          <div>{item.rol && item.rol.name ? item.rol.name : 'Sin rol'}</div>
-        )
+        return <div>{item.rol && item.rol.name ? item.rol.name : 'Sin rol'}</div>
       },
     },
     {
@@ -35,15 +33,13 @@ const CertificateListPage: FunctionComponent<any> = (props) => {
       sorter: (a: any, b: any) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
       render(val: any, item: any) {
-        return (
-          <div>{dayjs(item.created_at).format('YYYY-DD-MM')}</div>
-        )
+        return <div>{dayjs(item.created_at).format('YYYY-DD-MM')}</div>
       },
-    }
-  ];
+    },
+  ]
 
   return (
-    <CMS 
+    <CMS
       API={CertsApi}
       eventId={props.event._id}
       title="Certificados"
@@ -60,7 +56,7 @@ const CertificateListPage: FunctionComponent<any> = (props) => {
       search
       setColumnsData={setColumnsData}
     />
-  );
+  )
 }
 
-export default CertificateListPage;
+export default CertificateListPage

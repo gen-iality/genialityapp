@@ -1,29 +1,29 @@
-import { Fragment, useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import { MessageApi } from '@helpers/request';
-import MessageUser from './messageUser';
-import EmailPrev from './emailPreview';
-import { Row, Col, Tabs, Empty } from 'antd';
-import Header from '@antdComponents/Header';
+import { Fragment, useState, useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
+import { MessageApi } from '@helpers/request'
+import MessageUser from './messageUser'
+import EmailPrev from './emailPreview'
+import { Row, Col, Tabs, Empty } from 'antd'
+import Header from '@antdComponents/Header'
 
-const { TabPane } = Tabs;
+const { TabPane } = Tabs
 
 const InvitationDetail = (props) => {
-  const eventID = props.event._id;
-  const locationState = props.location.state; //si viene item
-  const [users, setUsers] = useState({});
+  const eventID = props.event._id
+  const locationState = props.location.state //si viene item
+  const [users, setUsers] = useState({})
 
   useEffect(() => {
     if (locationState.item._id) {
-      getOne();
+      getOne()
     }
-  }, [locationState.item._id]);
+  }, [locationState.item._id])
 
   const getOne = async () => {
-    const response = await MessageApi.getOne(locationState.item._id, eventID);
+    const response = await MessageApi.getOne(locationState.item._id, eventID)
 
-    setUsers(response.data);
-  };
+    setUsers(response.data)
+  }
 
   return (
     <Fragment>
@@ -33,7 +33,11 @@ const InvitationDetail = (props) => {
         <TabPane tab="Reporte envios" key="1">
           <Row justify="center" wrap gutter={[8, 8]}>
             <Col span={22}>
-              {users.length ? <MessageUser key="users" users={users} /> : <Empty description="Sin data" />}
+              {users.length ? (
+                <MessageUser key="users" users={users} />
+              ) : (
+                <Empty description="Sin data" />
+              )}
             </Col>
           </Row>
         </TabPane>
@@ -50,7 +54,7 @@ const InvitationDetail = (props) => {
         </TabPane>
       </Tabs>
     </Fragment>
-  );
-};
+  )
+}
 
-export default withRouter(InvitationDetail);
+export default withRouter(InvitationDetail)

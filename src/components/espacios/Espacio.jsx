@@ -1,36 +1,36 @@
-import { useEffect, useState } from 'react';
-import { SpacesApi } from '@helpers/request';
-import { useHistory } from 'react-router-dom';
-import { handleRequestError } from '@helpers/utils';
-import { Row, Col, Form, Input, message, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '@context/MessageService';
+import { useEffect, useState } from 'react'
+import { SpacesApi } from '@helpers/request'
+import { useHistory } from 'react-router-dom'
+import { handleRequestError } from '@helpers/utils'
+import { Row, Col, Form, Input, message, Modal } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import Header from '@antdComponents/Header'
+import { DispatchMessageService } from '@context/MessageService'
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
 const Espacio = (props) => {
-  const eventID = props.event._id;
-  const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
-  const history = useHistory();
-  const [espacio, setEspacio] = useState({});
+  const eventID = props.event._id
+  const locationState = props.location.state //si viene new o edit en el state, si es edit es un id
+  const history = useHistory()
+  const [espacio, setEspacio] = useState({})
 
   useEffect(() => {
     if (locationState.edit) {
-      getOne();
+      getOne()
     }
-  }, []);
+  }, [])
 
   const getOne = async () => {
-    const response = await SpacesApi.getOne(locationState.edit, eventID);
-    const data = response.data.find((espacios) => espacios._id === locationState.edit);
-    setEspacio(data);
-  };
+    const response = await SpacesApi.getOne(locationState.edit, eventID)
+    const data = response.data.find((espacios) => espacios._id === locationState.edit)
+    setEspacio(data)
+  }
 
   const onSubmit = async () => {
     if (espacio.name) {
@@ -39,47 +39,47 @@ const Espacio = (props) => {
         key: 'loading',
         msj: 'Por favor espere mientras se guarda la información...',
         action: 'show',
-      });
+      })
 
       try {
         if (locationState.edit) {
-          await SpacesApi.editOne(espacio, locationState.edit, eventID);
+          await SpacesApi.editOne(espacio, locationState.edit, eventID)
         } else {
-          await SpacesApi.create(espacio, eventID);
+          await SpacesApi.create(espacio, eventID)
         }
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
-        });
+        })
         DispatchMessageService({
           type: 'success',
           msj: 'Información guardada correctamente!',
           action: 'show',
-        });
-        history.push(`${props.matchUrl}/espacios`);
+        })
+        history.push(`${props.matchUrl}/espacios`)
       } catch (e) {
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
-        });
+        })
         DispatchMessageService({
           type: 'error',
           msj: handleRequestError(e).message,
           action: 'show',
-        });
+        })
       }
     } else {
       DispatchMessageService({
         type: 'error',
         msj: 'El nombre es requerido',
         action: 'show',
-      });
+      })
     }
-  };
+  }
 
   const handleChange = (e) => {
-    setEspacio({ ...espacio, name: e.target.value });
-  };
+    setEspacio({ ...espacio, name: e.target.value })
+  }
 
   const onRemoveId = () => {
     DispatchMessageService({
@@ -87,7 +87,7 @@ const Espacio = (props) => {
       key: 'loading',
       msj: 'Por favor espere mientras se borra la información...',
       action: 'show',
-    });
+    })
     if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -99,38 +99,45 @@ const Espacio = (props) => {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await SpacesApi.deleteOne(locationState.edit, eventID);
+              await SpacesApi.deleteOne(locationState.edit, eventID)
               DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-              });
+              })
               DispatchMessageService({
                 type: 'success',
                 msj: 'Se eliminó la información correctamente!',
                 action: 'show',
-              });
-              history.push(`${props.matchUrl}/espacios`);
+              })
+              history.push(`${props.matchUrl}/espacios`)
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-              });
+              })
               DispatchMessageService({
                 type: 'error',
                 msj: handleRequestError(e).message,
                 action: 'show',
-              });
+              })
             }
-          };
-          onHandlerRemove();
+          }
+          onHandlerRemove()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title="Espacio" back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header
+        title="Espacio"
+        back
+        save
+        form
+        remove={onRemoveId}
+        edit={locationState.edit}
+      />
 
       <Row justify="center" wrap gutter={12}>
         <Col span={12}>
@@ -152,7 +159,7 @@ const Espacio = (props) => {
         </Col>
       </Row>
     </Form>
-  );
-};
+  )
+}
 
-export default Espacio;
+export default Espacio

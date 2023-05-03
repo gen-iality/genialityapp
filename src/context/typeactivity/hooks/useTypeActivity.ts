@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { TypeActivityContext } from '../typeActivityContext';
+import { useContext } from 'react'
+import { TypeActivityContext } from '../typeActivityContext'
 
 export const useTypeActivity = () => {
   const {
@@ -13,7 +13,7 @@ export const useTypeActivity = () => {
     videoObject,
     visualizeVideo,
     loadingCreate,
-  } = useContext(TypeActivityContext);
+  } = useContext(TypeActivityContext)
 
   const {
     openModal,
@@ -24,7 +24,7 @@ export const useTypeActivity = () => {
     buttonsTextNextOrCreate,
     buttonTextPreviousOrCancel,
     data,
-  } = typeActivityState;
+  } = typeActivityState
 
   return {
     openModal,
@@ -44,5 +44,5 @@ export const useTypeActivity = () => {
     videoObject,
     visualizeVideo,
     loadingCreate,
-  };
-};
+  }
+}

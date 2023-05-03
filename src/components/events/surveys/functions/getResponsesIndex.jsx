@@ -1,5 +1,5 @@
-import singleAnswerType from './singleAnswerType';
-import multipleAnswerType from './multipleAnswerType';
+import singleAnswerType from './singleAnswerType'
+import multipleAnswerType from './multipleAnswerType'
 
 async function getResponsesIndex(question) {
   if (typeof question.value === 'object') {
@@ -10,4 +10,4 @@ async function getResponsesIndex(question) {
   }
 }
 
-export default getResponsesIndex;
+export default getResponsesIndex

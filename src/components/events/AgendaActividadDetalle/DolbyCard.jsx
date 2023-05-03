@@ -1,4 +1,4 @@
-import { Card, Form, Input, Button } from 'antd';
+import { Card, Form, Input, Button } from 'antd'
 
 export const DolbyCard = () => {
   return (
@@ -15,7 +15,8 @@ export const DolbyCard = () => {
             {
               required: true,
             },
-          ]}>
+          ]}
+        >
           <Input />
         </Form.Item>
         <Form.Item
@@ -27,7 +28,8 @@ export const DolbyCard = () => {
               type: 'email',
               message: 'Ingrese un email valido',
             },
-          ]}>
+          ]}
+        >
           <Input />
         </Form.Item>
         <Form.Item>
@@ -37,5 +39,5 @@ export const DolbyCard = () => {
         </Form.Item>
       </Form>
     </Card>
-  );
-};
+  )
+}

@@ -1,5 +1,5 @@
-import ProductoSectionRoutes from './ProductoSectionRoutes';
+import ProductoSectionRoutes from './ProductoSectionRoutes'
 const Productos = () => {
-  return <ProductoSectionRoutes />;
-};
-export default Productos;
+  return <ProductoSectionRoutes />
+}
+export default Productos

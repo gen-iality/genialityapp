@@ -1,7 +1,7 @@
-import { SurveysApi } from '@helpers/request';
-import { SurveyStatus, SurveyStats, SurveyData } from '@components/events/surveys/types';
-import { getStatus as getSurveyStatus } from '../events/surveys/services/surveyStatus';
-import PooledQuestions from '@/classes/PooledQuestions';
+import { SurveysApi } from '@helpers/request'
+import { SurveyStatus, SurveyStats, SurveyData } from '@components/events/surveys/types'
+import { getStatus as getSurveyStatus } from '../events/surveys/services/surveyStatus'
+import PooledQuestions from '@/classes/PooledQuestions'
 
 /**
  * Get the survey answer stats.
@@ -17,49 +17,58 @@ export default async function useQuizStatusRequesting(
   userId: string,
   survey?: SurveyData,
 ) {
-  console.debug('finding quiz status for userId', userId, 'with surveyId', surveyId);
+  console.debug('finding quiz status for userId', userId, 'with surveyId', surveyId)
 
   let quizStatus: SurveyStatus = {
     right: 0,
     surveyCompleted: '',
-  };
-  let minimumScore = 0;
-  let totalPoints = 0;
+  }
+  let minimumScore = 0
+  let totalPoints = 0
 
-  if (!surveyId) return { total: totalPoints, right: quizStatus.right, minimum: minimumScore } as SurveyStats;
+  if (!surveyId)
+    return {
+      total: totalPoints,
+      right: quizStatus.right,
+      minimum: minimumScore,
+    } as SurveyStats
 
   // Get info from Firebase: status that contains the `right` and `surveyCompleted` values
   try {
-    const result = await getSurveyStatus(surveyId, userId);
+    const result = await getSurveyStatus(surveyId, userId)
 
-    quizStatus = { ...quizStatus, ...result };
-    console.log('quizStatus', quizStatus);
+    quizStatus = { ...quizStatus, ...result }
+    console.log('quizStatus', quizStatus)
   } catch (err) {
-    console.error(err);
+    console.error(err)
   }
 
   // Get info about the survey from the API to get the minimum value
   try {
-    console.debug('finding eventId', eventId, 'with surveyId', surveyId);
+    console.debug('finding eventId', eventId, 'with surveyId', surveyId)
 
-    const surveyIn: SurveyData = survey ? survey : await SurveysApi.getOne(eventId, surveyId);
+    const surveyIn: SurveyData = survey
+      ? survey
+      : await SurveysApi.getOne(eventId, surveyId)
 
-    minimumScore = surveyIn.minimumScore ? surveyIn.minimumScore : 0;
+    minimumScore = surveyIn.minimumScore ? surveyIn.minimumScore : 0
     // questionLength = surveyIn.questions ? surveyIn.questions.length : 0;
 
-    const pooledQuestions = await PooledQuestions.fromFirebase(surveyId, userId);
-    console.log('PooledQuestions', pooledQuestions);
+    const pooledQuestions = await PooledQuestions.fromFirebase(surveyId, userId)
+    console.log('PooledQuestions', pooledQuestions)
 
     if (pooledQuestions.pooled.length === 0) {
-      console.log('WARN: quiz progress tried to get the pool but found no questions. We will use mongodb-survey-data questions instead');
-      pooledQuestions.pooled = surveyIn.questions;
+      console.log(
+        'WARN: quiz progress tried to get the pool but found no questions. We will use mongodb-survey-data questions instead',
+      )
+      pooledQuestions.pooled = surveyIn.questions
     }
 
     totalPoints = (pooledQuestions.pooled || []) // For each question
       .map((question: any) => parseInt(question.points || 0)) // Get their points
-      .reduce((a: any, b: any) => a + b, 0); // And sum
+      .reduce((a: any, b: any) => a + b, 0) // And sum
   } catch (err) {
-    console.error('SurveysApi.getOne', err);
+    console.error('SurveysApi.getOne', err)
   }
 
   const stats: SurveyStats = {
@@ -67,9 +76,9 @@ export default async function useQuizStatusRequesting(
     total: totalPoints,
     right: quizStatus.right,
     minimum: minimumScore,
-  };
+  }
 
-  console.log('stats', stats);
+  console.log('stats', stats)
 
-  return stats;
+  return stats
 }

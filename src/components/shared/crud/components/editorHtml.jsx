@@ -1,9 +1,9 @@
-import { Component } from 'react';
-import '../editor.scss';
+import { Component } from 'react'
+import '../editor.scss'
 
 class EditarHtml extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       html: '',
       video: '',
@@ -14,25 +14,25 @@ class EditarHtml extends Component {
       showTooltipMenu: false,
       isActive: true,
       topButton: 78,
-    };
-    this.editor = [];
+    }
+    this.editor = []
   }
 
   componentDidMount() {}
 
   submit = () => {
     this.editor.map((editor) => {
-      return editor;
-    });
-  };
+      return editor
+    })
+  }
 
   render() {
     return (
       <>
         <button onClick={this.submit}>SUBMIT</button>
       </>
-    );
+    )
   }
 }
 
-export default EditarHtml;
+export default EditarHtml

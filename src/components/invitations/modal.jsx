@@ -1,32 +1,32 @@
-import { Component, Fragment } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Modal, Button } from 'antd';
+import { Component, Fragment } from 'react'
+import { withRouter } from 'react-router-dom'
+import { Modal, Button } from 'antd'
 
 class ModalInvitationError extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       visible: this.props.visible,
-    };
-    this.handleOk = this.handleOk.bind(this);
+    }
+    this.handleOk = this.handleOk.bind(this)
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.visible !== prevProps.visible) {
-      this.setState({ visible: true });
+      this.setState({ visible: true })
     }
   }
 
   handleOk = () => {
-    this.setState({ visible: false });
-  };
+    this.setState({ visible: false })
+  }
 
   handleCancel = () => {
-    this.setState({ visible: false });
-  };
+    this.setState({ visible: false })
+  }
 
   render() {
-    const { visible } = this.state;
+    const { visible } = this.state
     return (
       <Fragment>
         <div>
@@ -39,13 +39,17 @@ class ModalInvitationError extends Component {
               <Button key="submit" type="primary" onClick={this.handleOk}>
                 Cerrar
               </Button>,
-            ]}>
-            <p>Por favor Selecciona un usuario para poder envíar una invitación e intenta nuevamente</p>
+            ]}
+          >
+            <p>
+              Por favor Selecciona un usuario para poder envíar una invitación e intenta
+              nuevamente
+            </p>
           </Modal>
         </div>
       </Fragment>
-    );
+    )
   }
 }
 
-export default withRouter(ModalInvitationError);
+export default withRouter(ModalInvitationError)

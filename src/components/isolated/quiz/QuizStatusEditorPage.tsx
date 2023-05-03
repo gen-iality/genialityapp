@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
-import { Button, Input, Space, Alert } from 'antd';
+import { Button, Input, Space, Alert } from 'antd'
 
-import { firestore } from '@helpers/firebase';
-import { SurveyStatus } from '@components/events/surveys/types';
+import { firestore } from '@helpers/firebase'
+import { SurveyStatus } from '@components/events/surveys/types'
 
-export interface QuizStatusEditorPageProps {
-}
+export interface QuizStatusEditorPageProps {}
 
-const surveyId = 'surveyId-feo';
-const userId = 'userId-feo';
-const status = 'completed';
+const surveyId = 'surveyId-feo'
+const userId = 'userId-feo'
+const status = 'completed'
 
 async function setCurrentUserSurveyStatus(
   surveyId: string,
@@ -22,59 +21,54 @@ async function setCurrentUserSurveyStatus(
     .collection('votingStatusByUser')
     .doc(userId)
     .collection('surveyStatus')
-    .doc(surveyId);
-    
-  const result = await firebaseRef.get();
+    .doc(surveyId)
+
+  const result = await firebaseRef.get()
   const payload: SurveyStatus = {
     surveyCompleted: status,
     right: 0,
-  };
+  }
   if (result?.exists) {
-    const {
-      right = 0,
-    } = result.data() as typeof payload;
-    payload.right = right + nextRight;
+    const { right = 0 } = result.data() as typeof payload
+    payload.right = right + nextRight
   }
 
-  await firebaseRef.set(payload);
+  await firebaseRef.set(payload)
 }
 
-export function QuizStatusEditorPage (props: QuizStatusEditorPageProps) {
-  const [valueRight, setValueRight] = useState('');
+export function QuizStatusEditorPage(props: QuizStatusEditorPageProps) {
+  const [valueRight, setValueRight] = useState('')
 
-  const [isBadTotal, setIsBadTotal] = useState(false);
-  const [isBadRight, setIsBadRight] = useState(false);
+  const [isBadTotal, setIsBadTotal] = useState(false)
+  const [isBadRight, setIsBadRight] = useState(false)
 
-  const [isBadAlertShown, setIsBadAlertShown] = useState(false);
-  const [isGoodAlertShown, setIsGoodAlertShown] = useState(false);
-
-  useEffect(() => {
-    setIsBadRight(isNaN(parseInt(valueRight)));
-  }, [valueRight]);
+  const [isBadAlertShown, setIsBadAlertShown] = useState(false)
+  const [isGoodAlertShown, setIsGoodAlertShown] = useState(false)
 
   useEffect(() => {
-    if (!isBadAlertShown) return;
-    setTimeout(() => setIsBadAlertShown(false), 4000);
-  }, [isBadAlertShown]);
+    setIsBadRight(isNaN(parseInt(valueRight)))
+  }, [valueRight])
 
   useEffect(() => {
-    if (!isGoodAlertShown) return;
-    setTimeout(() => setIsGoodAlertShown(false), 4000);
-  }, [isGoodAlertShown]);
+    if (!isBadAlertShown) return
+    setTimeout(() => setIsBadAlertShown(false), 4000)
+  }, [isBadAlertShown])
+
+  useEffect(() => {
+    if (!isGoodAlertShown) return
+    setTimeout(() => setIsGoodAlertShown(false), 4000)
+  }, [isGoodAlertShown])
 
   const handleUpdate = () => {
     if (isBadTotal || isBadRight) {
-      setIsBadAlertShown(true);
-      return;
+      setIsBadAlertShown(true)
+      return
     }
 
     setIsGoodAlertShown(false)
-    setCurrentUserSurveyStatus(
-      surveyId,
-      userId,
-      status,
-      parseInt(valueRight),
-    ).then(() => setIsGoodAlertShown(true));
+    setCurrentUserSurveyStatus(surveyId, userId, status, parseInt(valueRight)).then(() =>
+      setIsGoodAlertShown(true),
+    )
   }
 
   return (
@@ -90,5 +84,5 @@ export function QuizStatusEditorPage (props: QuizStatusEditorPageProps) {
       {isBadAlertShown && <Alert type="error" message="No puedes enviar eso" />}
       {isGoodAlertShown && <Alert type="success" message="Datos enviados" />}
     </Space>
-  );
+  )
 }

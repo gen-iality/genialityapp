@@ -12,81 +12,84 @@ import {
   Typography,
   Popconfirm,
   Divider,
-} from 'antd';
-import { withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
-import { find, map, mergeRight, path, propEq } from 'ramda';
-import { isNonEmptyArray } from 'ramda-adjunct';
-import { useEffect, useMemo, useState } from 'react';
-import { firestore } from '@helpers/firebase';
-import { getDatesRange } from '@helpers/utils';
-import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
-import { createChatRoom } from './agendaHook';
-import { isStagingOrProduccion } from '@Utilities/isStagingOrProduccion';
+} from 'antd'
+import { withRouter } from 'react-router-dom'
+import dayjs from 'dayjs'
+import { find, map, mergeRight, path, propEq } from 'ramda'
+import { isNonEmptyArray } from 'ramda-adjunct'
+import { useEffect, useMemo, useState } from 'react'
+import { firestore } from '@helpers/firebase'
+import { getDatesRange } from '@helpers/utils'
+import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services'
+import { createChatRoom } from './agendaHook'
+import { isStagingOrProduccion } from '@Utilities/isStagingOrProduccion'
 
-const { TabPane } = Tabs;
-const { Meta } = Card;
-const { confirm } = Modal;
+const { TabPane } = Tabs
+const { Meta } = Card
+const { confirm } = Modal
 
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
-  const [loading, setLoading] = useState(true);
-  const [enableMeetings, setEnableMeetings] = useState(false);
-  const [acceptedAgendas, setAcceptedAgendas] = useState([]);
-  const [currentRoom, setCurrentRoom] = useState(null);
+  const [loading, setLoading] = useState(true)
+  const [enableMeetings, setEnableMeetings] = useState(false)
+  const [acceptedAgendas, setAcceptedAgendas] = useState([])
+  const [currentRoom, setCurrentRoom] = useState(null)
 
   const eventDatesRange = useMemo(() => {
-    return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
-  }, [event.date_start, event.date_end]);
+    return getDatesRange(
+      event.date_start || event.datetime_from,
+      event.date_end || event.datetime_to,
+    )
+  }, [event.date_start, event.date_end])
 
   useEffect(() => {
-    if (!event || !event._id) return;
+    if (!event || !event._id) return
 
     firestore
       .collection('events')
       .doc(event._id)
-      .onSnapshot(function(doc) {
-        setEnableMeetings(doc.data() && !!(doc.data().enableMeetings));
-      });
-  }, [event]);
+      .onSnapshot(function (doc) {
+        setEnableMeetings(doc.data() && !!doc.data().enableMeetings)
+      })
+  }, [event])
 
   useEffect(() => {
     if (event._id && currentEventUserId && isNonEmptyArray(eventUsers)) {
-      setLoading(true);
+      setLoading(true)
       getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
         .then((agendas) => {
           if (isNonEmptyArray(agendas)) {
             const newAcceptedAgendas = map((agenda) => {
-              const agendaAttendees = path(['attendees'], agenda);
+              const agendaAttendees = path(['attendees'], agenda)
               const otherAttendeeId = isNonEmptyArray(agendaAttendees)
                 ? find((attendeeId) => attendeeId !== currentEventUserId, agendaAttendees)
-                : null;
+                : null
 
               if (otherAttendeeId) {
-                const otherEventUser = find(propEq('_id', otherAttendeeId), eventUsers);
-                return mergeRight(agenda, { otherEventUser });
+                const otherEventUser = find(propEq('_id', otherAttendeeId), eventUsers)
+                return mergeRight(agenda, { otherEventUser })
               } else {
-                return agenda;
+                return agenda
               }
-            }, agendas);
-            setAcceptedAgendas(newAcceptedAgendas);
+            }, agendas)
+            setAcceptedAgendas(newAcceptedAgendas)
           }
         })
         .catch((error) => {
-          console.error(error);
+          console.error(error)
           notification.error({
             message: 'Error',
             description: 'Obteniendo las citas del usuario',
-          });
+          })
         })
-        .finally(() => setLoading(false));
+        .finally(() => setLoading(false))
     }
-  }, [event._id, currentEventUserId, eventUsers]);
+  }, [event._id, currentEventUserId, eventUsers])
 
   useEffect(() => {
     if (currentRoom) {
-      createChatRoom(currentRoom);
+      createChatRoom(currentRoom)
     }
-  }, [currentRoom]);
+  }, [currentRoom])
 
   if (loading) {
     return (
@@ -94,11 +97,14 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
         <Spin />
         <p>Aun no se encuentran reuniones activas, vuelve mas tarde</p>
       </Row>
-    );
+    )
   }
 
   if (currentRoom) {
-    const userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
+    const userName =
+      eventUser && eventUser.properties
+        ? eventUser.properties.names
+        : 'Anonimo' + new Date().getTime()
     //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=8816111496
     //
 
@@ -109,8 +115,9 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             className="button_regresar"
             type="primary"
             onClick={() => {
-              setCurrentRoom(null);
-            }}>
+              setCurrentRoom(null)
+            }}
+          >
             Regresar al listado de citas
           </Button>
           <Row gutter={[12, 12]}>
@@ -126,11 +133,12 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                       currentRoom +
                       '&passcode=52125404639499'
                     }
-                    allow='autoplay;fullscreen; camera *;microphone *'
+                    allow="autoplay;fullscreen; camera *;microphone *"
                     allowusermedia
                     allowFullScreen
                     title="video"
-                    className="iframe-zoom nuevo">
+                    className="iframe-zoom nuevo"
+                  >
                     <p>Your browser does not support iframes.</p>
                   </iframe>
                 </div>
@@ -153,13 +161,14 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     '&version=0.0.2' +
                     '&mode=' +
                     isStagingOrProduccion()
-                  }></iframe>
+                  }
+                ></iframe>
               )}
             </Col>
           </Row>
         </Col>
       </Row>
-    );
+    )
   }
 
   return (
@@ -168,9 +177,9 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
         <Tabs>
           {eventDatesRange.map((eventDate, eventDateIndex) => {
             const dayAgendas = acceptedAgendas.filter(({ timestamp_start }) => {
-              const agendaDate = dayjs(timestamp_start).format('YYYY-MM-DD');
-              return agendaDate === eventDate;
-            });
+              const agendaDate = dayjs(timestamp_start).format('YYYY-MM-DD')
+              return agendaDate === eventDate
+            })
 
             return (
               <TabPane
@@ -200,65 +209,65 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                   </Card>
                 )}
               </TabPane>
-            );
+            )
           })}
         </Tabs>
       ) : (
-        <Card>
-          No tienes citas actualmente
-        </Card>
+        <Card>No tienes citas actualmente</Card>
       )}
     </div>
-  );
+  )
 }
 
 function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom }) {
-  const [loading, setLoading] = useState(false);
-  const [deleted, setDeleted] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [deleted, setDeleted] = useState(false)
 
-  //const userName = pathOr('', ['names','name'], data);
-  const userName = data.owner_id == eventUser._id ? data.name ?? 'Sin nombre' : data.name_requesting ?? 'Sin nombre';
-  //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
-  const userEmail = (data.otherEventUser && data.otherEventUser.properties.email) || data.email;
-  const userImage = (data.otherEventUser && data.otherEventUser.properties.picture) || undefined;
+  const userName =
+    data.owner_id == eventUser._id
+      ? data.name ?? 'Sin nombre'
+      : data.name_requesting ?? 'Sin nombre'
+  const userEmail =
+    (data.otherEventUser && data.otherEventUser.properties.email) || data.email
+  const userImage =
+    (data.otherEventUser && data.otherEventUser.properties.picture) || undefined
 
   /** Entramos a la sala 1 a 1 de la reunión
-   *
    */
   const accessMeetRoom = (data, eventUser) => {
     if (!eventUser) {
-      alert('Tenemos problemas con tu usuario, itenta recargar la página');
-      return;
+      alert('Tenemos problemas con tu usuario, itenta recargar la página')
+      return
     }
-    const roomName = data.id;
+    const roomName = data.id
 
-    setCurrentRoom(roomName);
-  };
+    setCurrentRoom(roomName)
+  }
 
   const deleteThisAgenda = () => {
     if (!loading) {
-      setLoading(true);
+      setLoading(true)
       deleteAgenda(eventId, data.id)
         .then(() => setDeleted(true))
         .catch((error) => {
-          console.error(error);
+          console.error(error)
           notification.error({
             message: 'Error',
             description: 'Error eliminando la cita',
-          });
+          })
         })
-        .finally(() => setLoading(false));
+        .finally(() => setLoading(false))
     }
-  };
+  }
 
   const validDateRoom = (room) => {
-    const dateFrom = dayjs(room.timestamp_start).format('YYYY-MM-DD');
+    const dateFrom = dayjs(room.timestamp_start).format('YYYY-MM-DD')
 
     if (dayjs().format('YYYY-MM-DD') == dateFrom) {
-      return true;
+      return true
     }
-    return false;
-  };
+    return false
+  }
 
   return (
     <Row justify="center" style={{ marginBottom: '20px' }}>
@@ -272,7 +281,8 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
             title="¿Desea cancelar/eliminar esta cita?"
             onConfirm={deleteThisAgenda}
             okText="Si"
-            cancelText="No">
+            cancelText="No"
+          >
             <Button type="text" danger disabled={loading} loading={loading}>
               Cancelar cita
             </Button>
@@ -287,16 +297,23 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
               {dayjs(data.timestamp_end).format('hh:mm a')}
             </Typography.Text>
           </Space>
-        }>
+        }
+      >
         <Meta
           avatar={
             userImage ? (
               <Avatar size={50} src={userImage}></Avatar>
             ) : (
-              <Avatar size={50}>{userName ? userName.charAt(0).toUpperCase() : userName}</Avatar>
+              <Avatar size={50}>
+                {userName ? userName.charAt(0).toUpperCase() : userName}
+              </Avatar>
             )
           }
-          title={<Typography.Title level={5}>{userName || 'No registra nombre'}</Typography.Title>}
+          title={
+            <Typography.Title level={5}>
+              {userName || 'No registra nombre'}
+            </Typography.Title>
+          }
           description={
             <Typography.Paragraph style={{ marginTop: '-15px' }}>
               <Typography.Text type="secondary" style={{ paddingRight: '20px' }}>
@@ -324,8 +341,9 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                 disabled={loading || (!enableMeetings && !validDateRoom(data))}
                 loading={loading}
                 onClick={() => {
-                  accessMeetRoom(data, eventUser);
-                }}>
+                  accessMeetRoom(data, eventUser)
+                }}
+              >
                 {validDateRoom(data) && !enableMeetings
                   ? 'Ingresar a reunión'
                   : !validDateRoom(data) && !enableMeetings
@@ -339,7 +357,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
         )}
       </Card>
     </Row>
-  );
+  )
 }
 
-export default withRouter(MyAgenda);
+export default withRouter(MyAgenda)

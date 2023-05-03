@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { FaqsApi } from '@helpers/request';
-import CMS from '../newComponent/CMS';
-import { getColumnSearchProps } from '../speakers/getColumnSearch';
+import { useState } from 'react'
+import { FaqsApi } from '@helpers/request'
+import CMS from '../newComponent/CMS'
+import { getColumnSearchProps } from '../speakers/getColumnSearch'
 
 const Faqs = (props) => {
-  const [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({})
 
   const columns = [
     {
@@ -25,10 +25,10 @@ const Faqs = (props) => {
           <div style={{ maxHeight: '100px' }}>
             <div dangerouslySetInnerHTML={{ __html: item.content }} />
           </div>
-        );
+        )
       },
     },
-  ];
+  ]
 
   return (
     <CMS
@@ -48,7 +48,7 @@ const Faqs = (props) => {
       search
       setColumnsData={setColumnsData}
     />
-  );
-};
+  )
+}
 
-export default Faqs;
+export default Faqs

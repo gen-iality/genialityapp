@@ -1,14 +1,14 @@
-import { Component } from 'react';
-import API, { EventsApi, TicketsApi } from '@helpers/request';
-import { fieldNameEmailFirst } from '@helpers/utils';
-import FormComponent from './registrationForm/form';
-import { Spin, Skeleton } from 'antd';
-import withContext from '@context/withContext';
-import { GetTokenUserFirebase } from 'helpers/HelperAuth';
+import { Component } from 'react'
+import API, { EventsApi, TicketsApi } from '@helpers/request'
+import { fieldNameEmailFirst } from '@helpers/utils'
+import FormComponent from './registrationForm/form'
+import { Spin, Skeleton } from 'antd'
+import withContext from '@context/withContext'
+import { GetTokenUserFirebase } from 'helpers/HelperAuth'
 
 class UserRegistration extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       eventUser: undefined,
       currentUser: {},
@@ -17,38 +17,44 @@ class UserRegistration extends Component {
       extraFields: [],
       initialValues: {},
       conditionals: [],
-    };
+    }
   }
 
   addDefaultLabels = (extraFields) => {
     extraFields = extraFields.map((field) => {
-      field['label'] = field['label'] ? field['label'] : field['name'];
-      return field;
-    });
-    return extraFields;
-  };
+      field['label'] = field['label'] ? field['label'] : field['name']
+      return field
+    })
+    return extraFields
+  }
 
   orderFieldsByWeight = (extraFields) => {
     extraFields = extraFields.sort((a, b) =>
-      (a.order_weight && !b.order_weight) || (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
+      (a.order_weight && !b.order_weight) ||
+      (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
         ? -1
-        : 1
-    );
-    return extraFields;
-  };
+        : 1,
+    )
+    return extraFields
+  }
 
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = async () => {
-    const evius_token = await GetTokenUserFirebase();
+    const evius_token = await GetTokenUserFirebase()
     if (!evius_token) {
-      this.setState({ currentUser: 'guest', loading: false });
+      this.setState({ currentUser: 'guest', loading: false })
     } else {
       try {
-        const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
+        const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`)
         if (resp.status === 200) {
-          const data = resp.data;
-          const eventUser = await EventsApi.getcurrentUserEventUser(this.props.cEvent.value._id);
-          const tickets = await TicketsApi.getByEvent(this.props.cEvent.value._id, evius_token);
+          const data = resp.data
+          const eventUser = await EventsApi.getcurrentUserEventUser(
+            this.props.cEvent.value._id,
+          )
+          const tickets = await TicketsApi.getByEvent(
+            this.props.cEvent.value._id,
+            evius_token,
+          )
 
           this.setState({
             currentUser: data,
@@ -57,30 +63,37 @@ class UserRegistration extends Component {
             loading: false,
             registeredUser: !!eventUser,
             initialValues: { names: data.names, email: data.email },
-          });
+          })
         }
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
     }
-  };
+  }
 
   async componentDidMount() {
     // Trae la informacion del curso
-    const event = await EventsApi.getOne(this.props.cEvent.value._id);
+    const event = await EventsApi.getOne(this.props.cEvent.value._id)
 
-    const properties = event.user_properties;
-    const conditionals = event.fields_conditions ? event.fields_conditions : [];
+    const properties = event.user_properties
+    const conditionals = event.fields_conditions ? event.fields_conditions : []
 
     // Trae la informacion para los input
-    let extraFields = fieldNameEmailFirst(properties);
-    extraFields = this.addDefaultLabels(extraFields);
-    extraFields = this.orderFieldsByWeight(extraFields);
-    this.setState({ extraFields, conditionals }, this.getCurrentUser);
+    let extraFields = fieldNameEmailFirst(properties)
+    extraFields = this.addDefaultLabels(extraFields)
+    extraFields = this.orderFieldsByWeight(extraFields)
+    this.setState({ extraFields, conditionals }, this.getCurrentUser)
   }
 
   render() {
-    const { registeredUser, loading, initialValues, extraFields, eventUser, conditionals } = this.state;
+    const {
+      registeredUser,
+      loading,
+      initialValues,
+      extraFields,
+      eventUser,
+      conditionals,
+    } = this.state
 
     if (!loading)
       return !registeredUser ? (
@@ -107,7 +120,7 @@ class UserRegistration extends Component {
         // <UserInforCard
         //   initialValues={currentUser} eventId={eventId} extraFieldsOriginal={extraFields} conditionals={conditionals}
         // />
-      );
+      )
     return (
       <Spin tip="Cargando..." size="large">
         <Skeleton.Input style={{ width: 600 }} active size="default" />
@@ -115,9 +128,9 @@ class UserRegistration extends Component {
         <Skeleton active></Skeleton>
         <Skeleton.Input style={{ width: 200 }} active size="default" />
       </Spin>
-    );
+    )
   }
 }
 
-const UserRegistrationwithContext = withContext(UserRegistration);
-export default UserRegistrationwithContext;
+const UserRegistrationwithContext = withContext(UserRegistration)
+export default UserRegistrationwithContext

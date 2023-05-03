@@ -1,26 +1,26 @@
-import { app, firestore } from '@helpers/firebase';
-import { EventsApi } from '@helpers/request';
-import { useEffect, useState } from 'react';
-import ResultLink from './ResultLink';
+import { app, firestore } from '@helpers/firebase'
+import { EventsApi } from '@helpers/request'
+import { useEffect, useState } from 'react'
+import ResultLink from './ResultLink'
 
 const WithCode = () => {
-  const [email, setEmail] = useState();
-  const [event, setEvent] = useState();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [verifyLink, setVerifyLink] = useState(false);
-  const conectionRef = firestore.collection(`connections`);
+  const [email, setEmail] = useState()
+  const [event, setEvent] = useState()
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+  const [verifyLink, setVerifyLink] = useState(false)
+  const conectionRef = firestore.collection(`connections`)
   useEffect(() => {
     // Referencia firestore para verificar si el usuario esta conectado
 
-    const querystring = window.location.search;
-    const params = new URLSearchParams(querystring);
-    let email = params.get('email');
-    const event = params.get('event_id');
+    const querystring = window.location.search
+    const params = new URLSearchParams(querystring)
+    let email = params.get('email')
+    const event = params.get('event_id')
     if (email) {
-      setEmail(email);
-      setEvent(event);
-      email = email.replace('%40', '@');
+      setEmail(email)
+      setEvent(event)
+      email = email.replace('%40', '@')
       conectionRef
         .where('email', '==', email)
         .get()
@@ -31,49 +31,49 @@ const WithCode = () => {
             (resp.docs.length == 0 && !app.auth()?.currentUser)
           ) {
             if (app.auth().currentUser) {
-              await app.auth().signOut();
-              const docRef = await conectionRef.where('email', '==', email).get();
+              await app.auth().signOut()
+              const docRef = await conectionRef.where('email', '==', email).get()
               if (docRef.docs.length > 0) {
-                await conectionRef.doc(docRef.docs[0].id).delete();
+                await conectionRef.doc(docRef.docs[0].id).delete()
               }
-              await loginWithCode();
+              await loginWithCode()
             } else {
-              await loginWithCode();
+              await loginWithCode()
             }
           } else {
-            setError(true);
-            setLoading(false);
+            setError(true)
+            setLoading(false)
           }
-        });
+        })
     }
     async function loginWithCode() {
       app
         .auth()
         .signInWithEmailLink(email, window.location.href)
         .then((result) => {
-          setVerifyLink(true);
-          let urlredirect;
+          setVerifyLink(true)
+          let urlredirect
           if (event && result) {
-            urlredirect = `${window.location.origin}/landing/${event}`;
+            urlredirect = `${window.location.origin}/landing/${event}`
           } else {
-            urlredirect = `${window.location.origin}`;
+            urlredirect = `${window.location.origin}`
           }
           if (urlredirect) {
-            setTimeout(() => redirectUrlFunction(), 3000);
+            setTimeout(() => redirectUrlFunction(), 3000)
             const redirectUrlFunction = () => {
-              window.location.href = urlredirect;
-            };
+              window.location.href = urlredirect
+            }
           }
         })
         .catch(async (error) => {
-          let refreshLink;
+          let refreshLink
           if (event) {
-            refreshLink = await EventsApi.refreshLinkEmailUserEvent(email, event);
+            refreshLink = await EventsApi.refreshLinkEmailUserEvent(email, event)
           } else {
-            refreshLink = await EventsApi.refreshLinkEmailUser(email);
+            refreshLink = await EventsApi.refreshLinkEmailUser(email)
           }
           if (refreshLink) {
-            setTimeout(() => (window.location.href = refreshLink), 3000);
+            setTimeout(() => (window.location.href = refreshLink), 3000)
 
             /*fetch(refreshLink).then((result) => {
               if (event && result) {
@@ -83,9 +83,9 @@ const WithCode = () => {
               }
             });*/
           }
-        });
+        })
     }
-  }, []);
+  }, [])
   return (
     <>
       {loading ? (
@@ -96,7 +96,7 @@ const WithCode = () => {
         ''
       )}
     </>
-  );
-};
+  )
+}
 
-export default WithCode;
+export default WithCode

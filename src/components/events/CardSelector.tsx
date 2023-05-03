@@ -1,23 +1,27 @@
 /** AntD's imports */
-import { CheckCircleFilled } from '@ant-design/icons';
-import { Badge, Checkbox, Col, Divider, Form, Row, Space, Typography } from 'antd';
-import { ReactNode, useState } from 'react';
+import { CheckCircleFilled } from '@ant-design/icons'
+import { Badge, Checkbox, Col, Divider, Form, Row, Space, Typography } from 'antd'
+import { ReactNode, useState } from 'react'
 
-const { Text } = Typography;
+const { Text } = Typography
 
 export interface CardSelectorProps {
-  selected?: string;
+  selected?: string
   options: {
-    id: string;
-    title: string;
-    body: string | ReactNode;
-    checkbox?: { text: string; onCheck: (checked: boolean) => void; initialCheck?: boolean };
-  }[];
-  onSelected: (id: string) => void;
+    id: string
+    title: string
+    body: string | ReactNode
+    checkbox?: {
+      text: string
+      onCheck: (checked: boolean) => void
+      initialCheck?: boolean
+    }
+  }[]
+  onSelected: (id: string) => void
 }
 
 export const CardSelector = (props: CardSelectorProps) => {
-  const [currentSelected, setCurrentSelected] = useState(props.selected);
+  const [currentSelected, setCurrentSelected] = useState(props.selected)
 
   return (
     <Row justify="center" wrap gutter={[8, 8]}>
@@ -48,8 +52,8 @@ export const CardSelector = (props: CardSelectorProps) => {
                     <Space direction="vertical">
                       <div
                         onClick={() => {
-                          props.onSelected(option.id);
-                          setCurrentSelected(option.id);
+                          props.onSelected(option.id)
+                          setCurrentSelected(option.id)
                         }}
                       >
                         <Text strong>{option.title}</Text>
@@ -76,5 +80,5 @@ export const CardSelector = (props: CardSelectorProps) => {
         </Form.Item>
       </Col>
     </Row>
-  );
-};
+  )
+}

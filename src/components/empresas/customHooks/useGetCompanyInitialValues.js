@@ -1,46 +1,46 @@
-import { notification } from 'antd';
-import { mergeDeepRight, pick } from 'ramda';
-import { useCallback, useEffect, useState } from 'react';
+import { notification } from 'antd'
+import { mergeDeepRight, pick } from 'ramda'
+import { useCallback, useEffect, useState } from 'react'
 
-import { getEventCompany } from '../services';
-import { defaultInitialValues, companyFormKeys } from '../crearEditarEmpresa';
+import { getEventCompany } from '../services'
+import { defaultInitialValues, companyFormKeys } from '../crearEditarEmpresa'
 
 function useGetCompanyInitialValues(eventId, companyId) {
-  const [data, setData] = useState(defaultInitialValues);
-  const [loadingData, setLoadingData] = useState(true);
-  const [reloadFlag, setReloadFlag] = useState(true);
+  const [data, setData] = useState(defaultInitialValues)
+  const [loadingData, setLoadingData] = useState(true)
+  const [reloadFlag, setReloadFlag] = useState(true)
 
   const reloadData = useCallback(() => {
-    setReloadFlag(!reloadFlag);
-  }, [reloadFlag]);
+    setReloadFlag(!reloadFlag)
+  }, [reloadFlag])
 
   useEffect(() => {
     if (companyId) {
-      setLoadingData(true);
+      setLoadingData(true)
 
       getEventCompany(eventId, companyId)
         .then((res) => {
-          const resValues = pick(companyFormKeys, res);
-          const newInitialValues = mergeDeepRight(defaultInitialValues, resValues);
+          const resValues = pick(companyFormKeys, res)
+          const newInitialValues = mergeDeepRight(defaultInitialValues, resValues)
 
-          setData(newInitialValues);
+          setData(newInitialValues)
         })
         .catch((error) => {
-          console.error(error);
+          console.error(error)
 
           notification.error({
             message: 'Error',
             description: 'Error obteniendo los valores iniciales',
-          });
+          })
         })
-        .finally(() => setLoadingData(false));
+        .finally(() => setLoadingData(false))
     } else {
-      setData(defaultInitialValues);
-      setLoadingData(false);
+      setData(defaultInitialValues)
+      setLoadingData(false)
     }
-  }, [reloadFlag, eventId, companyId]);
+  }, [reloadFlag, eventId, companyId])
 
-  return [data, loadingData, reloadData];
+  return [data, loadingData, reloadData]
 }
 
-export default useGetCompanyInitialValues;
+export default useGetCompanyInitialValues

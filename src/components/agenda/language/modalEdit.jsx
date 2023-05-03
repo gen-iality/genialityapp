@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Select, Form, Button, Input, Modal } from 'antd';
-const { Option } = Select;
+import { useEffect, useState } from 'react'
+import { Select, Form, Button, Input, Modal } from 'antd'
+const { Option } = Select
 
 const ModalEdit = ({ visible, data, onFinish }) => {
-  const [visibleModal, setVisibleModal] = useState();
+  const [visibleModal, setVisibleModal] = useState()
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
 
   useEffect(() => {
-    setVisibleModal(visible);
-  }, [visible]);
+    setVisibleModal(visible)
+  }, [visible])
 
   useEffect(() => {
     form.setFieldsValue({
@@ -18,12 +18,12 @@ const ModalEdit = ({ visible, data, onFinish }) => {
       informative_text: data && data.informative_text,
       meeting_id: data && data.meeting_id ? data.meeting_id : 0,
       vimeo_id: data && data.vimeo_id ? data.vimeo_id : 0,
-    });
-  }, [data, form]);
+    })
+  }, [data, form])
 
   const handleCancel = async () => {
-    setVisibleModal(false);
-  };
+    setVisibleModal(false)
+  }
 
   return (
     <Modal
@@ -34,7 +34,8 @@ const ModalEdit = ({ visible, data, onFinish }) => {
         <Button key="back" onClick={handleCancel}>
           Cerrar
         </Button>,
-      ]}>
+      ]}
+    >
       <Form onFinish={onFinish} form={form}>
         <Form.Item label="Lenguaje" name="language">
           <Select>
@@ -72,6 +73,6 @@ const ModalEdit = ({ visible, data, onFinish }) => {
         </Form.Item>
       </Form>
     </Modal>
-  );
-};
-export default ModalEdit;
+  )
+}
+export default ModalEdit

@@ -5,25 +5,19 @@
 
 // React stuffs
 import * as React from 'react'
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-} from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 
 // Ant Design stuffs
-import {
-  Button,
-  Form,
-  Col,
-  Card,
-  Typography,
-  Divider,
-} from 'antd'
+import { Button, Form, Col, Card, Typography, Divider } from 'antd'
 
 // API methods
-import { UsersApi, TicketsApi, EventsApi, EventFieldsApi, countryApi } from '@helpers/request'
+import {
+  UsersApi,
+  TicketsApi,
+  EventsApi,
+  EventFieldsApi,
+  countryApi,
+} from '@helpers/request'
 
 import { LoadingOutlined, UploadOutlined } from '@ant-design/icons'
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface'
@@ -41,11 +35,7 @@ import DynamicBooleanField from '@components/dynamic-fields/DynamicBooleanField'
 import DynamicForm from '@components/dynamic-fields/DynamicForm'
 import { FormInstance } from 'antd/es/form/Form'
 
-const {
-  Text,
-  Paragraph,
-  Title,
-} = Typography
+const { Text, Paragraph, Title } = Typography
 
 const centerStyle: any = {
   margin: '0 auto',
@@ -61,29 +51,28 @@ const textLeftStyle: any = {
 type FormValuesType = any
 
 interface IOrganizationPropertiesFormProps {
-  basicDataUser: any,
-  organization: any,
-  onProperyChange?: (propertyName: string, propertyValue: any) => void,
-  otherFields?: IDynamicFieldData[],
+  basicDataUser: any
+  organization: any
+  onProperyChange?: (propertyName: string, propertyValue: any) => void
+  otherFields?: IDynamicFieldData[]
   // initialOtherValues: let us set our initial values for
-  onSubmit?: (values: any) => void,
-  form?: FormInstance,
-  noSubmitButton?: boolean,
+  onSubmit?: (values: any) => void
+  form?: FormInstance
+  noSubmitButton?: boolean
 }
 
-const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertiesFormProps> = (props) => {
-  const {
-    noSubmitButton,
-    otherFields = []
-  } = props
+const OrganizationPropertiesForm: React.FunctionComponent<
+  IOrganizationPropertiesFormProps
+> = (props) => {
+  const { noSubmitButton, otherFields = [] } = props
 
   const intl = useIntl()
   const [newForm] = Form.useForm<FormValuesType>()
 
   const [isSubmiting, setIsSubmiting] = useState(false)
-  const [form, setForm] = useState<FormInstance | undefined>(props.form);
+  const [form, setForm] = useState<FormInstance | undefined>(props.form)
   const [dynamicFields, setDynamicFields] = useState<IDynamicFieldData[]>(
-    props.organization.user_properties || otherFields
+    props.organization.user_properties || otherFields,
   )
   // This state will be used for the form
   const [initialValues, setInitialValues] = useState<FormValuesType>({})
@@ -99,24 +88,25 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
     // TODO: implement a code like of `showGeneralMessage`, but nice
   }, [])
 
-  const onValueChange = useCallback((changedValues: any, values: FormValuesType) => {
-    console.info(changedValues)
-    // TODO: validate empty fields here
-    for (const key in changedValues) {
-      const value: any = changedValues[key]
-      props.onProperyChange && props.onProperyChange(key, value)
-    }
-    // TODO: update field visibility
-  }, [props.onProperyChange])
+  const onValueChange = useCallback(
+    (changedValues: any, values: FormValuesType) => {
+      console.info(changedValues)
+      // TODO: validate empty fields here
+      for (const key in changedValues) {
+        const value: any = changedValues[key]
+        props.onProperyChange && props.onProperyChange(key, value)
+      }
+      // TODO: update field visibility
+    },
+    [props.onProperyChange],
+  )
 
   useEffect(() => {
-    setInitialValues((previous: any) => (
-      {
-        ...previous,
-        ...(props.basicDataUser || {}),
-        ID: props.basicDataUser.password, // Clone the ID-password as only ID
-      }
-    ))
+    setInitialValues((previous: any) => ({
+      ...previous,
+      ...(props.basicDataUser || {}),
+      ID: props.basicDataUser.password, // Clone the ID-password as only ID
+    }))
   }, [props.basicDataUser])
 
   useEffect(() => {
@@ -128,10 +118,10 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
   }, [form, initialValues])
 
   useEffect(() => {
-    if(props.form) {
-      setForm(props.form);
+    if (props.form) {
+      setForm(props.form)
     } else {
-      setForm(newForm);
+      setForm(newForm)
     }
   }, [props.form, newForm])
 
@@ -139,21 +129,23 @@ const OrganizationPropertiesForm: React.FunctionComponent<IOrganizationPropertie
     <Col xs={24} sm={22} md={24} lg={24} xl={24} style={centerStyle}>
       {isSubmiting ? (
         <LoadingOutlined style={{ fontSize: '50px' }} />
-      ) : form && (
-        <Card bordered={false} bodyStyle={textLeftStyle}>
-          <DynamicForm
-            noSubmitButton={noSubmitButton}
-            form={form}
-            dynamicFields={dynamicFields}
-            initialValues={initialValues}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            onValueChange={onValueChange}
-          />
-        </Card>
+      ) : (
+        form && (
+          <Card bordered={false} bodyStyle={textLeftStyle}>
+            <DynamicForm
+              noSubmitButton={noSubmitButton}
+              form={form}
+              dynamicFields={dynamicFields}
+              initialValues={initialValues}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              onValueChange={onValueChange}
+            />
+          </Card>
+        )
       )}
     </Col>
-  );
-};
+  )
+}
 
 export default OrganizationPropertiesForm

@@ -27,6 +27,6 @@ const professionalProfilOptions = [
     value: 'others',
     label: 'Otros',
   },
-];
+]
 
-export default professionalProfilOptions;
+export default professionalProfilOptions

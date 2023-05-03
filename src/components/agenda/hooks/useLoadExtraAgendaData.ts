@@ -1,76 +1,84 @@
-import { CategoriesAgendaApi, eventTicketsApi, RolAttApi, SpacesApi, ToolsApi, SpeakersApi } from '@helpers/request';
-import { handleSelect } from '@helpers/utils';
-import dayjs from 'dayjs';
-import EventType from '../types/EventType';
-import SelectOptionType from '../types/SelectOptionType';
+import {
+  CategoriesAgendaApi,
+  eventTicketsApi,
+  RolAttApi,
+  SpacesApi,
+  ToolsApi,
+  SpeakersApi,
+} from '@helpers/request'
+import { handleSelect } from '@helpers/utils'
+import dayjs from 'dayjs'
+import EventType from '../types/EventType'
+import SelectOptionType from '../types/SelectOptionType'
 
-type FunctionSetter = (x: SelectOptionType[]) => void;
+type FunctionSetter = (x: SelectOptionType[]) => void
 
 type HookCallbackConfig = {
-  setTickets: FunctionSetter;
-  setDays: FunctionSetter;
-  setHosts: FunctionSetter;
-  setRoles: FunctionSetter;
-  setSpaces: FunctionSetter;
-  setTools: FunctionSetter;
-  setCategories: FunctionSetter;
-};
+  setTickets: FunctionSetter
+  setDays: FunctionSetter
+  setHosts: FunctionSetter
+  setRoles: FunctionSetter
+  setSpaces: FunctionSetter
+  setTools: FunctionSetter
+  setCategories: FunctionSetter
+}
 
-export default async function useLoadExtraAgendaData(event: EventType, callbacks: HookCallbackConfig) {
+export default async function useLoadExtraAgendaData(
+  event: EventType,
+  callbacks: HookCallbackConfig,
+) {
   try {
     // NOTE: The tickets are not used
-    const remoteTickets = await eventTicketsApi.getAll(event?._id);
+    const remoteTickets = await eventTicketsApi.getAll(event?._id)
     const newAllTickets = remoteTickets.map((ticket: any) => ({
       item: ticket,
       label: ticket.title,
       value: ticket._id,
-    }));
-    callbacks.setTickets(newAllTickets);
+    }))
+    callbacks.setTickets(newAllTickets)
   } catch (e) {
-    console.error(e);
+    console.error(e)
   }
 
   // If dates exist, then iterate the specific dates array, formating specially.
   if (event.dates && event.dates.length > 0) {
     const newDays = event.dates.map((dates) => {
-      const formatDate = dayjs(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD');
-      return { value: formatDate, label: formatDate };
-    });
-    callbacks.setDays(newDays);
+      const formatDate = dayjs(dates, ['YYYY-MM-DD']).format('YYYY-MM-DD')
+      return { value: formatDate, label: formatDate }
+    })
+    callbacks.setDays(newDays)
   } else {
     // Si no, recibe la fecha inicio y la fecha fin y le da el formato
     // especifico a mostrar
-    const initMoment = dayjs(event.date_start);
-    const endMoment = dayjs(event.date_end);
-    const dayDiff = endMoment.diff(initMoment, 'days');
+    const initMoment = dayjs(event.date_start)
+    const endMoment = dayjs(event.date_end)
+    const dayDiff = endMoment.diff(initMoment, 'days')
     // Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-    const newDays = [];
+    const newDays = []
     for (let i = 0; i < dayDiff + 1; i++) {
-      const formatDate = dayjs(initMoment)
-        .add(i, 'd')
-        .format('YYYY-MM-DD');
-      newDays.push({ value: formatDate, label: formatDate });
+      const formatDate = dayjs(initMoment).add(i, 'd').format('YYYY-MM-DD')
+      newDays.push({ value: formatDate, label: formatDate })
     }
-    callbacks.setDays(newDays);
+    callbacks.setDays(newDays)
   }
 
   // Get more data from this event
-  const remoteHosts = await SpeakersApi.byEvent(event._id);
-  const remoteRoles = await RolAttApi.byEvent(event._id);
-  const remoteSpaces = await SpacesApi.byEvent(event._id);
-  const remoteTools = await ToolsApi.byEvent(event._id);
-  const remoteCategories = await CategoriesAgendaApi.byEvent(event._id);
+  const remoteHosts = await SpeakersApi.byEvent(event._id)
+  const remoteRoles = await RolAttApi.byEvent(event._id)
+  const remoteSpaces = await SpacesApi.byEvent(event._id)
+  const remoteTools = await ToolsApi.byEvent(event._id)
+  const remoteCategories = await CategoriesAgendaApi.byEvent(event._id)
 
   // The object struct should be like [{ label, value }] for the Select components
-  const newAllHosts = handleSelect(remoteHosts) || [];
-  const newAllRoles = handleSelect(remoteRoles) || [];
-  const newAllSpaces = handleSelect(remoteSpaces) || [];
-  const newAllTools = handleSelect(remoteTools) || [];
-  const newAllCategories = handleSelect(remoteCategories) || [];
+  const newAllHosts = handleSelect(remoteHosts) || []
+  const newAllRoles = handleSelect(remoteRoles) || []
+  const newAllSpaces = handleSelect(remoteSpaces) || []
+  const newAllTools = handleSelect(remoteTools) || []
+  const newAllCategories = handleSelect(remoteCategories) || []
 
-  callbacks.setHosts(newAllHosts);
-  callbacks.setRoles(newAllRoles);
-  callbacks.setSpaces(newAllSpaces);
-  callbacks.setTools(newAllTools);
-  callbacks.setCategories(newAllCategories);
+  callbacks.setHosts(newAllHosts)
+  callbacks.setRoles(newAllRoles)
+  callbacks.setSpaces(newAllSpaces)
+  callbacks.setTools(newAllTools)
+  callbacks.setCategories(newAllCategories)
 }

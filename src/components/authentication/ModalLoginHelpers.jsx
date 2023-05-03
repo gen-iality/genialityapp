@@ -1,35 +1,46 @@
-import { LeftCircleOutlined, LoadingOutlined, MailOutlined } from '@ant-design/icons';
-import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert, Row } from 'antd';
-import { useState } from 'react';
-import { EventsApi } from '@helpers/request';
-import withContext from '@context/withContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useIntl } from 'react-intl';
-import { useEventContext } from '@context/eventContext';
+import { LeftCircleOutlined, LoadingOutlined, MailOutlined } from '@ant-design/icons'
+import {
+  Modal,
+  PageHeader,
+  Space,
+  Typography,
+  Form,
+  Input,
+  Grid,
+  Button,
+  Alert,
+  Row,
+} from 'antd'
+import { useState } from 'react'
+import { EventsApi } from '@helpers/request'
+import withContext from '@context/withContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { useIntl } from 'react-intl'
+import { useEventContext } from '@context/eventContext'
 
-const { useBreakpoint } = Grid;
+const { useBreakpoint } = Grid
 
 const stylePaddingDesktop = {
   paddingLeft: '25px',
   paddingRight: '25px',
-};
+}
 const stylePaddingMobile = {
   paddingLeft: '0px',
   paddingRight: '0px',
-};
+}
 
 const ModalLoginHelpers = (props) => {
-  const { handleChangeTypeModal, typeModal, helperDispatch } = useHelper();
-  const cEvent = useEventContext();
+  const { handleChangeTypeModal, typeModal, helperDispatch } = useHelper()
+  const cEvent = useEventContext()
   // typeModal --> recover || send
-  const [registerUser, setRegisterUser] = useState(false);
-  const [sendRecovery, setSendRecovery] = useState(null);
-  const [status, setStatus] = useState('success');
-  const [resul, setresul] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [form] = Form.useForm();
-  const intl = useIntl();
-  const screens = useBreakpoint();
+  const [registerUser, setRegisterUser] = useState(false)
+  const [sendRecovery, setSendRecovery] = useState(null)
+  const [status, setStatus] = useState('success')
+  const [resul, setresul] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [form] = Form.useForm()
+  const intl = useIntl()
+  const screens = useBreakpoint()
   const textoTitle =
     typeModal == 'recover'
       ? intl.formatMessage({
@@ -39,7 +50,7 @@ const ModalLoginHelpers = (props) => {
       : intl.formatMessage({
           id: 'modal.send.message',
           defaultMessage: 'Enviar link de acceso al correo',
-        });
+        })
   const textoButton =
     typeModal == 'recover'
       ? intl.formatMessage({
@@ -49,50 +60,49 @@ const ModalLoginHelpers = (props) => {
       : intl.formatMessage({
           id: 'modal.send.button',
           defaultMessage: 'Enviar link de acceso al correo',
-        });
+        })
   //FUNCIÓN QUE PERMITE ENVIAR LA CONTRASEÑA AL EMAIL DIGITADO
   const handleRecoveryPass = async ({ email }) => {
     try {
-      const resp = await EventsApi.changePasswordUser(email, window.location.href);
+      const resp = await EventsApi.changePasswordUser(email, window.location.href)
       if (resp) {
         setSendRecovery(
           `${intl.formatMessage({
             id: 'modal.restore.alert.success',
             defaultMessage: 'Se ha enviado una nueva contraseña a:',
-          })} ${email} `
-        );
-        setresul('OK');
-        setStatus('success');
+          })} ${email} `,
+        )
+        setresul('OK')
+        setStatus('success')
       }
     } catch (error) {
       setSendRecovery(
         `${email} ${intl.formatMessage({
           id: 'modal.message.notregistered.org',
           defaultMessage: 'no se encuentra registrado.',
-        })} `
-      );
-      setStatus('error');
+        })} `,
+      )
+      setStatus('error')
     }
-  };
+  }
   // Función que se ejecuta al presionar el boton
   const onFinish = async (values) => {
-    setLoading(true);
-    setRegisterUser(false);
-    setSendRecovery(null);
+    setLoading(true)
+    setRegisterUser(false)
+    setSendRecovery(null)
     // SI EL CURSO ES PARA RECUPERAR CONTRASEÑA
     if (typeModal == 'recover') {
-      handleRecoveryPass(values);
-      setLoading(false);
+      handleRecoveryPass(values)
+      setLoading(false)
     } else {
       // Enviar acceso al correo
       try {
-        //const resp = await EventsApi.requestUrlEmail(props.cEvent.value?._id, window.location.origin, { email:values.email });
-        let resp;
+        let resp
         // Se valida de esta manera para
         if (cEvent.value !== null && cEvent.value !== undefined) {
-          resp = await EventsApi.requestLinkEmail(props.cEvent.value?._id, values.email);
+          resp = await EventsApi.requestLinkEmail(props.cEvent.value?._id, values.email)
         } else {
-          resp = await EventsApi.requestLinkEmailUSer(values.email);
+          resp = await EventsApi.requestLinkEmailUSer(values.email)
         }
 
         if (resp) {
@@ -100,37 +110,37 @@ const ModalLoginHelpers = (props) => {
             `${intl.formatMessage({
               id: 'modal.send.alert.success',
               defaultMessage: 'Se ha enviado un link de acceso a su correo electrónico',
-            })} ${values.email}`
-          );
-          setresul('OK');
-          setStatus('success');
+            })} ${values.email}`,
+          )
+          setresul('OK')
+          setStatus('success')
         } else {
           setSendRecovery(
             `${values.email} ${intl.formatMessage({
               id: 'modal.send.notregistered',
               defaultMessage: 'no se encuentra registrado en este curso',
-            })}`
-          );
-          setresul('noRegister');
-          setStatus('error');
+            })}`,
+          )
+          setresul('noRegister')
+          setStatus('error')
         }
       } catch (error) {
         setSendRecovery(
           `${intl.formatMessage({
             id: 'modal.send.alert.error',
             defaultMessage: 'Error al solicitar acceso al curso',
-          })}`
-        );
-        setStatus('error');
+          })}`,
+        )
+        setStatus('error')
       }
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   // Failde de validaciones del formulario
   const onFinishFailed = () => {
-    console.log('FALIED FORM');
-  };
+    console.log('FALIED FORM')
+  }
 
   return (
     <Modal
@@ -150,11 +160,12 @@ const ModalLoginHelpers = (props) => {
         backIcon={
           <Space
             onClick={() => {
-              handleChangeTypeModal(null);
-              setSendRecovery(null);
-              setRegisterUser(false);
-              form.resetFields();
-            }}>
+              handleChangeTypeModal(null)
+              setSendRecovery(null)
+              setRegisterUser(false)
+              form.resetFields()
+            }}
+          >
             <LeftCircleOutlined style={{ color: '#6B7283', fontSize: '20px' }} />
             <span style={{ fontSize: '16px', color: '#6B7283' }}>
               {intl.formatMessage({
@@ -200,7 +211,8 @@ const ModalLoginHelpers = (props) => {
                 defaultMessage: 'Ingrese un email válido',
               }),
             },
-          ]}>
+          ]}
+        >
           <Input
             type="email"
             size="large"
@@ -233,12 +245,13 @@ const ModalLoginHelpers = (props) => {
                   size="middle"
                   type="primary"
                   onClick={() => {
-                    helperDispatch({ type: 'showRegister' });
-                    handleChangeTypeModal(null);
-                    setSendRecovery(null);
-                    setRegisterUser(false);
-                    form.resetFields();
-                  }}>
+                    helperDispatch({ type: 'showRegister' })
+                    handleChangeTypeModal(null)
+                    setSendRecovery(null)
+                    setRegisterUser(false)
+                    form.resetFields()
+                  }}
+                >
                   {intl.formatMessage({
                     id: 'modal.title.register',
                     defaultMessage: 'Registrarme',
@@ -272,12 +285,13 @@ const ModalLoginHelpers = (props) => {
                 size="middle"
                 type="primary"
                 onClick={() => {
-                  helperDispatch({ type: 'showRegister' });
-                  handleChangeTypeModal(null);
-                  setSendRecovery(null);
-                  setRegisterUser(false);
-                  form.resetFields();
-                }}>
+                  helperDispatch({ type: 'showRegister' })
+                  handleChangeTypeModal(null)
+                  setSendRecovery(null)
+                  setRegisterUser(false)
+                  form.resetFields()
+                }}
+              >
                 {intl.formatMessage({
                   id: 'modal.title.register',
                   defaultMessage: 'Registrarme',
@@ -293,7 +307,8 @@ const ModalLoginHelpers = (props) => {
               htmlType="submit"
               block
               style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-              size="large">
+              size="large"
+            >
               {textoButton}
             </Button>
           </Form.Item>
@@ -305,7 +320,7 @@ const ModalLoginHelpers = (props) => {
         )}
       </Form>
     </Modal>
-  );
-};
+  )
+}
 
-export default withContext(ModalLoginHelpers);
+export default withContext(ModalLoginHelpers)

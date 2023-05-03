@@ -1,13 +1,12 @@
 class Service {
   constructor(instance) {
-    this.firestore = instance;
-    //this.validateHasVideoconference=this.validateHasVideoconference.bind(this);
+    this.firestore = instance
   }
 
   validateHasVideoconference = (event_id, activity_id) => {
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
-      if (!event_id || !activity_id) resolve(false);
+      if (!event_id || !activity_id) resolve(false)
       this.firestore
         .collection('events')
         .doc(event_id)
@@ -16,18 +15,18 @@ class Service {
         .get()
         .then((activity) => {
           if (!activity.exists) {
-            resolve(false);
+            resolve(false)
           }
-          resolve(true);
-        });
-    });
-  };
+          resolve(true)
+        })
+    })
+  }
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
     //SI EXISTE ACTIVITY ID SI NO SE ROMPE AL CREAR LA ACTIVIDAD
     if (activity_id) {
-      console.log(event_id, activity_id, roomInfo, tabs, 'service');
-      const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
+      console.log(event_id, activity_id, roomInfo, tabs, 'service')
+      const tabsSchema = { attendees: false, chat: true, games: false, surveys: false }
       const {
         roomState,
         habilitar_ingreso,
@@ -37,7 +36,7 @@ class Service {
         host_id,
         host_name,
         typeActivity,
-      } = roomInfo;
+      } = roomInfo
       // eslint-disable-next-line no-unused-vars
 
       return new Promise((resolve, reject) => {
@@ -60,8 +59,10 @@ class Service {
                 transmition: roomInfo.transmition || null,
                 avalibleGames: roomInfo?.avalibleGames || [],
               })
-              .then(() => resolve({ message: 'Configuración actualizada', state: 'updated' }))
-              .catch((err) => console.error('11. ERROR==>', err));
+              .then(() =>
+                resolve({ message: 'Configuración actualizada', state: 'updated' }),
+              )
+              .catch((err) => console.error('11. ERROR==>', err))
           } else {
             this.firestore
               .collection('events')
@@ -81,12 +82,12 @@ class Service {
                 roomState: roomState || null,
               })
               .then(() => resolve({ message: 'Configuración creada', state: 'created' }))
-              .catch((err) => console.error('11. ERROR==>', err));
+              .catch((err) => console.error('11. ERROR==>', err))
           }
-        });
-      });
+        })
+      })
     }
-  };
+  }
 
   getConfiguration = (event_id, activity_id) => {
     return new Promise((resolve, reject) => {
@@ -98,16 +99,16 @@ class Service {
         .get()
         .then((result) => {
           if (result?.exists) {
-            resolve(result.data());
+            resolve(result.data())
           } else {
-            resolve();
+            resolve()
           }
         })
         .catch((err) => {
-          reject('Hubo un problema ', err);
-        });
-    });
-  };
+          reject('Hubo un problema ', err)
+        })
+    })
+  }
 
   deleteActivity = (event_id, activity_id) => {
     return new Promise((resolve, reject) => {
@@ -119,13 +120,13 @@ class Service {
         .delete()
         .then(() => resolve('Eliminado'))
         .catch((err) => {
-          reject('Hubo un problema ', err);
-        });
-    });
-  };
+          reject('Hubo un problema ', err)
+        })
+    })
+  }
 
   setZoomRoom = (token, data) => {
-    const url = `https://apimeetings.evius.co:6490/crearroom?token=${token}`;
+    const url = `https://apimeetings.evius.co:6490/crearroom?token=${token}`
 
     return new Promise((resolve) => {
       try {
@@ -138,22 +139,25 @@ class Service {
         })
           .then(async (response) => {
             if (response.status === 400) {
-              resolve({ message: 'No está disponible el host para la fecha/hora indicada', state: 'error' });
+              resolve({
+                message: 'No está disponible el host para la fecha/hora indicada',
+                state: 'error',
+              })
             } else {
-              return await response.json();
+              return await response.json()
             }
           })
           .then((data) => {
-            resolve(data);
-          });
+            resolve(data)
+          })
       } catch (err) {
-        console.error('Error: ' + err);
+        console.error('Error: ' + err)
       }
-    });
-  };
+    })
+  }
 
   getZoomRoom = (data) => {
-    const url = `https://apimeetings.evius.co:6490/obtenerMeeting`;
+    const url = `https://apimeetings.evius.co:6490/obtenerMeeting`
 
     return new Promise((resolve) => {
       try {
@@ -166,25 +170,25 @@ class Service {
         })
           .then(async (response) => await response.json())
           .then((data) => {
-            resolve(data);
-          });
+            resolve(data)
+          })
       } catch (err) {
-        console.error('Error: ' + err);
+        console.error('Error: ' + err)
       }
-    });
-  };
+    })
+  }
 
   deleteZoomRoom = (event_id, meeting_id) => {
-    const url = `https://apimeetings.evius.co:6490/deleteroom?meeting_id=${meeting_id}&event_id=${event_id}`;
+    const url = `https://apimeetings.evius.co:6490/deleteroom?meeting_id=${meeting_id}&event_id=${event_id}`
 
     return new Promise((resolve) => {
       try {
-        fetch(url, { method: 'DELETE' }).then((response) => resolve(response));
+        fetch(url, { method: 'DELETE' }).then((response) => resolve(response))
       } catch (err) {
-        console.error('Error: ' + err);
+        console.error('Error: ' + err)
       }
-    });
-  };
+    })
+  }
 }
 
-export default Service;
+export default Service

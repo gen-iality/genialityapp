@@ -1,34 +1,34 @@
-import { useContext, useState, useMemo } from 'react';
-import { Card, Result, Space, Button, Spin, Popconfirm, Modal, message } from 'antd';
-import LoadingActivityType from '../LoadingActivityType';
-import AgendaContext from '@context/AgendaContext';
-import { useEffect } from 'react';
+import { useContext, useState, useMemo } from 'react'
+import { Card, Result, Space, Button, Spin, Popconfirm, Modal, message } from 'antd'
+import LoadingActivityType from '../LoadingActivityType'
+import AgendaContext from '@context/AgendaContext'
+import { useEffect } from 'react'
 import {
   deleteLiveStream,
   getLiveStream,
   getLiveStreamStatus,
   startLiveStream,
   deleteAllVideos,
-} from '@adaptors/gcoreStreamingApi';
-import { useQueryClient } from 'react-query';
-import useActivityType from '@context/activityType/hooks/useActivityType';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { CurrentEventContext } from '@context/eventContext';
-import type { ActivityType } from '@context/activityType/types/activityType';
-import { TypeDisplayment } from '@context/activityType/constants/enum';
+} from '@adaptors/gcoreStreamingApi'
+import { useQueryClient } from 'react-query'
+import useActivityType from '@context/activityType/hooks/useActivityType'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { CurrentEventContext } from '@context/eventContext'
+import type { ActivityType } from '@context/activityType/types/activityType'
+import { TypeDisplayment } from '@context/activityType/constants/enum'
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 // TypeDisplayment.EVIUS_MEET | TypeDisplayment.TRANSMISSION
 interface TransmitionStatusCardProps {
-  type: ActivityType.TypeAsDisplayment;
+  type: ActivityType.TypeAsDisplayment
 }
 
 const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingComponent, setIsLoadingComponent] = useState(true);
-  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
-  const [isBlockedButton, setIsBlockedButton] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingComponent, setIsLoadingComponent] = useState(true)
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false)
+  const [isBlockedButton, setIsBlockedButton] = useState(false)
   const {
     meeting_id,
     setDataLive,
@@ -41,94 +41,94 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
     removeAllRequest,
     activityEdit,
     setMeetingId,
-  } = useContext(AgendaContext);
+  } = useContext(AgendaContext)
 
-  const cEvent = useContext(CurrentEventContext);
-  const refActivity = `request/${cEvent.value?._id}/activities/${activityEdit}`;
-  const refActivityViewers = `viewers/${cEvent.value?._id}/activities/${activityEdit}`;
-  const { resetActivityType } = useActivityType();
+  const cEvent = useContext(CurrentEventContext)
+  const refActivity = `request/${cEvent.value?._id}/activities/${activityEdit}`
+  const refActivityViewers = `viewers/${cEvent.value?._id}/activities/${activityEdit}`
+  const { resetActivityType } = useActivityType()
 
   useEffect(() => {
-    console.debug('meeting_id is', meeting_id, 'rn');
+    console.debug('meeting_id is', meeting_id, 'rn')
     if (meeting_id) {
-      saveConfig(null, 0);
-      initializeStream();
+      saveConfig(null, 0)
+      initializeStream()
     } else {
-      stopInterval();
+      stopInterval()
     }
 
     async function initializeStream() {
-      console.debug('trying initialize stream to meeting_id:', meeting_id);
+      console.debug('trying initialize stream to meeting_id:', meeting_id)
       try {
-        const status = await getLiveStream(meeting_id);
-        setDataLive(status);
+        const status = await getLiveStream(meeting_id)
+        setDataLive(status)
         // await saveConfig(1);
-        await executer_startMonitorStatus();
+        await executer_startMonitorStatus()
       } catch (e) {
-        await executer_startMonitorStatus();
-        setIsLoading(false);
-        setIsBlockedButton(true);
-        message.error('Gcore - error', e.message);
-        console.log({ error: e });
+        await executer_startMonitorStatus()
+        setIsLoading(false)
+        setIsBlockedButton(true)
+        message.error('Gcore - error', e.message)
+        console.log({ error: e })
       }
-      setIsLoadingComponent(false);
+      setIsLoadingComponent(false)
     }
-  }, [meeting_id]);
+  }, [meeting_id])
 
   const deleteStreaming = async () => {
-    console.log('TransmitionStatusCard.deleteStreaming() called');
-    setIsLoadingDelete(true);
-    deleteAllVideos(dataLive?.name, meeting_id); // verificar si se va a eliminar los vídeos cuando se elimana la transmision
-    deleteLiveStream(meeting_id);
-    await removeAllRequest(refActivity);
-    await deleteTypeActivity();
+    console.log('TransmitionStatusCard.deleteStreaming() called')
+    setIsLoadingDelete(true)
+    deleteAllVideos(dataLive?.name, meeting_id) // verificar si se va a eliminar los vídeos cuando se elimana la transmision
+    deleteLiveStream(meeting_id)
+    await removeAllRequest(refActivity)
+    await deleteTypeActivity()
     {
       // await AgendaApi.editOne({ video: null }, activityEdit, cEvent?.value?._id);
-      const value = 'created_meeting_room';
-      console.debug('saves value of RoomStatus:', value);
-      setRoomStatus(value);
-      setMeetingId(null);
-      await saveConfig({ habilitar_ingreso: value, data: null });
-      console.log('config saved - habilitar_ingreso:', value);
+      const value = 'created_meeting_room'
+      console.debug('saves value of RoomStatus:', value)
+      setRoomStatus(value)
+      setMeetingId(null)
+      await saveConfig({ habilitar_ingreso: value, data: null })
+      console.log('config saved - habilitar_ingreso:', value)
     }
     // Transmition stuffs must go back to 'liveBroadcast'
-    await resetActivityType('liveBroadcast'); // reset the content tab?
-    setMeetingId(null);
-    setIsLoadingDelete(false);
-    console.info('deleteStreaming called');
-  };
+    await resetActivityType('liveBroadcast') // reset the content tab?
+    setMeetingId(null)
+    setIsLoadingDelete(false)
+    console.info('deleteStreaming called')
+  }
 
   const executer_startStream = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-      const liveStreamresponse = await startLiveStream(meeting_id);
+      const liveStreamresponse = await startLiveStream(meeting_id)
       if (liveStreamresponse) {
-        setDataLive(liveStreamresponse);
-        setRoomStatus('');
-        saveConfig({ habilitar_ingreso: '' }, 1);
-        executer_startMonitorStatus();
-        setIsLoading(false);
+        setDataLive(liveStreamresponse)
+        setRoomStatus('')
+        saveConfig({ habilitar_ingreso: '' }, 1)
+        executer_startMonitorStatus()
+        setIsLoading(false)
       } else {
         confirm({
           title: 'Error',
           icon: <ExclamationCircleOutlined />,
           content: 'Ha ocurrido un error al iniciar la trasnmisión',
           onOk() {
-            window.location.reload();
+            window.location.reload()
           },
           onCancel() {},
           cancelButtonProps: {
             disabled: true,
           },
-        });
+        })
       }
     } catch (err) {
-      console.error('executer_startStream error', err);
-      setIsLoading(false);
+      console.error('executer_startStream error', err)
+      setIsLoading(false)
     }
 
     //inicia el monitoreo
-  };
+  }
 
   const popconfirmMessage = useMemo(() => {
     if (
@@ -137,10 +137,10 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
       props.type === TypeDisplayment.VIMEO ||
       props.type === TypeDisplayment.YOUTUBE
     )
-      return 'Eliminar transmisió';
-    if (props.type === TypeDisplayment.MEETING) return 'Eliminar sala de reunión';
-    return 'Eliminar video';
-  }, [props.type]);
+      return 'Eliminar transmisió'
+    if (props.type === TypeDisplayment.MEETING) return 'Eliminar sala de reunión'
+    return 'Eliminar video'
+  }, [props.type])
 
   return isLoadingComponent ? (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
@@ -160,9 +160,14 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
                 <Popconfirm
                   title={`¿Está seguro que desea ${popconfirmMessage.toLowerCase()}? `}
                   onConfirm={() => deleteStreaming()}
-                  onCancel={() => console.info(`Eliminación en "${popconfirmMessage.toLowerCase()}" cancelado`)}
+                  onCancel={() =>
+                    console.info(
+                      `Eliminación en "${popconfirmMessage.toLowerCase()}" cancelado`,
+                    )
+                  }
                   okText="Sí"
-                  cancelText="No">
+                  cancelText="No"
+                >
                   <Button loading={isLoadingDelete} type="text" danger>
                     {popconfirmMessage}
                   </Button>
@@ -174,7 +179,8 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
                   disabled={isBlockedButton}
                   loading={isLoading}
                   onClick={() => executer_startStream()}
-                  type="primary">
+                  type="primary"
+                >
                   Iniciar transmisión
                 </Button>
               )}
@@ -183,7 +189,7 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
         />
       )}
     </Card>
-  );
-};
+  )
+}
 
-export default TransmitionStatusCard;
+export default TransmitionStatusCard

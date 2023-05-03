@@ -1,10 +1,12 @@
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Row } from 'antd'
 
 type SearchAndCleanButtonsPropTypes = {
-  cleanInputSearch: () => void;
-};
+  cleanInputSearch: () => void
+}
 
-export const SearchAndCleanButtons = ({ cleanInputSearch }: SearchAndCleanButtonsPropTypes) => {
+export const SearchAndCleanButtons = ({
+  cleanInputSearch,
+}: SearchAndCleanButtonsPropTypes) => {
   return (
     <Row justify="center" wrap gutter={8}>
       <Col>
@@ -18,5 +20,5 @@ export const SearchAndCleanButtons = ({ cleanInputSearch }: SearchAndCleanButton
         </Button>
       </Col>
     </Row>
-  );
-};
+  )
+}

@@ -1,6 +1,6 @@
-import { firestore } from '@helpers/firebase';
+import { firestore } from '@helpers/firebase'
 
-const refActivity = firestore.collection('events');
+const refActivity = firestore.collection('events')
 
 export const validateActivityCreated = (activityId, event_id) => {
   return new Promise((resolve, reject) => {
@@ -10,15 +10,15 @@ export const validateActivityCreated = (activityId, event_id) => {
       .doc(activityId)
       .onSnapshot((survey) => {
         if (!survey.exists) {
-          resolve(false);
+          resolve(false)
         }
-        resolve(true);
-      });
-  });
-};
+        resolve(true)
+      })
+  })
+}
 
 export const createOrUpdateActivity = (activityId, event_id, activityInfo, tabs) => {
-  const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
+  const tabsSchema = { attendees: false, chat: true, games: false, surveys: false }
   return new Promise((resolve, reject) => {
     validateActivityCreated(activityId, event_id).then((existSurvey) => {
       if (existSurvey) {
@@ -30,7 +30,7 @@ export const createOrUpdateActivity = (activityId, event_id, activityInfo, tabs)
             habilitar_ingreso: activityInfo,
             tabs: tabs,
           })
-          .then(() => resolve({ message: 'Configuración actualizada', state: 'updated' }));
+          .then(() => resolve({ message: 'Configuración actualizada', state: 'updated' }))
       } else {
         refActivity
           .doc(event_id)
@@ -40,11 +40,11 @@ export const createOrUpdateActivity = (activityId, event_id, activityInfo, tabs)
             habilitar_ingreso: activityInfo,
             tabs: tabsSchema,
           })
-          .then(() => resolve({ message: 'Configuracioón Creada', state: 'created' }));
+          .then(() => resolve({ message: 'Configuracioón Creada', state: 'created' }))
       }
-    });
-  });
-};
+    })
+  })
+}
 
 export const getConfiguration = (event_id, activityId) => {
   return new Promise((resolve, reject) => {
@@ -55,13 +55,13 @@ export const getConfiguration = (event_id, activityId) => {
       .get()
       .then((result) => {
         if (result?.exists) {
-          resolve(result.data());
+          resolve(result.data())
         } else {
-          resolve();
+          resolve()
         }
       })
       .catch((err) => {
-        reject('Hubo un problema ', err);
-      });
-  });
-};
+        reject('Hubo un problema ', err)
+      })
+  })
+}

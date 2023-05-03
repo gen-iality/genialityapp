@@ -1,9 +1,9 @@
-import { Result, Button } from 'antd';
-import { Link } from 'react-router-dom';
+import { Result, Button } from 'antd'
+import { Link } from 'react-router-dom'
 
 function NoMatchPage(props) {
-  const error403 = '403';
-  const error404 = '404';
+  const error403 = '403'
+  const error404 = '404'
   return (
     <Result
       status={props.match.params.withoutPermissions === 'true' ? error403 : error404}
@@ -23,7 +23,11 @@ function NoMatchPage(props) {
             <div>
               <b>La ruta a la cual deseas acceder no existe</b>
             </div>
-            <div>{(props.eventId || props?.org?._id) && <code>{props.location.pathname}</code>}</div>
+            <div>
+              {(props.eventId || props?.org?._id) && (
+                <code>{props.location.pathname}</code>
+              )}
+            </div>
           </div>
         )
       }
@@ -44,7 +48,9 @@ function NoMatchPage(props) {
                   Ver más cursos
                 </Button>
               </Link>
-              <Link to={`/landing/${props.eventId ? props.eventId : props.match.params.id}`}>
+              <Link
+                to={`/landing/${props.eventId ? props.eventId : props.match.params.id}`}
+              >
                 <Button key="moreEvents">Ir a la landing de este curso</Button>
               </Link>
             </>
@@ -58,7 +64,7 @@ function NoMatchPage(props) {
         ),
       ]}
     />
-  );
+  )
 }
 
-export default NoMatchPage;
+export default NoMatchPage

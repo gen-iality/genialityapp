@@ -1,12 +1,12 @@
-import { Component, Fragment } from 'react';
-import { withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
-import { utils, writeFileXLSX } from 'xlsx';
+import { Component, Fragment } from 'react'
+import { withRouter } from 'react-router-dom'
+import dayjs from 'dayjs'
+import { utils, writeFileXLSX } from 'xlsx'
 
-import { getTriviaRanking } from './services';
+import { getTriviaRanking } from './services'
 
-import Header from '@antdComponents/Header';
-import Table from '@antdComponents/Table';
+import Header from '@antdComponents/Header'
+import Table from '@antdComponents/Table'
 
 const columns = [
   {
@@ -44,60 +44,66 @@ const columns = [
     ellipsis: true,
     sorter: (a, b) => a.correctAnswers - b.correctAnswers,
   },
-];
+]
 class Ranking extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       nameQuestion: '',
       listOfUserResponse: [],
-    };
+    }
   }
 
   loadData = async () => {
-    const { match } = this.props;
-    const response = await getTriviaRanking(match.params.id);
-    this.setState({ listOfUserResponse: response });
-  };
+    const { match } = this.props
+    const response = await getTriviaRanking(match.params.id)
+    this.setState({ listOfUserResponse: response })
+  }
 
   componentDidMount() {
-    this.loadData();
+    this.loadData()
   }
 
   exportReport = () => {
-    const { listOfUserResponse } = this.state;
+    const { listOfUserResponse } = this.state
 
     // eslint-disable-next-line no-unused-vars
-    const exclude = ({ _id, ...rest }) => rest;
+    const exclude = ({ _id, ...rest }) => rest
 
-    const data = listOfUserResponse.map((item) => exclude(item));
+    const data = listOfUserResponse.map((item) => exclude(item))
 
     for (let i = 0; data.length > i; i++) {
       if (Array.isArray(data[i].response)) {
-        data[i].response = data[i].response.toString();
+        data[i].response = data[i].response.toString()
       }
     }
-    const ws = utils.json_to_sheet(data);
-    const wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, 'ranking');
-    const name = `${this.props.match.params.id}`;
+    const ws = utils.json_to_sheet(data)
+    const wb = utils.book_new()
+    utils.book_append_sheet(wb, ws, 'ranking')
+    const name = `${this.props.match.params.id}`
 
-    writeFileXLSX(wb, `ranking_${name}_${dayjs().format('DDMMYY')}.xls`);
-  };
+    writeFileXLSX(wb, `ranking_${name}_${dayjs().format('DDMMYY')}.xls`)
+  }
 
-  goBack = () => this.props.history.goBack();
+  goBack = () => this.props.history.goBack()
 
   render() {
-    const { nameQuestion, listOfUserResponse } = this.state;
+    const { nameQuestion, listOfUserResponse } = this.state
 
     return (
       <Fragment>
         <Header title="Ranking" back />
 
-        <Table header={columns} list={listOfUserResponse} pagination={false} exportData fileName="Ranking" />
+        <Table
+          header={columns}
+          list={listOfUserResponse}
+          pagination={false}
+          exportData
+          fileName="Ranking"
+        />
       </Fragment>
-    );
+    )
   }
 }
 
-export default withRouter(Ranking);
+export default withRouter(Ranking)

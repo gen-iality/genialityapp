@@ -1,7 +1,11 @@
-import { Button, Typography } from 'antd';
-import { CheckCircleOutlined, ExclamationCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { Button, Typography } from 'antd'
+import {
+  CheckCircleOutlined,
+  ExclamationCircleOutlined,
+  CloseCircleOutlined,
+} from '@ant-design/icons'
 
-const { Paragraph } = Typography;
+const { Paragraph } = Typography
 export const columns = (goToEvent) => [
   {
     title: 'Nombre del curso',
@@ -28,7 +32,7 @@ export const columns = (goToEvent) => [
         <Button type="link" onClick={() => goToEvent(item._id)}>
           <span style={{ color: '#2E9AFE' }}>{item.name}</span>
         </Button>
-      );
+      )
     },
   },
   {
@@ -72,4 +76,4 @@ export const columns = (goToEvent) => [
          return item.checked_in;
       }, */
   },
-];
+]

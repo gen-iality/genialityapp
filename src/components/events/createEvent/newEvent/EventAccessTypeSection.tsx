@@ -3,8 +3,7 @@ import { CheckCircleFilled } from '@ant-design/icons'
 import { Badge, Card, Col, Divider, Row, Space, Typography, Checkbox } from 'antd'
 import { useContextNewEvent } from '@context/newEventContext'
 
-
-const EventAccessTypeSection: FunctionComponent  = () => {
+const EventAccessTypeSection: FunctionComponent = () => {
   /**
    * accessType === 0 -> Publico con registro obligatorio
    * accessType === 1 -> Publico sin registro obligatorio
@@ -22,7 +21,13 @@ const EventAccessTypeSection: FunctionComponent  = () => {
       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
         <Badge
           onClick={() => dispatch({ type: 'TYPE_EVENT', payload: { type: 0 } })}
-          count={state.type === 0 ? <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} />  : ''}
+          count={
+            state.type === 0 ? (
+              <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} />
+            ) : (
+              ''
+            )
+          }
         >
           <Card
             style={{
@@ -35,7 +40,9 @@ const EventAccessTypeSection: FunctionComponent  = () => {
           >
             <Space direction="vertical">
               <div onClick={() => this.changetypeEvent(0)}>
-                <Typography.Text strong>Curso público con registro obligatorio</Typography.Text>
+                <Typography.Text strong>
+                  Curso público con registro obligatorio
+                </Typography.Text>
                 <Divider />
                 <Typography.Text type="secondary">
                   <ul>
@@ -59,7 +66,13 @@ const EventAccessTypeSection: FunctionComponent  = () => {
       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
         <Badge
           onClick={() => dispatch({ type: 'TYPE_EVENT', payload: { type: 1 } })}
-          count={state.type === 1 ? <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} /> : ''}
+          count={
+            state.type === 1 ? (
+              <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} />
+            ) : (
+              ''
+            )
+          }
         >
           <Card
             style={{
@@ -71,7 +84,9 @@ const EventAccessTypeSection: FunctionComponent  = () => {
             }}
           >
             <Space direction="vertical">
-              <Typography.Text strong>Cursos público sin registro obligatorio</Typography.Text>
+              <Typography.Text strong>
+                Cursos público sin registro obligatorio
+              </Typography.Text>
               <Divider />
               <Typography.Text type="secondary">
                 {/* Solo se mostrará el inicio de sesión. Quedará como anónimo */}
@@ -88,7 +103,13 @@ const EventAccessTypeSection: FunctionComponent  = () => {
       <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
         <Badge
           onClick={() => dispatch({ type: 'TYPE_EVENT', payload: { type: 2 } })}
-          count={state.type === 2 ? <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} /> : ''}
+          count={
+            state.type === 2 ? (
+              <CheckCircleFilled style={{ fontSize: '25px', color: '#f7981d' }} />
+            ) : (
+              ''
+            )
+          }
         >
           <Card
             style={{

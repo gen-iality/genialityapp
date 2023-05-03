@@ -44,8 +44,8 @@
     }
   }
   .rsvp-date-wrapper {
-    .rsvp-date{
-      .date{
+    .rsvp-date {
+      .date {
         color: $grey;
         font-weight: 900;
         margin-left: 1em;
@@ -60,7 +60,7 @@
   .info-icon {
     /* cursor: pointer; */ // temporal
     cursor: not-allowed;
-    opacity: .5;
+    opacity: 0.5;
     &:hover {
       opacity: 1;
     }
@@ -133,7 +133,7 @@
 .rsvp-send {
   border-radius: 10px;
   border: none;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   height: auto;
   .rsvp-send-title {
     color: $grey;
@@ -165,7 +165,7 @@
       margin: 1em 0;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;  
+      white-space: nowrap;
       &:first-child {
         margin-top: 0;
       }
@@ -177,7 +177,8 @@
 }
 
 @media only screen and (max-width: 700px) {
-  .input, .textarea {
+  .input,
+  .textarea {
     max-width: 70%;
   }
   .geosuggest__input {
@@ -186,7 +187,7 @@
   .rw-widget > .rw-widget-container {
     width: 70%;
   }
-  div.imgRsvp{
+  div.imgRsvp {
     height: auto;
     width: 400px;
     position: relative;

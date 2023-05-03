@@ -1,4 +1,4 @@
-import axios from 'axios/index';
+import axios from 'axios/index'
 
 const gCoreCLient = axios.create({
   //BASE URL WOWZA
@@ -9,170 +9,171 @@ const gCoreCLient = axios.create({
     Authorization:
       'APIKey 1203$1032b84618ac0c687a026a037185e55c6930e0c006783a9d86b211f2114644c1a16836c730f4934df8559bc31952228999f371a694e788aeab756b2d0e253f45',
   },
-});
+})
 
 const createLiveStream = async (activity_name) => {
   const stream_config = {
     name: activity_name,
     active: false,
-  };
+  }
 
   const res = await gCoreCLient.post('streams/', stream_config, {
     timeout: 10000,
-  });
-  return res.data ? res.data : null;
-};
+  })
+  return res.data ? res.data : null
+}
 
 const getLiveStream = async (stream_id) => {
-  if (!stream_id) return null;
-  console.log('ejecutando', stream_id);
+  if (!stream_id) return null
+  console.log('ejecutando', stream_id)
   const res = await gCoreCLient.get('streams/' + stream_id, {
     timeout: 5000,
-  });
-  console.log('ejecutando', res.data);
-  return res.data ? res.data : null;
-};
+  })
+  console.log('ejecutando', res.data)
+  return res.data ? res.data : null
+}
 
 const getLiveStreamStatus = async (stream_id) => {
-  const res = await gCoreCLient.get('streams/' + stream_id);
-  return res.data ? res.data : null;
-};
+  const res = await gCoreCLient.get('streams/' + stream_id)
+  return res.data ? res.data : null
+}
 
 const getLiveStreamConnected = async (stream_id) => {
-  const res = await gCoreCLient.get('streams/' + stream_id);
-  return res.data ? res.data.live : null;
-};
+  const res = await gCoreCLient.get('streams/' + stream_id)
+  return res.data ? res.data.live : null
+}
 
 const ResetLiveStream = async (stream_id) => {
   const res = await gCoreCLient.put('live_streams/' + stream_id + '/reset', {
     timeout: 5000,
-  });
+  })
 
   if (res.data && res.data.live_stream) {
-    return res.data.live_stream;
+    return res.data.live_stream
   }
 
-  return null;
-};
+  return null
+}
 
 const startLiveStream = async (stream_id) => {
   const res = await gCoreCLient.put('streams/' + stream_id, {
     active: true,
-  });
-  console.log('RESPUESTA START===>', res);
-  return res.data ? res.data : null;
-};
+  })
+  console.log('RESPUESTA START===>', res)
+  return res.data ? res.data : null
+}
 
 const stopLiveStream = async (stream_id) => {
   const res = await gCoreCLient.put('streams/' + stream_id, {
     active: false,
-  });
-  console.log('RESPUESTA STOP===>', res);
-  return res.data ? res.data : null;
-};
+  })
+  console.log('RESPUESTA STOP===>', res)
+  return res.data ? res.data : null
+}
 const deleteLiveStream = async (stream_id) => {
   const res = await gCoreCLient.delete('streams/' + stream_id, {
     timeout: 5000,
-  });
+  })
 
   if (res?.status === 204) {
-    return 'LiveStream deleted';
+    return 'LiveStream deleted'
   }
 
-  return null;
-};
+  return null
+}
 const startRecordingLiveStream = async (stream_id) => {
-  const res = await gCoreCLient.put('streams/' + stream_id + '/start_recording');
+  const res = await gCoreCLient.put('streams/' + stream_id + '/start_recording')
   if (res?.status === 204) {
-    return 'LiveStream recording started';
+    return 'LiveStream recording started'
   }
-  return null;
-};
+  return null
+}
 const stopRecordingLiveStream = async (stream_id) => {
-  const res = await gCoreCLient.put('streams/' + stream_id + '/stop_recording');
+  const res = await gCoreCLient.put('streams/' + stream_id + '/stop_recording')
   if (res?.status === 204) {
-    return 'LiveStream recording stopped';
+    return 'LiveStream recording stopped'
   }
-  return null;
-};
+  return null
+}
 
 const getVideosLiveStream = async (name_activity) => {
-  const res = await gCoreCLient.get('/videos/search?q=' + name_activity);
+  const res = await gCoreCLient.get('/videos/search?q=' + name_activity)
 
   if (res?.status === 200) {
-    return res.data;
+    return res.data
   }
-  return null;
-};
+  return null
+}
 
 const getVideoLiveStream = async (video_id) => {
-  const res = await gCoreCLient.get('/videos/' + video_id + '?download=true');
+  const res = await gCoreCLient.get('/videos/' + video_id + '?download=true')
   if (res?.status === 200) {
-    return res.data;
+    return res.data
   }
-  return null;
-};
+  return null
+}
 
 const obtenerVideos = async (name_activity, stream_id) => {
-  const listVideo = [];
+  const listVideo = []
   try {
-    const videos = await getVideosLiveStream(name_activity);
+    const videos = await getVideosLiveStream(name_activity)
     if (videos) {
       await Promise.all(
         videos.map(async (video) => {
           if (video.stream_id == stream_id) {
-            const dataVideo = await getVideoLiveStream(video.id);
+            const dataVideo = await getVideoLiveStream(video.id)
             if (dataVideo) {
               listVideo.push({
                 id: dataVideo.id,
                 name: dataVideo.name,
                 url: dataVideo.iframe_url,
                 hls_url: dataVideo.hls_url,
-                download: 'https://' + dataVideo.origin_host + '/' + dataVideo.origin_resource,
+                download:
+                  'https://' + dataVideo.origin_host + '/' + dataVideo.origin_resource,
                 duration: dataVideo.duration,
                 status: dataVideo.status,
                 created_at: dataVideo.created_at,
                 image: dataVideo.screenshot,
-              });
+              })
             }
           }
-        })
-      );
+        }),
+      )
     }
   } catch (e) {
-    console.log('EXCEPCION===>', e);
-    return listVideo;
+    console.log('EXCEPCION===>', e)
+    return listVideo
   }
 
-  return listVideo;
-};
+  return listVideo
+}
 
 const deleteVideo = async (idVideo) => {
-  const res = await gCoreCLient.delete('/videos/' + idVideo);
+  const res = await gCoreCLient.delete('/videos/' + idVideo)
   if (res?.status === 204) {
-    return res;
+    return res
   } else {
-    return null;
+    return null
   }
-};
+}
 
 const deleteAllVideos = async (name_activity, stream_id) => {
   try {
-    const videos = await getVideosLiveStream(name_activity);
+    const videos = await getVideosLiveStream(name_activity)
     if (videos) {
       await Promise.all(
         videos.map(async (video) => {
           if (video.stream_id == stream_id) {
-            await deleteVideo(video.id);
+            await deleteVideo(video.id)
           }
-        })
-      );
+        }),
+      )
     }
   } catch (e) {
-    console.log('EXCEPCION===>', e);
-    return null;
+    console.log('EXCEPCION===>', e)
+    return null
   }
-};
+}
 
 export {
   getLiveStream,
@@ -190,4 +191,4 @@ export {
   obtenerVideos,
   deleteVideo,
   deleteAllVideos,
-};
+}

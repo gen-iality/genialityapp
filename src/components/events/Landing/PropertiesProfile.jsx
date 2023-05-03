@@ -1,5 +1,5 @@
-import { List, Col, Spin } from 'antd';
-import { formatDataToString } from '@helpers/utils';
+import { List, Col, Spin } from 'antd'
+import { formatDataToString } from '@helpers/utils'
 
 const PropertiesProfile = (props) => {
   return (
@@ -8,7 +8,9 @@ const PropertiesProfile = (props) => {
       span={24}
       style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'auto' }}
     >
-      {!props.propertiesUserPerfil && <Spin style={{ padding: '50px' }} size="large" tip="Cargando..."></Spin>}
+      {!props.propertiesUserPerfil && (
+        <Spin style={{ padding: '50px' }} size="large" tip="Cargando..."></Spin>
+      )}
       <List
         bordered
         dataSource={props.propertiesUserPerfil && props.propertiesUserPerfil}
@@ -17,13 +19,16 @@ const PropertiesProfile = (props) => {
           !item.visibleByAdmin &&
           this.props.cUser[item.name] && (
             <List.Item>
-              <List.Item.Meta title={item.label} description={formatDataToString(this.props.cUser[item.name], item)} />
+              <List.Item.Meta
+                title={item.label}
+                description={formatDataToString(this.props.cUser[item.name], item)}
+              />
             </List.Item>
           )
         }
       />
     </Col>
-  );
-};
+  )
+}
 
-export default PropertiesProfile;
+export default PropertiesProfile

@@ -1,10 +1,10 @@
-import { Button, Card, Input, Space, Tooltip, Typography } from 'antd';
-import { CopyFilled } from '@ant-design/icons';
-import { useContext } from 'react';
-import AgendaContext from '@context/AgendaContext';
+import { Button, Card, Input, Space, Tooltip, Typography } from 'antd'
+import { CopyFilled } from '@ant-design/icons'
+import { useContext } from 'react'
+import AgendaContext from '@context/AgendaContext'
 
 const CardShareLinkEviusMeet = (props: any) => {
-  const { copyToClipboard } = useContext(AgendaContext);
+  const { copyToClipboard } = useContext(AgendaContext)
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
       <Card.Meta
@@ -30,7 +30,9 @@ const CardShareLinkEviusMeet = (props: any) => {
             <Tooltip title="Copiar productor url">
               <Button
                 onClick={() =>
-                  copyToClipboard(`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=1`)
+                  copyToClipboard(
+                    `https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=1`,
+                  )
                 }
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}
               />
@@ -48,7 +50,9 @@ const CardShareLinkEviusMeet = (props: any) => {
             <Tooltip title="Copiar speaker url">
               <Button
                 onClick={() =>
-                  copyToClipboard(`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=2`)
+                  copyToClipboard(
+                    `https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=2`,
+                  )
                 }
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}
               />
@@ -57,7 +61,7 @@ const CardShareLinkEviusMeet = (props: any) => {
         </Space>
       </Space>
     </Card>
-  );
-};
+  )
+}
 
-export default CardShareLinkEviusMeet;
+export default CardShareLinkEviusMeet

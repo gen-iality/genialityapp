@@ -1,4 +1,4 @@
-import { useTable, usePagination, useRowSelect } from 'react-table';
+import { useTable, usePagination, useRowSelect } from 'react-table'
 
 /**
  * 
@@ -15,7 +15,7 @@ import { useTable, usePagination, useRowSelect } from 'react-table';
  className="-highlight"} props 
  */
 export default function EviusTable(props) {
-  const { columns, data, onRowClick } = props;
+  const { columns, data, onRowClick } = props
   // Use the useTable Hook to send the columns and data to build the table
 
   const keyHooks = (hooks) => {
@@ -26,9 +26,9 @@ export default function EviusTable(props) {
         nuevo2: 'nuevo2',
         onClick: (a) => {},
         ...props,
-      };
-    });
-  };
+      }
+    })
+  }
 
   const {
     headerGroups, // headerGroups if your table have groupings
@@ -52,7 +52,7 @@ export default function EviusTable(props) {
     usePagination,
     useRowSelect,
     keyHooks,
-  );
+  )
 
   return (
     <>
@@ -70,22 +70,22 @@ export default function EviusTable(props) {
         </thead>
         <tbody className="ant-table-tbody">
           {rows.map((row, keyrow) => {
-            prepareRow(row);
+            prepareRow(row)
 
             return (
               <tr
                 {...row.getRowProps()}
                 onClick={(e) => {
-                  onRowClick && onRowClick(row);
+                  onRowClick && onRowClick(row)
                 }}
                 key={keyrow}
                 className="ant-table-row nt-table-row-level-0"
               >
                 {row.cells.map((cell, keycell) => {
-                  return <td key={keycell}>{cell.render('Cell')}</td>;
+                  return <td key={keycell}>{cell.render('Cell')}</td>
                 })}
               </tr>
-            );
+            )
           })}
         </tbody>
       </table>
@@ -115,8 +115,8 @@ export default function EviusTable(props) {
             type="number"
             defaultValue={pageIndex + 1}
             onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              gotoPage(page)
             }}
             style={{ width: '100px' }}
           />
@@ -124,7 +124,7 @@ export default function EviusTable(props) {
         <select
           value={pageSize}
           onChange={(e) => {
-            setPageSize(Number(e.target.value));
+            setPageSize(Number(e.target.value))
           }}
         >
           {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -135,7 +135,7 @@ export default function EviusTable(props) {
         </select>
       </div>
     </>
-  );
+  )
 }
 
 /*  Inicio de metodo para cargar millones de datos trabajo en proceso

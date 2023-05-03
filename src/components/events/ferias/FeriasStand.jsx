@@ -1,15 +1,18 @@
-import { useHistory } from 'react-router';
-import { Badge } from 'antd';
+import { useHistory } from 'react-router'
+import { Badge } from 'antd'
 
 function FeriasStand(props) {
-  const history = useHistory();
+  const history = useHistory()
   return (
     <>
       <div
         style={{ position: 'relative', cursor: 'pointer' }}
         onClick={() => {
-          history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`);
-        }}>
+          history.push(
+            `/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`,
+          )
+        }}
+      >
         <div
           className="mini-banner"
           style={{
@@ -21,7 +24,8 @@ function FeriasStand(props) {
             transform: 'translateX(-50%)',
             top: '20px',
             backgroundColor: 'white',
-          }}>
+          }}
+        >
           <Badge.Ribbon text={props.text} color={props.color}>
             <img
               src={props.image}
@@ -47,7 +51,7 @@ function FeriasStand(props) {
         />
       </div>
     </>
-  );
+  )
 }
 
-export default FeriasStand;
+export default FeriasStand

@@ -1,13 +1,13 @@
-import { SmileOutlined } from '@ant-design/icons';
-import { Result, Grid } from 'antd';
-import ReactPlayer from 'react-player';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { SmileOutlined } from '@ant-design/icons'
+import { Result, Grid } from 'antd'
+import ReactPlayer from 'react-player'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
 
-const { useBreakpoint } = Grid;
+const { useBreakpoint } = Grid
 
 export const VideoActivity = () => {
-  const { currentActivity } = useHelper();
-  const screens = useBreakpoint();
+  const { currentActivity } = useHelper()
+  const screens = useBreakpoint()
   return (
     <>
       {currentActivity?.video ? (
@@ -23,7 +23,7 @@ export const VideoActivity = () => {
         <div className="mediaplayer">
           <ReactPlayer
             style={{ objectFit: 'cover' }}
-            width='100%'
+            width="100%"
             height={`${screens.xs ? '100%' : '55vh'}`}
             url={currentActivity && currentActivity?.video}
             controls
@@ -33,5 +33,5 @@ export const VideoActivity = () => {
         <Result icon={<SmileOutlined />} title="Este curso ha terminado!" />
       )}
     </>
-  );
-};
+  )
+}

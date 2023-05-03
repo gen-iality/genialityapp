@@ -1,5 +1,7 @@
 :root {
-  --main-height: calc(100vh - 0px); /* calc(100vh - 64px): Calculamos el alto 100% incluyendo el header principal */
+  --main-height: calc(
+    100vh - 0px
+  ); /* calc(100vh - 64px): Calculamos el alto 100% incluyendo el header principal */
 }
 
 .main-stand {
@@ -28,7 +30,7 @@
   top: 41%;
   right: 29.5%;
   border-radius: 50%;
-  background-color: rgba(255,255,255,0.5);
+  background-color: rgba(255, 255, 255, 0.5);
   background-image: url('/exhibitors/icons/play.svg');
   background-repeat: no-repeat;
   background-position: center center;

@@ -1,49 +1,52 @@
-import { useCallback, useState, useEffect } from 'react';
-import { CaretLeftOutlined, DeleteOutlined, PlusCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Row, Input, Modal, Switch, Spin } from 'antd';
-import { Field, FieldArray, Formik } from 'formik';
-import { apply, keys } from 'ramda';
-import { Link } from 'react-router-dom';
-import * as yup from 'yup';
+import { useCallback, useState, useEffect } from 'react'
+import {
+  CaretLeftOutlined,
+  DeleteOutlined,
+  PlusCircleOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons'
+import { Button, Col, Form, Row, Input, Modal, Switch, Spin } from 'antd'
+import { Field, FieldArray, Formik } from 'formik'
+import { apply, keys } from 'ramda'
+import { Link } from 'react-router-dom'
+import * as yup from 'yup'
 
-import InputField from '../formFields/InputField';
-import FileField from '../formFields/FileField';
-import ImageField from '../formFields/ImageField';
-import SelectField from '../formFields/SelectField';
-import RichTextComponentField from '../formFields/RichTextComponentField';
-import SwitchField from '../formFields/SwitchField';
-import Loading from '../loaders/loading';
-import useGetCompanyInitialValues from './customHooks/useGetCompanyInitialValues';
-import useGetEventCompaniesStandTypesOptions from './customHooks/useGetEventCompaniesStandTypesOptions';
-import useGetEventCompaniesSocialNetworksOptions from './customHooks/useGetEventCompaniesSocialNetworksOptions';
-import { createEventCompany, updateEventCompany } from './services';
-import { firestore } from '@helpers/firebase';
-import Header from '@antdComponents/Header';
-import BackTop from '@antdComponents/BackTop';
-import { DispatchMessageService } from '@context/MessageService';
-import { handleRequestError } from '@helpers/utils';
+import InputField from '../formFields/InputField'
+import FileField from '../formFields/FileField'
+import ImageField from '../formFields/ImageField'
+import SelectField from '../formFields/SelectField'
+import RichTextComponentField from '../formFields/RichTextComponentField'
+import SwitchField from '../formFields/SwitchField'
+import Loading from '../loaders/loading'
+import useGetCompanyInitialValues from './customHooks/useGetCompanyInitialValues'
+import useGetEventCompaniesStandTypesOptions from './customHooks/useGetEventCompaniesStandTypesOptions'
+import useGetEventCompaniesSocialNetworksOptions from './customHooks/useGetEventCompaniesSocialNetworksOptions'
+import { createEventCompany, updateEventCompany } from './services'
+import { firestore } from '@helpers/firebase'
+import Header from '@antdComponents/Header'
+import BackTop from '@antdComponents/BackTop'
+import { DispatchMessageService } from '@context/MessageService'
+import { handleRequestError } from '@helpers/utils'
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 const buttonsLayout = {
   wrapperCol: { offset: 8, span: 16 },
-};
+}
 
-const NAME_MAX_LENGTH = 100;
-const DESCRIPTION_MAX_LENGTH = 1000;
-const TIMES_AND_VENUES_MAX_LENGTH = 100;
-const URL_MAX_LENGTH = 500;
-const SERVICE_DESCRIPTION_MAX_LENGTH = 1000;
-//const SERVICES_LIMIT = 4
-const SOCIAL_NETWORKS_LIMIT = 4;
-//const ADVISOR_LIMIT = 3
-const GALLERY_LIMIT = 30;
-const CONTACT_INFO_DESCRIPTION_MAX_LENGTH = 1000;
+const NAME_MAX_LENGTH = 100
+const DESCRIPTION_MAX_LENGTH = 1000
+const TIMES_AND_VENUES_MAX_LENGTH = 100
+const URL_MAX_LENGTH = 500
+const SERVICE_DESCRIPTION_MAX_LENGTH = 1000
+const SOCIAL_NETWORKS_LIMIT = 4
+const GALLERY_LIMIT = 30
+const CONTACT_INFO_DESCRIPTION_MAX_LENGTH = 1000
 
 const validationSchema = yup.object().shape({
   name: yup
@@ -71,7 +74,7 @@ const validationSchema = yup.object().shape({
         number: yup.string().required('Este campo es requerido'),
         cargo: yup.string().required('Este campo es requerido'),
         email: yup.string().required('Este campo es requerido'),
-      })
+      }),
     ),
   services: yup
     .array()
@@ -85,26 +88,14 @@ const validationSchema = yup.object().shape({
           .min(3, 'nombre de servicio no válido')
           .required('El nombre del servicio es requerido'),
         category: yup.string(),
-        web_url: yup
-          .string()
-          .url()
-          .max(URL_MAX_LENGTH),
-      })
+        web_url: yup.string().url().max(URL_MAX_LENGTH),
+      }),
     ),
-  webpage: yup
-    .string()
-    .url()
-    .max(URL_MAX_LENGTH),
+  webpage: yup.string().url().max(URL_MAX_LENGTH),
   email: yup.string().max(40),
   telefono: yup.string().max(10),
-  video_url: yup
-    .string()
-    .url()
-    .max(URL_MAX_LENGTH),
-  linkedin: yup
-    .string()
-    .url()
-    .max(URL_MAX_LENGTH),
+  video_url: yup.string().url().max(URL_MAX_LENGTH),
+  linkedin: yup.string().url().max(URL_MAX_LENGTH),
   social_networks: yup
     .array()
     .max(SOCIAL_NETWORKS_LIMIT)
@@ -112,12 +103,12 @@ const validationSchema = yup.object().shape({
       yup.object().shape({
         network: yup.string(),
         url: yup.string().url(),
-      })
+      }),
     ),
 
   stand_type: yup.string(),
   visible: yup.boolean(),
-});
+})
 export const defaultInitialValues = {
   name: '',
   stand_type: '',
@@ -138,17 +129,22 @@ export const defaultInitialValues = {
   social_networks: [],
   gallery: [],
   visitors_space_id: '',
-};
-export const companyFormKeys = keys(defaultInitialValues);
+}
+export const companyFormKeys = keys(defaultInitialValues)
 
 function CrearEditarEmpresa(props) {
-  const { event, match, history } = props;
-  const { companyId } = match.params;
-  /* const locationState = props.location.state; */
-  const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(event._id);
-  const [socialNetworksOptions, loadingSocialNetworks] = useGetEventCompaniesSocialNetworksOptions(event._id);
-  const [initialValues, loadingInitialValues] = useGetCompanyInitialValues(event._id, props.location.state.edit);
-  const [tamanio, setTamanio] = useState(0);
+  const { event, match, history } = props
+  const { companyId } = match.params
+  const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(
+    event._id,
+  )
+  const [socialNetworksOptions, loadingSocialNetworks] =
+    useGetEventCompaniesSocialNetworksOptions(event._id)
+  const [initialValues, loadingInitialValues] = useGetCompanyInitialValues(
+    event._id,
+    props.location.state.edit,
+  )
+  const [tamanio, setTamanio] = useState(0)
 
   useEffect(() => {
     firestore
@@ -157,68 +153,71 @@ function CrearEditarEmpresa(props) {
       .collection('companies')
       .get()
       .then((resp) => {
-        setTamanio(resp.docs.length);
-      });
-  }, []);
+        setTamanio(resp.docs.length)
+      })
+  }, [])
 
   const onSubmit = useCallback(
     (values, { setSubmitting }) => {
-      /* console.log(values, 'vals') */
       DispatchMessageService({
         type: 'loading',
         key: 'loading',
         msj: 'Espere mientras se guarda la información',
         action: 'show',
-      });
+      })
       if (values.stand_image && values.list_image) {
-        const isNewRecord = !props.location.state.edit;
-        const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany;
-        const paramsArray = isNewRecord ? [event._id, values, tamanio] : [event._id, props.location.state.edit, values];
+        const isNewRecord = !props.location.state.edit
+        const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany
+        const paramsArray = isNewRecord
+          ? [event._id, values, tamanio]
+          : [event._id, props.location.state.edit, values]
         const errorObject = {
           message: 'Error',
-          description: isNewRecord ? 'Ocurrió un error creando la empresa' : 'Ocurrió un error actualizando la empresa',
-        };
-        setSubmitting(true);
+          description: isNewRecord
+            ? 'Ocurrió un error creando la empresa'
+            : 'Ocurrió un error actualizando la empresa',
+        }
+        setSubmitting(true)
         apply(createOrEdit, paramsArray)
           .then(() => {
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',
-            });
+            })
             DispatchMessageService({
               type: 'success',
               msj: 'Empresa creada correctamente!',
               action: 'show',
-            });
-            history.push(`/eventadmin/${event._id}/empresas`);
+            })
+            history.push(`/eventadmin/${event._id}/empresas`)
           })
           .catch((error) => {
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',
-            });
+            })
             DispatchMessageService({
               type: 'error',
               msj: errorObject,
               action: 'show',
-            });
+            })
             /* notification.error(errorObject); */
-            setSubmitting(false);
-          });
+            setSubmitting(false)
+          })
       } else {
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
-        });
+        })
         DispatchMessageService({
           type: 'error',
           msj: 'Favor de llenar los campos requeridos',
           action: 'show',
-        });
+        })
       }
     },
-    [history, event._id, props.location.state.edit, tamanio]
-  );
+    [history, event._id, props.location.state.edit, tamanio],
+  )
 
   const remove = () => {
     DispatchMessageService({
@@ -226,7 +225,7 @@ function CrearEditarEmpresa(props) {
       key: 'loading',
       msj: 'Por favor espere mientras borra la información...',
       action: 'show',
-    });
+    })
     if (props.location.state.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -243,43 +242,47 @@ function CrearEditarEmpresa(props) {
                 .doc(event._id)
                 .collection('companies')
                 .doc(props.location.state.edit)
-                .delete();
+                .delete()
               DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-              });
+              })
               DispatchMessageService({
                 type: 'success',
                 msj: 'Se eliminó la información correctamente!',
                 action: 'show',
-              });
-              history.push(`/eventadmin/${event._id}/empresas`);
+              })
+              history.push(`/eventadmin/${event._id}/empresas`)
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',
                 action: 'destroy',
-              });
+              })
               DispatchMessageService({
                 type: 'error',
                 msj: handleRequestError(e).message,
                 action: 'show',
-              });
+              })
             }
-          };
-          onHandlerRemove();
+          }
+          onHandlerRemove()
         },
-      });
+      })
     }
-  };
+  }
 
   if (loadingStandTypes || loadingSocialNetworks || loadingInitialValues) {
-    return <Loading />;
+    return <Loading />
   }
 
   return (
-    <Formik enableReinitialize initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+    <Formik
+      enableReinitialize
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
       {({ isSubmitting, errors, values, handleSubmit, handleReset }) => {
-        /* console.error(errors); */
         return (
           <Form onReset={handleReset} onSubmitCapture={handleSubmit} {...formLayout}>
             <Header
@@ -289,7 +292,9 @@ function CrearEditarEmpresa(props) {
               save
               remove={remove}
               edit={props.location.state.edit}
-              extra={<Field name="visible" component={SwitchField} label="Visible" labelCol />}
+              extra={
+                <Field name="visible" component={SwitchField} label="Visible" labelCol />
+              }
             />
             <Row justify="center">
               <Col span={20}>
@@ -302,7 +307,12 @@ function CrearEditarEmpresa(props) {
                   maxLength={NAME_MAX_LENGTH}
                 />
 
-                <Field name="video_url" component={InputField} label="Video" placeholder="Url video" />
+                <Field
+                  name="video_url"
+                  component={InputField}
+                  label="Video"
+                  placeholder="Url video"
+                />
 
                 <ImageField required name="stand_image" label="Banner de la empresa" />
 
@@ -332,9 +342,14 @@ function CrearEditarEmpresa(props) {
                   name="email"
                   component={InputField}
                   label="correo de la empresa"
-                  placeholder='ejemplo@ejemplo.com'
+                  placeholder="ejemplo@ejemplo.com"
                 />
-                <Field name="webpage" component={InputField} label="Página web" placeholder="Url página web" />
+                <Field
+                  name="webpage"
+                  component={InputField}
+                  label="Página web"
+                  placeholder="Url página web"
+                />
 
                 <Field
                   name="stand_type"
@@ -403,7 +418,7 @@ function CrearEditarEmpresa(props) {
                                   type="danger"
                                   icon={<DeleteOutlined />}
                                   onClick={() => {
-                                    arrayHelpers.remove(serviceIndex);
+                                    arrayHelpers.remove(serviceIndex)
                                   }}
                                   style={{ marginRight: '20px' }}
                                 >
@@ -416,7 +431,11 @@ function CrearEditarEmpresa(props) {
                                   type="primary"
                                   icon={<PlusCircleOutlined />}
                                   onClick={() => {
-                                    arrayHelpers.push({ description: '', image: '', web_url: '' });
+                                    arrayHelpers.push({
+                                      description: '',
+                                      image: '',
+                                      web_url: '',
+                                    })
                                   }}
                                 >
                                   Agregar servicio
@@ -432,19 +451,20 @@ function CrearEditarEmpresa(props) {
                           type="primary"
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
-                            arrayHelpers.push({ description: '', image: '', web_url: '' });
+                            arrayHelpers.push({ description: '', image: '', web_url: '' })
                           }}
                         >
                           Agregar servicio
                         </Button>
                       </Form.Item>
-                    );
+                    )
                   }}
                 />
                 <FieldArray
                   name="social_networks"
                   render={(arrayHelpers) => {
-                    return !!values.social_networks && values.social_networks.length > 0 ? (
+                    return !!values.social_networks &&
+                      values.social_networks.length > 0 ? (
                       <>
                         {values.social_networks.map((_sn, socialNetworkIndex) => (
                           <div key={`social-network-item-${socialNetworkIndex}`}>
@@ -470,7 +490,7 @@ function CrearEditarEmpresa(props) {
                                   type="danger"
                                   icon={<DeleteOutlined />}
                                   onClick={() => {
-                                    arrayHelpers.remove(socialNetworkIndex);
+                                    arrayHelpers.remove(socialNetworkIndex)
                                   }}
                                   style={{ marginRight: '20px' }}
                                 >
@@ -478,12 +498,13 @@ function CrearEditarEmpresa(props) {
                                 </Button>
                               )}
                               {values.social_networks.length < SOCIAL_NETWORKS_LIMIT &&
-                                socialNetworkIndex === values.social_networks.length - 1 && (
+                                socialNetworkIndex ===
+                                  values.social_networks.length - 1 && (
                                   <Button
                                     type="primary"
                                     icon={<PlusCircleOutlined />}
                                     onClick={() => {
-                                      arrayHelpers.push({ url: '', network: undefined });
+                                      arrayHelpers.push({ url: '', network: undefined })
                                     }}
                                   >
                                     Agregar red social
@@ -499,13 +520,13 @@ function CrearEditarEmpresa(props) {
                           type="primary"
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
-                            arrayHelpers.push({ url: '', network: undefined });
+                            arrayHelpers.push({ url: '', network: undefined })
                           }}
                         >
                           Agregar red social
                         </Button>
                       </Form.Item>
-                    );
+                    )
                   }}
                 />
                 <FieldArray
@@ -563,7 +584,7 @@ function CrearEditarEmpresa(props) {
                                   type="danger"
                                   icon={<DeleteOutlined />}
                                   onClick={() => {
-                                    arrayHelpers.remove(advisorIndex);
+                                    arrayHelpers.remove(advisorIndex)
                                   }}
                                   style={{ marginRight: '20px' }}
                                 >
@@ -583,7 +604,7 @@ function CrearEditarEmpresa(props) {
                                       number: '',
                                       email: '',
                                       cargo: '',
-                                    });
+                                    })
                                   }}
                                 >
                                   Agregar advisor
@@ -606,13 +627,13 @@ function CrearEditarEmpresa(props) {
                               number: '',
                               email: '',
                               cargo: '',
-                            });
+                            })
                           }}
                         >
                           Agregar advisor
                         </Button>
                       </Form.Item>
-                    );
+                    )
                   }}
                 />
 
@@ -634,24 +655,25 @@ function CrearEditarEmpresa(props) {
                                   type="danger"
                                   icon={<DeleteOutlined />}
                                   onClick={() => {
-                                    arrayHelpers.remove(galleryIndex);
+                                    arrayHelpers.remove(galleryIndex)
                                   }}
                                   style={{ marginRight: '20px' }}
                                 >
                                   Eliminar
                                 </Button>
                               )}
-                              {values.gallery.length < GALLERY_LIMIT && galleryIndex === values.gallery.length - 1 && (
-                                <Button
-                                  type="primary"
-                                  icon={<PlusCircleOutlined />}
-                                  onClick={() => {
-                                    arrayHelpers.push({ image: '' });
-                                  }}
-                                >
-                                  Agregar imagen
-                                </Button>
-                              )}
+                              {values.gallery.length < GALLERY_LIMIT &&
+                                galleryIndex === values.gallery.length - 1 && (
+                                  <Button
+                                    type="primary"
+                                    icon={<PlusCircleOutlined />}
+                                    onClick={() => {
+                                      arrayHelpers.push({ image: '' })
+                                    }}
+                                  >
+                                    Agregar imagen
+                                  </Button>
+                                )}
                             </Form.Item>
                           </div>
                         ))}
@@ -662,23 +684,23 @@ function CrearEditarEmpresa(props) {
                           type="primary"
                           icon={<PlusCircleOutlined />}
                           onClick={() => {
-                            arrayHelpers.push({ image: '' });
+                            arrayHelpers.push({ image: '' })
                           }}
                         >
                           Agregar imagen
                         </Button>
                       </Form.Item>
-                    );
+                    )
                   }}
                 />
               </Col>
             </Row>
             <BackTop />
           </Form>
-        );
+        )
       }}
     </Formik>
-  );
+  )
 }
 
-export default CrearEditarEmpresa;
+export default CrearEditarEmpresa

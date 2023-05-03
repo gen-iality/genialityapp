@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Button, Drawer, Row, Avatar, Image } from 'antd';
-import { EyeOutlined, MenuOutlined } from '@ant-design/icons';
-import { drawerButton, imageCenter } from '../helpers/csshelpers';
-import { useEventContext } from '@context/eventContext';
-import MenuEvent from './MenuEvent';
+import { useState } from 'react'
+import { Button, Drawer, Row, Avatar, Image } from 'antd'
+import { EyeOutlined, MenuOutlined } from '@ant-design/icons'
+import { drawerButton, imageCenter } from '../helpers/csshelpers'
+import { useEventContext } from '@context/eventContext'
+import MenuEvent from './MenuEvent'
 const MenuTablets = () => {
-  const [isOpen, setisOpen] = useState(false);
-  const cEvent = useEventContext();
+  const [isOpen, setisOpen] = useState(false)
+  const cEvent = useEventContext()
 
   return (
     <>
@@ -40,7 +40,10 @@ const MenuTablets = () => {
               preview={{ mask: <EyeOutlined /> }}
               alt="Logo"
               src={cEvent.value.styles.event_image}
-              style={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg, objectFit: 'cover' }}
+              style={{
+                backgroundColor: cEvent.value.styles.toolbarDefaultBg,
+                objectFit: 'cover',
+              }}
             />
           )}
         </Row>
@@ -48,7 +51,7 @@ const MenuTablets = () => {
         <MenuEvent isMobile />
       </Drawer>
     </>
-  );
-};
+  )
+}
 
-export default MenuTablets;
+export default MenuTablets

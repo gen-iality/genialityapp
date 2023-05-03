@@ -1,19 +1,19 @@
-import { Button, Card, Input, Space, Tooltip, Typography } from 'antd';
-import { CopyFilled } from '@ant-design/icons';
-import AgendaContext from '@context/AgendaContext';
-import { useContext, useEffect, useState } from 'react';
+import { Button, Card, Input, Space, Tooltip, Typography } from 'antd'
+import { CopyFilled } from '@ant-design/icons'
+import AgendaContext from '@context/AgendaContext'
+import { useContext, useEffect, useState } from 'react'
 
 const CardRTMP = () => {
-  const { dataLive, copyToClipboard } = useContext(AgendaContext);
-  const [dataRtmp, setDataRtmp] = useState<any>(null);
+  const { dataLive, copyToClipboard } = useContext(AgendaContext)
+  const [dataRtmp, setDataRtmp] = useState<any>(null)
   useEffect(() => {
     if (dataLive && dataLive?.push_url) {
-      const data = dataLive?.push_url.split('/');
-      const password = data[data.length - 1];
-      const rtmp = dataLive.push_url.replace(password, '');
-      setDataRtmp({ rtmp, password });
+      const data = dataLive?.push_url.split('/')
+      const password = data[data.length - 1]
+      const rtmp = dataLive.push_url.replace(password, '')
+      setDataRtmp({ rtmp, password })
     }
-  }, [dataLive]);
+  }, [dataLive])
 
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
@@ -63,7 +63,7 @@ const CardRTMP = () => {
         </Space>
       </Space>
     </Card>
-  );
-};
+  )
+}
 
-export default CardRTMP;
+export default CardRTMP

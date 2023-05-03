@@ -1,26 +1,27 @@
-import { withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
-import momentLocalizer from 'react-widgets-moment';
-import { useRequest } from '../../services/useRequest';
-import { useEffect, useState } from 'react';
-import ModalFeedback from '@components/authentication/ModalFeedback';
-import { Col, Row, Typography, Button, Space, Result } from 'antd';
-import LoadingEvent from '@components/loaders/loadevent';
-import ErrorServe from '@components/modal/serverError';
-import EventCard from '@components/shared/eventCard';
-import { useApiMultiple } from '@/services/hooks/useApiMultiple';
-dayjs.locale('es');
-momentLocalizer();
+import { withRouter } from 'react-router-dom'
+import dayjs from 'dayjs'
+import momentLocalizer from 'react-widgets-moment'
+import { useRequest } from '../../services/useRequest'
+import { useEffect, useState } from 'react'
+import ModalFeedback from '@components/authentication/ModalFeedback'
+import { Col, Row, Typography, Button, Space, Result } from 'antd'
+import LoadingEvent from '@components/loaders/loadevent'
+import ErrorServe from '@components/modal/serverError'
+import EventCard from '@components/shared/eventCard'
+import { useApiMultiple } from '@/services/hooks/useApiMultiple'
+dayjs.locale('es')
+momentLocalizer()
 
 const Home = () => {
-  const { isLoading, isError, isSuccess, responseData, useResponse, handleRequest } = useApiMultiple();
+  const { isLoading, isError, isSuccess, responseData, useResponse, handleRequest } =
+    useApiMultiple()
 
-  const [typeEvent, settypeEvent] = useState<string>('nextEvents');
-  const [hasMore, sethasMore] = useState(false);
+  const [typeEvent, settypeEvent] = useState<string>('nextEvents')
+  const [hasMore, sethasMore] = useState(false)
   const [pagebyTypevent, setpagebyTypevent] = useState({
     nextEvents: 10,
     oldEvents: 10,
-  });
+  })
 
   useEffect(() => {
     handleRequest({
@@ -32,8 +33,8 @@ const Home = () => {
       methods: ['get', 'get'],
       withCredentials: [true, true],
       payloads: [{}, {}],
-    });
-  }, []);
+    })
+  }, [])
 
   const SeeMoreEvents = () => {
     switch (typeEvent) {
@@ -41,18 +42,18 @@ const Home = () => {
         setpagebyTypevent({
           ...pagebyTypevent,
           nextEvents: pagebyTypevent.nextEvents + 10,
-        });
-        break;
+        })
+        break
       case 'oldEvents':
         setpagebyTypevent({
           ...pagebyTypevent,
           oldEvents: pagebyTypevent.oldEvents + 10,
-        });
-        break;
+        })
+        break
       default:
-        break;
+        break
     }
-  };
+  }
 
   return (
     <div style={{ padding: '20px' }}>
@@ -67,14 +68,16 @@ const Home = () => {
               onClick={() => settypeEvent('nextEvents')}
               type={typeEvent === 'nextEvents' ? 'primary' : 'text'}
               size="large"
-              shape="round">
+              shape="round"
+            >
               Próximos
             </Button>
             <Button
               onClick={() => settypeEvent('oldEvents')}
               type={typeEvent === 'oldEvents' ? 'primary' : 'text'}
               size="large"
-              shape="round">
+              shape="round"
+            >
               Pasados
             </Button>
           </Space>
@@ -87,7 +90,11 @@ const Home = () => {
               ) : (
                 <Row gutter={[16, 16]}>
                   {isSuccess && useResponse(typeEvent)?.length <= 0 ? (
-                    <Row justify="center" align="middle" style={{ width: '100%', height: '400px' }}>
+                    <Row
+                      justify="center"
+                      align="middle"
+                      style={{ width: '100%', height: '400px' }}
+                    >
                       <Result title="No hay cursos próximos" />
                     </Row>
                   ) : (
@@ -104,13 +111,18 @@ const Home = () => {
                             }}
                           />
                         </Col>
-                      );
+                      )
                     })
                   )}
                 </Row>
               )}
               {hasMore && useResponse(typeEvent)?.length > 10 ? (
-                <Button size="large" block loading={isLoading} onClick={() => SeeMoreEvents()}>
+                <Button
+                  size="large"
+                  block
+                  loading={isLoading}
+                  onClick={() => SeeMoreEvents()}
+                >
                   {!isLoading ? 'Ver más'.toUpperCase() : 'Cargando...'.toUpperCase()}
                 </Button>
               ) : typeEvent === 'next' ? (
@@ -130,7 +142,7 @@ const Home = () => {
 
       {isError.status && <ErrorServe errorData={{}} />}
     </div>
-  );
-};
+  )
+}
 
-export default withRouter(Home);
+export default withRouter(Home)

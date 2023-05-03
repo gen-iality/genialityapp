@@ -1,24 +1,19 @@
-import { Typography, Layout, Row, Col, Button, Spin } from 'antd';
-import { useState } from 'react';
-import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
+import { Typography, Layout, Row, Col, Button, Spin } from 'antd'
+import { useState } from 'react'
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
 
-const { Header, Content, Footer } = Layout;
-const { Title } = Typography;
+const { Header, Content, Footer } = Layout
+const { Title } = Typography
 
 export interface SmartLayoutTypeActivityProps {
-  title?: string;
-  onSetType: (typeString: string) => void;
-  children: JSX.Element | JSX.Element[];
-  onClosedForm: () => void,
+  title?: string
+  onSetType: (typeString: string) => void
+  children: JSX.Element | JSX.Element[]
+  onClosedForm: () => void
 }
 
 const SmartLayoutTypeActivity = (props: SmartLayoutTypeActivityProps) => {
-  const {
-    title,
-    children,
-    onSetType,
-    onClosedForm,
-  } = props;
+  const { title, children, onSetType, onClosedForm } = props
 
   const {
     closeModal,
@@ -31,43 +26,41 @@ const SmartLayoutTypeActivity = (props: SmartLayoutTypeActivityProps) => {
     disableNextButton,
     loadingCreate,
     // createTypeActivity,
-  } = useTypeActivity();
+  } = useTypeActivity()
 
   const handleClosePopup = () => {
-    closeModal();
-    onClosedForm();
+    closeModal()
+    onClosedForm()
   }
 
   const handleButtonPreviousClick = () => {
-    if (previewKey === 'close' || typeOptions.key === 'type') handleClosePopup();
-    if (previewKey === 'type' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
-    if (previewKey !== 'preview' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
-  };
+    if (previewKey === 'close' || typeOptions.key === 'type') handleClosePopup()
+    if (previewKey === 'type' && typeOptions.key !== 'type')
+      toggleActivitySteps(previewKey)
+    if (previewKey !== 'preview' && typeOptions.key !== 'type')
+      toggleActivitySteps(previewKey)
+  }
 
   const handleButtonNextClick = async () => {
     if (selectedKey !== 'initial' && buttonsTextNextOrCreate !== 'Crear') {
-      toggleActivitySteps(selectedKey);
-      return;
+      toggleActivitySteps(selectedKey)
+      return
     } else if (selectedKey === 'initial') {
-      handleClosePopup();
+      handleClosePopup()
     } else {
-      await onSetType(typeOptions.key);
-      handleClosePopup();
+      await onSetType(typeOptions.key)
+      handleClosePopup()
       // await createTypeActivity();
     }
-  };
+  }
 
   return (
     <Layout>
       <Header style={{ textAlign: 'center', padding: '20px 0px 20px 0px' }}>
-        <Title level={3}>
-          {title || 'Sin título'}
-        </Title>
+        <Title level={3}>{title || 'Sin título'}</Title>
       </Header>
 
-      <Content style={{ padding: '60px 50px 60px 50px' }}>
-        {children}
-      </Content>
+      <Content style={{ padding: '60px 50px 60px 50px' }}>{children}</Content>
 
       <Footer
         style={{
@@ -82,7 +75,11 @@ const SmartLayoutTypeActivity = (props: SmartLayoutTypeActivityProps) => {
             </Button>
           </Col>
           <Col>
-            {loadingCreate ? <div style={{ width: 60 }}><Spin /></div> : (
+            {loadingCreate ? (
+              <div style={{ width: 60 }}>
+                <Spin />
+              </div>
+            ) : (
               <Button
                 disabled={disableNextButton}
                 onClick={handleButtonNextClick}
@@ -95,7 +92,7 @@ const SmartLayoutTypeActivity = (props: SmartLayoutTypeActivityProps) => {
         </Row>
       </Footer>
     </Layout>
-  );
-};
+  )
+}
 
-export default SmartLayoutTypeActivity;
+export default SmartLayoutTypeActivity

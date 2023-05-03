@@ -1,6 +1,6 @@
-import dayjs from 'dayjs';
-import useDeepStateEqualityValidation from './useDeepStateEqualityValidation';
-import { FormDataType } from '../components/MainAgendaForm';
+import dayjs from 'dayjs'
+import useDeepStateEqualityValidation from './useDeepStateEqualityValidation'
+import { FormDataType } from '../components/MainAgendaForm'
 
 function useValideChangesInFormData(
   saved: FormDataType,
@@ -8,9 +8,9 @@ function useValideChangesInFormData(
   isPublished: boolean,
   setWasChanged: (was: boolean) => void,
 ) {
-  const deepStateEqualityValidation = useDeepStateEqualityValidation();
+  const deepStateEqualityValidation = useDeepStateEqualityValidation()
   const valideChangesInFormData = () => {
-    if (!saved) return;
+    if (!saved) return
     const {
       name,
       hour_start,
@@ -26,10 +26,10 @@ function useValideChangesInFormData(
       selectedHosts,
       selectedTools,
       isPhysical,
-    } = modified;
+    } = modified
 
-    const initialHour = dayjs(hour_start).format('HH:mm');
-    const finalHour = dayjs(hour_end).format('HH:mm');
+    const initialHour = dayjs(hour_start).format('HH:mm')
+    const finalHour = dayjs(hour_end).format('HH:mm')
 
     const formattedModified = {
       name,
@@ -46,14 +46,14 @@ function useValideChangesInFormData(
       selectedHosts,
       selectedTools,
       isPhysical,
-    };
+    }
 
-    const equalityValidation = deepStateEqualityValidation(modified, formattedModified);
-    console.log('equalityValidation:', equalityValidation);
-    setWasChanged(!equalityValidation);
-  };
+    const equalityValidation = deepStateEqualityValidation(modified, formattedModified)
+    console.log('equalityValidation:', equalityValidation)
+    setWasChanged(!equalityValidation)
+  }
 
-  return valideChangesInFormData;
+  return valideChangesInFormData
 }
 
-export default useValideChangesInFormData;
+export default useValideChangesInFormData

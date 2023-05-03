@@ -1,10 +1,10 @@
 /* globals process */
-import app from 'firebase/compat/app';
+import app from 'firebase/compat/app'
 
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
-import 'firebase/compat/storage';
-import 'firebase/compat/database';
+import 'firebase/compat/auth'
+import 'firebase/compat/firestore'
+import 'firebase/compat/storage'
+import 'firebase/compat/database'
 
 /**
  * FIRESTORE algunas veces se demora en traer los datos
@@ -21,7 +21,7 @@ const config = {
   appId: process.env.VITE_APPID_EVIUSAUTH,
   messagingSenderId: process.env.VITE_MESSAGINGSENDER_EVIUSAUTH,
   measurementId: process.env.VITE_MEASUREMENTID_EVIUSAUTH,
-};
+}
 
 const configEviuschat = {
   apiKey: process.env.VITE_FB_APIKEY_CHATEVIUS,
@@ -32,38 +32,46 @@ const configEviuschat = {
   appId: process.env.VITE_APPID_CHATEVIUS,
   messagingSenderId: process.env.VITE_MESSAGINGSENDER_CHATEVIUS,
   measurementId: process.env.VITE_MEASUREMENTID_CHATEVIUS,
-};
+}
 
-const eviusaauth = app.initializeApp(config);
-const eviuschat = app.initializeApp(configEviuschat, 'secondary');
+const eviusaauth = app.initializeApp(config)
+const eviuschat = app.initializeApp(configEviuschat, 'secondary')
 
-const firestore = eviusaauth.firestore();
-const fireStorage = eviusaauth.storage();
-const fireRealtime = eviusaauth.database();
-const auth = eviusaauth.auth();
-const ServerValue = app.database.ServerValue;
-const FieldValue = app.firestore.FieldValue;
+const firestore = eviusaauth.firestore()
+const fireStorage = eviusaauth.storage()
+const fireRealtime = eviusaauth.database()
+const auth = eviusaauth.auth()
+const ServerValue = app.database.ServerValue
+const FieldValue = app.firestore.FieldValue
 
-//const firestoreDB = getFirestore(app);
-
-const firestoreeviuschat = eviuschat.firestore();
-const realTimeviuschat = eviuschat.database();
+const firestoreeviuschat = eviuschat.firestore()
+const realTimeviuschat = eviuschat.database()
 
 firestore.settings({
   cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
   merge: true,
-});
+})
 
 firestore
   .enablePersistence({ synchronizeTabs: true })
   .then(() => {
-    window.eviusFailedPersistenceEnabling = false;
+    window.eviusFailedPersistenceEnabling = false
   })
   .catch((err) => {
-    console.error(err);
-    window.eviusFailedPersistenceEnabling = true;
-  });
+    console.error(err)
+    window.eviusFailedPersistenceEnabling = true
+  })
 
-window.firebase = app;
+window.firebase = app
 
-export { app, auth, firestore, fireStorage, fireRealtime, firestoreeviuschat, realTimeviuschat, ServerValue, FieldValue };
+export {
+  app,
+  auth,
+  firestore,
+  fireStorage,
+  fireRealtime,
+  firestoreeviuschat,
+  realTimeviuschat,
+  ServerValue,
+  FieldValue,
+}

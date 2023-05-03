@@ -1,20 +1,18 @@
-import { useEffect, useState } from 'react';
-import EviusReactQuill from '../../shared/eviusReactQuill';
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
-import { EventsApi } from '@helpers/request';
-import { useEventContext } from '@context/eventContext';
-import { Form, Row, Col } from 'antd';
-import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '@context/MessageService';
+import { useEffect, useState } from 'react'
+import EviusReactQuill from '../../shared/eviusReactQuill'
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+import { EventsApi } from '@helpers/request'
+import { useEventContext } from '@context/eventContext'
+import { Form, Row, Col } from 'antd'
+import Header from '@antdComponents/Header'
+import { DispatchMessageService } from '@context/MessageService'
 
 export default function AdmininformativeSection1(props) {
-  const eventContext = useEventContext();
-  const [content, setContent] = useState('');
+  const eventContext = useEventContext()
+  const [content, setContent] = useState('')
 
   const onFinish = (values) => {
     async function save() {
-      /* console.log('minu', eventContext.value.itemsMenu); */
-
       let informativeMenu = {
         name: 'Sección informativa 2',
         position: 30,
@@ -23,57 +21,56 @@ export default function AdmininformativeSection1(props) {
         markup: null,
         checked: true,
         permissions: 'public',
-      };
+      }
 
       informativeMenu =
         eventContext.value.itemsMenu && eventContext.value.itemsMenu.informativeSection1
           ? eventContext.value.itemsMenu.informativeSection1
-          : informativeMenu;
-      informativeMenu = { ...informativeMenu, markup: content };
+          : informativeMenu
+      informativeMenu = { ...informativeMenu, markup: content }
       const data = {
         itemsMenu: {
           ...eventContext.value.itemsMenu,
           informativeSection1: informativeMenu,
         },
-      };
-      /* console.log('minu', data); */
+      }
 
       try {
-        const result = await EventsApi.editOne(data, eventContext.value._id);
-        console.log('result', result);
+        const result = await EventsApi.editOne(data, eventContext.value._id)
+        console.log('result', result)
         DispatchMessageService({
           type: 'success',
           msj: 'Guardado',
           action: 'show',
-        });
+        })
       } catch (e) {
         DispatchMessageService({
           type: 'error',
           msj: e.message,
           action: 'show',
-        });
+        })
       }
     }
-    save();
-  };
+    save()
+  }
 
   useEffect(() => {
     async function getContent() {
-      const result = await EventsApi.getOne(eventContext.value._id);
-      console.log('data', result);
-      const markup = result?.itemsMenu?.informativeSection1?.markup || '';
-      setContent(markup);
+      const result = await EventsApi.getOne(eventContext.value._id)
+      console.log('data', result)
+      const markup = result?.itemsMenu?.informativeSection1?.markup || ''
+      setContent(markup)
     }
-    getContent();
-  }, []);
+    getContent()
+  }, [])
 
   const handleChangeReactQuill = (e) => {
-    setContent(e);
-    console.log('content', e);
-  };
+    setContent(e)
+    console.log('content', e)
+  }
 
-  if (eventContext.status === 'LOADING') return 'Loading...';
-  if (eventContext.status === 'ERROR') return 'An error has occurred: ';
+  if (eventContext.status === 'LOADING') return 'Loading...'
+  if (eventContext.status === 'ERROR') return 'An error has occurred: '
 
   return (
     <section>
@@ -83,11 +80,15 @@ export default function AdmininformativeSection1(props) {
         <Row justify="center" gutter={8} wrap>
           <Col span={16}>
             <Form.Item>
-              <EviusReactQuill name="content" data={content} handleChange={(e) => handleChangeReactQuill(e)} />
+              <EviusReactQuill
+                name="content"
+                data={content}
+                handleChange={(e) => handleChangeReactQuill(e)}
+              />
             </Form.Item>
           </Col>
         </Row>
       </Form>
     </section>
-  );
+  )
 }

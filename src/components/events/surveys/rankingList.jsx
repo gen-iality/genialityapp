@@ -1,23 +1,23 @@
-import { useState, useEffect } from 'react';
-import { Row, Divider, List } from 'antd';
-import withContext from '@context/withContext';
-import UsersCard from '../../shared/usersCard';
+import { useState, useEffect } from 'react'
+import { Row, Divider, List } from 'antd'
+import withContext from '@context/withContext'
+import UsersCard from '../../shared/usersCard'
 
 function RankingList(props) {
-  const { cEvent, cHelper } = props;
-  const styles = cEvent.value.styles;
-  const { gameRanking } = cHelper;
+  const { cEvent, cHelper } = props
+  const styles = cEvent.value.styles
+  const { gameRanking } = cHelper
   function formatName(name) {
-    const result = decodeURIComponent(name);
-    return result;
+    const result = decodeURIComponent(name)
+    return result
   }
 
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(false)
 
   useEffect(() => {
-    setloading(true);
-    setloading(false);
-  }, [gameRanking]);
+    setloading(true)
+    setloading(false)
+  }, [gameRanking])
 
   return (
     <div style={{ marginTop: 16 }}>
@@ -28,12 +28,16 @@ function RankingList(props) {
             fontWeight: 'bold',
             lineHeight: '3px',
             color: `${styles && styles.textMenu}`,
-          }}>
+          }}
+        >
           Ranking
         </h1>
         <Divider style={{ backgroundColor: `${styles && styles.textMenu}` }} />
       </Row>
-      <div className="container-ranking" style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
+      <div
+        className="container-ranking"
+        style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}
+      >
         <List
           className="demo-loadmore-list"
           loading={loading}
@@ -43,6 +47,6 @@ function RankingList(props) {
         />
       </div>
     </div>
-  );
+  )
 }
-export default withContext(RankingList);
+export default withContext(RankingList)

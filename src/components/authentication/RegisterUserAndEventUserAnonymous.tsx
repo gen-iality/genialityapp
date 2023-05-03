@@ -1,27 +1,31 @@
-import { useState } from 'react';
-import { Steps, Typography } from 'antd';
-import { useIntl } from 'react-intl';
-import { useEventContext } from '@context/eventContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { DispatchMessageService } from '@context/MessageService';
-import FormEnrollAttendeeToEvent from '@components/forms/FormEnrollAttendeeToEvent';
-import { fieldNameEmailFirst } from '@helpers/utils';
-import { app } from '@helpers/firebase';
-import { AttendeeApi } from '@helpers/request';
-import { useUserEvent } from '@context/eventUserContext';
-const { Step } = Steps;
-const { Title } = Typography;
+import { useState } from 'react'
+import { Steps, Typography } from 'antd'
+import { useIntl } from 'react-intl'
+import { useEventContext } from '@context/eventContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { DispatchMessageService } from '@context/MessageService'
+import FormEnrollAttendeeToEvent from '@components/forms/FormEnrollAttendeeToEvent'
+import { fieldNameEmailFirst } from '@helpers/utils'
+import { app } from '@helpers/firebase'
+import { AttendeeApi } from '@helpers/request'
+import { useUserEvent } from '@context/eventUserContext'
+const { Step } = Steps
+const { Title } = Typography
 
-const RegisterUserAndEventUserAnonymous = ({ screens, stylePaddingMobile, stylePaddingDesktop }: any) => {
-  const intl = useIntl();
-  const cEvent = useEventContext();
-  const cEventUser = useUserEvent();
-  const { helperDispatch } = useHelper();
-  const [loading, setLoading] = useState(false);
-  const { fields_conditions, type_event, _id, user_properties } = cEvent?.value || {};
-  const fields = fieldNameEmailFirst(user_properties);
+const RegisterUserAndEventUserAnonymous = ({
+  screens,
+  stylePaddingMobile,
+  stylePaddingDesktop,
+}: any) => {
+  const intl = useIntl()
+  const cEvent = useEventContext()
+  const cEventUser = useUserEvent()
+  const { helperDispatch } = useHelper()
+  const [loading, setLoading] = useState(false)
+  const { fields_conditions, type_event, _id, user_properties } = cEvent?.value || {}
+  const fields = fieldNameEmailFirst(user_properties)
   const handleSubmit = async (values: any) => {
-    setLoading(true);
+    setLoading(true)
     app
       .auth()
       .signInAnonymously()
@@ -34,7 +38,7 @@ const RegisterUserAndEventUserAnonymous = ({ screens, stylePaddingMobile, styleP
             photoURL: values.email,
           })
           .then(async () => {
-            console.log('response', user);
+            console.log('response', user)
             if (user.user) {
               const body = {
                 event_id: cEvent.value._id,
@@ -43,26 +47,26 @@ const RegisterUserAndEventUserAnonymous = ({ screens, stylePaddingMobile, styleP
                 properties: {
                   ...values,
                 },
-              };
-              await app.auth().currentUser?.reload();
+              }
+              await app.auth().currentUser?.reload()
               AttendeeApi.create(cEvent.value._id, body).then((data) => {
-                console.log('response', data);
-                cEventUser.setUpdateUser(true);
-                helperDispatch({ type: 'showLogin', visible: false });
-                setLoading(false);
-              });
+                console.log('response', data)
+                cEventUser.setUpdateUser(true)
+                helperDispatch({ type: 'showLogin', visible: false })
+                setLoading(false)
+              })
             }
-          });
+          })
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err)
         DispatchMessageService({
           type: 'error',
           msj: 'Ha ocurrido un error',
           action: 'show',
-        });
-      });
-  };
+        })
+      })
+  }
 
   return (
     <div>
@@ -85,7 +89,7 @@ const RegisterUserAndEventUserAnonymous = ({ screens, stylePaddingMobile, styleP
         }}
       />
     </div>
-  );
-};
+  )
+}
 
-export default RegisterUserAndEventUserAnonymous;
+export default RegisterUserAndEventUserAnonymous

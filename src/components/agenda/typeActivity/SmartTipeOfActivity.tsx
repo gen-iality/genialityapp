@@ -1,16 +1,16 @@
-import { TypeActivityProvider } from '@context/typeactivity/typeActivityProvider';
+import { TypeActivityProvider } from '@context/typeactivity/typeActivityProvider'
 
-import SmartInitialView from './SmartInitialView';
+import SmartInitialView from './SmartInitialView'
 
 export interface SmartTipeOfActivityProps {
-  eventId: string,
-  activityId: string,
-  activityName: string,
-  hasActivityName: boolean,
-  onSetType: (typeString: string) => void,
-  showForm: boolean,
-  onClosedForm: () => void,
-};
+  eventId: string
+  activityId: string
+  activityName: string
+  hasActivityName: boolean
+  onSetType: (typeString: string) => void
+  showForm: boolean
+  onClosedForm: () => void
+}
 
 function SmartTipeOfActivity(props: SmartTipeOfActivityProps) {
   const {
@@ -21,7 +21,7 @@ function SmartTipeOfActivity(props: SmartTipeOfActivityProps) {
     onSetType,
     showForm,
     onClosedForm,
-  } = props;
+  } = props
 
   return (
     <TypeActivityProvider>
@@ -35,7 +35,7 @@ function SmartTipeOfActivity(props: SmartTipeOfActivityProps) {
         onClosedForm={onClosedForm}
       />
     </TypeActivityProvider>
-  );
+  )
 }
 
-export default SmartTipeOfActivity;
+export default SmartTipeOfActivity

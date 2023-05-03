@@ -1,15 +1,15 @@
-import { Fragment, useState } from 'react';
-import { NavLink, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { Button, Col, Divider, Menu, Row } from 'antd';
-import { EventsApi } from '@helpers/request';
-import { useEffect } from 'react';
-import { MenuItems } from './utils';
-import { ApartmentOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { imageUtils } from '../../../Utilities/ImageUtils';
-import OpenInNewIcon from '@2fd/ant-design-icons/lib/OpenInNew';
+import { Fragment, useState } from 'react'
+import { NavLink, withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Button, Col, Divider, Menu, Row } from 'antd'
+import { EventsApi } from '@helpers/request'
+import { useEffect } from 'react'
+import { MenuItems } from './utils'
+import { ApartmentOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons'
+import { imageUtils } from '../../../Utilities/ImageUtils'
+import OpenInNewIcon from '@2fd/ant-design-icons/lib/OpenInNew'
 
-const { SubMenu } = Menu;
+const { SubMenu } = Menu
 
 const MenuConfig = (props) => {
   const [controller, setcontroller] = useState({
@@ -24,26 +24,26 @@ const MenuConfig = (props) => {
     url: window.location.href,
     collapsed: false,
     organizationId: '',
-  });
+  })
 
-  const eventId = props.match.params.event;
+  const eventId = props.match.params.event
 
   const eventOrganization = async (eventId) => {
-    const currentEvent = await EventsApi.getOne(eventId);
-    const organizationId = currentEvent.organizer_id;
-    setcontroller({ ...controller, organizationId });
-  };
+    const currentEvent = await EventsApi.getOne(eventId)
+    const organizationId = currentEvent.organizer_id
+    setcontroller({ ...controller, organizationId })
+  }
 
   useEffect(() => {
-    const { pathname } = props.location;
-    const splitted = pathname.split('/');
-    eventOrganization(splitted[2]);
-    props.collapseMenu();
-  }, []);
+    const { pathname } = props.location
+    const splitted = pathname.split('/')
+    eventOrganization(splitted[2])
+    props.collapseMenu()
+  }, [])
 
   const handleClick = (e) => {
-    if (!navigator.onLine) e.preventDefault();
-  };
+    if (!navigator.onLine) e.preventDefault()
+  }
   // cosole.log('Test request');
   return (
     <Menu
@@ -60,7 +60,12 @@ const MenuConfig = (props) => {
         <Button
           type="primary"
           onClick={props.collapseMenu}
-          style={{ width: '100%', textAlign: 'end', background: '#1B1E28', border: 'none' }}
+          style={{
+            width: '100%',
+            textAlign: 'end',
+            background: '#1B1E28',
+            border: 'none',
+          }}
         >
           {props.collapsed ? (
             <RightOutlined style={{ fontSize: '20px' }} />
@@ -102,19 +107,23 @@ const MenuConfig = (props) => {
             <ApartmentOutlined />
             <span>Administrar organizaciones</span>
           </span>
-        }>
+        }
+      >
         <Menu.Item key="30">
           Panel de administración
-          <NavLink onClick={handleClick} to={`/admin/organization/${controller.organizationId}`}></NavLink>
+          <NavLink
+            onClick={handleClick}
+            to={`/admin/organization/${controller.organizationId}`}
+          ></NavLink>
         </Menu.Item>
       </SubMenu>
     </Menu>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => ({
   permissions: state.permissions,
-});
+})
 
 const renderMenuItems = (controller, props) => {
   return (
@@ -128,17 +137,18 @@ const renderMenuItems = (controller, props) => {
                 {item.icon}
                 <span>{item.name}</span>
               </span>
-            }>
+            }
+          >
             {item.items.map((subItem) => (
               <Menu.Item key={subItem.key}>
                 <NavLink to={props.match.url + subItem.path}>{subItem.name}</NavLink>
               </Menu.Item>
             ))}
           </SubMenu>
-        );
+        )
       })}
     </>
-  );
-};
+  )
+}
 
-export default connect(mapStateToProps)(withRouter(MenuConfig));
+export default connect(mapStateToProps)(withRouter(MenuConfig))

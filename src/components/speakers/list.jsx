@@ -1,48 +1,48 @@
-import { useEffect, useState } from 'react';
-import { useQuery, useQueryClient, useMutation } from 'react-query';
-import { withRouter } from 'react-router-dom';
-import { SpeakersApi } from '@helpers/request';
-import { Table, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { sortableContainer, sortableElement } from 'react-sortable-hoc';
-import arrayMove from 'array-move';
-import Header from '@antdComponents/Header';
-import { columns } from './columns';
-import { DispatchMessageService } from '@context/MessageService';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { useEffect, useState } from 'react'
+import { useQuery, useQueryClient, useMutation } from 'react-query'
+import { withRouter } from 'react-router-dom'
+import { SpeakersApi } from '@helpers/request'
+import { Table, Modal } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { sortableContainer, sortableElement } from 'react-sortable-hoc'
+import arrayMove from 'array-move'
+import Header from '@antdComponents/Header'
+import { columns } from './columns'
+import { DispatchMessageService } from '@context/MessageService'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
 
-const SortableItem = sortableElement((props) => <tr {...props} />);
-const SortableContainer = sortableContainer((props) => <tbody {...props} />);
+const SortableItem = sortableElement((props) => <tr {...props} />)
+const SortableContainer = sortableContainer((props) => <tbody {...props} />)
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 function SpeakersList(props) {
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const [dataSpeakers, setdataSpeakers] = useState([]);
-  const { isLoading, data, refetch } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
-  const { eventIsActive } = useHelper();
-  const cEventIsActive = eventIsActive;
+  const [searchText, setSearchText] = useState('')
+  const [searchedColumn, setSearchedColumn] = useState('')
+  const [dataSpeakers, setdataSpeakers] = useState([])
+  const { isLoading, data, refetch } = useQuery('getSpeakersByEvent', () =>
+    SpeakersApi.byEvent(props.eventID),
+  )
+  const { eventIsActive } = useHelper()
+  const cEventIsActive = eventIsActive
 
   useEffect(() => {
-    /* console.log('dataSpeakers', data); */
-    setdataSpeakers(data);
-  }, [data]);
+    setdataSpeakers(data)
+  }, [data])
 
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   function sortAndIndexSpeakers() {
-    //  let { data } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
-    const data = dataSpeakers;
-    let list = [];
+    const data = dataSpeakers
+    let list = []
     if (data) {
-      list = data.sort((a, b) => (a.sort && b.sort ? a.sort - b.sort : true));
+      list = data.sort((a, b) => (a.sort && b.sort ? a.sort - b.sort : true))
       list = list.map((speaker, index) => {
-        return { ...speaker, index: speaker.sort == index ? speaker.sort : index };
-      });
-      list = list.sort((a, b) => a.index - b.index);
+        return { ...speaker, index: speaker.sort == index ? speaker.sort : index }
+      })
+      list = list.sort((a, b) => a.index - b.index)
 
-      return list;
+      return list
     }
   }
 
@@ -53,8 +53,8 @@ function SpeakersList(props) {
       key: 'loading',
       msj: 'Por favor espere...',
       action: 'show',
-    });
-    const eventId = props.eventID;
+    })
+    const eventId = props.eventID
     confirm({
       title: `¿Está seguro de eliminar a ${info.name}?`,
       icon: <ExclamationCircleOutlined />,
@@ -65,57 +65,61 @@ function SpeakersList(props) {
       onOk() {
         const onHandlerRemoveSpeaker = () => {
           try {
-            updateOrDeleteSpeakers.mutateAsync({ speakerData: info, eventId });
+            updateOrDeleteSpeakers.mutateAsync({ speakerData: info, eventId })
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',
-            });
+            })
             DispatchMessageService({
               type: 'success',
               msj: 'Se eliminó correctamente al conferencista!',
               action: 'show',
-            });
+            })
           } catch (e) {
             DispatchMessageService({
               key: 'loading',
               action: 'destroy',
-            });
+            })
             DispatchMessageService({
               type: 'error',
               msj: 'Ha ocurrido un problema eliminando al conferencista!',
               action: 'show',
-            });
+            })
           }
-        };
-        onHandlerRemoveSpeaker();
+        }
+        onHandlerRemoveSpeaker()
       },
-    });
+    })
   }
 
   //FN para búsqueda en la tabla 2/3
   function handleSearch(selectedKeys, confirm, dataIndex) {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
+    confirm()
+    setSearchText(selectedKeys[0])
+    setSearchedColumn(dataIndex)
   }
 
   //FN para búsqueda en la tabla 3/3
   function handleReset(clearFilters) {
-    clearFilters();
-    setSearchText('');
+    clearFilters()
+    setSearchText('')
   }
 
   //FN para el draggable 1/3
   function onSortEnd({ oldIndex, newIndex }) {
-    const eventId = props.eventID;
+    const eventId = props.eventID
     if (oldIndex !== newIndex) {
-      let newData = arrayMove([].concat(sortAndIndexSpeakers()), oldIndex, newIndex).filter((el) => !!el);
+      let newData = arrayMove(
+        [].concat(sortAndIndexSpeakers()),
+        oldIndex,
+        newIndex,
+      ).filter((el) => !!el)
       if (newData) {
         newData = newData.map((speaker, key) => {
-          return { ...speaker, index: key };
-        });
+          return { ...speaker, index: key }
+        })
       }
-      updateOrDeleteSpeakers.mutateAsync({ newData, state: 'update', eventId });
+      updateOrDeleteSpeakers.mutateAsync({ newData, state: 'update', eventId })
     }
   }
 
@@ -125,12 +129,16 @@ function SpeakersList(props) {
       if (queryData.state === 'update') {
         await Promise.all(
           queryData.newData.map(async (speaker, index) => {
-            const speakerChange = { ...speaker, order: index + 1 };
-            const data = await SpeakersApi.editOne(speakerChange, speaker._id, queryData.eventId);
-          })
-        );
+            const speakerChange = { ...speaker, order: index + 1 }
+            const data = await SpeakersApi.editOne(
+              speakerChange,
+              speaker._id,
+              queryData.eventId,
+            )
+          }),
+        )
       } else {
-        await SpeakersApi.deleteOne(queryData.speakerData._id, queryData.eventId);
+        await SpeakersApi.deleteOne(queryData.speakerData._id, queryData.eventId)
       }
     },
     {
@@ -139,65 +147,73 @@ function SpeakersList(props) {
       // an error
       onMutate: async () => {
         //
-        await queryClient.cancelQueries('getSpeakersByEvent');
-        const previousValue = queryClient.getQueryData('getSpeakersByEvent');
-        return previousValue;
+        await queryClient.cancelQueries('getSpeakersByEvent')
+        const previousValue = queryClient.getQueryData('getSpeakersByEvent')
+        return previousValue
       },
       // On failure, roll back to the previous value
       onError: (err, queryData, previousValue) => {
         if (queryData.state === 'update') {
-          queryClient.setQueryData('getSpeakersByEvent', () => previousValue);
+          queryClient.setQueryData('getSpeakersByEvent', () => previousValue)
           DispatchMessageService({
             type: 'error',
             msj: `Hubo un error al guardar la posición de los conferencista, Error tipo: ${err.response.statusText}`,
             action: 'show',
-          });
+          })
         } else {
           DispatchMessageService({
             type: 'error',
             msj: `Hubo un error intentando borrar el conferencista ${queryData.speakerData.name}, Error tipo: ${err.response.statusText}`,
             action: 'show',
-          });
+          })
         }
       },
       // After success , refetch the query
       onSuccess: (data, queryData, previousValue) => {
         if (queryData.state === 'update') {
-          queryClient.setQueryData('getSpeakersByEvent', queryData.newData);
+          queryClient.setQueryData('getSpeakersByEvent', queryData.newData)
           DispatchMessageService({
             type: 'success',
             msj: 'La posición de los conferencistas ha sido actualizada correctamente!',
             action: 'show',
-          });
+          })
         } else {
           // queryClient.fetchQuery('getSpeakersByEvent', SpeakersApi.byEvent(queryData.eventId), {
           //   staleTime: 500,
           // });
           const updateSpeakersAfterADelete = dataSpeakers.filter(
-            (speakers) => speakers._id !== queryData.speakerData._id
-          );
-          setdataSpeakers(updateSpeakersAfterADelete);
+            (speakers) => speakers._id !== queryData.speakerData._id,
+          )
+          setdataSpeakers(updateSpeakersAfterADelete)
           DispatchMessageService({
             type: 'success',
             msj: `El conferencista  ${queryData.speakerData.name} ha sido eliminado satisfactoriamente`,
             action: 'show',
-          });
-          sortAndIndexSpeakers();
+          })
+          sortAndIndexSpeakers()
         }
       },
-    }
-  );
+    },
+  )
 
   //FN para el draggable 2/3
   const DraggableContainer = (props) => (
-    <SortableContainer useDragHandle disableAutoscroll helperClass="row-dragging" onSortEnd={onSortEnd} {...props} />
-  );
+    <SortableContainer
+      useDragHandle
+      disableAutoscroll
+      helperClass="row-dragging"
+      onSortEnd={onSortEnd}
+      {...props}
+    />
+  )
 
   //FN para el draggable 3/3
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
-    const index = sortAndIndexSpeakers()?.findIndex((x) => x.index === restProps['data-row-key']);
-    return <SortableItem index={index} {...restProps} />;
-  };
+    const index = sortAndIndexSpeakers()?.findIndex(
+      (x) => x.index === restProps['data-row-key'],
+    )
+    return <SortableItem index={index} {...restProps} />
+  }
 
   const columnsData = {
     data: props,
@@ -208,7 +224,7 @@ function SpeakersList(props) {
     searchText: searchText,
     refetch,
     cEventIsActive,
-  };
+  }
 
   return (
     <div>
@@ -237,7 +253,7 @@ function SpeakersList(props) {
         pagination={false}
       />
     </div>
-  );
+  )
 }
 
-export default withRouter(SpeakersList);
+export default withRouter(SpeakersList)

@@ -1,10 +1,14 @@
-import {
-  FormType,
-  WidgetType,
-} from '../constants/enum';
+import { FormType, WidgetType } from '../constants/enum'
 
 export namespace ActivityType {
-  export type MainUIKey = 'live' | 'meeting' | 'video' | 'quizing' | 'survey' | 'pdf' | 'html';
+  export type MainUIKey =
+    | 'live'
+    | 'meeting'
+    | 'video'
+    | 'quizing'
+    | 'survey'
+    | 'pdf'
+    | 'html'
   export type DeepUIKey =
     | 'streaming'
     | 'vimeo'
@@ -17,9 +21,16 @@ export namespace ActivityType {
     | 'quizing'
     | 'survey'
     | 'pdf'
-    | 'html';
+    | 'html'
 
-  export type Name = 'liveBroadcast' | 'meeting2' | 'video' | 'quizing2' | 'survey2' | 'pdf2' | 'html2';
+  export type Name =
+    | 'liveBroadcast'
+    | 'meeting2'
+    | 'video'
+    | 'quizing2'
+    | 'survey2'
+    | 'pdf2'
+    | 'html2'
 
   export type ContentValue =
     | ''
@@ -34,15 +45,11 @@ export namespace ActivityType {
     | 'quizing'
     | 'survey'
     | 'pdf'
-    | 'html';
+    | 'html'
 
-  export type UIKey = 
-    | (MainUIKey & string)
-    | (DeepUIKey & string);
+  export type UIKey = (MainUIKey & string) | (DeepUIKey & string)
 
-  export type GeneralTypeValue = 
-    | (Name & string)
-    | (ContentValue & string);
+  export type GeneralTypeValue = (Name & string) | (ContentValue & string)
 
   export type TypeAsDisplayment =
     | ''
@@ -57,55 +64,57 @@ export namespace ActivityType {
     | 'pdf' // TODO: convert to uppercase, but check if all works goodly.
     | 'HTML'
 
-  export type TypeToDisplaymentMap = { [key in ContentValue]: TypeAsDisplayment } & { video: TypeAsDisplayment };
+  export type TypeToDisplaymentMap = { [key in ContentValue]: TypeAsDisplayment } & {
+    video: TypeAsDisplayment
+  }
 
   export interface FormUI {
-    formType: FormType,
-    key: ContentValue,
-    title?: string,
-    MainTitle?: string,
-    description?: string,
-    image?: string,
-    addonBefore?: string,
-    subtitle?: string,
-    placeholder?: string,
+    formType: FormType
+    key: ContentValue
+    title?: string
+    MainTitle?: string
+    description?: string
+    image?: string
+    addonBefore?: string
+    subtitle?: string
+    placeholder?: string
   }
 
   interface WidgetStringed {
     // Widget strings
-    key: GeneralTypeValue,
-    MainTitle: string,
-    title: string,
-    description: string,
-    image: string,
-  };
+    key: GeneralTypeValue
+    MainTitle: string
+    title: string
+    description: string
+    image: string
+  }
 
   interface WidgetStringedModeCardSet extends WidgetStringed {
-    widgetType: WidgetType.CARD_SET,
-    form?: undefined,
-    cards: CardUI[],
-  };
+    widgetType: WidgetType.CARD_SET
+    form?: undefined
+    cards: CardUI[]
+  }
 
   interface WidgetStringedModeFinal extends WidgetStringed {
-    widgetType: WidgetType.FINAL,
-    form?: undefined,
-    cards?: undefined,
-  };
+    widgetType: WidgetType.FINAL
+    form?: undefined
+    cards?: undefined
+  }
 
   interface WidgetStringedModeForm extends WidgetStringed {
-    widgetType: WidgetType.FORM,
-    form: FormUI,
-    cards?: undefined,
-  };
+    widgetType: WidgetType.FORM
+    form: FormUI
+    cards?: undefined
+  }
 
-  export type CardUI = 
+  export type CardUI =
     | WidgetStringedModeFinal
     | WidgetStringedModeForm
-    | WidgetStringedModeCardSet;
+    | WidgetStringedModeCardSet
 
   export interface MainUI {
-    key: 'type',
-    MainTitle: string,
-    cards: CardUI[],
-  };
+    key: 'type'
+    MainTitle: string
+    cards: CardUI[]
+  }
 }

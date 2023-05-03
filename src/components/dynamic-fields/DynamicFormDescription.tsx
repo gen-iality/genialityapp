@@ -1,9 +1,11 @@
-import * as React from 'react';
-import { Typography, Collapse, Col } from 'antd';
-import { IDynamicFieldProps } from './types';
+import * as React from 'react'
+import { Typography, Collapse, Col } from 'antd'
+import { IDynamicFieldProps } from './types'
 import { useIntl } from 'react-intl'
 
-const DynamicFormDescription: React.FunctionComponent<Pick<IDynamicFieldProps['fieldData'], 'description'>> = (props) => {
+const DynamicFormDescription: React.FunctionComponent<
+  Pick<IDynamicFieldProps['fieldData'], 'description'>
+> = (props) => {
   const { description } = props
 
   const intl = useIntl()
@@ -12,26 +14,26 @@ const DynamicFormDescription: React.FunctionComponent<Pick<IDynamicFieldProps['f
 
   return (
     <>
-    {description.length < 500 && (
+      {description.length < 500 && (
         <Col style={{ marginBottom: '24px' }}>
           <Typography.Text>{description}</Typography.Text>
         </Col>
       )}
 
-    {description && description.length > 500 && (
-      <Collapse defaultActiveKey={['0']} style={{ marginBottom: '15px' }}>
-        <Collapse.Panel
-          key="1"
-          header={intl.formatMessage({
-            id: 'registration.message.policy',
-          })}
-        >
-          <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
-        </Collapse.Panel>
-      </Collapse>
-    )}
+      {description && description.length > 500 && (
+        <Collapse defaultActiveKey={['0']} style={{ marginBottom: '15px' }}>
+          <Collapse.Panel
+            key="1"
+            header={intl.formatMessage({
+              id: 'registration.message.policy',
+            })}
+          >
+            <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
+          </Collapse.Panel>
+        </Collapse>
+      )}
     </>
-  );
-};
+  )
+}
 
-export default DynamicFormDescription;
+export default DynamicFormDescription

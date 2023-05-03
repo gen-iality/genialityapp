@@ -6,7 +6,7 @@
   background-color: $primary;
 }
 .bar {
-  content: "";
+  content: '';
   display: inline;
   position: absolute;
   width: 0;
@@ -30,19 +30,41 @@
   animation: loading 3s linear 2s infinite;
 }
 @-webkit-keyframes loading {
-  from {left: 50%; width: 0;z-index:100;}
-  33.3333% {left: 0; width: 100%;z-index: 10;}
-  to {left: 0; width: 100%;}
+  from {
+    left: 50%;
+    width: 0;
+    z-index: 100;
+  }
+  33.3333% {
+    left: 0;
+    width: 100%;
+    z-index: 10;
+  }
+  to {
+    left: 0;
+    width: 100%;
+  }
 }
 @keyframes loading {
-  from {left: 50%; width: 0;z-index:100;}
-  33.3333% {left: 0; width: 100%;z-index: 10;}
-  to {left: 0; width: 100%;}
+  from {
+    left: 50%;
+    width: 0;
+    z-index: 100;
+  }
+  33.3333% {
+    left: 0;
+    width: 100%;
+    z-index: 10;
+  }
+  to {
+    left: 0;
+    width: 100%;
+  }
 }
 
-.event-loading{
+.event-loading {
   text-align: center;
-  > div{
+  > div {
     width: 18px;
     height: 18px;
     background-color: #7b7b7b;
@@ -61,15 +83,24 @@
   }
 }
 @-webkit-keyframes sk-bouncedelay {
-  0%, 80%, 100% { -webkit-transform: scale(0) }
-  40% { -webkit-transform: scale(1.0) }
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+  }
 }
 @keyframes sk-bouncedelay {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     -webkit-transform: scale(0);
     transform: scale(0);
-  } 40% {
-      -webkit-transform: scale(1.0);
-      transform: scale(1.0);
-    }
+  }
+  40% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
 }

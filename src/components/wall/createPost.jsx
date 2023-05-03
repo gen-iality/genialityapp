@@ -1,17 +1,38 @@
-import { Component, createRef } from 'react';
-import CameraFeed from './cameraFeed';
+import { Component, createRef } from 'react'
+import CameraFeed from './cameraFeed'
 
 //custom
-import { AuthUrl } from '@helpers/constants';
-import { saveFirebase } from './helpers';
-import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert, Space, Spin, Upload } from 'antd';
-import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons';
-import { message } from 'antd';
-const { TextArea } = Input;
-import withContext from '@context/withContext';
-import { DispatchMessageService } from '@context/MessageService';
+import { AuthUrl } from '@helpers/constants'
+import { saveFirebase } from './helpers'
+import {
+  Comment,
+  Form,
+  Button,
+  Input,
+  Card,
+  Row,
+  Col,
+  Modal,
+  Alert,
+  Space,
+  Spin,
+  Upload,
+} from 'antd'
+import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons'
+import { message } from 'antd'
+const { TextArea } = Input
+import withContext from '@context/withContext'
+import { DispatchMessageService } from '@context/MessageService'
 
-const Editor = ({ onSubmit, submitting, value, loadingsave, errimage, errNote, refText }) => (
+const Editor = ({
+  onSubmit,
+  submitting,
+  value,
+  loadingsave,
+  errimage,
+  errNote,
+  refText,
+}) => (
   <Form ref={refText} onFinish={onSubmit}>
     <Form.Item name="post">
       <TextArea placeholder="¿Qué está pasando?" rows={4} />
@@ -47,11 +68,11 @@ const Editor = ({ onSubmit, submitting, value, loadingsave, errimage, errNote, r
       )}
     </Form.Item>
   </Form>
-);
+)
 
 class CreatePost extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       avatar:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/avatar0.png?alt=media&token=26ace5bb-f91f-45ca-8461-3e579790f481',
@@ -71,18 +92,18 @@ class CreatePost extends Component {
       errimage: false,
       loadingsave: false,
       errNote: false,
-    };
-    this.savePost = this.savePost.bind(this);
-    this.previewImage = this.previewImage.bind(this);
-    this.cancelUploadImage = this.cancelUploadImage.bind(this);
-    this.getImage = this.getImage.bind(this);
-    this.formRef = createRef();
+    }
+    this.savePost = this.savePost.bind(this)
+    this.previewImage = this.previewImage.bind(this)
+    this.cancelUploadImage = this.cancelUploadImage.bind(this)
+    this.getImage = this.getImage.bind(this)
+    this.formRef = createRef()
   }
 
   componentDidMount() {}
 
   cleanValue() {
-    this.setState({ value: '' });
+    this.setState({ value: '' })
   }
 
   //Funcion para guardar el post y enviar el mensaje de publicacion
@@ -90,7 +111,7 @@ class CreatePost extends Component {
     if (values.post || this.state.image) {
       this.setState({
         loadingsave: true,
-      });
+      })
       const data = {
         urlImage: this.state.image,
         post: values.post || '',
@@ -104,10 +125,10 @@ class CreatePost extends Component {
           ? this.props.cUser.value.name
           : this.props.cUser.value.email,
         authorImage: this.props.cUser.value.picture || null,
-      };
+      }
 
       //savepost se realiza para publicar el post
-      const newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
+      const newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id)
       if (newPost) {
         this.setState({ value: '', image: '' }, () =>
           this.setState({
@@ -117,110 +138,102 @@ class CreatePost extends Component {
             visible: false,
             keyList: Date.now(),
           }),
-        );
-        //this.setState({ showInfo: false, visible: false, keyList: Date.now(),value:'' });
+        )
         // Reset formulario
-        this.formRef.current.resetFields();
+        this.formRef.current.resetFields()
         DispatchMessageService({
           type: 'success',
           msj: 'Mensaje publicado',
           action: 'show',
-        });
+        })
       } else {
         DispatchMessageService({
           type: 'error',
           msj: 'Error al guardar',
           action: 'show',
-        });
+        })
       }
-
-      //this.props.addPosts(newPost);
     } else {
-      this.setState({ errNote: true });
+      this.setState({ errNote: true })
     }
   }
 
   //Funcion para mostrar el archivo, se pasa a base64 para poder mostrarlo
   previewImage(event) {
-    console.log(event);
-    const permitFile = ['png', 'jpg', 'jpeg', 'gif'];
-    //event.preventDefault();
-    const file = event.fileList[0];
-    const extension = file.name.split('.').pop();
-    /* if (permitFile.indexOf(extension) > -1) {
-      let reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        this.setState({ image: reader.result, inputKey: Date.now(), errimage: false });
-      };
-    } else {
-      this.setState({ errimage: true });
-    } */
+    console.log(event)
+    const permitFile = ['png', 'jpg', 'jpeg', 'gif']
+    const file = event.fileList[0]
+    const extension = file.name.split('.').pop()
+
     if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file.originFileObj);
+      const reader = new FileReader()
+      reader.readAsDataURL(file.originFileObj)
       reader.onloadend = () => {
-        this.setState({ image: reader.result, inputKey: Date.now(), errimage: false });
-      };
+        this.setState({ image: reader.result, inputKey: Date.now(), errimage: false })
+      }
     } else {
-      this.setState({ errimage: true });
+      this.setState({ errimage: true })
     }
   }
 
   //Funcion para poder pasarla por props y obtener la selfie de cameraFeed en este componente
   getImage(image) {
-    this.setState({ image });
+    this.setState({ image })
   }
 
   //Funcion para actualizar el canvas y poder tomar la foto
   uploadImage() {
-    const formData = new FormData();
-    formData.append('file', formData);
+    const formData = new FormData()
+    formData.append('file', formData)
   }
 
   //Funcion para cerrar la modal
   setModal2Visible(modal2Visible) {
-    this.setState({ modal2Visible, keyImage: Date.now() });
+    this.setState({ modal2Visible, keyImage: Date.now() })
   }
 
   //Funcion para limpiar el input de la selfie y ocultar el componente card que muestra la selfie
   cancelUploadImage() {
-    this.setState({ image: '' });
+    this.setState({ image: '' })
   }
 
   //Funcion para enviar al estado el comentario del post
   handleChange = (e) => {
     this.setState({
       value: e.target.value,
-    });
-  };
+    })
+  }
   //Funciones para mostrar o cerrar el modal que contiene el formulario para guardar post
   showModal = () => {
     this.setState({
       visible: true,
-    });
-  };
+    })
+  }
 
   //Funcion para cerrar el modal de publicacion en caso de no realizar ninguna publicación
   handleOk = () => {
-    this.setState({ loading: true });
+    this.setState({ loading: true })
     setTimeout(() => {
-      this.setState({ loading: false, visible: false });
-    }, 3000);
-  };
+      this.setState({ loading: false, visible: false })
+    }, 3000)
+  }
 
   //Funcion para cerrar el modal de publicacion en caso de no realizar ninguna publicación
   handleCancel = () => {
-    this.setState({ visible: false, errimage: false });
-  };
+    this.setState({ visible: false, errimage: false })
+  }
 
   render() {
-    const { visible, hidden, image, submitting, value } = this.state;
+    const { visible, hidden, image, submitting, value } = this.state
     return (
       <div>
         <div>
           {this.props.cUser && (
-            <Button style={{ marginBottom: '3%', marginTop: '3%' }} type="primary" onClick={this.showModal}>
+            <Button
+              style={{ marginBottom: '3%', marginTop: '3%' }}
+              type="primary"
+              onClick={this.showModal}
+            >
               Crear publicación
             </Button>
           )}
@@ -229,8 +242,8 @@ class CreatePost extends Component {
             <Alert
               message={
                 <p>
-                  <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado, inicia sesión para poder
-                  realizar publicaciones &nbsp;&nbsp;
+                  <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado,
+                  inicia sesión para poder realizar publicaciones &nbsp;&nbsp;
                   <Button type="primary">
                     <a href={AuthUrl}>Ir a Ingreso</a>
                   </Button>
@@ -240,9 +253,22 @@ class CreatePost extends Component {
             />
           )}
 
-          <Modal visible={visible} title="Publicaciones" onOk={this.handleOk} onCancel={this.handleCancel} footer={[]}>
+          <Modal
+            visible={visible}
+            title="Publicaciones"
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+            footer={[]}
+          >
             <Row>
-              <Col style={{ textAlign: 'center' }} xs={24} sm={24} md={24} lg={24} xl={24}>
+              <Col
+                style={{ textAlign: 'center' }}
+                xs={24}
+                sm={24}
+                md={24}
+                lg={24}
+                xl={24}
+              >
                 <Space>
                   {/* Boton para subir foto desde la galeria del dispositivo */}
                   <Upload
@@ -261,7 +287,7 @@ class CreatePost extends Component {
                     <Button
                       style={{ marginLeft: '3%' }}
                       onClick={(e) => {
-                        this.setState({ hidden: true }, this.setModal2Visible(true));
+                        this.setState({ hidden: true }, this.setModal2Visible(true))
                       }}
                     >
                       <CameraOutlined />
@@ -276,17 +302,17 @@ class CreatePost extends Component {
                       centered
                       visible={this.state.modal2Visible}
                       onOk={(e) => {
-                        this.setState({ hidden: false }, this.setModal2Visible(false));
+                        this.setState({ hidden: false }, this.setModal2Visible(false))
                       }}
                       onCancel={(e) => {
-                        this.setState({ hidden: false }, this.setModal2Visible(false));
+                        this.setState({ hidden: false }, this.setModal2Visible(false))
                       }}
                       footer={[
                         <Button
                           key="submit"
                           type="primary"
                           onClick={(e) => {
-                            this.setState({ hidden: false }, this.setModal2Visible(false));
+                            this.setState({ hidden: false }, this.setModal2Visible(false))
                           }}
                         >
                           Listo usar esta
@@ -329,9 +355,9 @@ class CreatePost extends Component {
           </Modal>
         </div>
       </div>
-    );
+    )
   }
 }
 
-const CreatePostWithContext = withContext(CreatePost);
-export default CreatePostWithContext;
+const CreatePostWithContext = withContext(CreatePost)
+export default CreatePostWithContext

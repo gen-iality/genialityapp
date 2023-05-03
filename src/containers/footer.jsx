@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
-import { Layout, Row, Col, Divider, List, Typography, Space } from 'antd';
-import { FacebookFilled, InstagramFilled, LinkedinFilled } from '@ant-design/icons';
-import { imageUtils } from '../Utilities/ImageUtils';
+import { Link } from 'react-router-dom'
+import { Layout, Row, Col, Divider, List, Typography, Space } from 'antd'
+import { FacebookFilled, InstagramFilled, LinkedinFilled } from '@ant-design/icons'
+import { imageUtils } from '../Utilities/ImageUtils'
 
 const Footer = () => {
   return (
@@ -17,22 +17,38 @@ const Footer = () => {
             bordered={false}
           >
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}
+              >
                 Inicio
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}
+              >
                 Tipos de cursos
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}
+              >
                 Casos de éxito
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}
+              >
                 Solicitar demo
               </a>
             </List.Item>
@@ -48,7 +64,11 @@ const Footer = () => {
             bordered={false}
           >
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}
+              >
                 ¿Quiénes somos?
               </a>
             </List.Item>
@@ -108,21 +128,21 @@ const Footer = () => {
         >
           <Space wrap>
             <a
-              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
               style={{ color: '#fff' }}
             >
               <FacebookFilled style={{ fontSize: '35px' }} />
             </a>
             <a
-              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
               style={{ color: '#fff' }}
             >
               <InstagramFilled style={{ fontSize: '35px' }} />
             </a>
             <a
-              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
               style={{ color: '#fff' }}
             >
@@ -132,7 +152,7 @@ const Footer = () => {
         </Col>
       </Row>
     </Layout.Footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

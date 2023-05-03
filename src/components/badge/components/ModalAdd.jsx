@@ -1,6 +1,13 @@
-import { Form, Modal, Select, Button } from 'antd';
-const { Option } = Select;
-export default function ModalAdd({ addField, isVisible, filterOptions, badges, fontSize, setIsVisible }) {
+import { Form, Modal, Select, Button } from 'antd'
+const { Option } = Select
+export default function ModalAdd({
+  addField,
+  isVisible,
+  filterOptions,
+  badges,
+  fontSize,
+  setIsVisible,
+}) {
   return (
     <Modal
       title="Agregar parametro"
@@ -16,7 +23,9 @@ export default function ModalAdd({ addField, isVisible, filterOptions, badges, f
               <Option
                 key={index + option.value}
                 value={option.name}
-                disabled={badges.find((bagde) => bagde.id_properties.value === option.name)}
+                disabled={badges.find(
+                  (bagde) => bagde.id_properties.value === option.name,
+                )}
               >
                 {option.label}
               </Option>
@@ -39,5 +48,5 @@ export default function ModalAdd({ addField, isVisible, filterOptions, badges, f
         </Form.Item>
       </Form>
     </Modal>
-  );
+  )
 }

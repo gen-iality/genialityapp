@@ -1,30 +1,30 @@
-import { Component } from 'react';
-import { FaqsApi } from '@helpers/request';
-import { Collapse, Col, Row } from 'antd';
-import withContext from '@context/withContext';
-import ReactQuill from 'react-quill';
+import { Component } from 'react'
+import { FaqsApi } from '@helpers/request'
+import { Collapse, Col, Row } from 'antd'
+import withContext from '@context/withContext'
+import ReactQuill from 'react-quill'
 
-const { Panel } = Collapse;
+const { Panel } = Collapse
 
 const center = {
   margin: '0 auto',
-};
+}
 class Faqs extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       faqsData: [],
       styles: {},
-    };
+    }
   }
 
   async componentDidMount() {
-    this.getFaqs();
+    this.getFaqs()
   }
 
   async getFaqs() {
-    const eventId = this.props.cEvent.value?._id;
-    const faqsData = await FaqsApi.byEvent(eventId);
+    const eventId = this.props.cEvent.value?._id
+    const faqsData = await FaqsApi.byEvent(eventId)
     if (this.props.cEvent.value.styles) {
       this.setState({
         styles: {
@@ -35,12 +35,12 @@ class Faqs extends Component {
               ? this.props.cEvent.value.styles.toolbarDefaultBg
               : '#7d8485d4',
         },
-      });
+      })
     }
-    this.setState({ faqsData });
+    this.setState({ faqsData })
   }
   render() {
-    const { faqsData, styles } = this.state;
+    const { faqsData, styles } = this.state
     return (
       <Row gutter={[8, 8]} wrap justify="center">
         <Col xs={22} sm={22} md={18} lg={18} xl={18}>
@@ -63,7 +63,8 @@ class Faqs extends Component {
                     <br />
                     {faqs.title}
                   </span>
-                }>
+                }
+              >
                 <b>Respuesta:</b>{' '}
                 <Row>
                   <Col span={24} id="img-informative">
@@ -80,9 +81,9 @@ class Faqs extends Component {
           </Collapse>
         </Col>
       </Row>
-    );
+    )
   }
 }
 
-const FaqsWithContext = withContext(Faqs);
-export default FaqsWithContext;
+const FaqsWithContext = withContext(Faqs)
+export default FaqsWithContext

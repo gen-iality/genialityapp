@@ -226,10 +226,10 @@ let indicativeCountryOptions = [
   { label: '+967 - Yemen 🇾🇪' },
   { label: '+260 - Zambia 🇿🇲' },
   { label: '+263 - Zimbabwe 🇿🇼' },
-];
+]
 
 indicativeCountryOptions = indicativeCountryOptions.map((indicativeCountry) => {
-  return { label: indicativeCountry.label, value: indicativeCountry.label };
-});
+  return { label: indicativeCountry.label, value: indicativeCountry.label }
+})
 
-export default indicativeCountryOptions;
+export default indicativeCountryOptions

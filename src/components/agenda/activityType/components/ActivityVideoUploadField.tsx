@@ -1,52 +1,50 @@
-import { useState } from 'react';
-import { message, Result, Spin, Upload } from 'antd';
-import FileVideoOutlineIcon from '@2fd/ant-design-icons/lib/FileVideoOutline';
-import { RcFile } from 'antd/lib/upload';
-import { deleteVideo } from '@adaptors/gcoreStreamingApi';
-import useActivityType from '@context/activityType/hooks/useActivityType';
+import { useState } from 'react'
+import { message, Result, Spin, Upload } from 'antd'
+import FileVideoOutlineIcon from '@2fd/ant-design-icons/lib/FileVideoOutline'
+import { RcFile } from 'antd/lib/upload'
+import { deleteVideo } from '@adaptors/gcoreStreamingApi'
+import useActivityType from '@context/activityType/hooks/useActivityType'
 
-const urlUploadVideoGcore = 'https://webhook.evius.co/upload-video';
+const urlUploadVideoGcore = 'https://webhook.evius.co/upload-video'
 
 const handleBeforeUpload = (file: RcFile) => {
-  return file;
-};
+  return file
+}
 
 export interface ActivityVideoUploadFieldProps {
-  activityName: string,
-};
+  activityName: string
+}
 
 function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
-  // const { selectOption, typeOptions } = useTypeActivity();
-  const { setContentSource } = useActivityType();
-  const [isLoading, setIsLoading] = useState(false);
+  const { setContentSource } = useActivityType()
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleOnChange = async (info: any) => {
-    const { status, response } = info.file;
+    const { status, response } = info.file
     switch (status) {
       case 'done':
-        // selectOption(typeOptions.key, `${response.video.iframe_url}*${response.video.id}`);
-        const finalURL = `${response.video.iframe_url}*${response.video.id}`;
-        setContentSource(finalURL);
-        console.debug('file uploaded to', finalURL);
-        setIsLoading(false);
-        break;
+        const finalURL = `${response.video.iframe_url}*${response.video.id}`
+        setContentSource(finalURL)
+        console.debug('file uploaded to', finalURL)
+        setIsLoading(false)
+        break
       case 'error':
         if (response?.message == 'ERROR: Invalid format') {
-          message.error('Formato de video inválido');
+          message.error('Formato de video inválido')
         } else {
-          message.error('Error al cargar el video');
+          message.error('Error al cargar el video')
         }
         console.error(info)
-        setIsLoading(false);
-        break;
+        setIsLoading(false)
+        break
       case 'removed':
         // Delete the video from gcore
-        if (response?.video) await deleteVideo(response.video.id);
-        setIsLoading(false);
-        break;
+        if (response?.video) await deleteVideo(response.video.id)
+        setIsLoading(false)
+        break
       default:
-        setIsLoading(true);
-        break;
+        setIsLoading(true)
+        break
     }
 
     if (status == 'error') {
@@ -70,7 +68,7 @@ function ActivityVideoUploadField(props: ActivityVideoUploadFieldProps) {
       />
       {isLoading && <Spin />}
     </Upload.Dragger>
-  );
-};
+  )
+}
 
-export default ActivityVideoUploadField;
+export default ActivityVideoUploadField

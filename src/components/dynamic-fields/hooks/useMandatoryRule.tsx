@@ -7,20 +7,27 @@ import { IDynamicFieldData } from '../../dynamic-fields/types'
  */
 const defaultErrorMessage = 'Es un campo necesario'
 
-
-export default function useMandatoryRule(fieldData: IDynamicFieldData, errorMessage?: string) {
+export default function useMandatoryRule(
+  fieldData: IDynamicFieldData,
+  errorMessage?: string,
+) {
   const [basicRule, setBasicRule] = useState<Rule>({})
   const [primaryMandatory, setPrimaryMandatory] = useState(false)
   const [secondMandatory, setSecondMandatory] = useState(false)
 
-  const setCondiction = useCallback((newCondiction: boolean) => {
-    console.log('change the second mandatory to', newCondiction)
-    setSecondMandatory(newCondiction);
-  }, [basicRule, setSecondMandatory])
+  const setCondiction = useCallback(
+    (newCondiction: boolean) => {
+      console.log('change the second mandatory to', newCondiction)
+      setSecondMandatory(newCondiction)
+    },
+    [basicRule, setSecondMandatory],
+  )
 
   useEffect(() => {
     setPrimaryMandatory(!!fieldData.mandatory)
-    console.debug('set required rule from mandatory value', { mandatory: fieldData.mandatory })
+    console.debug('set required rule from mandatory value', {
+      mandatory: fieldData.mandatory,
+    })
   }, [fieldData.mandatory])
 
   useEffect(() => {
@@ -29,8 +36,11 @@ export default function useMandatoryRule(fieldData: IDynamicFieldData, errorMess
       message: errorMessage ?? defaultErrorMessage,
     }
     setBasicRule(newRule)
-    console.debug('set required rule from mandatory value', { primaryMandatory, secondMandatory })
+    console.debug('set required rule from mandatory value', {
+      primaryMandatory,
+      secondMandatory,
+    })
   }, [primaryMandatory, secondMandatory])
 
-  return {basicRule, setCondiction};
+  return { basicRule, setCondiction }
 }

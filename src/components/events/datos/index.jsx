@@ -1,10 +1,15 @@
-import { Component, Fragment, useState } from 'react';
-import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '@helpers/request';
+import { Component, Fragment, useState } from 'react'
+import {
+  Actions,
+  EventFieldsApi,
+  OrganizationApi,
+  OrganizationPlantillaApi,
+} from '@helpers/request'
 /* import { toast } from 'react-toastify'; */
-import { FormattedMessage, useIntl } from 'react-intl';
-import DatosModal from './modal';
-import { Tabs, Table, Checkbox, Button, Select, Row, Col, Tooltip, Modal } from 'antd';
-import RelationField from './relationshipFields';
+import { FormattedMessage, useIntl } from 'react-intl'
+import DatosModal from './modal'
+import { Tabs, Table, Checkbox, Button, Select, Row, Col, Tooltip, Modal } from 'antd'
+import RelationField from './relationshipFields'
 import {
   EditOutlined,
   DeleteOutlined,
@@ -12,28 +17,30 @@ import {
   SaveOutlined,
   PlusCircleOutlined,
   ExclamationCircleOutlined,
-} from '@ant-design/icons';
-import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
-import arrayMove from 'array-move';
-import CMS from '../../newComponent/CMS';
-import { firestore } from '@helpers/firebase';
-import ModalCreateTemplate from '../../shared/modalCreateTemplate';
-import Header from '@antdComponents/Header';
-import { GetTokenUserFirebase } from '@helpers/HelperAuth';
-import { DispatchMessageService } from '@context/MessageService';
-import { createFieldForCheckInPerDocument } from './utils';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import DynamicFieldCreationForm from '../../dynamic-fields/DynamicFieldCreationForm';
+} from '@ant-design/icons'
+import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc'
+import arrayMove from 'array-move'
+import CMS from '../../newComponent/CMS'
+import { firestore } from '@helpers/firebase'
+import ModalCreateTemplate from '../../shared/modalCreateTemplate'
+import Header from '@antdComponents/Header'
+import { GetTokenUserFirebase } from '@helpers/HelperAuth'
+import { DispatchMessageService } from '@context/MessageService'
+import { createFieldForCheckInPerDocument } from './utils'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import DynamicFieldCreationForm from '../../dynamic-fields/DynamicFieldCreationForm'
 
-const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
-const SortableItem = sortableElement((props) => <tr {...props} />);
-const SortableContainer = sortableContainer((props) => <tbody {...props} />);
-const { TabPane } = Tabs;
-const { Option } = Select;
-const { confirm } = Modal;
+const DragHandle = sortableHandle(() => (
+  <DragOutlined style={{ cursor: 'grab', color: '#999' }} />
+))
+const SortableItem = sortableElement((props) => <tr {...props} />)
+const SortableContainer = sortableContainer((props) => <tbody {...props} />)
+const { TabPane } = Tabs
+const { Option } = Select
+const { confirm } = Modal
 class Datos extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       info: {},
       newField: false,
@@ -45,62 +52,73 @@ class Datos extends Component {
       value: '',
       visibleModal: false,
       isEditTemplate: { status: false, datafields: [], template: null },
-    };
-    this.eventId = this.props.eventId;
-    this.html = document.querySelector('html');
-    this.submitOrder = this.submitOrder.bind(this);
-    this.updateTable = this.updateTable.bind(this);
-    this.handlevisibleModal = this.handlevisibleModal.bind(this);
-    this.organization = this.props?.sendprops ? this.props?.sendprops?.org : this.props?.org;
+    }
+    this.eventId = this.props.eventId
+    this.html = document.querySelector('html')
+    this.submitOrder = this.submitOrder.bind(this)
+    this.updateTable = this.updateTable.bind(this)
+    this.handlevisibleModal = this.handlevisibleModal.bind(this)
+    this.organization = this.props?.sendprops
+      ? this.props?.sendprops?.org
+      : this.props?.org
   }
 
   async componentDidMount() {
-    await this.fetchFields();
+    await this.fetchFields()
   }
   updateTable(fields) {
-    let fieldsorder = this.orderFieldsByWeight(fields);
-    fieldsorder = this.updateIndex(fieldsorder);
-    this.setState({ isEditTemplate: { ...this.state.isEditTemplate, datafields: fieldsorder } });
+    let fieldsorder = this.orderFieldsByWeight(fields)
+    fieldsorder = this.updateIndex(fieldsorder)
+    this.setState({
+      isEditTemplate: { ...this.state.isEditTemplate, datafields: fieldsorder },
+    })
     //alert('EDITTEMPLATE==>', this.props.edittemplate);
   }
 
   orderFieldsByWeight = (extraFields) => {
     extraFields = extraFields.sort((a, b) =>
-      (a.order_weight && !b.order_weight) || (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
+      (a.order_weight && !b.order_weight) ||
+      (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
         ? -1
         : 1,
-    );
-    return extraFields;
-  };
+    )
+    return extraFields
+  }
   // Funcion para traer la información
   fetchFields = async () => {
     try {
-      const organizationId = this?.organization?._id;
-      let fields = [];
-      const fieldsReplace = [];
-      const checkInFieldsIds = [];
+      const organizationId = this?.organization?._id
+      let fields = []
+      const fieldsReplace = []
+      const checkInFieldsIds = []
       if (
         (organizationId && !this.props.eventId && this.props.edittemplate) ||
         (organizationId && !this.props.eventId && !this.props.edittemplate)
       ) {
-        fields = await this.props.getFields();
+        fields = await this.props.getFields()
         //Realizado con la finalidad de no mostrar la contraseña ni el avatar
         //Comentado la parte de password y contrasena para dejar habilitado solo en el administrador
         fields.map((field) => {
-          if (/* field.name !== 'password' && field.name !== 'contrasena' &&  */ field.name !== 'avatar') {
-            fieldsReplace.push(field);
+          if (
+            /* field.name !== 'password' && field.name !== 'contrasena' &&  */ field.name !==
+            'avatar'
+          ) {
+            fieldsReplace.push(field)
           }
-        });
-        fields = this.orderFieldsByWeight(fieldsReplace);
-        fields = this.updateIndex(fieldsReplace);
+        })
+        fields = this.orderFieldsByWeight(fieldsReplace)
+        fields = this.updateIndex(fieldsReplace)
       } else if (!this.props.edittemplate) {
-        this.setState({ checkInExists: false, checkInFieldsIds: [] });
-        fields = await EventFieldsApi.getAll(this.props.eventId);
+        this.setState({ checkInExists: false, checkInFieldsIds: [] })
+        fields = await EventFieldsApi.getAll(this.props.eventId)
         //Realizado con la finalidad de no mostrar la contraseña ni el avatar
         //Comentado la parte de password y contrasena para dejar habilitado solo en el administrador
         fields.map((field) => {
-          if (/* field.name !== 'password' && field.name !== 'contrasena' &&  */ field.name !== 'avatar') {
-            fieldsReplace.push(field);
+          if (
+            /* field.name !== 'password' && field.name !== 'contrasena' &&  */ field.name !==
+            'avatar'
+          ) {
+            fieldsReplace.push(field)
           }
           if (
             field.type === 'checkInField' ||
@@ -108,64 +126,74 @@ class Datos extends Component {
             field.name === 'bloodtype' ||
             field.name === 'gender'
           ) {
-            checkInFieldsIds.push(field._id);
-            this.setState({ checkInExists: true, checkInFieldsIds: checkInFieldsIds });
+            checkInFieldsIds.push(field._id)
+            this.setState({ checkInExists: true, checkInFieldsIds: checkInFieldsIds })
           }
-        });
-        fields = this.orderFieldsByWeight(fieldsReplace);
-        fields = this.updateIndex(fieldsReplace);
+        })
+        fields = this.orderFieldsByWeight(fieldsReplace)
+        fields = this.updateIndex(fieldsReplace)
       }
-      this.setState({ fields, loading: false });
+      this.setState({ fields, loading: false })
     } catch (e) {
-      this.showError(e, 'ERROR');
+      this.showError(e, 'ERROR')
     }
-  };
+  }
   //Permite asignarle un index a los elementos
   updateIndex = (fields) => {
     for (let i = 0; i < fields.length; i++) {
-      fields[i].index = i;
-      fields[i].order_weight = i + 1;
+      fields[i].index = i
+      fields[i].order_weight = i + 1
     }
-    return fields;
-  };
+    return fields
+  }
 
   //Agregar nuevo campo
   addField = () => {
-    this.setState({ edit: false, modal: true });
-  };
+    this.setState({ edit: false, modal: true })
+  }
   //Guardar campo en el curso
   saveField = async (field) => {
-    /* console.log('FIELD==>', field); */
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
       msj: ' Por favor espere mientras se guarda la información...',
       action: 'show',
-    });
+    })
     try {
-      let totaluser = {};
-      const organizationId = this.organization?._id;
+      let totaluser = {}
+      const organizationId = this.organization?._id
       if (organizationId) {
         if (this.state.edit) {
-          await this.props.editField(field._id || field.id, field, this.state.isEditTemplate, this.updateTable);
+          await this.props.editField(
+            field._id || field.id,
+            field,
+            this.state.isEditTemplate,
+            this.updateTable,
+          )
         } else {
-          await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
+          await this.props.createNewField(
+            field,
+            this.state.isEditTemplate,
+            this.updateTable,
+          )
         }
       } else {
         if (this.state.edit) {
-          await EventFieldsApi.editOne(field, field._id || field.id, this.eventId);
+          await EventFieldsApi.editOne(field, field._id || field.id, this.eventId)
         } else {
-          await EventFieldsApi.createOne(field, this.eventId);
+          await EventFieldsApi.createOne(field, this.eventId)
         }
-        totaluser = await firestore.collection(`${this.eventId}_event_attendees`).get();
+        totaluser = await firestore.collection(`${this.eventId}_event_attendees`).get()
       }
 
       // Update the fields state from the new edited field
       this.setState((previous) => ({
         ...previous,
-        fields: previous.fields.map((_field) => (_field._id === field._id ? field : _field)),
-      }));
-      this.closeModal2(); // To force clean the form by destroying the Modal
+        fields: previous.fields.map((_field) =>
+          _field._id === field._id ? field : _field,
+        ),
+      }))
+      this.closeModal2() // To force clean the form by destroying the Modal
 
       if (totaluser?.docs?.length > 0 && field?.name == 'pesovoto') {
         firestore
@@ -174,43 +202,46 @@ class Datos extends Component {
           .then((resp) => {
             if (resp.docs.length > 0) {
               resp.docs.map((doc) => {
-                const datos = doc.data();
-                let objectP = datos.properties;
-                const properties = objectP;
-                objectP = { ...objectP, pesovoto: properties && properties.pesovoto ? properties.pesovoto : 1 };
-                datos.properties = objectP;
+                const datos = doc.data()
+                let objectP = datos.properties
+                const properties = objectP
+                objectP = {
+                  ...objectP,
+                  pesovoto: properties && properties.pesovoto ? properties.pesovoto : 1,
+                }
+                datos.properties = objectP
                 firestore
                   .collection(`${this.eventId}_event_attendees`)
                   .doc(doc.id)
-                  .set(datos);
-              });
+                  .set(datos)
+              })
             }
-          });
+          })
       }
-      await this.fetchFields();
-      this.setState({ modal: false, edit: false, newField: false });
+      await this.fetchFields()
+      this.setState({ modal: false, edit: false, newField: false })
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
-      });
+      })
       DispatchMessageService({
         type: 'success',
         msj: 'Información guardada correctamente!',
         action: 'show',
-      });
+      })
     } catch (e) {
-      this.showError(e.response.data.message || e.response.status);
+      this.showError(e.response.data.message || e.response.status)
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
-      });
+      })
       DispatchMessageService({
         type: 'error',
         msj: e.response.data.message || e.response.status,
         action: 'show',
-      });
+      })
     }
-  };
+  }
 
   //Funcion para guardar el orden de los datos
   async submitOrder() {
@@ -219,45 +250,52 @@ class Datos extends Component {
       key: 'loading',
       msj: ' Por favor espere mientras se guarda la información...',
       action: 'show',
-    });
-    const organizationId = this?.organization?._id;
+    })
+    const organizationId = this?.organization?._id
     try {
       if (organizationId && !this.eventId) {
-        await this.props.orderFields(this.state.properties);
+        await this.props.orderFields(this.state.properties)
       } else if (this.eventId && !organizationId) {
         // && this.props.byEvent condición que no esta llegando
-        const token = await GetTokenUserFirebase();
-        await Actions.put(`api/events/${this.props.eventId}?token=${token}`, this.state.properties);
+        const token = await GetTokenUserFirebase()
+        await Actions.put(
+          `api/events/${this.props.eventId}?token=${token}`,
+          this.state.properties,
+        )
       } else {
-        await this.props.orderFields(this.state.isEditTemplate.datafields, this.state.isEditTemplate, this.updateTable);
+        await this.props.orderFields(
+          this.state.isEditTemplate.datafields,
+          this.state.isEditTemplate,
+          this.updateTable,
+        )
       }
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
-      });
+      })
       DispatchMessageService({
         type: 'success',
         msj: 'El orden de la recopilación de datos se ha guardado',
         action: 'show',
-      });
+      })
     } catch (e) {
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
-      });
+      })
       DispatchMessageService({
         type: 'error',
         msj: e,
         action: 'show',
-      });
+      })
     }
-    this.fetchFields();
+    this.fetchFields()
   }
 
   //Abrir modal para editar dato
   editField = (info) => {
-    this.setState({ info, modal: true, edit: true });
-  };
+    this.setState({ info, modal: true, edit: true })
+  }
 
   /* onHandlerRemove = async (loading, item) => {
     try {
@@ -291,46 +329,48 @@ class Datos extends Component {
   }; */
 
   closeModal2 = () => {
-    this.setState({ info: {}, modal: false, edit: false });
-  };
+    this.setState({ info: {}, modal: false, edit: false })
+  }
   //Borrar dato de la lista
   removeField = async (item, checkInFieldsDelete) => {
-    const self = this;
+    const self = this
 
     const onHandlerRemove = async () => {
       try {
-        const organizationId = self.organization?._id;
+        const organizationId = self.organization?._id
         if (organizationId) {
-          await self.props.deleteField(item, self.state.isEditTemplate, self.updateTable);
+          await self.props.deleteField(item, self.state.isEditTemplate, self.updateTable)
         } else {
-          await EventFieldsApi.deleteOne(item, self.eventId);
+          await EventFieldsApi.deleteOne(item, self.eventId)
         }
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
-        });
+        })
         DispatchMessageService({
           type: 'success',
           msj: 'Se eliminó la información correctamente!',
           action: 'show',
-        });
-        await self.fetchFields();
+        })
+        await self.fetchFields()
       } catch (e) {
         DispatchMessageService({
           key: 'loading',
           action: 'destroy',
-        });
+        })
         DispatchMessageService({
           type: 'error',
-          msj: `No ha sido posible eliminar el campo error: ${e?.response?.data?.message || e.response?.status}`,
+          msj: `No ha sido posible eliminar el campo error: ${
+            e?.response?.data?.message || e.response?.status
+          }`,
           action: 'show',
-        });
+        })
       }
-    };
+    }
 
     if (checkInFieldsDelete) {
-      onHandlerRemove();
-      return;
+      onHandlerRemove()
+      return
     }
 
     DispatchMessageService({
@@ -338,7 +378,7 @@ class Datos extends Component {
       key: 'loading',
       msj: ' Por favor espere mientras se borra la información...',
       action: 'show',
-    });
+    })
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -347,55 +387,38 @@ class Datos extends Component {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        //self.onHandlerRemove(loading, item);
-        onHandlerRemove();
+        onHandlerRemove()
       },
-    });
-    /* try {
-      const organizationId = this?.organization?._id;
-      if (organizationId) {
-        await this.props.deleteField(this.state.deleteModal, this.state.isEditTemplate, this.updateTable);
-        this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
-      } else {
-        await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventId);
-        this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
-      }
-      await this.fetchFields();
-      setTimeout(() => {
-        this.setState({ message: {}, deleteModal: false });
-      }, 800);
-    } catch (e) {
-      this.showError(e);
-    } */
-  };
+    })
+  }
 
   closeDelete = () => {
-    this.setState({ deleteModal: false });
-  };
+    this.setState({ deleteModal: false })
+  }
 
   closeModal = () => {
-    this.setState({ inputValue: '', modal: false, info: {}, edit: false });
-  };
+    this.setState({ inputValue: '', modal: false, info: {}, edit: false })
+  }
 
   showError = (error) => {
     DispatchMessageService({
       type: 'success',
       msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
       action: 'show',
-    });
+    })
     if (error.response) {
-      const { status, data } = error.response;
-      if (status === 401) this.setState({ timeout: true, loader: false });
-      else this.setState({ serverError: true, loader: false, errorData: data });
+      const { status, data } = error.response
+      if (status === 401) this.setState({ timeout: true, loader: false })
+      else this.setState({ serverError: true, loader: false, errorData: data })
     } else {
-      let errorData = error.message;
+      let errorData = error.message
       if (error.request) {
-        errorData = error.request;
+        errorData = error.request
       }
-      errorData.status = 708;
-      this.setState({ serverError: true, loader: false, errorData });
+      errorData.status = 708
+      this.setState({ serverError: true, loader: false, errorData })
     }
-  };
+  }
   //Funcion para cambiar el valor de los checkboxes
   async changeCheckBox(field, key, key2 = null) {
     DispatchMessageService({
@@ -403,36 +426,36 @@ class Datos extends Component {
       key: 'loading',
       msj: ' Por favor espere mientras se guarda la información...',
       action: 'show',
-    });
+    })
     try {
       this.setState({ edit: true }, () => {
-        field[key] = !field[key];
+        field[key] = !field[key]
         if (key2 != null) {
-          field[key2] = field[key2] == true ? false : field[key2];
+          field[key2] = field[key2] == true ? false : field[key2]
         }
 
         this.saveField(field).then((resp) => {
           DispatchMessageService({
             key: 'loading',
             action: 'destroy',
-          });
+          })
           DispatchMessageService({
             type: 'success',
             msj: 'Se ha editado correctamente el campo!',
             action: 'show',
-          });
-        });
-      });
+          })
+        })
+      })
     } catch (e) {
       DispatchMessageService({
         key: 'loading',
         action: 'destroy',
-      });
+      })
       DispatchMessageService({
         type: 'error',
         msj: 'El campo no ha sido posible actualizarlo, intenta mas tarde',
         action: 'show',
-      });
+      })
     }
   }
   //Contenedor draggable
@@ -444,7 +467,7 @@ class Datos extends Component {
       onSortEnd={this.onSortEnd}
       {...props}
     />
-  );
+  )
   //Función para hacer que el row sea draggable
   DraggableBodyRow = ({ className, style, ...restProps }) => {
     const fields =
@@ -452,48 +475,48 @@ class Datos extends Component {
         ? this.state.fields
         : this.state.isEditTemplate?.datafields.length > 0
         ? this.state.isEditTemplate?.datafields
-        : [];
+        : []
     // function findIndex base on Table rowKey props and should always be a right array index
-    const index = fields.findIndex((x) => x.index === restProps['data-row-key']);
-    return <SortableItem index={index} {...restProps} />;
-  };
+    const index = fields.findIndex((x) => x.index === restProps['data-row-key'])
+    return <SortableItem index={index} {...restProps} />
+  }
 
   //Función que se ejecuta cuando se termina de hacer drag
   onSortEnd = ({ oldIndex, newIndex }) => {
-    let user_properties = this.state.user_properties;
+    let user_properties = this.state.user_properties
     const fields =
       this.state.fields.length > 0
         ? this.state.fields
         : this.state.isEditTemplate?.datafields?.length > 0
         ? this.state.isEditTemplate?.datafields
-        : [];
+        : []
 
     if (oldIndex !== newIndex) {
-      let newData = arrayMove([].concat(fields), oldIndex, newIndex).filter((el) => !!el);
-      newData = this.updateIndex(newData);
-      user_properties = newData;
+      let newData = arrayMove([].concat(fields), oldIndex, newIndex).filter((el) => !!el)
+      newData = this.updateIndex(newData)
+      user_properties = newData
       this.setState({
         fields: newData,
         user_properties,
         isEditTemplate: { ...this.state.isEditTemplate, datafields: newData },
         available: false,
         properties: { user_properties: user_properties },
-      });
+      })
     }
-  };
+  }
 
   onChange1 = async (e, plantId) => {
-    /* console.log('e, radio checked', plantId); */
-    this.setState({ value: '' });
-    await OrganizationPlantillaApi.putOne(this.props.eventId, plantId);
-  };
+    this.setState({ value: '' })
+    await OrganizationPlantillaApi.putOne(this.props.eventId, plantId)
+  }
 
   handlevisibleModal = () => {
-    this.setState({ visibleModal: !this.state.visibleModal });
-  };
+    this.setState({ visibleModal: !this.state.visibleModal })
+  }
 
   render() {
-    const { fields, modal, edit, info, value, checkInExists, checkInFieldsIds } = this.state;
+    const { fields, modal, edit, info, value, checkInExists, checkInFieldsIds } =
+      this.state
     const columns = [
       {
         title: '',
@@ -550,7 +573,9 @@ class Datos extends Component {
         render: (record, key) => (
           <Checkbox
             name="visibleByContacts"
-            onChange={() => this.changeCheckBox(key, 'visibleByContacts', 'visibleByAdmin')}
+            onChange={() =>
+              this.changeCheckBox(key, 'visibleByContacts', 'visibleByAdmin')
+            }
             checked={record}
             disabled={
               key.type === 'checkInField' ||
@@ -587,7 +612,9 @@ class Datos extends Component {
           key.name !== 'email' && key.name !== 'names' ? (
             <Checkbox
               name="visibleByAdmin"
-              onChange={() => this.changeCheckBox(key, 'visibleByAdmin', 'visibleByContacts')}
+              onChange={() =>
+                this.changeCheckBox(key, 'visibleByAdmin', 'visibleByContacts')
+              }
               checked={record}
               /* disabled={key.name === 'contrasena' || key.type === 'password'} */
             />
@@ -599,7 +626,7 @@ class Datos extends Component {
         title: 'Opciones',
         dataIndex: '',
         render: (key) => {
-          const { eventIsActive } = useHelper();
+          const { eventIsActive } = useHelper()
 
           return (
             <Row wrap gutter={[8, 8]}>
@@ -613,31 +640,38 @@ class Datos extends Component {
                       icon={<EditOutlined />}
                       type="primary"
                       size="small"
-                      disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                      disabled={
+                        !eventIsActive &&
+                        window.location.toString().includes('eventadmin')
+                      }
                     />
                   </Tooltip>
                 )}
               </Col>
               <Col>
-                {key.name !== 'email' && key.name !== 'names' /* && key.name !== 'contrasena' */ && (
-                  <Tooltip placement="topLeft" title="Eliminar">
-                    <Button
-                      key={`removeAction${key.index}`}
-                      id={`removeAction${key.index}`}
-                      onClick={() => this.removeField(key._id || key.name)}
-                      icon={<DeleteOutlined />}
-                      type="danger"
-                      size="small"
-                      disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
-                    />
-                  </Tooltip>
-                )}
+                {key.name !== 'email' &&
+                  key.name !== 'names' /* && key.name !== 'contrasena' */ && (
+                    <Tooltip placement="topLeft" title="Eliminar">
+                      <Button
+                        key={`removeAction${key.index}`}
+                        id={`removeAction${key.index}`}
+                        onClick={() => this.removeField(key._id || key.name)}
+                        icon={<DeleteOutlined />}
+                        type="danger"
+                        size="small"
+                        disabled={
+                          !eventIsActive &&
+                          window.location.toString().includes('eventadmin')
+                        }
+                      />
+                    </Tooltip>
+                  )}
               </Col>
             </Row>
-          );
+          )
         },
       },
-    ];
+    ]
 
     const colsPlant = [
       /*  {
@@ -652,7 +686,7 @@ class Datos extends Component {
         ellipsis: true,
         sorter: (a, b) => a.name.localeCompare(b.name),
       },
-    ];
+    ]
 
     return (
       <div>
@@ -716,7 +750,12 @@ class Datos extends Component {
                         </Button>
                       </Col>
                       <Col>
-                        <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addField}>
+                        <Button
+                          type="primary"
+                          icon={<PlusCircleOutlined />}
+                          size="middle"
+                          onClick={this.addField}
+                        >
                           Agregar
                         </Button>
                       </Col>
@@ -745,7 +784,14 @@ class Datos extends Component {
           )}
 
           {this.props.type == 'organization' && (
-            <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key="3">
+            <TabPane
+              tab={
+                this.props.type === 'configMembers'
+                  ? 'Configuración Miembros'
+                  : 'Plantillas'
+              }
+              key="3"
+            >
               {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (
                 <Fragment>
                   <Header
@@ -758,7 +804,11 @@ class Datos extends Component {
                             style={{ color: 'blue' }}
                             onClick={() =>
                               this.setState({
-                                isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] },
+                                isEditTemplate: {
+                                  ...this.state.isEditTemplate,
+                                  status: false,
+                                  datafields: [],
+                                },
                               })
                             }
                           >
@@ -776,7 +826,11 @@ class Datos extends Component {
 
                   <Table
                     columns={columns}
-                    dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
+                    dataSource={
+                      this.props.type === 'configMembers'
+                        ? fields
+                        : this.state.isEditTemplate.datafields
+                    }
                     pagination={false}
                     rowKey="index"
                     size="small"
@@ -799,7 +853,12 @@ class Datos extends Component {
                           </Button>
                         </Col>
                         <Col>
-                          <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addField}>
+                          <Button
+                            type="primary"
+                            icon={<PlusCircleOutlined />}
+                            size="middle"
+                            onClick={this.addField}
+                          >
                             Agregar
                           </Button>
                         </Col>
@@ -827,13 +886,17 @@ class Datos extends Component {
               ) : (
                 <CMS
                   API={OrganizationPlantillaApi}
-                  eventId={this.props.event?.organizer_id ? this.props.event?.organizer_id : this.props.eventId}
+                  eventId={
+                    this.props.event?.organizer_id
+                      ? this.props.event?.organizer_id
+                      : this.props.eventId
+                  }
                   title="Plantillas de recoleccion de datos"
                   addFn={() => this.setState({ visibleModal: true })}
                   columns={colsPlant}
                   editFn={(values) => {
-                    let fields = this.orderFieldsByWeight(values.user_properties);
-                    fields = this.updateIndex(fields);
+                    let fields = this.orderFieldsByWeight(values.user_properties)
+                    fields = this.updateIndex(fields)
                     this.setState({
                       isEditTemplate: {
                         ...this.state.isEditTemplate,
@@ -841,7 +904,7 @@ class Datos extends Component {
                         datafields: fields,
                         template: values,
                       },
-                    });
+                    })
                   }}
                   pagination={false}
                   actions
@@ -851,8 +914,8 @@ class Datos extends Component {
           )}
         </Tabs>
       </div>
-    );
+    )
   }
 }
 
-export default Datos;
+export default Datos

@@ -1,24 +1,34 @@
-import { createContext } from 'react';
-export const MessageController = createContext({});
-import { message } from 'antd';
+import { createContext } from 'react'
+export const MessageController = createContext({})
+import { message } from 'antd'
 
-const PositiveAnswer = ['Excelente', 'Perfecto', 'Genial', 'Cool', 'Lo haz hecho', 'Éxito', 'Bien'];
-const NegativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry'];
-const LoadingAnswer = ['Cargando', 'Procesando', 'Espérame'];
+const PositiveAnswer = [
+  'Excelente',
+  'Perfecto',
+  'Genial',
+  'Cool',
+  'Lo haz hecho',
+  'Éxito',
+  'Bien',
+]
+const NegativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry']
+const LoadingAnswer = ['Cargando', 'Procesando', 'Espérame']
 
 interface PropsOptions {
-  type?: 'success' | 'error' | 'warning' | 'info' | 'loading';
-  msj?: string;
-  duration?: number;
-  action: 'show' | 'hide' | 'destroy';
-  key?: string;
+  type?: 'success' | 'error' | 'warning' | 'info' | 'loading'
+  msj?: string
+  duration?: number
+  action: 'show' | 'hide' | 'destroy'
+  key?: string
 }
 
-// Tipos de mensajes
-//success, error, warning, info, loading
-//api doc=> https://ant.design/components/message/
-
-export const DispatchMessageService = ({ type, msj, duration, action, key }: PropsOptions) => {
+export const DispatchMessageService = ({
+  type,
+  msj,
+  duration,
+  action,
+  key,
+}: PropsOptions) => {
   try {
     switch (action) {
       case 'show':
@@ -27,65 +37,69 @@ export const DispatchMessageService = ({ type, msj, duration, action, key }: Pro
           key: key || '',
           duration: duration || 5,
           type: null as any,
-        });
-        break;
+        })
+        break
 
       case 'destroy':
-        message.destroy(key);
-        break;
+        message.destroy(key)
+        break
     }
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 const MessageReducer = ({ type, msj }: PropsOptions) => {
-  const ramdon = Math.floor(Math.random() * PositiveAnswer.length);
-  const ramdonN = Math.floor(Math.random() * NegativeAnswer.length);
-  const ramdonLoading = Math.floor(Math.random() * LoadingAnswer.length);
-  let iconRender = '';
-  let finalMsj = '';
+  const ramdon = Math.floor(Math.random() * PositiveAnswer.length)
+  const ramdonN = Math.floor(Math.random() * NegativeAnswer.length)
+  const ramdonLoading = Math.floor(Math.random() * LoadingAnswer.length)
+  let iconRender = ''
+  let finalMsj = ''
 
   switch (type) {
     case 'success':
-      iconRender = '✅';
-      break;
+      iconRender = '✅'
+      break
     case 'error':
-      iconRender = '❌';
-      break;
+      iconRender = '❌'
+      break
     case 'warning':
-      iconRender = '⚠️';
-      break;
+      iconRender = '⚠️'
+      break
     case 'info':
-      iconRender = 'ℹ️';
-      break;
+      iconRender = 'ℹ️'
+      break
     case 'loading':
-      iconRender = '⏳';
-      break;
+      iconRender = '⏳'
+      break
     default:
-      iconRender = '🤷‍♂️';
+      iconRender = '🤷‍♂️'
   }
 
   // Convert captioncase to lowercase
   const formatUpperCaseMissing = (text: string) => {
-    if (text.length === 0) return text;
+    if (text.length === 0) return text
 
     if (text[0] === text[0].toUpperCase()) {
       return text[0].toLowerCase() + text.slice(1)
     } else {
-      return text;
+      return text
     }
   }
 
   if (msj !== undefined) {
     if (type === 'success') {
-      finalMsj = `${iconRender} ${PositiveAnswer[ramdon]}, ${formatUpperCaseMissing(msj)}`;
+      finalMsj = `${iconRender} ${PositiveAnswer[ramdon]}, ${formatUpperCaseMissing(msj)}`
     } else if (type === 'loading') {
-      finalMsj = `${iconRender} ${LoadingAnswer[ramdonLoading]}, ${formatUpperCaseMissing(msj)}`;
+      finalMsj = `${iconRender} ${LoadingAnswer[ramdonLoading]}, ${formatUpperCaseMissing(
+        msj,
+      )}`
     } else {
-      finalMsj = `${iconRender} ${NegativeAnswer[ramdonN]}, ${formatUpperCaseMissing(msj)}`;
+      finalMsj = `${iconRender} ${NegativeAnswer[ramdonN]}, ${formatUpperCaseMissing(
+        msj,
+      )}`
     }
   }
 
-  return finalMsj;
-};
+  return finalMsj
+}

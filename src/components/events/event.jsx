@@ -1,80 +1,81 @@
-import { Component } from 'react';
-import { Route, Redirect, Switch, Link } from 'react-router-dom';
-import dayjs from 'dayjs';
-import momentLocalizer from 'react-widgets-moment';
-import Loading from '../loaders/loading';
-import { EventsApi } from '@helpers/request';
-import ListEventUser from '../event-users';
-import { fetchRol } from '../../redux/rols/actions';
-import { fetchPermissions } from '../../redux/permissions/actions';
-import connect from 'react-redux/es/connect/connect';
-import ChatExport from './ChatExport/';
-import Espacios from '../espacios';
-import Herramientas from '../herramientas';
-import Menu from './shared/menu';
-import Datos from './datos';
-import TipoAsistentes from './tipoUsers';
-import ConfirmacionRegistro from './registro/confirmacionRegistro';
-import ErrorServe from '../modal/serverError';
-import AgendaRoutes from '../agenda';
-import ModulePage from '../agenda/ModulePage';
-import EmpresasRoutes from '../empresas';
-import TriviaRoutes from '../trivia';
-import DocumentsRoutes from '../documents';
-import Speakers from '../speakers';
-import MenuLanding from '../menuLanding';
-import ReportList from '../agenda/report';
-import ConferenceRoute from '../zoom/index';
-import ReportNetworking from '../networking/report';
-import NewsSectionRoutes from '../news/newsRoute';
-import ProductSectionRoutes from '../products/productsRoute';
-import { withRouter } from 'react-router-dom';
-import withContext from '@context/withContext';
-import { Layout, Space, Row, Col, Button, Result } from 'antd';
-import { AdminUsers } from '@components/AdminUsers/AdminUsers';
-import loadable from '@loadable/component';
-import NoMatchPage from '../notFoundPage/noMatchPage';
-import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms';
-import { DispatchMessageService } from '@context/MessageService';
-import { handleRequestError } from '@helpers/utils';
-import { ValidateEndEvent } from '@/hooks/validateEventStartAndEnd';
-import { featureBlockingListener, featureBlockingStatusSave } from '@/services/featureBlocking/featureBlocking';
-import IsolatedRoutes from '../isolated/IsolatedRoutes';
-import TimeTrackingRoutes from '../time-tracking/TimeTrackingRoutes';
+import { Component } from 'react'
+import { Route, Redirect, Switch, Link } from 'react-router-dom'
+import dayjs from 'dayjs'
+import momentLocalizer from 'react-widgets-moment'
+import Loading from '../loaders/loading'
+import { EventsApi } from '@helpers/request'
+import ListEventUser from '../event-users'
+import { fetchRol } from '../../redux/rols/actions'
+import { fetchPermissions } from '../../redux/permissions/actions'
+import connect from 'react-redux/es/connect/connect'
+import ChatExport from './ChatExport/'
+import Espacios from '../espacios'
+import Herramientas from '../herramientas'
+import Menu from './shared/menu'
+import Datos from './datos'
+import TipoAsistentes from './tipoUsers'
+import ConfirmacionRegistro from './registro/confirmacionRegistro'
+import ErrorServe from '../modal/serverError'
+import AgendaRoutes from '../agenda'
+import ModulePage from '../agenda/ModulePage'
+import EmpresasRoutes from '../empresas'
+import TriviaRoutes from '../trivia'
+import DocumentsRoutes from '../documents'
+import Speakers from '../speakers'
+import MenuLanding from '../menuLanding'
+import ReportList from '../agenda/report'
+import ConferenceRoute from '../zoom/index'
+import ReportNetworking from '../networking/report'
+import NewsSectionRoutes from '../news/newsRoute'
+import ProductSectionRoutes from '../products/productsRoute'
+import { withRouter } from 'react-router-dom'
+import withContext from '@context/withContext'
+import { Layout, Space, Row, Col, Button, Result } from 'antd'
+import { AdminUsers } from '@components/AdminUsers/AdminUsers'
+import loadable from '@loadable/component'
+import NoMatchPage from '../notFoundPage/noMatchPage'
+import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms'
+import { DispatchMessageService } from '@context/MessageService'
+import { handleRequestError } from '@helpers/utils'
+import { ValidateEndEvent } from '@/hooks/validateEventStartAndEnd'
+import {
+  featureBlockingListener,
+  featureBlockingStatusSave,
+} from '@/services/featureBlocking/featureBlocking'
+import IsolatedRoutes from '../isolated/IsolatedRoutes'
+import TimeTrackingRoutes from '../time-tracking/TimeTrackingRoutes'
 
-const { Sider, Content } = Layout;
+const { Sider, Content } = Layout
 
 // Code splitting
-const General = loadable(() => import('./general'));
-/* const Badge = loadable(() => import('../badge')); */
-const Informativesection = loadable(() => import('../events/informativeSections/adminInformativeSection'));
+const General = loadable(() => import('./general'))
+const Informativesection = loadable(() =>
+  import('../events/informativeSections/adminInformativeSection'),
+)
 
 //invitations
-const InvitedUsers = loadable(() => import('../invitations'));
+const InvitedUsers = loadable(() => import('../invitations'))
 
 //Messages
-const Messages = loadable(() => import('../messages'));
+const Messages = loadable(() => import('../messages'))
 
-/* const TicketInfo = loadable(() => import('../tickets/index_old')); */
-const Styles = loadable(() => import('../App/styles'));
-const DashboardEvent = loadable(() => import('../dashboard'));
-const BadgeEvent = loadable(() => import('../badge'));
-const OrdersEvent = loadable(() => import('../orders'));
-const CertificateRoutes = loadable(() => import('../certificates/CertificateRoutes'));
-/* const ReporteCertificados = loadable(() => import('../certificados/reporte_old')); */
-/* const ConfigurationApp = loadable(() => import('../App/configuration')); */
-const NotificationsApp = loadable(() => import('../pushNotifications/index'));
-const Wall = loadable(() => import('../wall/index'));
+const Styles = loadable(() => import('../App/styles'))
+const DashboardEvent = loadable(() => import('../dashboard'))
+const BadgeEvent = loadable(() => import('../badge'))
+const OrdersEvent = loadable(() => import('../orders'))
+const CertificateRoutes = loadable(() => import('../certificates/CertificateRoutes'))
+const NotificationsApp = loadable(() => import('../pushNotifications/index'))
+const Wall = loadable(() => import('../wall/index'))
 
-const FAQS = loadable(() => import('../faqs'));
-const EventsTicket = loadable(() => import('../ticketsEvent'));
+const FAQS = loadable(() => import('../faqs'))
+const EventsTicket = loadable(() => import('../ticketsEvent'))
 
-dayjs.locale('es');
-momentLocalizer();
+dayjs.locale('es')
+momentLocalizer()
 
 class Event extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       loading: true,
       generalTab: true,
@@ -92,124 +93,128 @@ class Event extends Component {
       event: null,
       collapsed: false,
       iMustValidate: true,
-    };
-    this.addNewFieldsToEvent = this.addNewFieldsToEvent.bind(this);
+    }
+    this.addNewFieldsToEvent = this.addNewFieldsToEvent.bind(this)
   }
 
   async componentDidMount() {
-    const helperDispatch = this.props.cHelper.helperDispatch;
+    const helperDispatch = this.props.cHelper.helperDispatch
 
     try {
-      await this.props.dispatch(fetchRol());
-      const eventId = this.props.match.params.event;
-      await this.props.dispatch(fetchPermissions(eventId));
-      const event = await EventsApi.getOne(eventId);
-      const eventWithExtraFields = this.addNewFieldsToEvent(event);
-      featureBlockingListener(eventId, helperDispatch);
-      this.setState({ event: eventWithExtraFields, loading: false });
+      await this.props.dispatch(fetchRol())
+      const eventId = this.props.match.params.event
+      await this.props.dispatch(fetchPermissions(eventId))
+      const event = await EventsApi.getOne(eventId)
+      const eventWithExtraFields = this.addNewFieldsToEvent(event)
+      featureBlockingListener(eventId, helperDispatch)
+      this.setState({ event: eventWithExtraFields, loading: false })
     } catch (e) {
       DispatchMessageService({
         type: 'error',
         msj: handleRequestError(e).message,
         action: 'show',
-      });
-      this.setState({ loading: false, error: e });
+      })
+      this.setState({ loading: false, error: e })
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.event !== this.state.event) {
-      const { event } = this.state;
-      const eventWithExtraFields = this.addNewFieldsToEvent(event);
-      this.setState({ event: eventWithExtraFields });
+      const { event } = this.state
+      const eventWithExtraFields = this.addNewFieldsToEvent(event)
+      this.setState({ event: eventWithExtraFields })
     }
   }
 
   addNewFieldsToEvent(event) {
-    const dateFrom = event.datetime_from.split(' ');
-    const dateTo = event.datetime_to.split(' ');
-    event.hour_start = dayjs(event.datetime_from).toDate();
-    event.hour_end = dayjs(event.datetime_to).toDate();
-    event.date_start = dayjs(event.datetime_from).toDate();
-    event.date_end = dayjs(event.datetime_to).toDate();
-    event.address = event.address ? event.address : '';
+    const dateFrom = event.datetime_from.split(' ')
+    const dateTo = event.datetime_to.split(' ')
+    event.hour_start = dayjs(event.datetime_from).toDate()
+    event.hour_end = dayjs(event.datetime_to).toDate()
+    event.date_start = dayjs(event.datetime_from).toDate()
+    event.date_end = dayjs(event.datetime_to).toDate()
+    event.address = event.address ? event.address : ''
 
-    return event;
+    return event
   }
 
   componentWillUnmount() {
-    this.setState({ newEvent: false });
+    this.setState({ newEvent: false })
   }
 
   handleClick = (e) => {
-    if (!navigator.onLine) e.preventDefault();
-  };
+    if (!navigator.onLine) e.preventDefault()
+  }
 
   updateEvent = (event) => {
-    this.setState({ event });
-  };
+    this.setState({ event })
+  }
 
   isUpper(str) {
-    return !/[a-z]/.test(str) && /[A-Z]/.test(str);
+    return !/[a-z]/.test(str) && /[A-Z]/.test(str)
   }
 
   isLowerCase(str) {
-    return /[a-z]/.test(str) && !/[A-Z]/.test(str);
+    return /[a-z]/.test(str) && !/[A-Z]/.test(str)
   }
 
   FriendLyUrl(url) {
-    let formatupperorlowercase = url.toString().toLowerCase();
+    let formatupperorlowercase = url.toString().toLowerCase()
     if (this.isUpper(url.toString())) {
-      formatupperorlowercase = url.toString().toUpperCase();
+      formatupperorlowercase = url.toString().toUpperCase()
     } else if (this.isLowerCase(url.toString())) {
-      formatupperorlowercase = url.toString().toLowerCase();
+      formatupperorlowercase = url.toString().toLowerCase()
     } else {
-      formatupperorlowercase = url.toString();
+      formatupperorlowercase = url.toString()
     }
 
-    let encodedUrl = formatupperorlowercase;
-    encodedUrl = encodedUrl.split(/\&+/).join('-and-');
+    let encodedUrl = formatupperorlowercase
+    encodedUrl = encodedUrl.split(/\&+/).join('-and-')
     if (this.isUpper(url)) {
-      encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-');
+      encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-')
     } else if (this.isLowerCase(url.toString())) {
-      encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-');
+      encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-')
     } else {
-      encodedUrl = encodedUrl.split(/-+/).join('-');
+      encodedUrl = encodedUrl.split(/-+/).join('-')
     }
 
-    encodedUrl = encodedUrl.replaceAll(' ', '-');
-    encodedUrl = encodedUrl.trim('-');
-    return encodedUrl;
+    encodedUrl = encodedUrl.replaceAll(' ', '-')
+    encodedUrl = encodedUrl.trim('-')
+    return encodedUrl
   }
 
   collapseMenu = () => {
-    this.setState({ collapsed: !this.state.collapsed });
-  };
+    this.setState({ collapsed: !this.state.collapsed })
+  }
 
   /** RESTRICIONES */
   theEventIsActive = (state) => {
-    const eventId = this.state.event._id;
+    const eventId = this.state.event._id
 
-    featureBlockingStatusSave(eventId, state);
+    featureBlockingStatusSave(eventId, state)
 
     this.setState({
       iMustValidate: false,
-    });
-  };
+    })
+  }
 
   render() {
-    const { match, permissions, showMenu } = this.props;
-    const { error, collapsed, iMustValidate, event } = this.state;
-    const cUser = this.props.cUser?.value;
+    const { match, permissions, showMenu } = this.props
+    const { error, collapsed, iMustValidate, event } = this.state
+    const cUser = this.props.cUser?.value
 
-    if (this.state.loading || this.props.loading || permissions.loading) return <Loading />;
-    if (this.props.error || permissions.error) return <ErrorServe errorData={permissions.error} />;
+    if (this.state.loading || this.props.loading || permissions.loading)
+      return <Loading />
+    if (this.props.error || permissions.error)
+      return <ErrorServe errorData={permissions.error} />
     if (error)
       return (
         <Result
           status="error"
           title="Error inesperado"
-          subTitle={`Lo sentimos, hubo un error de tipo: ${handleRequestError(error).message}`}
+          subTitle={`Lo sentimos, hubo un error de tipo: ${
+            handleRequestError(error).message
+          }`}
           extra={[
             <Link to={`/`}>
               <Button type="primary" key="eventData">
@@ -218,7 +223,7 @@ class Event extends Component {
             </Link>,
           ]}
         />
-      );
+      )
 
     return (
       <Layout className="columns">
@@ -250,7 +255,11 @@ class Event extends Component {
               <Route
                 exact
                 path={`${match.url}/`}
-                render={() => <Redirect to={`${match.url}${match.url.substr(-1) === '/' ? 'main' : '/main'}`} />}
+                render={() => (
+                  <Redirect
+                    to={`${match.url}${match.url.substr(-1) === '/' ? 'main' : '/main'}`}
+                  />
+                )}
               />
               <Protected
                 path={`${match.url}/main`}
@@ -304,7 +313,12 @@ class Event extends Component {
                 event={event}
                 componentKey="empresas"
               />
-              <Protected path={`${match.url}/trivia`} component={TriviaRoutes} event={event} componentKey="trivia" />
+              <Protected
+                path={`${match.url}/trivia`}
+                component={TriviaRoutes}
+                event={event}
+                componentKey="trivia"
+              />
               <Protected
                 path={`${match.url}/documents`}
                 component={DocumentsRoutes}
@@ -383,7 +397,12 @@ class Event extends Component {
                 event={event}
                 componentKey="invitados"
               />
-              <Protected path={`${match.url}/messages`} component={Messages} event={event} componentKey="messages" />
+              <Protected
+                path={`${match.url}/messages`}
+                component={Messages}
+                event={event}
+                componentKey="messages"
+              />
               <Protected
                 path={`${match.url}/confirmacion-registro`}
                 component={ConfirmacionRegistro}
@@ -410,7 +429,12 @@ class Event extends Component {
                 event={event}
                 componentKey="badge"
               />
-              <Protected path={`${match.url}/orders`} component={OrdersEvent} event={event} componentKey="orders" />
+              <Protected
+                path={`${match.url}/orders`}
+                component={OrdersEvent}
+                event={event}
+                componentKey="orders"
+              />
               <Protected
                 path={`${match.url}/certificates`}
                 component={CertificateRoutes}
@@ -506,7 +530,7 @@ class Event extends Component {
           </section>
         </Content>
       </Layout>
-    );
+    )
   }
 }
 
@@ -516,20 +540,27 @@ const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
     render={(props) =>
       event?.user_properties && event?.user_properties?.length > 0 ? (
         <ValidateAccessRouteCms>
-          <Component key="cms" {...props} {...rest} event={event} eventId={eventId} url={url} />
+          <Component
+            key="cms"
+            {...props}
+            {...rest}
+            event={event}
+            eventId={eventId}
+            url={url}
+          />
         </ValidateAccessRouteCms>
       ) : (
         <Redirect push to={`${url}/agenda`} />
       )
     }
   />
-);
+)
 
 const mapStateToProps = (state) => ({
   loading: state.rols.loading,
   permissions: state.permissions,
   showMenu: state.user.menu,
   error: state.rols.error,
-});
+})
 
-export default connect(mapStateToProps)(withContext(withRouter(Event)));
+export default connect(mapStateToProps)(withContext(withRouter(Event)))

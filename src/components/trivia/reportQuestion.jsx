@@ -1,12 +1,13 @@
-import { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
-import { utils, writeFileXLSX } from 'xlsx';
-import { getAnswersByQuestion } from './services';
-import Header from '@antdComponents/Header';
-import Table from '@antdComponents/Table';
+import { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import dayjs from 'dayjs'
+import { utils, writeFileXLSX } from 'xlsx'
+import { getAnswersByQuestion } from './services'
+import Header from '@antdComponents/Header'
+import Table from '@antdComponents/Table'
 
-const RenderNombreUsuario = (name) => (!name ? <span>Usuario invitado</span> : <span>{name}</span>);
+const RenderNombreUsuario = (name) =>
+  !name ? <span>Usuario invitado</span> : <span>{name}</span>
 
 const columns = [
   {
@@ -25,65 +26,71 @@ const columns = [
     dataIndex: 'response',
     key: 'response',
   },
-];
+]
 
 class ReportQuestion extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       nameQuestion: '',
       listOfUserResponse: [],
-    };
+    }
   }
 
   loadData = async () => {
-    const { location, match } = this.props;
+    const { location, match } = this.props
 
-    this.setState({ nameQuestion: location.state.titleQuestion });
-    const response = await getAnswersByQuestion(location.state.surveyId, match.params.id);
-    this.setState({ listOfUserResponse: response });
-  };
+    this.setState({ nameQuestion: location.state.titleQuestion })
+    const response = await getAnswersByQuestion(location.state.surveyId, match.params.id)
+    this.setState({ listOfUserResponse: response })
+  }
 
   componentDidMount() {
-    this.loadData();
+    this.loadData()
   }
 
   exportReport = () => {
-    let { nameQuestion } = this.state;
-    const { listOfUserResponse } = this.state;
+    let { nameQuestion } = this.state
+    const { listOfUserResponse } = this.state
     //Sheet names cannot exceed 31 chars
-    nameQuestion = nameQuestion.substring(0, 30);
-    const { match } = this.props;
+    nameQuestion = nameQuestion.substring(0, 30)
+    const { match } = this.props
 
-    const exclude = ({ ...rest }) => rest;
+    const exclude = ({ ...rest }) => rest
 
-    const data = listOfUserResponse.map((item) => exclude(item));
+    const data = listOfUserResponse.map((item) => exclude(item))
 
     for (let i = 0; data.length > i; i++) {
       if (Array.isArray(data[i].response)) {
-        data[i].response = data[i].response.toString();
+        data[i].response = data[i].response.toString()
       }
     }
-    const ws = utils.json_to_sheet(data);
-    const wb = utils.book_new();
-    const sheetName = nameQuestion.replace(/[.*+¿?^${}()|[\]\\]/g, '');
-    utils.book_append_sheet(wb, ws, `${sheetName}`);
-    const name = `${match.params.id}`;
+    const ws = utils.json_to_sheet(data)
+    const wb = utils.book_new()
+    const sheetName = nameQuestion.replace(/[.*+¿?^${}()|[\]\\]/g, '')
+    utils.book_append_sheet(wb, ws, `${sheetName}`)
+    const name = `${match.params.id}`
 
-    writeFileXLSX(wb, `${sheetName}-${name}${dayjs().format('DDMMYY')}.xls`);
-  };
+    writeFileXLSX(wb, `${sheetName}-${name}${dayjs().format('DDMMYY')}.xls`)
+  }
 
-  goBack = () => this.props.history.goBack();
+  goBack = () => this.props.history.goBack()
 
   render() {
-    const { nameQuestion, listOfUserResponse } = this.state;
+    const { nameQuestion, listOfUserResponse } = this.state
     return (
       <>
         <Header title={nameQuestion} back />
-        <Table header={columns} list={listOfUserResponse} pagination={false} exportData fileName={nameQuestion} />
+        <Table
+          header={columns}
+          list={listOfUserResponse}
+          pagination={false}
+          exportData
+          fileName={nameQuestion}
+        />
       </>
-    );
+    )
   }
 }
 
-export default withRouter(ReportQuestion);
+export default withRouter(ReportQuestion)

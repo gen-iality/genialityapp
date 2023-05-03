@@ -1,49 +1,49 @@
 /** React's libraries */
-import { useEffect, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { useEffect, useState } from 'react'
+import { useIntl } from 'react-intl'
 
 /** Antd imports */
-import { List, Avatar, Typography, Row, Divider, Card, Space } from 'antd';
-import { AlertOutlined } from '@ant-design/icons';
+import { List, Avatar, Typography, Row, Divider, Card, Space } from 'antd'
+import { AlertOutlined } from '@ant-design/icons'
 
 /** Helpers and utils */
-import { EventsApi, SpeakersApi, ToolsApi } from '@helpers/request';
+import { EventsApi, SpeakersApi, ToolsApi } from '@helpers/request'
 
 /** Context */
-import { useEventContext } from '@context/eventContext';
+import { useEventContext } from '@context/eventContext'
 
-const { Title, Text } = Typography;
+const { Title, Text } = Typography
 
 const HostList = () => {
-  const cEvent = useEventContext();
-  const intl = useIntl();
+  const cEvent = useEventContext()
+  const intl = useIntl()
 
-  const [speakers, setSpeakers] = useState<any[]>([]);
-  const [tools, setTools] = useState<any[]>([]);
-  const [duration, setDuration] = useState<any[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const speakersApi = await SpeakersApi.byEvent(cEvent.value._id);
-      setSpeakers(speakersApi);
-    })();
-  }, [cEvent.value]);
+  const [speakers, setSpeakers] = useState<any[]>([])
+  const [tools, setTools] = useState<any[]>([])
+  const [duration, setDuration] = useState<any[]>([])
 
   useEffect(() => {
-    (async () => {
-      const toolsApi = await ToolsApi.byEvent(cEvent.value._id);
-      console.log('toolsApi', toolsApi);
-      setTools(toolsApi);
-    })();
-  }, [cEvent.value]);
+    ;(async () => {
+      const speakersApi = await SpeakersApi.byEvent(cEvent.value._id)
+      setSpeakers(speakersApi)
+    })()
+  }, [cEvent.value])
 
   useEffect(() => {
-    (async () => {
-      const event = await EventsApi.getOne(cEvent.value._id);
-      console.log('event', event);
-      setDuration(event.duration);
-    })();
-  }, [cEvent.value]);
+    ;(async () => {
+      const toolsApi = await ToolsApi.byEvent(cEvent.value._id)
+      console.log('toolsApi', toolsApi)
+      setTools(toolsApi)
+    })()
+  }, [cEvent.value])
+
+  useEffect(() => {
+    ;(async () => {
+      const event = await EventsApi.getOne(cEvent.value._id)
+      console.log('event', event)
+      setDuration(event.duration)
+    })()
+  }, [cEvent.value])
 
   return (
     <>
@@ -73,10 +73,11 @@ const HostList = () => {
       >
         <Space direction="vertical" align="center">
           <AlertOutlined style={{ fontSize: '2rem' }} />
-          <Text style={{ fontSize: '1.5rem' }} >
+          <Text style={{ fontSize: '1.5rem' }}>
             {intl.formatMessage({
               id: 'label.duration.message',
-              defaultMessage: 'Para obtener el certificado debes cursar el 80% del curso.',
+              defaultMessage:
+                'Para obtener el certificado debes cursar el 80% del curso.',
             })}
           </Text>
         </Space>
@@ -112,7 +113,9 @@ const HostList = () => {
               description={
                 <>
                   <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.name}</p>
-                  <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>{item.profession || 'Profesor'}</p>
+                  <p style={{ margin: 0, padding: 0, lineHeight: 1 }}>
+                    {item.profession || 'Profesor'}
+                  </p>
                 </>
               }
             />
@@ -120,6 +123,6 @@ const HostList = () => {
         )}
       />
     </>
-  );
-};
-export default HostList;
+  )
+}
+export default HostList

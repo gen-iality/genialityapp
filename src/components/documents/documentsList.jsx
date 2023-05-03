@@ -1,88 +1,89 @@
-import { Component } from 'react';
+import { Component } from 'react'
 
 //custom
-import { List, Card, Button, Table, Typography } from 'antd';
-import { DownloadOutlined, FileTextOutlined, FolderOutlined, DownOutlined } from '@ant-design/icons';
+import { List, Card, Button, Table, Typography } from 'antd'
+import {
+  DownloadOutlined,
+  FileTextOutlined,
+  FolderOutlined,
+  DownOutlined,
+} from '@ant-design/icons'
 
 const columns = [
   {
     title: 'Documento',
     dataIndex: 'document',
     key: 'document',
-    render: function(text, record) {
-      console.log('record', record);
+    render: function (text, record) {
+      console.log('record', record)
       return (
         <a href={record?.file} target="_blank" rel="noopener noreferrer">
           {text}
         </a>
-      );
+      )
     },
   },
   {
     title: 'Descargar',
     dataIndex: 'file',
     key: 'document',
-    render: function(text, record) {
-      console.log('record', record);
+    render: function (text, record) {
+      console.log('record', record)
       return (
         <a target="_blank" href={record?.file} rel="noopener noreferrer">
           <IconText text="Descargar" icon={<DownloadOutlined />} href={record?.file} />
         </a>
-      );
+      )
     },
   },
-];
+]
 
 // Estructura de boton para descargar documentos
 const IconText = ({ icon, text, onSubmit }) => (
   <Button icon={icon} htmlType="submit" type="link" href={onSubmit} target="_blank">
     {text}
   </Button>
-);
+)
 
 class DocumentsList extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       data: this.props.data || [],
       documentDates: [],
       loading: true,
-    };
+    }
   }
 
   removeLoader = () => {
-    this.setState({ loading: false });
-  };
+    this.setState({ loading: false })
+  }
 
   componentDidMount() {
-    this.getDatesFromDocumentList();
+    this.getDatesFromDocumentList()
   }
 
   async getDatesFromDocumentList() {
-    const { data } = this.state;
-    const documentDates = [];
+    const { data } = this.state
+    const documentDates = []
     for (let i = 0; i < data.length; i++) {
-      //if (data[i].activity_id) {
       try {
-        //const agenda = await AgendaApi.getOne(data[i].activity_id, data[i].event_id)
         documentDates.push({
-          //activity: agenda.name,
           document: data[i].title ? data[i].title : data[i].name,
           file: data[i].file,
-        });
+        })
       } catch (e) {
-        console.error(e);
+        console.error(e)
       }
-      // }
     }
-    this.setState({ documentDates }, this.removeLoader);
+    this.setState({ documentDates }, this.removeLoader)
   }
 
   render() {
-    const { documentDates, data, loading } = this.state;
-    const { files } = this.props;
+    const { documentDates, data, loading } = this.state
+    const { files } = this.props
 
-    console.log('props', this.props);
+    console.log('props', this.props)
 
     return (
       <div>
@@ -216,7 +217,13 @@ class DocumentsList extends Component {
                           >
                             <List.Item.Meta
                               style={{ marginRight: '10%' }}
-                              avatar={files.type == 'folder' ? <FolderOutlined /> : <FileTextOutlined />}
+                              avatar={
+                                files.type == 'folder' ? (
+                                  <FolderOutlined />
+                                ) : (
+                                  <FileTextOutlined />
+                                )
+                              }
                               title={files.title ? files.title : files.name}
                             />
                           </List.Item>
@@ -228,7 +235,7 @@ class DocumentsList extends Component {
           </>
         )}
       </div>
-    );
+    )
   }
 }
-export default DocumentsList;
+export default DocumentsList

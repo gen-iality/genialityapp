@@ -1,15 +1,15 @@
-import { BrowserRouter as Router, Route, Switch, useRouteMatch } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, useRouteMatch } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 /** --------------------
  *  secciones del curso
  * ---------------------*/
-import News from './news';
+import News from './news'
 /* import AddNews from './addNews_old'; */
-import NewCE from './newCE';
+import NewCE from './newCE'
 
 const NewsSectionRoutes = (props) => {
-  const { path } = useRouteMatch();
+  const { path } = useRouteMatch()
 
   return (
     <Switch>
@@ -20,6 +20,6 @@ const NewsSectionRoutes = (props) => {
         <NewCE {...props} />
       </Route>
     </Switch>
-  );
-};
-export default withRouter(NewsSectionRoutes);
+  )
+}
+export default withRouter(NewsSectionRoutes)

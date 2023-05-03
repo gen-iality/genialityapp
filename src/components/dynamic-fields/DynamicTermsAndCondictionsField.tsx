@@ -1,55 +1,60 @@
 /** React's libraries */
-import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
-import { useIntl } from 'react-intl';
+import * as React from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useIntl } from 'react-intl'
 
 /** Antd imports */
-import { Checkbox, Typography } from 'antd';
-import { Rule } from 'antd/lib/form';
+import { Checkbox, Typography } from 'antd'
+import { Rule } from 'antd/lib/form'
 
 /** Hooks, helpers and utils */
-import { IDynamicFieldProps } from './types';
-import useMandatoryRule from './hooks/useMandatoryRule';
+import { IDynamicFieldProps } from './types'
+import useMandatoryRule from './hooks/useMandatoryRule'
 
 /** Components */
-import DynamicFormItem from './DynamicFormItem';
+import DynamicFormItem from './DynamicFormItem'
 
 interface IDynamicTermsAndCondictionsFieldProps extends IDynamicFieldProps {}
 
-const DynamicTermsAndCondictionsField: React.FunctionComponent<IDynamicTermsAndCondictionsFieldProps> = (props) => {
-  const { fieldData, allInitialValues } = props;
+const DynamicTermsAndCondictionsField: React.FunctionComponent<
+  IDynamicTermsAndCondictionsFieldProps
+> = (props) => {
+  const { fieldData, allInitialValues } = props
 
-  const { name, mandatory, label, link, props: secondProps } = fieldData;
+  const { name, mandatory, label, link, props: secondProps } = fieldData
 
-  const [rules, setRules] = useState<Rule[]>([]);
+  const [rules, setRules] = useState<Rule[]>([])
 
-  const intl = useIntl();
+  const intl = useIntl()
 
-  const requiredFieldErrorMessage = intl.formatMessage({ id: 'form.field.required' });
+  const requiredFieldErrorMessage = intl.formatMessage({ id: 'form.field.required' })
 
-  const { basicRule, setCondiction } = useMandatoryRule(fieldData, requiredFieldErrorMessage);
+  const { basicRule, setCondiction } = useMandatoryRule(
+    fieldData,
+    requiredFieldErrorMessage,
+  )
 
   // Clone the basic rule and inject the type for email type
   useEffect(() => {
-    const newRule: Rule = { ...basicRule };
-    (newRule.validator = (rule, value) => {
+    const newRule: Rule = { ...basicRule }
+    ;(newRule.validator = (rule, value) => {
       if (mandatory) {
-        return value ? Promise.resolve() : Promise.reject(requiredFieldErrorMessage);
+        return value ? Promise.resolve() : Promise.reject(requiredFieldErrorMessage)
       } else {
         return value || !value || value == '' || value == undefined
           ? Promise.resolve()
-          : Promise.reject(requiredFieldErrorMessage);
+          : Promise.reject(requiredFieldErrorMessage)
       }
     }),
-      setRules([newRule]);
-  }, [basicRule]);
+      setRules([newRule])
+  }, [basicRule])
 
   // Create a copy of the fieldData object without the label property
   const fieldDataWithoutLabel = useMemo(() => {
-    const newFieldData = { ...fieldData };
-    newFieldData.label = '';
-    return newFieldData;
-  }, [fieldData]);
+    const newFieldData = { ...fieldData }
+    newFieldData.label = ''
+    return newFieldData
+  }, [fieldData])
 
   const TTCC = () => (
     <Typography.Text>
@@ -59,7 +64,7 @@ const DynamicTermsAndCondictionsField: React.FunctionComponent<IDynamicTermsAndC
       </Typography.Link>
       .
     </Typography.Text>
-  );
+  )
 
   return (
     <DynamicFormItem
@@ -85,7 +90,7 @@ const DynamicTermsAndCondictionsField: React.FunctionComponent<IDynamicTermsAndC
         )}
       </Checkbox>
     </DynamicFormItem>
-  );
-};
+  )
+}
 
-export default DynamicTermsAndCondictionsField;
+export default DynamicTermsAndCondictionsField

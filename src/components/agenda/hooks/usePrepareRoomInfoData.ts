@@ -1,4 +1,4 @@
-export default function usePrepareRoomInfoData (context: any) {
+export default function usePrepareRoomInfoData(context: any) {
   const {
     roomStatus,
     platform,
@@ -13,7 +13,7 @@ export default function usePrepareRoomInfoData (context: any) {
     transmition,
     isPublished,
     typeActivity,
-  } = context;
+  } = context
 
   const roomInfo = {
     platform,
@@ -25,8 +25,8 @@ export default function usePrepareRoomInfoData (context: any) {
     habilitar_ingreso: roomStatus,
     transmition: transmition || null,
     typeActivity,
-  };
+  }
 
-  const tabs = { chat, surveys, games, attendees };
-  return { roomInfo, tabs };
+  const tabs = { chat, surveys, games, attendees }
+  return { roomInfo, tabs }
 }

@@ -1,4 +1,4 @@
 function FileInput() {
-  return <div>fileInput</div>;
+  return <div>fileInput</div>
 }
-export default FileInput;
+export default FileInput

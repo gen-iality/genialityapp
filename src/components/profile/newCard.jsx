@@ -1,36 +1,36 @@
-import { useState } from 'react';
-import { Card, message, Space, Typography } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import ModalCreateOrg from './modalCreateOrg';
-import ModalOrgListCreate from '@components/events/createEvent/newEvent/ModalOrgListCreate';
-import functionCreateNewOrganization from './functionCreateNewOrganization';
-import { useContextNewEvent } from '@context/newEventContext';
+import { useState } from 'react'
+import { Card, message, Space, Typography } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import ModalCreateOrg from './modalCreateOrg'
+import ModalOrgListCreate from '@components/events/createEvent/newEvent/ModalOrgListCreate'
+import functionCreateNewOrganization from './functionCreateNewOrganization'
+import { useContextNewEvent } from '@context/newEventContext'
 
 // Componente modal para la creacion de una organizacion <ModalCreateOrg/>
 
 const NewCard = (props) => {
-  const entity = props.entityType ? props.entityType : 'event';
-  const [modalCreateOrgIsVisible, setModalCreateOrgIsVisible] = useState(false);
-  const [modalListOrgIsVisible, setModalListOrgIsVisible] = useState(false);
-  const { dispatch } = useContextNewEvent();
+  const entity = props.entityType ? props.entityType : 'event'
+  const [modalCreateOrgIsVisible, setModalCreateOrgIsVisible] = useState(false)
+  const [modalListOrgIsVisible, setModalListOrgIsVisible] = useState(false)
+  const { dispatch } = useContextNewEvent()
 
   const newOrganization = () => {
-    setModalCreateOrgIsVisible(true);
-  };
+    setModalCreateOrgIsVisible(true)
+  }
   const newEvent = () => {
     if (props?.org?.length > 0) {
-      setModalListOrgIsVisible(true);
-      dispatch({ type: 'VISIBLE_MODAL', payload: { visible: true } });
+      setModalListOrgIsVisible(true)
+      dispatch({ type: 'VISIBLE_MODAL', payload: { visible: true } })
     } else {
       const newValues = {
         name: props.cUser.value.names || props.cUser.value.displayName,
         logo: null,
         newEventWithoutOrganization: true,
         closeModal: setModalListOrgIsVisible,
-      };
-      functionCreateNewOrganization(newValues);
+      }
+      functionCreateNewOrganization(newValues)
     }
-  };
+  }
 
   return (
     <>
@@ -69,16 +69,35 @@ const NewCard = (props) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-        }}>
-        <Space size={5} direction="vertical" style={{ textAlign: 'center', width: '100%' }}>
-          <PlusOutlined style={{ fontSize: '80px', paddingTop: '10%', paddingBottom: '10%', color: '#cccccc' }} />
-          <Typography.Text style={{ fontSize: '15px', width: '120px', color: '#cccccc', fontWeight: 'bold' }}>
+        }}
+      >
+        <Space
+          size={5}
+          direction="vertical"
+          style={{ textAlign: 'center', width: '100%' }}
+        >
+          <PlusOutlined
+            style={{
+              fontSize: '80px',
+              paddingTop: '10%',
+              paddingBottom: '10%',
+              color: '#cccccc',
+            }}
+          />
+          <Typography.Text
+            style={{
+              fontSize: '15px',
+              width: '120px',
+              color: '#cccccc',
+              fontWeight: 'bold',
+            }}
+          >
             {entity === 'event' ? 'Nuevo curso' : 'Nueva organizacion'}
           </Typography.Text>
         </Space>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default NewCard;
+export default NewCard

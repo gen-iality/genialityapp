@@ -1,51 +1,45 @@
-import { Checkbox } from 'antd';
-import { Rule } from 'antd/lib/form';
-import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
-import { useIntl } from 'react-intl';
-import DynamicFormItem from './DynamicFormItem';
-import useMandatoryRule from './hooks/useMandatoryRule';
-import { IDynamicFieldProps } from './types';
+import { Checkbox } from 'antd'
+import { Rule } from 'antd/lib/form'
+import * as React from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useIntl } from 'react-intl'
+import DynamicFormItem from './DynamicFormItem'
+import useMandatoryRule from './hooks/useMandatoryRule'
+import { IDynamicFieldProps } from './types'
 
-interface IDynamicBooleanFieldProps extends IDynamicFieldProps {
-}
+interface IDynamicBooleanFieldProps extends IDynamicFieldProps {}
 
-const DynamicBooleanField: React.FunctionComponent<IDynamicBooleanFieldProps> = (props) => {
-  const {
-    fieldData,
-    allInitialValues,
-  } = props
+const DynamicBooleanField: React.FunctionComponent<IDynamicBooleanFieldProps> = (
+  props,
+) => {
+  const { fieldData, allInitialValues } = props
 
-  const {
-    name,
-    mandatory,
-    label,
-    props: secondProps,
-  } = fieldData
-  
+  const { name, mandatory, label, props: secondProps } = fieldData
+
   const [rules, setRules] = useState<Rule[]>([])
 
   const intl = useIntl()
-  
+
   const requiredFieldErrorMessage = intl.formatMessage({ id: 'form.field.required' })
-  
-  const {basicRule, setCondiction} = useMandatoryRule(fieldData, requiredFieldErrorMessage)
+
+  const { basicRule, setCondiction } = useMandatoryRule(
+    fieldData,
+    requiredFieldErrorMessage,
+  )
 
   // Clone the basic rule and inject the type for email type
   useEffect(() => {
     const newRule: Rule = { ...basicRule }
-    newRule.validator = (rule, value) => {
+    ;(newRule.validator = (rule, value) => {
       if (mandatory) {
-        return value
-          ? Promise.resolve()
-          : Promise.reject(requiredFieldErrorMessage)
+        return value ? Promise.resolve() : Promise.reject(requiredFieldErrorMessage)
       } else {
         return value || !value || value == '' || value == undefined
           ? Promise.resolve()
           : Promise.reject(requiredFieldErrorMessage)
       }
-    },
-    setRules([newRule])
+    }),
+      setRules([newRule])
   }, [basicRule])
 
   // Create a copy of the fieldData object without the label property
@@ -69,9 +63,7 @@ const DynamicBooleanField: React.FunctionComponent<IDynamicBooleanFieldProps> = 
       >
         {mandatory ? (
           <span>
-            <span style={{ color: 'red' }}>*</span>
-            {' '}
-            <strong>{label}</strong>
+            <span style={{ color: 'red' }}>*</span> <strong>{label}</strong>
           </span>
         ) : (
           label
@@ -79,6 +71,6 @@ const DynamicBooleanField: React.FunctionComponent<IDynamicBooleanFieldProps> = 
       </Checkbox>
     </DynamicFormItem>
   )
-};
+}
 
-export default DynamicBooleanField;
+export default DynamicBooleanField

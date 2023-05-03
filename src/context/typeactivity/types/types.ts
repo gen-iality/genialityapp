@@ -1,4 +1,4 @@
-import { TypeActivity, TypeActivityState } from '../interfaces/interfaces';
+import { TypeActivity, TypeActivityState } from '../interfaces/interfaces'
 
 export type TypeActivityAction =
   | { type: 'initial'; payload: { activityState: TypeActivityState } }
@@ -25,17 +25,21 @@ export type TypeActivityAction =
   | { type: 'selectYouTube'; payload: { id: string; sendData: any } }
   | { type: 'selectEviusMeet'; payload: { id: string } }
   | { type: 'selectRTMP'; payload: { id: string } }
-  | { type: 'visualize'; payload: { id: string } };
+  | { type: 'visualize'; payload: { id: string } }
 
 export type TypeActivityContextProps = {
-  typeActivityState: TypeActivityState;
-  toggleActivitySteps: (id: string, payload?: TypeActivityState) => void;
-  closeModal: () => void;
-  selectOption: (id: string, sendData?: any) => void;
-  createTypeActivity: () => void;
-  executer_stopStream: () => void;
-  loadingStop: boolean;
-  videoObject: { created_at: string; name: string; url: string } | null;
-  visualizeVideo: (url: string | null, created_at: string | null, name: string | null) => void;
-  loadingCreate: boolean;
-};
+  typeActivityState: TypeActivityState
+  toggleActivitySteps: (id: string, payload?: TypeActivityState) => void
+  closeModal: () => void
+  selectOption: (id: string, sendData?: any) => void
+  createTypeActivity: () => void
+  executer_stopStream: () => void
+  loadingStop: boolean
+  videoObject: { created_at: string; name: string; url: string } | null
+  visualizeVideo: (
+    url: string | null,
+    created_at: string | null,
+    name: string | null,
+  ) => void
+  loadingCreate: boolean
+}

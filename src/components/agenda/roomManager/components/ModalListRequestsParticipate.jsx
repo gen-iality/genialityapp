@@ -1,61 +1,64 @@
-import { useContext, useEffect, useState } from 'react';
-import { Col, Modal, Row, Transfer, Typography, Grid } from 'antd';
-import AgendaContext from '@context/AgendaContext';
+import { useContext, useEffect, useState } from 'react'
+import { Col, Modal, Row, Transfer, Typography, Grid } from 'antd'
+import AgendaContext from '@context/AgendaContext'
 
-const { useBreakpoint } = Grid;
+const { useBreakpoint } = Grid
 
-const mockData = [];
+const mockData = []
 for (let i = 0; i < 5; i++) {
   mockData.push({
     key: i.toString(),
     title: `Solicitud para participar ${i + 1}`,
     description: `description of content${i + 1}`,
-  });
+  })
 }
 
 const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => {
-  const screens = useBreakpoint();
-  const [targetKeys, setTargetKeys] = useState([]);
-  const [dataRequest, setDataRequest] = useState([]);
-  const [selectedKeys, setSelectedKeys] = useState([]);
-  const { requestList, removeRequest, approvedOrRejectedRequest } = useContext(AgendaContext);
+  const screens = useBreakpoint()
+  const [targetKeys, setTargetKeys] = useState([])
+  const [dataRequest, setDataRequest] = useState([])
+  const [selectedKeys, setSelectedKeys] = useState([])
+  const { requestList, removeRequest, approvedOrRejectedRequest } =
+    useContext(AgendaContext)
   const onChange = async (nextTargetKeys, direction, moveKeys) => {
     // Eliminamos la solicitud
     if (direction === 'left') {
       await Promise.all(
         moveKeys?.map(async (key) => {
-          await removeRequest(`${refActivity}`, key);
-        })
-      );
+          await removeRequest(`${refActivity}`, key)
+        }),
+      )
     }
     // Approbamos la solicitud
     if (direction === 'right') {
       await Promise.all(
         moveKeys?.map(async (key) => {
-          await approvedOrRejectedRequest(`${refActivity}`, key, true);
-        })
-      );
+          await approvedOrRejectedRequest(`${refActivity}`, key, true)
+        }),
+      )
     }
-    setTargetKeys(nextTargetKeys);
-  };
+    setTargetKeys(nextTargetKeys)
+  }
 
   const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
-    console.log('sourceSelectedKeys:', sourceSelectedKeys);
-    console.log('targetSelectedKeys:', targetSelectedKeys);
-    setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
-  };
+    console.log('sourceSelectedKeys:', sourceSelectedKeys)
+    console.log('targetSelectedKeys:', targetSelectedKeys)
+    setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys])
+  }
 
   const onScroll = (direction, e) => {
-    console.log('direction:', direction);
-    console.log('target:', e.target);
-  };
+    console.log('direction:', direction)
+    console.log('target:', e.target)
+  }
   useEffect(() => {
     if (requestList) {
-      const approvedRequest = requestList.filter((request) => request.active).map((item) => item.key);
-      setDataRequest(requestList);
-      setTargetKeys(approvedRequest);
+      const approvedRequest = requestList
+        .filter((request) => request.active)
+        .map((item) => item.key)
+      setDataRequest(requestList)
+      setTargetKeys(approvedRequest)
     }
-  }, [requestList]);
+  }, [requestList])
   return (
     <Modal
       width={700}
@@ -67,7 +70,9 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
     >
       <Row gutter={[8, 8]}>
         <Col>
-          <Typography.Title level={4}>Solicitudes para participar en la transmisión</Typography.Title>
+          <Typography.Title level={4}>
+            Solicitudes para participar en la transmisión
+          </Typography.Title>
         </Col>
         <Col>
           <Transfer
@@ -91,13 +96,14 @@ const ModalListRequestsParticipate = ({ handleModal, visible, refActivity }) => 
         </Col>
         <Col>
           <Typography.Paragraph type="secondary">
-            Recuerde que al aprobar una solicitud, usted está dando acceso a esa persona a participar dentro de la
-            transmisión. Puede eliminar el acceso en cualquier momento.
+            Recuerde que al aprobar una solicitud, usted está dando acceso a esa persona a
+            participar dentro de la transmisión. Puede eliminar el acceso en cualquier
+            momento.
           </Typography.Paragraph>
         </Col>
       </Row>
     </Modal>
-  );
-};
+  )
+}
 
-export default ModalListRequestsParticipate;
+export default ModalListRequestsParticipate

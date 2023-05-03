@@ -1,29 +1,26 @@
-import './App.less';
+import './App.less'
 import dayjs from 'dayjs'
-import loadable from '@loadable/component';
-import { useCurrentUser } from './../context/userContext';
+import { useCurrentUser } from './../context/userContext'
 
-import ContentContainer from '@containers/content';
+import ContentContainer from '@containers/content'
 
-import { PreloaderApp } from '@/PreloaderApp/PreloaderApp';
-import { Layout } from 'antd';
-import InternetConnectionAlert from '@components/InternetConnectionAlert/InternetConnectionAlert';
-
-//Code splitting
+import { PreloaderApp } from '@/PreloaderApp/PreloaderApp'
+import { Layout } from 'antd'
+import InternetConnectionAlert from '@components/InternetConnectionAlert/InternetConnectionAlert'
 
 const App = () => {
-  const cUser = useCurrentUser();
-  if (cUser.status == 'LOADING') return <PreloaderApp />;
+  const cUser = useCurrentUser()
+  if (cUser.status == 'LOADING') return <PreloaderApp />
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <InternetConnectionAlert />
       <ContentContainer />
     </Layout>
-  );
-};
+  )
+}
 
-export default App;
+export default App
 
 // @ts-expect-error
 window.dayjs = dayjs

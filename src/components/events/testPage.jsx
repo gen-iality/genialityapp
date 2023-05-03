@@ -1,29 +1,29 @@
-import { Component, Fragment } from 'react';
-import ComponentTest from './componentTest';
-import API from '@helpers/request';
-import { firestore } from '@helpers/firebase';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { GetTokenUserFirebase } from 'helpers/HelperAuth';
-import { DispatchMessageService } from '@context/MessageService';
+import { Component, Fragment } from 'react'
+import ComponentTest from './componentTest'
+import API from '@helpers/request'
+import { firestore } from '@helpers/firebase'
+import { FormattedMessage, useIntl } from 'react-intl'
+import { GetTokenUserFirebase } from 'helpers/HelperAuth'
+import { DispatchMessageService } from '@context/MessageService'
 
 class Test extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       currentUser: false,
       usuarioRegistrado: false,
-    };
+    }
   }
 
   async componentDidMount() {
-    const evius_token = await GetTokenUserFirebase();
-    const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
+    const evius_token = await GetTokenUserFirebase()
+    const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`)
 
     if (resp.status !== 200 && resp.status !== 202) {
-      return;
+      return
     }
 
-    const data = resp.data;
+    const data = resp.data
 
     const userRef = firestore
       .collection(`${this.props.event._id}_event_attendees`)
@@ -35,16 +35,18 @@ class Test extends Component {
             type: 'error',
             msj: 'Usuario no inscrito a este curso, contacte al administrador',
             action: 'show',
-          });
+          })
 
-          this.setState({ currentUser: false });
-          return;
+          this.setState({ currentUser: false })
+          return
         }
 
-        this.setState({ currentUser: true });
+        this.setState({ currentUser: true })
 
         snapshot.forEach((doc) => {
-          const user = firestore.collection(`${this.props.event._id}_event_attendees`).doc(doc.id);
+          const user = firestore
+            .collection(`${this.props.event._id}_event_attendees`)
+            .doc(doc.id)
 
           user
             .update({
@@ -58,20 +60,23 @@ class Test extends Component {
                 type: 'success',
                 msj: 'Usuario inscrito',
                 action: 'show',
-              });
-              this.setState({ usuarioRegistrado: true });
+              })
+              this.setState({ usuarioRegistrado: true })
             })
             .catch((error) => {
-              console.error('Error updating document: ', error);
+              console.error('Error updating document: ', error)
               DispatchMessageService({
                 type: 'error',
-                msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Error :('}),
+                msj: this.props.intl.formatMessage({
+                  id: 'toast.error',
+                  defaultMessage: 'Error :(',
+                }),
                 action: 'show',
-              });
-            });
-        });
+              })
+            })
+        })
       })
-      .catch((err) => {});
+      .catch((err) => {})
   }
 
   render() {
@@ -85,8 +90,8 @@ class Test extends Component {
           usuarioRegistrado={this.state.currentUser}
         />
       </Fragment>
-    );
+    )
   }
 }
 
-export default Test;
+export default Test
