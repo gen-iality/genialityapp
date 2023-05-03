@@ -23,6 +23,7 @@ const initialState = {
   allow_register: true,
   visibility: 'PUBLIC',
   type: 0,
+  type_event: 'onlineEvent',
 }
 // Reducers
 function reducer(state, action) {
@@ -76,6 +77,10 @@ function reducer(state, action) {
       break
     case 'TYPE_AUTHENTICATION':
       return { ...state, type: 0, allow_register: true, visibility: 'ANONYMOUS' }
+    case 'EVENT_TYPE':
+      // NOTE: Why TYPE_EVENT set the visibility?????????
+      console.log({ action })
+      return { ...state, event_type: action.payload?.event_type || 'onlineEvent' }
     default:
       throw new Error()
   }
@@ -269,7 +274,7 @@ export const NewEventProvider = ({ children }) => {
       const data = {
         name: valueInputs.name,
         address: '',
-        type_event: 'onlineEvent',
+        type_event: state.event_type || 'onlineEvent',
         datetime_from: selectedDateEvent?.from + ':00',
         datetime_to: selectedDateEvent?.at + ':00',
         picture: null,
