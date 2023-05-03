@@ -55,7 +55,11 @@ import {
 import { firestore } from '@helpers/firebase'
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
-import { ExclamationCircleOutlined, CheckCircleFilled } from '@ant-design/icons'
+import {
+  ExclamationCircleOutlined,
+  CheckCircleFilled,
+  BellOutlined,
+} from '@ant-design/icons'
 import { handleRequestError } from '@helpers/utils'
 import { DispatchMessageService } from '@context/MessageService'
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
@@ -540,7 +544,6 @@ class General extends Component {
       googleanlyticsid: event.googleanlyticsid || null,
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
-      is_certification: event.is_certification,
       is_examen_required: event.is_examen_required,
       validity_days: event.validity_days,
       default_certification_description: event.default_certification_description,
@@ -1238,18 +1241,15 @@ class General extends Component {
                     />
                   </Form.Item>
 
-                  <Form.Item label="¿Es curso de certificación?">
-                    <Switch
-                      checkedChildren="Certificación"
-                      unCheckedChildren="GEN.iality"
-                      checked={event.is_certification}
-                      onChange={(checked) => {
-                        this.handleChange(checked, 'is_certification')
-                      }}
-                    />
-                  </Form.Item>
+                  {event.type_event === 'certification' && (
+                    <Typography.Paragraph>
+                      <Typography.Text strong>
+                        Este curso es de certificación <BellOutlined />
+                      </Typography.Text>
+                    </Typography.Paragraph>
+                  )}
 
-                  {event.is_certification && (
+                  {event.type_event === 'certification' && (
                     <>
                       <Form.Item label="Descripción de la certificación (valor por defecto)">
                         <Input
