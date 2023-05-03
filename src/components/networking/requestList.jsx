@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message, Row, Typography, Space } from 'antd';
+import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message, Row, Typography, Space, Result } from 'antd';
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 /* import 'react-toastify/dist/ReactToastify.css'; */
 import { Networking, UsersApi } from '../../helpers/request';
@@ -283,12 +283,38 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
         />
       </Col>
     ) : (
-      <div>
-        <Divider>Solicitudes de contacto recibidas</Divider>
-        <InvitacionListReceived list={requestListReceived} sendResponseToInvitation={sendResponseToInvitation} />
-        <Divider>Solicitudes de contacto enviadas</Divider>
-        <InvitacionListSent list={requestListSent} />
-      </div>
+      <>
+        {requestListReceived.length > 0 ? 
+          <>
+            <Divider><Typography.Text strong>Solicitudes de contacto recibidas</Typography.Text></Divider>
+            <InvitacionListReceived list={requestListReceived} sendResponseToInvitation={sendResponseToInvitation} />
+          </>
+        :
+          <Row justify='center'>
+            <Col>
+              <Result
+                title={'¡No tienes solicitudes de contactos recibidas!'}
+              />
+            </Col>
+          </Row>
+        }
+        
+        {requestListReceived.length === 0 || requestListSent.length === 0 && <Divider />}
+        {requestListSent.length > 0 ?
+          <>
+            <Divider><Typography.Text strong>Solicitudes de contacto enviadas</Typography.Text></Divider>
+            <InvitacionListSent list={requestListSent} />
+          </>
+          :
+          <Row justify='center'>
+            <Col>
+              <Result
+                title={'¡No tienes solicitudes de contactos enviadas!'}
+              />
+            </Col>
+          </Row>
+        }
+      </>
     );
   if (loading) return <Row justify='center' align='middle'><Col><Spin size='large'
   tip={<Typography.Text strong>Cargando...</Typography.Text>}/></Col></Row>;

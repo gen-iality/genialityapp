@@ -70,8 +70,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
             ))
           ) : (
             <Col >
-              <Result 
-                /* style={{padding: 0}} */
+              <Result
                 title={'¡No tienes solicitudes recibidas pendientes!'}
               />
             </Col>
@@ -106,7 +105,6 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
               ) : (
                 <Col >
                   <Result 
-                    /* style={{padding: 0}} */
                     title={'¡No tienes solicitudes pendientes enviadas!'}
                   />
                 </Col>

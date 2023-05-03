@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spin, Alert, Col, Card, Avatar, Row, Button, Typography } from 'antd';
+import { Spin, Alert, Col, Card, Avatar, Row, Button, Typography, Result } from 'antd';
 import { Networking } from '../../helpers/request';
 import { EventFieldsApi } from '../../helpers/request';
 import { formatDataToString } from '../../helpers/utils';
@@ -33,7 +33,9 @@ const ContactList = ({ tabActive, agendarCita }) => {
         if (typeof result == 'object') {
           setContactsList(result);
         }
-        if (typeof result == 'string') setMessageService(result);
+        if (typeof result == 'string') {
+          setMessageService(result === 'aun no tienes contactos.' ? 'Aún no tienes contactos.' : result);
+        };
 
         setLoading(false);
       });
@@ -154,9 +156,13 @@ const ContactList = ({ tabActive, agendarCita }) => {
     ) : (
       contactsList.length == 0 &&
       !loading && (
-        <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-          <Card style={{ textAlign: 'center' }}>{messageService}</Card>
-        </Col>
+        <Row justify='center' align='middle'>
+          <Col >
+            <Result 
+              title={messageService}
+            />
+          </Col>
+        </Row>
       )
     );
   if (userCurrentContext.value || loading) return <Row justify='center' align='middle'><Col><Spin size='large'
