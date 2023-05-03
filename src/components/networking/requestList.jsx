@@ -332,7 +332,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
           </Row>
         }
         
-        {requestListReceived.length === 0 || requestListSent.length === 0 && <Divider />}
+        {/* {requestListReceived.length === 0 || requestListSent.length === 0 && <Divider />} */}
         {requestListSent.length > 0 ?
           <>
             <Divider><Typography.Text strong>Solicitudes de contacto enviadas</Typography.Text></Divider>
