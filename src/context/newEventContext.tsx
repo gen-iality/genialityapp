@@ -12,10 +12,7 @@ import { DispatchMessageService } from '@context/MessageService'
 import { Actions, AgendaApi, EventsApi, OrganizationApi } from '@helpers/request'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 import { configEventsTemplate } from '@helpers/constants'
-
-export type EventTypeType = 'certification' | 'onlineEvent' | undefined
-
-export type EventVisibilityType = 'PUBLIC' | 'PRIVATE' // Missing something?
+import { EventTypeType, EventVisibilityType } from '@Utilities/types/EventType'
 
 export enum NewEventAccessTypeEnum {
   PUBLIC = 'PUBLIC',
@@ -42,7 +39,7 @@ export interface NewEventState {
   tab: string
   visible: boolean
   allow_register: boolean
-  visibility: 'PUBLIC' | 'ANONYMOUS' | 'PRIVATE' // Missing something?
+  visibility: EventVisibilityType
   type: number
   event_type: EventTypeType
 }
@@ -181,7 +178,8 @@ function reducer(state: NewEventState, action: NewEventAction): NewEventState {
       }
       break
     case NewEventActionEnum.TYPE_AUTHENTICATION:
-      return { ...state, type: 0, allow_register: true, visibility: 'ANONYMOUS' }
+      // return { ...state, type: 0, allow_register: true, visibility: 'ANONYMOUS' }
+      return { ...state, type: 0, allow_register: true, visibility: 'PRIVATE' }
     case NewEventActionEnum.EVENT_TYPE:
       // NOTE: Why TYPE_EVENT set the visibility?????????
       console.log({ action })
