@@ -25,6 +25,9 @@ const { Step } = Steps
 
 /* Objeto que compone el paso a paso y su contenido */
 
+/**
+ * @deprecated This component seens like deprecated. I DON'T SEE where it is used. I see NewEventPage.
+ */
 class NewEvent extends Component {
   constructor(props) {
     super(props)
