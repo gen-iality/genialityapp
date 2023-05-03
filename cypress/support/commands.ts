@@ -46,21 +46,60 @@ declare global {
       correctFields(): Cypress.Chainable<Element>
       openUserMenu(): Cypress.Chainable<Element>
       editRegistryInformation(email: string): Cypress.Chainable<Element>
+      clickLoginButton(): Cypress.Chainable<Element>
+      clickUserStatusMenuButton(): Cypress.Chainable<Element>
+      clickLogoutButton(): Cypress.Chainable<Element>
+      typeLogin(email: string, password: string): Cypress.Chainable<Element>
+      visitWebsite(): Cypress.Chainable<Element>
     }
   }
 }
 const eventToTest = '/landing/624362c612e3604d37212ed3/evento'
-const stagingUrl = 'https://staging.evius.co'
+const stagingUrl = 'https://beta.geniality.com.co'
 const localUrl = 'http://localhost:3000'
-const nombre = 'Pruebas'
+const nombre = 'Tester'
 const apellido = 'Cypress'
 const uuid = () => Cypress._.random(0, 1e9).toString(36)
 const id = uuid()
+
 Cypress.Commands.add('forceVisit', (url) => {
   cy.window().then((win) => {
     return win.open(url, '_self')
   })
 })
+
+Cypress.Commands.add('clickLoginButton', () => {
+  cy.get('button[data-testid="btn-login"]').click({ force: true, multiple: true })
+})
+
+Cypress.Commands.add('clickUserStatusMenuButton', () => {
+  cy.get('[data-testid="user-status-menu"]').eq(0).trigger('mouseover')
+})
+
+Cypress.Commands.add('clickLogoutButton', () => {
+  cy.get('[data-testid="menu-item-logout"]').click({ force: true, multiple: true })
+  cy.wait(2000)
+  cy.get('span[data-testid"btn-yes-close-session"]').click({
+    force: true,
+    multiple: true,
+  })
+})
+
+Cypress.Commands.add('typeLogin', (email, password) => {
+  cy.get('#email').type(email)
+  cy.get('#password').type(password)
+  cy.get('#loginButton').click()
+})
+
+Cypress.Commands.add('visitWebsite', () => {
+  if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+    cy.visit(`${stagingUrl}`, { timeout: 5 * 60000 })
+  } else if (process.env.NODE_ENV === 'development') {
+    cy.visit(`${localUrl}`, { timeout: 5 * 60000 })
+  }
+  cy.wait(20 * 1000)
+})
+
 Cypress.Commands.add('logout', () => {
   cy.wait(1000)
   cy.get('.ant-dropdown-trigger').eq(0).trigger('mouseover')
@@ -75,6 +114,7 @@ Cypress.Commands.add('logout', () => {
     .click()
   cy.wait(5000)
 })
+
 Cypress.Commands.add('logoutWithOutEvent', () => {
   cy.wait(1000)
   cy.get('.ant-dropdown-trigger').eq(0).trigger('mouseover')
@@ -96,25 +136,28 @@ Cypress.Commands.add('changeLogin', () => {
   cy.get('#rc-tabs-0-tab-register').should('exist')
   cy.get('#rc-tabs-0-tab-login').click()
 })
+
 Cypress.Commands.add('changeLoginEvent', () => {
   cy.wait(4000)
   cy.get('.ant-modal-body').should('exist')
   cy.get('#rc-tabs-1-tab-register').should('exist')
   cy.get('#rc-tabs-1-tab-login').click()
 })
+
 Cypress.Commands.add('login', (email, password) => {
   cy.get('#email').type(email)
   cy.get('#password').type(password)
   cy.get('#loginButton').click()
 })
+
 Cypress.Commands.add('visitEvent', () => {
-  // if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-  //   cy.visit(`${stagingUrl}${eventToTest}`);
-  // } else if (process.env.NODE_ENV === 'development') {
-  //   cy.visit(`${localUrl}${eventToTest}`);
-  // }
-  cy.visit(`${stagingUrl}${eventToTest}`)
+  if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+    cy.visit(`${stagingUrl}${eventToTest}`)
+  } else if (process.env.NODE_ENV === 'development') {
+    cy.visit(`${localUrl}${eventToTest}`)
+  }
 })
+
 Cypress.Commands.add('registerUser', (email, clave) => {
   const filePath = 'mocion.jpg'
   cy.get("input[type='file']").attachFile(filePath)
@@ -140,6 +183,7 @@ Cypress.Commands.add('registerUser', (email, clave) => {
   cy.get('.ant-typography.ant-typography-secondary').should('exist')
   cy.wait(15000)
 })
+
 Cypress.Commands.add('logoutWithEvent', () => {
   cy.get('.ant-dropdown-trigger').eq(0).trigger('mouseover')
   cy.get('.ant-dropdown-menu-item-group-title').should('exist')
@@ -170,6 +214,7 @@ Cypress.Commands.add('correctFields', () => {
   cy.get("button[type='submit']").click()
   cy.wait(2000)
 })
+
 Cypress.Commands.add('openUserMenu', () => {
   cy.get('.ant-dropdown-trigger').eq(0).trigger('mouseover')
   cy.get('.ant-dropdown-menu-item-group-title').should('exist')

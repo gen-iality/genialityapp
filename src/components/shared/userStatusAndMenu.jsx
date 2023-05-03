@@ -251,6 +251,7 @@ const UserStatusAndMenu = (props) => {
         </Badge>
 
         <Menu.Item
+          data-testid="menu-item-logout"
           danger
           icon={<LogoutIcon style={{ fontSize: '18px' }} />}
           onClick={() => showPropsConfirm()}
@@ -267,6 +268,7 @@ const UserStatusAndMenu = (props) => {
         >{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
       ) : (
         <Menu.Item
+          data-testid="menu-item-logout"
           danger
           icon={<LogoutIcon style={{ fontSize: '18px' }} />}
           onClick={() => showPropsConfirm()}
@@ -285,6 +287,7 @@ const UserStatusAndMenu = (props) => {
         <Dropdown arrow overlay={menu} placement="bottomRight">
           <a onClick={(e) => e.preventDefault()}>
             <Space
+              data-testid="user-status-menu"
               className="shadowHover"
               style={{
                 height: '40px',
@@ -325,10 +328,14 @@ const UserStatusAndMenu = (props) => {
         defaultMessage:
           'Si cierra la sesión, algunas de las funciones del sitio web quedarán desactivadas.',
       }),
-      okText: intl.formatMessage({
-        id: 'header.confirm.okText',
-        defaultMessage: 'Si, cerrar la sesión',
-      }),
+      okText: (
+        <span data-testid="btn-yes-close-session">
+          {intl.formatMessage({
+            id: 'header.confirm.okText',
+            defaultMessage: 'Sí, cerrar la sesión',
+          })}
+        </span>
+      ),
       okType: 'danger',
       cancelText: intl.formatMessage({
         id: 'header.confirm.cancelText',
