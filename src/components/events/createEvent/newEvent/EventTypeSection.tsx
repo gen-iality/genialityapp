@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import type { FunctionComponent } from 'react'
-import { Card, Col, Form, Input, InputNumber, Row, Switch, Badge } from 'antd'
+import { Card, Col, Row } from 'antd'
 import { useContextNewEvent } from '@context/newEventContext'
-import SelectableCard from '@components/agenda/activityType/components/SelectableCard'
-import { CheckOutlined } from '@ant-design/icons'
 
 type EventTypeType = 'certification' | 'onlineEvent' | undefined
 
@@ -13,9 +11,13 @@ type CardType = {
   type?: EventTypeType
 }
 
-interface EventTypeSectionProps {}
+interface EventTypeSectionProps {
+  onEventTypeSectionChange?: (et: EventTypeType) => void
+}
 
 const EventTypeSection: FunctionComponent<EventTypeSectionProps> = (props) => {
+  const { onEventTypeSectionChange = () => {} } = props
+
   const {
     showModal,
     isModalVisible,
@@ -50,6 +52,7 @@ const EventTypeSection: FunctionComponent<EventTypeSectionProps> = (props) => {
 
   const handleSelectEventType = (et: EventTypeType) => {
     setSelectedEventType(et)
+    onEventTypeSectionChange(et)
     console.log('user select event type:', et)
   }
 
