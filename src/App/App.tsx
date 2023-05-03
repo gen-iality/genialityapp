@@ -1,6 +1,5 @@
 import './App.less'
 import dayjs from 'dayjs'
-import loadable from '@loadable/component'
 import { useCurrentUser } from './../context/userContext'
 
 import ContentContainer from '@containers/content'
@@ -8,8 +7,6 @@ import ContentContainer from '@containers/content'
 import { PreloaderApp } from '@/PreloaderApp/PreloaderApp'
 import { Layout } from 'antd'
 import InternetConnectionAlert from '@components/InternetConnectionAlert/InternetConnectionAlert'
-
-//Code splitting
 
 const App = () => {
   const cUser = useCurrentUser()
