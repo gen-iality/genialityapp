@@ -18,7 +18,7 @@ import { cNewEventContext } from '@context/newEventContext'
 /** Components */
 import InitialNewEventFormSection from './newEvent/InitialNewEventFormSection'
 import EventAccessTypeSection from './newEvent/EventAccessTypeSection'
-import TypeEventSection from './newEvent/TypeEventSection'
+import EventTypeSection from './newEvent/EventTypeSection'
 
 interface INewEventPageProps {
   match: any
@@ -60,7 +60,7 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
   const obtainContent = (step: (typeof steps)[number]) => {
     switch (step.title) {
       case 'Tipo de evento':
-        return <TypeEventSection />
+        return <EventTypeSection />
       case 'Información':
         return (
           <InitialNewEventFormSection

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import type { FunctionComponent } from 'react'
 import { Card, Col, Form, Input, InputNumber, Row, Switch, Badge } from 'antd'
 import { useContextNewEvent } from '@context/newEventContext'
 import SelectableCard from '@components/agenda/activityType/components/SelectableCard'
@@ -14,7 +15,7 @@ type CardType = {
 
 interface EventTypeSectionProps {}
 
-const TypeEventSection = (props: EventTypeSectionProps) => {
+const EventTypeSection: FunctionComponent<EventTypeSectionProps> = (props) => {
   const {
     showModal,
     isModalVisible,
@@ -92,4 +93,4 @@ const TypeEventSection = (props: EventTypeSectionProps) => {
   )
 }
 
-export default TypeEventSection
+export default EventTypeSection
