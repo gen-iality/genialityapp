@@ -1,11 +1,20 @@
 import React, { useState } from 'react'
-import { Card, Col, Form, Input, InputNumber, Row, Switch } from 'antd'
+import { Card, Col, Form, Input, InputNumber, Row, Switch, Badge } from 'antd'
 import { useContextNewEvent } from '@context/newEventContext'
 import SelectableCard from '@components/agenda/activityType/components/SelectableCard'
+import { CheckOutlined } from '@ant-design/icons'
 
-type Props = {}
+type EventTypeType = 'certification' | 'onlineEvent' | undefined
 
-const TypeEventSection = (props: Props) => {
+type CardType = {
+  title: string
+  description: string
+  type?: EventTypeType
+}
+
+interface EventTypeSectionProps {}
+
+const TypeEventSection = (props: EventTypeSectionProps) => {
   const {
     showModal,
     isModalVisible,
@@ -27,43 +36,57 @@ const TypeEventSection = (props: Props) => {
 
   const [isCertification, setIsCertification] = useState(false)
   const [isChecked, setIsChecked] = useState(false)
+  const [selectedEventType, setSelectedEventType] = useState<EventTypeType>('onlineEvent')
 
-  const handleChange = (e: any) => {
-    const valueData = e?.target?.value
-
-    const targetData = e?.target
-
-    setIsCertification((previous) => !previous)
-    setIsChecked((previous) => !previous)
-  }
-
-  const cards = [
-    { title: 'Curso', description: 'Curso básico' },
+  const [cards] = useState<CardType[]>([
+    { title: 'Curso', description: 'Curso básico', type: 'onlineEvent' },
     {
       title: 'Certificación',
       description: 'Curso básico con la funcionalidad de que es un curso certificado',
+      type: 'certification',
     },
-  ]
+  ])
+
+  const handleSelectEventType = (et: EventTypeType) => {
+    setSelectedEventType(et)
+    console.log('user select event type:', et)
+  }
 
   return (
     <>
-      <Row justify="center" gutter={[16, 16]}>
-        {cards.length === 0 && <p>Ninguna opción fue pasada</p>}
-        {cards.map((card) => (
-          <Col span={8} key={'key-' + card.title}>
-            <Card
-              title={card.title}
-              hoverable
-
-              // description={card.description}
-              // image={card.image}
-              //  selected={card.key === selected}
-              //  onSelect={buildSelectionHandler(card)}
+      <Row justify="center" gutter={[16, 16]} align="stretch">
+        {cards.length === 0 ? (
+          <p>Ninguna opción fue pasada</p>
+        ) : (
+          cards.map((card) => (
+            <Col
+              span={8}
+              key={'key-' + card.title}
+              style={{ display: 'flex', justifyContent: 'stretch' }}
             >
-              {card.description}
-            </Card>
-          </Col>
-        ))}
+              <Card
+                style={{
+                  width: '100%',
+                  boxShadow:
+                    selectedEventType === card.type
+                      ? '0 0 10px rgba(26, 57, 120, 0.7)'
+                      : 'none',
+                }}
+                title={card.title}
+                hoverable
+                // description={card.description}
+                // image={card.image}
+                //  selected={card.key === selected}
+                //  onSelect={buildSelectionHandler(card)}
+                onClick={() => {
+                  handleSelectEventType(card.type)
+                }}
+              >
+                {card.description}
+              </Card>
+            </Col>
+          ))
+        )}
       </Row>
     </>
   )
