@@ -56,7 +56,7 @@ class NewEvent extends Component {
           icon: <VideoCameraOutlined />,
         },*/
       ],
-      loading: false,
+      isLoading: false,
     }
     this.saveEvent = this.saveEvent.bind(this)
   }
@@ -105,7 +105,7 @@ class NewEvent extends Component {
 
   async saveEvent(fields) {
     const eventNewContext = this.context
-    this.setState({ loading: true })
+    this.setState({ isLoading: true })
     if (eventNewContext.selectOrganization) {
       const data = {
         name: eventNewContext.valueInputs.name,
@@ -444,7 +444,7 @@ class NewEvent extends Component {
             {this.obtainContent(this.state.steps[current])}
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
-          {!this.state.loading && !context.loadingOrganization && (
+          {!this.state.isLoading && !context.isLoadingOrganization && (
             <div className="button-container">
               {current > 0 && (
                 <Button className="button" size="large" onClick={() => this.prev()}>
@@ -473,7 +473,7 @@ class NewEvent extends Component {
               )}
             </div>
           )}
-          {(this.state.loading || context.loadingOrganization) && (
+          {(this.state.isLoading || context.isLoadingOrganization) && (
             <Row justify="center">
               Espere.. <Spin />
             </Row>

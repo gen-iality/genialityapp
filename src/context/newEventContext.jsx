@@ -15,7 +15,7 @@ import { configEventsTemplate } from '@helpers/constants'
 export const cNewEventContext = createContext()
 // Initial state
 const initialState = {
-  loading: false,
+  isLoading: false,
   organizations: [],
   selectOrganization: null,
   tab: 'list',
@@ -32,9 +32,9 @@ function reducer(state, action) {
   let organizationSelected
   switch (action.type) {
     case 'LOADING':
-      return { ...state, loading: true }
+      return { ...state, isLoading: true }
     case 'COMPLETE':
-      return { ...state, loading: false }
+      return { ...state, isLoading: false }
     case 'SELECT_ORGANIZATION':
       if (organizationIdURL)
         organizationSelected = state.organizations
@@ -109,7 +109,7 @@ export const NewEventProvider = ({ children }) => {
   const [organization, setOrganization] = useState(false)
   const [selectOrganization, setSelectOrganization] = useState()
   const [isbyOrganization, setIsbyOrganization] = useState(false)
-  const [loadingOrganization, setLoadingOrganization] = useState(false)
+  const [isLoadingOrganization, setIsLoadingOrganization] = useState(false)
   const [createOrganizationF, setCreateOrganization] = useState(false)
   const [templateId, setTemplateId] = useState()
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -153,9 +153,6 @@ export const NewEventProvider = ({ children }) => {
 
   const eventByOrganization = (value) => {
     setIsbyOrganization(value)
-  }
-  const isLoadingOrganization = (value) => {
-    setLoadingOrganization(value)
   }
 
   const changeSelectDay = (day) => {
@@ -468,8 +465,8 @@ export const NewEventProvider = ({ children }) => {
         selectedOrganization,
         eventByOrganization,
         isbyOrganization,
-        loadingOrganization,
         isLoadingOrganization,
+        setIsLoadingOrganization,
         createOrganizationF,
         newOrganization,
         templateId,
