@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Card, Col, Form, Input, InputNumber, Row, Switch } from 'antd';
-import { useContextNewEvent } from '@context/newEventContext';
-import SelectableCard from '@components/agenda/activityType/components/SelectableCard';
+import React, { useState } from 'react'
+import { Card, Col, Form, Input, InputNumber, Row, Switch } from 'antd'
+import { useContextNewEvent } from '@context/newEventContext'
+import SelectableCard from '@components/agenda/activityType/components/SelectableCard'
 
-type Props = {};
+type Props = {}
 
 const TypeEventSection = (props: Props) => {
   const {
@@ -23,24 +23,27 @@ const TypeEventSection = (props: Props) => {
     templateId,
     dispatch,
     state,
-  } = useContextNewEvent();
+  } = useContextNewEvent()
 
-  const [isCertification, setIsCertification] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isCertification, setIsCertification] = useState(false)
+  const [isChecked, setIsChecked] = useState(false)
 
-  const handleChange = (e) => {
-    const valueData = e?.target?.value;
+  const handleChange = (e: any) => {
+    const valueData = e?.target?.value
 
-    const targetData = e?.target;
+    const targetData = e?.target
 
-    setIsCertification((previous) => !previous);
-    setIsChecked((previous) => !previous);
-  };
+    setIsCertification((previous) => !previous)
+    setIsChecked((previous) => !previous)
+  }
 
   const cards = [
     { title: 'Curso', description: 'Curso básico' },
-    { title: 'Certificación', description: 'Curso básico con la funcionalidad de que es un curso certificado' },
-  ];
+    {
+      title: 'Certificación',
+      description: 'Curso básico con la funcionalidad de que es un curso certificado',
+    },
+  ]
 
   return (
     <>
@@ -63,7 +66,7 @@ const TypeEventSection = (props: Props) => {
         ))}
       </Row>
     </>
-  );
-};
+  )
+}
 
-export default TypeEventSection;
+export default TypeEventSection
