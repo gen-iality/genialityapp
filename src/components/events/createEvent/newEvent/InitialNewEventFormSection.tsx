@@ -94,6 +94,14 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
     <div className="step-information">
       <Space direction="vertical" size="middle" style={{ marginBottom: '30px' }}>
         <div>
+          <Paragraph>
+            Curso de tipo:{' '}
+            {state.event_type === 'certification'
+              ? 'Certificación'
+              : ['onlineEvent', undefined, null].includes(state.event_type)
+              ? 'Genérico online'
+              : state.event_type.toString()}
+          </Paragraph>
           <Text>
             Nombre del curso <span className="text-color">*</span>
           </Text>
