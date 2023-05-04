@@ -8,6 +8,7 @@ import { Spin, Typography, Badge } from 'antd'
 import { firestore } from '@helpers/firebase'
 import { AgendaApi } from '@helpers/request'
 import type AgendaType from '@Utilities/types/AgendaType'
+import type { ExtendedAgendaType } from '@Utilities/types/AgendaType'
 
 /** Context */
 import { useEventContext } from '@context/eventContext'
@@ -19,18 +20,18 @@ import CourseProgress from './CourseProgress'
 type CurrentEventAttendees = any // TODO: define this type and move to @Utilities/types/
 
 export interface StudentSelfCourseProgressProps {
-  progressType: 'circle' | 'block'
+  progressType?: 'circle' | 'block'
   hasProgressLabel?: boolean
-  activityFilter?: (a: AgendaType) => boolean
+  activityFilter?: (a: ExtendedAgendaType) => boolean
   customTitle?: string
   nodeIfCompleted?: ReactNode
 }
 
 function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
   const {
-    progressType,
+    progressType = 'block',
     hasProgressLabel = false,
-    activityFilter = (a: AgendaType) => true,
+    activityFilter = (a: ExtendedAgendaType) => true,
     customTitle,
     nodeIfCompleted,
   } = props
@@ -51,7 +52,7 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
 
     setActivitiesAttendee([])
     const loadData = async () => {
-      const { data }: { data: AgendaType[] } = await AgendaApi.byEvent(
+      const { data }: { data: ExtendedAgendaType[] } = await AgendaApi.byEvent(
         cEventContext.value._id,
       )
       const filteredData = data
