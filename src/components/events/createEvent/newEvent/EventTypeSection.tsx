@@ -1,11 +1,8 @@
 import { useState } from 'react'
 import type { FunctionComponent } from 'react'
 import { Card, Col, Row } from 'antd'
-import {
-  useContextNewEvent,
-  EventTypeType,
-  NewEventActionEnum,
-} from '@context/newEventContext'
+import { useContextNewEvent, NewEventActionEnum } from '@context/newEventContext'
+import type { EventTypeType } from '@Utilities/types/EventType'
 
 type CardType = {
   title: string
