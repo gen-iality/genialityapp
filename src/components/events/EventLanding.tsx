@@ -26,7 +26,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
   const [activityDetail, setActivityDetail] = useState<any | null>(null)
   const [thereAreQuizingOrSurveys, setThereAreQuizingOrSurveys] = useState<boolean>(false)
 
-  const isVisible = useMemo(() => {
+  const isDescriptionVisible = useMemo(() => {
     if (
       (event.description !== '<p><br></p>' &&
         event.description !== null &&
@@ -104,7 +104,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
         </>
       )}
 
-      {isVisible ? (
+      {isDescriptionVisible ? (
         <Card
           className="event-description"
           /* bodyStyle={{ padding: '25px 5px' }} */
@@ -147,11 +147,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
             </div>
           )}
 
-          {event.description !== '<p><br></p>' &&
-          event.description !== null &&
-          event.description !== `<p class="ql-align-center"><br></p>` &&
-          event.description !== `<p class="ql-align-right"><br></p>` &&
-          event.description !== `<p class="ql-align-justify"><br></p>` ? (
+          {isDescriptionVisible ? (
             <Row justify="center">
               <Col span={24} id="img-informative">
                 <ReactQuill
