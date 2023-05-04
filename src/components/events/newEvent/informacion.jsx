@@ -52,7 +52,7 @@ const Informacion = (props) => {
     selectOrganization,
     selectedOrganization,
     isbyOrganization,
-    isLoadingOrganization,
+    setLoadingOrganization,
     createOrganizationF,
     newOrganization,
     selectTemplate,
@@ -65,7 +65,7 @@ const Informacion = (props) => {
     }
   }, [props.orgId, props.currentUser])
   async function obtainOrganizations() {
-    isLoadingOrganization(true)
+    setLoadingOrganization(true)
     const organizations = await OrganizationApi.mine()
     const organizationsFilter = organizations.filter((orgData) => orgData.id)
 
@@ -74,11 +74,11 @@ const Informacion = (props) => {
 
       selectedOrganization(createOrganizations)
       setOrganizations([createOrganizations])
-      isLoadingOrganization(false)
+      setLoadingOrganization(false)
     } else {
       setOrganizations(organizationsFilter)
       selectedOrganization(organizationsFilter && organizationsFilter[0])
-      isLoadingOrganization(false)
+      setLoadingOrganization(false)
     }
   }
   const createNewOrganization = async (value) => {

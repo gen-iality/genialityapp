@@ -16,7 +16,7 @@ import {
 } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
 import 'react-day-picker/lib/style.css'
-import { useContextNewEvent } from '@context/newEventContext'
+import { NewEventActionEnum, useContextNewEvent } from '@context/newEventContext'
 import { PlansApi } from '@helpers/request'
 import ModalOrgListCreate from './ModalOrgListCreate'
 /**
@@ -94,6 +94,14 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
     <div className="step-information">
       <Space direction="vertical" size="middle" style={{ marginBottom: '30px' }}>
         <div>
+          <Paragraph>
+            Curso de tipo:{' '}
+            {state.event_type === 'certification'
+              ? 'Certificación'
+              : ['onlineEvent', undefined, null].includes(state.event_type)
+              ? 'Genérico online'
+              : state.event_type.toString()}
+          </Paragraph>
           <Text>
             Nombre del curso <span className="text-color">*</span>
           </Text>
@@ -133,7 +141,10 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
               <Button
                 block
                 onClick={() =>
-                  dispatch({ type: 'VISIBLE_MODAL', payload: { visible: true } })
+                  dispatch({
+                    type: NewEventActionEnum.VISIBLE_MODAL,
+                    payload: { visible: true },
+                  })
                 }
               >
                 Cambiar de organización

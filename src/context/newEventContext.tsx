@@ -1,4 +1,5 @@
 import {
+  Dispatch,
   createContext,
   useCallback,
   useContext,
@@ -11,11 +12,106 @@ import { DispatchMessageService } from '@context/MessageService'
 import { Actions, AgendaApi, EventsApi, OrganizationApi } from '@helpers/request'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 import { configEventsTemplate } from '@helpers/constants'
+import { EventTypeType, EventVisibilityType } from '@Utilities/types/EventType'
 
-export const cNewEventContext = createContext()
+export enum NewEventAccessTypeEnum {
+  PUBLIC = 'PUBLIC',
+  PRIVATE = 'PRIVATE',
+  ANONYMOUS = 'ANONYMOUS',
+}
+
+export enum NewEventActionEnum {
+  LOADING = 'LOADING',
+  COMPLETE = 'COMPLETE',
+  SELECT_ORGANIZATION = 'SELECT_ORGANIZATION',
+  ORGANIZATIONS = 'ORGANIZATIONS',
+  SELECT_TAB = 'SELECT_TAB',
+  VISIBLE_MODAL = 'VISIBLE_MODAL',
+  EVENT_ACCESS = 'EVENT_ACCESS',
+  TYPE_AUTHENTICATION = 'TYPE_AUTHENTICATION',
+  EVENT_TYPE = 'EVENT_TYPE',
+}
+
+export interface NewEventState {
+  isLoading: boolean
+  organizations: any[]
+  selectOrganization: any
+  tab: string
+  visible: boolean
+  allow_register: boolean
+  visibility: EventVisibilityType
+  type: number
+  event_type: EventTypeType
+}
+
+export type NewEventAction =
+  | { type: NewEventActionEnum.LOADING }
+  | { type: NewEventActionEnum.COMPLETE }
+  | {
+      type: NewEventActionEnum.SELECT_ORGANIZATION
+      payload: { organization?: any; orgId: any }
+    }
+  | { type: NewEventActionEnum.ORGANIZATIONS; payload: { organizationList: any[] } }
+  | { type: NewEventActionEnum.SELECT_TAB; payload: { tab: any } }
+  | { type: NewEventActionEnum.VISIBLE_MODAL; payload: { visible: boolean } }
+  | {
+      type: NewEventActionEnum.EVENT_ACCESS
+      payload: { accessType: NewEventAccessTypeEnum }
+    }
+  | {
+      type: NewEventActionEnum.TYPE_AUTHENTICATION
+    }
+  | { type: NewEventActionEnum.EVENT_TYPE; payload: { event_type: EventTypeType } }
+
+export type NewEventContextType = {
+  state: NewEventState
+  dispatch: Dispatch<NewEventAction>
+  // More stuffs
+  addDescription: string | null
+  typeTransmission: number
+  isModalVisible: boolean
+  selectedDay: any
+  selectedHours: any
+  dateEvent: any
+  selectedDateEvent: any
+  showModal: any
+  handleOk: any
+  handleCancel: any
+  handleDayClick: any
+  visibilityDescription: any
+  changetypeTransmision: any
+  changeSelectHours: any
+  changeSelectDay: any
+  handleInput: any
+  valueInputs: any
+  errorInputs: any
+  containsError: any
+  validateField: any
+  imageEvents: any
+  saveImageEvent: any
+  onChangeCheck: any
+  optTransmitir: any
+  changeTransmision: any
+  changeOrganization: any
+  organization: any
+  selectOrganization: any
+  selectedOrganization: any
+  eventByOrganization: any
+  isbyOrganization: any
+  isLoadingOrganization: any
+  setIsLoadingOrganization: any
+  createOrganizationF: any
+  newOrganization: any
+  templateId: any
+  selectTemplate: any
+  OrganizationsList: any
+  createOrganization: any
+  saveEvent: any
+}
+
 // Initial state
-const initialState = {
-  loading: false,
+const initialState: NewEventState = {
+  isLoading: false,
   organizations: [],
   selectOrganization: null,
   tab: 'list',
@@ -23,69 +119,81 @@ const initialState = {
   allow_register: true,
   visibility: 'PUBLIC',
   type: 0,
+  event_type: 'onlineEvent',
 }
+
+export const cNewEventContext = createContext<NewEventContextType>(
+  {} as NewEventContextType,
+)
+
 // Reducers
-function reducer(state, action) {
-  const organizationSelect = action.payload?.organization || null
-  const organizationIdURL = action.payload?.orgId || null
+function reducer(state: NewEventState, action: NewEventAction): NewEventState {
   let organizationSelected
+
   switch (action.type) {
-    case 'LOADING':
-      return { ...state, loading: true }
-    case 'COMPLETE':
-      return { ...state, loading: false }
-    case 'SELECT_ORGANIZATION':
+    case NewEventActionEnum.LOADING:
+      return { ...state, isLoading: true }
+    case NewEventActionEnum.COMPLETE:
+      return { ...state, isLoading: false }
+    case NewEventActionEnum.SELECT_ORGANIZATION:
+      const organizationSelect = action.payload?.organization || null
+      const organizationIdURL = action.payload?.orgId || null
       if (organizationIdURL)
         organizationSelected = state.organizations
-          ? state.organizations.filter((org) => org.id == organizationIdURL)[0]
+          ? state.organizations.filter((org: any) => org.id == organizationIdURL)[0]
           : state.organizations[0]
       else if (organizationSelect) organizationSelected = organizationSelect
       else organizationSelected = state.organizations[0]
 
       return { ...state, selectOrganization: organizationSelected }
-    case 'ORGANIZATIONS':
+    case NewEventActionEnum.ORGANIZATIONS:
       return { ...state, organizations: action.payload.organizationList }
-    case 'SELECT_TAB':
+    case NewEventActionEnum.SELECT_TAB:
       return { ...state, tab: action.payload.tab }
-    case 'VISIBLE_MODAL':
+    case NewEventActionEnum.VISIBLE_MODAL:
       return { ...state, visible: action.payload.visible, tab: 'list' }
-    case 'TYPE_EVENT':
-      switch (action.payload.type) {
-        case 0:
+    case NewEventActionEnum.EVENT_ACCESS:
+      switch (action.payload.accessType) {
+        case NewEventAccessTypeEnum.PUBLIC:
           return {
             ...state,
-            type: action.payload.type,
+            type: 0,
             allow_register: true,
             visibility: 'PUBLIC',
           }
-        case 1:
+        case NewEventAccessTypeEnum.ANONYMOUS:
           return {
             ...state,
-            type: action.payload.type,
+            type: 1,
             allow_register: false,
             visibility: 'PUBLIC',
           }
-        case 2:
+        case NewEventAccessTypeEnum.PRIVATE:
           return {
             ...state,
-            type: action.payload.type,
+            type: 2,
             allow_register: false,
             visibility: 'PRIVATE',
           }
       }
       break
-    case 'TYPE_AUTHENTICATION':
-      return { ...state, type: 0, allow_register: true, visibility: 'ANONYMOUS' }
+    case NewEventActionEnum.TYPE_AUTHENTICATION:
+      // return { ...state, type: 0, allow_register: true, visibility: 'ANONYMOUS' }
+      return { ...state, type: 0, allow_register: true, visibility: 'PRIVATE' }
+    case NewEventActionEnum.EVENT_TYPE:
+      // NOTE: Why TYPE_EVENT set the visibility?????????
+      console.log({ action })
+      return { ...state, event_type: action.payload?.event_type || 'onlineEvent' }
     default:
       throw new Error()
   }
 }
 
-export const NewEventProvider = ({ children }) => {
-  const [addDescription, setAddDescription] = useState(false)
+export const NewEventProvider = ({ children }: any) => {
+  const [addDescription, setAddDescription] = useState<string | null>(null)
   const [typeTransmission, setTypeTransmission] = useState(0)
   const [isModalVisible, setIsModalVisible] = useState(false)
-  const [selectedDay, setSelectedDay] = useState(new Date())
+  const [selectedDay, setSelectedDay] = useState<any>(new Date())
   const currentDate = new Date()
   const calculatedStartDate = new Date(
     new Date().setMinutes(currentDate.getMinutes() + 30),
@@ -95,33 +203,34 @@ export const NewEventProvider = ({ children }) => {
     from: calculatedStartDate,
     at: calculatedEndDate,
   })
-  const [dateEvent, setDateEvent] = useState()
-  const [selectedDateEvent, setSelectedDateEvent] = useState()
-  const [valueInputs, setValueInputs] = useState({})
-  const [errorInputs, setErrorInputs] = useState([])
-  const [imageEvents, setImageEvents] = useState({})
+  const [dateEvent, setDateEvent] = useState<any>()
+  const [selectedDateEvent, setSelectedDateEvent] = useState<any>()
+  const [valueInputs, setValueInputs] = useState<any>({})
+  const [errorInputs, setErrorInputs] = useState<any[]>([])
+  const [imageEvents, setImageEvents] = useState<any>({})
   const [optTransmitir, setOptTransmitir] = useState(false)
   const [organization, setOrganization] = useState(false)
-  const [selectOrganization, setSelectOrganization] = useState()
+  const [selectOrganization, setSelectOrganization] = useState<any>()
   const [isbyOrganization, setIsbyOrganization] = useState(false)
-  const [loadingOrganization, setLoadingOrganization] = useState(false)
+  const [isLoadingOrganization, setIsLoadingOrganization] = useState(false)
   const [createOrganizationF, setCreateOrganization] = useState(false)
-  const [templateId, setTemplateId] = useState()
+  const [templateId, setTemplateId] = useState<any>()
+
   const [state, dispatch] = useReducer(reducer, initialState)
 
   async function OrganizationsList() {
-    dispatch({ type: 'LOADING' })
+    dispatch({ type: NewEventActionEnum.LOADING })
     const organizations = await OrganizationApi.mine()
-    const organizationsFilter = organizations.filter((orgData) => orgData.id)
+    const organizationsFilter = organizations.filter((orgData: any) => orgData.id)
     dispatch({
-      type: 'ORGANIZATIONS',
+      type: NewEventActionEnum.ORGANIZATIONS,
       payload: { organizationList: organizationsFilter },
     })
-    dispatch({ type: 'COMPLETE' })
+    dispatch({ type: NewEventActionEnum.COMPLETE })
     return organizationsFilter
   }
 
-  const createOrganization = async (data) => {
+  const createOrganization = async (data: any) => {
     // Crear organizacion------------------------------
     const create = await OrganizationApi.createOrganization(data)
     if (create) {
@@ -133,37 +242,34 @@ export const NewEventProvider = ({ children }) => {
   const showModal = () => {
     setIsModalVisible(true)
   }
-  const visibilityDescription = (value) => {
-    setAddDescription(value)
+  const visibilityDescription = (value?: string) => {
+    setAddDescription(value || null)
     setValueInputs({ ...valueInputs, ['description']: '' })
   }
 
-  const saveImageEvent = (image, index) => {
+  const saveImageEvent = (image: any, index: number) => {
     setImageEvents({ ...imageEvents, [index]: image })
   }
 
-  const newOrganization = (value) => {
+  const newOrganization = (value: any) => {
     setCreateOrganization(value)
   }
 
-  const eventByOrganization = (value) => {
+  const eventByOrganization = (value: any) => {
     setIsbyOrganization(value)
   }
-  const isLoadingOrganization = (value) => {
-    setLoadingOrganization(value)
-  }
 
-  const changeSelectDay = (day) => {
+  const changeSelectDay = (day: any) => {
     setSelectedDay(day)
   }
-  const changeSelectHours = (hour) => {
+  const changeSelectHours = (hour: any) => {
     setSelectedHours(hour)
   }
 
-  const changetypeTransmision = (type) => {
+  const changetypeTransmision = (type: any) => {
     setTypeTransmission(type)
   }
-  const handleOk = (organization) => {
+  const handleOk = (organization: any) => {
     setIsModalVisible(false)
     setSelectedDateEvent({
       from:
@@ -181,21 +287,21 @@ export const NewEventProvider = ({ children }) => {
   const handleCancel = () => {
     setIsModalVisible(false)
   }
-  const changeTransmision = (value) => {
+  const changeTransmision = (value: boolean) => {
     setOptTransmitir(value)
   }
-  const changeOrganization = (value) => {
+  const changeOrganization = (value: boolean) => {
     setOrganization(value)
   }
 
-  const selectedOrganization = (value) => {
+  const selectedOrganization = (value: any) => {
     setSelectOrganization(value)
   }
 
-  const handleDayClick = (day) => {
+  const handleDayClick = (day: any) => {
     setSelectedDay(day)
   }
-  const handleInput = (event, name) => {
+  const handleInput = (event: any, name: string) => {
     const listerrors = errorInputs.filter((err) => err.name !== name)
     setValueInputs({ ...valueInputs, [name]: event.target.value })
     if (name == 'name') {
@@ -215,7 +321,7 @@ export const NewEventProvider = ({ children }) => {
     setErrorInputs(listerrors)
   }
 
-  const containsError = (field) => {
+  const containsError = (field: any) => {
     const errorField = errorInputs.filter((error) => error.name == field)
     if (errorField.length > 0 && errorField[0].value) {
       return true
@@ -223,8 +329,8 @@ export const NewEventProvider = ({ children }) => {
     return false
   }
 
-  const validateField = (validatorsInput) => {
-    const listerrors = []
+  const validateField = (validatorsInput: any[]) => {
+    const listerrors: any[] = []
 
     validatorsInput.map((validator) => {
       if (validator) {
@@ -243,7 +349,7 @@ export const NewEventProvider = ({ children }) => {
     }
     return false
   }
-  const onChangeCheck = (check) => {
+  const onChangeCheck = (check: any) => {
     setValueInputs({ ...valueInputs, ['temaDark']: check })
   }
   const selectTemplate = useCallback((idTemplate) => {
@@ -264,12 +370,12 @@ export const NewEventProvider = ({ children }) => {
     })
   }, [selectedDay, selectedHours])
   const saveEvent = async () => {
-    dispatch({ type: 'LOADING' })
+    dispatch({ type: NewEventActionEnum.LOADING })
     if (state.selectOrganization) {
       const data = {
         name: valueInputs.name,
         address: '',
-        type_event: 'onlineEvent',
+        type_event: state.event_type || 'onlineEvent',
         datetime_from: selectedDateEvent?.from + ':00',
         datetime_to: selectedDateEvent?.at + ':00',
         picture: null,
@@ -397,7 +503,7 @@ export const NewEventProvider = ({ children }) => {
               msj: 'Error al crear el curso',
               action: 'show',
             })
-            dispatch({ type: 'COMPLETE' })
+            dispatch({ type: NewEventActionEnum.COMPLETE })
           }
         } else {
           DispatchMessageService({
@@ -405,7 +511,7 @@ export const NewEventProvider = ({ children }) => {
             msj: 'Error al crear el curso',
             action: 'show',
           })
-          dispatch({ type: 'COMPLETE' })
+          dispatch({ type: NewEventActionEnum.COMPLETE })
         }
       } catch (error) {
         DispatchMessageService({
@@ -413,7 +519,7 @@ export const NewEventProvider = ({ children }) => {
           msj: 'Error al crear el curso catch',
           action: 'show',
         })
-        dispatch({ type: 'COMPLETE' })
+        dispatch({ type: NewEventActionEnum.COMPLETE })
       }
     } else {
       DispatchMessageService({
@@ -426,7 +532,9 @@ export const NewEventProvider = ({ children }) => {
 
   useEffect(() => {
     if (selectedDateEvent) {
-      setDateEvent(selectedDateEvent.from + '     -     ' + selectedDateEvent.at)
+      setDateEvent(
+        selectedDateEvent.from + '     -     ' + selectedDateEvent.at.toString(),
+      )
     }
   }, [selectedDateEvent])
   return (
@@ -463,8 +571,8 @@ export const NewEventProvider = ({ children }) => {
         selectedOrganization,
         eventByOrganization,
         isbyOrganization,
-        loadingOrganization,
         isLoadingOrganization,
+        setIsLoadingOrganization,
         createOrganizationF,
         newOrganization,
         templateId,

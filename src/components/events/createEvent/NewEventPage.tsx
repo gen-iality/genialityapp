@@ -18,6 +18,7 @@ import { cNewEventContext } from '@context/newEventContext'
 /** Components */
 import InitialNewEventFormSection from './newEvent/InitialNewEventFormSection'
 import EventAccessTypeSection from './newEvent/EventAccessTypeSection'
+import EventTypeSection from './newEvent/EventTypeSection'
 
 interface INewEventPageProps {
   match: any
@@ -33,6 +34,10 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [steps, setSteps] = useState([
     {
+      title: 'Tipo de evento',
+      icon: <ScheduleOutlined />,
+    },
+    {
       title: 'Información',
       icon: <ScheduleOutlined />,
     },
@@ -44,16 +49,13 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
 
   const eventNewContext: any = useContext(cNewEventContext)
 
-  const goNextPage = () => {
-    setCurrent((previous) => previous + 1)
-  }
-
-  const goPreviousPage = () => {
-    setCurrent((previous) => previous - 1)
-  }
+  const goNextPage = () => setCurrent((previous) => previous + 1)
+  const goPreviousPage = () => setCurrent((previous) => previous - 1)
 
   const obtainContent = (step: (typeof steps)[number]) => {
     switch (step.title) {
+      case 'Tipo de evento':
+        return <EventTypeSection />
       case 'Información':
         return (
           <InitialNewEventFormSection
@@ -69,6 +71,9 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
   const goNext = () => {
     switch (current) {
       case 0:
+        goNextPage()
+        break
+      case 1:
         if (
           eventNewContext.validateField([
             { name: 'name', required: true, length: 4 },
@@ -84,18 +89,18 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
           goNextPage()
         }
         break
-      case 1:
+      case 2:
         eventNewContext.changeTransmision(false)
         goNextPage()
         console.log(eventNewContext.valueInputs)
         break
-      case 2:
+      case 3:
         break
     }
   }
 
   const goPrevious = () => {
-    if (eventNewContext.optTransmitir && current == 2) {
+    if (eventNewContext.optTransmitir && current == 3) {
       eventNewContext.changeTransmision(false)
     } else {
       goPreviousPage()
@@ -178,7 +183,7 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
           {/* SE VALIDA CON window.history.length  PARA DETECTAR SI ES POSIBLE HACER EL BACK YA QUE AVECES SE ABRE UNA PESTAÑA NUEVA*/}
-          {!eventNewContext.state.loading && (
+          {!eventNewContext.state.isLoading && (
             <div className="button-container">
               {current <= 0 && (
                 <Button
@@ -218,7 +223,7 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
               )}
             </div>
           )}
-          {eventNewContext.state.loading && (
+          {eventNewContext.state.isLoading && (
             <Row justify="center">
               Espere.. <Spin />
             </Row>
