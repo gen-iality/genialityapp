@@ -9,13 +9,13 @@ import { AlertOutlined } from '@ant-design/icons'
 /** Helpers and utils */
 import { SpeakersApi, ToolsApi } from '@helpers/request'
 
-interface AdditionalEventInfoProp {
+interface AdditionalEventInfoProps {
   event: any
 }
 
 const { Text } = Typography
 
-const AdditionalEventInfo: FunctionComponent<AdditionalEventInfoProp> = (props) => {
+const AdditionalEventInfo: FunctionComponent<AdditionalEventInfoProps> = (props) => {
   const { event } = props
 
   const [isLoading, setIsLoading] = useState(true)
