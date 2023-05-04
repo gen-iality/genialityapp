@@ -552,6 +552,7 @@ class General extends Component {
       default_certification_last_hours: event.default_certification_last_hours,
       duration: event.duration,
       is_socialzone_opened: event.is_socialzone_opened,
+      event_tip: event.event_tip,
     }
 
     try {
@@ -1106,6 +1107,16 @@ class General extends Component {
                       selectOption={this.selectOrganizer}
                       options={organizers}
                       required
+                    />
+                  </Form.Item>
+
+                  <Form.Item label="Recomendaciones (opcional)">
+                    <Input
+                      autoFocus
+                      name="event_tip"
+                      placeholder="Recomendaciones"
+                      value={event.event_tip}
+                      onChange={(e) => this.handleChange(e, 'event_tip')}
                     />
                   </Form.Item>
 

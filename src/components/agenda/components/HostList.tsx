@@ -63,25 +63,21 @@ const HostList = () => {
         </>
       )}
 
-      <Card
-        style={{
-          borderRadius: '10px',
-          border: '2px solid #bae637',
-          margin: '0px 10px',
-          textAlign: 'center',
-        }}
-      >
-        <Space direction="vertical" align="center">
-          <AlertOutlined style={{ fontSize: '2rem' }} />
-          <Text style={{ fontSize: '1.5rem' }}>
-            {intl.formatMessage({
-              id: 'label.duration.message',
-              defaultMessage:
-                'Para obtener el certificado debes cursar el 80% del curso.',
-            })}
-          </Text>
-        </Space>
-      </Card>
+      {cEvent.value.event_tip && (
+        <Card
+          style={{
+            borderRadius: '10px',
+            border: '2px solid #bae637',
+            margin: '0px 10px',
+            textAlign: 'center',
+          }}
+        >
+          <Space direction="vertical" align="center">
+            <AlertOutlined style={{ fontSize: '2rem' }} />
+            <Text style={{ fontSize: '1.5rem' }}>{cEvent.value.event_tip}</Text>
+          </Space>
+        </Card>
+      )}
 
       {tools.length !== 0 && (
         <List
