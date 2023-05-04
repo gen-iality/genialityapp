@@ -75,11 +75,12 @@ class EventLanding extends Component {
   }
 
   render() {
-    const { cEvent } = this.props
+    const { cEvent, cEventUser, setActivitiesAttendee } = this.props
+
     return (
       <div /* style={{ marginBottom: 12 }} */>
         {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
-        {this.props.cEvent.value && (
+        {cEvent.value && (
           <>
             <StudentSelfCourseProgress
               hasProgressLabel
@@ -90,14 +91,14 @@ class EventLanding extends Component {
                 )
               }
               nodeIfCompleted={
-                <Link to={`/landing/${this.props.cEvent.value._id}/certificate`}>
+                <Link to={`/landing/${cEvent.value._id}/certificate`}>
                   <Typography.Text strong style={{ color: '#FFFFFF' }}>
                     Obtener certificado
                   </Typography.Text>
                 </Link>
               }
             />
-            {this.props.cEvent.value.is_examen_required ? (
+            {cEvent.value.is_examen_required ? (
               <StudentSelfCourseProgress
                 hasProgressLabel
                 customTitle="Avance de exámenes"
@@ -116,8 +117,8 @@ class EventLanding extends Component {
                 thereAreExam={(param) => {
                   this.setState({ thereAreQuizingOrSurveys: param })
                 }}
-                eventId={this.props.cEvent.value._id}
-                approvedLink={`/landing/${this.props.cEvent.value._id}/certificate`}
+                eventId={cEvent.value._id}
+                approvedLink={`/landing/${cEvent.value._id}/certificate`}
               />
             </Card>
           </>
@@ -129,9 +130,9 @@ class EventLanding extends Component {
             /* bodyStyle={{ padding: '25px 5px' }} */
             bordered={false}
             style={
-              this.props.cEvent.value.styles &&
-              this.props.cEvent.value.styles.show_card_banner &&
-              this.props.cEvent.value.styles.show_card_banner
+              cEvent.value.styles &&
+              cEvent.value.styles.show_card_banner &&
+              cEvent.value.styles.show_card_banner
                 ? { marginTop: '2%' }
                 : { marginTop: '0px' }
             }
@@ -144,43 +145,39 @@ class EventLanding extends Component {
               <Col sm={24} md={18} style={{ padding: '0 5px' }}>
                 <div className="activities-main-list">
                   <ActivitiesList
-                    eventId={this.props.cEvent.value?._id}
-                    cEventUserId={this.props.cEventUser.value?._id}
-                    setActivitiesAttendee={this.props.setActivitiesAttendee}
+                    eventId={cEvent.value?._id}
+                    cEventUserId={cEventUser.value?._id}
+                    setActivitiesAttendee={setActivitiesAttendee}
                   />
                 </div>
               </Col>
             </Row>
             {/* FIN Lanzandome un nuevo diseno Sept 2022 */}
             {/* Si event video existe */}
-            {this.props.cEvent.value?.video_position == 'true' &&
-              this.props.cEvent.value.video && (
-                <div className="mediaplayer">
-                  <ReactPlayer
-                    width="100%"
-                    height="100%"
-                    style={{
-                      aspectRatio: '16/9',
-                      objectFit: 'cover',
-                    }}
-                    url={this.props.cEvent.value.video}
-                    controls
-                  />
-                </div>
-              )}
+            {cEvent.value?.video_position == 'true' && cEvent.value.video && (
+              <div className="mediaplayer">
+                <ReactPlayer
+                  width="100%"
+                  height="100%"
+                  style={{
+                    aspectRatio: '16/9',
+                    objectFit: 'cover',
+                  }}
+                  url={cEvent.value.video}
+                  controls
+                />
+              </div>
+            )}
 
-            {this.props.cEvent.value.description !== '<p><br></p>' &&
-            this.props.cEvent.value.description !== null &&
-            this.props.cEvent.value.description !==
-              `<p class="ql-align-center"><br></p>` &&
-            this.props.cEvent.value.description !==
-              `<p class="ql-align-right"><br></p>` &&
-            this.props.cEvent.value.description !==
-              `<p class="ql-align-justify"><br></p>` ? (
+            {cEvent.value.description !== '<p><br></p>' &&
+            cEvent.value.description !== null &&
+            cEvent.value.description !== `<p class="ql-align-center"><br></p>` &&
+            cEvent.value.description !== `<p class="ql-align-right"><br></p>` &&
+            cEvent.value.description !== `<p class="ql-align-justify"><br></p>` ? (
               <Row justify="center">
                 <Col span={24} id="img-informative">
                   <ReactQuill
-                    value={this.props.cEvent.value.description}
+                    value={cEvent.value.description}
                     readOnly
                     className="hide-toolbar ql-toolbar"
                     theme="bubble"
@@ -190,9 +187,9 @@ class EventLanding extends Component {
             ) : (
               <></>
             )}
-            {(this.props.cEvent.value?.video_position == 'false' ||
-              this.props.cEvent.value.video_position == undefined) &&
-              this.props.cEvent.value.video && (
+            {(cEvent.value?.video_position == 'false' ||
+              cEvent.value.video_position == undefined) &&
+              cEvent.value.video && (
                 <div className="mediaplayer">
                   <ReactPlayer
                     width="100%"
@@ -201,7 +198,7 @@ class EventLanding extends Component {
                       aspectRatio: '16/9',
                       objectFit: 'cover',
                     }}
-                    url={this.props.cEvent.value.video}
+                    url={cEvent.value.video}
                     controls
                   />
                 </div>
