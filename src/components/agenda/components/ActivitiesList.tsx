@@ -74,7 +74,11 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   useEffect(() => {
     if (!eventId) return
     // if (!cEventUserId) return;
-    if (`/landing/${eventId}/evento` !== location.pathname) {
+    console.log(location.pathname)
+    if (
+      `/landing/${eventId}/evento` !== location.pathname &&
+      `/landing/${eventId}/agenda` !== location.pathname
+    ) {
       // This was added because the event context keeps the last event data
       // before the component notices that the pathname was changed. After the
       // event context sees that thhe pathname has changed and updates the
