@@ -1,5 +1,5 @@
 import { Row, Col } from 'antd'
-import EventLanding from './eventLanding'
+import EventLanding from './EventLanding'
 import { useEventContext } from '@context/eventContext'
 import { withRouter } from 'react-router-dom'
 import { useContext, useEffect } from 'react'
