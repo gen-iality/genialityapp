@@ -12,7 +12,6 @@ import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import ModalPermission from '../authentication/ModalPermission';
 import { RenderSectios } from '../events/Description/componets/renderSectios';
-import EviusFooter from '../events/Landing/EviusFooter';
 import InfoEvent from '../shared/infoEvent';
 import ActivityBlock from './block/activityBlock';
 import CountdownBlock from './block/countdownBlock';
@@ -24,12 +23,14 @@ import getEventsponsors from '../empresas/customHooks/useGetEventCompanies';
 import useScript from './hooks/useScript';
 import useInjectScript from './hooks/useInjectScript';
 import { scriptGoogleTagManagerAudi, scriptTeadesAudi, scriptTeadeBodyAudi } from './constants/constants';
-import { LG_EVENT_IDS } from '@/Utilities/constants';
+import { PropsPreLanding } from './types/Prelanding';
+import { Agenda, DataSource, Description, SectionDescription, Speaker, Sponsor } from './types';
+import { style } from './constants'
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
 
-const ViewPrelanding = ({ preview }) => {
-	const mobilePreview = preview ? preview : '';
+const ViewPrelanding = ({ preview } : PropsPreLanding) => {
+	const mobilePreview = preview ? preview : 'desktop';
 	const screens = useBreakpoint();
 
 	//CONTEXTOS
@@ -43,19 +44,18 @@ const ViewPrelanding = ({ preview }) => {
 	const history = useHistory();
 
 	//ESTADOS
-	const [loading, setLoading] = useState(false);
-	const [sections, setSections] = useState({});
+	const [sections, setSections] = useState<DataSource>();
 
 	// PERMITE VALIDAR SI EXISTE DESCRIPCION
-	const [description, setDescription] = useState([]);
+	const [description, setDescription] = useState<Description[]>([]);
 	//PERMITE VALIDAR SI EXISTE CONFERENCISTAS
-	const [speakers, setSpeakers] = useState([]);
+	const [speakers, setSpeakers] = useState<Speaker[]>([]);
 	//PERMITE VALIDAR SI EXISTEN ACTIVIDADES
-	const [agenda, setAgenda] = useState([]);
+	const [agenda, setAgenda] = useState<Agenda[]>([]);
 	//PERMITE VALIDAR SI EXISTEN SPONSORS
-	const [sponsors, setSponsors] = useState([]);
+	const [sponsors, setSponsors] = useState<Sponsor[]>([]);
 
-	// console.log('Event', cEventContext);
+
 	const cBanner = cEventContext.value?.styles?.banner_image;
 	const cFooter = cEventContext.value?.styles?.banner_footer;
 	const cContainerBgColor = cEventContext.value?.styles?.containerBgColor;
@@ -67,20 +67,9 @@ const ViewPrelanding = ({ preview }) => {
 	const idEvent = cEventContext.value?._id;
 	const shadow = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : '';
 
-	const isLGEvent = LG_EVENT_IDS.includes(idEvent);
 	//PERMITE INGRESAR A LA LANDING DEL EVENTO
 	useEffect(() => {
-		// if (isLGEvent) {
-		// 	if (cEventUser?.value?._id && history.location.pathname === `/${idEvent}`) {
-		// 		console.log({ history });
-		// 		console.log('Is LG EVENT & Event User registered... Executing redirect');
-		// 		// return history.push(`/landing/${cEventContext?.value?._id}`);
-		// 	} else {
-		// 		console.log('Is LG EVENT but Event User not exists... Stay here');
-		// 	}
-		// } else {
 		setIsPrelanding(true);
-		// window.sessionStorage.setItem('message', true);
 		if (!cEventContext.value) return;
 		//SE REMUEVE LA SESION EN EL EVENTO OBLIGANDO A UNIR AL USUARIO
 		if (window.sessionStorage.getItem('session') !== cEventContext.value?._id) {
@@ -94,12 +83,12 @@ const ViewPrelanding = ({ preview }) => {
 				history.replace(`/landing/${cEventContext?.value?._id}`);
 			}
 		}
-		// }
+		
 	}, [cEventContext, cUser, cEventUser]);
 
 	//! TEMPORAL VALIDATION TO GET INTO EVENT FOR LG EVENT
 	useEffect(() => {
-		if (!!cEventContext?.value?.redirect_landing) {
+		if (cEventContext?.value?.redirect_landing) {
 			if (cEventUser?.value?._id && history.location.pathname === `/${idEvent}`) {
 				window.sessionStorage.setItem('session', cEventContext.value?._id);
 				return history.push(`/landing/${cEventContext?.value?._id}`);
@@ -111,29 +100,11 @@ const ViewPrelanding = ({ preview }) => {
 	//! TEMPORAL VALIDATION TO GET INTO EVENT FOR LG EVENT
 
 	/**DYNAMIC STYLES */
-	// Estilos para el contenedor de bloques en desktop y mobile
-	const desktopBlockContainerStyle = {
-		paddingLeft: '160px',
-		paddingRight: '160px',
-		paddingTop: '40px',
-		paddingBottom: '40px',
-	};
-	const mobileBlockContainerStyle = {
-		paddingLeft: '10px',
-		paddingRight: '10px',
-		paddingTop: '40px',
-		paddingBottom: '40px',
-	};
 	// Estilos para el contenido del bloque en desktop y mobile
-	const desktopBlockContentStyle = {
+	const desktopBlockContentStyle : React.CSSProperties = {
 		padding: idEvent !== '6334782dc19fe2710a0b8753' ? '40px' : '0px',
 	};
-	const mobileBlockContentStyle = {
-		paddingLeft: '25px',
-		paddingRight: '25px',
-		paddingTop: '25px',
-		paddingBottom: '25px',
-	};
+
 
 	/// Script
 
@@ -142,44 +113,32 @@ const ViewPrelanding = ({ preview }) => {
 	useInjectScript(scriptTeadeBodyAudi, idEvent, true);
 	useScript('https://p.teads.tv/teads-fellow.js', idEvent);
 	// Funciones para el render
-	const obtenerOrder = name => {
+	const obtenerOrder = ( name: string ) => {
 		if (sections) {
-			return sections && sections?.main_landing_blocks?.filter(section => section.name == name)[0]?.index + 2;
+			return sections.main_landing_blocks?.filter(section => section.name == name)[0]?.index + 2;
 		} else {
 			return 2;
 		}
 	};
 
-	const visibleSection = name => {
-		if (sections) {
-			return sections &&
-				sections?.main_landing_blocks?.filter(section => section.name == name && section.status).length > 0
-				? true
-				: false;
-		} else {
-			return false;
-		}
+	const visibleSection = ( name: string ) => {
+		return sections && sections.main_landing_blocks?.filter(section => section.name == name && section.status).length > 0
 	};
 
 	const isVisibleCardSections = () => {
-		if (sections) {
-			return sections && sections?.main_landing_blocks?.filter(section => section.status).length > 1 ? true : false;
-		} else {
-			return false;
-		}
+		return sections && sections.main_landing_blocks?.filter(section => section.status).length > 1 
 	};
-
 	useEffect(() => {
 		if (!cEventContext.value) return;
-		setLoading(true);
+
 		obtainPreview();
 		async function obtainPreview() {
 			//OBTENENOS LAS SECCIONES DE PRELANDING
 			const previews = await EventsApi.getPreviews(cEventContext.value._id);
 			//SE ORDENAN LAS SECCIONES POR INDEX
 			const sections = previews?._id ? previews : SectionsPrelanding;
+            
 			setSections(sections);
-			setLoading(false);
 		}
 	}, [cEventContext]);
 	//OBTENER  DATA DEL EVENTO PARA VALIDACIONES
@@ -187,14 +146,16 @@ const ViewPrelanding = ({ preview }) => {
 		if (!cEventContext.value) return;
 		obtenerData();
 		async function obtenerData() {
-			const sectionsDescription = await EventsApi.getSectionsDescriptions(cEventContext?.value._id);
-			let speakers = await SpeakersApi.byEvent(cEventContext?.value._id);
+			const sectionsDescription : SectionDescription | undefined = await EventsApi.getSectionsDescriptions(cEventContext?.value._id);
+			let speakers : Speaker[] | undefined = await SpeakersApi.byEvent(cEventContext?.value._id);
 			const agenda = await AgendaApi.byEvent(cEventContext?.value._id);
-			const speakersFiltered = speakers.filter(speaker => speaker.published || speaker.published == 'undefined');
-			const agendaConfig = await obtenerConfigActivity(cEventContext.value?._id, agenda.data);
-			const agendaFiltered = agendaConfig.filter(
+			const speakersFiltered = speakers?.filter((speaker: any) => speaker.published || speaker.published == 'undefined');
+			const agendaConfig : Agenda[] | undefined = await obtenerConfigActivity(cEventContext.value?._id, agenda.data);
+			const agendaFiltered = agendaConfig?.filter(
 				agendaCfg => agendaCfg.isPublished || agendaCfg.isPublished == undefined
 			);
+          
+            
 			setDescription(sectionsDescription?.data || []);
 			setSpeakers(speakersFiltered || []);
 			setAgenda(agendaFiltered || []);
@@ -202,7 +163,7 @@ const ViewPrelanding = ({ preview }) => {
 	}, [cEventContext.value]);
 
 	useEffect(() => {
-		setSponsors(companies || []);
+		setSponsors(companies as Sponsor[] || []);
 	}, [companies]);
 
 	return (
@@ -224,8 +185,8 @@ const ViewPrelanding = ({ preview }) => {
 				{/**MODAL INSCRIPCION EN EL EVENTO*/}
 				<ModalPermission />
 				<Row
-					gutter={[0, idEvent !== '6334782dc19fe2710a0b8753' ? 16 : 0]}
-					style={screens.xs || mobilePreview === 'smartphone' ? mobileBlockContainerStyle : desktopBlockContainerStyle}>
+					gutter={[0, 16]}
+					style={screens.xs || mobilePreview === 'smartphone' ? style.mobileBlockContainerStyle : style.desktopBlockContainerStyle}>
 					<Col id='Franja de titulo' span={24}>
 						<Row>
 							<Col span={24}>
@@ -234,7 +195,7 @@ const ViewPrelanding = ({ preview }) => {
 						</Row>
 					</Col>
 					<Col id='Bloques del evento' span={24}>
-						<Row gutter={[0, idEvent !== '6334782dc19fe2710a0b8753' ? 16 : 0]} align='stretch' justify='center'>
+						<Row gutter={[0, 16]} align='stretch' justify='center'>
 							<Col span={24} order={1}>
 								{isVisibleCardSections()
 									? shadow && (
@@ -273,7 +234,7 @@ const ViewPrelanding = ({ preview }) => {
 											border: 'none',
 										}}>
 										<CountdownBlock />
-									</Card>
+									</Card> 
 								</Col>
 							)}
 							{visibleSection('Descripción') && description?.length > 0 && (
@@ -282,7 +243,7 @@ const ViewPrelanding = ({ preview }) => {
 										id='Descripción_block'
 										className='viewReactQuill'
 										bodyStyle={
-											screens.xs || mobilePreview === 'smartphone' ? mobileBlockContentStyle : desktopBlockContentStyle
+											screens.xs || mobilePreview === 'smartphone' ? style.mobileBlockContentStyle : desktopBlockContentStyle
 										}
 										style={{
 											boxShadow: shadow,
@@ -295,11 +256,12 @@ const ViewPrelanding = ({ preview }) => {
 								</Col>
 							)}
 							{visibleSection('Conferencistas') && speakers.length > 0 && (
-								<Col span={24} order={obtenerOrder('Conferencistas')}>
+								<Col  order={obtenerOrder('Conferencistas')}>
 									<Card
 										id='Conferencistas_block'
 										bodyStyle={{
 											height: '100%',
+											width: '100%',
 											padding: screens.xs || mobilePreview === 'smartphone' ? '10px' : '24px',
 										}}
 										style={{
@@ -310,7 +272,7 @@ const ViewPrelanding = ({ preview }) => {
 											backgroundColor: bgColor,
 											border: 'none',
 										}}>
-										<SpeakersBlock />
+									<SpeakersBlock />										
 									</Card>
 								</Col>
 							)}

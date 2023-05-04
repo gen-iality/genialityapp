@@ -1,18 +1,26 @@
 import { getConfiguration } from '@/components/agenda/services';
 import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
-
+import { History } from 'history';
+import { Agenda, DataSource, Description, LandingBlock, Speaker, Sponsor } from '../types';
 //OBTENER  DATA DEL EVENTO PARA VALIDACIONES
-export const obtenerData = async (cEvent) => {
+export const obtenerData = async (
+  cEvent: any
+): Promise<{
+  description: Description[];
+  speakers: Speaker[];
+  agenda: Agenda[];
+}> => {
   const sectionsDescription = await EventsApi.getSectionsDescriptions(cEvent?.value._id);
-  let speakers = await SpeakersApi.byEvent(cEvent?.value._id);
+  let speakers: Speaker[] = await SpeakersApi.byEvent(cEvent?.value._id);
   const agenda = await AgendaApi.byEvent(cEvent?.value._id);
-  const speakersFiltered = speakers.filter((speaker) => speaker.published || speaker.published == 'undefined');
-  const agendaConfig = await obtenerConfigActivity(cEvent.value._id, agenda.data);
-  const agendaConfigFilter = agendaConfig.filter(
+  const speakersFiltered = speakers.filter((speaker) => speaker.published || typeof speaker.published === 'undefined');
+  const agendaConfig: Agenda[] = await obtenerConfigActivity(cEvent.value._id, agenda.data);
+  const agendaConfigFilter = agendaConfig?.filter(
     (agendaCfg) => agendaCfg.isPublished || agendaCfg.isPublished == undefined
   );
+
   return {
-    description: sectionsDescription?.data || [],
+    description: (sectionsDescription?.data as Description[]) || [],
     speakers: speakersFiltered || [],
     agenda: agendaConfigFilter || [],
   };
@@ -20,8 +28,8 @@ export const obtenerData = async (cEvent) => {
 
 //OBTENER DATA ACTIVIDADES DE FIREBASE
 
-export const obtenerConfigActivity = async (event, agenda) => {
-  const listAgenda = [];
+export const obtenerConfigActivity = async (event: string, agenda: Agenda[]): Promise<Agenda[]> => {
+  const listAgenda: Agenda[] = [];
   if (agenda) {
     await Promise.all(
       agenda.map(async (activity) => {
@@ -30,12 +38,18 @@ export const obtenerConfigActivity = async (event, agenda) => {
         listAgenda.push(activityData);
       })
     );
-    return listAgenda;
   }
+  return listAgenda;
 };
 
 //VISIBILIDAD DE BOTON DE ALERTAS
-export const visibleAlert = (section, description, speakers, agenda, sponsors) => {
+export const visibleAlert = (
+  section: LandingBlock,
+  description: Description[],
+  speakers: Speaker[],
+  agenda: Agenda[],
+  sponsors: Sponsor[]
+) => {
   switch (section.name) {
     case 'Contador':
       return false;
@@ -59,7 +73,13 @@ export const visibleAlert = (section, description, speakers, agenda, sponsors) =
 };
 
 //SETTINGS SECTIONS
-export const settingsSection = (section, cEvent, history, setVisible, changeTab) => {
+export const settingsSection = (
+  section: LandingBlock,
+  cEvent: any,
+  history: History,
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>,
+  changeTab: (params: string) => void
+) => {
   switch (section?.name) {
     case 'Contador':
       setVisible(true);

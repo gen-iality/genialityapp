@@ -3,13 +3,14 @@ import { EventsApi } from '@/helpers/request';
 import { Button, DatePicker, Form, Input, message, Modal, Spin } from 'antd';
 import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
+import { ConfigCountdown } from './types';
 
-const ModalContador = ({ setVisible, visible }) => {
+const ModalContador = ({ setVisible, visible } : any) => {
   const cEvent = useContext(CurrentEventContext);
-  const [dateLimit, setDateLimit] = useState(moment());
+  const [dateLimit, setDateLimit] = useState(moment().format('YYYY/MM/DD HH:mm:ss'));
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-  const onFinish = async (values) => {
+  const onFinish = async (values: ConfigCountdown) => {
     setLoading(true);
     const data = {
       useCountdown: true,
@@ -39,7 +40,7 @@ const ModalContador = ({ setVisible, visible }) => {
             : moment(cEvent.value?.datetime_from, 'YYYY/MM/DD HH:mm:ss'),
           messageIn: event?.countdownMessage || '',
           messageFinish: event?.countdownFinalMessage || '',
-        };
+        };      
         setDateLimit(event?.dateLimit);
         form.setFieldsValue(initialValueEvent);
       }
@@ -53,13 +54,14 @@ const ModalContador = ({ setVisible, visible }) => {
       bodyStyle={{ paddingLeft: '40px', paddingTop: '30px', paddingRight: '40px', paddingBottom: '30px' }}>
       <Form form={form} onFinish={onFinish} layout='vertical'>
         <Form.Item rules={[{ required: true, message: 'Ingrese una fecha' }]} name='date' label='Fecha y hora'>
+        {/*@ts-ignore*/}
           <DatePicker
             allowClear={false}
             style={{ width: '100%' }}
             format='YYYY-MM-DD HH:mm:ss'
             defaultValue={moment()}
             onChange={(e, eString) => setDateLimit(eString)}
-            showTime={{ defaultValue: moment().format('HH:mm:ss') }}
+            showTime={{ defaultValue: moment() }}
           />
         </Form.Item>
         <Form.Item name='messageIn' label='Mensaje durante la cuenta'>

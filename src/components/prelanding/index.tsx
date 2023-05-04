@@ -1,19 +1,14 @@
 import {
-	Affix,
 	Avatar,
 	Badge,
 	Button,
 	Card,
 	Col,
-	Divider,
-	Drawer,
 	Form,
 	Input,
-	Menu,
 	message,
 	Modal,
 	Row,
-	Select,
 	Space,
 	Spin,
 	Switch,
@@ -36,7 +31,7 @@ import { useHistory } from 'react-router';
 import { obtenerData, settingsSection, visibleAlert } from './hooks/helperFunction';
 import DrawerPreviewLanding from './drawerPreviewLanding';
 import getEventsponsors from '../empresas/customHooks/useGetEventCompanies';
-import { Alias, DataSource, LandingBlock } from './types';
+import { Agenda, Alias, DataSource, Description, LandingBlock, Speaker, Sponsor } from './types';
 
 const DragHandle = SortableHandle(() => (
 	<DragIcon
@@ -59,16 +54,16 @@ interface PreLandingSectionsProps {
 const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) => {
 	const [dataSource, setDataSource] = useState<DataSource>({} as DataSource);
 	const [modal, setModal] = useState<boolean>(false);
-	const [loading, setLoading] = useState(false);
-	const [visible, setVisible] = useState(false);
-	const [description, setDescription] = useState([]);
-	const [speakers, setSpeakers] = useState([]);   
-	const [agenda, setAgenda] = useState<any[]>([]);
-	const [sponsors, setSponsors] = useState([]);
+	const [loading, setLoading] = useState<boolean>(false);
+	const [visible, setVisible] = useState<boolean>(false);
+	const [description, setDescription] = useState<Description[]>([]);
+	const [speakers, setSpeakers] = useState<Speaker[]>([]);   
+	const [agenda, setAgenda] = useState<Agenda[]>([]);
+	const [sponsors, setSponsors] = useState<Sponsor[]>([]);
 
 	const [drawerPreviewVisible, setDrawerPreviewVisible] = useState(false);
 
-	// console.log(dataSource);
+	
 
 	const cEvent = useContext(CurrentEventContext);
 	const history = useHistory();
@@ -82,10 +77,11 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 		async function obtainPreview() {
 			//OBTENENOS LAS SECCIONES DE PRELANDING
 			const previews = await EventsApi.getPreviews(cEvent.value._id);
-			// console.log('previews', previews);
+			
 			//SE ORDENAN LAS SECCIONES POR INDEX
 			const sections = previews?._id ? previews : SectionsPrelanding;
 			const { speakers, agenda, description } = await obtenerData(cEvent);
+
 			setDescription(description);
 			setSpeakers(speakers);
 			setAgenda(agenda);
@@ -109,7 +105,7 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 	}, [companies]);
 
 	//PERMITE ACTUALIZAR EL STATUS DE LAS SECCIONES
-	const updateItem = (item: any, val: any) => {
+	const updateItem = (item: LandingBlock, val: boolean) => {
 		setLoading(true);
 		item.status = val;
 		const newDataSource = dataSource?.main_landing_blocks?.map((data: any) => {
@@ -120,7 +116,7 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 		setLoading(false);
 	};
 
-	const validateBlockState = (block: any) => {
+	const validateBlockState = (block: LandingBlock) => {
 		if (block.status === true && !visibleAlert(block, description, speakers, agenda, sponsors)) {
 			return 'VISIBLE_BLOCK';
 		} else if (block.status === true && visibleAlert(block, description, speakers, agenda, sponsors)) {
@@ -130,7 +126,7 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 		}
 	};
 
-	const stateOrStateColor = (block: any, iWantColor?: any) => {
+	const stateOrStateColor = (block: LandingBlock, iWantColor?: any) => {
 		const state = validateBlockState(block);
 
 		switch (state) {
@@ -151,47 +147,44 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 
 	//PERMITE GUARDAR STATUS DE LAS SECCIONES EN BD
 	const saveSections = async () => {
-		if (dataSource) {
-			// return;
-			let saved = true;
-			let response = undefined;
-			const main_landing_blocks = dataSource.main_landing_blocks;
-
-			if (!dataSource?._id) {
-				try {
-					response = await EventsApi.addPreviews(cEvent.value._id, { main_landing_blocks });
-				} catch (error) {
-					saved = false;
-				}
-			} else {
-				try {
-					response = await EventsApi.updatePreviews(dataSource?._id, { main_landing_blocks });
-				} catch (error) {
-					saved = false;
-				}
-			}
-			if (response) setDataSource(response);
-			if (saved) message.success('Configuración guardada correctamente');
-			else message.error('Error al guardar la configuración'); 
-		} else {
-			message.error('Secciones no se pueden guardar');
-		}
-	};
+    if (dataSource) {
+      // return;
+      let saved = true;
+      let response = undefined;
+      const main_landing_blocks = dataSource.main_landing_blocks;
+      try {
+        if (!dataSource?._id) {
+          response = await EventsApi.addPreviews(cEvent.value._id, { main_landing_blocks });
+        } else {
+          response = await EventsApi.updatePreviews(dataSource?._id, { main_landing_blocks });
+        }
+      } catch (error) {
+        saved = false;
+      }
+      if (response) setDataSource(response);
+      if (saved) message.success('Configuración guardada correctamente');
+      else message.error('Error al guardar la configuración');
+    } else {
+      message.error('Secciones no se pueden guardar');
+    }
+  };
 
 	const saveAliases = (alias : Alias) => {
 		const { main_landing_blocks } = dataSource
-		const newBlocks = main_landing_blocks.map((block)=>({...block, label : alias[block.key]}))
+		const newBlocks = main_landing_blocks.map((block)=>({...block, label : alias[block.key]}))		
 		setDataSource({...dataSource, main_landing_blocks : newBlocks})
 		setModal(false)
 	}
 	//COLUMNAS PARA LAS SECCIONES DE PRELANDING
+	
 	const columns = [
 		{
 			title: '',
 			dataIndex: 'sort',
 			width: 50,
 			className: 'drag-visible',
-			render: () => <DragHandle />,
+			// @ts-ignore
+			render: () => <DragHandle />, 
 		},
 		{
 			title: <OrderedListOutlined />,
@@ -266,6 +259,7 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 	};
 
 	const DraggableContainer = (props: any) => (
+		// @ts-ignore
 		<SortableBody useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props} />
 	);
 
@@ -274,6 +268,7 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 		const index = dataSource?.main_landing_blocks?.findIndex(x => {
 			return x.index === restProps['data-row-key'];
 		});
+		// @ts-ignore
 		return <SortableItem index={index} {...restProps} />;
 	};
 
@@ -288,6 +283,7 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 			   <Form onFinish={saveAliases} layout='vertical'>
 				{dataSource.main_landing_blocks.map((block)=>(
 					<Form.Item
+					key={block.key}
 					label={block.name}
 					name={`${block.key}`}
 					initialValue={block.label || block.name}

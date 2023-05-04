@@ -1,43 +1,34 @@
 import { CurrentEventContext } from '@/context/eventContext';
 import { CalendarFilled, ClockCircleFilled } from '@ant-design/icons';
-import { Card, Col, Divider, Grid, Row, Space, Typography } from 'antd';
+import { Card, Col, Row, Space, Typography } from 'antd';
 import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
-import Countdown, { zeroPad } from 'react-countdown';
-
-const { useBreakpoint } = Grid;
+import Countdown, { CountdownRenderProps, zeroPad } from 'react-countdown';
 
 const CountdownBlock = () => {
-  const screens = useBreakpoint();
+
   const cEvent = useContext(CurrentEventContext);
-  const [dateLimitContador, setDateLimitContador] = useState(null);
-  const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
+  const [dateLimitContador, setDateLimitContador] = useState<string | null>(null);
   const textColor = cEvent.value?.styles?.textMenu;
   const date = cEvent.value?.datetime_from;
 
-  //Validacion temporal para el evento audi
-  const idEvent = cEvent.value?._id;
-  const shadowNumber = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 3px 2px rgba(0, 0, 0, 0.4)' : '';
-  const shadow = idEvent !== '6334782dc19fe2710a0b8753' ? '0px 0px 8px rgba(0, 0, 0, 0.25)' : '';
 
   useEffect(() => {
     if (!cEvent.value) return;
     //PERMITE FORMATEAR LA FECHA PARA PODER INICIALIZAR EL CONTADOR
-    const dateSplit = cEvent.value?.dateLimit
-      ? cEvent.value?.dateLimit.split(' ')
-      : cEvent.value?.datetime_from.split(' ');
+    const dateSplit = cEvent.value?.dateLimit? cEvent.value?.dateLimit.split(' ') : cEvent.value?.datetime_from.split(' ');
     const dateFormat = dateSplit.join('T');
     setDateLimitContador(dateFormat);
   }, [cEvent.value]);
 
-  const stylesSubtitle = {
+  const stylesSubtitle : React.CSSProperties = {
     fontSize: '12px',
     textTransform: 'uppercase',
     color: textColor,
     fontWeight: '500',
   };
 
-  const stylesContainerNumeric = {
+  const stylesContainerNumeric : React.CSSProperties  = {
     width: '120px',
     textAlign: 'center',
     backgroundColor: 'transparent',
@@ -49,14 +40,14 @@ const CountdownBlock = () => {
     borderStyle: 'solid',
     borderColor: textColor,
   };
-  const gridStyle = {
+  const gridStyle : React.CSSProperties = {
     width: '50%',
     padding: '2px',
     textAlign: 'center',
     border: 'none',
     boxShadow: 'none',
   };
-  const gridStyleLine = {
+  const gridStyleLine : React.CSSProperties = {
     width: '50%',
     padding: '2px',
     textAlign: 'center',
@@ -65,24 +56,22 @@ const CountdownBlock = () => {
     borderLeft: `1px solid ${textColor}`,
   };
 
-  const stylesNumbers = {
-    textShadow: shadowNumber,
+  const stylesNumbers : React.CSSProperties = {
+    textShadow: '',
     fontVariantNumeric: 'tabular-nums',
     color: textColor,
   };
 
-  const numberBlink = (days, hours, minutes, seconds, completed) => {
-    if (completed) {
-      return false;
-    } else {
-      if (days === 0 && hours === 0 && minutes === 0 && seconds <= 10) {
-        return true;
-      }
+  const numberBlink = (days: number, hours: number, minutes: number, seconds: number, completed: boolean): boolean => {
+    let state = false;
+   if ( !completed && days === 0 && hours === 0 && minutes === 0 && seconds <= 10) {
+      state = true;
     }
-    return false;
+
+    return state;
   };
 
-  const renderer = ({ days, hours, minutes, seconds, completed }) => {
+  const renderer = ({ days, hours, minutes, seconds, completed } : CountdownRenderProps ) => {
     if (completed) {
       // Render a completed state
       return (
@@ -160,7 +149,6 @@ const CountdownBlock = () => {
                 style={{
                   width: '350px',
                   borderRadius: '20px',
-                  boxShadow: shadow,
                   padding: '20px 0px',
                   backgroundColor: 'transparent',
                 }}>
@@ -183,7 +171,8 @@ const CountdownBlock = () => {
       );
     }
   };
-  return dateLimitContador ? <Countdown date={dateLimitContador.toString()} renderer={renderer} /> : null;
+  // @ts-ignore
+  return dateLimitContador ?(<Countdown date={dateLimitContador.toString()} renderer={renderer} />) : (<></>);
 };
 
 export default CountdownBlock;

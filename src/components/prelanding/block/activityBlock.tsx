@@ -3,32 +3,31 @@ import { firestore } from '@/helpers/firebase';
 import { AgendaApi } from '@/helpers/request';
 import { Avatar, Row, Space, Tag, Timeline, Typography, Grid } from 'antd';
 import { useContext, useEffect, useState } from 'react';
-import moment from 'moment';
 import FlagCheckeredIcon from '@2fd/ant-design-icons/lib/FlagCheckered';
 import { UserOutlined } from '@ant-design/icons';
+import { PropsPreLanding } from '../types/Prelanding';
+import { Agenda } from '../types';
 
 const { useBreakpoint } = Grid;
 
-const ActivityBlock = ({ preview }) => {
+const ActivityBlock = ({ preview } : PropsPreLanding) => {
   const mobilePreview = preview ? preview : '';
   const screens = useBreakpoint();
   const cEvent = useContext(CurrentEventContext);
-  const [activities, setActivities] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [activities, setActivities] = useState<Agenda[]>([]);
 
   const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
   const textColor = cEvent.value?.styles?.textMenu;
 
   useEffect(() => {
     if (!cEvent.value) return;
-    setLoading(true);
     obtenerActivity();
     async function obtenerActivity() {
-      const { data } = await AgendaApi.byEvent(cEvent.value._id);
-      const listActivity = [];
+      const { data }  = await AgendaApi.byEvent(cEvent.value._id);
+      const listActivity : Agenda[] = [];
       if (data) {
         await Promise.all(
-          data.map(async (activity) => {
+          data.map(async (activity : Agenda) => {
             const dataActivity = await firestore
               .collection('events')
               .doc(cEvent?.value?._id)
@@ -36,7 +35,7 @@ const ActivityBlock = ({ preview }) => {
               .doc(activity._id)
               .get();
             if (dataActivity.exists) {
-              let { habilitar_ingreso, isPublished, meeting_id, platform } = dataActivity.data();
+              let { habilitar_ingreso, isPublished, meeting_id, platform } : any= dataActivity.data();
               const activityComplete = { ...activity, habilitar_ingreso, isPublished, meeting_id, platform };
               listActivity.push(activityComplete);
             } else {
@@ -56,24 +55,19 @@ const ActivityBlock = ({ preview }) => {
           (activity) => activity.isPublished === true || activity.isPublished === undefined
         );
         //ORDENAR ACTIVIDADES
-        filterActivity = filterActivity.sort(
-          (a, b) => moment(a.datetime_start).toDate() - moment(b.datetime_start).toDate()
-        );
-
+         filterActivity = filterActivity.sort((a, b) => new Date(a.datetime_start).getTime() - new Date(b.datetime_start).getTime()
+         ); 
+          console.log('filterActivity',filterActivity);
+          
         setActivities(filterActivity);
-        setLoading(false);
       } else {
         setActivities([]);
-        setLoading(false);
       }
-      //console.log('DATA NEW==>', data);
     }
   }, [cEvent.value]);
 
-  /* console.log('activities', activities); */
 
-  const determineType = (type) => {
-    /* console.log('type', type); */
+  const determineType = (type : string) => {
     switch (type) {
       case 'url':
       case 'cargarvideo':
@@ -167,7 +161,7 @@ const ActivityBlock = ({ preview }) => {
                 <Avatar.Group maxCount={3} maxStyle={{ color: textColor, backgroundColor: bgColor }}>
                   {activity.hosts.length > 0 &&
                     activity.hosts.map((host) => (
-                      <Avatar size={'large'} icon={<UserOutlined />} src={host.image && host.image} />
+                      <Avatar size={'large'} icon={<UserOutlined />} src={host.image || ''} />
                     ))}
                 </Avatar.Group>
                 {activities.length < 2 && (

@@ -1,16 +1,13 @@
 import Loading from '@/components/profile/loading';
 import { CurrentEventContext } from '@/context/eventContext';
-import { CategoriesAgendaApi, SpeakersApi } from '@/helpers/request';
+import {  SpeakersApi } from '@/helpers/request';
 import { showImageOrDefaultImage } from '@/Utilities/imgUtils';
-import { CaretLeftFilled, CaretRightFilled, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Row, Space, Typography, Grid, Comment } from 'antd';
-import { set } from 'firebase/database';
+import { CaretLeftFilled, CaretRightFilled } from '@ant-design/icons';
+import {  Button, Col, Row, Space, Typography, Grid } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { speakerWithoutImage } from '../constants';
 
 const { useBreakpoint } = Grid;
-const { Meta } = Card;
-const { Paragraph, Text, Title } = Typography;
 
 const SpeakersBlock = () => {
   const screens = useBreakpoint();
@@ -31,7 +28,7 @@ const SpeakersBlock = () => {
       //Se hace la consulta a la api de speakers
       setLoading(true);
       let speakers = await SpeakersApi.byEvent(cEvent.value._id);
-      /* console.log('SPEAKERS ACA=>', speakers); */
+     
       //FILTRAMOS LOS SPEAKERS POR PUBLICADOS
       let filteredSpeakers = speakers.filter((speaker) => speaker.published);
       //ORDENAMOS LOS SPEAKERS
