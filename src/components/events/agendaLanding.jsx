@@ -49,7 +49,7 @@ const attendee_states = {
 
 const { setNotification } = notificationsActions
 
-class Agenda extends Component {
+class AgendaLanding extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -856,5 +856,5 @@ const mapDispatchToProps = {
   setTabs,
 }
 
-const AgendaWithContext = withContext(Agenda)
+const AgendaWithContext = withContext(AgendaLanding)
 export default connect(mapStateToProps, mapDispatchToProps)(AgendaWithContext)

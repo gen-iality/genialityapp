@@ -33,7 +33,7 @@ const SpeakersForm = loadable(() => import('../speakers'))
 const SurveyForm = loadable(() => import('../surveys'))
 const FaqsForm = loadable(() => import('../../faqsLanding'))
 const Partners = loadable(() => import('../Partners'))
-const Agenda = loadable(() => import('../agendaLanding'))
+const AgendaLanding = loadable(() => import('../agendaLanding'))
 const EventHome = loadable(() => import('../eventHome'))
 const Certificate = loadable(() => import('../certificate'))
 const WallForm = loadable(() => import('../../wall/index'))
@@ -349,7 +349,7 @@ const EventSectionRoutes = (props) => {
         </Route>
         <Route path={`${path}/agenda`}>
           <ThisRouteCanBeDisplayed>
-            <Agenda
+            <AgendaLanding
               key="agenda"
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
