@@ -256,12 +256,11 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 								</Col>
 							)}
 							{visibleSection('Conferencistas') && speakers.length > 0 && (
-								<Col  order={obtenerOrder('Conferencistas')}>
+								<Col  span={24} order={obtenerOrder('Conferencistas')}>
 									<Card
 										id='Conferencistas_block'
 										bodyStyle={{
 											height: '100%',
-											width: '100%',
 											padding: screens.xs || mobilePreview === 'smartphone' ? '10px' : '24px',
 										}}
 										style={{
@@ -272,7 +271,7 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 											backgroundColor: bgColor,
 											border: 'none',
 										}}>
-									<SpeakersBlock />										
+											<SpeakersBlock />										
 									</Card>
 								</Col>
 							)}
