@@ -1,6 +1,6 @@
 import { FunctionComponent, useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { withRouter } from 'react-router-dom'
+
 import { Card, Typography } from 'antd'
 import ReactQuill from 'react-quill'
 import ReactPlayer from 'react-player'
