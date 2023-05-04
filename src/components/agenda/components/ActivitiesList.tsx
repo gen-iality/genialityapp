@@ -47,7 +47,7 @@ type TruncatedAgenda = {
 
 interface ActivitiesListProps {
   eventId: string
-  cEventUserId?: string
+  eventUserId?: string
   agendaList?: ExtendedAgendaType[] // If parent has this, why have we to re-do?
   setActivitiesAttendee?: any
 }
@@ -55,7 +55,7 @@ interface ActivitiesListProps {
 const ActivitiesList = (props: ActivitiesListProps) => {
   const {
     eventId, // The event ID
-    cEventUserId, // The event user ID
+    eventUserId, // The event user ID
     setActivitiesAttendee,
   } = props
 
@@ -126,18 +126,18 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             ViewedStatusComponent: () => {
               const [isTaken, setIsTaken] = useState(false)
               useEffect(() => {
-                if (!cEventUserId) return
+                if (!eventUserId) return
                 ;(async () => {
                   const activity_attendee = await firestore
                     .collection(`${agenda._id}_event_attendees`)
-                    .doc(cEventUserId)
+                    .doc(eventUserId)
                     .get() //checkedin_at
                   if (activity_attendee && activity_attendee.exists) {
                     // If this activity existes, then it means the lesson was taken
                     setIsTaken(activity_attendee.data()?.checked_in)
                   }
                 })()
-              }, [cEventUserId])
+              }, [eventUserId])
               if (isTaken)
                 return (
                   <Badge
@@ -185,7 +185,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   setSurveyId(meetingId)
                 })()
               }, [isAnswersDeleted])
-              if (cEventUserId && surveyId) {
+              if (eventUserId && surveyId) {
                 return (
                   <QuizProgress
                     short
@@ -330,7 +330,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
       setIsLoading(false)
     })()
-  }, [eventId, cEventUserId, isActivitiesAttendeeDeleted])
+  }, [eventId, eventUserId, isActivitiesAttendeeDeleted])
 
   if (isLoading) return <Spin />
 
@@ -485,7 +485,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
       {currentEventUser.value?.rol.type === 'admin' ? (
         <DeleteActivitiesTakenButton
           eventId={eventId}
-          cEventUserId={cEventUserId}
+          cEventUserId={eventUserId}
           setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
           setActivitiesAttendee={setActivitiesAttendee}
         />

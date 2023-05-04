@@ -124,7 +124,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
               <div className="activities-main-list">
                 <ActivitiesList
                   eventId={event?._id}
-                  cEventUserId={eventUser?._id}
+                  eventUserId={eventUser?._id}
                   setActivitiesAttendee={setActivitiesAttendee}
                 />
               </div>
