@@ -283,6 +283,7 @@ const Headers = (props) => {
                 <Space>
                   {showButtons.buttonlogin ? (
                     <Button
+                      data-testid="btn-login"
                       icon={<LockOutlined />}
                       style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
                       size="large"
