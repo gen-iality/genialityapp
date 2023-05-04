@@ -123,7 +123,9 @@ function PositionedUsersPage(props: PositionedUsersPageProps) {
     Promise.all(
       allEventIds.map(async (eventId: string) => await EventsApi.getOne(eventId)),
     ).then((events: any[]) =>
-      setAllPositionEvents(events.filter((event) => event.is_certification)),
+      setAllPositionEvents(
+        events.filter((event) => event.type_event === 'certification'),
+      ),
     )
   }, [currentPosition])
 

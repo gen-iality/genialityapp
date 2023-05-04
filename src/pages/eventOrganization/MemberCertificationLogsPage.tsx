@@ -95,7 +95,7 @@ function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
     const events = await Promise.all(
       allEventIds.map(async (eventId: string) => await EventsApi.getOne(eventId)),
     )
-    setAllEvents(events.filter((event) => event.is_certification))
+    setAllEvents(events.filter((event) => event.type_event === 'certification'))
     setAllPositionEvents(
       events.map((event) => {
         const filteredCertification = certifications.find(
