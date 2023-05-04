@@ -9,13 +9,13 @@ import { AlertOutlined } from '@ant-design/icons'
 /** Helpers and utils */
 import { SpeakersApi, ToolsApi } from '@helpers/request'
 
-interface HostListProp {
+interface AdditionalEventInfoProp {
   event: any
 }
 
 const { Text } = Typography
 
-const HostList: FunctionComponent<HostListProp> = (props) => {
+const AdditionalEventInfo: FunctionComponent<AdditionalEventInfoProp> = (props) => {
   const { event } = props
 
   const [isLoading, setIsLoading] = useState(true)
@@ -125,4 +125,4 @@ const HostList: FunctionComponent<HostListProp> = (props) => {
     </>
   )
 }
-export default HostList
+export default AdditionalEventInfo

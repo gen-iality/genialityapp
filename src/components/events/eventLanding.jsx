@@ -9,7 +9,7 @@ import { AgendaApi } from '@helpers/request'
 import { parseUrl } from '@helpers/constants'
 import withContext from '@context/withContext'
 import ActivitiesList from '@components/agenda/components/ActivitiesList'
-import HostList from '@components/agenda/components/HostList'
+import AdditionalEventInfo from '@components/agenda/components/AdditionalEventInfo'
 import StudentSelfCourseProgress from '../StudentProgress/StudentSelfCourseProgress'
 import { activityContentValues } from '@context/activityType/constants/ui'
 import QuizApprovedStatus from '../quiz/QuizApprovedStatus'
@@ -140,7 +140,7 @@ class EventLanding extends Component {
             {/*Lanzandome un nuevo diseno Sept 2022 */}
             <Row gutter={32}>
               <Col sm={24} md={6} style={{ width: '100%', padding: '0 5px' }}>
-                {cEvent.value && <HostList event={cEvent.value} />}
+                {cEvent.value && <AdditionalEventInfo event={cEvent.value} />}
               </Col>
               <Col sm={24} md={18} style={{ padding: '0 5px' }}>
                 <div className="activities-main-list">
