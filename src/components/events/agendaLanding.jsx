@@ -328,18 +328,6 @@ class AgendaLanding extends Component {
     return list
   }
 
-  //Fn para manejar cuando se selecciona un dia, ejecuta el filtrado
-  selectDay = (day) => {
-    const filtered = this.filterByDay(day, this.state.data)
-    this.setState({ filtered, toShow: filtered, day })
-  }
-
-  //Funcion para ejecutar el filtro por espacio y mandar el espacio a filtrar
-  selectSpace(space) {
-    const filtered = this.filterBySpace(space, this.state.list)
-    this.setState({ filtered, toShow: filtered, space })
-  }
-
   //Se realiza funcion para filtrar mediante dropdown
   selectionSpace() {
     const space = document.getElementById('selectedSpace').value
@@ -389,9 +377,6 @@ class AgendaLanding extends Component {
       })
   }
 
-  //Fn para el resultado de la búsqueda
-  searchResult = (data) => this.setState({ toShow: !data ? [] : data })
-
   redirect = () => this.setState({ redirect: true })
 
   async selected() {}
@@ -418,12 +403,6 @@ class AgendaLanding extends Component {
     this.setState({ survey: survey })
   }
 
-  showDrawer = () => {
-    this.setState({
-      visible: true,
-    })
-  }
-
   handleOk = () => {
     this.setState({ visible: false })
   }
@@ -432,16 +411,6 @@ class AgendaLanding extends Component {
     this.setState({
       visible: false,
     })
-  }
-
-  capitalizeDate(val) {
-    val = val.format('MMMM DD').toUpperCase()
-    return val
-      .toLowerCase()
-      .trim()
-      .split(' ')
-      .map((v) => v[0].toUpperCase() + v.substr(1))
-      .join(' ')
   }
 
   async getAgendaUser() {
@@ -636,33 +605,6 @@ class AgendaLanding extends Component {
     })
     return renderList
   }
-  // Funcion que permite verificar si existen lecciones publicadas por dia
-  // Sirve para mostrar u ocultar fechas
-  getActivitiesByDayVisibility = (date) => {
-    const { toggleConference } = this.props
-    const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state
-
-    //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
-    const list =
-      date != null
-        ? data
-            .filter(
-              (a) =>
-                date &&
-                date.format &&
-                a.datetime_start &&
-                a.datetime_start.includes(date.format('YYYY-MM-DD')) &&
-                (a.isPublished || a.isPublished == undefined),
-            )
-            .sort(
-              (a, b) =>
-                Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
-                Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY'),
-            )
-        : data
-    return list
-  }
-
   //End modal methods
 
   render() {
