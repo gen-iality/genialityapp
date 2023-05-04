@@ -1,20 +1,26 @@
 import { getConfiguration } from '@/components/agenda/services';
 import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
 import { History } from 'history';
-import { Agenda, DataSource, Description, LandingBlock, Speaker, Sponsor } from '../types';
+import { Agenda, Description, EventContext, LandingBlock, Speaker, Sponsor } from '../types';
 //OBTENER  DATA DEL EVENTO PARA VALIDACIONES
 export const obtenerData = async (
-  cEvent: any
+  cEvent: EventContext
 ): Promise<{
   description: Description[];
   speakers: Speaker[];
   agenda: Agenda[];
 }> => {
+
   const sectionsDescription = await EventsApi.getSectionsDescriptions(cEvent?.value._id);
+  
   let speakers: Speaker[] = await SpeakersApi.byEvent(cEvent?.value._id);
+  
   const agenda = await AgendaApi.byEvent(cEvent?.value._id);
+  
   const speakersFiltered = speakers.filter((speaker) => speaker.published || typeof speaker.published === 'undefined');
+  
   const agendaConfig: Agenda[] = await obtenerConfigActivity(cEvent.value._id, agenda.data);
+  
   const agendaConfigFilter = agendaConfig?.filter(
     (agendaCfg) => agendaCfg.isPublished || agendaCfg.isPublished == undefined
   );
@@ -54,32 +60,25 @@ export const visibleAlert = (
     case 'Contador':
       return false;
     case 'Descripción':
-      if (description.length > 0 && section?.status) return false;
-      else if (!section?.status) return false;
-      else return true;
+      return (description.length > 0 && section?.status) ? false : section?.status
     case 'Conferencistas':
-      if (speakers.length > 0 && section?.status) return false;
-      else if (!section?.status) return false;
-      else return true;
+      return (speakers.length > 0 && section?.status) ? false : section?.status
     case 'Actividades':
-      if (agenda.length > 0 && section?.status) return false;
-      else if (!section?.status) return false;
-      else return true;
+      return (agenda.length > 0 && section?.status) ? false : section?.status
     case 'Patrocinadores':
-      if (sponsors.length > 0 && section?.status) return false;
-      else if (!section?.status) return false;
-      else return true;
+      return (sponsors.length > 0 && section?.status) ? false : section?.status
   }
 };
 
 //SETTINGS SECTIONS
 export const settingsSection = (
   section: LandingBlock,
-  cEvent: any,
+  cEvent: EventContext,
   history: History,
   setVisible: React.Dispatch<React.SetStateAction<boolean>>,
   changeTab: (params: string) => void
 ) => {
+  console.log('ceventxd',cEvent)
   switch (section?.name) {
     case 'Contador':
       setVisible(true);

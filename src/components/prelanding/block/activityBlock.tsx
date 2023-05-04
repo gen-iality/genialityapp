@@ -1,16 +1,15 @@
 import { CurrentEventContext } from '@/context/eventContext';
-import { firestore } from '@/helpers/firebase';
-import { AgendaApi } from '@/helpers/request';
 import { Avatar, Row, Space, Tag, Timeline, Typography, Grid } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import FlagCheckeredIcon from '@2fd/ant-design-icons/lib/FlagCheckered';
 import { UserOutlined } from '@ant-design/icons';
 import { PropsPreLanding } from '../types/Prelanding';
 import { Agenda } from '../types';
+import { obtenerActivity } from '../services';
 
 const { useBreakpoint } = Grid;
 
-const ActivityBlock = ({ preview } : PropsPreLanding) => {
+const ActivityBlock = ({ preview }: PropsPreLanding) => {
   const mobilePreview = preview ? preview : '';
   const screens = useBreakpoint();
   const cEvent = useContext(CurrentEventContext);
@@ -21,92 +20,24 @@ const ActivityBlock = ({ preview } : PropsPreLanding) => {
 
   useEffect(() => {
     if (!cEvent.value) return;
-    obtenerActivity();
-    async function obtenerActivity() {
-      const { data }  = await AgendaApi.byEvent(cEvent.value._id);
-      const listActivity : Agenda[] = [];
-      if (data) {
-        await Promise.all(
-          data.map(async (activity : Agenda) => {
-            const dataActivity = await firestore
-              .collection('events')
-              .doc(cEvent?.value?._id)
-              .collection('activities')
-              .doc(activity._id)
-              .get();
-            if (dataActivity.exists) {
-              let { habilitar_ingreso, isPublished, meeting_id, platform } : any= dataActivity.data();
-              const activityComplete = { ...activity, habilitar_ingreso, isPublished, meeting_id, platform };
-              listActivity.push(activityComplete);
-            } else {
-              let updatedActivityInfo = {
-                habilitar_ingreso: true,
-                isPublished: true,
-                meeting_id: null,
-                platform: null,
-              };
-              const activityComplete = { ...activity, updatedActivityInfo };
-              listActivity.push(activityComplete);
-            }
-          })
-        );
-        //MOSTRAR SOLO ACTIVIDADES PUBLICADAS
-        let filterActivity = listActivity?.filter(
-          (activity) => activity.isPublished === true || activity.isPublished === undefined
-        );
-        //ORDENAR ACTIVIDADES
-         filterActivity = filterActivity.sort((a, b) => new Date(a.datetime_start).getTime() - new Date(b.datetime_start).getTime()
-         ); 
-          console.log('filterActivity',filterActivity);
-          
-        setActivities(filterActivity);
-      } else {
-        setActivities([]);
-      }
-    }
+    obtenerActivity(cEvent?.value?._id, setActivities);
   }, [cEvent.value]);
 
-
-  const determineType = (type : string) => {
+  const determineType = (type: string) => {
     switch (type) {
       case 'url':
       case 'cargarvideo':
-        return (
-          <Tag
-            color={textColor}
-            style={{
-              userSelect: 'none',
-              color: bgColor,
-            }}>
-            Video
-          </Tag>
-        );
+        return 'Video'
+
       case 'eviusMeet':
       case 'vimeo':
       case 'youTube':
-        return (
-          <Tag
-            color={textColor}
-            style={{
-              userSelect: 'none',
-              color: bgColor,
-            }}>
-            Transmisión
-          </Tag>
-        );
+        return 'Transmisión'
+        
       case 'meeting':
-        return (
-          <Tag
-            color={textColor}
-            style={{
-              userSelect: 'none',
-              color: bgColor,
-            }}>
-            Reunión
-          </Tag>
-        );
+        return 'Reunión'
       default:
-        return <></>;
+        return '';
     }
   };
   return (
@@ -160,12 +91,21 @@ const ActivityBlock = ({ preview } : PropsPreLanding) => {
                 </Space>
                 <Avatar.Group maxCount={3} maxStyle={{ color: textColor, backgroundColor: bgColor }}>
                   {activity.hosts.length > 0 &&
-                    activity.hosts.map((host) => (
-                      <Avatar size={'large'} icon={<UserOutlined />} src={host.image || ''} />
+                    activity.hosts.map((host,index) => (
+                      <Avatar key={`key-${index}`} size={'large'} icon={<UserOutlined />} src={host.image || ''} />
                     ))}
                 </Avatar.Group>
                 {activities.length < 2 && (
-                  <span style={{ position: 'relative', float: 'right' }}>{determineType(activity?.type?.name)}</span>
+                  <span style={{ position: 'relative', float: 'right' }}>
+                    <Tag
+                      color={textColor}
+                      style={{
+                        userSelect: 'none',
+                        color: bgColor,
+                      }}>
+                      {determineType(activity?.type?.name)}
+                    </Tag>
+                  </span>
                 )}
               </Space>
             </Timeline.Item>

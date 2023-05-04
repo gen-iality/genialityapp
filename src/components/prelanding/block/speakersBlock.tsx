@@ -3,12 +3,12 @@ import { CurrentEventContext } from '@/context/eventContext';
 import {  SpeakersApi } from '@/helpers/request';
 import { showImageOrDefaultImage } from '@/Utilities/imgUtils';
 import { CaretLeftFilled, CaretRightFilled } from '@ant-design/icons';
-import {  Button, Col, Row, Space, Typography, Grid, Carousel, Image } from 'antd';
+import { Button, Col, Row, Space, Typography, Grid } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { speakerWithoutImage } from '../constants';
 import { Speaker } from '../types';
-
 const { useBreakpoint } = Grid;
+
 
 const SpeakersBlock = () => {
   const screens = useBreakpoint();
@@ -28,8 +28,8 @@ const SpeakersBlock = () => {
     async function obtenerSpeakers() {
       //Se hace la consulta a la api de speakers
       setLoading(true);
-      let speakers : Speaker[] = await SpeakersApi.byEvent(cEvent.value._id);
-     
+      let speakers: Speaker[] = await SpeakersApi.byEvent(cEvent.value._id);
+
       //FILTRAMOS LOS SPEAKERS POR PUBLICADOS
       let filteredSpeakers = speakers.filter((speaker) => speaker.published);
       //ORDENAMOS LOS SPEAKERS
@@ -41,27 +41,79 @@ const SpeakersBlock = () => {
   }, [cEvent.value]);
 
   const scrollPlus = () => {
-
+    let carrusel = document.getElementById('carrusel-speakers');
+    let scrollLeftPrevious = carrusel?.scrollLeft;
+    if(carrusel?.scrollLeft) carrusel.scrollLeft += 450;
+    setTimeout(() => {
+      if (carrusel?.scrollLeft === scrollLeftPrevious) {
+        setDisabledPlus(true);
+      }
+    }, 1000);
+    setDisabledMinus(false);
   };
 
   const scrollMinus = () => {
-
+    let carrusel = document.getElementById('carrusel-speakers');
+    if(carrusel?.scrollLeft) carrusel.scrollLeft -= 450;
+    if (carrusel?.scrollLeft && carrusel?.scrollLeft < 50) {
+      setDisabledMinus(true);
+    }
+    setDisabledPlus(false);
   };
+
   return (
-    speakersWithoutCategory.length > 0 && !loading ? (
-            <Carousel afterChange={()=>{}} autoplay  draggable style={{height : '450px', width: '900px'}}>
-              { speakersWithoutCategory.map((speaker, key) => (
+    <div style={{ height: '100%' }}>
+      <Row gutter={[8, 8]} style={{ height: '100%' }}>
+        <Col style={{ zIndex: '1' }} span={!disabledMinus ? 1 : 0}>
+          <Row align='middle' justify='center' style={{ height: '100%' }}>
+            <Space>
+              <Button
+                style={{ backgroundColor: textColor }}
+                shape='default'
+                disabled={disabledMinus || speakersWithoutCategory.length === 1}
+                size='large'
+                icon={<CaretLeftFilled style={{ color: bgColor }} />}
+                onClick={() => scrollMinus()}></Button>
+            </Space>
+          </Row>
+        </Col>
+
+        <Col span={!disabledMinus || !disabledPlus ? 22 : 23} style={{ height: '100%' }}>
+          <Row
+            id='carrusel-speakers'
+            onTouchMove={() => {
+              setDisabledPlus(false);
+              setDisabledMinus(false);
+            }}
+            style={{
+              borderRadius: '10px',
+              height: '100%',
+              display: 'flex',
+              flexWrap: 'nowrap',
+              gap: '1rem',
+              justifyContent: speakersWithoutCategory.length > 3 || screens.xs ? 'initial' : 'center',
+              scrollPaddingLeft: '2rem',
+              scrollPaddingRight: '2rem',
+              overflowX: `${screens.xs ? 'auto' : 'hidden'}`,
+              scrollSnapType: 'x mandatory',
+              touchAction: 'auto',
+              scrollBehavior: 'smooth',
+              overflowY: 'hidden',
+            }}>
+            {speakersWithoutCategory.length > 0 && !loading ? (
+              speakersWithoutCategory.map((speaker, key) => (
                 <div
                   key={key}
-                /*   style={{
+                  style={{
+                    height: '100%',
                     aspectRatio: '3/4',
                     borderRadius: '10px',
                     backgroundImage: `url(${showImageOrDefaultImage(speaker.image, speakerWithoutImage)})`,
-                    backgroundSize: '',
+                    backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     scrollSnapAlign: 'center',
                     backgroundPosition: 'center',
-                  }} */>
+                  }}>
                   <Row
                     justify='start'
                     align='bottom'
@@ -73,8 +125,7 @@ const SpeakersBlock = () => {
                       paddingRight: '15px',
                       paddingBottom: '30px',
                       background: `linear-gradient(180deg,rgb(0,0,0,0) 40%, rgb(0,0,0,0.9) 100%)`,
-                    }} >
-                      <Image width={250} src={showImageOrDefaultImage(speaker.image, speakerWithoutImage)}></Image>
+                    }}>
                     <Space size={0} direction='vertical'>
                       <Typography.Text
                         strong
@@ -97,11 +148,28 @@ const SpeakersBlock = () => {
                     </Space>
                   </Row>
                 </div>
-              )) }
-              </Carousel>
-              ) : (
+              ))
+            ) : (
               <Loading />
-            )
+            )}
+          </Row>
+        </Col>
+
+        <Col span={!disabledPlus ? 1 : 0}>
+          <Row align='middle' justify='center' style={{ height: '100%' }}>
+            <Space>
+              <Button
+                style={{ backgroundColor: textColor }}
+                shape='default'
+                disabled={disabledPlus || speakersWithoutCategory.length === 1}
+                size='large'
+                icon={<CaretRightFilled style={{ color: bgColor }} />}
+                onClick={() => scrollPlus()}></Button>
+            </Space>
+          </Row>
+        </Col>
+      </Row>
+    </div>
   );
 };
 

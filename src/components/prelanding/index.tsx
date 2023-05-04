@@ -31,7 +31,7 @@ import { useHistory } from 'react-router';
 import { obtenerData, settingsSection, visibleAlert } from './hooks/helperFunction';
 import DrawerPreviewLanding from './drawerPreviewLanding';
 import getEventsponsors from '../empresas/customHooks/useGetEventCompanies';
-import { Agenda, Alias, DataSource, Description, LandingBlock, Speaker, Sponsor } from './types';
+import { Agenda, Alias, DataSource, Description, EventContext, LandingBlock, Speaker, Sponsor } from './types';
 
 const DragHandle = SortableHandle(() => (
 	<DragIcon
@@ -65,7 +65,7 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 
 	
 
-	const cEvent = useContext(CurrentEventContext);
+	const cEvent : EventContext = useContext(CurrentEventContext);
 	const history = useHistory();
 	const pathForRedirection = `/eventadmin/${cEvent.value._id}`;
 	const [companies] = getEventsponsors(cEvent.value._id) as [[]];

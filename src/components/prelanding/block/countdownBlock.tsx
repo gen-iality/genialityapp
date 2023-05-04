@@ -4,7 +4,7 @@ import { Card, Col, Row, Space, Typography } from 'antd';
 import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
 import Countdown, { CountdownRenderProps, zeroPad } from 'react-countdown';
-
+import {style } from '../constants'
 const CountdownBlock = () => {
 
   const cEvent = useContext(CurrentEventContext);
@@ -21,46 +21,7 @@ const CountdownBlock = () => {
     setDateLimitContador(dateFormat);
   }, [cEvent.value]);
 
-  const stylesSubtitle : React.CSSProperties = {
-    fontSize: '12px',
-    textTransform: 'uppercase',
-    color: textColor,
-    fontWeight: '500',
-  };
 
-  const stylesContainerNumeric : React.CSSProperties  = {
-    width: '120px',
-    textAlign: 'center',
-    backgroundColor: 'transparent',
-    paddingLeft: '10px',
-    paddingRight: '10px',
-    borderRadius: '10px',
-    paddingBottom: '10px',
-    borderWidth: '4px',
-    borderStyle: 'solid',
-    borderColor: textColor,
-  };
-  const gridStyle : React.CSSProperties = {
-    width: '50%',
-    padding: '2px',
-    textAlign: 'center',
-    border: 'none',
-    boxShadow: 'none',
-  };
-  const gridStyleLine : React.CSSProperties = {
-    width: '50%',
-    padding: '2px',
-    textAlign: 'center',
-    border: 'none',
-    boxShadow: 'none',
-    borderLeft: `1px solid ${textColor}`,
-  };
-
-  const stylesNumbers : React.CSSProperties = {
-    textShadow: '',
-    fontVariantNumeric: 'tabular-nums',
-    color: textColor,
-  };
 
   const numberBlink = (days: number, hours: number, minutes: number, seconds: number, completed: boolean): boolean => {
     let state = false;
@@ -100,33 +61,33 @@ const CountdownBlock = () => {
             <Typography.Text strong style={{ fontSize: '38px' }}>
               <Row gutter={[16, 16]} justify='center' align='middle'>
                 <Col>
-                  <Space direction='vertical' size={0} style={stylesContainerNumeric}>
-                    <Typography.Text type='secondary' style={stylesSubtitle}>
+                  <Space direction='vertical' size={0} style={{...style.stylesContainerNumeric, borderColor: textColor,}}>
+                    <Typography.Text type='secondary' style={{...style.stylesSubtitle, color: textColor,}}>
                       Dias
                     </Typography.Text>
-                    <Typography.Text style={stylesNumbers}>{zeroPad(days)}</Typography.Text>
+                    <Typography.Text style={{...style.stylesNumbers, color: textColor,}}>{zeroPad(days)}</Typography.Text>
                   </Space>
                 </Col>
 
                 <Col>
-                  <Space direction='vertical' size={0} style={stylesContainerNumeric}>
-                    <Typography.Text type='secondary' style={stylesSubtitle}>
+                  <Space direction='vertical' size={0} style={{...style.stylesContainerNumeric, borderColor: textColor,}}>
+                    <Typography.Text type='secondary' style={{...style.stylesSubtitle, color: textColor,}}>
                       Horas
                     </Typography.Text>
-                    <Typography.Text style={stylesNumbers}>{zeroPad(hours)}</Typography.Text>
+                    <Typography.Text style={{...style.stylesNumbers, color: textColor,}}>{zeroPad(hours)}</Typography.Text>
                   </Space>
                 </Col>
                 <Col>
-                  <Space direction='vertical' size={0} style={stylesContainerNumeric}>
-                    <Typography.Text type='secondary' style={stylesSubtitle}>
+                  <Space direction='vertical' size={0} style={{...style.stylesContainerNumeric, borderColor: textColor,}}>
+                    <Typography.Text type='secondary' style={{...style.stylesSubtitle, color: textColor,}}>
                       Minutos
                     </Typography.Text>
-                    <Typography.Text style={stylesNumbers}>{zeroPad(minutes)}</Typography.Text>
+                    <Typography.Text style={{...style.stylesNumbers, color: textColor,}}>{zeroPad(minutes)}</Typography.Text>
                   </Space>
                 </Col>
                 <Col>
-                  <Space direction='vertical' size={0} style={stylesContainerNumeric}>
-                    <Typography.Text type='secondary' style={stylesSubtitle}>
+                  <Space direction='vertical' size={0} style={{...style.stylesContainerNumeric, borderColor: textColor,}}>
+                    <Typography.Text type='secondary' style={{...style.stylesSubtitle, color: textColor,}}>
                       Segundos
                     </Typography.Text>
                     <div
@@ -135,7 +96,7 @@ const CountdownBlock = () => {
                           ? 'animate__animated animate__flash animate__fast animate__infinite'
                           : ''
                       }>
-                      <Typography.Text style={stylesNumbers}>{zeroPad(seconds)}</Typography.Text>
+                      <Typography.Text style={{...style.stylesNumbers, color: textColor,}}>{zeroPad(seconds)}</Typography.Text>
                     </div>
                   </Space>
                 </Col>
@@ -152,13 +113,13 @@ const CountdownBlock = () => {
                   padding: '20px 0px',
                   backgroundColor: 'transparent',
                 }}>
-                <Card.Grid hoverable={false} style={gridStyle}>
+                <Card.Grid hoverable={false} style={style.gridStyle}>
                   <Space direction='vertical' style={{ color: textColor }}>
                     <CalendarFilled style={{ fontSize: '30px' }} />
                     {moment(date).format('ll')}
                   </Space>
                 </Card.Grid>
-                <Card.Grid hoverable={false} style={gridStyleLine}>
+                <Card.Grid hoverable={false} style={{...style.gridStyleLine,borderLeft: `1px solid ${textColor}`,}}>
                   <Space direction='vertical' style={{ color: textColor }}>
                     <ClockCircleFilled style={{ fontSize: '30px' }} />
                     {moment(date).format('LT')}
