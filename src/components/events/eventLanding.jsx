@@ -75,6 +75,7 @@ class EventLanding extends Component {
   }
 
   render() {
+    const { cEvent } = this.props
     return (
       <div /* style={{ marginBottom: 12 }} */>
         {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
@@ -138,7 +139,7 @@ class EventLanding extends Component {
             {/*Lanzandome un nuevo diseno Sept 2022 */}
             <Row gutter={32}>
               <Col sm={24} md={6} style={{ width: '100%', padding: '0 5px' }}>
-                <HostList />
+                {cEvent.value && <HostList event={cEvent.value} />}
               </Col>
               <Col sm={24} md={18} style={{ padding: '0 5px' }}>
                 <div className="activities-main-list">

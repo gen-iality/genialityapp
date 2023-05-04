@@ -1,5 +1,5 @@
 /** React's libraries */
-import { useEffect, useState } from 'react'
+import { useEffect, useState, FunctionComponent } from 'react'
 import { useIntl } from 'react-intl'
 
 /** Antd imports */
@@ -12,48 +12,42 @@ import { EventsApi, SpeakersApi, ToolsApi } from '@helpers/request'
 /** Context */
 import { useEventContext } from '@context/eventContext'
 
-const { Title, Text } = Typography
+interface HostListProp {
+  event: any
+}
 
-const HostList = () => {
-  const cEvent = useEventContext()
+const { Text } = Typography
+
+const HostList: FunctionComponent<HostListProp> = (props) => {
+  const { event } = props
   const intl = useIntl()
 
   const [speakers, setSpeakers] = useState<any[]>([])
   const [tools, setTools] = useState<any[]>([])
-  const [duration, setDuration] = useState<any[]>([])
 
   useEffect(() => {
     ;(async () => {
-      const speakersApi = await SpeakersApi.byEvent(cEvent.value._id)
+      const speakersApi = await SpeakersApi.byEvent(event._id)
       setSpeakers(speakersApi)
     })()
-  }, [cEvent.value])
 
-  useEffect(() => {
+    // Take the tool
     ;(async () => {
-      const toolsApi = await ToolsApi.byEvent(cEvent.value._id)
+      const toolsApi = await ToolsApi.byEvent(event._id)
       console.log('toolsApi', toolsApi)
       setTools(toolsApi)
     })()
-  }, [cEvent.value])
-
-  useEffect(() => {
-    ;(async () => {
-      const event = await EventsApi.getOne(cEvent.value._id)
-      console.log('event', event)
-      setDuration(event.duration)
-    })()
-  }, [cEvent.value])
+  }, [event])
 
   return (
     <>
-      {duration && (
+      {event.duration && (
         <>
           <Row style={{ marginBottom: '1rem' }}>
             <h3>DURACIÓN</h3>
             <Divider style={{ margin: '15px 0px' }} />
             <Text style={{ marginLeft: '1.5rem' }}>
-              {duration}{' '}
+              {event.duration}{' '}
               {intl.formatMessage({
                 id: 'label.duration.content',
                 defaultMessage: 'de contenido',
@@ -63,7 +57,7 @@ const HostList = () => {
         </>
       )}
 
-      {cEvent.value.event_tip && (
+      {event.event_tip && (
         <Card
           style={{
             borderRadius: '10px',
@@ -74,7 +68,7 @@ const HostList = () => {
         >
           <Space direction="vertical" align="center">
             <AlertOutlined style={{ fontSize: '2rem' }} />
-            <Text style={{ fontSize: '1.5rem' }}>{cEvent.value.event_tip}</Text>
+            <Text style={{ fontSize: '1.5rem' }}>{event.event_tip}</Text>
           </Space>
         </Card>
       )}
