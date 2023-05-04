@@ -30,7 +30,7 @@ import NewsSectionRoutes from '../news/newsRoute'
 import ProductSectionRoutes from '../products/productsRoute'
 import { withRouter } from 'react-router-dom'
 import withContext from '@context/withContext'
-import { Layout, Space, Row, Col, Button, Result } from 'antd'
+import { Layout, Space, Row, Col, Button, Result, Badge, Tag } from 'antd'
 import { AdminUsers } from '@components/AdminUsers/AdminUsers'
 import loadable from '@loadable/component'
 import NoMatchPage from '../notFoundPage/noMatchPage'
@@ -44,6 +44,7 @@ import {
 } from '@/services/featureBlocking/featureBlocking'
 import IsolatedRoutes from '../isolated/IsolatedRoutes'
 import TimeTrackingRoutes from '../time-tracking/TimeTrackingRoutes'
+import { FileProtectOutlined } from '@ant-design/icons'
 
 const { Sider, Content } = Layout
 
@@ -248,6 +249,14 @@ class Event extends Component {
               >
                 Ir al curso: {event.name}
               </Button>
+              {event.type_event === 'certification' && (
+                <>
+                  {' '}
+                  <Tag color="#61E62C" icon={<FileProtectOutlined />}>
+                    Certificación
+                  </Tag>
+                </>
+              )}
             </Col>
           </Row>
           <section className="section event-wrapper">
