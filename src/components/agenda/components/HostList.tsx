@@ -1,16 +1,13 @@
 /** React's libraries */
 import { useEffect, useState, FunctionComponent } from 'react'
-import { useIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 /** Antd imports */
 import { List, Avatar, Typography, Row, Divider, Card, Space } from 'antd'
 import { AlertOutlined } from '@ant-design/icons'
 
 /** Helpers and utils */
-import { EventsApi, SpeakersApi, ToolsApi } from '@helpers/request'
-
-/** Context */
-import { useEventContext } from '@context/eventContext'
+import { SpeakersApi, ToolsApi } from '@helpers/request'
 
 interface HostListProp {
   event: any
@@ -20,23 +17,24 @@ const { Text } = Typography
 
 const HostList: FunctionComponent<HostListProp> = (props) => {
   const { event } = props
-  const intl = useIntl()
 
+  const [isLoading, setIsLoading] = useState(true)
   const [speakers, setSpeakers] = useState<any[]>([])
   const [tools, setTools] = useState<any[]>([])
 
-  useEffect(() => {
-    ;(async () => {
-      const speakersApi = await SpeakersApi.byEvent(event._id)
-      setSpeakers(speakersApi)
-    })()
+  const loadData = async () => {
+    const speakersApi = await SpeakersApi.byEvent(event._id)
+    setSpeakers(speakersApi)
 
     // Take the tool
-    ;(async () => {
-      const toolsApi = await ToolsApi.byEvent(event._id)
-      console.log('toolsApi', toolsApi)
-      setTools(toolsApi)
-    })()
+    const toolsApi = await ToolsApi.byEvent(event._id)
+    console.log('toolsApi', toolsApi)
+    setTools(toolsApi)
+  }
+
+  useEffect(() => {
+    setIsLoading(true)
+    loadData().finally(() => setIsLoading(false))
   }, [event])
 
   return (
@@ -44,14 +42,16 @@ const HostList: FunctionComponent<HostListProp> = (props) => {
       {event.duration && (
         <>
           <Row style={{ marginBottom: '1rem' }}>
-            <h3>DURACIÓN</h3>
+            <h3>
+              <FormattedMessage id="label.duration" defaultMessage="Duración" />
+            </h3>
             <Divider style={{ margin: '15px 0px' }} />
             <Text style={{ marginLeft: '1.5rem' }}>
               {event.duration}{' '}
-              {intl.formatMessage({
-                id: 'label.duration.content',
-                defaultMessage: 'de contenido',
-              })}
+              <FormattedMessage
+                id="label.duration.content"
+                defaultMessage="de contenido"
+              />
             </Text>
           </Row>
         </>
@@ -73,11 +73,16 @@ const HostList: FunctionComponent<HostListProp> = (props) => {
         </Card>
       )}
 
-      {tools.length !== 0 && (
+      {tools.length > 0 && (
         <List
           size="small"
-          header={<h3>HERRAMIENTAS</h3>}
+          header={
+            <h3>
+              <FormattedMessage id="label.tools" defaultMessage="Herramientas" />
+            </h3>
+          }
           dataSource={tools}
+          loading={isLoading}
           renderItem={(item) => (
             <List.Item>
               {item.link ? (
@@ -94,8 +99,13 @@ const HostList: FunctionComponent<HostListProp> = (props) => {
 
       <List
         size="small"
-        header={<h3>COLABORADORES</h3>}
+        header={
+          <h3>
+            <FormattedMessage id="label.speakers" defaultMessage="Colaboradores" />
+          </h3>
+        }
         dataSource={speakers}
+        loading={isLoading}
         renderItem={(item: any) => (
           <List.Item className="shadow-box">
             <List.Item.Meta

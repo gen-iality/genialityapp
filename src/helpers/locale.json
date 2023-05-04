@@ -254,6 +254,8 @@
     "my_plan.news": "News",
     "my_plan.products": "Products",
     "label.posted.date": "Posted",
+    "label.speakers": "Speakers",
+    "label.duration": "Duration",
     "label.duration.content": "of content",
     "activity.button.next": "Next"
   },
@@ -519,6 +521,9 @@
     "my_plan.products": "Productos",
     "my_plan.videos": "Videos",
     "label.posted.date": "Publicado",
+    "label.tools": "Herramientas",
+    "label.speakers": "Conferencistas",
+    "label.duration": "Duración",
     "label.duration.content": "de contenido",
     "activity.button.next": "Siguiente"
   },
@@ -673,6 +678,8 @@
     "message.error.updated.tabs": "Ocorreu um erro ao atualizar as guias da zona social",
     "message.success.initialized.tabs": "Abas da área social inicializadas",
     "label.posted.date": "Postado",
+    "label.speakers": "Conferencistas",
+    "label.duration": "Duración",
     "label.duration.content": "de conteúdo",
     "activity.button.next": "Seguindo"
   }
