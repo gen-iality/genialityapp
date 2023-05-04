@@ -14,13 +14,13 @@ import { activityContentValues } from '@context/activityType/constants/ui'
 import QuizApprovedStatus from '../quiz/QuizApprovedStatus'
 
 interface EventLandingProps {
-  cEvent: any
-  cEventUser: any
+  event: any
+  eventUser: any
   setActivitiesAttendee: any
 }
 
 const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
-  const { cEvent, cEventUser, setActivitiesAttendee } = props
+  const { event, eventUser, setActivitiesAttendee } = props
 
   const [activityId, setActivityId] = useState<string | null>(null)
   const [activityDetail, setActivityDetail] = useState<any | null>(null)
@@ -28,23 +28,23 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
 
   const isVisible = useMemo(() => {
     if (
-      (cEvent.value.description !== '<p><br></p>' &&
-        cEvent.value.description !== null &&
-        cEvent.value.description !== `<p class="ql-align-center"><br></p>` &&
-        cEvent.value.description !== `<p class="ql-align-right"><br></p>` &&
-        cEvent.value.description !== `<p class="ql-align-justify"><br></p>`) ||
-      cEvent.value ||
-      ((cEvent.value.description === '<p><br></p>' ||
-        cEvent.value.description === null ||
-        cEvent.value.description === `<p class="ql-align-center"><br></p>` ||
-        cEvent.value.description === `<p class="ql-align-right"><br></p>` ||
-        cEvent.value.description === `<p class="ql-align-justify"><br></p>`) &&
-        cEvent.value.video)
+      (event.description !== '<p><br></p>' &&
+        event.description !== null &&
+        event.description !== `<p class="ql-align-center"><br></p>` &&
+        event.description !== `<p class="ql-align-right"><br></p>` &&
+        event.description !== `<p class="ql-align-justify"><br></p>`) ||
+      event ||
+      ((event.description === '<p><br></p>' ||
+        event.description === null ||
+        event.description === `<p class="ql-align-center"><br></p>` ||
+        event.description === `<p class="ql-align-right"><br></p>` ||
+        event.description === `<p class="ql-align-justify"><br></p>`) &&
+        event.video)
     ) {
       return true
     }
     return false
-  }, [cEvent])
+  }, [event])
 
   useEffect(() => {
     // Utilizada para concatenar parametros
@@ -52,7 +52,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
     const urlParams = parseUrl(currentUrl) as any
     // Si existe el activity_id por urlParams entonces seteamos el estado
     if (urlParams.activity_id) {
-      AgendaApi.getOne(urlParams.activity_id, cEvent.value._id).then((activity) => {
+      AgendaApi.getOne(urlParams.activity_id, event._id).then((activity) => {
         setActivityId(urlParams.activity_id)
         setActivityDetail(activity)
       })
@@ -62,7 +62,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
   return (
     <div /* style={{ marginBottom: 12 }} */>
       {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
-      {cEvent.value && (
+      {event && (
         <>
           <StudentSelfCourseProgress
             hasProgressLabel
@@ -73,14 +73,14 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
               )
             }
             nodeIfCompleted={
-              <Link to={`/landing/${cEvent.value._id}/certificate`}>
+              <Link to={`/landing/${event._id}/certificate`}>
                 <Typography.Text strong style={{ color: '#FFFFFF' }}>
                   Obtener certificado
                 </Typography.Text>
               </Link>
             }
           />
-          {cEvent.value.is_examen_required ? (
+          {event.is_examen_required ? (
             <StudentSelfCourseProgress
               hasProgressLabel
               customTitle="Avance de exámenes"
@@ -97,8 +97,8 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
               thereAreExam={(param) => {
                 setThereAreQuizingOrSurveys(param)
               }}
-              eventId={cEvent.value._id}
-              approvedLink={`/landing/${cEvent.value._id}/certificate`}
+              eventId={event._id}
+              approvedLink={`/landing/${event._id}/certificate`}
             />
           </Card>
         </>
@@ -110,9 +110,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
           /* bodyStyle={{ padding: '25px 5px' }} */
           bordered={false}
           style={
-            cEvent.value.styles &&
-            cEvent.value.styles.show_card_banner &&
-            cEvent.value.styles.show_card_banner
+            event.styles && event.styles.show_card_banner && event.styles.show_card_banner
               ? { marginTop: '2%' }
               : { marginTop: '0px' }
           }
@@ -120,13 +118,13 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
           {/*Lanzandome un nuevo diseno Sept 2022 */}
           <Row gutter={32}>
             <Col sm={24} md={6} style={{ width: '100%', padding: '0 5px' }}>
-              {cEvent.value && <AdditionalEventInfo event={cEvent.value} />}
+              {event && <AdditionalEventInfo event={event} />}
             </Col>
             <Col sm={24} md={18} style={{ padding: '0 5px' }}>
               <div className="activities-main-list">
                 <ActivitiesList
-                  eventId={cEvent.value?._id}
-                  cEventUserId={cEventUser.value?._id}
+                  eventId={event?._id}
+                  cEventUserId={eventUser?._id}
                   setActivitiesAttendee={setActivitiesAttendee}
                 />
               </div>
@@ -134,7 +132,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
           </Row>
           {/* FIN Lanzandome un nuevo diseno Sept 2022 */}
           {/* Si event video existe */}
-          {cEvent.value?.video_position == 'true' && cEvent.value.video && (
+          {event?.video_position == 'true' && event.video && (
             <div className="mediaplayer">
               <ReactPlayer
                 width="100%"
@@ -143,21 +141,21 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
                   aspectRatio: '16/9',
                   objectFit: 'cover',
                 }}
-                url={cEvent.value.video}
+                url={event.video}
                 controls
               />
             </div>
           )}
 
-          {cEvent.value.description !== '<p><br></p>' &&
-          cEvent.value.description !== null &&
-          cEvent.value.description !== `<p class="ql-align-center"><br></p>` &&
-          cEvent.value.description !== `<p class="ql-align-right"><br></p>` &&
-          cEvent.value.description !== `<p class="ql-align-justify"><br></p>` ? (
+          {event.description !== '<p><br></p>' &&
+          event.description !== null &&
+          event.description !== `<p class="ql-align-center"><br></p>` &&
+          event.description !== `<p class="ql-align-right"><br></p>` &&
+          event.description !== `<p class="ql-align-justify"><br></p>` ? (
             <Row justify="center">
               <Col span={24} id="img-informative">
                 <ReactQuill
-                  value={cEvent.value.description}
+                  value={event.description}
                   readOnly
                   className="hide-toolbar ql-toolbar"
                   theme="bubble"
@@ -167,9 +165,8 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
           ) : (
             <></>
           )}
-          {(cEvent.value?.video_position == 'false' ||
-            cEvent.value.video_position == undefined) &&
-            cEvent.value.video && (
+          {(event?.video_position == 'false' || event.video_position == undefined) &&
+            event.video && (
               <div className="mediaplayer">
                 <ReactPlayer
                   width="100%"
@@ -178,7 +175,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
                     aspectRatio: '16/9',
                     objectFit: 'cover',
                   }}
-                  url={cEvent.value.video}
+                  url={event.video}
                   controls
                 />
               </div>
