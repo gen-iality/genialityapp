@@ -537,17 +537,19 @@ class ListEventUser extends Component {
               </div>
             )}
 
-            <Row justify='center' align='middle'>
-              {this.state.loading ? (
+            <div>
+            {this.state.loading ? (
+              <Row justify='center' align='middle'>
                 <Col>
                   <Spin 
                     size='large'
                     tip={<Typography.Text strong>Cargando...</Typography.Text>}
                   />
                 </Col>
+              </Row>
               ) : (
                 <div className='container card-Sugeridos'>
-                  <Row justify='space-between' gutter={[10, 10]}>
+                  <Row /* justify='space-between' */ gutter={[10, 10]}>
                     {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                     {pageOfItems.map((users, userIndex) => (
                       <Col
@@ -759,7 +761,7 @@ class ListEventUser extends Component {
                   )}
                 </div>
               )}
-            </Row>
+            </div>
           </TabPane>
 
           <TabPane
