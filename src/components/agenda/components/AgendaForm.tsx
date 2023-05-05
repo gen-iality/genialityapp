@@ -387,12 +387,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
           If THERE IS problem with this component, comment `getValueProps` at
           the `Form.Item` component, and uncomment the next commented code, please
           */}
-          <EviusReactQuill
-          // handleChange={(description: string) => {
-          //   props.form.setFieldsValue({ description })
-          // }}
-          // data={props.form.getFieldValue('description') || ''}
-          />
+          <EviusReactQuill />
         </Form.Item>
         <Form.Item label="Imagen">
           <Card style={{ textAlign: 'center', borderRadius: '20px' }}>
