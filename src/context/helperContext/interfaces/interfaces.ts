@@ -21,11 +21,11 @@ export interface logoutUser {
   names: string
 }
 export interface logoutParams {
-  formatMessage: ({}) => {}
+  formatMessage: ({}) => void
   user: logoutUser
   handleChangeTypeModal: any
-  setuserEvent: ({}) => {}
-  setCurrentUser: ({}) => {}
+  setuserEvent: ({}) => void
+  setCurrentUser: ({}) => void
   history: any
 }
 
@@ -37,5 +37,5 @@ export interface logoutInterface {
 export interface remoteLogoutNotificationInterface {
   type: string
   names: string
-  formatMessage: ({}) => {}
+  formatMessage: ({}) => void
 }

@@ -33,7 +33,7 @@ export const featureBlockingStatusSave = (eventId: string, state: boolean) => {
       },
       { merge: true },
     )
-    .then(() => {})
+    .then()
     .catch((error) => {
       console.error('firebase error: ', error)
     })

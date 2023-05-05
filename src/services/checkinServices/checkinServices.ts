@@ -16,7 +16,7 @@ export const checkinByEventOrByActivity = (
 ) => {
   if (!activityId) return attendee
 
-  const usersInTheActivity: {}[] = []
+  const usersInTheActivity: any[] = []
 
   attendee?.activityProperties?.filter((userInActivity: { activity_id: string }) => {
     if (userInActivity?.activity_id === activityId) {

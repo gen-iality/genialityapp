@@ -15,7 +15,7 @@ import {
   Typography,
 } from 'antd'
 
-import { Select, Input, InputNumber } from 'antd'
+import { Select, Input } from 'antd'
 
 import * as React from 'react'
 import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react'
@@ -41,8 +41,6 @@ import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 import { hourWithAdditionalMinutes } from '../hooks/useHourWithAdditionalMinutes'
 import Speaker from '@components/speakers/speaker'
 import { Link, useHistory } from 'react-router-dom'
-
-const { TextArea } = Input
 
 export interface FormValues {
   name: string
@@ -191,7 +189,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
         <Form.Item
           label="Descripción corta (Opcional)"
           name="short_description"
-          getValueProps={(value) => ({
+          getValueProps={(value: any) => ({
             data: value || '',
             handleChange: (short_description: any) => {
               props.form.setFieldsValue({ short_description })

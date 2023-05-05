@@ -97,7 +97,7 @@ function checkValidServiceWorker(swUrl) {
         registerValidSW(swUrl)
       }
     })
-    .catch(() => {})
+    .catch((err) => console.error(err))
 }
 
 export function unregister() {
