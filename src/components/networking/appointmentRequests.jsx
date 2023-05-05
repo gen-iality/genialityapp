@@ -46,7 +46,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
  
   return (
     <>
-      {pendingAgendas.length > 0 && <Divider><Typography.Text strong>Solicitudes de citas recibidas</Typography.Text></Divider>}
+      {/* {pendingAgendas.length > 0 &&  */}<Divider><Typography.Text strong>Solicitudes de citas recibidas</Typography.Text></Divider>
       {loading && (
         <Row justify='center' align='middle'>
           <Col>
@@ -70,15 +70,14 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
             ))
           ) : (
             <Col >
-              <Result 
-                /* style={{padding: 0}} */
+              <Result
                 title={'¡No tienes solicitudes recibidas pendientes!'}
               />
             </Col>
           ))}
       </Row>
       
-      {pendingAgendasSent.length > 0 && <Divider><Typography.Text strong>Solicitudes de citas enviadas</Typography.Text></Divider>}
+      {/* {pendingAgendasSent.length > 0 &&  */}<Divider><Typography.Text strong>Solicitudes de citas enviadas</Typography.Text></Divider>
       {loading1 && (
         <Row justify='center' align='middle'>
           <Col>
@@ -106,7 +105,6 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
               ) : (
                 <Col >
                   <Result 
-                    /* style={{padding: 0}} */
                     title={'¡No tienes solicitudes pendientes enviadas!'}
                   />
                 </Col>
