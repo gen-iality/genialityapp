@@ -6,7 +6,7 @@ import DynamicFormItem from './DynamicFormItem'
 import useMandatoryRule from './hooks/useMandatoryRule'
 import { IDynamicFieldProps } from './types'
 
-interface IDynamicMultipleListTableFieldProps extends IDynamicFieldProps {}
+type IDynamicMultipleListTableFieldProps = IDynamicFieldProps
 
 const DynamicMultipleListTableField: React.FunctionComponent<
   IDynamicMultipleListTableFieldProps

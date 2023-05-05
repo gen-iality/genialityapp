@@ -14,7 +14,7 @@ import useMandatoryRule from './hooks/useMandatoryRule'
 /** Components */
 import DynamicFormItem from './DynamicFormItem'
 
-interface IDynamicTermsAndCondictionsFieldProps extends IDynamicFieldProps {}
+type IDynamicTermsAndCondictionsFieldProps = IDynamicFieldProps
 
 const DynamicTermsAndCondictionsField: React.FunctionComponent<
   IDynamicTermsAndCondictionsFieldProps

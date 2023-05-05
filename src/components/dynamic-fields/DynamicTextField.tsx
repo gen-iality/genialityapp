@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Input } from 'antd'
 import useMandatoryRule from './hooks/useMandatoryRule'
 
-export interface IDynamicTextFieldProps extends IDynamicFieldProps {}
+export type IDynamicTextFieldProps = IDynamicFieldProps
 
 /**
  * Accept text and password type for now.

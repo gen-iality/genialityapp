@@ -7,7 +7,7 @@ import { IDynamicFieldProps } from './types'
 import useMandatoryRule from './hooks/useMandatoryRule'
 import { FormattedMessage } from 'react-intl'
 
-interface IDynamicMultipleListFieldProps extends IDynamicFieldProps {}
+type IDynamicMultipleListFieldProps = IDynamicFieldProps
 
 const DynamicMultipleListField: React.FunctionComponent<
   IDynamicMultipleListFieldProps

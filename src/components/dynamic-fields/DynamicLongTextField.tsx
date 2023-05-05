@@ -4,7 +4,7 @@ import DynamicFormItem from './DynamicFormItem'
 import { IDynamicFieldProps } from './types'
 import useMandatoryRule from './hooks/useMandatoryRule'
 
-interface IDynamicLongTextFieldProps extends IDynamicFieldProps {}
+type IDynamicLongTextFieldProps = IDynamicFieldProps
 
 const DynamicLongTextField: React.FunctionComponent<IDynamicLongTextFieldProps> = (
   props,

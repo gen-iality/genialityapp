@@ -7,7 +7,7 @@ import DynamicFormItem from './DynamicFormItem'
 import useMandatoryRule from './hooks/useMandatoryRule'
 import { IDynamicFieldProps } from './types'
 
-interface IDynamicBooleanFieldProps extends IDynamicFieldProps {}
+type IDynamicBooleanFieldProps = IDynamicFieldProps
 
 const DynamicBooleanField: React.FunctionComponent<IDynamicBooleanFieldProps> = (
   props,
