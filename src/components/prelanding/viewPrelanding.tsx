@@ -24,7 +24,7 @@ import useScript from './hooks/useScript';
 import useInjectScript from './hooks/useInjectScript';
 import { scriptGoogleTagManagerAudi, scriptTeadesAudi, scriptTeadeBodyAudi } from './constants/constants';
 import { PropsPreLanding } from './types/Prelanding';
-import { Agenda, DataSource, Description, SectionDescription, Speaker, Sponsor } from './types';
+import { Agenda, ApiGeneric, DataSource, Description, Speaker, Sponsor } from './types';
 import { style } from './constants'
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -146,9 +146,9 @@ const ViewPrelanding = ({ preview } : PropsPreLanding) => {
 		if (!cEventContext.value) return;
 		obtenerData();
 		async function obtenerData() {
-			const sectionsDescription : SectionDescription | undefined = await EventsApi.getSectionsDescriptions(cEventContext?.value._id);
+			const sectionsDescription : ApiGeneric<Description> | undefined = await EventsApi.getSectionsDescriptions(cEventContext?.value._id);
 			let speakers : Speaker[] | undefined = await SpeakersApi.byEvent(cEventContext?.value._id);
-			const agenda = await AgendaApi.byEvent(cEventContext?.value._id);
+			const agenda : ApiGeneric<Agenda> = await AgendaApi.byEvent(cEventContext?.value._id);
 			const speakersFiltered = speakers?.filter((speaker: any) => speaker.published || speaker.published == 'undefined');
 			const agendaConfig : Agenda[] | undefined = await obtenerConfigActivity(cEventContext.value?._id, agenda.data);
 			const agendaFiltered = agendaConfig?.filter(

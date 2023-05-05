@@ -46,8 +46,8 @@ export interface Speaker {
 	created_at:           string;
 }
 
-export interface SectionDescription {
-	data:  Description[];
+export interface ApiGeneric<T> {
+	data:  T[];
 	links: Links;
 	meta:  Meta;
 }

@@ -1,7 +1,7 @@
 import { getConfiguration } from '@/components/agenda/services';
 import { AgendaApi, EventsApi, SpeakersApi } from '@/helpers/request';
 import { History } from 'history';
-import { Agenda, Description, EventContext, LandingBlock, Speaker, Sponsor } from '../types';
+import { Agenda, ApiGeneric, Description, EventContext, LandingBlock, Speaker, Sponsor } from '../types';
 //OBTENER  DATA DEL EVENTO PARA VALIDACIONES
 export const obtenerData = async (
   cEvent: EventContext
@@ -11,12 +11,12 @@ export const obtenerData = async (
   agenda: Agenda[];
 }> => {
 
-  const sectionsDescription = await EventsApi.getSectionsDescriptions(cEvent?.value._id);
+  const sectionsDescription : ApiGeneric<Description> = await EventsApi.getSectionsDescriptions(cEvent?.value._id);
   
   let speakers: Speaker[] = await SpeakersApi.byEvent(cEvent?.value._id);
   
-  const agenda = await AgendaApi.byEvent(cEvent?.value._id);
-  
+  const agenda : ApiGeneric<Agenda> = await AgendaApi.byEvent(cEvent?.value._id);
+
   const speakersFiltered = speakers.filter((speaker) => speaker.published || typeof speaker.published === 'undefined');
   
   const agendaConfig: Agenda[] = await obtenerConfigActivity(cEvent.value._id, agenda.data);
@@ -26,7 +26,7 @@ export const obtenerData = async (
   );
 
   return {
-    description: (sectionsDescription?.data as Description[]) || [],
+    description: sectionsDescription?.data || [],
     speakers: speakersFiltered || [],
     agenda: agendaConfigFilter || [],
   };

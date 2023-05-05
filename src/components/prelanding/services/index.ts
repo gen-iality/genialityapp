@@ -1,13 +1,13 @@
 import { AgendaApi } from "@/helpers/request";
-import { Agenda, EventContext } from "../types";
+import { Agenda, ApiGeneric } from "../types";
 import { firestore } from "@/helpers/firebase";
 
 export const obtenerActivity = async (eventId : string,setActivities : React.Dispatch<React.SetStateAction<Agenda[]>>) => {
-    const { data }  = await AgendaApi.byEvent(eventId);
+    const { data } : ApiGeneric<Agenda>  = await AgendaApi.byEvent(eventId);
     const listActivity : Agenda[] = [];
     if (data) {
       await Promise.all(
-        data.map(async (activity : Agenda) => {
+        data.map(async (activity) => {
           const dataActivity = await firestore
             .collection('events')
             .doc(eventId)
