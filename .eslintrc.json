@@ -28,7 +28,10 @@
     "no-undef": "error",
     "prefer-const": "error",
     "no-var": "error",
-    "jsx-closing-bracket-newline": ["error", { "multiline": "always" }],
+    "react/jsx-closing-bracket-location": ["error", "tag-aligned"],
+    "@typescript-eslint/no-extra-semi": "off",
+    "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "cypress/no-unnecessary-waiting": "off"
   }
 }
