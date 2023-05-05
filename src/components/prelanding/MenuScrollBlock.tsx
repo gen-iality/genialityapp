@@ -3,10 +3,12 @@ import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import { Button, Collapse, Grid, List, Space, Typography } from 'antd';
 import { useContext } from 'react';
 import ScrollIntoView from 'react-scroll-into-view';
+import { PropsMenuScrollbar } from './types/Prelanding';
+import { LandingBlock } from './types';
 
 const { useBreakpoint } = Grid;
 
-const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades, vpatrocinadores }) => {
+const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades, vpatrocinadores } : PropsMenuScrollbar) => {
   //CONTEXTO
   const cEvent = useContext(CurrentEventContext);
   const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
@@ -14,28 +16,33 @@ const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades, vpat
 
   const screens = useBreakpoint();
   //PERMITE CONTROLAR SI LA SECCION TIENE CONTENIDO O NO
-  const visibleSeccion = (name) => {
-    if (name == 'Descripción' && vdescription.length > 0) {
-      return true;
+  const visibleSeccion = (name : string ) => {
+    switch (name) {
+      case 'Descripción':
+        return vdescription.length > 0
+
+      case 'Conferencistas':
+        return vspeakers.length > 0
+
+      case 'Contador':
+        return true
+
+      case 'Actividades':
+        return vactividades.length > 0
+
+      case 'Patrocinadores':
+        return vpatrocinadores.length > 0
+
+      default:
+        return false
+
     }
-    if (name == 'Conferencistas' && vspeakers.length > 0) {
-      return true;
-    }
-    if (name == 'Contador') {
-      return true;
-    }
-    if (name == 'Actividades' && vactividades.length > 0) {
-      return true;
-    }
-    if (name == 'Patrocinadores' && vpatrocinadores.length > 0) {
-      return true;
-    }
-    return false;
   };
 
-  const createLabel = (section) => {
+  const createLabel = (section : LandingBlock) => {
     return section.label || section.name
    };
+   
   return screens.xs ? (
     <Collapse
       className='menu__prelanding'

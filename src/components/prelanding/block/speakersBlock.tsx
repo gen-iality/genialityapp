@@ -1,21 +1,19 @@
 import Loading from '@/components/profile/loading';
 import { CurrentEventContext } from '@/context/eventContext';
-import { CategoriesAgendaApi, SpeakersApi } from '@/helpers/request';
+import {  SpeakersApi } from '@/helpers/request';
 import { showImageOrDefaultImage } from '@/Utilities/imgUtils';
-import { CaretLeftFilled, CaretRightFilled, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Row, Space, Typography, Grid, Comment } from 'antd';
-import { set } from 'firebase/database';
+import { CaretLeftFilled, CaretRightFilled } from '@ant-design/icons';
+import { Button, Col, Row, Space, Typography, Grid } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { speakerWithoutImage } from '../constants';
-
+import { Speaker } from '../types';
 const { useBreakpoint } = Grid;
-const { Meta } = Card;
-const { Paragraph, Text, Title } = Typography;
+
 
 const SpeakersBlock = () => {
   const screens = useBreakpoint();
   const cEvent = useContext(CurrentEventContext);
-  const [speakersWithoutCategory, setSpeakersWithoutCategory] = useState([]);
+  const [speakersWithoutCategory, setSpeakersWithoutCategory] = useState<Speaker[]>([]);
   const [loading, setLoading] = useState(false);
   const [disabledPlus, setDisabledPlus] = useState(false);
   const [disabledMinus, setDisabledMinus] = useState(false);
@@ -30,8 +28,8 @@ const SpeakersBlock = () => {
     async function obtenerSpeakers() {
       //Se hace la consulta a la api de speakers
       setLoading(true);
-      let speakers = await SpeakersApi.byEvent(cEvent.value._id);
-      /* console.log('SPEAKERS ACA=>', speakers); */
+      let speakers: Speaker[] = await SpeakersApi.byEvent(cEvent.value._id);
+
       //FILTRAMOS LOS SPEAKERS POR PUBLICADOS
       let filteredSpeakers = speakers.filter((speaker) => speaker.published);
       //ORDENAMOS LOS SPEAKERS
@@ -44,10 +42,10 @@ const SpeakersBlock = () => {
 
   const scrollPlus = () => {
     let carrusel = document.getElementById('carrusel-speakers');
-    let scrollLeftPrevious = carrusel.scrollLeft;
-    carrusel.scrollLeft += 450;
+    let scrollLeftPrevious = carrusel?.scrollLeft;
+    if(carrusel?.scrollLeft) carrusel.scrollLeft += 450;
     setTimeout(() => {
-      if (carrusel.scrollLeft === scrollLeftPrevious) {
+      if (carrusel?.scrollLeft === scrollLeftPrevious) {
         setDisabledPlus(true);
       }
     }, 1000);
@@ -56,12 +54,13 @@ const SpeakersBlock = () => {
 
   const scrollMinus = () => {
     let carrusel = document.getElementById('carrusel-speakers');
-    carrusel.scrollLeft -= 450;
-    if (carrusel.scrollLeft < 50) {
+    if(carrusel?.scrollLeft) carrusel.scrollLeft -= 450;
+    if (carrusel?.scrollLeft && carrusel?.scrollLeft < 50) {
       setDisabledMinus(true);
     }
     setDisabledPlus(false);
   };
+
   return (
     <div style={{ height: '100%' }}>
       <Row gutter={[8, 8]} style={{ height: '100%' }}>
@@ -82,7 +81,7 @@ const SpeakersBlock = () => {
         <Col span={!disabledMinus || !disabledPlus ? 22 : 23} style={{ height: '100%' }}>
           <Row
             id='carrusel-speakers'
-            onTouchMove={(e) => {
+            onTouchMove={() => {
               setDisabledPlus(false);
               setDisabledMinus(false);
             }}

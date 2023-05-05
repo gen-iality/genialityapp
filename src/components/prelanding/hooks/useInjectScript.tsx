@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 
-const useInjectScript = (scriptText, id, isBody) => {
+const useInjectScript = (scriptText: string, id : string, isBody : boolean) => {
   useEffect(() => {
     const eventId = '6334782dc19fe2710a0b8753';
     if (eventId !== id) return;
     const script = document.createElement('script');
     script.innerHTML = scriptText;
-    if (isBody === true) {
+    if (isBody) {
       document.body.appendChild(script);
     } else {
       document.head.appendChild(script);

@@ -1,118 +1,43 @@
 import { CurrentEventContext } from '@/context/eventContext';
-import { firestore } from '@/helpers/firebase';
-import { AgendaApi } from '@/helpers/request';
 import { Avatar, Row, Space, Tag, Timeline, Typography, Grid } from 'antd';
 import { useContext, useEffect, useState } from 'react';
-import moment from 'moment';
 import FlagCheckeredIcon from '@2fd/ant-design-icons/lib/FlagCheckered';
 import { UserOutlined } from '@ant-design/icons';
+import { PropsPreLanding } from '../types/Prelanding';
+import { Agenda } from '../types';
+import { obtenerActivity } from '../services';
 
 const { useBreakpoint } = Grid;
 
-const ActivityBlock = ({ preview }) => {
+const ActivityBlock = ({ preview }: PropsPreLanding) => {
   const mobilePreview = preview ? preview : '';
   const screens = useBreakpoint();
   const cEvent = useContext(CurrentEventContext);
-  const [activities, setActivities] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [activities, setActivities] = useState<Agenda[]>([]);
 
   const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
   const textColor = cEvent.value?.styles?.textMenu;
 
   useEffect(() => {
     if (!cEvent.value) return;
-    setLoading(true);
-    obtenerActivity();
-    async function obtenerActivity() {
-      const { data } = await AgendaApi.byEvent(cEvent.value._id);
-      const listActivity = [];
-      if (data) {
-        await Promise.all(
-          data.map(async (activity) => {
-            const dataActivity = await firestore
-              .collection('events')
-              .doc(cEvent?.value?._id)
-              .collection('activities')
-              .doc(activity._id)
-              .get();
-            if (dataActivity.exists) {
-              let { habilitar_ingreso, isPublished, meeting_id, platform } = dataActivity.data();
-              const activityComplete = { ...activity, habilitar_ingreso, isPublished, meeting_id, platform };
-              listActivity.push(activityComplete);
-            } else {
-              let updatedActivityInfo = {
-                habilitar_ingreso: true,
-                isPublished: true,
-                meeting_id: null,
-                platform: null,
-              };
-              const activityComplete = { ...activity, updatedActivityInfo };
-              listActivity.push(activityComplete);
-            }
-          })
-        );
-        //MOSTRAR SOLO ACTIVIDADES PUBLICADAS
-        let filterActivity = listActivity?.filter(
-          (activity) => activity.isPublished === true || activity.isPublished === undefined
-        );
-        //ORDENAR ACTIVIDADES
-        filterActivity = filterActivity.sort(
-          (a, b) => moment(a.datetime_start).toDate() - moment(b.datetime_start).toDate()
-        );
-
-        setActivities(filterActivity);
-        setLoading(false);
-      } else {
-        setActivities([]);
-        setLoading(false);
-      }
-      //console.log('DATA NEW==>', data);
-    }
+    obtenerActivity(cEvent?.value?._id, setActivities);
   }, [cEvent.value]);
 
-  /* console.log('activities', activities); */
-
-  const determineType = (type) => {
-    /* console.log('type', type); */
+  const determineType = (type: string) => {
     switch (type) {
       case 'url':
       case 'cargarvideo':
-        return (
-          <Tag
-            color={textColor}
-            style={{
-              userSelect: 'none',
-              color: bgColor,
-            }}>
-            Video
-          </Tag>
-        );
+        return 'Video'
+
       case 'eviusMeet':
       case 'vimeo':
       case 'youTube':
-        return (
-          <Tag
-            color={textColor}
-            style={{
-              userSelect: 'none',
-              color: bgColor,
-            }}>
-            Transmisión
-          </Tag>
-        );
+        return 'Transmisión'
+        
       case 'meeting':
-        return (
-          <Tag
-            color={textColor}
-            style={{
-              userSelect: 'none',
-              color: bgColor,
-            }}>
-            Reunión
-          </Tag>
-        );
+        return 'Reunión'
       default:
-        return <></>;
+        return '';
     }
   };
   return (
@@ -166,12 +91,21 @@ const ActivityBlock = ({ preview }) => {
                 </Space>
                 <Avatar.Group maxCount={3} maxStyle={{ color: textColor, backgroundColor: bgColor }}>
                   {activity.hosts.length > 0 &&
-                    activity.hosts.map((host) => (
-                      <Avatar size={'large'} icon={<UserOutlined />} src={host.image && host.image} />
+                    activity.hosts.map((host,index) => (
+                      <Avatar key={`key-${index}`} size={'large'} icon={<UserOutlined />} src={host.image || ''} />
                     ))}
                 </Avatar.Group>
                 {activities.length < 2 && (
-                  <span style={{ position: 'relative', float: 'right' }}>{determineType(activity?.type?.name)}</span>
+                  <span style={{ position: 'relative', float: 'right' }}>
+                    <Tag
+                      color={textColor}
+                      style={{
+                        userSelect: 'none',
+                        color: bgColor,
+                      }}>
+                      {determineType(activity?.type?.name)}
+                    </Tag>
+                  </span>
                 )}
               </Space>
             </Timeline.Item>

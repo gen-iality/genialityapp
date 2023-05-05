@@ -5,9 +5,11 @@ import LaptopIcon from '@2fd/ant-design-icons/lib/Laptop';
 import MonitorScreenshotIcon from '@2fd/ant-design-icons/lib/MonitorScreenshot';
 import { useState } from 'react';
 import ViewPrelanding from './viewPrelanding';
+import { PropsDrawer } from './types';
+import { TypeDivices } from './types/Prelanding';
 
-const DrawerPreviewLanding = ({ visibleDrawer, setVisibleDrawer }) => {
-  const [device, setdevice] = useState({ device: 'smartphone', value: 425 });
+const DrawerPreviewLanding = ({ visibleDrawer, setVisibleDrawer } : PropsDrawer) => {
+  const [device, setdevice] = useState<{device : TypeDivices , value : string | number}>({ device: 'smartphone', value: 425 });
   return (
     <Drawer
       contentWrapperStyle={{ transition: 'all 500ms ease 0s', backgroundColor: 'transparent' }}

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const useScript = (url, id) => {
+const useScript = (url : string, id : string) => {
   useEffect(() => {
     const eventId = '6334782dc19fe2710a0b8753';
     if (eventId !== id) return;

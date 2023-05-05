@@ -1202,6 +1202,7 @@ export const TypesAgendaApi = {
     return await Actions.create(`api/events/${event}/type`, data);
   },
 };
+
 export const AgendaApi = {
   byEvent: async (event, query) => {
     return await Actions.getAll(`api/events/${event}/activities${query ? query : ''}`, true);
