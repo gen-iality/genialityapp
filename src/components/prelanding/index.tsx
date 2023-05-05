@@ -87,7 +87,6 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 			setAgenda(agenda);
 			setDataSource(sections);
 			setLoading(false);
-			// setSponsors(companies);
 		}
 	}, [cEvent, tabActive]);
 
@@ -141,9 +140,6 @@ const PreLandingSections = ({ tabActive, changeTab }: PreLandingSectionsProps) =
 		}
 	};
 
-	const onChange = (checked: boolean) => {
-		console.log(`switch to ${checked}`);
-	};
 
 	//PERMITE GUARDAR STATUS DE LAS SECCIONES EN BD
 	const saveSections = async () => {

@@ -33,6 +33,16 @@ export const obtenerData = async (
 };
 
 //OBTENER DATA ACTIVIDADES DE FIREBASE
+/**
+ * This function obtains the configuration for a given event and agenda and returns a list of agendas
+ * with their respective configurations.
+ * @param {string} event - a string representing the event for which the configuration is being
+ * obtained.
+ * @param {Agenda[]} agenda - An array of objects representing activities in an agenda. Each object
+ * should have an "_id" property.
+ * @returns The function `obtenerConfigActivity` returns a Promise that resolves to an array of
+ * `Agenda` objects.
+ */
 
 export const obtenerConfigActivity = async (event: string, agenda: Agenda[]): Promise<Agenda[]> => {
   const listAgenda: Agenda[] = [];
@@ -49,6 +59,20 @@ export const obtenerConfigActivity = async (event: string, agenda: Agenda[]): Pr
 };
 
 //VISIBILIDAD DE BOTON DE ALERTAS
+/**
+ * The function determines whether a section should be visible based on the presence of data and its
+ * status.
+ * @param {LandingBlock} section - a LandingBlock object that represents a section of a landing page
+ * @param {Description[]} description - an array of objects containing information about the event's
+ * description
+ * @param {Speaker[]} speakers - an array of objects representing the speakers for an event
+ * @param {Agenda[]} agenda - An array of objects representing the agenda items for an event. Each
+ * object contains properties such as the title, time, and description of the agenda item.
+ * @param {Sponsor[]} sponsors - an array of objects representing the sponsors of an event
+ * @returns The function `visibleAlert` returns a boolean value indicating whether or not to display an
+ * alert message. The value returned depends on the section name and the presence of data in the
+ * corresponding arrays (description, speakers, agenda, sponsors) and the status of the section.
+ */
 export const visibleAlert = (
   section: LandingBlock,
   description: Description[],
@@ -78,7 +102,6 @@ export const settingsSection = (
   setVisible: React.Dispatch<React.SetStateAction<boolean>>,
   changeTab: (params: string) => void
 ) => {
-  console.log('ceventxd',cEvent)
   switch (section?.name) {
     case 'Contador':
       setVisible(true);
