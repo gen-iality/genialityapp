@@ -212,7 +212,7 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
         render: (event: any) => {
           if (event.certification?.file_url) {
             return (
-              <a href={event.certification.file_url} target="_blank">
+              <a href={event.certification.file_url} target="_blank" rel="noreferrer">
                 Ver certificado
               </a>
             )

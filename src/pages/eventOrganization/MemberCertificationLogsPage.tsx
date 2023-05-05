@@ -193,7 +193,7 @@ function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
         render: (log: any) => {
           if (log?.file_url) {
             return (
-              <a href={log?.file_url} target="_blank">
+              <a href={log?.file_url} target="_blank" rel="noreferrer">
                 Ver certificado
               </a>
             )
