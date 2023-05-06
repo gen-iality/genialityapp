@@ -133,7 +133,7 @@ class Graphics extends Component {
         </Card>
       )
 
-    return <Spin></Spin>
+    return <Spin />
   }
 }
 

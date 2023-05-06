@@ -109,7 +109,7 @@ class CameraFeed extends Component {
               hidden={this.state.hiddeVideo}
               ref={(ref) => (this.videoPlayer = ref)}
               width="1280"
-              heigh="960"
+              height="960"
             />
           </div>
         </div>

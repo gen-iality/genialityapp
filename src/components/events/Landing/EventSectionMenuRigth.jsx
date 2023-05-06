@@ -12,7 +12,7 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import DrawerProfile from './DrawerProfile'
 
 const EventSectionMenuRigth = (props) => {
-  const [optionselected, setOptionselected] = useState(1)
+  const [optionselected] = useState(1)
   const cEvent = useEventContext()
   const { isCollapsedMenuRigth, HandleOpenCloseMenuRigth, tabsGenerals } = useHelper()
 

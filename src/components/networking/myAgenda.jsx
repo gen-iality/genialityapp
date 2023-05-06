@@ -26,7 +26,6 @@ import { isStagingOrProduccion } from '@Utilities/isStagingOrProduccion'
 
 const { TabPane } = Tabs
 const { Meta } = Card
-const { confirm } = Modal
 
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [loading, setLoading] = useState(true)

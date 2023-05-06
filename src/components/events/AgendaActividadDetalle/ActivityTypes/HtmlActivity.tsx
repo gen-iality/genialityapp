@@ -1,11 +1,8 @@
 import { useState, useEffect, useContext, useRef, type FunctionComponent } from 'react'
-import { useHelper } from '@context/helperContext/hooks/useHelper'
 import AgendaContext from '@context/AgendaContext'
 import HeaderColumnswithContext from '../HeaderColumns'
 
-export interface HtmlActivityProps {}
-
-const HtmlActivity: FunctionComponent<HtmlActivityProps> = () => {
+const HtmlActivity: FunctionComponent = () => {
   const [activityState, setActivityState] = useState<any>()
   const [htmlData, setHtmlData] = useState<string>('')
 

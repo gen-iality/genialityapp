@@ -8,7 +8,7 @@ import {
   CameraOutlined,
   DeleteOutlined,
 } from '@ant-design/icons'
-import { Form, Input, Button, Space, Upload, Avatar, Image } from 'antd'
+import { Form, Input, Button, Space, Upload, Avatar } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import { useIntl } from 'react-intl'
 import { useEventWithCedula } from '@helpers/helperEvent'

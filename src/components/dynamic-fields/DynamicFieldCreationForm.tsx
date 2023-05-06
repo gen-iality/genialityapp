@@ -1,9 +1,7 @@
-import * as React from 'react'
-import { FunctionComponent, useState, useEffect, useCallback, useMemo } from 'react'
+import { FunctionComponent, useState, useEffect } from 'react'
 
 import { dynamicFieldOptions } from '@components/dynamic-fields/constants'
 import { Checkbox, Form, Input, Select, InputNumber, Button, Row, Divider } from 'antd'
-import { DispatchMessageService } from '@context/MessageService'
 import { FieldType, IDynamicFieldData } from '@components/dynamic-fields/types'
 import { Rule } from 'antd/lib/form'
 

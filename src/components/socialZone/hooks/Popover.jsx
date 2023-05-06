@@ -19,7 +19,6 @@ import {
 import { useUserEvent } from '@context/eventUserContext'
 import { useEventContext } from '@context/eventContext'
 import { setUserAgenda } from '../../../redux/networking/actions'
-import { EventsApi } from '@helpers/request'
 
 const { Meta } = Card
 
@@ -27,15 +26,7 @@ const PopoverInfoUser = (props) => {
   const [userSelected, setUserSelected] = useState()
   const eventUserContext = useUserEvent()
   const eventContext = useEventContext()
-  const {
-    containtNetworking,
-    getPropertiesUserWithId,
-    propertiesProfile,
-    propertiesOtherprofile,
-    requestSend,
-    obtenerContactos,
-    contacts,
-  } = useHelper()
+  const { containtNetworking, requestSend, obtenerContactos, contacts } = useHelper()
 
   useEffect(() => {
     const user = {

@@ -131,10 +131,11 @@ class UserLogin extends Component {
     app
       .auth()
       .signInWithCredential(credential)
-      .then((response) => {
+      .then(() => {
         this.setState({ errorValidation: false })
       })
       .catch((err) => {
+        console.error(err)
         this.setState({ errorValidation: true })
       })
   }

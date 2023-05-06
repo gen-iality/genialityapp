@@ -309,7 +309,7 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
                   id={`editAction${event._id}`}
                   type="primary"
                   size="small"
-                  onClick={(e) => {
+                  onClick={() => {
                     if (!event.certification) return
                     else editUserCertification(event)
                   }}
@@ -323,7 +323,7 @@ function MembersCertificationPage(props: MembersCertificationPageProps) {
                   id={`deleteAction${event._id}`}
                   type="primary"
                   size="small"
-                  onClick={(e) => onDeleteCertification(event.certification)}
+                  onClick={() => onDeleteCertification(event.certification)}
                   icon={<DeleteOutlined />}
                   danger
                 />

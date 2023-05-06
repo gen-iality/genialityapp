@@ -1,16 +1,14 @@
 import { useContext, useState } from 'react'
-import { Card, Result, Space, Button, Spin, Popconfirm, Modal, message } from 'antd'
+import { Card, Result, Space, Button, Popconfirm, Modal, message } from 'antd'
 import LoadingTypeActivity from './LoadingTypeActivity'
 import AgendaContext from '@context/AgendaContext'
 import { useEffect } from 'react'
 import {
   deleteLiveStream,
   getLiveStream,
-  getLiveStreamStatus,
   startLiveStream,
   deleteAllVideos,
 } from '../../../../adaptors/gcoreStreamingApi'
-import { useQueryClient } from 'react-query'
 import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { CurrentEventContext } from '@context/eventContext'

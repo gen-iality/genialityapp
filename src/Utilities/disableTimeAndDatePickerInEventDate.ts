@@ -75,13 +75,13 @@ export const disabledEndDate = (
   return endValue.valueOf() < startDate.valueOf()
 }
 
-export const disabledStartDateTime = (event: {}, streamingHours: number) => ({
+export const disabledStartDateTime = (event: any, streamingHours: number) => ({
   disabledHours: () => disableStartHoursRange(event, streamingHours),
   disabledMinutes: () => disableMinutesRange(event, streamingHours),
   // disabledSeconds: () => [55, 56],
 })
 
-export const disabledEndDateTime = (event: {}, streamingHours: number) => ({
+export const disabledEndDateTime = (event: any, streamingHours: number) => ({
   disabledHours: () => disableEndHoursRange(event, streamingHours),
   disabledMinutes: () => disableMinutesRange(event, streamingHours),
   // disabledSeconds: () => [55, 56],
@@ -96,13 +96,13 @@ const disableStartHoursRange = (event: eventProps, streamingHours: number) => {
 
   if (!streamingHours) return
   /** We add 60 more minutes to discriminate the current time, this affects the free plans */
-  //   if(){}
-  const addExtraTime = dayjs(hourStart).add(
-    streamingHours + equivalentToAHourInMinute,
-    'minutes',
-  )
 
-  const extraTimeHour = addExtraTime.hour()
+  // const addExtraTime = dayjs(hourStart).add(
+  //   streamingHours + equivalentToAHourInMinute,
+  //   'minutes',
+  // )
+
+  // const extraTimeHour = addExtraTime.hour()
 
   /** We iterate to be able to discriminate the hours before the start */
   for (let InitialHour = 0; InitialHour < dayjs(hourStart).hour(); InitialHour++) {

@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Col, Row, Typography, Badge, Skeleton, Spin, Space, Divider, Image } from 'antd'
+import { Col, Row, Typography, Image } from 'antd'
 import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons'
 
-const { Title, Text, Paragraph } = Typography
+const { Text, Paragraph } = Typography
 
 function feriaInformation(props) {
   const [loading, setloading] = useState(true)

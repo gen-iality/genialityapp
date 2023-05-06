@@ -12,7 +12,6 @@ import {
   Image,
   Tooltip,
 } from 'antd'
-import TimeStamp from 'react-timestamp'
 import {
   MessageOutlined,
   LikeOutlined,
@@ -71,12 +70,12 @@ class WallList extends Component {
       msj: 'Comentario creado.',
       action: 'show',
     })
-    const dataPost = await saveFirebase.createComment(
-      post.id,
-      this.props.cEvent.value._id,
-      comment,
-      this.props.cUser.value,
-    )
+    // const dataPost = await saveFirebase.createComment(
+    //   post.id,
+    //   this.props.cEvent.value._id,
+    //   comment,
+    //   this.props.cUser.value,
+    // )
     // this.setState({ dataPost });
     this.innershowComments(post.id, post.comments + 1)
   }

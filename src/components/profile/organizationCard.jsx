@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { EyeOutlined, SettingOutlined } from '@ant-design/icons'
 import { Avatar, Card, Space, Typography, Grid, Skeleton } from 'antd'
 import { OrganizationApi, OrganizationFuction } from '@helpers/request'
-import { truncate } from 'lodash-es'
 const { useBreakpoint } = Grid
 
 const OrganizationCard = (props) => {

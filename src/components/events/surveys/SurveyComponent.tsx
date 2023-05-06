@@ -1,16 +1,15 @@
 /** Hooks, CustomHooks  and react libraries*/
 import { useState, useEffect, FunctionComponent } from 'react'
 import * as Survey from 'survey-react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 /** Helpers and services */
 import { setCurrentPage } from './services/surveys'
 
 /** Antd services */
-import { Result, Spin, Button, Col } from 'antd'
+import { Spin, Button } from 'antd'
 
 /** Funciones externas */
-import stateMessages from './functions/stateMessagesV2'
 import messageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey'
 import getResponsesIndex from './functions/getResponsesIndex'
 import savingResponseByUserId from './functions/savingResponseByUserId'
@@ -72,8 +71,8 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
   const [isSaveButtonShown, setIsSaveButtonShown] = useState(false)
   const [isSavingPoints, setIsSavingPoints] = useState(false)
 
-  const [eventUsers, setEventUsers] = useState([])
-  const [voteWeight, setVoteWeight] = useState(0) // Inquietud: Es util?
+  const [eventUsers] = useState([])
+  const [voteWeight] = useState(0) // Inquietud: Es util?
 
   useEffect(() => {
     // Asigna los colores configurables a  la UI de la encuesta

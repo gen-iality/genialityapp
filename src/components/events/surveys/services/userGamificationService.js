@@ -46,7 +46,7 @@ const userGamification = {
         .collection(`${eventId}_users_gamification`)
         .doc(userInfo.user_id)
         .set({ ...userInfo, created_at: new Date(), updated_at: new Date() })
-        .then(() => {})
+        .then()
         .catch((err) => {
           console.error('Ha ocurrido un error', err)
         })
@@ -59,7 +59,7 @@ const userGamification = {
         .collection(`${eventId}_users_gamification`)
         .doc(userInfo.user_id)
         .update({ points, updated_at: new Date() })
-        .then(() => {})
+        .then()
         .catch((err) => {
           console.error('Ha ocurrido un error', err)
         })

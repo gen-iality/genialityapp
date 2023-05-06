@@ -1,6 +1,6 @@
 import { FunctionComponent, useContext, useMemo } from 'react'
-import { Divider, List, Typography, Button, Spin, Badge, Space, Collapse } from 'antd'
-import { ReadFilled, DeleteOutlined, LoadingOutlined } from '@ant-design/icons'
+import { List, Button, Spin, Badge, Space, Collapse } from 'antd'
+import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons'
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint'
 import { Link, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'

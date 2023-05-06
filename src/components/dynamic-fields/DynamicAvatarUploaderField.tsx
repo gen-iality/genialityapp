@@ -1,7 +1,7 @@
 import { UploadOutlined } from '@ant-design/icons'
 import { Button, Upload } from 'antd'
 import ImgCrop from 'antd-img-crop'
-import { FormInstance, Rule } from 'antd/lib/form'
+import { FormInstance } from 'antd/lib/form'
 import { RcFile } from 'antd/lib/upload'
 import * as React from 'react'
 import { useCallback, useMemo } from 'react'

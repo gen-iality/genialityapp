@@ -1,4 +1,3 @@
-import { message } from 'antd'
 import { useContext, useEffect, useState, useCallback } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { createLiveStream, stopLiveStream } from '../../adaptors/gcoreStreamingApi'
@@ -8,17 +7,12 @@ import { CurrentEventContext } from '../eventContext'
 
 import ActivityTypeContext from './activityTypeContext'
 import type { ActivityType } from './types/activityType'
-import { WidgetType, MainUI } from './constants/enum'
+import { MainUI } from './constants/enum'
 
-import {
-  ActivityTypeProviderProps,
-  ActivityTypeContextType,
-  OpenedWidget,
-} from './types/contextType'
+import { ActivityTypeProviderProps, ActivityTypeContextType } from './types/contextType'
 import {
   activityContentValues,
   formWidgetFlow,
-  activityTypeNames,
   typeToDisplaymentMap,
 } from './constants/ui'
 // Temporally
@@ -46,13 +40,11 @@ const externalFileTypes: ActivityType.ContentValue[] = ['pdf']
 function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   const {
     saveConfig,
-    deleteTypeActivity,
     setMeetingId,
     setPlatform,
     setTypeActivity,
     activityName,
     activityDispatch,
-    dataLive,
     meeting_id: meetingId,
     activityEdit,
     setDataLive,
@@ -60,7 +52,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
   } = useContext(AgendaContext)
   const cEvent = useContext(CurrentEventContext)
   const [isStoppingStreaming, setIsStoppingStreaming] = useState(false)
-  const [isCreatingActivityType, setIsCreatingActivityType] = useState(false)
+  const [isCreatingActivityType] = useState(false)
   const [isSavingActivityType, setIsSavingActivityType] = useState(false)
   const [isDeletingActivityType, setIsDeletingActivityType] = useState(false)
   const [isUpdatingActivityType, setIsUpdatingActivityType] = useState(false)
@@ -269,7 +261,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         break
       }
       case activityContentValues.vimeo: {
-        const resp = await saveConfig({
+        await saveConfig({
           platformNew: 'vimeo',
           type: 'vimeo',
           data: inputContentSource,
@@ -287,7 +279,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         const newData = inputContentSource.includes('https://youtu.be/')
           ? inputContentSource
           : 'https://youtu.be/' + inputContentSource
-        const resp = await saveConfig({
+        await saveConfig({
           platformNew: 'wowza',
           type: activityContentValues.youtube,
           data: newData,
@@ -298,7 +290,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
         break
       }
       case activityContentValues.meeting: {
-        const resp = await saveConfig({
+        await saveConfig({
           platformNew: '',
           type: activityContentValues.meeting,
           data: inputContentSource,
@@ -321,7 +313,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           cEvent.value._id,
         )
         if (respUrlVideo) {
-          const resp = await saveConfig({
+          await saveConfig({
             platformNew: '',
             type: 'video',
             data: urlVideo,
@@ -361,7 +353,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           )
           return
         }
-        const respUrl = await AgendaApi.editOne(
+        await AgendaApi.editOne(
           { meeting_id: inputContentSource },
           activityEdit,
           cEvent.value._id,
@@ -379,7 +371,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           )
           return
         }
-        const respUrl = await AgendaApi.editOne(
+        await AgendaApi.editOne(
           { meeting_id: inputContentSource },
           activityEdit,
           cEvent.value._id,
@@ -398,7 +390,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           )
           return
         }
-        const respUrl = await AgendaApi.editOne(
+        await AgendaApi.editOne(
           { meeting_id: inputContentSource },
           activityEdit,
           cEvent.value._id,
@@ -418,7 +410,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
           )
           return
         }
-        const respUrl = await AgendaApi.editOne(
+        await AgendaApi.editOne(
           { meeting_id: inputContentSource },
           activityEdit,
           cEvent.value._id,
@@ -578,7 +570,7 @@ function ActivityTypeProvider(props: ActivityTypeProviderProps) {
       }
     }
     if (activityEdit) {
-      request().then(() => {})
+      request().then()
     }
   }, [activityEdit])
 

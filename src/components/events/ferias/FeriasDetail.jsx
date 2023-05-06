@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Tabs, Row, Col, Card, Image, Typography, Space, Grid } from 'antd'
+import { Tabs, Row, Col, Image, Typography, Space, Grid } from 'antd'
 import FeriasBanner from './feriaBanner.jsx'
 import Information from './information.jsx'
 import Product from './product'

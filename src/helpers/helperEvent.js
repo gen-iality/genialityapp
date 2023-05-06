@@ -27,8 +27,7 @@ export function isEvent() {
 export function listenSurveysData(
   event_id,
   dispatch,
-  cUser,
-  activity,
+
   //visualizarEncuesta
 ) {
   console.log('600.listenSurveysData')
@@ -119,13 +118,7 @@ export const getProperties = async (event) => {
 
 ///zoom externo
 
-export const zoomExternoHandleOpen = (
-  activity,
-  eventUser,
-  isMobile,
-  TicketsApi,
-  event,
-) => {
+export const zoomExternoHandleOpen = (activity, eventUser, isMobile) => {
   let name =
     eventUser && eventUser.properties && eventUser.properties.names
       ? eventUser.properties.names

@@ -4,10 +4,6 @@ import {
   Row,
   Col,
   Button,
-  Dropdown,
-  Menu,
-  message,
-  Divider,
   Card,
   Typography,
   Form,
@@ -16,12 +12,7 @@ import {
   Space,
   Badge,
 } from 'antd'
-import {
-  UploadOutlined,
-  ExclamationCircleOutlined,
-  ReloadOutlined,
-  DownOutlined,
-} from '@ant-design/icons'
+import { UploadOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
 class Preview extends Component {
   constructor(props) {

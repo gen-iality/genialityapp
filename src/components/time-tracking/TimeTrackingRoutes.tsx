@@ -1,11 +1,8 @@
-import * as React from 'react'
-
-import { Route, Switch, withRouter, useHistory } from 'react-router-dom'
-import { Button, Typography } from 'antd'
+import { Route, Switch, withRouter } from 'react-router-dom'
 
 import TimeTracking from './TimeTracking'
 
-function TimeTrackingRoutes({ ...props }) {
+function TimeTrackingRoutes({ ...props }: { event: any; match: any }) {
   const { event, match } = props
   return (
     <>

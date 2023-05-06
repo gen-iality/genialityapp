@@ -1,13 +1,12 @@
 /** React's libraries */
 import { useState } from 'react'
-import { useIntl } from 'react-intl'
 
 /** Antd imports */
-import { Alert, Button, Grid, Modal } from 'antd'
+import { Grid, Modal } from 'antd'
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
 /** Helpers and utils */
-import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request'
+import { OrganizationApi, PositionsApi } from '@helpers/request'
 
 /** Context */
 import { DispatchMessageService } from '@context/MessageService'
@@ -34,16 +33,9 @@ const stylePaddingMobile = {
 function ModalMembers(props) {
   const organizationId = props.organizationId
   const userId = props.value._id
-  const intl = useIntl()
   const screens = useBreakpoint()
 
-  const {
-    handleChangeTypeModal,
-    typeModal,
-    helperDispatch,
-    currentAuthScreen,
-    controllerLoginVisible,
-  } = useHelper()
+  const { controllerLoginVisible } = useHelper()
 
   const [loadingregister, setLoadingregister] = useState(false)
 

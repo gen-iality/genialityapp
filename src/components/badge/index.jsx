@@ -1,20 +1,8 @@
-import { BadgeApi } from '../../helpers/request'
 import Header from '@/antdComponents/Header'
-import {
-  Form,
-  Row,
-  Col,
-  Button,
-  Space,
-  Modal,
-  Select,
-  Typography,
-  message,
-  Table,
-} from 'antd'
+import { Row, Col, Button, Space, Typography, message, Table } from 'antd'
 import { useState, useEffect, useRef } from 'react'
 
-const { Text, Link } = Typography
+const { Text } = Typography
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import ModalAdd from './components/ModalAdd'
 import { getInitialValues, saveBadge } from './services'

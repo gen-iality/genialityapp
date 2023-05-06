@@ -21,7 +21,7 @@ const DynamicTermsAndCondictionsField: React.FunctionComponent<
 > = (props) => {
   const { fieldData, allInitialValues } = props
 
-  const { name, mandatory, label, link, props: secondProps } = fieldData
+  const { name, mandatory, link, props: secondProps } = fieldData
 
   const [rules, setRules] = useState<Rule[]>([])
 
@@ -29,10 +29,7 @@ const DynamicTermsAndCondictionsField: React.FunctionComponent<
 
   const requiredFieldErrorMessage = intl.formatMessage({ id: 'form.field.required' })
 
-  const { basicRule, setCondiction } = useMandatoryRule(
-    fieldData,
-    requiredFieldErrorMessage,
-  )
+  const { basicRule } = useMandatoryRule(fieldData, requiredFieldErrorMessage)
 
   // Clone the basic rule and inject the type for email type
   useEffect(() => {

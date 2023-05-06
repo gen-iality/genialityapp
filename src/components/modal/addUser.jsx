@@ -83,7 +83,6 @@ class AddUser extends Component {
       const type = m.type || 'text'
       const props = m.props || {}
       const name = m.name
-      const mandatory = m.mandatory
       const target = name
       const value = this.state.user[target]
       let input = (

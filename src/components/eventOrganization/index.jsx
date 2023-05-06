@@ -1,29 +1,15 @@
-import {
-  Col,
-  Row,
-  Typography,
-  Badge,
-  Grid,
-  Space,
-  Divider,
-  Image,
-  Empty,
-  Button,
-  Modal,
-} from 'antd'
+import { Col, Row, Typography, Badge, Space, Divider, Image, Empty, Button } from 'antd'
 import { useState, useEffect } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { OrganizationFuction } from '@helpers/request'
 import EventCard from '../shared/eventCard'
 import dayjs from 'dayjs'
-import ModalAuth from '../authentication/ModalAuth'
 import ModalLoginHelpers from '../authentication/ModalLoginHelpers'
 import { EditOutlined } from '@ant-design/icons'
 import Loading from '@components/profile/loading'
 import { useCurrentUser } from '@context/userContext'
 import { OrganizationApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import RegisterMemberFromOrganizationUserModal from './RegisterMemberFromOrganizationUserModal'
 
 const { Title, Text, Paragraph } = Typography
 
@@ -34,8 +20,6 @@ const EventOrganization = (props) => {
   const [lastEvents, setLastEvents] = useState([])
   const [organization, setOrganization] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [view, setView] = useState(false)
-  const [isVisibleRegister, setIsVisibleRegister] = useState(false)
   const [organizationUser, setOrganizationUser] = useState(null)
 
   const [isAdminUser, setIsAdminUser] = useState(false)

@@ -1,15 +1,8 @@
-import { Component, Fragment, useState } from 'react'
-import {
-  Actions,
-  EventFieldsApi,
-  OrganizationApi,
-  OrganizationPlantillaApi,
-} from '@helpers/request'
+import { Component, Fragment } from 'react'
+import { Actions, EventFieldsApi, OrganizationPlantillaApi } from '@helpers/request'
 /* import { toast } from 'react-toastify'; */
-import { FormattedMessage, useIntl } from 'react-intl'
-import DatosModal from './modal'
-import { Tabs, Table, Checkbox, Button, Select, Row, Col, Tooltip, Modal } from 'antd'
-import RelationField from './relationshipFields'
+import { Tabs, Table, Checkbox, Button, Row, Col, Tooltip, Modal } from 'antd'
+
 import {
   EditOutlined,
   DeleteOutlined,
@@ -36,7 +29,6 @@ const DragHandle = sortableHandle(() => (
 const SortableItem = sortableElement((props) => <tr {...props} />)
 const SortableContainer = sortableContainer((props) => <tbody {...props} />)
 const { TabPane } = Tabs
-const { Option } = Select
 const { confirm } = Modal
 class Datos extends Component {
   constructor(props) {

@@ -16,7 +16,7 @@ import { ColumnsType } from 'antd/es/table'
 import { fireRealtime } from '@helpers/firebase'
 import Logger from '@Utilities/logger'
 import Online from '@components/online/Online'
-import { AgendaApi, OrganizationApi, UsersApi } from '@helpers/request'
+import { AgendaApi, OrganizationApi } from '@helpers/request'
 import { LoadingOutlined, UnorderedListOutlined, UserOutlined } from '@ant-design/icons'
 import { type SessionPayload } from '@components/presence/types'
 

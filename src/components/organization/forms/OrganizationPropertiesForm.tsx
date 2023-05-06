@@ -5,37 +5,18 @@
 
 // React stuffs
 import * as React from 'react'
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 // Ant Design stuffs
-import { Button, Form, Col, Card, Typography, Divider } from 'antd'
+import { Form, Col, Card } from 'antd'
 
-// API methods
-import {
-  UsersApi,
-  TicketsApi,
-  EventsApi,
-  EventFieldsApi,
-  countryApi,
-} from '@helpers/request'
-
-import { LoadingOutlined, UploadOutlined } from '@ant-design/icons'
+import { LoadingOutlined } from '@ant-design/icons'
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface'
-import { useIntl } from 'react-intl'
 
 import { IDynamicFieldData } from '../../dynamic-fields/types'
-import DynamicTextField from '../..//dynamic-fields/DynamicTextField'
-import DynamicLongTextField from '../..//dynamic-fields/DynamicLongTextField'
-import DynamicMultipleListField from '../..//dynamic-fields/DynamicMultipleListField'
-import DynamicFileUploaderField from '@components/dynamic-fields/DynamicFileUploaderField'
-import DynamicAvatarUploaderField from '@components/dynamic-fields/DynamicAvatarUploaderField'
-import DynamicSelectField from '@components/dynamic-fields/DynamicSelectField'
-import DynamicPhoneInputField from '@components/dynamic-fields/DynamicPhoneInputField'
-import DynamicBooleanField from '@components/dynamic-fields/DynamicBooleanField'
+
 import DynamicForm from '@components/dynamic-fields/DynamicForm'
 import { FormInstance } from 'antd/es/form/Form'
-
-const { Text, Paragraph, Title } = Typography
 
 const centerStyle: any = {
   margin: '0 auto',
@@ -66,12 +47,11 @@ const OrganizationPropertiesForm: React.FunctionComponent<
 > = (props) => {
   const { noSubmitButton, otherFields = [] } = props
 
-  const intl = useIntl()
   const [newForm] = Form.useForm<FormValuesType>()
 
   const [isSubmiting, setIsSubmiting] = useState(false)
   const [form, setForm] = useState<FormInstance | undefined>(props.form)
-  const [dynamicFields, setDynamicFields] = useState<IDynamicFieldData[]>(
+  const [dynamicFields] = useState<IDynamicFieldData[]>(
     props.organization.user_properties || otherFields,
   )
   // This state will be used for the form

@@ -5,7 +5,6 @@ import {
   NotificationOutlined,
   EditOutlined,
   BarChartOutlined,
-  PrinterOutlined,
 } from '@ant-design/icons'
 const handleClick = (e) => {
   if (!navigator.onLine) e.preventDefault()

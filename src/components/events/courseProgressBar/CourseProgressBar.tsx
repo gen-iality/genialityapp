@@ -27,7 +27,7 @@ export interface CourseProgressBarProps {
 }
 
 function CourseProgressBar(props: CourseProgressBarProps) {
-  const { count, linkFormatter, activities, activitiesAttendee } = props
+  const { linkFormatter, activities, activitiesAttendee } = props
 
   const [currentId, setCurrentId] = useState(null)
 
@@ -40,7 +40,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
       <div className="CourseProgressBar-container">
         <div className="CourseProgressBar-innerContainer">
           {activities.map((activity, index) => (
-            <div className="CourseProgressBar-stepContainer">
+            <div key={index} className="CourseProgressBar-stepContainer">
               <Line
                 isActive={
                   activitiesAttendee.filter(

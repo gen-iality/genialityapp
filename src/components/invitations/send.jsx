@@ -5,21 +5,8 @@ import 'dayjs/locale/es-us'
 import { EventsApi } from '@helpers/request'
 /* import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; */
-import { FormattedMessage } from 'react-intl'
-import Quill from 'react-quill'
 import EviusReactQuill from '../shared/eviusReactQuill'
-import {
-  Button,
-  Checkbox,
-  Row,
-  Col,
-  Form,
-  Input,
-  Modal,
-  Spin,
-  Card,
-  Typography,
-} from 'antd'
+import { Button, Checkbox, Row, Col, Form, Input, Modal, Card, Typography } from 'antd'
 dayjs.locale('es-us')
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'

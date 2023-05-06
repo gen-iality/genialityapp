@@ -1,6 +1,6 @@
-import { FunctionComponent, useEffect, useState } from 'react'
+import { FunctionComponent } from 'react'
 
-import { Modal, Form, Input, Button, Card, Alert, Select } from 'antd'
+import { Modal, Form, Input, Alert, Select } from 'antd'
 
 import { WarningOutlined } from '@ant-design/icons'
 import { OrganizationApi } from '@helpers/request'

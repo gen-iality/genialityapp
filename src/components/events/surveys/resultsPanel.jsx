@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Result, Spin, Button, Col, Card, Space } from 'antd'
+import { Card, Space } from 'antd'
 import SurveyAnswers from './services/surveyAnswersService'
 import { LoadingOutlined } from '@ant-design/icons'
 import useSurveyQuery from './hooks/useSurveyQuery'
@@ -64,24 +64,22 @@ function ResultsPanel(props) {
       {userAnswers !== undefined && (
         <>
           <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-            {userAnswers.map((answer, index) => {
-              return (
-                <Card>
-                  <p style={{ fontWeight: '700' }}>{`${index + 1}. ${answer.title}`}</p>
-                  <p
-                    style={{
-                      fontWeight: '700',
-                    }}
-                  >{`Respuesta correcta: ${answer.correctAnswer}`}</p>
-                  <p
-                    style={{
-                      fontWeight: '700',
-                      color: answer.isCorrectAnswer ? 'green' : 'red',
-                    }}
-                  >{`Tu respuesta: ${answer.answer}`}</p>
-                </Card>
-              )
-            })}
+            {userAnswers.map((answer, index) => (
+              <Card key={index}>
+                <p style={{ fontWeight: '700' }}>{`${index + 1}. ${answer.title}`}</p>
+                <p
+                  style={{
+                    fontWeight: '700',
+                  }}
+                >{`Respuesta correcta: ${answer.correctAnswer}`}</p>
+                <p
+                  style={{
+                    fontWeight: '700',
+                    color: answer.isCorrectAnswer ? 'green' : 'red',
+                  }}
+                >{`Tu respuesta: ${answer.answer}`}</p>
+              </Card>
+            ))}
           </Space>
         </>
       )}

@@ -1,5 +1,4 @@
 import dayjs, { Dayjs } from 'dayjs'
-import { SetStateAction, Dispatch } from 'react'
 import { useEffect, useRef, useMemo, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 
@@ -128,8 +127,6 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
   const processDateFromAgendaDocument = useProcessDateFromAgendaDocument()
   const hourWithAdditionalMinutes = useHourWithAdditionalMinutes()
-
-  const hola = [[1], [2], [3], [4]]
 
   useEffect(() => {
     if (!props.event?._id) return

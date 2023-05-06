@@ -30,14 +30,13 @@ import NewsSectionRoutes from '../news/newsRoute'
 import ProductSectionRoutes from '../products/productsRoute'
 import { withRouter } from 'react-router-dom'
 import withContext from '@context/withContext'
-import { Layout, Space, Row, Col, Button, Result, Badge, Tag } from 'antd'
+import { Layout, Row, Col, Button, Result, Tag } from 'antd'
 import { AdminUsers } from '@components/AdminUsers/AdminUsers'
 import loadable from '@loadable/component'
 import NoMatchPage from '../notFoundPage/noMatchPage'
 import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms'
 import { DispatchMessageService } from '@context/MessageService'
 import { handleRequestError } from '@helpers/utils'
-import { ValidateEndEvent } from '@/hooks/validateEventStartAndEnd'
 import {
   featureBlockingListener,
   featureBlockingStatusSave,
@@ -128,8 +127,8 @@ class Event extends Component {
   }
 
   addNewFieldsToEvent(event) {
-    const dateFrom = event.datetime_from.split(' ')
-    const dateTo = event.datetime_to.split(' ')
+    // const dateFrom = event.datetime_from.split(' ')
+    // const dateTo = event.datetime_to.split(' ')
     event.hour_start = dayjs(event.datetime_from).toDate()
     event.hour_end = dayjs(event.datetime_to).toDate()
     event.date_start = dayjs(event.datetime_from).toDate()

@@ -1,8 +1,7 @@
 import { Component, Fragment } from 'react'
 import { withRouter } from 'react-router-dom'
-import { fieldNameEmailFirst, handleRequestError, parseData2Excel } from '@helpers/utils'
+import { fieldNameEmailFirst, handleRequestError } from '@helpers/utils'
 import { firestore } from '@helpers/firebase'
-import { FormattedMessage, useIntl } from 'react-intl'
 import { Activity, RolAttApi } from '@helpers/request'
 import { Input, Button, Space, Row, Col, Tooltip, Checkbox, Tag } from 'antd'
 import {
@@ -11,7 +10,6 @@ import {
   DownloadOutlined,
   UploadOutlined,
   SendOutlined,
-  QrcodeOutlined,
   EditOutlined,
 } from '@ant-design/icons'
 import Highlighter from 'react-highlight-words'
@@ -20,8 +18,6 @@ import dayjs from 'dayjs'
 import Header from '@antdComponents/Header'
 import Table from '@antdComponents/Table'
 import { DispatchMessageService } from '@context/MessageService'
-
-const html = document.querySelector('html')
 
 class CheckAgenda extends Component {
   constructor(props) {
@@ -245,7 +241,7 @@ class CheckAgenda extends Component {
     this.setState({ editUser: true, selectedUser: item, edit: true })
   }
 
-  editcomponent = (text, item, index) => {
+  editcomponent = (text, item) => {
     return (
       <Tooltip placement="topLeft" title="Editar">
         <Button
@@ -304,7 +300,7 @@ class CheckAgenda extends Component {
         : attendees.find(({ _id }) => _id === id)
     const userRef = this.state.userRef
 
-    const doc = await this.state.userRef.doc(user._id).get()
+    await this.state.userRef.doc(user._id).get()
     //Sino está chequeado se chequea
     user.checked_in = check !== null ? check : !user.checked_in
 
@@ -475,18 +471,8 @@ class CheckAgenda extends Component {
   goBack = () => this.props.history.goBack()
 
   render() {
-    const {
-      attendees,
-      selectedRowKeys,
-      usersData,
-      loading,
-      columnsTable,
-      total,
-      checkIn,
-      qrModal,
-      eventID,
-      agendaID,
-    } = this.state
+    const { selectedRowKeys, usersData, columnsTable, total, checkIn, eventID } =
+      this.state
 
     const rowSelection = {
       selectedRowKeys,

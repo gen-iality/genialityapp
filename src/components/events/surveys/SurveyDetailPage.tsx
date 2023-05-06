@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import useAsyncPrepareQuizStats from '@components/quiz/useAsyncPrepareQuizStats'
 import useSurveyQuery from './hooks/useSurveyQuery'
-import { Card, Result, Divider, Button, Space, Spin } from 'antd'
+import { Card, Result, Button, Space, Spin } from 'antd'
 import { connect } from 'react-redux'
 
 /** Helpers */
@@ -16,7 +16,6 @@ import WithEviusContext from '@context/withContextV2'
 
 /** Components */
 import SurveyComponent from './SurveyComponent'
-import Graphics from './graphics'
 import ResultsPanel from './resultsPanel'
 import QuizProgress from '@components/quiz/QuizProgress'
 

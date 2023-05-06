@@ -22,10 +22,7 @@ const DynamicBooleanField: React.FunctionComponent<IDynamicBooleanFieldProps> = 
 
   const requiredFieldErrorMessage = intl.formatMessage({ id: 'form.field.required' })
 
-  const { basicRule, setCondiction } = useMandatoryRule(
-    fieldData,
-    requiredFieldErrorMessage,
-  )
+  const { basicRule } = useMandatoryRule(fieldData, requiredFieldErrorMessage)
 
   // Clone the basic rule and inject the type for email type
   useEffect(() => {

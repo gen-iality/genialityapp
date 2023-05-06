@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Col, Row, Spin, Switch } from 'antd'
 import { withRouter } from 'react-router'
 import ReactQuill from 'react-quill'

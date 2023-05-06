@@ -65,7 +65,8 @@ const WithCode = () => {
             }
           }
         })
-        .catch(async (error) => {
+        .catch(async (err) => {
+          console.error(err)
           let refreshLink
           if (event) {
             refreshLink = await EventsApi.refreshLinkEmailUserEvent(email, event)

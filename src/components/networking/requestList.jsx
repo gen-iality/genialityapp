@@ -1,9 +1,8 @@
 import { useState, useEffect, useContext } from 'react'
-import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from 'antd'
+import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag } from 'antd'
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons'
 /* import 'react-toastify/dist/ReactToastify.css'; */
 import { Networking, UsersApi } from '@helpers/request'
-import { getCurrentUser } from './services'
 import { addNotification } from '@helpers/netWorkingFunctions'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 import { DispatchMessageService } from '@context/MessageService'

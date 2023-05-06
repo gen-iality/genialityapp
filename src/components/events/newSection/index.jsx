@@ -31,7 +31,7 @@ class MySection extends Component {
   }
 
   render() {
-    const { event } = this.state
+    // const { event } = this.state
     return (
       <Fragment>
         <div

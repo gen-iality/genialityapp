@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { getColumnSearchProps } from './getColumnSearch'
 import { Link } from 'react-router-dom'
 import { SpeakersApi } from '@helpers/request'
@@ -35,7 +34,7 @@ export const columns = (columnsData) => [
     title: 'Orden',
     dataIndex: 'index',
     width: '70px',
-    render(val, item) {
+    render(val) {
       return <div>{val + 1}</div>
     },
   },

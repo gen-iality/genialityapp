@@ -1,20 +1,17 @@
-import { Badge, Col, Menu, Row, Space } from 'antd'
-import { useRouteMatch, Link, useLocation, useParams } from 'react-router-dom'
+import { Badge, Menu } from 'antd'
+import { useRouteMatch, Link, useLocation } from 'react-router-dom'
 import * as iconComponents from '@ant-design/icons'
 import { stylesMenuItems } from '../helpers/csshelpers'
 import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions'
 import { connect } from 'react-redux'
-import { useEffect, useState } from 'react'
 
 const MenuEvent = ({ isMobile }) => {
   const { url } = useRouteMatch()
   const location = useLocation()
-  const params = useParams()
   const cEvent = useEventContext()
   const { totalsolicitudes, eventPrivate } = useHelper()
-  const [currentSection, setCurrentSection] = useState('')
   const event = cEvent.value
 
   /* useEffect(() => {

@@ -16,7 +16,6 @@ import Loading from '../loaders/loading'
 import { withRouter } from 'react-router-dom'
 import Header from '@antdComponents/Header'
 import { DispatchMessageService } from '@context/MessageService'
-import { useEventContext } from '@context/eventContext'
 import { HelperContext } from '@context/helperContext/helperContext'
 
 const { Column } = Table
@@ -269,7 +268,7 @@ class Product extends Component {
               align="center"
               dataIndex="index"
               width="80px"
-              render={(data, index) => <div>{data + 1}</div>}
+              render={(data) => <div>{data + 1}</div>}
             />
             <Column
               key="_id"

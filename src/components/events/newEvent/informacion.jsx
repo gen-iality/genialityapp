@@ -35,9 +35,7 @@ const Informacion = (props) => {
     isModalVisible,
     handleCancel,
     handleOk,
-    typeTransmission,
     visibilityDescription,
-    changetypeTransmision,
     changeSelectHours,
     changeSelectDay,
     selectedDay,
@@ -45,7 +43,6 @@ const Informacion = (props) => {
     dateEvent,
     handleInput,
     valueInputs,
-    errorInputs,
     containsError,
     changeOrganization,
     organization,
@@ -128,7 +125,7 @@ const Informacion = (props) => {
       )
     }
     async function obtenerTemplates() {
-      const resp = await obtainTemplates(selectOrganization?._id)
+      await obtainTemplates(selectOrganization?._id)
     }
   }, [selectOrganization])
 

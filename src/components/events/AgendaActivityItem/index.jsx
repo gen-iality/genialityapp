@@ -6,8 +6,6 @@ import {
   Avatar,
   Card,
   Space,
-  Timeline,
-  Comment,
   Badge,
   Grid,
   Button,
@@ -17,16 +15,13 @@ import { useHistory } from 'react-router-dom'
 import Moment from 'moment-timezone'
 import './style.scss'
 import { firestore } from '@helpers/firebase'
-import { AgendaApi } from '@helpers/request'
 import {
   LoadingOutlined,
   CaretRightOutlined,
   CheckCircleOutlined,
-  PlayCircleOutlined,
 } from '@ant-design/icons'
 import { FormattedMessage, useIntl } from 'react-intl'
 import * as StageActions from '../../../redux/stage/actions'
-import ReactPlayer from 'react-player'
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint'
 import { zoomExternoHandleOpen } from '@helpers/helperEvent'
 import { useEventContext } from '@context/eventContext'

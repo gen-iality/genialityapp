@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import { Modal, Form, Select, Button, Typography } from 'antd'
-import functionCreateNewOrganization from './functionCreateNewOrganization'
 
 const { Option } = Select
 const ModalListOrg = (props) => {

@@ -5,17 +5,17 @@ import {
   updateFieldsVisibilityPropsTypes,
 } from './types/types'
 
-export const textLeft: {} = {
+export const textLeft: any = {
   textAlign: 'left',
   width: '100%',
 }
 
-export const center: {} = {
+export const center: any = {
   margin: '0 auto',
   textAlign: 'center',
 }
 
-export const cardStyles: {} = {
+export const cardStyles: any = {
   height: 'auto',
   maxHeight: '50vh',
   overflowY: 'auto',
@@ -23,7 +23,7 @@ export const cardStyles: {} = {
   borderRadius: '8px',
 }
 
-export const alertStyles: {} = {
+export const alertStyles: any = {
   boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
   backgroundColor: '#FFFFFF',
   color: '#000000',

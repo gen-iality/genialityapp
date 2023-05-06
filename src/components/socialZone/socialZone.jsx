@@ -1,8 +1,8 @@
 import { withRouter } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { Tabs, Row, Badge, Button, Alert, Space } from 'antd'
+import { Tabs, Row, Badge, Button, Space } from 'antd'
 import { SearchOutlined, CloseOutlined } from '@ant-design/icons'
-import SurveyList from '../events/surveys/surveyList'
+// import SurveyList from '../events/surveys/surveyList'
 import { connect } from 'react-redux'
 import * as StageActions from '../../redux/stage/actions'
 import { setCurrentSurvey } from '../../redux/survey/actions'
@@ -22,7 +22,7 @@ import ThisRouteCanBeDisplayed, {
 
 const { setMainStage } = StageActions
 const { TabPane } = Tabs
-const callback = () => {}
+const callback = () => console.log('empty callback here')
 const { setNotification } = notificationsActions
 const styleTabAttendes = {
   width: '95%',
@@ -35,7 +35,7 @@ const styleTabAttendes = {
 const SocialZone = (props) => {
   //contextos
   const cEvent = useEventContext()
-  const cUser = useCurrentUser()
+  // const cUser = useCurrentUser()
   const {
     attendeeList,
     HandleChatOrAttende,
@@ -44,7 +44,7 @@ const SocialZone = (props) => {
     currentActivity,
     tabsGenerals,
   } = useHelper()
-  const [currentUser, setCurrentUser] = useState(null)
+  const [setCurrentUser] = useState(null)
   const [busqueda, setBusqueda] = useState(null)
   const [strAttende, setstrAttende] = useState()
   const [isFiltered, setIsFiltered] = useState(false)

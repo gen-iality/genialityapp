@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { Typography, Layout, Row, Col, Button, Spin } from 'antd'
+import { Typography, Layout, Row, Col, Button } from 'antd'
 
 import { ModalWrapperUIProps } from '../interfaces/ModalWrapperUIProps'
 

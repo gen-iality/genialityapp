@@ -1,11 +1,5 @@
 import axios from 'axios'
-import {
-  ApiDEVUrl,
-  ApiUrlCountry,
-  KeyCountry,
-  ApiUrl,
-  ApiEviusZoomSurvey,
-} from './constants'
+import { ApiUrlCountry, KeyCountry, ApiUrl, ApiEviusZoomSurvey } from './constants'
 import { handleSelect } from './utils'
 import { firestore } from './firebase'
 import dayjs from 'dayjs'
@@ -120,7 +114,7 @@ export const getCurrentUser = async () => {
       } catch (error) {
         if (error.response) {
           // eslint-disable-next-line no-unused-vars
-          const { status, data } = error.response
+          const { status } = error.response
           if (status === 401) {
             DispatchMessageService({
               type: 'error',
@@ -560,7 +554,7 @@ export const eventTicketsApi = {
 }
 
 export const TicketsApi = {
-  getAll: async (id) => {
+  getAll: async () => {
     const token = await GetTokenUserFirebase()
     return await Actions.getAll(`/api/me/eventUsers/?token=${token}&limit=20`, true)
   },
@@ -960,7 +954,7 @@ export const CertsApi = {
   },
   generateCert: async (body) => {
     // eslint-disable-next-line no-unused-vars
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
       const token = await GetTokenUserFirebase()
       publicInstance
         .post(`/api/generatecertificate?token=${token}&download=1`, body, {
@@ -1442,11 +1436,11 @@ export const Activity = {
 
   Update: async (event, user_id, data) => {
     const token = await GetTokenUserFirebase()
-    const info = {
-      event_id: event,
-      user_id,
-      // activity_id,
-    }
+    // const info = {
+    //   event_id: event,
+    //   user_id,
+    //   // activity_id,
+    // }
     return await Actions.put(
       `api/events/${event}/activities_attendees/${user_id}?token=${token}`,
       data,

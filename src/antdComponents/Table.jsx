@@ -260,7 +260,7 @@ const Table = (props) => {
       {
         title: 'Orden',
         dataIndex: 'index',
-        render(val, item) {
+        render(val) {
           return <div>{val + 1}</div>
         },
       },

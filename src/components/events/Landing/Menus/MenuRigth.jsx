@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Menu, Badge } from 'antd'
-import {
-  CommentOutlined,
-  TeamOutlined,
-  PieChartOutlined,
-  ArrowLeftOutlined,
-} from '@ant-design/icons'
+import { CommentOutlined, TeamOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { stylesMenuItems } from '../helpers/csshelpers'
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline'
 import { connect } from 'react-redux'
@@ -22,7 +17,6 @@ const MenuRigth = (props) => {
   const {
     HandleOpenCloseMenuRigth,
     HandleChatOrAttende,
-    eventPrivate,
     totalPrivateMessages,
     currentActivity,
     tabsGenerals,

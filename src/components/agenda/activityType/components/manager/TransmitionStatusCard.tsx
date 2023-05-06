@@ -1,16 +1,14 @@
 import { useContext, useState, useMemo } from 'react'
-import { Card, Result, Space, Button, Spin, Popconfirm, Modal, message } from 'antd'
+import { Card, Result, Space, Button, Popconfirm, Modal, message } from 'antd'
 import LoadingActivityType from '../LoadingActivityType'
 import AgendaContext from '@context/AgendaContext'
 import { useEffect } from 'react'
 import {
   deleteLiveStream,
   getLiveStream,
-  getLiveStreamStatus,
   startLiveStream,
   deleteAllVideos,
 } from '@adaptors/gcoreStreamingApi'
-import { useQueryClient } from 'react-query'
 import useActivityType from '@context/activityType/hooks/useActivityType'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { CurrentEventContext } from '@context/eventContext'
@@ -45,7 +43,7 @@ const TransmitionStatusCard = (props: TransmitionStatusCardProps) => {
 
   const cEvent = useContext(CurrentEventContext)
   const refActivity = `request/${cEvent.value?._id}/activities/${activityEdit}`
-  const refActivityViewers = `viewers/${cEvent.value?._id}/activities/${activityEdit}`
+  // const refActivityViewers = `viewers/${cEvent.value?._id}/activities/${activityEdit}`
   const { resetActivityType } = useActivityType()
 
   useEffect(() => {

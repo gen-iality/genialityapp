@@ -290,23 +290,7 @@ class TicketsForm extends Component {
 
   render() {
     const {
-      state: {
-        active,
-        ticketstoshow,
-        summaryList,
-        loading,
-        selectValues,
-        total,
-        step,
-        disabled,
-        listSeats,
-        disabledSelect,
-      },
       props: { stages, seatsConfig, experience, fees },
-      selectStage,
-      handleQuantity,
-      onClick,
-      changeStep,
     } = this
     return (
       <>

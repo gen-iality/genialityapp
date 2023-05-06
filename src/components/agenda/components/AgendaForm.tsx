@@ -17,7 +17,6 @@ import {
 
 import { Select, Input } from 'antd'
 
-import * as React from 'react'
 import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react'
 import {
   CategoriesAgendaApi,

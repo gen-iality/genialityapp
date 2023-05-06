@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo, memo, ReactNode } from 'react'
 
 /** Antd imports */
-import { Spin, Typography, Badge } from 'antd'
+import { Spin, Badge } from 'antd'
 
 /** Helpers and utils */
 import { firestore } from '@helpers/firebase'

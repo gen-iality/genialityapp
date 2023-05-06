@@ -1,16 +1,5 @@
 import { DeleteFilled } from '@ant-design/icons'
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Input,
-  InputNumber,
-  Row,
-  Select,
-  Space,
-  Typography,
-} from 'antd'
+import { Button, Col, Input, InputNumber, Row, Select, Typography } from 'antd'
 import { CertRow } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types'
 
 const certRowTypeToTitle: { [key: string]: string } = {

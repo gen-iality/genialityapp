@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Row, Col, Checkbox, Form } from 'antd'
+import { Row, Col, Form } from 'antd'
 import EviusReactQuill from '../../shared/eviusReactQuill'
 import { EventsApi } from '@helpers/request'
 import Header from '@antdComponents/Header'
@@ -13,7 +13,7 @@ const formLayout = {
 function ConfirmacionRegistro(props) {
   console.log('props.event.validateEmail', props.event.validateEmail)
   // Se definen las variables de useState para enviar y obtener datos
-  const [validateEmail, setValidateEmail] = useState(() => {
+  const [validateEmail] = useState(() => {
     if (props.event && props.event.validateEmail) {
       if (props.event.validateEmail === 'true' || props.event.validateEmail) {
         return true

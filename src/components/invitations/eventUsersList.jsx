@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react'
+import { Component } from 'react'
 import { withRouter, Link } from 'react-router-dom'
 import { UsersApi, eventTicketsApi } from '@helpers/request'
 import { Table, Input, Button, Space, Menu, Row, Col, Tag } from 'antd'

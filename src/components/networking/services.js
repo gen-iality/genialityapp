@@ -8,7 +8,7 @@ const filterList = (list, currentUser) =>
 // Funcion para consultar la informacion del actual usuario -------------------------------------------
 export const getCurrentUser = (token) => {
   // eslint-disable-next-line no-unused-vars
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     ;(async () => {
       if (!token) {
         resolve('guestUser')
@@ -30,7 +30,7 @@ export const getCurrentUser = (token) => {
 // Funcion que obtiene el eventUserId del usuario actual
 export const getCurrentEventUser = (eventId, userId) => {
   // eslint-disable-next-line no-unused-vars
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     ;(async () => {
       const users = await UsersApi.getAll(eventId, '?pageSize=10000')
 

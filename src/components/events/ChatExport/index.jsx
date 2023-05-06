@@ -45,7 +45,7 @@ const ChatExport = ({ eventId, event }) => {
       <Tag color="#3895FA">{record.text}</Tag>
     </Tooltip>
   )
-  const renderFecha = (val, item) => <p>{dayjs(val).format('DD/MM/YYYY HH:mm')}</p>
+  const renderFecha = (val) => <p>{dayjs(val).format('DD/MM/YYYY HH:mm')}</p>
   const columns = [
     {
       title: 'Usuario',
@@ -289,7 +289,7 @@ const ChatExport = ({ eventId, event }) => {
   function blockUser(item) {
     const path = cEvent.value._id + '_event_attendees/' + item.idparticipant
 
-    const searchDataUser = new Promise((resolve, reject) => {
+    const searchDataUser = new Promise((resolve) => {
       firestore
         .doc(path)
         .get()
@@ -331,7 +331,7 @@ const ChatExport = ({ eventId, event }) => {
                 .update({
                   blocked: !userBlocked,
                 })
-                .then((res) => {
+                .then(() => {
                   DispatchMessageService({
                     key: 'loading',
                     action: 'destroy',

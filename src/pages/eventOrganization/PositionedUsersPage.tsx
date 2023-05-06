@@ -158,7 +158,7 @@ function PositionedUsersPage(props: PositionedUsersPageProps) {
               id={`deleteAction${orgUser._id}`}
               type="primary"
               size="small"
-              onClick={(e) => deleteOrgUser(orgUser).finally(() => loadUsers())}
+              onClick={() => deleteOrgUser(orgUser).finally(() => loadUsers())}
               icon={<DeleteOutlined />}
               danger
             />

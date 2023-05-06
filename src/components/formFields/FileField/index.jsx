@@ -63,12 +63,16 @@ function FileField(rawProps) {
     customRequest: uploadImagedummyRequest,
     /** props para no mostrar la mini previa de antDesing */
     isImageUrl(file) {
+      console.log('take file', file)
       return
     },
     iconRender(file) {
+      console.log('take file', file)
       return <FileImageOutlined style={{ color: '#003853' }} />
     },
-    onPreview(file) {},
+    onPreview(file) {
+      console.log('take file', file)
+    },
     /**------------------------------------------------- */
   }
 

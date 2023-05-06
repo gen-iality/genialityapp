@@ -1,6 +1,6 @@
 export function GetPermissionsEvent(
   cEvent: { value: { itemsMenu: [] } },
-  cEventuser: { value: {} },
+  cEventuser: { value: any },
   seteventPrivate: any,
 ) {
   if (cEvent.value != null) {

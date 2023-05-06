@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
-import { useMemo, memo, useEffect, useState } from 'react'
-import { useLocation, useParams, useRouteMatch } from 'react-router'
+import { useMemo, memo, useEffect } from 'react'
+import { useLocation } from 'react-router'
 import './Step.css'
 
 export interface StepProps {
@@ -16,12 +16,9 @@ export interface StepProps {
 }
 
 function Step(props: StepProps) {
-  const { children, isActive, isSurvey, key, currentId, setCurrentId, id, ...rest } =
-    props
+  const { children, isActive, isSurvey, currentId, setCurrentId, id, ...rest } = props
 
   const location = useLocation()
-
-  const params = useParams()
 
   const className = useMemo(() => {
     if (isActive) {

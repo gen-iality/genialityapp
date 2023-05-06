@@ -1,17 +1,5 @@
-import { useContext, useEffect, useState, lazy, useCallback } from 'react'
-import {
-  Card,
-  Row,
-  Col,
-  Switch,
-  Popover,
-  Avatar,
-  Empty,
-  Image,
-  Alert,
-  Select,
-  Form,
-} from 'antd'
+import { useContext, useEffect, useState, lazy } from 'react'
+import { Card, Row, Col, Switch, Popover, Avatar, Empty, Image, Alert, Form } from 'antd'
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline'
 import { getColumnSearchProps } from '@components/speakers/getColumnSearch'
 import { firestore } from '@helpers/firebase'

@@ -1,4 +1,4 @@
-import { Component, Fragment, createRef } from 'react'
+import { Component, createRef } from 'react'
 import { selectOptions, surveyTimeOptions } from './constants'
 import { SurveysApi, AgendaApi } from '@helpers/request'
 import { handleRequestError } from '@helpers/utils'

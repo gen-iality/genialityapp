@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Modal, Result, Button, Divider, Typography, Space } from 'antd'
+import { Modal, Result, Button, Typography, Space } from 'antd'
 import withContext from '@context/withContext'
 import { useIntl } from 'react-intl'
 import {

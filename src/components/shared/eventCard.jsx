@@ -56,9 +56,8 @@ class EventCard extends Component {
       blockedEvent,
       noAvailable,
       location,
-      history,
     } = this.props
-    const { eventIsActive } = this.context
+    // const { eventIsActive } = this.context
 
     const styleNormal = {
       fontWeight: 'bold',
@@ -74,7 +73,7 @@ class EventCard extends Component {
     const actualDate = new Date(event.datetime_to)
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
     const blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent))
-    const formatDate = dayjs(blockedDate).format('DD MMM YYYY')
+    // const formatDate = dayjs(blockedDate).format('DD MMM YYYY')
 
     return (
       <div className="animate__animated animate__fadeIn">

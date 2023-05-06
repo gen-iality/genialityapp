@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 /** Antd imports */
 import { Button, Badge, Drawer, Space } from 'antd'
-import { MessageOutlined, PieChartOutlined } from '@ant-design/icons'
+import { MessageOutlined } from '@ant-design/icons'
 
 /** Context */
 import { useEventContext } from '@context/eventContext'

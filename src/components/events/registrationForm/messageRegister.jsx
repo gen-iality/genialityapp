@@ -1,5 +1,4 @@
 import { Card, Result } from 'antd'
-import { useEffect } from 'react'
 import { withRouter } from 'react-router'
 import PayForm from './payRegister'
 import { useIntl } from 'react-intl'

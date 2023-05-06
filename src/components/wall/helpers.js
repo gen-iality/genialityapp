@@ -71,7 +71,6 @@ export const saveFirebase = {
 
   async createComment(postId, eventId, comment, user) {
     console.log('USER COMMENTARIO==>', user)
-    const dataPost = []
     const docRef = await firestore
       .collection('adminPost')
       .doc(eventId)
@@ -83,26 +82,26 @@ export const saveFirebase = {
     doc['comments'] = doc.comments ? doc.comments + 1 : 1
     doc['id'] = docRef.id
     await docRef.update(doc)
-    const posts = await firestore
-      .collection('adminPost')
-      .doc(eventId)
-      .collection('posts')
-      .orderBy('datePost', 'desc')
+    // const posts = await firestore
+    //   .collection('adminPost')
+    //   .doc(eventId)
+    //   .collection('posts')
+    //   .orderBy('datePost', 'desc')
     //GUARDAR COMENTARIO
-    const admincommentsRef = firestore
-      .collection('adminPost')
-      .doc(eventId)
-      .collection('comment')
-      .doc(postId)
-      .collection('comments')
-      .add({
-        author: user._id,
-        authorName: user.names || user.email,
-        comment: comment,
-        date: new Date(),
-        idPost: postId,
-        picture: user.picture || '',
-      })
+    // const admincommentsRef = firestore
+    //   .collection('adminPost')
+    //   .doc(eventId)
+    //   .collection('comment')
+    //   .doc(postId)
+    //   .collection('comments')
+    //   .add({
+    //     author: user._id,
+    //     authorName: user.names || user.email,
+    //     comment: comment,
+    //     date: new Date(),
+    //     idPost: postId,
+    //     picture: user.picture || '',
+    //   })
   },
 
   async deletePost(postId, eventId) {

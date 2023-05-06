@@ -1,8 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import 'chartjs-plugin-datalabels'
-import { Pagination, Card, Button, Row, Col, Typography } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { Pagination, Card, Row, Col, Typography } from 'antd'
 import Loading from './loading'
 
 import Chart from 'chart.js/auto'
@@ -174,7 +173,6 @@ class Graphics extends Component {
 
     let respuestadVotos = 0
     let porcentajeUsuarios = 0
-    const respuestatotal = 0
 
     respuestadVotos = this.state.totalUser - totalVotosUsuarios
     respuestadVotos = respuestadVotos > 0 ? respuestadVotos : 0

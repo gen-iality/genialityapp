@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { useState } from 'react'
 import { NavLink, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Button, Col, Divider, Menu, Row } from 'antd'
@@ -6,7 +6,6 @@ import { EventsApi } from '@helpers/request'
 import { useEffect } from 'react'
 import { MenuItems } from './utils'
 import { ApartmentOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons'
-import { imageUtils } from '../../../Utilities/ImageUtils'
 import OpenInNewIcon from '@2fd/ant-design-icons/lib/OpenInNew'
 
 const { SubMenu } = Menu
@@ -128,7 +127,7 @@ const mapStateToProps = (state) => ({
 const renderMenuItems = (controller, props) => {
   return (
     <>
-      {MenuItems.map((item, index) => {
+      {MenuItems.map((item) => {
         return (
           <SubMenu
             key={item.key}

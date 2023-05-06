@@ -1,6 +1,4 @@
 import { Typography, Row, Col } from 'antd'
-import { useEffect, useState } from 'react'
-import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
 
 interface propsOptions {
   title: string

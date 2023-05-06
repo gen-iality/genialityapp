@@ -1,4 +1,4 @@
-import { Card, Badge, Typography, Skeleton } from 'antd'
+import { Card, Badge, Typography } from 'antd'
 import { useState } from 'react'
 import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
 

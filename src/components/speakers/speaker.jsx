@@ -1,33 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Redirect, withRouter } from 'react-router-dom'
 import EviusReactQuill from '../shared/eviusReactQuill'
-import {
-  fieldsSelect,
-  handleRequestError,
-  sweetAlert,
-  uploadImage,
-  handleSelect,
-} from '@helpers/utils'
+import { fieldsSelect, handleRequestError, handleSelect } from '@helpers/utils'
 import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '@helpers/request'
-import Creatable from 'react-select'
+import { Button, Row, Col, Form, Input, Switch, Modal, Tooltip, Select } from 'antd'
 import {
-  Button,
-  Typography,
-  Row,
-  Col,
-  Form,
-  Input,
-  Image,
-  Empty,
-  Switch,
-  Modal,
-  Tooltip,
-  Select,
-} from 'antd'
-import {
-  LeftOutlined,
-  UserOutlined,
-  SettingOutlined,
   ExclamationCircleOutlined,
   PlusCircleOutlined,
   UpOutlined,
@@ -40,7 +17,6 @@ import { DispatchMessageService } from '@context/MessageService'
 import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 import Loading from '../profile/loading'
 
-const { Title } = Typography
 const { confirm } = Modal
 const { Option } = Select
 
@@ -74,7 +50,6 @@ function Speaker(props) {
   })
   const [showDescription_activity, setShowDescription_activity] = useState(false)
   const [redirect, setRedirect] = useState(false)
-  const [errorImage, setErrorImage] = useState('')
   const [categories, setCategories] = useState([])
   const [selectedCategories, setSelectedCategories] = useState([])
   const [isloadingSelect, setIsloadingSelect] = useState({

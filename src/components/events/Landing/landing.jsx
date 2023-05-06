@@ -3,12 +3,11 @@ import { connect } from 'react-redux'
 import { useEventContext } from '@context/eventContext'
 import { useCurrentUser } from '@context/userContext'
 import { useUserEvent } from '@context/eventUserContext'
-import { useHistory, Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 /** ant design */
-import { Layout, Spin, notification, Button, Result, Steps, Tooltip } from 'antd'
+import { Layout, Spin, notification, Button } from 'antd'
 /* import 'react-toastify/dist/ReactToastify.css'; */
 const { Content } = Layout
-const { Step } = Steps
 
 import { setUserAgenda } from '../../../redux/networking/actions'
 import {
@@ -16,7 +15,6 @@ import {
   LoadingOutlined,
   IssuesCloseOutlined,
   NotificationOutlined,
-  MinusCircleFilled,
 } from '@ant-design/icons'
 
 /** Google tag manager */
@@ -31,9 +29,6 @@ import { DispatchMessageService } from '@context/MessageService.tsx'
 import WithEviusContext from '@context/withContext'
 import { checkinAttendeeInEvent } from '@helpers/HelperAuth'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import initBroadcastViewers from '@containers/broadcastViewers'
-import DateEvent from '../dateEvent'
-import dayjs from 'dayjs'
 import { AgendaApi } from '@helpers/request'
 import { firestore } from '@helpers/firebase'
 
@@ -45,7 +40,7 @@ const ModalRegister = loadable(() => import('./modalRegister'))
 const ModalLoginHelpers = loadable(() => import('../../authentication/ModalLoginHelpers'))
 const ModalPermission = loadable(() => import('../../authentication/ModalPermission'))
 const ModalFeedback = loadable(() => import('../../authentication/ModalFeedback'))
-const ModalNoRegister = loadable(() => import('../../authentication/ModalNoRegister'))
+// const ModalNoRegister = loadable(() => import('../../authentication/ModalNoRegister'))
 
 /** Components */
 const TopBanner = loadable(() => import('./TopBanner'))
@@ -97,7 +92,6 @@ const Landing = (props) => {
 
   const [activitiesAttendee, setActivitiesAttendee] = useState([])
   const [activities, setActivities] = useState([])
-  const history = useHistory()
   const location = useLocation()
 
   const loadData = async () => {

@@ -7,7 +7,7 @@ const VideoActivity = () => {
   const { currentActivity } = useHelper()
   const urlVideo = currentActivity?.video
 
-  const [activityState, setactivityState] = useState('')
+  const [activityState] = useState('')
   const [isItAnFrame, setIsItAnFrame] = useState(false)
 
   useEffect(() => {

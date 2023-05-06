@@ -46,7 +46,7 @@ function RankingList(props) {
               loading={loading}
               itemLayout="horizontal"
               dataSource={myScore}
-              renderItem={(item, key) => <UsersCard type="ranking" item={item} />}
+              renderItem={(item) => <UsersCard type="ranking" item={item} />}
             />
           </div>
         </div>

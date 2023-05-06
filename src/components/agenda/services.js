@@ -3,7 +3,7 @@ import { firestore } from '@helpers/firebase'
 const refActivity = firestore.collection('events')
 
 export const validateActivityCreated = (activityId, event_id) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     refActivity
       .doc(event_id)
       .collection('activities')
@@ -19,7 +19,7 @@ export const validateActivityCreated = (activityId, event_id) => {
 
 export const createOrUpdateActivity = (activityId, event_id, activityInfo, tabs) => {
   const tabsSchema = { attendees: false, chat: true, games: false, surveys: false }
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     validateActivityCreated(activityId, event_id).then((existSurvey) => {
       if (existSurvey) {
         refActivity

@@ -154,7 +154,7 @@ const myPlan = ({ cUser }) => {
       }),
       dataIndex: 'created_at',
       key: 'created_at',
-      render(val, item) {
+      render(val) {
         const date = dayjs(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours')
 
         return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>
@@ -277,7 +277,7 @@ const myPlan = ({ cUser }) => {
       }),
       dataIndex: 'created_at',
       key: 'created_at',
-      render(val, item) {
+      render(val) {
         const date = dayjs(val).subtract(new Date(val).getTimezoneOffset() / 60, 'hours')
 
         return <>{date.format('YYYY-MM-DD HH:mm:ss')}</>
@@ -557,7 +557,7 @@ const myPlan = ({ cUser }) => {
       }),
       dataIndex: 'status',
       key: 'status',
-      render(val, item) {
+      render(val) {
         const color = () => {
           switch (val) {
             case 'ACTIVE':
@@ -782,7 +782,7 @@ const myPlan = ({ cUser }) => {
           .filter((plan1) => plan1?._id !== plan?._id)
           .sort((a, b) => a.index - b.index)
           .map((plan2, index) => (
-            <div style={{ paddingBottom: '15px' }}>
+            <div key={index} style={{ paddingBottom: '15px' }}>
               <Card style={{ borderRadius: '15px' }}>
                 <Space>
                   <Divider>

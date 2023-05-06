@@ -130,11 +130,7 @@ function SpeakersList(props) {
         await Promise.all(
           queryData.newData.map(async (speaker, index) => {
             const speakerChange = { ...speaker, order: index + 1 }
-            const data = await SpeakersApi.editOne(
-              speakerChange,
-              speaker._id,
-              queryData.eventId,
-            )
+            await SpeakersApi.editOne(speakerChange, speaker._id, queryData.eventId)
           }),
         )
       } else {

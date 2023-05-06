@@ -18,7 +18,6 @@ import Loading from '../profile/loading'
 import RoomController from './roomManager/RoomController'
 import Service from './roomManager/service'
 
-import TipeOfActivity from './typeActivity'
 import SurveyManager from './surveyManager'
 import MainAgendaForm, { FormDataType } from './components/MainAgendaForm'
 import usePrepareRoomInfoData from './hooks/usePrepareRoomInfoData'
@@ -117,7 +116,7 @@ function AgendaEdit(props: AgendaEditProps) {
 
   const [loadedAgenda, setLoadedAgenda] = useState<AgendaType | null>(null)
   const [formdata, setFormData] = useState<FormDataType>(initialFormDataState)
-  const [savedFormData, setSavedFormData] = useState<FormDataType>({} as FormDataType)
+  const [savedFormData] = useState<FormDataType>({} as FormDataType)
 
   const agendaContext = useContext(AgendaContext)
 

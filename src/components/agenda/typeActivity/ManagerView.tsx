@@ -1,4 +1,4 @@
-import { Row, Col, Card, Typography, List, Spin, Affix } from 'antd'
+import { Row, Col, Card, Typography, Affix } from 'antd'
 import CardPreview from '../typeActivity/components/CardPreview'
 import GoToEviusMeet from './components/GoToEviusMeet'
 import TransmitionOptions from './components/TransmitionOptions'
@@ -17,14 +17,8 @@ import LoadingTypeActivity from './components/LoadingTypeActivity'
 const ManagerView = (props: any) => {
   const eventContext = useContext(CurrentEventContext)
   const { data, toggleActivitySteps } = useTypeActivity()
-  const {
-    activityEdit,
-    getRequestByActivity,
-    request,
-    dataLive,
-    roomStatus,
-    meeting_id,
-  } = useContext(AgendaContext)
+  const { activityEdit, getRequestByActivity, request, dataLive, meeting_id } =
+    useContext(AgendaContext)
   const [viewModal, setViewModal] = useState(false)
   const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`
   const [videos, setVideos] = useState<any[] | null>(null)

@@ -1,5 +1,4 @@
-import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Row, Table, Tag } from 'antd'
+import { Table, Tag } from 'antd'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { withRouter } from 'react-router'
@@ -7,7 +6,7 @@ import API from '@helpers/request'
 import Header from '@antdComponents/Header'
 
 const OfertProduts = (props) => {
-  const goBack = () => props.history.goBack()
+  // const goBack = () => props.history.goBack()
   const [oferts, setOferts] = useState([])
 
   useEffect(() => {

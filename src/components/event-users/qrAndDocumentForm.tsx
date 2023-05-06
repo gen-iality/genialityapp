@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { Form, Row, Select, Tabs, Input, Button, Col } from 'antd'
+import { Form, Row, Tabs, Input, Button, Col } from 'antd'
 import { CameraOutlined, ExpandOutlined } from '@ant-design/icons'
 import CameraFlipOutlineIcon from '@2fd/ant-design-icons/lib/CameraFlipOutline'
 import { SearchAndCleanButtons } from './buttonsQrModal'

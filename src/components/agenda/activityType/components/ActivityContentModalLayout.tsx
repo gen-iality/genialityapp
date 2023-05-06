@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { useMemo, useEffect } from 'react'
+import { useMemo } from 'react'
 
 import { Typography, Layout, Row, Col, Button } from 'antd'
 

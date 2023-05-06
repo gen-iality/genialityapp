@@ -1,7 +1,5 @@
 import { Component, createRef } from 'react'
 import { FormattedDate, FormattedTime } from 'react-intl'
-import { IoIosCamera, IoIosQrScanner } from 'react-icons/io'
-import { FaCamera } from 'react-icons/fa'
 import QrReader from 'react-qr-reader'
 import { firestore } from '@helpers/firebase'
 import { toast } from 'react-toastify'

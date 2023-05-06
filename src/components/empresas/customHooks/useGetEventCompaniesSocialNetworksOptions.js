@@ -1,4 +1,3 @@
-import { notification } from 'antd'
 import { capitalize } from 'lodash'
 import { map } from 'ramda'
 import { isNonEmptyArray } from 'ramda-adjunct'

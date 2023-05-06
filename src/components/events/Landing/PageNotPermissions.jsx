@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Card, Col, Row, Spin, Result, Button } from 'antd'
+import { Card, Col, Spin, Result } from 'antd'
 import TicketsForm from '../../tickets/formTicket'
 import { connect } from 'react-redux'
 import { useUserEvent } from '@context/eventUserContext'
@@ -7,9 +7,7 @@ import { useEventContext } from '@context/eventContext'
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions'
 import { Redirect } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
-import ProductCard from '../producto/productCard'
 import { withRouter } from 'react-router-dom'
-import { useHistory } from 'react-router-dom'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import UserLoginContainer from '../UserLoginContainer'
 
@@ -20,7 +18,6 @@ const PageNotPermissions = (props) => {
   const urlsection = `/landing/${EventContext.value._id}/`
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
-  const history = useHistory()
   const { eventPrivate } = useHelper()
 
   const center = {

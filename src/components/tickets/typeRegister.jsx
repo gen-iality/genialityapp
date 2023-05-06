@@ -1,4 +1,4 @@
-import { Radio, Input, Space } from 'antd'
+import { Radio, Space } from 'antd'
 
 const TypeRegister = ({ setTypeRegister, typeRegister }) => {
   const onChange = (e) => {

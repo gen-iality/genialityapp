@@ -1,11 +1,10 @@
 /** React's libraries */
-import * as React from 'react'
 import { FunctionComponent, useState, useEffect, useContext } from 'react'
 import { withRouter } from 'react-router-dom'
 
 /** Antd imports */
 import { Steps, Button, Card, Row, Spin } from 'antd'
-import { ContactsOutlined, PictureOutlined, ScheduleOutlined } from '@ant-design/icons'
+import { ContactsOutlined, ScheduleOutlined } from '@ant-design/icons'
 
 /** Helpers and utils */
 import { OrganizationFuction, UsersApi } from '@helpers/request'

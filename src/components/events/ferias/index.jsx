@@ -1,5 +1,5 @@
 import FeriasSectionRoutes from '../Landing/FeriasSectionRoutes'
-const Ferias = (props) => {
+const Ferias = () => {
   return <FeriasSectionRoutes />
 }
 export default Ferias

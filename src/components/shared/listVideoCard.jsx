@@ -1,4 +1,4 @@
-import { Card, Space, Col, Row } from 'antd'
+import { Col, Row } from 'antd'
 import VideoCard from './videoCard'
 import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'

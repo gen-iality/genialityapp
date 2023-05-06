@@ -4,7 +4,7 @@ import { withRouter, Link } from 'react-router-dom'
 import { SurveysApi } from '@helpers/request'
 import { getTotalVotes } from './services'
 
-import { List, Card, Button, Spin, Empty, Row, Col, Modal, notification } from 'antd'
+import { List, Card, Spin, Empty, notification } from 'antd'
 import Header from '@antdComponents/Header'
 
 class TriviaReport extends Component {

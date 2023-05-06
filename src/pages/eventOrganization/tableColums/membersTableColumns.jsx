@@ -50,7 +50,7 @@ export const columns = (
     dataIndex: 'picture',
     width: 70,
     /* align: 'center', */
-    render(val, item, index) {
+    render(val, item) {
       return (
         <Row gutter={8}>
           <Col>
@@ -132,7 +132,7 @@ export const columns = (
               id={`editAction${index}`}
               type="primary"
               size="small"
-              onClick={(e) => {
+              onClick={() => {
                 editModalUser(item)
               }}
               icon={<EditOutlined />}

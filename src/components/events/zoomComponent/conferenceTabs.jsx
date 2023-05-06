@@ -1,5 +1,5 @@
 import { useState, createElement } from 'react'
-import { Tabs, Button, Menu, Row, Col, Tooltip } from 'antd'
+import { Tabs, Button, Menu, Tooltip } from 'antd'
 import {
   CommentOutlined,
   PieChartOutlined,
@@ -7,12 +7,9 @@ import {
   RightOutlined,
   LeftOutlined,
   BuildOutlined,
-  ArrowLeftOutlined,
-  VideoCameraOutlined,
 } from '@ant-design/icons'
 import ListadoJuegos from './listadoJuegos'
 import LiveChat from './liveChat'
-import RankingTrivia from './rankingTrivia'
 
 const { TabPane } = Tabs
 

@@ -7,7 +7,6 @@ import { DispatchMessageService } from '@context/MessageService'
 
 function Transmitir(props) {
   const {
-    changeTransmision,
     optTransmitir,
     changeOrganization,
     organization,

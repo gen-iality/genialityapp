@@ -1,13 +1,11 @@
 import { Modal } from 'antd'
 import LayoutTypeActivity from './components/layout/LayoutTypeActivity'
 import ContentTypeActivity from '../typeActivity/components/layout/ContentTypeActivity'
-import ResultTypeActivity from '../typeActivity/components/ResultTypeActivity'
-import LoadingTypeActivity from '../typeActivity/components/LoadingTypeActivity'
 import ContentSource from '../typeActivity/components/layout/ContentSource'
 import ContentInformative from '../typeActivity/components/layout/ContentInformative'
-import { LinkOutlined, YoutubeOutlined } from '@ant-design/icons' //Este icono para el addonBefore
 import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
 import InputUploadVideo from './components/InputUploadVideo'
+import { YoutubeOutlined } from '@ant-design/icons'
 
 const newContentSource = {
   title: 'Titulo principal',
@@ -26,7 +24,7 @@ interface mapContentSource {
 }
 
 const ModalStepByStep = (props: any) => {
-  const { openModal, closeModal, typeOptions, selectedKey } = useTypeActivity()
+  const { openModal, closeModal, typeOptions } = useTypeActivity()
 
   return (
     <Modal visible={openModal} onCancel={closeModal} centered width={1200} footer={null}>

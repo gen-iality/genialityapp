@@ -16,8 +16,6 @@ import { DownloadOutlined, LoadingOutlined } from '@ant-design/icons'
 
 import { activityContentValues } from '@context/activityType/constants/ui'
 
-//Imagen en base64 quemada de 'Genilaity - Lina Paola Bonilla'
-import certificateImage from './certificateImage'
 import { firestore } from '@helpers/firebase'
 import AgendaType from '@Utilities/types/AgendaType'
 import {
@@ -81,8 +79,6 @@ function Certificate(props: CertificateProps) {
 
   const pdfQuizGeneratorRef = useRef<Html2PdfCertsRef>(null)
   const pdfGeneralGeneratorRef = useRef<Html2PdfCertsRef>(null)
-
-  const background = certificateImage
 
   const getOrgMemberProperties = async (dataUser: any) => {
     const { data: orgMembers } = await OrganizationApi.getUsers(

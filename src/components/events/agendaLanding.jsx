@@ -21,23 +21,15 @@ import {
   Alert,
   Divider,
   Space,
-  Tabs,
   Badge,
   Row,
 } from 'antd'
 import { firestore } from '@helpers/firebase'
 import AgendaActivityItem from './AgendaActivityItem/index'
-import {
-  ArrowRightOutlined,
-  CalendarOutlined,
-  DoubleLeftOutlined,
-  DoubleRightOutlined,
-} from '@ant-design/icons'
+import { CalendarOutlined } from '@ant-design/icons'
 import * as notificationsActions from '../../redux/notifications/actions'
 import { setTabs } from '../../redux/stage/actions'
 import ActivitiesList from '../agenda/components/ActivitiesList'
-
-const { TabPane } = Tabs
 
 const attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
@@ -203,7 +195,7 @@ class AgendaLanding extends Component {
 
   async filterStateMeetingRoom(list) {
     const lista = await Promise.all(
-      list.map(async (activity, index) => {
+      list.map(async (activity) => {
         const infoActivity = await firestore
           .collection('events')
           .doc(this.props.cEvent.value._id)
@@ -338,7 +330,7 @@ class AgendaLanding extends Component {
 
   //Funcion que realiza el filtro por espacio, teniendo en cuenta el dia
   // eslint-disable-next-line no-unused-vars
-  filterBySpace = (space, dates) => {
+  filterBySpace = (space) => {
     //Se filta la lista anterior para esta vez filtrar por espacio
     const list = this.state.listDay.filter((a) => a.space.name === space)
 

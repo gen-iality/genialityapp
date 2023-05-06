@@ -1,11 +1,8 @@
-import { Card, Result, Button, Spin } from 'antd'
 import SmartModalStepByStep from './SmartModalStepByStep'
-import ManagerView from './ManagerView'
 import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
 import { useContext, useEffect, useState } from 'react'
 import AgendaContext from '@context/AgendaContext'
 
-import InitialSVG from './components/svg/InitialSVG'
 import { AgendaApi } from '@helpers/request'
 import { CurrentEventContext } from '@context/eventContext'
 import ModalPreviewVideo from './ModalPreviewVideo'
@@ -22,8 +19,7 @@ const objecKeys: object = {
 }
 
 const SmartInitialView = (props: any) => {
-  const { toggleActivitySteps, selectedKey, previewKey, createTypeActivity } =
-    useTypeActivity()
+  const { toggleActivitySteps, createTypeActivity } = useTypeActivity()
   const [loading, setLoading] = useState(true)
   const {
     typeActivity,

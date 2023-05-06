@@ -16,13 +16,11 @@ interface TypeActivityProviderProps {
 export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) => {
   const {
     saveConfig,
-    deleteTypeActivity,
     setMeetingId,
     setPlatform,
     setTypeActivity,
     activityName,
     activityDispatch,
-    dataLive,
     meeting_id,
     activityEdit,
     setDataLive,
@@ -290,7 +288,7 @@ export const TypeActivityProvider = ({ children }: TypeActivityProviderProps) =>
         try {
           const data = typeActivityState?.data.split('*')
           const urlVideo = data[0]
-          const videoId = data[1]
+          // const videoId = data[1]
           const respUrlVideo = await AgendaApi.editOne(
             { video: urlVideo },
             activityEdit,

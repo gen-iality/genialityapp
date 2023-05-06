@@ -1,5 +1,4 @@
 import { saveCheckInAttendee } from '@/services/checkinServices/checkinServices'
-import { useEffect } from 'react'
 import { app, firestore } from './firebase'
 
 export async function GetTokenUserFirebase() {

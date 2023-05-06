@@ -5,7 +5,7 @@ class Service {
 
   validateHasVideoconference = (event_id, activity_id) => {
     // eslint-disable-next-line no-unused-vars
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (!event_id || !activity_id) resolve(false)
       this.firestore
         .collection('events')
@@ -39,7 +39,7 @@ class Service {
       } = roomInfo
       // eslint-disable-next-line no-unused-vars
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
           if (existActivity) {
             this.firestore

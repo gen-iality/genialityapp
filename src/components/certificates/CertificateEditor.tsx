@@ -12,9 +12,6 @@ import {
   Button,
   Upload,
   Image as ImageAntD,
-  Typography,
-  List,
-  Card,
   InputNumber,
   Divider,
 } from 'antd'
@@ -23,8 +20,6 @@ import {
   UploadOutlined,
   ExclamationOutlined,
   CloseCircleOutlined,
-  PlusCircleFilled,
-  DeleteFilled,
   LoadingOutlined,
 } from '@ant-design/icons'
 import Header from '@antdComponents/Header'
@@ -41,7 +36,6 @@ import { replaceAllTagValues } from './utils/replaceAllTagValues'
 import { CertificateData } from './types'
 
 const { confirm } = Modal
-const { Option } = Select
 
 const formLayout = {
   labelCol: { span: 24 },

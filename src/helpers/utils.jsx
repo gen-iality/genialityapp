@@ -100,7 +100,7 @@ export async function parseData2Excel(data, fields, roles = null) {
     info[key]['Hora checkIn'] = item.checkedin_at
       ? dayjs(checkedInAt).format('DD/MM/YYYY H:mm:ss A')
       : ''
-    fields.map(({ name, type, label, _id }) => {
+    fields.map(({ name, type, label }) => {
       let str
       if (item?.properties) {
         switch (type) {

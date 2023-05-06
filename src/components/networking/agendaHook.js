@@ -12,7 +12,9 @@ function formatAMPM(hoy) {
   return strTime
 }
 
-export const createChatRoom = (idroom) => {}
+export const createChatRoom = (idroom) => {
+  console.warn('not implemented yet, additional:', { idroom })
+}
 
 const addInitalMessage = (colection) => {
   firestoreeviuschat
@@ -24,10 +26,12 @@ const addInitalMessage = (colection) => {
       timestamp: formatAMPM(new Date()),
     })
     .then(function (messageRef) {})
-    .then(() => {})
+    .then()
     .catch(function (error) {
       console.error('There was an error uploading a file to Cloud Storage:', error)
     })
 }
 
-export const createChatInitalPrivate = (idchat) => {}
+export const createChatInitalPrivate = (idchat) => {
+  console.warn('not implemented yet, additional:', { idchat })
+}

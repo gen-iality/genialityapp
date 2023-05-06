@@ -31,7 +31,8 @@ export const SendFriendship = async (
         const respInvitation = await EventsApi.sendInvitation(event._id, data)
         return respInvitation
       } catch (err) {
-        const { data } = err.response
+        console.error(err)
+        // const { data } = err.response
         return null
       }
     } else {

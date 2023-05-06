@@ -1,4 +1,4 @@
-import { Empty, Spin, Col, Row, Tag, Badge } from 'antd'
+import { Empty, Col, Row } from 'antd'
 import Companylist from './companyList'
 import { useEffect } from 'react'
 import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies'

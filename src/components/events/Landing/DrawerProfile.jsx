@@ -1,28 +1,11 @@
-import {
-  Button,
-  Drawer,
-  Row,
-  Space,
-  Tooltip,
-  Col,
-  Spin,
-  List,
-  notification,
-  Typography,
-  Modal,
-} from 'antd'
+import { Button, Drawer, Row, Space, Col, Spin, List, Typography, Modal } from 'antd'
 import { useCurrentUser } from '@context/userContext'
 import { formatDataToString } from '@helpers/utils'
 
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { setViewPerfil } from '../../../redux/viewPerfil/actions'
 import { connect } from 'react-redux'
-import {
-  addNotification,
-  haveRequest,
-  isMyContacts,
-  SendFriendship,
-} from '@helpers/netWorkingFunctions'
+import { haveRequest, isMyContacts } from '@helpers/netWorkingFunctions'
 import { useEventContext } from '@context/eventContext'
 import { useUserEvent } from '@context/eventUserContext'
 import { setUserAgenda } from '../../../redux/networking/actions'
@@ -43,7 +26,6 @@ const DrawerProfile = (props) => {
   const [userSelected, setUserSelected] = useState()
   const [isMycontact, setIsMyContact] = useState()
   const [isMe, setIsMe] = useState(false)
-  const [send, setSend] = useState(false)
   const [userPropertiesProfile, setUserPropertiesProfile] = useState()
   const [openModal, setOpenModal] = useState(false)
 

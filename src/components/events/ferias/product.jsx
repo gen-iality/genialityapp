@@ -1,7 +1,7 @@
-import { Tooltip, Card, Image, Typography, Badge, Button } from 'antd'
+import { Tooltip, Card, Image, Typography, Badge } from 'antd'
 import ShoppingOutlineIcon from '@2fd/ant-design-icons/lib/ShoppingOutline'
 import HandshakeOutlineIcon from '@2fd/ant-design-icons/lib/HandshakeOutline'
-import { ShoppingCartOutlined, DisconnectOutlined } from '@ant-design/icons'
+import { ShoppingCartOutlined } from '@ant-design/icons'
 import LinkOff from '@2fd/ant-design-icons/lib/LinkOff'
 function products(props) {
   const { Paragraph } = Typography

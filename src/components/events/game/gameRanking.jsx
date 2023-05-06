@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { firestore } from '@helpers/firebase'
-import { Row, Col, Avatar, Divider } from 'antd'
+import { Divider } from 'antd'
 import RankingList from '../../events/surveys/rankingList'
 import RankingMyScore from '../../events/surveys/rankingMyScore'
 
@@ -9,14 +9,14 @@ import WithEviusContext from '@context/withContext'
 function GameRanking(props) {
   const { cUser, cEvent, cHelper } = props
   const currentUser = cUser.value
-  const currentEvent = cEvent.value
+  // const currentEvent = cEvent.value
   const { setGameRanking, setMyScore } = cHelper
 
-  const styleRanking = {
-    backgroundColor: `${currentEvent.styles.toolbarDefaultBg}`,
-    padding: 5,
-    borderRadius: '10px',
-  }
+  // const styleRanking = {
+  //   backgroundColor: `${currentEvent.styles.toolbarDefaultBg}`,
+  //   padding: 5,
+  //   borderRadius: '10px',
+  // }
 
   useEffect(() => {
     const gameId = '0biWfCwWbUGhbZmfhkvu'
@@ -76,7 +76,6 @@ function GameRanking(props) {
   }
   return (
     <>
-      {/*RANKING*/}
       <RankingMyScore />
       <Divider />
       <RankingList />

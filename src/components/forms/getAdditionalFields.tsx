@@ -36,7 +36,6 @@ import { deleteFireStorageData } from '@Utilities/deleteFireStorageData'
 import { countryApi } from '@helpers/request'
 /**TODO::ocaciona error en ios */
 
-import { async } from 'ramda-adjunct'
 const { Option } = Select
 const { Panel } = Collapse
 const { TextArea } = Input
@@ -50,8 +49,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   const dateFormat = 'YYYY/MM/DD'
 
   const [country, setCountry] = useState({ name: '', countryCode: '', inputName: '' })
-  const [region, setRegion] = useState({ name: '', regionCode: '', inputName: '' })
-  const [city, setCity] = useState({ name: '', regionCode: '', inputName: '' })
+  const [setRegion] = useState({ name: '', regionCode: '', inputName: '' })
+  const [setCity] = useState({ name: '', regionCode: '', inputName: '' })
   const [countries, setCountries] = useState([])
   const [regiones, setRegiones] = useState([])
   const [cities, setCities] = useState([])

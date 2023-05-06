@@ -2,11 +2,6 @@ import { useState, useEffect } from 'react'
 import { useUserEvent } from '@context/eventUserContext'
 import { isHost } from '@helpers/helperEventUser'
 import { useEventContext } from '@context/eventContext'
-import {
-  getLiveStreamStatus,
-  getLiveStreamStats,
-  ResetLiveStream,
-} from '../../adaptors/wowzaStreamingAPI'
 import WOWZAPlayer from '../livetransmision/WOWZAPlayer'
 
 const IframeZoomComponent = ({
@@ -26,15 +21,7 @@ const IframeZoomComponent = ({
   }, [meeting_id])
 
   const checkStreamStatus = async () => {
-    const live_stream_status = await getLiveStreamStatus(meeting_id)
-
-    const live_stream_stats = await getLiveStreamStats(meeting_id)
-
     setTimeout(checkStreamStatus, 5000)
-  }
-
-  const HandleResetLiveStream = async () => {
-    await ResetLiveStream(meeting_id)
   }
 
   const getMeetingPath = async (

@@ -15,7 +15,6 @@ import {
   UserSwitchOutlined,
   ProjectOutlined,
   MenuOutlined,
-  DeleteOutlined,
 } from '@ant-design/icons'
 
 /** Helpers and utils */

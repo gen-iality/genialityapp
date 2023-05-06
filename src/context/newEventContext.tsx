@@ -270,6 +270,7 @@ export const NewEventProvider = ({ children }: any) => {
     setTypeTransmission(type)
   }
   const handleOk = (organization: any) => {
+    console.warn('organization is unused here:', { organization })
     setIsModalVisible(false)
     setSelectedDateEvent({
       from:

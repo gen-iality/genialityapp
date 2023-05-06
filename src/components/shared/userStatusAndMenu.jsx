@@ -26,7 +26,6 @@ import {
   ArrowLeftOutlined,
   DownOutlined,
   ExclamationCircleOutlined,
-  GoldOutlined,
 } from '@ant-design/icons'
 import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline'
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline'

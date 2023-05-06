@@ -1,18 +1,10 @@
 /** React's libraries */
 import { useIntl } from 'react-intl'
-import { Link } from 'react-router-dom'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import dayjs from 'dayjs'
 
 /** Antd imports */
-import { Button, Divider, PageHeader, Space, Typography } from 'antd'
-import {
-  CalendarOutlined,
-  ClockCircleOutlined,
-  GoldOutlined,
-  HomeOutlined,
-  RollbackOutlined,
-} from '@ant-design/icons'
+import { Button, PageHeader, Typography } from 'antd'
 
 /** Helpers and utils */
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed'

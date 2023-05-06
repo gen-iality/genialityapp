@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button } from 'antd'
 import { PrinterOutlined } from '@ant-design/icons'
 const AttendeeCheckInButtonPrint = ({

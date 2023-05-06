@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useMemo, createContext, useContext } from 'react'
+import { useEffect, useReducer, createContext, useContext } from 'react'
 import { listenSurveysData } from '@helpers/helperEvent'
 import InitSurveysCompletedListener from '@components/events/surveys/functions/initSurveyCompletedListener'
 import { useEventContext } from './eventContext'

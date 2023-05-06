@@ -1,4 +1,4 @@
-import { Button, Card, message, Result, Space, Typography } from 'antd'
+import { Button, Card, Result } from 'antd'
 import { Link } from 'react-router-dom'
 
 const ExploreEvents = () => {

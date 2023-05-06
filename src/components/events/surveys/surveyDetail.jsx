@@ -2,7 +2,6 @@ import { connect } from 'react-redux'
 import { Card, Button } from 'antd'
 import { unsetCurrentSurvey } from '../../../redux/survey/actions'
 import { setMainStage } from '../../../redux/stage/actions'
-import RankingTrivia from './rankingTrivia'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 function SurveyDetail(props) {
@@ -11,9 +10,6 @@ function SurveyDetail(props) {
     unsetCurrentSurvey()
     setMainStage(null)
   }
-
-  //hasRanking -> Parametro para cuando se cree en CMS la opcion de seleccionar el ranking
-  const hasRanking = true
 
   return (
     <Card>

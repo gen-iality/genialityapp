@@ -75,7 +75,7 @@ export default function EviusTable(props) {
             return (
               <tr
                 {...row.getRowProps()}
-                onClick={(e) => {
+                onClick={() => {
                   onRowClick && onRowClick(row)
                 }}
                 key={keyrow}

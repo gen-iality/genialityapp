@@ -37,18 +37,18 @@ class Wall extends Component {
     await saveFirebase.deletePost(postId, this.props.cEvent.value._id)
 
     //se borra local
-    const updatedPost = this.state.dataPost.filter(function (value) {
-      return value.id !== postId
-    })
+    // const updatedPost = this.state.dataPost.filter(function (value) {
+    //   return value.id !== postId
+    // })
     return true
   }
 
   increaseLikes = async (postId, userId) => {
-    const updatedPost = await saveFirebase.increaseLikes(
-      postId,
-      this.props.cEvent.value._id,
-      userId,
-    )
+    // const updatedPost = await saveFirebase.increaseLikes(
+    //   postId,
+    //   this.props.cEvent.value._id,
+    //   userId,
+    // )
     //se actualiza local
     /* updatedPost = this.state.dataPost.map(function(value) {
       return value.id !== postId ? value : updatedPost;

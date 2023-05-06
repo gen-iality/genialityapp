@@ -40,6 +40,7 @@ export function CurrentUserProvider({ children }) {
                     .auth()
                     .signOut()
                     .then(async (resp) => {
+                      console.debug({ resp })
                       const docRef = await conectionRef
                         .where('email', '==', app.auth().currentUser?.email)
                         .get()

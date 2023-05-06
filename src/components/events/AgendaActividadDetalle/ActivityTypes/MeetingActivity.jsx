@@ -5,8 +5,8 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { withRouter } from 'react-router-dom'
 import MeetingPlayer from '../MeetingPlayer'
 
-const MeetingActivity = (props) => {
-  const [activityState, setactivityState] = useState('')
+const MeetingActivity = () => {
+  const [activityState] = useState('')
 
   const { currentActivity } = useHelper()
 

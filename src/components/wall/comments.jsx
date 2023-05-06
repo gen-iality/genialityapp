@@ -1,16 +1,6 @@
 import { Component } from 'react'
 import { firestore } from '@helpers/firebase'
-import {
-  Avatar,
-  List,
-  Card,
-  Spin,
-  Row,
-  Comment,
-  Tooltip,
-  Typography,
-  Divider,
-} from 'antd'
+import { Avatar, List, Card, Spin, Comment, Tooltip, Typography } from 'antd'
 import dayjs from 'dayjs'
 import withContext from '@context/withContext'
 import { UsersApi } from '@helpers/request'

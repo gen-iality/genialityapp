@@ -14,14 +14,10 @@ import {
   Tag,
   Modal,
   Form,
-  Select,
-  Switch,
-  InputNumber,
-  Input,
   DatePicker,
 } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 
 /** Helpers and utils */
 import {
@@ -67,7 +63,7 @@ function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
   const openModal = () => setIsModalOpened(true)
   const closeModal = () => setIsModalOpened(false)
 
-  const organizationId: string = props.org._id
+  // const organizationId: string = props.org._id
   const positionId = props.match.params.positionId
   const userId = props.match.params.userId
   const certificationId = props.match.params.certificationId
@@ -256,7 +252,7 @@ function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
                   id={`editAction${event._id}`}
                   type="primary"
                   size="small"
-                  onClick={(e) => {
+                  onClick={() => {
                     console.log('event', event)
                     if (!event.certification) return
                     else editUserCertificationLog(event)
@@ -271,7 +267,7 @@ function MemberCertificationLogsPage(props: MemberCertificationLogsPageProps) {
                   id={`deleteAction${event._id}`}
                   type="primary"
                   size="small"
-                  onClick={(e) => {
+                  onClick={() => {
                     console.log('event', event)
                     if (!event.certification) return
                     else deleteUserCertificationLog(event)

@@ -1,5 +1,5 @@
-import { Card, Button, Space, Typography, Spin, Popconfirm } from 'antd'
-import { DeleteOutlined, WarningOutlined } from '@ant-design/icons'
+import { Card, Button, Space, Typography, Popconfirm } from 'antd'
+import { WarningOutlined } from '@ant-design/icons'
 import AgendaContext from '@context/AgendaContext'
 import { useContext, useState, useMemo } from 'react'
 import { deleteLiveStream, deleteAllVideos } from '@adaptors/gcoreStreamingApi'
@@ -25,7 +25,6 @@ const TransmitionOptionsCard = (props: TransmitionOptionsCardProps) => {
     meeting_id,
     setDataLive,
     setMeetingId,
-    deleteTypeActivity,
     activityEdit,
     removeAllRequest,
     saveConfig,

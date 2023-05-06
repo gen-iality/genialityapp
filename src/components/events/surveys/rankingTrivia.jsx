@@ -8,7 +8,7 @@ import { useCurrentUser } from '@context/userContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useEventContext } from '@context/eventContext'
 
-function RankingTrivia(props) {
+function RankingTrivia() {
   const { setGameRanking, setMyScore } = useHelper()
   const cSurveys = useSurveysContext()
   const cUser = useCurrentUser()
@@ -30,7 +30,7 @@ function RankingTrivia(props) {
         .onSnapshot(async (querySnapshot) => {
           const puntajes = []
           const newPuntajes = await Promise.all(
-            querySnapshot.docs.map(async (doc, index) => {
+            querySnapshot.docs.map(async (doc) => {
               const result = doc.data()
               let picture
               if (result?.userId) {

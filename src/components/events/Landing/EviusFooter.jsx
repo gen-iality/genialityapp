@@ -1,5 +1,4 @@
 import { useEventContext } from '@context/eventContext'
-import { useHistory } from 'react-router-dom'
 
 const EviusFooter = () => {
   const cEventContext = useEventContext()

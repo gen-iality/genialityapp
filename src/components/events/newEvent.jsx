@@ -103,7 +103,7 @@ class NewEvent extends Component {
     );
   }; */
 
-  async saveEvent(fields) {
+  async saveEvent() {
     const eventNewContext = this.context
     this.setState({ isLoading: true })
     if (eventNewContext.selectOrganization) {

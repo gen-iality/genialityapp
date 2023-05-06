@@ -9,7 +9,6 @@ type Data = {
 
 export interface IPresencePageProps {}
 
-const { LOG, ERROR } = Logger('presence')
 const { LOG: GLOG, ERROR: GERROR } = Logger('presence-global')
 
 export function PresencePage(props: IPresencePageProps) {

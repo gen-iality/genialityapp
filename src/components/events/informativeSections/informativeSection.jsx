@@ -1,15 +1,12 @@
 import { Component, Fragment } from 'react'
-import { Alert, Button, Card, Col, Input, Row, Space, Typography } from 'antd'
+import { Card } from 'antd'
 import withContext from '@context/withContext'
 import { EventsApi } from '@helpers/request'
-import { SettingOutlined, WarningOutlined } from '@ant-design/icons'
-import Meta from 'antd/lib/card/Meta'
-import Modal from 'antd/lib/modal/Modal'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { withRouter } from 'react-router-dom'
 import Parser from 'html-react-parser'
-import ReactPlayer from 'react-player'
+
 class InformativeSection extends Component {
   constructor(props) {
     super(props)

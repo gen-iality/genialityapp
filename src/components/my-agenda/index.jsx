@@ -38,8 +38,6 @@ class MyAgenda extends Component {
     this.state = {}
   }
 
-  async componentDidMount() {}
-
   getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>

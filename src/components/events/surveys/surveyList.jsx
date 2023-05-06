@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-
 /** Redux */
 import { connect } from 'react-redux'
 import * as surveysActions from '../../../redux/survey/actions'
@@ -13,9 +11,8 @@ import { useSurveysContext } from '@context/surveysContext'
 
 const { setCurrentSurvey, setSurveyResult } = surveysActions
 
-function SurveyList(props) {
+function SurveyList() {
   const cSurveys = useSurveysContext()
-  const { activity, setCurrentSurvey, setSurveyResult } = props
 
   const currentUser = useCurrentUser()
 

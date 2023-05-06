@@ -9,7 +9,7 @@ interface EventInitialDates {
     });
   }; */
   callBackTheEventIsActive?: ({}) => void
-  user?: { plan: {}; expiredPlan: boolean } | undefined
+  user?: { plan: any; expiredPlan: boolean } | undefined
 }
 
 const oneDayInMilliseconds = 86400000
@@ -26,7 +26,7 @@ const secondsBetweenTwoDates = ({
 
 export const ValidateEventStart = ({
   startDate = null,
-  callBackTheEventIsActive = ({}) => {},
+  callBackTheEventIsActive = () => console.log('no callback given'),
   user,
 }: EventInitialDates) => {
   /**NOTE: callBackTheEventIsActive params: true indicates function blocking, false indicates function is still available. */
@@ -71,7 +71,7 @@ export const ValidateEventStart = ({
 
 export const ValidateEndEvent = ({
   endDate = null,
-  callBackTheEventIsActive = ({}) => {},
+  callBackTheEventIsActive = () => console.log('no callback given'),
   user,
 }: EventInitialDates) => {
   /**NOTE: callBackTheEventIsActive params: true indicates that the event is about to start or in progress, false indicates that the event has already passed, therefore everything is blocked. */

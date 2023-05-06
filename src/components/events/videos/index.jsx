@@ -1,4 +1,4 @@
-import { Card, Space, Col, Row, Result, PageHeader } from 'antd'
+import { Col, Row, PageHeader } from 'antd'
 import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useState, useEffect } from 'react'

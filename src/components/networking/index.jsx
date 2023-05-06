@@ -22,7 +22,6 @@ import AppointmentRequests from './appointmentRequests'
 import SearchComponent from '../shared/searchTable'
 import Pagination from '../shared/pagination'
 import Loading from '../loaders/loading'
-import FilterNetworking from './FilterNetworking'
 import { EventFieldsApi } from '@helpers/request'
 import { formatDataToString } from '@helpers/utils'
 import { userRequest } from './services'
@@ -187,7 +186,7 @@ class ListEventUser extends Component {
   }
 
   //Search records at third column
-  searchResult = (data, search = 0) => {
+  searchResult = (data) => {
     !data
       ? this.setState({ users: [] })
       : this.setState({ pageOfItems: data, users: data })
@@ -233,18 +232,8 @@ class ListEventUser extends Component {
   render() {
     const { event } = this.props
 
-    const {
-      usersFiltered,
-      users,
-      pageOfItems,
-      eventUserId,
-      eventUser,
-      asistantData,
-      eventUserIdToMakeAppointment,
-      eventUserToMakeAppointment,
-      activeTab,
-      matches,
-    } = this.state
+    const { usersFiltered, users, pageOfItems, eventUserId, asistantData, activeTab } =
+      this.state
 
     return (
       <Card style={{ padding: '5px' }}>

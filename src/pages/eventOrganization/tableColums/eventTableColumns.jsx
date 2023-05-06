@@ -1,7 +1,6 @@
-import { Button, Typography, Tag } from 'antd'
+import { Button, Tag } from 'antd'
 import { FileProtectOutlined, FileOutlined } from '@ant-design/icons'
 
-const { Paragraph } = Typography
 export const columns = (goToEvent) => [
   {
     title: 'Nombre del curso',

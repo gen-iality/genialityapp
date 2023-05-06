@@ -8,7 +8,7 @@ function sentry() {
   Sentry.init({
     dsn: dns,
     ignoreErrors: ['ResizeObserver loop limit exceeded'],
-    beforeSend(event, hint) {
+    beforeSend(event) {
       // Check if it is an exception, and if so, show the report dialog
       if (event.exception) {
         // Sentry.showReportDialog({

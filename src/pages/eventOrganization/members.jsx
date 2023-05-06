@@ -1,14 +1,13 @@
 /** React's libraries */
 import { useEffect, useState } from 'react'
 import { FormattedDate, FormattedTime } from 'react-intl'
-import { useHistory } from 'react-router-dom'
 import dayjs from 'dayjs'
 
 /** export Excel */
 import { utils, writeFileXLSX } from 'xlsx'
 
 /** Antd imports */
-import { Table, Button, Row, Col, Tag, Spin } from 'antd'
+import { Table, Button, Row, Col, Tag } from 'antd'
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons'
 
 /** Components */
@@ -17,23 +16,15 @@ import ModalMembers from '@components/modal/modalMembers'
 import { columns } from './tableColums/membersTableColumns'
 
 /** Helpers and utils */
-import {
-  OrganizationApi,
-  RolAttApi,
-  EventsApi,
-  AgendaApi,
-  PositionsApi,
-} from '@helpers/request'
+import { OrganizationApi, EventsApi, AgendaApi, PositionsApi } from '@helpers/request'
 import { firestore } from '@helpers/firebase'
 
 /** Context */
 import withContext from '@context/withContext'
-import { async } from 'ramda-adjunct'
 
 function OrgMembers(props) {
   console.log('Props - OrgMembers (CMS) ->', props)
   const { _id: organizationId } = props.org
-  const history = useHistory()
 
   /** Data States */
   const [membersDataSource, setMembersDataSource] = useState([])

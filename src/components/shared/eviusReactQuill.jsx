@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from 'react'
 import ReactQuill from 'react-quill'
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
 import { Actions } from '@helpers/request'
-import { Input } from 'antd'
 
 import htmlEditButton from 'quill-html-edit-button'
 

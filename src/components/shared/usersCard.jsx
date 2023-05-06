@@ -1,20 +1,14 @@
 import { useEffect, useState } from 'react'
 import { List, Avatar, Badge, Image, Tooltip, Popover, Typography } from 'antd'
-import {
-  MessageTwoTone,
-  EyeOutlined,
-  CrownFilled,
-  FileImageOutlined,
-} from '@ant-design/icons'
+import { EyeOutlined, CrownFilled, FileImageOutlined } from '@ant-design/icons'
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline'
 import PopoverInfoUser from '../socialZone/hooks/Popover'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useCurrentUser } from '@context/userContext'
 import { useEventContext } from '@context/eventContext'
 import { imageforDefaultProfile } from '@helpers/constants'
-import dayjs from 'dayjs'
 
-const { Paragraph, Title, Text } = Typography
+const { Text } = Typography
 
 /** estilos list item */
 const styleList = {

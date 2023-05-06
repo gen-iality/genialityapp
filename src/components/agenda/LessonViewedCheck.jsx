@@ -1,4 +1,4 @@
-import { Badge, Card } from 'antd'
+import { Badge } from 'antd'
 
 function LessonViewedCheck(props) {
   const { isTaken = false } = props

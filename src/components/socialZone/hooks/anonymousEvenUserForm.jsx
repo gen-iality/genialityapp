@@ -1,5 +1,4 @@
 import { Form, Button, Row, Col, Input, Typography } from 'antd'
-import { useHistory } from 'react-router-dom'
 import { app } from '@helpers/firebase'
 import { FormattedMessage } from 'react-intl'
 import { useEventContext } from '@context/eventContext'
@@ -13,7 +12,6 @@ const layout = {
 const { Text } = Typography
 
 function AnonymousEvenUserForm() {
-  const history = useHistory()
   const cEvent = useEventContext()
   const cEventUser = useUserEvent()
 

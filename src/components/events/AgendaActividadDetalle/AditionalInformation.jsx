@@ -1,36 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useIntl } from 'react-intl'
-import {
-  Button,
-  Tabs,
-  Typography,
-  Badge,
-  Col,
-  Card,
-  List,
-  Avatar,
-  Alert,
-  Row,
-  Grid,
-  Space,
-  Result,
-} from 'antd'
+import { Button, Tabs, Typography, Col, Card, List, Avatar, Row, Grid, Space } from 'antd'
 import WithEviusContext from '@context/withContext'
-import SurveyList from '../surveys/surveyList'
 import { connect } from 'react-redux'
 import ModalSpeaker from '../modalSpeakers'
 import DocumentsList from '../../documents/documentsList'
 import { UserOutlined } from '@ant-design/icons'
 import ReactQuill from 'react-quill'
-import ClipboardTextOffIcon from '@2fd/ant-design-icons/lib/ClipboardTextOff'
 import { DocumentsApi } from '@helpers/request'
 const { TabPane } = Tabs
-const { Title } = Typography
 const { useBreakpoint } = Grid
 
 const AditionalInformation = (props) => {
-  const { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useHelper()
+  const { HandleChatOrAttende, currentActivity } = useHelper()
   const intl = useIntl()
   const [activeTab, setActiveTab] = useState('description')
   const [idSpeaker, setIdSpeaker] = useState(null)

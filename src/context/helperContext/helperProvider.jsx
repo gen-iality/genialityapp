@@ -17,7 +17,6 @@ import { maleIcons, femaleicons, imageforDefaultProfile } from '@helpers/constan
 import { useHistory } from 'react-router-dom'
 import { useIntl } from 'react-intl'
 import { helperReducer, helperInitialState } from './helperReducer'
-import { remoteLogOutValidator } from './hooks/remoteLogOutValidator'
 
 const initialStateNotification = {
   notify: false,
@@ -31,8 +30,6 @@ export const HelperContextProvider = ({ children }) => {
   const cEvent = useEventContext()
   const cUser = useCurrentUser()
   const cEventuser = useUserEvent()
-  const history = useHistory()
-  const intl = useIntl()
 
   const [containtNetworking, setcontaintNetworking] = useState(false)
   const [infoAgenda, setinfoAgenda] = useState(null)

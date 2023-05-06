@@ -1,17 +1,5 @@
 import { useState, useEffect } from 'react'
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Divider,
-  Input,
-  message,
-  Row,
-  Space,
-  Spin,
-  Typography,
-} from 'antd'
+import { Card, Divider, Row, Space, Spin, Typography } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
 import { IssuesCloseOutlined } from '@ant-design/icons'

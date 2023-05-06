@@ -17,27 +17,8 @@ interface EventTypeSectionProps {
 const EventTypeSection: FunctionComponent<EventTypeSectionProps> = (props) => {
   const { onEventTypeSectionChange = () => {} } = props
 
-  const {
-    showModal,
-    isModalVisible,
-    handleCancel,
-    handleOk,
-    changeSelectHours,
-    changeSelectDay,
-    selectedDay,
-    selectedHours,
-    dateEvent,
-    handleInput,
-    valueInputs,
-    containsError,
-    selectTemplate,
-    templateId,
-    dispatch,
-    state,
-  } = useContextNewEvent()
+  const { dispatch } = useContextNewEvent()
 
-  const [isCertification, setIsCertification] = useState(false)
-  const [isChecked, setIsChecked] = useState(false)
   const [selectedEventType, setSelectedEventType] = useState<EventTypeType>('onlineEvent')
 
   const [cards] = useState<CardType[]>([

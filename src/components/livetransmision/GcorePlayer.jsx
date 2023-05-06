@@ -1,10 +1,8 @@
 import { useContext, useEffect, useState, memo } from 'react'
 import ReactPlayer from 'react-player'
 import { getLiveStream } from '../../adaptors/gcoreStreamingApi'
-import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff'
-import { Button, Spin } from 'antd'
+import { Spin } from 'antd'
 import AgendaContext from '@context/AgendaContext'
-import { CurrentUserContext } from '@context/userContext'
 import { Grid } from 'antd'
 
 const { useBreakpoint } = Grid
@@ -15,8 +13,7 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
   const defaultVideo =
     'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2Fgeniality-loading-streaming.mp4?alt=media&token=97dc8cbf-dc80-477d-862c-6be0eeb11076'
 
-  const { typeActivity, activityEdit } = useContext(AgendaContext)
-  const userContext = useContext(CurrentUserContext)
+  const { typeActivity } = useContext(AgendaContext)
 
   const [platformurl, setPlatformurl] = useState(defaultVideo)
   const [visibleReactPlayer, setVisibleReactPlayer] = useState(false)

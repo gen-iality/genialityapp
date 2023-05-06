@@ -1,5 +1,5 @@
 /** React's libraries imports */
-import { useState, useEffect, ReactElement, ReactNode } from 'react'
+import { useState, useEffect, ReactNode } from 'react'
 import { useIntl } from 'react-intl'
 import { useLocation } from 'react-router'
 

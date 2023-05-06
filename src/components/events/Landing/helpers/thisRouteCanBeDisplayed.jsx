@@ -3,7 +3,6 @@ import { Button, Result, Typography } from 'antd'
 import { useUserEvent } from '@context/eventUserContext'
 import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import Loading from '../../../profile/loading'
 import { useIntl } from 'react-intl'
 
 export function iAmRegisteredInThisEvent(cEventUser) {

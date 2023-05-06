@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Button, Pagination as PaginationAnt } from 'antd'
+import { Pagination as PaginationAnt } from 'antd'
 
 class Pagination extends Component {
   constructor(props) {

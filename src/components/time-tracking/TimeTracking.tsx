@@ -24,7 +24,7 @@ export interface TimeTrackingProps {
   event: any
 }
 
-const { LOG, ERROR } = Logger('time-tracking')
+const { LOG } = Logger('time-tracking')
 
 function TimeTracking(props: TimeTrackingProps) {
   const [subtitleLoading, setSubtitleLoading] = useState('Por favor espere')
@@ -33,8 +33,6 @@ function TimeTracking(props: TimeTrackingProps) {
   const [userSessionInfoList, setUserSessionInfoList] = useState<UserSessionInfo[]>([])
   const cEvent = useEventContext()
   const cUser = useCurrentUser()
-
-  const history = useHistory()
 
   const requestAllAgendaItems = async (eventId: string) => {
     const result = (await AgendaApi.byEvent(eventId)) as { data: ExtendedAgendaType[] }

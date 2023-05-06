@@ -1,14 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Upload, Spin, Image, Card } from 'antd'
 import { FileImageOutlined } from '@ant-design/icons'
-import {
-  uploadImagedummyRequest,
-  readUrlImg,
-  handleImageName,
-} from '../../Utilities/imgUtils'
+import { uploadImagedummyRequest, handleImageName } from '../../Utilities/imgUtils'
 import { ImageUploaderDragAndDropType } from '../../Utilities/types/types'
 import { uploadImageData } from '@Utilities/uploadImageData'
-import { fireStorage } from '@helpers/firebase'
 import { deleteFireStorageData } from '@Utilities/deleteFireStorageData'
 
 const ImageUploaderDragAndDrop = ({

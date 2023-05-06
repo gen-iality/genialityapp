@@ -1,25 +1,14 @@
 import { Component, createRef } from 'react'
 import { dynamicFieldOptions } from '@components/dynamic-fields/constants'
 import { Creatable as CreatableSelect } from 'react-select'
-import {
-  Checkbox,
-  Form,
-  Input,
-  Radio,
-  Select,
-  InputNumber,
-  Button,
-  Row,
-  Divider,
-} from 'antd'
+import { Checkbox, Form, Input, Select, InputNumber, Button, Row, Divider } from 'antd'
 import { DispatchMessageService } from '@context/MessageService'
 
-const html = document.querySelector('html')
+// const html = document.querySelector('html')
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 }
-const { Option } = Select
 const { TextArea } = Input
 
 const extraInputs = {

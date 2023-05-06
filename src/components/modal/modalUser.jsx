@@ -1,29 +1,18 @@
 import { Component } from 'react'
-import { app, firestore } from '@helpers/firebase'
 import {
   Activity,
   AttendeeApi,
   eventTicketsApi,
   OrganizationApi,
-  TicketsApi,
   UsersApi,
 } from '@helpers/request'
 import { injectIntl } from 'react-intl'
 import QRCode from 'qrcode.react'
-import { icon } from '@helpers/constants'
 import { Redirect } from 'react-router-dom'
-import { Actions } from '@helpers/request'
 import FormComponent from '../events/registrationForm/form'
-import { Alert, Button, Grid, Modal } from 'antd'
+import { Alert, Button, Modal } from 'antd'
 import withContext from '@context/withContext'
-import { ComponentCollection } from 'survey-react'
-import { saveImageStorage } from '@helpers/helperSaveImage'
-import {
-  DeleteOutlined,
-  ExclamationCircleOutlined,
-  PrinterOutlined,
-} from '@ant-design/icons'
-import { FaBullseye } from 'react-icons/fa'
+import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 import { DispatchMessageService } from '@context/MessageService'
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent'
@@ -32,7 +21,6 @@ import printBagdeUser from '../badge/utils/printBagdeUser'
 import RegisterUserAndEventUser from '@components/authentication/RegisterUserAndEventUser'
 
 const { confirm } = Modal
-const { useBreakpoint } = Grid
 
 const stylePaddingDesktop = {
   paddingLeft: '30px',

@@ -100,8 +100,6 @@ class CreatePost extends Component {
     this.formRef = createRef()
   }
 
-  componentDidMount() {}
-
   cleanValue() {
     this.setState({ value: '' })
   }
@@ -161,9 +159,9 @@ class CreatePost extends Component {
   //Funcion para mostrar el archivo, se pasa a base64 para poder mostrarlo
   previewImage(event) {
     console.log(event)
-    const permitFile = ['png', 'jpg', 'jpeg', 'gif']
+    // const permitFile = ['png', 'jpg', 'jpeg', 'gif']
     const file = event.fileList[0]
-    const extension = file.name.split('.').pop()
+    // const extension = file.name.split('.').pop()
 
     if (file) {
       const reader = new FileReader()

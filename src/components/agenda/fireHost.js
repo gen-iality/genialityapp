@@ -6,7 +6,7 @@ export const setHostState = (hostId, state) => {
       .collection('host')
       .doc(hostId)
       .update({ busy: state })
-      .then((result) => {
+      .then(() => {
         resolve({ message: 'El host ha sido actualizado' })
       })
       .catch((err) => {

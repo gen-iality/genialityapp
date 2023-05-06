@@ -5,7 +5,6 @@ import momentLocalizer from 'react-widgets-moment'
 import { Row, Col, Button, Divider, Upload } from 'antd'
 import { DownloadOutlined, InboxOutlined } from '@ant-design/icons'
 import { DispatchMessageService } from '@context/MessageService'
-import content from '@containers/content'
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils'
 
 dayjs.locale('es')

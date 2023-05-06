@@ -17,12 +17,12 @@ const controllerInternetConnection = ({
   //   window.addEventListener('load', updateConnectionStatus);
 
   // Attaching event handler for the online event
-  window.addEventListener('online', function (e) {
+  window.addEventListener('online', function () {
     updateConnectionStatus()
   })
 
   // Attaching event handler for the offline event
-  window.addEventListener('offline', function (e) {
+  window.addEventListener('offline', function () {
     updateConnectionStatus()
   })
 }

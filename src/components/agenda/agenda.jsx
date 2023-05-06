@@ -17,7 +17,7 @@ const Agenda = (props) => {
       ellipsis: true,
       sorter: (a, b) => a.datetime_start.localeCompare(b.datetime_start),
       ...getColumnSearchProps('datetime_start', columnsData),
-      render(record, key) {
+      render(record) {
         return <div>{dayjs(record).format('DD/MM/YYYY')}</div>
       },
     },
@@ -27,7 +27,7 @@ const Agenda = (props) => {
       ellipsis: true,
       sorter: (a, b) => a.datetime_end.localeCompare(b.datetime_end),
       ...getColumnSearchProps('datetime_end', columnsData),
-      render(record, key) {
+      render(record) {
         return <div>{dayjs(record).format('DD/MM/YYYY')}</div>
       },
     },
@@ -40,7 +40,7 @@ const Agenda = (props) => {
     },
     {
       title: 'Tipo',
-      render(record, key) {
+      render(record) {
         if (record.type === null) {
           return <div>Genérico</div>
         }

@@ -1,11 +1,9 @@
 import { Modal } from 'antd'
 import SmartLayoutTypeActivity from './components/layout/SmartLayoutTypeActivity'
 import ContentTypeActivity from '../typeActivity/components/layout/ContentTypeActivity'
-import ResultTypeActivity from '../typeActivity/components/ResultTypeActivity'
-import LoadingTypeActivity from '../typeActivity/components/LoadingTypeActivity'
 import ContentSource from '../typeActivity/components/layout/ContentSource'
 import ContentInformative from '../typeActivity/components/layout/ContentInformative'
-import { LinkOutlined, YoutubeOutlined } from '@ant-design/icons' //Este icono para el addonBefore
+import { YoutubeOutlined } from '@ant-design/icons' //Este icono para el addonBefore
 import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
 import InputUploadVideo from './components/InputUploadVideo'
 
@@ -26,7 +24,7 @@ interface mapContentSource {
 }
 
 const SmartModalStepByStep = (props: any) => {
-  const { openModal, closeModal, typeOptions, selectedKey } = useTypeActivity()
+  const { openModal, closeModal, typeOptions } = useTypeActivity()
 
   return (
     <Modal

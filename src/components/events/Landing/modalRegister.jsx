@@ -1,4 +1,4 @@
-import { Button, Drawer, Modal, Result, Typography } from 'antd'
+import { Button, Modal, Result, Typography } from 'antd'
 import { CheckCircleTwoTone } from '@ant-design/icons'
 import { ButtonPayment } from '../registrationForm/payRegister'
 

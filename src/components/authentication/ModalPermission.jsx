@@ -1,16 +1,12 @@
-import { CloseCircleFilled } from '@ant-design/icons'
-import { Modal, PageHeader, Space, Grid, Typography, Button } from 'antd'
+import { Modal } from 'antd'
 import FormComponent from '../events/registrationForm/form'
 import withContext from '@context/withContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 
-import { useIntl } from 'react-intl'
 import { DispatchMessageService } from '@context/MessageService'
 import { useEventContext } from '@context/eventContext'
 import { useUserEvent } from '@context/eventUserContext'
-import { useState } from 'react'
 import { UsersApi } from '@helpers/request'
-const { useBreakpoint } = Grid
 
 const stylePaddingDesktop = {
   paddingLeft: '25px',
@@ -21,14 +17,10 @@ const stylePaddingMobile = {
   paddingRight: '10px',
 }
 
-const ModalPermission = (props) => {
+const ModalPermission = () => {
   const { handleChangeTypeModal, typeModal } = useHelper()
-  const screens = useBreakpoint()
-  const intl = useIntl()
   const cEvent = useEventContext()
   const cEventUser = useUserEvent()
-
-  const [openModal, setOpenModal] = useState(false)
 
   async function saveEventUser(values) {
     const eventUserBody = {

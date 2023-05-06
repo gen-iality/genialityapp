@@ -1,7 +1,6 @@
 import { Fragment } from 'react'
 import { Route, Switch, withRouter } from 'react-router-dom'
 import Agenda from './agenda'
-import AgendaEdit from './edit'
 import AgendaTypeCat from './typecat'
 import AgendaTypeCatCE from './AgendaTypeCatCE'
 import ActivityTypeProvider from '@context/activityType/activityTypeProvider'

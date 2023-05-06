@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Steps, Typography } from 'antd'
+import { Typography } from 'antd'
 import { useIntl } from 'react-intl'
 import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
@@ -9,20 +9,15 @@ import { fieldNameEmailFirst } from '@helpers/utils'
 import { app } from '@helpers/firebase'
 import { AttendeeApi } from '@helpers/request'
 import { useUserEvent } from '@context/eventUserContext'
-const { Step } = Steps
 const { Title } = Typography
 
-const RegisterUserAndEventUserAnonymous = ({
-  screens,
-  stylePaddingMobile,
-  stylePaddingDesktop,
-}: any) => {
+const RegisterUserAndEventUserAnonymous = ({}: any) => {
   const intl = useIntl()
   const cEvent = useEventContext()
   const cEventUser = useUserEvent()
   const { helperDispatch } = useHelper()
   const [loading, setLoading] = useState(false)
-  const { fields_conditions, type_event, _id, user_properties } = cEvent?.value || {}
+  const { fields_conditions, user_properties } = cEvent?.value || {}
   const fields = fieldNameEmailFirst(user_properties)
   const handleSubmit = async (values: any) => {
     setLoading(true)

@@ -3,7 +3,6 @@ import { Result, Button, Typography, Grid } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { firestore } from '@helpers/firebase'
 import { useIntl } from 'react-intl'
-import { imageUtils } from '../../Utilities/ImageUtils'
 
 const { useBreakpoint } = Grid
 

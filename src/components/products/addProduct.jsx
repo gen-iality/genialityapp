@@ -41,8 +41,6 @@ function AddProduct(props) {
   const [picture, setPicture] = useState(null)
   const [optionalPicture, setOptionalPicture] = useState(null)
   const [imageFile, setImgFile] = useState([])
-  const [imageFileOptional, setImgFileOptional] = useState(null)
-  const [errImg, setErrImg] = useState()
   const [error, setError] = useState(null)
   const [idNew, setIdNew] = useState()
   const [isLoading, setIsLoading] = useState(true)

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 
 import { SurveyStats } from '@components/events/surveys/types'
 import QuizBadge from './QuizBadge'

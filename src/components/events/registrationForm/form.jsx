@@ -214,12 +214,10 @@ const FormRegister = ({
   const [cities, setCities] = useState([])
 
   // Estados que no creo que sean necesarios. ¿o si? -> Convertirlos a variables sin necesidad de estados
-  const [eventUser, seteventUser] = useState(
-    organization ? eventUserOther : cEventUser.value || {},
-  )
+  const [eventUser] = useState(organization ? eventUserOther : cEventUser.value || {})
   // eslint-disable-next-line prefer-const
-  let [ImgUrl, setImgUrl] = useState('')
-  const [conditionals, setconditionals] = useState(
+  let [ImgUrl] = useState('')
+  const [conditionals] = useState(
     organization ? conditionalsOther : cEvent.value?.fields_conditions || [],
   )
 

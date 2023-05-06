@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect } from 'react'
-import { Button, Avatar, Row, Col, Tooltip, Typography, Spin } from 'antd'
+import { Avatar, Row, Col, Tooltip, Typography } from 'antd'
 import { AgendaApi } from '@helpers/request'
 import { firestore } from '@helpers/firebase'
 import Moment from 'moment-timezone'

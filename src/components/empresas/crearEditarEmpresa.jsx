@@ -1,14 +1,12 @@
 import { useCallback, useState, useEffect } from 'react'
 import {
-  CaretLeftOutlined,
   DeleteOutlined,
   PlusCircleOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons'
-import { Button, Col, Form, Row, Input, Modal, Switch, Spin } from 'antd'
+import { Button, Col, Form, Row, Modal } from 'antd'
 import { Field, FieldArray, Formik } from 'formik'
 import { apply, keys } from 'ramda'
-import { Link } from 'react-router-dom'
 import * as yup from 'yup'
 
 import InputField from '../formFields/InputField'

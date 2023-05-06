@@ -1,13 +1,9 @@
 import { useState } from 'react'
 import { Button, Space } from 'antd'
 
-import CourseProgressBar from '../../events/courseProgressBar/CourseProgressBar'
-
-export interface ICourseProgressBarPageProps {}
-
-export function CourseProgressBarPage(props: ICourseProgressBarPageProps) {
+export function CourseProgressBarPage() {
   const [takenCourseCount, setTakenCourseCount] = useState(0)
-  const [takenCourseTotal, setTakenCourseTotal] = useState(10)
+  const [takenCourseTotal] = useState(10)
 
   const increase = () => {
     if (takenCourseCount + 1 <= takenCourseTotal) {

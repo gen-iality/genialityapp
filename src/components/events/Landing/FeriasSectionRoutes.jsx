@@ -4,7 +4,6 @@ import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom'
  * ---------------------*/
 import FeriasDetail from '../../events/ferias/FeriasDetail'
 import FeriasList from '../../events/ferias/FeriasList'
-import FeriasStand from '../../events/ferias/FeriasStand'
 import { useEventContext } from '@context/eventContext'
 
 const FeriasSectionRoutes = () => {

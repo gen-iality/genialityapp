@@ -2,7 +2,6 @@ import { Component, Fragment } from 'react'
 import ComponentTest from './componentTest'
 import API from '@helpers/request'
 import { firestore } from '@helpers/firebase'
-import { FormattedMessage, useIntl } from 'react-intl'
 import { GetTokenUserFirebase } from 'helpers/HelperAuth'
 import { DispatchMessageService } from '@context/MessageService'
 

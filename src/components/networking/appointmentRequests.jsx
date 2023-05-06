@@ -1,6 +1,6 @@
 import { Avatar, Button, Card, Col, Divider, notification, Row, Spin } from 'antd'
 import dayjs from 'dayjs'
-import { find, map, pathOr, propEq, props } from 'ramda'
+import { find, map, propEq } from 'ramda'
 import { isNonEmptyArray } from 'ramda-adjunct'
 import { useEffect, useState } from 'react'
 //context
@@ -28,7 +28,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   const [fetching, setFetching] = useState(false)
   const [pendingAgendas, setPendingAgendas] = useState([])
   const [pendingAgendasSent, setPendingAgendasSent] = useState([])
-  const [sendRespuesta, setSendRespuesta] = useState(false)
+  const [sendRespuesta] = useState(false)
 
   //contextos
   const userEventContext = useUserEvent()
@@ -52,7 +52,8 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
               setLoading1(false)
             }
           })
-          .catch((error) => {
+          .catch((err) => {
+            console.error(err)
             notification.error({
               message: 'Error',
               description: 'Obteniendo las citas pendientes',

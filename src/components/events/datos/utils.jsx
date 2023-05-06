@@ -1,4 +1,4 @@
-import { Divider, List, Modal, Typography } from 'antd'
+import { List, Modal, Typography } from 'antd'
 
 const { confirm } = Modal
 const { Text } = Typography

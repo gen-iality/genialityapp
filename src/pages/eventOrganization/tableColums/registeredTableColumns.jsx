@@ -1,13 +1,6 @@
-import { useHistory } from 'react-router'
-import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin, Tag } from 'antd'
-import {
-  ClockCircleOutlined,
-  EditOutlined,
-  FileAddOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
+import { Tooltip, Button, Tag } from 'antd'
+import { FileAddOutlined } from '@ant-design/icons'
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps'
-import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
@@ -183,7 +176,7 @@ export const columns = (columnsData, extraFields = [], addNewCertificationModal)
               id={`editAction${index}`}
               type="primary"
               size="small"
-              onClick={(e) => {
+              onClick={() => {
                 addNewCertificationModal(item)
               }}
               icon={<FileAddOutlined />}
@@ -202,7 +195,7 @@ export const columns = (columnsData, extraFields = [], addNewCertificationModal)
       ellipsis: true,
       // This sorter is generic and it can crash when you are in a selling
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
-      render: (record, item) => {
+      render: (record) => {
         // TODO: parse each dynamic field type like boolean, string, etc.
         if (field.type === 'boolean') {
           return record === undefined ? 'N/A' : record ? 'Sí' : 'No'

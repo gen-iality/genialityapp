@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, useRef } from 'react'
-import { Modal, Row, Form, Typography, Alert, Spin, Space } from 'antd'
+import { Modal, Row, Form, Typography, Alert } from 'antd'
 import { getFieldDataFromAnArrayOfFields } from '@Utilities/generalUtils'
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent'
 import { assignMessageAndTypeToQrmodalAlert } from '@Utilities/checkInUtils'

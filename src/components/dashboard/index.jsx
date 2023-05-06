@@ -98,7 +98,7 @@ class DashboardEvent extends Component {
   }
 
   displayButton = (self) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       self.setState({ printButton: false }, () => resolve(true))
     })
   }
@@ -117,7 +117,7 @@ class DashboardEvent extends Component {
       totalSent = 0,
       totalBounced = 0
     list?.length > 0 &&
-      list.map((m, index) => {
+      list.map((m) => {
         totalClicked += m.total_clicked ? m.total_clicked : 0
         totalDeliverd += m.total_delivered ? m.total_delivered : 0
         totalOpened += m.total_opened ? m.total_opened : 0

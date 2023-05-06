@@ -189,7 +189,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
         key: `key_${i + 1}`,
         dataIndex: `row_${i}`,
         title: columnName,
-        render: (value: Cell, record, index) => {
+        render: (value: Cell) => {
           return (
             <>
               {value.isController ? (
@@ -238,7 +238,7 @@ function LikertScaleEditor(props: LikertScaleEditorProps) {
     newColumns.push({
       key: `key_controller`,
       dataIndex: 'row_controller',
-      title: (text) => (
+      title: () => (
         <Space align="center" size="large">
           <Button title="Agregar categoría" type="primary" onClick={showModalForColumn}>
             <PlusOutlined />

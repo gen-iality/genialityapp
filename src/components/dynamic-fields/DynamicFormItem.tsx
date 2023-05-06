@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { injectIntl, WrappedComponentProps } from 'react-intl'
 import { Form } from 'antd'
 import { Rule } from 'antd/lib/form'
 import { IDynamicFieldProps } from './types'

@@ -1,7 +1,6 @@
 import { message, Result, Spin, Upload } from 'antd'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import FileVideoOutlineIcon from '@2fd/ant-design-icons/lib/FileVideoOutline'
-import { RcFile } from 'antd/lib/upload'
 import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
 import { deleteVideo } from '@adaptors/gcoreStreamingApi'
 

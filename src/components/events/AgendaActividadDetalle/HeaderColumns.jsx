@@ -39,7 +39,6 @@ const HeaderColumns = (props) => {
   const [loading, setLoading] = useState(false)
   const {
     request,
-    transmition,
     getRequestByActivity,
     addRequest,
     setRefActivity,

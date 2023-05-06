@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Layout, Row, Col, Divider, List, Typography, Space } from 'antd'
 import { FacebookFilled, InstagramFilled, LinkedinFilled } from '@ant-design/icons'
-import { imageUtils } from '../Utilities/ImageUtils'
 
 const Footer = () => {
   return (
@@ -21,6 +20,7 @@ const Footer = () => {
                 target="_blank"
                 href="https://geniality.com.co/"
                 style={{ color: '#fff' }}
+                rel="noreferrer"
               >
                 Inicio
               </a>
@@ -30,6 +30,7 @@ const Footer = () => {
                 target="_blank"
                 href="https://geniality.com.co/"
                 style={{ color: '#fff' }}
+                rel="noreferrer"
               >
                 Tipos de cursos
               </a>
@@ -39,6 +40,7 @@ const Footer = () => {
                 target="_blank"
                 href="https://geniality.com.co/"
                 style={{ color: '#fff' }}
+                rel="noreferrer"
               >
                 Casos de éxito
               </a>
@@ -48,6 +50,7 @@ const Footer = () => {
                 target="_blank"
                 href="https://geniality.com.co/"
                 style={{ color: '#fff' }}
+                rel="noreferrer"
               >
                 Solicitar demo
               </a>
@@ -68,6 +71,7 @@ const Footer = () => {
                 target="_blank"
                 href="https://geniality.com.co/"
                 style={{ color: '#fff' }}
+                rel="noreferrer"
               >
                 ¿Quiénes somos?
               </a>
@@ -131,6 +135,7 @@ const Footer = () => {
               href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
               style={{ color: '#fff' }}
+              rel="noreferrer"
             >
               <FacebookFilled style={{ fontSize: '35px' }} />
             </a>
@@ -138,6 +143,7 @@ const Footer = () => {
               href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
               style={{ color: '#fff' }}
+              rel="noreferrer"
             >
               <InstagramFilled style={{ fontSize: '35px' }} />
             </a>
@@ -145,6 +151,7 @@ const Footer = () => {
               href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
               style={{ color: '#fff' }}
+              rel="noreferrer"
             >
               <LinkedinFilled style={{ fontSize: '35px' }} />
             </a>

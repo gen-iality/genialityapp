@@ -1,7 +1,7 @@
 import moment from 'moment'
 
 /** Sorting to show users with checkIn first in descending order, and users who do not have checkIn as last  */
-const sortUsersArray = async (users: {}[]) => {
+const sortUsersArray = async (users: any[]) => {
   const sortedResult = users.sort((itemA: any, itemB: any) => {
     let aParameter = ''
     let bParameter = ''

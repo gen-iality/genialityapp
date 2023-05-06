@@ -2,16 +2,16 @@ import { useContext, useState } from 'react'
 import { Button, Form, Input, Row, Col, Modal } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 import { AuthUrl } from '@helpers/constants'
-import WallContext, { WallContextProvider } from '@context/WallContext'
+import WallContext from '@context/WallContext'
 
 const { TextArea } = Input
 const CommentEditor = ({ onSubmit, item }) => {
-  const [visibleNoUser, setVisibleNoUser] = useState(false)
+  const [visibleNoUser] = useState(false)
 
   return <RenderEditor onSubmit={onSubmit} item={item} visibleNoUser={visibleNoUser} />
 }
 
-const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
+const RenderEditor = ({ onSubmit, visibleNoUser, item }) => {
   const { comment, setComment, itemcomment, setItemComment } = useContext(WallContext)
   return (
     <>
@@ -19,6 +19,7 @@ const RenderEditor = ({ wallcontext, onSubmit, visibleNoUser, item }) => {
       {
         <Form
           onFinish={(values) => {
+            console.log('form submits:', { values })
             onSubmit(comment)
             setComment('')
           }}

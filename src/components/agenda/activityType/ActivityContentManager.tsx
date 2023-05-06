@@ -6,7 +6,6 @@ import {
   Affix,
   Card,
   Typography,
-  Statistic,
   Alert, // to info messages
   Button,
 } from 'antd'
@@ -43,17 +42,10 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
   const {
     activityEdit,
     roomStatus,
-    setRoomStatus,
     dataLive,
     meeting_id,
-    obtainUrl,
     getRequestByActivity,
-    recordings,
-    startRecordTransmition,
-    stopRecordTransmition,
     request,
-    loadingRecord,
-    record,
     platform,
     obtenerDetalleActivity,
   } = useContext(AgendaContext)

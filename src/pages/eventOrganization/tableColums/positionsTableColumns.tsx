@@ -65,7 +65,7 @@ export default function positionsTableColumns(
             <Button
               type="primary"
               size="small"
-              onClick={(e) => cbEdit(position)}
+              onClick={() => cbEdit(position)}
               icon={<EditOutlined />}
             />
           </Tooltip>

@@ -1,4 +1,4 @@
-import { Button, Row, Col, Avatar, Card, Image } from 'antd'
+import { Button, Row, Col, Card } from 'antd'
 
 function PartnerItemList({ company, handleOpenPartnerDetail, companyId }) {
   return (

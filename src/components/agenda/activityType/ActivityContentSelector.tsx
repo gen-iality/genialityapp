@@ -20,7 +20,7 @@ export interface SubActivityContentSelectorProps {
 }
 
 function ActivityContentSelector(props: SubActivityContentSelectorProps) {
-  const { activityName, shouldLoad, matchUrl } = props
+  const { activityName, shouldLoad } = props
 
   const [modalTitle, setModalTitle] = useState('Contenido')
   const [isModalShown, setIsModalShown] = useState(false)

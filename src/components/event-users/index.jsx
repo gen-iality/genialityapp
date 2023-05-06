@@ -1,5 +1,5 @@
 import { Component, useState, useEffect } from 'react'
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl'
+import { FormattedDate, FormattedTime } from 'react-intl'
 import { firestore } from '@helpers/firebase'
 import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request'
 import { AgendaApi, OrganizationApi } from '@helpers/request'
@@ -16,11 +16,9 @@ import dayjs from 'dayjs'
 import {
   Button,
   Card,
-  Checkbox,
   Col,
   Drawer,
   Image,
-  message,
   List,
   Row,
   Statistic,

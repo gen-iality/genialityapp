@@ -17,14 +17,8 @@ function ActivityTypeSelector(props: SubActivityTypeSelectorProps) {
     null,
   )
 
-  const {
-    is,
-    saveActivityType,
-    deleteActivityType,
-    activityType,
-    setActivityType,
-    humanizeActivityType,
-  } = useActivityType()
+  const { is, saveActivityType, activityType, setActivityType, humanizeActivityType } =
+    useActivityType()
 
   const handleCloseModal = (success: boolean = false) => {
     setIsModalShown(false)

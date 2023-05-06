@@ -189,7 +189,7 @@ class SurveyForm extends Component {
     }
   }
 
-  getCurrentEvenUser = async (eventId) => {
+  getCurrentEvenUser = async () => {
     const evius_token = await GetTokenUserFirebase()
     if (!evius_token) return null
     const response = await TicketsApi.getByEvent(this.props.cEvent.value._id, evius_token)
@@ -205,7 +205,7 @@ class SurveyForm extends Component {
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
   // eslint-disable-next-line no-unused-vars
-  toggleSurvey = async (data, reload) => {
+  toggleSurvey = async (data) => {
     this.setState({ selectedSurvey: data, surveyVisible: true })
     if (typeof data === 'boolean' || data === undefined) {
       this.setState({

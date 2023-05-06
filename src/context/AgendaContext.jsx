@@ -1,6 +1,5 @@
 import {
   getLiveStreamStatus,
-  getVideosLiveStream,
   startRecordingLiveStream,
   stopRecordingLiveStream,
 } from '@adaptors/gcoreStreamingApi'
@@ -10,7 +9,6 @@ import { createContext, useState, useEffect, useContext, useReducer } from 'reac
 import Service from '@components/agenda/roomManager/service'
 import { fireRealtime, firestore } from '@helpers/firebase'
 import { CurrentEventContext } from './eventContext'
-import { CurrentEventUserContext } from './eventUserContext'
 import { DispatchMessageService } from './MessageService'
 export const AgendaContext = createContext()
 
@@ -300,12 +298,12 @@ export const AgendaContextProvider = ({ children }) => {
   }
   const executer_startMonitorStatus = async () => {
     let live_stream_status = null
-    let liveLocal = false
+    // let liveLocal = false
     try {
       live_stream_status = await getLiveStreamStatus(meeting_id)
       setDataLive(live_stream_status)
 
-      liveLocal = live_stream_status?.live
+      // liveLocal = live_stream_status?.live
     } catch (e) {}
     if (!!live_stream_status?.active) {
       const timer_id = setTimeout(executer_startMonitorStatus, 5000)

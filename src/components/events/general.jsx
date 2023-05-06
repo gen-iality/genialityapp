@@ -27,7 +27,6 @@ import {
 } from '@helpers/request'
 import ErrorServe from '../modal/serverError'
 import { injectIntl } from 'react-intl'
-import axios from 'axios/index'
 import SelectInput from '../shared/selectInput'
 import Loading from '../loaders/loading'
 import DateEvent from './dateEvent'
@@ -37,47 +36,28 @@ import {
   Row,
   Col,
   Tabs,
-  Checkbox,
   Typography,
   Input,
   Select,
   Modal,
   Form,
   InputNumber,
-  Badge,
-  Space,
-  Grid,
-  Divider,
-  Button,
-  TimePicker,
   DatePicker,
 } from 'antd'
 import { firestore } from '@helpers/firebase'
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
-import {
-  ExclamationCircleOutlined,
-  CheckCircleFilled,
-  BellOutlined,
-} from '@ant-design/icons'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { handleRequestError } from '@helpers/utils'
 import { DispatchMessageService } from '@context/MessageService'
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
-import { ValidateEventStart } from '@/hooks/validateEventStartAndEnd'
-import {
-  disabledEndDateTime,
-  disabledEndDate,
-  disabledStartDateTime,
-  disabledStartDate,
-} from '@Utilities/disableTimeAndDatePickerInEventDate'
+
 import { CurrentUserContext } from '@context/userContext'
 import { CardSelector } from './CardSelector'
 
 dayjs.locale('es')
-const { Title, Text } = Typography
 const { Option } = Select
 const { confirm } = Modal
-const { useBreakpoint } = Grid
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -302,7 +282,7 @@ class General extends Component {
   //Validación
   valid = () => {
     const error = {}
-    const { event, selectedOrganizer, selectedType, selectedCategories } = this.state
+    const { event, selectedOrganizer } = this.state
     const valid =
       event.name !== null &&
       event.name !== '' &&
@@ -740,27 +720,19 @@ class General extends Component {
     const {
       event,
       possiblePositions,
-      categories,
       organizers,
-      types,
-      selectedCategories,
       selectedOrganizer,
-      selectedType,
-      valid,
       errorData,
       serverError,
       specificDates,
-      registerForm,
       image,
       iMustBlockAFunctionality,
-      iMustValidate,
-      consumption,
     } = this.state
     const userContext = this.context
     /** RESTRICIONES */
     const cUser = userContext?.value
     const userPlan = userContext.value?.plan
-    const streamingHours = userPlan?.availables?.streaming_hours
+    // const streamingHours = userPlan?.availables?.streaming_hours
 
     if (!dayjs(event.hour_start).isValid()) {
       event.hour_start = dayjs(new Date())
