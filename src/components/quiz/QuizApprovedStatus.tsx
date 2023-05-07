@@ -52,7 +52,7 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
       }
 
       if (surveys.length > 0) {
-        props.thereAreExam(true)
+        props.thereAreExam && props.thereAreExam(true)
         if (passed === surveys.length) {
           setStatus('Aprobado')
           setIsApproved(true)
@@ -63,7 +63,7 @@ function QuizApprovedStatus(props: QuizApprovedStatusProps) {
         }
       } else {
         setStatus('Curso sin exámenes')
-        props.thereAreExam(false)
+        props.thereAreExam && props.thereAreExam(false)
         setBackgroundColor('#2C3647')
       }
 
