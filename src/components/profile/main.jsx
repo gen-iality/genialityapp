@@ -10,7 +10,6 @@ import {
   Tabs,
   Typography,
   Grid,
-  Tag,
   Divider,
   Skeleton,
   Menu,
@@ -35,8 +34,6 @@ import Loading from './loading'
 import ChangePassword from './components/changePassword'
 import EditInformation from './components/EditInformation'
 import MyPlan from './components/myPlan'
-import { imageUtils } from '../../Utilities/ImageUtils'
-import CashCheckIcon from '@2fd/ant-design-icons/lib/CashCheck'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { featureBlockingListener } from '@/services/featureBlocking/featureBlocking'
 import eventCard from '../shared/eventCard'
