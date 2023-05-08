@@ -239,6 +239,10 @@ export const EventsApi = {
     const token = await GetTokenUserFirebase()
     return await Actions.edit(`/api/events/${id}?token=${token}`, data, true)
   },
+  deleteOne: async (id) => {
+    const token = await GetTokenUserFirebase()
+    return await Actions.delete(`/api/events/${id}?token=${token}`, '', true)
+  },
   editItsPositions: async (id, positionIds) => {
     const data = {
       position_ids: positionIds,
