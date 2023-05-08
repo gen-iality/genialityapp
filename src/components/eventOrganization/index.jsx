@@ -20,6 +20,7 @@ const EventOrganization = (props) => {
   const [lastEvents, setLastEvents] = useState([])
   const [organization, setOrganization] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isVisibleRegister, setIsVisibleRegister] = useState(false)
   const [organizationUser, setOrganizationUser] = useState(null)
 
   const [isAdminUser, setIsAdminUser] = useState(false)
