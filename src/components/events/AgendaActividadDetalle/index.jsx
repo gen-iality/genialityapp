@@ -21,7 +21,7 @@ import { PreloaderApp } from '@/PreloaderApp/PreloaderApp'
 import Presence from '@components/presence/Presence'
 import { fireRealtime } from '@helpers/firebase'
 import Logger from '@Utilities/logger'
-import { ArrowRightOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 
 const { setHasOpenSurveys } = SurveyActions
 
@@ -37,6 +37,7 @@ const AgendaActividadDetalle = (props) => {
   const [blockActivity, setblockActivity] = useState(false)
   const [activity, setactivity] = useState('')
   const [nextActivityID, setNextActivityID] = useState(null)
+  const [previousActivityID, setPreviousctivityID] = useState(null)
   const cUser = useCurrentUser()
   const cEventUser = useUserEvent()
   const cEvent = useEventContext()
@@ -87,6 +88,12 @@ const AgendaActividadDetalle = (props) => {
       const nextActivityObject = allEventActivities[nextActivityIndex]
       if (nextActivityObject) {
         setNextActivityID(nextActivityObject._id)
+      }
+
+      const previousActivityIndex = currentActivityIndex - 1
+      const previousActivityObject = allEventActivities[previousActivityIndex]
+      if (previousActivityObject) {
+        setPreviousctivityID(previousActivityObject._id)
       }
     })
 
@@ -151,8 +158,8 @@ const AgendaActividadDetalle = (props) => {
     }
   }, [cEvent.value, cEventUser.value, cUser.value])
 
-  const nextActivity = async () => {
-    history.push(`/landing/${cEvent?.value._id}/activity/${nextActivityID}`)
+  const goToActivityIdPage = async (activityId) => {
+    history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)
   }
 
   // {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
@@ -174,13 +181,27 @@ const AgendaActividadDetalle = (props) => {
           ) : (
             <HOCActividad activity={activity} />
           )}
-          {nextActivityID && (
-            <Col align="end">
+          <Col align="end">
+            {previousActivityID && (
               <Button
                 style={{ marginTop: '1rem' }}
                 type="primary"
                 size="large"
-                onClick={nextActivity}
+                onClick={() => goToActivityIdPage(previousActivityID)}
+              >
+                <ArrowLeftOutlined />
+                {intl.formatMessage({
+                  id: 'activity.button.previous',
+                  defaultMessage: 'Anterior',
+                })}
+              </Button>
+            )}
+            {nextActivityID && (
+              <Button
+                style={{ marginTop: '1rem' }}
+                type="primary"
+                size="large"
+                onClick={() => goToActivityIdPage(nextActivityID)}
               >
                 {intl.formatMessage({
                   id: 'activity.button.next',
@@ -188,8 +209,8 @@ const AgendaActividadDetalle = (props) => {
                 })}
                 <ArrowRightOutlined />
               </Button>
-            </Col>
-          )}
+            )}
+          </Col>
 
           <AditionalInformation orderedHost={orderedHost} />
         </Card>
