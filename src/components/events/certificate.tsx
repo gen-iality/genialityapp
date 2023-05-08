@@ -76,6 +76,7 @@ function Certificate(props: CertificateProps) {
     CertificateData | undefined
   >()
   const [finalCertRows, setFinalCertRows] = useState<CertRow[]>(JSON.parse(initContent))
+  const [lastRolCert, setLastRolCert] = useState<CertificateData | undefined>()
 
   const pdfQuizGeneratorRef = useRef<Html2PdfCertsRef>(null)
   const pdfGeneralGeneratorRef = useRef<Html2PdfCertsRef>(null)
@@ -132,6 +133,7 @@ function Certificate(props: CertificateProps) {
         return cert.rol._id === dataUser.rol_id
       })
     }
+    setLastRolCert(rolCert)
 
     let currentCertRows: CertRow[] = defaultCertRows
     console.debug('rolCert', { rolCert })
@@ -157,9 +159,15 @@ function Certificate(props: CertificateProps) {
     setFinalCertRows(newCertRows)
 
     if (!dryRun) {
-      setReadyCertToGenerate(rolCert)
+      if (rolCert) {
+        setReadyCertToGenerate(rolCert)
+      } else {
+        console.warn('rolCert is undefined, create a cert in the CMS please')
+      }
 
       modal && modal.destroy()
+    } else {
+      console.log('nothing was created because the dry-run mode is on')
     }
   }
 
@@ -320,30 +328,34 @@ function Certificate(props: CertificateProps) {
                         Éste es una plantilla y no es el certificado final. Clic en
                         descargar para obtener el certificado real.
                       </Typography.Text>
-                      <Html2PdfCerts
-                        handler={pdfQuizGeneratorRef}
-                        rows={finalCertRows}
-                        imageUrl={
-                          certificateData.background ?? defaultCertificateBackground
-                        }
-                        backgroundColor="#005882"
-                        enableLinks={true}
-                        filename="certificate-quiz.pdf"
-                        format={[
-                          certificateData.cert_width ?? 1280,
-                          certificateData.cert_height ?? 720,
-                        ]}
-                        sizeStyle={{
-                          height: certificateData.cert_height ?? 720,
-                          width: certificateData.cert_width ?? 1280,
-                        }}
-                        transformationScale={0.5}
-                        unit="px"
-                        orientation="landscape"
-                        onEndGenerate={() => {
-                          setIsGenerating(false)
-                        }}
-                      />
+                      {lastRolCert ? (
+                        <Html2PdfCerts
+                          handler={pdfQuizGeneratorRef}
+                          rows={finalCertRows}
+                          imageUrl={
+                            certificateData.background ?? defaultCertificateBackground
+                          }
+                          backgroundColor="#005882"
+                          enableLinks={true}
+                          filename="certificate-quiz.pdf"
+                          format={[
+                            certificateData.cert_width ?? 1280,
+                            certificateData.cert_height ?? 720,
+                          ]}
+                          sizeStyle={{
+                            height: certificateData.cert_height ?? 720,
+                            width: certificateData.cert_width ?? 1280,
+                          }}
+                          transformationScale={0.5}
+                          unit="px"
+                          orientation="landscape"
+                          onEndGenerate={() => {
+                            setIsGenerating(false)
+                          }}
+                        />
+                      ) : (
+                        <p>Falla crear el certificado por el administrador</p>
+                      )}
                     </>
                   )}
                 </>
@@ -363,28 +375,34 @@ function Certificate(props: CertificateProps) {
                     Éste es una plantilla y no es el certificado final. Clic en descargar
                     para obtener el certificado real.
                   </Typography.Text>
-                  <Html2PdfCerts
-                    handler={pdfGeneralGeneratorRef}
-                    rows={finalCertRows}
-                    imageUrl={certificateData.background ?? defaultCertificateBackground}
-                    backgroundColor="#005882"
-                    enableLinks={true}
-                    filename="certificate-general.pdf"
-                    format={[
-                      certificateData.cert_width ?? 1280,
-                      certificateData.cert_height ?? 720,
-                    ]}
-                    sizeStyle={{
-                      height: certificateData.cert_height ?? 720,
-                      width: certificateData.cert_width ?? 1280,
-                    }}
-                    transformationScale={0.5}
-                    unit="px"
-                    orientation="landscape"
-                    onEndGenerate={() => {
-                      setIsGenerating(false)
-                    }}
-                  />
+                  {lastRolCert ? (
+                    <Html2PdfCerts
+                      handler={pdfGeneralGeneratorRef}
+                      rows={finalCertRows}
+                      imageUrl={
+                        certificateData.background ?? defaultCertificateBackground
+                      }
+                      backgroundColor="#005882"
+                      enableLinks={true}
+                      filename="certificate-general.pdf"
+                      format={[
+                        certificateData.cert_width ?? 1280,
+                        certificateData.cert_height ?? 720,
+                      ]}
+                      sizeStyle={{
+                        height: certificateData.cert_height ?? 720,
+                        width: certificateData.cert_width ?? 1280,
+                      }}
+                      transformationScale={0.5}
+                      unit="px"
+                      orientation="landscape"
+                      onEndGenerate={() => {
+                        setIsGenerating(false)
+                      }}
+                    />
+                  ) : (
+                    <p>Falla crear el certificado por el administrador</p>
+                  )}
                 </>
               )}
             </Card>
