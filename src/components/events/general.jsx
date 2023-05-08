@@ -48,7 +48,7 @@ import {
 import { firestore } from '@helpers/firebase'
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
-import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { ExclamationCircleOutlined, BellOutlined } from '@ant-design/icons'
 import { handleRequestError } from '@helpers/utils'
 import { DispatchMessageService } from '@context/MessageService'
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
