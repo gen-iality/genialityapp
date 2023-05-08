@@ -36,6 +36,7 @@ const AgendaActividadDetalle = (props) => {
   const [videoButtonStyles, setVideoButtonStyles] = useState(null)
   const [blockActivity, setblockActivity] = useState(false)
   const [activity, setactivity] = useState('')
+  const [nextActivityID, setNextActivityID] = useState(null)
   const cUser = useCurrentUser()
   const cEventUser = useUserEvent()
   const cEvent = useEventContext()
@@ -73,6 +74,21 @@ const AgendaActividadDetalle = (props) => {
     } else {
       HandleOpenCloseMenuRigth(true)
     }
+
+    // Get the next activity ID to able creating the next activity link
+    AgendaApi.byEvent(cEvent?.value._id).then(({ data: allEventActivities }) => {
+      const currentActivityId = props.match.params.activity_id
+      const currentActivityObject = allEventActivities.find(
+        (eventActivity) => eventActivity._id === currentActivityId,
+      )
+      const currentActivityIndex = allEventActivities.indexOf(currentActivityObject)
+
+      const nextActivityIndex = currentActivityIndex + 1
+      const nextActivityObject = allEventActivities[nextActivityIndex]
+      if (nextActivityObject) {
+        setNextActivityID(nextActivityObject._id)
+      }
+    })
 
     return () => {
       props.setTopBanner(true)
@@ -136,18 +152,7 @@ const AgendaActividadDetalle = (props) => {
   }, [cEvent.value, cEventUser.value, cUser.value])
 
   const nextActivity = async () => {
-    const { data: allEventActivities } = await AgendaApi.byEvent(cEvent?.value._id)
-
-    const currentActivityId = props.match.params.activity_id
-    const currentActivityObject = allEventActivities.find(
-      (eventActivity) => eventActivity._id === currentActivityId,
-    )
-    const currentActivityIndex = allEventActivities.indexOf(currentActivityObject)
-
-    const nextActivityIndex = currentActivityIndex + 1
-    const nextActivityObject = allEventActivities[nextActivityIndex]
-
-    history.push(`/landing/${cEvent?.value._id}/activity/${nextActivityObject._id}`)
+    history.push(`/landing/${cEvent?.value._id}/activity/${nextActivityID}`)
   }
 
   // {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
@@ -169,20 +174,22 @@ const AgendaActividadDetalle = (props) => {
           ) : (
             <HOCActividad activity={activity} />
           )}
-          <Col align="end">
-            <Button
-              style={{ marginTop: '1rem' }}
-              type="primary"
-              size="large"
-              onClick={nextActivity}
-            >
-              {intl.formatMessage({
-                id: 'activity.button.next',
-                defaultMessage: 'Siguiente',
-              })}
-              <ArrowRightOutlined />
-            </Button>
-          </Col>
+          {nextActivityID && (
+            <Col align="end">
+              <Button
+                style={{ marginTop: '1rem' }}
+                type="primary"
+                size="large"
+                onClick={nextActivity}
+              >
+                {intl.formatMessage({
+                  id: 'activity.button.next',
+                  defaultMessage: 'Siguiente',
+                })}
+                <ArrowRightOutlined />
+              </Button>
+            </Col>
+          )}
 
           <AditionalInformation orderedHost={orderedHost} />
         </Card>
