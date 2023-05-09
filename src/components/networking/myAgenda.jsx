@@ -1,4 +1,4 @@
-import { Button, Card, Col, Drawer, notification, Row, Spin, Typography } from 'antd';
+import { Button, Card, Col, Drawer, notification, Result, Row, Spin, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
@@ -162,7 +162,11 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             eventId={event._id}
           />
         ) : (
-          <Card>{'No tienes citas actualmente'}</Card>
+          <Row justify='center' align='middle'>
+            <Col>
+              <Result title={'No tienes citas actualmente'}/>
+            </Col>
+          </Row>
         )}
       </div>
     </>

@@ -317,11 +317,9 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       </Row>
     ) : (
       <>
+        <Divider><Typography.Text strong>Solicitudes de contacto recibidas</Typography.Text></Divider>
         {requestListReceived.length > 0 ? 
-          <>
-            <Divider><Typography.Text strong>Solicitudes de contacto recibidas</Typography.Text></Divider>
-            <InvitacionListReceived list={requestListReceived} sendResponseToInvitation={sendResponseToInvitation} />
-          </>
+          <InvitacionListReceived list={requestListReceived} sendResponseToInvitation={sendResponseToInvitation} />
         :
           <Row justify='center'>
             <Col>
@@ -333,11 +331,9 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
         }
         
         {/* {requestListReceived.length === 0 || requestListSent.length === 0 && <Divider />} */}
+        <Divider><Typography.Text strong>Solicitudes de contacto enviadas</Typography.Text></Divider>
         {requestListSent.length > 0 ?
-          <>
-            <Divider><Typography.Text strong>Solicitudes de contacto enviadas</Typography.Text></Divider>
-            <InvitacionListSent list={requestListSent} />
-          </>
+          <InvitacionListSent list={requestListSent} />
           :
           <Row justify='center'>
             <Col>

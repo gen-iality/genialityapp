@@ -35,10 +35,10 @@ import { setVirtualConference } from '../../redux/virtualconference/actions';
 import { connect } from 'react-redux';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { LoadingOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
-
 class ListEventUser extends Component {
   constructor(props) {
     super(props);
@@ -62,10 +62,10 @@ class ListEventUser extends Component {
       requestListSent: [],
       modalView: false,
       listTotalUser: [],
-      updatetable: false,
+      updatetable: false
     };
   }
-
+  
   async componentDidMount() {
     await this.getInfoCurrentUser();
     this.loadData();
@@ -326,6 +326,7 @@ class ListEventUser extends Component {
     let isContact = isMyContacts(formatUSer, this.props.cHelper.contacts);
     return isContact;
   }
+
   componentWillUnmount() {
     this.props.setVirtualConference(true);
   }
@@ -343,7 +344,7 @@ class ListEventUser extends Component {
       eventUserIdToMakeAppointment,
       eventUserToMakeAppointment,
       activeTab,
-      matches,
+      matches
     } = this.state;
 
     return (
@@ -370,7 +371,7 @@ class ListEventUser extends Component {
 
         {/* Componente de busqueda */}
         <Tabs style={{ background: '#FFFFFF' }} activeKey={activeTab} onChange={this.changeActiveTab}>
-          <TabPane tab={<Typography.Text>Participantes</Typography.Text>} key='asistentes'>
+          <TabPane tab={<Typography.Text><FormattedMessage id={'participants'} defaultMessage={'Participantes'} /></Typography.Text>} key='asistentes'>
             {
               <AppointmentModal
                 targetEventUserId={this.state.eventUserIdToMakeAppointment}
