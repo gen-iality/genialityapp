@@ -9,6 +9,7 @@ import LoadingEvent from '@components/loaders/loadevent'
 import ErrorServe from '@components/modal/serverError'
 import EventCard from '@components/shared/eventCard'
 import { useApiMultiple } from '@/services/hooks/useApiMultiple'
+
 dayjs.locale('es')
 momentLocalizer()
 
@@ -97,21 +98,23 @@ const Home = () => {
                       <Result title="No hay cursos próximos" />
                     </Row>
                   ) : (
-                    useResponse(typeEvent)?.map((event, key) => {
-                      return (
-                        <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
-                          <EventCard
-                            bordered={false}
-                            key={key}
-                            event={event}
-                            action={{
-                              name: 'Ver',
-                              url: `event/1`,
-                            }}
-                          />
-                        </Col>
-                      )
-                    })
+                    useResponse(typeEvent)
+                      ?.filter((event: any) => event.published_at_home)
+                      .map((event, key) => {
+                        return (
+                          <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <EventCard
+                              bordered={false}
+                              key={key}
+                              event={event}
+                              action={{
+                                name: 'Ver',
+                                url: `event/1`,
+                              }}
+                            />
+                          </Col>
+                        )
+                      })
                   )}
                 </Row>
               )}
