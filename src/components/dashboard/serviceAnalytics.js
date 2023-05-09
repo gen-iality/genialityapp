@@ -9,7 +9,9 @@ const lineBackground = 'rgba(80, 211, 201, 1)'
 export const totalsMetricasMail = async (eventId) => {
   const token = await GetTokenUserFirebase()
   return new Promise((resolve, reject) => {
-    fetch(`https://devapi.evius.co/api/events/${eventId}/messages/?token=${token}`)
+    fetch(
+      `https://devapi.geniality.com.co/api/events/${eventId}/messages/?token=${token}`,
+    )
       .then((response) => response.json())
       .then(({ data }) => {
         resolve(data)
@@ -22,7 +24,9 @@ export const totalsMetricasMail = async (eventId) => {
 
 export const totalsMetricasMailDetails = async (eventId, idBell) => {
   return new Promise((resolve, reject) => {
-    fetch(`https://devapi.evius.co/api/events/${eventId}/message/${idBell}/messageUser`)
+    fetch(
+      `https://devapi.geniality.com.co/api/events/${eventId}/message/${idBell}/messageUser`,
+    )
       .then((response) => response.json())
       .then(({ data }) => {
         resolve(data)
@@ -67,7 +71,7 @@ export const metricasCheckedByDate = async (eventId) => {
 
 //Esta funcion realiza la consulta de los datos a la API de analytics
 export const queryReportGnal = async (eventID) => {
-  const devEvius = 'https://api.evius.co/api/googleanalytics'
+  const devEvius = 'https://api.geniality.com.co/api/googleanalytics'
   const fechaActual = dayjs().format('YYYY-MM-DD')
   const data = {
     startDate: '2021-06-01',
@@ -109,7 +113,7 @@ export const queryReportGnal = async (eventID) => {
 
 //Esta funcion trae datos por fecha
 export const queryReportGnalByMoth = async (eventID) => {
-  const devEvius = 'https://api.evius.co/api/googleanalytics'
+  const devEvius = 'https://api.geniality.com.co/api/googleanalytics'
   const fechaActual = dayjs().format('YYYY-MM-DD')
   const data = {
     startDate: '2019-01-01',
