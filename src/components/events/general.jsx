@@ -526,6 +526,7 @@ class General extends Component {
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
       is_examen_required: event.is_examen_required,
+      published_at_home: event.published_at_home,
       validity_days: event.validity_days,
       default_certification_description: event.default_certification_description,
       default_certification_hours: event.default_certification_hours,
@@ -1221,6 +1222,17 @@ class General extends Component {
                       checked={event.is_examen_required}
                       onChange={(checked) => {
                         this.handleChange(checked, 'is_examen_required')
+                      }}
+                    />
+                  </Form.Item>
+
+                  <Form.Item label="¿Evento público en la página de inicio de GEN.iality?">
+                    <Switch
+                      checkedChildren="Promocionado"
+                      unCheckedChildren="Sólo para la organización"
+                      checked={event.published_at_home}
+                      onChange={(checked) => {
+                        this.handleChange(checked, 'published_at_home')
                       }}
                     />
                   </Form.Item>
