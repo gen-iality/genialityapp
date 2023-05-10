@@ -250,7 +250,11 @@
     "my_plan.sponsors": "Sponsors",
     "my_plan.news": "News",
     "my_plan.products": "Products",
-    "participants": "Participants"
+    "participants": "Participants",
+    "close": "Close",
+    "additional_information": "Additional information!",
+    "networking_informative_modal_part1": "You can only see a limited amount of public information of each attendee, to see all the information of an attendee you must make a contact request, after which the attendee will be informed, who will accept or reject the request sent.",
+    "networking_informative_modal_part2": "Once the assistant has accepted the application, you will receive an email and you can return to this same section in my contacts to see the complete information of the new contact."
   },
   "es": {
     "header.help": "Ayuda",
@@ -510,7 +514,11 @@
     "my_plan.news": "Noticias",
     "my_plan.products": "Productos",
     "my_plan.videos": "Videos",
-    "participants": "Participantes"
+    "participants": "Participantes",
+    "close": "Cerrar",
+    "additional_information": "¡Información adicional!",
+    "networking_informative_modal_part1": "Solo puedes ver una cantidad limitada de información pública de cada asistente, para ver toda la información de un asistente debes realizar una solicitud de contacto, luego de ello se le informará al asistente, quien aceptará o recharazá la solicitud enviada.",
+    "networking_informative_modal_part2": "Una vez el asistente haya aceptado solicitud te llegará un correo y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto."
   },
   "pt": {
     "live.join": "Entrar",
@@ -659,6 +667,10 @@
     "message.success.updated.tabs": "Abas da zona social atualizadas!",
     "message.error.updated.tabs": "Ocorreu um erro ao atualizar as guias da zona social",
     "message.success.initialized.tabs": "Abas da área social inicializadas",
-    "participants": "Participantes"
+    "participants": "Participantes",
+    "close": "Fechar",
+    "additional_information": "Informação adicional!",
+    "networking_informative_modal_part1": "Você só pode ver uma quantidade limitada de informações públicas de cada participante, para ver todas as informações de um participante você deve fazer uma solicitação de contato, após a qual o participante será informado, quem aceitará ou rejeitará a solicitação enviada.",
+    "networking_informative_modal_part2": "Assim que o assistente aceitar a inscrição, você receberá um e-mail e poderá retornar a esta mesma seção em meus contatos para ver as informações completas do novo contato."
   }
 }

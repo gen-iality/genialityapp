@@ -353,10 +353,10 @@ class ListEventUser extends Component {
           <Result
             extra={
               <Button type='primary' onClick={this.closeModal}>
-                Cerrar
+                <FormattedMessage id='close' defaultMessage={'Cerrar'}/>
               </Button>
             }
-            title={<Typography.Text strong>¡Información adicional!</Typography.Text>}
+            title={<Typography.Text strong><FormattedMessage id='additional_information' defaultMessage={'¡Información adicional!'}/></Typography.Text>}
             subTitle={
               <Typography.Paragraph style={{textAlign: 'justify'}}>
                 Solo puedes ver una cantidad limitada de información pública de cada asistente, 
