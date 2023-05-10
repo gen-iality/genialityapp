@@ -347,11 +347,9 @@ class ListEventUser extends Component {
             title={<Typography.Text strong><FormattedMessage id='additional_information' defaultMessage={'¡Información adicional!'}/></Typography.Text>}
             subTitle={
               <Typography.Paragraph style={{textAlign: 'justify'}}>
-                Solo puedes ver una cantidad limitada de información pública de cada asistente, 
-                para ver toda la información de un asistente debes realizar una solicitud de contacto,
-                luego de ello se le informará al asistente, quien aceptará o recharazá la solicitud enviada. <br /><br />
-                Una vez el asistente haya aceptado solicitud te llegará un correo y podrás regresar
-                a esta misma sección en mis contactos a ver la información completa del nuevo contacto.
+                <FormattedMessage id='networking_informative_modal_part1' defaultMessage={'Solo puedes ver una cantidad limitada de información pública de cada asistente, para ver toda la información de un asistente debes realizar una solicitud de contacto, luego de ello se le informará al asistente, quien aceptará o recharazá la solicitud enviada.'}/>
+                <br /><br />
+                <FormattedMessage id='networking_informative_modal_part2' defaultMessage={'Una vez el asistente haya aceptado solicitud te llegará un correo y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'}/>
               </Typography.Paragraph>
             }
           />
@@ -376,7 +374,7 @@ class ListEventUser extends Component {
                   <Col span={24} style={{ margin: '0 auto' }}>
                     <Form.Item
                       labelCol={{ span: 24 }}
-                      label='Busca aquí las personas que deseas contactar'
+                      label={<FormattedMessage id='networking_search_participant' defaultMessage={'Busca aquí las personas que deseas contactar'} />}
                       name='searchInput'>
                       <SearchComponent
                         id='searchInput'
@@ -409,7 +407,7 @@ class ListEventUser extends Component {
                       closable
                     /> */}
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='attendee_type' defaultMessage={'Tipo de asistente'}/>} name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -435,7 +433,7 @@ class ListEventUser extends Component {
                   {this.props.cEvent.value._id === '5f92d0cee5e2552f1b7c8ea2' && (
                     <>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='attendee_type' defaultMessage={'Tipo de asistente'}/>} name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -445,7 +443,7 @@ class ListEventUser extends Component {
                         </Form.Item>
                       </Col>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de participante' name='filterSector' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='attendee_type' defaultMessage={'Tipo de asistente'}/>} name='filterSector' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -461,7 +459,7 @@ class ListEventUser extends Component {
                   {this.props.cEvent.value._id === '5f7f21217828e17d80642856' && (
                     <>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='attendee_type' defaultMessage={'Tipo de asistente'}/>} name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -471,7 +469,7 @@ class ListEventUser extends Component {
                         </Form.Item>
                       </Col>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='sector' defaultMessage={'Sector'}/>} name='filterSector' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -487,7 +485,7 @@ class ListEventUser extends Component {
                   {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' && (
                     <>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='attendee_type' defaultMessage={'Tipo de asistente'}/>} name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -497,7 +495,7 @@ class ListEventUser extends Component {
                         </Form.Item>
                       </Col>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='sector' defaultMessage={'Sector'}/>} name='filterSector' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -517,8 +515,8 @@ class ListEventUser extends Component {
                 <br />
                 <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
                   <Alert
-                    message='Solicitudes'
-                    description='Para enviar solicitudes debes estar suscrito al evento'
+                    message={<FormattedMessage id='requests' defaultMessage={'Solicitudes'}/>}
+                    description={<FormattedMessage id='networking_send_request_subscribed_event' defaultMessage={'Para enviar solicitudes debes estar suscrito al evento'}/>}
                     type='info'
                     closable
                   />
@@ -532,7 +530,7 @@ class ListEventUser extends Component {
                 <Col>
                   <Spin 
                     size='large'
-                    tip={<Typography.Text strong>Cargando...</Typography.Text>}
+                    tip={<Typography.Text strong><FormattedMessage id='loading' defaultMessage={'Cargando...'}/></Typography.Text>}
                   />
                 </Col>
               </Row>
@@ -574,7 +572,7 @@ class ListEventUser extends Component {
                                   : users.properties.names}
                               </Avatar>
                             }
-                            title={users.properties.names ? users.properties.names : 'No registra Nombre'}
+                            title={users.properties.names ? users.properties.names : <FormattedMessage id='not_registered_name' defaultMessage={'No registra Nombre'}/>}
                             description={[
                               <div key={`ug-${userIndex}`}>
                                 <br />
@@ -623,7 +621,7 @@ class ListEventUser extends Component {
                                             eventUserToMakeAppointment: users,
                                           });
                                         }}>
-                                        {'Agendar cita'}
+                                        <FormattedMessage id='schedule_appointment' defaultMessage={'Agendar cita'}/>
                                       </Button>
                                       <Button
                                         type='primary'
