@@ -1,6 +1,7 @@
 import './App.less'
 import dayjs from 'dayjs'
 import { useCurrentUser } from './../context/userContext'
+import { firestore } from '@helpers/firebase'
 
 import ContentContainer from '@containers/content'
 
@@ -24,3 +25,5 @@ export default App
 
 // @ts-expect-error
 window.dayjs = dayjs
+// @ts-expect-error
+window.firestore = firestore
