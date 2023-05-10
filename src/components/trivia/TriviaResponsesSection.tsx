@@ -2,8 +2,9 @@ import { SurveysApi } from '@helpers/request'
 import PropTypes from 'prop-types'
 import { useState, useEffect } from 'react'
 import { firestore } from '@helpers/firebase'
-import { Table, Typography, Spin } from 'antd'
+import { Table, Typography, Spin, Space, Button } from 'antd'
 import { ColumnType } from 'antd/lib/table'
+import { utils, writeFileXLSX } from 'xlsx'
 
 type UserResponse = {
   username: string
@@ -39,6 +40,21 @@ const TriviaResponsesSection: React.FunctionComponent<ITriviaResponsesSectionPro
     },
   ])
   const [dataSource, setDataSource] = useState<UserResponse[]>([])
+
+  const onExportAsXLXS = () => {
+    const ws = utils.json_to_sheet(
+      dataSource.map((data) => {
+        return {
+          'Pregunta del cuestionario': data.questionTitle,
+          'Nombre de usuario': data.username,
+          'Respuesta dada': data.questionResponse,
+        }
+      }),
+    )
+    const wb = utils.book_new()
+    utils.book_append_sheet(wb, ws, 'Asistentes')
+    writeFileXLSX(wb, `survey_${survey?.survey || 'cuestionario'}.xls`)
+  }
 
   useEffect(() => {
     setIsLoading(true)
@@ -77,6 +93,7 @@ const TriviaResponsesSection: React.FunctionComponent<ITriviaResponsesSectionPro
 
       return questionAndResponses
     })
+
     Promise.all(promiseAllQuestionAndResponses).then((questionAndResponsesList) => {
       const data: typeof dataSource = []
       questionAndResponsesList.map((questionAndResponses) => {
@@ -98,6 +115,9 @@ const TriviaResponsesSection: React.FunctionComponent<ITriviaResponsesSectionPro
       <Typography.Title>
         Cuestionario: {survey === undefined ? <Spin /> : survey.survey}
       </Typography.Title>
+      <Space align="end" size="large">
+        <Button onClick={onExportAsXLXS}>Exportar como XLXS</Button>
+      </Space>
       <Table loading={isLoading} dataSource={dataSource} columns={columns} />
     </>
   )
