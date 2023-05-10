@@ -5,6 +5,7 @@ import TriviaEdit from './edit'
 import TriviaReport from './report'
 import ReportQuestion from './reportQuestion'
 import Ranking from './ranking'
+import TriviaResponsesSection from './TriviaResponsesSection'
 
 function TriviaRoutes({ ...props }) {
   const { event, match } = props
@@ -35,6 +36,16 @@ function TriviaRoutes({ ...props }) {
           exact
           path={`${match.url}/ranking/:id`}
           render={() => <Ranking event={event} matchUrl={match.url} />}
+        />
+        <Route
+          // exact
+          path={`${match.url}/:surveyId`}
+          render={(subprops) => (
+            <TriviaResponsesSection
+              surveyId={subprops.match.params.surveyId}
+              event={event}
+            />
+          )}
         />
       </Switch>
     </Fragment>
