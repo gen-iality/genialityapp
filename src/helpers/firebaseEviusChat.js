@@ -36,6 +36,4 @@ firestore
     window.eviusFailedPersistenceEnabling = true
   })
 
-window.firebase = app
-
 export { app, auth, firestore, fireStorage, fireRealtime }

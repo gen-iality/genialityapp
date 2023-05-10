@@ -173,7 +173,6 @@ const ColumnProgreso = ({
   }
   return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
 }
-window.firestore = firestore
 
 class ListEventUser extends Component {
   constructor(props) {
