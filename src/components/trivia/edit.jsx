@@ -968,7 +968,7 @@ class TriviaEdit extends Component {
                   >
                     <InputNumber
                       style={{ width: '100%' }}
-                      value={tries}
+                      value={tries || 1}
                       placeholder={`Cantidad de intentos permitidos en: ${this.state.title.toLowerCase()}`}
                       name="tries"
                       onChange={(value) =>
