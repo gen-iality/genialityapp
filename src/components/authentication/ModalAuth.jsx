@@ -37,7 +37,6 @@ const ModalAuth = (props) => {
   const screens = useBreakpoint();
   const [loading, setLoading] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
-  const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
   let {
     handleChangeTypeModal,
@@ -49,8 +48,8 @@ const ModalAuth = (props) => {
   } = useHelper();
   const cEvent = UseEventContext();
   const cUser = UseCurrentUser();
-  const isCustomPassword = cEvent?.value?.is_custom_password_label
-  const customPasswordLabel = cEvent?.value?.custom_password_label
+  const isCustomPassword = cEvent?.value?.is_custom_password_label;
+  const customPasswordLabel = cEvent?.value?.custom_password_label;
   const [modalVisible, setmodalVisible] = useState(false);
   const [msjError, setmsjError] = useState('');
   const intl = useIntl();
@@ -73,6 +72,7 @@ const ModalAuth = (props) => {
     async function isModalVisible() {
       let typeEvent = recordTypeForThisEvent(cEvent);
       switch (typeEvent) {
+        case 'UN_REGISTERED_PUBLIC_EVENT':
         case 'PRIVATE_EVENT':
           setmodalVisible(true);
           helperDispatch({ type: 'showLogin', visible: false });
@@ -82,12 +82,6 @@ const ModalAuth = (props) => {
           setmodalVisible(true);
           helperDispatch({ type: 'showRegister', visible: false });
           break;
-
-        case 'UN_REGISTERED_PUBLIC_EVENT':
-          setmodalVisible(true);
-          helperDispatch({ type: 'showLogin', visible: false });
-          break;
-
         default:
           setmodalVisible(true);
           break;
@@ -111,14 +105,15 @@ const ModalAuth = (props) => {
 
   useEffect(() => {
     form1.resetFields();
-    setErrorRegisterUSer(false);
     setErrorLogin(false);
   }, [typeModal, currentAuthScreen]);
 
   const DetecError = (code) => {
     switch (code) {
       case 'auth/wrong-password':
-        setmsjError(isCustomPassword ? `El dato es incorrecto` : intl.formatMessage({ id: 'auth.error.wrongPassword' }));
+        setmsjError(
+          isCustomPassword ? `El dato es incorrecto` : intl.formatMessage({ id: 'auth.error.wrongPassword' })
+        );
         break;
       case 'auth/user-not-found':
         setmsjError(intl.formatMessage({ id: 'auth.error.userNotFound' }));
@@ -180,11 +175,10 @@ const ModalAuth = (props) => {
   const onFinishFailed = (errorInfo) => {
     console.error('Failed:', errorInfo);
   };
-
   return (
     modalVisible && (
       <Modal
-        maskStyle={props.organization == 'organization' && { backgroundColor: '#333333' }}
+        maskStyle={props.organization === 'organization' && { backgroundColor: '#333333' }}
         onCancel={() => helperDispatch({ type: 'showLogin', visible: false })}
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
@@ -205,7 +199,7 @@ const ModalAuth = (props) => {
               onFinishFailed={onFinishFailed}
               layout='vertical'
               style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-              {props.organization == 'organization' && (
+              {props.organization === 'organization' && (
                 <Form.Item>
                   <Image
                     style={{ borderRadius: '100px', objectFit: 'cover' }}
@@ -246,28 +240,36 @@ const ModalAuth = (props) => {
               </Form.Item>
               {isCustomPassword && (
                 <Form.Item
-                  label={customPasswordLabel || intl.formatMessage({
-                    id: 'modal.label.password',
-                    defaultMessage: 'Contraseña',
-                  })}
+                  label={
+                    customPasswordLabel ||
+                    intl.formatMessage({
+                      id: 'modal.label.password',
+                      defaultMessage: 'Contraseña',
+                    })
+                  }
                   name='password'
                   style={{ marginBottom: '15px', textAlign: 'left' }}
                   rules={[
                     {
                       required: true,
-                      message: `Ingrese su ${customPasswordLabel}` || intl.formatMessage({
-                        id: 'modal.rule.required.password',
-                        defaultMessage: 'Ingrese una contraseña',
-                      }),
+                      message:
+                        `Ingrese su ${customPasswordLabel}` ||
+                        intl.formatMessage({
+                          id: 'modal.rule.required.password',
+                          defaultMessage: 'Ingrese una contraseña',
+                        }),
                     },
                   ]}>
                   <Input.Password
                     disabled={loading}
                     size='large'
-                    placeholder={customPasswordLabel || intl.formatMessage({
-                      id: 'modal.label.password',
-                      defaultMessage: 'Contraseña',
-                    })}
+                    placeholder={
+                      customPasswordLabel ||
+                      intl.formatMessage({
+                        id: 'modal.label.password',
+                        defaultMessage: 'Contraseña',
+                      })
+                    }
                     prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
                     iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                   />
@@ -339,10 +341,12 @@ const ModalAuth = (props) => {
                     id={'forgotpassword'}
                     type='secondary'
                     style={{ float: 'right', cursor: 'pointer' }}>
-                    {isCustomPassword ? `Olvide mi ${customPasswordLabel}` : intl.formatMessage({
-                      id: 'modal.option.restore',
-                      defaultMessage: 'Olvidé mi contraseña',
-                    })}
+                    {isCustomPassword
+                      ? `Olvide mi ${customPasswordLabel}`
+                      : intl.formatMessage({
+                          id: 'modal.option.restore',
+                          defaultMessage: 'Olvidé mi contraseña',
+                        })}
                   </Typography.Text>
                 </Form.Item>
               )}
