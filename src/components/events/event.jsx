@@ -73,6 +73,28 @@ const EventsTicket = loadable(() => import('../ticketsEvent'))
 dayjs.locale('es')
 momentLocalizer()
 
+const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) =>
+      event?.user_properties && event?.user_properties?.length > 0 ? (
+        <ValidateAccessRouteCms>
+          <Component
+            key="cms"
+            {...props}
+            {...rest}
+            event={event}
+            eventId={eventId}
+            url={url}
+          />
+        </ValidateAccessRouteCms>
+      ) : (
+        <Redirect push to={`${url}/agenda`} />
+      )
+    }
+  />
+)
+
 class Event extends Component {
   constructor(props) {
     super(props)
@@ -541,28 +563,6 @@ class Event extends Component {
     )
   }
 }
-
-const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      event?.user_properties && event?.user_properties?.length > 0 ? (
-        <ValidateAccessRouteCms>
-          <Component
-            key="cms"
-            {...props}
-            {...rest}
-            event={event}
-            eventId={eventId}
-            url={url}
-          />
-        </ValidateAccessRouteCms>
-      ) : (
-        <Redirect push to={`${url}/agenda`} />
-      )
-    }
-  />
-)
 
 const mapStateToProps = (state) => ({
   loading: state.rols.loading,
