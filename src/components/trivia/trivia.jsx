@@ -6,6 +6,7 @@ import { UnorderedListOutlined } from '@ant-design/icons'
 import { deleteSurvey } from './services'
 import { Result } from 'antd'
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed'
+import { Link } from 'react-router-dom'
 
 const trivia = (props) => {
   const [columnsData, setColumnsData] = useState({})
@@ -25,6 +26,14 @@ const trivia = (props) => {
       ellipsis: true,
       sorter: (a, b) => a.survey.localeCompare(b.survey),
       ...getColumnSearchProps('survey', columnsData),
+    },
+    {
+      title: 'Respuestas',
+      width: 200,
+      ellipsis: true,
+      render: (survey) => (
+        <Link to={`${props.matchUrl}/${survey._id}`}>Ver respuestas</Link>
+      ),
     },
     {
       title: 'Publicada',
