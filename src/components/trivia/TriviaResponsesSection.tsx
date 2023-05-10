@@ -52,32 +52,32 @@ const TriviaResponsesSection: React.FunctionComponent<ITriviaResponsesSectionPro
   }, [surveyId, event._id])
 
   useEffect(() => {
-    Promise.all(
-      questions.map(async (question) => {
-        const questionId = question.id
+    const promiseAllQuestionAndResponses = questions.map(async (question) => {
+      const questionId = question.id
 
-        const responsesRef = firestore
-          .collection('surveys')
-          .doc(surveyId)
-          .collection('answers')
-          .doc(questionId)
-          .collection('responses')
+      const responsesRef = firestore
+        .collection('surveys')
+        .doc(surveyId)
+        .collection('answers')
+        .doc(questionId)
+        .collection('responses')
 
-        const responsesSnapshot = await responsesRef.get()
+      const responsesSnapshot = await responsesRef.get()
 
-        const questionAndResponses: { question: any; responses: any[] } = {
-          question,
-          responses: [],
-        }
-        responsesSnapshot.forEach((doc) => {
-          const response = doc.data()
-          console.log(doc.id, ' => ', response)
-          questionAndResponses.responses.push(response)
-        })
+      const questionAndResponses: { question: any; responses: any[] } = {
+        question,
+        responses: [],
+      }
 
-        return questionAndResponses
-      }),
-    ).then((questionAndResponsesList) => {
+      responsesSnapshot.forEach((doc) => {
+        const response = doc.data()
+        // console.log(doc.id, ' => ', response)
+        questionAndResponses.responses.push(response)
+      })
+
+      return questionAndResponses
+    })
+    Promise.all(promiseAllQuestionAndResponses).then((questionAndResponsesList) => {
       const data: typeof dataSource = []
       questionAndResponsesList.map((questionAndResponses) => {
         questionAndResponses.responses.forEach((response) => {
