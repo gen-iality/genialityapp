@@ -1,5 +1,4 @@
-import { Component, Fragment } from 'react'; /* 
-import 'react-toastify/dist/ReactToastify.css'; */
+import { Component, Fragment } from 'react'; 
 import {
   Row,
   Button,
@@ -22,7 +21,6 @@ import MyAgenda from './myAgenda';
 import AppointmentRequests from './appointmentRequests';
 import SearchComponent from '../shared/searchTable';
 import Pagination from '../shared/pagination';
-import Loading from '../loaders/loading';
 import FilterNetworking from './FilterNetworking';
 import { EventFieldsApi } from '../../helpers/request';
 import { formatDataToString } from '../../helpers/utils';
@@ -34,7 +32,7 @@ import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../.
 import { setVirtualConference } from '../../redux/virtualconference/actions';
 import { connect } from 'react-redux';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
-import { LoadingOutlined } from '@ant-design/icons';
+import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
 import { FormattedMessage } from 'react-intl';
 
 const { Meta } = Card;
@@ -76,7 +74,7 @@ class ListEventUser extends Component {
   changeActiveTab = async (activeTab) => {
     this.setState({ activeTab });
     //console.log("TAB ACTIVA==>",activeTab)
-    if (activeTab == 'asistentes') {
+    if (activeTab === 'asistentes') {
       this.setState({ loading: true });
       await this.loadData();
       await this.props.cHelper.obtenerContactos();
@@ -86,7 +84,6 @@ class ListEventUser extends Component {
     this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
   };
   agendarCita = (iduser, user) => {
-    //console.log('USERS SELECTED==>', user);
     this.setState({ eventUserIdToMakeAppointment: iduser, eventUserToMakeAppointment: user });
   };
   loadData = async () => {
@@ -138,8 +135,8 @@ class ListEventUser extends Component {
         //Finanzas del clima
         else if (this.props.cEvent.value._id === '5f9708a2e4c9eb75713f8cc6') {
           let prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
-          prospectos.map((prospecto) => {
-            if (prospecto.properties.participacomo == 'Financiador') {
+          prospectos.forEach((prospecto) => {
+            if (prospecto.properties.participacomo === 'Financiador') {
               matches.push(prospecto);
             }
           });
@@ -156,13 +153,13 @@ class ListEventUser extends Component {
         // Rueda de negocio naranja
         else if (this.props.cEvent.value._id === '5f7f21217828e17d80642856') {
           let prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
-          prospectos.map((prospecto) => {
+          prospectos.forEach((prospecto) => {
             if (
               prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones &&
               Array.isArray(prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones) &&
               prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.length > 0
             ) {
-              prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.map((interes) => {
+              prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.forEach((interes) => {
                 const matchOk = interes.label.match(new RegExp(meproperties.queproductooservicioofreces, 'gi'));
                 if (matchOk !== null) {
                   matches.push(prospecto);
@@ -309,11 +306,6 @@ class ListEventUser extends Component {
     let ev1 = new Event('input', { bubbles: true });
     inputSearch.dispatchEvent(ev1);
 
-    // let filterSector = document.getElementById('filterSector')
-    // let nativeInputValueSetter2 = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, "value").set;
-    // nativeInputValueSetter2.call(filterSector, '');
-    // let ev2 = new Event('select', { bubbles: true});
-    // filterSector.dispatchEvent(ev2);
   };
 
   haveRequestUser(user) {
@@ -339,12 +331,8 @@ class ListEventUser extends Component {
       users,
       pageOfItems,
       eventUserId,
-      eventUser,
       asistantData,
-      eventUserIdToMakeAppointment,
-      eventUserToMakeAppointment,
       activeTab,
-      matches
     } = this.state;
 
     return (
@@ -597,10 +585,10 @@ class ListEventUser extends Component {
                                       {/* {!data.visible || !data.visibleByContacts && */
                                       asistantData.map(
                                         (property, propertyIndex) =>
-                                          (property.visibleByContacts == false ||
-                                            property?.visibleByContacts == undefined ||
-                                            property.visibleByContacts == 'public') &&
-                                          (property?.sensibility == false || property?.sensibility == undefined) &&
+                                          (parseStringBoolean(property.visibleByContacts) === false ||
+                                            property?.visibleByContacts === undefined ||
+                                            property.visibleByContacts === 'public') &&
+                                          (parseStringBoolean(property?.sensibility) === false || property?.sensibility === undefined) &&
                                           users.properties[property.name] &&
                                           property.name !== 'picture' &&
                                           property.name !== 'imagendeperfil' &&
@@ -642,7 +630,7 @@ class ListEventUser extends Component {
                                         disabled={
                                           this.isMyContact(users) ||
                                           this.haveRequestUser(users) ||
-                                          (users.send && users.send == 1) ||
+                                          (users.send && users.send === 1) ||
                                           users.loading
                                         }
                                         onClick={
@@ -691,7 +679,7 @@ class ListEventUser extends Component {
                                                   });
 
                                                   for (let i = 0; i < this.state.users.length; i++) {
-                                                    if (this.state.users[i]._id == users._id) {
+                                                    if (this.state.users[i]._id === users._id) {
                                                       // console.log("STATE USER==>",this.state.users[i])
                                                       this.state.users[i] = {
                                                         ...this.state.users[i],
@@ -746,7 +734,7 @@ class ListEventUser extends Component {
                       onChangePage={this.onChangePage}
                     />
                   )}
-                  {!this.state.loading && users.length == 0 && this.props.cEventUser.value && (
+                  {!this.state.loading && users.length === 0 && this.props.cEventUser.value && (
                     <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
                       <Card style={{ textAlign: 'center' }}>{'No existen usuarios'}</Card>
                     </Col>
