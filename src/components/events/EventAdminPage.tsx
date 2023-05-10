@@ -8,7 +8,7 @@ import ListEventUser from '../event-users'
 import { fetchRol } from '../../redux/rols/actions'
 import { fetchPermissions } from '../../redux/permissions/actions'
 import connect from 'react-redux/es/connect/connect'
-import ChatExport from './ChatExport/'
+import ChatExport from './ChatExport'
 import Espacios from '../espacios'
 import Herramientas from '../herramientas'
 import Menu from './shared/menu'
@@ -49,8 +49,8 @@ const { Sider, Content } = Layout
 
 // Code splitting
 const General = loadable(() => import('./general'))
-const Informativesection = loadable(() =>
-  import('../events/informativeSections/adminInformativeSection'),
+const Informativesection = loadable(
+  () => import('./informativeSections/adminInformativeSection'),
 )
 
 //invitations
