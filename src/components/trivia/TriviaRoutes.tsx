@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom'
 import Trivia from './TriviaListPage'
 import TriviaEdit from './edit'
 import TriviaReportPage from './TriviaReportPage'
-import ReportQuestion from './reportQuestion'
+import ReportQuestion from './ReportQuestionPage'
 import TriviaRankingPage from './TriviaRankingPage'
 import TriviaResponsesPage from './TriviaResponsesPage'
 
