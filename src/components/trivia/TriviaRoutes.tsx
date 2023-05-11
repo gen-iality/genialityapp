@@ -45,7 +45,9 @@ const TriviaRoutes: FunctionComponent<ITriviaRoutesProps> = (props) => {
         <Route
           exact
           path={`${matchUrl}/ranking/:id`}
-          render={() => <TriviaRankingPage event={event} />}
+          render={(routeProps) => (
+            <TriviaRankingPage event={event} surveyId={routeProps.match.params.id} />
+          )}
         />
         <Route
           // exact
