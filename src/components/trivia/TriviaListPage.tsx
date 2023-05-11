@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { FunctionComponent, useEffect, useState } from 'react'
 import { SurveysApi } from '../../helpers/request'
 import CMS from '../newComponent/CMS'
 import { getColumnSearchProps } from '../speakers/getColumnSearch'
@@ -8,15 +8,20 @@ import { Result } from 'antd'
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed'
 import { Link } from 'react-router-dom'
 
-const trivia = (props) => {
-  const [columnsData, setColumnsData] = useState({})
-  const [typeEvent, settypeEvent] = useState()
+type SurveyType = any // TODO: define this, and move to Utilities/types I guess
+
+export interface ITriviaListPageProps {
+  event: any
+  matchUrl: string
+}
+
+const TriviaListPage: FunctionComponent<ITriviaListPageProps> = (props) => {
+  const [columnsData, setColumnsData] = useState<any>({})
+  const [typeEvent, settypeEvent] = useState<string | undefined>()
 
   useEffect(() => {
-    const cEvent = {}
-    cEvent.value = props.event
-    const eventtype = recordTypeForThisEvent(cEvent)
-    settypeEvent(eventtype)
+    const eventType = recordTypeForThisEvent({ value: props.event })
+    settypeEvent(eventType)
   }, [props])
 
   const columns = [
@@ -24,14 +29,14 @@ const trivia = (props) => {
       title: 'Nombre de la evaluación',
       dataIndex: 'survey',
       ellipsis: true,
-      sorter: (a, b) => a.survey.localeCompare(b.survey),
+      sorter: (a: SurveyType, b: SurveyType) => a.survey.localeCompare(b.survey),
       ...getColumnSearchProps('survey', columnsData),
     },
     {
       title: 'Respuestas',
       width: 200,
       ellipsis: true,
-      render: (survey) => (
+      render: (survey: SurveyType) => (
         <Link to={`${props.matchUrl}/${survey._id}`}>Ver respuestas</Link>
       ),
     },
@@ -40,14 +45,14 @@ const trivia = (props) => {
       dataIndex: 'publish',
       ellipsis: true,
       width: 130,
-      sorter: (a, b) => a.publish.localeCompare(b.publish),
+      sorter: (a: SurveyType, b: SurveyType) => a.publish.localeCompare(b.publish),
       ...getColumnSearchProps('publish', columnsData),
-      render(val, item) {
-        return <p>{item.publish && item.publish !== 'false' ? 'Sí' : 'No'}</p>
+      render(isPublished?: string) {
+        return <p>{isPublished && isPublished !== 'false' ? 'Sí' : 'No'}</p>
       },
     },
   ]
-  async function deleteCallback(surveyId) {
+  async function deleteCallback(surveyId: string) {
     await deleteSurvey(surveyId)
   }
   return (
@@ -77,11 +82,11 @@ const trivia = (props) => {
           extraPathId
           extraPathStateName={`${props.matchUrl}/ranking`}
           widthAction={160}
-          deleteCallback={(surveyId) => deleteCallback(surveyId)}
+          deleteCallback={(surveyId: string) => deleteCallback(surveyId)}
         />
       )}
     </>
   )
 }
 
-export default trivia
+export default TriviaListPage
