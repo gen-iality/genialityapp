@@ -83,7 +83,7 @@ class TriviaReport extends Component {
                 <List.Item>
                   <Link
                     to={{
-                      pathname: `${this.props.matchUrl}/report/${item.id}`,
+                      pathname: `${this.props.matchUrl}/${item.id}`,
                       state: {
                         titleQuestion: item.title,
                         surveyId: location.state.report,

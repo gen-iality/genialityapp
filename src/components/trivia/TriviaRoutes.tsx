@@ -1,5 +1,5 @@
-import { Fragment } from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { FunctionComponent } from 'react'
+import { Route, Switch } from 'react-router-dom'
 import Trivia from './trivia'
 import TriviaEdit from './edit'
 import TriviaReport from './report'
@@ -7,39 +7,49 @@ import ReportQuestion from './reportQuestion'
 import Ranking from './ranking'
 import TriviaResponsesPage from './TriviaResponsesPage'
 
-function TriviaRoutes({ ...props }) {
-  const { event, match } = props
+export interface ITriviaRoutesProps {
+  event: any
+  matchUrl: string
+}
+
+const TriviaRoutes: FunctionComponent<ITriviaRoutesProps> = (props) => {
+  const { event, matchUrl } = props
+
   return (
-    <Fragment>
+    <>
       <Switch>
         <Route
           exact
-          path={`${match.url}/`}
-          render={() => <Trivia event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/`}
+          render={(routeProps) => (
+            <Trivia event={event} matchUrl={routeProps.match.url} />
+          )}
         />
         <Route
           exact
-          path={`${match.url}/encuesta`}
-          render={() => <TriviaEdit event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/encuesta`}
+          render={() => <TriviaEdit event={event} />}
         />
         <Route
           exact
-          path={`${match.url}/report`}
-          render={() => <TriviaReport event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/report`}
+          render={(routeProps) => (
+            <TriviaReport event={event} matchUrl={routeProps.match.url} />
+          )}
         />
         <Route
           exact
-          path={`${match.url}/report/:id`}
-          render={() => <ReportQuestion event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/report/:id`}
+          render={() => <ReportQuestion event={event} />}
         />
         <Route
           exact
-          path={`${match.url}/ranking/:id`}
-          render={() => <Ranking event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/ranking/:id`}
+          render={() => <Ranking event={event} />}
         />
         <Route
           // exact
-          path={`${match.url}/:surveyId`}
+          path={`${matchUrl}/:surveyId`}
           render={(subprops) => (
             <TriviaResponsesPage
               surveyId={subprops.match.params.surveyId}
@@ -48,8 +58,8 @@ function TriviaRoutes({ ...props }) {
           )}
         />
       </Switch>
-    </Fragment>
+    </>
   )
 }
 
-export default withRouter(TriviaRoutes)
+export default TriviaRoutes
