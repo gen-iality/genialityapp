@@ -148,7 +148,7 @@ class Event extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: any, prevState: any) {
     if (prevState.event !== this.state.event) {
       const { event } = this.state
       const eventWithExtraFields = this.addNewFieldsToEvent(event)
@@ -156,7 +156,7 @@ class Event extends Component {
     }
   }
 
-  addNewFieldsToEvent(event) {
+  addNewFieldsToEvent(event: any) {
     // const dateFrom = event.datetime_from.split(' ')
     // const dateTo = event.datetime_to.split(' ')
     event.hour_start = dayjs(event.datetime_from).toDate()
@@ -172,34 +172,33 @@ class Event extends Component {
     this.setState({ newEvent: false })
   }
 
-  handleClick = (e) => {
+  handleClick = (e: MouseEvent) => {
     if (!navigator.onLine) e.preventDefault()
   }
 
-  updateEvent = (event) => {
+  updateEvent = (event: any) => {
     this.setState({ event })
   }
 
-  isUpper(str) {
+  isUpper(str: string) {
     return !/[a-z]/.test(str) && /[A-Z]/.test(str)
   }
 
-  isLowerCase(str) {
+  isLowerCase(str: string) {
     return /[a-z]/.test(str) && !/[A-Z]/.test(str)
   }
 
-  FriendLyUrl(url) {
-    let formatupperorlowercase = url.toString().toLowerCase()
+  FriendLyUrl(url: string) {
+    // TODO: improve this method, pull apart and add tests... please
+    let formatUpperOrLowercase = url.toString()
+
     if (this.isUpper(url.toString())) {
-      formatupperorlowercase = url.toString().toUpperCase()
+      formatUpperOrLowercase = url.toString().toUpperCase()
     } else if (this.isLowerCase(url.toString())) {
-      formatupperorlowercase = url.toString().toLowerCase()
-    } else {
-      formatupperorlowercase = url.toString()
+      formatUpperOrLowercase = url.toString().toLowerCase()
     }
 
-    let encodedUrl = formatupperorlowercase
-    encodedUrl = encodedUrl.split(/\&+/).join('-and-')
+    let encodedUrl = formatUpperOrLowercase.split(/\&+/).join('-and-')
     if (this.isUpper(url)) {
       encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-')
     } else if (this.isLowerCase(url.toString())) {
@@ -246,7 +245,7 @@ class Event extends Component {
             handleRequestError(error).message
           }`}
           extra={[
-            <Link to={`/`}>
+            <Link key={0} to={`/`}>
               <Button type="primary" key="eventData">
                 Ver más cursos
               </Button>
