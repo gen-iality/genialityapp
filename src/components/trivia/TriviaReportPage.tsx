@@ -1,5 +1,5 @@
-import { Component } from 'react'
-import { withRouter, Link } from 'react-router-dom'
+import { useState, useEffect, FunctionComponent } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 
 import { SurveysApi } from '@helpers/request'
 import { getTotalVotes } from './services'
@@ -7,109 +7,94 @@ import { getTotalVotes } from './services'
 import { List, Card, Spin, Empty, notification } from 'antd'
 import Header from '@antdComponents/Header'
 
-class TriviaReport extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      surveyQuestions: [],
-      loading: true,
-      visibleModal: false,
+type SurveyQuestionType = any // TODO: define ths type, and move to Utilities/types
+
+export interface ITriviaReportPageProps {
+  event: any
+  matchUrl: string
+}
+
+const TriviaReportPage: FunctionComponent<ITriviaReportPageProps> = (props) => {
+  const { event, matchUrl } = props
+
+  const [surveyQuestions, setSurveyQuestions] = useState<SurveyQuestionType[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  const location = useLocation<any>()
+
+  const loadData = async () => {
+    console.log('report:', { report: location.state.report })
+
+    try {
+      const response = await SurveysApi.getOne(event._id, location.state.report)
+      const promiseOfVotes = Promise.all(
+        response.questions.map(async (question: any) => {
+          const infoQuestion = await getTotalVotes(location.state.report, question)
+          console.log('infoQuestion:', infoQuestion)
+          return infoQuestion
+        }),
+      )
+
+      const questions = await promiseOfVotes
+      setSurveyQuestions(questions)
+    } catch (err) {
+      console.error(err)
+      notification.open({
+        message: 'No se registran respuestas guardadas',
+        description: 'No hay respuestas y/o preguntas para realizar el informe',
+      })
     }
   }
 
-  loadData = async () => {
-    const { event, location } = this.props
+  useEffect(() => {
+    setIsLoading(true)
+    loadData().finally(() => setIsLoading(false))
+  }, [])
 
-    SurveysApi.getOne(event._id, location.state.report)
-      .then(async (response) => {
-        const votes = new Promise((resolve) => {
-          const questions = []
+  if (isLoading) return <Spin />
 
-          response.questions.forEach(async (question, index, arr) => {
-            const infoQuestion = await getTotalVotes(location.state.report, question)
-            questions.push(infoQuestion)
-            if (questions.length === arr.length) resolve(questions)
-          })
-        })
+  return (
+    <>
+      <Header title="Detalle de la Evaluación" back />
 
-        const questions = await votes
-        this.setState({ surveyQuestions: questions, loading: false })
-      })
-      .catch(() => {
-        //
-        notification.open({
-          message: 'No se registran respuestas guardadas',
-          description: 'No hay respuestas y/o preguntas para realizar el informe',
-        })
-        this.setState({
-          loading: false,
-        })
-      })
-  }
-
-  toggleModal = () => {
-    const { visibleModal } = this.state
-    this.setState({ visibleModal: !visibleModal })
-  }
-
-  componentDidMount() {
-    this.loadData()
-  }
-
-  goBack = () => this.props.history.goBack()
-
-  render() {
-    const { surveyQuestions, loading } = this.state
-    const { location } = this.props
-
-    if (!loading)
-      return (
-        <>
-          <Header title="Detalle de la Evaluación" back />
-
-          {surveyQuestions.length > 0 ? (
-            <List
-              grid={{
-                gutter: 16,
-                xs: 1,
-                sm: 2,
-                md: 2,
-                lg: 3,
-                xl: 3,
-                xxl: 3,
-              }}
-              dataSource={surveyQuestions}
-              renderItem={(item) => (
-                <List.Item>
-                  <Link
-                    to={{
-                      pathname: `${this.props.matchUrl}/${item.id}`,
-                      state: {
-                        titleQuestion: item.title,
-                        surveyId: location.state.report,
-                      },
-                    }}
-                  >
-                    <Card
-                      title={item.title ? item.title : 'Pregunta sin Titulo'}
-                      hoverable
-                    >
-                      {item.quantityResponses === 0
-                        ? 'No se ha respondido aun la pregunta'
-                        : `${item.quantityResponses} usuarios han respondido la pregunta`}
-                    </Card>
-                  </Link>
-                </List.Item>
-              )}
-            />
-          ) : (
-            <Empty />
+      {surveyQuestions.length > 0 ? (
+        <List
+          grid={{
+            gutter: 16,
+            xs: 1,
+            sm: 2,
+            md: 2,
+            lg: 3,
+            xl: 3,
+            xxl: 3,
+          }}
+          loading={isLoading}
+          dataSource={surveyQuestions}
+          renderItem={(item) => (
+            <List.Item>
+              <Link
+                to={{
+                  pathname: `${matchUrl}/${item.id}`,
+                  state: {
+                    titleQuestion: item.title,
+                    surveyId: location.state.report,
+                  },
+                }}
+              >
+                <Card title={item.title ? item.title : 'Pregunta sin Titulo'} hoverable>
+                  {item.quantityResponses === 0
+                    ? 'No se ha respondido aun la pregunta'
+                    : `${item.quantityResponses} usuarios han respondido la pregunta`}
+                </Card>
+              </Link>
+            </List.Item>
           )}
-        </>
-      )
-
-    return <Spin></Spin>
-  }
+        />
+      ) : (
+        <Empty />
+      )}
+    </>
+  )
 }
 
-export default withRouter(TriviaReport)
+export default TriviaReportPage
