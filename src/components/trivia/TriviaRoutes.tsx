@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Trivia from './trivia'
+import Trivia from './TriviaListPage'
 import TriviaEdit from './edit'
 import TriviaReport from './report'
 import ReportQuestion from './reportQuestion'
