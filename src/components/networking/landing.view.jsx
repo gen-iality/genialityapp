@@ -660,7 +660,7 @@ class ListEventUser extends Component {
                                                     message:
                                                       (this.props.cEventUser.value.names ||
                                                         this.props.cEventUser.value.user.names) +
-                                                      ' te ha enviado solicitud de amistad',
+                                                      <FormattedMessage id='sent_you_a_friend_request' defaultMessage={' te ha enviado solicitud de amistad'}/>,
                                                     name: 'notification.name',
                                                     type: 'amistad',
                                                     state: '0',
@@ -672,8 +672,8 @@ class ListEventUser extends Component {
                                                     this.props.cEventUser.value
                                                   );
                                                   notification['success']({
-                                                    message: 'Correcto!',
-                                                    description: 'Se ha enviado la solicitud de amistad correctamente',
+                                                    message: <FormattedMessage id='correct' defaultMessage={'Correcto!'}/>,
+                                                    description: <FormattedMessage id='friend_request_sent_successfully' defaultMessage={'Se ha enviado la solicitud de amistad correctamente'}/>,
                                                   });
 
                                                   for (let i = 0; i < this.state.users.length; i++) {
@@ -701,14 +701,18 @@ class ListEventUser extends Component {
                                         }>
                                         {!users.loading ? (
                                           this.isMyContact(users) ? (
-                                            'Ya es tu contacto'
+                                            <FormattedMessage id='already_your_contact' defaultMessage={'Ya es tu contacto'}/>
                                           ) : this.haveRequestUser(users) || (users.send && users.send == 1) ? (
-                                            'Confrimación pendiente'
+                                            <FormattedMessage id='pending_confirmation' defaultMessage={'Confirmación pendiente'}/>
                                           ) : (
-                                            'Enviar solicitud de contacto'
+                                            <FormattedMessage id='send_contact_request' defaultMessage={'Enviar solicitud de contacto'}/>
                                           )
                                         ) : (
-                                          <Spin />
+                                          <Row justify='center' align='middle'>
+                                            <Col>
+                                              <Spin size='large' tip={<Typography.Text strong><FormattedMessage id='loading' defaultMessage={'Cargando...'}/></Typography.Text>}/>
+                                            </Col>
+                                          </Row>
                                         )}
                                       </Button>
                                     </Space>
@@ -733,15 +737,19 @@ class ListEventUser extends Component {
                     />
                   )}
                   {!this.state.loading && users.length === 0 && this.props.cEventUser.value && (
-                    <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-                      <Card style={{ textAlign: 'center' }}>{'No existen usuarios'}</Card>
-                    </Col>
+                    <Row justify='center' align='middle'>
+                      <Col>
+                        <Result 
+                          title={<FormattedMessage id='no_users' defaultMessage={'No existen usuarios'}/>}
+                        />
+                      </Col>
+                    </Row>
                   )}
 
                   {!this.state.loading && !this.props.cEventUser.value && (
                     <Alert
-                      message='Iniciar Sesión'
-                      description='Para poder ver los asistentes es necesario iniciar sesión.'
+                      message={<FormattedMessage id='log_in' defaultMessage={'Iniciar Sesión'}/>}
+                      description={<FormattedMessage id='see_attendess_login' defaultMessage={'Para poder ver los asistentes es necesario iniciar sesión.'}/>}
                       type='info'
                       showIcon
                     />
@@ -754,7 +762,7 @@ class ListEventUser extends Component {
           <TabPane
             tab={
               <Typography.Text>
-                Mi agenda
+                <FormattedMessage id='my_agenda' defaultMessage={'Mi agenda'}/>
               </Typography.Text>
             }
             key='mi-agenda'>
@@ -773,7 +781,7 @@ class ListEventUser extends Component {
             )}
           </TabPane>
 
-          <TabPane tab={<Typography.Text>Mis contactos</Typography.Text>} key='mis-contactos'>
+          <TabPane tab={<Typography.Text><FormattedMessage id='my_contacts' defaultMessage={'Mis contactos'}/></Typography.Text>} key='mis-contactos'>
             <ContactList
               agendarCita={this.agendarCita}
               eventId={this.props.cEvent.value._id}
@@ -789,7 +797,7 @@ class ListEventUser extends Component {
                 count={
                   this.props.cHelper.totalSolicitudAmistad > 0 && this.props.cHelper.totalSolicitudAmistad}
               >
-                <Typography.Text>Solicitudes de contacto</Typography.Text>
+                <Typography.Text><FormattedMessage id='contact_requests' defaultMessage={'Solicitudes de contacto'}/></Typography.Text>
               </Badge>
             }
             key='solicitudes'>
@@ -812,10 +820,9 @@ class ListEventUser extends Component {
                   this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
                 }>
                   <Typography.Text>
-                    Solicitudes de citas
+                    <FormattedMessage id='appointment_requests' defaultMessage={'Solicitudes de citas'}/> 
                   </Typography.Text>
                 </Badge>
-              
             }
             key='solicitudes-de-citas'>
             {activeTab === 'solicitudes-de-citas' && (

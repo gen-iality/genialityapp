@@ -262,7 +262,20 @@
     "networking_send_request_subscribed_event": "To send requests you must be subscribed to the event",
     "loading": "Loading...",
     "not_registered_name": "Does not register name",
-    "schedule_appointment": "Schedule appointment"
+    "schedule_appointment": "Schedule appointment",
+    "sent_you_a_friend_request": "sent you a friend request",
+    "correct_message": "Correct",
+    "friend_request_sent_successfully": "The friend request has been sent successfully",
+    "already_your_contact": "It's already your contact",
+    "pending_confirmation": "Pending confirmation",
+    "send_contact_request": "Send contact request",
+    "no_users": "There are no users",
+    "log_in": "Log in",
+    "see_attendess_login": "In order to see the attendees you need to log in.",
+    "my_agenda": "My agenda",
+    "my_contacts": "My contacts",
+    "contact_requests": "Contact requests",
+    "appointment_requests": "Appointment requests"
   },
   "es": {
     "header.help": "Ayuda",
@@ -534,7 +547,20 @@
     "networking_send_request_subscribed_event": "Para enviar solicitudes debes estar suscrito al evento",
     "loading": "Cargando...",
     "not_registered_name": "No registra nombre",
-    "schedule_appointment": "Agendar cita"
+    "schedule_appointment": "Agendar cita",
+    "sent_you_a_friend_request": "te ha enviado solicitud de amistad",
+    "correct_message": "Correcto",
+    "friend_request_sent_successfully": "Se ha enviado la solicitud de amistad correctamente",
+    "already_your_contact": "Ya es tu contacto",
+    "pending_confirmation": "Confirmación pendiente",
+    "send_contact_request": "Enviar solicitud de contacto",
+    "no_users": "No existen usuarios",
+    "log_in": "Iniciar sesión",
+    "see_attendess_login": "Para poder ver los asistentes es necesario iniciar sesión.",
+    "my_agenda": "Mi agenda",
+    "my_contacts": "Mis contactos",
+    "contact_requests": "Solicitudes de contacto",
+    "appointment_requests": "Solicitudes de citas"
   },
   "pt": {
     "live.join": "Entrar",
@@ -695,6 +721,19 @@
     "networking_send_request_subscribed_event": "Para enviar solicitações você deve estar inscrito no evento",
     "loading": "Carregando...",
     "not_registered_name": "Não registra Nome",
-    "schedule_appointment": "Agendar consulta"
+    "schedule_appointment": "Agendar consulta",
+    "sent_you_a_friend_request": "te enviei uma solicitação de amizade",
+    "correct": "Correto",
+    "friend_request_sent_successfully": "A solicitação de amizade foi enviada com sucesso",
+    "already_your_contact": "Já é seu contato",
+    "pending_confirmation": "Confirmação pendente",
+    "send_contact_request": "Enviar solicitação de contato",
+    "no_users": "Não há usuários",
+    "log_in": "Iniciar sessão",
+    "see_attendess_login": "Para ver os participantes, você precisa fazer login.",
+    "my_agenda": "Minha agenda",
+    "my_contacts": "Meus contatos",
+    "contact_requests": "Pedidos de contato",
+    "appointment_requests": "Pedidos de agendamento"
   }
 }
