@@ -45,7 +45,7 @@ const columns = [
     sorter: (a, b) => a.correctAnswers - b.correctAnswers,
   },
 ]
-class Ranking extends Component {
+class TriviaRankingPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -106,4 +106,4 @@ class Ranking extends Component {
   }
 }
 
-export default withRouter(Ranking)
+export default withRouter(TriviaRankingPage)

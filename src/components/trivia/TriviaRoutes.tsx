@@ -4,7 +4,7 @@ import Trivia from './TriviaListPage'
 import TriviaEdit from './edit'
 import TriviaReportPage from './TriviaReportPage'
 import ReportQuestion from './reportQuestion'
-import Ranking from './ranking'
+import TriviaRankingPage from './TriviaRankingPage'
 import TriviaResponsesPage from './TriviaResponsesPage'
 
 export interface ITriviaRoutesProps {
@@ -45,7 +45,7 @@ const TriviaRoutes: FunctionComponent<ITriviaRoutesProps> = (props) => {
         <Route
           exact
           path={`${matchUrl}/ranking/:id`}
-          render={() => <Ranking event={event} />}
+          render={() => <TriviaRankingPage event={event} />}
         />
         <Route
           // exact
