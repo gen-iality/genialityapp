@@ -1,12 +1,5 @@
-import { Component, FunctionComponent, ReactNode } from 'react'
-import {
-  Route,
-  Redirect,
-  Switch,
-  Link,
-  RouteComponentProps,
-  RouteProps,
-} from 'react-router-dom'
+import { Component, FunctionComponent } from 'react'
+import { Route, Redirect, Switch, Link, RouteProps } from 'react-router-dom'
 import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import Loading from '../loaders/loading'
@@ -80,8 +73,7 @@ const EventsTicket = loadable(() => import('../ticketsEvent'))
 dayjs.locale('es')
 momentLocalizer()
 
-interface IProtected extends Omit<RouteProps, 'render'> {
-  render: (routeProps: RouteComponentProps) => ReactNode
+interface IProtected extends RouteProps {
   event?: any
   url?: string
 }
@@ -94,7 +86,7 @@ const Protected: FunctionComponent<IProtected> = (props) => {
       {...rest}
       render={(routeProps) =>
         event?.user_properties && event?.user_properties?.length > 0 ? (
-          <ValidateAccessRouteCms>{render(routeProps)}</ValidateAccessRouteCms>
+          <ValidateAccessRouteCms>{render && render(routeProps)}</ValidateAccessRouteCms>
         ) : (
           <Redirect push to={`${url}/agenda`} />
         )
