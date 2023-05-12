@@ -1,15 +1,24 @@
-import { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { Component, FunctionComponent, useEffect, useState } from 'react'
+import { useLocation, withRouter } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { utils, writeFileXLSX } from 'xlsx'
 import { getAnswersByQuestion } from './services'
 import Header from '@antdComponents/Header'
 import Table from '@antdComponents/Table'
+import { ColumnsType } from 'antd/lib/table'
+import { Button } from 'antd'
+import { VerticalAlignBottomOutlined } from '@ant-design/icons'
 
-const RenderNombreUsuario = (name) =>
+type UserResponseType = any // TODO: define this, and move to Utilities/types
+
+export interface IReportQuestionPageProps {
+  surveyId: string
+}
+
+const UserNameRendered = (name?: string) =>
   !name ? <span>Usuario invitado</span> : <span>{name}</span>
 
-const columns = [
+const columns: ColumnsType<UserResponseType> = [
   {
     title: 'Creado',
     dataIndex: 'creation_date_text',
@@ -19,7 +28,7 @@ const columns = [
     title: 'Nombre',
     dataIndex: 'user_name',
     key: 'user_name',
-    render: RenderNombreUsuario,
+    render: UserNameRendered,
   },
   {
     title: 'Respuesta',
@@ -28,35 +37,25 @@ const columns = [
   },
 ]
 
-class ReportQuestion extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      nameQuestion: '',
-      listOfUserResponse: [],
+const ReportQuestionPage: FunctionComponent<IReportQuestionPageProps> = (props) => {
+  const { surveyId } = props
+
+  const [questionText, setQuestionText] = useState<string>('')
+  const [listOfUserResponse, setListOfUserResponse] = useState<UserResponseType[]>([])
+
+  const location = useLocation<any>()
+
+  const loadData = async () => {
+    setQuestionText(location.state.titleQuestion)
+    const response = await getAnswersByQuestion(location.state.surveyId, surveyId)
+    setListOfUserResponse(response)
+  }
+
+  const exportReport = () => {
+    const exclude = (data: any) => {
+      delete data._id
+      return data
     }
-  }
-
-  loadData = async () => {
-    const { location, match } = this.props
-
-    this.setState({ nameQuestion: location.state.titleQuestion })
-    const response = await getAnswersByQuestion(location.state.surveyId, match.params.id)
-    this.setState({ listOfUserResponse: response })
-  }
-
-  componentDidMount() {
-    this.loadData()
-  }
-
-  exportReport = () => {
-    let { nameQuestion } = this.state
-    const { listOfUserResponse } = this.state
-    //Sheet names cannot exceed 31 chars
-    nameQuestion = nameQuestion.substring(0, 30)
-    const { match } = this.props
-
-    const exclude = ({ ...rest }) => rest
 
     const data = listOfUserResponse.map((item) => exclude(item))
 
@@ -67,30 +66,26 @@ class ReportQuestion extends Component {
     }
     const ws = utils.json_to_sheet(data)
     const wb = utils.book_new()
-    const sheetName = nameQuestion.replace(/[.*+¿?^${}()|[\]\\]/g, '')
+    const sheetName = questionText.substring(0, 30).replace(/[.*+¿?^${}()|[\]\\]/g, '')
     utils.book_append_sheet(wb, ws, `${sheetName}`)
-    const name = `${match.params.id}`
 
-    writeFileXLSX(wb, `${sheetName}-${name}${dayjs().format('DDMMYY')}.xls`)
+    writeFileXLSX(wb, `${sheetName}-${surveyId}_${dayjs().format('DDMMYY')}.xls`)
   }
 
-  goBack = () => this.props.history.goBack()
+  useEffect(() => {
+    loadData()
+  }, [])
 
-  render() {
-    const { nameQuestion, listOfUserResponse } = this.state
-    return (
-      <>
-        <Header title={nameQuestion} back />
-        <Table
-          header={columns}
-          list={listOfUserResponse}
-          pagination={false}
-          exportData
-          fileName={nameQuestion}
-        />
-      </>
-    )
-  }
+  return (
+    <>
+      <Header title={questionText} back />
+
+      <Button icon={<VerticalAlignBottomOutlined />} onClick={exportReport}>
+        Exportar
+      </Button>
+      <Table header={columns} list={listOfUserResponse} pagination={false} />
+    </>
+  )
 }
 
-export default withRouter(ReportQuestion)
+export default ReportQuestionPage
