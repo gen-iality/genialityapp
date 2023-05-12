@@ -9,13 +9,18 @@ import { typeAttendace } from './interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 import SpacesAvalibleList from './components/spaces-requestings/SpacesAvalibleList';
 import firebase from 'firebase/compat';
-import locale from 'antd/es/date-picker/locale/es_ES';
+import locale_es from 'antd/es/date-picker/locale/es_ES';
+import locale_en from 'antd/es/date-picker/locale/en_GB';
+import locale_pt from 'antd/es/date-picker/locale/pt_BR';
+import { useIntl } from 'react-intl';
 
 function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, closeModal, cEvent }) {
   const [agendaMessage, setAgendaMessage] = useState('');
   const [date, setDate] = useState(null);
   const [loading, setLoading] = useState(false);
   const [reloadFlag, setReloadFlag] = useState(false);
+  const intl = useIntl();
+  const locale = intl.locale === 'en' ? locale_en : intl.locale === 'pt' ? locale_pt : locale_es;
 
   useEffect(() => {
     if (targetEventUserId === null || cEvent.value === null || cEventUser.value === null) return;
@@ -26,9 +31,8 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
     if (!resp) return;
     setReloadFlag(!reloadFlag);
     notification.open({
-      message: 'Solicitud enviada',
-      description:
-        'Le llegará un correo a la persona notificandole la solicitud, quien la aceptara o recharaza  y le llegará un correo de vuelta confirmando la respuesta',
+      message: intl.formatMessage({id: 'request_sent', defaultMessage: 'Solicitud enviada'}),
+      description: intl.formatMessage({id: 'networking_notification_email_confirmation', defaultMessage: 'Le llegará un correo a la persona notificandole la solicitud, quien la aceptara o recharaza y le llegará un correo de vuelta confirmando la respuesta'}),
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
       duration: 30,
     });
@@ -40,7 +44,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       emailEmited: 'email@gmail.com',
       message: `${cEventUser.value.names ||
         cEventUser.value.user.names ||
-        cEventUser.value.user.name} te ha enviado cita`,
+        cEventUser.value.user.name} ${intl.formatMessage({id: 'networking_sent_an_appointment', defaultMessage: 'te ha enviado cita'})}`,
       name: 'notification.name',
       type: 'agenda',
       state: '0',
@@ -56,7 +60,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
 
   const onSubmit = async (message,startDate, endDate) => {
     try {
-      if (!date) return notification.warning({ message: 'Debes seleccionar una fecha' });
+      if (!date) return notification.warning({ message: intl.formatMessage({id: 'networking_select_date', defaultMessage: 'Debes seleccionar una fecha'}) });
       setLoading(true);
       const eventId = cEvent?.value?._id;
 
@@ -77,7 +81,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       DispatchMessageService({
         action: 'show',
         type: 'error',
-        msj: 'No se pudo programar la reunión, intentelo más tarde',
+        msj: intl.formatMessage({id: 'networking_error_meet', formatMessage: 'No se pudo programar la reunión, intentelo más tarde'}),
       });
       setLoading(false);
       closeModal();
@@ -94,7 +98,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
   return (
     <Modal
       visible={!!targetEventUserId}
-      title={<Typography.Text ellipsis style={{width: 450}}>Agendar cita con <strong>{targetEventUser?.user?.names}</strong></Typography.Text>}
+      title={<Typography.Text ellipsis style={{width: 450}}>{intl.formatMessage({id: 'schedule_an_appointment_with', defaultMessage: 'Agendar cita con '})}<strong>{targetEventUser?.user?.names}</strong></Typography.Text>}
       footer={null}
       onCancel={resetModal}
       style={{ zIndex: 1031 }}
