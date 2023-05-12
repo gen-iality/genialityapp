@@ -51,7 +51,6 @@ const columns: ColumnsType<UserResponseType> = [
 ]
 
 export interface ITriviaRankingPageProps {
-  event: any
   surveyId: string
 }
 
@@ -64,10 +63,6 @@ const TriviaRankingPage: FunctionComponent<ITriviaRankingPageProps> = (props) =>
     const response = await getTriviaRanking(surveyId)
     setListOfUserResponse(response)
   }
-
-  useEffect(() => {
-    loadData()
-  }, [])
 
   const exportReport = () => {
     const exclude = (data: any) => {
@@ -89,6 +84,10 @@ const TriviaRankingPage: FunctionComponent<ITriviaRankingPageProps> = (props) =>
 
     writeFileXLSX(wb, `ranking_${surveyId}_${dayjs().format('DDMMYY')}.xls`)
   }
+
+  useEffect(() => {
+    loadData()
+  }, [])
 
   return (
     <>

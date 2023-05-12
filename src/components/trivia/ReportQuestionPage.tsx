@@ -1,5 +1,5 @@
-import { Component, FunctionComponent, useEffect, useState } from 'react'
-import { useLocation, withRouter } from 'react-router-dom'
+import { FunctionComponent, useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { utils, writeFileXLSX } from 'xlsx'
 import { getAnswersByQuestion } from './services'

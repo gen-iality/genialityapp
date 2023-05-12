@@ -1,9 +1,9 @@
 import { FunctionComponent } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Trivia from './TriviaListPage'
+import TriviaListPage from './TriviaListPage'
 import TriviaEdit from './edit'
 import TriviaReportPage from './TriviaReportPage'
-import ReportQuestion from './ReportQuestionPage'
+import ReportQuestionPage from './ReportQuestionPage'
 import TriviaRankingPage from './TriviaRankingPage'
 import TriviaResponsesPage from './TriviaResponsesPage'
 
@@ -22,7 +22,7 @@ const TriviaRoutes: FunctionComponent<ITriviaRoutesProps> = (props) => {
           exact
           path={`${matchUrl}/`}
           render={(routeProps) => (
-            <Trivia event={event} matchUrl={routeProps.match.url} />
+            <TriviaListPage event={event} matchUrl={routeProps.match.url} />
           )}
         />
         <Route
@@ -40,13 +40,15 @@ const TriviaRoutes: FunctionComponent<ITriviaRoutesProps> = (props) => {
         <Route
           exact
           path={`${matchUrl}/report/:id`}
-          render={() => <ReportQuestion event={event} />}
+          render={(routeProps) => (
+            <ReportQuestionPage surveyId={routeProps.match.params.id} />
+          )}
         />
         <Route
           exact
           path={`${matchUrl}/ranking/:id`}
           render={(routeProps) => (
-            <TriviaRankingPage event={event} surveyId={routeProps.match.params.id} />
+            <TriviaRankingPage surveyId={routeProps.match.params.id} />
           )}
         />
         <Route
