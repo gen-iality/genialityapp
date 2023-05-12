@@ -31,7 +31,7 @@ import {
   DeleteOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons'
-import FormQuestionEdit from './formEdit'
+import FormQuestionEdit from './FormQuestionEdit'
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
 import Loading from '../profile/loading'
