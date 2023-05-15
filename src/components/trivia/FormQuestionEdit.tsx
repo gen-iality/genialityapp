@@ -81,8 +81,12 @@ const columns = [
   },
 ]
 
+interface ExtendedSurveyQuestion extends SurveyQuestion {
+  [key: string]: any
+}
+
 export interface IFormQuestionEditProps {
-  valuesQuestion: SurveyQuestion
+  valuesQuestion: ExtendedSurveyQuestion
   eventId: string
   surveyId: string
   closeModal: any
@@ -132,7 +136,10 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
 
   useEffect(() => {
     if (valuesQuestion.image && valuesQuestion.image !== null) {
-      setDefaultImgValue(valuesQuestion.image)
+      const images = Array.isArray(valuesQuestion.image)
+        ? valuesQuestion.image
+        : [valuesQuestion.image]
+      setDefaultImgValue(images)
     } else {
       setDefaultImgValue(undefined)
     }
@@ -222,7 +229,7 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
 
     if (valuesQuestion.type) {
       const choice = selectOptions.find((option) => option.text === valuesQuestion.type)
-      setQuestionType(choice.value)
+      setQuestionType(choice ? choice.value : choice)
     }
 
     if (valuesQuestion.type === 'Rating') {
@@ -268,15 +275,15 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
     }, 500)
   }, [form, valuesQuestion])
 
-  const handleRadio = (e) => {
+  const handleRadio = (e: any) => {
     setCorrectAnswerIndex(e.target.value)
   }
 
-  const handleCheckbox = (value) => {
+  const handleCheckbox = (value: any[]) => {
     setCorrectAnswerIndex(value.sort((a, b) => a - b))
   }
 
-  const handleFunction = (value) => {
+  const handleFunction = (value: string) => {
     setQuestionType(value)
     setCorrectAnswerIndex(value === 'radiogroup' ? null : [])
   }
