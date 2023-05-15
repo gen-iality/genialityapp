@@ -1,4 +1,4 @@
-import { Button, Card, Col, Drawer, notification, Row, Spin, Typography } from 'antd';
+import { Button, Card, Col, Drawer, notification, Result, Row, Spin, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
@@ -10,12 +10,15 @@ import {INITIAL_MEET_CONFIG} from './utils/utils'
 import { LeftOutlined } from '@ant-design/icons';
 import { getConfig } from './services/configuration.service';
 import { isMobile } from 'react-device-detect';
+import { useIntl } from 'react-intl';
+
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const [meetConfig, setMeetConfig] = useState(INITIAL_MEET_CONFIG);
   const { listDays, haveMeetings, loading } = useGetMeetingConfirmed();
   const [openChat, setOpenChat] = useState(false);
+  const intl = useIntl();
 
   const defineName = () => {
     let userName = 'Anonimo' + new Date().getTime();
@@ -50,7 +53,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       <Row align='middle' justify='center' >
         <Spin 
           size='large'
-          tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
+          tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/>
       </Row>
     );
   }
@@ -70,7 +73,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             onClick={() => {
               setCurrentRoom(null);
             }}>
-            Regresar al listado de citas
+            {intl.formatMessage({id: 'networking_return_list_appointments', defaultMessage: 'Regresar al listado de citas'})}
           </Button>
           {isMobile && <Button onClick={() => setOpenChat(!openChat)} style={{marginLeft: 10}}>Chat</Button>}
           <Row gutter={[16, 16]}>
@@ -162,7 +165,11 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             eventId={event._id}
           />
         ) : (
-          <Card>{'No tienes citas actualmente'}</Card>
+          <Row justify='center' align='middle'>
+            <Col>
+              <Result title={intl.formatMessage({id: 'networking_dont_have_dates', defaultMessage: 'No tienes citas actualmente'})}/>
+            </Col>
+          </Row>
         )}
       </div>
     </>

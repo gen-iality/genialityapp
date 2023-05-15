@@ -33,10 +33,10 @@ import { setVirtualConference } from '../../redux/virtualconference/actions';
 import { connect } from 'react-redux';
 import { GetTokenUserFirebase } from '../../helpers/HelperAuth';
 import { parseStringBoolean } from '@/Utilities/parseStringBoolean';
+import { FormattedMessage } from 'react-intl';
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
-
 class ListEventUser extends Component {
   constructor(props) {
     super(props);
@@ -60,10 +60,10 @@ class ListEventUser extends Component {
       requestListSent: [],
       modalView: false,
       listTotalUser: [],
-      updatetable: false,
+      updatetable: false
     };
   }
-
+  
   async componentDidMount() {
     await this.getInfoCurrentUser();
     this.loadData();
@@ -318,6 +318,7 @@ class ListEventUser extends Component {
     let isContact = isMyContacts(formatUSer, this.props.cHelper.contacts);
     return isContact;
   }
+
   componentWillUnmount() {
     this.props.setVirtualConference(true);
   }
@@ -340,17 +341,15 @@ class ListEventUser extends Component {
           <Result
             extra={
               <Button type='primary' onClick={this.closeModal}>
-                Cerrar
+                <FormattedMessage id='close' defaultMessage={'Cerrar'}/>
               </Button>
             }
-            title={<Typography.Text strong>¡Información adicional!</Typography.Text>}
+            title={<Typography.Text strong><FormattedMessage id='additional_information' defaultMessage={'¡Información adicional!'}/></Typography.Text>}
             subTitle={
               <Typography.Paragraph style={{textAlign: 'justify'}}>
-                Solo puedes ver una cantidad limitada de información pública de cada asistente, 
-                para ver toda la información de un asistente debes realizar una solicitud de contacto,
-                luego de ello se le informará al asistente, quien aceptará o recharazá la solicitud enviada. <br /><br />
-                Una vez el asistente haya aceptado solicitud te llegará un correo y podrás regresar
-                a esta misma sección en mis contactos a ver la información completa del nuevo contacto.
+                <FormattedMessage id='networking_informative_modal_part1' defaultMessage={'Solo puedes ver una cantidad limitada de información pública de cada asistente, para ver toda la información de un asistente debes realizar una solicitud de contacto, luego de ello se le informará al asistente, quien aceptará o recharazá la solicitud enviada.'}/>
+                <br /><br />
+                <FormattedMessage id='networking_informative_modal_part2' defaultMessage={'Una vez el asistente haya aceptado solicitud te llegará un correo y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'}/>
               </Typography.Paragraph>
             }
           />
@@ -358,7 +357,7 @@ class ListEventUser extends Component {
 
         {/* Componente de busqueda */}
         <Tabs style={{ background: '#FFFFFF' }} activeKey={activeTab} onChange={this.changeActiveTab}>
-          <TabPane tab={<Typography.Text>Participantes</Typography.Text>} key='asistentes'>
+          <TabPane tab={<Typography.Text><FormattedMessage id={'participants'} defaultMessage={'Participantes'} /></Typography.Text>} key='asistentes'>
             {
               <AppointmentModal
                 targetEventUserId={this.state.eventUserIdToMakeAppointment}
@@ -375,7 +374,7 @@ class ListEventUser extends Component {
                   <Col span={24} style={{ margin: '0 auto' }}>
                     <Form.Item
                       labelCol={{ span: 24 }}
-                      label='Busca aquí las personas que deseas contactar'
+                      label={<FormattedMessage id='networking_search_participant' defaultMessage={'Busca aquí las personas que deseas contactar'} />}
                       name='searchInput'>
                       <SearchComponent
                         id='searchInput'
@@ -408,7 +407,7 @@ class ListEventUser extends Component {
                       closable
                     /> */}
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='attendee_type' defaultMessage={'Tipo de asistente'}/>} name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -434,7 +433,7 @@ class ListEventUser extends Component {
                   {this.props.cEvent.value._id === '5f92d0cee5e2552f1b7c8ea2' && (
                     <>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='attendee_type' defaultMessage={'Tipo de asistente'}/>} name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -444,7 +443,7 @@ class ListEventUser extends Component {
                         </Form.Item>
                       </Col>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de participante' name='filterSector' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='attendee_type' defaultMessage={'Tipo de asistente'}/>} name='filterSector' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -460,7 +459,7 @@ class ListEventUser extends Component {
                   {this.props.cEvent.value._id === '5f7f21217828e17d80642856' && (
                     <>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='attendee_type' defaultMessage={'Tipo de asistente'}/>} name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -470,7 +469,7 @@ class ListEventUser extends Component {
                         </Form.Item>
                       </Col>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='sector' defaultMessage={'Sector'}/>} name='filterSector' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -486,7 +485,7 @@ class ListEventUser extends Component {
                   {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' && (
                     <>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='attendee_type' defaultMessage={'Tipo de asistente'}/>} name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -496,7 +495,7 @@ class ListEventUser extends Component {
                         </Form.Item>
                       </Col>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                        <Form.Item label={<FormattedMessage id='sector' defaultMessage={'Sector'}/>} name='filterSector' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
                             properties={this.props.cEvent.value.user_properties || []}
@@ -516,8 +515,8 @@ class ListEventUser extends Component {
                 <br />
                 <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
                   <Alert
-                    message='Solicitudes'
-                    description='Para enviar solicitudes debes estar suscrito al evento'
+                    message={<FormattedMessage id='requests' defaultMessage={'Solicitudes'}/>}
+                    description={<FormattedMessage id='networking_send_request_subscribed_event' defaultMessage={'Para enviar solicitudes debes estar suscrito al evento'}/>}
                     type='info'
                     closable
                   />
@@ -531,7 +530,7 @@ class ListEventUser extends Component {
                 <Col>
                   <Spin 
                     size='large'
-                    tip={<Typography.Text strong>Cargando...</Typography.Text>}
+                    tip={<Typography.Text strong><FormattedMessage id='loading' defaultMessage={'Cargando...'}/></Typography.Text>}
                   />
                 </Col>
               </Row>
@@ -573,7 +572,7 @@ class ListEventUser extends Component {
                                   : users.properties.names}
                               </Avatar>
                             }
-                            title={users.properties.names ? users.properties.names : 'No registra Nombre'}
+                            title={users.properties.names ? users.properties.names : <FormattedMessage id='not_registered_name' defaultMessage={'No registra Nombre'}/>}
                             description={[
                               <div key={`ug-${userIndex}`}>
                                 <br />
@@ -622,7 +621,7 @@ class ListEventUser extends Component {
                                             eventUserToMakeAppointment: users,
                                           });
                                         }}>
-                                        {'Agendar cita'}
+                                        <FormattedMessage id='schedule_appointment' defaultMessage={'Agendar cita'}/>
                                       </Button>
                                       <Button
                                         type='primary'
@@ -661,7 +660,7 @@ class ListEventUser extends Component {
                                                     message:
                                                       (this.props.cEventUser.value.names ||
                                                         this.props.cEventUser.value.user.names) +
-                                                      ' te ha enviado solicitud de amistad',
+                                                      <FormattedMessage id='sent_you_a_friend_request' defaultMessage={' te ha enviado solicitud de amistad'}/>,
                                                     name: 'notification.name',
                                                     type: 'amistad',
                                                     state: '0',
@@ -673,8 +672,8 @@ class ListEventUser extends Component {
                                                     this.props.cEventUser.value
                                                   );
                                                   notification['success']({
-                                                    message: 'Correcto!',
-                                                    description: 'Se ha enviado la solicitud de amistad correctamente',
+                                                    message: <FormattedMessage id='correct' defaultMessage={'Correcto!'}/>,
+                                                    description: <FormattedMessage id='friend_request_sent_successfully' defaultMessage={'Se ha enviado la solicitud de amistad correctamente'}/>,
                                                   });
 
                                                   for (let i = 0; i < this.state.users.length; i++) {
@@ -702,14 +701,18 @@ class ListEventUser extends Component {
                                         }>
                                         {!users.loading ? (
                                           this.isMyContact(users) ? (
-                                            'Ya es tu contacto'
+                                            <FormattedMessage id='already_your_contact' defaultMessage={'Ya es tu contacto'}/>
                                           ) : this.haveRequestUser(users) || (users.send && users.send == 1) ? (
-                                            'Confrimación pendiente'
+                                            <FormattedMessage id='pending_confirmation' defaultMessage={'Confirmación pendiente'}/>
                                           ) : (
-                                            'Enviar solicitud de contacto'
+                                            <FormattedMessage id='send_contact_request' defaultMessage={'Enviar solicitud de contacto'}/>
                                           )
                                         ) : (
-                                          <Spin />
+                                          <Row justify='center' align='middle'>
+                                            <Col>
+                                              <Spin size='large' tip={<Typography.Text strong><FormattedMessage id='loading' defaultMessage={'Cargando...'}/></Typography.Text>}/>
+                                            </Col>
+                                          </Row>
                                         )}
                                       </Button>
                                     </Space>
@@ -734,15 +737,19 @@ class ListEventUser extends Component {
                     />
                   )}
                   {!this.state.loading && users.length === 0 && this.props.cEventUser.value && (
-                    <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-                      <Card style={{ textAlign: 'center' }}>{'No existen usuarios'}</Card>
-                    </Col>
+                    <Row justify='center' align='middle'>
+                      <Col>
+                        <Result 
+                          title={<FormattedMessage id='no_users' defaultMessage={'No existen usuarios'}/>}
+                        />
+                      </Col>
+                    </Row>
                   )}
 
                   {!this.state.loading && !this.props.cEventUser.value && (
                     <Alert
-                      message='Iniciar Sesión'
-                      description='Para poder ver los asistentes es necesario iniciar sesión.'
+                      message={<FormattedMessage id='log_in' defaultMessage={'Iniciar Sesión'}/>}
+                      description={<FormattedMessage id='see_attendess_login' defaultMessage={'Para poder ver los asistentes es necesario iniciar sesión.'}/>}
                       type='info'
                       showIcon
                     />
@@ -755,7 +762,7 @@ class ListEventUser extends Component {
           <TabPane
             tab={
               <Typography.Text>
-                Mi agenda
+                <FormattedMessage id='my_agenda' defaultMessage={'Mi agenda'}/>
               </Typography.Text>
             }
             key='mi-agenda'>
@@ -774,7 +781,7 @@ class ListEventUser extends Component {
             )}
           </TabPane>
 
-          <TabPane tab={<Typography.Text>Mis contactos</Typography.Text>} key='mis-contactos'>
+          <TabPane tab={<Typography.Text><FormattedMessage id='my_contacts' defaultMessage={'Mis contactos'}/></Typography.Text>} key='mis-contactos'>
             <ContactList
               agendarCita={this.agendarCita}
               eventId={this.props.cEvent.value._id}
@@ -790,7 +797,7 @@ class ListEventUser extends Component {
                 count={
                   this.props.cHelper.totalSolicitudAmistad > 0 && this.props.cHelper.totalSolicitudAmistad}
               >
-                <Typography.Text>Solicitudes de contacto</Typography.Text>
+                <Typography.Text><FormattedMessage id='contact_requests' defaultMessage={'Solicitudes de contacto'}/></Typography.Text>
               </Badge>
             }
             key='solicitudes'>
@@ -813,10 +820,9 @@ class ListEventUser extends Component {
                   this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
                 }>
                   <Typography.Text>
-                    Solicitudes de citas
+                    <FormattedMessage id='appointment_requests' defaultMessage={'Solicitudes de citas'}/> 
                   </Typography.Text>
                 </Badge>
-              
             }
             key='solicitudes-de-citas'>
             {activeTab === 'solicitudes-de-citas' && (

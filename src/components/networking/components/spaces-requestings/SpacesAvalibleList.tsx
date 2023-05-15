@@ -6,6 +6,7 @@ import firebase from 'firebase/compat';
 import TextArea from 'antd/lib/input/TextArea';
 import { getAccionButton, getDisabledAccionButton } from './utils/space-avalible-list.utils';
 import { IFormRequestSpace } from './interfaces/space-avalible.interfaces';
+import { useIntl } from 'react-intl';
 
 interface ListSpacesAvalibleProps {
   date: Moment;
@@ -34,6 +35,7 @@ const SpacesAvalibleList = ({
     targetEventUserId,
     creatorEventUserId
   );
+  const intl = useIntl();
 
   const onAgendar = (index: number) => {
     setClickedIndices(index);
@@ -49,7 +51,7 @@ const SpacesAvalibleList = ({
     onSubmit(values.message??'', dateStart, dateEnd);
   };
   if (!spacesMeetingsToTargedUserLoading && spacesMeetingsToTargedUser.length === 0)
-    return <Result title='Debe configurar los parametros del networking' />;
+    return <Result title={intl.formatMessage({id: 'networking_config_parameters', defaultMessage: 'Debe configurar los parametros del networking'})} />;
   return (
     <>
       <List loading={spacesMeetingsToTargedUserLoading || loadingButton}>
@@ -70,7 +72,7 @@ const SpacesAvalibleList = ({
                 title={
                   <>
                     <Typography.Paragraph>
-                      Reunion entre {moment(spaceMeeting.dateStart.toDate()).format('h:mm a')} y las{' '}
+                      {intl.formatMessage({id: 'networking_meeting_between', defaultMessage: 'Reunión entre '})} {moment(spaceMeeting.dateStart.toDate()).format('h:mm a')} {intl.formatMessage({id: 'networking_and_the', defaultMessage: 'y las '})}
                       {moment(spaceMeeting.dateEnd.toDate()).format('h:mm a')}
                     </Typography.Paragraph>
                     {clickedIndices === index && (
@@ -80,7 +82,7 @@ const SpacesAvalibleList = ({
                           ref={() => {}}
                           onFinish={(values) => onHandledSubmit(values, spaceMeeting.dateStart, spaceMeeting.dateEnd)}>
                           <Form.Item name={'message'}>
-                            <TextArea placeholder='Ingrese su mensaje aquí' />
+                            <TextArea placeholder={intl.formatMessage({id: 'enter_your_message_here', defaultMessage: 'Ingrese su mensaje aquí'})} />
                           </Form.Item>
                           <Row gutter={[8, 8]}>
                             <Col>
@@ -90,7 +92,7 @@ const SpacesAvalibleList = ({
                             </Col>
                             <Col>
                               <Button danger onClick={() => onCancelar(index)}>
-                                Cancelar
+                                {intl.formatMessage({id: 'global.cancel', defaultMessage: 'Cancelar'})}
                               </Button>
                             </Col>
                           </Row>

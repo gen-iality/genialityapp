@@ -8,6 +8,7 @@ import { formatDataToString } from '../../helpers/utils';
 import { UseUserEvent } from '../../context/eventUserContext';
 import { UseEventContext } from '../../context/eventContext';
 import { UseCurrentUser } from '../../context/userContext';
+import { useIntl } from 'react-intl';
 
 const { Meta } = Card;
 
@@ -16,6 +17,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
   const [messageService, setMessageService] = useState('');
   const [userProperties, setUserProperties] = useState([]);
   const [loading, setLoading] = useState(false);
+  const intl = useIntl();
 
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
@@ -34,7 +36,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
           setContactsList(result);
         }
         if (typeof result == 'string') {
-          setMessageService(result === 'aun no tienes contactos.' ? 'Aún no tienes contactos.' : result);
+          setMessageService(result === 'aun no tienes contactos.' ? intl.formatMessage({id: 'networking_not_contacts_yet', defaultMessage: 'Aún no tienes contactos.'}) : result);
         };
 
         setLoading(false);
@@ -58,8 +60,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
     return userCurrentContext.value === null ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} xxl={15} style={{ margin: '0 auto' }}>
         <Alert
-          message='Iniciar sesión'
-          description='Para poder ver contactos es necesario iniciar sesión.'
+          message={intl.formatMessage({id: 'log_in', defaultMessage:'Iniciar sesión'})}
+          description={intl.formatMessage({id: 'see_contacts_login', defaultMessage: 'Para poder ver contactos es necesario iniciar sesión.'})}
           type='info'
           showIcon
         />
@@ -107,7 +109,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
                         {!user['picture'] && user.names ? user.names.charAt(0).toUpperCase() : user.names}
                       </Avatar>
                     }
-                    title={user.names ? user.names : 'No registra Nombre'}
+                    title={user.names ? user.names : intl.formatMessage({id: 'not_registed_name', defaultMessage: 'No registra nombre'})}
                     description={[
                       <div key={'contact' + key}>
                         <br />
@@ -144,7 +146,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
                       size='large'
                       style={{ backgroundColor: '#363636', color: 'white' }}
                       onClick={() => agendarCita(contact._id, contact)}>
-                      {'Agendar cita'}
+                      {intl.formatMessage({id: 'schedule_appointment', defaultMessage: 'Agendar cita'})}
                     </Button>
                   </Col>
                 </Card>
@@ -166,8 +168,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
       )
     );
   if (userCurrentContext.value || loading) return <Row justify='center' align='middle'><Col><Spin size='large'
-  tip={<Typography.Text strong>Cargando...</Typography.Text>}/></Col></Row>;
+  tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/></Col></Row>;
   if (!userCurrentContext.value) return <Row justify='center' align='middle'><Col><Spin size='large'
-  tip={<Typography.Text strong>Cargando...</Typography.Text>}/></Col></Row>;
+  tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/></Col></Row>;
 };
 export default ContactList;
