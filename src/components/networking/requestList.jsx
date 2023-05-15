@@ -10,12 +10,15 @@ import { DispatchMessageService } from '../../context/MessageService';
 import { CurrentEventUserContext } from '../../context/eventUserContext';
 import { CurrentEventContext } from '@/context/eventContext';
 import { isMobile } from 'react-device-detect';
+import { useIntl } from 'react-intl'; 
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
   const [invitationsReceived, setInvitationsReceived] = useState([]);
   const cEvent = useContext(CurrentEventContext);
   const [loading, setLoading] = useState(true);
+  const intl = useIntl();
+
   const obtenerImageUser = async (idUser) => {
     const eventUser = await UsersApi.getOne(cEvent.value?._id, idUser);
     if (eventUser) {
@@ -56,12 +59,12 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
                     <Row wrap gutter={[16, 16]} style={isMobile && {marginLeft: 15}}>
                       <Col>
                         <Button key='btn-aceptar' onClick={() => sendResponseToInvitation(item, true)}>
-                          Aceptar
+                          {intl.formatMessage({id: 'accept', defaultMessage: 'Aceptar'})}
                         </Button>
                       </Col>
                       <Col>
                         <Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item, false)}>
-                          Rechazar
+                          {intl.formatMessage({id: 'decline', defaultMessage: 'Rechazar'})}
                         </Button>
                       </Col>
                     </Row>
@@ -91,14 +94,14 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
     <Row justify='center' align='middle'>
       <Col >
         <Result 
-          title={'¡No tienes solicitudes actualmente!'}
+          title={intl.formatMessage({id: 'networking_not_requests', defaultMessage: '¡No tienes solicitudes actualmente!'})}
         />
       </Col>
     </Row>
   ) : (
     <Row justify='center' align='middle'>
       <Col>
-        <Spin size='large' tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
+        <Spin size='large' tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/>
       </Col>
     </Row>
   );
@@ -153,7 +156,7 @@ const InvitacionListSent = ({ list }) => {
                           color={item.response === 'rejected' && 'error'}
                           style={{padding: '4px 15px'}}
                         >
-                          {item.response ? item.response : item.state === 'send' ? 'Enviado' : item.state}
+                          {item.response ? item.response : item.state === 'send' ? intl.formatMessage({id: 'networking_send', defaultMessage: 'Enviado'}) : item.state}
                         </Tag>
                       </Col>
                     </Row>
@@ -183,14 +186,14 @@ const InvitacionListSent = ({ list }) => {
     <Row justify='center' align='middle'>
       <Col >
         <Result 
-          title={'¡No has enviado ninguna solicitud!'}
+          title={intl.formatMessage({id: 'networking_not_submitted_any_requests', defaultMessage: '¡No has enviado ninguna solicitud!'})}
         />
       </Col>
     </Row>
   ) : (
     <Row justify='center' align='middle'>
       <Col>
-        <Spin size='large' tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
+        <Spin size='large' tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/>
       </Col>
     </Row>
   );
@@ -202,6 +205,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
   const [currentUserId, setCurrentUserId] = useState(null);
   const [loading, setLoading] = useState(false);
   const eventUserCtx = useContext(CurrentEventUserContext);
+  const intl = useIntl();
 
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
@@ -276,7 +280,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       .then(async () => {
         DispatchMessageService({
           type: 'success',
-          msj: 'Respuesta enviada',
+          msj: intl.formatMessage({id: 'networking_reply_sent', defaultMessage: 'Respuesta enviada'}),
           action: 'show',
         });
 
@@ -293,7 +297,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
         // console.error('ERROR API==>', err);
         DispatchMessageService({
           type: 'error',
-          msj: 'Hubo un problema',
+          msj: intl.formatMessage({id: 'message_error_problem', defaultMessage: 'Hubo un problema'}),
           action: 'show',
         });
       });
@@ -310,35 +314,35 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       <Row justify='center' align='middle'>
         <Col>
           <Result
-            title='Iniciar Sesión'
-            description='Para poder ver contactos es necesario iniciar sesión.'
+            title={intl.formatMessage({id: 'log_in', defaultMessage: 'Iniciar Sesión'})}
+            description={intl.formatMessage({id: 'see_contacts_login', defaultMessage: 'Para poder ver contactos es necesario iniciar sesión.'})}
           />
         </Col>
       </Row>
     ) : (
       <>
-        <Divider><Typography.Text strong>Solicitudes de contacto recibidas</Typography.Text></Divider>
+        <Divider><Typography.Text strong>{intl.formatMessage({id: 'networking_contact_requests_received', defaultMessage: 'Solicitudes de contacto recibidas'})}</Typography.Text></Divider>
         {requestListReceived.length > 0 ? 
           <InvitacionListReceived list={requestListReceived} sendResponseToInvitation={sendResponseToInvitation} />
         :
           <Row justify='center'>
             <Col>
               <Result
-                title={'¡No tienes solicitudes de contactos recibidas!'}
+                title={intl.formatMessage({id: 'networking_not_contact_requests_received', defaultMessage: '¡No tienes solicitudes de contactos recibidas!'})}
               />
             </Col>
           </Row>
         }
         
         {/* {requestListReceived.length === 0 || requestListSent.length === 0 && <Divider />} */}
-        <Divider><Typography.Text strong>Solicitudes de contacto enviadas</Typography.Text></Divider>
+        <Divider><Typography.Text strong>{intl.formatMessage({id: 'networking_contact_requests_sent', defaultMessage: 'Solicitudes de contacto enviadas'})}</Typography.Text></Divider>
         {requestListSent.length > 0 ?
           <InvitacionListSent list={requestListSent} />
           :
           <Row justify='center'>
             <Col>
               <Result
-                title={'¡No tienes solicitudes de contactos enviadas!'}
+                title={intl.formatMessage({id: 'networking_not_contact_requests_sent', defaultMessage: '¡No tienes solicitudes de contactos enviadas!'})}
               />
             </Col>
           </Row>
@@ -346,5 +350,5 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       </>
     );
   if (loading) return <Row justify='center' align='middle'><Col><Spin size='large'
-  tip={<Typography.Text strong>Cargando...</Typography.Text>}/></Col></Row>;
+  tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/></Col></Row>;
 }

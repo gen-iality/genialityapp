@@ -308,7 +308,20 @@
     "networking_enter_meetings": "Enter meeting",
     "networking_meeting_not_started": "Meeting not started",
     "networking_closed_meeting": "Closed Meeting",
-    "networking_appointment_cancelled": "Appointment cancelled."
+    "networking_appointment_cancelled": "Appointment cancelled.",
+    "networking_not_contacts_yet": "You don't have contacts yet.",
+    "see_contacts_login": "To be able to see contacts it is necessary to log in.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "networking_not_requests": "You currently have no requests!",
+    "networking_send": "Send",
+    "networking_not_submitted_any_requests": "You have not submitted any requests!",
+    "networking_reply_sent": "Reply sent",
+    "message_error_problem": "There was a problem",
+    "networking_contact_requests_received": "Contact requests received",
+    "networking_not_contact_requests_received": "You have no contact requests received!",
+    "networking_contact_requests_sent": "Contact requests sent",
+    "networking_not_contact_requests_sent": "You have no contact requests sent!"
   },
   "es": {
     "header.help": "Ayuda",
@@ -626,7 +639,20 @@
     "networking_enter_meetings": "Ingresar a reunión",
     "networking_meeting_not_started": "Reunión no iniciada",
     "networking_closed_meeting": "Reunión Cerrada",
-    "networking_appointment_cancelled": "Cita cancelada."
+    "networking_appointment_cancelled": "Cita cancelada.",
+    "networking_not_contacts_yet": "Aún no tienes contactos.",
+    "see_contacts_login": "Para poder ver contactos es necesario iniciar sesión.",
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "networking_not_requests": "¡No tienes solicitudes actualmente!",
+    "networking_send": "Enviado",
+    "networking_not_submitted_any_requests": "¡No has enviado ninguna solicitud!",
+    "networking_reply_sent": "Respuesta enviada",
+    "message_error_problem": "Hubo un problema",
+    "networking_contact_requests_received": "Solicitudes de contacto recibidas",
+    "networking_not_contact_requests_received": "¡No tienes solicitudes de contactos recibidas!",
+    "networking_contact_requests_sent": "Solicitudes de contacto enviadas",
+    "networking_not_contact_requests_sent": "¡No tienes solicitudes de contactos enviadas!"
   },
   "pt": {
     "live.join": "Entrar",
@@ -833,6 +859,19 @@
     "networking_enter_meetings": "Entrar na reunião",
     "networking_meeting_not_started": "Reunião não iniciada",
     "networking_closed_meeting": "Reunião Fechada",
-    "networking_appointment_cancelled": "Agendamento cancelado."
+    "networking_appointment_cancelled": "Agendamento cancelado.",
+    "networking_not_contacts_yet": "Você ainda não tem contatos.",
+    "see_contacts_login": "Para poder ver os contactos é necessário iniciar sessão.",
+    "accept": "Aceitar",
+    "decline": "Declínio",
+    "networking_not_requests": "No momento você não tem solicitações!",
+    "networking_send": "Enviado",
+    "networking_not_submitted_any_requests": "Você não enviou nenhuma solicitação!",
+    "networking_reply_sent": "Resposta enviada",
+    "message_error_problem": "Houve um problema",
+    "networking_contact_requests_received": "Solicitações de contato recebidas",
+    "networking_not_contact_requests_received": "Você não recebeu nenhum pedido de contato!",
+    "networking_contact_requests_sent": "Solicitações de contato enviadas",
+    "networking_not_contact_requests_sent": "Você não tem solicitações de contato enviadas!"
   }
 }
