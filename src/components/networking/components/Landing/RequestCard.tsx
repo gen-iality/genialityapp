@@ -12,6 +12,8 @@ import { IRequestCard } from '../../interfaces/Landing.interfaces';
 import moment from 'moment';
 import { RequestMeetingState } from '../../utils/utils';
 import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { useIntl } from 'react-intl';
+
 const { Meta } = Card;
 const { confirm } = Modal;
 
@@ -25,6 +27,7 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
   const [className, setClassName] = useState<string>('');
   const userName = received ? data.user_from.name : data.user_to.name;
   const userEmail = received ? data.user_from.email : data.user_to.email;
+  const intl = useIntl();
   //contextos
 
   let eventContext = UseEventContext();
@@ -42,15 +45,15 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
       let message = ''
       meetingsForTowUsers.forEach((meetings) => {
         if (meetings.participantsIds.includes(data.user_from.id)) {
-          message = '¡El otro participante no se encuentra disponible!'
+          message = intl.formatMessage({id: 'networking_participant_not_available', defaultMessage: '¡El otro participante no se encuentra disponible!'})
           notAvalibleUsers = true;
         } else if (meetings.participantsIds.includes(data.user_to.id)) {
-          message = '¡Usted se encuentra ocupado en este espacio!'          
+          message = intl.formatMessage({id: 'networking_busy_space', defaultMessage: '¡Usted se encuentra ocupado en este espacio!'})          
           notAvalibleUsers = true;
         }
       });
       if (notAvalibleUsers) {
-        notification.warning({ message: `No se pudo aceptar la reunión, ${message}`});
+        notification.warning({ message: `${intl.formatMessage({id: 'networking_couldnt_accept_meeting', defaultMessage: 'No se pudo aceptar la reunión'})}, ${message}`});
         await services.updateRequestMeeting(eventId, data.id, {
           ...data,
           status: RequestMeetingState.rejected,
@@ -65,12 +68,12 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
       notificationUser();
       setClassName('animate__animated animate__backOutRight animate__slow');
       notification.success({
-        message: '¡Se agendó la reunión correctamente!',
+        message: intl.formatMessage({id: 'networking_meeting_successfully_scheduled', defaultMessage: '¡Se agendó la reunión correctamente!'}),
         icon: <CheckCircleOutlined />,
       });
     } else {
       notification.warning({
-        message: '¡No se logró agendar la reunión! ',
+        message: intl.formatMessage({id: 'networking_failed_scheduled_meeting', defaultMessage: '¡No se logró agendar la reunión!'}),
         icon: <ExclamationCircleOutlined />,
       });
     }
@@ -86,8 +89,8 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
     } else {
       notification.warning({
         icon: <ExclamationCircleOutlined />,
-        message: '¡Algo salió mal!',
-        description: 'No se logró rechazar la reunión, comuníquese con el administrador',
+        message: intl.formatMessage({id: 'something_went_wrong', defaultMessage: '¡Algo salió mal!'}),
+        description: intl.formatMessage({id: 'networking_failed_declined_contact_administrator', defaultMessage: 'No se logró rechazar la reunión, comuníquese con el administrador'}),
       });
     }
 
@@ -111,12 +114,12 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
       setloader(false);
     } else {
       confirm({
-        title: `¿Estás seguro de que deseas rechazar la reunión?`,
+        title: intl.formatMessage({id: 'networking_want_to_decline_meeting', defaultMessage: '¿Estás seguro de que deseas rechazar la reunión?'}),
         icon: <ExclamationCircleOutlined />,
-        content: 'Una vez rechazado, no lo podrá volver a aceptar',
-        okText: 'Rechazar',
+        content: intl.formatMessage({id: 'networking_warning_rejected_meeting', defaultMessage: 'Una vez rechazado, no lo podrá volver a aceptar'}),
+        okText: intl.formatMessage({id: 'decline', defaultMessage: 'Rechazar'}),
         okType: 'danger',
-        cancelText: 'Cancelar',
+        cancelText: intl.formatMessage({id: 'global.cancel', defaultMessage: 'Cancelar'}),
         onOk() {
           rejectRequest();
         },
@@ -130,18 +133,20 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
   return (
     <Row justify='center' style={{ marginBottom: '20px' }} className={className}>
       <Card style={{ width: 600, textAlign: 'left' }} bordered={true}>
-        <div style={{ marginBottom: '10px' }}>{received ? 'Solicitud de cita por: ' : 'Solicitud de cita a: '}</div>
+        <div style={{ marginBottom: '10px' }}>{received ? 
+        intl.formatMessage({id: 'networking_appointment_request_by', defaultMessage: 'Solicitud de cita por: '}) : 
+        intl.formatMessage({id: 'networking_appointment_request_to', defaultMessage: 'Solicitud de cita a: '})}</div>
         <Meta
           avatar={<Avatar>{`${userName}`.charAt(0).toUpperCase()}</Avatar>}
-          title={userName || 'No registra nombre'}
+          title={userName || intl.formatMessage({id: 'not_registered_name', defaultMessage: 'No registra nombre'})}
           description={
             <div>
               <Row>
                 <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
-                  <p>{userEmail || 'No registra correo'}</p>
+                  <p>{userEmail || intl.formatMessage({id: 'not_registered_name', defaultMessage: 'No registra correo'})}</p>
                   <p style={{ paddingRight: '20px' }}>
-                    {'Mensaje: '}
-                    {data.message || 'sin mensaje'}
+                    {intl.formatMessage({id: 'networking_message', defaultMessage: 'Mensaje: '})}
+                    {data.message || intl.formatMessage({id: 'networking_without_message', defaultMessage: 'sin mensaje'})}
                   </p>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
@@ -156,18 +161,18 @@ export default function RequestCardTs({ data, setSendRespuesta, received }: IReq
                     disabled={loader}
                     loading={loader}
                     onClick={() => changeAgendaStatus(RequestMeetingState.rejected)}>
-                    {'Rechazar'}
+                    {intl.formatMessage({id: 'decline', defaultMessage: 'Rechazar'})}
                   </Button>
                   <Button
                     type='primary'
                     disabled={loader}
                     loading={loader}
                     onClick={() => changeAgendaStatus(RequestMeetingState.confirmed)}>
-                    {'Aceptar'}
+                    {intl.formatMessage({id: 'accept', defaultMessage: 'Aceptar'})}
                   </Button>
                 </Row>
               ) : (
-                <Row>{`Solicitud ${statusRequestText[data.status]}.`}</Row>
+                <Row>{intl.formatMessage({id: 'networking_application', defaultMessage: 'Solicitud'})} {statusRequestText[data.status]}.</Row>
               )}
             </div>
           }

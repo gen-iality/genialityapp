@@ -11,6 +11,7 @@ import { addNotification } from '../../helpers/netWorkingFunctions';
 import { RequestMeetingState } from './utils/utils';
 import RequestCardTs from './components/Landing/RequestCard';
 import { getMeetingRequest, listenMeetingsRequest } from './services/landing.service';
+import { useIntl } from 'react-intl';
 
 const { Meta } = Card;
 
@@ -26,6 +27,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   const [pendingAgendas, setPendingAgendas] = useState([]);
   const [pendingAgendasSent, setPendingAgendasSent] = useState([]);
   const [sendRespuesta, setSendRespuesta] = useState(false);
+  const intl = useIntl();
 
   //contextos
   let userEventContext = UseUserEvent();
@@ -46,11 +48,11 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
  
   return (
     <>
-      {/* {pendingAgendas.length > 0 &&  */}<Divider><Typography.Text strong>Solicitudes de citas recibidas</Typography.Text></Divider>
+      {/* {pendingAgendas.length > 0 &&  */}<Divider><Typography.Text strong>{intl.formatMessage({id: 'networking_appointment_requests_received', defaultMessage: 'Solicitudes de citas recibidas'})}</Typography.Text></Divider>
       {loading && (
         <Row justify='center' align='middle'>
           <Col>
-            <Spin size='large' tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
+            <Spin size='large' tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/>
           </Col>
         </Row>
       )}
@@ -73,18 +75,18 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
             <Row justify='center' align='middle'>
               <Col >
                 <Result
-                  title={'¡No tienes solicitudes recibidas pendientes!'}
+                  title={intl.formatMessage({id: 'networking_no_pending_received_request', defaultMessage: '¡No tienes solicitudes recibidas pendientes!'})}
                 />
               </Col>
             </Row>
           ))}
       
       
-      {/* {pendingAgendasSent.length > 0 &&  */}<Divider><Typography.Text strong>Solicitudes de citas enviadas</Typography.Text></Divider>
+      {/* {pendingAgendasSent.length > 0 &&  */}<Divider><Typography.Text strong>{intl.formatMessage({id: 'networking_appointment_requests_sent', defaultMessage: 'Solicitudes de citas enviadas'})}</Typography.Text></Divider>
       {loading1 && (
         <Row justify='center' align='middle'>
           <Col>
-            <Spin size='large' tip={<Typography.Text strong>Cargando...</Typography.Text>}/>
+            <Spin size='large' tip={<Typography.Text strong>{intl.formatMessage({id: 'loading', defaultMessage: 'Cargando...'})}</Typography.Text>}/>
           </Col>
         </Row>
       )}
@@ -109,7 +111,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
             <Row justify='center' align='middle'>
               <Col>
                 <Result 
-                  title={'¡No tienes solicitudes pendientes enviadas!'}
+                  title={intl.formatMessage({id: 'networking_no_pending_requests_sent', defaultMessage: '¡No tienes solicitudes pendientes enviadas!'})}
                 />
               </Col>
             </Row>
