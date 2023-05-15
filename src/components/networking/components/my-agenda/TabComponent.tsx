@@ -3,6 +3,7 @@ import { DailyMeeting } from '../../interfaces/my-agenda.interfaces';
 import { Col, Row, Tabs } from 'antd';
 import moment from 'moment';
 import AcceptedCard from './AcceptedCard';
+import { useIntl } from 'react-intl';
 
 interface TabComponentProps {
   listTabPanels: DailyMeeting[];
@@ -13,6 +14,7 @@ interface TabComponentProps {
 }
 
 const TabComponent = ({ listTabPanels, eventUser, enableMeetings, setCurrentRoom, eventId }: TabComponentProps) => {
+  const intl = useIntl();
   return (
     <>
       <Tabs>
@@ -35,7 +37,7 @@ const TabComponent = ({ listTabPanels, eventUser, enableMeetings, setCurrentRoom
                   </Col>
                 ))
               ) : (
-                <>No tiene reuniones programadas para este dia</>
+                intl.formatMessage({id: 'networking_no_meetings_scheduled_for_day', defaultMessage: 'No tiene reuniones programadas para este día'})              
               )}
             </Row>
           </Tabs.TabPane>

@@ -6,6 +6,7 @@ import { IMeeting } from '../../interfaces/Meetings.interfaces';
 import { DispatchMessageService } from '@/context/MessageService';
 import * as service from '../../services/meenting.service';
 import { deleteRequestMeeting } from '../../services/landing.service';
+import { useIntl } from 'react-intl';
 
 interface AcceptedCardProps {
   data: IMeeting;
@@ -18,8 +19,8 @@ interface AcceptedCardProps {
 const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom }: AcceptedCardProps) => {
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
-
-  const userName = 'Reunion';
+  const intl = useIntl();
+  const userName = intl.formatMessage({id: 'networking_meeting', defaultMessage: 'Reunión'});
   const userImage = '';
 
   /** Entramos a la sala 1 a 1 de la reunión
@@ -27,7 +28,7 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
    */
   const accessMeetRoom = (data: IMeeting, eventUser: any) => {
     if (!eventUser) {
-      alert('Tenemos problemas con tu usuario, itenta recargar la página');
+      alert(intl.formatMessage({id: 'networking_problems_user_refresh_page', defaultMessage: 'Tenemos problemas con tu usuario, itenta recargar la página'}));
       return;
     }
     let roomName = data.id;
@@ -47,7 +48,7 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
 
       DispatchMessageService({
         type: response ? 'success' : 'warning',
-        msj: response ? '¡Información guardada correctamente!' : 'No ha sido posible eliminar el campo',
+        msj: response ? intl.formatMessage({id: 'information_saved_successfully', defaultMessage: '¡Información guardada correctamente!'}) : intl.formatMessage({id: 'could_not_delete_field', defaultMessage: 'No ha sido posible eliminar el campo'}),
         action: 'show',
       });
       setLoading(false);
@@ -72,13 +73,13 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
         bordered={true}
         extra={
           <Popconfirm
-            title='¿Desea cancelar/eliminar esta cita?'
+            title={intl.formatMessage({id: 'do_you_want_to_cancel_or_delete_appointment', defaultMessage: '¿Desea cancelar/eliminar esta cita?'})}
             onConfirm={deleteThisAgenda}
-            okText='Si'
-            cancelText='No'
+            okText={intl.formatMessage({id: 'yes', defaultMessage: 'Sí'})}
+            cancelText={intl.formatMessage({id: 'no', defaultMessage: 'No'})}
             onCancel={() => setLoading(false)}>
             <Button type='text' danger disabled={loading} loading={loading}>
-              {'Cancelar Cita'}
+              {intl.formatMessage({id: 'networking_cancel_appointment', defaultMessage: 'Cancelar cita'})}
             </Button>
           </Popconfirm>
         }
@@ -106,7 +107,7 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
           description={
             <Typography.Paragraph style={{ marginTop: '-15px' }}>
               <Typography.Text type='secondary' style={{ paddingRight: '20px' }}>
-                Integrantes
+                {intl.formatMessage({id: 'members', defaultMessage: 'Integrantes'})}
               </Typography.Text>
 
               {data.participants.map((participant) => (
@@ -127,15 +128,15 @@ const AcceptedCard = ({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                   accessMeetRoom(data, eventUser);
                 }}>
                 {validDateRoom(data) && !enableMeetings
-                  ? 'Ingresar a reunión'
+                  ? intl.formatMessage({id: 'networking_enter_meetings', defaultMessage: 'Ingresar a reunión'})
                   : !validDateRoom(data) && !enableMeetings
-                  ? 'Reunión no iniciada'
-                  : 'Reunión Cerrada'}
+                  ? intl.formatMessage({id: 'networking_meeting_not_started', defaultMessage: 'Reunión no iniciada'})
+                  : intl.formatMessage({id: 'networking_closed_meeting', defaultMessage: 'Reunión Cerrada'})}
               </Button>
             </Col>
           </Row>
         ) : (
-          <Row>{`Cita cancelada.`}</Row>
+          <Row>{intl.formatMessage({id: 'networking_appointment_cancelled', defaultMessage: 'Cita cancelada.'})}</Row>
         )}
       </Card>
     </Row>
