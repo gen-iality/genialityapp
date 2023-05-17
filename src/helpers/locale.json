@@ -353,7 +353,8 @@
     "error_creating_event_with_template": "Error creating event with your template",
     "error_creating_event": "Error creating the event",
     "error_creating_event_catch": "Error creating catch event",
-    "select_organization": "Select an organization"
+    "select_organization": "Select an organization",
+    "search": "Search"
   },
   "es": {
     "header.help": "Ayuda",
@@ -718,7 +719,8 @@
     "error_creating_event_with_template": "Error al crear evento con su template",
     "error_creating_event": "Error al crear el evento",
     "error_creating_event_catch": "Error al crear el evento catch",
-    "select_organization": "Seleccione una organización"
+    "select_organization": "Seleccione una organización",
+    "search": "Buscar"
   },
   "pt": {
     "live.join": "Entrar",
@@ -970,6 +972,7 @@
     "error_creating_event_with_template": "Erro ao criar um evento com o seu modelo",
     "error_creating_event": "Erro ao criar o evento",
     "error_creating_event_catch": "Erro ao criar o evento catch",
-    "select_organization": "Seleccionar uma organização"
+    "select_organization": "Seleccionar uma organização",
+    "search": "Pesquisar"
   }
 }
