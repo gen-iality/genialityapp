@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { message, Result, Spin, Upload, Form, Input } from 'antd'
+import { message, Result, Spin, Upload, Form, Input, Modal } from 'antd'
 import FileVideoOutlineIcon from '@2fd/ant-design-icons/lib/FileVideoOutline'
 import { RcFile } from 'antd/lib/upload'
 
@@ -24,12 +24,18 @@ function VimeoUploader(props: VimeoUploaderProps) {
       case 'done':
         const uri: string | undefined = response.uri_list[0]
         if (uri) {
-          const finalURL = `https://player.vimeo.com${uri.replace(
-            'videos',
-            'video',
-          )}?h=11ba52b1c6`
+          const finalURL = uri
+          // const finalURL = `https://player.vimeo.com${uri.replace(
+          //   'videos',
+          //   'video',
+          // )}?h=8866e9a7e6`
           props.onUploaded(finalURL)
           console.debug('file uploaded to', finalURL)
+          Modal.info({
+            title: 'Procesando...',
+            content: 'El vídeo se estará procesando y en un momento estará disponible',
+            closable: true,
+          })
         } else {
           message.error('No se ha recuperado la URL del vídeo subido')
         }
