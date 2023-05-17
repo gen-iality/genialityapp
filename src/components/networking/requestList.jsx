@@ -112,6 +112,7 @@ const InvitacionListSent = ({ list }) => {
   const [invitationsSent, setInvitationsSent] = useState([]);
   const cEvent = useContext(CurrentEventContext);
   const [loading, setLoading] = useState(true);
+  const intl = useIntl();
   const obtenerImageUser = async (idUser) => {
     const eventUser = await UsersApi.getOne(cEvent.value?._id, idUser);
     if (eventUser) {

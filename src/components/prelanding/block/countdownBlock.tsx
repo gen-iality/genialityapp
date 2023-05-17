@@ -4,14 +4,15 @@ import { Card, Col, Row, Space, Typography } from 'antd';
 import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
 import Countdown, { CountdownRenderProps, zeroPad } from 'react-countdown';
-import {style } from '../constants'
-const CountdownBlock = () => {
+import {style } from '../constants';
+import { useIntl } from 'react-intl';
 
+const CountdownBlock = () => {
   const cEvent = useContext(CurrentEventContext);
   const [dateLimitContador, setDateLimitContador] = useState<string | null>(null);
   const textColor = cEvent.value?.styles?.textMenu;
   const date = cEvent.value?.datetime_from;
-
+  const intl = useIntl();
 
   useEffect(() => {
     if (!cEvent.value) return;
@@ -63,7 +64,7 @@ const CountdownBlock = () => {
                 <Col>
                   <Space direction='vertical' size={0} style={{...style.stylesContainerNumeric, borderColor: textColor,}}>
                     <Typography.Text type='secondary' style={{...style.stylesSubtitle, color: textColor,}}>
-                      Dias
+                      {intl.formatMessage({id: 'days', defaultMessage: 'Días'})}
                     </Typography.Text>
                     <Typography.Text style={{...style.stylesNumbers, color: textColor,}}>{zeroPad(days)}</Typography.Text>
                   </Space>
@@ -72,7 +73,7 @@ const CountdownBlock = () => {
                 <Col>
                   <Space direction='vertical' size={0} style={{...style.stylesContainerNumeric, borderColor: textColor,}}>
                     <Typography.Text type='secondary' style={{...style.stylesSubtitle, color: textColor,}}>
-                      Horas
+                      {intl.formatMessage({id: 'hours', defaultMessage: 'Horas'})}
                     </Typography.Text>
                     <Typography.Text style={{...style.stylesNumbers, color: textColor,}}>{zeroPad(hours)}</Typography.Text>
                   </Space>
@@ -80,7 +81,7 @@ const CountdownBlock = () => {
                 <Col>
                   <Space direction='vertical' size={0} style={{...style.stylesContainerNumeric, borderColor: textColor,}}>
                     <Typography.Text type='secondary' style={{...style.stylesSubtitle, color: textColor,}}>
-                      Minutos
+                      {intl.formatMessage({id: 'minutes', defaultMessage: 'Minutos'})}
                     </Typography.Text>
                     <Typography.Text style={{...style.stylesNumbers, color: textColor,}}>{zeroPad(minutes)}</Typography.Text>
                   </Space>
@@ -88,7 +89,7 @@ const CountdownBlock = () => {
                 <Col>
                   <Space direction='vertical' size={0} style={{...style.stylesContainerNumeric, borderColor: textColor,}}>
                     <Typography.Text type='secondary' style={{...style.stylesSubtitle, color: textColor,}}>
-                      Segundos
+                      {intl.formatMessage({id: 'seconds', defaultMessage: 'Segundos'})}
                     </Typography.Text>
                     <div
                       className={
