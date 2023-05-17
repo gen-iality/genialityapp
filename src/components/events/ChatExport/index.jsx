@@ -432,6 +432,7 @@ const ChatExport = ({ eventId, event }) => {
         }
         key='3'>
         <ChatSettings
+        eventId={eventId}
         />
       </TabPane>
     </Tabs>

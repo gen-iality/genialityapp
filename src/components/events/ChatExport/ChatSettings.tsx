@@ -1,7 +1,11 @@
 import { Form, Switch } from 'antd';
 import React, { useState } from 'react';
+import MessageList from './components/MessageList';
 
-const ChatSettings = () => {
+interface IChatSettingsProps {
+  eventId: string;
+}
+const ChatSettings = ({ eventId }: IChatSettingsProps) => {
   const [controlled, setControlled] = useState(false);
   return (
     <>
@@ -18,6 +22,11 @@ const ChatSettings = () => {
           />
         </Form.Item>
       </Form>
+
+      {
+        controlled &&
+        <MessageList eventId={eventId}/>
+      }
     </>
   );
 };

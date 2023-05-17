@@ -373,3 +373,19 @@ export const generateBingoForExclusiveUsers = async (eventId: string) => {
     return null;
   }
 };
+
+export const listeningMessages = (eventId: string, setData:(messages:any)=>void)=> {
+  const INITIAL_MESSAGES = 50
+  console.log(`messages_${eventId}`)
+  return firebase.firestore().collection(`messages_${eventId}`).orderBy('fecha', 'desc')
+  .limit(INITIAL_MESSAGES)
+  .onSnapshot((snapshot) => {
+    if (!snapshot.empty) {
+      const initialDocs = snapshot.docs.reverse();
+      initialDocs.map((doc) => ({id: doc.id,...doc.data()}))
+      setData(initialDocs)
+    } else {
+      setData([])
+    }
+  });
+}
