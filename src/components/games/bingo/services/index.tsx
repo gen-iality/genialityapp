@@ -1,8 +1,14 @@
 import { BingoApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
-import { BingoGame, CreateBingoGameDto, SaveCurrentStateOfBingoInterface, UpdateBingoGameDto } from '../interfaces/bingo';
-import { firestore } from '@/helpers/firebase';
+import {
+  BingoGame,
+  CreateBingoGameDto,
+  SaveCurrentStateOfBingoInterface,
+  UpdateBingoGameDto,
+} from '../interfaces/bingo';
+import { firestore, firestoreeviuschat } from '@/helpers/firebase';
 import firebase from 'firebase/compat';
+import { IMessage } from '@/components/events/ChatExport/interface/message.interface';
 
 // --------------------- Api Bingo Services ---------------------
 export const CreateBingo = async (event: string, data: { name: string }) => {
@@ -221,19 +227,22 @@ export const listenBingoNotifications = (eventId: string, setData: any) => {
   return unSuscribe;
 };
 
-export const bingoGamelistener = (eventId: string, setBingoGame: React.Dispatch<React.SetStateAction<BingoGame | null>>) => {
+export const bingoGamelistener = (
+  eventId: string,
+  setBingoGame: React.Dispatch<React.SetStateAction<BingoGame | null>>
+) => {
   return firestore
     .collection('bingosByEvent')
     .doc(eventId)
     .onSnapshot((doc) => {
       if (doc.exists) {
-        const bingoGame = doc.data() as BingoGame
-        setBingoGame(bingoGame)
+        const bingoGame = doc.data() as BingoGame;
+        setBingoGame(bingoGame);
       } else {
-        setBingoGame(null)
+        setBingoGame(null);
       }
-    })
-}
+    });
+};
 
 export const listenBingoData = (eventID: string | undefined, setData: any, clearCarton?: any) => {
   const unSuscribe = firestore
@@ -374,18 +383,18 @@ export const generateBingoForExclusiveUsers = async (eventId: string) => {
   }
 };
 
-export const listeningMessages = (eventId: string, setData:(messages:any)=>void)=> {
-  const INITIAL_MESSAGES = 50
-  console.log(`messages_${eventId}`)
-  return firebase.firestore().collection(`messages_${eventId}`).orderBy('fecha', 'desc')
-  .limit(INITIAL_MESSAGES)
-  .onSnapshot((snapshot) => {
-    if (!snapshot.empty) {
-      const initialDocs = snapshot.docs.reverse();
-      initialDocs.map((doc) => ({id: doc.id,...doc.data()}))
-      setData(initialDocs)
-    } else {
-      setData([])
-    }
-  });
-}
+export const listeningMessages = (eventId: string, setData: (messages: IMessage[]) => void) => {
+  const INITIAL_MESSAGES = 50;
+  return firestoreeviuschat
+    .collection(`messagesevent_${eventId}`)
+    .orderBy('fecha', 'desc')
+    .limit(INITIAL_MESSAGES)
+    .onSnapshot((snapshot) => {
+      if (!snapshot.empty) {
+        const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IMessage));
+        setData(data);
+      } else {
+        setData([]);
+      }
+    });
+};
