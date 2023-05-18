@@ -15,7 +15,7 @@ import Informacion from './newEvent/informacion'
 import Apariencia from './newEvent/apariencia'
 import Tranmitir from './newEvent/transmitir'
 /*vista de resultado de la creacion de un curso */
-import { cNewEventContext } from '@context/newEventContext'
+import { NewEventContext } from '@context/newEventContext'
 import Service from '@components/agenda/roomManager/service'
 import { firestore } from '@helpers/firebase'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
@@ -483,5 +483,5 @@ class NewEvent extends Component {
     )
   }
 }
-NewEvent.contextType = cNewEventContext
+NewEvent.contextType = NewEventContext
 export default withRouter(NewEvent)

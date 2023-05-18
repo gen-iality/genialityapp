@@ -12,7 +12,7 @@ import { OrganizationFuction, UsersApi } from '@helpers/request'
 /** Context */
 import { DispatchMessageService } from '@context/MessageService'
 /*vista de resultado de la creacion de un curso */
-import { cNewEventContext } from '@context/newEventContext'
+import { NewEventContext } from '@context/newEventContext'
 
 /** Components */
 import InitialNewEventFormSection from './newEvent/InitialNewEventFormSection'
@@ -44,7 +44,7 @@ const NewEventPage: FunctionComponent = () => {
 
   const params = useParams<any>()
 
-  const eventNewContext: any = useContext(cNewEventContext)
+  const eventNewContext: any = useContext(NewEventContext)
 
   const goNextPage = () => setCurrent((previous) => previous + 1)
   const goPreviousPage = () => setCurrent((previous) => previous - 1)
