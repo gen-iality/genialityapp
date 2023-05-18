@@ -1,6 +1,6 @@
 /** React's libraries */
 import { FunctionComponent, useState, useEffect, useContext } from 'react'
-import { withRouter } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 /** Antd imports */
 import { Steps, Button, Card, Row, Spin } from 'antd'
@@ -19,11 +19,7 @@ import InitialNewEventFormSection from './newEvent/InitialNewEventFormSection'
 import EventAccessTypeSection from './newEvent/EventAccessTypeSection'
 import EventTypeSection from './newEvent/EventTypeSection'
 
-interface INewEventPageProps {
-  match: any
-}
-
-const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
+const NewEventPage: FunctionComponent = () => {
   const [orgId, setOrgId] = useState<string | null>(null)
   const [stepsValid, setStepsValid] = useState({
     info: false,
@@ -45,6 +41,8 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
       icon: <ContactsOutlined />,
     },
   ])
+
+  const params = useParams<any>()
 
   const eventNewContext: any = useContext(cNewEventContext)
 
@@ -111,13 +109,13 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
     const newOrgId = urlParams.get('orgId')
     setOrgId(newOrgId)
 
-    if (props.match?.params?.user) {
+    if (params.user) {
       // eslint-disable-next-line react/prop-types
-      UsersApi.getProfile(props.match?.params?.user).then((profileUser) => {
+      UsersApi.getProfile(params.user).then((profileUser) => {
         setCurrentUser(profileUser)
       })
     }
-  }, [])
+  }, [params])
 
   useEffect(() => {
     if (orgId) {
@@ -233,4 +231,4 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
   )
 }
 
-export default withRouter(NewEventPage)
+export default NewEventPage
