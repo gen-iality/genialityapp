@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { useMemo, memo, useEffect } from 'react'
 import { useLocation } from 'react-router'
 import './Step.css'
@@ -8,15 +8,14 @@ export interface StepProps {
   isActive?: boolean | number
   isSurvey?: boolean
   key?: string
-  /* onChangeFunction?: any; */
-  setCurrentId?: any
-  currentId?: any
   id?: string
   onClick?: () => void
 }
 
 function Step(props: StepProps) {
-  const { children, isActive, isSurvey, currentId, setCurrentId, id, ...rest } = props
+  const { children, isActive, isSurvey, id, ...rest } = props
+
+  const [activityIdFromUrl, setActivityIdFromUrl] = useState('')
 
   const location = useLocation()
 
@@ -27,11 +26,14 @@ function Step(props: StepProps) {
     return 'Step'
   }, [isActive])
 
+  // We don't have access to the param activity_id using useMatch because this
+  // component is upside of the EventSectionRoutes, then the activity_id will be
+  // taken from the url by parsing
   useEffect(() => {
     const urlCompleta = location.pathname
     const urlSplited = urlCompleta.split('activity/')
     const currentActivityId = urlSplited[1]
-    setCurrentId(currentActivityId)
+    setActivityIdFromUrl(currentActivityId)
   }, [location])
 
   return (
@@ -39,12 +41,11 @@ function Step(props: StepProps) {
       className={className}
       style={{
         borderRadius: isSurvey ? '' : '50%',
-        backgroundColor: currentId == id ? '#043558' : '',
-        color: currentId == id ? '#fff' : '',
+        backgroundColor: activityIdFromUrl == id ? '#043558' : '',
+        color: activityIdFromUrl == id ? '#fff' : '',
       }}
       {...rest}
       onClick={() => {
-        setCurrentId(id)
         props.onClick && props.onClick()
       }}
     >

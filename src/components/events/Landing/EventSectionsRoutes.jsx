@@ -1,12 +1,5 @@
 import { useEffect } from 'react'
-import {
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-  useRouteMatch,
-  withRouter,
-} from 'react-router-dom'
+import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { setSpaceNetworking } from '../../../redux/networking/actions'
@@ -64,13 +57,11 @@ const ThisRouteCanBeDisplayed = loadable(() =>
 )
 
 const EventSectionRoutes = (props) => {
-  const { setActivitiesAttendee } = props
   const { path } = useRouteMatch()
   const { event_id, event_name } = useParams()
   const { GetPermissionsEvent } = useHelper()
   const cEventUser = useUserEvent()
   const cUser = useCurrentUser()
-  const history = useHistory()
 
   const obtenerFirstSection = () => {
     if (props.cEvent.value == null) return
@@ -311,7 +302,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/evento`}>
           <ThisRouteCanBeDisplayed>
-            <EventHome key="evento" setActivitiesAttendee={setActivitiesAttendee} />
+            <EventHome key="evento" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -354,7 +345,6 @@ const EventSectionRoutes = (props) => {
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
               setVirtualConference={props.setVirtualConference}
-              setActivitiesAttendee={setActivitiesAttendee}
             />
           </ThisRouteCanBeDisplayed>
         </Route>

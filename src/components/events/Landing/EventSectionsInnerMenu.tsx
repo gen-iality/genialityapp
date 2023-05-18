@@ -1,16 +1,18 @@
 import { Layout, Spin, Row, Image } from 'antd'
 import MenuEvent from './Menus/MenuEvent'
-import { EyeOutlined } from '@ant-design/icons'
+// import { EyeOutlined } from '@ant-design/icons'
 import { useEventContext } from '@context/eventContext'
-import { useHelper } from '@context/helperContext/hooks/useHelper'
+// import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { FunctionComponent } from 'react'
 const { Sider } = Layout
 
-const EventSectionsInnerMenu = () => {
+const EventSectionsInnerMenu: FunctionComponent = () => {
   const cEvent = useEventContext()
   const event = cEvent.value
-  const { eventPrivate } = useHelper()
+  // const { eventPrivate } = useHelper() // as MenuEvent doesn't use this...
 
   if (!event) return <Spin size="small" />
+
   return (
     <>
       <div className="hiddenMenu_Landing">
@@ -28,7 +30,8 @@ const EventSectionsInnerMenu = () => {
           <Row justify="center" style={{ margin: 5 }}>
             {event.styles && event.styles.event_image && (
               <Image
-                preview={{ mask: <EyeOutlined /> }}
+                // preview={{ mask: <EyeOutlined /> }}
+                preview={false}
                 alt="Logo"
                 src={event.styles.event_image}
                 style={{
@@ -39,7 +42,8 @@ const EventSectionsInnerMenu = () => {
             )}
           </Row>
           <div className="items-menu_Landing">
-            <MenuEvent eventPrivate={eventPrivate} />
+            {/** eventPrivate={eventPrivate} */}
+            <MenuEvent isMobile={false} />
           </div>
         </Sider>
       </div>

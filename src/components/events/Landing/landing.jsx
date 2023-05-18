@@ -4,9 +4,10 @@ import { useEventContext } from '@context/eventContext'
 import { useCurrentUser } from '@context/userContext'
 import { useUserEvent } from '@context/eventUserContext'
 import { useLocation } from 'react-router-dom'
+
 /** ant design */
 import { Layout, Spin, notification, Button } from 'antd'
-/* import 'react-toastify/dist/ReactToastify.css'; */
+
 const { Content } = Layout
 
 import { setUserAgenda } from '../../../redux/networking/actions'
@@ -30,7 +31,6 @@ import WithEviusContext from '@context/withContext'
 import { checkinAttendeeInEvent } from '@helpers/HelperAuth'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { AgendaApi } from '@helpers/request'
-import { firestore } from '@helpers/firebase'
 
 import CourseProgressBar from '@components/events/courseProgressBar/CourseProgressBar'
 
@@ -40,7 +40,6 @@ const ModalRegister = loadable(() => import('./modalRegister'))
 const ModalLoginHelpers = loadable(() => import('../../authentication/ModalLoginHelpers'))
 const ModalPermission = loadable(() => import('../../authentication/ModalPermission'))
 const ModalFeedback = loadable(() => import('../../authentication/ModalFeedback'))
-// const ModalNoRegister = loadable(() => import('../../authentication/ModalNoRegister'))
 
 /** Components */
 const TopBanner = loadable(() => import('./TopBanner'))
@@ -90,54 +89,16 @@ const Landing = (props) => {
     setRegister,
   } = useHelper()
 
-  const [activitiesAttendee, setActivitiesAttendee] = useState([])
   const [activities, setActivities] = useState([])
   const location = useLocation()
 
   const loadData = async () => {
     // Reset this
     setActivities([])
-    setActivitiesAttendee([])
 
     const { data } = await AgendaApi.byEvent(cEventContext.value?._id)
     setActivities(data)
-    const existentActivities = data.map(async (activity) => {
-      const activity_attendee = await firestore
-        .collection(`${activity._id}_event_attendees`)
-        .doc(cEventUser.value?._id)
-        .get() //checkedin_at
-      if (activity_attendee.exists) {
-        let datos = activity_attendee.data()
-        datos = {
-          ...datos,
-          hola: 123,
-          activity_id: activity._id,
-          activity_attendee: activity_attendee.id,
-        }
-
-        //...activity_attendee.data(), activity_id: activity._id, activity_attendee: activity_attendee.id()
-        return datos
-        // setActivities_attendee((past) => [...past, activity_attendee.data()]);
-      }
-      return null
-    })
-    // Filter existent activities and set the state
-    setActivitiesAttendee(
-      // Promises don't bite :)
-      (await Promise.all(existentActivities)).filter((item) => !!item),
-    )
   }
-
-  function reloadActivityAttendee() {
-    loadData()
-  }
-
-  /*   useEffect(() => {
-    if (!cEventContext.value?._id) return
-    if (!cEventUser.value?._id) {
-      window.location.href = `/organization/${cEventContext.value?.organizer._id}/events`
-    }
-  }, [cEventUser.value, cEventContext.value]) */
 
   useEffect(() => {
     if (!cEventContext.value?._id) return
@@ -145,10 +106,6 @@ const Landing = (props) => {
     loadData()
     console.info('event is asked', cEventContext.value?._id)
   }, [cEventContext.value, cEventUser.value])
-
-  // useEffect(() => {
-  //   loadData()
-  // }, [location])
 
   useEffect(() => {
     DispatchMessageService({
@@ -158,7 +115,6 @@ const Landing = (props) => {
     })
     return () => {
       setActivities([])
-      setActivitiesAttendee([])
     }
   }, [])
 
@@ -287,12 +243,7 @@ const Landing = (props) => {
         <CourseProgressBar
           eventId={cEventContext.value._id}
           activities={activities}
-          linkFormatter={(activityId) =>
-            `/landing/${cEventContext.value._id}/activity/${activityId}`
-          }
-          count={activitiesAttendee.length}
-          activitiesAttendee={activitiesAttendee}
-          onChange={reloadActivityAttendee}
+          eventUser={cEventUser.value}
         />
         <EventSectionsInnerMenu />
         <MenuTablets />
@@ -314,7 +265,6 @@ const Landing = (props) => {
             <EventSectionRoutes
               generaltabs={generaltabs}
               currentActivity={currentActivity}
-              setActivitiesAttendee={setActivitiesAttendee}
             />
             <EviusFooter />
           </Content>

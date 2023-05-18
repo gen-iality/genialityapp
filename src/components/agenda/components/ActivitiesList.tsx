@@ -49,21 +49,18 @@ interface ActivitiesListProps {
   eventId: string
   eventUserId?: string
   agendaList?: ExtendedAgendaType[] // If parent has this, why have we to re-do?
-  setActivitiesAttendee?: any
 }
 
 const ActivitiesList = (props: ActivitiesListProps) => {
   const {
     eventId, // The event ID
     eventUserId, // The event user ID
-    setActivitiesAttendee,
   } = props
 
   const service = new Service(firestore)
 
   const [isLoading, setIsLoading] = useState(true)
   const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([])
-  const [isActivitiesAttendeeDeleted, setActivitiesAttendeeIsDeleted] = useState(false)
   const [isAnswersDeleted, setAnswersIsDeleted] = useState(false)
 
   const currentUser = useCurrentUser()
@@ -73,8 +70,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   useEffect(() => {
     if (!eventId) return
-    // if (!cEventUserId) return;
-    console.log(location.pathname)
+
     if (
       `/landing/${eventId}/evento` !== location.pathname &&
       `/landing/${eventId}/agenda` !== location.pathname
@@ -334,15 +330,13 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
       setIsLoading(false)
     })()
-  }, [eventId, eventUserId, isActivitiesAttendeeDeleted])
+  }, [eventId, eventUserId])
 
   if (isLoading) return <Spin />
 
   const ListThisActivities = (props: { dataSource: any[] }) => (
     <List
       size="small"
-      // header={<h2>LECCIONES DEL CURSO</h2>}
-      //bordered
       dataSource={props.dataSource}
       renderItem={(item: TruncatedAgenda) => (
         <item.RibbonComponent>
@@ -380,9 +374,10 @@ const ActivitiesList = (props: ActivitiesListProps) => {
                   style={{ display: 'flex', flexFlow: 'row wrap', margin: '0.5rem 0' }}
                 >
                   {item.categories &&
-                    item.categories.map((category: any) => {
+                    item.categories.map((category: any, index) => {
                       return (
                         <Badge
+                          key={index}
                           style={{
                             backgroundColor: category.category_color,
                             fontSize: '1rem',
@@ -487,13 +482,14 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   return (
     <>
       {currentEventUser.value?.rol.type === 'admin' ? (
-        <DeleteActivitiesTakenButton
-          eventId={eventId}
-          cEventUserId={eventUserId}
-          setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
-          setActivitiesAttendee={setActivitiesAttendee}
-        />
-      ) : undefined}
+        <></>
+      ) : // <DeleteActivitiesTakenButton
+      //   eventId={eventId}
+      //   cEventUserId={eventUserId}
+      //   setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
+      //   setActivitiesAttendee={setActivitiesAttendee}
+      // />
+      undefined}
       <ModuledActivityHOC
         list={truncatedAgendaList}
         render={(nameToFilter) => (

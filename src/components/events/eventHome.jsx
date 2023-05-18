@@ -5,9 +5,8 @@ import { withRouter } from 'react-router-dom'
 import { useContext, useEffect } from 'react'
 import { CurrentEventUserContext } from '@context/eventUserContext'
 
-const EventHome = (props) => {
+const EventHome = () => {
   /*Contextos*/
-  const { setActivitiesAttendee } = props
   const cEvent = useEventContext()
   const cEventUser = useContext(CurrentEventUserContext)
   if (!cEvent.value) {
@@ -29,11 +28,7 @@ const EventHome = (props) => {
             span={24}
             /* sm={24} md={16} lg={18} xl={18} */ style={{ padding: '1rem' }}
           >
-            <EventLanding
-              event={cEvent.value}
-              eventUser={cEventUser.value}
-              setActivitiesAttendee={setActivitiesAttendee}
-            />
+            <EventLanding event={cEvent.value} eventUser={cEventUser.value} />
           </Col>
         </Row>
       ) : undefined}
