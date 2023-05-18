@@ -35,9 +35,9 @@ function AgendaRoutes({ ...props }) {
         <Route
           exact
           path={`${matchUrl}/create-activity`}
-          render={(routeProps) => (
+          render={() => (
             <ActivityTypeProvider>
-              <AgendaCreatorPage event={event} matchUrl={routeProps.match.url} />
+              <AgendaCreatorPage event={event} parentUrl={matchUrl} />
             </ActivityTypeProvider>
           )}
         />
