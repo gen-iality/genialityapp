@@ -616,10 +616,7 @@ class General extends Component {
         const onHandlerRemove = async () => {
           try {
             await EventsApi.deleteOne(self.state.event._id)
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
+            DispatchMessageService({ key: 'loading', action: 'destroy' })
             DispatchMessageService({
               type: 'success',
               msj: 'Se eliminó la información correctamente!',
@@ -627,10 +624,7 @@ class General extends Component {
             })
             window.location.replace(`${window.location.origin}/myprofile`)
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
+            DispatchMessageService({ key: 'loading', action: 'destroy' })
             DispatchMessageService({
               type: 'error',
               msj: handleRequestError(e).message,

@@ -16,11 +16,10 @@ import QuizApprovedStatus from '../quiz/QuizApprovedStatus'
 interface EventLandingProps {
   event: any
   eventUser: any
-  setActivitiesAttendee: any
 }
 
 const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
-  const { event, eventUser, setActivitiesAttendee } = props
+  const { event, eventUser } = props
 
   const [activityId, setActivityId] = useState<string | null>(null)
   const [activityDetail, setActivityDetail] = useState<any | null>(null)
@@ -60,7 +59,7 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
   }, [])
 
   return (
-    <div /* style={{ marginBottom: 12 }} */>
+    <div>
       {/* Condiciones de posicionamiento, solo para cuando no tiene contenido*/}
       {event && (
         <>
@@ -115,22 +114,16 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
               : { marginTop: '0px' }
           }
         >
-          {/*Lanzandome un nuevo diseno Sept 2022 */}
           <Row gutter={32}>
             <Col sm={24} md={6} style={{ width: '100%', padding: '0 5px' }}>
               {event && <AdditionalEventInfo event={event} />}
             </Col>
             <Col sm={24} md={18} style={{ padding: '0 5px' }}>
               <div className="activities-main-list">
-                <ActivitiesList
-                  eventId={event?._id}
-                  eventUserId={eventUser?._id}
-                  setActivitiesAttendee={setActivitiesAttendee}
-                />
+                <ActivitiesList eventId={event?._id} eventUserId={eventUser?._id} />
               </div>
             </Col>
           </Row>
-          {/* FIN Lanzandome un nuevo diseno Sept 2022 */}
           {/* Si event video existe */}
           {event?.video_position == 'true' && event.video && (
             <div className="mediaplayer">

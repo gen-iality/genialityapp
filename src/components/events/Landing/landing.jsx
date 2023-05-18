@@ -4,9 +4,10 @@ import { useEventContext } from '@context/eventContext'
 import { useCurrentUser } from '@context/userContext'
 import { useUserEvent } from '@context/eventUserContext'
 import { useLocation } from 'react-router-dom'
+
 /** ant design */
 import { Layout, Spin, notification, Button } from 'antd'
-/* import 'react-toastify/dist/ReactToastify.css'; */
+
 const { Content } = Layout
 
 import { setUserAgenda } from '../../../redux/networking/actions'
@@ -39,7 +40,6 @@ const ModalRegister = loadable(() => import('./modalRegister'))
 const ModalLoginHelpers = loadable(() => import('../../authentication/ModalLoginHelpers'))
 const ModalPermission = loadable(() => import('../../authentication/ModalPermission'))
 const ModalFeedback = loadable(() => import('../../authentication/ModalFeedback'))
-// const ModalNoRegister = loadable(() => import('../../authentication/ModalNoRegister'))
 
 /** Components */
 const TopBanner = loadable(() => import('./TopBanner'))
@@ -89,7 +89,6 @@ const Landing = (props) => {
     setRegister,
   } = useHelper()
 
-  // const [activitiesAttendee, setActivitiesAttendee] = useState([])
   const [activities, setActivities] = useState([])
   const location = useLocation()
 
@@ -100,13 +99,6 @@ const Landing = (props) => {
     const { data } = await AgendaApi.byEvent(cEventContext.value?._id)
     setActivities(data)
   }
-
-  /*   useEffect(() => {
-    if (!cEventContext.value?._id) return
-    if (!cEventUser.value?._id) {
-      window.location.href = `/organization/${cEventContext.value?.organizer._id}/events`
-    }
-  }, [cEventUser.value, cEventContext.value]) */
 
   useEffect(() => {
     if (!cEventContext.value?._id) return

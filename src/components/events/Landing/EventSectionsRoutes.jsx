@@ -1,12 +1,5 @@
 import { useEffect } from 'react'
-import {
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-  useRouteMatch,
-  withRouter,
-} from 'react-router-dom'
+import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { setSpaceNetworking } from '../../../redux/networking/actions'
@@ -69,7 +62,6 @@ const EventSectionRoutes = (props) => {
   const { GetPermissionsEvent } = useHelper()
   const cEventUser = useUserEvent()
   const cUser = useCurrentUser()
-  const history = useHistory()
 
   const obtenerFirstSection = () => {
     if (props.cEvent.value == null) return
