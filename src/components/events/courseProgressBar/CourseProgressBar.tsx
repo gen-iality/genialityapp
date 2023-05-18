@@ -29,9 +29,7 @@ export interface CourseProgressBarProps {
 function CourseProgressBar(props: CourseProgressBarProps) {
   const { activities, activitiesAttendee, eventId } = props
 
-  if (activities.length === 0) {
-    return null
-  }
+  console.log('activities', activities)
 
   return (
     <div>
