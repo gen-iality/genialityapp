@@ -49,14 +49,12 @@ interface ActivitiesListProps {
   eventId: string
   eventUserId?: string
   agendaList?: ExtendedAgendaType[] // If parent has this, why have we to re-do?
-  setActivitiesAttendee?: any
 }
 
 const ActivitiesList = (props: ActivitiesListProps) => {
   const {
     eventId, // The event ID
     eventUserId, // The event user ID
-    setActivitiesAttendee,
   } = props
 
   const service = new Service(firestore)
@@ -73,8 +71,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   useEffect(() => {
     if (!eventId) return
-    // if (!cEventUserId) return;
-    console.log(location.pathname)
+
     if (
       `/landing/${eventId}/evento` !== location.pathname &&
       `/landing/${eventId}/agenda` !== location.pathname
@@ -487,13 +484,14 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   return (
     <>
       {currentEventUser.value?.rol.type === 'admin' ? (
-        <DeleteActivitiesTakenButton
-          eventId={eventId}
-          cEventUserId={eventUserId}
-          setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
-          setActivitiesAttendee={setActivitiesAttendee}
-        />
-      ) : undefined}
+        <></>
+      ) : // <DeleteActivitiesTakenButton
+      //   eventId={eventId}
+      //   cEventUserId={eventUserId}
+      //   setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
+      //   setActivitiesAttendee={setActivitiesAttendee}
+      // />
+      undefined}
       <ModuledActivityHOC
         list={truncatedAgendaList}
         render={(nameToFilter) => (

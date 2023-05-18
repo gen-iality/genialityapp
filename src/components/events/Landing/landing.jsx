@@ -311,7 +311,6 @@ const Landing = (props) => {
             <EventSectionRoutes
               generaltabs={generaltabs}
               currentActivity={currentActivity}
-              setActivitiesAttendee={setActivitiesAttendee}
             />
             <EviusFooter />
           </Content>

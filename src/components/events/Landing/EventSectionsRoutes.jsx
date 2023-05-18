@@ -64,7 +64,6 @@ const ThisRouteCanBeDisplayed = loadable(() =>
 )
 
 const EventSectionRoutes = (props) => {
-  const { setActivitiesAttendee } = props
   const { path } = useRouteMatch()
   const { event_id, event_name } = useParams()
   const { GetPermissionsEvent } = useHelper()
@@ -311,7 +310,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/evento`}>
           <ThisRouteCanBeDisplayed>
-            <EventHome key="evento" setActivitiesAttendee={setActivitiesAttendee} />
+            <EventHome key="evento" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -354,7 +353,6 @@ const EventSectionRoutes = (props) => {
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
               setVirtualConference={props.setVirtualConference}
-              setActivitiesAttendee={setActivitiesAttendee}
             />
           </ThisRouteCanBeDisplayed>
         </Route>
