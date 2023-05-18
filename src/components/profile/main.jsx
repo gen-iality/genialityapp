@@ -28,7 +28,7 @@ import ExploreEvents from './exploreEvents'
 import withContext from '@context/withContext'
 import { EventsApi, TicketsApi, OrganizationApi, SurveysApi } from '@helpers/request'
 import EventCard from '../shared/eventCard'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import Loading from './loading'
 import ChangePassword from './components/changePassword'
@@ -40,12 +40,13 @@ import eventCard from '../shared/eventCard'
 import QuizzesProgress from '../quiz/QuizzesProgress'
 
 import { CerticationsApi } from '@helpers/request'
+import { useCurrentUser } from '@context/userContext'
 
 const { Content, Sider } = Layout
 const { TabPane } = Tabs
 const { useBreakpoint } = Grid
 
-const MainProfile = (props) => {
+const MainProfile = () => {
   const [activeTab, setActiveTab] = useState()
   const [events, setevents] = useState([])
   const [tickets, settickets] = useState([])
@@ -64,8 +65,9 @@ const MainProfile = (props) => {
   const [allCertifications, setAllCertifications] = useState([])
 
   const screens = useBreakpoint()
-  const selectedTab = props.match.params.tab
+  const { tab: selectedTab } = useParams()
   const { helperDispatch } = useHelper()
+  const cUser = useCurrentUser()
 
   const showSider = () => {
     if (!collapsed) {
@@ -167,9 +169,9 @@ const MainProfile = (props) => {
   }, [])
 
   useEffect(() => {
-    if (!props?.cUser?.value?._id) return
-    CerticationsApi.getByUserAndEvent(props.cUser.value._id).then(setAllCertifications)
-  }, [props?.cUser?.value])
+    if (!cUser.value?._id) return
+    CerticationsApi.getByUserAndEvent(cUser.value._id).then(setAllCertifications)
+  }, [cUser.value])
 
   useEffect(() => {
     if (activeTab !== '2') return
@@ -206,10 +208,10 @@ const MainProfile = (props) => {
             direction="vertical"
             style={{ textAlign: 'center', paddingLeft: '15px', paddingRight: '15px' }}
           >
-            {props?.cUser?.value ? (
+            {cUser.value ? (
               <>
-                {props?.cUser?.value?.picture ? (
-                  <Avatar size={150} src={props?.cUser?.value?.picture} />
+                {cUser.value?.picture ? (
+                  <Avatar size={150} src={cUser.value?.picture} />
                 ) : (
                   <Avatar
                     style={{ backgroundColor: '#50D3C9' }}
@@ -224,15 +226,13 @@ const MainProfile = (props) => {
             <Typography.Text
               style={{ fontSize: '20px', width: '250px', overflowWrap: 'anywhere' }}
             >
-              {props?.cUser?.value?.names ||
-                props?.cUser?.value?.displayName ||
-                props?.cUser?.value?.name}
+              {cUser.value?.names || cUser.value?.displayName || cUser.value?.name}
             </Typography.Text>
             <Typography.Text
               type="secondary"
               style={{ fontSize: '16px', width: '220px', wordBreak: 'break-all' }}
             >
-              {props?.cUser?.value?.email}
+              {cUser.value?.email}
             </Typography.Text>
           </Space>
           <Col span={24}>
@@ -292,10 +292,8 @@ const MainProfile = (props) => {
       </Sider>
       <Layout>
         <Content style={{ margin: '0px', padding: '10px', overflowY: 'auto' }}>
-          {content === 'CHANGE_PASSWORD' && (
-            <ChangePassword email={props?.cUser?.value?.email} />
-          )}
-          {content === 'EDIT_INFORMATION' && <EditInformation cUser={props.cUser} />}
+          {content === 'CHANGE_PASSWORD' && <ChangePassword email={cUser.value?.email} />}
+          {content === 'EDIT_INFORMATION' && <EditInformation cUser={cUser} />}
           {content === 'ACCOUNT_ACTIVITY' && (
             <Tabs
               defaultActiveKey={activeTab}
@@ -402,11 +400,11 @@ const MainProfile = (props) => {
                               {organizationsLimited.length > 0 ? (
                                 <NewCard
                                   entityType="event"
-                                  cUser={props.cUser}
+                                  cUser={cUser}
                                   org={organizationsLimited}
                                 />
                               ) : (
-                                <NewCard entityType="event" cUser={props.cUser} />
+                                <NewCard entityType="event" cUser={cUser} />
                               )}
                             </Col>
                             {/* aqui empieza el mapeo de eventCard.jsx maximo 4 */}
@@ -433,8 +431,8 @@ const MainProfile = (props) => {
                                         </div>,
                                       ]}
                                       blockedEvent={
-                                        props?.cUser?.value?.plan?.availables
-                                          ?.later_days || eventCard.value?.later_days
+                                        cUser?.value?.plan?.availables?.later_days ||
+                                        eventCard.value?.later_days
                                       }
                                     />
                                   </Col>
@@ -468,8 +466,8 @@ const MainProfile = (props) => {
                                         url: `landing/${event._id}`,
                                       }}
                                       blockedEvent={
-                                        props?.cUser?.value?.plan?.availables
-                                          ?.later_days || eventCard.value?.later_days
+                                        cUser?.value?.plan?.availables?.later_days ||
+                                        eventCard.value?.later_days
                                       }
                                     />
                                   </Col>
@@ -495,7 +493,7 @@ const MainProfile = (props) => {
                             <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                               <NewCard
                                 entityType="organization"
-                                cUser={props.cUser}
+                                cUser={cUser}
                                 fetchItem={fetchItem}
                               />
                             </Col>
@@ -532,7 +530,7 @@ const MainProfile = (props) => {
                     <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                       <NewCard
                         entityType="organization"
-                        cUser={props.cUser}
+                        cUser={cUser}
                         fetchItem={fetchItem}
                       />
                     </Col>
@@ -556,11 +554,11 @@ const MainProfile = (props) => {
                       {organizationsLimited.length > 0 ? (
                         <NewCard
                           entityType="event"
-                          cUser={props.cUser}
+                          cUser={cUser}
                           org={organizationsLimited}
                         />
                       ) : (
-                        <NewCard entityType="event" cUser={props.cUser} />
+                        <NewCard entityType="event" cUser={cUser} />
                       )}
                     </Col>
                     {events.map((event, index) => {
@@ -582,7 +580,7 @@ const MainProfile = (props) => {
                               </div>,
                             ]}
                             blockedEvent={
-                              props?.cUser?.value?.plan?.availables?.later_days ||
+                              cUser.value?.plan?.availables?.later_days ||
                               eventCard.value?.later_days
                             }
                           />
@@ -607,7 +605,7 @@ const MainProfile = (props) => {
                               event={event}
                               action={{ name: 'Ver', url: `landing/${event._id}` }}
                               blockedEvent={
-                                props?.cUser?.value?.plan?.availables?.later_days ||
+                                cUser.value?.plan?.availables?.later_days ||
                                 eventCard.value?.later_days
                               }
                             />
@@ -628,7 +626,7 @@ const MainProfile = (props) => {
                   {tickets.length === 0 && (
                     <Typography.Text strong>Sin cursos</Typography.Text>
                   )}
-                  {!props?.cUser?.value?._id ? (
+                  {!cUser.value?._id ? (
                     <Loading />
                   ) : (
                     tickets.map((tickets) => (
@@ -636,7 +634,7 @@ const MainProfile = (props) => {
                         <QuizzesProgress
                           eventId={tickets._id}
                           eventName={tickets.name}
-                          userId={props?.cUser?.value?._id}
+                          userId={cUser.value?._id}
                         />
                       </>
                     ))
@@ -645,7 +643,7 @@ const MainProfile = (props) => {
               )}
 
               {/* <TabPane tab="Certificaciones" key="6">
-                {!(props?.cUser?.value?._id) ? (
+                {!(cUser.value?._id) ? (
                   <Loading />
                 ) : (
                   <>
@@ -701,7 +699,7 @@ const MainProfile = (props) => {
               </TabPane> */}
             </Tabs>
           )}
-          {content === 'MY_PLAN' && <MyPlan cUser={props.cUser} />}
+          {content === 'MY_PLAN' && <MyPlan cUser={cUser} />}
         </Content>
       </Layout>
     </Layout>
