@@ -13,7 +13,7 @@ import {
 } from 'antd'
 import { useCurrentUser } from '@context/userContext'
 import { useState, useEffect, FunctionComponent } from 'react'
-import { useContextNewEvent, NewEventActionEnum } from '@context/newEventContext'
+import { useNewEventContext, NewEventActionEnum } from '@context/newEventContext'
 import ImgCrop from 'antd-img-crop'
 import functionCreateNewOrganization from '@components/profile/functionCreateNewOrganization'
 
@@ -26,7 +26,7 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
   const { modalListOrgIsVisible, orgId } = props
 
   const { newOrganization, OrganizationsList, state, dispatch, createOrganization } =
-    useContextNewEvent()
+    useNewEventContext()
   const cUser = useCurrentUser()
   const [imageAvatar, setImageAvatar] = useState<any>(null)
   const [form] = Form.useForm()

@@ -590,10 +590,10 @@ export const NewEventProvider = ({ children }: any) => {
   )
 }
 
-export const useContextNewEvent = () => {
+export const useNewEventContext = () => {
   const context = useContext(cNewEventContext)
   if (!context) {
-    throw new Error('useContextNewEvent debe estar dentro del proveedor')
+    throw new Error('useNewEventContext debe estar dentro del proveedor')
   }
   return context
 }
