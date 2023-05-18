@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Document, Page, pdfjs } from 'react-pdf'
+import { Document as DocumentReactPDF, Page, pdfjs } from 'react-pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
 import { useHelper } from '../../../../context/helperContext/hooks/useHelper'
@@ -51,9 +51,9 @@ const PdfActivity = () => {
       <a href={pdfURL} target="blank">
         Descargar PDF
       </a>
-      <Document file={pdfURL} onLoadSuccess={onDocumentLoadSuccess}>
+      <DocumentReactPDF file={pdfURL} onLoadSuccess={onDocumentLoadSuccess}>
         <Page pageNumber={pageNumber} width={600} />
-      </Document>
+      </DocumentReactPDF>
       <div>
         <p>
           Page {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
