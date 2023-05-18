@@ -1,5 +1,7 @@
-import { createContext } from 'react'
-export const MessageController = createContext({})
+/**
+ * TODO: rename this file to messageService
+ */
+
 import { message } from 'antd'
 
 const positiveAnswer = [
@@ -14,34 +16,45 @@ const positiveAnswer = [
 const negativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry']
 const loadingAnswer = ['Cargando', 'Procesando', 'Espérame']
 
-interface PropsOptions {
-  type?: 'success' | 'error' | 'warning' | 'info' | 'loading'
+type MessageType = 'success' | 'error' | 'warning' | 'info' | 'loading'
+
+interface OptionProps {
+  type?: MessageType
   msj?: string
   duration?: number
-  action: 'show' | 'hide' | 'destroy'
+  action: 'show' | 'destroy'
   key?: string
 }
 
-export const DispatchMessageService = ({
-  type,
-  msj,
-  duration,
-  action,
-  key,
-}: PropsOptions) => {
+export const StateMessage = {
+  show: (key: string, type: MessageType, textMessage: string, duration?: number) => {
+    message.open({
+      content: preProcessMessage(type, textMessage),
+      key: key || '',
+      duration: duration || 5,
+      type: null as any,
+    })
+  },
+  destroy: (key: string) => {
+    message.destroy(key)
+  },
+}
+
+/**
+ * Show a message or destroy an existent message
+ *
+ * @deprecated use StateMessage instead
+ * @param props OptionProps
+ */
+export const DispatchMessageService = (props: OptionProps) => {
   try {
-    switch (action) {
+    switch (props.action) {
       case 'show':
-        message.open({
-          content: MessageReducer({ type, msj, action }),
-          key: key || '',
-          duration: duration || 5,
-          type: null as any,
-        })
+        StateMessage.show(props.key!, props.type!, props.msj!, props.duration)
         break
 
       case 'destroy':
-        message.destroy(key)
+        StateMessage.destroy(props.key!)
         break
     }
   } catch (error) {
@@ -49,7 +62,7 @@ export const DispatchMessageService = ({
   }
 }
 
-const MessageReducer = ({ type, msj: textMessage }: PropsOptions) => {
+const preProcessMessage = (type: string | undefined, textMessage: string) => {
   const randomPositive = Math.floor(Math.random() * positiveAnswer.length)
   const ramdonNegative = Math.floor(Math.random() * negativeAnswer.length)
   const ramdonLoading = Math.floor(Math.random() * loadingAnswer.length)
