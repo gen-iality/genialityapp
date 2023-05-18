@@ -139,6 +139,7 @@
     "@types/mocha": "^9.1.0",
     "@types/react": "^17.0.40",
     "@types/react-dom": "^17.0.10",
+    "@types/react-pdf": "^6.2.0",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-select": "^5.0.1",
     "@types/react-widgets-moment": "^4.0.1",

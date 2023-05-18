@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { useHistory, withRouter } from 'react-router-dom'
+import { useState, useEffect, FunctionComponent } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 import { DocumentsApi } from '@helpers/request'
 import { handleRequestError } from '@helpers/utils'
 import { Form, Row, Col, Input, Modal, Upload, Button, Spin, Progress } from 'antd'
@@ -20,11 +20,23 @@ const formLayout = {
   wrapperCol: { span: 24 },
 }
 
-const Document = (props) => {
-  const locationState = props.location.state
+interface IDocumentProps {
+  event: any
+  simpleMode?: boolean
+  fromPDFDocumentURL?: string | null
+  parentUrl?: string
+  notRecordFileInDocuments?: boolean
+  /** To check if the document was uploaded */
+  cbUploaded?: () => void
+  /** When the document is removed */
+  onRemoveDocumentContent?: () => void
+  onSave?: (url: string) => void
+}
+
+const Document: FunctionComponent<IDocumentProps> = (props) => {
   const history = useHistory()
-  const [document, setDocument] = useState({})
-  const [documentList, setDocumentList] = useState([])
+  const [document, setDocument] = useState<any>({})
+  const [documentList, setDocumentList] = useState<any[]>([])
   const [files, setFiles] = useState('')
   const [fileName, setFileName] = useState('')
   const [extention, setExtention] = useState('')
@@ -33,8 +45,10 @@ const Document = (props) => {
   const [loadPercentage, setLoadPercentage] = useState(0)
   const [fromEditing, setFromEditing] = useState(false)
 
+  const location = useLocation<any>()
+
   useEffect(() => {
-    if (locationState?.edit && !props.simpleMode) {
+    if (location.state.edit && !props.simpleMode) {
       getDocument()
     }
   }, [])
@@ -85,7 +99,7 @@ const Document = (props) => {
   }, [props.fromPDFDocumentURL])
 
   const getDocument = async () => {
-    const response = await DocumentsApi.getOne(locationState.edit, props.event._id)
+    const response = await DocumentsApi.getOne(location.state.edit, props.event._id)
     setDocument(response)
     setFolder(response.folder)
     setFiles([response.file])
@@ -133,18 +147,18 @@ const Document = (props) => {
 
       try {
         if (!props.notRecordFileInDocuments) {
-          if (locationState.edit && !props.simpleMode) {
+          if (location.state.edit && !props.simpleMode) {
             console.debug('document editing')
             await DocumentsApi.editOne(
-              !folder ? document : { title: document.title, type: 'folder', folder },
-              locationState.edit,
+              folder ? { title: document.title, type: 'folder', folder } : document,
+              location.state.edit,
               props.event._id,
             )
             console.debug('document edited')
           } else {
             console.debug('document creating')
             await DocumentsApi.create(
-              !folder ? document : { title: document.title, type: 'folder', folder },
+              folder ? { title: document.title, type: 'folder', folder } : document,
               props.event._id,
             )
             console.debug('document created')
@@ -165,7 +179,7 @@ const Document = (props) => {
           })
         }
 
-        if (!props.simpleMode) history.push(`${props.parentUrl}`)
+        if (!props.simpleMode && props.parentUrl) history.push(`${props.parentUrl}`)
         setLoading(false)
       } catch (e) {
         DispatchMessageService({
@@ -189,7 +203,7 @@ const Document = (props) => {
       msj: ' Por favor espere mientras se borra la información...',
       action: 'show',
     })
-    if (locationState.edit) {
+    if (location.state.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -219,7 +233,7 @@ const Document = (props) => {
                 });
               } */
               if (!props.notRecordFileInDocuments) {
-                await DocumentsApi.deleteOne(locationState.edit, props.event._id)
+                await DocumentsApi.deleteOne(location.state.edit, props.event._id)
                 DispatchMessageService({
                   key: 'loading',
                   action: 'destroy',
@@ -269,7 +283,7 @@ const Document = (props) => {
     }, 3000)
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name } = e.target
     const { value } = e.target
     setDocument({
@@ -278,7 +292,7 @@ const Document = (props) => {
     })
   }
 
-  const onHandlerFile = async (e) => {
+  const onHandlerFile = async (e: any) => {
     console.log('onHandlerFile calling...', e)
     setLoading(true)
     setDocumentList(e.fileList)
@@ -291,7 +305,7 @@ const Document = (props) => {
     setFileName(name)
     //Se extrae la extencion del archivo por necesidad del aplicativo
 
-    setExtention(name.split('.').pop())
+    setExtention(name.split('.').pop() || '')
 
     const uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files)
     //Se envia a firebase y se pasa la validacion para poder saber el estado del documento
@@ -360,18 +374,24 @@ const Document = (props) => {
         title={props.simpleMode ? 'Cargar documento' : 'Documento'}
         back={!props.simpleMode}
         save={props.simpleMode || (loadPercentage > 0 && true) || fromEditing}
-        saveMethod={props.simpleMode && onSubmit}
+        saveMethod={() => {
+          props.simpleMode && onSubmit()
+        }}
         form={!props.simpleMode}
         remove={() => {
           if (props.notRecordFileInDocuments) {
             remove()
           } else if (props.simpleMode) {
-            history.push(`${props.matchUrl.replace('agenda', 'documents')}`)
+            history.push(
+              `${location.pathname
+                .replace('agenda/activity', 'documents')
+                .replace('agenda', 'documents')}`,
+            )
           } else {
             remove()
           }
         }}
-        edit={locationState?.edit}
+        edit={location.state.edit}
         loadingSave={loading}
       />
 
@@ -391,17 +411,13 @@ const Document = (props) => {
           <Col span={14}>
             {!folder && (
               <Form.Item
-                label={
-                  <label style={{ marginTop: '2%' }}>
-                    Archivo <label style={{ color: 'red' }}>*</label>
-                  </label>
-                }
+                label="Archivo"
                 rules={[{ required: true, message: 'El archivo es requerido' }]}
               >
                 <Upload
                   multiple={false}
                   name="file"
-                  type="file"
+                  type="drag"
                   fileList={documentList}
                   defaultValue={documentList}
                   onChange={(e) => {
@@ -420,11 +436,7 @@ const Document = (props) => {
             {loadPercentage > 0 && <Progress percent={loadPercentage} />}
 
             <Form.Item
-              label={
-                <label style={{ marginTop: '2%' }}>
-                  Título <label style={{ color: 'red' }}>*</label>
-                </label>
-              }
+              label="Título"
               rules={[{ required: true, message: 'El título es requerido' }]}
             >
               <Input
@@ -442,4 +454,4 @@ const Document = (props) => {
   )
 }
 
-export default withRouter(Document)
+export default Document

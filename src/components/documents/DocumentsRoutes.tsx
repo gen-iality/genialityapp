@@ -1,12 +1,16 @@
-import { Fragment } from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Fragment, FunctionComponent } from 'react'
+import { Route, Switch } from 'react-router-dom'
 import Documents from './documents'
 import Document from './Document'
-/* import DocumentsEdit from './edit_old'; */
-/* import DocumentsPermission from './filePermission_old'; */
 
-function DocumentsRoutes({ ...props }) {
+interface IDocumentsRoutesProps {
+  event: any
+  matchUrl: string
+}
+
+const DocumentsRoutes: FunctionComponent<IDocumentsRoutesProps> = (props) => {
   const { event, matchUrl } = props
+
   return (
     <Fragment>
       <Switch>
@@ -18,11 +22,11 @@ function DocumentsRoutes({ ...props }) {
         <Route
           exact
           path={`${matchUrl}/document`}
-          render={() => <Document event={event} parentUrl={matchUrl} {...props} />}
+          render={() => <Document event={event} parentUrl={matchUrl} />}
         />
       </Switch>
     </Fragment>
   )
 }
 
-export default withRouter(DocumentsRoutes)
+export default DocumentsRoutes

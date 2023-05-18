@@ -354,7 +354,6 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
                           console.log('document update:', changed)
                           setSelectedDocuments(changed)
                         }}
-                        matchUrl={props.parentUrl}
                       />
                     </Form.Item>
                     <BackTop />
