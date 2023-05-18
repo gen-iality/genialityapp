@@ -23,7 +23,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons'
 import OrganizationCard from './organizationCard'
-import NewCard from './NewEventCard'
+import NewEventCard from './NewEventCard'
 import ExploreEvents from './exploreEvents'
 import withContext from '@context/withContext'
 import { EventsApi, TicketsApi, OrganizationApi, SurveysApi } from '@helpers/request'
@@ -400,13 +400,13 @@ const MainProfile = () => {
                             <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                               <NewEventProvider>
                                 {organizationsLimited.length > 0 ? (
-                                  <NewCard
+                                  <NewEventCard
                                     entityType="event"
-                                    cUser={cUser}
+                                    user={cUser.value}
                                     org={organizationsLimited}
                                   />
                                 ) : (
-                                  <NewCard entityType="event" cUser={cUser} />
+                                  <NewEventCard entityType="event" user={cUser.value} />
                                 )}
                               </NewEventProvider>
                             </Col>
@@ -495,9 +495,9 @@ const MainProfile = () => {
                           <>
                             <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                               <NewEventProvider>
-                                <NewCard
+                                <NewEventCard
                                   entityType="organization"
-                                  cUser={cUser}
+                                  user={cUser.value}
                                   fetchItem={fetchItem}
                                 />
                               </NewEventProvider>
@@ -534,9 +534,9 @@ const MainProfile = () => {
                   <Row gutter={[16, 16]}>
                     <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                       <NewEventProvider>
-                        <NewCard
+                        <NewEventCard
                           entityType="organization"
-                          cUser={cUser}
+                          user={cUser.value}
                           fetchItem={fetchItem}
                         />
                       </NewEventProvider>
@@ -560,13 +560,13 @@ const MainProfile = () => {
                     <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                       <NewEventProvider>
                         {organizationsLimited.length > 0 ? (
-                          <NewCard
+                          <NewEventCard
                             entityType="event"
-                            cUser={cUser}
+                            user={cUser.value}
                             org={organizationsLimited}
                           />
                         ) : (
-                          <NewCard entityType="event" cUser={cUser} />
+                          <NewEventCard entityType="event" user={cUser.value} />
                         )}
                       </NewEventProvider>
                     </Col>
