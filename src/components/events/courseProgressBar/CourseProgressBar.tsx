@@ -77,7 +77,20 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                 key={`key_${index}`}
               >
                 <Step
-                  // onClick={() => {}}
+                  onClick={() => {
+                    // Fake assignation of attendee
+                    if (
+                      !attendees.some((attendee) => attendee.activity_id === activity._id)
+                    ) {
+                      console.debug('mark as viewed this activity:', activity._id)
+                      setAttendees((previous) => [
+                        ...previous,
+                        {
+                          activity_id: activity._id,
+                        },
+                      ])
+                    }
+                  }}
                   id={activity._id}
                   key={activity._id}
                   isActive={activity.isViewed}
