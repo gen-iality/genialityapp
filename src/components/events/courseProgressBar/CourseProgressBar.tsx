@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Tooltip } from 'antd'
+import { Spin, Tooltip } from 'antd'
 
 import { activityContentValues } from '@context/activityType/constants/ui'
 
@@ -30,6 +30,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
 
   const [attendees, setAttendees] = useState<any[]>([])
   const [watchedActivityId, setWatchedActivityId] = useState<undefined | string>()
+  const [isLoading, setIsLoading] = useState(false)
 
   const location = useLocation()
 
@@ -52,7 +53,10 @@ function CourseProgressBar(props: CourseProgressBarProps) {
   }
 
   useEffect(() => {
-    requestAttendees().then().finally()
+    setIsLoading(true)
+    requestAttendees()
+      .then()
+      .finally(() => setIsLoading(false))
   }, [activities, location])
 
   // We don't have access to the param activity_id using useMatch because this
@@ -124,7 +128,9 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                       : 'sin contenido'
                     ).toLowerCase()}`}
                   >
-                    {index + 1}
+                    <Spin spinning={isLoading && activity._id === watchedActivityId}>
+                      {index + 1}
+                    </Spin>
                   </Tooltip>
                 </Step>
               </Link>
