@@ -1,6 +1,6 @@
 import { Layout, Spin, Row, Image } from 'antd'
 import MenuEvent from './Menus/MenuEvent'
-import { EyeOutlined } from '@ant-design/icons'
+// import { EyeOutlined } from '@ant-design/icons'
 import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 const { Sider } = Layout
@@ -28,7 +28,8 @@ const EventSectionsInnerMenu = () => {
           <Row justify="center" style={{ margin: 5 }}>
             {event.styles && event.styles.event_image && (
               <Image
-                preview={{ mask: <EyeOutlined /> }}
+                // preview={{ mask: <EyeOutlined /> }}
+                preview={false}
                 alt="Logo"
                 src={event.styles.event_image}
                 style={{
