@@ -29,6 +29,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
   const { activities, eventUser, eventId } = props
 
   const [attendees, setAttendees] = useState<any[]>([])
+  const [watchedActivityId, setWatchedActivityId] = useState<undefined | string>()
 
   const location = useLocation()
 
@@ -52,7 +53,17 @@ function CourseProgressBar(props: CourseProgressBarProps) {
 
   useEffect(() => {
     requestAttendees().then().finally()
-  }, [activities, location.pathname])
+  }, [activities, location])
+
+  // We don't have access to the param activity_id using useMatch because this
+  // component is upside of the EventSectionRoutes, then the activity_id will be
+  // taken from the url by parsing
+  useEffect(() => {
+    const urlCompleta = location.pathname
+    const urlSplited = urlCompleta.split('activity/')
+    const currentActivityId = urlSplited[1]
+    setWatchedActivityId(currentActivityId)
+  }, [location])
 
   const activityAndAttendeeList = useMemo(
     () =>
@@ -91,7 +102,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                       ])
                     }
                   }}
-                  id={activity._id}
+                  isFocus={activity._id === watchedActivityId}
                   key={activity._id}
                   isActive={activity.isViewed}
                   isSurvey={[
