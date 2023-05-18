@@ -294,10 +294,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
 
     if (props.organization !== 1) {
       const token = await GetTokenUserFirebase()
-      const resp = await Actions.put(
-        `api/events/${props.event._id}?token=${token}`,
-        newMenu,
-      )
+      await Actions.put(`api/events/${props.event._id}?token=${token}`, newMenu)
     } else {
       // Actualizar organizacion
       const updateOrganization = {
@@ -312,10 +309,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
         console.debug(resp)
       }
     }
-    DispatchMessageService({
-      key: 'loading',
-      action: 'destroy',
-    })
+    DispatchMessageService({ key: 'loading', action: 'destroy' })
     DispatchMessageService({
       type: 'success',
       msj: 'Información guardada correctamente',
