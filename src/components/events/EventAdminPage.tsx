@@ -222,7 +222,6 @@ class Event extends Component {
   render() {
     const { match, permissions, showMenu } = this.props
     const { error, collapsed, iMustValidate, event } = this.state
-    const cUser = this.props.cUser?.value
 
     if (this.state.loading || this.props.loading || permissions.loading)
       return <Loading />
@@ -358,7 +357,9 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/trivia`}
                 event={event}
-                render={() => <TriviaRoutes event={event} matchUrl={match.url} />}
+                render={(routeProps) => (
+                  <TriviaRoutes event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/documents`}
