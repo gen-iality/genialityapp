@@ -37,6 +37,7 @@ interface LocationStateType {
 interface IAgendaEditPageProps {
   event: any
   matchUrl: string
+  parentUrl: string
 }
 
 /**
@@ -142,8 +143,8 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         setIsEditing(true)
         cAgenda.setIsPublished(true)
       } else if (changePathWithoutSaving) {
-        console.log('go to', props.matchUrl)
-        history.push(`${props.matchUrl}`)
+        console.log('go to', props.parentUrl)
+        history.push(`${props.parentUrl}`)
       }
 
       DispatchMessageService({
@@ -227,7 +228,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
           deleteActivity(props.event._id, currentAgenda._id!, currentAgenda.name).then(
             () => {
               setShouldRedirect(true)
-              history.push(`${props.matchUrl}`)
+              history.push(`${props.parentUrl}`)
             },
           )
         },
@@ -248,7 +249,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
     cAgenda.saveConfig()
   }, [cAgenda.isPublished])
 
-  if (!location.state || shouldRedirect) return <Redirect to={props.matchUrl} />
+  if (!location.state || shouldRedirect) return <Redirect to={props.parentUrl} />
 
   return (
     <Form
@@ -291,7 +292,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         form
         saveNameIcon
         remove={onRemove}
-        customBack={props.matchUrl}
+        customBack={props.parentUrl}
         title={cAgenda.activityName ? `Actividad - ${cAgenda.activityName}` : 'Actividad'}
         saveName={location.state.edit || cAgenda.activityEdit || isEditing ? '' : 'Crear'}
         edit={location.state.edit || cAgenda.activityEdit || isEditing}
@@ -321,7 +322,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
               activityId={cAgenda.activityEdit}
               event={props.event}
               agenda={currentAgenda}
-              matchUrl={props.matchUrl}
+              matchUrl={props.parentUrl}
             />
           </Tabs.TabPane>
           {isEditing && (
@@ -335,7 +336,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
                         activityName={currentAgenda.name}
                         eventId={props.event._id}
                         shouldLoad={currentTab === '2'}
-                        matchUrl={props.matchUrl}
+                        matchUrl={props.parentUrl}
                       />
                     )}
                     <BackTop />
@@ -353,7 +354,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
                           console.log('document update:', changed)
                           setSelectedDocuments(changed)
                         }}
-                        matchUrl={props.matchUrl}
+                        matchUrl={props.parentUrl}
                       />
                     </Form.Item>
                     <BackTop />
