@@ -100,21 +100,8 @@ class Event extends Component {
     super(props)
     this.state = {
       loading: true,
-      generalTab: true,
-      guestTab: true,
-      ticketTab: true,
-      styleTab: true,
-      menuMobile: false,
-      ConfigurationApp: true,
-      NotificationsApp: true,
-      CreateSuervey: true,
-      NewsApp: true,
-      SurveysCreate: true,
-      FAQS: true,
-      Trivia: true,
       event: null,
       collapsed: false,
-      iMustValidate: true,
     }
     this.addNewFieldsToEvent = this.addNewFieldsToEvent.bind(this)
   }
@@ -164,10 +151,6 @@ class Event extends Component {
     this.setState({ newEvent: false })
   }
 
-  handleClick = (e: MouseEvent) => {
-    if (!navigator.onLine) e.preventDefault()
-  }
-
   updateEvent = (event: any) => {
     this.setState({ event })
   }
@@ -208,20 +191,10 @@ class Event extends Component {
     this.setState({ collapsed: !this.state.collapsed })
   }
 
-  /** RESTRICIONES */
-  theEventIsActive = (state) => {
-    const eventId = this.state.event._id
-
-    featureBlockingStatusSave(eventId, state)
-
-    this.setState({
-      iMustValidate: false,
-    })
-  }
-
   render() {
-    const { match, permissions, showMenu } = this.props
-    const { error, collapsed, iMustValidate, event } = this.state
+    const { match, permissions } = this.props
+    const { error, collapsed, event } = this.state
+    console.log('permissions', permissions)
 
     if (this.state.loading || this.props.loading || permissions.loading)
       return <Loading />
@@ -309,13 +282,7 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/datos`}
                 event={event}
-                render={() => (
-                  <Datos
-                    eventId={event._id}
-                    event={event}
-                    updateEvent={this.updateEvent}
-                  />
-                )}
+                render={() => <Datos eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/agenda`}
@@ -325,20 +292,13 @@ class Event extends Component {
                     event={event}
                     eventId={event._id}
                     matchUrl={routeProps.match.url}
-                    updateEvent={this.updateEvent}
                   />
                 )}
               />
               <Protected
                 path={`${match.url}/module`}
                 event={event}
-                render={() => (
-                  <ModulePage
-                    eventId={event._id}
-                    event={event}
-                    updateEvent={this.updateEvent}
-                  />
-                )}
+                render={() => <ModulePage eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/adminUsers`}
