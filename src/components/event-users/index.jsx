@@ -1,6 +1,6 @@
 import { Component, useState, useEffect } from 'react'
 import { FormattedDate, FormattedTime } from 'react-intl'
-import { firestore } from '@helpers/firebase'
+import { fireRealtime, firestore } from '@helpers/firebase'
 import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request'
 import { AgendaApi, OrganizationApi } from '@helpers/request'
 import UserModal from '../modal/modalUser'
@@ -125,6 +125,36 @@ const ModalWithLessonsInfo = ({
       </Space>
     </Modal>
   )
+}
+
+const TimeTrackingStats = ({ user }) => {
+  const [timing, setTiming] = useState(0)
+
+  useEffect(() => {
+    const localRef = fireRealtime.ref(`user_sessions/local/${user._id}`)
+    localRef.get().then((result) => {
+      const logDict = result && result.exists() ? result.val() : {}
+
+      if (!logDict) {
+        setTiming(0)
+        return
+      }
+
+      const filteredLogDict = Object.values(logDict)
+        .filter((log) => log.status === 'offline')
+        .filter((log) => log.startTimestamp !== undefined)
+        .filter((log) => log.endTimestamp !== undefined)
+
+      const divisor = 3600
+
+      const time = filteredLogDict
+        .map((log) => (log.endTimestamp - log.startTimestamp) / 1000 / divisor)
+        .reduce((a, b) => a + b, 0)
+      setTiming(time)
+    })
+  }, [user])
+
+  return <>{timing.toFixed(2)} horas</>
 }
 
 const ColumnProgreso = ({
@@ -557,6 +587,14 @@ class ListEventUser extends Component {
         ),
       }
 
+      const timeTrackingStatsColumn = {
+        title: 'Tiempo registrado',
+        key: 'time-tracking-stats',
+        dataIndex: 'user',
+        ellipsis: true,
+        render: (user) => <TimeTrackingStats user={user} />,
+      }
+
       const rol = {
         title: 'Rol',
         dataIndex: 'rol_id',
@@ -588,6 +626,7 @@ class ListEventUser extends Component {
         render: self.updated_at_component,
       }
       columns.push(progressing)
+      columns.push(timeTrackingStatsColumn)
       columns.push(rol)
       columns.push(created_at)
       columns.push(updated_at)

@@ -154,20 +154,20 @@ const videoActivityTypeCards: ActivityType.CardUI[] = [
     description: '',
     form: urlInputForms.url as ActivityType.FormUI,
   },
-  {
-    widgetType: WidgetType.FORM,
-    key: activityContentValues.file,
-    title: 'Cargar vídeo',
-    description: '',
-    MainTitle: 'Cargue un video desde su equipo',
-    image:
-      'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fcargar_video.jpg?alt=media&token=b0990943-3563-4004-9e15-cf9dfea6805c',
-    form: {
-      formType: FormType.UPLOAD,
-      key: activityContentValues.file,
-      MainTitle: 'Cargue un vídeo desde su equipo',
-    },
-  },
+  // {
+  //   widgetType: WidgetType.FORM,
+  //   key: activityContentValues.file,
+  //   title: 'Cargar vídeo',
+  //   description: '',
+  //   MainTitle: 'Cargue un video desde su equipo',
+  //   image:
+  //     'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fcargar_video.jpg?alt=media&token=b0990943-3563-4004-9e15-cf9dfea6805c',
+  //   form: {
+  //     formType: FormType.UPLOAD,
+  //     key: activityContentValues.file,
+  //     MainTitle: 'Cargue un vídeo desde su equipo',
+  //   },
+  // },
 ]
 
 const pdfForm: ActivityType.FormUI = {
