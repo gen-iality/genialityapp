@@ -287,9 +287,6 @@ const Landing = (props) => {
         <CourseProgressBar
           eventId={cEventContext.value._id}
           activities={activities}
-          linkFormatter={(activityId) =>
-            `/landing/${cEventContext.value._id}/activity/${activityId}`
-          }
           count={activitiesAttendee.length}
           activitiesAttendee={activitiesAttendee}
           onChange={reloadActivityAttendee}

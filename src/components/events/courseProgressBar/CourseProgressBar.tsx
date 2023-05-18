@@ -20,16 +20,14 @@ type Activity = {
 
 export interface CourseProgressBarProps {
   count: number
-  linkFormatter: (activityId: string) => string
+  eventId: string
   activities: Activity[]
   activitiesAttendee: Activity[]
   onChange?: () => void
 }
 
 function CourseProgressBar(props: CourseProgressBarProps) {
-  const { linkFormatter, activities, activitiesAttendee } = props
-
-  const [currentId, setCurrentId] = useState(null)
+  const { activities, activitiesAttendee, eventId } = props
 
   if (activities.length === 0) {
     return null
@@ -48,12 +46,13 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                   ).length
                 }
               />
-              <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
+              <Link
+                to={`/landing/${eventId}/activity/${activity._id}`}
+                key={`key_${index}`}
+              >
                 <Step
                   /* onChangeFunction={onChange} */
                   onClick={props.onChange}
-                  setCurrentId={setCurrentId}
-                  currentId={currentId}
                   id={activity._id}
                   key={activity._id}
                   isActive={
@@ -72,7 +71,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                       [
                         activityContentValues.quizing,
                         activityContentValues.survey,
-                      ].includes(activity.type?.name! as any)
+                      ].includes(activity.type?.name as any)
                         ? 'al cuestionario'
                         : 'a la actividad'
                     } "${activity.name}", tipo ${(activity.type?.name
