@@ -18,6 +18,18 @@ import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 import { DispatchMessageService } from '@context/MessageService'
 // import { CurrentUserContext } from '@context/userContext'
 
+interface IMenuItem {
+  [key: string]: {
+    name: string
+    section: string
+    position: number
+    icon: string
+    checked: boolean
+    permissions: string
+    markup?: string
+  }
+}
+
 interface IMenuLandingProps {
   organization: any
   organizationObj: any
@@ -30,7 +42,7 @@ const formLayout = {
   wrapperCol: { span: 24 },
 }
 
-const initialMenu = {
+const initialMenu: IMenuItem = {
   evento: {
     name: 'Curso', // TODO: check where this prop is used
     position: 0,
