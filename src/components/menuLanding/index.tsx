@@ -204,7 +204,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
 
   const loadItemsMenuData = async () => {
     console.debug('requesting menu items from back-end')
-    const menuBase = menu
+    const menuBase = { ...menu }
     let menuLanding: any = {}
     if (props.organization != 1) {
       const token = await GetTokenUserFirebase()
@@ -320,7 +320,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
    */
   const saveOrRemoveThisMenuItems = (key: string) => {
     console.log('clicked key', key)
-    const menuBase = menu
+    const menuBase = { ...menu }
 
     // Update/add this menu item or delete
     if (menuBase[key].checked) {
@@ -344,7 +344,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
    * @returns nothing
    */
   const changeMenuName = (key: string, name: string) => {
-    const menuBase = menu
+    const menuBase = { ...menu }
 
     if (!name || !name.trim()) return
 
@@ -363,7 +363,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
    * @returns nothing
    */
   const changeMenuPosition = (key: string, position: any) => {
-    const menuBase = menu
+    const menuBase = { ...menu }
 
     if (!position && position !== 0) return
 
@@ -382,7 +382,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
    * @returns nothing
    */
   const changeMarkup = (key: string, markup: string) => {
-    const menuBase = menu
+    const menuBase = { ...menu }
 
     if (!markup || !markup.trim()) return
 
@@ -401,7 +401,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
    * @returns nothing
    */
   const changePermissions = (key: string, access: string) => {
-    const menuBase = menu
+    const menuBase = { ...menu }
 
     if (!access || !access.trim()) return
 
@@ -414,7 +414,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
   }
 
   const setOrderPosition = (key: string, order: any) => {
-    const menuBase = menu
+    const menuBase = { ...menu }
 
     const integerPosition = parseInt(order || 0)
     menuBase[key].position = integerPosition
@@ -427,7 +427,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
   }, [])
 
   useEffect(() => {
-    const menuEntries = Object.entries(menu) as [string, any][]
+    const menuEntries = Object.entries({ ...menu }) as [string, any][]
     const onlyCheckedMenuEntries = menuEntries.filter((entry) => entry[1].checked)
     setItemsMenu(Object.fromEntries(onlyCheckedMenuEntries))
   }, [menu])
@@ -448,7 +448,6 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
 
         <Spin tip="Cargando..." size="large" spinning={isLoading} />
         <Row gutter={[8, 8]} wrap>
-          {JSON.stringify(menu)}
           {Object.keys(menu).map((key, index) => (
             <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
               <Card
