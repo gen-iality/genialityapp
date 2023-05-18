@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { Tooltip } from 'antd'
 
 import { activityContentValues } from '@context/activityType/constants/ui'
@@ -10,6 +10,7 @@ import Step from './Step'
 import Line from './Line'
 
 import './CourseProgressBar.css'
+import { firestore } from '@helpers/firebase'
 
 type Activity = {
   _id: string
@@ -19,45 +20,67 @@ type Activity = {
 }
 
 export interface CourseProgressBarProps {
-  count: number
   eventId: string
+  eventUser: any
   activities: Activity[]
-  activitiesAttendee: Activity[]
-  onChange?: () => void
 }
 
 function CourseProgressBar(props: CourseProgressBarProps) {
-  const { activities, activitiesAttendee, eventId } = props
+  const { activities, eventUser, eventId } = props
 
-  console.log('activities', activities)
+  const [attendees, setAttendees] = useState<any[]>([])
+
+  const location = useLocation()
+
+  const requestAttendees = async () => {
+    console.debug('will request the attendee for', activities.length, 'activities')
+    const existentActivities = activities.map(async (activity) => {
+      const activity_attendee = await firestore
+        .collection(`${activity._id}_event_attendees`)
+        .doc(eventUser._id)
+        .get() //checkedin_at
+      if (activity_attendee.exists) {
+        const newAttendee = activity_attendee.data()
+        return { ...newAttendee, activity_id: activity._id }
+      }
+      return null
+    })
+
+    // Filter existent activities and set the state
+    setAttendees((await Promise.all(existentActivities)).filter((item) => !!item))
+  }
+
+  useEffect(() => {
+    requestAttendees().then().finally()
+  }, [activities, location.pathname])
+
+  const activityAndAttendeeList = useMemo(
+    () =>
+      activities.map((activity) => ({
+        ...activity,
+        isViewed: attendees.some((attende) => attende.activity_id == activity._id),
+      })),
+    [activities, attendees],
+  )
+
+  if (activities.length == 0) return null
 
   return (
     <div>
       <div className="CourseProgressBar-container">
         <div className="CourseProgressBar-innerContainer">
-          {activities.map((activity, index) => (
+          {activityAndAttendeeList.map((activity, index) => (
             <div key={index} className="CourseProgressBar-stepContainer">
-              <Line
-                isActive={
-                  activitiesAttendee.filter(
-                    (attende) => attende.activity_id == activity._id,
-                  ).length
-                }
-              />
+              <Line isActive={activity.isViewed} />
               <Link
                 to={`/landing/${eventId}/activity/${activity._id}`}
                 key={`key_${index}`}
               >
                 <Step
-                  /* onChangeFunction={onChange} */
-                  onClick={props.onChange}
+                  // onClick={() => {}}
                   id={activity._id}
                   key={activity._id}
-                  isActive={
-                    activitiesAttendee.filter(
-                      (attende) => attende.activity_id == activity._id,
-                    ).length
-                  }
+                  isActive={activity.isViewed}
                   isSurvey={[
                     activityContentValues.quizing,
                     activityContentValues.survey,

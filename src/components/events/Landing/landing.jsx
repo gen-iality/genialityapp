@@ -30,7 +30,6 @@ import WithEviusContext from '@context/withContext'
 import { checkinAttendeeInEvent } from '@helpers/HelperAuth'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { AgendaApi } from '@helpers/request'
-import { firestore } from '@helpers/firebase'
 
 import CourseProgressBar from '@components/events/courseProgressBar/CourseProgressBar'
 
@@ -90,46 +89,16 @@ const Landing = (props) => {
     setRegister,
   } = useHelper()
 
-  const [activitiesAttendee, setActivitiesAttendee] = useState([])
+  // const [activitiesAttendee, setActivitiesAttendee] = useState([])
   const [activities, setActivities] = useState([])
   const location = useLocation()
 
   const loadData = async () => {
     // Reset this
     setActivities([])
-    setActivitiesAttendee([])
 
     const { data } = await AgendaApi.byEvent(cEventContext.value?._id)
     setActivities(data)
-    const existentActivities = data.map(async (activity) => {
-      const activity_attendee = await firestore
-        .collection(`${activity._id}_event_attendees`)
-        .doc(cEventUser.value?._id)
-        .get() //checkedin_at
-      if (activity_attendee.exists) {
-        let datos = activity_attendee.data()
-        datos = {
-          ...datos,
-          hola: 123,
-          activity_id: activity._id,
-          activity_attendee: activity_attendee.id,
-        }
-
-        //...activity_attendee.data(), activity_id: activity._id, activity_attendee: activity_attendee.id()
-        return datos
-        // setActivities_attendee((past) => [...past, activity_attendee.data()]);
-      }
-      return null
-    })
-    // Filter existent activities and set the state
-    setActivitiesAttendee(
-      // Promises don't bite :)
-      (await Promise.all(existentActivities)).filter((item) => !!item),
-    )
-  }
-
-  function reloadActivityAttendee() {
-    loadData()
   }
 
   /*   useEffect(() => {
@@ -146,10 +115,6 @@ const Landing = (props) => {
     console.info('event is asked', cEventContext.value?._id)
   }, [cEventContext.value, cEventUser.value])
 
-  // useEffect(() => {
-  //   loadData()
-  // }, [location])
-
   useEffect(() => {
     DispatchMessageService({
       type: 'loading',
@@ -158,7 +123,6 @@ const Landing = (props) => {
     })
     return () => {
       setActivities([])
-      setActivitiesAttendee([])
     }
   }, [])
 
@@ -287,9 +251,7 @@ const Landing = (props) => {
         <CourseProgressBar
           eventId={cEventContext.value._id}
           activities={activities}
-          count={activitiesAttendee.length}
-          activitiesAttendee={activitiesAttendee}
-          onChange={reloadActivityAttendee}
+          eventUser={cEventUser.value}
         />
         <EventSectionsInnerMenu />
         <MenuTablets />
