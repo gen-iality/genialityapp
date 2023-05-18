@@ -1,29 +1,36 @@
-import { useState } from 'react'
+import { FunctionComponent, useState } from 'react'
 import { Space, Typography, Card } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import ModalCreateOrg from './modalCreateOrg'
 import ModalOrgListCreate from '@components/events/createEvent/newEvent/ModalOrgListCreate'
 import functionCreateNewOrganization from './functionCreateNewOrganization'
-import { useContextNewEvent, NewEventActionEnum } from '@context/newEventContext'
+import { useNewEventContext, NewEventActionEnum } from '@context/newEventContext'
 
-// Componente modal para la creacion de una organizacion <ModalCreateOrg/>
+interface INewEventCardProps {
+  entityType: string
+  org?: any[]
+  fetchItem?: any
+  user: any
+}
 
-const NewCard = (props) => {
-  const entity = props.entityType ? props.entityType : 'event'
+const NewEventCard: FunctionComponent<INewEventCardProps> = (props) => {
+  const { entityType, org, fetchItem, user } = props
+
+  const entity = entityType ?? 'event'
   const [modalCreateOrgIsVisible, setModalCreateOrgIsVisible] = useState(false)
   const [modalListOrgIsVisible, setModalListOrgIsVisible] = useState(false)
-  const { dispatch } = useContextNewEvent()
+  const { dispatch } = useNewEventContext()
 
   const newOrganization = () => {
     setModalCreateOrgIsVisible(true)
   }
   const newEvent = () => {
-    if (props?.org?.length > 0) {
+    if (org && org.length > 0) {
       setModalListOrgIsVisible(true)
       dispatch({ type: NewEventActionEnum.VISIBLE_MODAL, payload: { visible: true } })
     } else {
       const newValues = {
-        name: props.cUser.value.names || props.cUser.value.displayName,
+        name: user.value.names || user.value.displayName,
         logo: null,
         newEventWithoutOrganization: true,
         closeModal: setModalListOrgIsVisible,
@@ -38,7 +45,7 @@ const NewCard = (props) => {
         <ModalCreateOrg
           modalCreateOrgIsVisible={modalCreateOrgIsVisible}
           setModalCreateOrgIsVisible={setModalCreateOrgIsVisible}
-          fetchItem={props.fetchItem}
+          fetchItem={fetchItem}
         />
       )}
 
@@ -46,8 +53,8 @@ const NewCard = (props) => {
         <ModalListOrg
           modalListOrgIsVisible={modalListOrgIsVisible}
           setModalListOrgIsVisible={setModalListOrgIsVisible}
-          org={props.org}
-          cUserId={props.cUser.value._id}
+          org={org}
+          cUserId={user._id}
         />
       )*/}
 
@@ -55,7 +62,7 @@ const NewCard = (props) => {
         <ModalOrgListCreate
           modalListOrgIsVisible={modalListOrgIsVisible}
           setModalListOrgIsVisible={setModalListOrgIsVisible}
-          org={props.org}
+          org={org}
         />
       )}
 
@@ -100,4 +107,4 @@ const NewCard = (props) => {
   )
 }
 
-export default NewCard
+export default NewEventCard

@@ -81,19 +81,6 @@ const ContentContainer = () => {
           <PrivateRoute exact path="/myprofile" component={MainProfile} />
 
           <Route path="/social/:event_id" component={socialZone} />
-          {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
-          <Route
-            path="/mentoriamastercard"
-            render={() => <Redirect to="/landing/5ef49fd9c6c89039a14c6412" />}
-          />
-          <Route
-            path="/meetupsfenalco"
-            render={() => <Redirect to="/landing/5f0622f01ce76d5550058c32" />}
-          />
-          <Route
-            path="/evento/tpgamers"
-            render={() => <Redirect to="/landing/5f4e41d5eae9886d464c6bf4" />}
-          />
           <Route path="/notfound" component={NotFoundPage} />
           <RouteContext path="/blockedEvent/:event_id" component={BlockedEvent} />
           <PrivateRoute path="/create-event/:user?">
@@ -103,7 +90,11 @@ const ContentContainer = () => {
           </PrivateRoute>
           <PrivateRoute path="/eventadmin/:event" component={EventAdminPage} />
           <PrivateRoute path="/orgadmin/:event" component={EventAdminPage} />
-          <PrivateRoute path="/create-event" component={NewEventPage} />
+          <PrivateRoute path="/create-event">
+            <NewEventProvider>
+              <NewEventPage />
+            </NewEventProvider>
+          </PrivateRoute>
           <RouteContext
             exact
             path="/organization/:id/events"
@@ -186,28 +177,26 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         <CurrentEventProvider>
           <CurrentUserEventProvider>
             <CurrentUserProvider>
-              <NewEventProvider>
-                <HelperContextProvider>
-                  <AgendaContextProvider>
-                    <SurveysProvider>
-                      <Layout style={{ minHeight: '100vh' }}>
-                        <Header />
-                        {cUser.value ? (
-                          <Component {...props} />
-                        ) : cUser.value == null && cUser.status == 'LOADED' ? (
-                          <>
-                            <ModalAuth isPrivateRoute />
+              <HelperContextProvider>
+                <AgendaContextProvider>
+                  <SurveysProvider>
+                    <Layout style={{ minHeight: '100vh' }}>
+                      <Header />
+                      {cUser.value ? (
+                        <Component {...props} />
+                      ) : cUser.value == null && cUser.status == 'LOADED' ? (
+                        <>
+                          <ModalAuth isPrivateRoute />
 
-                            <ForbiddenPage />
-                          </>
-                        ) : (
-                          <Spin />
-                        )}
-                      </Layout>
-                    </SurveysProvider>
-                  </AgendaContextProvider>
-                </HelperContextProvider>
-              </NewEventProvider>
+                          <ForbiddenPage />
+                        </>
+                      ) : (
+                        <Spin />
+                      )}
+                    </Layout>
+                  </SurveysProvider>
+                </AgendaContextProvider>
+              </HelperContextProvider>
             </CurrentUserProvider>
           </CurrentUserEventProvider>
         </CurrentEventProvider>
