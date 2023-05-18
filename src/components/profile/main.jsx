@@ -23,7 +23,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons'
 import OrganizationCard from './organizationCard'
-import NewCard from './newCard'
+import NewCard from './NewEventCard'
 import ExploreEvents from './exploreEvents'
 import withContext from '@context/withContext'
 import { EventsApi, TicketsApi, OrganizationApi, SurveysApi } from '@helpers/request'
