@@ -4,6 +4,7 @@ import { Button, PageHeader, Space, Typography, Grid } from 'antd';
 import Moment from 'moment';
 import { UseEventContext } from '../../context/eventContext';
 import EventAccessActionContainer from './eventAccessAction/EventAccessActionContainer';
+import { useIntl } from 'react-intl';
 
 const { useBreakpoint } = Grid;
 
@@ -19,6 +20,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
 	const textColor = cEventValues?.styles?.textMenu;
 	//Validacion temporal para el evento audi
 	const idEvent = cEventValues?._id;
+	const intl = useIntl();
 
 	return (
 		<PageHeader
@@ -43,7 +45,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
 							<EventAccessActionContainer />
 						) : (
 							<Button style={{ color: textColor, backgroundColor: bgColor }} type='primary' size='large'>
-								Incribirme al evento
+								{intl.formatMessage({id: 'signup_event', defaultMessage: 'Incribirme al evento'})}
 							</Button>
 						)}
 					</>

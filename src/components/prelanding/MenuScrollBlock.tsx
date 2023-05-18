@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import ScrollIntoView from 'react-scroll-into-view';
 import { PropsMenuScrollbar } from './types/Prelanding';
 import { LandingBlock } from './types';
+import { useIntl } from 'react-intl';
 
 const { useBreakpoint } = Grid;
 
@@ -13,6 +14,7 @@ const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades, vpat
   const cEvent = useContext(CurrentEventContext);
   const bgColor = cEvent.value?.styles?.toolbarDefaultBg;
   const textColor = cEvent.value?.styles?.textMenu;
+  const intl = useIntl();
 
   const screens = useBreakpoint();
   //PERMITE CONTROLAR SI LA SECCION TIENE CONTENIDO O NO
@@ -59,7 +61,7 @@ const MenuScrollBlock = ({ sections, vdescription, vspeakers, vactividades, vpat
         style={{ backgroundColor: bgColor }}
         header={
           <Typography.Text strong style={{ fontSize: '24px', color: textColor }}>
-            Menu
+            {intl.formatMessage({id: 'menu', defaultMessage: 'Menú'})}
           </Typography.Text>
         }
         key='1'>
