@@ -21,7 +21,7 @@ const ProductCard = ({ galery, eventId, history }) => {
       cover={
         <img
           alt='example'
-          src={galery && galery.image && galery.image[0]}
+          src={galery && galery.images && galery.images[0]}
           style={{ height: '250px', objectFit: 'cover' }}
         />
       }>

@@ -302,9 +302,13 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                     </a>
                   </Col>
                 )}
-                {!permission() && cEventUser.value !== null && (
+                {!permission() && cEventUser.value !== null ? (
                   <Row>
                     <Alert type='warning' message='No tienes permisos para pujar sobre esta obra.' />
+                  </Row>
+                ) : (
+                  <Row>
+                    <button>Pujar</button>
                   </Row>
                 )}
                 {!permission() && cEventUser.value === null && (

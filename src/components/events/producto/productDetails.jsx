@@ -54,17 +54,18 @@ function DetailsProduct(props) {
             <Card style={{ width: '100%', display: 'grid', justifyContent: 'center' }}>
               <Carousel
                 showThumbs={
-                  product && product.image && product.image.filter((img) => img != null).length === 1 ? false : true
+                  product && product.images && product.images.filter((img) => img != null).length === 1 ? false : true
                 }>
                 {product &&
-                  product.image &&
-                  product.image
+                  product.images &&
+                  product.images
                     .filter((img) => img != null)
                     .map((image, index) => (
                       <img
                         key={'image' + index}
                         /* style={{ objectFit: 'contain' }} */
-                        src={product.image[index]}
+                        // Imagen seteada 
+                        src={product.images[index]}
                         alt='arte'
                       />
                     ))}
@@ -74,7 +75,10 @@ function DetailsProduct(props) {
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Card>
               <Space direction='vertical' style={{ width: '100%' }}>
+              {/* nombre de la obra Pan */}
                 <Title level={3}>{product && product.name ? product.name : 'Nombre de la obra'}</Title>
+                {/* OfertaProduct "No tienes permisos para pujar sobre esta obra." Precio Inicial:
+                  $ 2000 */}
                 {product && (product.price || product.start_price) && (
                   <OfertaProduct
                     updateValues={setUpdateValue}
@@ -86,16 +90,19 @@ function DetailsProduct(props) {
                 )}
                 {product && product.by && (
                   <Divider orientation='left'>
+                  {/* autor  */}
                     <Title style={{ marginBottom: '0px' }} level={5}>
                       Autor
                     </Title>
                   </Divider>
                 )}
+                {/* nombre del autor */}
                 {product && product.by && <Text>{product && product.by ? product.by : 'Sin Autor'} </Text>}
                 <Divider orientation='left'>
                   <Title level={5}>Descripción</Title>
                 </Divider>
                 <Text>
+                {/* descripcion  */}
                   <div
                     dangerouslySetInnerHTML={{
                       __html: product && product.description ? product.description : 'Sin descripción',

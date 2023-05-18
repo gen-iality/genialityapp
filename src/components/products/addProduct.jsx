@@ -11,6 +11,9 @@ import { DispatchMessageService } from '../../context/MessageService';
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { removeObjectFromArray, renderTypeImage } from '@/Utilities/imgUtils';
 import Loading from '../profile/loading';
+// este código se va a usar para poder seleccionar si se quiere agregar un producto para subasta o Tienda
+// import { Select } from 'antd';
+// const { Option } = Select;
 
 export const toolbarEditor = {
   toolbar: [
@@ -36,6 +39,8 @@ function AddProduct(props) {
   const [product, setProduct] = useState();
   const [name, setName] = useState('');
   const [creator, setCreator] = useState('');
+  //subasta o tienda
+  // const [store, setStore] = useState('just-store');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [picture, setPicture] = useState(null);
@@ -46,7 +51,11 @@ function AddProduct(props) {
   const [error, setError] = useState(null);
   const [idNew, setIdNew] = useState();
   const [isLoading, setIsLoading] = useState(true);
-
+  // subasta o tienda
+  // const handleChange = (value) => {
+  //   setStore(value);
+  // };
+  // console.log(store);
   useEffect(() => {
     if (props.match.params.id) {
       setIdNew(props.match.params.id);
@@ -54,13 +63,15 @@ function AddProduct(props) {
         setProduct(product);
         setName(product.name);
         setCreator(product.by);
+          // subasta o tienda
+        // setStore(product.type)
         setDescription(product.description || '');
-        setPicture(product.image && product.image[0] ? product.image[0] : null);
+        setPicture(product.images && product.images[0] ? product.images[0] : null);
         setImgFile([
-          { name: 'Imagen', file: product.image[0] },
-          { name: 'img_optional', file: product.image[1] },
+          { name: 'Imagen', file: product.images[0] },
+          { name: 'img_optional', file: product.images[1] },
         ]);
-        setOptionalPicture(product.image && product.image[1] ? product.image[1] : null);
+        setOptionalPicture(product.images && product.images[1] ? product.images[1] : null);
         setPrice(product.price);
         setIsLoading(false);
       });
@@ -78,7 +89,6 @@ function AddProduct(props) {
       setCreator(e.target.value);
     }
   };
-
   const changeDescription = (e) => {
     if (description.length < 10000) {
       setDescription(e);
@@ -144,11 +154,11 @@ function AddProduct(props) {
     setError(validators);
     if (
       validators &&
-      validators.name == false &&
-      validators.creator == false &&
-      validators.description == false &&
-      validators.picture == false &&
-      validators.price == false
+      validators.name === false &&
+      validators.creator === false &&
+      validators.description === false &&
+      validators.picture === false &&
+      validators.price === false
     ) {
       try {
         if (idNew !== undefined) {
@@ -158,7 +168,10 @@ function AddProduct(props) {
               by: creator,
               description,
               price,
-              image: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
+              images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
+                // subasta o tienda
+              // type: store,
+              type: 'just-store',
             },
             props.eventId,
             product._id
@@ -173,7 +186,10 @@ function AddProduct(props) {
               by: creator,
               description,
               price,
-              image: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
+              images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
+              // subasta o tienda
+              // type: store,
+              type: 'just-store',
             },
             props.eventId
           );
@@ -279,7 +295,7 @@ function AddProduct(props) {
                 <small style={{ color: 'red' }}>El nombre del producto es requerido</small>
               )}
             </Form.Item>
-            <Form.Item label={<label style={{ marginTop: '2%' }}>Por</label>} rules={[{ required: false }]}>
+            <Form.Item label={<label style={{ marginTop: '2%' }}>Vendedor</label>} rules={[{ required: false }]}>
               <Input
                 value={creator}
                 placeholder='Nombre del autor, creador o descripción corta'
@@ -288,6 +304,14 @@ function AddProduct(props) {
               />
               {error != null && error.creator && <small style={{ color: 'red' }}>Este campo es requerido</small>}
             </Form.Item>
+            {/*   // subasta o tienda
+            <Form.Item label={<label style={{ marginTop: '2%' }}>Tipo</label>} rules={[{ required: false }]}>
+              <Select value={store} style={{ width: 120 }} onChange={handleChange}>
+                <Option value='just-store'>Tienda</Option>
+                <Option value='Prueba'>Subasta</Option>
+              </Select>
+              {error != null && error.store && <small style={{ color: 'red' }}>Este campo es requerido</small>}
+            </Form.Item> */}
             <Form.Item
               label={
                 <label style={{ marginTop: '2%' }}>
