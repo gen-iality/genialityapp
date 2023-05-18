@@ -2,7 +2,7 @@ import { createContext } from 'react'
 export const MessageController = createContext({})
 import { message } from 'antd'
 
-const PositiveAnswer = [
+const positiveAnswer = [
   'Excelente',
   'Perfecto',
   'Genial',
@@ -11,8 +11,8 @@ const PositiveAnswer = [
   'Éxito',
   'Bien',
 ]
-const NegativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry']
-const LoadingAnswer = ['Cargando', 'Procesando', 'Espérame']
+const negativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry']
+const loadingAnswer = ['Cargando', 'Procesando', 'Espérame']
 
 interface PropsOptions {
   type?: 'success' | 'error' | 'warning' | 'info' | 'loading'
@@ -49,12 +49,13 @@ export const DispatchMessageService = ({
   }
 }
 
-const MessageReducer = ({ type, msj }: PropsOptions) => {
-  const ramdon = Math.floor(Math.random() * PositiveAnswer.length)
-  const ramdonN = Math.floor(Math.random() * NegativeAnswer.length)
-  const ramdonLoading = Math.floor(Math.random() * LoadingAnswer.length)
+const MessageReducer = ({ type, msj: textMessage }: PropsOptions) => {
+  const randomPositive = Math.floor(Math.random() * positiveAnswer.length)
+  const ramdonNegative = Math.floor(Math.random() * negativeAnswer.length)
+  const ramdonLoading = Math.floor(Math.random() * loadingAnswer.length)
+
   let iconRender = ''
-  let finalMsj = ''
+  let finalMessage = ''
 
   switch (type) {
     case 'success':
@@ -87,19 +88,21 @@ const MessageReducer = ({ type, msj }: PropsOptions) => {
     }
   }
 
-  if (msj !== undefined) {
+  if (textMessage !== undefined) {
     if (type === 'success') {
-      finalMsj = `${iconRender} ${PositiveAnswer[ramdon]}, ${formatUpperCaseMissing(msj)}`
+      finalMessage = `${iconRender} ${
+        positiveAnswer[randomPositive]
+      }, ${formatUpperCaseMissing(textMessage)}`
     } else if (type === 'loading') {
-      finalMsj = `${iconRender} ${LoadingAnswer[ramdonLoading]}, ${formatUpperCaseMissing(
-        msj,
-      )}`
+      finalMessage = `${iconRender} ${
+        loadingAnswer[ramdonLoading]
+      }, ${formatUpperCaseMissing(textMessage)}`
     } else {
-      finalMsj = `${iconRender} ${NegativeAnswer[ramdonN]}, ${formatUpperCaseMissing(
-        msj,
-      )}`
+      finalMessage = `${iconRender} ${
+        negativeAnswer[ramdonNegative]
+      }, ${formatUpperCaseMissing(textMessage)}`
     }
   }
 
-  return finalMsj
+  return finalMessage
 }
