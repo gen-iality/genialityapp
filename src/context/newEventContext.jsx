@@ -5,6 +5,7 @@ import { Actions, AgendaApi, EventsApi, OrganizationApi } from '../helpers/reque
 import { GetTokenUserFirebase } from '../helpers/HelperAuth';
 import { configEventsTemplate } from '../helpers/constants';
 import { firestore } from '@/helpers/firebase';
+import { useIntl } from 'react-intl';
 
 export const cNewEventContext = createContext();
 //INITIAL STATE
@@ -87,6 +88,7 @@ export const NewEventProvider = ({ children }) => {
   const [venue, setVenue] = useState('');
   const [address, setAddress] = useState('');
   const [state, dispatch] = useReducer(reducer, initialState);
+  const intl = useIntl();
 
   async function OrganizationsList() {
     dispatch({ type: 'LOADING' });
@@ -387,14 +389,14 @@ export const NewEventProvider = ({ children }) => {
                 const data = {
                   useCountdown: true,
                   dateLimit: selectedDateEvent?.from + ':00',
-                  countdownMessage: 'El evento inicia en',
-                  countdownFinalMessage: 'Ha terminado el evento',
+                  countdownMessage: intl.formatMessage({id: 'the_event_start_at', defaultMessage: 'El evento inicia en'}),
+                  countdownFinalMessage: intl.formatMessage({id: 'the_event_has_ended', defaultMessage: 'Ha terminado el evento'}),
                 };
                 const respApi = await EventsApi.editOne(data, result._id);
                 if (respApi?._id) {
                   DispatchMessageService({
                     type: 'success',
-                    msj: 'Evento creado correctamente...',
+                    msj: intl.formatMessage({id: 'event_successfully_created', defaultMessage: 'Evento creado correctamente...'}),
                     action: 'show',
                   });
                   window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
@@ -402,7 +404,7 @@ export const NewEventProvider = ({ children }) => {
               } else {
                 DispatchMessageService({
                   type: 'error',
-                  msj: 'Error al crear evento con su template',
+                  msj: intl.formatMessage({id: 'error_creating_event_with_template', defaultMessage: 'Error al crear evento con su template'}),
                   action: 'show',
                 });
               }
@@ -410,7 +412,7 @@ export const NewEventProvider = ({ children }) => {
           } else {
             DispatchMessageService({
               type: 'error',
-              msj: 'Error al crear el evento',
+              msj: intl.formatMessage({id: 'error_creating_event', defaultMessage: 'Error al crear el evento'}),
               action: 'show',
             });
             dispatch({ type: 'COMPLETE' });
@@ -418,7 +420,7 @@ export const NewEventProvider = ({ children }) => {
         } else {
           DispatchMessageService({
             type: 'error',
-            msj: 'Error al crear el evento',
+            msj: intl.formatMessage({id: 'error_creating_event', defaultMessage: 'Error al crear el evento'}),
             action: 'show',
           });
           dispatch({ type: 'COMPLETE' });
@@ -427,7 +429,7 @@ export const NewEventProvider = ({ children }) => {
         console.error('CATCH==>', error);
         DispatchMessageService({
           type: 'error',
-          msj: 'Error al crear el evento catch',
+          msj: intl.formatMessage({id: 'error_creating_event_catch', defaultMessage: 'Error al crear el evento catch'}),
           action: 'show',
         });
         dispatch({ type: 'COMPLETE' });
@@ -435,7 +437,7 @@ export const NewEventProvider = ({ children }) => {
     } else {
       DispatchMessageService({
         type: 'error',
-        msj: 'Seleccione una organización',
+        msj: intl.formatMessage({id: 'select_organization', defaultMessage: 'Seleccione una organización'}),
         action: 'show',
       });
     }
