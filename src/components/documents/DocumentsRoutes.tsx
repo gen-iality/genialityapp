@@ -1,10 +1,16 @@
-import { Fragment } from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Fragment, FunctionComponent } from 'react'
+import { Route, Switch } from 'react-router-dom'
 import Documents from './documents'
 import Document from './Document'
 
-function DocumentsRoutes(props) {
+interface IDocumentsRoutesProps {
+  event: any
+  matchUrl: string
+}
+
+const DocumentsRoutes: FunctionComponent<IDocumentsRoutesProps> = (props) => {
   const { event, matchUrl } = props
+
   return (
     <Fragment>
       <Switch>
@@ -23,4 +29,4 @@ function DocumentsRoutes(props) {
   )
 }
 
-export default withRouter(DocumentsRoutes)
+export default DocumentsRoutes
