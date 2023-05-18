@@ -41,6 +41,7 @@ import QuizzesProgress from '../quiz/QuizzesProgress'
 
 import { CerticationsApi } from '@helpers/request'
 import { useCurrentUser } from '@context/userContext'
+import { NewEventProvider } from '@context/newEventContext'
 
 const { Content, Sider } = Layout
 const { TabPane } = Tabs
@@ -397,15 +398,17 @@ const MainProfile = () => {
                         ) : (
                           <>
                             <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                              {organizationsLimited.length > 0 ? (
-                                <NewCard
-                                  entityType="event"
-                                  cUser={cUser}
-                                  org={organizationsLimited}
-                                />
-                              ) : (
-                                <NewCard entityType="event" cUser={cUser} />
-                              )}
+                              <NewEventProvider>
+                                {organizationsLimited.length > 0 ? (
+                                  <NewCard
+                                    entityType="event"
+                                    cUser={cUser}
+                                    org={organizationsLimited}
+                                  />
+                                ) : (
+                                  <NewCard entityType="event" cUser={cUser} />
+                                )}
+                              </NewEventProvider>
                             </Col>
                             {/* aqui empieza el mapeo de eventCard.jsx maximo 4 */}
                             {eventsLimited.length > 0 &&
@@ -491,11 +494,13 @@ const MainProfile = () => {
                         ) : (
                           <>
                             <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                              <NewCard
-                                entityType="organization"
-                                cUser={cUser}
-                                fetchItem={fetchItem}
-                              />
+                              <NewEventProvider>
+                                <NewCard
+                                  entityType="organization"
+                                  cUser={cUser}
+                                  fetchItem={fetchItem}
+                                />
+                              </NewEventProvider>
                             </Col>
                             {/* aqui empieza el mapeo maximo 6 */}
                             {organizationsLimited.length > 0 &&
@@ -528,11 +533,13 @@ const MainProfile = () => {
                 ) : (
                   <Row gutter={[16, 16]}>
                     <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                      <NewCard
-                        entityType="organization"
-                        cUser={cUser}
-                        fetchItem={fetchItem}
-                      />
+                      <NewEventProvider>
+                        <NewCard
+                          entityType="organization"
+                          cUser={cUser}
+                          fetchItem={fetchItem}
+                        />
+                      </NewEventProvider>
                     </Col>
                     {organizations.length > 0 &&
                       organizations.map((organization, index) => {
@@ -551,15 +558,17 @@ const MainProfile = () => {
                 ) : (
                   <Row gutter={[16, 16]}>
                     <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                      {organizationsLimited.length > 0 ? (
-                        <NewCard
-                          entityType="event"
-                          cUser={cUser}
-                          org={organizationsLimited}
-                        />
-                      ) : (
-                        <NewCard entityType="event" cUser={cUser} />
-                      )}
+                      <NewEventProvider>
+                        {organizationsLimited.length > 0 ? (
+                          <NewCard
+                            entityType="event"
+                            cUser={cUser}
+                            org={organizationsLimited}
+                          />
+                        ) : (
+                          <NewCard entityType="event" cUser={cUser} />
+                        )}
+                      </NewEventProvider>
                     </Col>
                     {events.map((event, index) => {
                       return (
