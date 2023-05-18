@@ -13,3 +13,7 @@ export interface IMessage {
     timestamp: string;
     iduser: string;
 }
+
+export interface IConfigChat {
+    message_controlled: boolean;
+}

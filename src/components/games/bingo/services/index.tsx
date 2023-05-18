@@ -8,7 +8,7 @@ import {
 } from '../interfaces/bingo';
 import { firestore, firestoreeviuschat } from '@/helpers/firebase';
 import firebase from 'firebase/compat';
-import { IMessage } from '@/components/events/ChatExport/interface/message.interface';
+import { IConfigChat, IMessage } from '@/components/events/ChatExport/interface/message.interface';
 
 // --------------------- Api Bingo Services ---------------------
 export const CreateBingo = async (event: string, data: { name: string }) => {
@@ -387,14 +387,80 @@ export const listeningMessages = (eventId: string, setData: (messages: IMessage[
   const INITIAL_MESSAGES = 50;
   return firestoreeviuschat
     .collection(`messagesevent_${eventId}`)
-    .orderBy('fecha', 'desc')
+    .orderBy('fecha', 'asc')
     .limit(INITIAL_MESSAGES)
     .onSnapshot((snapshot) => {
       if (!snapshot.empty) {
-        const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IMessage));
+        const data = snapshot.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() } as IMessage))
+          .filter((msg) => msg.visible !== true);
         setData(data);
       } else {
         setData([]);
       }
     });
+};
+export const listeningConfigChat = (eventId: string, setData: (configChat: IConfigChat | undefined) => void) => {
+  return firestore
+    .collection(`events`)
+    .doc(eventId)
+    .onSnapshot((snapshot) => {
+      if (snapshot.exists) {
+        const data: IConfigChat = snapshot.data()?.configChat as IConfigChat;
+        setData(data);
+      } else {
+        setData(undefined);
+      }
+    });
+};
+export const updateConfigChat = async (eventId: string, configChat: IConfigChat) => {
+  try {
+    await firestore
+      .collection(`events`)
+      .doc(eventId)
+      .update({ configChat });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+export const getEventConfigChat = async (eventId: string): Promise<IConfigChat | undefined> => {
+  try {
+    const requestMeetings = await firestore
+      .collection('events')
+      .doc(eventId)
+      .get();
+    const data = requestMeetings.data();
+    return data?.configChat;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteMessages = async (eventId: string, messageEventId: string) => {
+  try {
+    await firestoreeviuschat
+      .collection(`messagesevent_${eventId}`)
+      .doc(messageEventId)
+      .delete();
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+export const approveMessages = async (eventId: string, messageEventId: string) => {
+  try {
+    await firestoreeviuschat
+      .collection(`messagesevent_${eventId}`)
+      .doc(messageEventId)
+      .update({ visible: true });
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 };

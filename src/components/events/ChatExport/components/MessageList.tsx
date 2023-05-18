@@ -2,6 +2,8 @@ import { Button, Space, Table, Tag, Tooltip } from 'antd';
 import React from 'react';
 import useListeningMessage from '../hooks/useListeningMessage';
 import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import { approveMessages, deleteMessages } from '@/components/games/bingo/services';
+import { DispatchMessageService } from '@/context/MessageService';
 
 interface IMessageListProps {
   eventId: string;
@@ -39,6 +41,19 @@ const columns = [
 
 const MessageList = ({ eventId }: IMessageListProps) => {
   const { messages, isLoading } = useListeningMessage(eventId);
+
+  const onDeleteMessage = async (messageEventId: string) => {
+    const epa = await deleteMessages(eventId, messageEventId);
+    if (epa) return DispatchMessageService({ type: 'success', action: 'show', msj: 'Se elimino el mensaje con exito' });
+    DispatchMessageService({ type: 'info', action: 'show', msj: 'No se pudo eliminar el mensaje con exito' });
+  };
+
+  const onApproveMessage = async (messageEventId: string) => {
+    const epa = await approveMessages(eventId, messageEventId);
+    if (epa) return DispatchMessageService({ type: 'success', action: 'show', msj: 'Se aprobo el mensaje con exito' });
+    DispatchMessageService({ type: 'info', action: 'show', msj: 'No se pudo aprobar el mensaje' });
+  };
+
   return (
     <>
       <Table
@@ -50,10 +65,12 @@ const MessageList = ({ eventId }: IMessageListProps) => {
             key: 'action',
             render: (_, record) => (
               <Space size='middle'>
-                <Button type='primary' icon={<CheckCircleOutlined />}>
+                <Button onClick={() => onApproveMessage(record.key)} type='primary' icon={<CheckCircleOutlined />}>
                   Aprobar
                 </Button>
-                <Button icon={<DeleteOutlined />}>Desaprobar</Button>
+                <Button onClick={() => onDeleteMessage(record.key)} icon={<DeleteOutlined />}>
+                  Desaprobar
+                </Button>
               </Space>
             ),
           },
