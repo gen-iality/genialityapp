@@ -8,7 +8,6 @@ export interface StepProps {
   isActive?: boolean | number
   isSurvey?: boolean
   key?: string
-  /* onChangeFunction?: any; */
   id?: string
   onClick?: () => void
 }
