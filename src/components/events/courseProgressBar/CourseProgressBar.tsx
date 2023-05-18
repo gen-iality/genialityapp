@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Tooltip } from 'antd'
+import { Spin, Tooltip } from 'antd'
 
 import { activityContentValues } from '@context/activityType/constants/ui'
 
@@ -29,6 +29,8 @@ function CourseProgressBar(props: CourseProgressBarProps) {
   const { activities, eventUser, eventId } = props
 
   const [attendees, setAttendees] = useState<any[]>([])
+  const [watchedActivityId, setWatchedActivityId] = useState<undefined | string>()
+  const [isLoading, setIsLoading] = useState(false)
 
   const location = useLocation()
 
@@ -51,8 +53,21 @@ function CourseProgressBar(props: CourseProgressBarProps) {
   }
 
   useEffect(() => {
-    requestAttendees().then().finally()
-  }, [activities, location.pathname])
+    setIsLoading(true)
+    requestAttendees()
+      .then()
+      .finally(() => setIsLoading(false))
+  }, [activities, location])
+
+  // We don't have access to the param activity_id using useMatch because this
+  // component is upside of the EventSectionRoutes, then the activity_id will be
+  // taken from the url by parsing
+  useEffect(() => {
+    const urlCompleta = location.pathname
+    const urlSplited = urlCompleta.split('activity/')
+    const currentActivityId = urlSplited[1]
+    setWatchedActivityId(currentActivityId)
+  }, [location])
 
   const activityAndAttendeeList = useMemo(
     () =>
@@ -91,7 +106,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                       ])
                     }
                   }}
-                  id={activity._id}
+                  isFocus={activity._id === watchedActivityId}
                   key={activity._id}
                   isActive={activity.isViewed}
                   isSurvey={[
@@ -113,7 +128,9 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                       : 'sin contenido'
                     ).toLowerCase()}`}
                   >
-                    {index + 1}
+                    <Spin spinning={isLoading && activity._id === watchedActivityId}>
+                      {index + 1}
+                    </Spin>
                   </Tooltip>
                 </Step>
               </Link>
