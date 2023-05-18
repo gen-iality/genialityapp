@@ -1,6 +1,6 @@
 import { Col, Modal, Row, List } from 'antd'
 import { useEffect, useState } from 'react'
-import { useContextNewEvent } from '@context/newEventContext'
+import { useNewEventContext } from '@context/newEventContext'
 import { OrganizationApi } from '@helpers/request'
 import OptTranmitir from './optTransmitir'
 import { DispatchMessageService } from '@context/MessageService'
@@ -14,7 +14,7 @@ function Transmitir(props) {
     selectedOrganization,
     isbyOrganization,
     setLoadingOrganization,
-  } = useContextNewEvent()
+  } = useNewEventContext()
   const [organizations, setOrganizations] = useState([])
 
   useEffect(() => {

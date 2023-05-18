@@ -103,7 +103,11 @@ const ContentContainer = () => {
           </PrivateRoute>
           <PrivateRoute path="/eventadmin/:event" component={EventAdminPage} />
           <PrivateRoute path="/orgadmin/:event" component={EventAdminPage} />
-          <PrivateRoute path="/create-event" component={NewEventPage} />
+          <PrivateRoute path="/create-event">
+            <NewEventProvider>
+              <NewEventPage />
+            </NewEventProvider>
+          </PrivateRoute>
           <RouteContext
             exact
             path="/organization/:id/events"
@@ -186,28 +190,26 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         <CurrentEventProvider>
           <CurrentUserEventProvider>
             <CurrentUserProvider>
-              <NewEventProvider>
-                <HelperContextProvider>
-                  <AgendaContextProvider>
-                    <SurveysProvider>
-                      <Layout style={{ minHeight: '100vh' }}>
-                        <Header />
-                        {cUser.value ? (
-                          <Component {...props} />
-                        ) : cUser.value == null && cUser.status == 'LOADED' ? (
-                          <>
-                            <ModalAuth isPrivateRoute />
+              <HelperContextProvider>
+                <AgendaContextProvider>
+                  <SurveysProvider>
+                    <Layout style={{ minHeight: '100vh' }}>
+                      <Header />
+                      {cUser.value ? (
+                        <Component {...props} />
+                      ) : cUser.value == null && cUser.status == 'LOADED' ? (
+                        <>
+                          <ModalAuth isPrivateRoute />
 
-                            <ForbiddenPage />
-                          </>
-                        ) : (
-                          <Spin />
-                        )}
-                      </Layout>
-                    </SurveysProvider>
-                  </AgendaContextProvider>
-                </HelperContextProvider>
-              </NewEventProvider>
+                          <ForbiddenPage />
+                        </>
+                      ) : (
+                        <Spin />
+                      )}
+                    </Layout>
+                  </SurveysProvider>
+                </AgendaContextProvider>
+              </HelperContextProvider>
             </CurrentUserProvider>
           </CurrentUserEventProvider>
         </CurrentEventProvider>

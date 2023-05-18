@@ -4,7 +4,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import ModalCreateOrg from './modalCreateOrg'
 import ModalOrgListCreate from '@components/events/createEvent/newEvent/ModalOrgListCreate'
 import functionCreateNewOrganization from './functionCreateNewOrganization'
-import { useContextNewEvent, NewEventActionEnum } from '@context/newEventContext'
+import { useNewEventContext, NewEventActionEnum } from '@context/newEventContext'
 
 // Componente modal para la creacion de una organizacion <ModalCreateOrg/>
 
@@ -12,7 +12,7 @@ const NewCard = (props) => {
   const entity = props.entityType ? props.entityType : 'event'
   const [modalCreateOrgIsVisible, setModalCreateOrgIsVisible] = useState(false)
   const [modalListOrgIsVisible, setModalListOrgIsVisible] = useState(false)
-  const { dispatch } = useContextNewEvent()
+  const { dispatch } = useNewEventContext()
 
   const newOrganization = () => {
     setModalCreateOrgIsVisible(true)

@@ -122,7 +122,7 @@ const initialState: NewEventState = {
   event_type: 'onlineEvent',
 }
 
-export const cNewEventContext = createContext<NewEventContextType>(
+export const NewEventContext = createContext<NewEventContextType>(
   {} as NewEventContextType,
 )
 
@@ -539,7 +539,7 @@ export const NewEventProvider = ({ children }: any) => {
     }
   }, [selectedDateEvent])
   return (
-    <cNewEventContext.Provider
+    <NewEventContext.Provider
       value={{
         addDescription,
         typeTransmission,
@@ -586,15 +586,15 @@ export const NewEventProvider = ({ children }: any) => {
       }}
     >
       {children}
-    </cNewEventContext.Provider>
+    </NewEventContext.Provider>
   )
 }
 
-export const useContextNewEvent = () => {
-  const context = useContext(cNewEventContext)
+export const useNewEventContext = () => {
+  const context = useContext(NewEventContext)
   if (!context) {
-    throw new Error('useContextNewEvent debe estar dentro del proveedor')
+    throw new Error('useNewEventContext debe estar dentro del proveedor')
   }
   return context
 }
-export default cNewEventContext
+export default NewEventContext
