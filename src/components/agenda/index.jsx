@@ -16,9 +16,7 @@ function AgendaRoutes({ ...props }) {
         <Route
           exact
           path={`${matchUrl}/`}
-          render={(routeProps) => (
-            <Agenda event={event} matchUrl={routeProps.match.url} />
-          )}
+          render={() => <Agenda event={event} parentUrl={matchUrl} />}
         />
         {/* <Route exact path={`${matchUrl}/activity`} render={() => <ActivityTypeProvider><AgendaEdit event={event} matchUrl={matchUrl} /></ActivityTypeProvider>} /> */}
         <Route
@@ -26,7 +24,11 @@ function AgendaRoutes({ ...props }) {
           path={`${matchUrl}/activity`}
           render={(routeProps) => (
             <ActivityTypeProvider>
-              <AgendaEditPage event={event} matchUrl={routeProps.match.url} />
+              <AgendaEditPage
+                event={event}
+                parentUrl={matchUrl}
+                matchUrl={routeProps.match.url}
+              />
             </ActivityTypeProvider>
           )}
         />
