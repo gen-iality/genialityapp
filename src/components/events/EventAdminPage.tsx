@@ -1,5 +1,5 @@
-import { Component } from 'react'
-import { Route, Redirect, Switch, Link } from 'react-router-dom'
+import { Component, FunctionComponent } from 'react'
+import { Route, Redirect, Switch, Link, RouteProps } from 'react-router-dom'
 import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import Loading from '../loaders/loading'
@@ -8,7 +8,7 @@ import ListEventUser from '../event-users'
 import { fetchRol } from '../../redux/rols/actions'
 import { fetchPermissions } from '../../redux/permissions/actions'
 import connect from 'react-redux/es/connect/connect'
-import ChatExport from './ChatExport/'
+import ChatExport from './ChatExport'
 import Espacios from '../espacios'
 import Herramientas from '../herramientas'
 import Menu from './shared/menu'
@@ -19,7 +19,7 @@ import ErrorServe from '../modal/serverError'
 import AgendaRoutes from '../agenda'
 import ModulePage from '../agenda/ModulePage'
 import EmpresasRoutes from '../empresas'
-import TriviaRoutes from '../trivia'
+import TriviaRoutes from '../trivia/TriviaRoutes'
 import DocumentsRoutes from '../documents'
 import Speakers from '../speakers'
 import MenuLanding from '../menuLanding'
@@ -49,8 +49,8 @@ const { Sider, Content } = Layout
 
 // Code splitting
 const General = loadable(() => import('./general'))
-const Informativesection = loadable(() =>
-  import('../events/informativeSections/adminInformativeSection'),
+const Informativesection = loadable(
+  () => import('./informativeSections/adminInformativeSection'),
 )
 
 //invitations
@@ -73,26 +73,35 @@ const EventsTicket = loadable(() => import('../ticketsEvent'))
 dayjs.locale('es')
 momentLocalizer()
 
+interface IProtected extends RouteProps {
+  event?: any
+  url?: string
+}
+
+const Protected: FunctionComponent<IProtected> = (props) => {
+  const { render, event, url, ...rest } = props
+
+  return (
+    <Route
+      {...rest}
+      render={(routeProps) =>
+        event?.user_properties && event?.user_properties?.length > 0 ? (
+          <ValidateAccessRouteCms>{render && render(routeProps)}</ValidateAccessRouteCms>
+        ) : (
+          <Redirect push to={`${url}/agenda`} />
+        )
+      }
+    />
+  )
+}
+
 class Event extends Component {
   constructor(props) {
     super(props)
     this.state = {
       loading: true,
-      generalTab: true,
-      guestTab: true,
-      ticketTab: true,
-      styleTab: true,
-      menuMobile: false,
-      ConfigurationApp: true,
-      NotificationsApp: true,
-      CreateSuervey: true,
-      NewsApp: true,
-      SurveysCreate: true,
-      FAQS: true,
-      Trivia: true,
       event: null,
       collapsed: false,
-      iMustValidate: true,
     }
     this.addNewFieldsToEvent = this.addNewFieldsToEvent.bind(this)
   }
@@ -118,7 +127,7 @@ class Event extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: any, prevState: any) {
     if (prevState.event !== this.state.event) {
       const { event } = this.state
       const eventWithExtraFields = this.addNewFieldsToEvent(event)
@@ -126,7 +135,7 @@ class Event extends Component {
     }
   }
 
-  addNewFieldsToEvent(event) {
+  addNewFieldsToEvent(event: any) {
     // const dateFrom = event.datetime_from.split(' ')
     // const dateTo = event.datetime_to.split(' ')
     event.hour_start = dayjs(event.datetime_from).toDate()
@@ -142,34 +151,29 @@ class Event extends Component {
     this.setState({ newEvent: false })
   }
 
-  handleClick = (e) => {
-    if (!navigator.onLine) e.preventDefault()
-  }
-
-  updateEvent = (event) => {
+  updateEvent = (event: any) => {
     this.setState({ event })
   }
 
-  isUpper(str) {
+  isUpper(str: string) {
     return !/[a-z]/.test(str) && /[A-Z]/.test(str)
   }
 
-  isLowerCase(str) {
+  isLowerCase(str: string) {
     return /[a-z]/.test(str) && !/[A-Z]/.test(str)
   }
 
-  FriendLyUrl(url) {
-    let formatupperorlowercase = url.toString().toLowerCase()
+  FriendLyUrl(url: string) {
+    // TODO: improve this method, pull apart and add tests... please
+    let formatUpperOrLowercase = url.toString()
+
     if (this.isUpper(url.toString())) {
-      formatupperorlowercase = url.toString().toUpperCase()
+      formatUpperOrLowercase = url.toString().toUpperCase()
     } else if (this.isLowerCase(url.toString())) {
-      formatupperorlowercase = url.toString().toLowerCase()
-    } else {
-      formatupperorlowercase = url.toString()
+      formatUpperOrLowercase = url.toString().toLowerCase()
     }
 
-    let encodedUrl = formatupperorlowercase
-    encodedUrl = encodedUrl.split(/\&+/).join('-and-')
+    let encodedUrl = formatUpperOrLowercase.split(/\&+/).join('-and-')
     if (this.isUpper(url)) {
       encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-')
     } else if (this.isLowerCase(url.toString())) {
@@ -187,21 +191,10 @@ class Event extends Component {
     this.setState({ collapsed: !this.state.collapsed })
   }
 
-  /** RESTRICIONES */
-  theEventIsActive = (state) => {
-    const eventId = this.state.event._id
-
-    featureBlockingStatusSave(eventId, state)
-
-    this.setState({
-      iMustValidate: false,
-    })
-  }
-
   render() {
-    const { match, permissions, showMenu } = this.props
-    const { error, collapsed, iMustValidate, event } = this.state
-    const cUser = this.props.cUser?.value
+    const { match, permissions } = this.props
+    const { error, collapsed, event } = this.state
+    console.log('permissions', permissions)
 
     if (this.state.loading || this.props.loading || permissions.loading)
       return <Loading />
@@ -216,7 +209,7 @@ class Event extends Component {
             handleRequestError(error).message
           }`}
           extra={[
-            <Link to={`/`}>
+            <Link key={0} to={`/`}>
               <Button type="primary" key="eventData">
                 Ver más cursos
               </Button>
@@ -271,268 +264,267 @@ class Event extends Component {
               />
               <Protected
                 path={`${match.url}/main`}
-                component={General}
-                eventId={event._id}
                 event={event}
-                updateEvent={this.updateEvent}
-                componentKey="main"
+                render={() => (
+                  <General
+                    eventId={event._id}
+                    event={event}
+                    updateEvent={this.updateEvent}
+                  />
+                )}
               />
               {/* En esta ruta se pueden crear y ver los post de la seccion muro que hay en la landing */}
               <Protected
                 path={`${match.url}/wall`}
-                component={Wall}
-                eventId={event._id}
                 event={event}
-                componentKey="wall"
+                render={() => <Wall eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/datos`}
-                component={Datos}
-                eventId={event._id}
                 event={event}
-                componentKey="datos"
+                render={() => <Datos eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/agenda`}
-                component={AgendaRoutes}
-                eventId={event._id}
                 event={event}
-                updateEvent={this.updateEvent}
-                componentKey="agenda"
+                render={(routeProps) => (
+                  <AgendaRoutes
+                    event={event}
+                    eventId={event._id}
+                    matchUrl={routeProps.match.url}
+                  />
+                )}
               />
               <Protected
                 path={`${match.url}/module`}
-                component={ModulePage}
-                eventId={event._id}
                 event={event}
-                updateEvent={this.updateEvent}
-                componentKey="module"
+                render={() => <ModulePage eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/adminUsers`}
-                component={AdminUsers}
-                eventId={event._id}
                 event={event}
-                componentKey="adminUsers"
+                render={(routeProps) => (
+                  <AdminUsers
+                    eventId={event._id}
+                    event={event}
+                    matchUrl={routeProps.match.url}
+                  />
+                )}
               />
               <Protected
                 path={`${match.url}/empresas`}
-                component={EmpresasRoutes}
                 event={event}
-                componentKey="empresas"
+                render={(routeProps) => (
+                  <EmpresasRoutes event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/trivia`}
-                component={TriviaRoutes}
                 event={event}
-                componentKey="trivia"
+                render={(routeProps) => (
+                  <TriviaRoutes event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/documents`}
-                component={DocumentsRoutes}
                 event={event}
-                componentKey="documents"
+                render={(routeProps) => (
+                  <DocumentsRoutes event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               {/* esta ruta carga en blanco */}
               <Protected
                 path={`${match.url}/conference`}
-                component={ConferenceRoute}
                 event={event}
-                componentKey="conference"
+                render={() => <ConferenceRoute event={event} />}
               />
               <Protected
                 path={`${match.url}/menuLanding`}
-                component={MenuLanding}
                 event={event}
-                componentKey="menuLanding"
+                render={() => <MenuLanding event={event} />}
               />
               <Protected
                 path={`${match.url}/reportNetworking`}
-                component={ReportNetworking}
                 event={event}
-                componentKey="reportNetworking"
+                render={() => <ReportNetworking event={event} />}
               />
               <Protected
                 path={`${match.url}/assistants`}
-                component={ListEventUser}
-                eventId={event._id}
                 event={event}
                 url={match.url}
-                shownAll
+                render={() => (
+                  <ListEventUser shownAll eventId={event._id} event={event} />
+                )}
               />
 
               <Protected
                 path={`${match.url}/chatexport`}
-                component={ChatExport}
-                eventId={event._id}
-                event={event}
                 url={match.url}
+                event={event}
+                render={() => <ChatExport eventId={event._id} event={event} />}
               />
-
               <Protected
                 path={`${match.url}/checkin/:id`}
-                component={ListEventUser}
-                event={event}
-                eventId={event._id}
                 url={match.url}
-                componentKey="checkin"
-                type="activity"
-                shownAll={false}
-                componentKeyToMergingOrAdaptIt="activity-checkin"
+                event={event}
+                render={() => (
+                  <ListEventUser
+                    eventId={event._id}
+                    event={event}
+                    type="activity"
+                    shownAll={false}
+                  />
+                )}
               />
-
               <Protected
                 path={`${match.url}/checkin-actividad`}
-                component={ReportList}
-                eventId={event._id}
-                event={event}
                 url={match.url}
-                componentKey="checkin-actividad"
+                event={event}
+                render={() => <ReportList eventId={event._id} event={event} />}
               />
-
               <Protected
                 path={`${match.url}/informativesection`}
-                component={Informativesection}
-                eventId={event._id}
                 event={event}
                 url={match.url}
+                render={() => <Informativesection eventId={event._id} event={event} />}
               />
               {/** AÚN NO TIENEN PERMISOS */}
               <Protected
                 path={`${match.url}/invitados`}
-                component={InvitedUsers}
-                eventId={event._id}
                 event={event}
-                componentKey="invitados"
+                render={() => (
+                  <InvitedUsers eventId={event._id} event={event} matchUrl={match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/messages`}
-                component={Messages}
                 event={event}
-                componentKey="messages"
+                render={() => <Messages event={event} matchUrl={match.url} />}
               />
               <Protected
                 path={`${match.url}/confirmacion-registro`}
-                component={ConfirmacionRegistro}
                 event={event}
-                componentKey="tconfirmacion-registro"
+                render={() => <ConfirmacionRegistro event={event} />}
               />
               <Protected
                 path={`${match.url}/tipo-asistentes`}
-                component={TipoAsistentes}
                 event={event}
-                componentKey="tipo-asistentes"
+                render={(routeProps) => (
+                  <TipoAsistentes event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/dashboard`}
-                component={DashboardEvent}
-                eventId={event._id}
                 event={event}
-                componentKey="dashboard"
+                render={() => <DashboardEvent eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/badge`}
-                component={BadgeEvent}
-                eventId={event._id}
                 event={event}
-                componentKey="badge"
+                render={() => <BadgeEvent eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/orders`}
-                component={OrdersEvent}
                 event={event}
-                componentKey="orders"
+                render={() => <OrdersEvent event={event} />}
               />
               <Protected
                 path={`${match.url}/certificates`}
-                component={CertificateRoutes}
                 event={event}
-                componentKey="certificados"
+                render={(routeProps) => (
+                  <CertificateRoutes event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/espacios`}
-                component={Espacios}
-                matchUrl={match.url}
                 event={event}
-                componentKey="espacios"
+                render={(routeProps) => (
+                  <Espacios event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/herramientas`}
-                component={Herramientas}
-                matchUrl={match.url}
                 event={event}
-                componentKey="herramientas"
+                render={(routeProps) => (
+                  <Herramientas event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/speakers`}
-                component={Speakers}
                 event={event}
-                eventID={event._id}
-                componentKey="speakers"
+                render={(routeProps) => (
+                  <Speakers
+                    event={event}
+                    eventID={event._id}
+                    matchUrl={routeProps.match.url}
+                  />
+                )}
               />
-
               <Protected
                 path={`${match.url}/styles`}
-                component={Styles}
-                eventId={event._id}
                 event={event}
-                componentKey="styles"
+                render={() => <Styles eventId={event._id} event={event} />}
               />
               {/* Ruta no usada posiblemente es la version 1 de la ruta /menuLanding */}
               <Protected
                 path={`${match.url}/notificationsApp`}
-                component={NotificationsApp}
                 event={event}
-                componentKey="notificationsApp"
+                render={() => <NotificationsApp event={event} />}
               />
               <Protected
                 path={`${match.url}/news`}
-                component={NewsSectionRoutes}
-                eventId={event._id}
                 event={event}
-                componentKey="news"
+                render={() => <NewsSectionRoutes eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/product`}
-                component={ProductSectionRoutes}
-                eventId={event._id}
                 event={event}
-                componentKey="product"
+                render={(routeProps) => (
+                  <ProductSectionRoutes
+                    eventId={event._id}
+                    event={event}
+                    matchUrl={routeProps.match.url}
+                  />
+                )}
               />
               <Protected
                 path={`${match.url}/faqs`}
-                matchUrl={match.url}
-                component={FAQS}
                 event={event}
-                componentKey="faqs"
+                render={(routeProps) => (
+                  <FAQS event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/ticketsEvent`}
-                matchUrl={match.url}
-                component={EventsTicket}
                 event={event}
-                eventId={event._id}
-                componentKey="ticketsEvent"
+                render={(routeProps) => (
+                  <EventsTicket
+                    eventId={event._id}
+                    event={event}
+                    matchUrl={routeProps.match.url}
+                  />
+                )}
               />
               <Protected
                 path={`${match.url}/isolated`}
-                component={IsolatedRoutes}
                 event={this.state.event}
-                componentKey="isolated"
+                render={() => <IsolatedRoutes event={this.state.event} />}
               />
               <Protected
                 path={`${match.url}/timetracking`}
-                component={TimeTrackingRoutes}
                 event={this.state.event}
-                componentKey="timetracking"
+                render={(routeProps) => (
+                  <TimeTrackingRoutes
+                    event={this.state.event}
+                    matchUrl={routeProps.match.url}
+                  />
+                )}
               />
               {/* Este componente se muestra si una ruta no coincide */}
               <Protected
                 path={`${match.url}`}
-                component={NoMatchPage}
                 event={event}
-                eventId={event._id}
-                componentKey="NoMatch"
+                render={() => <NoMatchPage eventId={event._id} event={event} />}
               />
             </Switch>
           </section>
@@ -541,28 +533,6 @@ class Event extends Component {
     )
   }
 }
-
-const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      event?.user_properties && event?.user_properties?.length > 0 ? (
-        <ValidateAccessRouteCms>
-          <Component
-            key="cms"
-            {...props}
-            {...rest}
-            event={event}
-            eventId={eventId}
-            url={url}
-          />
-        </ValidateAccessRouteCms>
-      ) : (
-        <Redirect push to={`${url}/agenda`} />
-      )
-    }
-  />
-)
 
 const mapStateToProps = (state) => ({
   loading: state.rols.loading,

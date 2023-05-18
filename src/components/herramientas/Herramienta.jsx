@@ -60,7 +60,7 @@ const Herramienta = (props) => {
           msj: 'Información guardada correctamente!',
           action: 'show',
         })
-        history.push(`${props.matchUrl}/herramientas`)
+        history.push(`${props.parentUrl}/herramientas`)
       } catch (e) {
         DispatchMessageService({
           key: 'loading',
@@ -118,7 +118,7 @@ const Herramienta = (props) => {
                 msj: 'Se eliminó la información correctamente!',
                 action: 'show',
               })
-              history.push(`${props.matchUrl}/herramientas`)
+              history.push(`${props.parentUrl}/herramientas`)
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',

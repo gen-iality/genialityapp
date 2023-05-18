@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { withRouter, useHistory } from 'react-router-dom'
+import { withRouter, useHistory, useLocation } from 'react-router-dom'
 import { ChromePicker } from 'react-color'
 import { CategoriesAgendaApi, TypesAgendaApi } from '@helpers/request'
 import { handleRequestError } from '@helpers/utils'
@@ -16,9 +16,8 @@ const formLayout = {
 const { confirm } = Modal
 
 const AgendaTypeCatCE = (props) => {
-  const matchUrl = props.match.url
+  const matchUrl = props.matchUrl
   const eventID = props.event._id
-  const locationState = props.location.state //si viene new o edit en el state, si es edit es un id
   const subject = matchUrl.split('/').slice(-1)[0]
   const apiURL =
     subject === 'addcategorias' || subject === 'editcategorias'
@@ -28,6 +27,9 @@ const AgendaTypeCatCE = (props) => {
   const [categoryValues, setCategoryValues] = useState({})
   const [name, setName] = useState('')
   const [color, setColor] = useState('#000000')
+
+  const location = useLocation()
+  const locationState = location.state // If is coming from "new" or "edit" in the state, if "edit", then it is an ID
 
   useEffect(() => {
     if (locationState.edit) {

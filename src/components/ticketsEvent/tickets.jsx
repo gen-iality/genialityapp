@@ -50,12 +50,12 @@ const Tickets = (props) => {
         title="Tickets"
         titleTooltip="Agregue o edite los Tickets que se muestran en la aplicación"
         addUrl={{
-          pathname: `${props.matchUrl}/ticket`,
+          pathname: `${props.parentUrl}/ticket`,
           state: { new: true },
         }}
         columns={columns}
         key="_id"
-        editPath={`${props.matchUrl}/ticket`}
+        editPath={`${props.parentUrl}/ticket`}
         pagination={false}
         actions
         search

@@ -165,7 +165,7 @@ const Document = (props) => {
           })
         }
 
-        if (!props.simpleMode) history.push(`${props.matchUrl}`)
+        if (!props.simpleMode) history.push(`${props.parentUrl}`)
         setLoading(false)
       } catch (e) {
         DispatchMessageService({
@@ -230,7 +230,7 @@ const Document = (props) => {
                   action: 'show',
                 })
               }
-              if (!props.simpleMode) history.push(`${props.matchUrl}`)
+              if (!props.simpleMode) history.push(`${props.parentUrl}`)
               if (typeof props.onRemoveDocumentContent === 'function') {
                 props.onRemoveDocumentContent()
               }

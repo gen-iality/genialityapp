@@ -12,12 +12,12 @@ type UserResponse = {
   questionResponse: string
 }
 
-interface ITriviaResponsesSectionProps {
+interface ITriviaResponsesPageProps {
   surveyId: string
   event: any
 }
 
-const TriviaResponsesSection: React.FunctionComponent<ITriviaResponsesSectionProps> = (
+const TriviaResponsesPage: React.FunctionComponent<ITriviaResponsesPageProps> = (
   props,
 ) => {
   const { surveyId, event } = props
@@ -123,9 +123,9 @@ const TriviaResponsesSection: React.FunctionComponent<ITriviaResponsesSectionPro
   )
 }
 
-TriviaResponsesSection.propTypes = {
+TriviaResponsesPage.propTypes = {
   surveyId: PropTypes.string.isRequired,
   event: PropTypes.object.isRequired,
 }
 
-export default TriviaResponsesSection
+export default TriviaResponsesPage

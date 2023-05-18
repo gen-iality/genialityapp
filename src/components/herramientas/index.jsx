@@ -4,19 +4,19 @@ import Herramientas from './Herramientas'
 import Herramienta from './Herramienta'
 
 function HerramientaRoutes(props) {
-  const { event, match } = props
+  const { event, matchUrl } = props
   return (
     <Fragment>
       <Switch>
         <Route
           exact
-          path={`${match.url}/`}
-          render={() => <Herramientas event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/`}
+          render={() => <Herramientas event={event} parentUrl={matchUrl} />}
         />
         <Route
           exact
-          path={`${match.url}/herramienta`}
-          render={() => <Herramienta event={event} matchUrl={match.url} {...props} />}
+          path={`${matchUrl}/herramienta`}
+          render={() => <Herramienta event={event} parentUrl={matchUrl} {...props} />}
         />
       </Switch>
     </Fragment>

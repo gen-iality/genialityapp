@@ -11,12 +11,12 @@ export interface SurveyQuestion {
     | 'comment'
     | 'text'
     | string
-  choices: string[]
+  choices: string[] | { rows: any[]; columns: any[] }[]
   id: string
   image: string | null
   points: number
-  correctAnswer: string
-  correctAnswerIndex: number
+  correctAnswer: string[]
+  correctAnswerIndex: number[]
 }
 
 export interface SurveyData {

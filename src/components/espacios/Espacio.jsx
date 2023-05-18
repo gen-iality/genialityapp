@@ -56,7 +56,7 @@ const Espacio = (props) => {
           msj: 'Información guardada correctamente!',
           action: 'show',
         })
-        history.push(`${props.matchUrl}/espacios`)
+        history.push(`${props.parentUrl}/espacios`)
       } catch (e) {
         DispatchMessageService({
           key: 'loading',
@@ -109,7 +109,7 @@ const Espacio = (props) => {
                 msj: 'Se eliminó la información correctamente!',
                 action: 'show',
               })
-              history.push(`${props.matchUrl}/espacios`)
+              history.push(`${props.parentUrl}/espacios`)
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',

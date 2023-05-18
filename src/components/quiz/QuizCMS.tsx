@@ -1,4 +1,4 @@
-import TriviaEdit from '../trivia/edit'
+import TriviaEdit from '../trivia/TriviaEditPage'
 
 export interface QuizCMSProps {
   title: string

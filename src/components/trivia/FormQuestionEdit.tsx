@@ -34,6 +34,7 @@ import { saveImageStorage } from '@helpers/helperSaveImage'
 import { DispatchMessageService } from '@context/MessageService'
 import { uploadImagedummyRequest } from '@Utilities/imgUtils'
 import LikertScaleEditor from '../quiz/LikertScaleEditor'
+import { SurveyQuestion } from '@components/events/surveys/types'
 
 const { Option } = Select
 
@@ -80,8 +81,22 @@ const columns = [
   },
 ]
 
-const FormEdit = (
-  {
+interface ExtendedSurveyQuestion extends SurveyQuestion {
+  [key: string]: any
+}
+
+export interface IFormQuestionEditProps {
+  valuesQuestion: ExtendedSurveyQuestion
+  eventId: string
+  surveyId: string
+  closeModal: any
+  toggleConfirmLoading: any
+  gradableSurvey: any
+  unmountForm: any
+}
+
+const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) => {
+  const {
     valuesQuestion,
     eventId,
     surveyId,
@@ -89,16 +104,14 @@ const FormEdit = (
     toggleConfirmLoading,
     gradableSurvey,
     unmountForm,
-  },
-  ref,
-) => {
-  const [defaultValues, setDefaultValues] = useState({})
-  const [questionId, setQuestionId] = useState('')
+  } = props
+  const [defaultValues, setDefaultValues] = useState<any>({})
+  const [questionId, setQuestionId] = useState<string>('')
   const [questionIndex, setQuestionIndex] = useState(0)
   const [allowGradableSurvey, setAllowGradableSurvey] = useState(false)
-  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null)
-  const [questionType, setQuestionType] = useState(null)
-  const [defaultImgValue, setDefaultImgValue] = useState(null)
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number[]>([])
+  const [questionType, setQuestionType] = useState<string | undefined>()
+  const [defaultImgValue, setDefaultImgValue] = useState<any[] | undefined>()
   const [loading, setLoading] = useState(false)
   /** se almacenan las dimenciones de la imagen para mostarlas en el error */
   const [dimensions, setDimensions] = useState({
@@ -108,34 +121,38 @@ const FormEdit = (
   /** Estado para validar algun error en las dimensiones de la imagen */
   const [wrongDimensions, setWrongDimensions] = useState(false)
   // Order for the ranking correct answers
-  const [rankingCorrectAnswers, setRankingCorrectAnswers] = useState([])
+  const [rankingCorrectAnswers, setRankingCorrectAnswers] = useState<any[]>([])
   // This stuffs are used for the rating questions
-  const [maxRateDescription, setMaxRateDescription] = useState('Completely satisfied')
-  const [rateMax, setRateMax] = useState(10)
-  const [minRateDescription, setMinRateDescription] = useState('Not Satisfied')
-  const [rateMin, setRateMin] = useState(0)
-  const [ratingCorrectAnswer, setRatingCorrectAnswer] = useState()
+  const [maxRateDescription, setMaxRateDescription] =
+    useState<string>('Completely satisfied')
+  const [rateMax, setRateMax] = useState<number>(10)
+  const [minRateDescription, setMinRateDescription] = useState<string>('Not Satisfied')
+  const [rateMin, setRateMin] = useState<number>(0)
+  const [ratingCorrectAnswer, setRatingCorrectAnswer] = useState<any | undefined>()
   // For the likert scale surveys
-  const [likertScaleData, setLikertScaleData] = useState(undefined)
+  const [likertScaleData, setLikertScaleData] = useState<any | undefined>()
 
   const [form] = Form.useForm()
 
   useEffect(() => {
     if (valuesQuestion.image && valuesQuestion.image !== null) {
-      setDefaultImgValue(valuesQuestion.image)
+      const images = Array.isArray(valuesQuestion.image)
+        ? valuesQuestion.image
+        : [valuesQuestion.image]
+      setDefaultImgValue(images)
     } else {
-      setDefaultImgValue(null)
+      setDefaultImgValue(undefined)
     }
 
     return () => {
-      setDefaultImgValue(null)
+      setDefaultImgValue(undefined)
       setWrongDimensions(false)
       unmountForm()
       setRankingCorrectAnswers([])
     }
   }, [])
 
-  const editRankingCorrectAnswer = (index, value) => {
+  const editRankingCorrectAnswer = (index: number, value: any) => {
     const newRecord = [...rankingCorrectAnswers]
     newRecord[index] = value
     setRankingCorrectAnswers(newRecord)
@@ -145,7 +162,7 @@ const FormEdit = (
    * Build a fake correct answer index for the ranking type.
    * @param {number} size The field size.
    */
-  const buildFakeCorrectAnswerIndexForRankingType = (size) => {
+  const buildFakeCorrectAnswerIndexForRankingType = (size: number) => {
     setCorrectAnswerIndex(Array.from(Array(size).keys()))
   }
 
@@ -191,7 +208,7 @@ const FormEdit = (
             width: width,
             height: height,
           })
-          setDefaultImgValue(null)
+          setDefaultImgValue(undefined)
           setWrongDimensions(true)
 
           return false
@@ -212,7 +229,7 @@ const FormEdit = (
 
     if (valuesQuestion.type) {
       const choice = selectOptions.find((option) => option.text === valuesQuestion.type)
-      setQuestionType(choice.value)
+      setQuestionType(choice ? choice.value : choice)
     }
 
     if (valuesQuestion.type === 'Rating') {
@@ -226,7 +243,11 @@ const FormEdit = (
 
     setAllowGradableSurvey(state)
 
-    setCorrectAnswerIndex(valuesQuestion.correctAnswerIndex)
+    if (Array.isArray(valuesQuestion.correctAnswerIndex)) {
+      setCorrectAnswerIndex(valuesQuestion.correctAnswerIndex)
+    } else {
+      setCorrectAnswerIndex([valuesQuestion.correctAnswerIndex])
+    }
     // Load rankingCorrectAnswers
     if (valuesQuestion.type === 'Ranking') {
       ;(valuesQuestion.correctAnswer || []).forEach((answer, index) => {
@@ -254,15 +275,15 @@ const FormEdit = (
     }, 500)
   }, [form, valuesQuestion])
 
-  const handleRadio = (e) => {
+  const handleRadio = (e: any) => {
     setCorrectAnswerIndex(e.target.value)
   }
 
-  const handleCheckbox = (value) => {
+  const handleCheckbox = (value: any[]) => {
     setCorrectAnswerIndex(value.sort((a, b) => a - b))
   }
 
-  const handleFunction = (value) => {
+  const handleFunction = (value: string) => {
     setQuestionType(value)
     setCorrectAnswerIndex(value === 'radiogroup' ? null : [])
   }
@@ -336,17 +357,23 @@ const FormEdit = (
       values.image = imageUrl
     }
 
+    const fixedCorrectAnswerIndex = Array.isArray(correctAnswerIndex)
+      ? correctAnswerIndex.map((x) => x || 0)
+      : [correctAnswerIndex || 0]
+
     if (allowGradableSurvey) {
       switch (questionType) {
         case 'radiogroup':
-          values['correctAnswer'] = values.choices && values.choices[correctAnswerIndex]
-          values['correctAnswerIndex'] = correctAnswerIndex
+          values['correctAnswer'] =
+            values.choices && values.choices[fixedCorrectAnswerIndex[0]]
+          values['correctAnswerIndex'] = fixedCorrectAnswerIndex
           break
 
         case 'checkbox':
           values['correctAnswer'] =
-            values.choices && searchWithMultipleIndex(values.choices, correctAnswerIndex)
-          values['correctAnswerIndex'] = correctAnswerIndex
+            values.choices &&
+            searchWithMultipleIndex(values.choices, fixedCorrectAnswerIndex)
+          values['correctAnswerIndex'] = fixedCorrectAnswerIndex
           break
 
         case 'ranking':
@@ -354,19 +381,20 @@ const FormEdit = (
           const sortted = sortChoicesByRanking(values.choices, rankingCorrectAnswers)
           console.debug(values.choices, rankingCorrectAnswers, sortted)
           values['correctAnswer'] = sortted
-          values['correctAnswerIndex'] = correctAnswerIndex
+          values['correctAnswerIndex'] = fixedCorrectAnswerIndex
           break
 
         case 'rating':
           values['isRequired'] = true
           values['correctAnswer'] = ratingCorrectAnswer
-          values['correctAnswerIndex'] = correctAnswerIndex
+          values['correctAnswerIndex'] = fixedCorrectAnswerIndex
           break
 
         case 'matrix':
           values['correctAnswer'] = likertScaleData?.values || []
           values['isRequired'] = true
-          values['correctAnswerIndex'] = correctAnswerIndex
+          values['correctAnswerIndex'] = fixedCorrectAnswerIndex
+          break
 
         default:
           break
@@ -394,16 +422,18 @@ const FormEdit = (
 
     const pointsValue = values.points ? values.points : '1'
     const dataValues = { ...values, points: pointsValue }
-    const exclude = ({ questionOptions, ...rest }) => rest
+
+    const exclude = (data: any) => {
+      delete data.questionOptions
+      return data
+    }
+
     if (questionIndex === undefined) {
       try {
         SurveysApi.createQuestion(eventId, surveyId, exclude(dataValues)).then(() => {
           form.resetFields()
           closeModal({ questionIndex, data: exclude(dataValues) }, 'created')
-          DispatchMessageService({
-            key: 'loading',
-            action: 'destroy',
-          })
+          DispatchMessageService({ key: 'loading', action: 'destroy' })
           DispatchMessageService({
             type: 'success',
             msj: 'Pregunta creada',
@@ -411,10 +441,7 @@ const FormEdit = (
           })
         })
       } catch (err) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
+        DispatchMessageService({ key: 'loading', action: 'destroy' })
         DispatchMessageService({
           type: 'error',
           msj: 'Problema creando la pregunta!',
@@ -426,10 +453,7 @@ const FormEdit = (
         .then(() => {
           form.resetFields()
           closeModal({ questionIndex, data: exclude(dataValues) }, 'updated')
-          DispatchMessageService({
-            key: 'loading',
-            action: 'destroy',
-          })
+          DispatchMessageService({ key: 'loading', action: 'destroy' })
           DispatchMessageService({
             type: 'success',
             msj: 'Pregunta actualizada',
@@ -437,6 +461,7 @@ const FormEdit = (
           })
         })
         .catch((err) => {
+          console.error(err)
           DispatchMessageService({
             key: 'loading',
             action: 'destroy',
@@ -451,7 +476,7 @@ const FormEdit = (
   }
 
   function handleRemoveImg() {
-    setDefaultImgValue(null)
+    setDefaultImgValue(undefined)
   }
 
   if (Object.entries(defaultValues).length !== 0) {
@@ -503,7 +528,7 @@ const FormEdit = (
                           placeholder="Seleccione una Opcion"
                           onChange={handleFunction}
                         >
-                          {field.selectOptions.map((option, index) =>
+                          {field.selectOptions.map((option: any, index: number) =>
                             option.text ? (
                               <Option key={`type${index}`} value={option.value}>
                                 {option.text}
@@ -554,7 +579,7 @@ const FormEdit = (
                           placeholder="Seleccione una Opción"
                           onChange={handleFunction}
                         >
-                          {field.selectOptions.map((option, index) =>
+                          {field.selectOptions.map((option: any, index: number) =>
                             option.text ? (
                               <Option key={`type${index}`} value={option.value}>
                                 {option.text}
@@ -582,14 +607,17 @@ const FormEdit = (
                     listType="picture"
                     maxCount={1}
                     /** Se envia el blob del upload para validar las dimensiones */
-                    action={(file) => validatingImageDimensions(file)}
+                    action={(file) => {
+                      validatingImageDimensions(file)
+                    }}
                     onChange={(file) => {
+                      console.log('file:', file.fileList)
                       if (file.fileList.length > 0) {
                         setDefaultImgValue(file.fileList)
                         setWrongDimensions(false)
                       } else {
                         setWrongDimensions(false)
-                        setDefaultImgValue(null)
+                        setDefaultImgValue(undefined)
                       }
                     }}
                     customRequest={uploadImagedummyRequest}
@@ -978,6 +1006,8 @@ const FormEdit = (
   } else {
     return null
   }
-}
+})
 
-export default forwardRef(FormEdit)
+FormQuestionEdit.displayName = 'FormQuestionEdit'
+
+export default FormQuestionEdit

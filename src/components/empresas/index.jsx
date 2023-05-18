@@ -4,9 +4,7 @@ import CrearEditarEmpresa from './crearEditarEmpresa'
 import Empresas from './empresas'
 import Stands from './gestionStands'
 
-function EmpresasRoutes({ event, match }) {
-  const matchUrl = match.url
-
+function EmpresasRoutes({ event, matchUrl }) {
   return (
     <Switch>
       <Route

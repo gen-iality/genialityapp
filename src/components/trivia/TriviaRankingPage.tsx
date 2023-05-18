@@ -1,5 +1,4 @@
-import { Component, Fragment } from 'react'
-import { withRouter } from 'react-router-dom'
+import { useEffect, FunctionComponent, useState } from 'react'
 import dayjs from 'dayjs'
 import { utils, writeFileXLSX } from 'xlsx'
 
@@ -7,8 +6,13 @@ import { getTriviaRanking } from './services'
 
 import Header from '@antdComponents/Header'
 import Table from '@antdComponents/Table'
+import { ColumnsType } from 'antd/lib/table'
+import { Button } from 'antd'
+import { VerticalAlignBottomOutlined } from '@ant-design/icons'
 
-const columns = [
+type UserResponseType = any // TODO: define this, and move to Utilities/types
+
+const columns: ColumnsType<UserResponseType> = [
   {
     title: 'Creado',
     dataIndex: 'registerDate',
@@ -45,32 +49,29 @@ const columns = [
     sorter: (a, b) => a.correctAnswers - b.correctAnswers,
   },
 ]
-class Ranking extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      nameQuestion: '',
-      listOfUserResponse: [],
+
+export interface ITriviaRankingPageProps {
+  surveyId: string
+}
+
+const TriviaRankingPage: FunctionComponent<ITriviaRankingPageProps> = (props) => {
+  const { surveyId } = props
+
+  const [listOfUserResponse, setListOfUserResponse] = useState<any[]>([])
+
+  const loadData = async () => {
+    const response = await getTriviaRanking(surveyId)
+    setListOfUserResponse(response)
+  }
+
+  const exportReport = () => {
+    const exclude = (data: any) => {
+      delete data._id
+      return data
     }
-  }
-
-  loadData = async () => {
-    const { match } = this.props
-    const response = await getTriviaRanking(match.params.id)
-    this.setState({ listOfUserResponse: response })
-  }
-
-  componentDidMount() {
-    this.loadData()
-  }
-
-  exportReport = () => {
-    const { listOfUserResponse } = this.state
-
-    // eslint-disable-next-line no-unused-vars
-    const exclude = ({ _id, ...rest }) => rest
 
     const data = listOfUserResponse.map((item) => exclude(item))
+    console.debug('data of user responses', data)
 
     for (let i = 0; data.length > i; i++) {
       if (Array.isArray(data[i].response)) {
@@ -80,30 +81,29 @@ class Ranking extends Component {
     const ws = utils.json_to_sheet(data)
     const wb = utils.book_new()
     utils.book_append_sheet(wb, ws, 'ranking')
-    const name = `${this.props.match.params.id}`
 
-    writeFileXLSX(wb, `ranking_${name}_${dayjs().format('DDMMYY')}.xls`)
+    writeFileXLSX(wb, `ranking_${surveyId}_${dayjs().format('DDMMYY')}.xls`)
   }
 
-  goBack = () => this.props.history.goBack()
+  useEffect(() => {
+    loadData()
+  }, [])
 
-  render() {
-    const { nameQuestion, listOfUserResponse } = this.state
+  return (
+    <>
+      <Header title="Ranking" back />
 
-    return (
-      <Fragment>
-        <Header title="Ranking" back />
-
-        <Table
-          header={columns}
-          list={listOfUserResponse}
-          pagination={false}
-          exportData
-          fileName="Ranking"
-        />
-      </Fragment>
-    )
-  }
+      <Button icon={<VerticalAlignBottomOutlined />} onClick={exportReport}>
+        Exportar
+      </Button>
+      <Table
+        header={columns}
+        list={listOfUserResponse}
+        pagination={false}
+        fileName="Ranking"
+      />
+    </>
+  )
 }
 
-export default withRouter(Ranking)
+export default TriviaRankingPage

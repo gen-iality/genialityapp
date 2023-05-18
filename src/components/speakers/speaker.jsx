@@ -30,11 +30,10 @@ function Speaker(props) {
     eventID,
     location: { state },
     history,
-    matchUrl,
+    parentUrl,
     justCreate,
   } = props
-  const match = matchUrl.split('/').slice(0)[1]
-  const newCategoryUrl = `/${match}/` + eventID // Ruta creada para el boton de nueva categoria /event/[eventID]
+  const match = parentUrl.split('/').slice(0)[1]
 
   const [data, setData] = useState({
     name: '',
@@ -265,7 +264,7 @@ function Speaker(props) {
     </Select>
   )
 
-  if (!props.location.state || redirect) return <Redirect to={matchUrl} />
+  if (!props.location.state || redirect) return <Redirect to={parentUrl} />
 
   return (
     <Form onFinish={() => submit(data)} {...formLayout}>
