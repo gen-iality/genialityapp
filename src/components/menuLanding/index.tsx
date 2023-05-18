@@ -210,11 +210,11 @@ const initialMenu: IMenuItem = {
 
 const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
   const [menu, setMenu] = useState<any>(initialMenu)
-  const [itemsMenu, setItemsMenu] = useState<any>({})
+  const [menuItems, setMenuItems] = useState<any>({})
   const [keySelect, setKeySelect] = useState(Date.now())
   const [isLoading, setIsLoading] = useState(true)
 
-  const loadItemsMenuData = async () => {
+  const loadMenuItemsData = async () => {
     console.debug('requesting menu items from back-end')
     const menuBase = { ...menu }
     let menuLanding: any = {}
@@ -226,8 +226,8 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
       // Obtener de organización
 
       menuLanding.itemsMenu = props.organizationObj.itemsMenu || []
-      const newItemsMenu = menuLanding.itemsMenu
-      setItemsMenu(newItemsMenu) // I think this is going thus
+      const newMenuItems = menuLanding.itemsMenu
+      setMenuItems(newMenuItems) // I think this is going thus
     }
 
     for (const menuBaseProp in menuBase) {
@@ -250,13 +250,13 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
 
   /**
    * Given a menu items, sort according of their position attribute.
-   * @param itemsMenu menuItems to sort
+   * @param menuItems menuItems to sort
    * @returns A sortted menu items
    */
-  const orderItemsMenu = (itemsMenu: any) => {
-    let itemsMenuData: any = {}
-    const itemsMenuToSave: any = {}
-    let items: any[] = Object.values(itemsMenu)
+  const orderMenuItems = (menuItems: any) => {
+    let menuItemsData: any = {}
+    const menuItemsToSave: any = {}
+    let items: any[] = Object.values(menuItems)
 
     items = items.map((item) => {
       return {
@@ -267,12 +267,12 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
 
     items.sort((a, b) => (a.position || 0) - (b.position || 0))
 
-    itemsMenuData = Object.assign({}, items)
+    menuItemsData = Object.assign({}, items)
 
-    for (const item in itemsMenuData) {
-      itemsMenuToSave[itemsMenuData[item].section] = itemsMenuData[item]
+    for (const item in menuItemsData) {
+      menuItemsToSave[menuItemsData[item].section] = menuItemsData[item]
     }
-    return itemsMenuToSave
+    return menuItemsToSave
   }
 
   const submit = async () => {
@@ -283,7 +283,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
       action: 'show',
     })
 
-    const menu = orderItemsMenu(itemsMenu)
+    const menu = orderMenuItems(menuItems)
     const newMenu = { itemsMenu: { ...menu } }
 
     /*if (newMenu.itemsMenu.tickets) {
@@ -360,7 +360,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
 
     if (!name || !name.trim()) return
 
-    if (!itemsMenu[key]) return
+    if (!menuItems[key]) return
 
     menuBase[key].name = name
 
@@ -379,7 +379,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
 
     if (!position && position !== 0) return
 
-    if (!itemsMenu[key]) return
+    if (!menuItems[key]) return
 
     menuBase[key].position = position
 
@@ -398,7 +398,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
 
     if (!markup || !markup.trim()) return
 
-    if (!itemsMenu[key]) return
+    if (!menuItems[key]) return
 
     menuBase[key].markup = markup
 
@@ -417,7 +417,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
 
     if (!access || !access.trim()) return
 
-    if (!itemsMenu[key]) return
+    if (!menuItems[key]) return
 
     menuBase[key].permissions = access
 
@@ -435,13 +435,13 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
   }
 
   useEffect(() => {
-    loadItemsMenuData().finally(() => setIsLoading(false))
+    loadMenuItemsData().finally(() => setIsLoading(false))
   }, [])
 
   useEffect(() => {
     const menuEntries = Object.entries({ ...menu }) as [string, any][]
     const onlyCheckedMenuEntries = menuEntries.filter((entry) => entry[1].checked)
-    setItemsMenu(Object.fromEntries(onlyCheckedMenuEntries))
+    setMenuItems(Object.fromEntries(onlyCheckedMenuEntries))
   }, [menu])
 
   return (
