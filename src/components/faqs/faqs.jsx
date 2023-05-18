@@ -37,12 +37,12 @@ const Faqs = (props) => {
       title="Preguntas frecuentes"
       titleTooltip="Agregue o edite las Preguntas frecuentes que se muestran en la aplicación"
       addUrl={{
-        pathname: `${props.matchUrl}/faq`,
+        pathname: `${props.parentUrl}/faq`,
         state: { new: true },
       }}
       columns={columns}
       key="_id"
-      editPath={`${props.matchUrl}/faq`}
+      editPath={`${props.parentUrl}/faq`}
       pagination={false}
       actions
       search

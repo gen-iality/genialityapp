@@ -66,7 +66,7 @@ const Ticket = (props) => {
           msj: 'Información guardada correctamente!',
           action: 'show',
         })
-        history.push(`${props.matchUrl}/ticketsEvent`)
+        history.push(`${props.parentUrl}/ticketsEvent`)
       } catch (e) {
         DispatchMessageService({
           key: 'loading',
@@ -115,7 +115,7 @@ const Ticket = (props) => {
                 msj: 'Se eliminó la información correctamente!',
                 action: 'show',
               })
-              history.push(`${props.matchUrl}/ticketsEvent`)
+              history.push(`${props.parentUrl}/ticketsEvent`)
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',

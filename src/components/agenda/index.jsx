@@ -8,48 +8,57 @@ import AgendaEditPage from './AgendaEditPage'
 import AgendaCreatorPage from './AgendaCreatorPage'
 
 function AgendaRoutes({ ...props }) {
-  const { event, match } = props
+  const { event, matchUrl } = props
+
   return (
     <Fragment>
       <Switch>
         <Route
           exact
-          path={`${match.url}/`}
-          render={() => <Agenda event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/`}
+          render={(routeProps) => (
+            <Agenda event={event} matchUrl={routeProps.match.url} />
+          )}
         />
-        {/* <Route exact path={`${match.url}/activity`} render={() => <ActivityTypeProvider><AgendaEdit event={event} matchUrl={match.url} /></ActivityTypeProvider>} /> */}
+        {/* <Route exact path={`${matchUrl}/activity`} render={() => <ActivityTypeProvider><AgendaEdit event={event} matchUrl={matchUrl} /></ActivityTypeProvider>} /> */}
         <Route
           exact
-          path={`${match.url}/activity`}
-          render={() => (
+          path={`${matchUrl}/activity`}
+          render={(routeProps) => (
             <ActivityTypeProvider>
-              <AgendaEditPage event={event} matchUrl={match.url} />
+              <AgendaEditPage event={event} matchUrl={routeProps.match.url} />
             </ActivityTypeProvider>
           )}
         />
         <Route
           exact
-          path={`${match.url}/create-activity`}
-          render={() => (
+          path={`${matchUrl}/create-activity`}
+          render={(routeProps) => (
             <ActivityTypeProvider>
-              <AgendaCreatorPage event={event} matchUrl={match.url} />
+              <AgendaCreatorPage event={event} matchUrl={routeProps.match.url} />
             </ActivityTypeProvider>
           )}
         />
         <Route
           exact
-          path={`${match.url}/tipos`}
-          render={() => <AgendaTypeCat event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/tipos`}
+          render={(routeProps) => (
+            <AgendaTypeCat event={event} matchUrl={routeProps.match.url} />
+          )}
         />
         <Route
           exact
-          path={`${match.url}/categorias`}
-          render={() => <AgendaTypeCat event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/categorias`}
+          render={(routeProps) => (
+            <AgendaTypeCat event={event} matchUrl={routeProps.match.url} />
+          )}
         />
         <Route
           exact
-          path={`${match.url}/:subject`}
-          render={() => <AgendaTypeCatCE event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/:subject`}
+          render={(routeProps) => (
+            <AgendaTypeCatCE event={event} matchUrl={routeProps.match.url} />
+          )}
         />
       </Switch>
     </Fragment>

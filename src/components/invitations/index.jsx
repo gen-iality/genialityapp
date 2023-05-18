@@ -6,10 +6,10 @@ import ImportUsers from '../import-users/importUser'
 import { EventsApi } from '@helpers/request'
 
 function ListaInvitados({ ...props }) {
-  const { eventId, event, match, location } = props
+  const { eventId, event, matchUrl, location } = props
 
   useEffect(() => {
-    if (match.path === `/eventAdmin/${eventId}/invitados`) {
+    if (matchUrl === `/eventAdmin/${eventId}/invitados`) {
       obtenerEvento()
     }
 
@@ -17,7 +17,7 @@ function ListaInvitados({ ...props }) {
       const respEvento = await EventsApi.getOne(eventId)
       setUserProperties(respEvento.user_properties)
     }
-  }, [match])
+  }, [matchUrl])
 
   const [guestSelected, setGuestSelected] = useState([])
   const [userProperties, setUserProperties] = useState([])
@@ -27,38 +27,32 @@ function ListaInvitados({ ...props }) {
       <Switch>
         <Route
           exact
-          path={`${match.url}/`}
+          path={`${matchUrl}/`}
           render={() => (
             <InvitedUsers
               event={event}
               eventID={eventId}
-              matchUrl={match.url}
               setGuestSelected={setGuestSelected}
             />
           )}
         />
         <Route
           exact
-          path={`${match.url}/createmessage`}
+          path={`${matchUrl}/createmessage`}
           render={() => (
-            <CreateMessage
-              event={event}
-              eventID={eventId}
-              matchUrl={match.url}
-              selection={guestSelected}
-            />
+            <CreateMessage event={event} eventID={eventId} selection={guestSelected} />
           )}
         />
 
         <Route
           exact
-          path={`${match.url}/importar-excel`}
+          path={`${matchUrl}/importar-excel`}
           render={() => (
             <ImportUsers
               extraFields={userProperties}
               eventId={eventId}
               event={event}
-              matchUrl={match.url}
+              parentUrl={matchUrl}
               locationParams={location}
             />
           )}

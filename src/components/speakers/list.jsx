@@ -228,7 +228,7 @@ function SpeakersList(props) {
         title="Conferencistas"
         titleTooltip="Agregue o edite las personas que son conferencistas"
         addUrl={{
-          pathname: `${props.matchUrl}/speaker`,
+          pathname: `${props.parentUrl}/speaker`,
           state: { new: true },
         }}
         /* listLenght={sortAndIndexSpeakers()} */

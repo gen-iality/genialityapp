@@ -304,9 +304,7 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/wall`}
                 event={event}
-                render={() => (
-                  <Wall eventId={event._id} event={event} matchUrl={match.url} />
-                )}
+                render={() => <Wall eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/datos`}
@@ -322,11 +320,11 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/agenda`}
                 event={event}
-                render={() => (
+                render={(routeProps) => (
                   <AgendaRoutes
                     event={event}
                     eventId={event._id}
-                    matchUrl={match.url}
+                    matchUrl={routeProps.match.url}
                     updateEvent={this.updateEvent}
                   />
                 )}
@@ -345,14 +343,20 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/adminUsers`}
                 event={event}
-                render={() => (
-                  <AdminUsers eventId={event._id} event={event} matchUrl={match.url} />
+                render={(routeProps) => (
+                  <AdminUsers
+                    eventId={event._id}
+                    event={event}
+                    matchUrl={routeProps.match.url}
+                  />
                 )}
               />
               <Protected
                 path={`${match.url}/empresas`}
                 event={event}
-                render={() => <EmpresasRoutes event={event} matchUrl={match.url} />}
+                render={(routeProps) => (
+                  <EmpresasRoutes event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/trivia`}
@@ -364,37 +368,32 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/documents`}
                 event={event}
-                render={() => <DocumentsRoutes event={event} matchUrl={match.url} />}
+                render={(routeProps) => (
+                  <DocumentsRoutes event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               {/* esta ruta carga en blanco */}
               <Protected
                 path={`${match.url}/conference`}
                 event={event}
-                render={() => <ConferenceRoute event={event} matchUrl={match.url} />}
+                render={() => <ConferenceRoute event={event} />}
               />
               <Protected
                 path={`${match.url}/menuLanding`}
                 event={event}
-                render={() => <MenuLanding event={event} matchUrl={match.url} />}
+                render={() => <MenuLanding event={event} />}
               />
               <Protected
                 path={`${match.url}/reportNetworking`}
                 event={event}
-                render={() => <ReportNetworking event={event} matchUrl={match.url} />}
+                render={() => <ReportNetworking event={event} />}
               />
               <Protected
                 path={`${match.url}/assistants`}
                 event={event}
                 url={match.url}
-                render={(routeProps) => (
-                  <ListEventUser
-                    shownAll
-                    match={routeProps.match}
-                    location={routeProps.match}
-                    eventId={event._id}
-                    event={event}
-                    matchUrl={match.url}
-                  />
+                render={() => (
+                  <ListEventUser shownAll eventId={event._id} event={event} />
                 )}
               />
 
@@ -402,9 +401,7 @@ class Event extends Component {
                 path={`${match.url}/chatexport`}
                 url={match.url}
                 event={event}
-                render={() => (
-                  <ChatExport eventId={event._id} event={event} matchUrl={match.url} />
-                )}
+                render={() => <ChatExport eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/checkin/:id`}
@@ -416,8 +413,6 @@ class Event extends Component {
                     event={event}
                     type="activity"
                     shownAll={false}
-                    componentKeyToMergingOrAdaptIt="activity-checkin"
-                    matchUrl={match.url}
                   />
                 )}
               />
@@ -425,21 +420,13 @@ class Event extends Component {
                 path={`${match.url}/checkin-actividad`}
                 url={match.url}
                 event={event}
-                render={() => (
-                  <ReportList eventId={event._id} event={event} matchUrl={match.url} />
-                )}
+                render={() => <ReportList eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/informativesection`}
                 event={event}
                 url={match.url}
-                render={() => (
-                  <Informativesection
-                    eventId={event._id}
-                    event={event}
-                    matchUrl={match.url}
-                  />
-                )}
+                render={() => <Informativesection eventId={event._id} event={event} />}
               />
               {/** AÚN NO TIENEN PERMISOS */}
               <Protected
@@ -457,103 +444,105 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/confirmacion-registro`}
                 event={event}
-                render={() => <ConfirmacionRegistro event={event} matchUrl={match.url} />}
+                render={() => <ConfirmacionRegistro event={event} />}
               />
               <Protected
                 path={`${match.url}/tipo-asistentes`}
                 event={event}
-                render={() => <TipoAsistentes event={event} matchUrl={match.url} />}
+                render={(routeProps) => (
+                  <TipoAsistentes event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/dashboard`}
                 event={event}
-                render={() => (
-                  <DashboardEvent
-                    eventId={event._id}
-                    event={event}
-                    matchUrl={match.url}
-                  />
-                )}
+                render={() => <DashboardEvent eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/badge`}
                 event={event}
-                render={() => (
-                  <BadgeEvent eventId={event._id} event={event} matchUrl={match.url} />
-                )}
+                render={() => <BadgeEvent eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/orders`}
                 event={event}
-                render={() => <OrdersEvent event={event} matchUrl={match.url} />}
+                render={() => <OrdersEvent event={event} />}
               />
               <Protected
                 path={`${match.url}/certificates`}
                 event={event}
-                render={() => <CertificateRoutes event={event} matchUrl={match.url} />}
+                render={(routeProps) => (
+                  <CertificateRoutes event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/espacios`}
                 event={event}
-                render={() => <Espacios event={event} matchUrl={match.url} />}
+                render={(routeProps) => (
+                  <Espacios event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/herramientas`}
                 event={event}
-                render={() => <Herramientas event={event} matchUrl={match.url} />}
+                render={(routeProps) => (
+                  <Herramientas event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/speakers`}
                 event={event}
-                render={() => (
-                  <Speakers event={event} eventID={event._id} matchUrl={match.url} />
+                render={(routeProps) => (
+                  <Speakers
+                    event={event}
+                    eventID={event._id}
+                    matchUrl={routeProps.match.url}
+                  />
                 )}
               />
               <Protected
                 path={`${match.url}/styles`}
                 event={event}
-                render={() => (
-                  <Styles eventId={event._id} event={event} matchUrl={match.url} />
-                )}
+                render={() => <Styles eventId={event._id} event={event} />}
               />
               {/* Ruta no usada posiblemente es la version 1 de la ruta /menuLanding */}
               <Protected
                 path={`${match.url}/notificationsApp`}
                 event={event}
-                render={() => <NotificationsApp event={event} matchUrl={match.url} />}
+                render={() => <NotificationsApp event={event} />}
               />
               <Protected
                 path={`${match.url}/news`}
                 event={event}
-                render={() => (
-                  <NewsSectionRoutes
-                    eventId={event._id}
-                    event={event}
-                    matchUrl={match.url}
-                  />
-                )}
+                render={() => <NewsSectionRoutes eventId={event._id} event={event} />}
               />
               <Protected
                 path={`${match.url}/product`}
                 event={event}
-                render={() => (
+                render={(routeProps) => (
                   <ProductSectionRoutes
                     eventId={event._id}
                     event={event}
-                    matchUrl={match.url}
+                    matchUrl={routeProps.match.url}
                   />
                 )}
               />
               <Protected
                 path={`${match.url}/faqs`}
                 event={event}
-                render={() => <FAQS event={event} matchUrl={match.url} />}
+                render={(routeProps) => (
+                  <FAQS event={event} matchUrl={routeProps.match.url} />
+                )}
               />
               <Protected
                 path={`${match.url}/ticketsEvent`}
                 event={event}
-                render={() => (
-                  <EventsTicket eventId={event._id} event={event} matchUrl={match.url} />
+                render={(routeProps) => (
+                  <EventsTicket
+                    eventId={event._id}
+                    event={event}
+                    matchUrl={routeProps.match.url}
+                  />
                 )}
               />
               <Protected
@@ -564,8 +553,11 @@ class Event extends Component {
               <Protected
                 path={`${match.url}/timetracking`}
                 event={this.state.event}
-                render={() => (
-                  <TimeTrackingRoutes event={this.state.event} matchUrl={match.url} />
+                render={(routeProps) => (
+                  <TimeTrackingRoutes
+                    event={this.state.event}
+                    matchUrl={routeProps.match.url}
+                  />
                 )}
               />
               {/* Este componente se muestra si una ruta no coincide */}

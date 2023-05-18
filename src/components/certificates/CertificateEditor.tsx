@@ -125,7 +125,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         action: 'show',
       })
 
-      history.push(`${props.matchUrl}`)
+      history.push(`${props.parentUrl}`)
     } catch (e) {
       DispatchMessageService({
         key: 'loading',
@@ -167,7 +167,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
               msj: 'Se eliminó la información correctamente!',
               action: 'show',
             })
-            history.push(`${props.matchUrl}`)
+            history.push(`${props.parentUrl}`)
           } catch (e) {
             DispatchMessageService({
               key: 'loading',

@@ -6,19 +6,19 @@ import Document from './Document'
 /* import DocumentsPermission from './filePermission_old'; */
 
 function DocumentsRoutes({ ...props }) {
-  const { event, match } = props
+  const { event, matchUrl } = props
   return (
     <Fragment>
       <Switch>
         <Route
           exact
-          path={`${match.url}/`}
-          render={() => <Documents event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/`}
+          render={() => <Documents event={event} parentUrl={matchUrl} />}
         />
         <Route
           exact
-          path={`${match.url}/document`}
-          render={() => <Document event={event} matchUrl={match.url} {...props} />}
+          path={`${matchUrl}/document`}
+          render={() => <Document event={event} parentUrl={matchUrl} {...props} />}
         />
       </Switch>
     </Fragment>

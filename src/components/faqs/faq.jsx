@@ -63,7 +63,7 @@ const Faq = (props) => {
           msj: 'Información guardada correctamente!',
           action: 'show',
         })
-        history.push(`${props.matchUrl}/faqs`)
+        history.push(`${props.parentUrl}/faqs`)
       } catch (e) {
         DispatchMessageService({
           key: 'loading',
@@ -116,7 +116,7 @@ const Faq = (props) => {
                 msj: 'Se eliminó la información correctamente!',
                 action: 'show',
               })
-              history.push(`${props.matchUrl}/faqs`)
+              history.push(`${props.parentUrl}/faqs`)
             } catch (e) {
               DispatchMessageService({
                 key: 'loading',

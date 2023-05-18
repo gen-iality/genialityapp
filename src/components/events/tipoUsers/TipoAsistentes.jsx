@@ -28,11 +28,11 @@ const TipoAsistentes = (props) => {
         title="Organizadores"
         titleTooltip="Administre los organizadores que se muestran en la aplicación"
         addUrl={{
-          pathname: `${props.matchUrl}/tipoAsistente`,
+          pathname: `${props.parentUrl}/tipoAsistente`,
           state: { new: true },
         }}
         columns={columns}
-        editPath={`${props.matchUrl}/tipoAsistente`}
+        editPath={`${props.parentUrl}/tipoAsistente`}
         pagination={false}
         actions
       />

@@ -32,7 +32,7 @@ import {
 } from 'antd'
 
 import updateAttendees from './eventUserRealTime'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import {
   EditOutlined,
   FullscreenOutlined,
@@ -1495,4 +1495,4 @@ class ListEventUser extends Component {
   }
 }
 
-export default ListEventUser
+export default withRouter(ListEventUser)
