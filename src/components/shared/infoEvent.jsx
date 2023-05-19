@@ -13,7 +13,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
 	let cEvent = UseEventContext();
 	let cEventValues = cEvent.value;
 	const screens = useBreakpoint();
-
+	
 	// console.log('Soy una landing');
 
 	const bgColor = cEventValues?.styles?.toolbarDefaultBg;
@@ -45,7 +45,7 @@ const InfoEvent = ({ paddingOff, preview }) => {
 							<EventAccessActionContainer />
 						) : (
 							<Button style={{ color: textColor, backgroundColor: bgColor }} type='primary' size='large'>
-								{intl.formatMessage({id: 'signup_event', defaultMessage: 'Incribirme al evento'})}
+								{intl.formatMessage({id: 'signup_event', defaultMessage: 'Inscribirme al evento'})}
 							</Button>
 						)}
 					</>
