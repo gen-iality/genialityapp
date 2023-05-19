@@ -12,11 +12,13 @@ import {
 	informativeMessagesInterface,
 } from '../interfaces/interfaces';
 import { assignStatusAccordingToAction } from './utils/utils';
+import { useIntl } from 'react-intl';
 
 const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 	let cEvent = UseEventContext();
 	const cUser = UseUserEvent();
 	const history = useHistory();
+	const intl = useIntl();
 	const initialButtonsState = [{ label: 'INITIAL_STATE', action: () => {} }];
 	const informativeMessagesState = [{ label: 'INITIAL_STATE' }];
 	const bgColor = cEvent?.value?.styles?.toolbarDefaultBg;
@@ -66,6 +68,7 @@ const EventAccessAction = ({ eventAction }: EventAccessActionInterface) => {
 			helperDispatch,
 			cEvent: eventData || cEvent,
 			history,
+			intl
 		};
 
 		assignStatusAccordingToAction(assignStatusAccordingToActionParams);

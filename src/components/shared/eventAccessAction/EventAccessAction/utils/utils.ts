@@ -4,6 +4,7 @@ import {
 	informativeMessagesInterface,
 	internalOrExternalEventInterface,
 } from '../../interfaces/interfaces';
+import { useIntl } from 'react-intl';
 
 type Status = 'withURL' | 'noURL';
 
@@ -81,13 +82,23 @@ export const assignStatusAccordingToAction = ({
 	helperDispatch,
 	cEvent,
 	history,
+	intl
 }: any) => {
 	let buttonsAction: EventAccessActionButtonsInterface[] = initialButtonsState;
 	let informativeMessage: informativeMessagesInterface[] = informativeMessagesState;
 
+	const signup_event = intl.formatMessage({id: 'signup_event', defaultMessage: 'Inscribirme al evento'});
+	const signup = intl.formatMessage({id: 'signup', defaultMessage: '¡INSCRÍBETE!'});
+	const enter_event = intl.formatMessage({id: 'enter_event', defaultMessage: 'Ingresar al evento'});
+	const log_in = intl.formatMessage({id: 'log_in', defaultMessage: 'Iniciar sesión'});
+	const already_registered_event = intl.formatMessage({id: 'already_registered_event', defaultMessage: 'Ya estás inscrito en el evento'});
+	const private_event = intl.formatMessage({id: 'private_event', defaultMessage: 'Evento privado'});
+	const not_invited = intl.formatMessage({id: 'not_invited', defaultMessage: 'No estas invitado'});
+	const has_been_invited_event = intl.formatMessage({id: 'has_been_invited_event', defaultMessage: 'Has sido invitado a este evento'});
+	const INITIAL_STATE = intl.formatMessage({id: 'INITIAL_STATE', defaultMessage: 'INITIAL_STATE'})
 	//Validacion temporal para el evento audi
 	const idEvent = cEvent?._id;
-	const labelAudi: string = idEvent !== '6334782dc19fe2710a0b8753' ? 'Inscribirme al evento' : 'INSCRÍBETE';
+	const labelAudi: string = idEvent !== '6334782dc19fe2710a0b8753' ? signup_event : signup;
 	const bingoExists = !!cEvent?.bingo || !!cEvent?.dynamics?.bingo;
 
 	switch (eventAction) {
@@ -110,14 +121,14 @@ export const assignStatusAccordingToAction = ({
 
 		case 'ACTION_ENTER_THE_EVENT':
 			// Here goes the logic for button 'Ingresar al evento'
-			buttonsAction = [{ label: 'Ingresar al evento', action: () => internalOrExternalEvent({ cEvent, history }) }];
+			buttonsAction = [{ label: enter_event, action: () => internalOrExternalEvent({ cEvent, history }) }];
 			setButtonsActions(buttonsAction);
 			break;
 
 		case 'ACTION_LOG_IN_OR_REGISTER_FOR_THE_EVENT':
 			buttonsAction = [
-				{ label: 'Iniciar sesión', action: () => helperDispatch({ type: 'showLogin', visible: true }) },
-				{ label: 'Inscribirme al evento', action: () => helperDispatch({ type: 'showRegister', visible: true }) },
+				{ label: log_in, action: () => helperDispatch({ type: 'showLogin', visible: true }) },
+				{ label: signup_event, action: () => helperDispatch({ type: 'showRegister', visible: true }) },
 			];
 			// if (bingoExists) buttonsAction.push({ label: 'Imprimir cartón', action: () => helperDispatch({ type: 'showRegister', visible: true }) },)
 
@@ -132,37 +143,37 @@ export const assignStatusAccordingToAction = ({
 			break;
 
 		case 'MESSAGE_YOU_ARE_ALREADY_REGISTERED':
-			informativeMessage = [{ label: 'Ya estás inscrito en el evento' }];
+			informativeMessage = [{ label: already_registered_event }];
 			setInformativeMessage(informativeMessage);
 			break;
 
 		case 'ACTION_LOGIN_AND_PRIVATE_EVENT_MESSAGE':
 			buttonsAction = [
 				{
-					label: 'Iniciar sesión',
+					label: log_in,
 					action: () => helperDispatch({ type: 'showLogin', visible: true }),
 				},
 			];
-			informativeMessage = [{ label: 'Evento privado' }];
+			informativeMessage = [{ label: private_event }];
 
 			setButtonsActions(buttonsAction);
 			setInformativeMessage(informativeMessage);
 			break;
 
 		case 'PRIVATE_EVENT_MESSAGE_AND_MESSAGE_YOU_ARE_NOT_INVITED':
-			informativeMessage = [{ label: 'No estas invitado' }, { label: 'Evento privado' }];
+			informativeMessage = [{ label: not_invited }, { label: private_event }];
 
 			setInformativeMessage(informativeMessage);
 			break;
 
 		case 'MESSAGE_YOU_ARE_INVITED':
-			informativeMessage = [{ label: 'Has sido invitado a este evento' }];
+			informativeMessage = [{ label: has_been_invited_event }];
 
 			setInformativeMessage(informativeMessage);
 			break;
 
 		case 'NO_ACTION':
-			informativeMessage = [{ label: 'INITIAL_STATE' }];
+			informativeMessage = [{ label: INITIAL_STATE }];
 
 			setInformativeMessage(informativeMessage);
 			break;

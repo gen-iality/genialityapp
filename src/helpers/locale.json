@@ -354,7 +354,14 @@
     "error_creating_event": "Error creating the event",
     "error_creating_event_catch": "Error creating catch event",
     "select_organization": "Select an organization",
-    "search": "Search"
+    "search": "Search",
+    "signup": "SIGN UP!",
+    "enter_event": "Enter to the event",
+    "already_registered_event": "You are already registered for the event",
+    "private_event": "Private event",
+    "not_invited": "You are not invited",
+    "has_been_invited_event": "You have been invited to this event",
+    "INITIAL_STATE": "Initial state"
   },
   "es": {
     "header.help": "Ayuda",
@@ -720,7 +727,14 @@
     "error_creating_event": "Error al crear el evento",
     "error_creating_event_catch": "Error al crear el evento catch",
     "select_organization": "Seleccione una organización",
-    "search": "Buscar"
+    "search": "Buscar",
+    "signup": "¡INSCRÍBETE!",
+    "enter_event": "Ingresar al evento",
+    "already_registered_event": "Ya estás inscrito en el evento",
+    "private_event": "Evento privado",
+    "not_invited": "No estas invitado",
+    "has_been_invited_event": "Has sido invitado a este evento",
+    "INITIAL_STATE": "Estado inicial"
   },
   "pt": {
     "live.join": "Entrar",
@@ -973,6 +987,13 @@
     "error_creating_event": "Erro ao criar o evento",
     "error_creating_event_catch": "Erro ao criar o evento catch",
     "select_organization": "Seleccionar uma organização",
-    "search": "Pesquisar"
+    "search": "Pesquisar",
+    "signup": "INSCREVA-SE!",
+    "enter_event": "Introduzir o evento",
+    "already_registered_event": "Já está inscrito no evento",
+    "private_event": "Evento particular",
+    "not_invited": "Não está convidado",
+    "has_been_invited_event": "Foi convidado para este evento",
+    "INITIAL_STATE": "Estado inicial"
   }
 }
