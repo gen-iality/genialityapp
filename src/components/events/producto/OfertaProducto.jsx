@@ -20,20 +20,20 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
   useEffect(() => {
     if (product && eventId) {
       obtenerOfertas();
-      if (product.currency == 'USD') {
+      if (product.currency === 'USD') {
         setUsd(true);
         setSelectedValue(50);
       }
       //PUJA BLOQUEDA PARA UN PRODUCTO EN ESPECIFICO, SIRVE PARA NO CAMBIAR EL VALOR A OFRECER
-      if (product && product._id == '6116cae171f4b926d1363266') {
+      if (product && product._id === '6116cae171f4b926d1363266') {
         setBloquearPuja(true);
       }
       setPriceProduct(product && product.price);
       /* console.log('PRODUCT PRICE==>', product.price); */
       setValorProduct(obtenerValor());
-      let minValueUp = product.currency == 'USD' ? 50 : 100000;
+      let minValueUp = product.currency === 'USD' ? 50 : 100000;
       let valueOfertaMin =
-        product._id == '6116cae171f4b926d1363266'
+        product._id === '6116cae171f4b926d1363266'
           ? parseFloat(obtenerValor())
           : parseFloat(obtenerValor()) + minValueUp;
       setValueOferta(valueOfertaMin);
@@ -108,7 +108,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
   //VALIDAR SI TIENE PERMISOS DE PUJAR
   const permission = () => {
     if (cEventUser.value != null) {
-      if (cEventUser.value.rol_id == '60e8a8b7f6817c280300dc23') {
+      if (cEventUser.value.rol_id === '60e8a8b7f6817c280300dc23') {
         return true;
       }
     }
@@ -133,7 +133,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
 
           if (
             valuOferta > valueNumber ||
-            (product && product._id == '6116cae171f4b926d1363266' && valuOferta >= valueNumber)
+            (product && product._id === '6116cae171f4b926d1363266' && valuOferta >= valueNumber)
           ) {
             let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
             if (respuestaApi) {
@@ -145,7 +145,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
               updateValues(true);
             }
           } else {
-            let minValueUp = product.currency == 'USD' ? 50 : 100000;
+            let minValueUp = product.currency === 'USD' ? 50 : 100000;
             let valueOfertaMin = parseFloat(valueNumber) + minValueUp;
             setValueOferta(valueOfertaMin);
             setPriceProduct(valueResp);
@@ -175,7 +175,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
   };
   //BOTON MENOS
   const downvalue = () => {
-    let minValueUp = product.currency == 'USD' ? 50 : 100000;
+    let minValueUp = product.currency === 'USD' ? 50 : 100000;
     if (+valuOferta - selectedValue >= +valorProduct + minValueUp) {
       setValueOferta(+valuOferta - selectedValue);
     }
@@ -183,12 +183,12 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
   return (
     <>
       {/* {console.log(product, 'producto')} */}
-      {product && product._id != '6116cae171f4b926d1363266' && (
+      {product && product._id !== '6116cae171f4b926d1363266' && (
         <Card>
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Text type='secondary'>
-                Precio Inicial:{' '}
+                Precio:{' '}
                 <Title level={4}>
                   {(product &&
                     product.start_price &&
@@ -265,7 +265,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                   </Col>
                 )}
                 <Col>
-                  {permission() && totalOferts == 0 ? (
+                  {permission() && totalOferts === 0 ? (
                     <div>
                       <small>No hay ofertas por esta obra</small>
                     </div>
@@ -304,7 +304,10 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                 )}
                 {!permission() && cEventUser.value !== null ? (
                   <Row>
-                    <Alert type='warning' message='No tienes permisos para pujar sobre esta obra.' />
+                    <Alert
+                      type='warning'
+                      message='No puedes adquirir este producto en este momento, por favor intentalo mas tarde.'
+                    />
                   </Row>
                 ) : (
                   <Row>
@@ -321,7 +324,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
           )}
           {!hability && (
             <div>
-              {messageF && messageF != '<p><br></p>' && (
+              {messageF && messageF !== '<p><br></p>' && (
                 <div
                   dangerouslySetInnerHTML={{
                     __html: messageF ? messageF : 'Sin mensaje',
@@ -332,11 +335,11 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
         </Card>
       )}
 
-      {product && product._id == '6116cae171f4b926d1363266' && (
+      {product && product._id === '6116cae171f4b926d1363266' && (
         <Card>
           <Row justify='center' style={{ color: 'red' }}>
             {' '}
-            La obra está agotada.
+            Producto agotado.
           </Row>
         </Card>
       )}

@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Alert, Button, Card, Col, Divider, Input, message, Row, Space, Spin, Typography } from 'antd';
+import { Card, Col, Divider, Row, Space, Spin, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { EventsApi } from '../../../helpers/request';
 import { IssuesCloseOutlined } from '@ant-design/icons';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
-import { Carousel } from 'react-responsive-carousel';
+// import { Carousel } from 'react-responsive-carousel';
 import { firestore } from '../../../helpers/firebase';
 import OfertaProduct from './OfertaProducto';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper-bundle.css';
+
+
 
 function DetailsProduct(props) {
   const { Title, Text } = Typography;
@@ -49,33 +53,44 @@ function DetailsProduct(props) {
   return (
     <>
       {product && !loading && (
-        <Row style={{ padding: '24px' }} gutter={[8, 8]}>
+        <Row style={{ padding: '10px' }} gutter={[8, 8]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Card style={{ width: '100%', display: 'grid', justifyContent: 'center' }}>
-              <Carousel
-                showThumbs={
-                  product && product.images && product.images.filter((img) => img != null).length === 1 ? false : true
-                }>
+            <Card
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'grid',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Swiper
+                style={{objectFit: 'cover', width: '800px', height: '100%' }}
+                spaceBetween={10}
+                slidesPerView={1}
+                loop={true}
+                pagination={{ type: "progressbar"}}
+                scrollbar={{ draggable: false }}>
                 {product &&
                   product.images &&
                   product.images
                     .filter((img) => img != null)
                     .map((image, index) => (
-                      <img
-                        key={'image' + index}
-                        /* style={{ objectFit: 'contain' }} */
-                        // Imagen seteada 
-                        src={product.images[index]}
-                        alt='arte'
-                      />
+                      <SwiperSlide key={'image' + index} >
+                        <img
+                          style={{ objectFit: 'contain', width: '100%', height: '300px' }}
+                          // Imagen seteada
+                          src={product.images[index]}
+                          alt='producto'
+                        />
+                      </SwiperSlide>
                     ))}
-              </Carousel>
+              </Swiper>
             </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Card>
               <Space direction='vertical' style={{ width: '100%' }}>
-              {/* nombre de la obra Pan */}
+                {/* nombre de la obra Pan */}
                 <Title level={3}>{product && product.name ? product.name : 'Nombre de la obra'}</Title>
                 {/* OfertaProduct "No tienes permisos para pujar sobre esta obra." Precio Inicial:
                   $ 2000 */}
@@ -90,9 +105,9 @@ function DetailsProduct(props) {
                 )}
                 {product && product.by && (
                   <Divider orientation='left'>
-                  {/* autor  */}
+                    {/* autor  */}
                     <Title style={{ marginBottom: '0px' }} level={5}>
-                      Autor
+                      Vendedor
                     </Title>
                   </Divider>
                 )}
@@ -102,7 +117,7 @@ function DetailsProduct(props) {
                   <Title level={5}>Descripción</Title>
                 </Divider>
                 <Text>
-                {/* descripcion  */}
+                  {/* descripcion  */}
                   <div
                     dangerouslySetInnerHTML={{
                       __html: product && product.description ? product.description : 'Sin descripción',
