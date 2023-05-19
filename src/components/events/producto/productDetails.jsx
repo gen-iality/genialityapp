@@ -72,12 +72,12 @@ function DetailsProduct(props) {
                 style={{
                   width: '400px',
                   height: '280px',
-                  margin: "4px"
+                  margin: '4px',
                 }}
                 loop={true}
                 spaceBetween={1}
                 thumbs={{ swiper: thumbsSwiper }}
-                modules={[Navigation, Thumbs]} // Agregar los módulos aquí
+                modules={[Navigation, Thumbs]}
                 freeMode={true}>
                 {product &&
                   product.images &&
@@ -86,37 +86,40 @@ function DetailsProduct(props) {
                     .map((image, index) => (
                       <SwiperSlide key={'image' + index}>
                         <img
-                          style={{ borderRadius:"10px", objectFit: 'contain', width: '100%', height: '280px' }}
+                          style={{ borderRadius: '10px', objectFit: 'contain', width: '100%', height: '280px' }}
                           src={product.images[index]}
                           alt='producto'
                         />
                       </SwiperSlide>
                     ))}
               </Swiper>
-              <Swiper
-              style={{width: "250px", height:"120px"}}
-                onSwiper={setThumbsSwiper}
-                loop={true}
-                spaceBetween={1}
-                slidesPerView={2}
-                freeMode={true}
-                watchSlidesProgress={true}
-                modules={[Navigation, Thumbs]} // Agregar los módulos aquí
-              >
-                {product &&
-                  product.images &&
-                  product.images
-                    .filter((img) => img != null)
-                    .map((image, index) => (
-                      <SwiperSlide key={'thumb' + index} style={{ objectFit: 'contain', width: '100px', height: '100px' }}>
-                        <img
-                           style={{ objectFit: 'cover', width: '100px', height: '100px' }} // Establece un tamaño fijo para la altura
-                          src={product.images[index]}
-                          alt='thumbnail'
-                        />
-                      </SwiperSlide>
-                    ))}
-              </Swiper>
+              {product && product.images && product.images.filter((img) => img != null).length > 1 && (
+                <Swiper
+                  style={{ width: '250px', height: '120px' }}
+                  onSwiper={setThumbsSwiper}
+                  loop={true}
+                  spaceBetween={1}
+                  slidesPerView={2}
+                  freeMode={true}
+                  watchSlidesProgress={true}
+                  modules={[Navigation, Thumbs]}>
+                  {product &&
+                    product.images &&
+                    product.images
+                      .filter((img) => img != null)
+                      .map((image, index) => (
+                        <SwiperSlide
+                          key={'thumb' + index}
+                          style={{ objectFit: 'contain', width: '100px', height: '100px' }}>
+                          <img
+                            style={{ objectFit: 'cover', width: '100px', height: '100px' }}
+                            src={product.images[index]}
+                            alt='thumbnail'
+                          />
+                        </SwiperSlide>
+                      ))}
+                </Swiper>
+              )}
             </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
@@ -135,7 +138,7 @@ function DetailsProduct(props) {
                     eventId={eventId}
                   />
                 )}
-                {product && product.by && (
+                {product && product.by && product.by !== '' && (
                   <Divider orientation='left'>
                     {/* autor  */}
                     <Title style={{ marginBottom: '0px' }} level={5}>
