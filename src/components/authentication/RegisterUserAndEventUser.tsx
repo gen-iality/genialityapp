@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode } from 'react'
-import { Steps, Button, Alert } from 'antd'
+import { Steps, Button, Alert, Form } from 'antd'
 import RegisterFast from './Content/RegisterFast'
 import RegistrationResult from './Content/RegistrationResult'
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline'
@@ -22,6 +22,7 @@ const RegisterUserAndEventUser = ({
   stylePaddingDesktop,
 }: any) => {
   const intl = useIntl()
+  const [form] = Form.useForm()
   const cEvent = useEventContext()
   const [current, setCurrent] = useState(0)
   const [basicDataUser, setbasicDataUser] = useState<any>({
@@ -52,6 +53,9 @@ const RegisterUserAndEventUser = ({
     textError: '',
     statusFields: false,
   })
+
+  const [organization, setOrganization] = useState({})
+  const [existGenialialityUser, setExistGenialialityUser] = useState(false)
 
   const hookValidations = (status: boolean, textError: string) => {
     setValidationGeneral({
@@ -85,6 +89,10 @@ const RegisterUserAndEventUser = ({
         [fieldName]: value,
       })
     }
+  }
+
+  const onSubmit = (values: any) => {
+    setdataEventUser(values)
   }
 
   const steps = [
@@ -140,19 +148,31 @@ const RegisterUserAndEventUser = ({
       }
     } catch (err: any) {
       if (err?.response?.data?.errors?.email[0] === 'email ya ha sido registrado.') {
-        setValidationGeneral({
-          isLoading: false,
-          status: true,
-          textError: intl.formatMessage({
-            id: 'modal.feedback.title.error',
-            defaultMessage:
-              'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
-          }),
-          component: intl.formatMessage({
-            id: 'modal.feedback.title.errorlink',
-            defaultMessage: 'iniciar sesión',
-          }),
-        })
+        if (isAdminPage()) {
+          setCurrent(current + 1)
+          setExistGenialialityUser(true)
+
+          setValidationGeneral({
+            isLoading: false,
+            status: false,
+            textError: '',
+            component: '',
+          })
+        } else {
+          setValidationGeneral({
+            isLoading: false,
+            status: true,
+            textError: intl.formatMessage({
+              id: 'modal.feedback.title.error',
+              defaultMessage:
+                'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
+            }),
+            component: intl.formatMessage({
+              id: 'modal.feedback.title.errorlink',
+              defaultMessage: 'iniciar sesión',
+            }),
+          })
+        }
       } else if (
         err?.response?.data?.errors?.email[0] === 'email no es un correo válido'
       ) {
@@ -216,25 +236,29 @@ const RegisterUserAndEventUser = ({
       }
     }
 
-    createNewUser(basicDataUser)
-      .then((createdUserInfo) => {
-        console.log('createdUserInfo returned:', { createdUserInfo })
-        const { status } = createdUserInfo
+    if (existGenialialityUser) {
+      createEventUser()
+    } else {
+      createNewUser(basicDataUser)
+        .then((createdUserInfo) => {
+          console.log('createdUserInfo returned:', { createdUserInfo })
+          const { status } = createdUserInfo
 
-        if (status === CREATE_NEW_USER_SUCCESS) {
-          createEventUser()
-        } else {
-          setValidationGeneral({
-            status: false,
-            isLoading: false,
-            textError: intl.formatMessage({
-              id: 'text_error.error_creating_user',
-              defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
-            }),
-          })
-        }
-      })
-      .catch((err) => console.error(err))
+          if (status === CREATE_NEW_USER_SUCCESS) {
+            createEventUser()
+          } else {
+            setValidationGeneral({
+              status: false,
+              isLoading: false,
+              textError: intl.formatMessage({
+                id: 'text_error.error_creating_user',
+                defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
+              }),
+            })
+          }
+        })
+        .catch((err) => console.error(err))
+    }
   }
 
   const next = () => {
@@ -251,6 +275,18 @@ const RegisterUserAndEventUser = ({
         status: true,
         textError: '',
       })
+      /* form
+        .validateFields()
+        .then(() => {
+          console.log('3. Validate Fields')
+          form.submit()
+          setValidationGeneral((previous) => ({
+            ...previous,
+            isLoading: true,
+            status: false,
+          }))
+        })
+        .catch((error) => console.log(error)) */
     }
   }
 
@@ -264,6 +300,12 @@ const RegisterUserAndEventUser = ({
       handleSubmit()
     }
   }, [validateEventUser.statusFields])
+
+  /*  useEffect(() => {
+    if (dataEventUser !== undefined) {
+      handleSubmit()
+    }
+  }, [dataEventUser]) */
 
   const prev = () => {
     setCurrent(current - 1)
@@ -303,6 +345,14 @@ const RegisterUserAndEventUser = ({
     } else {
       setbuttonStatus(true)
     }
+  }
+
+  const isAdminPage = () => {
+    const isAdmin = location.pathname.includes('admin')
+
+    if (isAdmin) {
+      return true
+    } else return false
   }
 
   useEffect(() => {
