@@ -3,6 +3,8 @@ import { FormattedDate, FormattedTime } from 'react-intl'
 import { fireRealtime, firestore } from '@helpers/firebase'
 import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request'
 import { AgendaApi, OrganizationApi } from '@helpers/request'
+import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
+
 import UserModal from '../modal/modalUser'
 import ErrorServe from '../modal/serverError'
 import { utils, writeFileXLSX } from 'xlsx'
@@ -29,6 +31,7 @@ import {
   Tooltip,
   Select,
   Modal,
+  Checkbox,
 } from 'antd'
 
 import updateAttendees from './eventUserRealTime'
@@ -68,6 +71,7 @@ const ModalWithLessonsInfo = ({
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [activities, setActivities] = useState([])
+  const [shouldUpdate, setshouldUpdate] = useState(0)
 
   useEffect(async () => {
     if (!currentUser) return
@@ -89,30 +93,33 @@ const ModalWithLessonsInfo = ({
     )
     setActivities(viewedActivities.map((activity) => activity.name))
     setLoaded(true)
-  }, [allActivities, attendee, currentUser])
+  }, [allActivities, attendee, currentUser, shouldUpdate])
 
   const Content = () => {
-    if (attendee.length === 0) {
-      return <p>No ha visto ningún curso</p>
-    }
-
     if (loaded) {
-      if (activities.length) {
-        return (
-          <List
-            header={<Text strong>Lecciones vistas</Text>}
-            // bordered
-            dataSource={activities}
-            renderItem={(item) => (
-              <List.Item>
-                <CheckOutlined /> {item}
-              </List.Item>
-            )}
-          />
-        )
-        // return (activities.map((activity) => <p>{activity}</p>));
-      }
-      return <p>Nada para mostrar</p>
+      return (
+        <List
+          header={<Text strong>Lecciones vistas</Text>}
+          // bordered
+          dataSource={allActivities}
+          renderItem={(item) => (
+            <List.Item>
+              {activities.filter((activityname) => activityname == item.name).length ? (
+                <CheckOutlined />
+              ) : (
+                <Checkbox
+                  onChange={async () => {
+                    await checkinAttendeeInActivity(currentUser, item._id)
+                    setshouldUpdate((value) => value + 1)
+                  }}
+                />
+              )}{' '}
+              {item.name}
+            </List.Item>
+          )}
+        />
+      )
+      // return (activities.map((activity) => <p>{activity}</p>));
     }
 
     return <p>Cargando...</p>
@@ -167,6 +174,7 @@ const ColumnProgreso = ({
   ...props
 }) => {
   const [attendee, setAttendee] = useState([])
+  const [shouldUpdate, setshouldUpdate] = useState(0)
   useEffect(async () => {
     // Get all existent activities, after will filter it
     const existentActivities = await allActivities.map(async (activity) => {
@@ -184,7 +192,7 @@ const ColumnProgreso = ({
       (item) => item !== null,
     )
     setAttendee(gotAttendee)
-  }, [])
+  }, [shouldUpdate])
 
   if (!onOpen) onOpen = () => {}
 
@@ -194,6 +202,7 @@ const ColumnProgreso = ({
         onClick={() => {
           updateAttendee(attendee)
           updateCurrentUser(item)
+          setshouldUpdate((previus) => previus + 1)
           onOpen()
         }}
       >
@@ -575,15 +584,17 @@ class ListEventUser extends Component {
         ellipsis: true,
         sorter: (a, b) => true,
         render: (text, item, index) => (
-          <ColumnProgreso
-            shownAll={this.props.shownAll}
-            item={item}
-            onOpen={() => this.setState({ showModalOfProgress: true })}
-            updateAttendee={(attendee) => this.setState({ attendee })}
-            updateCurrentUser={(user) => this.setState({ currentUser: user })}
-            index={index}
-            allActivities={allActivities}
-          />
+          <>
+            <ColumnProgreso
+              shownAll={this.props.shownAll}
+              item={item}
+              onOpen={() => this.setState({ showModalOfProgress: true })}
+              updateAttendee={(attendee) => this.setState({ attendee })}
+              updateCurrentUser={(user) => this.setState({ currentUser: user })}
+              index={index}
+              allActivities={allActivities}
+            />
+          </>
         ),
       }
 
@@ -685,7 +696,7 @@ class ListEventUser extends Component {
           for (let i = 0; i < updatedAttendees.length; i++) {
             // Arreglo temporal para que se muestre el listado de usuarios sin romperse
             // algunos campos no son string y no se manejan bien
-            extraFields.forEach(function (key) {
+            extraFields.forEach(function(key) {
               if (
                 !(
                   (updatedAttendees[i][key.name] &&
@@ -1100,7 +1111,10 @@ class ListEventUser extends Component {
     ),
     onFilter: (value, record) =>
       record[dataIndex]
-        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
         : '',
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
@@ -1215,21 +1229,19 @@ class ListEventUser extends Component {
           </div>
         )}
 
-        {
-          // localChanges &&
-          quantityUsersSync > 0 && localChanges === 'Local' && (
-            <Row gutter={8}>
-              <Col>
-                <p>
-                  <small>
-                    Cambios sin sincronizar :{' '}
-                    {quantityUsersSync < 0 ? 0 : quantityUsersSync}
-                  </small>
-                </p>
-              </Col>
-            </Row>
-          )
-        }
+        {// localChanges &&
+        quantityUsersSync > 0 && localChanges === 'Local' && (
+          <Row gutter={8}>
+            <Col>
+              <p>
+                <small>
+                  Cambios sin sincronizar :{' '}
+                  {quantityUsersSync < 0 ? 0 : quantityUsersSync}
+                </small>
+              </p>
+            </Col>
+          </Row>
+        )}
 
         {this.state.qrModalOpen && (
           <QrModal
