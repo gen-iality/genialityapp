@@ -289,6 +289,8 @@ function AgendaActivityItem(props) {
                   padding: '10px',
                   borderRadius: '15px',
                   backgroundColor: cEvent.value.styles.toolbarDefaultBg,
+                  maxHeight: '280px',
+                  minHeight: '187px',
                 }}>
                 <Row gutter={[8, 8]}>
                   <Col md={4} lg={4} xl={4} className='agenda-hora'>
