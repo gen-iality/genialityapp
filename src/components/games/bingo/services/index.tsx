@@ -384,11 +384,10 @@ export const generateBingoForExclusiveUsers = async (eventId: string) => {
 };
 
 export const listeningMessages = (eventId: string, setData: (messages: IMessage[]) => void) => {
-  const INITIAL_MESSAGES = 50;
   return firestoreeviuschat
     .collection(`messagesevent_${eventId}`)
     .orderBy('fecha', 'asc')
-    .limit(INITIAL_MESSAGES)
+    /* .where('visible','==','true') */
     .onSnapshot((snapshot) => {
       if (!snapshot.empty) {
         const data = snapshot.docs
