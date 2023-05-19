@@ -7,10 +7,14 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a lo
 // import { Carousel } from 'react-responsive-carousel';
 import { firestore } from '../../../helpers/firebase';
 import OfertaProduct from './OfertaProducto';
+// Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
 import 'swiper/swiper-bundle.css';
 
-
+// import required modules
+import { Navigation, Thumbs } from 'swiper';
 
 function DetailsProduct(props) {
   const { Title, Text } = Typography;
@@ -20,6 +24,7 @@ function DetailsProduct(props) {
   const [messageF, setMessage] = useState('');
   const [eventId, setEventId] = useState('');
   const [updateValue, setUpdateValue] = useState();
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
   //currency
   useEffect(() => {
     let idProduct = props.match.params.id;
@@ -58,29 +63,56 @@ function DetailsProduct(props) {
             <Card
               style={{
                 width: '100%',
-                height: '100%',
+                height: '425px',
                 display: 'grid',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
               <Swiper
-                style={{objectFit: 'cover', width: '800px', height: '100%' }}
-                spaceBetween={10}
-                slidesPerView={1}
+                style={{
+                  width: '400px',
+                  height: '280px',
+                  margin: "4px"
+                }}
                 loop={true}
-                pagination={{ type: "progressbar"}}
-                scrollbar={{ draggable: false }}>
+                spaceBetween={1}
+                thumbs={{ swiper: thumbsSwiper }}
+                modules={[Navigation, Thumbs]} // Agregar los módulos aquí
+                freeMode={true}>
                 {product &&
                   product.images &&
                   product.images
                     .filter((img) => img != null)
                     .map((image, index) => (
-                      <SwiperSlide key={'image' + index} >
+                      <SwiperSlide key={'image' + index}>
                         <img
-                          style={{ objectFit: 'contain', width: '100%', height: '300px' }}
-                          // Imagen seteada
+                          style={{ borderRadius:"10px", objectFit: 'contain', width: '100%', height: '280px' }}
                           src={product.images[index]}
                           alt='producto'
+                        />
+                      </SwiperSlide>
+                    ))}
+              </Swiper>
+              <Swiper
+              style={{width: "250px", height:"120px"}}
+                onSwiper={setThumbsSwiper}
+                loop={true}
+                spaceBetween={1}
+                slidesPerView={2}
+                freeMode={true}
+                watchSlidesProgress={true}
+                modules={[Navigation, Thumbs]} // Agregar los módulos aquí
+              >
+                {product &&
+                  product.images &&
+                  product.images
+                    .filter((img) => img != null)
+                    .map((image, index) => (
+                      <SwiperSlide key={'thumb' + index} style={{ objectFit: 'contain', width: '100px', height: '100px' }}>
+                        <img
+                           style={{ objectFit: 'cover', width: '100px', height: '100px' }} // Establece un tamaño fijo para la altura
+                          src={product.images[index]}
+                          alt='thumbnail'
                         />
                       </SwiperSlide>
                     ))}

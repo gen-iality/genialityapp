@@ -17,6 +17,32 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
   const [totalOferts, setTotalOferts] = useState(0);
   const [isUsd, setUsd] = useState(false);
   const [bloquerPuja, setBloquearPuja] = useState(false);
+  
+
+  const obtenerValor = () => {
+    return (
+      product && product.price
+    ); /* && product.price.includes('COP')
+      ? product.price
+          .split('COP $ ')[1]
+          .replace(`’`, '')
+          .replace('.', '')
+          .replace(',', '')
+      : product && product.price && product.price.includes('USD')?
+      product.price
+          .split('USD $ ')[1]
+          .replace(`’`, '')
+          .replace('.', '').replace(',', ''):0;*/
+  };
+
+  /*const formatPrecioInitial=(value)=>{
+    let valueFormat;
+   if(value){    
+    let valor= value.split(' ');    
+    valueFormat=valor.slice(2)     
+      return valueFormat;        
+   }
+  }*/
   useEffect(() => {
     if (product && eventId) {
       obtenerOfertas();
@@ -44,32 +70,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
         setTotalOferts(oferts.data.length);
       }
     }
-  }, [eventId, product]);
-
-  const obtenerValor = () => {
-    return (
-      product && product.price
-    ); /* && product.price.includes('COP')
-      ? product.price
-          .split('COP $ ')[1]
-          .replace(`’`, '')
-          .replace('.', '')
-          .replace(',', '')
-      : product && product.price && product.price.includes('USD')?
-      product.price
-          .split('USD $ ')[1]
-          .replace(`’`, '')
-          .replace('.', '').replace(',', ''):0;*/
-  };
-
-  /*const formatPrecioInitial=(value)=>{
-    let valueFormat;
-   if(value){    
-    let valor= value.split(' ');    
-    valueFormat=valor.slice(2)     
-      return valueFormat;        
-   }
-  }*/
+  }, [eventId, obtenerValor, product]);
   //VALORES PARA SUBIR EN LA PUJA
   const valuesPuja = [
     {
