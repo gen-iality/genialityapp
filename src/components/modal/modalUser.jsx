@@ -323,7 +323,7 @@ class UserModal extends Component {
 
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state
-    const { modal, badgeEvent, componentKey } = this.props
+    const { modal, badgeEvent, componentKey, edit } = this.props
     const qrSize = badgeEvent?.BadgeFields?.find((bagde) => bagde.qr)
     if (this.state.redirect)
       return <Redirect to={{ pathname: this.state.url_redirect }} />
@@ -339,21 +339,23 @@ class UserModal extends Component {
             marginTop: '30px',
           }}
         >
-          {componentKey === 'event-checkin' || componentKey == 'activity-checkin' ? (
-            <FormEnrollAttendeeToEvent
-              fields={this.props.extraFields}
-              conditionalFields={this.props.cEvent?.value?.fields_conditions}
-              attendee={this.props.value}
-              options={this.options}
-              saveAttendee={this.saveUser}
-              printUser={this.printUser}
-              loaderWhenSavingUpdatingOrDelete={this.state.loadingregister}
-              visibleInCms
-              eventType={this.props.cEvent?.value?.type_event}
-              badgeEvent={this.props.badgeEvent}
-              activityId={this.props.activityId}
-            />
-          ) : this.state.makeUserRegister ? (
+          {componentKey === 'event-checkin' ||
+            (componentKey == 'activity-checkin' && (
+              <FormEnrollAttendeeToEvent
+                fields={this.props.extraFields}
+                conditionalFields={this.props.cEvent?.value?.fields_conditions}
+                attendee={this.props.value}
+                options={this.options}
+                saveAttendee={this.saveUser}
+                printUser={this.printUser}
+                loaderWhenSavingUpdatingOrDelete={this.state.loadingregister}
+                visibleInCms
+                eventType={this.props.cEvent?.value?.type_event}
+                badgeEvent={this.props.badgeEvent}
+                activityId={this.props.activityId}
+              />
+            ))}
+          {!this.state.edit ? (
             <RegisterUserAndEventUser
               screens={[]}
               stylePaddingMobile={stylePaddingMobile}
