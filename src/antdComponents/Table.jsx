@@ -28,7 +28,6 @@ const Table = (props) => {
   let {
     header,
     list,
-    key,
     loading,
     pagination,
     draggable,
@@ -38,7 +37,6 @@ const Table = (props) => {
     noRemove,
     search,
     setColumnsData,
-    setList,
     downloadFile,
     exportData,
     fileName,
@@ -52,7 +50,6 @@ const Table = (props) => {
     extraPathTitle,
     extraPathIcon,
     extraPathType,
-    extraPathId,
     extraPathStateName,
     scroll,
     widthAction,

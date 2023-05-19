@@ -1,8 +1,14 @@
 import { BingoApi } from '@/helpers/request';
 import { DispatchMessageService } from '@/context/MessageService';
-import { BingoGame, CreateBingoGameDto, SaveCurrentStateOfBingoInterface, UpdateBingoGameDto } from '../interfaces/bingo';
-import { firestore } from '@/helpers/firebase';
+import {
+  BingoGame,
+  CreateBingoGameDto,
+  SaveCurrentStateOfBingoInterface,
+  UpdateBingoGameDto,
+} from '../interfaces/bingo';
+import { firestore, firestoreeviuschat } from '@/helpers/firebase';
 import firebase from 'firebase/compat';
+import { IConfigChat, IMessage } from '@/components/events/ChatExport/interface/message.interface';
 
 // --------------------- Api Bingo Services ---------------------
 export const CreateBingo = async (event: string, data: { name: string }) => {
@@ -221,19 +227,22 @@ export const listenBingoNotifications = (eventId: string, setData: any) => {
   return unSuscribe;
 };
 
-export const bingoGamelistener = (eventId: string, setBingoGame: React.Dispatch<React.SetStateAction<BingoGame | null>>) => {
+export const bingoGamelistener = (
+  eventId: string,
+  setBingoGame: React.Dispatch<React.SetStateAction<BingoGame | null>>
+) => {
   return firestore
     .collection('bingosByEvent')
     .doc(eventId)
     .onSnapshot((doc) => {
       if (doc.exists) {
-        const bingoGame = doc.data() as BingoGame
-        setBingoGame(bingoGame)
+        const bingoGame = doc.data() as BingoGame;
+        setBingoGame(bingoGame);
       } else {
-        setBingoGame(null)
+        setBingoGame(null);
       }
-    })
-}
+    });
+};
 
 export const listenBingoData = (eventID: string | undefined, setData: any, clearCarton?: any) => {
   const unSuscribe = firestore
@@ -371,5 +380,86 @@ export const generateBingoForExclusiveUsers = async (eventId: string) => {
   } catch (error) {
     DispatchMessageService({ type: 'error', msj: 'Error al eliminar el dato', action: 'show' });
     return null;
+  }
+};
+
+export const listeningMessages = (eventId: string, setData: (messages: IMessage[]) => void) => {
+  return firestoreeviuschat
+    .collection(`messagesevent_${eventId}`)
+    .orderBy('fecha', 'asc')
+    /* .where('visible','==','true') */
+    .onSnapshot((snapshot) => {
+      if (!snapshot.empty) {
+        const data = snapshot.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() } as IMessage))
+          .filter((msg) => msg.visible !== true);
+        setData(data);
+      } else {
+        setData([]);
+      }
+    });
+};
+export const listeningConfigChat = (eventId: string, setData: (configChat: IConfigChat | undefined) => void) => {
+  return firestore
+    .collection(`events`)
+    .doc(eventId)
+    .onSnapshot((snapshot) => {
+      if (snapshot.exists) {
+        const data: IConfigChat = snapshot.data()?.configChat as IConfigChat;
+        setData(data);
+      } else {
+        setData(undefined);
+      }
+    });
+};
+export const updateConfigChat = async (eventId: string, configChat: IConfigChat) => {
+  try {
+    await firestore
+      .collection(`events`)
+      .doc(eventId)
+      .update({ configChat });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+export const getEventConfigChat = async (eventId: string): Promise<IConfigChat | undefined> => {
+  try {
+    const requestMeetings = await firestore
+      .collection('events')
+      .doc(eventId)
+      .get();
+    const data = requestMeetings.data();
+    return data?.configChat;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteMessages = async (eventId: string, messageEventId: string) => {
+  try {
+    await firestoreeviuschat
+      .collection(`messagesevent_${eventId}`)
+      .doc(messageEventId)
+      .delete();
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+export const approveMessages = async (eventId: string, messageEventId: string) => {
+  try {
+    await firestoreeviuschat
+      .collection(`messagesevent_${eventId}`)
+      .doc(messageEventId)
+      .update({ visible: true });
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
 };

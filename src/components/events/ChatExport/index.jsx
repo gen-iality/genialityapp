@@ -12,6 +12,7 @@ import Account from '@2fd/ant-design-icons/lib/Account';
 import { DispatchMessageService } from '../../../context/MessageService';
 import { useHelper } from '@/context/helperContext/hooks/useHelper';
 import { UseEventContext } from '@/context/eventContext';
+import ChatSettings from './ChatSettings';
 
 const { TabPane } = Tabs;
 
@@ -421,6 +422,17 @@ const ChatExport = ({ eventId, event }) => {
           }
           search
           setColumnsData={setColumnsData}
+        />
+      </TabPane>
+      <TabPane
+        tab={
+          <Badge count={listUsersBlocked.length} offset={[8, 0]}>
+            Control de mensajes
+          </Badge>
+        }
+        key='3'>
+        <ChatSettings
+        eventId={eventId}
         />
       </TabPane>
     </Tabs>
