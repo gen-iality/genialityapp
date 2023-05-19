@@ -60,13 +60,26 @@ const RegistrationResult = ({
         </>
       ) : (
         <>
-          <Result status="success" title="Inscripción exitosa!" />
-          {requireAutomaticLoguin && (
-            <RedirectUser
-              basicDataUser={basicDataUser}
-              cEvent={cEvent}
-              dataEventUser={dataEventUser}
+          {!validationGeneral.status ? (
+            <Result
+              status="warning"
+              title={
+                (basicDataUser ? basicDataUser?.email : '') +
+                ' ' +
+                validationGeneral.textError
+              }
             />
+          ) : (
+            <>
+              <Result status="success" title="Inscripción exitosa!" />
+              {requireAutomaticLoguin && (
+                <RedirectUser
+                  basicDataUser={basicDataUser}
+                  cEvent={cEvent}
+                  dataEventUser={dataEventUser}
+                />
+              )}
+            </>
           )}
         </>
       )}
@@ -78,8 +91,9 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
   const cEventUser = useUserEvent()
   const { helperDispatch } = useHelper()
   const intl = useIntl()
-  const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] =
-    useState(false)
+  const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(
+    false,
+  )
 
   useEffect(() => {
     setSignInWithEmailAndPasswordError(false)
