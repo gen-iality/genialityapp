@@ -146,7 +146,7 @@ const RegisterUserAndEventUser = ({
         })
         setCurrent(current + 1)
       }
-    } catch (err: any) {
+    } catch (err) {
       if (err?.response?.data?.errors?.email[0] === 'email ya ha sido registrado.') {
         if (isAdminPage()) {
           setCurrent(current + 1)
@@ -212,11 +212,12 @@ const RegisterUserAndEventUser = ({
       }
 
       const propertiesuser = { properties: { ...datauser } }
+
       try {
         const respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id)
         if (respUser && respUser._id) {
           setValidationGeneral({
-            status: false,
+            status: true,
             isLoading: false,
             textError: intl.formatMessage({
               id: 'text_error.successfully_registered',
@@ -227,12 +228,36 @@ const RegisterUserAndEventUser = ({
           setdataEventUser({})
         }
       } catch (err) {
-        console.error(err)
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error',
-          action: 'show',
-        })
+        console.error('errorregistro', { err: err })
+
+        if (err.response) {
+          setValidationGeneral({
+            status: false,
+            isLoading: false,
+            textError: intl.formatMessage({
+              id: 'text_error.already_registeredtrue',
+              defaultMessage: err.response.data.message,
+            }),
+          })
+        } else {
+          alert('else')
+        }
+        // if (err.response) {
+        //   setValidationGeneral({
+        //     status: false,
+        //     isLoading: false,
+        //     textError: intl.formatMessage({
+        //       id: 'text_error.already_registeredtrue',
+        //       defaultMessage: err.response.data.message,
+        //     }),
+        //   })
+        // } else {
+        //   DispatchMessageService({
+        //     type: 'error',
+        //     msj: 'Ha ocurrido un error',
+        //     action: 'show',
+        //   })
+        // }
       }
     }
 
@@ -241,9 +266,7 @@ const RegisterUserAndEventUser = ({
     } else {
       createNewUser(basicDataUser)
         .then((createdUserInfo) => {
-          console.log('createdUserInfo returned:', { createdUserInfo })
           const { status } = createdUserInfo
-
           if (status === CREATE_NEW_USER_SUCCESS) {
             createEventUser()
           } else {
