@@ -1,4 +1,4 @@
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { firestore } from '@helpers/firebase'
 import { Activity, TicketsApi } from '@helpers/request'
 import { structureScannedInformation } from '@Utilities/checkInUtils'
@@ -168,21 +168,13 @@ export const saveCheckInAttendee = async ({
       else response = await TicketsApi.addCheckIn(_id, checkInType)
 
       if (notification)
-        DispatchMessageService({
-          type: 'success',
-          msj: 'CheckIn agregado correctamente',
-          action: 'show',
-        })
+        StateMessage.show(null, 'success', 'CheckIn agregado correctamente')
     } else {
       if (activityId) response = await Activity.deleteCheckIn(_id, activityId)
       else response = await TicketsApi.deleteCheckIn(_id)
 
       if (notification)
-        DispatchMessageService({
-          type: 'success',
-          msj: 'CheckIn eliminado correctamente',
-          action: 'show',
-        })
+        StateMessage.show(null, 'success', 'CheckIn eliminado correctamente')
     }
 
     if (checkInAttendeeCallbak) checkInAttendeeCallbak(response)
@@ -192,11 +184,6 @@ export const saveCheckInAttendee = async ({
       if (setAttemdeeCheckIn) setAttemdeeCheckIn(response.checked_in)
     }
   } catch (error) {
-    if (notification)
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Hubo un error con el checkIn',
-        action: 'show',
-      })
+    if (notification) StateMessage.show(null, 'error', 'Hubo un error con el checkIn')
   }
 }

@@ -13,7 +13,7 @@ import AgendaContext from '@context/AgendaContext'
 import { hourWithAdditionalMinutes } from './hooks/useHourWithAdditionalMinutes'
 import useAvailableDaysFromEvent from './hooks/useAvailableDaysFromEvent'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { FormValues } from './components/AgendaForm'
 import dayjs from 'dayjs'
 import { AgendaApi } from '@helpers/request'
@@ -71,30 +71,20 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
     values.datetime_start = values.date + ' ' + dayjs(values.hour_start).format('HH:mm')
     values.datetime_end = values.date + ' ' + dayjs(values.hour_end).format('HH:mm')
 
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se guarda la información...',
+    )
 
     const _agenda: AgendaType = await AgendaApi.create(props.event._id, values)
     setCurrentAgenda(_agenda)
     setShouldRedirect(true)
     cAgenda.setActivityEdit(_agenda._id)
 
-    DispatchMessageService({
-      action: 'destroy',
-      type: 'loading',
-      key: 'loading',
-      msj: '',
-    })
+    StateMessage.destroy('loading')
 
-    DispatchMessageService({
-      msj: 'Información guardada correctamente!',
-      type: 'success',
-      action: 'show',
-    })
+    StateMessage.show(null, 'success', 'Información guardada correctamente!')
   }, [])
 
   useEffect(() => {

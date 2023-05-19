@@ -13,7 +13,7 @@ import {
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
 import { areaCode } from '@helpers/constants'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 import Loading from '../profile/loading'
 
@@ -128,12 +128,11 @@ function Speaker(props) {
 
   async function submit(values) {
     if (values.name) {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: 'Por favor espere mientras guarda la información...',
-        action: 'show',
-      })
+      StateMessage.show(
+        'loading',
+        'loading',
+        'Por favor espere mientras guarda la información...',
+      )
 
       const { name, profession, description, order, published, image } = values
 
@@ -152,46 +151,27 @@ function Speaker(props) {
         if (state.edit && !justCreate)
           await SpeakersApi.editOne(body, state.edit, eventID)
         else await SpeakersApi.create(eventID, body)
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Conferencista guardado correctamente!',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Conferencista guardado correctamente!')
         if (!justCreate) history.push(`/${match}/${eventID}/speakers`)
         else if (props.onCreated) props.onCreated()
       } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', handleRequestError(e).message)
         /* if (handleRequestError(e).message === 'Speakers/host limit reached')
           setMessageHeaderAlert(handleRequestError(e).message); */
       }
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El nombre es requerido',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'El nombre es requerido')
     }
   }
 
   function remove() {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     if (state.edit && !justCreate) {
       confirm({
         title: `¿Está seguro de eliminar al conferencista?`,
@@ -205,25 +185,15 @@ function Speaker(props) {
             try {
               await SpeakersApi.deleteOne(state.edit, eventID)
               setRedirect(true)
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó al conferencista correctamente!',
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó al conferencista correctamente!',
+              )
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
           }
           onHandlerRemoveSpeaker()

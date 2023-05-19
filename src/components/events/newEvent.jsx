@@ -19,7 +19,7 @@ import { NewEventContext } from '@context/newEventContext'
 import Service from '@components/agenda/roomManager/service'
 import { firestore } from '@helpers/firebase'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const { Step } = Steps
 
@@ -214,21 +214,14 @@ class NewEvent extends Component {
               if (eventNewContext.typeTransmission == 1) {
                 const sala = await this.createZoomRoom(agenda, result._id)
                 if (sala) {
-                  DispatchMessageService({
-                    type: 'success',
-                    msj: 'Cursos creado correctamente...',
-                    action: 'show',
-                  })
+                  StateMessage.show(null, 'success', 'Cursos creado correctamente...')
+
                   alert('ACA')
                   window.location.replace(
                     `${window.location.origin}/eventadmin/${result._id}`,
                   )
                 } else {
-                  DispatchMessageService({
-                    type: 'error',
-                    msj: 'Error al crear sala',
-                    action: 'show',
-                  })
+                  StateMessage.show(null, 'error', 'Error al crear sala')
                 }
               } else {
                 // Crear template para el curso
@@ -240,50 +233,26 @@ class NewEvent extends Component {
                   )
                 }
                 if (template) {
-                  DispatchMessageService({
-                    type: 'success',
-                    msj: 'Cursos creado correctamente...',
-                    action: 'show',
-                  })
+                  StateMessage.show(null, 'success', 'Cursos creado correctamente...')
                   window.location.replace(
                     `${window.location.origin}/eventadmin/${result._id}`,
                   )
                 } else {
-                  DispatchMessageService({
-                    type: 'error',
-                    msj: 'Error al crear curso con su template',
-                    action: 'show',
-                  })
+                  StateMessage.show(null, 'error', 'Error al crear curso con su template')
                 }
               }
             }
           } else {
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Error al crear el curso',
-              action: 'show',
-            })
+            StateMessage.show(null, 'error', 'Error al crear el curso')
           }
         } else {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Error al crear el curso',
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', 'Error al crear el curso')
         }
       } catch (error) {
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Error al crear el curso',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Error al crear el curso')
       }
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Seleccione una organización',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Seleccione una organización')
     }
   }
 
@@ -346,19 +315,11 @@ class NewEvent extends Component {
       if (result) {
         return true
       } else {
-        DispatchMessageService({
-          type: 'error',
-          msj: result.message,
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', result.message)
         return false
       }
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: response.message,
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', response.message)
       return false
     }
   }
@@ -388,11 +349,7 @@ class NewEvent extends Component {
             },
           ])
         ) {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Error en los campos...',
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', 'Error en los campos...')
         } else {
           this.nextPage()
         }

@@ -14,7 +14,7 @@ import { Alert, Button, Modal } from 'antd'
 import withContext from '@context/withContext'
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import FormEnrollAttendeeToEvent from '../forms/FormEnrollAttendeeToEvent'
 import { handleRequestError } from '@helpers/utils'
 import printBagdeUser from '../badge/utils/printBagdeUser'
@@ -134,12 +134,11 @@ class UserModal extends Component {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        DispatchMessageService({
-          type: 'loading',
-          key: 'loading',
-          msj: ' Por favor espere mientras se borra la información...',
-          action: 'show',
-        })
+        StateMessage.show(
+          'loading',
+          'loading',
+          ' Por favor espere mientras se borra la información...',
+        )
         self.setState({ loadingregister: true })
 
         const onHandlerRemove = async () => {
@@ -158,15 +157,8 @@ class UserModal extends Component {
             if (!activityId)
               await AttendeeApi.delete(self.props.cEvent.value?._id, selectedEventUserId)
 
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
 
             setTimeout(() => {
               messages.class = messages.content = ''
@@ -175,15 +167,8 @@ class UserModal extends Component {
             }, 500)
           } catch (e) {
             self.setState({ loadingregister: false })
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Error eliminando el usuario',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', 'Error eliminando el usuario')
           }
         }
         onHandlerRemove()
@@ -223,17 +208,13 @@ class UserModal extends Component {
             }
           } catch (error) {
             if (handleRequestError(error).message === 'users limit exceeded') {
-              DispatchMessageService({
-                type: 'error',
-                msj: 'Ha exedido el límite de usuarios en el plan',
-                action: 'show',
-              })
+              StateMessage.show(
+                null,
+                'error',
+                'Ha exedido el límite de usuarios en el plan',
+              )
             } else {
-              DispatchMessageService({
-                type: 'error',
-                msj: 'Usuario ya registrado en el curso',
-                action: 'show',
-              })
+              StateMessage.show(null, 'error', 'Usuario ya registrado en el curso')
             }
 
             respActivity = false
@@ -274,20 +255,16 @@ class UserModal extends Component {
     }
 
     if (resp || respActivity) {
-      DispatchMessageService({
-        type: 'success',
-        msj: this.props?.edit
+      StateMessage.show(
+        null,
+        'success',
+        this.props?.edit
           ? 'Usuario editado correctamente'
           : 'Usuario agregado correctamente',
-        action: 'show',
-      })
+      )
       this.props.handleModal()
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Error al guardar el usuario',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Error al guardar el usuario')
     }
 
     this.setState({ loadingregister: false })

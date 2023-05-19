@@ -15,7 +15,7 @@ import { Actions, OrganizationApi } from '@helpers/request'
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 // import { CurrentUserContext } from '@context/userContext'
 
 interface IMenuItem {
@@ -276,12 +276,7 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
   }
 
   const submit = async () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere...',
-      action: 'show',
-    })
+    StateMessage.show('loading', 'loading', 'Por favor espere...')
 
     const menu = orderMenuItems(menuItems)
     const newMenu = { itemsMenu: { ...menu } }
@@ -309,12 +304,8 @@ const MenuLanding: FunctionComponent<IMenuLandingProps> = (props) => {
         console.debug(resp)
       }
     }
-    DispatchMessageService({ key: 'loading', action: 'destroy' })
-    DispatchMessageService({
-      type: 'success',
-      msj: 'Información guardada correctamente',
-      action: 'show',
-    })
+    StateMessage.destroy('loading')
+    StateMessage.show(null, 'success', 'Información guardada correctamente')
   }
 
   /**

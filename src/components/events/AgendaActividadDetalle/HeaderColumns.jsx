@@ -30,7 +30,7 @@ import { useEventContext } from '@context/eventContext'
 import WithEviusContext from '@context/withContext'
 import AgendaContext from '@context/AgendaContext'
 import { CurrentEventUserContext } from '@context/eventUserContext'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const HeaderColumns = (props) => {
   const { currentActivity } = useHelper()
@@ -107,11 +107,7 @@ const HeaderColumns = (props) => {
       // Remover o cancelar request
       await removeRequest(refActivity, cEventUSer.value?._id)
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Error al enviar solicitud',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Error al enviar solicitud')
     }
     setLoading(false)
   }

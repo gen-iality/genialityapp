@@ -18,7 +18,7 @@ import { firestore } from '@helpers/firebase'
 import ModalCreateTemplate from '../../shared/modalCreateTemplate'
 import Header from '@antdComponents/Header'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { createFieldForCheckInPerDocument } from './utils'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import DynamicFieldCreationForm from '../../dynamic-fields/DynamicFieldCreationForm'
@@ -145,12 +145,11 @@ class Datos extends Component {
   }
   //Guardar campo en el curso
   saveField = async (field) => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se guarda la información...',
+    )
     try {
       let totaluser = {}
       const organizationId = this.organization?._id
@@ -212,37 +211,22 @@ class Datos extends Component {
       }
       await this.fetchFields()
       this.setState({ modal: false, edit: false, newField: false })
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Información guardada correctamente!',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', 'Información guardada correctamente!')
     } catch (e) {
       this.showError(e.response.data.message || e.response.status)
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: e.response.data.message || e.response.status,
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', e.response.data.message || e.response.status)
     }
   }
 
   //Funcion para guardar el orden de los datos
   async submitOrder() {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se guarda la información...',
+    )
     const organizationId = this?.organization?._id
     try {
       if (organizationId && !this.eventId) {
@@ -261,25 +245,15 @@ class Datos extends Component {
           this.updateTable,
         )
       }
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'El orden de la recopilación de datos se ha guardado',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(
+        null,
+        'success',
+        'El orden de la recopilación de datos se ha guardado',
+      )
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: e,
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', e)
     }
     this.fetchFields()
   }
@@ -297,26 +271,12 @@ class Datos extends Component {
       } else {
         await EventFieldsApi.deleteOne(item, this.eventId);
       }
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Se eliminó la información correctamente!',
-        action: 'show',
-      });
+      StateMessage.destroy('loading');
+      StateMessage.show(null, 'success', 'Se eliminó la información correctamente!');
       await this.fetchFields();
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
-      DispatchMessageService({
-        type: 'error',
-        msj: `No ha sido posible eliminar el campo error: ${e?.response?.data?.message || e.response?.status}`,
-        action: 'show',
-      });
+      StateMessage.destroy('loading');
+      StateMessage.show(null, 'error', `No ha sido posible eliminar el campo error: ${e?.response?.data?.message || e.response?.status}`)
     }
   }; */
 
@@ -335,28 +295,18 @@ class Datos extends Component {
         } else {
           await EventFieldsApi.deleteOne(item, self.eventId)
         }
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Se eliminó la información correctamente!',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
         await self.fetchFields()
       } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: `No ha sido posible eliminar el campo error: ${
+        StateMessage.destroy('loading')
+        StateMessage.show(
+          null,
+          'error',
+          `No ha sido posible eliminar el campo error: ${
             e?.response?.data?.message || e.response?.status
           }`,
-          action: 'show',
-        })
+        )
       }
     }
 
@@ -365,12 +315,11 @@ class Datos extends Component {
       return
     }
 
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se borra la información...',
+    )
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -393,11 +342,11 @@ class Datos extends Component {
   }
 
   showError = (error) => {
-    DispatchMessageService({
-      type: 'success',
-      msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
-      action: 'show',
-    })
+    StateMessage.show(
+      null,
+      'error',
+      this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
+    )
     if (error.response) {
       const { status, data } = error.response
       if (status === 401) this.setState({ timeout: true, loader: false })
@@ -413,12 +362,11 @@ class Datos extends Component {
   }
   //Funcion para cambiar el valor de los checkboxes
   async changeCheckBox(field, key, key2 = null) {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se guarda la información...',
+    )
     try {
       this.setState({ edit: true }, () => {
         field[key] = !field[key]
@@ -427,27 +375,17 @@ class Datos extends Component {
         }
 
         this.saveField(field).then((resp) => {
-          DispatchMessageService({
-            key: 'loading',
-            action: 'destroy',
-          })
-          DispatchMessageService({
-            type: 'success',
-            msj: 'Se ha editado correctamente el campo!',
-            action: 'show',
-          })
+          StateMessage.destroy('loading')
+          StateMessage.show(null, 'success', 'Se ha editado correctamente el campo!')
         })
       })
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El campo no ha sido posible actualizarlo, intenta mas tarde',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(
+        null,
+        'error',
+        'El campo no ha sido posible actualizarlo, intenta mas tarde',
+      )
     }
   }
   //Contenedor draggable

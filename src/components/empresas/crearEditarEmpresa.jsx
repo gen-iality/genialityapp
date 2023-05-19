@@ -23,7 +23,7 @@ import { createEventCompany, updateEventCompany } from './services'
 import { firestore } from '@helpers/firebase'
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { handleRequestError } from '@helpers/utils'
 
 const formLayout = {
@@ -157,12 +157,7 @@ function CrearEditarEmpresa(props) {
 
   const onSubmit = useCallback(
     (values, { setSubmitting }) => {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: 'Espere mientras se guarda la información',
-        action: 'show',
-      })
+      StateMessage.show('loading', 'loading', 'Espere mientras se guarda la información')
       if (values.stand_image && values.list_image) {
         const isNewRecord = !props.location.state.edit
         const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany
@@ -178,52 +173,30 @@ function CrearEditarEmpresa(props) {
         setSubmitting(true)
         apply(createOrEdit, paramsArray)
           .then(() => {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Empresa creada correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Empresa creada correctamente!')
             history.push(`/eventadmin/${event._id}/empresas`)
           })
           .catch((error) => {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: errorObject,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', errorObject)
             /* notification.error(errorObject); */
             setSubmitting(false)
           })
       } else {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Favor de llenar los campos requeridos',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', 'Favor de llenar los campos requeridos')
       }
     },
     [history, event._id, props.location.state.edit, tamanio],
   )
 
   const remove = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras borra la información...',
+    )
     if (props.location.state.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -241,26 +214,16 @@ function CrearEditarEmpresa(props) {
                 .collection('companies')
                 .doc(props.location.state.edit)
                 .delete()
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó la información correctamente!',
+              )
               history.push(`/eventadmin/${event._id}/empresas`)
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
           }
           onHandlerRemove()

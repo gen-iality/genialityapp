@@ -1,4 +1,4 @@
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { deleteLiveStream, deleteAllVideos } from '@adaptors/gcoreStreamingApi'
 import { AgendaApi } from '@helpers/request'
 import { firestore, fireRealtime } from '@helpers/firebase'
@@ -23,40 +23,18 @@ export default function useDeleteActivity() {
         try {
           await deleteLiveStream(configuration.meeting_id)
         } catch (err) {
-          DispatchMessageService({
-            type: 'error',
-            msj: handleRequestError(err).message,
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', handleRequestError(err).message)
         }
       }
       await fireRealtime.ref(refActivity).remove()
       await fireRealtime.ref(refActivityViewers).remove()
       await service.deleteActivity(eventId, activityId)
       await AgendaApi.deleteOne(activityId, eventId)
-      DispatchMessageService({
-        type: 'loading', // Added by types
-        msj: '', // Added by types
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Se eliminó la información correctamente!',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
     } catch (e) {
-      DispatchMessageService({
-        type: 'loading', // Added by types
-        msj: '', // Added by types
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: handleRequestError(e).message,
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', handleRequestError(e).message)
     }
   }
 

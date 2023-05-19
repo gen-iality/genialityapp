@@ -24,7 +24,7 @@ import BackTop from '@antdComponents/BackTop'
 import { useHistory } from 'react-router-dom'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import EviusReactQuill from '../shared/eviusReactQuill'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 import Loading from '../profile/loading'
 
@@ -85,11 +85,7 @@ const NewCE = (props) => {
   const onSubmit = async () => {
     const values = {}
     if (notice.title === '' || !notice.title) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El título es requerido',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'El título es requerido')
       values.title = false
     } else {
       values.title = true
@@ -99,11 +95,7 @@ const NewCE = (props) => {
       notice.description_complete === '<p><br></p>' ||
       !notice.description_complete
     ) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'La noticia es requerida',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'La noticia es requerida')
       values.description_complete = false
     } else {
       values.description_complete = true
@@ -113,31 +105,19 @@ const NewCE = (props) => {
       notice.description_short === '<p><br></p>' ||
       !notice.description_short
     ) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El subtítulo es requerido',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'El subtítulo es requerido')
       values.description_short = false
     } else {
       values.description_short = true
     }
     if (notice.image === null || !notice.image) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'La imagen es requerida',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'La imagen es requerida')
       values.image = false
     } else {
       values.image = true
     }
     if (notice.fecha === null && notice.fecha !== '' && !notice.fecha) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'La fecha es requerida',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'La fecha es requerida')
       values.fecha = false
     } else {
       values.fecha = true
@@ -151,12 +131,11 @@ const NewCE = (props) => {
       values.image &&
       values.fecha
     ) {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: ' Por favor espere mientras se guarda la información...',
-        action: 'show',
-      })
+      StateMessage.show(
+        'loading',
+        'loading',
+        ' Por favor espere mientras se guarda la información...',
+      )
 
       try {
         if (locationState.edit) {
@@ -165,37 +144,22 @@ const NewCE = (props) => {
           await NewsFeed.create(notice, props.eventId)
         }
 
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
         history.push(`${props.match.url}`)
       } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', handleRequestError(e).message)
       }
     }
   }
 
   const remove = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se borra la información...',
+    )
     if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -208,26 +172,16 @@ const NewCE = (props) => {
           const onHandlerRemove = async () => {
             try {
               await NewsFeed.deleteOne(locationState.edit, props.eventId)
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó la información correctamente!',
+              )
               history.push(`${props.match.url}`)
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
           }
           onHandlerRemove()

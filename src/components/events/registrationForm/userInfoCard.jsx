@@ -17,7 +17,7 @@ import {
   Upload,
 } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const { Panel } = Collapse
 const { TextArea } = Input
@@ -38,7 +38,7 @@ const validateMessages = {
   },
 }
 
-export default ({
+const userInfoCard = ({
   initialValues,
   eventId,
   extraFieldsOriginal,
@@ -93,13 +93,7 @@ export default ({
     const key = 'registerUserService'
 
     // message.loading({ content: !eventUserId ? "Registrando usuario" : "Realizando transferencia", key }, 10);
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Actualizando usuario',
-      duration: 10,
-      action: 'show',
-    })
+    StateMessage.show('loading', 'loading', 'Actualizando usuario', 10)
 
     const snap = { properties: values }
 
@@ -120,43 +114,22 @@ export default ({
         )
 
         setSubmittedForm(true)
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: textMessage,
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', textMessage)
       } else {
         textMessage.content = resp
         // Retorna un mensaje en caso de que ya se encuentre registrado el correo
         setNotLoggedAndRegister(true)
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: textMessage,
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', textMessage)
       }
     } catch (err) {
       // textMessage.content = "Error... Intentalo mas tarde";
       textMessage.content = formMessage.errorMessage
 
       textMessage.key = key
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: textMessage,
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', textMessage)
     }
   }
 
@@ -198,19 +171,11 @@ export default ({
   const beforeUpload = (file) => {
     const isJpgOrPng = file.type === 'application/pdf'
     if (!isJpgOrPng) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'You can only upload PDF file!',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'You can only upload PDF file!')
     }
     const isLt5M = file.size / 1024 / 1024 < 5
     if (!isLt5M) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Image must smaller than 5MB!',
-        action: 'show',
-      })
+      StateMessage.show(null, 'success', 'Image must smaller than 5MB!')
     }
     return isJpgOrPng && isLt5M
   }
@@ -494,3 +459,5 @@ export default ({
     </>
   )
 }
+
+export default userInfoCard

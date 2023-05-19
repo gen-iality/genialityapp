@@ -7,7 +7,7 @@ import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
 import EviusReactQuill from '../shared/eviusReactQuill'
 import { handleRequestError } from '@helpers/utils'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 import { removeObjectFromArray, renderTypeImage } from '@Utilities/imgUtils'
 import Loading from '../profile/loading'
@@ -105,12 +105,11 @@ function AddProduct(props) {
   }
 
   const saveProduct = async () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se guarda la información...',
+    )
 
     const validators = {}
     validators.price = false
@@ -184,26 +183,12 @@ function AddProduct(props) {
             props.history.push(`/eventadmin/${props.eventId}/product`)
           }
         }
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
       } catch (e) {
         e
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: e,
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', e)
       }
     } else {
       console.log('algo fallo', validators)
@@ -211,12 +196,11 @@ function AddProduct(props) {
   }
 
   const remove = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se borra la información...',
+    )
     if (props.match.params.id) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -229,26 +213,16 @@ function AddProduct(props) {
           const onHandlerRemove = async () => {
             try {
               await EventsApi.deleteProduct(props.match.params.id, props.eventId)
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó la información correctamente!',
+              )
               goBack()
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e)?.message,
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e)?.message)
             }
           }
           onHandlerRemove()

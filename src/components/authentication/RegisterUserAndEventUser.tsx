@@ -12,7 +12,7 @@ import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/create
 import { useIntl } from 'react-intl'
 import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const { Step } = Steps
 
@@ -208,11 +208,7 @@ const RegisterUserAndEventUser = ({
         }
       } catch (err) {
         console.error(err)
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Ha ocurrido un error')
       }
     }
 

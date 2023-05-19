@@ -26,7 +26,7 @@ import { EnableAnalyticsByEVENT } from './helpers/analyticsHelper'
 import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper'
 
 import loadable from '@loadable/component'
-import { DispatchMessageService } from '@context/MessageService.tsx'
+import { StateMessage } from '@context/MessageService.tsx'
 import WithEviusContext from '@context/withContext'
 import { checkinAttendeeInEvent } from '@helpers/HelperAuth'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
@@ -108,11 +108,11 @@ const Landing = (props) => {
   }, [cEventContext.value, cEventUser.value])
 
   useEffect(() => {
-    DispatchMessageService({
-      type: 'loading',
-      msj: '¡Estamos configurando la mejor experiencia para tí!',
-      action: 'show',
-    })
+    StateMessage.show(
+      null,
+      'loading',
+      '¡Estamos configurando la mejor experiencia para tí!',
+    )
     return () => {
       setActivities([])
     }

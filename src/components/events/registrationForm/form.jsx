@@ -35,7 +35,7 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useUserEvent } from '@context/eventUserContext'
 import { useEventContext } from '@context/eventContext'
 import { useCurrentUser } from '@context/userContext'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 /**TODO::ocaciona error en ios */
 
@@ -482,11 +482,7 @@ const FormRegister = ({
   const beforeUpload = (file) => {
     const isLt5M = file.size / 1024 / 1024 < 5
     if (!isLt5M) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Image must smaller than 5MB!',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Image must smaller than 5MB!')
     }
     return isLt5M
   }

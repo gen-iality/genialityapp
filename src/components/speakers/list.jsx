@@ -8,7 +8,7 @@ import { sortableContainer, sortableElement } from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 import Header from '@antdComponents/Header'
 import { columns } from './columns'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 
 const SortableItem = sortableElement((props) => <tr {...props} />)
@@ -48,12 +48,7 @@ function SpeakersList(props) {
 
   function remove(info) {
     //Se coloco la constante "eventId" porque se perdia al momento de hacer la llamada al momento de eliminar
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere...',
-      action: 'show',
-    })
+    StateMessage.show('loading', 'loading', 'Por favor espere...')
     const eventId = props.eventID
     confirm({
       title: `¿Está seguro de eliminar a ${info.name}?`,
@@ -66,25 +61,19 @@ function SpeakersList(props) {
         const onHandlerRemoveSpeaker = () => {
           try {
             updateOrDeleteSpeakers.mutateAsync({ speakerData: info, eventId })
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó correctamente al conferencista!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(
+              null,
+              'success',
+              'Se eliminó correctamente al conferencista!',
+            )
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Ha ocurrido un problema eliminando al conferencista!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(
+              null,
+              'error',
+              'Ha ocurrido un problema eliminando al conferencista!',
+            )
           }
         }
         onHandlerRemoveSpeaker()
@@ -151,28 +140,28 @@ function SpeakersList(props) {
       onError: (err, queryData, previousValue) => {
         if (queryData.state === 'update') {
           queryClient.setQueryData('getSpeakersByEvent', () => previousValue)
-          DispatchMessageService({
-            type: 'error',
-            msj: `Hubo un error al guardar la posición de los conferencista, Error tipo: ${err.response.statusText}`,
-            action: 'show',
-          })
+          StateMessage.show(
+            null,
+            'error',
+            `Hubo un error al guardar la posición de los conferencista, Error tipo: ${err.response.statusText}`,
+          )
         } else {
-          DispatchMessageService({
-            type: 'error',
-            msj: `Hubo un error intentando borrar el conferencista ${queryData.speakerData.name}, Error tipo: ${err.response.statusText}`,
-            action: 'show',
-          })
+          StateMessage.show(
+            null,
+            'error',
+            `Hubo un error intentando borrar el conferencista ${queryData.speakerData.name}, Error tipo: ${err.response.statusText}`,
+          )
         }
       },
       // After success , refetch the query
       onSuccess: (data, queryData, previousValue) => {
         if (queryData.state === 'update') {
           queryClient.setQueryData('getSpeakersByEvent', queryData.newData)
-          DispatchMessageService({
-            type: 'success',
-            msj: 'La posición de los conferencistas ha sido actualizada correctamente!',
-            action: 'show',
-          })
+          StateMessage.show(
+            null,
+            'success',
+            'La posición de los conferencistas ha sido actualizada correctamente!',
+          )
         } else {
           // queryClient.fetchQuery('getSpeakersByEvent', SpeakersApi.byEvent(queryData.eventId), {
           //   staleTime: 500,
@@ -181,11 +170,11 @@ function SpeakersList(props) {
             (speakers) => speakers._id !== queryData.speakerData._id,
           )
           setdataSpeakers(updateSpeakersAfterADelete)
-          DispatchMessageService({
-            type: 'success',
-            msj: `El conferencista  ${queryData.speakerData.name} ha sido eliminado satisfactoriamente`,
-            action: 'show',
-          })
+          StateMessage.show(
+            null,
+            'success',
+            `El conferencista  ${queryData.speakerData.name} ha sido eliminado satisfactoriamente`,
+          )
           sortAndIndexSpeakers()
         }
       },

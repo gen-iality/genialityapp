@@ -33,7 +33,7 @@ import AgendaContext from '@context/AgendaContext'
 import StoreAlreadyCreatedMeeting from '../components/storeAlreadyCreatedMeeting'
 import Loading from '../../../profile/loading'
 import { CurrentEventContext } from '@context/eventContext'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const WowzaStreamingPanel = ({
   meeting_id,
@@ -157,11 +157,7 @@ const WowzaStreamingPanel = ({
   }
 
   function success() {
-    DispatchMessageService({
-      type: 'success',
-      msj: 'URL copiada satisfactoriamente!',
-      action: 'show',
-    })
+    StateMessage.show(null, 'success', 'URL copiada satisfactoriamente!')
   }
 
   function copyToClipboard(type) {

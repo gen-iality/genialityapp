@@ -3,7 +3,7 @@ import { Modal, Form, Input, Button, Typography, Spin } from 'antd'
 import { DefaultProperties } from './propertiesdefault'
 import { OrganizationPlantillaApi } from '@helpers/request'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const ModalCreateTemplate = (props) => {
   const [loading, setloading] = useState(false)
@@ -17,11 +17,7 @@ const ModalCreateTemplate = (props) => {
     await OrganizationPlantillaApi.createTemplate(organizerid, {
       template_properties: [values],
     })
-    DispatchMessageService({
-      type: 'success',
-      msj: 'Template creada',
-      action: 'show',
-    })
+    StateMessage.show(null, 'success', 'Template creada')
     setloading(false)
     props.handlevisibleModal()
     helperDispatch({ type: 'reloadTemplatesCms' })

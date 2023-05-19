@@ -3,7 +3,7 @@ import FormComponent from '../events/registrationForm/form'
 import withContext from '@context/withContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { useEventContext } from '@context/eventContext'
 import { useUserEvent } from '@context/eventUserContext'
 import { UsersApi } from '@helpers/request'
@@ -30,19 +30,11 @@ const ModalPermission = () => {
     const resp = await UsersApi.createOne(eventUserBody, cEvent.value?._id)
 
     if (resp._id) {
-      DispatchMessageService({
-        type: 'success',
-        msj: `Usuario editado correctamente`,
-        action: 'show',
-      })
+      StateMessage.show(null, 'success', `Usuario editado correctamente`)
       cEventUser.setUpdateUser(true)
       handleChangeTypeModal(null)
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: `No fue posible editar el Usuario`,
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', `No fue posible editar el Usuario`)
     }
   }
 

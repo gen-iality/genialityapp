@@ -20,7 +20,7 @@ import DayPicker from 'react-day-picker'
 import 'react-day-picker/lib/style.css'
 import { useNewEventContext } from '@context/newEventContext'
 import { OrganizationApi } from '@helpers/request'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import dayjs from 'dayjs'
 
 const { Text, Link, Title, Paragraph } = Typography
@@ -102,11 +102,7 @@ const Informacion = (props) => {
 
   const selectOrganizationOK = () => {
     if (!selectOrganization || selectOrganization == null) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Por favor seleccione una organización',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Por favor seleccione una organización')
     } else {
       changeOrganization(false)
     }

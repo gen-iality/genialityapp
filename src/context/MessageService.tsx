@@ -27,7 +27,12 @@ interface OptionProps {
 }
 
 export const StateMessage = {
-  show: (key: string, type: MessageType, textMessage: string, duration?: number) => {
+  show: (
+    key: string | undefined | null,
+    type: MessageType,
+    textMessage: string,
+    duration?: number,
+  ) => {
     message.open({
       content: preProcessMessage(type, textMessage),
       key: key || '',

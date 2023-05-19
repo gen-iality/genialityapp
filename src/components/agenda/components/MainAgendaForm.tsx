@@ -29,7 +29,7 @@ import { fieldsSelect, handleRequestError, handleSelect } from '@helpers/utils'
 import Select from 'react-select'
 import Creatable from 'react-select'
 
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import useCreatableStyles from '../hooks/useCreatableStyles'
 import useValideChangesInFormData from '../hooks/useValideChangesInFormData'
 import useProcessDateFromAgendaDocument from '../hooks/useProcessDateFromAgendaDocument'
@@ -234,12 +234,11 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   }
 
   const handleImageChange = (files: any) => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras carga la imagen...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras carga la imagen...',
+    )
     setFormData({ ...previousFormData, image: files })
   }
 
@@ -253,12 +252,11 @@ function MainAgendaForm(props: MainAgendaFormProps) {
 
   const handlerCreateCategories = async (value: any, name: string) => {
     // Last handleCreate method
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras guarda la información...',
+    )
 
     try {
       // Show as loading...
@@ -285,31 +283,13 @@ function MainAgendaForm(props: MainAgendaFormProps) {
       })
 
       // Show this messages
-      DispatchMessageService({
-        type: 'loading',
-        msj: '',
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Información guardada correctamente!',
-        action: 'show',
-      })
+      StateMessage.show('loading', 'loading', 'Procesando...')
+      StateMessage.show(null, 'success', 'Información guardada correctamente!')
     } catch (e) {
       // Stop showing as loading and hide the messages
       setThisIsLoading((previous) => ({ ...previous, [name]: false }))
-      DispatchMessageService({
-        type: 'loading',
-        msj: '',
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        msj: handleRequestError(e).message,
-        type: 'error',
-        action: 'show',
-      })
+      StateMessage.show('loading', 'loading', 'Procesando...')
+      StateMessage.show(null, 'error', handleRequestError(e).message)
     }
   }
 

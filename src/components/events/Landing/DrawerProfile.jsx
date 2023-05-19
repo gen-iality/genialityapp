@@ -15,7 +15,7 @@ import { useState } from 'react'
 import { useIntl, FormattedMessage } from 'react-intl'
 import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline'
 import { UsersApi } from '@helpers/request'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import FormComponent from '../registrationForm/form'
 
 const DrawerProfile = (props) => {
@@ -73,19 +73,11 @@ const DrawerProfile = (props) => {
     )
 
     if (resp._id) {
-      DispatchMessageService({
-        type: 'success',
-        msj: `Usuario editado correctamente`,
-        action: 'show',
-      })
+      StateMessage.show(null, 'success', `Usuario editado correctamente`)
       cEventUser.setUpdateUser(true)
       setOpenModal(false)
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: `No fue posible editar el Usuario`,
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', `No fue posible editar el Usuario`)
     }
   }
 

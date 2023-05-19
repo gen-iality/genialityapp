@@ -49,7 +49,7 @@ import QrModal from './qrModal'
 import Header from '@antdComponents/Header'
 import TableA from '@antdComponents/Table'
 import Highlighter from 'react-highlight-words'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import Loading from '../profile/loading'
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox'
 import { HelperContext } from '@context/helperContext/helperContext'
@@ -921,30 +921,22 @@ class ListEventUser extends Component {
         checked_in: true,
       })
       .then(() => {
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Usuario inscrito exitosamente...',
-          action: 'show',
-        })
+        StateMessage.show(null, 'success', 'Usuario inscrito exitosamente...')
         checkInStatus = true
       })
       .catch((error) => {
         console.error('Error updating document: ', error)
         if (this.props.intl) {
-          DispatchMessageService({
-            type: 'error',
-            msj: this.props.intl.formatMessage({
+          StateMessage.show(
+            null,
+            'error',
+            this.props.intl.formatMessage({
               id: 'toast.error',
               defaultMessage: 'Sry :(',
             }),
-            action: 'show',
-          })
+          )
         } else {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Algo salió mal. Intentalo de nuevo',
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', 'Algo salió mal. Intentalo de nuevo')
         }
         checkInStatus = false
       })

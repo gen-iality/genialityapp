@@ -4,7 +4,7 @@ import { handleSelect } from './utils'
 import { firestore } from './firebase'
 import dayjs from 'dayjs'
 import { GetTokenUserFirebase } from './HelperAuth'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const publicInstance = axios.create({
   url: ApiUrl,
@@ -116,36 +116,24 @@ export const getCurrentUser = async () => {
           // eslint-disable-next-line no-unused-vars
           const { status } = error.response
           if (status === 401) {
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Tu token a caducado, redirigiendo al login!',
-              action: 'show',
-            })
+            StateMessage.show(
+              null,
+              'error',
+              'Tu token a caducado, redirigiendo al login!',
+            )
           } else {
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Ocurrió un error distinto al token!',
-              action: 'show',
-            })
+            StateMessage.show(null, 'error', 'Ocurrió un error distinto al token!')
           }
         } else {
           const errorData = {}
           console.error('Error', error.message)
           if (error.message) {
             errorData.message = error.message
-            DispatchMessageService({
-              type: 'error',
-              msj: errorData.message,
-              action: 'show',
-            })
+            StateMessage.show(null, 'error', errorData.message)
           } else if (error.request) {
             console.error(error.request)
             errorData.message = JSON.stringify(error.request)
-            DispatchMessageService({
-              type: 'error',
-              msj: errorData.message,
-              action: 'show',
-            })
+            StateMessage.show(null, 'error', errorData.message)
           }
           errorData.status = 708
         }

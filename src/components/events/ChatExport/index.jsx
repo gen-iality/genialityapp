@@ -14,7 +14,7 @@ import { handleRequestError } from '@helpers/utils'
 import { firestoreeviuschat, firestore } from '@helpers/firebase'
 import AccountCancel from '@2fd/ant-design-icons/lib/AccountCancel'
 import Account from '@2fd/ant-design-icons/lib/Account'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useEventContext } from '@context/eventContext'
 
@@ -176,12 +176,11 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function deleteAllChat() {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se borra la información...',
+    )
     Modal.confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -198,25 +197,11 @@ const ChatExport = ({ eventId, event }) => {
             })
             setdatamsjevent([])
             setLoading(false)
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
         }
         onHandlerRemove()
@@ -240,12 +225,11 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function remove(id) {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se borra la información...',
+    )
     Modal.confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -260,25 +244,11 @@ const ChatExport = ({ eventId, event }) => {
             await deleteSingleChat(eventId, id)
             getChat()
             setLoading(false)
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
         }
         onHandlerRemove()
@@ -300,14 +270,13 @@ const ChatExport = ({ eventId, event }) => {
 
     searchDataUser.then((res) => {
       const userBlocked = res.data
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: `Por favor espere mientras ${
+      StateMessage.show(
+        'loading',
+        'loading',
+        `Por favor espere mientras ${
           userBlocked ? 'desbloquea' : 'bloquea'
         } el usuario del chat...`,
-        action: 'show',
-      })
+      )
       Modal.confirm({
         title: `¿Está seguro de ${
           userBlocked ? 'desbloquear' : 'bloquear'
@@ -332,29 +301,19 @@ const ChatExport = ({ eventId, event }) => {
                   blocked: !userBlocked,
                 })
                 .then(() => {
-                  DispatchMessageService({
-                    key: 'loading',
-                    action: 'destroy',
-                  })
-                  DispatchMessageService({
-                    type: 'success',
-                    msj: `${userBlocked ? 'Usuario desbloqueado' : 'Usuario bloqueado'}`,
-                    action: 'show',
-                  })
+                  StateMessage.destroy('loading')
+                  StateMessage.show(
+                    null,
+                    'success',
+                    `${userBlocked ? 'Usuario desbloqueado' : 'Usuario bloqueado'}`,
+                  )
                 })
               getChat()
               getBlocketdUsers()
               setLoading(false)
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
           }
           onHandlerBlock()

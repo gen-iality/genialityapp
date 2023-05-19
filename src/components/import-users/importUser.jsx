@@ -6,7 +6,7 @@ import Result from './result'
 import Async from 'async'
 import Header from '@antdComponents/Header'
 import { Steps } from 'antd'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const { Step } = Steps
 
@@ -31,12 +31,11 @@ class ImportUsers extends Component {
 
   importUsers = (users, password) => {
     const self = this
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se envía la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se envía la información...',
+    )
 
     if (password) {
       const genericPassword = []
@@ -93,25 +92,11 @@ class ImportUsers extends Component {
           })
         },
       )
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Información cargada correctamente!',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', 'Información cargada correctamente!')
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Error cargando la información',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', 'Error cargando la información')
     }
   }
 

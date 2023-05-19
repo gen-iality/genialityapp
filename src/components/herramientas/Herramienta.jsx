@@ -5,7 +5,7 @@ import { handleRequestError } from '@helpers/utils'
 import { Row, Col, Form, Input, Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const { confirm } = Modal
 
@@ -36,12 +36,11 @@ const Herramienta = (props) => {
 
   const onSubmit = async () => {
     if (herramienta.name) {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: 'Por favor espere mientras se guarda la información...',
-        action: 'show',
-      })
+      StateMessage.show(
+        'loading',
+        'loading',
+        'Por favor espere mientras se guarda la información...',
+      )
 
       try {
         if (locationState.edit) {
@@ -51,33 +50,15 @@ const Herramienta = (props) => {
           const resp = await ToolsApi.create(herramienta, eventID)
           console.log('resp', resp)
         }
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
         history.push(`${props.parentUrl}/herramientas`)
       } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', handleRequestError(e).message)
       }
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El nombre es requerido',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'El nombre es requerido')
     }
   }
 
@@ -91,12 +72,11 @@ const Herramienta = (props) => {
   }
 
   const onRemoveId = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -109,26 +89,16 @@ const Herramienta = (props) => {
           const onHandlerRemove = async () => {
             try {
               await ToolsApi.deleteOne(locationState.edit, eventID)
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó la información correctamente!',
+              )
               history.push(`${props.parentUrl}/herramientas`)
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
           }
           onHandlerRemove()

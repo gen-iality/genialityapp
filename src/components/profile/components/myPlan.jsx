@@ -30,7 +30,7 @@ import { Link } from 'react-router-dom'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 import dayjs from 'dayjs'
 import { useIntl } from 'react-intl'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { handleRequestError } from '@helpers/utils'
 
 const myPlan = ({ cUser }) => {
@@ -76,44 +76,33 @@ const myPlan = ({ cUser }) => {
         defaultMessage: 'Cancelar',
       }),
       onOk() {
-        DispatchMessageService({
-          type: 'loading',
-          key: 'loading',
-          msj: intl.formatMessage({
+        StateMessage.show(
+          'loading',
+          'loading',
+          intl.formatMessage({
             id: 'my_plan.delete.loading.notification',
             defaultMessage: 'Por favor espere mientras se borra la notificación...',
           }),
-          action: 'show',
-        })
+        )
         const onHandlerRemove = async () => {
           try {
             await AlertsPlanApi.editOne(id, {
               status: 'INACTIVE',
               user_id: cUser.value?._id,
             })
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: intl.formatMessage({
+            StateMessage.destroy('loading')
+            StateMessage.show(
+              null,
+              'success',
+              intl.formatMessage({
                 id: 'my_plan.delete.notification.success',
                 defaultMessage: 'Se eliminó la notificación correctamente!',
               }),
-              action: 'show',
-            })
+            )
             getInfoPlans()
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
         }
         onHandlerRemove()

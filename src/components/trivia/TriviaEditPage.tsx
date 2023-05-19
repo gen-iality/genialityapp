@@ -35,7 +35,7 @@ import FormQuestionEdit from './FormQuestionEdit'
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
 import Loading from '../profile/loading'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 
 const formLayout = {
@@ -241,12 +241,11 @@ class TriviaEdit extends Component {
   async submit() {
     console.debug('call submit this.state.survey =', this.state.survey)
     if (this.state.survey) {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: 'Por favor espere mientras se guarda la información...',
-        action: 'show',
-      })
+      StateMessage.show(
+        'loading',
+        'loading',
+        'Por favor espere mientras se guarda la información...',
+      )
       //Se recogen los datos a actualizar
       const data = {
         survey: this.state.survey,
@@ -320,32 +319,18 @@ class TriviaEdit extends Component {
           this.props.onSave(idSurvey)
         }
 
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: `La ${this.state.title.toLowerCase()} se guardó correctamente!`,
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(
+          null,
+          'success',
+          `La ${this.state.title.toLowerCase()} se guardó correctamente!`,
+        )
       } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', handleRequestError(e).message)
       }
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El nombre es requerido',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'El nombre es requerido')
     }
   }
 
@@ -354,12 +339,11 @@ class TriviaEdit extends Component {
     console.debug('call submitWithQuestions')
 
     if (this.state.publish === 'true' && this.state.questions.length === 0)
-      return DispatchMessageService({
-        type: 'error',
-        /* key: 'updating', */
-        msj: `Esta ${this.state.title.toLowerCase()} no cuenta con respuestas posibles`,
-        action: 'show',
-      })
+      return StateMessage.show(
+        null,
+        'error',
+        `Esta ${this.state.title.toLowerCase()} no cuenta con respuestas posibles`,
+      )
 
     let isValid = true
     let isValidInitial = true
@@ -384,12 +368,7 @@ class TriviaEdit extends Component {
     }
 
     if (isValid && isValidInitial) {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'updating',
-        msj: 'Actualizando información',
-        action: 'show',
-      })
+      StateMessage.show('updating', 'loading', 'Actualizando información')
 
       const data = {
         graphyType: this.state.graphyType,
@@ -460,46 +439,29 @@ class TriviaEdit extends Component {
             { eventId: this.props.event._id, name: data.survey, category: 'none' },
           )
           if (!this.props.inserted) this.goBack()
-          DispatchMessageService({
-            key: 'updating',
-            action: 'destroy',
-          })
-          DispatchMessageService({
-            type: 'success',
-            key: 'updating',
-            msj: setDataInFire.message,
-            action: 'show',
-          })
+          StateMessage.destroy('updating')
+          StateMessage.show('updating', 'success', setDataInFire.message)
         })
         .catch((err) => {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Ha ocurrido un inconveniente',
-            action: 'show',
-          })
+          console.error(err)
+          StateMessage.show(null, 'error', 'Ha ocurrido un inconveniente')
         })
     } else {
       if (!isValid) {
-        DispatchMessageService({
-          key: 'updating',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: `Esta ${this.state.title.toLowerCase()} es calificable, hay preguntas sin respuesta correcta asignada`,
-          action: 'show',
-        })
+        StateMessage.destroy('updating')
+        StateMessage.show(
+          null,
+          'error',
+          `Esta ${this.state.title.toLowerCase()} es calificable, hay preguntas sin respuesta correcta asignada`,
+        )
       }
       if (!isValidInitial) {
-        DispatchMessageService({
-          key: 'updating',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: `Esta ${this.state.title.toLowerCase()} es calificable, debe asignar un mensaje inicial`,
-          action: 'show',
-        })
+        StateMessage.destroy('updating')
+        StateMessage.show(
+          null,
+          'error',
+          `Esta ${this.state.title.toLowerCase()} es calificable, debe asignar un mensaje inicial`,
+        )
       }
     }
   }
@@ -527,12 +489,11 @@ class TriviaEdit extends Component {
   // Borrar pregunta
   deleteOneQuestion = async (questionId) => {
     const self = this
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     const { questions, _id } = self.state
     const { event } = self.props
 
@@ -554,26 +515,12 @@ class TriviaEdit extends Component {
               )
 
               self.setState({ questions: newListQuestion })
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'success',
-                msj: response,
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'success', response)
             })
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
         }
         onHandlerRemove()
@@ -730,12 +677,11 @@ class TriviaEdit extends Component {
 
   remove = () => {
     const self = this
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -748,23 +694,15 @@ class TriviaEdit extends Component {
           try {
             await SurveysApi.deleteOne(self.state.idSurvey, self.props.event._id)
             await deleteSurvey(self.state.idSurvey)
-            DispatchMessageService({ key: 'loading', action: 'destroy' })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
             if (!this.props.inserted) self.goBack()
             if (this.props.inserted && this.props.onDelete) {
               this.props.onDelete()
             }
           } catch (e) {
-            DispatchMessageService({ key: 'loading', action: 'destroy' })
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
         }
         onHandlerRemove()

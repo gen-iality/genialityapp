@@ -10,7 +10,7 @@ import { Form, Tabs, Col, Row, Switch, Modal, BackTop } from 'antd'
 
 import Header from '@antdComponents/Header'
 import { RouterPrompt } from '@antdComponents/RoutePrompt'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import Loading from '../profile/loading'
 
 import { Redirect, useHistory, useLocation } from 'react-router'
@@ -93,12 +93,11 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       values.datetime_end = values.date + ' ' + dayjs(values.hour_end).format('HH:mm')
       values.selected_document = selectedDocuments
 
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: 'Por favor espere mientras se guarda la información...',
-        action: 'show',
-      })
+      StateMessage.show(
+        'loading',
+        'loading',
+        'Por favor espere mientras se guarda la información...',
+      )
 
       let _agenda: AgendaType | undefined = undefined
       if (location.state?.edit || currentAgenda?._id) {
@@ -131,12 +130,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         setIsNeededConfirmRedirection(false)
       }
 
-      DispatchMessageService({
-        action: 'destroy',
-        type: 'loading',
-        key: 'loading',
-        msj: '',
-      })
+      StateMessage.destroy('loading')
 
       if (_agenda?._id) {
         console.log('agenda created (2)')
@@ -147,11 +141,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         history.push(`${props.parentUrl}`)
       }
 
-      DispatchMessageService({
-        msj: 'Información guardada correctamente!',
-        type: 'success',
-        action: 'show',
-      })
+      StateMessage.show(null, 'success', 'Información guardada correctamente!')
     },
     [selectedDocuments],
   )
@@ -210,12 +200,11 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
    * remove the current activity.
    */
   const onRemove = useCallback(async () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras borra la información...',
+    )
     if (currentAgenda) {
       Modal.confirm({
         title: '¿Está seguro de eliminar la información?',

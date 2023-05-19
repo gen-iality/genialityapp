@@ -33,7 +33,7 @@ import {
 } from '@ant-design/icons'
 import EviusReactQuill from '@components/shared/eviusReactQuill'
 import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import BackTop from '@antdComponents/BackTop'
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 
@@ -411,12 +411,11 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               getValueProps={(value) => ({
                 imageUrl: value,
                 imageDataCallBack: (image: string) => {
-                  DispatchMessageService({
-                    type: 'loading',
-                    key: 'loading',
-                    msj: 'Por favor espere mientras carga la imagen...',
-                    action: 'show',
-                  })
+                  StateMessage.show(
+                    'loading',
+                    'loading',
+                    'Por favor espere mientras carga la imagen...',
+                  )
                   props.form.setFieldsValue({ image })
                 },
               })}

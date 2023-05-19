@@ -1,4 +1,4 @@
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import getAdditionalFields from '@components/forms/getAdditionalFields'
 import {
   aditionalFieldsPropsTypes,
@@ -71,11 +71,11 @@ export function getImagename(fileUrl: string) {
 export const beforeUpload = (file: any) => {
   const isLt5M = file.size / 1024 / 1024 < 5
   if (!isLt5M) {
-    DispatchMessageService({
-      type: 'error',
-      msj: 'The file must be less than 5MB, delete it and upload again',
-      action: 'show',
-    })
+    StateMessage.show(
+      null,
+      'error',
+      'The file must be less than 5MB, delete it and upload again',
+    )
   }
   return isLt5M
 }

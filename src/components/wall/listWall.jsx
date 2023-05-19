@@ -26,7 +26,7 @@ import withContext from '@context/withContext'
 import dayjs from 'dayjs'
 import { firestore } from '@helpers/firebase'
 import { WallContextProvider } from '@context/WallContext'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const IconText = ({ icon, text, onSubmit, color, megusta }) => (
   <Button
@@ -65,11 +65,7 @@ class WallList extends Component {
   innerCreateComment = async (post, comment) => {
     await this.setState({ commenting: post.id })
     await this.setState({ commenting: null })
-    DispatchMessageService({
-      type: 'success',
-      msj: 'Comentario creado.',
-      action: 'show',
-    })
+    StateMessage.show(null, 'success', 'Comentario creado.')
     // const dataPost = await saveFirebase.createComment(
     //   post.id,
     //   this.props.cEvent.value._id,
@@ -110,11 +106,7 @@ class WallList extends Component {
     const dataPostOld = this.state.dataPost
     await saveFirebase.deletePost(postId, eventId)
     await this.setState({ deleting: null })
-    DispatchMessageService({
-      type: 'success',
-      msj: 'Publicación eliminada.',
-      action: 'show',
-    })
+    StateMessage.show(null, 'success', 'Publicación eliminada.')
     const dataPost = dataPostOld.filter((item) => item.id !== postId) //crea un nuevo array de objetos sin el post eliminado
     this.setState({ dataPost }) // asigan el nuevo array al estado para que se actualice el componente
   }

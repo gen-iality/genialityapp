@@ -6,7 +6,7 @@ import { app } from '@helpers/firebase'
 import { useUserEvent } from '@context/eventUserContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useIntl } from 'react-intl'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 import { AttendeeApi } from '@helpers/request'
 
@@ -35,11 +35,7 @@ const RegistrationResult = ({
         }
       } catch (err) {
         console.log(err)
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Ha ocurrido un error')
       }
     }
 

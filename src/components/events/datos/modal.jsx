@@ -2,7 +2,7 @@ import { Component, createRef } from 'react'
 import { dynamicFieldOptions } from '@components/dynamic-fields/constants'
 import { Creatable as CreatableSelect } from 'react-select'
 import { Checkbox, Form, Input, Select, InputNumber, Button, Row, Divider } from 'antd'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 // const html = document.querySelector('html')
 const formLayout = {
@@ -310,11 +310,11 @@ class DatosModal extends Component {
         info?.type === 'multiplelist' ||
         info?.type === 'multiplelisttable')
     ) {
-      DispatchMessageService({
-        type: 'error',
-        msj: `El campo de tipo ${info.type} debe tener al menos una opción válida`,
-        action: 'show',
-      })
+      StateMessage.show(
+        null,
+        'error',
+        `El campo de tipo ${info.type} debe tener al menos una opción válida`,
+      )
       return
     }
     info.name = toCapitalizeLower(info.name)

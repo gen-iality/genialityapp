@@ -1,5 +1,5 @@
 import { FormDataType } from '../components/MainAgendaForm'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 export default function useValidAgendaForm(formdata: FormDataType) {
   const validForm: () => boolean = () => {
@@ -18,7 +18,7 @@ export default function useValidAgendaForm(formdata: FormDataType) {
     if (title.length === 0) return true
 
     title.map((item) => {
-      DispatchMessageService({ msj: item, type: 'warning', action: 'show' })
+      StateMessage.show(null, 'warning', item)
     })
 
     return false

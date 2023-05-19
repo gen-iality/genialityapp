@@ -11,7 +11,7 @@ import {
 import { fireStorage } from '@helpers/firebase'
 import Header from '@antdComponents/Header'
 import dayjs from 'dayjs'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const { confirm } = Modal
 
@@ -126,24 +126,15 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
     }
 
     if (!document.title) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El título es requerido',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'El título es requerido')
     } else if (!files && document.type !== 'folder') {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El archivo es requerido',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'El archivo es requerido')
     } else {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: ' Por favor espere mientras se guarda la información...',
-        action: 'show',
-      })
+      StateMessage.show(
+        'loading',
+        'loading',
+        ' Por favor espere mientras se guarda la información...',
+      )
 
       try {
         if (!props.notRecordFileInDocuments) {
@@ -168,41 +159,26 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
             }
           }
 
-          DispatchMessageService({
-            key: 'loading',
-            action: 'destroy',
-          })
-          DispatchMessageService({
-            type: 'success',
-            msj: 'Información guardada correctamente!',
-            action: 'show',
-          })
+          StateMessage.destroy('loading')
+          StateMessage.show(null, 'success', 'Información guardada correctamente!')
         }
 
         if (!props.simpleMode && props.parentUrl) history.push(`${props.parentUrl}`)
         setLoading(false)
       } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', handleRequestError(e).message)
       }
     }
   }
 
   const remove = () => {
     console.debug('call Document.remove')
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se borra la información...',
+    )
     if (location.state.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -234,15 +210,12 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
               } */
               if (!props.notRecordFileInDocuments) {
                 await DocumentsApi.deleteOne(location.state.edit, props.event._id)
-                DispatchMessageService({
-                  key: 'loading',
-                  action: 'destroy',
-                })
-                DispatchMessageService({
-                  type: 'success',
-                  msj: 'Se eliminó la información correctamente!',
-                  action: 'show',
-                })
+                StateMessage.destroy('loading')
+                StateMessage.show(
+                  null,
+                  'success',
+                  'Se eliminó la información correctamente!',
+                )
               }
               if (!props.simpleMode) history.push(`${props.parentUrl}`)
               if (typeof props.onRemoveDocumentContent === 'function') {
@@ -250,15 +223,8 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
               }
               lazyResetDocument()
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
           }
           onHandlerRemove()

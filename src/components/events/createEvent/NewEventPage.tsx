@@ -10,7 +10,7 @@ import { ContactsOutlined, ScheduleOutlined } from '@ant-design/icons'
 import { OrganizationFuction, UsersApi } from '@helpers/request'
 
 /** Context */
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 /*vista de resultado de la creacion de un curso */
 import { NewEventContext } from '@context/newEventContext'
 
@@ -77,11 +77,7 @@ const NewEventPage: FunctionComponent = () => {
             { name: 'description', required: eventNewContext.addDescription, length: 9 },
           ])
         ) {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Error en los campos...',
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', 'Error en los campos...')
         } else {
           goNextPage()
         }

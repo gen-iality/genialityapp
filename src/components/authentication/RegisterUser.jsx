@@ -15,7 +15,7 @@ import createNewUser, {
 import { app } from '@helpers/firebase'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useIntl } from 'react-intl'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { uploadImagedummyRequest } from '@Utilities/imgUtils'
 
 const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
@@ -78,12 +78,7 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
   }
 
   const onFinishCreateNewUser = async (values) => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere...',
-      action: 'show',
-    })
+    StateMessage.show('loading', 'loading', ' Por favor espere...')
     const newValues = {
       ...values,
       picture: imageAvatar,
@@ -118,12 +113,8 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
             console.error(err)
             handleChangeTypeModal('loginError')
           })
-        DispatchMessageService({ key: 'loading', action: 'destroy' })
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
       } else {
         console.error({ creatingStatus, resultMessage })
         if (creatingStatus === CREATE_NEW_USER_FAIL_BECAUSE_EMAIL) {
@@ -133,21 +124,13 @@ const RegisterUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }) => {
           handleChangeTypeModal('loginError')
         }
 
-        DispatchMessageService({ key: 'loading', action: 'destroy' })
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error inesperado',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', 'Ha ocurrido un error inesperado')
       }
     } catch (err) {
       console.error(err)
-      DispatchMessageService({ key: 'loading', action: 'destroy' })
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Ha ocurrido un error inesperado',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', 'Ha ocurrido un error inesperado')
     }
   }
   return (

@@ -1,4 +1,4 @@
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { UsersApi } from '@helpers/request'
 
 /** function to create or edit an eventuser from the cms */
@@ -22,11 +22,7 @@ export const saveOrUpdateAttendeeInAEvent = async ({
       try {
         resp = await UsersApi.createOne(body, eventID)
       } catch (e) {
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Usuario ya registrado en el curso',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Usuario ya registrado en el curso')
         respActivity = false
       }
     } else {
@@ -45,22 +41,16 @@ export const saveOrUpdateAttendeeInAEvent = async ({
 
   if (resp || respActivity) {
     setLoadingregister(false)
-    DispatchMessageService({
-      type: 'success',
-      msj: shouldBeEdited
-        ? 'Usuario editado correctamente'
-        : 'Usuario agregado correctamente',
-      action: 'show',
-    })
+    StateMessage.show(
+      null,
+      'success',
+      shouldBeEdited ? 'Usuario editado correctamente' : 'Usuario agregado correctamente',
+    )
     if (handleModal) handleModal()
     return resp
   } else {
     setLoadingregister(false)
-    DispatchMessageService({
-      type: 'error',
-      msj: 'Error al guardar el usuario',
-      action: 'show',
-    })
+    StateMessage.show(null, 'error', 'Error al guardar el usuario')
     return resp
   }
 }

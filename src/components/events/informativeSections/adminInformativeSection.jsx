@@ -3,7 +3,8 @@ import EviusReactQuill from '../../shared/eviusReactQuill'
 import { useEventContext } from '@context/eventContext'
 import { Form, Row, Col } from 'antd'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
+import { EventsApi } from '@helpers/request'
 
 export default function AdmininformativeSection1() {
   const eventContext = useEventContext()
@@ -36,17 +37,9 @@ export default function AdmininformativeSection1() {
       try {
         const result = await EventsApi.editOne(data, eventContext.value._id)
         console.log('result', result)
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Guardado',
-          action: 'show',
-        })
+        StateMessage.show(null, 'success', 'Guardado')
       } catch (e) {
-        DispatchMessageService({
-          type: 'error',
-          msj: e.message,
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', e.message)
       }
     }
     save()

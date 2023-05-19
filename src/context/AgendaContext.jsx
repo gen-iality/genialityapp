@@ -9,7 +9,7 @@ import { createContext, useState, useEffect, useContext, useReducer } from 'reac
 import Service from '@components/agenda/roomManager/service'
 import { fireRealtime, firestore } from '@helpers/firebase'
 import { CurrentEventContext } from './eventContext'
-import { DispatchMessageService } from './MessageService'
+import { StateMessage } from './MessageService'
 export const AgendaContext = createContext()
 
 const initialState = {
@@ -275,19 +275,11 @@ export const AgendaContextProvider = ({ children }) => {
         )
         // await TypesAgendaApi.create(cEvent.value._id, data);
         if (result && notify) {
-          DispatchMessageService({
-            type: 'success',
-            msj: result.message,
-            action: 'show',
-          })
+          StateMessage.show(null, 'success', result.message)
         }
         return result
       } catch (err) {
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Error en la configuración!',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Error en la configuración!')
       }
     }
   }
@@ -372,19 +364,11 @@ export const AgendaContextProvider = ({ children }) => {
         setMeetingId(null)
         setRoomStatus('')
         setDataLive(null)
-        DispatchMessageService({
-          type: 'success',
-          msj: result.message,
-          action: 'show',
-        })
+        StateMessage.show(null, 'success', result.message)
       }
       return result
     } catch (err) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Error en la configuración!',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Error en la configuración!')
     }
   }
 

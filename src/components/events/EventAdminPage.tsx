@@ -35,7 +35,7 @@ import { AdminUsers } from '@components/AdminUsers/AdminUsers'
 import loadable from '@loadable/component'
 import NoMatchPage from '../notFoundPage/noMatchPage'
 import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { handleRequestError } from '@helpers/utils'
 import {
   featureBlockingListener,
@@ -118,11 +118,7 @@ class Event extends Component {
       featureBlockingListener(eventId, helperDispatch)
       this.setState({ event: eventWithExtraFields, loading: false })
     } catch (e) {
-      DispatchMessageService({
-        type: 'error',
-        msj: handleRequestError(e).message,
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', handleRequestError(e).message)
       this.setState({ loading: false, error: e })
     }
   }

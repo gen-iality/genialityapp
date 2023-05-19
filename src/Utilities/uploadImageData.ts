@@ -1,4 +1,4 @@
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { handleRequestError, uploadImage } from '@helpers/utils'
 
 export const uploadImageData = async (image: string | object) => {
@@ -8,12 +8,12 @@ export const uploadImageData = async (image: string | object) => {
       imagenUrl = await uploadImage(image)
     } catch (e) {
       imagenUrl = null
-      DispatchMessageService({
-        type: 'error',
-        msj: `Error al guardar la imagen: ${handleRequestError(e).message}`,
-        action: 'show',
-        duration: 8,
-      })
+      StateMessage.show(
+        null,
+        'error',
+        `Error al guardar la imagen: ${handleRequestError(e).message}`,
+        8,
+      )
     }
   }
   if (typeof image === 'string') {

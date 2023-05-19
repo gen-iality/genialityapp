@@ -1,7 +1,7 @@
 import { Modal, Form, Input, Button, Typography } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 import axios from 'axios'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const { TextArea } = Input
 
@@ -20,13 +20,12 @@ const ModalNotifications = (props) => {
 
   async function sendNotifications(values) {
     const { notificationMessage } = values
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: `Enviando ${data.length > 0 ? 'notificaciones' : 'notificación'}`,
-      duration: 90,
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      `Enviando ${data.length > 0 ? 'notificaciones' : 'notificación'}`,
+      90,
+    )
 
     if (data.length > 0) {
       const promisesResolved = await Promise.all(
@@ -42,15 +41,8 @@ const ModalNotifications = (props) => {
       )
 
       if (promisesResolved) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Notificación enviada correctamente',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Notificación enviada correctamente')
         setModalSendNotificationVisible(false)
       }
     } else {
@@ -63,28 +55,14 @@ const ModalNotifications = (props) => {
       axios
         .post('https://eviusauth.web.app/notification', body)
         .then(function () {
-          DispatchMessageService({
-            key: 'loading',
-            action: 'destroy',
-          })
-          DispatchMessageService({
-            type: 'success',
-            msj: 'Notificación enviada correctamente',
-            action: 'show',
-          })
+          StateMessage.destroy('loading')
+          StateMessage.show(null, 'success', 'Notificación enviada correctamente')
           setModalSendNotificationVisible(false)
         })
         .catch(function () {
           /** el catch tambien se maneja como successs ya que la notificacion siempre es enviada desde que exista un token, la unica diferencia es que cuando la pantalla del dispositivo esta apagada devuelve error 500 */
-          DispatchMessageService({
-            key: 'loading',
-            action: 'destroy',
-          })
-          DispatchMessageService({
-            type: 'success',
-            msj: 'Notificación enviada correctamente',
-            action: 'show',
-          })
+          StateMessage.destroy('loading')
+          StateMessage.show(null, 'success', 'Notificación enviada correctamente')
 
           setModalSendNotificationVisible(false)
         })

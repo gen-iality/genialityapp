@@ -27,7 +27,7 @@ import BackTop from '@antdComponents/BackTop'
 import dayjs from 'dayjs'
 import { firestore } from '@helpers/firebase'
 import { withRouter } from 'react-router-dom'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs'
 import 'html2pdf-certs/dist/styles.css'
 import CertificateRows from './CertificateRows'
@@ -84,12 +84,11 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
 
   const onSubmit = async (values: any) => {
     console.log('submit', { values })
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se guarda la información...',
+    )
 
     setCertificateData({
       ...certificateData,
@@ -114,39 +113,24 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         await CertsApi.create(payload)
       }
 
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
+      StateMessage.destroy('loading')
 
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Información guardada correctamente!',
-        action: 'show',
-      })
+      StateMessage.show(null, 'success', 'Información guardada correctamente!')
 
       history.push(`${props.parentUrl}`)
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
+      StateMessage.destroy('loading')
 
-      DispatchMessageService({
-        type: 'error',
-        msj: handleRequestError(e).message,
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', handleRequestError(e).message)
     }
   }
 
   const onRemoveId = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -158,26 +142,12 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         onOk: async () => {
           try {
             await CertsApi.deleteOne(locationState.edit)
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
             history.push(`${props.parentUrl}`)
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
         },
       })
@@ -217,11 +187,7 @@ const CertificateEditor: FunctionComponent<any> = (props) => {
         }
       }
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Solo se permiten imágenes. Intentalo de nuevo',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Solo se permiten imágenes. Intentalo de nuevo')
     }
   }
 

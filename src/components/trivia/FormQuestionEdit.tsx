@@ -31,7 +31,7 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons'
 import { saveImageStorage } from '@helpers/helperSaveImage'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { uploadImagedummyRequest } from '@Utilities/imgUtils'
 import LikertScaleEditor from '../quiz/LikertScaleEditor'
 import { SurveyQuestion } from '@components/events/surveys/types'
@@ -327,12 +327,11 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
   }
 
   const onFinish = async (values) => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se guarda la información...',
+    )
     values['id'] = questionId
 
     const imageUrl = await saveEventImage()
@@ -433,44 +432,25 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
         SurveysApi.createQuestion(eventId, surveyId, exclude(dataValues)).then(() => {
           form.resetFields()
           closeModal({ questionIndex, data: exclude(dataValues) }, 'created')
-          DispatchMessageService({ key: 'loading', action: 'destroy' })
-          DispatchMessageService({
-            type: 'success',
-            msj: 'Pregunta creada',
-            action: 'show',
-          })
+          StateMessage.destroy('loading')
+          StateMessage.show(null, 'success', 'Pregunta creada')
         })
       } catch (err) {
-        DispatchMessageService({ key: 'loading', action: 'destroy' })
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Problema creando la pregunta!',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', 'Problema creando la pregunta!')
       }
     } else {
       SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(dataValues))
         .then(() => {
           form.resetFields()
           closeModal({ questionIndex, data: exclude(dataValues) }, 'updated')
-          DispatchMessageService({ key: 'loading', action: 'destroy' })
-          DispatchMessageService({
-            type: 'success',
-            msj: 'Pregunta actualizada',
-            action: 'show',
-          })
+          StateMessage.destroy('loading')
+          StateMessage.show(null, 'success', 'Pregunta actualizada')
         })
         .catch((err) => {
           console.error(err)
-          DispatchMessageService({
-            key: 'loading',
-            action: 'destroy',
-          })
-          DispatchMessageService({
-            type: 'error',
-            msj: 'No se pudo actualizar la pregunta',
-            action: 'show',
-          })
+          StateMessage.destroy('loading')
+          StateMessage.show(null, 'error', 'No se pudo actualizar la pregunta')
         })
     }
   }

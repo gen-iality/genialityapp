@@ -30,7 +30,7 @@ import dayjs from 'dayjs'
 import { utils, writeFileXLSX } from 'xlsx'
 import API from '@helpers/request'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const { Title } = Typography
 // Estilos pagina pdf
@@ -142,11 +142,7 @@ class DashboardEvent extends Component {
       utils.book_append_sheet(wb, ws, `${namesheet}`)
       writeFileXLSX(wb, `${name}_${this.props.eventId}_${dayjs().format('DDMMYY')}.xls`)
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'No existen datos que exportar',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'No existen datos que exportar')
     }
   }
   async fetchDataMails() {

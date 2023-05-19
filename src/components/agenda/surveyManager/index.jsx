@@ -2,7 +2,7 @@ import { Component } from 'react'
 import { Card, Row, Col } from 'antd'
 import { firestore, fireRealtime } from '@helpers/firebase'
 import SurveyItem from './surveyItem'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { sendCommunicationOpen } from './services'
 
 export default class SurveyManager extends Component {
@@ -70,11 +70,7 @@ export default class SurveyManager extends Component {
       await sendCommunicationOpen(survey_id)
     }
     if (result && result.state === 'updated') {
-      DispatchMessageService({
-        type: 'success',
-        msj: result.message,
-        action: 'show',
-      })
+      StateMessage.show(null, 'success', result.message)
     }
   }
 

@@ -22,7 +22,7 @@ import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request'
 
 /** Context imports */
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm'
 
 const { Step } = Steps
@@ -225,11 +225,7 @@ const RegisterUserAndOrgMember = ({
         }
       } catch (err) {
         console.error(err)
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Ha ocurrido un error')
       }
     }
 
