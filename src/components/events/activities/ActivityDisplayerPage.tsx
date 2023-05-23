@@ -27,20 +27,23 @@ const { setHasOpenSurveys } = SurveyActions
 
 const { LOG, ERROR } = Logger('studentlanding-activity')
 
-const ActivityDisplayerPage = (props) => {
+interface IActivityDisplayerPageProps {}
+
+const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
   const { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } =
     useHelper()
-  const [orderedHost, setOrderedHost] = useState([])
-  const cSurveys = useSurveysContext()
-  const [videoStyles, setVideoStyles] = useState(null)
-  const [videoButtonStyles, setVideoButtonStyles] = useState(null)
-  const [blockActivity, setblockActivity] = useState(false)
-  const [activity, setactivity] = useState('')
-  const [nextActivityID, setNextActivityID] = useState(null)
-  const [previousActivityID, setPreviousctivityID] = useState(null)
+  const [orderedHost, setOrderedHost] = useState<any[]>([])
+  const [videoStyles, setVideoStyles] = useState<any>(null)
+  const [videoButtonStyles, setVideoButtonStyles] = useState<any>(null)
+  const [blockActivity, setBlockActivity] = useState(false)
+  const [activity, setActivity] = useState<any>(null)
+  const [nextActivityID, setNextActivityID] = useState<any>(null)
+  const [previousActivityID, setPreviousctivityID] = useState<any>(null)
+
   const cUser = useCurrentUser()
   const cEventUser = useUserEvent()
   const cEvent = useEventContext()
+  const cSurveys = useSurveysContext()
   const history = useHistory()
 
   const intl = useIntl()
@@ -53,7 +56,7 @@ const ActivityDisplayerPage = (props) => {
       return await AgendaApi.getOne(props.match.params.activity_id, cEvent.value._id)
     }
 
-    function orderHost(hosts) {
+    function orderHost(hosts: any[]) {
       hosts.sort(function (a, b) {
         return a.order - b.order
       })
@@ -62,7 +65,7 @@ const ActivityDisplayerPage = (props) => {
 
     getActividad().then((result) => {
       helperDispatch({ type: 'currentActivity', currentActivity: result })
-      setactivity(result)
+      setActivity(result)
       orderHost(result.hosts)
       cSurveys.set_current_activity(result)
     })
@@ -79,7 +82,7 @@ const ActivityDisplayerPage = (props) => {
     // Get the next activity ID to able creating the next activity link
     AgendaApi.byEvent(cEvent?.value._id).then(({ data: allEventActivities }) => {
       const currentActivityId = props.match.params.activity_id
-      const currentActivityObject = allEventActivities.find(
+      const currentActivityObject = (allEventActivities as any[]).find(
         (eventActivity) => eventActivity._id === currentActivityId,
       )
       const currentActivityIndex = allEventActivities.indexOf(currentActivityObject)
@@ -102,7 +105,7 @@ const ActivityDisplayerPage = (props) => {
       props.setVirtualConference(true)
       HandleOpenCloseMenuRigth(true)
       helperDispatch({ type: 'currentActivity', currentActivity: null })
-      setactivity(null)
+      setActivity(null)
     }
   }, [props.match.params.activity_id])
 
@@ -154,7 +157,7 @@ const ActivityDisplayerPage = (props) => {
   // Validar lecciones por codigo
   useEffect(() => {
     if (cEvent.value && cUser.value) {
-      setblockActivity(false)
+      setBlockActivity(false)
     }
   }, [cEvent.value, cEventUser.value, cUser.value])
 
@@ -221,7 +224,7 @@ const ActivityDisplayerPage = (props) => {
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
   mainStageContent: state.stage.data.mainStage,
   userInfo: state.user.data,
   currentActivity: state.stage.data.currentActivity,
