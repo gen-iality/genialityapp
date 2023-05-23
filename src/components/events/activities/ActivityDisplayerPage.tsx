@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'moment-timezone'
 import { useIntl } from 'react-intl'
-import { Card, Col, Button } from 'antd'
+import { Card, Col, Button, Row } from 'antd'
 import { setTopBanner } from '../../../redux/topBanner/actions'
 import { AgendaApi } from '@helpers/request'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
@@ -182,37 +182,40 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
           ) : (
             <ActivityDisplayer activity={activity} />
           )}
-          <Col align="end">
+          <Row gutter={[8, 8]} justify="end">
             {previousActivityID && (
-              <Button
-                style={{ marginTop: '1rem' }}
-                type="primary"
-                size="large"
-                onClick={() => goToActivityIdPage(previousActivityID)}
-              >
-                <ArrowLeftOutlined />
-                {intl.formatMessage({
-                  id: 'activity.button.previous',
-                  defaultMessage: 'Anterior',
-                })}
-              </Button>
+              <Col>
+                <Button
+                  style={{ marginTop: '1rem' }}
+                  type="primary"
+                  size="large"
+                  onClick={() => goToActivityIdPage(previousActivityID)}
+                >
+                  <ArrowLeftOutlined />
+                  {intl.formatMessage({
+                    id: 'activity.button.previous',
+                    defaultMessage: 'Anterior',
+                  })}
+                </Button>
+              </Col>
             )}
-            {previousActivityID && nextActivityID && ' '}
             {nextActivityID && (
-              <Button
-                style={{ marginTop: '1rem' }}
-                type="primary"
-                size="large"
-                onClick={() => goToActivityIdPage(nextActivityID)}
-              >
-                {intl.formatMessage({
-                  id: 'activity.button.next',
-                  defaultMessage: 'Siguiente',
-                })}
-                <ArrowRightOutlined />
-              </Button>
+              <Col>
+                <Button
+                  style={{ marginTop: '1rem' }}
+                  type="primary"
+                  size="large"
+                  onClick={() => goToActivityIdPage(nextActivityID)}
+                >
+                  {intl.formatMessage({
+                    id: 'activity.button.next',
+                    defaultMessage: 'Siguiente',
+                  })}
+                  <ArrowRightOutlined />
+                </Button>
+              </Col>
             )}
-          </Col>
+          </Row>
 
           <AditionalInformation orderedHost={orderedHost} />
         </Card>
