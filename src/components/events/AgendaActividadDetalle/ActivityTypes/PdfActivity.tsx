@@ -3,29 +3,23 @@ import { Document as DocumentReactPDF, Page, pdfjs } from 'react-pdf'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
-import { useHelper } from '../../../../context/helperContext/hooks/useHelper'
 import HeaderColumnswithContext from '../HeaderColumns'
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
 
-// TODO: not use useHelper, pass the activity data via props to be this component portable
+import { IBasicActivityProps } from './basicTypes'
 
-const PdfActivity: FunctionComponent = () => {
-  const { currentActivity } = useHelper()
+const PdfActivity: FunctionComponent<IBasicActivityProps> = (props) => {
+  const { activity } = props
 
-  const [activityState, setActivityState] = useState<any>()
   const [pdfURL, setPdfURL] = useState()
 
   const [numPages, setNumPages] = useState<number | undefined>()
   const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
-    setActivityState(currentActivity)
-  }, [currentActivity])
-
-  useEffect(() => {
-    if (!activityState) return
-    setPdfURL(activityState.meeting_id)
-  }, [activityState])
+    if (!activity) return
+    setPdfURL(activity.meeting_id)
+  }, [activity])
 
   function onDocumentLoadSuccess({ numPages }: any) {
     setNumPages(numPages as number)
@@ -50,7 +44,7 @@ const PdfActivity: FunctionComponent = () => {
 
   return (
     <>
-      <HeaderColumnswithContext isVisible activityState={activityState} />
+      <HeaderColumnswithContext isVisible activityState={activity} />
       <a href={pdfURL} target="blank">
         Descargar PDF
       </a>

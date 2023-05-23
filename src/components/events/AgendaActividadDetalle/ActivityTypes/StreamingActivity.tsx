@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { FunctionComponent, useCallback, useContext, useEffect, useState } from 'react'
 import { Result } from 'antd'
 import { SmileOutlined } from '@ant-design/icons'
 import HeaderColumnswithContext from '../HeaderColumns'
@@ -11,7 +11,10 @@ import GcoreStreamingPlayer from '../GcoreStreamingPlayer'
 import AgendaContext from '@context/AgendaContext'
 import ReactPlayer from 'react-player'
 
-const StreamingActivity = (props) => {
+import { IBasicActivityProps } from './basicTypes'
+
+const StreamingActivity: FunctionComponent<IBasicActivityProps> = (props) => {
+  const { activity } = props
   const [activityState, setactivityState] = useState('')
   const [meetingId, setmeetingId] = useState('')
   const [fnCiclo, setFnCiclo] = useState(false)
@@ -19,11 +22,9 @@ const StreamingActivity = (props) => {
   // Estado para controlar origen de transmision
 
   const { transmition, setTransmition } = useContext(AgendaContext)
-  const { currentActivity } = useHelper()
 
   async function listeningStateStreamingRoom(event_id, activity_id) {
     if (!fnCiclo) {
-      const tempActivity = currentActivity
       firestore
         .collection('events')
         .doc(event_id)
@@ -37,20 +38,19 @@ const StreamingActivity = (props) => {
           setmeetingId(meeting_id)
           setTransmition(data.transmition)
           setFnCiclo(true)
-          console.log('tempActivity', tempActivity)
         })
     }
   }
 
   useEffect(() => {
     async function GetStateStreamingRoom() {
-      await listeningStateStreamingRoom(props.cEvent.value._id, currentActivity._id)
+      await listeningStateStreamingRoom(props.cEvent.value._id, activity._id)
     }
 
-    if (currentActivity != null) {
+    if (activity != null) {
       GetStateStreamingRoom()
     }
-  }, [currentActivity, props.cEvent])
+  }, [activity, props.cEvent])
 
   const ViewTypeStreaming = useCallback((actividad_estado) => {
     switch (actividad_estado) {
@@ -58,7 +58,7 @@ const StreamingActivity = (props) => {
         return (
           <>
             <GcoreStreamingPlayer
-              activity={currentActivity}
+              activity={activity}
               transmition={transmition}
               meeting_id={meetingId}
             />
@@ -73,14 +73,14 @@ const StreamingActivity = (props) => {
         )
 
       case 'ended_meeting_room':
-        return currentActivity?.video ? (
+        return activity?.video ? (
           <>
             <div className="mediaplayer" style={{ aspectRatio: '16/9' }}>
               <ReactPlayer
                 style={{ objectFit: 'cover' }}
                 width="100%"
                 height="100%"
-                url={currentActivity && currentActivity?.video}
+                url={activity && activity?.video}
                 controls
               />
             </div>
@@ -106,7 +106,7 @@ const StreamingActivity = (props) => {
         return (
           <>
             <GcoreStreamingPlayer
-              activity={currentActivity}
+              activity={activity}
               transmition={transmition}
               meeting_id={meetingId}
             />

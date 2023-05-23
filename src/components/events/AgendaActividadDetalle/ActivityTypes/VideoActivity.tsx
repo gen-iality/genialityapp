@@ -1,22 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FunctionComponent } from 'react'
 import ReactPlayer from 'react-player'
-import { useHelper } from '@context/helperContext/hooks/useHelper'
 import HeaderColumnswithContext from '../HeaderColumns'
 
-const VideoActivity = () => {
-  const { currentActivity } = useHelper()
-  const urlVideo = currentActivity?.video
+import { IBasicActivityProps } from './basicTypes'
+
+const VideoActivity: FunctionComponent<IBasicActivityProps> = (props) => {
+  const { activity } = props
+  const urlVideo = activity?.video
 
   const [activityState] = useState('')
   const [isItAnFrame, setIsItAnFrame] = useState(false)
 
   useEffect(() => {
-    if (currentActivity.type.name === 'cargarvideo') {
+    if (activity.type.name === 'cargarvideo') {
       setIsItAnFrame(true)
     } else {
       setIsItAnFrame(false)
     }
-  }, [currentActivity])
+  }, [activity])
 
   return (
     <>

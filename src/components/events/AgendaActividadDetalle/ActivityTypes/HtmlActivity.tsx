@@ -1,23 +1,18 @@
-import { useState, useEffect, useContext, useRef, type FunctionComponent } from 'react'
-import AgendaContext from '@context/AgendaContext'
+import { useState, useEffect, useRef, type FunctionComponent } from 'react'
 import HeaderColumnswithContext from '../HeaderColumns'
 
-const HtmlActivity: FunctionComponent = () => {
-  const [activityState, setActivityState] = useState<any>()
+import { IBasicActivityProps } from './basicTypes'
+
+const HtmlActivity: FunctionComponent<IBasicActivityProps> = (props) => {
+  const { activity } = props
   const [htmlData, setHtmlData] = useState<string>('')
 
   const ref = useRef<HTMLDivElement>(null)
-  const cAgenda = useContext(AgendaContext)
 
   useEffect(() => {
-    setActivityState(cAgenda)
-    console.log('currentActivity', cAgenda)
-  }, [cAgenda])
-
-  useEffect(() => {
-    if (!activityState) return
-    setHtmlData(activityState.meeting_id || '<em>Contenido no <b>establecido</b></em>.')
-  }, [activityState?.meeting_id])
+    if (!activity) return
+    setHtmlData(activity.meeting_id || '<em>Contenido no <b>establecido</b></em>.')
+  }, [activity?.meeting_id])
 
   useEffect(() => {
     if (!ref.current) return
@@ -30,7 +25,7 @@ const HtmlActivity: FunctionComponent = () => {
 
   return (
     <>
-      <HeaderColumnswithContext isVisible activityState={activityState} />
+      <HeaderColumnswithContext isVisible activityState={activity} />
       <div ref={ref} style={{ width: '100%' }} />
     </>
   )

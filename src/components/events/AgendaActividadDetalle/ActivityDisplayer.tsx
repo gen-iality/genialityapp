@@ -1,3 +1,5 @@
+import { FunctionComponent } from 'react'
+
 /** Context */
 import { SurveyProvider } from '@components/events/surveys/surveyContext'
 
@@ -11,51 +13,52 @@ import SurveyActivity from './ActivityTypes/SurveyActivity'
 import PdfActivity from './ActivityTypes/PdfActivity'
 import HtmlActivity from './ActivityTypes/HtmlActivity'
 
-function ActivityTypeSwitch({ activity }) {
+interface IActivityDisplayerProps {
+  activity: any
+}
+
+function switchActivity(activity: IActivityDisplayerProps['activity']) {
   console.debug(activity)
-  const activityType = activity.type ? activity.type.name : 'generic'
+  const activityType: string | undefined = activity.type?.name
   console.debug('HOC: activityType', activityType)
+
   switch (activityType) {
-    case 'generic':
-      return <GenericActivity />
     case 'eviusMeet':
     case 'vimeo':
     case 'youTube':
-      return <StreamingActivity />
+      return <StreamingActivity activity={activity} />
     case 'meeting':
-      return <MeetingActivity />
+      return <MeetingActivity activity={activity} />
     case 'url':
     case 'cargarvideo':
-      return <VideoActivity />
+      return <VideoActivity activity={activity} />
     case 'pdf':
     case 'pdf2':
-      return <PdfActivity />
+      return <PdfActivity activity={activity} />
     case 'quiz':
     case 'quizing':
       return (
         <SurveyProvider>
-          <QuizActivity />
+          <QuizActivity activity={activity} />
         </SurveyProvider>
       )
     case 'survey':
       return (
         <SurveyProvider>
-          <SurveyActivity />
+          <SurveyActivity activity={activity} />
         </SurveyProvider>
       )
     case 'html':
-      return <HtmlActivity />
+      return <HtmlActivity activity={activity} />
     default:
-      return <GenericActivity />
+      return <GenericActivity activity={activity} />
   }
 }
 
-const ActivityDisplayer = ({ activity }) => {
+const ActivityDisplayer: FunctionComponent<IActivityDisplayerProps> = ({ activity }) => {
   return (
     <header>
-      <div>
-        <ActivityTypeSwitch activity={activity} />
-      </div>
+      <div>{switchActivity(activity)}</div>
     </header>
   )
 }
