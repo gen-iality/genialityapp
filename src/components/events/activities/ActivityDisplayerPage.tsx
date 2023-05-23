@@ -33,9 +33,9 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
   const { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } =
     useHelper()
   const [orderedHost, setOrderedHost] = useState<any[]>([])
-  const [videoStyles, setVideoStyles] = useState<any>(null)
-  const [videoButtonStyles, setVideoButtonStyles] = useState<any>(null)
-  const [blockActivity, setBlockActivity] = useState(false)
+  // const [videoStyles, setVideoStyles] = useState<any>(null)
+  // const [videoButtonStyles, setVideoButtonStyles] = useState<any>(null)
+  // const [blockActivity, setBlockActivity] = useState(false)
   const [activity, setActivity] = useState<any>(null)
   const [nextActivityID, setNextActivityID] = useState<any>(null)
   const [previousActivityID, setPreviousctivityID] = useState<any>(null)
@@ -123,41 +123,37 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
 
   useEffect(() => {
     if (chatAttendeChats === '4') {
-      const sharedProperties = {
-        position: 'fixed',
-        right: '0',
-        width: '170px',
-      }
-
-      const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' }
-
-      setVideoStyles({
-        ...sharedProperties,
-        ...verticalVideo,
-        zIndex: '100',
-        transition: '300ms',
-      })
-
-      const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' }
-
-      setVideoButtonStyles({
-        ...sharedProperties,
-        ...verticalVideoButton,
-        zIndex: '101',
-        cursor: 'pointer',
-        display: 'block',
-        height: '96px',
-      })
+      // const sharedProperties = {
+      //   position: 'fixed',
+      //   right: '0',
+      //   width: '170px',
+      // }
+      // const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' }
+      // setVideoStyles({
+      //   ...sharedProperties,
+      //   ...verticalVideo,
+      //   zIndex: '100',
+      //   transition: '300ms',
+      // })
+      // const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' }
+      // setVideoButtonStyles({
+      //   ...sharedProperties,
+      //   ...verticalVideoButton,
+      //   zIndex: '101',
+      //   cursor: 'pointer',
+      //   display: 'block',
+      //   height: '96px',
+      // })
     } else {
-      setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' })
-      setVideoButtonStyles({ display: 'none' })
+      // setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' })
+      // setVideoButtonStyles({ display: 'none' })
     }
   }, [chatAttendeChats, isMobile])
 
   // Validar lecciones por codigo
   useEffect(() => {
     if (cEvent.value && cUser.value) {
-      setBlockActivity(false)
+      // setBlockActivity(false)
     }
   }, [cEvent.value, cEventUser.value, cUser.value])
 
