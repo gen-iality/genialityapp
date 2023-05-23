@@ -199,6 +199,7 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
                 })}
               </Button>
             )}
+            {previousActivityID && nextActivityID && ' '}
             {nextActivityID && (
               <Button
                 style={{ marginTop: '1rem' }}
