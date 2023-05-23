@@ -1,10 +1,19 @@
 import { Form, Input } from 'antd';
+import { CurrentEventContext } from '@context/eventContext';
+import { useContext } from 'react';
 
 const getBasicFields = ({ fields, attendee }: any) => {
   let attendeeProperties = attendee?.properties || {};
   if (fields?.lenght === 0) return [];
+  const cEvent: any = useContext(CurrentEventContext);
 
   const basicFormFields = fields.map((field: any, key: any) => {
+    /* console.log(field.label, '---------------------') */
+    if(cEvent?.value?._id === '64623516d0f7f7b59e0f77e2' && field && field.label === 'Correo') {
+      /* const x = {...field} */
+      field.label = 'Correo corporativo'
+      /* console.log(field, 'field') */
+    }
     if (field.name !== 'contrasena' && field.name !== 'password') {
       let rule = {};
       let type = field.type || 'text';
