@@ -2,6 +2,14 @@ import { Card, Space, Typography } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 const ProductCard = ({ galery, eventId, history }) => {
   const { Title } = Typography;
+  const calculateDiscountedPrice = () => {
+    if (galery.discount > 0) {
+      const discountedPrice = galery.price - (galery.price * galery.discount) / 100;
+      return discountedPrice;
+    }
+    return galery.price;
+  };
+  const discountedPrice = calculateDiscountedPrice();
   return (
     <Card
       /* actions={[
@@ -38,7 +46,7 @@ const ProductCard = ({ galery, eventId, history }) => {
                     {galery?.by}
                   </Typography.Text>
                 )}
-                {galery?.price && <Typography.Text type='success'> $ {galery?.price}</Typography.Text>}
+                {discountedPrice && <Typography.Text type='success'> $ {discountedPrice}</Typography.Text>}
               </Space>
             )}
           </Space>

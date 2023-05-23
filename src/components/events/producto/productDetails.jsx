@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, Col, Divider, Row, Space, Spin, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { EventsApi } from '../../../helpers/request';
-import { IssuesCloseOutlined } from '@ant-design/icons';
+import { IssuesCloseOutlined, TagsOutlined, PercentageOutlined } from '@ant-design/icons';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 // import { Carousel } from 'react-responsive-carousel';
 import { firestore } from '../../../helpers/firebase';
@@ -25,7 +25,22 @@ function DetailsProduct(props) {
   const [eventId, setEventId] = useState('');
   const [updateValue, setUpdateValue] = useState();
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const [initialPrice, setInitialPrice] = useState(0);
+
+  const calculateDiscountedPrice = () => {
+    if (product && product.price) {
+      if (product.discount && product.discount > 0) {
+        const discountedPrice = product.price - (product.price * product.discount) / 100;      
+        // const formattedPrice = discountedPrice.toFixed(2); // redondear a dos decimales
+        // const priceWithoutDecimal = formattedPrice.replace(/\.00$/, ''); // para quitar decimales 
+        return discountedPrice;
+      }
+      return product.price;
+    }
+    return 0;
+  };
+
+  const priceWithDiscount = calculateDiscountedPrice();
+  const priceWithoutDiscount = product && product.price;
 
   //currency
   useEffect(() => {
@@ -52,7 +67,6 @@ function DetailsProduct(props) {
       let detalleProduct = await EventsApi.getOneProduct(eventId, idProduct);
       if (Object.keys(detalleProduct).length > 0) {
         setProduct(detalleProduct);
-        setInitialPrice(detalleProduct.price); // Asignar el precio inicial a la variable de estado
       }
       setLoading(false);
     }
@@ -132,31 +146,41 @@ function DetailsProduct(props) {
                 <Title level={3}>{product && product.name ? product.name : 'Nombre del producto'}</Title>
                 {/* OfertaProduct "No tienes permisos para pujar sobre esta obra." Precio Inicial:
                   $ 2000 */}
-                <div style={{display: "flex"}}>
+                <div style={{ display: 'flex' }}>
                   {product && (product.price || product.start_price) && (
                     <div>
-                      <h3 style={{marginLeft: "5px", fontWeight: "bold"}}>Ahora</h3>
+                      <h3 style={{ marginLeft: '5px', fontWeight: 'bold' }}>Ahora</h3>
                       <OfertaProduct
                         updateValues={setUpdateValue}
                         hability={habilty}
                         messageF={messageF}
                         product={product}
                         eventId={eventId}
+                        priceWithDiscount={priceWithDiscount}
                       />
                     </div>
                   )}
-                  {product && (product.price || product.start_price) && initialPrice !== product.price && (
+                  {product && (product.price || product.start_price) && product.discount && (
                     <div>
-                      <h3 style={{marginLeft: "5px", fontWeight: "bold"}}>Antes</h3>
+                      <h3 style={{ marginLeft: '5px', fontWeight: 'bold' }}>Antes</h3>
                       <OfertaProduct
                         updateValues={setUpdateValue}
                         hability={habilty}
                         messageF={messageF}
                         product={product}
                         eventId={eventId}
-                        initialPrice={initialPrice} // Pasar el valor de initialPrice como una prop
+                        priceWithoutDiscount={priceWithoutDiscount}
                       />
                     </div>
+                  )}
+                  {product && product.discount && product.discount > 0 && (
+                    <Text>
+                      <div style={{ textAlign: 'center' }}>
+                        <h4 style={{ marginLeft: '5px', fontWeight: 'bold' }}>Descuento</h4>
+                        {product.discount}
+                        <PercentageOutlined style={{ fontSize: '16px', marginRight: '5px' }} />
+                      </div>
+                    </Text>
                   )}
                 </div>
                 {product && product.by && product.by !== '' && (
