@@ -4,14 +4,14 @@ import { FunctionComponent } from 'react'
 import { SurveyProvider } from '@components/events/surveys/surveyContext'
 
 /** Components */
-import StreamingActivity from './ActivityTypes/StreamingActivity'
-import MeetingActivity from './ActivityTypes/MeetingActivity'
-import QuizActivity from './ActivityTypes/QuizActivity'
-import VideoActivity from './ActivityTypes/VideoActivity'
-import GenericActivity from './ActivityTypes/GenericActivity'
-import SurveyActivity from './ActivityTypes/SurveyActivity'
-import PdfActivity from './ActivityTypes/PdfActivity'
-import HtmlActivity from './ActivityTypes/HtmlActivity'
+import StreamingActivity from './displayers/StreamingDisplayer'
+import MeetingActivity from './displayers/MeetingDisplayer'
+import QuizActivity from './displayers/QuizDisplayer'
+import VideoActivity from './displayers/VideoDisplayer'
+import GenericActivity from './displayers/GenericDisplayer'
+import SurveyActivity from './displayers/SurveyDisplayer'
+import PdfActivity from './displayers/PdfDisplayer'
+import HtmlActivity from './displayers/HtmlDisplayer'
 
 interface IActivityDisplayerProps {
   activity: any
