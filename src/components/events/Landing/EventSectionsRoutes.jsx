@@ -48,7 +48,9 @@ const ListVideoCard = loadable(() => import('../../shared/listVideoCard'))
 const Videos = loadable(() => import('../videos'))
 const InfoEvent = loadable(() => import('../../shared/infoEvent'))
 const ResponsePayu = loadable(() => import('../../shared/infoEvent'))
-const ActivityDisplayerPage = loadable(() => import('../activities/index'))
+const ActivityDisplayerPage = loadable(() =>
+  import('../activities/ActivityDisplayerPage'),
+)
 const MySection = loadable(() => import('../newSection'))
 const ThisRouteCanBeDisplayed = loadable(() =>
   import('./helpers/thisRouteCanBeDisplayed'),
