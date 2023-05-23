@@ -50,7 +50,7 @@ function ActivityTypeSwitch({ activity }) {
   }
 }
 
-const HOCActividad = ({ activity }) => {
+const ActivityDisplayer = ({ activity }) => {
   return (
     <header>
       <div>
@@ -60,4 +60,4 @@ const HOCActividad = ({ activity }) => {
   )
 }
 
-export default HOCActividad
+export default ActivityDisplayer

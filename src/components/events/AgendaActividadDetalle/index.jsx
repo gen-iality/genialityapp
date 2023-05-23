@@ -11,7 +11,7 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useSurveysContext } from '@context/surveysContext'
 import { isMobile } from 'react-device-detect'
 import * as SurveyActions from '../../../redux/survey/actions'
-import HOCActividad from './HOC_Actividad'
+import ActivityDisplayer from './HOC_Actividad'
 import AditionalInformation from './AditionalInformation'
 import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
 import { useUserEvent } from '@context/eventUserContext'
@@ -179,7 +179,7 @@ const AgendaActividadDetalle = (props) => {
           {activity?.type === undefined ? (
             <PreloaderApp />
           ) : (
-            <HOCActividad activity={activity} />
+            <ActivityDisplayer activity={activity} />
           )}
           <Col align="end">
             {previousActivityID && (
