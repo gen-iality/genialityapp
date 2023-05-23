@@ -55,7 +55,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
         setBloquearPuja(true);
       }
       setPriceProduct(product && product.price);
-      /* console.log('PRODUCT PRICE==>', product.price); */
+      // console.log('PRODUCT PRICE==>', product.price);
       setValorProduct(obtenerValor());
       let minValueUp = product.currency === 'USD' ? 50 : 100000;
       let valueOfertaMin =
@@ -185,7 +185,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
     <>
       {/* {console.log(product, 'producto')} */}
       {product && product._id !== '6116cae171f4b926d1363266' && (
-        <Card>
+        <Card style={{width:"200px", margin: "2px"}}>
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Text type='secondary'>
@@ -307,7 +307,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                   <Row>
                     <Alert
                       type='warning'
-                      message='No puedes adquirir este producto en este momento, por favor intentalo mas tarde.'
+                      message='No estas autorizado para pujar en esta obra.'
                     />
                   </Row>
                 ) : (

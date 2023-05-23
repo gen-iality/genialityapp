@@ -25,6 +25,8 @@ function DetailsProduct(props) {
   const [eventId, setEventId] = useState('');
   const [updateValue, setUpdateValue] = useState();
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [initialPrice, setInitialPrice] = useState(0);
+
   //currency
   useEffect(() => {
     let idProduct = props.match.params.id;
@@ -50,6 +52,7 @@ function DetailsProduct(props) {
       let detalleProduct = await EventsApi.getOneProduct(eventId, idProduct);
       if (Object.keys(detalleProduct).length > 0) {
         setProduct(detalleProduct);
+        setInitialPrice(detalleProduct.price); // Asignar el precio inicial a la variable de estado
       }
       setLoading(false);
     }
@@ -126,18 +129,36 @@ function DetailsProduct(props) {
             <Card>
               <Space direction='vertical' style={{ width: '100%' }}>
                 {/* nombre de la obra Pan */}
-                <Title level={3}>{product && product.name ? product.name : 'Nombre de la obra'}</Title>
+                <Title level={3}>{product && product.name ? product.name : 'Nombre del producto'}</Title>
                 {/* OfertaProduct "No tienes permisos para pujar sobre esta obra." Precio Inicial:
                   $ 2000 */}
-                {product && (product.price || product.start_price) && (
-                  <OfertaProduct
-                    updateValues={setUpdateValue}
-                    hability={habilty}
-                    messageF={messageF}
-                    product={product}
-                    eventId={eventId}
-                  />
-                )}
+                <div style={{display: "flex"}}>
+                  {product && (product.price || product.start_price) && (
+                    <div>
+                      <h3 style={{marginLeft: "5px", fontWeight: "bold"}}>Ahora</h3>
+                      <OfertaProduct
+                        updateValues={setUpdateValue}
+                        hability={habilty}
+                        messageF={messageF}
+                        product={product}
+                        eventId={eventId}
+                      />
+                    </div>
+                  )}
+                  {product && (product.price || product.start_price) && initialPrice !== product.price && (
+                    <div>
+                      <h3 style={{marginLeft: "5px", fontWeight: "bold"}}>Antes</h3>
+                      <OfertaProduct
+                        updateValues={setUpdateValue}
+                        hability={habilty}
+                        messageF={messageF}
+                        product={product}
+                        eventId={eventId}
+                        initialPrice={initialPrice} // Pasar el valor de initialPrice como una prop
+                      />
+                    </div>
+                  )}
+                </div>
                 {product && product.by && product.by !== '' && (
                   <Divider orientation='left'>
                     {/* autor  */}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Row, Input, Form, Col, Modal } from 'antd';
+import { Row, Input, Form, Col, Modal, InputNumber } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { EventsApi } from '../../helpers/request';
 import Header from '../../antdComponents/Header';
@@ -51,11 +51,26 @@ function AddProduct(props) {
   const [error, setError] = useState(null);
   const [idNew, setIdNew] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [discount, setDiscount] = useState('');
+
   // subasta o tienda
   // const handleChange = (value) => {
   //   setStore(value);
   // };
   // console.log(store);
+  const onChangeDiscount = (value) => {
+    setDiscount(value);
+  };
+  const calculateDiscountedPrice = () => {
+    if (discount > 0) {
+      const discountedPrice = price - (price * discount) / 100;
+      const formattedPrice = discountedPrice.toFixed(2);
+      return formattedPrice.replace(/\.00$/, ''); // Eliminar ".00" al final
+    }
+    return price;
+  };
+  
+  const discountedPrice = calculateDiscountedPrice();
   useEffect(() => {
     if (props.match.params.id) {
       setIdNew(props.match.params.id);
@@ -63,7 +78,7 @@ function AddProduct(props) {
         setProduct(product);
         setName(product.name);
         setCreator(product.by);
-          // subasta o tienda
+        // subasta o tienda
         // setStore(product.type)
         setDescription(product.description || '');
         setPicture(product.images && product.images[0] ? product.images[0] : null);
@@ -167,9 +182,10 @@ function AddProduct(props) {
               name,
               by: creator,
               description,
-              price,
+              price: discountedPrice,
+              initialPrice: price, // Agregar el precio inicial al objeto
               images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
-                // subasta o tienda
+              // subasta o tienda
               // type: store,
               type: 'just-store',
             },
@@ -185,7 +201,8 @@ function AddProduct(props) {
               name,
               by: creator,
               description,
-              price,
+              price: discountedPrice,
+              initialPrice: price, // Agregar el precio inicial al objeto
               images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
               // subasta o tienda
               // type: store,
@@ -312,6 +329,16 @@ function AddProduct(props) {
               </Select>
               {error != null && error.store && <small style={{ color: 'red' }}>Este campo es requerido</small>}
             </Form.Item> */}
+            <Form.Item label={<label style={{ marginTop: '2%' }}>Descuento</label>} rules={[{ required: false }]}>
+              <InputNumber
+                defaultValue={100}
+                min={0}
+                max={100}
+                formatter={(value) => `${value}%`}
+                parser={(value) => value.replace('%', '')}
+                onChange={onChangeDiscount}
+              />
+            </Form.Item>
             <Form.Item
               label={
                 <label style={{ marginTop: '2%' }}>
@@ -331,9 +358,8 @@ function AddProduct(props) {
                 placeholder='Valor del producto'
                 name={'price'}
                 onChange={(e) => changeInput(e, 'price')}
-              />{' '}
+              />
             </Form.Item>
-
             <label style={{ marginTop: '2%' }}>
               Imagen <label style={{ color: 'red' }}>*</label>
             </label>
