@@ -1,5 +1,4 @@
-import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button, Row, Table, Tag } from 'antd';
+import { Table, Tag } from 'antd';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { withRouter } from 'react-router';
@@ -7,9 +6,10 @@ import API from '../../helpers/request';
 import Header from '../../antdComponents/Header';
 
 const OfertProduts = (props) => {
+  
   const goBack = () => props.history.goBack();
   const [oferts, setOferts] = useState([]);
-
+  // Definición de variables de estado y funciones
   useEffect(() => {
     if (props.eventId) {
       obtenerOrdenes();
@@ -25,8 +25,9 @@ const OfertProduts = (props) => {
       }
     }
   }, [props.eventId]);
-
+  // Definición de las columnas de la tabla
   const columns = [
+    // Columna "Correo" 
     {
       title: 'Correo',
       dataIndex: 'email',
@@ -47,11 +48,13 @@ const OfertProduts = (props) => {
         );
       },
     },
+    // Columna "Fecha"
     {
       title: 'Fecha',
       dataIndex: 'created_at',
       key: 'created_at',
     },
+    // Columna "Valor ofertado"
     {
       title: 'Valor ofertado',
       key: 'amount',
@@ -66,9 +69,12 @@ const OfertProduts = (props) => {
       },
     },
   ];
+    // Renderizado del componente
   return (
     <>
+      {/* Componente Header */}
       <Header title={'Ofertas de la obra'} back />
+       {/* Tabla de ofertas */}
       <Table columns={columns} dataSource={oferts.length > 0 && oferts} />
       {/* <Row>
             <Button shape='circle' onClick={goBack} icon={<ArrowLeftOutlined />} />{' '}
