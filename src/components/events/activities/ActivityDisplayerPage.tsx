@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useHistory, withRouter } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'moment-timezone'
 import { useIntl } from 'react-intl'
@@ -46,6 +46,8 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
   const cSurveys = useSurveysContext()
   const history = useHistory()
 
+  const params = useParams<any>()
+
   const intl = useIntl()
   {
     Moment.locale(window.navigator.language)
@@ -53,7 +55,7 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
 
   useEffect(() => {
     async function getActividad() {
-      return await AgendaApi.getOne(props.match.params.activity_id, cEvent.value._id)
+      return await AgendaApi.getOne(params.activity_id, cEvent.value._id)
     }
 
     function orderHost(hosts: any[]) {
@@ -81,7 +83,7 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
 
     // Get the next activity ID to able creating the next activity link
     AgendaApi.byEvent(cEvent?.value._id).then(({ data: allEventActivities }) => {
-      const currentActivityId = props.match.params.activity_id
+      const currentActivityId = params.activity_id
       const currentActivityObject = (allEventActivities as any[]).find(
         (eventActivity) => eventActivity._id === currentActivityId,
       )
@@ -107,7 +109,7 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
       helperDispatch({ type: 'currentActivity', currentActivity: null })
       setActivity(null)
     }
-  }, [props.match.params.activity_id])
+  }, [params.activity_id])
 
   useEffect(() => {
     if (!currentActivity) return
@@ -116,7 +118,7 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
       console.log('cEvent.value.type_event', cEvent.value.type_event)
       // if (cEvent.value.type_event === 'onlineEvent') {
       //   console.log('Haciendo checking en la actividad');
-      checkinAttendeeInActivity(cEventUser.value, props.match.params.activity_id)
+      checkinAttendeeInActivity(cEventUser.value, params.activity_id)
       // }
     }
   }, [currentActivity, cEventUser.status])
@@ -157,7 +159,7 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
     }
   }, [cEvent.value, cEventUser.value, cUser.value])
 
-  const goToActivityIdPage = async (activityId) => {
+  const goToActivityIdPage = async (activityId: string) => {
     history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)
   }
 
@@ -240,7 +242,4 @@ const mapDispatchToProps = {
   setHasOpenSurveys,
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withRouter(ActivityDisplayerPage))
+export default connect(mapStateToProps, mapDispatchToProps)(ActivityDisplayerPage)
