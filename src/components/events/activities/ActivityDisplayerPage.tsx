@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'moment-timezone'
-import { useIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { Card, Col, Button, Row } from 'antd'
 import { setTopBanner } from '../../../redux/topBanner/actions'
 import { AgendaApi } from '@helpers/request'
@@ -26,6 +26,8 @@ const { setHasOpenSurveys } = SurveyActions
 
 const { LOG, ERROR } = Logger('studentlanding-activity')
 
+Moment.locale(window.navigator.language)
+
 interface IActivityDisplayerPageProps {}
 
 const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
@@ -46,28 +48,11 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
 
   const params = useParams<any>()
 
-  const intl = useIntl()
-  {
-    Moment.locale(window.navigator.language)
-  }
-
   useEffect(() => {
-    async function getActividad() {
-      return await AgendaApi.getOne(params.activity_id, cEvent.value._id)
-    }
-
-    function orderHost(hosts: any[]) {
-      hosts.sort(function (a, b) {
-        return a.order - b.order
-      })
-      setOrderedHost(hosts)
-    }
-
-    getActividad().then((result) => {
+    AgendaApi.getOne(params.activity_id, cEvent.value._id).then((result) => {
       helperDispatch({ type: 'currentActivity', currentActivity: result })
       setActivity(result)
-      orderHost(result.hosts)
-      // cSurveys.set_current_activity(result)
+      setOrderedHost((result.hosts as any[]).sort((a, b) => a.order - b.order))
     })
 
     props.setTopBanner(false)
@@ -85,16 +70,16 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
       const currentActivityObject = (allEventActivities as any[]).find(
         (eventActivity) => eventActivity._id === currentActivityId,
       )
-      const currentActivityIndex = allEventActivities.indexOf(currentActivityObject)
+      const currentIndex = allEventActivities.indexOf(currentActivityObject)
 
-      const nextActivityIndex = currentActivityIndex + 1
-      const nextActivityObject = allEventActivities[nextActivityIndex]
+      const nextIndex = currentIndex + 1
+      const nextActivityObject = allEventActivities[nextIndex]
       if (nextActivityObject) {
         setNextActivityID(nextActivityObject._id)
       }
 
-      const previousActivityIndex = currentActivityIndex - 1
-      const previousActivityObject = allEventActivities[previousActivityIndex]
+      const previousIndex = currentIndex - 1
+      const previousActivityObject = allEventActivities[previousIndex]
       if (previousActivityObject) {
         setPreviousctivityID(previousActivityObject._id)
       }
@@ -112,12 +97,7 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
   useEffect(() => {
     if (!currentActivity) return
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
-      // cSurveys.set_current_activity(currentActivity)
-      console.log('cEvent.value.type_event', cEvent.value.type_event)
-      // if (cEvent.value.type_event === 'onlineEvent') {
-      //   console.log('Haciendo checking en la actividad');
       checkinAttendeeInActivity(cEventUser.value, params.activity_id)
-      // }
     }
   }, [currentActivity, cEventUser.status])
 
@@ -125,7 +105,6 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
     history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)
   }
 
-  // {activity.type === undefined ? (<PreloaderApp />) : (<HCOActividad activity={activity}/>)}
   return (
     <div>
       {cUser.value?._id && cEvent.value?._id && activity?._id && (
@@ -154,10 +133,10 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
                   onClick={() => goToActivityIdPage(previousActivityID)}
                 >
                   <ArrowLeftOutlined />
-                  {intl.formatMessage({
-                    id: 'activity.button.previous',
-                    defaultMessage: 'Anterior',
-                  })}
+                  <FormattedMessage
+                    id="activity.button.previous"
+                    defaultMessage="Anterior"
+                  />
                 </Button>
               </Col>
             )}
@@ -169,10 +148,10 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
                   size="large"
                   onClick={() => goToActivityIdPage(nextActivityID)}
                 >
-                  {intl.formatMessage({
-                    id: 'activity.button.next',
-                    defaultMessage: 'Siguiente',
-                  })}
+                  <FormattedMessage
+                    id="activity.button.next"
+                    defaultMessage="Siguiente"
+                  />
                   <ArrowRightOutlined />
                 </Button>
               </Col>
@@ -182,8 +161,6 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
           <AditionalInformation orderedHost={orderedHost} />
         </Card>
       </div>
-      {/* Drawer encuestas */}
-      {/* <SurveyDrawer colorFondo={cEvent.value.styles.toolbarDefaultBg} colorTexto={cEvent.value.styles.textMenu} /> */}
     </div>
   )
 }
