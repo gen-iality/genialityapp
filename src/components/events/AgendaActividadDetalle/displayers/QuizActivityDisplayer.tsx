@@ -9,10 +9,10 @@ import { Spin } from 'antd'
 import { IBasicActivityProps } from './basicTypes'
 import { getActivityFirestoreData } from './getActivityFirestoreData'
 
-const SurveyDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
+const QuizActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
 
-  const [activityState, setActivityState] = useState()
+  const [activityState, setActivityState] = useState('')
 
   useEffect(() => {
     if (!activity || !props.cEvent) return
@@ -46,4 +46,4 @@ const SurveyDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   )
 }
 
-export default withRouter(WithEviusContext(SurveyDisplayer))
+export default withRouter(WithEviusContext(QuizActivityDisplayer))

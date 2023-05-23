@@ -12,7 +12,7 @@ import ReactPlayer from 'react-player'
 import { IBasicActivityProps } from './basicTypes'
 import { getActivityFirestoreData } from './getActivityFirestoreData'
 
-const StreamingDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
+const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
   const [activityState, setactivityState] = useState('')
   const [meetingId, setmeetingId] = useState('')
@@ -111,4 +111,4 @@ const StreamingDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   )
 }
 
-export default withRouter(WithEviusContext(StreamingDisplayer))
+export default withRouter(WithEviusContext(StreamingActivityDisplayer))
