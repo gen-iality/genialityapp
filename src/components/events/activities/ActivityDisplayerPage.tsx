@@ -8,8 +8,7 @@ import { setTopBanner } from '../../../redux/topBanner/actions'
 import { AgendaApi } from '@helpers/request'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-// import { useSurveysContext } from '@context/surveysContext'
-import { isMobile } from 'react-device-detect'
+
 import * as SurveyActions from '../../../redux/survey/actions'
 import ActivityDisplayer from './ActivityDisplayer'
 import AditionalInformation from './AditionalInformation'
@@ -30,8 +29,7 @@ const { LOG, ERROR } = Logger('studentlanding-activity')
 interface IActivityDisplayerPageProps {}
 
 const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
-  const { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } =
-    useHelper()
+  const { HandleOpenCloseMenuRigth, currentActivity, helperDispatch } = useHelper()
   const [orderedHost, setOrderedHost] = useState<any[]>([])
   // const [videoStyles, setVideoStyles] = useState<any>(null)
   // const [videoButtonStyles, setVideoButtonStyles] = useState<any>(null)
@@ -122,42 +120,6 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
       // }
     }
   }, [currentActivity, cEventUser.status])
-
-  useEffect(() => {
-    if (chatAttendeChats === '4') {
-      // const sharedProperties = {
-      //   position: 'fixed',
-      //   right: '0',
-      //   width: '170px',
-      // }
-      // const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' }
-      // setVideoStyles({
-      //   ...sharedProperties,
-      //   ...verticalVideo,
-      //   zIndex: '100',
-      //   transition: '300ms',
-      // })
-      // const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' }
-      // setVideoButtonStyles({
-      //   ...sharedProperties,
-      //   ...verticalVideoButton,
-      //   zIndex: '101',
-      //   cursor: 'pointer',
-      //   display: 'block',
-      //   height: '96px',
-      // })
-    } else {
-      // setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' })
-      // setVideoButtonStyles({ display: 'none' })
-    }
-  }, [chatAttendeChats, isMobile])
-
-  // Validar lecciones por codigo
-  useEffect(() => {
-    if (cEvent.value && cUser.value) {
-      // setBlockActivity(false)
-    }
-  }, [cEvent.value, cEventUser.value, cUser.value])
 
   const goToActivityIdPage = async (activityId: string) => {
     history.push(`/landing/${cEvent?.value._id}/activity/${activityId}`)
