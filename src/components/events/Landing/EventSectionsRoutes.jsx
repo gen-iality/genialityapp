@@ -48,7 +48,7 @@ const ListVideoCard = loadable(() => import('../../shared/listVideoCard'))
 const Videos = loadable(() => import('../videos'))
 const InfoEvent = loadable(() => import('../../shared/infoEvent'))
 const ResponsePayu = loadable(() => import('../../shared/infoEvent'))
-const AgendaActividadDetalle = loadable(() => import('../activities/index'))
+const ActivityDisplayerPage = loadable(() => import('../activities/index'))
 const MySection = loadable(() => import('../newSection'))
 const ThisRouteCanBeDisplayed = loadable(() =>
   import('./helpers/thisRouteCanBeDisplayed'),
@@ -268,7 +268,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/activity/:activity_id`}>
           <ThisRouteCanBeDisplayed>
-            <AgendaActividadDetalle
+            <ActivityDisplayerPage
               socialzonetabs={{
                 ...props?.generaltabs,
               }}

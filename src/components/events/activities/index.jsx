@@ -27,7 +27,7 @@ const { setHasOpenSurveys } = SurveyActions
 
 const { LOG, ERROR } = Logger('studentlanding-activity')
 
-const AgendaActividadDetalle = (props) => {
+const ActivityDisplayerPage = (props) => {
   const { chatAttendeChats, HandleOpenCloseMenuRigth, currentActivity, helperDispatch } =
     useHelper()
   const [orderedHost, setOrderedHost] = useState([])
@@ -243,4 +243,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withRouter(AgendaActividadDetalle))
+)(withRouter(ActivityDisplayerPage))
