@@ -4,7 +4,7 @@ import HeaderColumnswithContext from '../HeaderColumns'
 
 import { IBasicActivityProps } from './basicTypes'
 
-const VideoActivity: FunctionComponent<IBasicActivityProps> = (props) => {
+const VideoDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
   const urlVideo = activity?.video
 
@@ -46,4 +46,4 @@ const VideoActivity: FunctionComponent<IBasicActivityProps> = (props) => {
   )
 }
 
-export default VideoActivity
+export default VideoDisplayer

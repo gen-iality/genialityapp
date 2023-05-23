@@ -3,7 +3,7 @@ import HeaderColumnswithContext from '../HeaderColumns'
 
 import { IBasicActivityProps } from './basicTypes'
 
-const HtmlActivity: FunctionComponent<IBasicActivityProps> = (props) => {
+const HtmlDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
   const [htmlData, setHtmlData] = useState<string>('')
 
@@ -31,4 +31,4 @@ const HtmlActivity: FunctionComponent<IBasicActivityProps> = (props) => {
   )
 }
 
-export default HtmlActivity
+export default HtmlDisplayer

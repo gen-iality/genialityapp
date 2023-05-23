@@ -8,7 +8,7 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
 
 import { IBasicActivityProps } from './basicTypes'
 
-const PdfActivity: FunctionComponent<IBasicActivityProps> = (props) => {
+const PdfDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
 
   const [pdfURL, setPdfURL] = useState()
@@ -66,4 +66,4 @@ const PdfActivity: FunctionComponent<IBasicActivityProps> = (props) => {
   )
 }
 
-export default PdfActivity
+export default PdfDisplayer

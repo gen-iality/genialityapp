@@ -5,7 +5,7 @@ import HeaderColumnswithContext from '../HeaderColumns'
 
 import { IBasicActivityProps } from './basicTypes'
 
-const GenericActivity: FunctionComponent<IBasicActivityProps> = (props) => {
+const GenericDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
 
   return (
@@ -19,4 +19,4 @@ const GenericActivity: FunctionComponent<IBasicActivityProps> = (props) => {
   )
 }
 
-export default GenericActivity
+export default GenericDisplayer

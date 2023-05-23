@@ -9,7 +9,7 @@ import { Spin } from 'antd'
 
 import { IBasicActivityProps } from './basicTypes'
 
-const SurveyActivity: FunctionComponent<IBasicActivityProps> = (props) => {
+const SurveyDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
 
   const [activityState, setActivityState] = useState()
@@ -53,4 +53,4 @@ const SurveyActivity: FunctionComponent<IBasicActivityProps> = (props) => {
   )
 }
 
-export default withRouter(WithEviusContext(SurveyActivity))
+export default withRouter(WithEviusContext(SurveyDisplayer))

@@ -4,14 +4,14 @@ import { FunctionComponent } from 'react'
 import { SurveyProvider } from '@components/events/surveys/surveyContext'
 
 /** Components */
-import StreamingActivity from './displayers/StreamingDisplayer'
-import MeetingActivity from './displayers/MeetingDisplayer'
-import QuizActivity from './displayers/QuizDisplayer'
-import VideoActivity from './displayers/VideoDisplayer'
-import GenericActivity from './displayers/GenericDisplayer'
-import SurveyActivity from './displayers/SurveyDisplayer'
-import PdfActivity from './displayers/PdfDisplayer'
-import HtmlActivity from './displayers/HtmlDisplayer'
+import StreamingDisplayer from './displayers/StreamingDisplayer'
+import MeetingDisplayer from './displayers/MeetingDisplayer'
+import QuizDisplayer from './displayers/QuizDisplayer'
+import VideoDisplayer from './displayers/VideoDisplayer'
+import GenericDisplayer from './displayers/GenericDisplayer'
+import SurveyDisplayer from './displayers/SurveyDisplayer'
+import PdfDisplayer from './displayers/PdfDisplayer'
+import HtmlDisplayer from './displayers/HtmlDisplayer'
 
 interface IActivityDisplayerProps {
   activity: any
@@ -26,32 +26,32 @@ function switchActivity(activity: IActivityDisplayerProps['activity']) {
     case 'eviusMeet':
     case 'vimeo':
     case 'youTube':
-      return <StreamingActivity activity={activity} />
+      return <StreamingDisplayer activity={activity} />
     case 'meeting':
-      return <MeetingActivity activity={activity} />
+      return <MeetingDisplayer activity={activity} />
     case 'url':
     case 'cargarvideo':
-      return <VideoActivity activity={activity} />
+      return <VideoDisplayer activity={activity} />
     case 'pdf':
     case 'pdf2':
-      return <PdfActivity activity={activity} />
+      return <PdfDisplayer activity={activity} />
     case 'quiz':
     case 'quizing':
       return (
         <SurveyProvider>
-          <QuizActivity activity={activity} />
+          <QuizDisplayer activity={activity} />
         </SurveyProvider>
       )
     case 'survey':
       return (
         <SurveyProvider>
-          <SurveyActivity activity={activity} />
+          <SurveyDisplayer activity={activity} />
         </SurveyProvider>
       )
     case 'html':
-      return <HtmlActivity activity={activity} />
+      return <HtmlDisplayer activity={activity} />
     default:
-      return <GenericActivity activity={activity} />
+      return <GenericDisplayer activity={activity} />
   }
 }
 

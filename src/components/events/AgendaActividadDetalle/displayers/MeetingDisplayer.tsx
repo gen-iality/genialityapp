@@ -6,7 +6,7 @@ import MeetingPlayer from '../MeetingPlayer'
 
 import { IBasicActivityProps } from './basicTypes'
 
-const MeetingActivity: FunctionComponent<IBasicActivityProps> = (props) => {
+const MeetingDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
 
   return (
@@ -17,4 +17,4 @@ const MeetingActivity: FunctionComponent<IBasicActivityProps> = (props) => {
   )
 }
 
-export default withRouter(WithEviusContext(MeetingActivity))
+export default withRouter(WithEviusContext(MeetingDisplayer))

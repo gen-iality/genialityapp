@@ -13,7 +13,7 @@ import ReactPlayer from 'react-player'
 
 import { IBasicActivityProps } from './basicTypes'
 
-const StreamingActivity: FunctionComponent<IBasicActivityProps> = (props) => {
+const StreamingDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
   const [activityState, setactivityState] = useState('')
   const [meetingId, setmeetingId] = useState('')
@@ -123,4 +123,4 @@ const StreamingActivity: FunctionComponent<IBasicActivityProps> = (props) => {
   )
 }
 
-export default withRouter(WithEviusContext(StreamingActivity))
+export default withRouter(WithEviusContext(StreamingDisplayer))
