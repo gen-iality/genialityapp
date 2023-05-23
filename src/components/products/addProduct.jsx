@@ -51,7 +51,7 @@ function AddProduct(props) {
   const [error, setError] = useState(null);
   const [idNew, setIdNew] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [discount, setDiscount] = useState('');
+  const [discount, setDiscount] = useState(null);
 
   // subasta o tienda
   // const handleChange = (value) => {
@@ -59,18 +59,9 @@ function AddProduct(props) {
   // };
   // console.log(store);
   const onChangeDiscount = (value) => {
-    setDiscount(value);
+    setDiscount(value === null ? null : value);
   };
-  const calculateDiscountedPrice = () => {
-    if (discount > 0) {
-      const discountedPrice = price - (price * discount) / 100;
-      const formattedPrice = discountedPrice.toFixed(2);
-      return formattedPrice.replace(/\.00$/, ''); // Eliminar ".00" al final
-    }
-    return price;
-  };
-  
-  const discountedPrice = calculateDiscountedPrice();
+
   useEffect(() => {
     if (props.match.params.id) {
       setIdNew(props.match.params.id);
@@ -182,8 +173,8 @@ function AddProduct(props) {
               name,
               by: creator,
               description,
-              price: discountedPrice,
-              initialPrice: price, // Agregar el precio inicial al objeto
+              price,
+              discount,
               images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
               // subasta o tienda
               // type: store,
@@ -201,8 +192,8 @@ function AddProduct(props) {
               name,
               by: creator,
               description,
-              price: discountedPrice,
-              initialPrice: price, // Agregar el precio inicial al objeto
+              price,
+              discount,
               images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
               // subasta o tienda
               // type: store,
@@ -331,11 +322,11 @@ function AddProduct(props) {
             </Form.Item> */}
             <Form.Item label={<label style={{ marginTop: '2%' }}>Descuento</label>} rules={[{ required: false }]}>
               <InputNumber
-                defaultValue={100}
-                min={0}
+                defaultValue={null}
+                min={1}
                 max={100}
-                formatter={(value) => `${value}%`}
-                parser={(value) => value.replace('%', '')}
+                formatter={(value) => (value === null ? '' : `${value}%`)}
+                parser={(value) => (value ? value.replace('%', '') : null)}
                 onChange={onChangeDiscount}
               />
             </Form.Item>

@@ -8,7 +8,17 @@ import { DispatchMessageService } from '../../../context/MessageService';
 
 const { Title, Text } = Typography;
 
-const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF, updateValues }) => {
+const OfertaProduct = ({
+  product,
+  eventId,
+  cEventUser,
+  cUser,
+  hability,
+  messageF,
+  updateValues,
+  priceWithDiscount,
+  priceWithoutDiscount,
+}) => {
   const [selectedValue, setSelectedValue] = useState(100000);
   const [loadingSave, setLoadingSave] = useState(false);
   const [priceProduct, setPriceProduct] = useState(product && product.price);
@@ -17,7 +27,6 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
   const [totalOferts, setTotalOferts] = useState(0);
   const [isUsd, setUsd] = useState(false);
   const [bloquerPuja, setBloquearPuja] = useState(false);
-  
 
   const obtenerValor = () => {
     return (
@@ -185,19 +194,18 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
     <>
       {/* {console.log(product, 'producto')} */}
       {product && product._id !== '6116cae171f4b926d1363266' && (
-        <Card style={{width:"200px", margin: "2px"}}>
+        <Card style={{ width: '200px', margin: '2px' }}>
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Text type='secondary'>
                 Precio:{' '}
                 <Title level={4}>
-                  {(product &&
-                    product.start_price &&
-                    /* product?.currency +  */ ' $ ' + product.start_price.toLocaleString('es-CO')) ||
-                    /* priceProduct && product?.currency + */ ' $ ' + priceProduct.toLocaleString('es-CO')}
+                  {priceWithoutDiscount
+                    ? /* product?.currency +  */ ' $ ' + priceWithoutDiscount.toLocaleString('es-CO')
+                    : /* priceProduct && product?.currency + */ ' $ ' + priceWithDiscount.toLocaleString('es-CO')}
                 </Title>
               </Text>
-              {hability && <Divider></Divider>}
+              {hability && <Divider />}
             </Col>
             {hability && permission() && product && product.start_price && (
               <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
@@ -305,10 +313,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                 )}
                 {!permission() && cEventUser.value !== null ? (
                   <Row>
-                    <Alert
-                      type='warning'
-                      message='No estas autorizado para pujar en esta obra.'
-                    />
+                    <Alert type='warning' message='No estas autorizado para pujar en esta obra.' />
                   </Row>
                 ) : (
                   <Row>
