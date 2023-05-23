@@ -1,7 +1,5 @@
 import { FunctionComponent } from 'react'
-import WithEviusContext from '@context/withContext'
 import HeaderColumnswithContext from '../HeaderColumns'
-import { withRouter } from 'react-router-dom'
 import MeetingPlayer from '../MeetingPlayer'
 
 import { IBasicActivityProps } from './basicTypes'
@@ -17,4 +15,4 @@ const MeetingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props)
   )
 }
 
-export default withRouter(WithEviusContext(MeetingActivityDisplayer))
+export default MeetingActivityDisplayer
