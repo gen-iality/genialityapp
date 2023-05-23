@@ -4,14 +4,13 @@ import { SmileOutlined } from '@ant-design/icons'
 import HeaderColumnswithContext from '../HeaderColumns'
 import WithEviusContext from '@context/withContext'
 import ImageComponentwithContext from '../ImageComponent'
-import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { withRouter } from 'react-router-dom'
-import { firestore } from '@helpers/firebase'
 import GcoreStreamingPlayer from '../GcoreStreamingPlayer'
 import AgendaContext from '@context/AgendaContext'
 import ReactPlayer from 'react-player'
 
 import { IBasicActivityProps } from './basicTypes'
+import { getActivityFirestoreData } from './getActivityFirestoreData'
 
 const StreamingDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
@@ -23,28 +22,17 @@ const StreamingDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
 
   const { transmition, setTransmition } = useContext(AgendaContext)
 
-  async function listeningStateStreamingRoom(event_id, activity_id) {
-    if (!fnCiclo) {
-      firestore
-        .collection('events')
-        .doc(event_id)
-        .collection('activities')
-        .doc(activity_id)
-        .onSnapshot((infoActivity) => {
-          if (!infoActivity.exists) return
-          const data = infoActivity.data()
+  useEffect(() => {
+    async function GetStateStreamingRoom() {
+      if (!fnCiclo) {
+        await getActivityFirestoreData(props.cEvent.value._id, activity._id, (data) => {
           const { habilitar_ingreso, meeting_id } = data
           setactivityState(habilitar_ingreso)
           setmeetingId(meeting_id)
           setTransmition(data.transmition)
           setFnCiclo(true)
         })
-    }
-  }
-
-  useEffect(() => {
-    async function GetStateStreamingRoom() {
-      await listeningStateStreamingRoom(props.cEvent.value._id, activity._id)
+      }
     }
 
     if (activity != null) {

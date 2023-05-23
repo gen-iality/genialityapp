@@ -4,36 +4,29 @@ import HeaderColumnswithContext from '../HeaderColumns'
 
 import WithEviusContext from '@context/withContext'
 import { withRouter } from 'react-router-dom'
-import { firestore } from '@helpers/firebase'
 import { Spin } from 'antd'
 
 import { IBasicActivityProps } from './basicTypes'
+import { getActivityFirestoreData } from './getActivityFirestoreData'
 
 const SurveyDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
 
   const [activityState, setActivityState] = useState()
 
-  function listeningStateStreamingRoom(event_id, activity_id) {
-    return firestore
-      .collection('events')
-      .doc(event_id)
-      .collection('activities')
-      .doc(activity_id)
-      .onSnapshot((infoActivity) => {
-        if (!infoActivity.exists) return
-        const data = infoActivity.data()
-        console.log('realtime', data)
-        setActivityState(data)
-      })
-  }
-
   useEffect(() => {
     if (!activity || !props.cEvent) return
 
-    let unsubscribe
+    let unsubscribe: any
     if (activity != null) {
-      unsubscribe = listeningStateStreamingRoom(props.cEvent.value._id, activity._id)
+      unsubscribe = getActivityFirestoreData(
+        props.cEvent.value._id,
+        activity._id,
+        (data) => {
+          console.log('realtime', data)
+          setActivityState(data)
+        },
+      )
     }
 
     return () => {
