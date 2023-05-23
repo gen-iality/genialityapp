@@ -8,7 +8,7 @@ import { setTopBanner } from '../../../redux/topBanner/actions'
 import { AgendaApi } from '@helpers/request'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import { useSurveysContext } from '@context/surveysContext'
+// import { useSurveysContext } from '@context/surveysContext'
 import { isMobile } from 'react-device-detect'
 import * as SurveyActions from '../../../redux/survey/actions'
 import ActivityDisplayer from './ActivityDisplayer'
@@ -43,7 +43,7 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
   const cUser = useCurrentUser()
   const cEventUser = useUserEvent()
   const cEvent = useEventContext()
-  const cSurveys = useSurveysContext()
+  // const cSurveys = useSurveysContext()
   const history = useHistory()
 
   const params = useParams<any>()
@@ -69,7 +69,7 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
       helperDispatch({ type: 'currentActivity', currentActivity: result })
       setActivity(result)
       orderHost(result.hosts)
-      cSurveys.set_current_activity(result)
+      // cSurveys.set_current_activity(result)
     })
 
     props.setTopBanner(false)
@@ -114,7 +114,7 @@ const ActivityDisplayerPage = (props: IActivityDisplayerPageProps) => {
   useEffect(() => {
     if (!currentActivity) return
     if (cEventUser.status == 'LOADED' && cEventUser.value != null) {
-      cSurveys.set_current_activity(currentActivity)
+      // cSurveys.set_current_activity(currentActivity)
       console.log('cEvent.value.type_event', cEvent.value.type_event)
       // if (cEvent.value.type_event === 'onlineEvent') {
       //   console.log('Haciendo checking en la actividad');
