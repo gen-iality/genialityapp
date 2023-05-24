@@ -368,9 +368,13 @@ const FormEdit = (
                         <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
                           {field.selectOptions.map((option, index) =>
                             option.text ? (
-                              <Option key={`type${index}`} value={option.value}>
+                              <>
+                              {option.text!=='Texto' &&
+                                <Option key={`type${index}`} value={option.value}>
                                 {option.text}
                               </Option>
+                              }
+                              </>
                             ) : (
                               <Option key={`quantity${index}`} value={option}>
                                 {option}
@@ -584,7 +588,7 @@ const FormEdit = (
                         )
                       )}
                     </Space>
-                    {fields.length < 15 && (
+                    {fields.length < 15 && form.getFieldValue('type')!=='text' && (
                       <Form.Item>
                         <Button
                           type='dashed'

@@ -760,7 +760,7 @@ function TriviaEdit(props: any) {
 			render: (e: any) => {
 				return (
 					<>
-						<div style={{ marginBottom: '10px' }}>
+						{parseStringBoolean(state.allow_gradable_survey) && <div style={{ marginBottom: '10px' }}>
 							{e.correctAnswer ? (
 								<Tag icon={<CheckCircleOutlined />} color='success'>
 									Respuesta asignada
@@ -770,7 +770,7 @@ function TriviaEdit(props: any) {
 									Sin respuesta asignada
 								</Tag>
 							)}
-						</div>
+						</div>}
 						<div>{e.title}</div>
 					</>
 				);
