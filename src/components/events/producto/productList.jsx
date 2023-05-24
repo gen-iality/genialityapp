@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { EventsApi } from '../../../helpers/request';
 import withContext from '../../../context/withContext';
 import { useHistory } from 'react-router-dom';
-import { Card, Col, Row } from 'antd';
+import { Card, Col, List, Result, Row } from 'antd';
 import { useEffect } from 'react';
 import ProductCard from './productCard';
 
 const ProductList = (props) => {
   const [products, setProducts] = useState([]);
+  const [grid, setGrid] = useState(true);
   let history = useHistory();
 
   useEffect(() => {
@@ -23,24 +24,44 @@ const ProductList = (props) => {
     });
   };
   return (
-    <Row gutter={[16, 16]} style={{ padding: '20px' }}>
-      {/*<Card style={{textAlign:'center', marginLeft:30,marginRight:30,marginTop:60}}>
-            <IssuesCloseOutlined  style={{marginRight:20, fontSize:20}} />La subasta se ha cerrado
-         </Card>*/}
+    <>
       {products.length > 0 ? (
-        <>
-          {products.map((galery) => (
-            <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8} key={galery.id}>
-              <ProductCard history={history} eventId={props.cEvent.value._id} galery={galery} />
-            </Col>
-          ))}
-        </>
+        <List
+          grid={grid &&{
+            gutter: 16,
+            xs: 1,
+            sm: 1,
+            md: 3,
+            lg: 4,
+            xl: 4,
+            xxl: 4,
+          }}
+          style={{padding: 20}}
+          dataSource={products}
+          renderItem={product => (
+            <List.Item key={product.id}>
+              <ProductCard history={history} eventId={props.cEvent.value._id} product={product} />
+            </List.Item>
+          )}
+        />
       ) : (
-        <Card style={{ width: '100%', textAlign: 'center', marginRight: 60, marginLeft: 60, marginTop: 50 }}>
-          Aún no existen artículos en la galería
-        </Card>
+        <Row justify='center' align='middle'>
+          <Col span={23}>
+            <Card bordered={false} style={{borderRadius: 20}}>
+              <Result 
+                title={'Aún no existen artículos en la galería'}
+              />
+            </Card>
+            
+          </Col>
+        </Row>
       )}
-    </Row>
+      {/* <Row gutter={[16, 16]} style={{ padding: '20px' }}> */}
+        {/*<Card style={{textAlign:'center', marginLeft:30,marginRight:30,marginTop:60}}>
+              <IssuesCloseOutlined  style={{marginRight:20, fontSize:20}} />La subasta se ha cerrado
+          </Card>*/}
+      {/* </Row> */}
+    </>
   );
 };
 

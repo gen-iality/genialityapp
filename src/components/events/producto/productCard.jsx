@@ -1,58 +1,62 @@
-import { Card, Space, Typography } from 'antd';
-import Meta from 'antd/lib/card/Meta';
-const ProductCard = ({ galery, eventId, history }) => {
-  const { Title } = Typography;
+import { Badge, Card, Space, Typography } from 'antd';
+
+const ProductCard = ({ product, eventId, history }) => {
   const calculateDiscountedPrice = () => {
-    if (galery.discount > 0) {
-      const discountedPrice = galery.price - (galery.price * galery.discount) / 100;
+    if (product.discount > 0) {
+      const discountedPrice = product.price - (product.price * product.discount) / 100;
       return discountedPrice;
     }
-    return galery.price;
+    return product.price;
   };
   const discountedPrice = calculateDiscountedPrice();
+  console.log(product, 'product');
+
   return (
-    <Card
+    <Badge.Ribbon text={product?.discount ? product?.discount + '%' : ''} color={product?.discount ? 'red': 'transparent'}>
+      <Card
       /* actions={[
-        galery?.currency && galery?.currency && (
-          <div style={{ fontWeight: 'bold', fontSize: '18px' }} onClick={null} key={'act-' + galery.id}>
-            {(galery?.currency && galery?.currency) +
+        product?.currency && product?.currency && (
+          <div style={{ fontWeight: 'bold', fontSize: '18px' }} onClick={null} key={'act-' + product.id}>
+            {(product?.currency && product?.currency) +
               ' $ ' +
-              (galery.start_price?.toLocaleString('es-CO') || galery.price?.toLocaleString('es-CO'))}
+              (product.start_price?.toLocaleString('es-CO') || product.price?.toLocaleString('es-CO'))}
           </div>
         ),
       ]} */
-      bordered={false}
-      bodyStyle={{ padding: '10px', minHeight: '120px', width: '100%' }}
-      key={'Cardgallery' + galery.id}
-      style={{ width: '100%', cursor: 'pointer' }}
-      onClick={() => history.push(`/landing/${eventId}/producto/${galery._id}/detailsproducts`)}
-      cover={
-        <img
-          alt='example'
-          src={galery && galery.images && galery.images[0]}
-          style={{ height: '250px', objectFit: 'cover' }}
+        bordered={false}
+        hoverable
+        bodyStyle={{ padding: '10px', minHeight: '120px', width: '100%' }}
+        key={'Cardgallery' + product.id}
+        style={{ width: '100%', cursor: 'pointer', height: '100%' }}
+        onClick={() => history.push(`/landing/${eventId}/producto/${product._id}/detailsproducts`)}
+        cover={
+          <img
+            alt='example'
+            src={product && product.images && product.images[0]}
+            style={{ height: '250px', objectFit: 'cover' }}
+          />
+        }>
+        <Card.Meta
+          description={
+            <Space direction='vertical'>
+              <Typography.Title level={5} ellipsis={{ rows: 2 }}>
+                {product.name}
+              </Typography.Title>
+              {product && (
+                <Space direction='vertical'>
+                  {product?.by && (
+                    <Typography.Text type='secondary' italic>
+                      {product?.by}
+                    </Typography.Text>
+                  )}
+                  {discountedPrice && <Typography.Text type='success'> $ {discountedPrice}</Typography.Text>}
+                </Space>
+              )}
+            </Space>
+          }
         />
-      }>
-      <Meta
-        description={
-          <Space direction='vertical'>
-            <Title level={5} ellipsis={{ rows: 2 }}>
-              {galery.name}
-            </Title>
-            {galery && (
-              <Space direction='vertical'>
-                {galery?.by && (
-                  <Typography.Text type='secondary' italic>
-                    {galery?.by}
-                  </Typography.Text>
-                )}
-                {discountedPrice && <Typography.Text type='success'> $ {discountedPrice}</Typography.Text>}
-              </Space>
-            )}
-          </Space>
-        }
-      />
-    </Card>
+      </Card>
+    </Badge.Ribbon>
   );
 };
 
