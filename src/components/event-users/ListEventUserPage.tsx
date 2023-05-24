@@ -59,10 +59,11 @@ interface ILessonsInfoModalProps {
   onHidden: () => void
   allActivities: any[]
   user: any
+  event: any
 }
 
 const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
-  const { show, onHidden, allActivities, user } = props
+  const { show, onHidden, allActivities, user, event } = props
 
   const [dataLoaded, setDataLoaded] = useState(false)
   const [viewedActivities, setViewedActivities] = useState<any[]>([])
@@ -88,10 +89,14 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
 
   const handleSendCertificate = async () => {
     setIsSending(true)
+    const emailEncoded = encodeURIComponent(user.email)
+    const redirect = `${window.location.origin}/landing/${event._id}/certificate`
+    const url = `${window.location.origin}/direct-login?email=${emailEncoded}&redirect=${redirect}`
+
     try {
       await EventsApi.generalMagicLink(
         user.email,
-        `${window.location.origin}/direct-login`,
+        url,
         'Entra al ver el certificado en el siguiente link',
       )
       StateMessage.show(null, 'success', `Se ha enviado el mensaje a ${user.email}`)
@@ -577,6 +582,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         }}
         allActivities={allActivities}
         user={watchedUserInProgressingModal}
+        event={event}
       />
       <Header
         title={
