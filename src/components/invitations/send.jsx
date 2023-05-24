@@ -404,7 +404,7 @@ class SendRsvp extends Component {
                     )}
                   </Row>
                   <Row justify="center" gutter={8} wrap>
-                    <Link to={{ pathname: `${this.props.match.url}` }}>
+                    <Link to={{ pathname: `${this.props.parentUrl}/invitados` }}>
                       <Button type="primary">Editar seleccionados</Button>
                     </Link>
                   </Row>

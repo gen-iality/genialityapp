@@ -9,7 +9,7 @@ function ListaInvitados({ ...props }) {
   const { eventId, event, matchUrl, location } = props
 
   useEffect(() => {
-    if (matchUrl === `/eventAdmin/${eventId}/invitados`) {
+    if (matchUrl === `/eventAdmin/${eventId}`) {
       obtenerEvento()
     }
 
@@ -27,7 +27,7 @@ function ListaInvitados({ ...props }) {
       <Switch>
         <Route
           exact
-          path={`${matchUrl}/`}
+          path={`${matchUrl}/invitados`}
           render={() => (
             <InvitedUsers
               event={event}
@@ -38,15 +38,20 @@ function ListaInvitados({ ...props }) {
         />
         <Route
           exact
-          path={`${matchUrl}/createmessage`}
+          path={`${matchUrl}/invitados/createmessage`}
           render={() => (
-            <CreateMessage event={event} eventID={eventId} selection={guestSelected} />
+            <CreateMessage
+              event={event}
+              eventID={eventId}
+              selection={guestSelected}
+              parentUrl={matchUrl}
+            />
           )}
         />
 
         <Route
           exact
-          path={`${matchUrl}/importar-excel`}
+          path={`${matchUrl}/invitados/importar-excel`}
           render={() => (
             <ImportUsers
               extraFields={userProperties}
