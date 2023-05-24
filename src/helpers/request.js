@@ -352,6 +352,9 @@ export const EventsApi = {
   refreshLinkEmailUser: async (email) => {
     return await Actions.post(`/api/getloginlink`, { email: email, refreshlink: true })
   },
+  generalMagicLink: async (email, url, content) => {
+    return await Actions.post(`/api/general-magic-link`, { email, url, content })
+  },
   //REFRESH URL LINK DE ACCESSO A CURSO
   refreshLinkEmailUserEvent: async (email, eventId) => {
     return await Actions.post(`/api/getloginlink`, {
