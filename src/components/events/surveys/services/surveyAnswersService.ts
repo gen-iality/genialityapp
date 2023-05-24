@@ -6,7 +6,7 @@ import countAnswers from './counstAnswersService';
 
 const surveyAnswers = {
 	// Servicio para registrar votos para un usuario logeado
-	registerWithUID: (surveyId: string, questionId: string, dataAnswer: any, counter: any) => {
+	registerWithUID: async (surveyId: string, questionId: string, dataAnswer: any, counter: any) => {
 		const { responseData, date, uid, email, names, voteWeight } = dataAnswer;
 		const { optionQuantity, optionIndex, correctAnswer } = counter;
 		const data = {
@@ -28,7 +28,7 @@ const surveyAnswers = {
 			countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteWeight);
 		}
 
-		firestore
+		await firestore
 			.collection('surveys')
 			.doc(surveyId)
 			.collection('answers')
