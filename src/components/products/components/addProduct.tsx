@@ -104,6 +104,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
       setCreator(e.target.value);
     }
   };
+
   const changeDescription = (e: string) => {
     if (description.length < 10000) {
       setDescription(e);
@@ -334,6 +335,16 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
               </Select>
               {error != null && error.shop && <small style={{ color: 'red' }}>Este campo es requerido</small>}
             </Form.Item> */}
+            <Form.Item label={<label style={{ marginTop: '2%' }}>Descuento</label>} rules={[{ required: false }]}>
+              <InputNumber
+                defaultValue={100}
+                min={1}
+                max={100}
+                formatter={(value) => (value === null ? '' : `${value}%`)}
+                parser={(value: any ) => (value ? value.replace('%', '') : undefined)}
+                onChange={onChangeDiscount}
+              />
+            </Form.Item>
             <Form.Item
               label={
                 <label style={{ marginTop: '2%' }}>
