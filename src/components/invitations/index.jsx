@@ -9,7 +9,7 @@ function ListaInvitados({ ...props }) {
   const { eventId, event, matchUrl, location } = props
 
   useEffect(() => {
-    if (matchUrl === `/eventAdmin/${eventId}`) {
+    if (matchUrl === `/eventadmin/${eventId}`) {
       obtenerEvento()
     }
 
