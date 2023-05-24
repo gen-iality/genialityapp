@@ -538,7 +538,9 @@ class Event extends Component {
               <Protected
                 path={`${match.url}`}
                 event={event}
-                render={() => <NoMatchPage eventId={event._id} event={event} />}
+                render={() => (
+                  <NoMatchPage eventId={event._id} event={event} parentUrl={match.url} />
+                )}
               />
             </Switch>
           </section>
