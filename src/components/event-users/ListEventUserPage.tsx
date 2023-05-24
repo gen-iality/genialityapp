@@ -1,4 +1,10 @@
-import { AgendaApi, BadgeApi, OrganizationApi, RolAttApi } from '@helpers/request'
+import {
+  AgendaApi,
+  BadgeApi,
+  EventsApi,
+  OrganizationApi,
+  RolAttApi,
+} from '@helpers/request'
 import { FunctionComponent, useEffect, useMemo, useState } from 'react'
 
 import {
@@ -16,6 +22,7 @@ import {
   Image,
   List,
   Modal,
+  Result,
   Row,
   Space,
   Table,
@@ -35,6 +42,7 @@ import { utils, writeFileXLSX } from 'xlsx'
 import {
   CheckOutlined,
   DownloadOutlined,
+  LoadingOutlined,
   PlusCircleOutlined,
   SafetyCertificateOutlined,
   StarOutlined,
@@ -44,6 +52,7 @@ import {
 import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
 import UserModal from '../modal/modalUser'
 import { Link } from 'react-router-dom'
+import { StateMessage } from '@context/MessageService'
 
 interface ILessonsInfoModalProps {
   show: boolean
@@ -57,6 +66,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
 
   const [dataLoaded, setDataLoaded] = useState(false)
   const [viewedActivities, setViewedActivities] = useState<any[]>([])
+  const [isSending, setIsSending] = useState(false)
 
   const requestAllData = async () => {
     const existentActivities = await allActivities.map(async (activity) => {
@@ -74,6 +84,25 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
       (item) => item !== null,
     )
     setViewedActivities(viewedActivities.map((activity) => activity.name))
+  }
+
+  const handleSendCertificate = async () => {
+    setIsSending(true)
+    try {
+      await EventsApi.generalMagicLink(
+        user.email,
+        `${window.location.origin}/direct-login`,
+        'Entra al ver el certificado en el siguiente link',
+      )
+      StateMessage.show(null, 'success', `Se ha enviado el mensaje a ${user.email}`)
+    } catch (err) {
+      console.error(err)
+      Modal.error({
+        title: 'Error en el envío',
+        content: 'No se ha podido enviar el certificado por problemas de fondo',
+      })
+    }
+    setIsSending(false)
   }
 
   useEffect(() => {
@@ -104,9 +133,10 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
                   disabled={
                     !allActivities.every((activity) =>
                       viewedActivities.includes(activity.name),
-                    )
+                    ) || isSending
                   }
-                  icon={<SafetyCertificateOutlined />}
+                  onClick={() => handleSendCertificate()}
+                  icon={isSending ? <LoadingOutlined /> : <SafetyCertificateOutlined />}
                 >
                   Enviar certificado
                 </Button>
@@ -132,7 +162,12 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
             )}
           />
         ) : (
-          <p>Cargando datos de {user.names}...</p>
+          <Result
+            icon={<LoadingOutlined />}
+            title="Cargando"
+            status="info"
+            subTitle={`Cargando datos de ${user.names}...`}
+          />
         )}
       </Space>
     </Modal>
