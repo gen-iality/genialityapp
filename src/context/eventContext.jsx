@@ -1,7 +1,7 @@
 import { useState, createContext, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
-import NotFoundPage from '@components/notFoundPage'
+import NotFoundPage from '@components/notFoundPage/NotFoundPage'
 
 export const CurrentEventContext = createContext()
 

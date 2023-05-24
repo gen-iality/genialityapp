@@ -43,7 +43,7 @@ const socialZone = loadable(() => import('../components/socialZone/socialZone'))
 const AppointmentAccept = loadable(() =>
   import('../components/networking/appointmentAccept'),
 )
-const NotFoundPage = loadable(() => import('../components/notFoundPage'))
+const NotFoundPage = loadable(() => import('../components/notFoundPage/NotFoundPage'))
 const ForbiddenPage = loadable(() => import('../components/forbiddenPage'))
 const QueryTesting = loadable(() =>
   import('../components/events/surveys/components/queryTesting'),
