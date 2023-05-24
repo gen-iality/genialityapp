@@ -110,6 +110,11 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
     setIsSending(false)
   }
 
+  const isDone = useMemo(
+    () => allActivities.every((activity) => viewedActivities.includes(activity.name)),
+    [allActivities, viewedActivities],
+  )
+
   useEffect(() => {
     if (!user) return
     if (allActivities.length == 0) return
@@ -135,11 +140,12 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
                 </Typography.Text>
                 <Button
                   type="primary"
-                  disabled={
-                    !allActivities.every((activity) =>
-                      viewedActivities.includes(activity.name),
-                    ) || isSending
+                  title={
+                    isDone
+                      ? 'Envía un correo con un enlace mágico'
+                      : 'Se necesita pasar todos los cursos'
                   }
+                  disabled={!isDone || isSending}
                   onClick={() => handleSendCertificate()}
                   icon={isSending ? <LoadingOutlined /> : <SafetyCertificateOutlined />}
                 >
