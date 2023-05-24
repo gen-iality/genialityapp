@@ -1,16 +1,17 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Row, Input, Form, Col, Modal, InputNumber } from 'antd';
+import { Row, Input, Form, Col, Modal, InputNumber, Switch } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { EventsApi } from '../../helpers/request';
-import Header from '../../antdComponents/Header';
-import BackTop from '../../antdComponents/BackTop';
-import EviusReactQuill from '../shared/eviusReactQuill';
-import { handleRequestError } from '../../helpers/utils';
-import { DispatchMessageService } from '../../context/MessageService';
-import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
 import { removeObjectFromArray, renderTypeImage } from '@/Utilities/imgUtils';
-import Loading from '../profile/loading';
+import { AddProductProps, ImageFile, Product, Validators } from '../interface/productTypes';
+import { EventsApi } from '@/helpers/request';
+import BackTop from '@/antdComponents/BackTop';
+import EviusReactQuill from '@/components/shared/eviusReactQuill';
+import { handleRequestError } from '@/helpers/utils';
+import { DispatchMessageService } from '@/context/MessageService';
+import ImageUploaderDragAndDrop from '@/components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import Loading from '@/components/loaders/loading';
+import Header from '@/antdComponents/Header';
 // este código se va a usar para poder seleccionar si se quiere agregar un producto para subasta o Tienda
 // import { Select } from 'antd';
 // const { Option } = Select;
@@ -35,30 +36,38 @@ const formLayout = {
 
 const { confirm } = Modal;
 
-function AddProduct(props) {
-  const [product, setProduct] = useState();
-  const [name, setName] = useState('');
-  const [creator, setCreator] = useState('');
+const AddProduct: React.FC<AddProductProps> = (props) => {
+  const [product, setProduct] = useState<Product>({} as Product);
+  const [name, setName] = useState<string | null>(null);
+  const [creator, setCreator] = useState<string>('');
   //subasta o tienda
-  // const [store, setStore] = useState('just-store');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [picture, setPicture] = useState(null);
-  const [optionalPicture, setOptionalPicture] = useState(null);
-  const [imageFile, setImgFile] = useState([]);
-  const [imageFileOptional, setImgFileOptional] = useState(null);
-  const [errImg, setErrImg] = useState();
-  const [error, setError] = useState(null);
-  const [idNew, setIdNew] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  const [discount, setDiscount] = useState(null);
+  // const [shop, setShop] = useState<string>('just-store');
+  const [description, setDescription] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
+  const [picture, setPicture] = useState<string | null>(null);
+  const [optionalPicture, setOptionalPicture] = useState<string>('');
+  const [imageFile, setImgFile] = useState<ImageFile[]>([]);
+  const [error, setError] = useState<Validators | null>(null);
+  const [idNew, setIdNew] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [discount, setDiscount] = useState<number | null>(null);
+  const [discountEnabled, setDiscountEnabled] = useState(false);
+  const [discountValue, setDiscountValue] = useState(100);
+
+  const handleDiscountEnabledChange = (checked: boolean) => {
+    setDiscountEnabled(checked);
+  };
+
+  const handleDiscountValueChange = (value: number) => {
+    setDiscountValue(value);
+  };
 
   // subasta o tienda
-  // const handleChange = (value) => {
-  //   setStore(value);
+  // const handleChange = (value: string): void => {
+  //   setShop(value);
   // };
-  // console.log(store);
-  const onChangeDiscount = (value) => {
+  // console.log(shop);
+  const onChangeDiscount = (value: number | null): void => {
     setDiscount(value === null ? null : value);
   };
 
@@ -70,7 +79,7 @@ function AddProduct(props) {
         setName(product.name);
         setCreator(product.by);
         // subasta o tienda
-        // setStore(product.type)
+        // setShop(product.type)
         setDescription(product.description || '');
         setPicture(product.images && product.images[0] ? product.images[0] : null);
         setImgFile([
@@ -86,7 +95,7 @@ function AddProduct(props) {
 
   const goBack = () => props.history.goBack();
 
-  const changeInput = (e, key) => {
+  const changeInput = (e: React.ChangeEvent<HTMLInputElement>, key: string): void => {
     if (key === 'name') {
       setName(e.target.value);
     } else if (key === 'price') {
@@ -95,7 +104,8 @@ function AddProduct(props) {
       setCreator(e.target.value);
     }
   };
-  const changeDescription = (e) => {
+
+  const changeDescription = (e: string) => {
     if (description.length < 10000) {
       setDescription(e);
     } else {
@@ -103,7 +113,7 @@ function AddProduct(props) {
     }
   };
 
-  const changeImg = (file, name) => {
+  const changeImg = (file: File | null, name: string): void => {
     let temp = imageFile;
     let ImagenSearch = imageFile.filter((img) => img.name === name);
     if (ImagenSearch.length > 0) {
@@ -119,11 +129,11 @@ function AddProduct(props) {
       setImgFile(temp);
     } else {
       removeObjectFromArray(name, temp, setImgFile);
-      temp.push({ name, file: '' });
+      temp.push({ name, file: new File([], '') });
     }
   };
 
-  const saveProduct = async () => {
+  const saveProduct = async (): Promise<void> => {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
@@ -131,7 +141,13 @@ function AddProduct(props) {
       action: 'show',
     });
 
-    let validators = {};
+    let validators: Validators = {
+      price: false,
+      creator: false,
+      name: false,
+      description: false,
+      picture: false,
+    };
     validators.price = false;
     validators.creator = false;
 
@@ -167,7 +183,7 @@ function AddProduct(props) {
       validators.price === false
     ) {
       try {
-        if (idNew !== undefined) {
+        if (idNew !== undefined && idNew !== null) {
           let resp = await EventsApi.editProduct(
             {
               name,
@@ -177,7 +193,7 @@ function AddProduct(props) {
               discount,
               images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
               // subasta o tienda
-              // type: store,
+              // type: shop,
               type: 'just-store',
             },
             props.eventId,
@@ -196,7 +212,7 @@ function AddProduct(props) {
               discount,
               images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
               // subasta o tienda
-              // type: store,
+              // type: shop,
               type: 'just-store',
             },
             props.eventId
@@ -222,7 +238,7 @@ function AddProduct(props) {
         });
         DispatchMessageService({
           type: 'error',
-          msj: e,
+          msj: e as string,
           action: 'show',
         });
       }
@@ -280,7 +296,7 @@ function AddProduct(props) {
 
   return (
     <Form {...formLayout} onFinish={saveProduct}>
-      <Header title={'Producto'} back save form edit={props.match.params.id} remove={remove} />
+      <Header title={'Producto'} back save form edit={props.match.params?.id} remove={remove} />
       <Row justify='center' wrap gutter={12}>
         {props.match.params.id && isLoading ? (
           <Loading />
@@ -294,7 +310,7 @@ function AddProduct(props) {
               }
               rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]}>
               <Input
-                value={name}
+                value={name as string}
                 placeholder='Nombre del producto'
                 name={'name'}
                 onChange={(e) => changeInput(e, 'name')}
@@ -312,24 +328,13 @@ function AddProduct(props) {
               />
               {error != null && error.creator && <small style={{ color: 'red' }}>Este campo es requerido</small>}
             </Form.Item>
-            {/*   // subasta o tienda
-            <Form.Item label={<label style={{ marginTop: '2%' }}>Tipo</label>} rules={[{ required: false }]}>
-              <Select value={store} style={{ width: 120 }} onChange={handleChange}>
+            {/* <Form.Item label={<label style={{ marginTop: '2%' }}>Tipo</label>} rules={[{ required: false }]}>
+              <Select value={shop} style={{ width: 120 }} onChange={handleChange}>
                 <Option value='just-store'>Tienda</Option>
                 <Option value='Prueba'>Subasta</Option>
               </Select>
-              {error != null && error.store && <small style={{ color: 'red' }}>Este campo es requerido</small>}
+              {error != null && error.shop && <small style={{ color: 'red' }}>Este campo es requerido</small>}
             </Form.Item> */}
-            <Form.Item label={<label style={{ marginTop: '2%' }}>Descuento</label>} rules={[{ required: false }]}>
-              <InputNumber
-                defaultValue={null}
-                min={1}
-                max={100}
-                formatter={(value) => (value === null ? '' : `${value}%`)}
-                parser={(value) => (value ? value.replace('%', '') : null)}
-                onChange={onChangeDiscount}
-              />
-            </Form.Item>
             <Form.Item
               label={
                 <label style={{ marginTop: '2%' }}>
@@ -351,22 +356,37 @@ function AddProduct(props) {
                 onChange={(e) => changeInput(e, 'price')}
               />
             </Form.Item>
+            <Form.Item>
+              <label style={{ marginTop: '2%', marginRight: '5px' }}>Habilitar descuento</label>
+              <Switch checked={discountEnabled} onChange={handleDiscountEnabledChange} />
+            </Form.Item>
+            {discountEnabled && (
+              <Form.Item label={<label style={{ marginTop: '2%' }}>Descuento</label>} rules={[{ required: false }]}>
+                <InputNumber
+                  defaultValue={100}
+                  min={1}
+                  max={100}
+                  formatter={(value) => (value === null ? '' : `${value}%`)}
+                  parser={(value: any) => (value ? value.replace('%', '') : undefined)}
+                  onChange={onChangeDiscount}
+                />
+              </Form.Item>
+            )}
             <label style={{ marginTop: '2%' }}>
               Imagen <label style={{ color: 'red' }}>*</label>
             </label>
             <ImageUploaderDragAndDrop
-              imageDataCallBack={(file) => changeImg(file, 'Imagen')}
-              imageUrl={picture}
+              imageDataCallBack={(file: any) => changeImg(file, 'Imagen')}
+              imageUrl={picture !== null ? (picture as string) : ''}
               width='1080'
               height='1080'
             />
-
             {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
 
             <label style={{ marginTop: '2%' }}>Imagen opcional</label>
 
             <ImageUploaderDragAndDrop
-              imageDataCallBack={(file) => changeImg(file, 'img_optional')}
+              imageDataCallBack={(file: any) => changeImg(file, 'img_optional')}
               imageUrl={optionalPicture}
               width='1080'
               height='1080'
@@ -377,6 +397,6 @@ function AddProduct(props) {
       <BackTop />
     </Form>
   );
-}
+};
 
 export default withRouter(AddProduct);
