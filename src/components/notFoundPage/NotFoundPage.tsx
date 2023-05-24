@@ -1,7 +1,8 @@
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Result, Button } from 'antd'
+import { FunctionComponent } from 'react'
 
-const NotFoundPage = () => (
+const NotFoundPage: FunctionComponent = () => (
   <Result
     status="404"
     title="404"
@@ -14,4 +15,4 @@ const NotFoundPage = () => (
   />
 )
 
-export default withRouter(NotFoundPage)
+export default NotFoundPage
