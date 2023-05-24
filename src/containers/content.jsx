@@ -25,6 +25,7 @@ import ModalNoRegister from '@components/authentication/ModalNoRegister'
 import BlockedEvent from '@components/events/Landing/BlockedEvent'
 import ModalAuthAnonymous from '@components/authentication/ModalAuthAnonymous'
 import ModalUpdate from '@components/events/Landing/ModalUpdate'
+import DirectLoginPage from '@/pages/DirectLoginPage'
 //Code splitting
 const Header = loadable(() => import('./header'))
 const Home = loadable(() => import('../pages/home'))
@@ -118,6 +119,8 @@ const ContentContainer = () => {
           <Route exact path="/eventfinished" component={EventFinished} />
 
           <Route path="/loginWithCode" component={LoginWithCode} />
+
+          <Route path="/direct-login" component={DirectLoginPage} />
 
           <Route
             path="/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver"
