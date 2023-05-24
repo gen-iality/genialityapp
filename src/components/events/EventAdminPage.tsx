@@ -4,7 +4,8 @@ import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import Loading from '../loaders/loading'
 import { EventsApi } from '@helpers/request'
-import ListEventUser from '../event-users'
+import ListEventUser_Old from '../event-users/index.bad'
+import ListEventUserPage from '../event-users/ListEventUserPage'
 import { fetchRol } from '../../redux/rols/actions'
 import { fetchPermissions } from '../../redux/permissions/actions'
 import connect from 'react-redux/es/connect/connect'
@@ -345,12 +346,18 @@ class Event extends Component {
                 render={() => <ReportNetworking event={event} />}
               />
               <Protected
-                path={`${match.url}/assistants`}
+                path={`${match.url}/assistants.old`}
                 event={event}
                 url={match.url}
                 render={() => (
-                  <ListEventUser shownAll eventId={event._id} event={event} />
+                  <ListEventUser_Old shownAll eventId={event._id} event={event} />
                 )}
+              />
+              <Protected
+                path={`${match.url}/assistants`}
+                event={event}
+                url={match.url}
+                render={() => <ListEventUserPage event={event} parentUrl={match.url} />}
               />
 
               <Protected
@@ -364,11 +371,22 @@ class Event extends Component {
                 url={match.url}
                 event={event}
                 render={() => (
-                  <ListEventUser
+                  <ListEventUser_Old
                     eventId={event._id}
                     event={event}
                     type="activity"
                     shownAll={false}
+                  />
+                )}
+              />
+              <Protected
+                path={`${match.url}/checkin.new/:id`}
+                url={match.url}
+                event={event}
+                render={(routeProps) => (
+                  <ListEventUserPage
+                    event={event}
+                    activityId={routeProps.match.params.id}
                   />
                 )}
               />
