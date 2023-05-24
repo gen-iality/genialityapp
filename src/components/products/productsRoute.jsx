@@ -5,9 +5,10 @@ import { withRouter } from 'react-router-dom';
  *  secciones del evento
  * ---------------------*/
 import Product from './product';
-import AddProduct from './addProduct';
+
 import Configuration from './configuration';
 import OfertProduts from './oferts';
+import AddProduct from './components/addProduct';
 
 const ProductSectionRoutes = (props) => {
   let { path } = useRouteMatch();
