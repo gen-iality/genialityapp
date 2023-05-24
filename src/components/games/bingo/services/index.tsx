@@ -384,31 +384,36 @@ export const generateBingoForExclusiveUsers = async (eventId: string) => {
 };
 
 export const listeningMessages = (eventId: string, setData: (messages: IMessage[]) => void) => {
-  return firestoreeviuschat
-    .collection(`messagesevent_${eventId}`)
-    .orderBy('fecha', 'asc')
-    /* .where('visible','==','true') */
-    .onSnapshot((snapshot) => {
-      if (!snapshot.empty) {
-        const data = snapshot.docs
-          .map((doc) => ({ id: doc.id, ...doc.data() } as IMessage))
-          .filter((msg) => msg.visible !== true);
-        setData(data);
-      } else {
-        setData([]);
-      }
-    });
+  return (
+    firestoreeviuschat
+      .collection(`messagesevent_${eventId}`)
+      .orderBy('fecha', 'asc')
+      /* .where('visible','==','true') */
+      .onSnapshot((snapshot) => {
+        if (!snapshot.empty) {
+          const data = snapshot.docs
+            .map((doc) => ({ id: doc.id, ...doc.data() } as IMessage))
+            .filter((msg) => msg.visible !== true);
+          setData(data);
+        } else {
+          setData([]);
+        }
+      })
+  );
 };
-export const listeningConfigChat = (eventId: string, setData: (configChat: IConfigChat | undefined) => void) => {
+export const listeningConfigChat = (eventId: string, setData: (configChat: IConfigChat) => void) => {
   return firestore
     .collection(`events`)
     .doc(eventId)
     .onSnapshot((snapshot) => {
       if (snapshot.exists) {
-        const data: IConfigChat = snapshot.data()?.configChat as IConfigChat;
-        setData(data);
+        const configChat: IConfigChat = snapshot.data()?.configChat as IConfigChat;
+        if (!configChat) {
+          return setData({ message_controlled: false });
+        }
+        setData(configChat);
       } else {
-        setData(undefined);
+        setData({ message_controlled: false });
       }
     });
 };
