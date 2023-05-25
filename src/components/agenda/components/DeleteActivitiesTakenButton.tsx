@@ -1,42 +1,43 @@
-import { Button } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
-import { AgendaApi } from '@helpers/request';
-import { firestore } from '@helpers/firebase';
-import { Link } from 'react-router-dom';
-import { useCallback } from 'react';
+import { Button } from 'antd'
+import { DeleteOutlined } from '@ant-design/icons'
+import { AgendaApi } from '@helpers/request'
+import { firestore } from '@helpers/firebase'
+import { Link } from 'react-router-dom'
+import { useCallback } from 'react'
 
 interface DeleteActivitiesTakenButtonProps {
-  eventId: string;
-  cEventUserId?: string;
-  setActivitiesAttendeeIsDeleted?: any;
-  setActivitiesAttendee?: any;
+  eventId: string
+  cEventUserId?: string
+  setActivitiesAttendeeIsDeleted?: any
+  setActivitiesAttendee?: any
 }
 
+/** @deprecated remove temporally because setActivitiesAttendee */
 export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonProps) {
   const {
     eventId, // The event ID
     cEventUserId, // The event user ID
     setActivitiesAttendeeIsDeleted,
     setActivitiesAttendee,
-  } = props;
+  } = props
 
   const deleteActivitiesTaken = useCallback(
     async (cEventUserId: any, eventId: any) => {
-      const { data } = await AgendaApi.byEvent(eventId);
+      const { data } = await AgendaApi.byEvent(eventId)
       await Promise.all(
         data.map(async (activity: any) => {
           await firestore
             .collection(`${activity._id}_event_attendees`)
             .doc(cEventUserId)
-            .delete();
+            .delete()
         }),
-      );
+      )
 
-      setActivitiesAttendee([]);
-      setActivitiesAttendeeIsDeleted((prevState: any) => !prevState);
+      setActivitiesAttendee([])
+      setActivitiesAttendeeIsDeleted((prevState: any) => !prevState)
     },
     [cEventUserId, eventId],
-  );
+  )
 
   return (
     <Link to={`/landing/${eventId}/agenda`} replace>
@@ -58,5 +59,5 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
         Eliminar actividades vistas
       </Button>
     </Link>
-  );
+  )
 }

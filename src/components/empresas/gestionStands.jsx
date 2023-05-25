@@ -1,35 +1,48 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
-import { Button, Input, Row, Form, Modal, Col, Card, message, Alert, Table, Select, Tooltip, Divider } from 'antd';
+import {
+  Button,
+  Input,
+  Row,
+  Form,
+  Modal,
+  Col,
+  Card,
+  Alert,
+  Table,
+  Select,
+  Tooltip,
+  Divider,
+} from 'antd'
 import {
   ExclamationCircleOutlined,
   DeleteOutlined,
   EditOutlined,
   PlusCircleOutlined,
   SaveOutlined,
-} from '@ant-design/icons';
-import { handleRequestError } from '@helpers/utils';
-import { firestore } from '@helpers/firebase';
-import { SketchPicker } from 'react-color';
-import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '@context/MessageService';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
+} from '@ant-design/icons'
+import { handleRequestError } from '@helpers/utils'
+import { firestore } from '@helpers/firebase'
+import { SketchPicker } from 'react-color'
+import Header from '@antdComponents/Header'
+import { StateMessage } from '@context/MessageService'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
 
-const { Option } = Select;
-const { confirm } = Modal;
+const { Option } = Select
+const { confirm } = Modal
 
 const Stands = (props) => {
-  const [standsList, setStands] = useState();
-  const [editStands, setEditStands] = useState(false);
-  const [selectedStand, setSelectedStand] = useState(null);
-  const [nameStand, setNameStand] = useState(null);
-  const [documentEmpresa, setDocumentEmpresa] = useState(null);
-  const [visualization, setVisualization] = useState('list');
-  const [config, setconfig] = useState(null);
-  const [colorStand, setColorStand] = useState('#2C2A29');
-  const [viewModalColor, setViewModalColor] = useState(false);
-  const [noValid, setNoValid] = useState(false);
-  const { eventIsActive } = useHelper();
+  const [standsList, setStands] = useState()
+  const [editStands, setEditStands] = useState(false)
+  const [selectedStand, setSelectedStand] = useState(null)
+  const [nameStand, setNameStand] = useState(null)
+  const [documentEmpresa, setDocumentEmpresa] = useState(null)
+  const [visualization, setVisualization] = useState('list')
+  const [config, setconfig] = useState(null)
+  const [colorStand, setColorStand] = useState('#2C2A29')
+  const [viewModalColor, setViewModalColor] = useState(false)
+  const [noValid, setNoValid] = useState(false)
+  const { eventIsActive } = useHelper()
 
   const columns = [
     {
@@ -56,7 +69,7 @@ const Stands = (props) => {
             onClick={() => null}
             onChange={null}
           />
-        );
+        )
       },
     },
     {
@@ -73,15 +86,17 @@ const Stands = (props) => {
                     key={`editAction${record.index}`}
                     id={`editAction${record.index}`}
                     onClick={() => {
-                      setEditStands(true);
-                      setViewModalColor(false);
-                      setNoValid(false);
-                      obtenerStand(record);
+                      setEditStands(true)
+                      setViewModalColor(false)
+                      setNoValid(false)
+                      obtenerStand(record)
                     }}
                     icon={<EditOutlined />}
                     type="primary"
                     size="small"
-                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                    disabled={
+                      !eventIsActive && window.location.toString().includes('eventadmin')
+                    }
                   />
                 </Tooltip>
               </Col>
@@ -91,44 +106,45 @@ const Stands = (props) => {
                     key={`removeAction${record.index}`}
                     id={`removeAction${record.index}`}
                     onClick={() => {
-                      deleteStand(key);
+                      deleteStand(key)
                     }}
                     icon={<DeleteOutlined />}
                     type="danger"
                     size="small"
-                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                    disabled={
+                      !eventIsActive && window.location.toString().includes('eventadmin')
+                    }
                   />
                 </Tooltip>
               </Col>
             </Row>
           </>
-        );
+        )
       },
     },
-  ];
+  ]
 
   function handleChange(value) {
-    setVisualization(value);
+    setVisualization(value)
   }
 
   async function obtenerConfig() {
     const config = await firestore
       .collection('event_companies')
       .doc(props.event._id)
-      .get();
-    setconfig(config.data());
+      .get()
+    setconfig(config.data())
     if (config.data().config) {
-      setVisualization(config.data().config.visualization);
+      setVisualization(config.data().config.visualization)
     }
   }
 
   async function saveConfiguration() {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se guarda la información...',
-      action: 'show',
-    });
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se guarda la información...',
+    )
     await firestore
       .collection('event_companies')
       .doc(props.event._id)
@@ -136,65 +152,53 @@ const Stands = (props) => {
         {
           config: { visualization: visualization },
         },
-        { merge: true }
-      );
-    DispatchMessageService({
-      key: 'loading',
-      action: 'destroy',
-    });
-    DispatchMessageService({
-      type: 'success',
-      msj: 'Configuración guardada correctamente!',
-      action: 'show',
-    });
+        { merge: true },
+      )
+    StateMessage.destroy('loading')
+    StateMessage.show(null, 'success', 'Configuración guardada correctamente!')
   }
 
   const editStand = async () => {
     if (nameStand !== '' && nameStand !== null) {
-      const list = standsList;
+      const list = standsList
       const selectedStandEdit =
         selectedStand !== null
           ? { ...selectedStand, label: nameStand, value: nameStand, color: colorStand }
-          : { label: nameStand, value: nameStand, id: standsList.length, color: colorStand };
-      selectedStand !== null ? (list[selectedStand.id] = selectedStandEdit) : list.push(selectedStandEdit);
-      const modifyObject = { ...documentEmpresa, stand_types: list };
-      await actualizarData(modifyObject);
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Información guardada correctamente!',
-        action: 'show',
-      });
+          : {
+              label: nameStand,
+              value: nameStand,
+              id: standsList.length,
+              color: colorStand,
+            }
+      selectedStand !== null
+        ? (list[selectedStand.id] = selectedStandEdit)
+        : list.push(selectedStandEdit)
+      const modifyObject = { ...documentEmpresa, stand_types: list }
+      await actualizarData(modifyObject)
+      StateMessage.show(null, 'success', 'Información guardada correctamente!')
 
-      handleCancel();
+      handleCancel()
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Información inválida!',
-        action: 'show',
-      });
-      setNoValid(true);
+      StateMessage.show(null, 'error', 'Información inválida!')
+      setNoValid(true)
     }
-  };
+  }
 
   async function actualizarData(data) {
-    await firestore
-      .collection('event_companies')
-      .doc(props.event._id)
-      .set(data);
-    obtenerStands();
+    await firestore.collection('event_companies').doc(props.event._id).set(data)
+    obtenerStands()
   }
 
   const handleClickSelectColor = () => {
-    setViewModalColor(true);
-  };
+    setViewModalColor(true)
+  }
 
   async function deleteStand(id) {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    });
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -205,68 +209,54 @@ const Stands = (props) => {
       onOk() {
         const onHandlerRemove = async () => {
           try {
-            let list = standsList;
-            list = list.filter((stand) => stand.id !== id);
-            const modifyObject = { ...documentEmpresa, stand_types: list };
-            await actualizarData(modifyObject);
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            });
+            let list = standsList
+            list = list.filter((stand) => stand.id !== id)
+            const modifyObject = { ...documentEmpresa, stand_types: list }
+            await actualizarData(modifyObject)
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            });
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
-        };
-        onHandlerRemove();
+        }
+        onHandlerRemove()
       },
-    });
+    })
   }
 
   function obtenerStand(record) {
     if (record != null) {
       if (record.color) {
-        setColorStand(record.color);
+        setColorStand(record.color)
       } else {
-        setColorStand('');
+        setColorStand('')
       }
-      setSelectedStand(record);
-      setNameStand(record.value);
+      setSelectedStand(record)
+      setNameStand(record.value)
     } else {
-      setNameStand(null);
-      setSelectedStand(null);
+      setNameStand(null)
+      setSelectedStand(null)
     }
   }
 
   const HandlerEditText = (e) => {
-    const value = e.target.value;
-    setNameStand(value);
+    const value = e.target.value
+    setNameStand(value)
     if (e.target.value.length > 0) {
-      setNoValid(false);
+      setNoValid(false)
     }
-  };
+  }
 
   const handleCancel = () => {
-    setEditStands(false);
-    setNoValid(false);
-  };
+    setEditStands(false)
+    setNoValid(false)
+  }
 
   useEffect(() => {
-    obtenerConfig();
-    obtenerStands();
-  }, []);
+    obtenerConfig()
+    obtenerStands()
+  }, [])
 
   const obtenerStands = () => {
     firestore
@@ -274,16 +264,18 @@ const Stands = (props) => {
       .doc(props.event._id)
       .get()
       .then((resp) => {
-        setDocumentEmpresa(resp.data());
-        const standTypesOptions = resp.data().stand_types;
-        const listStands = [];
+        setDocumentEmpresa(resp.data())
+        const standTypesOptions = resp.data().stand_types
+        const listStands = []
         standTypesOptions &&
           standTypesOptions.map((stands, indx) => {
-            stands.label && stands.label.label !== null && listStands.push({ ...stands, id: indx });
-          });
-        setStands(listStands);
-      });
-  };
+            stands.label &&
+              stands.label.label !== null &&
+              listStands.push({ ...stands, id: indx })
+          })
+        setStands(listStands)
+      })
+  }
 
   return (
     <div>
@@ -299,7 +291,11 @@ const Stands = (props) => {
           <br />
           <Row justify="space-between">
             <p>Visualización: </p>
-            <Select value={visualization} style={{ width: 220, marginLeft: 30 }} onChange={handleChange}>
+            <Select
+              value={visualization}
+              style={{ width: 220, marginLeft: 30 }}
+              onChange={handleChange}
+            >
               <Option value="list">Listado</Option>
               <Option value="stand">Stand</Option>
             </Select>
@@ -307,7 +303,9 @@ const Stands = (props) => {
               onClick={() => saveConfiguration()}
               type="primary"
               icon={<SaveOutlined />}
-              disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+              disabled={
+                !eventIsActive && window.location.toString().includes('eventadmin')
+              }
             >
               Guardar
             </Button>
@@ -320,22 +318,29 @@ const Stands = (props) => {
             extra={
               <Button
                 onClick={() => {
-                  setEditStands(true);
-                  setColorStand('#2C2A29');
-                  setViewModalColor(false);
-                  setNoValid(false);
-                  obtenerStand(null);
+                  setEditStands(true)
+                  setColorStand('#2C2A29')
+                  setViewModalColor(false)
+                  setNoValid(false)
+                  obtenerStand(null)
                 }}
                 type="primary"
                 icon={<PlusCircleOutlined />}
-                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                disabled={
+                  !eventIsActive && window.location.toString().includes('eventadmin')
+                }
               >
                 Agregar
               </Button>
             }
             bordered={false}
           >
-            <Table columns={columns} dataSource={standsList} pagination={false} rowKey="_id" />
+            <Table
+              columns={columns}
+              dataSource={standsList}
+              pagination={false}
+              rowKey="_id"
+            />
 
             <Modal
               title={selectedStand ? 'Editar stand' : 'Agregar stand'}
@@ -348,8 +353,13 @@ const Stands = (props) => {
                   validateStatus={!noValid ? 'success' : 'error'}
                   label={<span style={{ width: 70 }}>Nombre</span>}
                 >
-                  <Input value={nameStand && nameStand} onChange={(e) => HandlerEditText(e)} />
-                  {noValid && <small style={{ color: 'red' }}>Ingrese un nombre válido</small>}
+                  <Input
+                    value={nameStand && nameStand}
+                    onChange={(e) => HandlerEditText(e)}
+                  />
+                  {noValid && (
+                    <small style={{ color: 'red' }}>Ingrese un nombre válido</small>
+                  )}
                 </Form.Item>
                 <Form.Item label={<span style={{ width: 70 }}>Color</span>}>
                   <div onClick={() => handleClickSelectColor()}>
@@ -372,15 +382,19 @@ const Stands = (props) => {
                         bottom: '0px',
                         left: '600px',
                         zIndex: 10000,
-                      }}>
+                      }}
+                    >
                       <Card size="small" style={{ width: '250px' }}>
                         <SketchPicker
                           color={colorStand}
                           onChangeComplete={(color) => {
-                            setColorStand(color.hex);
+                            setColorStand(color.hex)
                           }}
                         />
-                        <Button style={{ marginTop: 20 }} onClick={() => setViewModalColor(false)}>
+                        <Button
+                          style={{ marginTop: 20 }}
+                          onClick={() => setViewModalColor(false)}
+                        >
                           Aceptar
                         </Button>
                       </Card>
@@ -393,7 +407,7 @@ const Stands = (props) => {
         </Col>
       </Row>
     </div>
-  );
-};
+  )
+}
 
-export default Stands;
+export default Stands

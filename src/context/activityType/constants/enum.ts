@@ -2,13 +2,13 @@ export enum FormType {
   INFO = 'INFO',
   UPLOAD = 'UPLOAD',
   INPUT = 'INPUT',
-};
+}
 
 export enum WidgetType {
   FINAL = 'FINAL', // It is the final widget, after incoming the creation
   CARD_SET = 'CARD_SET', // It can have a cards attribute
   FORM = 'FORM', // It has a form
-};
+}
 
 export enum MainUI {
   LIVE = 'liveBroadcast',
@@ -18,7 +18,7 @@ export enum MainUI {
   SURVEY = 'survey2',
   PDF = 'pdf2',
   HTML = 'html2',
-};
+}
 
 export enum DeepUI {
   MEETING = 'meeting',
@@ -33,7 +33,7 @@ export enum DeepUI {
   SURVEY = 'survey',
   PDF = 'pdf',
   HTML = 'html',
-};
+}
 
 export enum TypeDisplayment {
   TRANSMISSION = 'Transmisión',
@@ -46,4 +46,4 @@ export enum TypeDisplayment {
   SURVEY = 'Survey',
   PDF = 'pdf', // TODO: this should be uppercase, but we have to check where it is used
   HTML = 'HTML',
-};
+}

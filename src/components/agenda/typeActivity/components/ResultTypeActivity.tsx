@@ -1,5 +1,4 @@
-;
-import { Result } from 'antd';
+import { Result } from 'antd'
 
 /**
  * Título varia según lo seleccionado
@@ -8,13 +7,13 @@ import { Result } from 'antd';
  * Video: Video asignado correctamente
  */
 interface propsOptions {
-  title: string;
-  status: 'success' | 'error' | 'info' | 'warning' | '404' | '403' | '500';
-  subtitle?: string;
+  title: string
+  status: 'success' | 'error' | 'info' | 'warning' | '404' | '403' | '500'
+  subtitle?: string
 }
 
 const ResultTypeActivity = ({ title, status, subtitle }: propsOptions) => {
-  return <Result status={status} title={title} subTitle={subtitle} />;
-};
+  return <Result status={status} title={title} subTitle={subtitle} />
+}
 
-export default ResultTypeActivity;
+export default ResultTypeActivity

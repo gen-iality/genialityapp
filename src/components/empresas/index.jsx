@@ -1,15 +1,17 @@
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom'
 
-import CrearEditarEmpresa from './crearEditarEmpresa';
-import Empresas from './empresas';
-import Stands from './gestionStands';
+import CrearEditarEmpresa from './crearEditarEmpresa'
+import Empresas from './empresas'
+import Stands from './gestionStands'
 
-function EmpresasRoutes({ event, match }) {
-  const matchUrl = match.url;
-
+function EmpresasRoutes({ event, matchUrl }) {
   return (
     <Switch>
-      <Route exact path={`${matchUrl}/`} render={(routeProps) => <Empresas {...routeProps} event={event} />} />
+      <Route
+        exact
+        path={`${matchUrl}/`}
+        render={(routeProps) => <Empresas {...routeProps} event={event} />}
+      />
       <Route
         exact
         path={`${matchUrl}/crear`}
@@ -26,7 +28,7 @@ function EmpresasRoutes({ event, match }) {
         render={(routeProps) => <CrearEditarEmpresa {...routeProps} event={event} />}
       />
     </Switch>
-  );
+  )
 }
 
-export default withRouter(EmpresasRoutes);
+export default withRouter(EmpresasRoutes)

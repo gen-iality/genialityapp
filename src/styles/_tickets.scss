@@ -1,257 +1,255 @@
-div.stage{
+div.stage {
   cursor: pointer;
-  &.is-active{
+  &.is-active {
     background-color: $primary;
-    color: white
+    color: white;
   }
-  &.is-disabled{
+  &.is-disabled {
     background-color: lightgray;
   }
 }
 
-.column{
+.column {
   padding: 1rem 0.75rem !important;
 }
 
-.column .ticket{
+.column .ticket {
   border-radius: 0;
 }
 
-.menu-steps{
+.menu-steps {
   font-size: 1.2rem;
   cursor: pointer;
-  .is-active{
+  .is-active {
     color: $primary;
     text-decoration: underline;
   }
 }
 
-.content-tabs{
+.content-tabs {
   width: fit-content;
   box-shadow: none;
-  .column{
+  .column {
     padding: 0rem 0.5rem !important;
   }
-  .tab{
+  .tab {
     height: fit-content;
     padding: 3px 18px;
     border-radius: 0;
   }
-  p{
+  p {
     font-size: 18px;
   }
-  .columns .is-vcentered{
+  .columns .is-vcentered {
     align-items: center;
     justify-content: center;
   }
-  .date-etapa{
+  .date-etapa {
     padding: 0;
     width: auto;
     height: auto;
   }
-  .hasta{
+  .hasta {
     padding: 12px;
   }
 }
-.price{
+.price {
   font-size: 1.2rem;
   padding-right: 16px;
 }
 
-.separador{
+.separador {
   height: 1px;
   margin: 1px 0;
 }
 
-.box-ticket{
+.box-ticket {
   border-radius: 0;
 }
 
-.card-resume{
+.card-resume {
   position: sticky;
   top: 17%;
 }
 
-.card-content{
+.card-content {
   height: auto !important;
-  .ticket{
+  .ticket {
     padding: 0px;
     border-top: 1px solid #dbdbdb;
     box-shadow: none;
     height: 100%;
-    .column-content p{
+    .column-content p {
       margin-bottom: 0;
     }
-    .column-delete{
+    .column-delete {
       text-align: center;
     }
   }
-  .no-tickets{
+  .no-tickets {
     color: grey;
     height: 100%;
     padding: 10px;
     width: 100%;
   }
 }
-.card-footer-item{
+.card-footer-item {
   flex-direction: column;
-  .Subtotal{
+  .Subtotal {
     font-size: 1.2rem;
     font-weight: 600;
     margin: 10px;
   }
 }
-.is-hidden-mobile{
+.is-hidden-mobile {
   box-shadow: 0 1px 2px rgba(10, 10, 10, 0.1);
 }
 .title-map {
   font-size: large;
   padding: 15px;
 }
-.card-header-title{
+.card-header-title {
   justify-content: center;
   font-size: large;
 }
 
-.title-header{
+.title-header {
   display: flex;
   width: 100%;
   align-items: center;
-  .icon{
+  .icon {
     margin: 0 10px;
   }
 }
 
-.field{
+.field {
   margin-top: 11px;
 }
 
-.field .control{
+.field .control {
   margin: 1em;
 }
-.field .control-container{
+.field .control-container {
   margin: 0em !important;
 }
 
-.quantity{
+.quantity {
   font-size: 1.2rem;
   font-weight: 600;
   margin: 10px;
 }
 
 @media only screen and (max-width: 1023px) {
-
-  .columns .menu-steps{
+  .columns .menu-steps {
     flex-direction: row !important;
   }
 
-  .column .tickets-content{
+  .column .tickets-content {
     width: 100%;
   }
-  .columns .content-tabs{
+  .columns .content-tabs {
     width: 100%;
-    .date-media{
+    .date-media {
       flex-direction: row;
       justify-content: center;
     }
   }
-  .columns .tickets-frame{
+  .columns .tickets-frame {
     flex-direction: column !important;
     width: 100%;
-    .resume{
+    .resume {
       width: 100%;
     }
-      .card-resume{
+    .card-resume {
+      display: flex;
+      flex-direction: row;
+      position: fixed;
+      width: 100%;
+      left: 0;
+      bottom: 0;
+      top: auto;
+      z-index: 10;
+      .card-content {
         display: flex;
-        flex-direction: row;
-        position: fixed;
+        justify-content: center;
+      }
+      .is-hidden-mobile {
+        display: flex;
         width: 100%;
-        left: 0;
-        bottom: 0;
-        top: auto;
-        z-index: 10;
-        .card-content{
-          display: flex;
-          justify-content: center;
-        }
-        .is-hidden-mobile{
-          display: flex;
-          width: 100%;
-          .ticket{  
-            flex: 1 1 auto;
-            padding: 2px;
-            border-left: 1px solid #dbdbdb;
-            border-right: 1px solid #dbdbdb;
-            .media{
-              flex-direction: row;
-              .column-delete{
-                flex:none;
-                width: 16%;
-              }
+        .ticket {
+          flex: 1 1 auto;
+          padding: 2px;
+          border-left: 1px solid #dbdbdb;
+          border-right: 1px solid #dbdbdb;
+          .media {
+            flex-direction: row;
+            .column-delete {
+              flex: none;
+              width: 16%;
             }
           }
         }
-        .is-hidden-tablet{
-          padding: 10px;
+      }
+      .is-hidden-tablet {
+        padding: 10px;
+      }
+      .field {
+        padding: 10px;
+        margin: 0;
+      }
+      .card-footer-item {
+        justify-content: flex-end;
+        padding: 0;
+        .Subtotal {
+          margin: 2px;
         }
-        .field{
-          padding: 10px;
-          margin: 0;
-        }
-        .card-footer-item{
-          justify-content: flex-end;
-          padding: 0;
-          .Subtotal{
-            margin: 2px;
-          }
-          .Button-reserva{
-            margin: 5px;
-          }
+        .Button-reserva {
+          margin: 5px;
         }
       }
-      .title-header{
-        .icon{
-          margin: 0 10px;
-        }
-        .ticket-resume-title{
-          display: none;
-        }
+    }
+    .title-header {
+      .icon {
+        margin: 0 10px;
       }
+      .ticket-resume-title {
+        display: none;
+      }
+    }
   }
   @media only screen and (max-width: 600px) {
-
-    .content-ticket{
+    .content-ticket {
       flex-direction: column !important;
     }
-    .columns .content-tabs{
+    .columns .content-tabs {
       justify-content: inherit !important;
       overflow: hidden;
     }
-    .card-header-title{
+    .card-header-title {
       padding: 0;
     }
-    .title-header{
-      .icon{
+    .title-header {
+      .icon {
         margin: 0 !important;
       }
     }
-    .card-footer-item{
-      .Subtotal{
+    .card-footer-item {
+      .Subtotal {
         font-size: 1rem;
         margin: 10px 1px;
       }
-      .button{
+      .button {
         font-size: 1rem;
       }
     }
-    .media{
+    .media {
       flex-direction: column;
-      .media-content{
-        .title{
+      .media-content {
+        .title {
           font-size: 1.2rem;
         }
       }
-      .media-right{
+      .media-right {
         margin: 1.5rem 0;
         width: 100%;
         text-align: end;

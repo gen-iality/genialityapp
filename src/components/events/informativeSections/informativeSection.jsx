@@ -1,18 +1,15 @@
-import { Component, Fragment } from 'react';
-import { Alert, Button, Card, Col, Input, Row, Space, Typography } from 'antd';
-import withContext from '@context/withContext';
-import { EventsApi } from '@helpers/request';
-import { SettingOutlined, WarningOutlined } from '@ant-design/icons';
-import Meta from 'antd/lib/card/Meta';
-import Modal from 'antd/lib/modal/Modal';
-import { connect } from 'react-redux';
-import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import { withRouter } from 'react-router-dom';
-import Parser from 'html-react-parser';
-import ReactPlayer from 'react-player';
+import { Component, Fragment } from 'react'
+import { Card } from 'antd'
+import withContext from '@context/withContext'
+import { EventsApi } from '@helpers/request'
+import { connect } from 'react-redux'
+import { setVirtualConference } from '../../../redux/virtualconference/actions'
+import { withRouter } from 'react-router-dom'
+import Parser from 'html-react-parser'
+
 class InformativeSection extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       markup: '',
       informativeSection: null,
@@ -23,15 +20,15 @@ class InformativeSection extends Component {
       valueoff: false,
       isModalVisibleRegister: false,
       ellipsis: true,
-    };
+    }
   }
 
   componentDidMount() {
-    this.props.setVirtualConference(false);
+    this.props.setVirtualConference(false)
     this.setState({
       informativeSection: this.props.cEvent.value.itemsMenu.informativeSection,
       markup: this.props.cEvent.value.itemsMenu.informativeSection.markup,
-    });
+    })
     // Obtener galeria
     // EventsApi.getGallery(this.props.cEvent.value._id).then((resp) => {
     //   if (resp && resp.data) {
@@ -50,69 +47,73 @@ class InformativeSection extends Component {
   }
 
   componentWillUnmount() {
-    this.props.setVirtualConference(true);
+    this.props.setVirtualConference(true)
   }
 
   showModal = () => {
     this.setState({
       isModalVisible: true,
-    });
-  };
+    })
+  }
   // Cuando se ofrece un producto
   handleOk = async () => {
     //validación para campo oferta vacío
     if (this.state.value_oferta === null || this.state.value_oferta === '') {
       this.setState({
         valueoff: true,
-      });
-      return false;
+      })
+      return false
       //validación para oferta mayor al precio base
     } else if (this.state.value_oferta !== null || this.state.value_oferta !== '') {
       if (parseFloat(this.state.value_oferta) < this.state.selectedGalery.price) {
         this.setState({
           valueoff: true,
-        });
-        return false;
+        })
+        return false
       } else {
         //gestionar y guardar valor de oferta
-        const items = this.state.galeries;
-        const newPuja = { ...this.state.selectedGalery, price: this.state.value_oferta };
+        const items = this.state.galeries
+        const newPuja = { ...this.state.selectedGalery, price: this.state.value_oferta }
         const newItems = items.map((item) => {
           if (item._id === this.state.selectedGalery._id) {
-            return newPuja;
+            return newPuja
           } else {
-            return item;
+            return item
           }
-        });
-        const oferta = { valueOffered: parseFloat(this.state.value_oferta) };
-        const resp = await EventsApi.storeGalley(this.props.cEvent.value._id, this.state.selectedGalery._id, oferta);
+        })
+        const oferta = { valueOffered: parseFloat(this.state.value_oferta) }
+        const resp = await EventsApi.storeGalley(
+          this.props.cEvent.value._id,
+          this.state.selectedGalery._id,
+          oferta,
+        )
 
-        this.inputOferta.value = '';
+        this.inputOferta.value = ''
         this.setState({
           valueoff: false,
           galeries: newItems,
           value_oferta: null,
           selectedGalery: null,
           isModalVisible: false,
-        });
+        })
       }
     }
-  };
+  }
   //ir a registrar usuario
   registerUser = () => {
-    this.props.history.push(`/landing/${this.props.cEvent.value._id}/tickets`);
-  };
+    this.props.history.push(`/landing/${this.props.cEvent.value._id}/tickets`)
+  }
   //Cerrar modal
   handleCancel = () => {
     this.setState({
       isModalVisible: false,
-    });
-  };
+    })
+  }
   onChangeValue = (e) => {
     this.setState({
       value_oferta: e.target.value,
-    });
-  };
+    })
+  }
 
   pujar = (articulo) => {
     this.setState(
@@ -120,11 +121,11 @@ class InformativeSection extends Component {
         value_oferta: articulo.price,
         selectedGalery: articulo,
       },
-      () => this.showModal()
-    );
-  };
+      () => this.showModal(),
+    )
+  }
   render() {
-    const { markup, informativeSection } = this.state;
+    const { markup, informativeSection } = this.state
     return (
       <Fragment>
         {informativeSection !== null && (
@@ -134,17 +135,20 @@ class InformativeSection extends Component {
               bordered={false}
               style={{ backgroundColor: 'transparent', margin: 'auto' }}
             >
-              { markup && Parser(markup)}
+              {markup && Parser(markup)}
             </Card>
           </div>
         )}
       </Fragment>
-    );
+    )
   }
 }
 const mapDispatchToProps = {
   setVirtualConference,
-};
+}
 
-const InformativeSection2WithContext = connect(null, mapDispatchToProps)(withContext(withRouter(InformativeSection)));
-export default InformativeSection2WithContext;
+const InformativeSection2WithContext = connect(
+  null,
+  mapDispatchToProps,
+)(withContext(withRouter(InformativeSection)))
+export default InformativeSection2WithContext

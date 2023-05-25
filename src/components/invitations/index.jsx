@@ -1,92 +1,70 @@
-import { useEffect, useState } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
-import InvitedUsers from './eventUsersList';
-import CreateMessage from './send';
-import ImportUsers from '../import-users/importUser';
-import { EventsApi } from '@helpers/request';
-
-// function Tabla(props) {
-//   const [guests, setGuests] = useState([]);
-
-//   const columns = [
-//     {
-//       Header: "Email",
-//       accessor: "email" // accessor is the "key" in the data
-//     },
-//     {
-//       Header: "Names",
-//       accessor: "names"
-//     }
-//   ];
-
-//   useEffect(() => {
-//
-
-//     async function fetchData(props) {
-//       const guestsResult = await UsersApi.getAll(
-//         props.event._id,
-//         "?pageSize=1000"
-//       );
-//       setGuests(guestsResult.data);
-//
-//     }
-//     fetchData(props);
-//   }, []);
-
-//   return <EviusTable columns={columns} data={guests} />;
-// }
+import { useEffect, useState } from 'react'
+import { Route, Switch, withRouter } from 'react-router-dom'
+import InvitedUsers from './eventUsersList'
+import CreateMessage from './send'
+import ImportUsers from '../import-users/importUser'
+import { EventsApi } from '@helpers/request'
 
 function ListaInvitados({ ...props }) {
-  const { eventId, event, match, location } = props;
+  const { eventId, event, parentUrl, location } = props
 
   useEffect(() => {
-    if (match.path === `/eventAdmin/${eventId}/invitados`) {
-      obtenerEvento();
+    if (parentUrl === `/eventadmin/${eventId}`) {
+      obtenerEvento()
     }
 
     async function obtenerEvento() {
-      const respEvento = await EventsApi.getOne(eventId);
-      setUserProperties(respEvento.user_properties);
+      const respEvento = await EventsApi.getOne(eventId)
+      setUserProperties(respEvento.user_properties)
     }
-  }, [match]);
+  }, [parentUrl])
 
-  const [guestSelected, setGuestSelected] = useState([]);
-  const [userProperties, setUserProperties] = useState([]);
+  const [guestSelected, setGuestSelected] = useState([])
+  const [userProperties, setUserProperties] = useState([])
 
   return (
     <>
       <Switch>
         <Route
           exact
-          path={`${match.url}/`}
+          path={`${parentUrl}/invitados`}
           render={() => (
-            <InvitedUsers event={event} eventID={eventId} matchUrl={match.url} setGuestSelected={setGuestSelected} />
+            <InvitedUsers
+              event={event}
+              eventID={eventId}
+              setGuestSelected={setGuestSelected}
+            />
           )}
         />
         <Route
           exact
-          path={`${match.url}/createmessage`}
+          path={`${parentUrl}/invitados/createmessage`}
           render={() => (
-            <CreateMessage event={event} eventID={eventId} matchUrl={match.url} selection={guestSelected} />
+            <CreateMessage
+              event={event}
+              eventID={eventId}
+              selection={guestSelected}
+              parentUrl={parentUrl}
+            />
           )}
         />
 
         <Route
           exact
-          path={`${match.url}/importar-excel`}
+          path={`${parentUrl}/invitados/importar-excel`}
           render={() => (
             <ImportUsers
               extraFields={userProperties}
               eventId={eventId}
               event={event}
-              matchUrl={match.url}
+              parentUrl={parentUrl}
               locationParams={location}
             />
           )}
         />
       </Switch>
     </>
-  );
+  )
 }
 
-export default withRouter(ListaInvitados);
+export default withRouter(ListaInvitados)

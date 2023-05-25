@@ -12,22 +12,22 @@ import {
   Badge,
   Popconfirm,
   Result,
-} from 'antd';
-import ReactPlayer from 'react-player';
-import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
-import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
-import { useContext, useEffect, useState } from 'react';
-import AgendaContext from '@context/AgendaContext';
-import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
-import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
-import { startRecordingLiveStream, stopRecordingLiveStream } from '@adaptors/gcoreStreamingApi';
-import { urlErrorCodeValidation } from '@Utilities/urlErrorCodeValidation';
+} from 'antd'
+import ReactPlayer from 'react-player'
+import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons'
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
+import { useContext, useState } from 'react'
+import AgendaContext from '@context/AgendaContext'
+import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo'
+import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline'
+
+import { urlErrorCodeValidation } from '@Utilities/urlErrorCodeValidation'
 
 const CardPreview = (props: any) => {
-  const [duration, setDuration] = useState(0);
-  const [errorOcurred, setErrorOcurred] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const { data } = useTypeActivity();
+  const [duration, setDuration] = useState(0)
+  const [errorOcurred, setErrorOcurred] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const { data } = useTypeActivity()
   const {
     roomStatus,
     setRoomStatus,
@@ -39,20 +39,20 @@ const CardPreview = (props: any) => {
     stopRecordTransmition,
     loadingRecord,
     record,
-  } = useContext(AgendaContext);
+  } = useContext(AgendaContext)
   // Obtener url a renderizar en componente de video
   const valideUrl = (url: string) => {
     if (url.includes('Loading2')) {
-      return false;
+      return false
     } else {
-      return true;
+      return true
     }
-  };
+  }
 
   // Permite renderizar el componente iframe o react player gcore
   const renderPlayer = () => {
     // Obtener visibilidad del react player y url a renderizar
-    const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
+    const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data)
 
     // Renderizar componente
     return (
@@ -76,8 +76,8 @@ const CardPreview = (props: any) => {
                 loop
                 onDuration={props.type === 'Video' ? handleDuration : undefined}
                 style={{ objectFit: 'cover', aspectRatio: '16/9' }}
-                width='100%'
-                height='100%'
+                width="100%"
+                height="100%"
                 url={urlVideo}
                 controls
                 // onStart={() => {
@@ -86,8 +86,8 @@ const CardPreview = (props: any) => {
                 // }}
                 onError={(e) => {
                   if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
-                    setErrorOcurred(true);
-                    setErrorMessage(e?.message);
+                    setErrorOcurred(true)
+                    setErrorMessage(e?.message)
                   }
                 }}
               />
@@ -98,45 +98,47 @@ const CardPreview = (props: any) => {
         {!visibleReactPlayer && !errorOcurred && (
           <iframe
             style={{ aspectRatio: '16/9' }}
-            width='100%'
+            width="100%"
             src={urlVideo + '?muted=1&autoplay=1'}
             frameBorder="0"
-            allow='autoplay; encrypted-media'
+            allow="autoplay; encrypted-media"
             allowFullScreen
             onLoad={(e) => {
               if (props.type !== 'EviusMeet' && props.type !== 'Transmisión') {
-                const target = e.target as any | undefined;
-                setErrorOcurred(urlErrorCodeValidation(target?.src, true));
+                const target = e.target as any | undefined
+                setErrorOcurred(urlErrorCodeValidation(target?.src, true))
               }
-            }}></iframe>
+            }}
+          ></iframe>
         )}
       </>
-    );
-  };
+    )
+  }
 
   // Permite verificar ids y no mostrar la url completa de youtube y vimeo
   const filterData = data
-    ? data.toString()?.includes('https://vimeo.com/event/') || data?.toString().includes('https://youtu.be/')
+    ? data.toString()?.includes('https://vimeo.com/event/') ||
+      data?.toString().includes('https://youtu.be/')
       ? data?.split('/')[data?.split('/').length - 1]
       : data
     : meeting_id
     ? meeting_id
-    : null;
+    : null
 
   const handleDuration = (duration: number) => {
-    console.log('onDuration', duration);
-    setDuration(duration);
-  };
+    console.log('onDuration', duration)
+    setDuration(duration)
+  }
 
   function videoDuration(seconds: number) {
-    let hour: number | string = Math.floor(seconds / 3600);
-    let minute: number | string = Math.floor((seconds / 60) % 60);
-    let second: number | string = seconds % 60;
-    hour = hour < 10 ? '0' + hour : hour;
-    minute = minute < 10 ? '0' + minute : minute;
-    second = second < 10 ? '0' + second : second;
-    if (hour == 0) return minute + ':' + second;
-    return hour + ':' + minute + ':' + second;
+    let hour: number | string = Math.floor(seconds / 3600)
+    let minute: number | string = Math.floor((seconds / 60) % 60)
+    let second: number | string = seconds % 60
+    hour = hour < 10 ? '0' + hour : hour
+    minute = minute < 10 ? '0' + minute : minute
+    second = second < 10 ? '0' + second : second
+    if (hour == 0) return minute + ':' + second
+    return hour + ':' + minute + ':' + second
   }
 
   return (
@@ -146,7 +148,7 @@ const CardPreview = (props: any) => {
           <img
             style={{ objectFit: 'cover' }}
             height="250px"
-            src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b'
+            src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b"
           />
         )
       }
@@ -179,11 +181,20 @@ const CardPreview = (props: any) => {
                     style={
                       props.type === 'EviusMeet' || props.type === 'Transmisión'
                         ? dataLive?.active
-                          ? { backgroundColor: 'rgba(82, 196, 26, 0.1)', color: '#52C41A' }
-                          : { backgroundColor: 'rgba(255, 77, 79, 0.1)', color: '#FF4D4F' }
+                          ? {
+                              backgroundColor: 'rgba(82, 196, 26, 0.1)',
+                              color: '#52C41A',
+                            }
+                          : {
+                              backgroundColor: 'rgba(255, 77, 79, 0.1)',
+                              color: '#FF4D4F',
+                            }
                         : props.type === 'vimeo'
                         ? { backgroundColor: 'rgba(26, 183, 234, 0.1)', color: '#32B8E8' }
-                        : (props.type === 'Youtube' && { backgroundColor: 'rgba(255, 0, 0, 0.1)', color: '#FF0000' }) ||
+                        : (props.type === 'Youtube' && {
+                            backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                            color: '#FF0000',
+                          }) ||
                           undefined
                     }
                   />
@@ -213,14 +224,21 @@ const CardPreview = (props: any) => {
           {dataLive?.live && dataLive?.active ? (
             dataLive?.live ? (
               <Col span={8}>
-                <Badge count={recordings && Object.keys(recordings).length > 0 ? Object.keys(recordings).length : 0}>
+                <Badge
+                  count={
+                    recordings && Object.keys(recordings).length > 0
+                      ? Object.keys(recordings).length
+                      : 0
+                  }
+                >
                   {record === 'start' ? (
                     <Button
                       loading={loadingRecord}
                       onClick={() => {
-                        startRecordTransmition();
+                        startRecordTransmition()
                       }}
-                      type="primary">
+                      type="primary"
+                    >
                       Iniciar grabación
                     </Button>
                   ) : (
@@ -229,7 +247,7 @@ const CardPreview = (props: any) => {
                       okText="Si"
                       cancelText="No"
                       onConfirm={() => {
-                        stopRecordTransmition();
+                        stopRecordTransmition()
                       }}
                       onCancel={() => console.log('cancelado')}
                     >
@@ -251,24 +269,33 @@ const CardPreview = (props: any) => {
           props.type == 'Youtube' ||
           props.type == 'EviusMeet') && (
           <Space style={{ width: '100%' }}>
-            <Typography.Text strong>ID {props.type === 'EviusMeet' ? 'GEN.iality': props.type}:</Typography.Text>
+            <Typography.Text strong>
+              ID {props.type === 'EviusMeet' ? 'GEN.iality' : props.type}:
+            </Typography.Text>
             <Typography.Text
               copyable={{
                 tooltips: ['clic para copiar', 'ID copiado!!'],
                 text: `${filterData}`,
-              }}>
+              }}
+            >
               {filterData}
             </Typography.Text>
           </Space>
         )}
-        {((dataLive?.active && (props.type === 'Transmisión' || props.type === 'EviusMeet')) ||
-          (props.type !== 'Transmisión' && props.type !== 'EviusMeet' && props.type !== 'reunión' && props.type !== 'Video')) && (
+        {((dataLive?.active &&
+          (props.type === 'Transmisión' || props.type === 'EviusMeet')) ||
+          (props.type !== 'Transmisión' &&
+            props.type !== 'EviusMeet' &&
+            props.type !== 'reunión' &&
+            props.type !== 'Video')) && (
           <Space direction="vertical" style={{ width: '100%' }}>
-            <Typography.Text strong>Estado de la lección para tus asistentes: </Typography.Text>
+            <Typography.Text strong>
+              Estado de la lección para tus asistentes:{' '}
+            </Typography.Text>
             <Select
               value={roomStatus}
               onChange={(value) => {
-                setRoomStatus(value);
+                setRoomStatus(value)
               }}
               style={{ width: '100%' }}
             >
@@ -276,13 +303,15 @@ const CardPreview = (props: any) => {
               <Select.Option value="closed_meeting_room">Iniciará pronto</Select.Option>
               <Select.Option value="open_meeting_room">En vivo</Select.Option>
               <Select.Option value="ended_meeting_room">Finalizada</Select.Option>
-              {props.type === 'Video' && <Select.Option value="no_visibe">Oculto</Select.Option>}
+              {props.type === 'Video' && (
+                <Select.Option value="no_visibe">Oculto</Select.Option>
+              )}
             </Select>
           </Space>
         )}
       </Space>
     </Card>
-  );
-};
+  )
+}
 
-export default CardPreview;
+export default CardPreview

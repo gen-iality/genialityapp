@@ -2,8 +2,8 @@ import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 
 export interface AvailableDayOptions {
-  value: string,
-  label: string,
+  value: string
+  label: string
 }
 
 export default function useAvailableDaysFromEvent(event: any) {
@@ -27,9 +27,7 @@ export default function useAvailableDaysFromEvent(event: any) {
       // Convert all days between this range
       const newDays: any[] = []
       for (let i = 0; i < dayDiff + 1; i++) {
-        const formatDate = dayjs(initMoment)
-          .add(i, 'd')
-          .format('YYYY-MM-DD')
+        const formatDate = dayjs(initMoment).add(i, 'd').format('YYYY-MM-DD')
         newDays.push({ value: formatDate, label: formatDate })
       }
       setAllDays(newDays)

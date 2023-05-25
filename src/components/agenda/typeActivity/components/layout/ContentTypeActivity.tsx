@@ -1,8 +1,8 @@
-import { Row, Col } from 'antd';
-import CardOption from '../CardOption';
+import { Row, Col } from 'antd'
+import CardOption from '../CardOption'
 
 interface propsOptions {
-  options?: Array<any>;
+  options?: Array<any>
 }
 
 const ContentTypeActivity = ({ options }: propsOptions) => {
@@ -30,7 +30,7 @@ const ContentTypeActivity = ({ options }: propsOptions) => {
             </Col>
           ))}
     </Row>
-  );
-};
+  )
+}
 
-export default ContentTypeActivity;
+export default ContentTypeActivity

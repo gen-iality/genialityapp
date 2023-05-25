@@ -1,91 +1,126 @@
-import { createContext } from 'react';
-export const MessageController = createContext({});
-import { message } from 'antd';
+/**
+ * TODO: rename this file to messageService
+ */
 
-const PositiveAnswer = ['Excelente', 'Perfecto', 'Genial', 'Cool', 'Lo haz hecho', 'Éxito', 'Bien'];
-const NegativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry'];
-const LoadingAnswer = ['Cargando', 'Procesando', 'Espérame'];
+import { message } from 'antd'
 
-interface PropsOptions {
-  type?: 'success' | 'error' | 'warning' | 'info' | 'loading';
-  msj?: string;
-  duration?: number;
-  action: 'show' | 'hide' | 'destroy';
-  key?: string;
+const positiveAnswer = [
+  'Excelente',
+  'Perfecto',
+  'Genial',
+  'Cool',
+  'Lo haz hecho',
+  'Éxito',
+  'Bien',
+]
+const negativeAnswer = ['Ups', 'Error', 'Lo siento', 'Lo sentimos', 'Sorry']
+const loadingAnswer = ['Cargando', 'Procesando', 'Espérame']
+
+type MessageType = 'success' | 'error' | 'warning' | 'info' | 'loading'
+
+interface OptionProps {
+  type?: MessageType
+  msj?: string
+  duration?: number
+  action: 'show' | 'destroy'
+  key?: string
 }
 
-// Tipos de mensajes
-//success, error, warning, info, loading
-//api doc=> https://ant.design/components/message/
+export const StateMessage = {
+  show: (
+    key: string | undefined | null,
+    type: MessageType,
+    textMessage: string,
+    duration?: number,
+  ) => {
+    message.open({
+      content: preProcessMessage(type, textMessage),
+      key: key || '',
+      duration: duration || 5,
+      type: null as any,
+    })
+  },
+  destroy: (key: string) => {
+    message.destroy(key)
+  },
+}
 
-export const DispatchMessageService = ({ type, msj, duration, action, key }: PropsOptions) => {
+/**
+ * Show a message or destroy an existent message
+ *
+ * @deprecated use StateMessage instead
+ * @param props OptionProps
+ */
+export const DispatchMessageService = (props: OptionProps) => {
   try {
-    switch (action) {
+    switch (props.action) {
       case 'show':
-        message.open({
-          content: MessageReducer({ type, msj, action }),
-          key: key || '',
-          duration: duration || 5,
-          type: null as any,
-        });
-        break;
+        StateMessage.show(props.key!, props.type!, props.msj!, props.duration)
+        break
 
       case 'destroy':
-        message.destroy(key);
-        break;
+        StateMessage.destroy(props.key!)
+        break
     }
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
-const MessageReducer = ({ type, msj }: PropsOptions) => {
-  const ramdon = Math.floor(Math.random() * PositiveAnswer.length);
-  const ramdonN = Math.floor(Math.random() * NegativeAnswer.length);
-  const ramdonLoading = Math.floor(Math.random() * LoadingAnswer.length);
-  let iconRender = '';
-  let finalMsj = '';
+const preProcessMessage = (type: string | undefined, textMessage: string) => {
+  const randomPositive = Math.floor(Math.random() * positiveAnswer.length)
+  const ramdonNegative = Math.floor(Math.random() * negativeAnswer.length)
+  const ramdonLoading = Math.floor(Math.random() * loadingAnswer.length)
+
+  let iconRender = ''
+  let finalMessage = ''
 
   switch (type) {
     case 'success':
-      iconRender = '✅';
-      break;
+      iconRender = '✅'
+      break
     case 'error':
-      iconRender = '❌';
-      break;
+      iconRender = '❌'
+      break
     case 'warning':
-      iconRender = '⚠️';
-      break;
+      iconRender = '⚠️'
+      break
     case 'info':
-      iconRender = 'ℹ️';
-      break;
+      iconRender = 'ℹ️'
+      break
     case 'loading':
-      iconRender = '⏳';
-      break;
+      iconRender = '⏳'
+      break
     default:
-      iconRender = '🤷‍♂️';
+      iconRender = '🤷‍♂️'
   }
 
   // Convert captioncase to lowercase
   const formatUpperCaseMissing = (text: string) => {
-    if (text.length === 0) return text;
+    if (text.length === 0) return text
 
     if (text[0] === text[0].toUpperCase()) {
       return text[0].toLowerCase() + text.slice(1)
     } else {
-      return text;
+      return text
     }
   }
 
-  if (msj !== undefined) {
+  if (textMessage !== undefined) {
     if (type === 'success') {
-      finalMsj = `${iconRender} ${PositiveAnswer[ramdon]}, ${formatUpperCaseMissing(msj)}`;
+      finalMessage = `${iconRender} ${
+        positiveAnswer[randomPositive]
+      }, ${formatUpperCaseMissing(textMessage)}`
     } else if (type === 'loading') {
-      finalMsj = `${iconRender} ${LoadingAnswer[ramdonLoading]}, ${formatUpperCaseMissing(msj)}`;
+      finalMessage = `${iconRender} ${
+        loadingAnswer[ramdonLoading]
+      }, ${formatUpperCaseMissing(textMessage)}`
     } else {
-      finalMsj = `${iconRender} ${NegativeAnswer[ramdonN]}, ${formatUpperCaseMissing(msj)}`;
+      finalMessage = `${iconRender} ${
+        negativeAnswer[ramdonNegative]
+      }, ${formatUpperCaseMissing(textMessage)}`
     }
   }
 
-  return finalMsj;
-};
+  return finalMessage
+}

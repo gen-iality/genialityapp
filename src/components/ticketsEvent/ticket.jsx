@@ -1,99 +1,79 @@
-import { useEffect, useState } from 'react';
-import { eventTicketsApi } from '@helpers/request';
-import { useHistory } from 'react-router-dom';
-import { handleRequestError } from '@helpers/utils';
-import { Row, Col, Form, Input, Modal, Switch } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '@context/MessageService';
+import { useEffect, useState } from 'react'
+import { eventTicketsApi } from '@helpers/request'
+import { useHistory } from 'react-router-dom'
+import { handleRequestError } from '@helpers/utils'
+import { Row, Col, Form, Input, Modal, Switch } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import Header from '@antdComponents/Header'
+import { StateMessage } from '@context/MessageService'
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 const Ticket = (props) => {
-  const eventID = props.event._id;
-  const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
-  const history = useHistory();
-  const [ticket, setTicket] = useState({ event_id: props.event._id });
+  const eventID = props.event._id
+  const locationState = props.location.state //si viene new o edit en el state, si es edit es un id
+  const history = useHistory()
+  const [ticket, setTicket] = useState({ event_id: props.event._id })
 
   useEffect(() => {
     if (locationState.edit) {
-      getOne();
+      getOne()
     }
-  }, [locationState.edit]);
+  }, [locationState.edit])
 
   const getOne = async () => {
-    const data = await eventTicketsApi.getOne(locationState.edit, eventID);
+    const data = await eventTicketsApi.getOne(locationState.edit, eventID)
 
-    setTicket(data);
-  };
+    setTicket(data)
+  }
 
   const handleInputChange = (e) => {
     if (ticket) {
-      setTicket({ ...ticket, title: e.target.value });
+      setTicket({ ...ticket, title: e.target.value })
     }
-  };
+  }
 
   const onSubmit = async () => {
     if (ticket.title) {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: 'Por favor espere mientras se guarda la información...',
-        action: 'show',
-      });
+      StateMessage.show(
+        'loading',
+        'loading',
+        'Por favor espere mientras se guarda la información...',
+      )
       try {
         if (locationState.edit) {
-          await eventTicketsApi.update(eventID, ticket, locationState.edit);
+          await eventTicketsApi.update(eventID, ticket, locationState.edit)
         } else {
           const data = {
             title: ticket.title,
             allowed_to_vote: ticket.allowed_to_vote,
             event_id: eventID,
-          };
-          await eventTicketsApi.create(eventID, data);
+          }
+          await eventTicketsApi.create(eventID, data)
         }
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        });
-        history.push(`${props.matchUrl}/ticketsEvent`);
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
+        history.push(`${props.parentUrl}/ticketsEvent`)
       } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        });
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', handleRequestError(e).message)
       }
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El título es requerido',
-        action: 'show',
-      });
+      StateMessage.show(null, 'error', 'El título es requerido')
     }
-  };
+  }
 
   const onRemoveId = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    });
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     if (locationState.edit) {
       confirm({
         title: '¿Está seguro de eliminar la información?',
@@ -105,38 +85,35 @@ const Ticket = (props) => {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await eventTicketsApi.deleteOne(locationState.edit, eventID);
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              });
-              history.push(`${props.matchUrl}/ticketsEvent`);
+              await eventTicketsApi.deleteOne(locationState.edit, eventID)
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó la información correctamente!',
+              )
+              history.push(`${props.parentUrl}/ticketsEvent`)
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              });
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
-          };
-          onHandlerRemove();
+          }
+          onHandlerRemove()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title="Ticket" back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header
+        title="Ticket"
+        back
+        save
+        form
+        remove={onRemoveId}
+        edit={locationState.edit}
+      />
 
       <Row justify="center" wrap gutter={18}>
         <Col>
@@ -167,7 +144,7 @@ const Ticket = (props) => {
         </Col>
       </Row>
     </Form>
-  );
-};
+  )
+}
 
-export default Ticket;
+export default Ticket

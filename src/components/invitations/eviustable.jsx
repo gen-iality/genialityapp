@@ -1,4 +1,4 @@
-import { useTable } from 'react-table';
+import { useTable } from 'react-table'
 
 export default function EviusTable({ columns, data }) {
   // Use the useTable Hook to send the columns and data to build the table
@@ -9,7 +9,7 @@ export default function EviusTable({ columns, data }) {
   } = useTable({
     columns,
     data,
-  });
+  })
 
   return (
     <table>
@@ -24,18 +24,18 @@ export default function EviusTable({ columns, data }) {
       </thead>
       <tbody className="ant-table-tbody">
         {rows.map((row, i) => {
-          prepareRow(row);
+          prepareRow(row)
           return (
             <tr key={i} className="ant-table-row nt-table-row-level-0">
               {row.cells.map((cell, j) => {
-                return <td key={`${i}-${j}`}>{cell.render('Cell')}</td>;
+                return <td key={`${i}-${j}`}>{cell.render('Cell')}</td>
               })}
             </tr>
-          );
+          )
         })}
       </tbody>
     </table>
-  );
+  )
 }
 
 /*  Inicio de metodo para cargar millones de datos trabajo en proceso

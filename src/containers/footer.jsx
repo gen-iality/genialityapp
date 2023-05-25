@@ -1,7 +1,6 @@
-import { Link } from 'react-router-dom';
-import { Layout, Row, Col, Divider, List, Typography, Space } from 'antd';
-import { FacebookFilled, InstagramFilled, LinkedinFilled } from '@ant-design/icons';
-import { imageUtils } from '../Utilities/ImageUtils';
+import { Link } from 'react-router-dom'
+import { Layout, Row, Col, Divider, List, Typography, Space } from 'antd'
+import { FacebookFilled, InstagramFilled, LinkedinFilled } from '@ant-design/icons'
 
 const Footer = () => {
   return (
@@ -17,22 +16,42 @@ const Footer = () => {
             bordered={false}
           >
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}
+                rel="noreferrer"
+              >
                 Inicio
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}
+                rel="noreferrer"
+              >
                 Tipos de cursos
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}
+                rel="noreferrer"
+              >
                 Casos de éxito
               </a>
             </List.Item>
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}
+                rel="noreferrer"
+              >
                 Solicitar demo
               </a>
             </List.Item>
@@ -48,7 +67,12 @@ const Footer = () => {
             bordered={false}
           >
             <List.Item style={{ border: 'none' }}>
-              <a target="_blank" href='https://geniality.com.co/' style={{ color: '#fff' }}>
+              <a
+                target="_blank"
+                href="https://geniality.com.co/"
+                style={{ color: '#fff' }}
+                rel="noreferrer"
+              >
                 ¿Quiénes somos?
               </a>
             </List.Item>
@@ -108,23 +132,26 @@ const Footer = () => {
         >
           <Space wrap>
             <a
-              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
               style={{ color: '#fff' }}
+              rel="noreferrer"
             >
               <FacebookFilled style={{ fontSize: '35px' }} />
             </a>
             <a
-              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
               style={{ color: '#fff' }}
+              rel="noreferrer"
             >
               <InstagramFilled style={{ fontSize: '35px' }} />
             </a>
             <a
-              href='https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience'
+              href="https://www.linkedin.com/in/sandra-segura-2aa0251b6/#experience"
               target="_blank"
               style={{ color: '#fff' }}
+              rel="noreferrer"
             >
               <LinkedinFilled style={{ fontSize: '35px' }} />
             </a>
@@ -132,7 +159,7 @@ const Footer = () => {
         </Col>
       </Row>
     </Layout.Footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

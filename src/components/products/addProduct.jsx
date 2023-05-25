@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Row, Input, Form, Col, Modal } from 'antd';
-import { withRouter } from 'react-router-dom';
-import { EventsApi } from '@helpers/request';
-import Header from '@antdComponents/Header';
-import BackTop from '@antdComponents/BackTop';
-import EviusReactQuill from '../shared/eviusReactQuill';
-import { handleRequestError } from '@helpers/utils';
-import { DispatchMessageService } from '@context/MessageService';
-import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
-import { removeObjectFromArray, renderTypeImage } from '@Utilities/imgUtils';
-import Loading from '../profile/loading';
+import { useState, useEffect } from 'react'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { Row, Input, Form, Col, Modal } from 'antd'
+import { withRouter } from 'react-router-dom'
+import { EventsApi } from '@helpers/request'
+import Header from '@antdComponents/Header'
+import BackTop from '@antdComponents/BackTop'
+import EviusReactQuill from '../shared/eviusReactQuill'
+import { handleRequestError } from '@helpers/utils'
+import { StateMessage } from '@context/MessageService'
+import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
+import { removeObjectFromArray, renderTypeImage } from '@Utilities/imgUtils'
+import Loading from '../profile/loading'
 
 export const toolbarEditor = {
   toolbar: [
@@ -23,125 +23,121 @@ export const toolbarEditor = {
     [{ list: 'ordered' }, { list: 'bullet' }],
     ['link', 'image'],
   ],
-};
+}
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 function AddProduct(props) {
-  const [product, setProduct] = useState();
-  const [name, setName] = useState('');
-  const [creator, setCreator] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [picture, setPicture] = useState(null);
-  const [optionalPicture, setOptionalPicture] = useState(null);
-  const [imageFile, setImgFile] = useState([]);
-  const [imageFileOptional, setImgFileOptional] = useState(null);
-  const [errImg, setErrImg] = useState();
-  const [error, setError] = useState(null);
-  const [idNew, setIdNew] = useState();
-  const [isLoading, setIsLoading] = useState(true);
+  const [product, setProduct] = useState()
+  const [name, setName] = useState('')
+  const [creator, setCreator] = useState('')
+  const [description, setDescription] = useState('')
+  const [price, setPrice] = useState('')
+  const [picture, setPicture] = useState(null)
+  const [optionalPicture, setOptionalPicture] = useState(null)
+  const [imageFile, setImgFile] = useState([])
+  const [error, setError] = useState(null)
+  const [idNew, setIdNew] = useState()
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     if (props.match.params.id) {
-      setIdNew(props.match.params.id);
+      setIdNew(props.match.params.id)
       EventsApi.getOneProduct(props.eventId, props.match.params.id).then((product) => {
-        setProduct(product);
-        setName(product.name);
-        setCreator(product.by);
-        setDescription(product.description || '');
-        setPicture(product.image && product.image[0] ? product.image[0] : null);
+        setProduct(product)
+        setName(product.name)
+        setCreator(product.by)
+        setDescription(product.description || '')
+        setPicture(product.image && product.image[0] ? product.image[0] : null)
         setImgFile([
           { name: 'Imagen', file: product.image[0] },
           { name: 'img_optional', file: product.image[1] },
-        ]);
-        setOptionalPicture(product.image && product.image[1] ? product.image[1] : null);
-        setPrice(product.price);
-        setIsLoading(false);
-      });
+        ])
+        setOptionalPicture(product.image && product.image[1] ? product.image[1] : null)
+        setPrice(product.price)
+        setIsLoading(false)
+      })
     }
-  }, [props.match.params.id]);
+  }, [props.match.params.id])
 
-  const goBack = () => props.history.goBack();
+  const goBack = () => props.history.goBack()
 
   const changeInput = (e, key) => {
     if (key === 'name') {
-      setName(e.target.value);
+      setName(e.target.value)
     } else if (key === 'price') {
-      setPrice(e.target.value);
+      setPrice(e.target.value)
     } else if (key === 'creator') {
-      setCreator(e.target.value);
+      setCreator(e.target.value)
     }
-  };
+  }
 
   const changeDescription = (e) => {
     if (description.length < 10000) {
-      setDescription(e);
+      setDescription(e)
     } else {
-      //alert('NO PUEDE ESCRIBIR MAS');
     }
-  };
+  }
 
   const changeImg = (file, name) => {
-    let temp = imageFile;
-    const ImagenSearch = imageFile.filter((img) => img.name === name);
+    let temp = imageFile
+    const ImagenSearch = imageFile.filter((img) => img.name === name)
     if (ImagenSearch.length > 0) {
-      const newtemp = imageFile.filter((img) => img.name !== name);
-      temp = newtemp;
-      temp.push({ name, file });
-      setImgFile(temp);
-      return;
+      const newtemp = imageFile.filter((img) => img.name !== name)
+      temp = newtemp
+      temp.push({ name, file })
+      setImgFile(temp)
+      return
     }
 
     if (file) {
-      temp.push({ name, file });
-      setImgFile(temp);
+      temp.push({ name, file })
+      setImgFile(temp)
     } else {
-      removeObjectFromArray(name, temp, setImgFile);
-      temp.push({ name, file: '' });
+      removeObjectFromArray(name, temp, setImgFile)
+      temp.push({ name, file: '' })
     }
-  };
+  }
 
   const saveProduct = async () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se guarda la información...',
-      action: 'show',
-    });
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se guarda la información...',
+    )
 
-    const validators = {};
-    validators.price = false;
-    validators.creator = false;
+    const validators = {}
+    validators.price = false
+    validators.creator = false
 
     if (name === '') {
-      validators.name = true;
+      validators.name = true
     } else {
-      validators.name = false;
+      validators.name = false
     }
     if (description === '') {
-      validators.description = true;
+      validators.description = true
     } else {
-      validators.description = false;
+      validators.description = false
     }
     // if (picture === null) {
     //   validators.picture = true;
     // } else {
     //   validators.picture = false;
     // }
-    const ImagenFilled = imageFile.filter((img) => img.name === 'Imagen');
+    const ImagenFilled = imageFile.filter((img) => img.name === 'Imagen')
     if (ImagenFilled.length === 0) {
-      validators.picture = true;
+      validators.picture = true
     } else {
-      validators.picture = false;
+      validators.picture = false
     }
 
-    setError(validators);
+    setError(validators)
     if (
       validators &&
       validators.name == false &&
@@ -158,13 +154,16 @@ function AddProduct(props) {
               by: creator,
               description,
               price,
-              image: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
+              image: [
+                renderTypeImage('Imagen', imageFile),
+                renderTypeImage('img_optional', imageFile),
+              ],
             },
             props.eventId,
-            product._id
-          );
+            product._id,
+          )
           if (resp) {
-            props.history.push(`/eventadmin/${props.eventId}/product`);
+            props.history.push(`/eventadmin/${props.eventId}/product`)
           }
         } else {
           const newProduct = await EventsApi.createProducts(
@@ -173,47 +172,35 @@ function AddProduct(props) {
               by: creator,
               description,
               price,
-              image: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
+              image: [
+                renderTypeImage('Imagen', imageFile),
+                renderTypeImage('img_optional', imageFile),
+              ],
             },
-            props.eventId
-          );
+            props.eventId,
+          )
           if (newProduct) {
-            props.history.push(`/eventadmin/${props.eventId}/product`);
+            props.history.push(`/eventadmin/${props.eventId}/product`)
           }
         }
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        });
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
       } catch (e) {
-        e;
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'error',
-          msj: e,
-          action: 'show',
-        });
+        e
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', e)
       }
     } else {
-      console.log('algo fallo', validators);
+      console.log('algo fallo', validators)
     }
-  };
+  }
 
   const remove = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se borra la información...',
-      action: 'show',
-    });
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se borra la información...',
+    )
     if (props.match.params.id) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -225,38 +212,35 @@ function AddProduct(props) {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await EventsApi.deleteProduct(props.match.params.id, props.eventId);
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              });
-              goBack();
+              await EventsApi.deleteProduct(props.match.params.id, props.eventId)
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó la información correctamente!',
+              )
+              goBack()
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e)?.message,
-                action: 'show',
-              });
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e)?.message)
             }
-          };
-          onHandlerRemove();
+          }
+          onHandlerRemove()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <Form {...formLayout} onFinish={saveProduct}>
-      <Header title="Producto" back save form edit={props.match.params.id} remove={remove} />
+      <Header
+        title="Producto"
+        back
+        save
+        form
+        edit={props.match.params.id}
+        remove={remove}
+      />
       <Row justify="center" wrap gutter={12}>
         {props.match.params.id && isLoading ? (
           <Loading />
@@ -277,27 +261,41 @@ function AddProduct(props) {
                 onChange={(e) => changeInput(e, 'name')}
               />
               {error != null && error.name && (
-                <small style={{ color: 'red' }}>El nombre del producto es requerido</small>
+                <small style={{ color: 'red' }}>
+                  El nombre del producto es requerido
+                </small>
               )}
             </Form.Item>
-            <Form.Item label={<label style={{ marginTop: '2%' }}>Por</label>} rules={[{ required: false }]}>
+            <Form.Item
+              label={<label style={{ marginTop: '2%' }}>Por</label>}
+              rules={[{ required: false }]}
+            >
               <Input
                 value={creator}
                 placeholder="Nombre del autor, creador o descripción corta"
                 name="creator"
                 onChange={(e) => changeInput(e, 'creator')}
               />
-              {error != null && error.creator && <small style={{ color: 'red' }}>Este campo es requerido</small>}
+              {error != null && error.creator && (
+                <small style={{ color: 'red' }}>Este campo es requerido</small>
+              )}
             </Form.Item>
             <Form.Item
               label={
                 <label style={{ marginTop: '2%' }}>
                   Descripción <label style={{ color: 'red' }}>*</label>
                 </label>
-              }>
-              <EviusReactQuill data={description} id="descriptionProduct" handleChange={changeDescription} />
+              }
+            >
+              <EviusReactQuill
+                data={description}
+                id="descriptionProduct"
+                handleChange={changeDescription}
+              />
               {error != null && error.description && (
-                <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
+                <small style={{ color: 'red' }}>
+                  La descripción del producto es requerida
+                </small>
               )}
             </Form.Item>
             <Form.Item
@@ -322,7 +320,9 @@ function AddProduct(props) {
               height="1080"
             />
 
-            {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
+            {error != null && error.picture && (
+              <small style={{ color: 'red' }}>La imagen es requerida</small>
+            )}
 
             <label style={{ marginTop: '2%' }}>Imagen opcional</label>
 
@@ -337,7 +337,7 @@ function AddProduct(props) {
       </Row>
       <BackTop />
     </Form>
-  );
+  )
 }
 
-export default withRouter(AddProduct);
+export default withRouter(AddProduct)

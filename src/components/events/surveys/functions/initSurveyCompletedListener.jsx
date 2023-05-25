@@ -1,25 +1,25 @@
-import { firestore } from '@helpers/firebase';
+import { firestore } from '@helpers/firebase'
 
 async function InitSurveysCompletedListener(currentUser, dispatch) {
-   const userId = currentUser.value._id;
+  const userId = currentUser.value._id
 
-   const firebaseRef = firestore
-      .collection('votingStatusByUser')
-      .doc(userId)
-      .collection('surveyStatus');
+  const firebaseRef = firestore
+    .collection('votingStatusByUser')
+    .doc(userId)
+    .collection('surveyStatus')
 
-   const unSuscribe = firebaseRef.onSnapshot((snapShot) => {
-      const surveysCompleted = {};
-      snapShot.forEach((data) => {
-         if (data.data()) {
-            surveysCompleted[data.id] = data.data();
-         }
-      });
+  const unSuscribe = firebaseRef.onSnapshot((snapShot) => {
+    const surveysCompleted = {}
+    snapShot.forEach((data) => {
+      if (data.data()) {
+        surveysCompleted[data.id] = data.data()
+      }
+    })
 
-      dispatch({ type: 'current_Survey_Status', payload: surveysCompleted });
-   });
+    dispatch({ type: 'current_Survey_Status', payload: surveysCompleted })
+  })
 
-   return unSuscribe;
+  return unSuscribe
 }
 
-export default InitSurveysCompletedListener;
+export default InitSurveysCompletedListener

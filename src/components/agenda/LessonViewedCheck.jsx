@@ -1,13 +1,11 @@
-import { Badge, Card } from 'antd';
+import { Badge } from 'antd'
 
 function LessonViewedCheck(props) {
-  const { isTaken = false } = props;
+  const { isTaken = false } = props
 
-  if (!isTaken) return null;
+  if (!isTaken) return null
 
-  return (
-    <Badge.Ribbon text="Viewed" color="green" placement="end" />
-  );
+  return <Badge.Ribbon text="Viewed" color="green" placement="end" />
 }
 
-export default LessonViewedCheck;
+export default LessonViewedCheck

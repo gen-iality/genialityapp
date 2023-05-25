@@ -9,7 +9,7 @@ function Logger(name: string) {
    * @param args Arguments.
    */
   function LOG(...args: any[]) {
-    console.debug(`${name}:`, ...args);
+    console.debug(`${name}:`, ...args)
   }
 
   /**
@@ -17,7 +17,7 @@ function Logger(name: string) {
    * @param args Arguments.
    */
   function INFO(...args: any[]) {
-    console.info(`${name}:`, ...args);
+    console.info(`${name}:`, ...args)
   }
 
   /**
@@ -25,7 +25,7 @@ function Logger(name: string) {
    * @param args Arguments.
    */
   function ERROR(...args: any[]) {
-    console.error(`${name}:`, ...args);
+    console.error(`${name}:`, ...args)
   }
 
   /**
@@ -33,10 +33,10 @@ function Logger(name: string) {
    * @param args Arguments.
    */
   function WARN(...args: any[]) {
-    console.warn(`${name}:`, ...args);
+    console.warn(`${name}:`, ...args)
   }
 
-  return { LOG, INFO, ERROR, WARN, };
+  return { LOG, INFO, ERROR, WARN }
 }
 
-export default Logger;
+export default Logger

@@ -1,5 +1,5 @@
 export default function TableAction({ ...props }) {
-  const { id, object, saveItem, editItem, removeNew, removeItem, discardChanges } = props;
+  const { id, object, saveItem, editItem, removeNew, removeItem, discardChanges } = props
   return (
     <td>
       {id === object._id ? (
@@ -7,8 +7,9 @@ export default function TableAction({ ...props }) {
           <span
             className="icon"
             onClick={() => {
-              saveItem(object);
-            }}>
+              saveItem(object)
+            }}
+          >
             <i className="fas fa-save" />
           </span>
         </button>
@@ -30,8 +31,9 @@ export default function TableAction({ ...props }) {
           <span
             className="icon"
             onClick={() => {
-              removeItem(object._id);
-            }}>
+              removeItem(object._id)
+            }}
+          >
             <i className="far fa-trash-alt" />
           </span>
         </button>
@@ -44,5 +46,5 @@ export default function TableAction({ ...props }) {
         </button>
       )}
     </td>
-  );
+  )
 }

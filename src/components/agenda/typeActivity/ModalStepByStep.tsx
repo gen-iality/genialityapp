@@ -1,13 +1,11 @@
-import { Modal } from 'antd';
-import LayoutTypeActivity from './components/layout/LayoutTypeActivity';
-import ContentTypeActivity from '../typeActivity/components/layout/ContentTypeActivity';
-import ResultTypeActivity from '../typeActivity/components/ResultTypeActivity';
-import LoadingTypeActivity from '../typeActivity/components/LoadingTypeActivity';
-import ContentSource from '../typeActivity/components/layout/ContentSource';
-import ContentInformative from '../typeActivity/components/layout/ContentInformative';
-import { LinkOutlined, YoutubeOutlined } from '@ant-design/icons'; //Este icono para el addonBefore
-import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
-import InputUploadVideo from './components/InputUploadVideo';
+import { Modal } from 'antd'
+import LayoutTypeActivity from './components/layout/LayoutTypeActivity'
+import ContentTypeActivity from '../typeActivity/components/layout/ContentTypeActivity'
+import ContentSource from '../typeActivity/components/layout/ContentSource'
+import ContentInformative from '../typeActivity/components/layout/ContentInformative'
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
+import InputUploadVideo from './components/InputUploadVideo'
+import { YoutubeOutlined } from '@ant-design/icons'
 
 const newContentSource = {
   title: 'Titulo principal',
@@ -15,27 +13,33 @@ const newContentSource = {
   subtitle: 'Descripción del contenido',
   placeholder: 'llene el campo',
   icon: <YoutubeOutlined />,
-};
+}
 interface mapContentSource {
-  key: string;
-  addonBefore: string;
-  placeholder: string;
-  title: string;
-  subtitle: string;
-  image: string;
+  key: string
+  addonBefore: string
+  placeholder: string
+  title: string
+  subtitle: string
+  image: string
 }
 
 const ModalStepByStep = (props: any) => {
-  const { openModal, closeModal, typeOptions, selectedKey } = useTypeActivity();
+  const { openModal, closeModal, typeOptions } = useTypeActivity()
 
   return (
     <Modal visible={openModal} onCancel={closeModal} centered width={1200} footer={null}>
       <LayoutTypeActivity title={typeOptions?.MainTitle}>
-        {typeOptions.key !== 'vimeo' && typeOptions.key !== 'youTube' && typeOptions.key !== 'url' ? (
+        {typeOptions.key !== 'vimeo' &&
+        typeOptions.key !== 'youTube' &&
+        typeOptions.key !== 'url' ? (
           <ContentTypeActivity options={typeOptions.typeOptions} />
         ) : null}
-        {typeOptions.key === 'cargarvideo' ? <InputUploadVideo activityName={props.activityName} /> : null}
-        {typeOptions.key === 'vimeo' || typeOptions.key === 'youTube' || typeOptions.key === 'url'
+        {typeOptions.key === 'cargarvideo' ? (
+          <InputUploadVideo activityName={props.activityName} />
+        ) : null}
+        {typeOptions.key === 'vimeo' ||
+        typeOptions.key === 'youTube' ||
+        typeOptions.key === 'url'
           ? typeOptions.typeOptions.map((options: mapContentSource) => {
               if (options.key === typeOptions.key) {
                 return (
@@ -46,7 +50,7 @@ const ModalStepByStep = (props: any) => {
                     icon={options.image}
                     subtitle={options.subtitle}
                   />
-                );
+                )
               }
             })
           : null}
@@ -64,7 +68,7 @@ const ModalStepByStep = (props: any) => {
         )}
       </LayoutTypeActivity>
     </Modal>
-  );
-};
+  )
+}
 
-export default ModalStepByStep;
+export default ModalStepByStep

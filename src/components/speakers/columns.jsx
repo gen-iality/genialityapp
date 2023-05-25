@@ -1,11 +1,15 @@
-import { useState } from 'react';
-import { getColumnSearchProps } from './getColumnSearch';
-import { Link } from 'react-router-dom';
-import { SpeakersApi } from '@helpers/request';
-import { Button, Row, Col, Avatar, Tooltip, Popover, Image, Empty, Switch } from 'antd';
-import { DeleteOutlined, EditOutlined, UserOutlined, DragOutlined } from '@ant-design/icons';
-import { sortableHandle } from 'react-sortable-hoc';
-import { DispatchMessageService } from '@context/MessageService';
+import { getColumnSearchProps } from './getColumnSearch'
+import { Link } from 'react-router-dom'
+import { SpeakersApi } from '@helpers/request'
+import { Button, Row, Col, Avatar, Tooltip, Popover, Image, Empty, Switch } from 'antd'
+import {
+  DeleteOutlined,
+  EditOutlined,
+  UserOutlined,
+  DragOutlined,
+} from '@ant-design/icons'
+import { sortableHandle } from 'react-sortable-hoc'
+import { StateMessage } from '@context/MessageService'
 
 export const columns = (columnsData) => [
   {
@@ -15,19 +19,23 @@ export const columns = (columnsData) => [
     align: 'center',
     render(val, item) {
       const DragHandle = sortableHandle(() => (
-        <DragOutlined id={`drag${item.index}`} style={{ cursor: 'grab', color: '#999', visibility: 'visible' }} />
-      ));
-      return columnsData.cEventIsActive === false && window.location.toString().includes('eventadmin') ? null : (
+        <DragOutlined
+          id={`drag${item.index}`}
+          style={{ cursor: 'grab', color: '#999', visibility: 'visible' }}
+        />
+      ))
+      return columnsData.cEventIsActive === false &&
+        window.location.toString().includes('eventadmin') ? null : (
         <DragHandle />
-      );
+      )
     },
   },
   {
     title: 'Orden',
     dataIndex: 'index',
     width: '70px',
-    render(val, item) {
-      return <div>{val + 1}</div>;
+    render(val) {
+      return <div>{val + 1}</div>
     },
   },
   {
@@ -48,17 +56,27 @@ export const columns = (columnsData) => [
               content={() => (
                 <>
                   {item.image ? (
-                    <Image key={'img' + item._id} width={200} height={200} src={item.image} />
+                    <Image
+                      key={'img' + item._id}
+                      width={200}
+                      height={200}
+                      src={item.image}
+                    />
                   ) : (
                     <Empty description="Imagen no encontrada" />
                   )}
                 </>
-              )}>
-              {item.image ? <Avatar key={'img' + item._id} src={item.image} /> : <Avatar icon={<UserOutlined />} />}
+              )}
+            >
+              {item.image ? (
+                <Avatar key={'img' + item._id} src={item.image} />
+              ) : (
+                <Avatar icon={<UserOutlined />} />
+              )}
             </Popover>
           </Col>
         </Row>
-      );
+      )
     },
   },
   {
@@ -81,25 +99,21 @@ export const columns = (columnsData) => [
     width: '80px',
     render(val, item) {
       const update = async (checked) => {
-        item.published = checked;
+        item.published = checked
         try {
-          const res = await SpeakersApi.editOne(item, item._id, item.event_id);
+          const res = await SpeakersApi.editOne(item, item._id, item.event_id)
           if (res) {
-            columnsData.refetch();
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se actualizó la publicación!',
-              action: 'show',
-            });
+            columnsData.refetch()
+            StateMessage.show(null, 'success', 'Se actualizó la publicación!')
           }
         } catch (err) {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Ha ocurrido un problema actualizando la publicación!',
-            action: 'show',
-          });
+          StateMessage.show(
+            null,
+            'error',
+            'Ha ocurrido un problema actualizando la publicación!',
+          )
         }
-      };
+      }
 
       return (
         <Switch
@@ -108,9 +122,12 @@ export const columns = (columnsData) => [
           onChange={update}
           checked={item.published}
           id={`editSwitch${item.index}`}
-          disabled={columnsData.cEventIsActive === false && window.location.toString().includes('eventadmin')}
+          disabled={
+            columnsData.cEventIsActive === false &&
+            window.location.toString().includes('eventadmin')
+          }
         />
-      );
+      )
     },
   },
   {
@@ -126,8 +143,19 @@ export const columns = (columnsData) => [
         <Row wrap gutter={[8, 8]}>
           <Col>
             <Tooltip placement="topLeft" title="Editar">
-              <Link key="edit" to={{ pathname: `${columnsData.data.matchUrl}/speaker`, state: { edit: item._id } }}>
-                <Button icon={<EditOutlined />} type="primary" size="small" id={`editarTest${item.index}`} />
+              <Link
+                key="edit"
+                to={{
+                  pathname: `${columnsData.data.matchUrl}/speaker`,
+                  state: { edit: item._id },
+                }}
+              >
+                <Button
+                  icon={<EditOutlined />}
+                  type="primary"
+                  size="small"
+                  id={`editarTest${item.index}`}
+                />
               </Link>
             </Tooltip>
           </Col>
@@ -137,17 +165,20 @@ export const columns = (columnsData) => [
                 key="delete"
                 id={`remove${item.index}`}
                 onClick={() => {
-                  columnsData.remove(item);
+                  columnsData.remove(item)
                 }}
                 icon={<DeleteOutlined />}
                 type="danger"
                 size="small"
-                disabled={columnsData.cEventIsActive === false && window.location.toString().includes('eventadmin')}
+                disabled={
+                  columnsData.cEventIsActive === false &&
+                  window.location.toString().includes('eventadmin')
+                }
               />
             </Tooltip>
           </Col>
         </Row>
-      );
+      )
     },
   },
-];
+]

@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { FaqsApi } from '@helpers/request';
-import CMS from '../newComponent/CMS';
-import { getColumnSearchProps } from '../speakers/getColumnSearch';
+import { useState } from 'react'
+import { FaqsApi } from '@helpers/request'
+import CMS from '../newComponent/CMS'
+import { getColumnSearchProps } from '../speakers/getColumnSearch'
 
 const Faqs = (props) => {
-  const [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({})
 
   const columns = [
     {
@@ -25,10 +25,10 @@ const Faqs = (props) => {
           <div style={{ maxHeight: '100px' }}>
             <div dangerouslySetInnerHTML={{ __html: item.content }} />
           </div>
-        );
+        )
       },
     },
-  ];
+  ]
 
   return (
     <CMS
@@ -37,18 +37,18 @@ const Faqs = (props) => {
       title="Preguntas frecuentes"
       titleTooltip="Agregue o edite las Preguntas frecuentes que se muestran en la aplicación"
       addUrl={{
-        pathname: `${props.matchUrl}/faq`,
+        pathname: `${props.parentUrl}/faq`,
         state: { new: true },
       }}
       columns={columns}
       key="_id"
-      editPath={`${props.matchUrl}/faq`}
+      editPath={`${props.parentUrl}/faq`}
       pagination={false}
       actions
       search
       setColumnsData={setColumnsData}
     />
-  );
-};
+  )
+}
 
-export default Faqs;
+export default Faqs

@@ -1,41 +1,41 @@
-import { Component } from 'react';
-import dayjs from 'dayjs';
-import { EventsApi } from '@helpers/request';
-import { Button, notification } from 'antd';
+import { Component } from 'react'
+import dayjs from 'dayjs'
+import { EventsApi } from '@helpers/request'
+import { Button, notification } from 'antd'
 
-import DayPicker, { DateUtils } from 'react-day-picker';
-import 'react-day-picker/lib/style.css';
+import DayPicker, { DateUtils } from 'react-day-picker'
+import 'react-day-picker/lib/style.css'
 
 class DateEvent extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       currentChannel: 0,
       dates: [],
       properties: {},
       month: 6,
       year: 2020,
-    };
-    this.handleDayClick = this.handleDayClick.bind(this);
-    this.save = this.save.bind(this);
+    }
+    this.handleDayClick = this.handleDayClick.bind(this)
+    this.save = this.save.bind(this)
   }
 
   componentDidMount() {
-    this.getDates();
+    this.getDates()
   }
 
   async getDates() {
-    const info = await EventsApi.getOne(this.props.eventId);
-    const dates = info.dates;
+    const info = await EventsApi.getOne(this.props.eventId)
+    const dates = info.dates
 
-    const date = [];
+    const date = []
     if (dates !== undefined) {
       for (let i = 0; i < dates.length; i++) {
         if (dates[i] !== '') {
-          const dateUTC = Date.parse(dates[i]);
-          const dateUtc = new Date(dateUTC);
-          const utc = new Date(dateUtc.getTime() + dateUtc.getTimezoneOffset() * 60000);
-          date.push(utc);
+          const dateUTC = Date.parse(dates[i])
+          const dateUtc = new Date(dateUTC)
+          const utc = new Date(dateUtc.getTime() + dateUtc.getTimezoneOffset() * 60000)
+          date.push(utc)
         }
       }
 
@@ -44,42 +44,44 @@ class DateEvent extends Component {
         dates: date,
         month: parseInt(dayjs(dates[dates?.length - 1]).format('M') - 1) || '',
         year: parseInt(dayjs(dates[dates?.length - 1]).format('YYYY')) || '',
-      });
+      })
     }
   }
 
   async handleDayClick(day, { selected }) {
-    const { dates } = this.state;
+    const { dates } = this.state
     if (selected) {
-      const selectedIndex = dates.findIndex((selectedDay) => DateUtils.isSameDay(selectedDay, day));
-      dates.splice(selectedIndex, 1);
+      const selectedIndex = dates.findIndex((selectedDay) =>
+        DateUtils.isSameDay(selectedDay, day),
+      )
+      dates.splice(selectedIndex, 1)
     } else {
-      dates.push(day);
+      dates.push(day)
     }
 
-    dates.sort(function(a, b) {
-      const dateA = new Date(a);
-      const dateB = new Date(b);
-      return dateA - dateB;
-    });
+    dates.sort(function (a, b) {
+      const dateA = new Date(a)
+      const dateB = new Date(b)
+      return dateA - dateB
+    })
 
     this.setState({
       properties: {
         dates,
       },
       dates,
-    });
+    })
   }
 
   async save() {
-    const { updateEvent } = this.props;
-    const result = await EventsApi.editOne(this.state.properties, this.props.eventId);
+    const { updateEvent } = this.props
+    const result = await EventsApi.editOne(this.state.properties, this.props.eventId)
 
-    await updateEvent(result);
+    await updateEvent(result)
     notification.open({
       message: 'Datos guardados',
       description: 'Las fechas especificas fueron guardadas',
-    });
+    })
   }
   render() {
     return (
@@ -95,8 +97,8 @@ class DateEvent extends Component {
           Guardar
         </Button>
       </div>
-    );
+    )
   }
 }
 
-export default DateEvent;
+export default DateEvent

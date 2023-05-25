@@ -1,4 +1,4 @@
-import { Button, Empty, message, Row, Table, Tag, Col, Tooltip, Modal } from 'antd';
+import { Button, Empty, Row, Table, Tag, Col, Tooltip, Modal } from 'antd'
 import {
   DragOutlined,
   ExclamationCircleOutlined,
@@ -6,62 +6,62 @@ import {
   SettingOutlined,
   DeleteOutlined,
   EditOutlined,
-} from '@ant-design/icons';
-import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
-import arrayMove from 'array-move';
+} from '@ant-design/icons'
+import { Link } from 'react-router-dom'
+import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc'
+import arrayMove from 'array-move'
 
-import Loading from '../loaders/loading';
-import useGetEventCompanies from './customHooks/useGetEventCompanies';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { firestore } from '@helpers/firebase';
-import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '@context/MessageService';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { handleRequestError } from '@helpers/utils';
+import Loading from '../loaders/loading'
+import useGetEventCompanies from './customHooks/useGetEventCompanies'
+import { useState } from 'react'
+import { useEffect } from 'react'
+import { firestore } from '@helpers/firebase'
+import Header from '@antdComponents/Header'
+import { StateMessage } from '@context/MessageService'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { handleRequestError } from '@helpers/utils'
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 const tableLocale = {
   emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No hay datos" />,
-};
+}
 
 function Empresas({ event, match }) {
-  const [companies, loadingCompanies] = useGetEventCompanies(event._id);
-  const [companyList, setCompanyList] = useState([]);
-  const { eventIsActive } = useHelper();
+  const [companies, loadingCompanies] = useGetEventCompanies(event._id)
+  const [companyList, setCompanyList] = useState([])
+  const { eventIsActive } = useHelper()
 
   useEffect(() => {
     if (companies.length > 0) {
       let newCompanies = companies.map((company, ind) => {
-        return { ...company, index: company.index ? company.index : ind + 1 };
-      });
+        return { ...company, index: company.index ? company.index : ind + 1 }
+      })
 
-      newCompanies = newCompanies.sort(function(a, b) {
-        return a.index - b.index;
-      });
-      setCompanyList(newCompanies);
+      newCompanies = newCompanies.sort(function (a, b) {
+        return a.index - b.index
+      })
+      setCompanyList(newCompanies)
     }
-  }, [companies]);
+  }, [companies])
 
-  const SortableItem = sortableElement((props) => <tr {...props} />);
-  const SortableContainer = sortableContainer((props) => <tbody {...props} />);
-  const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
+  const SortableItem = sortableElement((props) => <tr {...props} />)
+  const SortableContainer = sortableContainer((props) => <tbody {...props} />)
+  const DragHandle = sortableHandle(() => (
+    <DragOutlined style={{ cursor: 'grab', color: '#999' }} />
+  ))
 
   const orderCompany = async (updateList) => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se guarda el orden...',
-      action: 'destroy',
-    });
-    const companies = updateList ? updateList : companyList;
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se guarda el orden...',
+    )
+    const companies = updateList ? updateList : companyList
     try {
       for (let i = 0; i < companies.length; i++) {
-        companies[i].index = i + 1;
-        const { id, ...company } = companies[i];
+        companies[i].index = i + 1
+        const { id, ...company } = companies[i]
         await firestore
           .collection('event_companies')
           .doc(event._id)
@@ -72,37 +72,22 @@ function Empresas({ event, match }) {
               ...company,
             },
             { merge: true },
-          );
+          )
       }
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Orden guardado correctamente!',
-        action: 'show',
-      });
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', 'Orden guardado correctamente!')
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
-      DispatchMessageService({
-        type: 'Error',
-        msj: 'Ha ocurrido un problema al ordenar!',
-        action: 'show',
-      });
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'Error', 'Ha ocurrido un problema al ordenar!')
     }
-  };
+  }
 
   function deleteCompany(id) {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    });
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -120,34 +105,20 @@ function Empresas({ event, match }) {
               .doc(id)
               .delete()
               .then((resp) => {
-                const updateList = companyList.filter((company) => company.id !== id);
-                setCompanyList(updateList);
-                orderCompany(updateList).then((r) => {});
-              });
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            });
+                const updateList = companyList.filter((company) => company.id !== id)
+                setCompanyList(updateList)
+                orderCompany(updateList).then((r) => {})
+              })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'Error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            });
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
-        };
-        onHandlerRemove();
+        }
+        onHandlerRemove()
       },
-    });
+    })
   }
 
   const companyColumns = [
@@ -157,7 +128,10 @@ function Empresas({ event, match }) {
       width: 30,
       className: 'drag-visible',
       render(companyName, record) {
-        return !eventIsActive && window.location.toString().includes('eventadmin') ? null : <DragHandle />;
+        return !eventIsActive &&
+          window.location.toString().includes('eventadmin') ? null : (
+          <DragHandle />
+        )
       },
     },
     {
@@ -170,7 +144,7 @@ function Empresas({ event, match }) {
           <Link to={`${match.url}/editar/${record.id}`} title="Editar">
             {companyName}
           </Link>
-        );
+        )
       },
     },
     {
@@ -185,7 +159,7 @@ function Empresas({ event, match }) {
       width: '100px',
       ellipsis: true,
       render(visible) {
-        return visible ? <Tag color="green">Visible</Tag> : <Tag color="red">Oculto</Tag>;
+        return visible ? <Tag color="green">Visible</Tag> : <Tag color="red">Oculto</Tag>
       },
     },
     {
@@ -219,39 +193,49 @@ function Empresas({ event, match }) {
                   icon={<DeleteOutlined />}
                   type="danger"
                   size="small"
-                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                  disabled={
+                    !eventIsActive && window.location.toString().includes('eventadmin')
+                  }
                 />
               </Tooltip>
             </Col>
           </Row>
-        );
+        )
       },
     },
-  ];
+  ]
 
   if (loadingCompanies) {
-    return <Loading />;
+    return <Loading />
   }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
-      const newData = arrayMove([].concat(companyList), oldIndex, newIndex).filter((el) => !!el);
+      const newData = arrayMove([].concat(companyList), oldIndex, newIndex).filter(
+        (el) => !!el,
+      )
       for (let i = 0; i < newData.length; i++) {
-        newData[i].index = i;
+        newData[i].index = i
       }
-      setCompanyList(newData);
+      setCompanyList(newData)
     }
-  };
+  }
 
   const DraggableContainer = (props) => (
-    <SortableContainer useDragHandle disableAutoscroll helperClass="row-dragging" onSortEnd={onSortEnd} {...props} />
-  );
+    <SortableContainer
+      useDragHandle
+      disableAutoscroll
+      helperClass="row-dragging"
+      onSortEnd={onSortEnd}
+      {...props}
+    />
+  )
 
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
     // function findIndex base on Table rowKey props and should always be a right array index
-    const index = companyList.findIndex((x) => x.index === restProps['data-row-key']);
-    return <SortableItem index={index} {...restProps} />;
-  };
+    const index = companyList.findIndex((x) => x.index === restProps['data-row-key'])
+    return <SortableItem index={index} {...restProps} />
+  }
 
   return (
     <div>
@@ -269,7 +253,9 @@ function Empresas({ event, match }) {
                 onClick={() => orderCompany()}
                 type="primary"
                 icon={<SaveOutlined />}
-                disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                disabled={
+                  !eventIsActive && window.location.toString().includes('eventadmin')
+                }
               >
                 Guardar orden
               </Button>
@@ -300,7 +286,7 @@ function Empresas({ event, match }) {
         }}
       />
     </div>
-  );
+  )
 }
 
-export default Empresas;
+export default Empresas

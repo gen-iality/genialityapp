@@ -1,29 +1,25 @@
-import { useState } from 'react';
-import { Modal, Form, Input, Button, Typography, Upload, Space } from 'antd';
-import ImgCrop from 'antd-img-crop';
-import { PictureOutlined } from '@ant-design/icons';
-import functionCreateNewOrganization from './functionCreateNewOrganization';
-import { DispatchMessageService } from '@context/MessageService';
+import { useState } from 'react'
+import { Modal, Form, Input, Button, Typography, Upload, Space } from 'antd'
+import ImgCrop from 'antd-img-crop'
+import { PictureOutlined } from '@ant-design/icons'
+import functionCreateNewOrganization from './functionCreateNewOrganization'
+import { StateMessage } from '@context/MessageService'
 
 const ModalCreateOrg = (props) => {
-  const [form] = Form.useForm();
-  const [imageAvatar, setImageAvatar] = useState(null);
+  const [form] = Form.useForm()
+  const [imageAvatar, setImageAvatar] = useState(null)
 
   const beforeUpload = (file) => {
-    const isLt5M = file.size / 1024 / 1024 < 5;
+    const isLt5M = file.size / 1024 / 1024 < 5
     if (!isLt5M) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Image must smaller than 5MB!',
-        action: 'show',
-      });
+      StateMessage.show(null, 'error', 'Image must smaller than 5MB!')
     }
-    return isLt5M;
-  };
+    return isLt5M
+  }
 
   function resetFields() {
-    form.resetFields();
-    setImageAvatar(null);
+    form.resetFields()
+    setImageAvatar(null)
   }
   const saveNewOrganization = (values) => {
     const newValues = {
@@ -32,9 +28,9 @@ const ModalCreateOrg = (props) => {
       closeModal: props.setModalCreateOrgIsVisible,
       fetchItem: props.fetchItem,
       resetFields: resetFields,
-    };
-    functionCreateNewOrganization(newValues);
-  };
+    }
+    functionCreateNewOrganization(newValues)
+  }
 
   return (
     <Modal
@@ -52,11 +48,16 @@ const ModalCreateOrg = (props) => {
       closable
       visible={props.modalCreateOrgIsVisible}
       onCancel={() => {
-        props.setModalCreateOrgIsVisible(false);
-        resetFields();
+        props.setModalCreateOrgIsVisible(false)
+        resetFields()
       }}
     >
-      <Form onFinish={saveNewOrganization} form={form} autoComplete="off" layout="vertical">
+      <Form
+        onFinish={saveNewOrganization}
+        form={form}
+        autoComplete="off"
+        layout="vertical"
+      >
         <Typography.Title level={4} type="secondary">
           Nueva organizacion
         </Typography.Title>
@@ -68,11 +69,11 @@ const ModalCreateOrg = (props) => {
                 const fls = (file ? file.fileList : []).map((fl) => ({
                   ...fl,
                   status: 'success',
-                }));
+                }))
                 if (file.fileList.length > 0) {
-                  setImageAvatar(fls);
+                  setImageAvatar(fls)
                 } else {
-                  setImageAvatar(null);
+                  setImageAvatar(null)
                 }
               }}
               multiple={false}
@@ -82,7 +83,11 @@ const ModalCreateOrg = (props) => {
               beforeUpload={beforeUpload}
             >
               {imageAvatar === null && (
-                <Button type="primary" shape="circle" style={{ height: '150px', width: '150px' }}>
+                <Button
+                  type="primary"
+                  shape="circle"
+                  style={{ height: '150px', width: '150px' }}
+                >
                   <Space direction="vertical">
                     <PictureOutlined style={{ fontSize: '40px' }} />
                     Subir logo
@@ -113,7 +118,7 @@ const ModalCreateOrg = (props) => {
         </Form.Item>
       </Form>
     </Modal>
-  );
-};
+  )
+}
 
-export default ModalCreateOrg;
+export default ModalCreateOrg

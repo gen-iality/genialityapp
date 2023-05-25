@@ -1,34 +1,33 @@
-import { Component } from 'react';
-import { Form, Divider, Button, Table, Input, Space } from 'antd';
-import { EventsApi } from '@helpers/request';
-import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
-import Modal from './modalRelation';
+import { Component } from 'react'
+import { Form, Divider, Button, Table, Input, Space } from 'antd'
+import { EventsApi } from '@helpers/request'
+import Highlighter from 'react-highlight-words'
+import { SearchOutlined } from '@ant-design/icons'
+import Modal from './modalRelation'
 
 /**
  * @deprecated nobody uses this
  */
 class RelationshipFields extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       fields: [],
       state: 'disabled',
       data: [],
       showModal: false,
-    };
-    //this.submit = this.submit.bind(this);
+    }
   }
 
   componentDidMount() {
-    const { fields } = this.props;
-    this.setState({ fields });
-    this.getData();
+    const { fields } = this.props
+    this.setState({ fields })
+    this.getData()
   }
   async getData() {
-    const { eventId } = this.props;
-    const data = [];
-    const info = await EventsApi.getOne(eventId);
+    const { eventId } = this.props
+    const data = []
+    const info = await EventsApi.getOne(eventId)
 
     if (info.fields_conditions !== undefined) {
       data.push({
@@ -37,15 +36,15 @@ class RelationshipFields extends Component {
         fieldToValidate: info.fields_conditions.fieldToValidate,
         state: info.fields_conditions.state,
         value: info.fields_conditions.value,
-      });
-      this.setState({ data });
+      })
+      this.setState({ data })
     }
   }
 
   handleChange(e) {
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState({ [name]: value });
+    const name = e.target.name
+    const value = e.target.value
+    this.setState({ [name]: value })
   }
 
   getColumnSearchProps = (dataIndex) => ({
@@ -53,7 +52,7 @@ class RelationshipFields extends Component {
       <div style={{ padding: 8 }}>
         <Input
           ref={(node) => {
-            this.searchInput = node;
+            this.searchInput = node
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
@@ -71,23 +70,26 @@ class RelationshipFields extends Component {
           >
             Search
           </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => this.handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    filterIcon: (filtered) => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
     onFilter: (value, record) =>
       record[dataIndex]
-        ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
         : '',
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
-        setTimeout(() => this.searchInput.select());
+        setTimeout(() => this.searchInput.select())
       }
     },
     render: (text) =>
@@ -101,29 +103,29 @@ class RelationshipFields extends Component {
       ) : (
         text
       ),
-  });
+  })
 
   handleReset = (clearFilters) => {
-    clearFilters();
-    this.setState({ searchText: '' });
-  };
+    clearFilters()
+    this.setState({ searchText: '' })
+  }
 
   handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
+    confirm()
     this.setState({
       searchText: selectedKeys[0],
       searchedColumn: dataIndex,
-    });
-  };
+    })
+  }
   delete() {}
 
   showModal = () => {
-    this.setState({ showModal: !this.state.showModal });
-  };
+    this.setState({ showModal: !this.state.showModal })
+  }
 
   render() {
-    const { fields } = this.props;
-    const { data } = this.state;
+    const { fields } = this.props
+    const { data } = this.state
     const columns = [
       {
         title: 'Campo',
@@ -168,7 +170,7 @@ class RelationshipFields extends Component {
         key: 'x',
         render: () => <a>Delete</a>,
       },
-    ];
+    ]
     return (
       <Form layout="inline">
         <>
@@ -182,7 +184,7 @@ class RelationshipFields extends Component {
                     <option key={key} value={field.name}>
                       {field.label}
                     </option>
-                  );
+                  )
                 })}
               </select>
             </div>
@@ -191,7 +193,11 @@ class RelationshipFields extends Component {
           <div>
             <label>Estará: </label>
             <div className="select">
-              <select defaultValue="disabled" name="state" onChange={(e) => this.handleChange(e)}>
+              <select
+                defaultValue="disabled"
+                name="state"
+                onChange={(e) => this.handleChange(e)}
+              >
                 <option value="enabled">Habilitado</option>
                 <option value="disabled">Inhabilitado</option>
               </select>
@@ -205,7 +211,11 @@ class RelationshipFields extends Component {
                 {item.type === 'list' && (
                   <>
                     <div className="select">
-                      <select defaultValue="" name="fieldToValidate" onChange={(e) => this.handleChange(e)}>
+                      <select
+                        defaultValue=""
+                        name="fieldToValidate"
+                        onChange={(e) => this.handleChange(e)}
+                      >
                         <option value="">Seleccione...</option>
                         <option key={key} value={item.name}>
                           {item.label}
@@ -215,7 +225,11 @@ class RelationshipFields extends Component {
                     <Divider type="vertical" />
                     <label>Tenga el valor de: </label>
                     <div className="select">
-                      <select defaultValue="" name="value" onChange={(e) => this.handleChange(e)}>
+                      <select
+                        defaultValue=""
+                        name="value"
+                        onChange={(e) => this.handleChange(e)}
+                      >
                         <option value="">Seleccione...</option>
                         {item.options.map((item, key) => (
                           <option key={key} value={item.value}>
@@ -227,7 +241,7 @@ class RelationshipFields extends Component {
                   </>
                 )}
               </div>
-            );
+            )
           })}
           <Button style={{ marginTop: '3%' }}>Guardar</Button>
 
@@ -235,8 +249,8 @@ class RelationshipFields extends Component {
           <Modal fields={fields} show={this.state.showModal} />
         </>
       </Form>
-    );
+    )
   }
 }
 
-export default RelationshipFields;
+export default RelationshipFields

@@ -1,100 +1,82 @@
-import { useEffect, useState } from 'react';
-import { ToolsApi } from '@helpers/request';
-import { useHistory } from 'react-router-dom';
-import { handleRequestError } from '@helpers/utils';
-import { Row, Col, Form, Input, message, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '@context/MessageService';
+import { useEffect, useState } from 'react'
+import { ToolsApi } from '@helpers/request'
+import { useHistory } from 'react-router-dom'
+import { handleRequestError } from '@helpers/utils'
+import { Row, Col, Form, Input, Modal } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import Header from '@antdComponents/Header'
+import { StateMessage } from '@context/MessageService'
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
 const Herramienta = (props) => {
-  const eventID = props.event._id;
-  const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
-  const history = useHistory();
-  const [herramienta, setHerramienta] = useState({});
+  const eventID = props.event._id
+  const locationState = props.location.state //si viene new o edit en el state, si es edit es un id
+  const history = useHistory()
+  const [herramienta, setHerramienta] = useState({})
 
   useEffect(() => {
     if (locationState.edit) {
-      getOne();
+      getOne()
     }
-  }, []);
+  }, [])
 
   const getOne = async () => {
-    const response = await ToolsApi.getOne(locationState.edit, eventID);
-    const data = response.data.find((herramientas) => herramientas._id === locationState.edit);
-    setHerramienta(data);
-  };
+    const response = await ToolsApi.getOne(locationState.edit, eventID)
+    const data = response.data.find(
+      (herramientas) => herramientas._id === locationState.edit,
+    )
+    setHerramienta(data)
+  }
 
   const onSubmit = async () => {
     if (herramienta.name) {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: 'Por favor espere mientras se guarda la información...',
-        action: 'show',
-      });
+      StateMessage.show(
+        'loading',
+        'loading',
+        'Por favor espere mientras se guarda la información...',
+      )
 
       try {
         if (locationState.edit) {
-          const resp = await ToolsApi.editOne(herramienta, locationState.edit, eventID);
-          console.log('resp', resp);
+          const resp = await ToolsApi.editOne(herramienta, locationState.edit, eventID)
+          console.log('resp', resp)
         } else {
-          const resp = await ToolsApi.create(herramienta, eventID);
-          console.log('resp', resp);
+          const resp = await ToolsApi.create(herramienta, eventID)
+          console.log('resp', resp)
         }
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        });
-        history.push(`${props.matchUrl}/herramientas`);
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
+        history.push(`${props.parentUrl}/herramientas`)
       } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        });
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', handleRequestError(e).message)
       }
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El nombre es requerido',
-        action: 'show',
-      });
+      StateMessage.show(null, 'error', 'El nombre es requerido')
     }
-  };
+  }
 
   const handleChangeName = (e) => {
-    setHerramienta({ ...herramienta, name: e.target.value });
-  };
+    setHerramienta({ ...herramienta, name: e.target.value })
+  }
 
   const handleChangeLink = (e) => {
-    console.log('Se ejecuta esto');
-    setHerramienta({ ...herramienta, link: e.target.value });
-  };
+    console.log('Se ejecuta esto')
+    setHerramienta({ ...herramienta, link: e.target.value })
+  }
 
   const onRemoveId = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    });
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -106,38 +88,35 @@ const Herramienta = (props) => {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await ToolsApi.deleteOne(locationState.edit, eventID);
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              });
-              history.push(`${props.matchUrl}/herramientas`);
+              await ToolsApi.deleteOne(locationState.edit, eventID)
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó la información correctamente!',
+              )
+              history.push(`${props.parentUrl}/herramientas`)
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              });
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
-          };
-          onHandlerRemove();
+          }
+          onHandlerRemove()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title="Herramienta" back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header
+        title="Herramienta"
+        back
+        save
+        form
+        remove={onRemoveId}
+        edit={locationState.edit}
+      />
 
       <Row justify="center" wrap gutter={12}>
         <Col span={12}>
@@ -174,7 +153,7 @@ const Herramienta = (props) => {
         </Col>
       </Row>
     </Form>
-  );
-};
+  )
+}
 
-export default Herramienta;
+export default Herramienta

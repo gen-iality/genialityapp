@@ -1,85 +1,63 @@
-import { useState, useEffect } from 'react';
-import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Col, Row, Spin, Switch } from 'antd';
-import { withRouter } from 'react-router';
-import ReactQuill from 'react-quill';
-import { toolbarEditor } from '@helpers/constants';
-import { firestore } from '@helpers/firebase';
-import Header from '@antdComponents/Header';
-import { DispatchMessageService } from '@context/MessageService';
+import { useState, useEffect } from 'react'
+import { Col, Row, Spin, Switch } from 'antd'
+import { withRouter } from 'react-router'
+import ReactQuill from 'react-quill'
+import { toolbarEditor } from '@helpers/constants'
+import { firestore } from '@helpers/firebase'
+import Header from '@antdComponents/Header'
+import { StateMessage } from '@context/MessageService'
 
 const Configuration = (props) => {
-  const [checkSubasta, setCheckSubasta] = useState(false);
-  const [messageF, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [loadingData, setLoadingData] = useState(true);
+  const [checkSubasta, setCheckSubasta] = useState(false)
+  const [messageF, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [loadingData, setLoadingData] = useState(true)
 
   useEffect(() => {
     if (props.eventId) {
-      obtenerConfig();
+      obtenerConfig()
     }
     async function obtenerConfig() {
-      const resp = await firestore
-        .collection('config')
-        .doc(props.eventId)
-        .get();
+      const resp = await firestore.collection('config').doc(props.eventId).get()
       if (resp.exists) {
-        const data = resp.data();
-        setCheckSubasta(data.data.habilitar_subasta);
-        setMessage(data.data.message);
+        const data = resp.data()
+        setCheckSubasta(data.data.habilitar_subasta)
+        setMessage(data.data.message)
       }
-      setLoadingData(false);
+      setLoadingData(false)
     }
-  }, []);
+  }, [])
 
-  const goBack = () => props.history.goBack();
+  const goBack = () => props.history.goBack()
   function onChange(checked) {
-    setCheckSubasta(checked);
+    setCheckSubasta(checked)
   }
   const changeMessage = (e) => {
-    setMessage(e);
-  };
+    setMessage(e)
+  }
 
-  const saveConfiguration = async() => { 
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se guarda la configuración...',
-      action: 'show',
-    });
-    setLoading(true)     
-    const data={
-      habilitar_subasta:checkSubasta,
-      message:messageF
+  const saveConfiguration = async () => {
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se guarda la configuración...',
+    )
+    setLoading(true)
+    const data = {
+      habilitar_subasta: checkSubasta,
+      message: messageF,
     }
 
-    try{
-      const resp = await firestore
-      .collection('config')
-      .doc(props.eventId).set({data});
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Configuración guardada correctamente!',
-        action: 'show',
-      });       
+    try {
+      const resp = await firestore.collection('config').doc(props.eventId).set({ data })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', 'Configuración guardada correctamente!')
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      });
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Ha ocurrido un error',
-        action: 'show',
-      });
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', 'Ha ocurrido un error')
     }
     setLoading(false)
-  };
-  
+  }
 
   return !loadingData ? (
     <>
@@ -90,7 +68,12 @@ const Configuration = (props) => {
           <Switch checked={checkSubasta} onChange={onChange} />
           <br /> <br />
           <p>Mensaje a mostrar al deshabilitar</p>
-          <ReactQuill id="messageF" value={messageF} modules={toolbarEditor} onChange={changeMessage} />
+          <ReactQuill
+            id="messageF"
+            value={messageF}
+            modules={toolbarEditor}
+            onChange={changeMessage}
+          />
         </Col>
       </Row>
     </>
@@ -98,7 +81,7 @@ const Configuration = (props) => {
     <div style={{ textAlign: 'center' }}>
       <Spin />
     </div>
-  );
-};
+  )
+}
 
-export default withRouter(Configuration);
+export default withRouter(Configuration)

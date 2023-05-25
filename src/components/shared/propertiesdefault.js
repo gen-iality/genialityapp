@@ -21,4 +21,4 @@ export const DefaultProperties = [
     visibleByAdmin: false,
     visibleByContacts: false,
   },
-];
+]

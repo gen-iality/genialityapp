@@ -1,14 +1,15 @@
-import { Card, Result } from 'antd';
-import { useEffect } from 'react';
-import { withRouter } from 'react-router';
-import PayForm from './payRegister';
-import { useIntl } from 'react-intl';
+import { Card, Result } from 'antd'
+import { withRouter } from 'react-router'
+import PayForm from './payRegister'
+import { useIntl } from 'react-intl'
 
 const MessageRegister = (props) => {
-  const intl = useIntl();
+  const intl = useIntl()
   return (
     <>
-      {props.match.params.type == 'pay' && <PayForm eventId={props.match.params.event_id} />}
+      {props.match.params.type == 'pay' && (
+        <PayForm eventId={props.match.params.event_id} />
+      )}
       {props.match.params.type == 'free' && (
         <Card>
           <Result
@@ -18,11 +19,12 @@ const MessageRegister = (props) => {
               <h2 style={{ fontSize: '20px' }}>
                 {intl.formatMessage({ id: 'registration.message.success.subtitle' })}
               </h2>
-            }></Result>
+            }
+          ></Result>
         </Card>
       )}
     </>
-  );
-};
+  )
+}
 
-export default withRouter(MessageRegister);
+export default withRouter(MessageRegister)

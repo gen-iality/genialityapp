@@ -1,31 +1,29 @@
 /** React's libraries */
-import { useIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import dayjs from 'dayjs';
+import { useIntl } from 'react-intl'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
+import dayjs from 'dayjs'
 
 /** Antd imports */
-import { Button, Divider, PageHeader, Space, Typography } from 'antd';
-import { CalendarOutlined, ClockCircleOutlined, GoldOutlined, HomeOutlined, RollbackOutlined } from '@ant-design/icons';
+import { Button, PageHeader, Typography } from 'antd'
 
 /** Helpers and utils */
-import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
+import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed'
 
 /** Context */
-import { useEventContext } from '@context/eventContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useUserEvent } from '@context/eventUserContext';
-import { useCurrentUser } from '@context/userContext';
+import { useEventContext } from '@context/eventContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { useUserEvent } from '@context/eventUserContext'
+import { useCurrentUser } from '@context/userContext'
 
-dayjs.extend(localizedFormat);
+dayjs.extend(localizedFormat)
 
 const InfoEvent = () => {
-  const cEvent = useEventContext();
-  const { handleChangeTypeModal, eventIsActive } = useHelper();
-  const cEventUser = useUserEvent();
-  const cUser = useCurrentUser();
+  const cEvent = useEventContext()
+  const { handleChangeTypeModal, eventIsActive } = useHelper()
+  const cEventUser = useUserEvent()
+  const cUser = useCurrentUser()
 
-  const intl = useIntl();
+  const intl = useIntl()
   return (
     <PageHeader
       style={{
@@ -43,26 +41,32 @@ const InfoEvent = () => {
       title={
         <Typography.Title
           level={2}
-          style={{ color: cEvent.value.styles.textMenu, fontSize: '2.5rem', whiteSpace: 'normal' }}
+          style={{
+            color: cEvent.value.styles.textMenu,
+            fontSize: '2.5rem',
+            whiteSpace: 'normal',
+          }}
         >
           {cEvent.value.name}
         </Typography.Title>
       }
       extra={
         <>
-          {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' && cUser?.value && !cEventUser?.value && (
-            <Button
-              onClick={() => handleChangeTypeModal('registerForTheEvent')}
-              type="primary"
-              size="large"
-              disabled={!eventIsActive}
-            >
-              {intl.formatMessage({
-                id: 'Button.signup',
-                defaultMessage: 'Inscribirme al curso',
-              })}
-            </Button>
-          )}
+          {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
+            cUser?.value &&
+            !cEventUser?.value && (
+              <Button
+                onClick={() => handleChangeTypeModal('registerForTheEvent')}
+                type="primary"
+                size="large"
+                disabled={!eventIsActive}
+              >
+                {intl.formatMessage({
+                  id: 'Button.signup',
+                  defaultMessage: 'Inscribirme al curso',
+                })}
+              </Button>
+            )}
         </>
       }
       // footer={
@@ -91,7 +95,7 @@ const InfoEvent = () => {
       //   </Space>
       // }
     ></PageHeader>
-  );
-};
+  )
+}
 
-export default InfoEvent;
+export default InfoEvent

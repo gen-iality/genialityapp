@@ -1,72 +1,66 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Select, Spin } from 'antd';
-import { DocumentsApi } from '@helpers/request';
-import SelectOptionType from '../types/SelectOptionType';
+import { useState, useEffect, useCallback } from 'react'
+import { Select, Spin } from 'antd'
+import { DocumentsApi } from '@helpers/request'
+import SelectOptionType from '../types/SelectOptionType'
 
-import Document from '@components/documents/Document';
+import Document from '@components/documents/Document'
 
 export interface AgendaDocumentForm {
-  eventId: string,
-  selectedDocuments: string[],
-  onSelectedDocuments?: (changed: string[]) => void,
-  matchUrl?: string,
-};
+  eventId: string
+  selectedDocuments: string[]
+  onSelectedDocuments?: (changed: string[]) => void
+}
 
 function AgendaDocumentForm(props: AgendaDocumentForm) {
-  const {
-    eventId,
-    selectedDocuments,
-    onSelectedDocuments,
-    matchUrl,
-  } = props;
+  const { eventId, selectedDocuments, onSelectedDocuments } = props
 
-  const [allNameDocuments, setAllNameDocuments] = useState<SelectOptionType[]>([]);
-  const [wasLoaded, setWasLoaded] = useState(true);
+  const [allNameDocuments, setAllNameDocuments] = useState<SelectOptionType[]>([])
+  const [wasLoaded, setWasLoaded] = useState(true)
 
   const loadAllDocument = useCallback(async () => {
-    setWasLoaded(true);
-    const documents = await DocumentsApi.byEvent(eventId);
+    setWasLoaded(true)
+    const documents = await DocumentsApi.byEvent(eventId)
 
     // Load document names
-    const newNameDocuments = documents.map((document: { _id: string; title: string }) => ({
-      ...document,
-      value: document._id,
-      label: document.title,
-    }));
-    setAllNameDocuments(newNameDocuments);
-    setWasLoaded(false);
-  }, []);
+    const newNameDocuments = documents.map(
+      (document: { _id: string; title: string }) => ({
+        ...document,
+        value: document._id,
+        label: document.title,
+      }),
+    )
+    setAllNameDocuments(newNameDocuments)
+    setWasLoaded(false)
+  }, [])
 
   // Loads document from API using the current event id.
   useEffect(() => {
-    loadAllDocument().then();
-  }, []);
+    loadAllDocument().then()
+  }, [])
 
   return (
     <>
-    <h3>Seleccione o cargue un documento</h3>
-    {wasLoaded && <Spin/>}
-    <Select
-      showArrow
-      id="nameDocuments"
-      mode="multiple"
-      options={allNameDocuments}
-      onChange={onSelectedDocuments}
-      defaultValue={selectedDocuments}
-    />
-    <br/>
-    <Document
-      simpleMode
-      event={{ _id: eventId }} // Awful, but who are we
-      matchUrl={matchUrl}
-      location={{location: { state: {edit: false} }}} // Awful, but who are we
-      cbUploaded={() => {
-        loadAllDocument().then();
-        console.debug('calls cbUploaded');
-      }}
-    />
+      <h3>Seleccione o cargue un documento</h3>
+      {wasLoaded && <Spin />}
+      <Select
+        showArrow
+        id="nameDocuments"
+        mode="multiple"
+        options={allNameDocuments}
+        onChange={onSelectedDocuments}
+        defaultValue={selectedDocuments}
+      />
+      <br />
+      <Document
+        simpleMode
+        event={{ _id: eventId }} // Awful, but who are we
+        cbUploaded={() => {
+          loadAllDocument().then()
+          console.debug('calls cbUploaded')
+        }}
+      />
     </>
-  );
+  )
 }
 
-export default AgendaDocumentForm;
+export default AgendaDocumentForm

@@ -1,24 +1,32 @@
 import { PictureOutlined } from '@ant-design/icons'
-import { Button, Form, Input, List, Modal, Row, Spin, message, Upload, Typography, Space, Tabs } from 'antd'
+import {
+  Button,
+  Form,
+  Input,
+  List,
+  Modal,
+  Spin,
+  message,
+  Upload,
+  Space,
+  Tabs,
+} from 'antd'
 import { useCurrentUser } from '@context/userContext'
 import { useState, useEffect, FunctionComponent } from 'react'
-import { useContextNewEvent } from '@context/newEventContext'
+import { useNewEventContext, NewEventActionEnum } from '@context/newEventContext'
 import ImgCrop from 'antd-img-crop'
 import functionCreateNewOrganization from '@components/profile/functionCreateNewOrganization'
 
 export interface ModalOrgListCreateProps {
-  modalListOrgIsVisible?: boolean,
-  orgId?: string,
+  modalListOrgIsVisible?: boolean
+  orgId?: string
 }
 
-
 const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) => {
-  const {
-    modalListOrgIsVisible,
-    orgId,
-  } = props
+  const { modalListOrgIsVisible, orgId } = props
 
-  const { newOrganization, OrganizationsList, state, dispatch, createOrganization } = useContextNewEvent()
+  const { newOrganization, OrganizationsList, state, dispatch, createOrganization } =
+    useNewEventContext()
   const cUser = useCurrentUser()
   const [imageAvatar, setImageAvatar] = useState<any>(null)
   const [form] = Form.useForm()
@@ -42,10 +50,12 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
   }
 
   const redirectOrganization = () => {
-    linkToCreateNewEvent(`/create-event/${cUser.value._id}/?orgId=${state.selectOrganization.id}`)
+    linkToCreateNewEvent(
+      `/create-event/${cUser.value._id}/?orgId=${state.selectOrganization.id}`,
+    )
   }
 
-  const obtainOrganizations = async () =>  {
+  const obtainOrganizations = async () => {
     const organizations = await OrganizationsList()
     if (organizations.length === 0) {
       const newOrganization = {
@@ -53,23 +63,32 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
         styles: { event_image: null },
       }
       const createOrganizationR = await createOrganization(newOrganization)
-      dispatch({ type: 'ORGANIZATIONS', payload: { organizationList: [createOrganizationR] } })
-      dispatch({ type: 'SELECT_ORGANIZATION', payload: { orgId: orgId, organization: createOrganizationR } })
+      dispatch({
+        type: NewEventActionEnum.ORGANIZATIONS,
+        payload: { organizationList: [createOrganizationR] },
+      })
+      dispatch({
+        type: NewEventActionEnum.SELECT_ORGANIZATION,
+        payload: { orgId: orgId, organization: createOrganizationR },
+      })
     } else {
-      dispatch({ type: 'SELECT_ORGANIZATION', payload: { orgId: orgId } })
+      dispatch({
+        type: NewEventActionEnum.SELECT_ORGANIZATION,
+        payload: { orgId: orgId },
+      })
     }
   }
 
   const createNewOrganization = async (value: any) => {
-    dispatch({ type: 'LOADING' })
+    dispatch({ type: NewEventActionEnum.LOADING })
     await functionCreateNewOrganization({ name: value.name, logo: imageAvatar })
     setTimeout(async () => {
       await obtainOrganizations()
       resetFields()
       newOrganization(false)
     }, 500)
-    dispatch({ type: 'SELECT_TAB', payload: { tab: 'list' } })
-    dispatch({ type: 'COMPLETE' })
+    dispatch({ type: NewEventActionEnum.SELECT_TAB, payload: { tab: 'list' } })
+    dispatch({ type: NewEventActionEnum.COMPLETE })
   }
 
   useEffect(() => {
@@ -81,9 +100,17 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
   return (
     <Modal
       footer={
-        state?.tab == 'create' ? null : !state.loading ? (
+        state?.tab == 'create' ? null : !state.isLoading ? (
           [
-            <Button key="back" onClick={() => dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })}>
+            <Button
+              key="back"
+              onClick={() =>
+                dispatch({
+                  type: NewEventActionEnum.VISIBLE_MODAL,
+                  payload: { visible: false },
+                })
+              }
+            >
               Cerrar
             </Button>,
             <Button
@@ -93,7 +120,10 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                 if (modalListOrgIsVisible) {
                   redirectOrganization()
                 }
-                dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })
+                dispatch({
+                  type: NewEventActionEnum.VISIBLE_MODAL,
+                  payload: { visible: false },
+                })
               }}
             >
               Seleccionar
@@ -107,14 +137,21 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
         if (modalListOrgIsVisible) {
           redirectOrganization()
         }
-        dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })
+        dispatch({ type: NewEventActionEnum.VISIBLE_MODAL, payload: { visible: false } })
       }}
       okText="Seleccionar"
       cancelText="Cerrar"
       visible={state?.visible}
-      onCancel={() => dispatch({ type: 'VISIBLE_MODAL', payload: { visible: false } })}
+      onCancel={() =>
+        dispatch({ type: NewEventActionEnum.VISIBLE_MODAL, payload: { visible: false } })
+      }
     >
-      <Tabs activeKey={state?.tab} onChange={(key) => dispatch({ type: 'SELECT_TAB', payload: { tab: key } })}>
+      <Tabs
+        activeKey={state?.tab}
+        onChange={(key) =>
+          dispatch({ type: NewEventActionEnum.SELECT_TAB, payload: { tab: key } })
+        }
+      >
         <TabPane tab="Mis organizaciones" key="list">
           <List
             style={{ height: 350, overflowY: 'auto', borderRadius: '8px' }}
@@ -125,11 +162,20 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
               <List.Item
                 style={{
                   cursor: 'pointer',
-                  color: state.selectOrganization?.id == item.id ? 'white' : 'rgba(0, 0, 0, 0.85)',
-                  background: state.selectOrganization?.id == item.id ? '#40a9ff' : 'white',
+                  color:
+                    state.selectOrganization?.id == item.id
+                      ? 'white'
+                      : 'rgba(0, 0, 0, 0.85)',
+                  background:
+                    state.selectOrganization?.id == item.id ? '#40a9ff' : 'white',
                   borderRadius: '8px',
                 }}
-                onClick={() => dispatch({ type: 'SELECT_ORGANIZATION', payload: { orgId: null, organization: item } })}
+                onClick={() =>
+                  dispatch({
+                    type: NewEventActionEnum.SELECT_ORGANIZATION,
+                    payload: { orgId: null, organization: item },
+                  })
+                }
               >
                 {item.name}
               </List.Item>
@@ -151,7 +197,8 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
               form={form}
               autoComplete="off"
               style={{ width: '80%' }}
-              layout="vertical">
+              layout="vertical"
+            >
               <Form.Item>
                 <ImgCrop rotate shape="round">
                   <Upload
@@ -174,7 +221,11 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                     beforeUpload={beforeUpload}
                   >
                     {imageAvatar === null && (
-                      <Button type="primary" shape="circle" style={{ height: '150px', width: '150px' }}>
+                      <Button
+                        type="primary"
+                        shape="circle"
+                        style={{ height: '150px', width: '150px' }}
+                      >
                         <Space direction="vertical">
                           <PictureOutlined style={{ fontSize: '40px' }} />
                           Subir logo
@@ -188,11 +239,13 @@ const ModalOrgListCreate: FunctionComponent<ModalOrgListCreateProps> = (props) =
                 label="Nombre de la organizacion"
                 name="name"
                 style={{ marginBottom: '10px' }}
-                rules={[{ required: true, message: 'Ingrese un nombre para su organización!' }]}
+                rules={[
+                  { required: true, message: 'Ingrese un nombre para su organización!' },
+                ]}
               >
                 <Input type="text" size="large" placeholder="Nombre de la organizacion" />
               </Form.Item>
-              {!state.loading ? (
+              {!state.isLoading ? (
                 <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
                   <Button
                     id="submitButton"

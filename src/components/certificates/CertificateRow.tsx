@@ -1,9 +1,8 @@
-import { DeleteFilled } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, InputNumber, Row, Select, Space, Typography } from 'antd';
-import { CertRow } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types';
+import { DeleteFilled } from '@ant-design/icons'
+import { Button, Col, Input, InputNumber, Row, Select, Typography } from 'antd'
+import { CertRow } from 'html2pdf-certs/dist/types/components/html2pdf-certs/types'
 
-
-const certRowTypeToTitle: {[key: string]: string} = {
+const certRowTypeToTitle: { [key: string]: string } = {
   break: 'Salto',
   h1: 'Título 1',
   h2: 'Título 2',
@@ -13,12 +12,12 @@ const certRowTypeToTitle: {[key: string]: string} = {
 }
 
 interface ICertificateRowProps {
-    value?: CertRow,
-    onChange?: (data: CertRow) => void,
-    showDeleteButton?: boolean,
-    onDelete?: () => void,
-    possibleType?: CertRow['type'][],
-    title?: string,
+  value?: CertRow
+  onChange?: (data: CertRow) => void
+  showDeleteButton?: boolean
+  onDelete?: () => void
+  possibleType?: CertRow['type'][]
+  title?: string
 }
 
 const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) => {
@@ -32,14 +31,14 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
   } = props
 
   return (
-    <Row wrap gutter={[16, 16]} style={{borderColor: '#eee', borderWidth: 1, borderStyle: 'solid'}}>
+    <Row
+      wrap
+      gutter={[16, 16]}
+      style={{ borderColor: '#eee', borderWidth: 1, borderStyle: 'solid' }}
+    >
       <Col md={1} xs={4}>
         {showDeleteButton ? (
-        <Button
-          danger
-          onClick={() => onDelete()}
-          icon={<DeleteFilled />}
-        />
+          <Button danger onClick={() => onDelete()} icon={<DeleteFilled />} />
         ) : undefined}
       </Col>
       <Col md={2} xs={20}>
@@ -91,6 +90,6 @@ const CertificateRow: React.FunctionComponent<ICertificateRowProps> = (props) =>
       </Col>
     </Row>
   )
-};
+}
 
-export default CertificateRow;
+export default CertificateRow

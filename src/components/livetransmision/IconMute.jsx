@@ -1,14 +1,14 @@
-import { SoundOutlined, StopOutlined } from '@ant-design/icons';
+import { SoundOutlined, StopOutlined } from '@ant-design/icons'
 const IconMute = ({ callback }) => {
   return (
     <div onClick={callback} style={styles.square}>
       <SoundOutlined style={styles.icon} />
       <StopOutlined style={styles.icon} />
     </div>
-  );
-};
+  )
+}
 
-export default IconMute;
+export default IconMute
 
 const styles = {
   square: {
@@ -27,4 +27,4 @@ const styles = {
     left: 'calc(50% - 10vw)',
     top: 'calc(50% - 10vw)',
   },
-};
+}

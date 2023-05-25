@@ -1,56 +1,58 @@
-import { useState, useEffect } from 'react';
-import { Spin, Alert, Col, Card, Avatar, Row, Button } from 'antd';
-import { Networking } from '@helpers/request';
-import { EventFieldsApi } from '@helpers/request';
-import { formatDataToString } from '@helpers/utils';
+import { useState, useEffect } from 'react'
+import { Spin, Alert, Col, Card, Avatar, Row, Button } from 'antd'
+import { Networking } from '@helpers/request'
+import { EventFieldsApi } from '@helpers/request'
+import { formatDataToString } from '@helpers/utils'
 
 //context
-import { useUserEvent } from '@context/eventUserContext';
-import { useEventContext } from '@context/eventContext';
-import { useCurrentUser } from '@context/userContext';
+import { useUserEvent } from '@context/eventUserContext'
+import { useEventContext } from '@context/eventContext'
+import { useCurrentUser } from '@context/userContext'
 
-const { Meta } = Card;
+const { Meta } = Card
 
 const ContactList = ({ tabActive, agendarCita }) => {
-  const [contactsList, setContactsList] = useState([]);
-  const [messageService, setMessageService] = useState('');
-  const [userProperties, setUserProperties] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [contactsList, setContactsList] = useState([])
+  const [messageService, setMessageService] = useState('')
+  const [userProperties, setUserProperties] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  const userEventContext = useUserEvent();
-  const eventContext = useEventContext();
-  const userCurrentContext = useCurrentUser();
+  const userEventContext = useUserEvent()
+  const eventContext = useEventContext()
+  const userCurrentContext = useCurrentUser()
 
   useEffect(() => {
-    setLoading(true);
+    setLoading(true)
 
     const getContactList = async () => {
       // Servicio que trae los contactos
       if (!userEventContext.value) {
-        return {};
+        return {}
       }
-      Networking.getContactList(eventContext.value._id, userEventContext.value._id).then((result) => {
-        if (typeof result == 'object') {
-          setContactsList(result);
-        }
-        if (typeof result == 'string') setMessageService(result);
+      Networking.getContactList(eventContext.value._id, userEventContext.value._id).then(
+        (result) => {
+          if (typeof result == 'object') {
+            setContactsList(result)
+          }
+          if (typeof result == 'string') setMessageService(result)
 
-        setLoading(false);
-      });
-    };
+          setLoading(false)
+        },
+      )
+    }
     const getProperties = async () => {
-      const properties = await EventFieldsApi.getAll(eventContext.value._id);
-      setUserProperties(properties);
-    };
+      const properties = await EventFieldsApi.getAll(eventContext.value._id)
+      setUserProperties(properties)
+    }
 
     if (tabActive === 'mis-contactos' && eventContext.value && userCurrentContext.value) {
-      getProperties();
+      getProperties()
       // getuserContactList();
-      getContactList();
+      getContactList()
     } else {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [eventContext.value._id, tabActive]);
+  }, [eventContext.value._id, tabActive])
 
   if (!loading)
     return userCurrentContext.value === null ? (
@@ -66,9 +68,19 @@ const ContactList = ({ tabActive, agendarCita }) => {
       <div>
         <Row gutter={[10, 10]}>
           {contactsList.map((contact, key) => {
-            const user = contact.properties ? { ...contact.properties, picture: contact.user?.picture } : contact.user;
+            const user = contact.properties
+              ? { ...contact.properties, picture: contact.user?.picture }
+              : contact.user
             return (
-              <Col key={'contactlist' + key} xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
+              <Col
+                key={'contactlist' + key}
+                xs={24}
+                sm={24}
+                md={24}
+                lg={10}
+                xl={10}
+                xxl={10}
+              >
                 <Card
                   // extra={
                   //   ((user.telefono && user.telefono !== null && user.telefono.length === 10) ||
@@ -103,7 +115,9 @@ const ContactList = ({ tabActive, agendarCita }) => {
                   <Meta
                     avatar={
                       <Avatar size={65} src={user['picture'] ? user['picture'] : ''}>
-                        {!user['picture'] && user.names ? user.names.charAt(0).toUpperCase() : user.names}
+                        {!user['picture'] && user.names
+                          ? user.names.charAt(0).toUpperCase()
+                          : user.names}
                       </Avatar>
                     }
                     title={user.names ? user.names : 'No registra Nombre'}
@@ -127,12 +141,12 @@ const ContactList = ({ tabActive, agendarCita }) => {
                                       property.type != 'codearea'
                                         ? user[property.name]
                                         : '(' + user[`code`] + ')' + user[property.name],
-                                      property
+                                      property,
                                     )}
                                   </p>
                                 }
                               </div>
-                            )
+                            ),
                         )}
                       </div>,
                     ]}
@@ -149,7 +163,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
                   </Col>
                 </Card>
               </Col>
-            );
+            )
           })}
         </Row>
       </div>
@@ -160,8 +174,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
           <Card style={{ textAlign: 'center' }}>{messageService}</Card>
         </Col>
       )
-    );
-  if (userCurrentContext.value || loading) return <Spin></Spin>;
-  if (!userCurrentContext.value) return <Spin></Spin>;
-};
-export default ContactList;
+    )
+  if (userCurrentContext.value || loading) return <Spin></Spin>
+  if (!userCurrentContext.value) return <Spin></Spin>
+}
+export default ContactList

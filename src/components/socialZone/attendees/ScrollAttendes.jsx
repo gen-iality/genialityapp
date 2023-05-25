@@ -1,5 +1,5 @@
-const AttendeScroll = function(props) {
-  return <div style={{ height: '300px' }}></div>;
-};
+const AttendeScroll = function () {
+  return <div style={{ height: '300px' }}></div>
+}
 
-export default AttendeScroll;
+export default AttendeScroll

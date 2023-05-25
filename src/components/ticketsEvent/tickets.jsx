@@ -1,11 +1,11 @@
-import { Fragment, useState } from 'react';
-import { eventTicketsApi } from '@helpers/request';
-import dayjs from 'dayjs';
-import CMS from '../newComponent/CMS';
-import { getColumnSearchProps } from '../speakers/getColumnSearch';
+import { Fragment, useState } from 'react'
+import { eventTicketsApi } from '@helpers/request'
+import dayjs from 'dayjs'
+import CMS from '../newComponent/CMS'
+import { getColumnSearchProps } from '../speakers/getColumnSearch'
 
 const Tickets = (props) => {
-  const [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({})
   const columns = [
     {
       title: 'Id',
@@ -27,7 +27,7 @@ const Tickets = (props) => {
       ellipsis: true,
       ...getColumnSearchProps('allowed_to_vote', columnsData),
       render(val, item) {
-        return <div>{item.allowed_to_vote ? 'Sí' : 'No'}</div>;
+        return <div>{item.allowed_to_vote ? 'Sí' : 'No'}</div>
       },
     },
     {
@@ -37,10 +37,10 @@ const Tickets = (props) => {
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
       render(val, item) {
-        return <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>;
+        return <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>
       },
     },
-  ];
+  ]
 
   return (
     <Fragment>
@@ -50,19 +50,19 @@ const Tickets = (props) => {
         title="Tickets"
         titleTooltip="Agregue o edite los Tickets que se muestran en la aplicación"
         addUrl={{
-          pathname: `${props.matchUrl}/ticket`,
+          pathname: `${props.parentUrl}/ticket`,
           state: { new: true },
         }}
         columns={columns}
         key="_id"
-        editPath={`${props.matchUrl}/ticket`}
+        editPath={`${props.parentUrl}/ticket`}
         pagination={false}
         actions
         search
         setColumnsData={setColumnsData}
       />
     </Fragment>
-  );
-};
+  )
+}
 
-export default Tickets;
+export default Tickets

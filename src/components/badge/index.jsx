@@ -1,29 +1,28 @@
-import { BadgeApi } from '../../helpers/request';
-import Header from '@/antdComponents/Header';
-import { Form, Row, Col, Button, Space, Modal, Select, Typography, message, Table } from 'antd';
-import { useState, useEffect, useRef } from 'react';
+import Header from '@/antdComponents/Header'
+import { Row, Col, Button, Space, Typography, message, Table } from 'antd'
+import { useState, useEffect, useRef } from 'react'
 
-const { Text, Link } = Typography;
-import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import ModalAdd from './components/ModalAdd';
-import { getInitialValues, saveBadge } from './services';
-import renderPrint from './utils/renderPrint';
-import printBagde from './utils/printBagde';
-import { fontSize, initialStateBagde } from './constants';
-import ModalEdit from './components/ModalEdit';
+const { Text } = Typography
+import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons'
+import ModalAdd from './components/ModalAdd'
+import { getInitialValues, saveBadge } from './services'
+import renderPrint from './utils/renderPrint'
+import printBagde from './utils/printBagde'
+import { fontSize, initialStateBagde } from './constants'
+import ModalEdit from './components/ModalEdit'
 export default function Index(props) {
-  const { event } = props;
-  const ifrmPrint = useRef();
-  const [badges, setBadges] = useState([]);
-  const [badge, setBadge] = useState(initialStateBagde);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isVisibleEdit, setIsVisibleEdit] = useState(false);
-  const [qrExist, setQrExist] = useState(false);
-  const [extraFields, setExtraFields] = useState([]);
-  const filterOptions = event.user_properties ? event.user_properties : [];
+  const { event } = props
+  const ifrmPrint = useRef()
+  const [badges, setBadges] = useState([])
+  const [badge, setBadge] = useState(initialStateBagde)
+  const [isVisible, setIsVisible] = useState(false)
+  const [isVisibleEdit, setIsVisibleEdit] = useState(false)
+  const [qrExist, setQrExist] = useState(false)
+  const [extraFields, setExtraFields] = useState([])
+  const filterOptions = event.user_properties ? event.user_properties : []
   useEffect(() => {
-    getInitialValues(event, setBadges, setQrExist);
-  }, []);
+    getInitialValues(event, setBadges, setQrExist)
+  }, [])
   const addQR = () => {
     setBadges([
       ...badges,
@@ -35,9 +34,9 @@ export default function Index(props) {
         qr: true,
         size: 148,
       },
-    ]);
-    setQrExist(true);
-  };
+    ])
+    setQrExist(true)
+  }
 
   const addField = (values) => {
     let dataAdd = {
@@ -47,10 +46,12 @@ export default function Index(props) {
         value: values.id_properties,
       },
       size: values.size,
-    };
+    }
     if (event) {
-      const properties = event.user_properties;
-      const labelFound = properties.find((propertie) => propertie.name === values.id_properties);
+      const properties = event.user_properties
+      const labelFound = properties.find(
+        (propertie) => propertie.name === values.id_properties,
+      )
       dataAdd = {
         edit: true,
         id_properties: {
@@ -58,34 +59,36 @@ export default function Index(props) {
           value: values.id_properties,
         },
         size: values.size,
-      };
+      }
     }
-    setBadges([...badges, dataAdd]);
-    setIsVisible(false);
-    setExtraFields([...extraFields, dataAdd.id_properties]);
+    setBadges([...badges, dataAdd])
+    setIsVisible(false)
+    setExtraFields([...extraFields, dataAdd.id_properties])
     // badges.push({ edit: true, id_properties: '', size: 18 });
-  };
+  }
   const editField = () => {
     const dataEdit = {
       edit: true,
       id_properties: badge.id_properties,
       size: badge.size,
       qr: badge.qr,
-    };
-    badges[badge.index] = dataEdit;
-    setBadges([...badges]);
-    setIsVisibleEdit(false);
-  };
+    }
+    badges[badge.index] = dataEdit
+    setBadges([...badges])
+    setIsVisibleEdit(false)
+  }
   const removeField = (field) => {
-    if (field.qr) setQrExist(false);
-    setExtraFields([...extraFields, field.id_properties]);
-    const badgesFilter = badges.filter((item) => item.id_properties != field.id_properties);
-    setBadges(badgesFilter);
-  };
+    if (field.qr) setQrExist(false)
+    setExtraFields([...extraFields, field.id_properties])
+    const badgesFilter = badges.filter(
+      (item) => item.id_properties != field.id_properties,
+    )
+    setBadges(badgesFilter)
+  }
   const actionEditField = (values, index) => {
-    setBadge({ index, ...values });
-    setIsVisibleEdit(true);
-  };
+    setBadge({ index, ...values })
+    setIsVisibleEdit(true)
+  }
   const columns = [
     {
       title: 'Propiedad',
@@ -113,7 +116,7 @@ export default function Index(props) {
         </Space>
       ),
     },
-  ];
+  ]
   return (
     <>
       <Header
@@ -125,7 +128,11 @@ export default function Index(props) {
       <Row justify="center" wrap gutter={[16, 16]}>
         <Col span={16}>
           <Space style={{ marginBottom: 8 }}>
-            <Button type="primary" onClick={() => saveBadge(event, badges, message)} block>
+            <Button
+              type="primary"
+              onClick={() => saveBadge(event, badges, message)}
+              block
+            >
               Guardar
             </Button>
             {!qrExist && <Button onClick={addQR}>Agregar QR</Button>}
@@ -143,7 +150,8 @@ export default function Index(props) {
               border: '1px solid rgb(211, 211, 211)',
               borderRadius: '5px',
               padding: '10px',
-            }}>
+            }}
+          >
             {renderPrint(badges)}
           </div>
         </Col>
@@ -166,7 +174,11 @@ export default function Index(props) {
         setIsVisible={setIsVisibleEdit}
         setBadge={setBadge}
       />
-      <iframe title="Print User" ref={ifrmPrint} style={{ opacity: 0, display: 'none' }} />
+      <iframe
+        title="Print User"
+        ref={ifrmPrint}
+        style={{ opacity: 0, display: 'none' }}
+      />
     </>
-  );
+  )
 }

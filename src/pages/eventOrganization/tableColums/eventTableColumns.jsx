@@ -1,11 +1,9 @@
-import { Button, Typography } from 'antd';
-import { CheckCircleOutlined, ExclamationCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { Button, Tag } from 'antd'
+import { FileProtectOutlined, FileOutlined } from '@ant-design/icons'
 
-const { Paragraph } = Typography;
 export const columns = (goToEvent) => [
   {
     title: 'Nombre del curso',
-    dataIndex: 'name',
     ellipsis: 'true',
     sorter: (a, b) => a.name.localeCompare(b.name),
     /* align: 'center', */
@@ -23,12 +21,25 @@ export const columns = (goToEvent) => [
          );
       }, */
     /* fixed: 'left', */
-    render(val, item) {
+    render(event) {
       return (
-        <Button type="link" onClick={() => goToEvent(item._id)}>
-          <span style={{ color: '#2E9AFE' }}>{item.name}</span>
+        <Button type="link" onClick={() => goToEvent(event._id)}>
+          {event.type_event === 'certification' ? (
+            <>
+              <Tag color="#61E62C" icon={<FileProtectOutlined />}>
+                Certificación
+              </Tag>
+            </>
+          ) : !event.type_event || event.type_event === 'onlineEvent' ? (
+            <>
+              <Tag color="#E67B17" icon={<FileOutlined />}>
+                Curso
+              </Tag>
+            </>
+          ) : undefined}
+          <span style={{ color: '#2E9AFE' }}>{event.name}</span>
         </Button>
-      );
+      )
     },
   },
   {
@@ -72,4 +83,4 @@ export const columns = (goToEvent) => [
          return item.checked_in;
       }, */
   },
-];
+]

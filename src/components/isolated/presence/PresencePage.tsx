@@ -1,23 +1,21 @@
-import Presence from '@components/presence/Presence';
-import Logger from '@Utilities/logger';
-import { fireRealtime } from '@helpers/firebase';
+import Presence from '@components/presence/Presence'
+import Logger from '@Utilities/logger'
+import { fireRealtime } from '@helpers/firebase'
 
 type Data = {
-  userId: string;
-  organizationId: string;
-};
-
-export interface IPresencePageProps {
+  userId: string
+  organizationId: string
 }
 
-const { LOG, ERROR } = Logger('presence');
-const { LOG: GLOG, ERROR: GERROR } = Logger('presence-global');
+export interface IPresencePageProps {}
 
-export function PresencePage (props: IPresencePageProps) {
+const { LOG: GLOG, ERROR: GERROR } = Logger('presence-global')
+
+export function PresencePage(props: IPresencePageProps) {
   const data: Data = {
     userId: 'paco',
     organizationId: 'orgx2',
-  }  
+  }
 
   return (
     <div>
@@ -41,5 +39,5 @@ export function PresencePage (props: IPresencePageProps) {
         collectionId="paco"
       />
     </div>
-  );
+  )
 }

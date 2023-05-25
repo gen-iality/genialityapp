@@ -1,48 +1,56 @@
-import { getLiveStreamStatus } from '@adaptors/wowzaStreamingAPI';
-import { Select, Button, Space, Row, Col, Card, Badge } from 'antd';
-import AgendaContext from '@context/AgendaContext';
-import { CurrentEventContext } from '@context/eventContext';
-import { useState, useContext } from 'react';
-import { useEffect } from 'react';
-import ModalListRequestsParticipate from './ModalListRequestsParticipate';
-const { Option } = Select;
+import { getLiveStreamStatus } from '@adaptors/wowzaStreamingAPI'
+import { Select, Button, Space, Row, Col, Card, Badge } from 'antd'
+import AgendaContext from '@context/AgendaContext'
+import { CurrentEventContext } from '@context/eventContext'
+import { useState, useContext } from 'react'
+import { useEffect } from 'react'
+import ModalListRequestsParticipate from './ModalListRequestsParticipate'
+const { Option } = Select
 
-export default function ConferenceConfig({ roomStatus, deleteRoom, setRoomStatus, meeting_id }) {
-  const eventContext = useContext(CurrentEventContext);
-  const { activityEdit, getRequestByActivity, request, transmition } = useContext(AgendaContext);
-  const [viewModal, setViewModal] = useState(false);
-  const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`;
-  const [status, setStatus] = useState();
+export default function ConferenceConfig({
+  roomStatus,
+  deleteRoom,
+  setRoomStatus,
+  meeting_id,
+}) {
+  const eventContext = useContext(CurrentEventContext)
+  const { activityEdit, getRequestByActivity, request, transmition } =
+    useContext(AgendaContext)
+  const [viewModal, setViewModal] = useState(false)
+  const refActivity = `request/${eventContext.value?._id}/activities/${activityEdit}`
+  const [status, setStatus] = useState()
 
   useEffect(() => {
-    if (!eventContext.value || !activityEdit) return;
-    getRequestByActivity(refActivity);
-  }, [eventContext.value, activityEdit]);
+    if (!eventContext.value || !activityEdit) return
+    getRequestByActivity(refActivity)
+  }, [eventContext.value, activityEdit])
 
   useEffect(() => {
-    let timerID = null;
+    let timerID = null
     if (meeting_id) {
-      obtenerStatusTransmision();
+      obtenerStatusTransmision()
       async function obtenerStatusTransmision() {
-        const live_stream_status = await getLiveStreamStatus(meeting_id);
-        live_stream_status.state && setStatus(live_stream_status.state);
-        timerID = setTimeout(obtenerStatusTransmision, 5000);
+        const live_stream_status = await getLiveStreamStatus(meeting_id)
+        live_stream_status.state && setStatus(live_stream_status.state)
+        timerID = setTimeout(obtenerStatusTransmision, 5000)
       }
     } else {
-      timerID && clearTimeout(timerID);
+      timerID && clearTimeout(timerID)
     }
-  }, [meeting_id]);
+  }, [meeting_id])
   return (
     <>
       <Card bordered style={{ borderRadius: '10px' }}>
         <Row gutter={[16, 16]} justify="space-between" align="middle">
           <Col>
             <Space>
-              <label className="label">Estado de la transmisión para tus asistentes: </label>
+              <label className="label">
+                Estado de la transmisión para tus asistentes:{' '}
+              </label>
               <Select
                 value={roomStatus}
                 onChange={(value) => {
-                  setRoomStatus(value);
+                  setRoomStatus(value)
                 }}
                 style={{ width: '180px' }}
               >
@@ -57,7 +65,11 @@ export default function ConferenceConfig({ roomStatus, deleteRoom, setRoomStatus
             <Col>
               <Badge
                 onClick={() => setViewModal(true)}
-                count={request && Object.keys(request).length > 0 ? Object.keys(request).length : 0}
+                count={
+                  request && Object.keys(request).length > 0
+                    ? Object.keys(request).length
+                    : 0
+                }
               >
                 <Button type="primary">Solicitudes de participación</Button>
               </Badge>
@@ -72,7 +84,11 @@ export default function ConferenceConfig({ roomStatus, deleteRoom, setRoomStatus
           </Col>
         </Row>
       </Card>
-      <ModalListRequestsParticipate refActivity={refActivity} visible={viewModal} handleModal={setViewModal} />
+      <ModalListRequestsParticipate
+        refActivity={refActivity}
+        visible={viewModal}
+        handleModal={setViewModal}
+      />
     </>
-  );
+  )
 }

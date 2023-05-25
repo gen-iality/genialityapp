@@ -1,12 +1,12 @@
-import { firestore, fireRealtime } from '@helpers/firebase';
-import { SurveysApi } from '@helpers/request';
-import countAnswers from './counstAnswersService';
+import { firestore, fireRealtime } from '@helpers/firebase'
+import { SurveysApi } from '@helpers/request'
+import countAnswers from './counstAnswersService'
 
 const surveyAnswers = {
   // Servicio para registrar votos para un usuario logeado
   registerWithUID: (surveyId, questionId, dataAnswer, counter) => {
-    const { responseData, date, uid, email, names, voteValue } = dataAnswer;
-    const { optionQuantity, optionIndex, correctAnswer } = counter;
+    const { responseData, date, uid, email, names, voteValue } = dataAnswer
+    const { optionQuantity, optionIndex, correctAnswer } = counter
     const data = {
       response: responseData || '',
       created: date,
@@ -14,14 +14,14 @@ const surveyAnswers = {
       user_email: email,
       user_name: names,
       id_survey: surveyId,
-    };
+    }
 
     if (correctAnswer !== undefined) {
-      data['correctAnswer'] = correctAnswer;
+      data['correctAnswer'] = correctAnswer
     }
 
     if (responseData && responseData?.length > 0) {
-      countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue);
+      countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue)
     }
 
     firestore
@@ -31,12 +31,12 @@ const surveyAnswers = {
       .doc(questionId)
       .collection('responses')
       .doc(uid)
-      .set(data);
+      .set(data)
   },
   // Servicio para registrar votos para un usuario sin logeo
   registerLikeGuest: async (surveyId, questionId, dataAnswer, counter) => {
-    const { responseData, date, uid } = dataAnswer;
-    const { optionQuantity, optionIndex, correctAnswer } = counter;
+    const { responseData, date, uid } = dataAnswer
+    const { optionQuantity, optionIndex, correctAnswer } = counter
 
     const data =
       correctAnswer !== undefined
@@ -52,9 +52,9 @@ const surveyAnswers = {
             created: date,
             id_user: uid,
             id_survey: surveyId,
-          };
+          }
 
-    countAnswers(surveyId, questionId, optionQuantity, optionIndex);
+    countAnswers(surveyId, questionId, optionQuantity, optionIndex)
 
     return new Promise((resolve, reject) => {
       firestore
@@ -65,63 +65,64 @@ const surveyAnswers = {
         .collection('responses')
         .add(data)
         .then(() => {
-          resolve('Las respuestas han sido enviadas');
+          resolve('Las respuestas han sido enviadas')
         })
         .catch((err) => {
-          reject(err);
-        });
-    });
+          reject(err)
+        })
+    })
   },
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
   getAnswersQuestion: async (surveyId, questionId, eventId, updateData, operation) => {
     // eslint-disable-next-line no-unused-vars
-    const dataSurvey = await SurveysApi.getOne(eventId, surveyId);
-    const options = dataSurvey.questions.find((question) => question.id === questionId);
-    const optionsIndex = dataSurvey.questions.findIndex((index) => index.id === questionId);
-    const realTimeRef = fireRealtime.ref(`surveys/${surveyId}/answer_count/${questionId}`);
+    const dataSurvey = await SurveysApi.getOne(eventId, surveyId)
+    const options = dataSurvey.questions.find((question) => question.id === questionId)
+    const optionsIndex = dataSurvey.questions.findIndex(
+      (index) => index.id === questionId,
+    )
+    const realTimeRef = fireRealtime.ref(`surveys/${surveyId}/answer_count/${questionId}`)
 
     realTimeRef.on('value', (listResponse) => {
       if (listResponse.exists()) {
-        let result = [];
-        let total = 0;
-        result = listResponse.val();
+        let result = []
+        let total = 0
+        result = listResponse.val()
         switch (operation) {
           case 'onlyCount':
             Object.keys(result).map((item) => {
               if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
                 if (parseInt(item) >= 0) {
-                  result[item] = [result[item]];
+                  result[item] = [result[item]]
                 }
               }
-            });
-            break;
+            })
+            break
 
           case 'participationPercentage':
             Object.keys(result).map((item) => {
               if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
                 if (parseInt(item) >= 0) {
-                  total = total + result[item];
+                  total = total + result[item]
                 }
               }
-            });
+            })
 
             Object.keys(result).map((item) => {
               if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
                 if (parseInt(item) >= 0) {
-                  const calcPercentage = Math.round((result[item] / total) * 100);
-                  result[item] = [result[item], calcPercentage];
+                  const calcPercentage = Math.round((result[item] / total) * 100)
+                  result[item] = [result[item], calcPercentage]
                 }
               }
-            });
-            break;
+            })
+            break
 
           case 'registeredPercentage':
-            //result = result;
-            break;
+            break
         }
-        updateData({ answer_count: result, options, optionsIndex });
+        updateData({ answer_count: result, options, optionsIndex })
       }
-    });
+    })
   },
   getAnswersQuestionV2: async (surveyId, questionId, uid) => {
     return (
@@ -134,8 +135,8 @@ const surveyAnswers = {
         .collection('responses')
         .doc(uid)
         .get()
-    );
+    )
   },
-};
+}
 
-export default surveyAnswers;
+export default surveyAnswers

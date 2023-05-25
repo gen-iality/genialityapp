@@ -15,8 +15,8 @@ import withContext from '@context/withContext'
 import { PositionResponseType } from '@Utilities/types/PositionType'
 
 interface Props {
-  path: string,
-  org: { _id: string, default_position_id?: string | null },
+  path: string
+  org: { _id: string; default_position_id?: string | null }
 }
 
 function OrganizationPositionsPage(props: Props) {
@@ -29,15 +29,22 @@ function OrganizationPositionsPage(props: Props) {
 
   async function requestAllPositions() {
     setIsLoading(true)
-    const positions: PositionResponseType[] = await PositionsApi.getAllByOrganization(organizationId)
-    const positionsWithUsers = await Promise.all(positions.map(async (position) => {
-      const users: any[] = await PositionsApi.Organizations.getUsers(organizationId, position._id)
-      return {
-        ...position,
-        users,
-        key: position._id,
-      }
-    }))
+    const positions: PositionResponseType[] = await PositionsApi.getAllByOrganization(
+      organizationId,
+    )
+    const positionsWithUsers = await Promise.all(
+      positions.map(async (position) => {
+        const users: any[] = await PositionsApi.Organizations.getUsers(
+          organizationId,
+          position._id,
+        )
+        return {
+          ...position,
+          users,
+          key: position._id,
+        }
+      }),
+    )
     setPositionsData(positionsWithUsers)
     setIsLoading(false)
     console.debug('OrganizationPositionsPage: got positions', { positions })
@@ -72,13 +79,7 @@ function OrganizationPositionsPage(props: Props) {
     >
       <Header title="Cargos" />
       <Table
-        columns={
-          positionsTableColumns(
-            modalHandler.open,
-            orgEventsData,
-            props.path,
-          )
-        }
+        columns={positionsTableColumns(modalHandler.open, orgEventsData, props.path)}
         dataSource={positionsData}
         size="small"
         rowKey="index"
@@ -93,16 +94,13 @@ function OrganizationPositionsPage(props: Props) {
                 icon={<PlusCircleOutlined />}
                 onClick={() => modalHandler.open()}
               >
-                  Agregar cargo
+                Agregar cargo
               </Button>
             </Col>
           </Row>
         )}
       />
-      <PositionsFormModal
-        handler={modalHandler}
-        organizationId={organizationId}
-      />
+      <PositionsFormModal handler={modalHandler} organizationId={organizationId} />
     </Radio.Group>
   )
 }

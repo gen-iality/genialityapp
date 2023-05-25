@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo } from 'react'
 
 import {
   Card,
@@ -14,33 +14,30 @@ import {
   Badge,
   Popconfirm,
   Result,
-  Statistic,
-} from 'antd';
-import ReactPlayer from 'react-player';
-import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons';
-import useActivityType from '@context/activityType/hooks/useActivityType';
-import { useContext, useEffect, useState } from 'react';
-import AgendaContext from '@context/AgendaContext';
-import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo';
-import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline';
-import { startRecordingLiveStream, stopRecordingLiveStream } from '@adaptors/gcoreStreamingApi';
-import { urlErrorCodeValidation } from '@Utilities/urlErrorCodeValidation';
-import type { ActivityType } from '@context/activityType/types/activityType';
-import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat';
+} from 'antd'
+import ReactPlayer from 'react-player'
+import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons'
+import useActivityType from '@context/activityType/hooks/useActivityType'
+import { useContext, useState } from 'react'
+import AgendaContext from '@context/AgendaContext'
+import VimeoIcon from '@2fd/ant-design-icons/lib/Vimeo'
+import EmoticonSadOutline from '@2fd/ant-design-icons/lib/EmoticonSadOutline'
+
+import { urlErrorCodeValidation } from '@Utilities/urlErrorCodeValidation'
+import type { ActivityType } from '@context/activityType/types/activityType'
+import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat'
 import { TypeDisplayment } from '@context/activityType/constants/enum'
 
 interface VideoPreviewerCardProps {
-  type: ActivityType.TypeAsDisplayment,
-  activityName: string,
-};
+  type: ActivityType.TypeAsDisplayment
+  activityName: string
+}
 
 const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
-  const [duration, setDuration] = useState(0);
-  const [errorOcurred, setErrorOcurred] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  let {
-    contentSource: data,
-  } = useActivityType();
+  const [duration, setDuration] = useState(0)
+  const [errorOcurred, setErrorOcurred] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  let { contentSource: data } = useActivityType()
   const {
     roomStatus,
     setRoomStatus,
@@ -52,24 +49,24 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     stopRecordTransmition,
     loadingRecord,
     record,
-    viewers,
-    viewersOnline,
-    totalViews,
-    maxViewers,
     saveConfig,
-  } = useContext(AgendaContext);
+  } = useContext(AgendaContext)
 
-  console.debug('VideoPreviewerCard.dataLive:', dataLive);
+  console.debug('VideoPreviewerCard.dataLive:', dataLive)
 
-  if (!data) data = meeting_id;
+  if (!data) data = meeting_id
 
   // Render the ifram or gCore component
   const renderPlayer = () => {
     // Gets visibility status for the react player, and the url to render
-    if (!data) return (
-      <><Spin/><p>Esperando recurso...</p></>
-    );
-    const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data);
+    if (!data)
+      return (
+        <>
+          <Spin />
+          <p>Esperando recurso...</p>
+        </>
+      )
+    const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data)
 
     return (
       <>
@@ -91,16 +88,21 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
               <ReactPlayer
                 playing
                 loop
-                onDuration={props.type === TypeDisplayment.VIDEO ? handleDuration : undefined}
+                onDuration={
+                  props.type === TypeDisplayment.VIDEO ? handleDuration : undefined
+                }
                 style={{ objectFit: 'cover', aspectRatio: '16/9' }}
-                width='100%'
-                height='100%'
+                width="100%"
+                height="100%"
                 url={urlVideo}
                 controls
                 onError={(e) => {
-                  if (props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.TRANSMISSION) {
-                    setErrorOcurred(true);
-                    setErrorMessage(e?.message);
+                  if (
+                    props.type !== TypeDisplayment.EVIUS_MEET &&
+                    props.type !== TypeDisplayment.TRANSMISSION
+                  ) {
+                    setErrorOcurred(true)
+                    setErrorMessage(e?.message)
                   }
                 }}
               />
@@ -111,40 +113,51 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
         {!visibleReactPlayer && !errorOcurred && (
           <iframe
             style={{ aspectRatio: '16/9' }}
-            width='100%'
+            width="100%"
             src={urlVideo + '?muted=1&autoplay=1'}
             frameBorder="0"
-            allow='autoplay; encrypted-media'
+            allow="autoplay; encrypted-media"
             allowFullScreen
             onLoad={(e) => {
-              if (props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.TRANSMISSION) {
+              if (
+                props.type !== TypeDisplayment.EVIUS_MEET &&
+                props.type !== TypeDisplayment.TRANSMISSION
+              ) {
                 // @ts-expect-error
-                setErrorOcurred(urlErrorCodeValidation(e.target?.src, true));
+                setErrorOcurred(urlErrorCodeValidation(e.target?.src, true))
               }
-            }}></iframe>
+            }}
+          ></iframe>
         )}
       </>
-    );
-  };
+    )
+  }
 
-  console.debug('VideoPreviewerCard (99. data transmition):', dataLive?.live, dataLive?.hls_playlist_url);
+  console.debug(
+    'VideoPreviewerCard (99. data transmition):',
+    dataLive?.live,
+    dataLive?.hls_playlist_url,
+  )
 
   // Check IDs to split the YouTube or Vimeo URL
   const filterData = useMemo(() => {
     if (data) {
-      if (data.toString().includes('https://vimeo.com/event/') || data.toString().includes('https://youtu.be/'))
+      if (
+        data.toString().includes('https://vimeo.com/event/') ||
+        data.toString().includes('https://youtu.be/')
+      )
         return data?.split('/')[data?.split('/').length - 1]
-      return data;
+      return data
     } else if (meeting_id) {
-      return meeting_id;
+      return meeting_id
     }
-    return null;
-  }, [meeting_id, data]);
+    return null
+  }, [meeting_id, data])
 
   const handleDuration = (duration: number) => {
-    console.debug('VideoPreviewerCard::onDuration:', duration);
-    setDuration(duration);
-  };
+    console.debug('VideoPreviewerCard::onDuration:', duration)
+    setDuration(duration)
+  }
 
   return (
     <Card
@@ -153,7 +166,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
           <img
             style={{ objectFit: 'cover' }}
             height="250px"
-            src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b'
+            src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b"
           />
         )
       }
@@ -168,10 +181,12 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
           <Col span={dataLive?.live && dataLive?.active ? 16 : 24}>
             <Comment
               avatar={
-                props.type === TypeDisplayment.MEETING || props.type === TypeDisplayment.VIDEO ? null : (
+                props.type === TypeDisplayment.MEETING ||
+                props.type === TypeDisplayment.VIDEO ? null : (
                   <Avatar
                     icon={
-                      props.type === TypeDisplayment.EVIUS_MEET || props.type === TypeDisplayment.TRANSMISSION ? (
+                      props.type === TypeDisplayment.EVIUS_MEET ||
+                      props.type === TypeDisplayment.TRANSMISSION ? (
                         dataLive?.active ? (
                           <CheckCircleOutlined />
                         ) : (
@@ -184,13 +199,23 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                       )
                     }
                     style={
-                      props.type === TypeDisplayment.EVIUS_MEET || props.type === TypeDisplayment.TRANSMISSION
+                      props.type === TypeDisplayment.EVIUS_MEET ||
+                      props.type === TypeDisplayment.TRANSMISSION
                         ? dataLive?.active
-                          ? { backgroundColor: 'rgba(82, 196, 26, 0.1)', color: '#52C41A' }
-                          : { backgroundColor: 'rgba(255, 77, 79, 0.1)', color: '#FF4D4F' }
+                          ? {
+                              backgroundColor: 'rgba(82, 196, 26, 0.1)',
+                              color: '#52C41A',
+                            }
+                          : {
+                              backgroundColor: 'rgba(255, 77, 79, 0.1)',
+                              color: '#FF4D4F',
+                            }
                         : props.type === TypeDisplayment.VIMEO
                         ? { backgroundColor: 'rgba(26, 183, 234, 0.1)', color: '#32B8E8' }
-                        : (props.type === TypeDisplayment.YOUTUBE && { backgroundColor: 'rgba(255, 0, 0, 0.1)', color: '#FF0000' }) ||
+                        : (props.type === TypeDisplayment.YOUTUBE && {
+                            backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                            color: '#FF0000',
+                          }) ||
                           undefined
                     }
                   />
@@ -206,7 +231,8 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                   'Sala de reuniones'
                 ) : props.type === TypeDisplayment.VIDEO ? (
                   convertSecondsToHourFormat(duration)
-                ) : props.type === TypeDisplayment.VIMEO || props.type == TypeDisplayment.YOUTUBE ? (
+                ) : props.type === TypeDisplayment.VIMEO ||
+                  props.type == TypeDisplayment.YOUTUBE ? (
                   'Conexión externa'
                 ) : dataLive?.active ? (
                   <Typography.Text type="success">Iniciado</Typography.Text>
@@ -220,14 +246,21 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
           {dataLive?.live && dataLive?.active ? (
             dataLive?.live ? (
               <Col span={8}>
-                <Badge count={recordings && Object.keys(recordings).length > 0 ? Object.keys(recordings).length : 0}>
+                <Badge
+                  count={
+                    recordings && Object.keys(recordings).length > 0
+                      ? Object.keys(recordings).length
+                      : 0
+                  }
+                >
                   {record === 'start' ? (
                     <Button
                       loading={loadingRecord}
                       onClick={() => {
-                        startRecordTransmition();
+                        startRecordTransmition()
                       }}
-                      type="primary">
+                      type="primary"
+                    >
                       Iniciar grabación
                     </Button>
                   ) : (
@@ -236,7 +269,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
                       okText="Si"
                       cancelText="No"
                       onConfirm={() => {
-                        stopRecordTransmition();
+                        stopRecordTransmition()
                       }}
                       onCancel={() => console.log('cancelado')}
                     >
@@ -258,27 +291,38 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
           props.type == TypeDisplayment.YOUTUBE ||
           props.type == TypeDisplayment.EVIUS_MEET) && (
           <Space style={{ width: '100%' }}>
-            <Typography.Text strong>ID {props.type === TypeDisplayment.EVIUS_MEET ? 'GEN Connect' : props.type}:</Typography.Text>
+            <Typography.Text strong>
+              ID {props.type === TypeDisplayment.EVIUS_MEET ? 'GEN Connect' : props.type}:
+            </Typography.Text>
             <Typography.Text
               copyable={{
                 tooltips: ['clic para copiar', '¡ID copiado!'],
                 text: `${filterData}`,
-              }}>
+              }}
+            >
               {filterData}
             </Typography.Text>
           </Space>
         )}
-        {((dataLive?.active && (props.type === TypeDisplayment.TRANSMISSION || props.type === TypeDisplayment.EVIUS_MEET)) ||
-          (props.type !== TypeDisplayment.TRANSMISSION && props.type !== TypeDisplayment.EVIUS_MEET && props.type !== TypeDisplayment.MEETING && props.type !== TypeDisplayment.VIDEO)) && (
+        {((dataLive?.active &&
+          (props.type === TypeDisplayment.TRANSMISSION ||
+            props.type === TypeDisplayment.EVIUS_MEET)) ||
+          (props.type !== TypeDisplayment.TRANSMISSION &&
+            props.type !== TypeDisplayment.EVIUS_MEET &&
+            props.type !== TypeDisplayment.MEETING &&
+            props.type !== TypeDisplayment.VIDEO)) && (
           <Space direction="vertical" style={{ width: '100%' }}>
-            <Typography.Text strong>Estado de la actividad para tus asistentes: </Typography.Text>
+            <Typography.Text strong>
+              Estado de la actividad para tus asistentes:{' '}
+            </Typography.Text>
             <Select
               value={roomStatus}
               onChange={(value) => {
-                console.debug('saves value of RoomStatus:', value);
-                setRoomStatus(value);
-                saveConfig({ habilitar_ingreso: value })
-                  .then(() => console.log('config saved - habilitar_ingreso:', value));
+                console.debug('saves value of RoomStatus:', value)
+                setRoomStatus(value)
+                saveConfig({ habilitar_ingreso: value }).then(() =>
+                  console.log('config saved - habilitar_ingreso:', value),
+                )
               }}
               style={{ width: '100%' }}
             >
@@ -291,7 +335,7 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
         )}
       </Space>
     </Card>
-  );
-};
+  )
+}
 
-export default VideoPreviewerCard;
+export default VideoPreviewerCard

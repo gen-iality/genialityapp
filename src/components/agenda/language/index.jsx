@@ -1,168 +1,188 @@
-import { Component, Fragment } from 'react';
-import { AgendaApi } from '@helpers/request';
-import { Typography, Select, Form, Table, Button, InputNumber, notification, Input } from 'antd';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import ModalEdit from './modalEdit';
-import { firestore } from '@helpers/firebase';
+import { Component, Fragment } from 'react'
+import { AgendaApi } from '@helpers/request'
+import {
+  Typography,
+  Select,
+  Form,
+  Table,
+  Button,
+  InputNumber,
+  notification,
+  Input,
+} from 'antd'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import ModalEdit from './modalEdit'
+import { firestore } from '@helpers/firebase'
 
-const { Title } = Typography;
-const { Option } = Select;
+const { Title } = Typography
+const { Option } = Select
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
 class ActividadLanguage extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       activity: {},
       related_meetings: [],
       visible: false,
-    };
-    this.onFinish = this.onFinish.bind(this);
-    this.deleteObject = this.deleteObject.bind(this);
-    this.onFinishModal = this.onFinishModal.bind(this);
+    }
+    this.onFinish = this.onFinish.bind(this)
+    this.deleteObject = this.deleteObject.bind(this)
+    this.onFinishModal = this.onFinishModal.bind(this)
   }
 
   async componentDidMount() {
-    this.loadData();
+    this.loadData()
   }
 
   async loadData() {
-    const { eventId, activityId } = this.props;
+    const { eventId, activityId } = this.props
     const related_meetings = await firestore
       .collection('languageState')
       .doc(activityId)
       .get()
-      .then(function(doc) {
+      .then(function (doc) {
         if (doc.exists) {
-          return doc.data().related_meetings;
+          return doc.data().related_meetings
         } else {
           notification.open({
             message: 'No hay información guardada',
-          });
+          })
         }
       })
-      .catch(function() {
+      .catch(function () {
         //
         notification.open({
           message: 'Hubo un error, intente mas tarde',
-        });
-      });
-    const info = await AgendaApi.getOne(activityId, eventId);
-    this.setState({ activity: info, related_meetings });
+        })
+      })
+    const info = await AgendaApi.getOne(activityId, eventId)
+    this.setState({ activity: info, related_meetings })
   }
 
   async onFinish(related_meetings_selected) {
-    const { eventId, activityId } = this.props;
-    const related_meetings = this.state.related_meetings ? this.state.related_meetings : [];
-    related_meetings.push(related_meetings_selected);
+    const { eventId, activityId } = this.props
+    const related_meetings = this.state.related_meetings
+      ? this.state.related_meetings
+      : []
+    related_meetings.push(related_meetings_selected)
 
-    const info = { event_id: eventId, activity_id: activityId, related_meetings: related_meetings };
+    const info = {
+      event_id: eventId,
+      activity_id: activityId,
+      related_meetings: related_meetings,
+    }
     try {
-      await firestore
-        .collection('languageState')
-        .doc(activityId)
-        .set(info);
+      await firestore.collection('languageState').doc(activityId).set(info)
       notification.open({
         message: 'Información Guardada',
-      });
+      })
     } catch (e) {
       //
       notification.open({
         message: 'Hubo un error',
         description: 'No se ha logrado crear la información, intente mas tarde',
-      });
+      })
     }
-    this.loadData();
+    this.loadData()
   }
 
   async deleteObject(object) {
-    const { eventId, activityId } = this.props;
-    let dataToFilter = this.state.related_meetings;
+    const { eventId, activityId } = this.props
+    let dataToFilter = this.state.related_meetings
 
-    dataToFilter = dataToFilter.filter(function(i) {
-      return i !== object;
-    });
+    dataToFilter = dataToFilter.filter(function (i) {
+      return i !== object
+    })
 
-    const related_meetings = dataToFilter;
+    const related_meetings = dataToFilter
 
-    this.setState({ related_meetings });
+    this.setState({ related_meetings })
     try {
       await firestore
         .collection('languageState')
         .doc(activityId)
-        .update({ event_id: eventId, activity_id: activityId, related_meetings });
+        .update({ event_id: eventId, activity_id: activityId, related_meetings })
       notification.open({
         message: 'Dato eliminado',
-      });
+      })
     } catch (e) {
       //
       notification.open({
         message: 'Hubo un error',
         description: 'No se ha logrado eliminar la información, intente mas tarde',
-      });
+      })
     }
-    this.loadData();
+    this.loadData()
   }
 
   async editObject(object) {
-    this.setState({ dataToEdit: { ...object }, visible: true });
+    this.setState({ dataToEdit: { ...object }, visible: true })
   }
 
   async onFinishModal(related_meetings_selected) {
-    const { eventId, activityId } = this.props;
-    const related_meetings_original = this.state.related_meetings;
+    const { eventId, activityId } = this.props
+    const related_meetings_original = this.state.related_meetings
 
     for (let i = 0; i < related_meetings_original.length; i++) {
       if (related_meetings_original[i].meeting_id) {
         if (related_meetings_selected.meeting_id !== 0) {
-          if (related_meetings_original[i].meeting_id.toString() === related_meetings_selected.meeting_id.toString()) {
-            related_meetings_original[i].language = related_meetings_selected.language;
-            related_meetings_original[i].state = related_meetings_selected.state;
-            related_meetings_original[i].informative_text = related_meetings_selected.informative_text;
+          if (
+            related_meetings_original[i].meeting_id.toString() ===
+            related_meetings_selected.meeting_id.toString()
+          ) {
+            related_meetings_original[i].language = related_meetings_selected.language
+            related_meetings_original[i].state = related_meetings_selected.state
+            related_meetings_original[i].informative_text =
+              related_meetings_selected.informative_text
           }
         }
       }
 
       if (related_meetings_original[i].vimeo_id) {
-        if (related_meetings_original[i].vimeo_id.toString() === related_meetings_selected.vimeo_id.toString()) {
+        if (
+          related_meetings_original[i].vimeo_id.toString() ===
+          related_meetings_selected.vimeo_id.toString()
+        ) {
           if (related_meetings_selected.vimeo_id !== 0) {
-            related_meetings_original[i].language = related_meetings_selected.language;
-            related_meetings_original[i].state = related_meetings_selected.state;
-            related_meetings_original[i].informative_text = related_meetings_selected.informative_text;
+            related_meetings_original[i].language = related_meetings_selected.language
+            related_meetings_original[i].state = related_meetings_selected.state
+            related_meetings_original[i].informative_text =
+              related_meetings_selected.informative_text
           }
         }
       }
     }
 
-    const related_meetings = related_meetings_original;
+    const related_meetings = related_meetings_original
 
     try {
       await firestore
         .collection('languageState')
         .doc(activityId)
-        .update({ event_id: eventId, activity_id: activityId, related_meetings });
+        .update({ event_id: eventId, activity_id: activityId, related_meetings })
       notification.open({
         message: 'Dato actualizado',
-      });
+      })
     } catch (e) {
       //
       notification.open({
         message: 'Hubo un error',
         description: 'No se ha logrado actualizar la información, intente mas tarde',
-      });
+      })
     }
 
-    this.setState({ visible: false });
+    this.setState({ visible: false })
 
-    this.loadData();
+    this.loadData()
   }
   render() {
-    const { activity, related_meetings, dataToEdit, visible } = this.state;
-    const { platform } = this.props;
+    const { activity, related_meetings, dataToEdit, visible } = this.state
+    const { platform } = this.props
     const columns = [
       {
         title: 'Lenguaje',
@@ -173,11 +193,11 @@ class ActividadLanguage extends Component {
         title: 'Id de conferencia',
         render: (value, row) => {
           if (row.vimeo_id !== undefined) {
-            return <p>{value.vimeo_id}</p>;
+            return <p>{value.vimeo_id}</p>
           } else if (row.meeting_id !== undefined) {
-            return <p>{value.meeting_id}</p>;
+            return <p>{value.meeting_id}</p>
           } else if (row.bigmarker_id !== undefined) {
-            return <p>{value.bigmarker_id}</p>;
+            return <p>{value.bigmarker_id}</p>
           }
         },
         key: 'meeting_id',
@@ -187,11 +207,11 @@ class ActividadLanguage extends Component {
         dataIndex: 'state',
         render: (value) => {
           if (value === 'open_meeting_room') {
-            return <p>Conferencia abierta</p>;
+            return <p>Conferencia abierta</p>
           } else if (value === 'closed_meeting_room') {
-            return <p>Conferencia no Iniciada</p>;
+            return <p>Conferencia no Iniciada</p>
           } else if (value === 'ended_meeting_room') {
-            return <p>Conferencia terminada</p>;
+            return <p>Conferencia terminada</p>
           }
         },
         key: 'state',
@@ -200,11 +220,11 @@ class ActividadLanguage extends Component {
         title: 'Plataforma',
         render: (row) => {
           if (row.vimeo_id !== undefined) {
-            return <p>vimeo</p>;
+            return <p>vimeo</p>
           } else if (row.meeting_id !== undefined) {
-            return <p>zoom</p>;
+            return <p>zoom</p>
           } else if (row.bigmarker_id !== undefined) {
-            return <p>BigMarker</p>;
+            return <p>BigMarker</p>
           }
         },
       },
@@ -226,7 +246,7 @@ class ActividadLanguage extends Component {
           </>
         ),
       },
-    ];
+    ]
     return (
       <>
         <Fragment>
@@ -295,8 +315,8 @@ class ActividadLanguage extends Component {
           <ModalEdit onFinish={this.onFinishModal} visible={visible} data={dataToEdit} />
         </Fragment>
       </>
-    );
+    )
   }
 }
 
-export default ActividadLanguage;
+export default ActividadLanguage

@@ -1,25 +1,24 @@
-import { TicketsApi } from "../../../../helpers/request";
-import { GetTokenUserFirebase } from "../../../../helpers/HelperAuth";
+import { TicketsApi } from '../../../../helpers/request'
+import { GetTokenUserFirebase } from '../../../../helpers/HelperAuth'
 
 // funcion para obtener el EventUser y los votos
 async function getCurrentEvenUser(eventId, setEventUsers, setVoteWeight) {
-  const evius_token = await GetTokenUserFirebase();
-  let eventUser = [];
-  let voteWeight = 1;
+  const evius_token = await GetTokenUserFirebase()
+  let eventUser = []
+  let voteWeight = 1
   if (evius_token) {
-    const response = await TicketsApi.getByEvent(eventId, evius_token);
+    const response = await TicketsApi.getByEvent(eventId, evius_token)
 
     if (response.data.length > 0) {
-      voteWeight = 0;
-      eventUser = response.data;
+      voteWeight = 0
+      eventUser = response.data
       response.data.forEach((item) => {
-        if (item.properties.pesovoto)
-          voteWeight += parseFloat(item.properties.pesovoto);
-      });
+        if (item.properties.pesovoto) voteWeight += parseFloat(item.properties.pesovoto)
+      })
     }
   }
-  setEventUsers(eventUser);
-  setVoteWeight(voteWeight);
+  setEventUsers(eventUser)
+  setVoteWeight(voteWeight)
 }
 
-export default getCurrentEvenUser;
+export default getCurrentEvenUser

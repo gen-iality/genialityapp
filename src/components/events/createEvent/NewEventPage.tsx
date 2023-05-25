@@ -1,37 +1,37 @@
 /** React's libraries */
-import * as React from 'react';
-import { FunctionComponent, useState, useEffect, useContext } from 'react';
-import { withRouter } from 'react-router-dom';
+import { FunctionComponent, useState, useEffect, useContext } from 'react'
+import { useParams } from 'react-router-dom'
 
 /** Antd imports */
-import { Steps, Button, Card, Row, Spin } from 'antd';
-import { ContactsOutlined, PictureOutlined, ScheduleOutlined } from '@ant-design/icons';
+import { Steps, Button, Card, Row, Spin } from 'antd'
+import { ContactsOutlined, ScheduleOutlined } from '@ant-design/icons'
 
 /** Helpers and utils */
-import { OrganizationFuction, UsersApi } from '@helpers/request';
+import { OrganizationFuction, UsersApi } from '@helpers/request'
 
 /** Context */
-import { DispatchMessageService } from '@context/MessageService';
+import { StateMessage } from '@context/MessageService'
 /*vista de resultado de la creacion de un curso */
-import { cNewEventContext } from '@context/newEventContext';
+import { NewEventContext } from '@context/newEventContext'
 
 /** Components */
-import InitialNewEventFormSection from './newEvent/InitialNewEventFormSection';
-import EventAccessTypeSection from './newEvent/EventAccessTypeSection';
+import InitialNewEventFormSection from './newEvent/InitialNewEventFormSection'
+import EventAccessTypeSection from './newEvent/EventAccessTypeSection'
+import EventTypeSection from './newEvent/EventTypeSection'
 
-interface INewEventPageProps {
-  match: any;
-}
-
-const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
-  const [orgId, setOrgId] = useState<string | null>(null);
+const NewEventPage: FunctionComponent = () => {
+  const [orgId, setOrgId] = useState<string | null>(null)
   const [stepsValid, setStepsValid] = useState({
     info: false,
     fields: false,
-  });
-  const [current, setCurrent] = useState(0);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  })
+  const [current, setCurrent] = useState(0)
+  const [currentUser, setCurrentUser] = useState<any>(null)
   const [steps, setSteps] = useState([
+    {
+      title: 'Tipo de evento',
+      icon: <ScheduleOutlined />,
+    },
     {
       title: 'Información',
       icon: <ScheduleOutlined />,
@@ -40,83 +40,86 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
       title: 'Tipo de acceso',
       icon: <ContactsOutlined />,
     },
-  ]);
+  ])
 
-  const eventNewContext: any = useContext(cNewEventContext);
+  const params = useParams<any>()
 
-  const goNextPage = () => {
-    setCurrent((previous) => previous + 1);
-  };
+  const eventNewContext: any = useContext(NewEventContext)
 
-  const goPreviousPage = () => {
-    setCurrent((previous) => previous - 1);
-  };
+  const goNextPage = () => setCurrent((previous) => previous + 1)
+  const goPreviousPage = () => setCurrent((previous) => previous - 1)
 
   const obtainContent = (step: (typeof steps)[number]) => {
     switch (step.title) {
+      case 'Tipo de evento':
+        return <EventTypeSection />
       case 'Información':
-        return <InitialNewEventFormSection orgId={orgId || undefined} currentUser={currentUser} />;
+        return (
+          <InitialNewEventFormSection
+            orgId={orgId || undefined}
+            currentUser={currentUser}
+          />
+        )
       case 'Tipo de acceso':
-        return <EventAccessTypeSection />;
+        return <EventAccessTypeSection />
     }
-  };
+  }
 
   const goNext = () => {
     switch (current) {
       case 0:
+        goNextPage()
+        break
+      case 1:
         if (
           eventNewContext.validateField([
             { name: 'name', required: true, length: 4 },
             { name: 'description', required: eventNewContext.addDescription, length: 9 },
           ])
         ) {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Error en los campos...',
-            action: 'show',
-          });
+          StateMessage.show(null, 'error', 'Error en los campos...')
         } else {
-          goNextPage();
+          goNextPage()
         }
-        break;
-      case 1:
-        eventNewContext.changeTransmision(false);
-        goNextPage();
-        console.log(eventNewContext.valueInputs);
-        break;
+        break
       case 2:
-        break;
+        eventNewContext.changeTransmision(false)
+        goNextPage()
+        console.log(eventNewContext.valueInputs)
+        break
+      case 3:
+        break
     }
-  };
+  }
 
   const goPrevious = () => {
-    if (eventNewContext.optTransmitir && current == 2) {
-      eventNewContext.changeTransmision(false);
+    if (eventNewContext.optTransmitir && current == 3) {
+      eventNewContext.changeTransmision(false)
     } else {
-      goPreviousPage();
+      goPreviousPage()
     }
-  };
+  }
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const newOrgId = urlParams.get('orgId');
-    setOrgId(newOrgId);
+    const urlParams = new URLSearchParams(window.location.search)
+    const newOrgId = urlParams.get('orgId')
+    setOrgId(newOrgId)
 
-    if (props.match?.params?.user) {
+    if (params.user) {
       // eslint-disable-next-line react/prop-types
-      UsersApi.getProfile(props.match?.params?.user).then((profileUser) => {
-        setCurrentUser(profileUser);
-      });
+      UsersApi.getProfile(params.user).then((profileUser) => {
+        setCurrentUser(profileUser)
+      })
     }
-  }, []);
+  }, [params])
 
   useEffect(() => {
     if (orgId) {
       OrganizationFuction.obtenerDatosOrganizacion(orgId).then((organization) => {
         if (organization) {
-          organization = { ...organization, id: organization._id };
-          eventNewContext.selectedOrganization(organization);
-          eventNewContext.eventByOrganization(false);
+          organization = { ...organization, id: organization._id }
+          eventNewContext.selectedOrganization(organization)
+          eventNewContext.eventByOrganization(false)
 
           // I saw the NewEventContext and i have seen that the saveEvent method
           // will take data from the reducer state instead the context state.
@@ -125,9 +128,9 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
           // Well.. I comment because the component ModalOrgListCreate is setting now
           // this value, and when its orgId prop change, the component will update the state
         }
-      });
+      })
     }
-  }, [orgId]);
+  }, [orgId])
 
   return (
     <div
@@ -139,8 +142,13 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
         height: '100vh',
         width: '100vw',
         backgroundColor: '#FCEAD9',
-      }}>
-      <Row justify="center" className="newEvent" style={{ transition: 'all 1.5s ease-out' }}>
+      }}
+    >
+      <Row
+        justify="center"
+        className="newEvent"
+        style={{ transition: 'all 1.5s ease-out' }}
+      >
         {/* Items del paso a paso */}
         <div className="itemStep">
           <Steps current={current} responsive>
@@ -160,20 +168,24 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
             height: `80%`,
             borderRadius: '25px',
           }}
-          className="card-container">
+          className="card-container"
+        >
           {/* Contenido de cada item del paso a paso */}
           <Row justify="center" style={{ marginBottom: '8px' }}>
             {obtainContent(steps[current])}
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
           {/* SE VALIDA CON window.history.length  PARA DETECTAR SI ES POSIBLE HACER EL BACK YA QUE AVECES SE ABRE UNA PESTAÑA NUEVA*/}
-          {!eventNewContext.state.loading && (
+          {!eventNewContext.state.isLoading && (
             <div className="button-container">
               {current <= 0 && (
                 <Button
                   className="button"
                   size="large"
-                  onClick={() => (window.history.length == 1 ? window.close() : window.history.back())}>
+                  onClick={() =>
+                    window.history.length == 1 ? window.close() : window.history.back()
+                  }
+                >
                   {window.history.length == 1 ? 'Salir' : 'Cancelar'}
                 </Button>
               )}
@@ -183,7 +195,12 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
                 </Button>
               )}
               {current < steps.length - 1 && (
-                <Button className="button" type="primary" size="large" onClick={() => goNext()}>
+                <Button
+                  className="button"
+                  type="primary"
+                  size="large"
+                  onClick={() => goNext()}
+                >
                   Siguiente
                 </Button>
               )}
@@ -192,13 +209,14 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
                   className="button"
                   type="primary"
                   size="large"
-                  onClick={async () => await eventNewContext.saveEvent()}>
+                  onClick={async () => await eventNewContext.saveEvent()}
+                >
                   Crear curso
                 </Button>
               )}
             </div>
           )}
-          {eventNewContext.state.loading && (
+          {eventNewContext.state.isLoading && (
             <Row justify="center">
               Espere.. <Spin />
             </Row>
@@ -206,7 +224,7 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
         </Card>
       </Row>
     </div>
-  );
-};
+  )
+}
 
-export default withRouter(NewEventPage);
+export default NewEventPage

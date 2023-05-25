@@ -1,8 +1,8 @@
-import { Layout, Drawer, Button, Col, Row, Badge, notification, message } from 'antd';
-import { MenuUnfoldOutlined, MessageOutlined } from '@ant-design/icons';
-import SocialZone from '../../socialZone/socialZone';
-import MenuRigth from './Menus/MenuRigth';
-const { Sider } = Layout;
+import { Layout, Drawer, Button, Badge } from 'antd'
+import { MenuUnfoldOutlined, MessageOutlined } from '@ant-design/icons'
+import SocialZone from '../../socialZone/socialZone'
+import MenuRigth from './Menus/MenuRigth'
+const { Sider } = Layout
 const InteractiveZone = () => {
   return (
     <>
@@ -17,7 +17,8 @@ const InteractiveZone = () => {
           }
           size="large"
           onClick={this.showDrawerMobile}
-          style={this.state.visibleChat ? { display: 'none' } : {}}></Button>
+          style={this.state.visibleChat ? { display: 'none' } : {}}
+        ></Button>
       </div>
       <Drawer
         height={450}
@@ -26,7 +27,8 @@ const InteractiveZone = () => {
         onClose={this.onClose}
         visible={this.state.visibleChat}
         maskClosable
-        className="drawerMobile">
+        className="drawerMobile"
+      >
         <SocialZone
           updateChat={this.state.updateChat}
           collapse={this.state.collapsed}
@@ -97,7 +99,7 @@ const InteractiveZone = () => {
         </Sider>
       )}
     </>
-  );
-};
+  )
+}
 
-export default InteractiveZone;
+export default InteractiveZone

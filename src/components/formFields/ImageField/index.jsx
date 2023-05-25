@@ -1,41 +1,37 @@
-import { Input } from 'antd';
-import { concat, omit, pick } from 'ramda';
-import { Field } from 'formik';
-import { useIntl } from 'react-intl';
-import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop';
+import { concat, omit, pick } from 'ramda'
+import { Field } from 'formik'
+import ImageUploaderDragAndDrop from '@components/imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 
-const FORMIK_PROPS_KEYS = ['form', 'field', 'meta'];
-const FORM_ITEM_PROPS_KEYS = ['label', 'required'];
-const NOT_PROPS_KEYS = concat(FORMIK_PROPS_KEYS, FORM_ITEM_PROPS_KEYS);
+const FORMIK_PROPS_KEYS = ['form', 'field', 'meta']
+const FORM_ITEM_PROPS_KEYS = ['label', 'required']
+const NOT_PROPS_KEYS = concat(FORMIK_PROPS_KEYS, FORM_ITEM_PROPS_KEYS)
 
 function ImageField(rawProps) {
-  const intl = useIntl();
-  const ancho = '200';
-  const alto = '200';
-  const props = omit(NOT_PROPS_KEYS, rawProps);
-  const formItemProps = pick(FORM_ITEM_PROPS_KEYS, rawProps);
+  const ancho = '200'
+  const alto = '200'
+  const props = omit(NOT_PROPS_KEYS, rawProps)
+  console.warn('not used', { props })
+  const formItemProps = pick(FORM_ITEM_PROPS_KEYS, rawProps)
 
-  const { name } = rawProps;
+  const { name } = rawProps
 
   const handleChange = (newValue, form, field) => {
-    form.setFieldValue(field.name, newValue);
-  };
+    form.setFieldValue(field.name, newValue)
+  }
 
   const handleBlur = (form, field) => {
-    form.setFieldTouched(field.name, true);
-  };
+    form.setFieldTouched(field.name, true)
+  }
   //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
 
   const handleImage = (imageUrl, field, form) => {
-    handleChange(imageUrl, form, field);
-    handleBlur(form, field);
-  };
+    handleChange(imageUrl, form, field)
+    handleBlur(form, field)
+  }
 
   return (
     <Field name={name}>
-      {({ field, form, meta }) => {
-        const fieldError = meta.touched && meta.error;
-
+      {({ field, form }) => {
         return (
           <div>
             <label style={{ marginTop: '2%' }}>
@@ -49,10 +45,10 @@ function ImageField(rawProps) {
               height={alto}
             />
           </div>
-        );
+        )
       }}
     </Field>
-  );
+  )
 }
 
-export default ImageField;
+export default ImageField

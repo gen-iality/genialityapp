@@ -11,12 +11,11 @@ import {
   Select,
   TimePicker,
   DatePicker,
-  Form,
   Divider,
 } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
 import 'react-day-picker/lib/style.css'
-import { useContextNewEvent } from '@context/newEventContext'
+import { NewEventActionEnum, useNewEventContext } from '@context/newEventContext'
 import { PlansApi } from '@helpers/request'
 import ModalOrgListCreate from './ModalOrgListCreate'
 /**
@@ -38,15 +37,16 @@ dayjs.extend(localeData)
 dayjs.extend(weekOfYear)
 dayjs.extend(weekYear)
 
-
 const { Text, Title, Paragraph } = Typography
 
 export interface InitialNewEventFormSectionProps {
-  currentUser?: any,
-  orgId?: string,
+  currentUser?: any
+  orgId?: string
 }
 
-const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionProps> = (props) => {
+const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionProps> = (
+  props,
+) => {
   const {
     showModal,
     isModalVisible,
@@ -64,7 +64,7 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
     templateId,
     dispatch,
     state,
-  } = useContextNewEvent()
+  } = useNewEventContext()
 
   const cUser = props.currentUser
 
@@ -76,8 +76,7 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
 
   useEffect(() => {
     if (!cUser?._id) return
-    PlansApi.getCurrentConsumptionPlanByUsers(cUser?._id)
-      .then(setUserConsumption)
+    PlansApi.getCurrentConsumptionPlanByUsers(cUser?._id).then(setUserConsumption)
   }, [cUser])
 
   useEffect(() => {
@@ -85,7 +84,7 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
       selectTemplate(
         state.selectOrganization.template_properties
           ? state.selectOrganization?.template_properties[0]._id['$oid']
-          : undefined
+          : undefined,
       )
     }
   }, [state.selectOrganization, selectTemplate])
@@ -94,6 +93,14 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
     <div className="step-information">
       <Space direction="vertical" size="middle" style={{ marginBottom: '30px' }}>
         <div>
+          <Paragraph>
+            Curso de tipo:{' '}
+            {state.event_type === 'certification'
+              ? 'Certificación'
+              : ['onlineEvent', undefined, null].includes(state.event_type)
+              ? 'Genérico online'
+              : state.event_type.toString()}
+          </Paragraph>
           <Text>
             Nombre del curso <span className="text-color">*</span>
           </Text>
@@ -106,7 +113,9 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
           {containsError('name') && (
             <Col>
               {' '}
-              <small className="text-color">Ingrese un nombre correcto para el curso</small>
+              <small className="text-color">
+                Ingrese un nombre correcto para el curso
+              </small>
             </Col>
           )}
         </div>
@@ -125,9 +134,18 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
           {state.organizations.length > 0 && (
             <div>
               <p>
-                Este curso pertenecerá a la organización | <b>{state?.selectOrganization?.name}</b>
+                Este curso pertenecerá a la organización |{' '}
+                <b>{state?.selectOrganization?.name}</b>
               </p>
-              <Button block onClick={() => dispatch({ type: 'VISIBLE_MODAL', payload: { visible: true } })}>
+              <Button
+                block
+                onClick={() =>
+                  dispatch({
+                    type: NewEventActionEnum.VISIBLE_MODAL,
+                    payload: { visible: true },
+                  })
+                }
+              >
                 Cambiar de organización
               </Button>
             </div>
@@ -142,10 +160,12 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
               style={{ minWidth: '400px' }}
               value={templateId}
               onChange={handleChange}
-              options={state.selectOrganization.template_properties.map((template: any) => ({
-                value: template._id['$oid'],
-                label: template.name,
-              }))}
+              options={state.selectOrganization.template_properties.map(
+                (template: any) => ({
+                  value: template._id['$oid'],
+                  label: template.name,
+                }),
+              )}
             />
           </Space>
         )}
@@ -201,10 +221,12 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
                     allowClear={false}
                     use12Hours
                     value={dayjs(selectedHours.from) as unknown as any}
-                    onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours, at: hours })}
+                    onChange={(hours) =>
+                      changeSelectHours({ ...selectedHours, from: hours, at: hours })
+                    }
                   />
                 </Space>
-                
+
                 <Space>
                   <div className="modal-horas">
                     <span>a:</span>
@@ -215,13 +237,16 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
                     allowClear={false}
                     use12Hours
                     value={dayjs(selectedHours.at) as unknown as any}
-                    onChange={(hours) => changeSelectHours({ ...selectedHours, at: hours })}
+                    onChange={(hours) =>
+                      changeSelectHours({ ...selectedHours, at: hours })
+                    }
                   />
                 </Space>
               </Space>
             </Card>
             <Paragraph type="secondary" style={{ marginTop: '10px' }}>
-              Podrás ajustar las fechas en la sección <strong>Datos del curso</strong> una vez lo hayas creado.
+              Podrás ajustar las fechas en la sección <strong>Datos del curso</strong> una
+              vez lo hayas creado.
             </Paragraph>
           </Col>
         </Row>

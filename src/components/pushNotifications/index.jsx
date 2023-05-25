@@ -1,53 +1,53 @@
-import { useState, useEffect } from 'react';
-import Header from '@antdComponents/Header';
-import Table from '@antdComponents/Table';
-import { Button } from 'antd';
-import { SendOutlined } from '@ant-design/icons';
-import { UsersApi } from '@helpers/request';
-import { getColumnSearchProps } from '../speakers/getColumnSearch';
-import ModalNotifications from './modalNotificacions';
+import { useState, useEffect } from 'react'
+import Header from '@antdComponents/Header'
+import Table from '@antdComponents/Table'
+import { Button } from 'antd'
+import { SendOutlined } from '@ant-design/icons'
+import { UsersApi } from '@helpers/request'
+import { getColumnSearchProps } from '../speakers/getColumnSearch'
+import ModalNotifications from './modalNotificacions'
 
 function pushNotification(props) {
-  const { _id: eventId, name: eventName } = props.event;
-  const [columnsData, setColumnsData] = useState({});
-  const [isLoading, setIstloading] = useState(true);
-  const [listUsersWithNotifications, setListUsersWithNotifications] = useState([]);
-  const [modalSendNotificationVisible, setModalSendNotificationVisible] = useState(false);
-  const [userToNotify, setUserToNotify] = useState(false);
+  const { _id: eventId, name: eventName } = props.event
+  const [columnsData, setColumnsData] = useState({})
+  const [isLoading, setIstloading] = useState(true)
+  const [listUsersWithNotifications, setListUsersWithNotifications] = useState([])
+  const [modalSendNotificationVisible, setModalSendNotificationVisible] = useState(false)
+  const [userToNotify, setUserToNotify] = useState(false)
 
   async function usersWithNotificationsEnabled() {
-    const { data } = await UsersApi.getAll(eventId);
+    const { data } = await UsersApi.getAll(eventId)
     if (data) {
-      const list = [];
-      data.forEach(function(data) {
-        list.push({ ...data.properties, _id: data._id });
-      });
-      const fiteredList = list.filter((userList) => userList.token);
-      setListUsersWithNotifications(fiteredList);
-      setIstloading(false);
+      const list = []
+      data.forEach(function (data) {
+        list.push({ ...data.properties, _id: data._id })
+      })
+      const fiteredList = list.filter((userList) => userList.token)
+      setListUsersWithNotifications(fiteredList)
+      setIstloading(false)
     }
   }
 
   useEffect(() => {
-    usersWithNotificationsEnabled();
-  }, []);
+    usersWithNotificationsEnabled()
+  }, [])
 
   const notifyEveryoneButton = (
     <Button
       type="primary"
       onClick={() => {
-        setUserToNotify();
-        setModalSendNotificationVisible(true);
+        setUserToNotify()
+        setModalSendNotificationVisible(true)
       }}
       icon={<SendOutlined />}
     >
       Notificación masiva
     </Button>
-  );
+  )
 
   function extraField(params) {
-    setUserToNotify(params);
-    setModalSendNotificationVisible(true);
+    setUserToNotify(params)
+    setModalSendNotificationVisible(true)
   }
 
   const columns = [
@@ -61,7 +61,7 @@ function pushNotification(props) {
       dataIndex: 'email',
       ...getColumnSearchProps('email', columnsData),
     },
-  ];
+  ]
 
   return (
     <>
@@ -92,7 +92,7 @@ function pushNotification(props) {
         extraFnTitle="Enviar notificación a este usuario"
       />
     </>
-  );
+  )
 }
 
-export default pushNotification;
+export default pushNotification

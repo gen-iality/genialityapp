@@ -1,159 +1,182 @@
 import {
   getLiveStreamStatus,
-  getVideosLiveStream,
   startRecordingLiveStream,
   stopRecordingLiveStream,
-} from '@adaptors/gcoreStreamingApi';
-import { message } from 'antd';
+} from '@adaptors/gcoreStreamingApi'
+import { message } from 'antd'
 
-import { createContext, useState, useEffect, useContext, useReducer } from 'react';
-import Service from '@components/agenda/roomManager/service';
-import { fireRealtime, firestore } from '@helpers/firebase';
-import { CurrentEventContext } from './eventContext';
-import { CurrentEventUserContext } from './eventUserContext';
-import { DispatchMessageService } from './MessageService';
-export const AgendaContext = createContext();
+import { createContext, useState, useEffect, useContext, useReducer } from 'react'
+import Service from '@components/agenda/roomManager/service'
+import { fireRealtime, firestore } from '@helpers/firebase'
+import { CurrentEventContext } from './eventContext'
+import { StateMessage } from './MessageService'
+export const AgendaContext = createContext()
 
 const initialState = {
   meeting_id: null,
-};
+}
 
 export const AgendaContextProvider = ({ children }) => {
-  const [activityState, activityDispatch] = useReducer(reducer, initialState);
-  const [chat, setChat] = useState(false);
-  const [activityEdit, setActivityEdit] = useState();
-  const [surveys, setSurveys] = useState(false);
-  const [games, setGames] = useState(false);
-  const [attendees, setAttendees] = useState(false);
-  const [host_id, setHostId] = useState(null);
-  const [host_name, setHostName] = useState(null);
-  const [habilitar_ingreso, setHabilitarIngreso] = useState('');
-  const [platform, setPlatform] = useState('wowza');
-  const [vimeo_id, setVimeoId] = useState('');
-  const [name_host, setNameHost] = useState('');
-  const [avalibleGames, setAvailableGames] = useState([]);
-  const [isPublished, setIsPublished] = useState(true);
-  const [meeting_id, setMeetingId] = useState(null);
-  const [roomStatus, setRoomStatus] = useState('');
-  const [select_host_manual, setSelect_host_manual] = useState(false);
-  const cEvent = useContext(CurrentEventContext);
-  const [transmition, setTransmition] = useState('EviusMeet'); //EviusMeet para cuando se tenga terminada
-  const [useAlreadyCreated, setUseAlreadyCreated] = useState(true);
-  const [request, setRequest] = useState({});
-  const [requestList, setRequestList] = useState([]);
-  const [refActivity, setRefActivity] = useState(null);
-  const [typeActivity, setTypeActivity] = useState(undefined);
-  const [activityName, setActivityName] = useState(null);
-  const [dataLive, setDataLive] = useState(null);
-  const [timerId, setTimerId] = useState(null);
-  const [recordings, setRecordings] = useState([]);
-  const [loadingRecord, setLoadingRecord] = useState(false);
-  const [record, setRecord] = useState('start');
+  const [activityState, activityDispatch] = useReducer(reducer, initialState)
+  const [chat, setChat] = useState(false)
+  const [activityEdit, setActivityEdit] = useState()
+  const [surveys, setSurveys] = useState(false)
+  const [games, setGames] = useState(false)
+  const [attendees, setAttendees] = useState(false)
+  const [host_id, setHostId] = useState(null)
+  const [host_name, setHostName] = useState(null)
+  const [habilitar_ingreso, setHabilitarIngreso] = useState('')
+  const [platform, setPlatform] = useState('wowza')
+  const [vimeo_id, setVimeoId] = useState('')
+  const [name_host, setNameHost] = useState('')
+  const [avalibleGames, setAvailableGames] = useState([])
+  const [isPublished, setIsPublished] = useState(true)
+  const [meeting_id, setMeetingId] = useState(null)
+  const [roomStatus, setRoomStatus] = useState('')
+  const [select_host_manual, setSelect_host_manual] = useState(false)
+  const cEvent = useContext(CurrentEventContext)
+  const [transmition, setTransmition] = useState('EviusMeet') //EviusMeet para cuando se tenga terminada
+  const [useAlreadyCreated, setUseAlreadyCreated] = useState(true)
+  const [request, setRequest] = useState({})
+  const [requestList, setRequestList] = useState([])
+  const [refActivity, setRefActivity] = useState(null)
+  const [typeActivity, setTypeActivity] = useState(undefined)
+  const [activityName, setActivityName] = useState(null)
+  const [dataLive, setDataLive] = useState(null)
+  const [timerId, setTimerId] = useState(null)
+  const [recordings, setRecordings] = useState([])
+  const [loadingRecord, setLoadingRecord] = useState(false)
+  const [record, setRecord] = useState('start')
 
   function reducer(state, action) {
-    /* console.log('actiondata', action); */
     switch (action.type) {
       case 'meeting_created':
-        /* console.log('meeting_created', action); */
-        return { ...state, meeting_id: action.meeting_id };
+        return { ...state, meeting_id: action.meeting_id }
       case 'meeting_delete':
-        return { ...state, meeting_id: null };
+        return { ...state, meeting_id: null }
       case 'stop':
-        return { ...state, isRunning: false };
+        return { ...state, isRunning: false }
       case 'reset':
-        return { isRunning: false, time: 0 };
+        return { isRunning: false, time: 0 }
       case 'tick':
-        return { ...state, time: state.time + 1 };
+        return { ...state, time: state.time + 1 }
       default:
-        throw new Error();
+        throw new Error()
     }
   }
 
   //Un patch temporal mientras la transisicón a reducer/store
   useEffect(() => {
-    setMeetingId(activityState.meeting_id); //esta linea es temporal mejor reeplazarla por el store del reducer
-  }, [activityState.meeting_id]);
+    setMeetingId(activityState.meeting_id) //esta linea es temporal mejor reeplazarla por el store del reducer
+  }, [activityState.meeting_id])
 
   useEffect(() => {
     if (dataLive) {
-      setRecord(dataLive.recording ? 'stop' : 'start');
+      setRecord(dataLive.recording ? 'stop' : 'start')
     }
-  }, [dataLive]);
+  }, [dataLive])
 
   async function obtenerDetalleActivity() {
-    console.log('8. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit);
+    console.log('8. OBTENER DETALLE ACTIVITY==>', cEvent.value._id, activityEdit)
 
-    const service = new Service(firestore);
-    const hasVideoconference = await service.validateHasVideoconference(cEvent.value._id, activityEdit);
-    console.log('8. EDIT HAS VIDEO CONFERENCE===>', hasVideoconference);
+    const service = new Service(firestore)
+    const hasVideoconference = await service.validateHasVideoconference(
+      cEvent.value._id,
+      activityEdit,
+    )
+    console.log('8. EDIT HAS VIDEO CONFERENCE===>', hasVideoconference)
     if (hasVideoconference) {
-      const configuration = await service.getConfiguration(cEvent.value._id, activityEdit);
+      const configuration = await service.getConfiguration(cEvent.value._id, activityEdit)
 
-      console.log('8. CONFIGURATION==>', configuration);
-      setIsPublished(typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true);
-      setPlatform(configuration.platform ? configuration.platform : 'wowza');
-      setMeetingId(configuration.meeting_id ? configuration.meeting_id : null);
+      console.log('8. CONFIGURATION==>', configuration)
+      setIsPublished(
+        typeof configuration.isPublished !== 'undefined'
+          ? configuration.isPublished
+          : true,
+      )
+      setPlatform(configuration.platform ? configuration.platform : 'wowza')
+      setMeetingId(configuration.meeting_id ? configuration.meeting_id : null)
       setRoomStatus(
         configuration?.habilitar_ingreso == null
           ? ''
           : configuration.habilitar_ingreso
           ? configuration.habilitar_ingreso
-          : ''
-      );
-      setTransmition(configuration.transmition || null);
-      setAvailableGames(configuration.avalibleGames || []);
-      setChat(configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false);
-      setSurveys(configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false);
-      setGames(configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false);
-      setAttendees(configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false);
-      setHostId(typeof configuration.host_id !== 'undefined' ? configuration.host_id : null);
-      setHostName(typeof configuration.host_name !== 'undefined' ? configuration.host_name : null);
-      setHabilitarIngreso(configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '');
-      setSelect_host_manual(configuration.select_host_manual ? configuration.select_host_manual : false);
-      setTypeActivity(configuration.typeActivity || null);
-      setDataLive(null);
+          : '',
+      )
+      setTransmition(configuration.transmition || null)
+      setAvailableGames(configuration.avalibleGames || [])
+      setChat(
+        configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false,
+      )
+      setSurveys(
+        configuration.tabs && configuration.tabs.surveys
+          ? configuration.tabs.surveys
+          : false,
+      )
+      setGames(
+        configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false,
+      )
+      setAttendees(
+        configuration.tabs && configuration.tabs.attendees
+          ? configuration.tabs.attendees
+          : false,
+      )
+      setHostId(
+        typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
+      )
+      setHostName(
+        typeof configuration.host_name !== 'undefined' ? configuration.host_name : null,
+      )
+      setHabilitarIngreso(
+        configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '',
+      )
+      setSelect_host_manual(
+        configuration.select_host_manual ? configuration.select_host_manual : false,
+      )
+      setTypeActivity(configuration.typeActivity || null)
+      setDataLive(null)
     } else {
-      initializeState();
+      initializeState()
     }
   }
 
   useEffect(() => {
     if (activityEdit) {
-      obtenerDetalleActivity();
+      obtenerDetalleActivity()
     } else {
-      initializeState();
+      initializeState()
     }
-  }, [activityEdit]);
+  }, [activityEdit])
 
   // Funcion que permite reinicializar los estados ya que al agregar o editar otra lección estos toman valores anteriores
   const initializeState = () => {
-    setIsPublished(true);
-    setPlatform('wowza');
-    setMeetingId(null);
-    setRoomStatus('');
-    setTransmition('EviusMeet');
-    setAvailableGames([]);
-    setChat(false);
-    setSurveys(false);
-    setGames(false);
-    setAttendees(false);
-    setHostId(null);
-    setHostName(null);
-    setHabilitarIngreso('');
-    setSelect_host_manual(false);
-    setTypeActivity(null);
-    setDataLive(null);
-  };
+    setIsPublished(true)
+    setPlatform('wowza')
+    setMeetingId(null)
+    setRoomStatus('')
+    setTransmition('EviusMeet')
+    setAvailableGames([])
+    setChat(false)
+    setSurveys(false)
+    setGames(false)
+    setAttendees(false)
+    setHostId(null)
+    setHostName(null)
+    setHabilitarIngreso('')
+    setSelect_host_manual(false)
+    setTypeActivity(null)
+    setDataLive(null)
+  }
 
   const getRequestByActivity = (refActivity) => {
     fireRealtime
       .ref(refActivity)
       .orderByChild('date')
       .on('value', (snapshot) => {
-        const listRequest = {};
-        const listRequestArray = [];
+        const listRequest = {}
+        const listRequestArray = []
         if (snapshot.exists()) {
-          const data = snapshot.val();
+          const data = snapshot.val()
           if (Object.keys(data).length > 0) {
             Object.keys(data).map((requestData) => {
               listRequest[requestData] = {
@@ -162,147 +185,152 @@ export const AgendaContextProvider = ({ children }) => {
                 title: data[requestData].name,
                 date: data[requestData].date,
                 active: data[requestData].active || false,
-              };
+              }
               listRequestArray.push({
                 key: requestData,
                 id: data[requestData].id,
                 title: data[requestData].name,
                 date: data[requestData].date,
                 active: data[requestData].active || false,
-              });
-            });
-            setRequest(listRequest);
-            setRequestList(listRequestArray);
+              })
+            })
+            setRequest(listRequest)
+            setRequestList(listRequestArray)
           }
         } else {
-          setRequest({});
-          setRequestList([]);
+          setRequest({})
+          setRequestList([])
         }
-      });
-  };
+      })
+  }
   const addRequest = (refActivity, request) => {
     if (request) {
-      fireRealtime.ref(refActivity).set(request);
+      fireRealtime.ref(refActivity).set(request)
     }
-  };
+  }
 
   const removeRequest = async (refActivity, key) => {
     if (key) {
-      await fireRealtime
-        .ref(refActivity)
-        .child(key)
-        .remove();
+      await fireRealtime.ref(refActivity).child(key).remove()
     }
-  };
+  }
 
   const removeAllRequest = async (refActivity) => {
     if (refActivity) {
-      await fireRealtime.ref(refActivity).remove();
+      await fireRealtime.ref(refActivity).remove()
     }
-  };
+  }
 
   const approvedOrRejectedRequest = async (refActivity, key, status) => {
-    console.log('1. APROVE ACA=>', refActivity);
+    console.log('1. APROVE ACA=>', refActivity)
     if (refActivity) {
-      await fireRealtime
-        .ref(`${refActivity}`)
-        .child(key)
-        .update({ active: status });
+      await fireRealtime.ref(`${refActivity}`).child(key).update({ active: status })
     }
-  };
+  }
 
   const prepareData = (datos) => {
     const roomInfo = {
       platform: datos?.platformNew || platform,
       // Variable que guarda la data que se genera al crear un tipo de lección validación que permite conservar estado o limpiarlo
-      meeting_id: datos?.data ? datos?.data : datos?.type !== 'delete' ? meeting_id : null,
+      meeting_id: datos?.data
+        ? datos?.data
+        : datos?.type !== 'delete'
+        ? meeting_id
+        : null,
       isPublished: isPublished ? isPublished : false,
       host_id,
       host_name,
       avalibleGames,
       habilitar_ingreso:
-        datos?.type === 'delete' ? '' : datos?.habilitar_ingreso ? datos?.habilitar_ingreso : roomStatus,
+        datos?.type === 'delete'
+          ? ''
+          : datos?.habilitar_ingreso
+          ? datos?.habilitar_ingreso
+          : roomStatus,
       transmition: transmition || null,
       //PERMITE REINICIALIZAR EL TIPO DE LECCIÓN O EN SU CASO BORRARLO  Y CONSERVAR EL ESTADO ACTUAL (type=delete)
       typeActivity:
-        datos?.type && datos?.type !== 'delete' ? datos?.type : datos?.type == 'delete' ? null : typeActivity,
-    };
-    const tabs = { chat, surveys, games, attendees };
-    return { roomInfo, tabs };
-  };
+        datos?.type && datos?.type !== 'delete'
+          ? datos?.type
+          : datos?.type == 'delete'
+          ? null
+          : typeActivity,
+    }
+    const tabs = { chat, surveys, games, attendees }
+    return { roomInfo, tabs }
+  }
 
   const saveConfig = async (data = null, notify = 1) => {
-    const respuesta = prepareData(data);
+    const respuesta = prepareData(data)
     if (respuesta) {
-      const { roomInfo, tabs } = respuesta;
-      const activity_id = activityEdit;
-      const service = new Service(firestore);
+      const { roomInfo, tabs } = respuesta
+      const activity_id = activityEdit
+      const service = new Service(firestore)
       try {
-        const result = await service.createOrUpdateActivity(cEvent.value._id, activity_id, roomInfo, tabs);
+        const result = await service.createOrUpdateActivity(
+          cEvent.value._id,
+          activity_id,
+          roomInfo,
+          tabs,
+        )
         // await TypesAgendaApi.create(cEvent.value._id, data);
         if (result && notify) {
-          DispatchMessageService({
-            type: 'success',
-            msj: result.message,
-            action: 'show',
-          });
+          StateMessage.show(null, 'success', result.message)
         }
-        return result;
+        return result
       } catch (err) {
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Error en la configuración!',
-          action: 'show',
-        });
+        StateMessage.show(null, 'error', 'Error en la configuración!')
       }
     }
-  };
+  }
   const stopInterval = () => {
     if (timerId) {
-      clearInterval(timerId);
+      clearInterval(timerId)
     }
-  };
+  }
   const executer_startMonitorStatus = async () => {
-    let live_stream_status = null;
-    let liveLocal = false;
+    let live_stream_status = null
+    // let liveLocal = false
     try {
-      live_stream_status = await getLiveStreamStatus(meeting_id);
-      setDataLive(live_stream_status);
+      live_stream_status = await getLiveStreamStatus(meeting_id)
+      setDataLive(live_stream_status)
 
-      liveLocal = live_stream_status?.live;
+      // liveLocal = live_stream_status?.live
     } catch (e) {}
     if (!!live_stream_status?.active) {
-      const timer_id = setTimeout(executer_startMonitorStatus, 5000);
-      setTimerId(timer_id);
+      const timer_id = setTimeout(executer_startMonitorStatus, 5000)
+      setTimerId(timer_id)
     } else {
-      setDataLive(null);
+      setDataLive(null)
     }
-  };
+  }
 
   const obtainUrl = (type, data) => {
-    const previewBaseUrlVideo = import.meta.env.VITE_PLACEHOLDER_LIVE_TRANSMITION;
+    const previewBaseUrlVideo = import.meta.env.VITE_PLACEHOLDER_LIVE_TRANSMITION
     // 'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FLoading2.mp4?alt=media&token=8d898c96-b616-4906-ad58-1f426c0ad807';
-    let urlVideo;
+    let urlVideo
     switch (type) {
       case 'vimeo':
-        urlVideo = data?.includes('https://player.vimeo.com/video/') ? data : 'https://player.vimeo.com/video/' + data;
-        break;
+        urlVideo = data?.includes('https://player.vimeo.com/video/')
+          ? data
+          : 'https://player.vimeo.com/video/' + data
+        break
       case 'Youtube':
-        urlVideo = data?.includes('https://youtu.be/') ? data : 'https://youtu.be/' + data;
-        break;
+        urlVideo = data?.includes('https://youtu.be/') ? data : 'https://youtu.be/' + data
+        break
       case 'Transmisión':
-        urlVideo = !dataLive?.live ? previewBaseUrlVideo : dataLive.iframe_url;
-        break;
+        urlVideo = !dataLive?.live ? previewBaseUrlVideo : dataLive.iframe_url
+        break
       case 'EviusMeet':
-        urlVideo = !dataLive?.live ? previewBaseUrlVideo : dataLive.iframe_url;
-        break;
+        urlVideo = !dataLive?.live ? previewBaseUrlVideo : dataLive.iframe_url
+        break
       case 'Video':
-        const dataSplit = data.split('*');
-        console.log('dataSplit', dataSplit);
-        urlVideo = dataSplit[0];
-        break;
+        const dataSplit = data.split('*')
+        console.log('dataSplit', dataSplit)
+        urlVideo = dataSplit[0]
+        break
       default:
-        urlVideo = data;
+        urlVideo = data
     }
     // Se valida con url que contenga youtube debido a que react player no muestra video de gcore
     const visibleReactPlayer =
@@ -310,66 +338,64 @@ export const AgendaContextProvider = ({ children }) => {
         (type == 'Video' && data.includes('youtube')) ||
         (type == 'Video' && data.includes('vimeo'))) &&
         urlVideo) ||
-      (((dataLive?.live && !dataLive?.active) || (!dataLive?.live && !dataLive?.active)) &&
+      (((dataLive?.live && !dataLive?.active) ||
+        (!dataLive?.live && !dataLive?.active)) &&
         (type === 'Transmisión' || type === 'EviusMeet'))
         ? true
-        : false;
-    return { urlVideo, visibleReactPlayer };
-  };
+        : false
+    return { urlVideo, visibleReactPlayer }
+  }
 
   const deleteTypeActivity = async () => {
-    const { roomInfo, tabs } = prepareData({ type: 'delete' });
+    const { roomInfo, tabs } = prepareData({ type: 'delete' })
 
-    const activity_id = activityEdit;
-    const service = new Service(firestore);
+    const activity_id = activityEdit
+    const service = new Service(firestore)
     try {
-      const result = await service.createOrUpdateActivity(cEvent.value._id, activity_id, roomInfo, tabs);
+      const result = await service.createOrUpdateActivity(
+        cEvent.value._id,
+        activity_id,
+        roomInfo,
+        tabs,
+      )
       if (result) {
         // Clean status
-        setTypeActivity(null);
-        setMeetingId(null);
-        setRoomStatus('');
-        setDataLive(null);
-        DispatchMessageService({
-          type: 'success',
-          msj: result.message,
-          action: 'show',
-        });
+        setTypeActivity(null)
+        setMeetingId(null)
+        setRoomStatus('')
+        setDataLive(null)
+        StateMessage.show(null, 'success', result.message)
       }
-      return result;
+      return result
     } catch (err) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Error en la configuración!',
-        action: 'show',
-      });
+      StateMessage.show(null, 'error', 'Error en la configuración!')
     }
-  };
+  }
 
   const copyToClipboard = (data) => {
-    navigator.clipboard.writeText(data);
-    message.success('Copiado correctamente.!');
-  };
+    navigator.clipboard.writeText(data)
+    message.success('Copiado correctamente.!')
+  }
 
   const refreshActivity = () => {
-    obtenerDetalleActivity();
-  };
+    obtenerDetalleActivity()
+  }
 
   const startRecordTransmition = async () => {
-    setLoadingRecord(true);
-    const response = await startRecordingLiveStream(meeting_id);
-    console.log('response', response);
-    setLoadingRecord(false);
-    setRecord('stop');
-  };
+    setLoadingRecord(true)
+    const response = await startRecordingLiveStream(meeting_id)
+    console.log('response', response)
+    setLoadingRecord(false)
+    setRecord('stop')
+  }
 
   const stopRecordTransmition = async () => {
-    setLoadingRecord(true);
-    const response = await stopRecordingLiveStream(meeting_id);
-    console.log('response', response);
-    setLoadingRecord(false);
-    setRecord('start');
-  };
+    setLoadingRecord(true)
+    const response = await stopRecordingLiveStream(meeting_id)
+    console.log('response', response)
+    setLoadingRecord(false)
+    setRecord('start')
+  }
 
   return (
     <AgendaContext.Provider
@@ -439,10 +465,11 @@ export const AgendaContextProvider = ({ children }) => {
         stopRecordTransmition,
         loadingRecord,
         record,
-      }}>
+      }}
+    >
       {children}
     </AgendaContext.Provider>
-  );
-};
+  )
+}
 
-export default AgendaContext;
+export default AgendaContext

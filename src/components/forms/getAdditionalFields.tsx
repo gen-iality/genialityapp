@@ -1,141 +1,155 @@
-import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Collapse, Divider, Form, Input, Select, Upload, DatePicker } from 'antd';
-import ImgCrop from 'antd-img-crop';
-import { useIntl } from 'react-intl';
-import { ApiUrl, areaCode } from '@helpers/constants';
-import { beforeUpload, getImagename } from '@Utilities/formUtils';
-import { useEffect, useState } from 'react';
+import { InboxOutlined, UploadOutlined } from '@ant-design/icons'
+import {
+  Button,
+  Checkbox,
+  Collapse,
+  Divider,
+  Form,
+  Input,
+  Select,
+  Upload,
+  DatePicker,
+} from 'antd'
+import ImgCrop from 'antd-img-crop'
+import { useIntl } from 'react-intl'
+import { ApiUrl, areaCode } from '@helpers/constants'
+import { beforeUpload, getImagename } from '@Utilities/formUtils'
+import { useEffect, useState } from 'react'
 /**
  * This solution is distributed as is:
  * https://github.com/react-component/picker/issues/123#issuecomment-728755491
  */
-import dayjs from 'dayjs';
-import advancedFormat from 'dayjs/plugin/advancedFormat';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import localeData from 'dayjs/plugin/localeData';
-import weekday from 'dayjs/plugin/weekday';
-import weekOfYear from 'dayjs/plugin/weekOfYear';
-import weekYear from 'dayjs/plugin/weekYear';
-dayjs.extend(customParseFormat);
-dayjs.extend(advancedFormat);
-dayjs.extend(weekday);
-dayjs.extend(localeData);
-dayjs.extend(weekOfYear);
-dayjs.extend(weekYear);
-import { deleteFireStorageData } from '@Utilities/deleteFireStorageData';
-import { countryApi } from '@helpers/request';
+import dayjs from 'dayjs'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import localeData from 'dayjs/plugin/localeData'
+import weekday from 'dayjs/plugin/weekday'
+import weekOfYear from 'dayjs/plugin/weekOfYear'
+import weekYear from 'dayjs/plugin/weekYear'
+dayjs.extend(customParseFormat)
+dayjs.extend(advancedFormat)
+dayjs.extend(weekday)
+dayjs.extend(localeData)
+dayjs.extend(weekOfYear)
+dayjs.extend(weekYear)
+import { deleteFireStorageData } from '@Utilities/deleteFireStorageData'
+import { countryApi } from '@helpers/request'
 /**TODO::ocaciona error en ios */
 
-import { async } from 'ramda-adjunct';
-const { Option } = Select;
-const { Panel } = Collapse;
-const { TextArea } = Input;
-const { Dragger } = Upload;
+const { Option } = Select
+const { Panel } = Collapse
+const { TextArea } = Input
+const { Dragger } = Upload
 
 const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
-  const intl = useIntl();
-  const attendeeProperties = attendee?.properties || {};
-  let areacodeselected = attendeeProperties['code'] || '+57';
-  let onlyAreacodeselected = attendeeProperties['onlyCodearea'] || '+57';
-  const dateFormat = 'YYYY/MM/DD';
+  const intl = useIntl()
+  const attendeeProperties = attendee?.properties || {}
+  let areacodeselected = attendeeProperties['code'] || '+57'
+  let onlyAreacodeselected = attendeeProperties['onlyCodearea'] || '+57'
+  const dateFormat = 'YYYY/MM/DD'
 
-  const [country, setCountry] = useState({ name: '', countryCode: '', inputName: '' });
-  const [region, setRegion] = useState({ name: '', regionCode: '', inputName: '' });
-  const [city, setCity] = useState({ name: '', regionCode: '', inputName: '' });
-  const [countries, setCountries] = useState([]);
-  const [regiones, setRegiones] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [country, setCountry] = useState({ name: '', countryCode: '', inputName: '' })
+  const [setRegion] = useState({ name: '', regionCode: '', inputName: '' })
+  const [setCity] = useState({ name: '', regionCode: '', inputName: '' })
+  const [countries, setCountries] = useState([])
+  const [regiones, setRegiones] = useState([])
+  const [cities, setCities] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const getCountries = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await countryApi.getCountries();
-      setCountries(response);
+      const response = await countryApi.getCountries()
+      setCountries(response)
     } catch (error) {
-      setCountries([]);
+      setCountries([])
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   const getState = async (country: string) => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await countryApi.getStatesByCountry(country);
+      const response = await countryApi.getStatesByCountry(country)
 
-      setRegiones(response);
+      setRegiones(response)
     } catch (error) {
-      setRegiones([]);
+      setRegiones([])
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   const getCities = async (country: string, state: string) => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await countryApi.getCities(country, state);
+      const response = await countryApi.getCities(country, state)
 
-      setCities(response);
+      setCities(response)
     } catch (error) {
-      setCities([]);
+      setCities([])
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   const getCitiesByCountry = async (country: string) => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await countryApi.getCitiesByCountry(country);
+      const response = await countryApi.getCitiesByCountry(country)
 
-      setCities(response);
+      setCities(response)
     } catch (error) {
-      setCities([]);
+      setCities([])
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
   useEffect(() => {
-    getCountries();
+    getCountries()
     return () => {
-      setCountries([]);
-    };
-  }, []);
-  if (fields?.lenght === 0) return [];
+      setCountries([])
+    }
+  }, [])
+  if (fields?.lenght === 0) return []
 
   const additionalFormFields = fields.map((field: any, key: any) => {
     // se valida si el campo es visible solo el en cms,
-    if (field.visibleByAdmin && !visibleInCms) return;
+    if (field.visibleByAdmin && !visibleInCms) return
 
     //Este if es nuevo para poder validar las contraseñas viejos (nuevo flujo para no mostrar esos campos)
     if (field.name !== 'contrasena' && field.name !== 'password') {
-      let ImgUrl: any = '';
-      let rule = {};
-      const type = field.type || 'text';
-      const name = field.name;
-      const label = field.label;
-      const mandatory = field.mandatory;
-      const description = field.description;
-      const labelPosition = field.labelPosition;
-      const target = name;
+      let ImgUrl: any = ''
+      let rule = {}
+      const type = field.type || 'text'
+      const name = field.name
+      const label = field.label
+      const mandatory = field.mandatory
+      const description = field.description
+      const labelPosition = field.labelPosition
+      const target = name
 
-      let value = attendeeProperties.email || attendeeProperties.names ? attendeeProperties[target] : null;
+      let value =
+        attendeeProperties.email || attendeeProperties.names
+          ? attendeeProperties[target]
+          : null
 
       //esogemos el tipo de validación para email
-      rule = type === 'email' ? { ...rule, type: 'email' } : rule;
+      rule = type === 'email' ? { ...rule, type: 'email' } : rule
 
       rule =
         type == 'password'
           ? {
               required: true,
               pattern: new RegExp(/^[A-Za-z0-9_-]{8,}$/),
-              message: 'Mínimo 8 caracteres con letras y números, no se permiten caracteres especiales',
+              message:
+                'Mínimo 8 caracteres con letras y números, no se permiten caracteres especiales',
             }
-          : rule;
-      rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
-      console.log('sss', cities.length, type, regiones.length, regiones, rule);
+          : rule
+      rule =
+        name == 'email' || name == 'names' ? { required: true } : { required: mandatory }
+      console.log('sss', cities.length, type, regiones.length, regiones, rule)
       const validations =
         (type === 'region' && regiones.length == 0) ||
         (type === 'country' && countries.length == 0) ||
-        (type === 'city' && cities.length == 0);
+        (type === 'city' && cities.length == 0)
 
       let input = (
         <Form.Item initialValue={value} name={name} noStyle>
@@ -152,7 +166,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             key={key}
           />
         </Form.Item>
-      );
+      )
 
       if (type === 'codearea') {
         const prefixSelector = (
@@ -162,7 +176,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               optionFilterProp="children"
               style={{ fontSize: '12px', width: 155 }}
               onChange={(val) => {
-                areacodeselected = val;
+                areacodeselected = val
               }}
               placeholder="Código de area del pais"
             >
@@ -171,11 +185,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   <Option key={key} value={code.value}>
                     {`${code.label} (${code.value})`}
                   </Option>
-                );
+                )
               })}
             </Select>
           </Form.Item>
-        );
+        )
         input = (
           <Form.Item initialValue={value} name={name} noStyle>
             <Input
@@ -188,7 +202,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               placeholder="Numero de telefono"
             />
           </Form.Item>
-        );
+        )
       }
       if (type === 'onlyCodearea') {
         input = (
@@ -198,7 +212,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               optionFilterProp="children"
               style={{ width: '100%' }}
               onChange={(val) => {
-                onlyAreacodeselected = val;
+                onlyAreacodeselected = val
               }}
               placeholder="Código de area del pais"
             >
@@ -207,11 +221,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   <Option key={key} value={code.value}>
                     {`${code.label} (${code.value})`}
                   </Option>
-                );
+                )
               })}
             </Select>
           </Form.Item>
-        );
+        )
       }
 
       if (type === 'tituloseccion') {
@@ -226,12 +240,12 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             </div>
             <Divider />
           </>
-        );
+        )
       }
 
       if (type === 'multiplelisttable') {
-        let defaultValue = value;
-        if (typeof value === 'string') defaultValue = JSON.parse(value);
+        let defaultValue = value
+        if (typeof value === 'string') defaultValue = JSON.parse(value)
 
         input = field.options
           ? field.options.map((option: any, key: any) => {
@@ -239,32 +253,39 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                 <Option key={key} value={option.value}>
                   {option.label}
                 </Option>
-              );
+              )
             })
-          : [];
+          : []
 
         input = (
           <Form.Item initialValue={defaultValue} name={name} noStyle>
-            <Select mode="multiple" placeholder="Selecciona una o mas opciones" style={{ width: '100%' }}>
+            <Select
+              mode="multiple"
+              placeholder="Selecciona una o mas opciones"
+              style={{ width: '100%' }}
+            >
               {input}
             </Select>
           </Form.Item>
-        );
+        )
       }
 
       if (type === 'boolean') {
-        let textoError = '';
+        let textoError = ''
         if (mandatory) {
-          textoError = intl.formatMessage({ id: 'form.field.required' });
+          textoError = intl.formatMessage({ id: 'form.field.required' })
 
           rule = {
-            validator: (_: any, value: any) => (value ? Promise.resolve() : Promise.reject(textoError)),
-          };
+            validator: (_: any, value: any) =>
+              value ? Promise.resolve() : Promise.reject(textoError),
+          }
         } else {
           rule = {
             validator: (_: any, value: any) =>
-              value || !value || value == '' || value == undefined ? Promise.resolve() : Promise.reject(textoError),
-          };
+              value || !value || value == '' || value == undefined
+                ? Promise.resolve()
+                : Promise.reject(textoError),
+          }
         }
 
         return (
@@ -315,7 +336,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               </>
             }
           </div>
-        );
+        )
       }
 
       if (type === 'longtext') {
@@ -323,7 +344,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           <Form.Item initialValue={value} name={name} noStyle>
             <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} />
           </Form.Item>
-        );
+        )
       }
 
       if (type === 'multiplelist') {
@@ -332,11 +353,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             <Checkbox.Group
               options={field.options}
               onChange={(checkedValues) => {
-                value = JSON.stringify(checkedValues);
+                value = JSON.stringify(checkedValues)
               }}
             />
           </Form.Item>
-        );
+        )
       }
 
       if (type === 'file') {
@@ -350,8 +371,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               listType="text"
               beforeUpload={beforeUpload}
               onRemove={async (file: any) => {
-                const urlFile = file.url || file.response;
-                if (urlFile) await deleteFireStorageData(urlFile);
+                const urlFile = file.url || file.response
+                if (urlFile) await deleteFireStorageData(urlFile)
               }}
               // @ts-ignore: Unreachable code error
               defaultFileList={
@@ -373,7 +394,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               </>
             </Dragger>
           </Form.Item>
-        );
+        )
       }
 
       if (type === 'list') {
@@ -383,9 +404,9 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                 <Option key={key} value={option.value}>
                   {option.label}
                 </Option>
-              );
+              )
             })
-          : [];
+          : []
         input = (
           <Form.Item initialValue={value} name={name} noStyle>
             <Select style={{ width: '100%' }}>
@@ -393,7 +414,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               {input}
             </Select>
           </Form.Item>
-        );
+        )
       }
 
       if (type === 'country') {
@@ -404,9 +425,13 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               optionFilterProp="children"
               style={{ width: '100%' }}
               onChange={(nameCountry, aditionalData: any) => {
-                getState(aditionalData.key);
-                getCitiesByCountry(aditionalData.key);
-                setCountry({ name: nameCountry, countryCode: aditionalData.key, inputName: name });
+                getState(aditionalData.key)
+                getCitiesByCountry(aditionalData.key)
+                setCountry({
+                  name: nameCountry,
+                  countryCode: aditionalData.key,
+                  inputName: name,
+                })
               }}
               disabled={loading || countries.length === 0}
               loading={loading}
@@ -417,11 +442,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   <Option key={country.iso2} value={country.name}>
                     {country.name}
                   </Option>
-                );
+                )
               })}
             </Select>
           </Form.Item>
-        );
+        )
       }
       if (type === 'region') {
         input = (
@@ -431,8 +456,12 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               optionFilterProp="children"
               style={{ width: '100%' }}
               onChange={(nameRegion, aditionalData: any) => {
-                getCities(country.countryCode, aditionalData.key);
-                setRegion({ name: nameRegion, regionCode: aditionalData.key, inputName: name });
+                getCities(country.countryCode, aditionalData.key)
+                setRegion({
+                  name: nameRegion,
+                  regionCode: aditionalData.key,
+                  inputName: name,
+                })
               }}
               disabled={loading || regiones.length === 0}
               loading={loading}
@@ -443,11 +472,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   <Option key={regiones.iso2} value={regiones.name}>
                     {regiones.name}
                   </Option>
-                );
+                )
               })}
             </Select>
           </Form.Item>
-        );
+        )
       }
 
       if (type === 'city') {
@@ -460,7 +489,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               disabled={loading || cities.length === 0}
               loading={loading}
               onChange={(nameCity, aditionalData: any) => {
-                setCity({ name: nameCity, regionCode: aditionalData.key, inputName: name });
+                setCity({
+                  name: nameCity,
+                  regionCode: aditionalData.key,
+                  inputName: name,
+                })
               }}
               placeholder="Seleccione una ciudad"
             >
@@ -469,16 +502,21 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   <Option key={key} value={cityCode.name}>
                     {cityCode.name}
                   </Option>
-                );
+                )
               })}
             </Select>
           </Form.Item>
-        );
+        )
       }
 
       // Se debe quedar para rendrizar el campo imagen dentro del cms
       if (type === 'avatar') {
-        ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
+        ImgUrl =
+          ImgUrl !== ''
+            ? ImgUrl
+            : value !== '' && value !== null
+            ? [{ url: value }]
+            : undefined
 
         input = (
           <div style={{ textAlign: 'center' }}>
@@ -511,7 +549,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               </Upload>
             </ImgCrop>
           </div>
-        );
+        )
       }
 
       if (type === 'number') {
@@ -519,17 +557,17 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
           <Form.Item initialValue={value} name={name} noStyle>
             <Input type={type} />
           </Form.Item>
-        );
+        )
       }
 
       if (type === 'date') {
-        const defaultValue = value ? dayjs(value, dateFormat) : null;
+        const defaultValue = value ? dayjs(value, dateFormat) : null
         input = (
           <Form.Item initialValue={defaultValue} name={name} noStyle>
             {/*  @ts-ignore: Unreachable code error */}
             <DatePicker format={dateFormat} style={{ width: '100%' }} />
           </Form.Item>
-        );
+        )
       }
 
       return (
@@ -543,7 +581,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   // hidden={visible}
                   valuePropName={type === 'boolean' ? 'checked' : 'value'}
                   label={
-                    (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
+                    (labelPosition !== 'izquierda' || !labelPosition) &&
+                    type !== 'tituloseccion'
                       ? label
                       : '' && (labelPosition !== 'arriba' || !labelPosition)
                   }
@@ -575,11 +614,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
             )}
           </div>
         )
-      );
+      )
     }
-  });
+  })
 
-  return additionalFormFields;
-};
+  return additionalFormFields
+}
 
-export default getAdditionalFields;
+export default getAdditionalFields

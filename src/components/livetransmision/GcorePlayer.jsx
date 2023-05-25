@@ -1,60 +1,57 @@
-import { useContext, useEffect, useState, memo } from 'react';
-import ReactPlayer from 'react-player';
-import { getLiveStream } from '../../adaptors/gcoreStreamingApi';
-import VolumeOff from '@2fd/ant-design-icons/lib/VolumeOff';
-import { Button, Spin } from 'antd';
-import AgendaContext from '@context/AgendaContext';
-import { CurrentUserContext } from '@context/userContext';
-import { Grid } from 'antd';
+import { useContext, useEffect, useState, memo } from 'react'
+import ReactPlayer from 'react-player'
+import { getLiveStream } from '../../adaptors/gcoreStreamingApi'
+import { Spin } from 'antd'
+import AgendaContext from '@context/AgendaContext'
+import { Grid } from 'antd'
 
-const { useBreakpoint } = Grid;
+const { useBreakpoint } = Grid
 
 function GcorePlayer({ meeting_id, thereIsConnection }) {
-  const screens = useBreakpoint();
+  const screens = useBreakpoint()
 
   const defaultVideo =
-    'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2Fgeniality-loading-streaming.mp4?alt=media&token=97dc8cbf-dc80-477d-862c-6be0eeb11076';
+    'https://firebasestorage.googleapis.com/v0/b/geniality-sas.appspot.com/o/public%2Fgeniality-loading-streaming.mp4?alt=media&token=97dc8cbf-dc80-477d-862c-6be0eeb11076'
 
-  const { typeActivity, activityEdit } = useContext(AgendaContext);
-  const userContext = useContext(CurrentUserContext);
+  const { typeActivity } = useContext(AgendaContext)
 
-  const [platformurl, setPlatformurl] = useState(defaultVideo);
-  const [visibleReactPlayer, setVisibleReactPlayer] = useState(false);
-  const [conected, setConected] = useState('No');
+  const [platformurl, setPlatformurl] = useState(defaultVideo)
+  const [visibleReactPlayer, setVisibleReactPlayer] = useState(false)
+  const [conected, setConected] = useState('No')
 
   useEffect(() => {
-    if (!meeting_id) return;
+    if (!meeting_id) return
     if (!thereIsConnection) {
-      setConected('Yes');
-      setPlatformurl(defaultVideo);
-      setVisibleReactPlayer(true);
+      setConected('Yes')
+      setPlatformurl(defaultVideo)
+      setVisibleReactPlayer(true)
     } else if (thereIsConnection) {
       const asyncfunction = async () => {
-        setConected('Yes');
-        setPlatformurl('none');
-        const live_stream = await getLiveStream(meeting_id);
-        const url = live_stream.iframe_url;
-        visibleReactPlayer && setVisibleReactPlayer(false);
+        setConected('Yes')
+        setPlatformurl('none')
+        const live_stream = await getLiveStream(meeting_id)
+        const url = live_stream.iframe_url
+        visibleReactPlayer && setVisibleReactPlayer(false)
         /** se hace uso de un TimeOut para dar tiempo a wowza de inicializar la playList para que no devuelva error 404 la primera vez que el origen 'eviusMeets' envie data */
         setTimeout(() => {
-          const aditionalParameters = typeActivity !== 'url' ? '?muted=1&autoplay=1' : '';
-          setPlatformurl(url + aditionalParameters);
-        }, 2000);
-      };
-      asyncfunction();
+          const aditionalParameters = typeActivity !== 'url' ? '?muted=1&autoplay=1' : ''
+          setPlatformurl(url + aditionalParameters)
+        }, 2000)
+      }
+      asyncfunction()
     } else if (typeActivity === 'youTube') {
-      setVisibleReactPlayer(true);
-      setConected('Yes');
-      setPlatformurl('https://youtu.be/' + meeting_id);
+      setVisibleReactPlayer(true)
+      setConected('Yes')
+      setPlatformurl('https://youtu.be/' + meeting_id)
     } else {
-      setPlatformurl(meeting_id);
-      setVisibleReactPlayer(false);
-      setConected('Yes');
+      setPlatformurl(meeting_id)
+      setVisibleReactPlayer(false)
+      setConected('Yes')
     }
     return () => {
-      setPlatformurl(null);
-    };
-  }, [meeting_id, thereIsConnection, typeActivity]);
+      setPlatformurl(null)
+    }
+  }, [meeting_id, thereIsConnection, typeActivity])
 
   return (
     <>
@@ -89,7 +86,7 @@ function GcorePlayer({ meeting_id, thereIsConnection }) {
         )}
       </div>
     </>
-  );
+  )
 }
 
-export default memo(GcorePlayer);
+export default memo(GcorePlayer)

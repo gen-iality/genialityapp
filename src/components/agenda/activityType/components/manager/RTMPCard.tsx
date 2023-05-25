@@ -1,29 +1,29 @@
-import { Button, Card, Input, Space, Tooltip, Typography } from 'antd';
-import { CopyFilled } from '@ant-design/icons';
-import AgendaContext from '@context/AgendaContext';
-import { useContext, useEffect, useState } from 'react';
+import { Button, Card, Input, Space, Tooltip, Typography } from 'antd'
+import { CopyFilled } from '@ant-design/icons'
+import AgendaContext from '@context/AgendaContext'
+import { useContext, useEffect, useState } from 'react'
 
 type DataTRMP = {
-  rtmp: string,
-  password: string,
-};
+  rtmp: string
+  password: string
+}
 
 const description = `El Protocolo de mensajería en tiempo real te permite
-transmitir audio, video y datos a través de Internet.`;
+transmitir audio, video y datos a través de Internet.`
 
 const RTMPCard = () => {
-  const { dataLive, copyToClipboard } = useContext(AgendaContext);
-  const [dataRtmp, setDataRtmp] = useState<DataTRMP | null>(null);
+  const { dataLive, copyToClipboard } = useContext(AgendaContext)
+  const [dataRtmp, setDataRtmp] = useState<DataTRMP | null>(null)
 
   useEffect(() => {
     if (dataLive && dataLive.push_url) {
-      const data = dataLive.push_url.split('/');
-      const password: string = data[data.length - 1];
-      const rtmp: string = dataLive.push_url.replace(password, '');
-      console.debug('password:', password, rtmp);
-      setDataRtmp({ rtmp, password });
+      const data = dataLive.push_url.split('/')
+      const password: string = data[data.length - 1]
+      const rtmp: string = dataLive.push_url.replace(password, '')
+      console.debug('password:', password, rtmp)
+      setDataRtmp({ rtmp, password })
     }
-  }, [dataLive]);
+  }, [dataLive])
 
   return (
     <Card bodyStyle={{ padding: '21' }} style={{ borderRadius: '8px' }}>
@@ -34,8 +34,7 @@ const RTMPCard = () => {
           </Typography.Text>
         }
         description={description}
-      />
-      {' '}
+      />{' '}
       <br />
       <Space direction="vertical" style={{ width: '100%' }}>
         <Space direction="vertical" style={{ width: '100%' }}>
@@ -72,7 +71,7 @@ const RTMPCard = () => {
         </Space>
       </Space>
     </Card>
-  );
-};
+  )
+}
 
-export default RTMPCard;
+export default RTMPCard

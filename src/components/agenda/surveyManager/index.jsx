@@ -1,86 +1,81 @@
-import { Component } from 'react';
-import { Card, Row, Col } from 'antd';
-import { firestore, fireRealtime } from '@helpers/firebase';
-import SurveyItem from './surveyItem';
-import { DispatchMessageService } from '@context/MessageService';
-import { sendCommunicationOpen } from './services';
+import { Component } from 'react'
+import { Card, Row, Col } from 'antd'
+import { firestore, fireRealtime } from '@helpers/firebase'
+import SurveyItem from './surveyItem'
+import { StateMessage } from '@context/MessageService'
+import { sendCommunicationOpen } from './services'
 
 export default class SurveyManager extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       publishedSurveys: [],
-    };
+    }
   }
   componentDidMount = () => {
-    this.listenActivitySurveys();
-  };
+    this.listenActivitySurveys()
+  }
 
   listenActivitySurveys = () => {
-    const { event_id, activity_id } = this.props;
+    const { event_id, activity_id } = this.props
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
-    let $query = firestore.collection('surveys');
+    let $query = firestore.collection('surveys')
 
     //Le agregamos el filtro por curso
     if (event_id) {
-      $query = $query.where('eventId', '==', event_id);
+      $query = $query.where('eventId', '==', event_id)
     }
 
     $query.onSnapshot(async (surveySnapShot) => {
       // Almacena el Snapshot de todas las encuestas del curso
 
-      const eventSurveys = [];
-      let publishedSurveys = [];
+      const eventSurveys = []
+      let publishedSurveys = []
 
       if (surveySnapShot.size === 0) {
-        this.setState({ publishedSurveys: [] });
-        return;
+        this.setState({ publishedSurveys: [] })
+        return
       }
 
-      surveySnapShot.forEach(function(doc) {
-        eventSurveys.push({ ...doc.data(), survey_id: doc.id });
-      });
+      surveySnapShot.forEach(function (doc) {
+        eventSurveys.push({ ...doc.data(), survey_id: doc.id })
+      })
 
       // Listado de encuestas publicadas del curso
       publishedSurveys = eventSurveys.filter(
-        (survey) => survey.activity_id === activity_id || survey.isGlobal === 'true'
-      );
+        (survey) => survey.activity_id === activity_id || survey.isGlobal === 'true',
+      )
 
-      this.setState({ publishedSurveys, loading: true });
-    });
-  };
+      this.setState({ publishedSurveys, loading: true })
+    })
+  }
 
   updateSurvey = (survey_id, data) => {
     return new Promise((resolve) => {
       //Abril 2021 @todo migracion de estados de firestore a firebaserealtime
-      //let eventId = surveyInfo.eventId || 'general';
-      const eventId = data.eventId || 'general';
-      fireRealtime.ref('events/' + eventId + '/surveys/' + survey_id).update(data);
+      const eventId = data.eventId || 'general'
+      fireRealtime.ref('events/' + eventId + '/surveys/' + survey_id).update(data)
       firestore
         .collection('surveys')
         .doc(survey_id)
         .update({ ...data })
-        .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }));
-    });
-  };
+        .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }))
+    })
+  }
 
   handleChange = async (survey_id, data) => {
-    const result = await this.updateSurvey(survey_id, data);
-    const canSendComunications = this.props.canSendComunications;
+    const result = await this.updateSurvey(survey_id, data)
+    const canSendComunications = this.props.canSendComunications
     if (canSendComunications && data.isOpened === 'true') {
-      await sendCommunicationOpen(survey_id);
+      await sendCommunicationOpen(survey_id)
     }
     if (result && result.state === 'updated') {
-      DispatchMessageService({
-        type: 'success',
-        msj: result.message,
-        action: 'show',
-      });
+      StateMessage.show(null, 'success', result.message)
     }
-  };
+  }
 
   render() {
-    const { publishedSurveys } = this.state;
+    const { publishedSurveys } = this.state
     return (
       <Card title="Gestor de evaluaciones">
         {publishedSurveys.length > 0 ? (
@@ -97,13 +92,19 @@ export default class SurveyManager extends Component {
               </Col>
             </Row>
             {publishedSurveys.map((survey) => {
-              return <SurveyItem key={`survey-${survey.survey_id}`} survey={survey} onChange={this.handleChange} />;
+              return (
+                <SurveyItem
+                  key={`survey-${survey.survey_id}`}
+                  survey={survey}
+                  onChange={this.handleChange}
+                />
+              )
             })}
           </>
         ) : (
           <div>No hay evaluaciones publicadas para esta lección</div>
         )}
       </Card>
-    );
+    )
   }
 }

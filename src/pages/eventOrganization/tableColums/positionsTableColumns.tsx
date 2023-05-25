@@ -7,7 +7,7 @@ import { ColumnsType } from 'antd/es/table'
 import { PositionResponseType } from '@Utilities/types/PositionType'
 
 interface PositionResponseRowType extends PositionResponseType {
-  users: any[],
+  users: any[]
 }
 
 export default function positionsTableColumns(
@@ -20,7 +20,7 @@ export default function positionsTableColumns(
       key: 'default',
       title: 'Por defecto',
       width: 50,
-      render: (_, item) => <Radio value={item._id} />
+      render: (_, item) => <Radio value={item._id} />,
     },
     {
       key: 'position',
@@ -65,7 +65,7 @@ export default function positionsTableColumns(
             <Button
               type="primary"
               size="small"
-              onClick={(e) => cbEdit(position)}
+              onClick={() => cbEdit(position)}
               icon={<EditOutlined />}
             />
           </Tooltip>

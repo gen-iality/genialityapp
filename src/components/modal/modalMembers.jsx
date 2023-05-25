@@ -1,45 +1,43 @@
 /** React's libraries */
-import { useState } from 'react';
-import { useIntl } from 'react-intl';
+import { useState } from 'react'
 
 /** Antd imports */
-import { Alert, Button, Grid, Modal } from 'antd';
-import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Grid, Modal } from 'antd'
+import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
 /** Helpers and utils */
-import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request';
+import { OrganizationApi, PositionsApi } from '@helpers/request'
 
 /** Context */
-import { DispatchMessageService } from '@context/MessageService';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
+import { StateMessage } from '@context/MessageService'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
 
 /** Components */
-import FormComponent from '../events/registrationForm/form';
-import RegisterUserAndOrgMember from '@components/authentication/RegisterUserAndOrgMember';
+import FormComponent from '../events/registrationForm/form'
+import RegisterUserAndOrgMember from '@components/authentication/RegisterUserAndOrgMember'
 
-const { confirm } = Modal;
-const { useBreakpoint } = Grid;
+const { confirm } = Modal
+const { useBreakpoint } = Grid
 
 const stylePaddingDesktop = {
   paddingLeft: '30px',
   paddingRight: '30px',
   textAlign: 'center',
-};
+}
 const stylePaddingMobile = {
   paddingLeft: '10px',
   paddingRight: '10px',
   textAlign: 'center',
-};
+}
 
 function ModalMembers(props) {
-  const organizationId = props.organizationId;
-  const userId = props.value._id;
-  const intl = useIntl();
-  const screens = useBreakpoint();
+  const organizationId = props.organizationId
+  const userId = props.value._id
+  const screens = useBreakpoint()
 
-  const { handleChangeTypeModal, typeModal, helperDispatch, currentAuthScreen, controllerLoginVisible } = useHelper();
+  const { controllerLoginVisible } = useHelper()
 
-  const [loadingregister, setLoadingregister] = useState(false);
+  const [loadingregister, setLoadingregister] = useState(false)
 
   const options = [
     {
@@ -48,7 +46,7 @@ function ModalMembers(props) {
       icon: <DeleteOutlined />,
       action: () => deleteUser(props.value),
     },
-  ];
+  ]
 
   async function deleteUser(user) {
     confirm({
@@ -59,41 +57,26 @@ function ModalMembers(props) {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        DispatchMessageService({
-          type: 'loading',
-          key: 'loading',
-          msj: ' Por favor espere mientras se borra la información...',
-          action: 'show',
-        });
+        StateMessage.show(
+          'loading',
+          'loading',
+          ' Por favor espere mientras se borra la información...',
+        )
         const onHandlerRemove = async () => {
           try {
-            await OrganizationApi.deleteUser(organizationId, user._id);
-            props.closeOrOpenModalMembers();
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            });
-            props.startingComponent();
+            await OrganizationApi.deleteUser(organizationId, user._id)
+            props.closeOrOpenModalMembers()
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
+            props.startingComponent()
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Hubo un error al eliminar',
-              action: 'show',
-            });
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', 'Hubo un error al eliminar')
           }
-        };
-        onHandlerRemove();
+        }
+        onHandlerRemove()
       },
-    });
+    })
     /* try {
       await OrganizationApi.deleteUser(organizationId, user._id);
       props.closeOrOpenModalMembers();
@@ -105,39 +88,47 @@ function ModalMembers(props) {
   }
 
   async function editOrgMember(values) {
-    setLoadingregister(true);
+    setLoadingregister(true)
 
-    let resp;
+    let resp
 
     if (props.editMember) {
-      //values.rol_id = values.role;
-      resp = await OrganizationApi.editUser(organizationId, userId, values);
+      resp = await OrganizationApi.editUser(organizationId, userId, values)
       if (values.position_id) {
-        await PositionsApi.Organizations.addUser(organizationId, values.position_id, resp.account_id);
+        await PositionsApi.Organizations.addUser(
+          organizationId,
+          values.position_id,
+          resp.account_id,
+        )
       }
     }
 
     if (resp._id) {
-      DispatchMessageService({
-        type: 'success',
-        msj: `Usuario ${props.editMember ? 'editado ' : 'agregado'} correctamente`,
-        action: 'show',
-      });
-      props.setIsLoading(true);
-      props.closeOrOpenModalMembers();
-      props.startingComponent();
+      StateMessage.show(
+        null,
+        'success',
+        `Usuario ${props.editMember ? 'editado ' : 'agregado'} correctamente`,
+      )
+      props.setIsLoading(true)
+      props.closeOrOpenModalMembers()
+      props.startingComponent()
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: `No fue posible ${props.editMember ? 'editar ' : 'agregar'} el Usuario`,
-        action: 'show',
-      });
+      StateMessage.show(
+        null,
+        'error',
+        `No fue posible ${props.editMember ? 'editar ' : 'agregar'} el Usuario`,
+      )
     }
   }
 
   return (
     <>
-      <Modal closable footer={false} visible onCancel={() => props.closeOrOpenModalMembers()}>
+      <Modal
+        closable
+        footer={false}
+        visible
+        onCancel={() => props.closeOrOpenModalMembers()}
+      >
         <div
           style={{
             paddingLeft: '0px',
@@ -173,7 +164,7 @@ function ModalMembers(props) {
         </div>
       </Modal>
     </>
-  );
+  )
 }
 
-export default ModalMembers;
+export default ModalMembers

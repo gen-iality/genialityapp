@@ -1,13 +1,13 @@
 const userHasRole = (ifTheRoleExists, cEventUserRolId) => {
   if (!cEventUserRolId) {
-    return false;
+    return false
   }
   if (typeof ifTheRoleExists === 'string') {
-    return cEventUserRolId === ifTheRoleExists;
+    return cEventUserRolId === ifTheRoleExists
   } else if (typeof ifTheRoleExists === 'object') {
-    return ifTheRoleExists?.type === 'admin';
+    return ifTheRoleExists?.type === 'admin'
   }
-  return false;
-};
+  return false
+}
 
-export default userHasRole;
+export default userHasRole

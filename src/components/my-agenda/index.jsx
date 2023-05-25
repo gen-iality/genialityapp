@@ -1,9 +1,9 @@
-import { Component, Fragment } from 'react';
-import { Table, Input, Button, Space, Typography } from 'antd';
-import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
+import { Component, Fragment } from 'react'
+import { Table, Input, Button, Space, Typography } from 'antd'
+import Highlighter from 'react-highlight-words'
+import { SearchOutlined } from '@ant-design/icons'
 
-const { Title } = Typography;
+const { Title } = Typography
 
 const data = [
   {
@@ -30,22 +30,20 @@ const data = [
     age: 32,
     hour: '6:15 PM',
   },
-];
+]
 
 class MyAgenda extends Component {
   constructor(props) {
-    super(props);
-    this.state = {};
+    super(props)
+    this.state = {}
   }
-
-  async componentDidMount() {}
 
   getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input
           ref={(node) => {
-            this.searchInput = node;
+            this.searchInput = node
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
@@ -63,23 +61,26 @@ class MyAgenda extends Component {
           >
             Search
           </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => this.handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    filterIcon: (filtered) => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
     onFilter: (value, record) =>
       record[dataIndex]
-        ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
         : '',
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
-        setTimeout(() => this.searchInput.select());
+        setTimeout(() => this.searchInput.select())
       }
     },
     render: (text) =>
@@ -93,20 +94,20 @@ class MyAgenda extends Component {
       ) : (
         text
       ),
-  });
+  })
 
   handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
+    confirm()
     this.setState({
       searchText: selectedKeys[0],
       searchedColumn: dataIndex,
-    });
-  };
+    })
+  }
 
   handleReset = (clearFilters) => {
-    clearFilters();
-    this.setState({ searchText: '' });
-  };
+    clearFilters()
+    this.setState({ searchText: '' })
+  }
 
   render() {
     const columns = [
@@ -130,14 +131,14 @@ class MyAgenda extends Component {
         key: 'hour',
         ...this.getColumnSearchProps('hour'),
       },
-    ];
+    ]
     return (
       <Fragment>
         <Title>Agenda personal</Title>
         <Table columns={columns} dataSource={data} />
       </Fragment>
-    );
+    )
   }
 }
 
-export default MyAgenda;
+export default MyAgenda

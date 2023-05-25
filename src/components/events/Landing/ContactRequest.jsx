@@ -1,9 +1,13 @@
-import { Button, Space, Tooltip } from 'antd';
-import { VideoCameraAddOutlined, UsergroupAddOutlined, CommentOutlined } from '@ant-design/icons';
-import { useCurrentUser } from '@context/userContext';
+import { Button, Space, Tooltip } from 'antd'
+import {
+  VideoCameraAddOutlined,
+  UsergroupAddOutlined,
+  CommentOutlined,
+} from '@ant-design/icons'
+import { useCurrentUser } from '@context/userContext'
 
 const ContactRequest = (props) => {
-  const cUser = useCurrentUser();
+  const cUser = useCurrentUser()
 
   return (
     <Space size="middle">
@@ -12,11 +16,11 @@ const ContactRequest = (props) => {
           size="large"
           shape="circle"
           onClick={async () => {
-            props.collapsePerfil();
+            props.collapsePerfil()
             const sendResp = await props.SendFriendship({
               eventUserIdReceiver: cUser._id,
               userName: cUser.names || cUser.email,
-            });
+            })
             if (sendResp._id) {
               const notification = {
                 idReceive: cUser.account_id,
@@ -26,9 +30,9 @@ const ContactRequest = (props) => {
                 name: 'notification.name',
                 type: 'amistad',
                 state: '0',
-              };
+              }
 
-              await props.addNotification(notification, cUser._id);
+              await props.addNotification(notification, cUser._id)
             }
           }}
           icon={<UsergroupAddOutlined />}
@@ -39,8 +43,13 @@ const ContactRequest = (props) => {
           size="large"
           shape="circle"
           onClick={async () => {
-            props.collapsePerfil();
-            props.UpdateChat(cUser.uid, cUser.names || cUser.name, cUser._id, cUser.names || cUser.name);
+            props.collapsePerfil()
+            props.UpdateChat(
+              cUser.uid,
+              cUser.names || cUser.name,
+              cUser._id,
+              cUser.names || cUser.name,
+            )
           }}
           icon={<CommentOutlined />}
         />
@@ -51,15 +60,15 @@ const ContactRequest = (props) => {
           shape="circle"
           onClick={async () => {
             if (cUser) {
-              props.collapsePerfil();
-              props.AgendarCita(cUser._id, cUser);
+              props.collapsePerfil()
+              props.AgendarCita(cUser._id, cUser)
             }
           }}
           icon={<VideoCameraAddOutlined />}
         />
       </Tooltip>
     </Space>
-  );
-};
+  )
+}
 
-export default ContactRequest;
+export default ContactRequest

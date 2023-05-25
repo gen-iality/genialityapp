@@ -1,13 +1,17 @@
-import { getUserByEmail } from '@components/networking/services';
-import { EventsApi } from './request';
-import { firestore } from './firebase';
-import { GetTokenUserFirebase } from './HelperAuth';
+import { getUserByEmail } from '@components/networking/services'
+import { EventsApi } from './request'
+import { firestore } from './firebase'
+import { GetTokenUserFirebase } from './HelperAuth'
 
-export const SendFriendship = async ({ eventUserIdReceiver, userName }, userActual, event) => {
-  const eventUserId = userActual._id;
+export const SendFriendship = async (
+  { eventUserIdReceiver, userName },
+  userActual,
+  event,
+) => {
+  const eventUserId = userActual._id
 
-  const currentUserName = userActual.names || userActual.email;
-  const currentUser = await GetTokenUserFirebase();
+  const currentUserName = userActual.names || userActual.email
+  const currentUser = await GetTokenUserFirebase()
 
   if (currentUser) {
     // Se valida si el usuario esta suscrito al curso
@@ -20,28 +24,29 @@ export const SendFriendship = async ({ eventUserIdReceiver, userName }, userActu
         user_name_requesting: userName,
         event_id: event._id,
         state: 'send',
-      };
+      }
 
       // Se ejecuta el servicio del api de evius
       try {
-        const respInvitation = await EventsApi.sendInvitation(event._id, data);
-        return respInvitation;
+        const respInvitation = await EventsApi.sendInvitation(event._id, data)
+        return respInvitation
       } catch (err) {
-        const { data } = err.response;
-        return null;
+        console.error(err)
+        // const { data } = err.response
+        return null
       }
     } else {
-      return null;
+      return null
     }
   } else {
-    return null;
+    return null
   }
-};
+}
 
 export const loadDataUser = async (user, event) => {
-  const resp = await getUserByEmail(user, event._id);
-  return resp;
-};
+  const resp = await getUserByEmail(user, event._id)
+  return resp
+}
 
 export const addNotification = (notification, event, user) => {
   if (notification.emailEmited != null && notification.emailEmited) {
@@ -58,7 +63,7 @@ export const addNotification = (notification, event, user) => {
         name: notification.name,
         state: notification.state,
         type: notification.type,
-      });
+      })
   } else {
     firestore
       .collection('notificationUser')
@@ -71,33 +76,36 @@ export const addNotification = (notification, event, user) => {
         {
           state: notification.state,
         },
-        { merge: true }
-      );
+        { merge: true },
+      )
   }
-};
+}
 
 export const isMyContacts = (contact, listContacts) => {
-  let resp = false;
+  let resp = false
   if (Array.isArray(listContacts)) {
     listContacts.map((contacts) => {
       if (contacts._id == contact.eventUserId) {
-        resp = true;
-        return;
+        resp = true
+        return
       }
     })
   }
-  return resp;
+  return resp
 }
 
 export const haveRequest = (user, listRequest, socialZone = 0) => {
   if (listRequest.length > 0) {
-    const request = listRequest?.filter((userRequest) => socialZone == 0 ? userRequest.id_user_requesting == user?._id : userRequest?.id_user_requesting == user?.eventUserId);
+    const request = listRequest?.filter((userRequest) =>
+      socialZone == 0
+        ? userRequest.id_user_requesting == user?._id
+        : userRequest?.id_user_requesting == user?.eventUserId,
+    )
     if (request.length > 0) {
-      return true;
-    }
-    else {
-      return false;
+      return true
+    } else {
+      return false
     }
   }
-  return false;
+  return false
 }

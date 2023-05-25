@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { Col, Row, Typography, Badge, Skeleton, Spin, Space, Divider, Image } from 'antd';
-import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import { useState } from 'react'
+import { Col, Row, Typography, Image } from 'antd'
+import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons'
 
-const { Title, Text, Paragraph } = Typography;
+const { Text, Paragraph } = Typography
 
 function feriaInformation(props) {
-  const [loading, setloading] = useState(true);
+  const [loading, setloading] = useState(true)
 
   return (
     <>
@@ -34,20 +34,26 @@ function feriaInformation(props) {
                     rows: 3, // Determina la cantidad de filas que se muestran antes de cortar el texto.
                     expandable: true,
                     symbol: (
-                      <span style={{ color: '#2D7FD6', fontSize: '14px' }}>
-                        ver más
-                      </span>
+                      <span style={{ color: '#2D7FD6', fontSize: '14px' }}>ver más</span>
                     ),
                   }}
-                  style={{ marginTop: '18px', fontSize: '16px', color: '#9e9e9e' }}></Paragraph>
+                  style={{
+                    marginTop: '18px',
+                    fontSize: '16px',
+                    color: '#9e9e9e',
+                  }}
+                ></Paragraph>
                 <span className="parrafo">{props.Description}</span>
                 {props.companyDetail &&
-                (props.companyDetail.telefono || props.companyDetail.email || props.companyDetail.webpage) ? (
+                (props.companyDetail.telefono ||
+                  props.companyDetail.email ||
+                  props.companyDetail.webpage) ? (
                   <Row style={{ fontSize: '14px', marginTop: 12 }}>
                     {props.companyDetail.telefono && (
                       <Col>
                         <span className="tel" style={{ marginRight: 20 }}>
-                          <PhoneOutlined className="icono" /> {props.companyDetail.telefono}
+                          <PhoneOutlined className="icono" />{' '}
+                          {props.companyDetail.telefono}
                         </span>
                       </Col>
                     )}
@@ -65,9 +71,10 @@ function feriaInformation(props) {
                           <a
                             rel="noreferrer"
                             onClick={() => {
-                              window.open(`${props.companyDetail.pagweb}`, '_blank');
+                              window.open(`${props.companyDetail.pagweb}`, '_blank')
                             }}
-                            target="_blank">
+                            target="_blank"
+                          >
                             <Text style={{ width: '35vh' }} ellipsis>
                               {props.companyDetail.webpage}
                             </Text>
@@ -85,7 +92,7 @@ function feriaInformation(props) {
         </Row>
       </div>
     </>
-  );
+  )
 }
 
-export default feriaInformation;
+export default feriaInformation

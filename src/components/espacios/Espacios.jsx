@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { SpacesApi } from '@helpers/request';
-import CMS from '../newComponent/CMS';
-import { getColumnSearchProps } from '../speakers/getColumnSearch';
-import dayjs from 'dayjs';
+import { useState } from 'react'
+import { SpacesApi } from '@helpers/request'
+import CMS from '../newComponent/CMS'
+import { getColumnSearchProps } from '../speakers/getColumnSearch'
+import dayjs from 'dayjs'
 
 const Espacios = (props) => {
-  const [columnsData, setColumnsData] = useState({});
+  const [columnsData, setColumnsData] = useState({})
 
   const columns = [
     {
@@ -23,10 +23,10 @@ const Espacios = (props) => {
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       ...getColumnSearchProps('created_at', columnsData),
       render(val, item) {
-        return <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>;
+        return <div>{dayjs(item.created_at).format('DD/MM/YYYY')}</div>
       },
     },
-  ];
+  ]
 
   return (
     <CMS
@@ -35,18 +35,18 @@ const Espacios = (props) => {
       title="Espacios"
       titleTooltip="Agregue o edite los Espacios que se muestran en la aplicación"
       addUrl={{
-        pathname: `${props.matchUrl}/espacio`,
+        pathname: `${props.parentUrl}/espacio`,
         state: { new: true },
       }}
       columns={columns}
       key="_id"
-      editPath={`${props.matchUrl}/espacio`}
+      editPath={`${props.parentUrl}/espacio`}
       pagination={false}
       actions
       search
       setColumnsData={setColumnsData}
     />
-  );
-};
+  )
+}
 
-export default Espacios;
+export default Espacios

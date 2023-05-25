@@ -1,19 +1,20 @@
-import * as React from 'react';
+import { Route, Switch, withRouter } from 'react-router-dom'
 
-import { Route, Switch, withRouter, useHistory } from 'react-router-dom';
-import { Button, Typography } from 'antd';
+import TimeTracking from './TimeTracking'
 
-import TimeTracking from './TimeTracking';
-
-function TimeTrackingRoutes({ ...props }) {
-  const { event, match } = props;
+function TimeTrackingRoutes({ ...props }: { event: any; matchUrl: any }) {
+  const { event, matchUrl } = props
   return (
     <>
       <Switch>
-        <Route exact path={`${match.url}/`} render={() => <TimeTracking event={event} matchUrl={match.url} />} />
+        <Route
+          exact
+          path={`${matchUrl}/`}
+          render={() => <TimeTracking event={event} />}
+        />
       </Switch>
     </>
-  );
+  )
 }
 
-export default withRouter(TimeTrackingRoutes);
+export default withRouter(TimeTrackingRoutes)

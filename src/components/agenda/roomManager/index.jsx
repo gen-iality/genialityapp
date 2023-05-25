@@ -1,17 +1,21 @@
-import { Component } from 'react';
-import { Modal } from 'antd';
-import RoomConfig from './config';
-import Service from './service';
-import dayjs from 'dayjs';
-import AgendaContext from '@context/AgendaContext';
-import { GetTokenUserFirebase } from '@helpers/HelperAuth';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { stopLiveStream, deleteLiveStream, getLiveStreamStatus } from '../../../adaptors/wowzaStreamingAPI';
-import { DispatchMessageService } from '@context/MessageService';
+import { Component } from 'react'
+import { Modal } from 'antd'
+import RoomConfig from './config'
+import Service from './service'
+import dayjs from 'dayjs'
+import AgendaContext from '@context/AgendaContext'
+import { GetTokenUserFirebase } from '@helpers/HelperAuth'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import {
+  stopLiveStream,
+  deleteLiveStream,
+  getLiveStreamStatus,
+} from '../../../adaptors/wowzaStreamingAPI'
+import { StateMessage } from '@context/MessageService'
 
 class RoomManager extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       //Servicio de firebase
       service: new Service(this.props.firestore),
@@ -59,32 +63,37 @@ class RoomManager extends Component {
       surveys: false,
       games: false,
       attendees: false,
-    };
+    }
   }
-  static contextType = AgendaContext;
+  static contextType = AgendaContext
 
   componentDidMount = async () => {
-    const { event_id } = this.props;
-    const activity_id = this.context.activityEdit;
-    const { host_list } = this.state;
+    const { event_id } = this.props
+    const activity_id = this.context.activityEdit
+    const { host_list } = this.state
 
-    const host_ids = host_list.map((host) => host.host_id);
-    this.setState({ host_ids });
+    const host_ids = host_list.map((host) => host.host_id)
+    this.setState({ host_ids })
 
-    if (typeof event_id === 'undefined' || typeof activity_id === 'undefined' || !activity_id) return;
+    if (
+      typeof event_id === 'undefined' ||
+      typeof activity_id === 'undefined' ||
+      !activity_id
+    )
+      return
 
-    this.setState({ loading: true });
+    this.setState({ loading: true })
 
     // Si valida si existe informacion en Firebase del espacio virtual
-    const validation = await this.validationRoom();
+    const validation = await this.validationRoom()
 
     // Si no existe información del espacio virtual en firebase se procede inicializa el documento
     if (!validation) {
-      await this.saveConfig();
+      await this.saveConfig()
     }
 
-    this.setState({ loading: false });
-  };
+    this.setState({ loading: false })
+  }
 
   /*componentDidUpdate = async (prevProps) => {
     // Se escucha el cambio de activity_id esto sucede cuando se crea una lección nueva
@@ -101,10 +110,13 @@ class RoomManager extends Component {
 
   // validacion de existencia de sala e inicializacion de estado
   validationRoom = async () => {
-    const { event_id } = this.props;
-    const activity_id = this.context.activityEdit;
-    const { service } = this.state;
-    const hasVideoconference = await service.validateHasVideoconference(event_id, activity_id);
+    const { event_id } = this.props
+    const activity_id = this.context.activityEdit
+    const { service } = this.state
+    const hasVideoconference = await service.validateHasVideoconference(
+      event_id,
+      activity_id,
+    )
 
     if (hasVideoconference) {
       // Si en firebase ya esta inicializado el campo platfom y meeting_id se habilita el tab controller
@@ -114,78 +126,78 @@ class RoomManager extends Component {
         this.context.meeting_id !== null &&
         this.context.meeting_id !== ''
       ) {
-        this.setState({ hasVideoconference: true, activeTab: 'controller' });
+        this.setState({ hasVideoconference: true, activeTab: 'controller' })
       }
-      return true;
+      return true
     } else {
-      return false;
+      return false
     }
-  };
+  }
 
   // Engargado de la navegacion entre los tabs del administrado de salas
   handleTab = (tab) => {
-    this.setState({ activeTab: tab });
-  };
+    this.setState({ activeTab: tab })
+  }
 
   // Encargado de gestionar los estados de la videoConferencia
   // Estados: open_meeting_room, closed_meeting_room, ended_meeting_room
   handleRoomState = (e) => {
-    this.setState({ roomStatus: e }, async () => await this.saveConfig());
-  };
+    this.setState({ roomStatus: e }, async () => await this.saveConfig())
+  }
 
   // Encargado de gestionar los juegos seleccionados
   handleGamesSelected = async (status, itemId, listOfGames) => {
     if (status === 'newOrUpdate') {
-      this.setState({ avalibleGames: listOfGames }, async () => await this.saveConfig());
+      this.setState({ avalibleGames: listOfGames }, async () => await this.saveConfig())
     } else {
-      const newData = [];
+      const newData = []
       listOfGames.forEach((items) => {
         if (items.id === itemId) {
-          newData.push({ ...items, showGame: status });
+          newData.push({ ...items, showGame: status })
         } else {
-          newData.push({ ...items });
+          newData.push({ ...items })
         }
-      });
-      this.setState({ avalibleGames: newData }, async () => await this.saveConfig());
+      })
+      this.setState({ avalibleGames: newData }, async () => await this.saveConfig())
     }
-  };
+  }
   // Encargado de gestionar los tabs de la video conferencia
   handleTabsController = (e, tab) => {
-    const valueTab = e;
-    const { chat, surveys, games, attendees } = this.state;
-    const tabs = { chat, surveys, games, attendees };
+    const valueTab = e
+    const { chat, surveys, games, attendees } = this.state
+    const tabs = { chat, surveys, games, attendees }
 
     //
     // return true;
 
     if (tab === 'chat') {
-      tabs.chat = valueTab;
-      this.setState({ chat: valueTab }, async () => await this.saveConfig());
+      tabs.chat = valueTab
+      this.setState({ chat: valueTab }, async () => await this.saveConfig())
     } else if (tab === 'surveys') {
-      tabs.surveys = valueTab;
-      this.setState({ surveys: valueTab }, async () => await this.saveConfig());
+      tabs.surveys = valueTab
+      this.setState({ surveys: valueTab }, async () => await this.saveConfig())
     } else if (tab === 'games') {
-      tabs.games = valueTab;
-      this.setState({ games: valueTab }, async () => await this.saveConfig());
+      tabs.games = valueTab
+      this.setState({ games: valueTab }, async () => await this.saveConfig())
     } else if (tab === 'attendees') {
-      tabs.attendees = valueTab;
-      this.setState({ attendees: valueTab }, async () => await this.saveConfig());
+      tabs.attendees = valueTab
+      this.setState({ attendees: valueTab }, async () => await this.saveConfig())
     }
-  };
+  }
 
   // Encargado de recibir los cambios de los input y select
   handleChange = (e, nameS) => {
-    const { name } = e.target ? e.target : nameS;
-    const { value } = e.target ? e.target : e;
+    const { name } = e.target ? e.target : nameS
+    const { value } = e.target ? e.target : e
 
-    this.setState({ [name]: value });
+    this.setState({ [name]: value })
     if (nameS === 'select_host_manual') {
-      this.context.select_host_manual = e;
+      this.context.select_host_manual = e
     }
     if (nameS === 'host_id') {
-      this.context.host_id = e;
+      this.context.host_id = e
     }
-  };
+  }
 
   //Preparacion de la data para guardar en firebase
   prepareData = () => {
@@ -203,7 +215,7 @@ class RoomManager extends Component {
       avalibleGames,
       transmition,
       typeActivity,
-    } = this.context;
+    } = this.context
     const roomInfo = {
       habilitar_ingreso: roomStatus,
       platform,
@@ -214,70 +226,72 @@ class RoomManager extends Component {
       avalibleGames,
       transmition,
       typeActivity,
-    };
-    const tabs = { chat, surveys, games, attendees };
-    return { roomInfo, tabs };
-  };
+    }
+    const tabs = { chat, surveys, games, attendees }
+    return { roomInfo, tabs }
+  }
 
   // Se usa al eliminar una sala de zoom, elimnar la informacion asociada a ella, se mantiene la configuración de la misma
   restartData = () => {
-    this.context.setPlatform('wowza');
-    this.context.setMeetingId('');
-    this.context.setHostId(null);
-    this.context.setHostName(null);
-    this.context.setRoomStatus('');
+    this.context.setPlatform('wowza')
+    this.context.setMeetingId('')
+    this.context.setHostId(null)
+    this.context.setHostName(null)
+    this.context.setRoomStatus('')
     this.setState(
       {
         hasVideoconference: false,
       },
 
-      async () => await this.saveConfig()
-    );
-  };
+      async () => await this.saveConfig(),
+    )
+  }
 
   // Método para guarda la información de la configuración
   saveConfig = async (notify) => {
-    const { event_id } = this.props;
-    const activity_id = this.context.activityEdit;
+    const { event_id } = this.props
+    const activity_id = this.context.activityEdit
 
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la lección */
-    const { roomInfo, tabs } = this.prepareData();
-    const { service } = this.state;
+    const { roomInfo, tabs } = this.prepareData()
+    const { service } = this.state
     try {
-      const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
+      const result = await service.createOrUpdateActivity(
+        event_id,
+        activity_id,
+        roomInfo,
+        tabs,
+      )
       if (result && !notify) {
-        DispatchMessageService({
-          type: 'success',
-          msj: result.message,
-          action: 'show',
-        });
+        StateMessage.show(null, 'success', result.message)
       }
-      return result;
+      return result
     } catch (err) {
-      DispatchMessageService({
-        type: 'error',
-        msj: err,
-        action: 'show',
-      });
+      StateMessage.show(null, 'error', err)
     }
-  };
+  }
 
   //
   handleClickSaveConfig = async () => {
-    const { event_id, activity_id, pendingChangesSave } = this.props;
+    const { event_id, activity_id, pendingChangesSave } = this.props
 
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la lección */
     if (!pendingChangesSave) {
-      const { service, platform, meeting_id } = this.state;
+      const { service, platform, meeting_id } = this.state
 
       // Validación de los campos requeridos
-      if (platform === '' || platform === null || meeting_id === '' || meeting_id === null) {
-        DispatchMessageService({
-          type: 'warning',
-          msj: 'Seleccione una plataforma e ingrese el id de la videoconferencia',
-          action: 'show',
-        });
-        return false;
+      if (
+        platform === '' ||
+        platform === null ||
+        meeting_id === '' ||
+        meeting_id === null
+      ) {
+        StateMessage.show(
+          null,
+          'warning',
+          'Seleccione una plataforma e ingrese el id de la videoconferencia',
+        )
+        return false
       }
 
       // Se utiliza solo cuando el usuario guarda de manera manual el id del curso en zoom o zoomExterno
@@ -286,8 +300,8 @@ class RoomManager extends Component {
           event_id,
           activity_id,
           meeting_id,
-        };
-        const response = await service.getZoomRoom(data);
+        }
+        const response = await service.getZoomRoom(data)
         if (
           Object.keys(response).length > 0 &&
           typeof response.meeting_id !== 'undefined' &&
@@ -297,46 +311,43 @@ class RoomManager extends Component {
           this.setState({
             host_id: response.zoom_host_id,
             host_name: response.zoom_host_name,
-          });
+          })
         } else {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'El id de la videoconferencia NO es valido',
-            action: 'show',
-          });
-          return false;
+          StateMessage.show(null, 'error', 'El id de la videoconferencia NO es valido')
+          return false
         }
       }
 
       //Si las validaciones  son aprobadas  se procede a salvar en firebase
-      const result = await this.saveConfig();
+      const result = await this.saveConfig()
 
       if (result.state === 'created' || result.state === 'updated') {
-        this.setState({ hasVideoconference: true });
+        this.setState({ hasVideoconference: true })
       }
     } else {
-      DispatchMessageService({
-        type: 'warning',
-        msj: 'Cambios pendientes por guardar en la fecha y hora de la lección',
-        action: 'show',
-      });
+      StateMessage.show(
+        null,
+        'warning',
+        'Cambios pendientes por guardar en la fecha y hora de la lección',
+      )
     }
-  };
+  }
 
   // Create room zoom
   createZoomRoom = async () => {
-    this.validateForCreateZoomRoom();
-    const evius_token = await GetTokenUserFirebase();
+    this.validateForCreateZoomRoom()
+    const evius_token = await GetTokenUserFirebase()
 
-    const { activity_id, activity_name, event_id, date_start_zoom, date_end_zoom } = this.props;
-    const { select_host_manual, host_ids } = this.state;
-    const { host_id } = this.context;
+    const { activity_id, activity_name, event_id, date_start_zoom, date_end_zoom } =
+      this.props
+    const { select_host_manual, host_ids } = this.state
+    const { host_id } = this.context
 
     // Se valida si es el host se selecciona de manera manual o automáticamente
     // Si la seleccion del host es manual se envia el campo host_id con el id del host tipo string
     // Si la seleccion del host es automática se envia el campo host_ids con un array de strings con los ids de los hosts
-    const host_field = select_host_manual ? 'host_id' : 'host_ids';
-    const host_value = select_host_manual ? host_id : host_ids;
+    const host_field = select_host_manual ? 'host_id' : 'host_ids'
+    const host_value = select_host_manual ? host_id : host_ids
 
     const body = {
       token: evius_token,
@@ -347,8 +358,8 @@ class RoomManager extends Component {
       date_start_zoom,
       date_end_zoom,
       [host_field]: host_value,
-    };
-    const response = await this.state.service.setZoomRoom(evius_token, body);
+    }
+    const response = await this.state.service.setZoomRoom(evius_token, body)
 
     if (
       Object.keys(response).length > 0 &&
@@ -356,72 +367,59 @@ class RoomManager extends Component {
       typeof response.zoom_host_id !== 'undefined' &&
       typeof response.zoom_host_name !== 'undefined'
     ) {
-      const { meeting_id, zoom_host_id, zoom_host_name } = response;
-      this.context.setMeetingId(meeting_id);
-      this.context.setHostId(zoom_host_id);
-      this.context.setHostName(zoom_host_name);
+      const { meeting_id, zoom_host_id, zoom_host_name } = response
+      this.context.setMeetingId(meeting_id)
+      this.context.setHostId(zoom_host_id)
+      this.context.setHostName(zoom_host_name)
       this.setState(
         {
           hasVideoconference: true,
         },
-        async () => await this.saveConfig()
-      );
+        async () => await this.saveConfig(),
+      )
     } else {
-      DispatchMessageService({
-        type: 'warning',
-        msj: response.message,
-        action: 'show',
-      });
+      StateMessage.show(null, 'warning', response.message)
     }
-  };
+  }
 
   // Se ejecuta cuando se solicita la creación de una trasmisión de manera automática
   validateForCreateZoomRoom = () => {
-    const { pendingChangesSave } = this.props;
+    const { pendingChangesSave } = this.props
 
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la lección */
     if (pendingChangesSave) {
-      DispatchMessageService({
-        type: 'warning',
-        msj: 'Cambios pendientes por guardar en la fecha y hora de la lección',
-        action: 'show',
-      });
-      return false;
+      StateMessage.show(
+        null,
+        'warning',
+        'Cambios pendientes por guardar en la fecha y hora de la lección',
+      )
+      return false
     }
     //Esta validacion aplcia para lecciones creadas antes de el backend devolviera los campos date_start_zoom y date_end_zoom
-    if (typeof this.props.date_start_zoom === 'undefined' || typeof this.props.date_end_zoom === 'undefined') {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Guarde primero la lección antes de continuar',
-        action: 'show',
-      });
-      return false;
+    if (
+      typeof this.props.date_start_zoom === 'undefined' ||
+      typeof this.props.date_end_zoom === 'undefined'
+    ) {
+      StateMessage.show(null, 'error', 'Guarde primero la lección antes de continuar')
+      return false
     }
     if (!dayjs(this.props.date_start_zoom).isValid()) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'La fecha de inicio no es valida',
-        action: 'show',
-      });
-      return false;
+      StateMessage.show(null, 'error', 'La fecha de inicio no es valida')
+      return false
     }
     if (!dayjs(this.props.date_end_zoom).isValid()) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'La fecha de finalización no es valida',
-        action: 'show',
-      });
-      return false;
+      StateMessage.show(null, 'error', 'La fecha de finalización no es valida')
+      return false
     }
-  };
+  }
 
   //Eliminar trasmisión de zoom
   deleteRoom = async () => {
-    const self = this;
-    const { service, meeting_id, platform } = self.state;
-    const { event_id } = self.props;
-    const streamingMeetingId = self.context.meeting_id;
-    const streamingPlatForm = self.context.platform;
+    const self = this
+    const { service, meeting_id, platform } = self.state
+    const { event_id } = self.props
+    const streamingMeetingId = self.context.meeting_id
+    const streamingPlatForm = self.context.platform
     Modal.confirm({
       title: `¿Está seguro de eliminar la transmisión?`,
       icon: <ExclamationCircleOutlined />,
@@ -430,70 +428,48 @@ class RoomManager extends Component {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        DispatchMessageService({
-          type: 'loading',
-          key: 'loading',
-          msj: ' Por favor espere mientras se borra la transmisión...',
-          action: 'show',
-        });
+        StateMessage.show(
+          'loading',
+          'loading',
+          ' Por favor espere mientras se borra la transmisión...',
+        )
         const onHandlerRemove = async () => {
           try {
             // Si es una sala de zoom se elimina de la agenda de la api zoom
             if (platform === 'zoom' || platform === 'zoomExterno') {
-              const updatedData = await service.deleteZoomRoom(event_id, meeting_id);
+              const updatedData = await service.deleteZoomRoom(event_id, meeting_id)
               if (updatedData.status === 200) {
-                DispatchMessageService({
-                  key: 'loading',
-                  action: 'destroy',
-                });
-                DispatchMessageService({
-                  type: 'success',
-                  msj: 'Transmisión de Zoom eliminada!',
-                  action: 'show',
-                });
+                StateMessage.destroy('loading')
+                StateMessage.show(null, 'success', 'Transmisión de Zoom eliminada!')
               }
             }
             if (streamingPlatForm === 'wowza') {
-              const { state } = await getLiveStreamStatus(streamingMeetingId);
-              const refActivity = `request/${self.props.event_id}/activities/${self.context.activityEdit}`;
+              const { state } = await getLiveStreamStatus(streamingMeetingId)
+              const refActivity = `request/${self.props.event_id}/activities/${self.context.activityEdit}`
               if (state === 'started') {
-                await stopLiveStream(streamingMeetingId);
+                await stopLiveStream(streamingMeetingId)
               }
-              await deleteLiveStream(streamingMeetingId);
-              self.context.setMeetingId(null);
-              await self.context.removeAllRequest(refActivity);
+              await deleteLiveStream(streamingMeetingId)
+              self.context.setMeetingId(null)
+              await self.context.removeAllRequest(refActivity)
             }
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la transmisión correctamente!',
-              action: 'show',
-            });
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la transmisión correctamente!')
 
-            self.restartData();
+            self.restartData()
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            });
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Hubo un error eliminando la transmisión',
-              action: 'show',
-            });
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', 'Hubo un error eliminando la transmisión')
           }
-        };
-        onHandlerRemove();
+        }
+        onHandlerRemove()
       },
-    });
-  };
+    })
+  }
 
   render() {
-    const { hasVideoconference, /* select_host_manual, */ host_list } = this.state;
-    const { activity_name } = this.props;
+    const { hasVideoconference, /* select_host_manual, */ host_list } = this.state
+    const { activity_name } = this.props
     return (
       <>
         <RoomConfig
@@ -509,8 +485,8 @@ class RoomManager extends Component {
           activity_name={activity_name}
         />
       </>
-    );
+    )
   }
 }
 
-export default RoomManager;
+export default RoomManager

@@ -1,19 +1,19 @@
-import { notification, List, Avatar, Button, Typography } from 'antd';
-import { Component } from 'react';
-import { getFiles } from '../services';
-import { Col, Card, Result, Row, Space } from 'antd';
-import { CloudDownloadOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import Loading from '../../loaders/loading';
-import DocumentsList from '../documentsList';
-import { DocumentsApi } from '@helpers/request';
-import { Tabs } from 'antd';
-import withContext from '@context/withContext';
-import { utils, writeFileXLSX } from 'xlsx';
-const { TabPane } = Tabs;
+import { notification, List, Avatar, Button, Typography } from 'antd'
+import { Component } from 'react'
+import { getFiles } from '../services'
+import { Col, Card, Result, Row, Space } from 'antd'
+import { CloudDownloadOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import Loading from '../../loaders/loading'
+import DocumentsList from '../documentsList'
+import { DocumentsApi } from '@helpers/request'
+import { Tabs } from 'antd'
+import withContext from '@context/withContext'
+import { utils, writeFileXLSX } from 'xlsx'
+const { TabPane } = Tabs
 
 class DocumentsDetail extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       documents: [],
       loading: true,
@@ -21,56 +21,59 @@ class DocumentsDetail extends Component {
       previewImage: '',
       data: [],
       folders: [],
-    };
+    }
   }
 
   exportFile = async (e) => {
-    e.preventDefault();
-    const data = this.props.cEventUser?.value?.properties?.documents_user;
-    const ws = utils.json_to_sheet(data);
-    const wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, 'CARTONES BINGO');
-    writeFileXLSX(wb, `CARTONES BINGO_${this.props.cEventUser?.value?.properties?.displayName}.xls`);
-  };
+    e.preventDefault()
+    const data = this.props.cEventUser?.value?.properties?.documents_user
+    const ws = utils.json_to_sheet(data)
+    const wb = utils.book_new()
+    utils.book_append_sheet(wb, ws, 'CARTONES BINGO')
+    writeFileXLSX(
+      wb,
+      `CARTONES BINGO_${this.props.cEventUser?.value?.properties?.displayName}.xls`,
+    )
+  }
 
   async componentDidMount() {
-    let { documents } = this.state;
-    const data = [];
+    let { documents } = this.state
+    const data = []
 
     try {
-      const eventId = this.props.cEvent.value?._id;
-      const folders = await DocumentsApi.getAll(eventId);
-      documents = await getFiles(eventId);
+      const eventId = this.props.cEvent.value?._id
+      const folders = await DocumentsApi.getAll(eventId)
+      documents = await getFiles(eventId)
 
       this.setState({
         folders: folders.data,
-      });
+      })
 
       //Se itera para poder pasar un array al componente List de ant
       for (const document in documents) {
-        data.push(documents[document]);
+        data.push(documents[document])
       }
 
-      this.setState({ data }, this.removeLoader);
+      this.setState({ data }, this.removeLoader)
     } catch (error) {
-      console.error(error);
+      console.error(error)
 
       notification.error({
         message: 'Error',
         description: 'Ha ocurrido un error obteniendo los documentos',
-      });
+      })
     }
   }
 
   removeLoader = () => {
-    this.setState({ loading: false });
-  };
+    this.setState({ loading: false })
+  }
 
   render() {
-    const { data, loading, folders } = this.state;
+    const { data, loading, folders } = this.state
 
     if (loading) {
-      return <Loading />;
+      return <Loading />
     }
 
     return (
@@ -113,15 +116,24 @@ class DocumentsDetail extends Component {
                   <Card
                     title=""
                     bordered={false}
-                    style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}
+                    style={{
+                      backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                    }}
                   >
                     <Result
                       title={
-                        <Typography.Title level={4} style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                        <Typography.Title
+                          level={4}
+                          style={{ color: this.props.cEvent.value.styles.textMenu }}
+                        >
                           Aún no se han agregado archivos.
                         </Typography.Title>
                       }
-                      icon={<ExclamationCircleOutlined style={{ color: this.props.cEvent.value.styles.textMenu }} />}
+                      icon={
+                        <ExclamationCircleOutlined
+                          style={{ color: this.props.cEvent.value.styles.textMenu }}
+                        />
+                      }
                     />
                   </Card>
                 </div>
@@ -159,7 +171,11 @@ class DocumentsDetail extends Component {
                         }
                         title={<a href={item.url}>{item.name}</a>}
                         description={
-                          <Button onClick={() => window.open(item.url)} shape="round" type="primary">
+                          <Button
+                            onClick={() => window.open(item.url)}
+                            shape="round"
+                            type="primary"
+                          >
                             Ver documento
                           </Button>
                         }
@@ -167,7 +183,8 @@ class DocumentsDetail extends Component {
                     </List.Item>
                   )}
                 />
-              ) : this.props.cEventUser?.value?.properties?.documents_user?.length >= 10 ? (
+              ) : this.props.cEventUser?.value?.properties?.documents_user?.length >=
+                10 ? (
                 <Row>
                   <Space direction="vertical">
                     <Row>
@@ -191,12 +208,21 @@ class DocumentsDetail extends Component {
                     <Card
                       title=""
                       bordered={false}
-                      style={{ backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }}
+                      style={{
+                        backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                      }}
                     >
                       <Result
-                        icon={<ExclamationCircleOutlined style={{ color: this.props.cEvent.value.styles.textMenu }} />}
+                        icon={
+                          <ExclamationCircleOutlined
+                            style={{ color: this.props.cEvent.value.styles.textMenu }}
+                          />
+                        }
                         title={
-                          <Typography.Title level={4} style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                          <Typography.Title
+                            level={4}
+                            style={{ color: this.props.cEvent.value.styles.textMenu }}
+                          >
                             Hola, No tienes documentos asignados
                           </Typography.Title>
                         }
@@ -209,9 +235,9 @@ class DocumentsDetail extends Component {
           )}
         </Tabs>
       </div>
-    );
+    )
   }
 }
 
-const DocumentsWithContext = withContext(DocumentsDetail);
-export default DocumentsWithContext;
+const DocumentsWithContext = withContext(DocumentsDetail)
+export default DocumentsWithContext

@@ -1,38 +1,37 @@
-import { useEffect, useState } from 'react';
-import { Menu, Badge } from 'antd';
-import { CommentOutlined, TeamOutlined, PieChartOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-import { stylesMenuItems } from '../helpers/csshelpers';
-import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import withContext from '@context/withContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useEventContext } from '@context/eventContext';
-import { recordTypeForThisEvent } from '../helpers/thisRouteCanBeDisplayed';
+import { useEffect, useState } from 'react'
+import { Menu, Badge } from 'antd'
+import { CommentOutlined, TeamOutlined, ArrowLeftOutlined } from '@ant-design/icons'
+import { stylesMenuItems } from '../helpers/csshelpers'
+import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import withContext from '@context/withContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { useEventContext } from '@context/eventContext'
+import { recordTypeForThisEvent } from '../helpers/thisRouteCanBeDisplayed'
 
 const MenuRigth = (props) => {
-  const cEvent = useEventContext();
-  const [typeEvent, settypeEvent] = useState();
+  const cEvent = useEventContext()
+  const [typeEvent, settypeEvent] = useState()
 
   const {
     HandleOpenCloseMenuRigth,
     HandleChatOrAttende,
-    eventPrivate,
     totalPrivateMessages,
     currentActivity,
     tabsGenerals,
-  } = useHelper();
+  } = useHelper()
 
   useEffect(() => {
-    settypeEvent(recordTypeForThisEvent(cEvent));
-  }, [cEvent]);
-
-  // const animateIcon = 'animate__animated animate__bounceIn';
+    settypeEvent(recordTypeForThisEvent(cEvent))
+  }, [cEvent])
 
   return (
     <Menu mode="none" theme="light" style={stylesMenuItems}>
       <>
-        {(props.generalTabs?.publicChat || props.generalTabs?.privateChat || props.generalTabs?.attendees) && (
+        {(props.generalTabs?.publicChat ||
+          props.generalTabs?.privateChat ||
+          props.generalTabs?.attendees) && (
           <Menu.Item
             id="openMenu"
             // className="animate__animated animate__headShake animate__slower animate__infinite"
@@ -48,7 +47,8 @@ const MenuRigth = (props) => {
               </>
             }
             style={{ marginTop: '12px', marginBottom: '22px' }}
-            onClick={() => HandleOpenCloseMenuRigth(false)}></Menu.Item>
+            onClick={() => HandleOpenCloseMenuRigth(false)}
+          ></Menu.Item>
         )}
         {(props.generalTabs?.publicChat || props.generalTabs?.privateChat) && (
           <Menu.Item
@@ -68,9 +68,10 @@ const MenuRigth = (props) => {
             }
             style={{ paddingTop: '20px' }}
             onClick={() => {
-              HandleOpenCloseMenuRigth(false);
-              HandleChatOrAttende('1');
-            }}></Menu.Item>
+              HandleOpenCloseMenuRigth(false)
+              HandleChatOrAttende('1')
+            }}
+          ></Menu.Item>
         )}
         {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una lección*/}
         {props.generalTabs?.attendees && typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
@@ -87,11 +88,12 @@ const MenuRigth = (props) => {
             }
             style={{ paddingTop: '20px' }}
             onClick={() => {
-              HandleOpenCloseMenuRigth(false);
-              HandleChatOrAttende('2');
-            }}></Menu.Item>
+              HandleOpenCloseMenuRigth(false)
+              HandleChatOrAttende('2')
+            }}
+          ></Menu.Item>
         )}
-       {/*  {currentActivity != null &&
+        {/*  {currentActivity != null &&
           // currentActivity.habilitar_ingreso === 'open_meeting_room' &&
           typeEvent != 'UN_REGISTERED_PUBLIC_EVENT' && (
             <Menu.Item
@@ -133,15 +135,16 @@ const MenuRigth = (props) => {
                 }
                 style={{ paddingTop: '20px' }}
                 onClick={() => {
-                  HandleOpenCloseMenuRigth(false);
-                  HandleChatOrAttende('4');
-                }}></Menu.Item>
+                  HandleOpenCloseMenuRigth(false)
+                  HandleChatOrAttende('4')
+                }}
+              ></Menu.Item>
             )}
         </>
       </>
     </Menu>
-  );
-};
+  )
+}
 
-const MenuRigthWithContext = withContext(MenuRigth);
-export default connect(null, null)(withRouter(MenuRigthWithContext));
+const MenuRigthWithContext = withContext(MenuRigth)
+export default connect(null, null)(withRouter(MenuRigthWithContext))

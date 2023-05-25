@@ -1,6 +1,6 @@
-import { notification } from 'antd';
-import Logout from '@2fd/ant-design-icons/lib/Logout';
-import { remoteLogoutNotificationInterface } from '../interfaces/interfaces';
+import { notification } from 'antd'
+import Logout from '@2fd/ant-design-icons/lib/Logout'
+import { remoteLogoutNotificationInterface } from '../interfaces/interfaces'
 
 /**
  * @function remoteLogoutNotification - Show notification after logging out remotely the user is notified why their current session has been logged out
@@ -8,7 +8,11 @@ import { remoteLogoutNotificationInterface } from '../interfaces/interfaces';
  * @param {string} userName Name of the user to log out
  * @param {function} formatMessage Function to change the message language
  */
-export const remoteLogoutNotification = ({ type, names, formatMessage }: remoteLogoutNotificationInterface) => {
+export const remoteLogoutNotification = ({
+  type,
+  names,
+  formatMessage,
+}: remoteLogoutNotificationInterface) => {
   if (type == 'success' || type == 'warning' || type == 'error' || type == 'info')
     notification[type]({
       duration: 0,
@@ -18,7 +22,11 @@ export const remoteLogoutNotification = ({ type, names, formatMessage }: remoteL
           style={{ color: '#FF4E50' }}
         />
       ),
-      message: <b className="animate__animated animate__heartBeat animate__infinite animate__slower">{names}</b>,
+      message: (
+        <b className="animate__animated animate__heartBeat animate__infinite animate__slower">
+          {names}
+        </b>
+      ),
       description: formatMessage({
         id: 'notification.log_out',
         defaultMessage: 'Tu sesión fue cerrada porque fue iniciada en otro dispositivo.',
@@ -26,7 +34,7 @@ export const remoteLogoutNotification = ({ type, names, formatMessage }: remoteL
       style: {
         borderRadius: '10px',
       },
-    });
+    })
 
-  return null;
-};
+  return null
+}

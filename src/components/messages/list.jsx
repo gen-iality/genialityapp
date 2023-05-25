@@ -1,16 +1,21 @@
-import { withRouter } from 'react-router-dom';
-import { MessageApi } from '@helpers/request';
-import { Button, Row, Col, Space, Typography } from 'antd';
-import { ExclamationCircleOutlined, LineChartOutlined, BarsOutlined, ReloadOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router';
-import CMS from '../newComponent/CMS';
+import { withRouter } from 'react-router-dom'
+import { MessageApi } from '@helpers/request'
+import { Button, Row, Col, Space, Typography } from 'antd'
+import {
+  ExclamationCircleOutlined,
+  LineChartOutlined,
+  BarsOutlined,
+  ReloadOutlined,
+} from '@ant-design/icons'
+import { useHistory } from 'react-router'
+import CMS from '../newComponent/CMS'
 
-const { Text } = Typography;
+const { Text } = Typography
 
 function InvitationsList(props) {
-  const { match, eventId } = props;
+  const { match, eventId } = props
 
-  const history = useHistory();
+  const history = useHistory()
 
   const columns = [
     {
@@ -57,7 +62,7 @@ function InvitationsList(props) {
       defaultSortOrder: 'descend',
       sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
     },
-  ];
+  ]
 
   return (
     <>
@@ -68,7 +73,9 @@ function InvitationsList(props) {
         description={
           <Space>
             <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-            <Text type="secondary">La información en la tabla puede demorar un tiempo en reflejarse.</Text>
+            <Text type="secondary">
+              La información en la tabla puede demorar un tiempo en reflejarse.
+            </Text>
           </Space>
         }
         columns={columns}
@@ -86,7 +93,7 @@ function InvitationsList(props) {
             <Col>
               <Button
                 onClick={() => {
-                  history.push(`/eventadmin/${eventId}/dashboard`);
+                  history.push(`/eventadmin/${eventId}/dashboard`)
                 }}
                 type="ghost"
                 icon={<LineChartOutlined />}
@@ -98,7 +105,7 @@ function InvitationsList(props) {
         }
       />
     </>
-  );
+  )
 }
 
-export default withRouter(InvitationsList);
+export default withRouter(InvitationsList)

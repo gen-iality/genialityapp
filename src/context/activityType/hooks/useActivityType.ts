@@ -1,13 +1,13 @@
-import { useContext } from 'react';
-import ActivityTypeContext from '../activityTypeContext';
-import { ActivityTypeContextType } from '../types/contextType';
+import { useContext } from 'react'
+import ActivityTypeContext from '../activityTypeContext'
+import { ActivityTypeContextType } from '../types/contextType'
 
-type hookType = ActivityTypeContextType;
+type hookType = ActivityTypeContextType
 
-export default function useActivityType (): hookType {
-  const context = useContext(ActivityTypeContext);
+export default function useActivityType(): hookType {
+  const context = useContext(ActivityTypeContext)
 
   return {
     ...context,
-  };
+  }
 }

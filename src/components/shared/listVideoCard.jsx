@@ -1,43 +1,42 @@
-import { Card, Space, Col, Row } from 'antd';
-import VideoCard from './videoCard';
-import { useEventContext } from '@context/eventContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { useState, useEffect } from 'react';
+import { Col, Row } from 'antd'
+import VideoCard from './videoCard'
+import { useEventContext } from '@context/eventContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { useState, useEffect } from 'react'
 
 const ListVideoCard = () => {
-  const cEvent = useEventContext();
-  const { activitiesEvent } = useHelper();
-  const [existActivity, setexistActivity] = useState(0);
+  const cEvent = useEventContext()
+  const { activitiesEvent } = useHelper()
+  const [existActivity, setexistActivity] = useState(0)
   function ExistvideoInActivity() {
     activitiesEvent &&
       activitiesEvent.map((activity) => {
         if (activity.video != undefined || activity.video != null) {
           {
-            setexistActivity(1);
+            setexistActivity(1)
           }
         }
-      });
+      })
   }
   useEffect(() => {
-    ExistvideoInActivity();
-  }, [activitiesEvent]);
+    ExistvideoInActivity()
+  }, [activitiesEvent])
 
   if (!cEvent.value) {
-    return <>Cargando...</>;
+    return <>Cargando...</>
   }
 
-  let countactivityToShow = 0;
+  let countactivityToShow = 0
 
   return (
     <>
       {existActivity === 1 && (
         <Row gutter={[20, 20]} style={{ margin: '25px' }}>
           {activitiesEvent &&
-            //activitiesEvent.sort((a, b) => a.updated_at - b.updated_at)&&
             activitiesEvent.map((activity, index) => {
               if (countactivityToShow < 3) {
                 if (activity.video) {
-                  countactivityToShow++;
+                  countactivityToShow++
                   return (
                     <Col key={index} xs={0} sm={0} md={24} lg={8} xl={8}>
                       <VideoCard
@@ -48,18 +47,14 @@ const ListVideoCard = () => {
                         activity={activity}
                       />
                     </Col>
-                  );
+                  )
                 }
-                //Solo los últimos 3
-                // if (index > 2) return;
-
-                //return <VideoCard key={index} activity={activity} />;
               }
             })}
         </Row>
       )}
     </>
-  );
-};
+  )
+}
 
-export default ListVideoCard;
+export default ListVideoCard

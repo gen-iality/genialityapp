@@ -1,38 +1,38 @@
-import { Component } from 'react';
-import { Card, Row, Col } from 'antd';
-import { firestore } from '@helpers/firebase';
-import { ExternalSurvey } from '@helpers/request';
-import { EditOutlined } from '@ant-design/icons';
-import { DispatchMessageService } from '@context/MessageService';
+import { Component } from 'react'
+import { Card, Row, Col } from 'antd'
+import { firestore } from '@helpers/firebase'
+import { ExternalSurvey } from '@helpers/request'
+import { EditOutlined } from '@ant-design/icons'
+import { StateMessage } from '@context/MessageService'
 
 export default class SurveyExternal extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       publishedSurveys: [],
-    };
+    }
   }
   componentDidMount = () => {
     //
-    this.listenActivitySurveysExternal();
-  };
+    this.listenActivitySurveysExternal()
+  }
 
   listenActivitySurveysExternal = async () => {
     try {
-      const resp = await ExternalSurvey(this.props.meeting_id, true);
+      const resp = await ExternalSurvey(this.props.meeting_id, true)
       if (resp != null) {
-        const surveyList = resp.polls;
-        this.setState({ publishedSurveys: surveyList, loading: true });
+        const surveyList = resp.polls
+        this.setState({ publishedSurveys: surveyList, loading: true })
       }
     } catch (error) {
-      error;
+      error
     }
-  };
+  }
 
   Details = async () => {
     // Crear survey parametros inicializados
     // Revisar esta función... creo que no se usa para nada
-  };
+  }
 
   updateSurvey = (survey_id, data) => {
     return new Promise((resolve) => {
@@ -40,24 +40,20 @@ export default class SurveyExternal extends Component {
         .collection('surveys')
         .doc(survey_id)
         .update({ ...data })
-        .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }));
-    });
-  };
+        .then(() => resolve({ message: 'Evaluación actualizada', state: 'updated' }))
+    })
+  }
 
   handleChange = async (survey_id, data) => {
-    const result = await this.updateSurvey(survey_id, data);
+    const result = await this.updateSurvey(survey_id, data)
 
     if (result && result.state === 'updated') {
-      DispatchMessageService({
-        type: 'success',
-        msj: result.message,
-        action: 'show',
-      });
+      StateMessage.show(null, 'success', result.message)
     }
-  };
+  }
 
   render() {
-    const { publishedSurveys } = this.state;
+    const { publishedSurveys } = this.state
     return (
       <Card title="Gestor de evaluaciones externas">
         {this.props.isExternal ? (
@@ -83,13 +79,13 @@ export default class SurveyExternal extends Component {
                     <EditOutlined onClick={() => this.Details(survey.id)} />
                   </Col>
                 </Row>
-              );
+              )
             })}
           </>
         ) : (
           <div>No hay evaluaciones publicadas para esta lección</div>
         )}
       </Card>
-    );
+    )
   }
 }

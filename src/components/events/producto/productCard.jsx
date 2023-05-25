@@ -1,7 +1,7 @@
-import { Card, Space, Typography } from 'antd';
-import Meta from 'antd/lib/card/Meta';
+import { Card, Space, Typography } from 'antd'
+import Meta from 'antd/lib/card/Meta'
 const ProductCard = ({ galery, eventId, history }) => {
-  const { Title } = Typography;
+  const { Title } = Typography
   return (
     <Card
       /* actions={[
@@ -17,14 +17,17 @@ const ProductCard = ({ galery, eventId, history }) => {
       bodyStyle={{ padding: '10px', minHeight: '120px', width: '100%' }}
       key={'Cardgallery' + galery.id}
       style={{ width: '100%', cursor: 'pointer' }}
-      onClick={() => history.push(`/landing/${eventId}/producto/${galery._id}/detailsproducts`)}
+      onClick={() =>
+        history.push(`/landing/${eventId}/producto/${galery._id}/detailsproducts`)
+      }
       cover={
         <img
           alt="example"
           src={galery && galery.image && galery.image[0]}
           style={{ height: '250px', objectFit: 'cover' }}
         />
-      }>
+      }
+    >
       <Meta
         description={
           <Space direction="vertical">
@@ -38,14 +41,16 @@ const ProductCard = ({ galery, eventId, history }) => {
                     {galery?.by}
                   </Typography.Text>
                 )}
-                {galery?.price && <Typography.Text type="success"> $ {galery?.price}</Typography.Text>}
+                {galery?.price && (
+                  <Typography.Text type="success"> $ {galery?.price}</Typography.Text>
+                )}
               </Space>
             )}
           </Space>
         }
       />
     </Card>
-  );
-};
+  )
+}
 
-export default ProductCard;
+export default ProductCard

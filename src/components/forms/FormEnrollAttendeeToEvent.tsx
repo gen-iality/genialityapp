@@ -1,10 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
-import BasicFieldsToFormEnrollAttendeeToEvent from './BasicFieldsToFormEnrollAttendeeToEvent';
-import AdditionalFieldsToFormEnrollAttendeeToEvent from './AdditionalFieldsToFormEnrollAttendeeToEvent';
-import { Alert, Button, Card, Col, Divider, Form, Row, Space, Spin, Typography } from 'antd';
-import { useIntl } from 'react-intl';
-import { LoadingOutlined } from '@ant-design/icons';
-import dispatchFormEnrollAttendeeToEvent from './dispatchFormEnrollAttendeeToEvent';
+import { useEffect, useRef, useState } from 'react'
+import BasicFieldsToFormEnrollAttendeeToEvent from './BasicFieldsToFormEnrollAttendeeToEvent'
+import AdditionalFieldsToFormEnrollAttendeeToEvent from './AdditionalFieldsToFormEnrollAttendeeToEvent'
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Divider,
+  Form,
+  Row,
+  Space,
+  Spin,
+  Typography,
+} from 'antd'
+import { useIntl } from 'react-intl'
+import { LoadingOutlined } from '@ant-design/icons'
+import dispatchFormEnrollAttendeeToEvent from './dispatchFormEnrollAttendeeToEvent'
 import {
   aditionalFields,
   alertStyles,
@@ -12,14 +23,17 @@ import {
   center,
   textLeft,
   assignmentOfConditionsToAdditionalFields,
-} from '@Utilities/formUtils';
-import { AttendeeInformation, FormEnrollAttendeeToEventPropsTypes } from '@Utilities/types/types';
-import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
-import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline';
-import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
-import AttendeeCheckInButtonPrint from '@components/checkIn/AttendeeCheckInButtonPrint';
+} from '@Utilities/formUtils'
+import {
+  AttendeeInformation,
+  FormEnrollAttendeeToEventPropsTypes,
+} from '@Utilities/types/types'
+import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox'
+import BadgeAccountOutlineIcon from '@2fd/ant-design-icons/lib/BadgeAccountOutline'
+import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton'
+import AttendeeCheckInButtonPrint from '@components/checkIn/AttendeeCheckInButtonPrint'
 
-const { Title } = Typography;
+const { Title } = Typography
 
 const FormEnrollAttendeeToEvent = ({
   fields = [],
@@ -39,26 +53,33 @@ const FormEnrollAttendeeToEvent = ({
   badgeEvent,
   activityId,
 }: FormEnrollAttendeeToEventPropsTypes) => {
-  const [form] = Form.useForm();
-  const intl = useIntl();
-  const buttonSubmit = useRef(null);
-  const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState<boolean>(false);
+  const [form] = Form.useForm()
+  const intl = useIntl()
+  const buttonSubmit = useRef(null)
+  const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] =
+    useState<boolean>(false)
 
-  const [attendeeInformation, setAttendeeInformation] = useState<AttendeeInformation | null>(null);
+  const [attendeeInformation, setAttendeeInformation] =
+    useState<AttendeeInformation | null>(null)
 
-  const { formDispatch, formState } = dispatchFormEnrollAttendeeToEvent();
-  const { basicFields, thereAreExtraFields, buttonText } = formState;
-  const [validatedFields, setValidatedFields] = useState<Array<any>>([]);
-  const { icon, styles, text } = submitButtonProps;
+  const { formDispatch, formState } = dispatchFormEnrollAttendeeToEvent()
+  const { basicFields, thereAreExtraFields, buttonText } = formState
+  const [validatedFields, setValidatedFields] = useState<Array<any>>([])
+  const { icon, styles, text } = submitButtonProps
   /** Restructuring of fields which contain conditions or not */
   const assigningConditionsToFields = (changedValues: {}, allValues: {}) => {
-    assignmentOfConditionsToAdditionalFields({ conditionalFields, allValues, fields, setValidatedFields });
-  };
+    assignmentOfConditionsToAdditionalFields({
+      conditionalFields,
+      allValues,
+      fields,
+      setValidatedFields,
+    })
+  }
 
   const componentLoad = (attendeeData: AttendeeInformation) => {
-    setAttendeeInformation(attendeeData);
-    form.resetFields();
-    formDispatch({ type: 'getBasicFields', payload: { fields, attendeeData } });
+    setAttendeeInformation(attendeeData)
+    form.resetFields()
+    formDispatch({ type: 'getBasicFields', payload: { fields, attendeeData } })
     formDispatch({
       type: 'thereAreExtraFields',
       payload: {
@@ -66,23 +87,23 @@ const FormEnrollAttendeeToEvent = ({
         attendeeData,
         visibleInCms,
       },
-    });
-    formDispatch({ type: 'buttonText', payload: { visibleInCms, attendeeData } });
-    const allValues = attendeeData ? attendeeData.properties : [];
+    })
+    formDispatch({ type: 'buttonText', payload: { visibleInCms, attendeeData } })
+    const allValues = attendeeData ? attendeeData.properties : []
 
-    assigningConditionsToFields({}, allValues);
-  };
+    assigningConditionsToFields({}, allValues)
+  }
 
   useEffect(() => {
-    componentLoad(attendee);
-  }, [attendee]);
+    componentLoad(attendee)
+  }, [attendee])
 
   const showGeneralMessage = () => {
-    setGeneralFormErrorMessageVisible(true);
+    setGeneralFormErrorMessageVisible(true)
     setTimeout(() => {
-      setGeneralFormErrorMessageVisible(false);
-    }, 4000);
-  };
+      setGeneralFormErrorMessageVisible(false)
+    }, 4000)
+  }
 
   return (
     <div style={center}>
@@ -99,11 +120,20 @@ const FormEnrollAttendeeToEvent = ({
             <Row style={textLeft}>
               <Col span={24}>
                 <Card bodyStyle={textLeft} style={cardStyles}>
-                  <Spin tip="Guardando cambios" spinning={loaderWhenSavingUpdatingOrDelete}>
-                    <BasicFieldsToFormEnrollAttendeeToEvent basicFields={basicFields} attendee={attendee} />
+                  <Spin
+                    tip="Guardando cambios"
+                    spinning={loaderWhenSavingUpdatingOrDelete}
+                  >
+                    <BasicFieldsToFormEnrollAttendeeToEvent
+                      basicFields={basicFields}
+                      attendee={attendee}
+                    />
                     <Divider />
                     {thereAreExtraFields > 0 && (
-                      <Title level={4} style={{ marginBottom: '30px', textAlign: 'center' }}>
+                      <Title
+                        level={4}
+                        style={{ marginBottom: '30px', textAlign: 'center' }}
+                      >
                         {intl.formatMessage({
                           id: 'modal.title.registerevent..',
                           defaultMessage: 'Información adicional para el curso',
@@ -116,7 +146,11 @@ const FormEnrollAttendeeToEvent = ({
                         defaultMessage: 'No hay campos adicionales en este curso',
                       })}
                     <AdditionalFieldsToFormEnrollAttendeeToEvent
-                      aditionalFields={aditionalFields({ validatedFields, attendee, visibleInCms })}
+                      aditionalFields={aditionalFields({
+                        validatedFields,
+                        attendee,
+                        visibleInCms,
+                      })}
                     />
                   </Spin>
                 </Card>
@@ -125,7 +159,10 @@ const FormEnrollAttendeeToEvent = ({
 
             <Row gutter={[24, 24]}>
               {generalFormErrorMessageVisible && (
-                <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                <Col
+                  span={24}
+                  style={{ display: 'inline-flex', justifyContent: 'center' }}
+                >
                   <Alert
                     className="animate__animated animate__bounceIn"
                     style={alertStyles}
@@ -146,7 +183,9 @@ const FormEnrollAttendeeToEvent = ({
                     {attendeeInformation?._id && eventType === 'hybridEvent' && (
                       <b>
                         Tipo de checkIn:{' '}
-                        {attendeeInformation?.checkedin_type ? attendeeInformation.checkedin_type : 'ninguno'}
+                        {attendeeInformation?.checkedin_type
+                          ? attendeeInformation.checkedin_type
+                          : 'ninguno'}
                       </b>
                     )}
                     {visibleInCms && (
@@ -155,19 +194,26 @@ const FormEnrollAttendeeToEvent = ({
                           attendee={attendeeInformation}
                           activityId={activityId}
                           reloadComponent={componentLoad}
-                          checkInAttendeeCallbak={checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}}
+                          checkInAttendeeCallbak={
+                            checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}
+                          }
                         />
                         {eventType === 'hybridEvent' && (
                           <AttendeeCheckInButton
                             attendee={attendeeInformation}
                             activityId={activityId}
                             reloadComponent={componentLoad}
-                            checkInAttendeeCallbak={checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}}
+                            checkInAttendeeCallbak={
+                              checkInAttendeeCallbak ? checkInAttendeeCallbak : () => {}
+                            }
                           />
                         )}
-                        {eventType !== 'onlineEvent' && badgeEvent && attendee && printUser && (
-                          <AttendeeCheckInButtonPrint onPrintUser={printUser!} />
-                        )}
+                        {eventType !== 'onlineEvent' &&
+                          badgeEvent &&
+                          attendee &&
+                          printUser && (
+                            <AttendeeCheckInButtonPrint onPrintUser={printUser!} />
+                          )}
                       </>
                     )}
 
@@ -207,7 +253,7 @@ const FormEnrollAttendeeToEvent = ({
         </Card>
       </Col>
     </div>
-  );
-};
+  )
+}
 
-export default FormEnrollAttendeeToEvent;
+export default FormEnrollAttendeeToEvent

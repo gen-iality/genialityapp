@@ -1,5 +1,5 @@
-import { useState, createElement } from 'react';
-import { Tabs, Button, Menu, Row, Col, Tooltip } from 'antd';
+import { useState, createElement } from 'react'
+import { Tabs, Button, Menu, Tooltip } from 'antd'
 import {
   CommentOutlined,
   PieChartOutlined,
@@ -7,27 +7,24 @@ import {
   RightOutlined,
   LeftOutlined,
   BuildOutlined,
-  ArrowLeftOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
-import ListadoJuegos from './listadoJuegos';
-import LiveChat from './liveChat';
-import RankingTrivia from './rankingTrivia';
+} from '@ant-design/icons'
+import ListadoJuegos from './listadoJuegos'
+import LiveChat from './liveChat'
 
-const { TabPane } = Tabs;
+const { TabPane } = Tabs
 
 export default function ConferenceTabsComponent(props) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false)
 
   function callback(key) {
-    props.handleActiveTab(key);
+    props.handleActiveTab(key)
   }
 
   function handleClick(key) {
-    props.handleActiveTab(key);
+    props.handleActiveTab(key)
   }
 
-  const { chat, surveys, games, attendees, activeTab } = props;
+  const { chat, surveys, games, attendees, activeTab } = props
   return (
     <div className="zoom-collapsed">
       <Button onClick={() => setCollapsed(!collapsed)} className="zoom-collapsed_button">
@@ -47,7 +44,8 @@ export default function ConferenceTabsComponent(props) {
                     <p style={{ marginBottom: '0px' }}>Chat</p>
                   </>
                 }
-                key="chat">
+                key="chat"
+              >
                 <LiveChat {...props} />
               </TabPane>
             )}
@@ -60,7 +58,8 @@ export default function ConferenceTabsComponent(props) {
                     <p style={{ marginBottom: '0px' }}>Asistentes</p>
                   </>
                 }
-                key="attendees">
+                key="attendees"
+              >
                 Asistentes
               </TabPane>
             )}
@@ -69,14 +68,15 @@ export default function ConferenceTabsComponent(props) {
                 tab={
                   <>
                     <img
-                      src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
+                      src="https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png"
                       style={{ width: '32px' }}
                       alt="Games"
                     />
                     <p style={{ marginBottom: '0px' }}>Juego</p>
                   </>
                 }
-                key="games">
+                key="games"
+              >
                 <ListadoJuegos {...props} />
               </TabPane>
             )}
@@ -93,8 +93,8 @@ export default function ConferenceTabsComponent(props) {
                 </Tooltip>
               }
               onClick={() => {
-                setCollapsed(!collapsed);
-                handleClick('chat');
+                setCollapsed(!collapsed)
+                handleClick('chat')
               }}
             />
           )}
@@ -107,8 +107,8 @@ export default function ConferenceTabsComponent(props) {
                 </Tooltip>
               }
               onClick={() => {
-                setCollapsed(!collapsed);
-                handleClick('surveys');
+                setCollapsed(!collapsed)
+                handleClick('surveys')
               }}
             />
           )}
@@ -121,8 +121,8 @@ export default function ConferenceTabsComponent(props) {
                 </Tooltip>
               }
               onClick={() => {
-                setCollapsed(!collapsed);
-                handleClick('attendees');
+                setCollapsed(!collapsed)
+                handleClick('attendees')
               }}
             />
           )}
@@ -134,8 +134,8 @@ export default function ConferenceTabsComponent(props) {
                   <BuildOutlined
                     style={{ fontSize: '21px' }}
                     onClick={() => {
-                      setCollapsed(!collapsed);
-                      handleClick('games');
+                      setCollapsed(!collapsed)
+                      handleClick('games')
                     }}
                   />
                 </Tooltip>
@@ -145,5 +145,5 @@ export default function ConferenceTabsComponent(props) {
         </Menu>
       )}
     </div>
-  );
+  )
 }

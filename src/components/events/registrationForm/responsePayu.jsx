@@ -1,23 +1,23 @@
-import { CheckCircleFilled, CloseCircleFilled, InfoCircleFilled } from '@ant-design/icons';
-import { Button, Card, Modal, Result, Row } from 'antd';
-import { useEffect, useState } from 'react';
-import withContext from '@context/withContext';
-import { Actions } from '@helpers/request';
+import { CheckCircleFilled, CloseCircleFilled, InfoCircleFilled } from '@ant-design/icons'
+import { Button, Modal, Result } from 'antd'
+import { useEffect, useState } from 'react'
+import withContext from '@context/withContext'
+import { Actions } from '@helpers/request'
 
 const ResponsePayu = (props) => {
-  const [referenceCode, setReferenceCode] = useState();
-  const [response, setResponse] = useState();
-  const [visible, setVisible] = useState(true);
+  const [referenceCode, setReferenceCode] = useState()
+  const [response, setResponse] = useState()
+  const [visible, setVisible] = useState(true)
   useEffect(() => {
-    const parameters = window.location.search;
-    const urlParams = new URLSearchParams(parameters);
+    const parameters = window.location.search
+    const urlParams = new URLSearchParams(parameters)
     //Accedemos a los valores
-    const reference = urlParams.get('referenceCode');
-    const lapResponseCode = urlParams.get('lapResponseCode');
-    const polTransactionState = urlParams.get('polTransactionState');
-    const polResponseCode = urlParams.get('polResponseCode');
-    const lapTransactionState = urlParams.get('lapTransactionState');
-    const message = urlParams.get('message');
+    const reference = urlParams.get('referenceCode')
+    const lapResponseCode = urlParams.get('lapResponseCode')
+    const polTransactionState = urlParams.get('polTransactionState')
+    const polResponseCode = urlParams.get('polResponseCode')
+    const lapTransactionState = urlParams.get('lapTransactionState')
+    const message = urlParams.get('message')
     setResponse({
       reference,
       lapResponseCode,
@@ -25,25 +25,32 @@ const ResponsePayu = (props) => {
       polResponseCode,
       lapTransactionState,
       message,
-    });
-    if (lapTransactionState == 'APPROVED' && polTransactionState == 4 && polResponseCode == 1) {
-      updateRolUser();
+    })
+    if (
+      lapTransactionState == 'APPROVED' &&
+      polTransactionState == 4 &&
+      polResponseCode == 1
+    ) {
+      updateRolUser()
     }
     async function updateRolUser() {
-      const updateRol = await Actions.put(`/api/events/${props.cEvent.value?._id}/eventusers/${reference}/updaterol`, {
-        rol_id: '60e8a8b7f6817c280300dc23',
-      });
+      const updateRol = await Actions.put(
+        `/api/events/${props.cEvent.value?._id}/eventusers/${reference}/updaterol`,
+        {
+          rol_id: '60e8a8b7f6817c280300dc23',
+        },
+      )
     }
     //lapResponseCode,polTransactionState,polResponseCode,lapTransactionState=DECLINED&message=DECLINED
-    if (reference) setReferenceCode(reference);
-  }, []);
+    if (reference) setReferenceCode(reference)
+  }, [])
   const isDeclined = () => {
     return response?.lapTransactionState == 'DECLINED' ||
       response?.lapTransactionState == 'ERROR' ||
       response?.lapTransactionState == 'EXPIRED'
       ? true
-      : false;
-  };
+      : false
+  }
   return (
     <Modal
       bodyStyle={{
@@ -97,9 +104,15 @@ const ResponsePayu = (props) => {
           (response?.lapTransactionState == 'DECLINED' ||
             response?.lapTransactionState == 'ERROR' ||
             response?.lapTransactionState == 'EXPIRED') ? (
-            <div>Lo sentimos, su transacción ha sido rechazada, intente realizar su transacción mas tarde.</div>
+            <div>
+              Lo sentimos, su transacción ha sido rechazada, intente realizar su
+              transacción mas tarde.
+            </div>
           ) : response?.lapTransactionState == 'APPROVED' ? (
-            <div>Su transacción ha sido realizada correctamente, ahora podrás realizar pujas por las obras</div>
+            <div>
+              Su transacción ha sido realizada correctamente, ahora podrás realizar pujas
+              por las obras
+            </div>
           ) : response?.lapTransactionState == 'PENDING' ? (
             <div>Su transacción está pendiente por confirmar</div>
           ) : (
@@ -113,17 +126,18 @@ const ResponsePayu = (props) => {
             type="primary"
             size="large"
             onClick={() => {
-              setVisible(false);
+              setVisible(false)
               !isDeclined()
                 ? (window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/evento`)
-                : (window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/tickets`);
-            }}>
+                : (window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/tickets`)
+            }}
+          >
             Aceptar
           </Button>,
         ]}
       />
     </Modal>
-  );
-};
+  )
+}
 
-export default withContext(ResponsePayu);
+export default withContext(ResponsePayu)

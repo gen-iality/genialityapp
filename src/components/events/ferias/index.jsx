@@ -1,5 +1,5 @@
-import FeriasSectionRoutes from '../Landing/FeriasSectionRoutes';
-const Ferias = (props) => {
-  return <FeriasSectionRoutes />;
-};
-export default Ferias;
+import FeriasSectionRoutes from '../Landing/FeriasSectionRoutes'
+const Ferias = () => {
+  return <FeriasSectionRoutes />
+}
+export default Ferias

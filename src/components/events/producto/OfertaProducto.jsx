@@ -1,74 +1,74 @@
-import { MinusOutlined, PlayCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, Alert, Spin } from 'antd';
-import { useState } from 'react';
-import { EventsApi } from '@helpers/request';
-import withContext from '@context/withContext';
-import { useEffect } from 'react';
-import { DispatchMessageService } from '@context/MessageService';
+import { MinusOutlined, PlayCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import {
+  Card,
+  Col,
+  Row,
+  Tag,
+  Input,
+  Button,
+  Typography,
+  Space,
+  Divider,
+  Alert,
+  Spin,
+} from 'antd'
+import { useState } from 'react'
+import { EventsApi } from '@helpers/request'
+import withContext from '@context/withContext'
+import { useEffect } from 'react'
+import { StateMessage } from '@context/MessageService'
 
-const { Title, Text } = Typography;
+const { Title, Text } = Typography
 
-const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF, updateValues }) => {
-  const [selectedValue, setSelectedValue] = useState(100000);
-  const [loadingSave, setLoadingSave] = useState(false);
-  const [priceProduct, setPriceProduct] = useState(product && product.price);
-  const [valuOferta, setValueOferta] = useState(0);
-  const [valorProduct, setValorProduct] = useState(valuOferta);
-  const [totalOferts, setTotalOferts] = useState(0);
-  const [isUsd, setUsd] = useState(false);
-  const [bloquerPuja, setBloquearPuja] = useState(false);
+const OfertaProduct = ({
+  product,
+  eventId,
+  cEventUser,
+  cUser,
+  hability,
+  messageF,
+  updateValues,
+}) => {
+  const [selectedValue, setSelectedValue] = useState(100000)
+  const [loadingSave, setLoadingSave] = useState(false)
+  const [priceProduct, setPriceProduct] = useState(product && product.price)
+  const [valuOferta, setValueOferta] = useState(0)
+  const [valorProduct, setValorProduct] = useState(valuOferta)
+  const [totalOferts, setTotalOferts] = useState(0)
+  const [isUsd, setUsd] = useState(false)
+  const [bloquerPuja, setBloquearPuja] = useState(false)
   useEffect(() => {
     if (product && eventId) {
-      obtenerOfertas();
+      obtenerOfertas()
       if (product.currency == 'USD') {
-        setUsd(true);
-        setSelectedValue(50);
+        setUsd(true)
+        setSelectedValue(50)
       }
       // Puja bloqueda para un producto en especifico, sirve para no cambiar el valor a ofrecer
       if (product && product._id == '6116cae171f4b926d1363266') {
-        setBloquearPuja(true);
+        setBloquearPuja(true)
       }
-      setPriceProduct(product && product.price);
-      setValorProduct(obtenerValor());
-      const minValueUp = product.currency == 'USD' ? 50 : 100000;
+      setPriceProduct(product && product.price)
+      setValorProduct(obtenerValor())
+      const minValueUp = product.currency == 'USD' ? 50 : 100000
       const valueOfertaMin =
         product._id == '6116cae171f4b926d1363266'
           ? parseFloat(obtenerValor())
-          : parseFloat(obtenerValor()) + minValueUp;
-      setValueOferta(valueOfertaMin);
+          : parseFloat(obtenerValor()) + minValueUp
+      setValueOferta(valueOfertaMin)
     }
     async function obtenerOfertas() {
-      const oferts = await EventsApi.ofertsProduct(eventId, product._id);
+      const oferts = await EventsApi.ofertsProduct(eventId, product._id)
       if (oferts && oferts.data) {
-        setTotalOferts(oferts.data.length);
+        setTotalOferts(oferts.data.length)
       }
     }
-  }, [eventId, product]);
+  }, [eventId, product])
 
   const obtenerValor = () => {
-    return (
-      product && product.price
-    ); /* && product.price.includes('COP')
-      ? product.price
-          .split('COP $ ')[1]
-          .replace(`’`, '')
-          .replace('.', '')
-          .replace(',', '')
-      : product && product.price && product.price.includes('USD')?
-      product.price
-          .split('USD $ ')[1]
-          .replace(`’`, '')
-          .replace('.', '').replace(',', ''):0;*/
-  };
+    return product && product.price
+  }
 
-  /*const formatPrecioInitial=(value)=>{
-    let valueFormat;
-   if(value){    
-    let valor= value.split(' ');    
-    valueFormat=valor.slice(2)     
-      return valueFormat;        
-   }
-  }*/
   // Valores para subir en la puja
   const valuesPuja = [
     {
@@ -83,7 +83,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
       name: 'COP 1.000.000',
       value: 1000000,
     },
-  ];
+  ]
 
   // Valores para subir en la puja usd
   const valuesPujaDol = [
@@ -103,82 +103,76 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
       name: 'USD 1.000',
       value: 1000,
     },
-  ];
+  ]
   // Validar si tiene permisos de pujar
   const permission = () => {
     if (cEventUser.value != null) {
       if (cEventUser.value.rol_id == '60e8a8b7f6817c280300dc23') {
-        return true;
+        return true
       }
     }
 
-    return false;
-  };
+    return false
+  }
   // Onchange input value
   const changeValor = (e) => {
-    setValueOferta(e.target.value);
-  };
+    setValueOferta(e.target.value)
+  }
   // Save value oferta
   const saveValue = async () => {
-    setLoadingSave(true);
+    setLoadingSave(true)
     if (valuOferta > 0) {
       const data = {
         valueOffered: valuOferta,
-      };
+      }
       try {
-        const valueResp = await EventsApi.validPrice(eventId, product._id, data);
+        const valueResp = await EventsApi.validPrice(eventId, product._id, data)
         if (valueResp) {
-          const valueNumber = valueResp;
+          const valueNumber = valueResp
 
           if (
             valuOferta > valueNumber ||
-            (product && product._id == '6116cae171f4b926d1363266' && valuOferta >= valueNumber)
+            (product &&
+              product._id == '6116cae171f4b926d1363266' &&
+              valuOferta >= valueNumber)
           ) {
-            const respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
+            const respuestaApi = await EventsApi.storeOfert(eventId, product._id, data)
             if (respuestaApi) {
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Oferta realizada correctamente..!',
-                action: 'show',
-              });
-              updateValues(true);
+              StateMessage.show(null, 'success', 'Oferta realizada correctamente..!')
+              updateValues(true)
             }
           } else {
-            const minValueUp = product.currency == 'USD' ? 50 : 100000;
-            const valueOfertaMin = parseFloat(valueNumber) + minValueUp;
-            setValueOferta(valueOfertaMin);
-            setPriceProduct(valueResp);
-            setValorProduct(valueNumber);
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Actualmente se ha ofertado un valor mucho mayor para esta obra!',
-              action: 'show',
-            });
+            const minValueUp = product.currency == 'USD' ? 50 : 100000
+            const valueOfertaMin = parseFloat(valueNumber) + minValueUp
+            setValueOferta(valueOfertaMin)
+            setPriceProduct(valueResp)
+            setValorProduct(valueNumber)
+            StateMessage.show(
+              null,
+              'error',
+              'Actualmente se ha ofertado un valor mucho mayor para esta obra!',
+            )
           }
         }
       } catch (error) {
-        DispatchMessageService({
-          type: 'error',
-          msj: 'No estás autorizado para realizar ofertas',
-          action: 'show',
-        });
+        StateMessage.show(null, 'error', 'No estás autorizado para realizar ofertas')
       }
     }
-    setLoadingSave(false);
-  };
+    setLoadingSave(false)
+  }
   // Boton mas
   const upvalue = () => {
     if (+valuOferta + selectedValue <= 3 * valorProduct) {
-      setValueOferta(+valuOferta + selectedValue);
+      setValueOferta(+valuOferta + selectedValue)
     }
-  };
+  }
   // Boton menos
   const downvalue = () => {
-    const minValueUp = product.currency == 'USD' ? 50 : 100000;
+    const minValueUp = product.currency == 'USD' ? 50 : 100000
     if (+valuOferta - selectedValue >= +valorProduct + minValueUp) {
-      setValueOferta(+valuOferta - selectedValue);
+      setValueOferta(+valuOferta - selectedValue)
     }
-  };
+  }
   return (
     <>
       {product && product._id != '6116cae171f4b926d1363266' && (
@@ -190,8 +184,10 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                 <Title level={4}>
                   {(product &&
                     product.start_price &&
-                    /* product?.currency +  */ ' $ ' + product.start_price.toLocaleString('es-CO')) ||
-                    /* priceProduct && product?.currency + */ ' $ ' + priceProduct.toLocaleString('es-CO')}
+                    /* product?.currency +  */ ' $ ' +
+                      product.start_price.toLocaleString('es-CO')) ||
+                    /* priceProduct && product?.currency + */ ' $ ' +
+                      priceProduct.toLocaleString('es-CO')}
                 </Title>
               </Text>
               {hability && <Divider></Divider>}
@@ -200,9 +196,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
               <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                 <Text type="secondary">
                   Oferta actual:{' '}
-                  <Title level={4}>
-                    {' $ ' + priceProduct.toLocaleString('es-CO')}
-                  </Title>
+                  <Title level={4}>{' $ ' + priceProduct.toLocaleString('es-CO')}</Title>
                 </Text>
                 {hability && permission() && <Divider></Divider>}
               </Col>
@@ -246,7 +240,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                         type="dashed"
                         shape="circle"
                         icon={<MinusOutlined style={{ color: '#2db7f5' }} />}
-                        onClick={() => (!bloquerPuja ? downvalue() : null)}></Button>
+                        onClick={() => (!bloquerPuja ? downvalue() : null)}
+                      ></Button>
                       <Input
                         readOnly
                         type="number"
@@ -260,7 +255,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                         type="dashed"
                         shape="circle"
                         icon={<PlusOutlined style={{ color: '#2db7f5' }} />}
-                        onClick={() => (!bloquerPuja ? upvalue() : null)}></Button>
+                        onClick={() => (!bloquerPuja ? upvalue() : null)}
+                      ></Button>
                     </Space>
                   </Col>
                 )}
@@ -273,7 +269,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                     permission() && (
                       <div>
                         <small>
-                          Hay <strong>{totalOferts}</strong> oferta{totalOferts > 1 && 's'}
+                          Hay <strong>{totalOferts}</strong> oferta
+                          {totalOferts > 1 && 's'}
                         </small>
                       </div>
                     )
@@ -297,14 +294,21 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                         'Al hacer esta puja estás aceptando nuestros términos y condiciones y adquieres el compromiso de pago por el valor ofertado, en caso que ningún otro participante realice una puja por un monto superior.'
                       }
                     />
-                    <a target="_blank" rel="noreferrer" href="https://tiempodejuego.org/tyclaventana/">
+                    <a
+                      target="_blank"
+                      rel="noreferrer"
+                      href="https://tiempodejuego.org/tyclaventana/"
+                    >
                       <PlayCircleOutlined /> Ver términos y condiciones
                     </a>
                   </Col>
                 )}
                 {!permission() && cEventUser.value !== null && (
                   <Row>
-                    <Alert type="warning" message="No tienes permisos para pujar sobre esta obra." />
+                    <Alert
+                      type="warning"
+                      message="No tienes permisos para pujar sobre esta obra."
+                    />
                   </Row>
                 )}
                 {!permission() && cEventUser.value === null && (
@@ -321,7 +325,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
                 <div
                   dangerouslySetInnerHTML={{
                     __html: messageF ? messageF : 'Sin mensaje',
-                  }}></div>
+                  }}
+                ></div>
               )}
             </div>
           )}
@@ -337,7 +342,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability, messageF
         </Card>
       )}
     </>
-  );
-};
+  )
+}
 
-export default withContext(OfertaProduct);
+export default withContext(OfertaProduct)

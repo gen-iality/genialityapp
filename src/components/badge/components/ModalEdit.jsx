@@ -1,5 +1,5 @@
-import { Form, Modal, Select, Button } from 'antd';
-const { Option } = Select;
+import { Form, Modal, Select, Button } from 'antd'
+const { Option } = Select
 export default function ModalEdit({
   editField,
   isVisible,
@@ -69,5 +69,5 @@ export default function ModalEdit({
         </Form.Item>
       </Form>
     </Modal>
-  );
+  )
 }

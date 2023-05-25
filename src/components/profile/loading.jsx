@@ -1,5 +1,5 @@
-import { Space } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { Space } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 
 const Loading = () => {
   return (
@@ -11,10 +11,11 @@ const Loading = () => {
         justifyContent: 'center',
         alignContent: 'center',
         height: '100%',
-      }}>
+      }}
+    >
       <LoadingOutlined style={{ fontSize: '100px', color: '#cccccc' }} />
     </Space>
-  );
-};
+  )
+}
 
-export default Loading;
+export default Loading

@@ -1,25 +1,25 @@
-import { Component } from 'react';
-import { Card, Row, Col, Typography } from 'antd';
-import Parser from 'html-react-parser';
-import withContext from '@context/withContext';
+import { Component } from 'react'
+import { Card, Row, Col, Typography } from 'antd'
+import Parser from 'html-react-parser'
+import withContext from '@context/withContext'
 
 class InformativeSection2 extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       markup: '',
       informativeSection1: null,
-    };
+    }
   }
 
   componentDidMount() {
     this.setState({
       markup: this.props.cEvent.value.itemsMenu.informativeSection1.markup,
       informativeSection1: this.props.cEvent.value.itemsMenu.informativeSection1,
-    });
+    })
   }
   render() {
-    const { markup, informativeSection1 } = this.state;
+    const { markup, informativeSection1 } = this.state
 
     return (
       <Row justify="center" gutter={[8, 8]} wrap>
@@ -31,7 +31,10 @@ class InformativeSection2 extends Component {
                   backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
                 }}
                 title={
-                  <Typography.Title level={4} style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                  <Typography.Title
+                    level={4}
+                    style={{ color: this.props.cEvent.value.styles.textMenu }}
+                  >
                     {informativeSection1 && informativeSection1.name
                       ? informativeSection1.name
                       : 'Sección informativa'}
@@ -39,7 +42,10 @@ class InformativeSection2 extends Component {
                 }
                 bordered={false} /* style={{ width: 1000 }} */
               >
-                <div id="img-informative" style={{ color: this.props.cEvent.value.styles.textMenu }}>
+                <div
+                  id="img-informative"
+                  style={{ color: this.props.cEvent.value.styles.textMenu }}
+                >
                   {markup != null && Parser(markup)}
                 </div>
               </Card>
@@ -47,9 +53,9 @@ class InformativeSection2 extends Component {
           )}
         </Col>
       </Row>
-    );
+    )
   }
 }
 
-const InformativeSection2WithContext = withContext(InformativeSection2);
-export default InformativeSection2WithContext;
+const InformativeSection2WithContext = withContext(InformativeSection2)
+export default InformativeSection2WithContext

@@ -1,7 +1,7 @@
-div.editorHtml{
+div.editorHtml {
   margin: 50px;
   position: relative;
-  .sectionLayout{
+  .sectionLayout {
     position: relative;
     max-width: 740px;
     padding-left: 130px;
@@ -11,21 +11,24 @@ div.editorHtml{
       min-height: 50px;
       padding: 5px;
     }
-    input:focus,.medium-editor-element:focus{
-        outline: none;
+    input:focus,
+    .medium-editor-element:focus {
+      outline: none;
     }
-    .contentEditable{border: 1px dashed #aaa;}
-    .graf{
+    .contentEditable {
+      border: 1px dashed #aaa;
+    }
+    .graf {
       margin-top: 29px;
     }
-    .graf-figure{
+    .graf-figure {
       margin-top: 39px;
-      clear:both;
+      clear: both;
       position: relative;
       outline: 0;
       z-index: 10;
     }
-    .graf-ratio{
+    .graf-ratio {
       max-width: 380px;
       max-height: 380px;
       top: 0;
@@ -35,27 +38,27 @@ div.editorHtml{
       position: absolute;
       margin: 0 auto;
       display: block;
-      &:focus{
-        border: 2px solid green
+      &:focus {
+        border: 2px solid green;
       }
     }
-    .graf-image{
+    .graf-image {
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
     }
-    .imageCaption{
+    .imageCaption {
       display: block;
       line-height: 1.4;
-      color: rgba(0,0,0,.68);
+      color: rgba(0, 0, 0, 0.68);
       letter-spacing: 0;
     }
-    ::placeholder{
+    ::placeholder {
       color: lightgray;
     }
   }
-  .inlineTooltip{
+  .inlineTooltip {
     position: absolute;
     margin-left: -58px;
     margin-top: 4px;
@@ -64,7 +67,7 @@ div.editorHtml{
     height: 40px;
     z-index: 20;
     opacity: 0;
-    button{
+    button {
       width: 32px;
       height: 32px;
       line-height: 30px;
@@ -73,20 +76,19 @@ div.editorHtml{
       text-align: center;
       border-radius: 100%;
     }
-    &.is-active{
+    &.is-active {
       opacity: 1;
     }
-    &.is-scaled{
+    &.is-scaled {
       width: 260px;
     }
   }
-  .inlineTooltip-menu{
+  .inlineTooltip-menu {
     opacity: 0;
     display: inline-block;
     padding-left: 22px;
   }
-  .inlineTooltip.is-scaled .inlineTooltip-menu{
+  .inlineTooltip.is-scaled .inlineTooltip-menu {
     opacity: 1;
   }
 }
-

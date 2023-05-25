@@ -1,56 +1,56 @@
-import { useEffect, useState } from 'react';
-import { Card, Col, Row, Spin, Result, Button } from 'antd';
-import TicketsForm from '../../tickets/formTicket';
-import { connect } from 'react-redux';
-import { useUserEvent } from '@context/eventUserContext';
-import { useEventContext } from '@context/eventContext';
-import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
-import { Redirect } from 'react-router-dom';
-import { EventsApi } from '@helpers/request';
-import ProductCard from '../producto/productCard';
-import { withRouter } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import UserLoginContainer from '../UserLoginContainer';
+import { useEffect, useState } from 'react'
+import { Card, Col, Spin, Result } from 'antd'
+import TicketsForm from '../../tickets/formTicket'
+import { connect } from 'react-redux'
+import { useUserEvent } from '@context/eventUserContext'
+import { useEventContext } from '@context/eventContext'
+import { setSectionPermissions } from '../../../redux/sectionPermissions/actions'
+import { Redirect } from 'react-router-dom'
+import { EventsApi } from '@helpers/request'
+import { withRouter } from 'react-router-dom'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import UserLoginContainer from '../UserLoginContainer'
 
 const PageNotPermissions = (props) => {
-  const EventUser = useUserEvent();
-  const EventContext = useEventContext();
-  let redirect;
-  const urlsection = `/landing/${EventContext.value._id}/`;
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const history = useHistory();
-  const { eventPrivate } = useHelper();
+  const EventUser = useUserEvent()
+  const EventContext = useEventContext()
+  let redirect
+  const urlsection = `/landing/${EventContext.value._id}/`
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(false)
+  const { eventPrivate } = useHelper()
 
   const center = {
     margin: '30px auto',
     textAlign: 'center',
-  };
+  }
 
   const obtenerGaleria = () => {
-    setLoading(true);
+    setLoading(true)
     EventsApi.getProducts(EventContext.value._id).then((resp) => {
       if (resp && resp.data) {
-        const threeList = resp.data.slice(0, 3);
-        setProducts(threeList);
-        setLoading(false);
+        const threeList = resp.data.slice(0, 3)
+        setProducts(threeList)
+        setLoading(false)
       }
-    });
-  };
+    })
+  }
 
   useEffect(() => {
     if (EventUser.value == null) {
-      props.setSectionPermissions({ view: true, section: props.sectionPermissions.section });
+      props.setSectionPermissions({
+        view: true,
+        section: props.sectionPermissions.section,
+      })
     }
 
     if (EventUser.value !== null) {
-      redirect = 'evento';
+      redirect = 'evento'
     } else {
-      obtenerGaleria();
-      redirect = null;
+      obtenerGaleria()
+      redirect = null
     }
-  }, []);
+  }, [])
 
   return (
     <>
@@ -71,7 +71,8 @@ const PageNotPermissions = (props) => {
       ) : (
         <>
           {' '}
-          {redirect !== null || (redirect !== undefined && <Redirect to={`${urlsection}${redirect}`} />)}
+          {redirect !== null ||
+            (redirect !== undefined && <Redirect to={`${urlsection}${redirect}`} />)}
           {/* Sección quemada para curso de subasta sileciosa FTDJ */}
           {loading && (
             <div style={{ textAlign: 'center' }}>
@@ -86,11 +87,16 @@ const PageNotPermissions = (props) => {
                     {props.sectionPermissions.section ? (
                       <>
                         Para poder ver la sección{' '}
-                        <a style={{ fontWeight: 'bold' }}>{props.sectionPermissions.section}</a> tienes que estar
-                        registrado en este curso
+                        <a style={{ fontWeight: 'bold' }}>
+                          {props.sectionPermissions.section}
+                        </a>{' '}
+                        tienes que estar registrado en este curso
                       </>
                     ) : (
-                      <>Para poder ver esta sección tienes que estar registrado en este curso</>
+                      <>
+                        Para poder ver esta sección tienes que estar registrado en este
+                        curso
+                      </>
                     )}
                   </h1>
                 </Card>
@@ -103,15 +109,18 @@ const PageNotPermissions = (props) => {
         </>
       )}
     </>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => ({
   sectionPermissions: state.viewSectionPermissions,
-});
+})
 
 const mapDispatchToProps = {
   setSectionPermissions,
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PageNotPermissions));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withRouter(PageNotPermissions))

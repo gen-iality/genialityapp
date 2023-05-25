@@ -1,70 +1,79 @@
 /** React's libraries */
-import { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
-import PropTypes from 'prop-types';
+import { Component } from 'react'
+import { Link, withRouter } from 'react-router-dom'
+import dayjs from 'dayjs'
+import PropTypes from 'prop-types'
 
 /** Antd imports */
-import { Badge, Card, Modal, Space, Typography } from 'antd';
+import { Badge, Card, Modal, Space, Typography } from 'antd'
 
 /** Helpers and utils */
-import { imageUtils } from '@Utilities/ImageUtils';
+import { imageUtils } from '@Utilities/ImageUtils'
 
 /** Context */
-import { HelperContext } from '@context/helperContext/helperContext';
+import { HelperContext } from '@context/helperContext/helperContext'
 
 /** Components */
-import StudentGeneralCourseProgress from '@components/StudentProgress/StudentGeneralCourseProgress';
-import QuizApprovedStatus from '../quiz/QuizApprovedStatus';
+import StudentGeneralCourseProgress from '@components/StudentProgress/StudentGeneralCourseProgress'
+import QuizApprovedStatus from '../quiz/QuizApprovedStatus'
 
-const { Meta } = Card;
+const { Meta } = Card
 
-const EventImage = imageUtils.EventImage;
+const EventImage = imageUtils.EventImage
 
 class EventCard extends Component {
-  static contextType = HelperContext;
+  static contextType = HelperContext
 
   static propTypes = {
     location: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isOpenModal: false,
-    };
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    }
+    this.openModal = this.openModal.bind(this)
+    this.closeModal = this.closeModal.bind(this)
   }
 
   openModal() {
-    this.setState({ isOpenModal: true });
+    this.setState({ isOpenModal: true })
   }
 
   closeModal() {
-    this.setState({ isOpenModal: false });
+    this.setState({ isOpenModal: false })
   }
 
   render() {
-    const { event, bordered, right, loading, isAdmin, blockedEvent, noAvailable, location, history } = this.props;
-    const { eventIsActive } = this.context;
+    const {
+      event,
+      bordered,
+      right,
+      loading,
+      isAdmin,
+      blockedEvent,
+      noAvailable,
+      location,
+    } = this.props
+    // const { eventIsActive } = this.context
 
     const styleNormal = {
       fontWeight: 'bold',
-    };
+    }
 
     const styleAdmin = {
       fontWeight: 'bold',
       width: '250px',
-    };
+    }
 
     //Esto sólo va a aplicar para cuando el usuario tiene un plan
     //Se esta validando la fecha en la que se va a bloquear el evento, osea hasta la fecha que tiene acceso
-    const actualDate = new Date(event.datetime_to);
+    const actualDate = new Date(event.datetime_to)
     //aqui  tiene que venir ahora unos minutos en caso de tener plan
-    const blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent));
-    const formatDate = dayjs(blockedDate).format('DD MMM YYYY');
+    const blockedDate = new Date(actualDate.setDate(actualDate.getDate() + blockedEvent))
+    // const formatDate = dayjs(blockedDate).format('DD MMM YYYY')
 
     return (
       <div className="animate__animated animate__fadeIn">
@@ -102,26 +111,39 @@ class EventCard extends Component {
                           className="animate__animated animate__fadeIn animate__slower"
                           loading="lazy"
                           style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-                          src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
+                          src={
+                            typeof event.picture === 'object'
+                              ? event.picture[0]
+                              : event.picture
+                          }
                           alt="geniality.com.co"
                         />
                       </Link>
                     </>
                   ) : (
                     <Link to={`/landing/${event._id}/evento`}>
-                    {/* <a href={`/landing/${event._id}/evento`}> */}
+                      {/* <a href={`/landing/${event._id}/evento`}> */}
                       <img
                         className="animate__animated animate__fadeIn animate__slower"
                         loading="lazy"
                         style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-                        src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
+                        src={
+                          typeof event.picture === 'object'
+                            ? event.picture[0]
+                            : event.picture
+                        }
                         alt="geniality.com.co"
                       />
-                      {this.props.moreDetails && event._id && <StudentGeneralCourseProgress eventId={event._id} />}
-                      {this.props.moreDetails && (
-                        <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
+                      {this.props.moreDetails && event._id && (
+                        <StudentGeneralCourseProgress eventId={event._id} />
                       )}
-                    {/* </a> */}
+                      {this.props.moreDetails && (
+                        <QuizApprovedStatus
+                          eventId={event._id}
+                          approvedLink={`/landing/${event._id}/certificate`}
+                        />
+                      )}
+                      {/* </a> */}
                     </Link>
                   )}
                 </>
@@ -135,7 +157,8 @@ class EventCard extends Component {
                         style={{ objectFit: 'cover', height: '180px', width: '100%' }}
                         src={
                           event.styles
-                            ? event.styles.banner_image && event.styles.banner_image !== undefined
+                            ? event.styles.banner_image &&
+                              event.styles.banner_image !== undefined
                               ? event.styles.banner_image
                               : EventImage
                             : EventImage
@@ -151,16 +174,22 @@ class EventCard extends Component {
                         style={{ objectFit: 'cover', height: '180px', width: '100%' }}
                         src={
                           event.styles
-                            ? event.styles.banner_image && event.styles.banner_image !== undefined
+                            ? event.styles.banner_image &&
+                              event.styles.banner_image !== undefined
                               ? event.styles.banner_image
                               : EventImage
                             : EventImage
                         }
                         alt="geniality.com.co"
                       />
-                      {this.props.moreDetails && event._id && <StudentGeneralCourseProgress eventId={event._id} />}
+                      {this.props.moreDetails && event._id && (
+                        <StudentGeneralCourseProgress eventId={event._id} />
+                      )}
                       {this.props.moreDetails && (
-                        <QuizApprovedStatus eventId={event._id} approvedLink={`/landing/${event._id}/certificate`} />
+                        <QuizApprovedStatus
+                          eventId={event._id}
+                          approvedLink={`/landing/${event._id}/certificate`}
+                        />
                       )}
                     </a>
                   )}
@@ -185,11 +214,16 @@ class EventCard extends Component {
                                 {dayjs(event.datetime_from).format('DD MMM YYYY')}
                               </time>
                               {'-'}
-                              <time dateTime={event.datetime_to}>{dayjs(event.datetime_to).format('DD MMM YYYY')}</time>
+                              <time dateTime={event.datetime_to}>
+                                {dayjs(event.datetime_to).format('DD MMM YYYY')}
+                              </time>
                             </Space>
                           )}
                         </span>
-                        <Typography.Text ellipsis={!!isAdmin} style={isAdmin ? styleAdmin : styleNormal}>
+                        <Typography.Text
+                          ellipsis={!!isAdmin}
+                          style={isAdmin ? styleAdmin : styleNormal}
+                        >
                           {event.name}
                         </Typography.Text>
                         <span>
@@ -212,11 +246,16 @@ class EventCard extends Component {
                                 {dayjs(event.datetime_from).format('DD MMM YYYY')}
                               </time>
                               {'-'}
-                              <time dateTime={event.datetime_to}>{dayjs(event.datetime_to).format('DD MMM YYYY')}</time>
+                              <time dateTime={event.datetime_to}>
+                                {dayjs(event.datetime_to).format('DD MMM YYYY')}
+                              </time>
                             </Space>
                           )}
                         </span>
-                        <Typography.Text ellipsis={!!isAdmin} style={isAdmin ? styleAdmin : styleNormal}>
+                        <Typography.Text
+                          ellipsis={!!isAdmin}
+                          style={isAdmin ? styleAdmin : styleNormal}
+                        >
                           {event.name}
                         </Typography.Text>
                         <span>
@@ -235,13 +274,19 @@ class EventCard extends Component {
           </Card>
         </Badge.Ribbon>
         {this.state.isOpenModal && (
-          <Modal title="Información importante" closable footer={false} visible onCancel={() => this.closeModal()}>
+          <Modal
+            title="Información importante"
+            closable
+            footer={false}
+            visible
+            onCancel={() => this.closeModal()}
+          >
             El evento será habilitado próximamente
           </Modal>
         )}
       </div>
-    );
+    )
   }
 }
 
-export default withRouter(EventCard);
+export default withRouter(EventCard)

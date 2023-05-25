@@ -4,7 +4,7 @@ interface ParamType {
       color: any
     }
   }
-};
+}
 
 const dot = (color = 'transparent') => ({
   alignItems: 'center',
@@ -17,17 +17,18 @@ const dot = (color = 'transparent') => ({
     height: 10,
     width: 10,
   },
-});
+})
 
 const useCreatableStyles = () => {
   // Some select styles
   const creatableStyles = {
     menu: (styles: object) => ({ ...styles, maxHeight: 'inherit' }),
-    multiValue: (styles: object, param: ParamType) => (
-      { ...styles, ...dot(param.data?.item?.color) }
-    ),
-  };
-  return creatableStyles;
+    multiValue: (styles: object, param: ParamType) => ({
+      ...styles,
+      ...dot(param.data?.item?.color),
+    }),
+  }
+  return creatableStyles
 }
 
-export default useCreatableStyles;
+export default useCreatableStyles

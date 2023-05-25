@@ -1,100 +1,80 @@
-import { useEffect, useState } from 'react';
-import { FaqsApi } from '@helpers/request';
-import { useHistory } from 'react-router-dom';
-import { toolbarEditor } from '@helpers/constants';
-import { handleRequestError } from '@helpers/utils';
-import { Row, Col, Form, Input, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import Header from '@antdComponents/Header';
-import ReactQuill from 'react-quill';
-import { DispatchMessageService } from '@context/MessageService';
+import { useEffect, useState } from 'react'
+import { FaqsApi } from '@helpers/request'
+import { useHistory } from 'react-router-dom'
+import { toolbarEditor } from '@helpers/constants'
+import { handleRequestError } from '@helpers/utils'
+import { Row, Col, Form, Input, Modal } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import Header from '@antdComponents/Header'
+import ReactQuill from 'react-quill'
+import { StateMessage } from '@context/MessageService'
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
 const Faq = (props) => {
-  const eventID = props.event._id;
-  const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
-  const history = useHistory();
-  const [faq, setFaq] = useState({});
+  const eventID = props.event._id
+  const locationState = props.location.state //si viene new o edit en el state, si es edit es un id
+  const history = useHistory()
+  const [faq, setFaq] = useState({})
 
   useEffect(() => {
     if (locationState.edit) {
-      getOne();
+      getOne()
     }
-  }, [locationState.edit]);
+  }, [locationState.edit])
 
   const getOne = async () => {
-    const response = await FaqsApi.getOne(locationState.edit, eventID);
-    const data = response.data.find((faqs) => faqs._id === locationState.edit);
+    const response = await FaqsApi.getOne(locationState.edit, eventID)
+    const data = response.data.find((faqs) => faqs._id === locationState.edit)
 
-    setFaq(data);
-    setFaq(data); //este esta repedito para poder cargar el titulo en caso de que tenga contenido, con uno solo no se porque no vuelve a cargar
+    setFaq(data)
+    setFaq(data) //este esta repedito para poder cargar el titulo en caso de que tenga contenido, con uno solo no se porque no vuelve a cargar
     // if (data.content === '<p><br></p>') {
     //   setFaq({ content: '', title: data.title });
     // }
-  };
+  }
 
   const onSubmit = async () => {
-    if(faq.content && faq.title) {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: ' Por favor espere mientras se guarda la información...',
-        action: 'show',
-      });
+    if (faq.content && faq.title) {
+      StateMessage.show(
+        'loading',
+        'loading',
+        ' Por favor espere mientras se guarda la información...',
+      )
 
       try {
         if (locationState.edit) {
-          await FaqsApi.editOne(faq, locationState.edit, eventID);
+          await FaqsApi.editOne(faq, locationState.edit, eventID)
         } else {
-          await FaqsApi.create(faq, eventID);
+          await FaqsApi.create(faq, eventID)
         }
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        });
-        history.push(`${props.matchUrl}/faqs`);
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
+        history.push(`${props.parentUrl}/faqs`)
       } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        });
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', handleRequestError(e).message)
       }
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El título y contenido son requeridos',
-        action: 'show',
-      });
+      StateMessage.show(null, 'error', 'El título y contenido son requeridos')
     }
-  };
+  }
 
   const handleChange = (e) => {
-    setFaq({ ...faq, title: e.target.value });
-  };
+    setFaq({ ...faq, title: e.target.value })
+  }
 
   const onRemoveId = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se borra la información...',
-      action: 'show',
-    });
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se borra la información...',
+    )
     if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -106,48 +86,45 @@ const Faq = (props) => {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await FaqsApi.deleteOne(locationState.edit, eventID);
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              });
-              history.push(`${props.matchUrl}/faqs`);
+              await FaqsApi.deleteOne(locationState.edit, eventID)
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó la información correctamente!',
+              )
+              history.push(`${props.parentUrl}/faqs`)
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              });
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
-          };
-          onHandlerRemove();
+          }
+          onHandlerRemove()
         },
-      });
+      })
     }
-  };
+  }
 
   const HandleQuillEditorChange = (contents) => {
-    let content = contents;
+    let content = contents
     if (content === '<p><br></p>') {
-      content = '';
+      content = ''
     }
     if (faq) {
-      setFaq({ ...faq, content: content });
+      setFaq({ ...faq, content: content })
     }
-  };
+  }
 
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title="Pregunta frecuente" back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header
+        title="Pregunta frecuente"
+        back
+        save
+        form
+        remove={onRemoveId}
+        edit={locationState.edit}
+      />
 
       <Row justify="center" wrap gutter={12}>
         <Col>
@@ -185,7 +162,7 @@ const Faq = (props) => {
         </Col>
       </Row>
     </Form>
-  );
-};
+  )
+}
 
-export default Faq;
+export default Faq

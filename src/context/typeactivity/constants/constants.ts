@@ -1,4 +1,4 @@
-import { OriginOptions, ProviderOptions, TypeActivity } from '../interfaces/interfaces';
+import { OriginOptions, ProviderOptions, TypeActivity } from '../interfaces/interfaces'
 
 /** data para mostrar en vimeo y youtube */
 const urlVideoTypeOptions: OriginOptions[] = [
@@ -10,7 +10,7 @@ const urlVideoTypeOptions: OriginOptions[] = [
     subtitle: '',
     placeholder: 'www.ejemplo.com/watch?v=oK88Stdw0DI',
   },
-];
+]
 /** data para mostrar en vimeo y youtube */
 const vimeoAndYotubeType: OriginOptions[] = [
   {
@@ -31,7 +31,7 @@ const vimeoAndYotubeType: OriginOptions[] = [
     subtitle: 'Coloca aquí el ID o URL de tu transmisión de YouTube',
     placeholder: 'youtube id',
   },
-];
+]
 
 /** data para la seleccion del origin para transmitir en eviusmeets */
 const liveBroadcastTransmissionOriginType: OriginOptions[] = [
@@ -49,7 +49,7 @@ const liveBroadcastTransmissionOriginType: OriginOptions[] = [
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2FRTMP.jpg?alt=media&token=d0c74ddc-5ad6-49bf-ad57-c1d0c02a1ee6',
   },
-];
+]
 
 /** data de la transmision en vivo */
 const liveBroadcastTransmissionType: ProviderOptions[] = [
@@ -57,7 +57,8 @@ const liveBroadcastTransmissionType: ProviderOptions[] = [
     key: 'eviusStreaming',
     title: 'GEN.iality streaming',
     MainTitle: 'Escoge el origen de transmisión',
-    description: 'Configura de forma fácil y rápida una transmisión con la tecnología de Evius.',
+    description:
+      'Configura de forma fácil y rápida una transmisión con la tecnología de Evius.',
     image: import.meta.env.VITE_IMAGE_STREAMING_OPTION,
     typeOptions: liveBroadcastTransmissionOriginType,
   },
@@ -81,7 +82,7 @@ const liveBroadcastTransmissionType: ProviderOptions[] = [
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fyoutube.jpg?alt=media&token=b3d20ca7-d1fa-43c7-a260-01f30a800a8a',
     typeOptions: vimeoAndYotubeType,
   },
-];
+]
 /* Data de la seccion Video*/
 const videoActivity: ProviderOptions[] = [
   {
@@ -99,7 +100,7 @@ const videoActivity: ProviderOptions[] = [
     image:
       'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fcargar_video.jpg?alt=media&token=b0990943-3563-4004-9e15-cf9dfea6805c',
   },
-];
+]
 
 /* esta data aparece al momento de escoger un tipo de contenido*/
 export const typeActivityData: TypeActivity = {
@@ -117,9 +118,11 @@ export const typeActivityData: TypeActivity = {
     },
     {
       key: 'meeting',
-      MainTitle: 'Crear reuniones interactivas y personalizadas con todo el poder de evius',
+      MainTitle:
+        'Crear reuniones interactivas y personalizadas con todo el poder de evius',
       title: 'Reunión',
-      description: 'Lección en la que quieras tener una reunión virtual con tus asistentes.',
+      description:
+        'Lección en la que quieras tener una reunión virtual con tus asistentes.',
       image:
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Freunion.jpg?alt=media&token=79983d40-cb24-4ca2-9a19-794a5eeb825b',
     },
@@ -141,4 +144,4 @@ export const typeActivityData: TypeActivity = {
         'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Evius_type_activity%2Fvideo.jpg?alt=media&token=aa83fcb2-293e-4f2a-9d1e-128e70f84200',
     },
   ],
-};
+}

@@ -1,14 +1,14 @@
-import { Component } from 'react';
-import Async from 'async';
-import { Actions } from '@helpers/request';
-import { Row, Col, Tag, Tabs, Table, Spin } from 'antd';
+import { Component } from 'react'
+import Async from 'async'
+import { Actions } from '@helpers/request'
+import { Row, Col, Tag, Tabs, Table, Spin } from 'antd'
 
-const { TabPane } = Tabs;
-const { Column } = Table;
+const { TabPane } = Tabs
+const { Column } = Table
 
 class Result extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       list: [],
       ok: [],
@@ -18,21 +18,21 @@ class Result extends Component {
       fails: 0,
       updated: 0,
       step: 1,
-    };
+    }
   }
 
   componentDidMount() {
-    const { list } = this.props;
-    this.setState({ list });
-    this.uploadByOne(list);
+    const { list } = this.props
+    this.setState({ list })
+    this.uploadByOne(list)
   }
 
   uploadByOne = (users) => {
-    const self = this;
-    const { extraFields } = this.props;
+    const self = this
+    const { extraFields } = this.props
     const ok = [],
-      notok = [];
-    const toImport = users.filter((user) => !this.isEmptyObject(user));
+      notok = []
+    const toImport = users.filter((user) => !this.isEmptyObject(user))
     Async.eachOfSeries(
       toImport,
       (user, key, cb) => {
@@ -45,112 +45,121 @@ class Result extends Component {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
                     status: resp.status,
-                  };
+                  }
                   if (resp.status === 'UPDATED') {
                     self.setState((prevState) => {
-                      return { updated: prevState.updated + 1, total: prevState.total + 1 };
-                    });
+                      return {
+                        updated: prevState.updated + 1,
+                        total: prevState.total + 1,
+                      }
+                    })
                   } else {
                     self.setState((prevState) => {
-                      return { saved: prevState.saved + 1, total: prevState.total + 1 };
-                    });
+                      return { saved: prevState.saved + 1, total: prevState.total + 1 }
+                    })
                   }
                 }
-                cb();
+                cb()
               })
               .catch((err) => {
                 if (err.response) {
-                  const { data } = err.response;
-                  let error = 'ERROR ';
+                  const { data } = err.response
+                  let error = 'ERROR '
                   Object.keys(data).map((field) => {
-                    return (error = error + data[field][0] + ' ');
-                  });
+                    return (error = error + data[field][0] + ' ')
+                  })
                   notok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
                     status: error,
-                  };
+                  }
                 } else {
                   notok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
                     status: 'ERROR DESCONOCIDO',
-                  };
+                  }
                 }
                 self.setState((prevState) => {
-                  return { fails: prevState.fails + 1, total: prevState.total + 1 };
-                });
-                cb();
-              });
+                  return { fails: prevState.fails + 1, total: prevState.total + 1 }
+                })
+                cb()
+              })
           } else {
-            const activityId = this.props.locationParams?.state?.activityId;
-            const activity = activityId ? `activity_id=${activityId}` : '';
-            Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}/?${activity}`, user)
+            const activityId = this.props.locationParams?.state?.activityId
+            const activity = activityId ? `activity_id=${activityId}` : ''
+            Actions.post(
+              `/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}/?${activity}`,
+              user,
+            )
               .then((resp) => {
                 if (resp.message === 'OK') {
                   ok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
                     status: resp.status,
-                  };
+                  }
                   if (resp.status === 'UPDATED') {
                     self.setState((prevState) => {
-                      return { updated: prevState.updated + 1, total: prevState.total + 1 };
-                    });
+                      return {
+                        updated: prevState.updated + 1,
+                        total: prevState.total + 1,
+                      }
+                    })
                   } else {
                     self.setState((prevState) => {
-                      return { saved: prevState.saved + 1, total: prevState.total + 1 };
-                    });
+                      return { saved: prevState.saved + 1, total: prevState.total + 1 }
+                    })
                   }
                 }
-                cb();
+                cb()
               })
               .catch((err) => {
                 if (err.response) {
-                  const { data } = err.response;
-                  let error = 'ERROR ';
+                  const { data } = err.response
+                  let error = 'ERROR '
                   Object.keys(data).map((field) => {
-                    return (error = error + data[field][0] + ' ');
-                  });
+                    return (error = error + data[field][0] + ' ')
+                  })
                   notok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
                     status: error,
-                  };
+                  }
                 } else {
                   notok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
                     status: 'ERROR DESCONOCIDO',
-                  };
+                  }
                 }
                 self.setState((prevState) => {
-                  return { fails: prevState.fails + 1, total: prevState.total + 1 };
-                });
-                cb();
-              });
+                  return { fails: prevState.fails + 1, total: prevState.total + 1 }
+                })
+                cb()
+              })
           }
         }
       },
       (err) => {
-        self.setState({ ok, notok });
+        self.setState({ ok, notok })
         if (err) {
-          err;
+          err
         }
-      }
-    );
-  };
+      },
+    )
+  }
 
   isEmptyObject = (o) => {
-    return Object.keys(o).every(function(x) {
-      return !o[x] || o[x] === null;
-    });
-  };
+    return Object.keys(o).every(function (x) {
+      return !o[x] || o[x] === null
+    })
+  }
 
   render() {
-    const { total, saved, fails, updated, step, ok, notok } = this.state;
-    const { extraFields } = this.props;
-    const data = [notok, ok];
+    const { total, saved, fails, updated, step, ok, notok } = this.state
+    const { extraFields } = this.props
+    const data = [notok, ok]
     return (
       <>
         <Row justify="space-between" wrap>
@@ -159,15 +168,15 @@ class Result extends Component {
             <span>Total</span>
           </Col>
           <Col>
-            <Tag color='#f7981d'>{saved}</Tag>
+            <Tag color="#f7981d">{saved}</Tag>
             <span>Importados</span>
           </Col>
           <Col>
-            <Tag color='#ff3860'>{fails}</Tag>
+            <Tag color="#ff3860">{fails}</Tag>
             <span>Fallidos</span>
           </Col>
           <Col>
-            <Tag color='#ffdd57'>{updated}</Tag>
+            <Tag color="#ffdd57">{updated}</Tag>
             <span>Actualizados</span>
           </Col>
         </Row>
@@ -183,8 +192,16 @@ class Result extends Component {
                     pagination
                     /* scroll={{ x: 2500 }} auto*/
                   >
-                    <Column title={extraFields[0].name} dataIndex={extraFields[0].name} ellipsis />
-                    <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis />
+                    <Column
+                      title={extraFields[0].name}
+                      dataIndex={extraFields[0].name}
+                      ellipsis
+                    />
+                    <Column
+                      title={extraFields[1].name}
+                      dataIndex={extraFields[1].name}
+                      ellipsis
+                    />
                     <Column title="Estado" dataIndex="status" ellipsis />
                   </Table>
                 </Spin>
@@ -197,8 +214,16 @@ class Result extends Component {
                   pagination
                   /* scroll={{ x: 2500 }}  auto*/
                 >
-                  <Column title={extraFields[0].name} dataIndex={extraFields[0].name} ellipsis />
-                  <Column title={extraFields[1].name} dataIndex={extraFields[1].name} ellipsis />
+                  <Column
+                    title={extraFields[0].name}
+                    dataIndex={extraFields[0].name}
+                    ellipsis
+                  />
+                  <Column
+                    title={extraFields[1].name}
+                    dataIndex={extraFields[1].name}
+                    ellipsis
+                  />
                   <Column title="Estado" dataIndex="status" ellipsis />
                 </Table>
               </TabPane>
@@ -206,8 +231,8 @@ class Result extends Component {
           </>
         )}
       </>
-    );
+    )
   }
 }
 
-export default Result;
+export default Result

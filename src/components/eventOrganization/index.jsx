@@ -1,109 +1,103 @@
-import { Col, Row, Typography, Badge, Grid, Space, Divider, Image, Empty, Button, Modal } from 'antd';
-import { useState, useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { OrganizationFuction } from '@helpers/request';
-import EventCard from '../shared/eventCard';
-import dayjs from 'dayjs';
-import ModalAuth from '../authentication/ModalAuth';
-import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
-import { EditOutlined } from '@ant-design/icons';
-import Loading from '@components/profile/loading';
-import { useCurrentUser } from '@context/userContext';
-import { OrganizationApi } from '@helpers/request';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import RegisterMemberFromOrganizationUserModal from './RegisterMemberFromOrganizationUserModal';
+import { Col, Row, Typography, Badge, Space, Divider, Image, Empty, Button } from 'antd'
+import { useState, useEffect } from 'react'
+import { Link, withRouter } from 'react-router-dom'
+import { OrganizationFuction } from '@helpers/request'
+import EventCard from '../shared/eventCard'
+import dayjs from 'dayjs'
+import ModalLoginHelpers from '../authentication/ModalLoginHelpers'
+import { EditOutlined } from '@ant-design/icons'
+import Loading from '@components/profile/loading'
+import { useCurrentUser } from '@context/userContext'
+import { OrganizationApi } from '@helpers/request'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text, Paragraph } = Typography
 
 const EventOrganization = (props) => {
-  const orgId = props.match.params.id;
+  const orgId = props.match.params.id
 
-  const [upcomingEvents, setUpcomingEvents] = useState([]);
-  const [lastEvents, setLastEvents] = useState([]);
-  const [organization, setOrganization] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [view, setView] = useState(false);
-  const [isVisibleRegister, setIsVisibleRegister] = useState(false);
-  const [organizationUser, setOrganizationUser] = useState(null);
+  const [upcomingEvents, setUpcomingEvents] = useState([])
+  const [lastEvents, setLastEvents] = useState([])
+  const [organization, setOrganization] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isVisibleRegister, setIsVisibleRegister] = useState(false)
+  const [organizationUser, setOrganizationUser] = useState(null)
 
-  const [isAdminUser, setIsAdminUser] = useState(false);
+  const [isAdminUser, setIsAdminUser] = useState(false)
 
-  const cUser = useCurrentUser();
-  const { helperDispatch } = useHelper();
+  const cUser = useCurrentUser()
+  const { helperDispatch } = useHelper()
 
   useEffect(() => {
     if (orgId) {
-      fetchItem(orgId).then(() => setIsLoading(false));
+      fetchItem(orgId).then(() => setIsLoading(false))
     }
-  }, [orgId]);
+  }, [orgId])
 
   useEffect(() => {
-    if (cUser.value || !organization || !orgId) return;
-    // const { visibility, allow_register } = organization;
+    if (cUser.value || !organization || !orgId) return
     if (!cUser.value && organization) {
-      // helperDispatch({ type: 'showLogin', visible: true });
-
-      let positionId;
+      let positionId
       if (organization.default_position_id) {
-        positionId = organization.default_position_id;
+        positionId = organization.default_position_id
       }
-      console.log('5. positionId', positionId, 'orgId', orgId);
+      console.log('5. positionId', positionId, 'orgId', orgId)
       helperDispatch({
         type: 'showRegister',
         visible: true,
         idOrganization: orgId,
         defaultPositionId: positionId,
-      });
+      })
     }
-  }, [cUser.value, organization, orgId]);
+  }, [cUser.value, organization, orgId])
 
   useEffect(() => {
-    if (!organization) return;
-    if (!cUser.value) return;
-    if (organizationUser) return;
-    const { visibility, allow_register } = organization;
-    console.log('organization access', { visibility, allow_register });
+    if (!organization) return
+    if (!cUser.value) return
+    if (organizationUser) return
+    const { visibility, allow_register } = organization
+    console.log('organization access', { visibility, allow_register })
     if (visibility === 'PUBLIC' && allow_register) {
       //helperDispatch({ type: 'showRegister', visible: true });
-      setIsVisibleRegister(true);
+      setIsVisibleRegister(true)
     }
-  }, [organizationUser, organization, cUser.value]);
+  }, [organizationUser, organization, cUser.value])
 
   useEffect(() => {
-    if (!cUser.value) return;
-    if (!orgId) return;
+    if (!cUser.value) return
+    if (!orgId) return
 
     OrganizationApi.getMeUser(orgId).then(({ data }) => {
-      const [orgUser] = data;
+      const [orgUser] = data
 
-      setOrganizationUser(orgUser);
-      console.debug('EventOrganization member rol:', orgUser?.rol);
-      setIsAdminUser(orgUser?.rol?.type === 'admin');
-    });
-  }, [cUser.value, orgId]);
+      setOrganizationUser(orgUser)
+      console.debug('EventOrganization member rol:', orgUser?.rol)
+      setIsAdminUser(orgUser?.rol?.type === 'admin')
+    })
+  }, [cUser.value, orgId])
 
   // Obtener los datos necesarios de la organización
   const fetchItem = async (orgId) => {
-    const events = await OrganizationFuction.getEventsNextByOrg(orgId);
-    const _upcomingEvents = [];
-    const _lastEvents = [];
-    const currentDateNow = dayjs();
+    const events = await OrganizationFuction.getEventsNextByOrg(orgId)
+    const _upcomingEvents = []
+    const _lastEvents = []
+    const currentDateNow = dayjs()
     events.forEach((event) => {
       if (dayjs(event.datetime_from).isAfter(currentDateNow)) {
-        _upcomingEvents.push(event);
+        _upcomingEvents.push(event)
       } else {
-        _lastEvents.push(event);
+        _lastEvents.push(event)
       }
-    });
+    })
 
-    const _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
+    const _organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId)
     if (events) {
-      setUpcomingEvents(_upcomingEvents);
-      setLastEvents(_lastEvents); // Reverse that list to show older events as first ._.
-      setOrganization(_organization);
-      setIsLoading(false);
+      setUpcomingEvents(_upcomingEvents)
+      setLastEvents(_lastEvents) // Reverse that list to show older events as first ._.
+      setOrganization(_organization)
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div
@@ -180,7 +174,6 @@ const EventOrganization = (props) => {
                         borderRadius: '20px',
                         objectFit: 'cover',
                         border: '4px solid #FFFFFF',
-                        //boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
                         backgroundColor: '#FFFFFF',
                       }}
                       preview={{ maskClassName: 'roundedMask' }}
@@ -207,7 +200,11 @@ const EventOrganization = (props) => {
                       ellipsis={{
                         rows: 3,
                         expandable: true,
-                        symbol: <span style={{ color: '#2D7FD6', fontSize: '12px' }}>Ver más</span>,
+                        symbol: (
+                          <span style={{ color: '#2D7FD6', fontSize: '12px' }}>
+                            Ver más
+                          </span>
+                        ),
                       }}
                     >
                       {organization?.description || ''}
@@ -317,10 +314,10 @@ const EventOrganization = (props) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default withRouter(EventOrganization);
+export default withRouter(EventOrganization)
 
 /**
  * 

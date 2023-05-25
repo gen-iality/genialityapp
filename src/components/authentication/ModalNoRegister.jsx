@@ -1,35 +1,37 @@
-import { useState } from 'react';
-import { Modal, Result, Button, Divider, Typography, Space } from 'antd';
-import withContext from '@context/withContext';
-import { useIntl } from 'react-intl';
-import { recordTypeForThisEvent, iAmRegisteredInThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed';
-import { useEventContext } from '@context/eventContext';
-import { useUserEvent } from '@context/eventUserContext';
+import { Modal, Result, Button, Typography, Space } from 'antd'
+import withContext from '@context/withContext'
+import { useIntl } from 'react-intl'
+import {
+  recordTypeForThisEvent,
+  iAmRegisteredInThisEvent,
+} from '../events/Landing/helpers/thisRouteCanBeDisplayed'
+import { useEventContext } from '@context/eventContext'
+import { useUserEvent } from '@context/eventUserContext'
 
 const ModalNoRegister = (props) => {
-  const cEvent = useEventContext();
-  const cEventUser = useUserEvent();
-  const intl = useIntl();
+  const cEvent = useEventContext()
+  const cEventUser = useUserEvent()
+  const intl = useIntl()
 
   // Mensajes para curso privado
   const msgEventPrivate = intl.formatMessage({
     id: 'modal.no_register.msg_private',
     defaultMessage:
       'Este curso es privado, solo se puede acceder por invitación,  contacte al administrador del curso.',
-  });
+  })
 
   function whenToOpenTheModal() {
     return (
       recordTypeForThisEvent(cEvent) === 'PRIVATE_EVENT' &&
       iAmRegisteredInThisEvent(cEventUser) === 'NOT_REGISTERED' &&
       props.cHelper.typeModal !== 'visitors'
-    );
+    )
   }
 
   return (
     <Modal
       onCancel={() => {
-        props.cHelper.handleChangeTypeModal('visitors');
+        props.cHelper.handleChangeTypeModal('visitors')
       }}
       bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
       centered
@@ -37,11 +39,12 @@ const ModalNoRegister = (props) => {
         <Space wrap key="options">
           <Button
             onClick={() => {
-              window.location.href = `${window.location.origin}`;
+              window.location.href = `${window.location.origin}`
             }}
             key="sign_off"
             type="text"
-            size="large">
+            size="large"
+          >
             <b>
               {intl.formatMessage({
                 id: 'modal.no_register.gotoevius',
@@ -71,7 +74,7 @@ const ModalNoRegister = (props) => {
         }
       />
     </Modal>
-  );
-};
+  )
+}
 
-export default withContext(ModalNoRegister);
+export default withContext(ModalNoRegister)

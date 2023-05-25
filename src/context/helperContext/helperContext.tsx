@@ -1,4 +1,4 @@
-import { createContext } from 'react';
-import { HelperContextProps } from './types/types';
+import { createContext } from 'react'
+import { HelperContextProps } from './types/types'
 
-export const HelperContext = createContext<HelperContextProps>({} as HelperContextProps);
+export const HelperContext = createContext<HelperContextProps>({} as HelperContextProps)

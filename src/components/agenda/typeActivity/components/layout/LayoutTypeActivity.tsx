@@ -1,12 +1,11 @@
-import { Typography, Layout, Row, Col, Button, Spin } from 'antd';
-import { useState } from 'react';
-import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity';
+import { Typography, Layout, Row, Col, Button, Spin } from 'antd'
+import { useTypeActivity } from '@context/typeactivity/hooks/useTypeActivity'
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content, Footer } = Layout
 
 interface propsOptions {
-  title?: string;
-  children: JSX.Element | JSX.Element[];
+  title?: string
+  children: JSX.Element | JSX.Element[]
 }
 
 const LayoutTypeActivity = ({ title, children }: propsOptions) => {
@@ -21,24 +20,26 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
     disableNextButton,
     loadingCreate,
     createTypeActivity,
-  } = useTypeActivity();
+  } = useTypeActivity()
 
   const previousOrCancel = () => {
-    if (previewKey === 'close' || typeOptions.key === 'type') closeModal();
-    if (previewKey === 'type' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
-    if (previewKey !== 'preview' && typeOptions.key !== 'type') toggleActivitySteps(previewKey);
-  };
+    if (previewKey === 'close' || typeOptions.key === 'type') closeModal()
+    if (previewKey === 'type' && typeOptions.key !== 'type')
+      toggleActivitySteps(previewKey)
+    if (previewKey !== 'preview' && typeOptions.key !== 'type')
+      toggleActivitySteps(previewKey)
+  }
 
   const nextOrCreate = async () => {
     if (selectedKey !== 'initial' && buttonsTextNextOrCreate !== 'Crear') {
-      toggleActivitySteps(selectedKey);
-      return;
+      toggleActivitySteps(selectedKey)
+      return
     } else if (selectedKey === 'initial') {
-      closeModal();
+      closeModal()
     } else {
-      await createTypeActivity();
+      await createTypeActivity()
     }
-  };
+  }
 
   return (
     <Layout>
@@ -65,7 +66,7 @@ const LayoutTypeActivity = ({ title, children }: propsOptions) => {
         </Row>
       </Footer>
     </Layout>
-  );
-};
+  )
+}
 
-export default LayoutTypeActivity;
+export default LayoutTypeActivity

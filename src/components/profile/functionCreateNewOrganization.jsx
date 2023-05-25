@@ -1,6 +1,6 @@
-import { saveImageStorage } from '@helpers/helperSaveImage';
-import { OrganizationApi } from '@helpers/request';
-import { DispatchMessageService } from '@context/MessageService';
+import { saveImageStorage } from '@helpers/helperSaveImage'
+import { OrganizationApi } from '@helpers/request'
+import { StateMessage } from '@context/MessageService'
 
 const functionCreateNewOrganization = (props) => {
   const styles = {
@@ -36,86 +36,74 @@ const functionCreateNewOrganization = (props) => {
     hideBtnDetailAgenda: true,
     loader_page: 'no',
     data_loader_page: null,
-  };
+  }
 
-  DispatchMessageService({
-    type: 'loading',
-    key: 'loading',
-    msj: !props.newEventWithoutOrganization
+  StateMessage.show(
+    'loading',
+    'loading',
+    !props.newEventWithoutOrganization
       ? 'Estamos creando la organización.'
       : 'Redirigiendo al creador de cursos rápidos',
-    duration: 90,
-    action: 'show',
-  });
+    90,
+  )
 
   function linkToCreateNewEvent(menuRoute) {
-    window.location.href = `${window.location.origin}${menuRoute}`;
+    window.location.href = `${window.location.origin}${menuRoute}`
   }
 
   function sendDataFinished() {
-    DispatchMessageService({
-      key: 'loading',
-      action: 'destroy',
-    });
-    props.closeModal(false);
+    StateMessage.destroy('loading')
+    props.closeModal(false)
   }
   const uploadLogo = async () => {
-    const selectedLogo = props.logo !== null ? props.logo[0].thumbUrl : null;
+    const selectedLogo = props.logo !== null ? props.logo[0].thumbUrl : null
 
     if (selectedLogo) {
-      const urlOfTheUploadedImage = await saveImageStorage(selectedLogo);
+      const urlOfTheUploadedImage = await saveImageStorage(selectedLogo)
 
-      return urlOfTheUploadedImage;
+      return urlOfTheUploadedImage
     }
-    return null;
-  };
+    return null
+  }
 
   const sendData = async () => {
-    const imageUrl = await uploadLogo();
-    const dataStyles = { ...styles, event_image: imageUrl };
+    const imageUrl = await uploadLogo()
+    const dataStyles = { ...styles, event_image: imageUrl }
     const body = {
       name: props.name,
       styles: dataStyles,
-    };
+    }
 
-    const response = await OrganizationApi.createOrganization(body);
+    const response = await OrganizationApi.createOrganization(body)
 
     /** si el usuario no tiene una org, primero se crea y despues se redirige al creador de cursos sencillo */
     if (props.newEventWithoutOrganization) {
       if (response?._id) {
-        sendDataFinished();
-        linkToCreateNewEvent(`/create-event/${response.author}/?orgId=${response._id}`);
+        sendDataFinished()
+        linkToCreateNewEvent(`/create-event/${response.author}/?orgId=${response._id}`)
       } else {
-        sendDataFinished();
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Error al redirigir al creador de cursos rápidos',
-          action: 'show',
-        });
+        sendDataFinished()
+        StateMessage.show(
+          null,
+          'error',
+          'Error al redirigir al creador de cursos rápidos',
+        )
       }
     } else {
-      props.fetchItem && (await props.fetchItem());
+      props.fetchItem && (await props.fetchItem())
       /** se trae la function fetchItem desde el main.jsx para poder actualizar la data */
-      props.resetFields && props.resetFields();
+      props.resetFields && props.resetFields()
       if (response?._id) {
-        sendDataFinished();
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Organización creada correctamente',
-          action: 'show',
-        });
+        sendDataFinished()
+        StateMessage.show(null, 'success', 'Organización creada correctamente')
       } else {
-        sendDataFinished();
-        DispatchMessageService({
-          type: 'error',
-          msj: 'La organización no pudo ser creada',
-          action: 'show',
-        });
+        sendDataFinished()
+        StateMessage.show(null, 'error', 'La organización no pudo ser creada')
       }
     }
-  };
+  }
 
-  sendData();
-};
+  sendData()
+}
 
-export default functionCreateNewOrganization;
+export default functionCreateNewOrganization

@@ -1,14 +1,14 @@
 import { IDynamicFieldData } from '@components/dynamic-fields/types'
 
 type ExtraSampleType = {
-  _id: string,
+  _id: string
   index?: number
-  order_weight?: number,
-  unique?: boolean,
+  order_weight?: number
+  unique?: boolean
 }
 
 type SampleType = {
-  [k: number]: IDynamicFieldData & ExtraSampleType,
+  [k: number]: IDynamicFieldData & ExtraSampleType
 }
 
 const sample: SampleType = {
@@ -75,7 +75,10 @@ const sample: SampleType = {
     label: 'Perfil Profesional',
     mandatory: true,
     name: 'perfilProfesional',
-    options: [{ label: 'pro1', value: 'p1' }, { label: 'pro2', value: 'p2' }],
+    options: [
+      { label: 'pro1', value: 'p1' },
+      { label: 'pro2', value: 'p2' },
+    ],
     order_weight: 7,
     type: 'list',
   },
@@ -85,7 +88,10 @@ const sample: SampleType = {
     label: 'Especialidad',
     mandatory: true,
     name: 'especialidad',
-    options: [{ label: 'op1', value: '1' }, { label: 'op2', value: '2' }],
+    options: [
+      { label: 'op1', value: '1' },
+      { label: 'op2', value: '2' },
+    ],
     order_weight: 8,
     type: 'list',
   },
@@ -120,7 +126,10 @@ const sample: SampleType = {
     mandatory: true,
     name: 'campoDeSeleccionMultiple',
     type: 'multiplelist',
-    options: [{ label: 'op11xx', value: '11x' }, { label: 'op22xx', value: '22x' }],
+    options: [
+      { label: 'op11xx', value: '11x' },
+      { label: 'op22xx', value: '22x' },
+    ],
   },
   12: {
     _id: 'id',
@@ -156,7 +165,10 @@ const sample: SampleType = {
     _id: 'id',
     label: 'Campo Selección mutiple con buscar',
     name: 'campoSeleccionMutipleConBuscar',
-    options: [{ label: 'op11', value: '11' }, { label: 'op22', value: '22' }],
+    options: [
+      { label: 'op11', value: '11' },
+      { label: 'op22', value: '22' },
+    ],
     type: 'multiplelisttable',
   },
   18: {
@@ -175,7 +187,7 @@ const sample: SampleType = {
       { label: 'Activo', value: 'active' },
       { label: 'Temporal', value: 'temporal' },
       { label: 'Desactivado', value: 'deactive' },
-    ]
+    ],
   },
   20: {
     _id: 'id',
@@ -185,7 +197,7 @@ const sample: SampleType = {
     type: 'text',
     dependency: {
       fieldName: 'main-field',
-      triggerValues: ['active', 'temporal']
+      triggerValues: ['active', 'temporal'],
     },
   },
   21: {
@@ -194,7 +206,7 @@ const sample: SampleType = {
     label: 'Terminos y condiciones - label',
     name: 'tt_cc',
     type: 'TTCC',
-    link: 'https://beta.geniality.com.co/tc'
+    link: 'https://beta.geniality.com.co/tc',
   },
 }
 

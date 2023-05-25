@@ -1,35 +1,35 @@
-import { useEffect, useState } from 'react';
-import { Row, Col, Button, Drawer, Space } from 'antd';
-import { FileDoneOutlined, PieChartOutlined, CloseOutlined } from '@ant-design/icons';
-import { useSurveysContext } from '@context/surveysContext';
-import { useCurrentUser } from '@context/userContext';
-import SurveyDetailPage from '../SurveyDetailPage';
-import RankingTrivia from '../rankingTrivia';
-import ThisRouteCanBeDisplayed from '../../Landing/helpers/thisRouteCanBeDisplayed';
+import { useEffect, useState } from 'react'
+import { Row, Col, Button, Drawer, Space } from 'antd'
+import { FileDoneOutlined, PieChartOutlined, CloseOutlined } from '@ant-design/icons'
+import { useSurveysContext } from '@context/surveysContext'
+import { useCurrentUser } from '@context/userContext'
+import SurveyDetailPage from '../SurveyDetailPage'
+import RankingTrivia from '../rankingTrivia'
+import ThisRouteCanBeDisplayed from '../../Landing/helpers/thisRouteCanBeDisplayed'
 
 function SurveyDrawer(props) {
-  const cSurveys = useSurveysContext();
-  const cUser = useCurrentUser();
+  const cSurveys = useSurveysContext()
+  const cUser = useCurrentUser()
 
   // Estado para hacer visible el ranking
-  const [rankingVisible, setRankingVisible] = useState(true);
+  const [rankingVisible, setRankingVisible] = useState(true)
 
   const showRanking = () => {
-    setRankingVisible(!rankingVisible);
-  };
+    setRankingVisible(!rankingVisible)
+  }
   useEffect(() => {
     if (!cSurveys.shouldDisplayRanking()) {
-      setRankingVisible(true);
+      setRankingVisible(true)
     }
-  }, [cSurveys.shouldDisplayRanking()]);
+  }, [cSurveys.shouldDisplayRanking()])
 
   function closeDrawer() {
-    cSurveys.unset_select_survey(null);
+    cSurveys.unset_select_survey(null)
   }
 
   const validationsToOpenTheDrawer = () => {
-    return cSurveys.currentSurvey !== null;
-  };
+    return cSurveys.currentSurvey !== null
+  }
 
   return (
     <>
@@ -72,7 +72,9 @@ function SurveyDrawer(props) {
                 <Space direction="vertical" size={-3}>
                   {cSurveys.currentSurvey?.name}
                   {cSurveys.currentSurvey.allow_gradable_survey === 'true' && (
-                    <span style={{ fontSize: '12px', color: '#52c41a' }}>Calificable</span>
+                    <span style={{ fontSize: '12px', color: '#52c41a' }}>
+                      Calificable
+                    </span>
                   )}
                 </Space>
               </Space>
@@ -99,7 +101,9 @@ function SurveyDrawer(props) {
           closeIcon={<CloseOutlined style={{ fontSize: '24px' }} />}
           placement="right"
           // closable
-          visible={cSurveys.shouldDisplaysurveyAssignedToThisActivity() && cUser.value !== null}
+          visible={
+            cSurveys.shouldDisplaysurveyAssignedToThisActivity() && cUser.value !== null
+          }
           onClose={closeDrawer}
           width={window.screen.width >= 768 ? (!rankingVisible ? '100%' : '70%') : '100%'}
         >
@@ -128,7 +132,7 @@ function SurveyDrawer(props) {
         </Drawer>
       )}
     </>
-  );
+  )
 }
 
-export default SurveyDrawer;
+export default SurveyDrawer

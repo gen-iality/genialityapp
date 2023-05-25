@@ -1,13 +1,15 @@
 type controllerInternetConnectionProps = {
-  setConnectionStatus: (status: boolean) => void;
-};
+  setConnectionStatus: (status: boolean) => void
+}
 
-const controllerInternetConnection = ({ setConnectionStatus }: controllerInternetConnectionProps) => {
+const controllerInternetConnection = ({
+  setConnectionStatus,
+}: controllerInternetConnectionProps) => {
   async function updateConnectionStatus() {
     if (navigator.onLine) {
-      setConnectionStatus(navigator.onLine);
+      setConnectionStatus(navigator.onLine)
     } else {
-      setConnectionStatus(navigator.onLine);
+      setConnectionStatus(navigator.onLine)
     }
   }
 
@@ -15,14 +17,14 @@ const controllerInternetConnection = ({ setConnectionStatus }: controllerInterne
   //   window.addEventListener('load', updateConnectionStatus);
 
   // Attaching event handler for the online event
-  window.addEventListener('online', function(e) {
-    updateConnectionStatus();
-  });
+  window.addEventListener('online', function () {
+    updateConnectionStatus()
+  })
 
   // Attaching event handler for the offline event
-  window.addEventListener('offline', function(e) {
-    updateConnectionStatus();
-  });
-};
+  window.addEventListener('offline', function () {
+    updateConnectionStatus()
+  })
+}
 
-export default controllerInternetConnection;
+export default controllerInternetConnection

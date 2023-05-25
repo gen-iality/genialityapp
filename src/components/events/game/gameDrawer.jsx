@@ -1,32 +1,32 @@
-import { useEffect, useState } from 'react';
-import { Row, Col, Button, Drawer, Avatar, Space } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
-import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
-import Game from '../game';
-import GameRanking from '../../events/game/gameRanking';
-import withContext from '@context/withContext';
+import { useEffect, useState } from 'react'
+import { Row, Col, Button, Drawer, Avatar, Space } from 'antd'
+import { CloseOutlined } from '@ant-design/icons'
+import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline'
+import Game from '../game'
+import GameRanking from '../../events/game/gameRanking'
+import withContext from '@context/withContext'
 
 function GameDrawer(props) {
-  const { cHelper, cEvent } = props;
-  const styles = cEvent.value.styles;
-  const { gameData, setGameData } = cHelper;
+  const { cHelper, cEvent } = props
+  const styles = cEvent.value.styles
+  const { gameData, setGameData } = cHelper
   // Estado para hacer visible el ranking
-  const [rankingVisible, setRankingVisible] = useState(false);
-  const [gameVisible, setGameVisible] = useState(false);
+  const [rankingVisible, setRankingVisible] = useState(false)
+  const [gameVisible, setGameVisible] = useState(false)
 
   const showRanking = () => {
-    setRankingVisible(!rankingVisible);
-  };
+    setRankingVisible(!rankingVisible)
+  }
   useEffect(() => {
     if (gameData !== '') {
-      setGameVisible(true);
-      setRankingVisible(false);
+      setGameVisible(true)
+      setRankingVisible(false)
     }
-  }, [gameData]);
+  }, [gameData])
 
   function closeDrawer() {
-    setGameVisible(false);
-    setGameData('');
+    setGameVisible(false)
+    setGameData('')
   }
 
   const iconStyles = {
@@ -39,7 +39,7 @@ function GameDrawer(props) {
     borderRadius: '8px',
     color: `${styles.textMenu}`,
     backgroundColor: `${gameData.picture ? '' : styles.toolbarDefaultBg}`,
-  };
+  }
 
   return (
     <>
@@ -51,7 +51,11 @@ function GameDrawer(props) {
             <Col>
               <Space>
                 {gameData.picture ? (
-                  <Avatar style={iconStyles} key={'img' + gameData.id} src={gameData.picture} />
+                  <Avatar
+                    style={iconStyles}
+                    key={'img' + gameData.id}
+                    src={gameData.picture}
+                  />
                 ) : (
                   <GamepadVariantOutline style={iconStyles} />
                 )}
@@ -91,7 +95,7 @@ function GameDrawer(props) {
         </Row>
       </Drawer>
     </>
-  );
+  )
 }
 
-export default withContext(GameDrawer);
+export default withContext(GameDrawer)

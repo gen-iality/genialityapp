@@ -1,31 +1,31 @@
 /** React's libraries imports */
-import { useState, useEffect, ReactElement, ReactNode } from 'react';
-import { useIntl } from 'react-intl';
-import { useLocation } from 'react-router';
+import { useState, useEffect, ReactNode } from 'react'
+import { useIntl } from 'react-intl'
+import { useLocation } from 'react-router'
 
 /** Antd imports */
-import { Steps, Button, Alert, Form } from 'antd';
-import { ScheduleOutlined } from '@ant-design/icons';
-import { LoadingOutlined } from '@ant-design/icons';
-import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
-import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
+import { Steps, Button, Alert, Form } from 'antd'
+import { ScheduleOutlined } from '@ant-design/icons'
+import { LoadingOutlined } from '@ant-design/icons'
+import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline'
+import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline'
 
 /** Components imports */
-import RegisterFast from './Content/RegisterFast';
-import RegistrationResult from './Content/RegistrationResult';
+import RegisterFast from './Content/RegisterFast'
+import RegistrationResult from './Content/RegistrationResult'
 
 /** External functions imports */
-import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/createNewUser';
+import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/createNewUser'
 
 /** Helpers and utils imports */
-import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request';
+import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request'
 
 /** Context imports */
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { DispatchMessageService } from '@context/MessageService';
-import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm';
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { StateMessage } from '@context/MessageService'
+import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm'
 
-const { Step } = Steps;
+const { Step } = Steps
 
 const RegisterUserAndOrgMember = ({
   screens,
@@ -36,61 +36,63 @@ const RegisterUserAndOrgMember = ({
   requireAutomaticLoguin,
   startingComponent,
 }: any) => {
-  const intl = useIntl();
-  const [form] = Form.useForm();
-  const { helperDispatch, currentAuthScreen } = useHelper();
-  const location = useLocation();
+  const intl = useIntl()
+  const [form] = Form.useForm()
+  const { helperDispatch, currentAuthScreen } = useHelper()
+  const location = useLocation()
 
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(0)
   const [basicDataUser, setBasicDataUser] = useState<any>({
     names: '',
     email: '',
     password: '',
     picture: '',
-  });
-  const [dataOrgMember, setDataOrgMember] = useState<any | undefined>(undefined);
-  const [buttonStatus, setButtonStatus] = useState(true);
+  })
+  const [dataOrgMember, setDataOrgMember] = useState<any | undefined>(undefined)
+  const [buttonStatus, setButtonStatus] = useState(true)
   const [validationGeneral, setValidationGeneral] = useState<{
-    status: boolean,
-    textError: string,
-    isLoading: boolean,
-    component?: ReactNode,
+    status: boolean
+    textError: string
+    isLoading: boolean
+    component?: ReactNode
   }>({
     status: false,
     textError: '',
     isLoading: false,
     component: undefined,
-  });
+  })
 
-  const [organization, setOrganization] = useState({});
-  const [existGenialialityUser, setExistGenialialityUser] = useState(false);
+  const [organization, setOrganization] = useState({})
+  const [existGenialialityUser, setExistGenialialityUser] = useState(false)
 
   const hookValidations = (status: boolean, textError: string) => {
     setValidationGeneral({
       status: status,
       textError: textError,
       isLoading: false,
-    });
-    setButtonStatus(status);
-  };
+    })
+    setButtonStatus(status)
+  }
 
   const formDataHandler = (e: any, fieldName: string, picture: any) => {
-    const value = fieldName === 'picture' ? picture : e.target.value;
+    const value = fieldName === 'picture' ? picture : e.target.value
 
     setBasicDataUser((previous: any) => ({
       ...previous,
       [fieldName]: value,
-    }));
-  };
+    }))
+  }
 
   const onSubmit = (values: any) => {
-    setDataOrgMember(values);
-  };
+    setDataOrgMember(values)
+  }
 
   const steps = [
     {
       title: 'First',
-      content: <RegisterFast basicDataUser={basicDataUser} formDataHandler={formDataHandler} />,
+      content: (
+        <RegisterFast basicDataUser={basicDataUser} formDataHandler={formDataHandler} />
+      ),
       icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
     {
@@ -119,46 +121,49 @@ const RegisterUserAndOrgMember = ({
       ),
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
     },
-  ];
+  ]
 
   const handleValidateAccountGeniality = async () => {
     try {
-      const validateEmail = await UsersApi.validateEmail({ email: basicDataUser.email });
+      const validateEmail = await UsersApi.validateEmail({ email: basicDataUser.email })
       if (validateEmail?.message === 'Email valid') {
         setValidationGeneral({
           isLoading: false,
           status: false,
           textError: '',
-        });
-        setCurrent(current + 1);
+        })
+        setCurrent(current + 1)
       }
     } catch (err: any) {
       if (err?.response?.data?.errors?.email[0] === 'email ya ha sido registrado.') {
         if (isAdminPage()) {
-          setCurrent(current + 1);
-          setExistGenialialityUser(true);
+          setCurrent(current + 1)
+          setExistGenialialityUser(true)
 
           setValidationGeneral({
             isLoading: false,
             status: false,
             textError: 'El usuario ya existe. Debes registrar miembro a la organización',
             component: 'Registrar miembro de la organización',
-          });
+          })
         } else {
           setValidationGeneral({
             isLoading: false,
             status: true,
             textError: intl.formatMessage({
               id: 'modal.feedback.title.error',
-              defaultMessage: 'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
+              defaultMessage:
+                'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
             }),
             component: intl.formatMessage({
               id: 'modal.feedback.title.errorlink',
               defaultMessage: 'inicia sesión',
             }),
-          });
+          })
         }
-      } else if (err?.response?.data?.errors?.email[0] === 'email no es un correo válido') {
+      } else if (
+        err?.response?.data?.errors?.email[0] === 'email no es un correo válido'
+      ) {
         setValidationGeneral({
           isLoading: false,
           status: true,
@@ -166,35 +171,43 @@ const RegisterUserAndOrgMember = ({
             id: 'modal.feedback.errorDNSNotFound',
             defaultMessage: 'El correo ingresado no es válido.',
           }),
-        });
+        })
       } else {
         setValidationGeneral({
           isLoading: false,
           status: true,
           textError: intl.formatMessage({
             id: 'modal.feedback.errorGeneralInternal',
-            defaultMessage: 'Se ha presentado un error interno. Por favor intenta de nuevo',
+            defaultMessage:
+              'Se ha presentado un error interno. Por favor intenta de nuevo',
           }),
-        });
+        })
       }
     }
-  };
+  }
 
   const handleSubmit = () => {
-    setCurrent(current + 1);
+    setCurrent(current + 1)
 
     async function createOrgMember() {
-      const propertiesOrgMember = { properties: { ...basicDataUser, ...dataOrgMember } };
-      delete propertiesOrgMember.properties.password;
-      delete propertiesOrgMember.properties.picture;
+      const propertiesOrgMember = { properties: { ...basicDataUser, ...dataOrgMember } }
+      delete propertiesOrgMember.properties.password
+      delete propertiesOrgMember.properties.picture
 
       try {
-        const respUser = await OrganizationApi.saveUser(idOrganization, propertiesOrgMember);
-        console.log('3. RegisterUser: has default position Id', { defaultPositionId });
+        const respUser = await OrganizationApi.saveUser(
+          idOrganization,
+          propertiesOrgMember,
+        )
+        console.log('3. RegisterUser: has default position Id', { defaultPositionId })
         if (defaultPositionId === undefined) {
-          console.error('4. This organization has no default position. Eh!');
+          console.error('4. This organization has no default position. Eh!')
         } else {
-          await PositionsApi.Organizations.addUser(idOrganization, defaultPositionId, respUser.account_id);
+          await PositionsApi.Organizations.addUser(
+            idOrganization,
+            defaultPositionId,
+            respUser.account_id,
+          )
         }
         if (respUser && respUser.account_id) {
           setValidationGeneral({
@@ -205,31 +218,27 @@ const RegisterUserAndOrgMember = ({
               id: 'text_error.organization_successfully_registered',
               defaultMessage: 'Te has inscrito correctamente a esta organización',
             }),
-          });
-          setBasicDataUser({});
-          setDataOrgMember(undefined);
-          startingComponent && startingComponent();
+          })
+          setBasicDataUser({})
+          setDataOrgMember(undefined)
+          startingComponent && startingComponent()
         }
       } catch (err) {
         console.error(err)
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error',
-          action: 'show',
-        });
+        StateMessage.show(null, 'error', 'Ha ocurrido un error')
       }
     }
 
     if (existGenialialityUser) {
-      createOrgMember();
+      createOrgMember()
     } else {
       createNewUser(basicDataUser)
         .then((createdUserInfo) => {
-          console.log('createdUserInfo returned:', {createdUserInfo})
-          const {status} = createdUserInfo
+          console.log('createdUserInfo returned:', { createdUserInfo })
+          const { status } = createdUserInfo
 
           if (status === CREATE_NEW_USER_SUCCESS) {
-            createOrgMember();
+            createOrgMember()
           } else {
             setValidationGeneral({
               status: false, // REVISAR: ¿Debe ser true, para que pueda salir la alerta?
@@ -238,12 +247,12 @@ const RegisterUserAndOrgMember = ({
                 id: 'text_error.error_creating_user',
                 defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
               }),
-            });
+            })
           }
         })
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
     }
-  };
+  }
 
   const goToNextStep = () => {
     if (current == 0) {
@@ -251,33 +260,33 @@ const RegisterUserAndOrgMember = ({
         ...validationGeneral,
         isLoading: true,
         status: false,
-      });
+      })
 
-      handleValidateAccountGeniality();
+      handleValidateAccountGeniality()
     } else if (current == 1) {
       form
         .validateFields()
         .then(() => {
-          console.log('3. Validate Fields');
-          form.submit();
+          console.log('3. Validate Fields')
+          form.submit()
           setValidationGeneral((previous) => ({
             ...previous,
             isLoading: true,
             status: false,
-          }));
+          }))
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.log(error))
     }
-  };
+  }
 
   const goTopreviousStep = () => {
-    setCurrent(current - 1);
-    setButtonStatus(false);
-  };
+    setCurrent(current - 1)
+    setButtonStatus(false)
+  }
 
   function validateEmail(email: string) {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
+    const re = /\S+@\S+\.\S+/
+    return re.test(email)
   }
 
   const ValidateGeneralFields = () => {
@@ -287,13 +296,13 @@ const RegisterUserAndOrgMember = ({
         basicDataUser.password.length >= 6 &&
         basicDataUser.password.length <= 18
       ) {
-        setButtonStatus(false);
+        setButtonStatus(false)
         setValidationGeneral({
           ...validationGeneral,
           isLoading: false,
           status: false,
           textError: '',
-        });
+        })
       } else {
         setValidationGeneral({
           ...validationGeneral,
@@ -303,47 +312,47 @@ const RegisterUserAndOrgMember = ({
             defaultMessage: 'Complete los campos solicitados correctamente.',
           }),
           status: true,
-        });
+        })
       }
     } else {
-      setButtonStatus(true);
+      setButtonStatus(true)
     }
-  };
+  }
 
   const isAdminPage = () => {
-    const isAdmin = location.pathname.includes('admin');
+    const isAdmin = location.pathname.includes('admin')
 
     if (isAdmin) {
-      return true;
-    } else return false;
-  };
+      return true
+    } else return false
+  }
 
   useEffect(() => {
     if (dataOrgMember !== undefined) {
-      handleSubmit();
+      handleSubmit()
     }
-  }, [dataOrgMember]);
+  }, [dataOrgMember])
 
   useEffect(() => {
     OrganizationApi.getOne(idOrganization).then((response) => {
-      console.log('response', response);
-      setOrganization(response);
-    });
-  }, []);
+      console.log('response', response)
+      setOrganization(response)
+    })
+  }, [])
 
   useEffect(() => {
     if (current == 0) {
-      ValidateGeneralFields();
+      ValidateGeneralFields()
     }
-  }, [basicDataUser, current]);
+  }, [basicDataUser, current])
 
   useEffect(() => {
-    if (currentAuthScreen === 'login') setCurrent(0);
+    if (currentAuthScreen === 'login') setCurrent(0)
 
     return () => {
-      setCurrent(0);
-    };
-  }, [currentAuthScreen]);
+      setCurrent(0)
+    }
+  }, [currentAuthScreen])
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
@@ -357,8 +366,8 @@ const RegisterUserAndOrgMember = ({
         {current > 0 && current < 2 && (
           <Button
             onClick={() => {
-              hookValidations(false, '');
-              goTopreviousStep();
+              hookValidations(false, '')
+              goTopreviousStep()
             }}
             size="large"
             style={{ margin: '0 8px' }}
@@ -434,7 +443,7 @@ const RegisterUserAndOrgMember = ({
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default RegisterUserAndOrgMember;
+export default RegisterUserAndOrgMember

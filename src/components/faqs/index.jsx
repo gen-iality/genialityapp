@@ -1,18 +1,26 @@
-import { Fragment } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
-import Faqs from './faqs';
-import Faq from './faq';
+import { Fragment } from 'react'
+import { Route, Switch, withRouter } from 'react-router-dom'
+import Faqs from './faqs'
+import Faq from './faq'
 
 function FaqsRoutes(props) {
-  const { event, match } = props;
+  const { event, matchUrl } = props
   return (
     <Fragment>
       <Switch>
-        <Route exact path={`${match.url}/`} render={() => <Faqs event={event} matchUrl={match.url} />} />
-        <Route exact path={`${match.url}/faq`} render={() => <Faq event={event} matchUrl={match.url} {...props} />} />
+        <Route
+          exact
+          path={`${matchUrl}/`}
+          render={() => <Faqs event={event} parentUrl={matchUrl} />}
+        />
+        <Route
+          exact
+          path={`${matchUrl}/faq`}
+          render={() => <Faq event={event} parentUrl={matchUrl} {...props} />}
+        />
       </Switch>
     </Fragment>
-  );
+  )
 }
 
-export default withRouter(FaqsRoutes);
+export default withRouter(FaqsRoutes)

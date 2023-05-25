@@ -1,4 +1,4 @@
-import Footer from '../../containers/footer';
+import Footer from '../../containers/footer'
 /* import { ToastContainer } from 'react-toastify'; */
 
 export default function WithFooter({ children }) {
@@ -7,5 +7,5 @@ export default function WithFooter({ children }) {
       {children}
       <Footer />
     </>
-  );
+  )
 }

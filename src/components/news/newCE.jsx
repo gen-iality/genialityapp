@@ -1,142 +1,126 @@
-import { useState, useEffect } from 'react';
-import { NewsFeed } from '@helpers/request';
-import { handleRequestError } from '@helpers/utils';
-import { Col, Row, Input, Form, DatePicker, Modal } from 'antd';
+import { useState, useEffect } from 'react'
+import { NewsFeed } from '@helpers/request'
+import { handleRequestError } from '@helpers/utils'
+import { Col, Row, Input, Form, DatePicker, Modal } from 'antd'
 /**
  * This solution is distributed as is:
  * https://github.com/react-component/picker/issues/123#issuecomment-728755491
  */
- import dayjs from 'dayjs';
- import advancedFormat from 'dayjs/plugin/advancedFormat';
- import customParseFormat from 'dayjs/plugin/customParseFormat';
- import localeData from 'dayjs/plugin/localeData';
- import weekday from 'dayjs/plugin/weekday';
- import weekOfYear from 'dayjs/plugin/weekOfYear';
- import weekYear from 'dayjs/plugin/weekYear';
- dayjs.extend(customParseFormat);
- dayjs.extend(advancedFormat);
- dayjs.extend(weekday);
- dayjs.extend(localeData);
- dayjs.extend(weekOfYear);
- dayjs.extend(weekYear);
-import Header from '@antdComponents/Header';
-import BackTop from '@antdComponents/BackTop';
-import { useHistory } from 'react-router-dom';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import EviusReactQuill from '../shared/eviusReactQuill';
-import { DispatchMessageService } from '@context/MessageService';
-import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop';
-import Loading from '../profile/loading';
+import dayjs from 'dayjs'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import localeData from 'dayjs/plugin/localeData'
+import weekday from 'dayjs/plugin/weekday'
+import weekOfYear from 'dayjs/plugin/weekOfYear'
+import weekYear from 'dayjs/plugin/weekYear'
+dayjs.extend(customParseFormat)
+dayjs.extend(advancedFormat)
+dayjs.extend(weekday)
+dayjs.extend(localeData)
+dayjs.extend(weekOfYear)
+dayjs.extend(weekYear)
+import Header from '@antdComponents/Header'
+import BackTop from '@antdComponents/BackTop'
+import { useHistory } from 'react-router-dom'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import EviusReactQuill from '../shared/eviusReactQuill'
+import { StateMessage } from '@context/MessageService'
+import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
+import Loading from '../profile/loading'
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
-};
+}
 
 const NewCE = (props) => {
-  const history = useHistory();
-  const locationState = props.location.state;
-  const [notice, setNotice] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const history = useHistory()
+  const locationState = props.location.state
+  const [notice, setNotice] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     if (locationState.edit) {
-      getNew();
+      getNew()
     }
-  }, []);
+  }, [])
 
   const getNew = async () => {
-    const data = await NewsFeed.getOne(props.eventId, locationState.edit);
-    setNotice(data);
-    setIsLoading(false);
-  };
+    const data = await NewsFeed.getOne(props.eventId, locationState.edit)
+    setNotice(data)
+    setIsLoading(false)
+  }
 
   const handleChange = (e) => {
-    const { name } = e.target;
-    const { value } = e.target;
+    const { name } = e.target
+    const { value } = e.target
     setNotice({
       ...notice,
       [name]: value,
-    });
-  };
+    })
+  }
 
   const changeDescription = (e, name) => {
     if (notice) {
       setNotice({
         ...notice,
         [name]: e,
-      });
+      })
     }
-  };
+  }
 
   const handleImage = (imageUrl) => {
     setNotice({
       ...notice,
       image: imageUrl,
-    });
-  };
+    })
+  }
 
   const onChangeDate = (date, dateString) => {
-    setNotice({ ...notice, time: date });
-  };
+    setNotice({ ...notice, time: date })
+  }
 
   const onSubmit = async () => {
-    const values = {};
+    const values = {}
     if (notice.title === '' || !notice.title) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El título es requerido',
-        action: 'show',
-      });
-      values.title = false;
+      StateMessage.show(null, 'error', 'El título es requerido')
+      values.title = false
     } else {
-      values.title = true;
+      values.title = true
     }
     if (
       notice.description_complete === '' ||
       notice.description_complete === '<p><br></p>' ||
       !notice.description_complete
     ) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'La noticia es requerida',
-        action: 'show',
-      });
-      values.description_complete = false;
+      StateMessage.show(null, 'error', 'La noticia es requerida')
+      values.description_complete = false
     } else {
-      values.description_complete = true;
+      values.description_complete = true
     }
-    if (notice.description_short === '' || notice.description_short === '<p><br></p>' || !notice.description_short) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El subtítulo es requerido',
-        action: 'show',
-      });
-      values.description_short = false;
+    if (
+      notice.description_short === '' ||
+      notice.description_short === '<p><br></p>' ||
+      !notice.description_short
+    ) {
+      StateMessage.show(null, 'error', 'El subtítulo es requerido')
+      values.description_short = false
     } else {
-      values.description_short = true;
+      values.description_short = true
     }
     if (notice.image === null || !notice.image) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'La imagen es requerida',
-        action: 'show',
-      });
-      values.image = false;
+      StateMessage.show(null, 'error', 'La imagen es requerida')
+      values.image = false
     } else {
-      values.image = true;
+      values.image = true
     }
     if (notice.fecha === null && notice.fecha !== '' && !notice.fecha) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'La fecha es requerida',
-        action: 'show',
-      });
-      values.fecha = false;
+      StateMessage.show(null, 'error', 'La fecha es requerida')
+      values.fecha = false
     } else {
-      values.fecha = true;
+      values.fecha = true
     }
 
     if (
@@ -147,51 +131,35 @@ const NewCE = (props) => {
       values.image &&
       values.fecha
     ) {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: ' Por favor espere mientras se guarda la información...',
-        action: 'show',
-      });
+      StateMessage.show(
+        'loading',
+        'loading',
+        ' Por favor espere mientras se guarda la información...',
+      )
 
       try {
         if (locationState.edit) {
-          await NewsFeed.editOne(notice, locationState.edit, props.eventId);
+          await NewsFeed.editOne(notice, locationState.edit, props.eventId)
         } else {
-          await NewsFeed.create(notice, props.eventId);
+          await NewsFeed.create(notice, props.eventId)
         }
 
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        });
-        history.push(`${props.match.url}`);
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
+        history.push(`${props.match.url}`)
       } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        });
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        });
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', handleRequestError(e).message)
       }
     }
-  };
+  }
 
   const remove = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se borra la información...',
-      action: 'show',
-    });
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se borra la información...',
+    )
     if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -203,34 +171,24 @@ const NewCE = (props) => {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await NewsFeed.deleteOne(locationState.edit, props.eventId);
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              });
-              history.push(`${props.match.url}`);
+              await NewsFeed.deleteOne(locationState.edit, props.eventId)
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó la información correctamente!',
+              )
+              history.push(`${props.match.url}`)
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              });
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
-          };
-          onHandlerRemove();
+          }
+          onHandlerRemove()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <Form onFinish={onSubmit} {...formLayout} initialValues={notice}>
@@ -285,7 +243,6 @@ const NewCE = (props) => {
                 id="description_complete"
                 name="description_complete"
                 data={(notice && notice.description_complete) || ''}
-                //modules={toolbarEditor}
                 handleChange={(e) => changeDescription(e, 'description_complete')}
               />
             </Form.Item>
@@ -331,7 +288,7 @@ const NewCE = (props) => {
       </Row>
       <BackTop />
     </Form>
-  );
-};
+  )
+}
 
-export default NewCE;
+export default NewCE

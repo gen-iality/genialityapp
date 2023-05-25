@@ -1,6 +1,6 @@
-import { TypeActivityProvider } from '@context/typeactivity/typeActivityProvider';
+import { TypeActivityProvider } from '@context/typeactivity/typeActivityProvider'
 
-import InitialView from './InitialView';
+import InitialView from './InitialView'
 
 function TipeOfActivity({ eventId, activityId, activityName, tab, onDelete }: any) {
   return (
@@ -13,7 +13,7 @@ function TipeOfActivity({ eventId, activityId, activityName, tab, onDelete }: an
         onDelete={onDelete}
       />
     </TypeActivityProvider>
-  );
+  )
 }
 
-export default TipeOfActivity;
+export default TipeOfActivity

@@ -1,14 +1,14 @@
-import { Divider, List, Modal, Typography } from 'antd';
+import { List, Modal, Typography } from 'antd'
 
-const { confirm } = Modal;
-const { Text } = Typography;
+const { confirm } = Modal
+const { Text } = Typography
 
 const checkInInstructions = [
   'Si ya hay asistentes inscritos en el curso, se deberá actualizar la información de dicho campo.',
   'Esta función está disponible solo para cédula de ciudadanía Colombiana.',
   'Se requiere Lector de documentos.',
   'Durante la inscripción se almacenará la información capturada del documento.',
-];
+]
 
 const checkInFields = [
   {
@@ -63,18 +63,18 @@ const checkInFields = [
     visibleByAdmin: true,
     visibleByContacts: undefined,
   },
-];
+]
 
 // a little function to help us with reordering the result
 export const Reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
+  const result = Array.from(list)
+  const [removed] = result.splice(startIndex, 1)
+  result.splice(endIndex, 0, removed)
 
-  return result;
-};
+  return result
+}
 
-const grid = 6;
+const grid = 6
 export const getItemStyle = (isDragging, draggableStyle) => {
   return {
     // some basic styles to make the items look a bit nicer
@@ -88,21 +88,26 @@ export const getItemStyle = (isDragging, draggableStyle) => {
 
     // styles we need to apply on draggables
     ...draggableStyle,
-  };
-};
+  }
+}
 
 export const getQuestionListStyle = (isDraggingOver) => ({
   background: isDraggingOver ? '#CA4FC4' : '',
   padding: 8,
   width: 350,
-});
+})
 
-export const createFieldForCheckInPerDocument = async ({ value, checkInFieldsIds, save, remove }) => {
+export const createFieldForCheckInPerDocument = async ({
+  value,
+  checkInFieldsIds,
+  save,
+  remove,
+}) => {
   const saveCheckInField = async () => {
     checkInFields.map(async (checkInField) => {
-      await save(checkInField);
-    });
-  };
+      await save(checkInField)
+    })
+  }
 
   if (value.target.checked) {
     confirm({
@@ -124,9 +129,9 @@ export const createFieldForCheckInPerDocument = async ({ value, checkInFieldsIds
       okType: 'primary',
       cancelText: 'Cancelar',
       onOk() {
-        saveCheckInField();
+        saveCheckInField()
       },
-    });
+    })
   } else {
     confirm({
       title: `¿Se deshabilitará el checkIn por documento estás seguro?`,
@@ -136,9 +141,9 @@ export const createFieldForCheckInPerDocument = async ({ value, checkInFieldsIds
       cancelText: 'Cancelar',
       onOk() {
         checkInFieldsIds.map(async (checkInFieldId) => {
-          await remove(checkInFieldId, true);
-        });
+          await remove(checkInFieldId, true)
+        })
       },
-    });
+    })
   }
-};
+}

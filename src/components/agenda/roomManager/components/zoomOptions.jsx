@@ -1,5 +1,11 @@
-import { Row, Col, Form, Select } from 'antd';
-export default function ZoomOptions({ hasVideoconference, select_host_manual, handleChange, host_id, host_list }) {
+import { Row, Col, Form, Select } from 'antd'
+export default function ZoomOptions({
+  hasVideoconference,
+  select_host_manual,
+  handleChange,
+  host_id,
+  host_list,
+}) {
   return (
     <>
       {!hasVideoconference && (
@@ -39,5 +45,5 @@ export default function ZoomOptions({ hasVideoconference, select_host_manual, ha
         </Row>
       )}
     </>
-  );
+  )
 }

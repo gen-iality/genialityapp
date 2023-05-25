@@ -1,17 +1,22 @@
-import { logout } from './hooks/logOut';
-import { HelperState } from './interfaces/interfaces';
-import { HelperAction } from './types/types';
+import { logout } from './hooks/logOut'
+import { HelperState } from './interfaces/interfaces'
+import { HelperAction } from './types/types'
 
 export const helperInitialState: HelperState = {
   reloadTemplatesCms: false,
   tabsGenerals: {},
   currentAuthScreen: 'login',
-  controllerLoginVisible: { visible: false, idOrganization: '', organization: '', logo: '' },
+  controllerLoginVisible: {
+    visible: false,
+    idOrganization: '',
+    organization: '',
+    logo: '',
+  },
   currentActivity: null,
   showNotification: false,
   params: {},
   eventIsActive: false,
-};
+}
 
 export const helperReducer = (state: HelperState, action: HelperAction) => {
   switch (action.type) {
@@ -19,13 +24,13 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
       return {
         ...state,
         reloadTemplatesCms: true,
-      };
+      }
 
     case 'changeTabs':
       return {
         ...state,
         tabsGenerals: action.tabs,
-      };
+      }
 
     case 'showLogin':
       return {
@@ -38,7 +43,7 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
           logo: action.logo,
           defaultPositionId: action.defaultPositionId,
         },
-      };
+      }
 
     case 'showRegister':
       return {
@@ -51,38 +56,38 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
           logo: action.logo,
           defaultPositionId: action.defaultPositionId,
         },
-      };
+      }
 
     case 'currentActivity':
       return {
         ...state,
         currentActivity: action.currentActivity,
-      };
+      }
 
     case 'logout':
       const params = {
         showNotification: action.showNotification,
         params: action.params,
-      };
+      }
 
-      logout(params);
+      logout(params)
 
-      return { ...state };
+      return { ...state }
 
     case 'eventIsActive':
-      const eventId = action.eventId;
+      const eventId = action.eventId
       /** RESTRICIONES quitar negacion en action.eventIsActive para dejar el flujo de manera correcta*/
       if (eventId) {
         return {
           ...state,
           // @ts-ignore: Unreachable code error
           eventIsActive: { ...state.eventIsActive, [eventId]: !action.eventIsActive },
-        };
+        }
       }
       return {
         ...state,
         eventIsActive: !action.eventIsActive,
-      };
+      }
 
     //   case 'selectLiveBroadcast':
     //     return {
@@ -90,6 +95,6 @@ export const helperReducer = (state: HelperState, action: HelperAction) => {
     //     };
 
     default:
-      return state;
+      return state
   }
-};
+}

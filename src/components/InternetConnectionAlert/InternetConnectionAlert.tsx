@@ -1,13 +1,13 @@
-import { useEffect, useState, ReactNode, CSSProperties } from 'react';
-import { Alert, Space, Typography } from 'antd';
-import controllerInternetConnection from '@Utilities/controllerInternetConnection';
-import WebRemoveIcon from '@2fd/ant-design-icons/lib/WebRemove';
-import WebCheckIcon from '@2fd/ant-design-icons/lib/WebCheck';
+import { useEffect, useState, ReactNode, CSSProperties } from 'react'
+import { Alert, Space, Typography } from 'antd'
+import controllerInternetConnection from '@Utilities/controllerInternetConnection'
+import WebRemoveIcon from '@2fd/ant-design-icons/lib/WebRemove'
+import WebCheckIcon from '@2fd/ant-design-icons/lib/WebCheck'
 
 interface propsOptions {
-  description?: string | ReactNode;
-  placement?: 'top' | 'bottom';
-  action?: ReactNode;
+  description?: string | ReactNode
+  placement?: 'top' | 'bottom'
+  action?: ReactNode
 }
 
 const positionTop: CSSProperties = {
@@ -16,7 +16,7 @@ const positionTop: CSSProperties = {
   width: '100vw',
   zIndex: '2000',
   textAlign: 'center',
-};
+}
 
 const positionBotton: CSSProperties = {
   position: 'fixed',
@@ -24,21 +24,25 @@ const positionBotton: CSSProperties = {
   width: '100vw',
   zIndex: '2000',
   textAlign: 'center',
-};
+}
 
-const InternetConnectionAlert = ({ description, placement = 'top', action }: propsOptions) => {
-  const [connectionStatus, setConnectionStatus] = useState<boolean | string>('initial');
+const InternetConnectionAlert = ({
+  description,
+  placement = 'top',
+  action,
+}: propsOptions) => {
+  const [connectionStatus, setConnectionStatus] = useState<boolean | string>('initial')
 
-  controllerInternetConnection({ setConnectionStatus });
+  controllerInternetConnection({ setConnectionStatus })
 
   useEffect(() => {
-    if (connectionStatus === 'initial') return;
+    if (connectionStatus === 'initial') return
     if (connectionStatus) {
       setTimeout(() => {
-        setConnectionStatus('initial');
-      }, 3500);
+        setConnectionStatus('initial')
+      }, 3500)
     }
-  }, [connectionStatus]);
+  }, [connectionStatus])
 
   return (
     <>
@@ -78,7 +82,7 @@ const InternetConnectionAlert = ({ description, placement = 'top', action }: pro
         </>
       )}
     </>
-  );
-};
+  )
+}
 
-export default InternetConnectionAlert;
+export default InternetConnectionAlert

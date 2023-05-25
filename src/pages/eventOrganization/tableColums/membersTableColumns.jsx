@@ -1,35 +1,39 @@
 /** React's libraries */
-import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 
 /** Antd imports */
-import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin } from 'antd';
-import { ClockCircleOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
+import { Tooltip, Button, Row, Col, Popover, Image, Avatar, Empty, Spin } from 'antd'
+import { ClockCircleOutlined, EditOutlined, UserOutlined } from '@ant-design/icons'
 
 /** Helpers and utils */
-import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
+import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps'
 
-export const columns = (columnsData, editModalUser, extraFields, userActivities, isStaticsLoading) => {
-  const history = useHistory();
-  const [columns, setColumns] = useState([]);
-  const [progressing, setProgressing] = useState({});
+export const columns = (
+  columnsData,
+  editModalUser,
+  extraFields,
+  userActivities,
+  isStaticsLoading,
+) => {
+  const history = useHistory()
+  const [columns, setColumns] = useState([])
+  const [progressing, setProgressing] = useState({})
 
-  if (!extraFields) return [];
+  if (!extraFields) return []
 
   const dynamicColumns = extraFields
     .map((extraField) => {
-      //if (extraField.name === 'role') return null;
-
       const dataIndex = () => {
         switch (extraField.name) {
           case 'position_id':
-            return 'position';
+            return 'position'
           case 'rol_id':
-            return 'role';
+            return 'role'
           default:
-            return extraField.name;
+            return extraField.name
         }
-      };
+      }
 
       return {
         title: extraField.label,
@@ -37,16 +41,16 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
         ellipsis: true,
         sorter: (a, b) => a[extraField.name]?.length - b[extraField.name]?.length,
         ...membersGetColumnSearchProps(extraField.name, columnsData),
-      };
+      }
     })
-    .filter((x) => x !== null);
+    .filter((x) => x !== null)
 
   const picture = {
     title: 'Avatar',
     dataIndex: 'picture',
     width: 70,
     /* align: 'center', */
-    render(val, item, index) {
+    render(val, item) {
       return (
         <Row gutter={8}>
           <Col>
@@ -55,20 +59,29 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
               content={() => (
                 <>
                   {item.picture ? (
-                    <Image key={'img' + item._id} width={200} height={200} src={item.picture} />
+                    <Image
+                      key={'img' + item._id}
+                      width={200}
+                      height={200}
+                      src={item.picture}
+                    />
                   ) : (
                     <Empty description="Imagen no encontrada" />
                   )}
                 </>
               )}
             >
-              {item.picture ? <Avatar key={'img' + item._id} src={item.picture} /> : <Avatar icon={<UserOutlined />} />}
+              {item.picture ? (
+                <Avatar key={'img' + item._id} src={item.picture} />
+              ) : (
+                <Avatar icon={<UserOutlined />} />
+              )}
             </Popover>
           </Col>
         </Row>
-      );
+      )
     },
-  };
+  }
 
   const created_at = {
     title: 'Creado',
@@ -78,9 +91,9 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
     sorter: (a, b) => a.created_at.localeCompare(b.created_at),
     ...membersGetColumnSearchProps('created_at', columnsData),
     render(val, item) {
-      return item.created_at;
+      return item.created_at
     },
-  };
+  }
 
   const updated_at = {
     title: 'Actualizado',
@@ -90,9 +103,9 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
     sorter: (a, b) => a.updated_at.localeCompare(b.updated_at),
     ...membersGetColumnSearchProps('updated_at', columnsData),
     render(val, item) {
-      return item.updated_at;
+      return item.updated_at
     },
-  };
+  }
 
   const editOption = {
     title: 'Opción',
@@ -109,7 +122,7 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
               type="primary"
               size="small"
               onClick={() => {
-                history.push(`./members/timetracking/${item._id}`);
+                history.push(`./members/timetracking/${item._id}`)
               }}
               icon={<ClockCircleOutlined />}
             ></Button>
@@ -119,16 +132,16 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
               id={`editAction${index}`}
               type="primary"
               size="small"
-              onClick={(e) => {
-                editModalUser(item);
+              onClick={() => {
+                editModalUser(item)
               }}
               icon={<EditOutlined />}
             ></Button>
           </Tooltip>
         </>
-      );
+      )
     },
-  };
+  }
 
   useEffect(() => {
     const progressingColumn = {
@@ -143,21 +156,21 @@ export const columns = (columnsData, editModalUser, extraFields, userActivities,
       ellipsis: true,
       align: 'center',
       render: (text, item) => <div>{item.stats}</div>,
-    };
+    }
 
-    setProgressing(progressingColumn);
-  }, [userActivities]);
+    setProgressing(progressingColumn)
+  }, [userActivities])
 
   useEffect(() => {
-    const newColumns = [picture, ...dynamicColumns];
+    const newColumns = [picture, ...dynamicColumns]
 
-    newColumns.push(progressing);
-    newColumns.push(created_at);
-    newColumns.push(updated_at);
-    newColumns.push(editOption);
+    newColumns.push(progressing)
+    newColumns.push(created_at)
+    newColumns.push(updated_at)
+    newColumns.push(editOption)
 
-    setColumns(newColumns);
-  }, [progressing]);
+    setColumns(newColumns)
+  }, [progressing])
 
-  return columns;
-};
+  return columns
+}

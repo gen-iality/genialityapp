@@ -1,4 +1,4 @@
-import 'react-tabs/style/react-tabs.css';
+import 'react-tabs/style/react-tabs.css'
 
 export default function EvenTable({ ...props }) {
   return (
@@ -19,5 +19,5 @@ export default function EvenTable({ ...props }) {
         <tbody className="ant-table-tbody">{props.children}</tbody>
       </table>
     </div>
-  );
+  )
 }

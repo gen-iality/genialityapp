@@ -1,21 +1,26 @@
-import { Component, useState, useEffect } from 'react';
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
-import { firestore } from '@helpers/firebase';
-import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request';
-import { AgendaApi, OrganizationApi } from '@helpers/request';
-import UserModal from '../modal/modalUser';
-import ErrorServe from '../modal/serverError';
-import { utils, writeFileXLSX } from 'xlsx';
-import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '@helpers/utils';
-import dayjs from 'dayjs';
+import { Component, useState, useEffect } from 'react'
+import { FormattedDate, FormattedTime } from 'react-intl'
+import { fireRealtime, firestore } from '@helpers/firebase'
+import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request'
+import { AgendaApi, OrganizationApi } from '@helpers/request'
+import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
+
+import UserModal from '../modal/modalUser'
+import ErrorServe from '../modal/serverError'
+import { utils, writeFileXLSX } from 'xlsx'
+import {
+  fieldNameEmailFirst,
+  handleRequestError,
+  parseData2Excel,
+  sweetAlert,
+} from '@helpers/utils'
+import dayjs from 'dayjs'
 import {
   Button,
   Card,
-  Checkbox,
   Col,
   Drawer,
   Image,
-  message,
   List,
   Row,
   Statistic,
@@ -26,10 +31,11 @@ import {
   Tooltip,
   Select,
   Modal,
-} from 'antd';
+  Checkbox,
+} from 'antd'
 
-import updateAttendees from './eventUserRealTime';
-import { Link } from 'react-router-dom';
+import updateAttendees from './eventUserRealTime'
+import { Link, withRouter } from 'react-router-dom'
 import {
   EditOutlined,
   FullscreenOutlined,
@@ -40,72 +46,85 @@ import {
   UsergroupAddOutlined,
   StarOutlined,
   CheckOutlined,
-} from '@ant-design/icons';
-import QrModal from './qrModal';
+} from '@ant-design/icons'
+import QrModal from './qrModal'
 
-import Header from '@antdComponents/Header';
-import TableA from '@antdComponents/Table';
-import Highlighter from 'react-highlight-words';
-import { DispatchMessageService } from '@context/MessageService';
-import Loading from '../profile/loading';
-import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox';
-import { HelperContext } from '@context/helperContext/helperContext';
-import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton';
-import { UsersPerEventOrActivity } from './utils/utils';
+import Header from '@antdComponents/Header'
+import TableA from '@antdComponents/Table'
+import Highlighter from 'react-highlight-words'
+import { StateMessage } from '@context/MessageService'
+import Loading from '../profile/loading'
+import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox'
+import { HelperContext } from '@context/helperContext/helperContext'
+import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton'
+import { UsersPerEventOrActivity } from './utils/utils'
+import LessonsInfoModal from './LessonsInfoModal'
 
-const { Title, Text } = Typography;
-const { Option } = Select;
+const { Title, Text } = Typography
+const { Option } = Select
 
-const ModalWithLessonsInfo = ({ show, onHidden, allActivities, attendee, currentUser }) => {
-  const [loaded, setLoaded] = useState(false);
-  const [activities, setActivities] = useState([]);
+const ModalWithLessonsInfo_ = ({
+  show,
+  onHidden,
+  allActivities,
+  attendee,
+  currentUser,
+}) => {
+  const [loaded, setLoaded] = useState(false)
+  const [activities, setActivities] = useState([])
+  const [shouldUpdate, setshouldUpdate] = useState(0)
 
   useEffect(async () => {
-    if (!currentUser) return;
-    if (allActivities.length == 0) return;
+    if (!currentUser) return
+    if (allActivities.length == 0) return
 
     const existentActivities = await allActivities.map(async (activity) => {
       const activity_attendee = await firestore
         .collection(`${activity._id}_event_attendees`)
         .doc(currentUser._id)
-        .get();
+        .get()
       if (activity_attendee.exists) {
-        return activity;
+        return activity
       }
-      return null;
-    });
+      return null
+    })
     // Filter non-null result that means that the user attendees them
-    const viewedActivities = (await Promise.all(existentActivities)).filter((item) => item !== null);
-    setActivities(viewedActivities.map((activity) => activity.name));
-    setLoaded(true);
-  }, [allActivities, attendee, currentUser]);
+    const viewedActivities = (await Promise.all(existentActivities)).filter(
+      (item) => item !== null,
+    )
+    setActivities(viewedActivities.map((activity) => activity.name))
+    setLoaded(true)
+  }, [allActivities, attendee, currentUser, shouldUpdate])
 
   const Content = () => {
-    if (attendee.length === 0) {
-      return <p>No ha visto ningún curso</p>;
-    }
-
     if (loaded) {
-      if (activities.length) {
-        return (
-          <List
-            header={<Text strong>Lecciones vistas</Text>}
-            // bordered
-            dataSource={activities}
-            renderItem={(item) => (
-              <List.Item>
-                <CheckOutlined /> {item}
-              </List.Item>
-            )}
-          />
-        );
-        // return (activities.map((activity) => <p>{activity}</p>));
-      }
-      return <p>Nada para mostrar</p>;
+      return (
+        <List
+          header={<Text strong>Lecciones vistas</Text>}
+          // bordered
+          dataSource={allActivities}
+          renderItem={(item) => (
+            <List.Item>
+              {activities.filter((activityname) => activityname == item.name).length ? (
+                <CheckOutlined />
+              ) : (
+                <Checkbox
+                  onChange={async () => {
+                    await checkinAttendeeInActivity(currentUser, item._id)
+                    setshouldUpdate((value) => value + 1)
+                  }}
+                />
+              )}{' '}
+              {item.name}
+            </List.Item>
+          )}
+        />
+      )
+      // return (activities.map((activity) => <p>{activity}</p>));
     }
 
-    return <p>Cargando...</p>;
-  };
+    return <p>Cargando...</p>
+  }
 
   return (
     <Modal centered footer={null} visible={show} closable onCancel={onHidden}>
@@ -113,50 +132,92 @@ const ModalWithLessonsInfo = ({ show, onHidden, allActivities, attendee, current
         <Content />
       </Space>
     </Modal>
-  );
-};
+  )
+}
 
-const ColumnProgreso = ({ shownAll, item, allActivities, onOpen, updateAttendee, updateCurrentUser, ...props }) => {
-  const [attendee, setAttendee] = useState([]);
+const TimeTrackingStats = ({ user }) => {
+  const [timing, setTiming] = useState(0)
+
+  useEffect(() => {
+    const localRef = fireRealtime.ref(`user_sessions/local/${user._id}`)
+    localRef.get().then((result) => {
+      const logDict = result && result.exists() ? result.val() : {}
+
+      if (!logDict) {
+        setTiming(0)
+        return
+      }
+
+      const filteredLogDict = Object.values(logDict)
+        .filter((log) => log.status === 'offline')
+        .filter((log) => log.startTimestamp !== undefined)
+        .filter((log) => log.endTimestamp !== undefined)
+
+      const divisor = 3600
+
+      const time = filteredLogDict
+        .map((log) => (log.endTimestamp - log.startTimestamp) / 1000 / divisor)
+        .reduce((a, b) => a + b, 0)
+      setTiming(time)
+    })
+  }, [user])
+
+  return <>{timing.toFixed(2)} horas</>
+}
+
+const ColumnProgreso = ({
+  shownAll,
+  item,
+  allActivities,
+  onOpen,
+  updateAttendee,
+  updateCurrentUser,
+  ...props
+}) => {
+  const [attendee, setAttendee] = useState([])
+  const [shouldUpdate, setshouldUpdate] = useState(0)
   useEffect(async () => {
     // Get all existent activities, after will filter it
     const existentActivities = await allActivities.map(async (activity) => {
       const activity_attendee = await firestore
         .collection(`${activity._id}_event_attendees`)
         .doc(item._id)
-        .get();
+        .get()
       if (activity_attendee.exists) {
-        return activity_attendee.data();
+        return activity_attendee.data()
       }
-      return null;
-    });
+      return null
+    })
     // Filter non-null result that means that the user attendees them
-    const gotAttendee = (await Promise.all(existentActivities)).filter((item) => item !== null);
-    setAttendee(gotAttendee);
-  }, []);
+    const gotAttendee = (await Promise.all(existentActivities)).filter(
+      (item) => item !== null,
+    )
+    setAttendee(gotAttendee)
+  }, [shouldUpdate])
 
-  if (!onOpen) onOpen = () => {};
+  if (!onOpen) onOpen = () => {}
 
   if (shownAll) {
     return (
       <Button
         onClick={() => {
-          updateAttendee(attendee);
-          updateCurrentUser(item);
-          onOpen();
+          updateAttendee(attendee)
+          updateCurrentUser(item)
+          setshouldUpdate((previus) => previus + 1)
+          onOpen()
         }}
       >
         {`${attendee.length || 0}/${allActivities.length || 0}`}
       </Button>
-    );
+    )
   }
-  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>;
-};
+  return <>{attendee.length > 0 ? 'Visto' : 'No visto'}</>
+}
 window.firestore = firestore
 
 class ListEventUser extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       users: [],
       columns: null,
@@ -208,20 +269,20 @@ class ListEventUser extends Component {
       qrModalOpen: false,
       unSusCribeConFigFast: () => {},
       unSuscribeAttendees: () => {},
-    };
+    }
   }
-  static contextType = HelperContext;
+  static contextType = HelperContext
 
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index, badColumns) => {
     const newItem = JSON.parse(JSON.stringify(item))
     const filteredProperties = Object.fromEntries(
       Object.entries(newItem.properties).filter(([key, value]) => {
-        return !(badColumns.includes(key))
-      })
+        return !badColumns.includes(key)
+      }),
     )
     newItem.properties = filteredProperties
-    const { eventIsActive } = this.context;
+    const { eventIsActive } = this.context
     return (
       <Tooltip placement="topLeft" title="Editar">
         <Button
@@ -232,123 +293,132 @@ class ListEventUser extends Component {
           disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
         />
       </Tooltip>
-    );
-  };
+    )
+  }
 
   // eslint-disable-next-line no-unused-vars
   created_at_component = (text, item, index) => {
     if (item.created_at !== null) {
-      const createdAt = item?.created_at || new Date();
+      const createdAt = item?.created_at || new Date()
 
-      return <>{createdAt ? <span>{dayjs(createdAt).format('D/MMM/YY h:mm:ss A ')}</span> : ''}</>;
+      return (
+        <>
+          {createdAt ? <span>{dayjs(createdAt).format('D/MMM/YY h:mm:ss A ')}</span> : ''}
+        </>
+      )
     } else {
-      return '';
+      return ''
     }
-  };
+  }
 
   rol_component = (text, item, index) => {
     if (this.state.rolesList) {
       for (const role of this.state.rolesList) {
         if (item.rol_id == role._id) {
-          item['rol_name'] = role.name;
-          return <span>{role.name}</span>;
+          item['rol_name'] = role.name
+          return <span>{role.name}</span>
         }
       }
     }
-  };
+  }
 
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
     if (item.updated_at !== null) {
-      const updatedAt = item?.updated_at;
+      const updatedAt = item?.updated_at
 
-      return <>{updatedAt ? <span>{dayjs(updatedAt).format('D/MMM/YY h:mm:ss A ')}</span> : ''}</>;
+      return (
+        <>
+          {updatedAt ? <span>{dayjs(updatedAt).format('D/MMM/YY h:mm:ss A ')}</span> : ''}
+        </>
+      )
     } else {
-      return '';
+      return ''
     }
-  };
+  }
 
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
-    const activityId = this.props.match.params.id;
+    const activityId = this.props.match.params.id
 
-    return <AttendeeCheckInCheckbox attendee={item} activityId={activityId} />;
-  };
+    return <AttendeeCheckInCheckbox attendee={item} activityId={activityId} />
+  }
 
   physicalCheckInComponent = (text, item, index) => {
-    const activityId = this.props.match.params.id;
-    return <AttendeeCheckInButton attendee={item} activityId={activityId} />;
-  };
+    const activityId = this.props.match.params.id
+    return <AttendeeCheckInButton attendee={item} activityId={activityId} />
+  }
 
   checkInTypeComponent = (text, item, index) => {
-    return <>{item?.checkedin_type ? <b>{item?.checkedin_type}</b> : <b>Ninguno</b>}</>;
-  };
+    return <>{item?.checkedin_type ? <b>{item?.checkedin_type}</b> : <b>Ninguno</b>}</>
+  }
 
   addDefaultLabels = (extraFields) => {
     extraFields = extraFields.map((field) => {
-      field['label'] = field['label'] ? field['label'] : field['name'];
-      return field;
-    });
-    return extraFields;
-  };
+      field['label'] = field['label'] ? field['label'] : field['name']
+      return field
+    })
+    return extraFields
+  }
 
   orderFieldsByWeight = (extraFields) => {
     extraFields = extraFields.sort((a, b) =>
-      (a.order_weight && !b.order_weight) || (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
+      (a.order_weight && !b.order_weight) ||
+      (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
         ? -1
         : 1,
-    );
-    return extraFields;
-  };
+    )
+    return extraFields
+  }
   /** Sorting to show users with checkIn first in descending order, and users who do not have checkIn as last  */
   sortUsersArray = async (users) => {
     const sortedResult = users.sort((itemA, itemB) => {
-      let aParameter = '';
-      let bParameter = '';
+      let aParameter = ''
+      let bParameter = ''
 
       try {
-        aParameter = itemA?.checkedin_at?.toDate();
-        bParameter = itemB?.checkedin_at?.toDate();
+        aParameter = itemA?.checkedin_at?.toDate()
+        bParameter = itemB?.checkedin_at?.toDate()
       } catch (error) {}
 
-      if (!aParameter) return 1;
-      if (!bParameter) return -1;
-      if (dayjs(aParameter) === dayjs(bParameter)) return 0;
-      return dayjs(aParameter) > dayjs(bParameter) ? -1 : 1;
-    });
+      if (!aParameter) return 1
+      if (!bParameter) return -1
+      if (dayjs(aParameter) === dayjs(bParameter)) return 0
+      return dayjs(aParameter) > dayjs(bParameter) ? -1 : 1
+    })
 
-    return sortedResult;
-  };
+    return sortedResult
+  }
 
   getAttendes = async () => {
-    const self = this;
-    const activityId = this.props.match.params.id;
+    const self = this
+    const activityId = this.props.match.params.id
 
-    this.checkFirebasePersistence();
+    this.checkFirebasePersistence()
     try {
-      const event = await EventsApi.getOne(this.props.event._id);
-      const orgId = event.organizer._id;
+      const event = await EventsApi.getOne(this.props.event._id)
+      const orgId = event.organizer._id
       const org = await OrganizationApi.getOne(orgId)
 
-      const properties = event.user_properties;
+      const properties = event.user_properties
       const simplifyOrgProperties = (org.user_properties || []).filter(
-        (property) => !['email', 'password', 'names'].includes(property.name)
+        (property) => !['email', 'password', 'names'].includes(property.name),
       )
-      const rolesList = await RolAttApi.byEventRolsGeneral();
-      const badgeEvent = await BadgeApi.get(this.props.event._id);
+      const rolesList = await RolAttApi.byEventRolsGeneral()
+      const badgeEvent = await BadgeApi.get(this.props.event._id)
 
-      let extraFields = fieldNameEmailFirst(properties);
+      let extraFields = fieldNameEmailFirst(properties)
 
-      extraFields = this.addDefaultLabels(extraFields);
-      extraFields = this.orderFieldsByWeight(extraFields);
-      const fieldsForm = Array.from(extraFields);
+      extraFields = this.addDefaultLabels(extraFields)
+      extraFields = this.orderFieldsByWeight(extraFields)
+      const fieldsForm = Array.from(extraFields)
       // Agregar extrafields de rol y checkin
       const rolesOptions = rolesList.map((rol) => {
         return {
           label: rol.name,
           value: rol._id,
-        };
-      });
+        }
+      })
       fieldsForm.push({
         author: null,
         categories: [],
@@ -364,7 +434,7 @@ class ListEventUser extends Component {
         visibleByAdmin: false,
         visibleByContacts: 'public',
         _id: { $oid: '614260d226e7862220497eac1' },
-      });
+      })
 
       fieldsForm.push({
         author: null,
@@ -380,9 +450,9 @@ class ListEventUser extends Component {
         visibleByAdmin: false,
         visibleByContacts: 'public',
         _id: { $oid: '614260d226e7862220497eac2' },
-      });
+      })
 
-      const columns = [];
+      const columns = []
       const checkInColumn = {
         title: 'Fecha de ingreso',
         dataIndex: 'checkedin_at',
@@ -402,13 +472,12 @@ class ListEventUser extends Component {
         ],
         filterSearch: true,
         onFilter: (value, record) => {
-          if(value === 'attendees') {
-            return (record.checkedin_at !== null);
-          }
-          else return (record.checkedin_at === null);
+          if (value === 'attendees') {
+            return record.checkedin_at !== null
+          } else return record.checkedin_at === null
         },
         render: self.checkedincomponent,
-      };
+      }
 
       const checkInType = {
         title: 'Tipo de checkIn',
@@ -418,7 +487,7 @@ class ListEventUser extends Component {
         ellipsis: true,
         ...self.getColumnSearchProps('checkedin_type'),
         render: self.checkInTypeComponent,
-      };
+      }
 
       const physicalCheckIn = {
         title: 'Registrar checkIn físico',
@@ -427,29 +496,29 @@ class ListEventUser extends Component {
         width: '120px',
         ellipsis: true,
         render: self.physicalCheckInComponent,
-      };
+      }
 
       const editColumn = {
         title: 'Editar',
         key: 'edit',
         fixed: 'right',
         width: 60,
-        render: (...args) => (
+        render: (...args) =>
           self.editcomponent(
             ...args,
             simplifyOrgProperties.map((item) => item.name),
-          )
-        ),
-      };
+          ),
+      }
       /* columns.push(editColumn); */
       /** Additional columns for hybrid events */
-      if (self.props.event?.type_event === 'hybridEvent') columns.push(checkInType, physicalCheckIn);
+      if (self.props.event?.type_event === 'hybridEvent')
+        columns.push(checkInType, physicalCheckIn)
 
-      columns.push(checkInColumn);
+      columns.push(checkInColumn)
 
       const extraColumns = extraFields
         .filter((item) => {
-          return item.type !== 'tituloseccion' && item.type !== 'password';
+          return item.type !== 'tituloseccion' && item.type !== 'password'
         })
         .map((item) => {
           return {
@@ -463,53 +532,52 @@ class ListEventUser extends Component {
               switch (item.type) {
                 /** When using the ant datePicker it saves the date with the time, therefore, since only the date is needed, the following split is performed */
                 case 'date':
-                  const date = key[item.name];
-                  const dateSplit = date ? date?.split('T') : '';
-                  return dateSplit[0];
+                  const date = key[item.name]
+                  const dateSplit = date ? date?.split('T') : ''
+                  return dateSplit[0]
 
                 case 'file':
                   return (
                     <a target="__blank" download={item?.name} href={key[item?.name]}>
                       {this.obtenerName(key[item?.name])}
                     </a>
-                  );
+                  )
 
                 case 'avatar':
-                  return <Image width={40} height={40} src={key?.user?.picture} />;
+                  return <Image width={40} height={40} src={key?.user?.picture} />
 
                 default:
-                  return key[item.name];
+                  return key[item.name]
               }
             },
-          };
-        });
-      columns.push(...extraColumns);
-
-      // Inject the organization member properties here
-      const orgExtraColumns = simplifyOrgProperties
-        .map((property) => {
-          return {
-            title: property.label,
-            dataIndex: property.name,
-            key: property.name,
-            ellipsis: true,
-            sorter: (a, b) => a[property.name]?.length - b[property.name]?.length,
-            ...self.getColumnSearchProps(property.name),
-            render: (record, item) => {
-              const value = item.properties[property.name]
-              if (property.type === 'boolean') {
-                return typeof value === 'undefined' ? 'N/A' : value ? 'Sí' : 'No'
-              }
-              // TODO: we need check other type, and parse
-              return (item.properties || [])[property.name]
-            }
           }
         })
-      columns.push(...orgExtraColumns);
+      columns.push(...extraColumns)
+
+      // Inject the organization member properties here
+      const orgExtraColumns = simplifyOrgProperties.map((property) => {
+        return {
+          title: property.label,
+          dataIndex: property.name,
+          key: property.name,
+          ellipsis: true,
+          sorter: (a, b) => a[property.name]?.length - b[property.name]?.length,
+          ...self.getColumnSearchProps(property.name),
+          render: (record, item) => {
+            const value = item.properties[property.name]
+            if (property.type === 'boolean') {
+              return typeof value === 'undefined' ? 'N/A' : value ? 'Sí' : 'No'
+            }
+            // TODO: we need check other type, and parse
+            return (item.properties || [])[property.name]
+          },
+        }
+      })
+      columns.push(...orgExtraColumns)
       this.setState({ simplifyOrgProperties })
 
-      const { data: allActivities } = await AgendaApi.byEvent(this.props.event._id);
-      this.setState({ allActivities });
+      const { data: allActivities } = await AgendaApi.byEvent(this.props.event._id)
+      this.setState({ allActivities })
       const progressing = {
         title: 'Progreso',
         dataIndex: 'progress_id',
@@ -517,17 +585,27 @@ class ListEventUser extends Component {
         ellipsis: true,
         sorter: (a, b) => true,
         render: (text, item, index) => (
-          <ColumnProgreso
-            shownAll={this.props.shownAll}
-            item={item}
-            onOpen={() => this.setState({ showModalOfProgress: true })}
-            updateAttendee={(attendee) => this.setState({ attendee })}
-            updateCurrentUser={(user) => this.setState({ currentUser: user })}
-            index={index}
-            allActivities={allActivities}
-          />
+          <>
+            <ColumnProgreso
+              shownAll={this.props.shownAll}
+              item={item}
+              onOpen={() => this.setState({ showModalOfProgress: true })}
+              updateAttendee={(attendee) => this.setState({ attendee })}
+              updateCurrentUser={(user) => this.setState({ currentUser: user })}
+              index={index}
+              allActivities={allActivities}
+            />
+          </>
         ),
-      };
+      }
+
+      const timeTrackingStatsColumn = {
+        title: 'Tiempo registrado',
+        key: 'time-tracking-stats',
+        dataIndex: 'user',
+        ellipsis: true,
+        render: (user) => <TimeTrackingStats user={user} />,
+      }
 
       const rol = {
         title: 'Rol',
@@ -537,7 +615,7 @@ class ListEventUser extends Component {
         sorter: (a, b) => a.rol_id.length - b.rol_id.length,
         ...self.getColumnSearchProps('rol_name'),
         render: self.rol_component,
-      };
+      }
 
       const created_at = {
         title: 'Creado',
@@ -548,7 +626,7 @@ class ListEventUser extends Component {
         sorter: (a, b) => a.created_at - b.created_at,
         ...self.getColumnSearchProps('created_at'),
         render: self.created_at_component,
-      };
+      }
       const updated_at = {
         title: 'Actualizado',
         dataIndex: 'updated_at',
@@ -558,24 +636,25 @@ class ListEventUser extends Component {
         sorter: (a, b) => a.updated_at - b.updated_at,
         ...self.getColumnSearchProps('updated_at'),
         render: self.updated_at_component,
-      };
-      columns.push(progressing);
-      columns.push(rol);
-      columns.push(created_at);
-      columns.push(updated_at);
-      columns.push(editColumn);
+      }
+      columns.push(progressing)
+      columns.push(timeTrackingStatsColumn)
+      columns.push(rol)
+      columns.push(created_at)
+      columns.push(updated_at)
+      columns.push(editColumn)
 
-      this.setState({ columns: columns });
+      this.setState({ columns: columns })
 
-      this.setState({ extraFields, rolesList, badgeEvent, fieldsForm });
-      const { usersRef } = this.state;
+      this.setState({ extraFields, rolesList, badgeEvent, fieldsForm })
+      const { usersRef } = this.state
 
       const unSusCribeConFigFast = firestore
         .collection(`event_config`)
         .doc(event._id)
         .onSnapshot((doc) => {
-          this.setState({ ...this.state, configfast: doc.data() });
-        });
+          this.setState({ ...this.state, configfast: doc.data() })
+        })
 
       const unSuscribeAttendees = usersRef.orderBy('updated_at', 'desc').onSnapshot(
         {
@@ -583,37 +662,46 @@ class ListEventUser extends Component {
           //includeMetadataChanges: true
         },
         async (snapshot) => {
-          const currentAttendees = [...this.state.usersReq];
-          const updatedAttendees = updateAttendees(currentAttendees, snapshot);
+          const currentAttendees = [...this.state.usersReq]
+          const updatedAttendees = updateAttendees(currentAttendees, snapshot)
           console.log('updatedAttendees', updatedAttendees)
 
-          const totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
+          const totalCheckedIn = updatedAttendees.reduce(
+            (acc, item) => acc + (item.checkedin_at ? 1 : 0),
+            0,
+          )
 
           const totalCheckedInWithWeight =
             Math.round(
               updatedAttendees.reduce(
-                (acc, item) => acc + (item.checkedin_at ? parseFloat(item.pesovoto ? item.pesovoto : 1) : 0),
+                (acc, item) =>
+                  acc +
+                  (item.checkedin_at ? parseFloat(item.pesovoto ? item.pesovoto : 1) : 0),
                 0,
               ) * 100,
-            ) / 100;
+            ) / 100
           //total de pesos
           const totalWithWeight =
             Math.round(
-              updatedAttendees.reduce((acc, item) => acc + parseFloat(item.pesovoto ? item.pesovoto : 1), 0) * 100,
-            ) / 100;
+              updatedAttendees.reduce(
+                (acc, item) => acc + parseFloat(item.pesovoto ? item.pesovoto : 1),
+                0,
+              ) * 100,
+            ) / 100
           this.setState({
             totalCheckedIn: totalCheckedIn,
             totalCheckedInWithWeight: totalCheckedInWithWeight,
             totalWithWeight,
-          });
+          })
 
           for (let i = 0; i < updatedAttendees.length; i++) {
             // Arreglo temporal para que se muestre el listado de usuarios sin romperse
             // algunos campos no son string y no se manejan bien
-            extraFields.forEach(function(key) {
+            extraFields.forEach(function (key) {
               if (
                 !(
-                  (updatedAttendees[i][key.name] && updatedAttendees[i][key.name].getMonth) ||
+                  (updatedAttendees[i][key.name] &&
+                    updatedAttendees[i][key.name].getMonth) ||
                   typeof updatedAttendees[i][key.name] == 'string' ||
                   typeof updatedAttendees[i][key.name] == 'boolean' ||
                   typeof updatedAttendees[i][key.name] == 'number' ||
@@ -623,13 +711,17 @@ class ListEventUser extends Component {
                 )
               ) {
                 {
-                  console.log('entro', updatedAttendees[i].user ? updatedAttendees[i].user[key.name] : '');
+                  console.log(
+                    'entro',
+                    updatedAttendees[i].user ? updatedAttendees[i].user[key.name] : '',
+                  )
                 }
                 updatedAttendees[i]['properties'][key.name] =
-                  updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
+                  updatedAttendees[i].user[key.name] ||
+                  JSON.stringify(updatedAttendees[i][key.name])
               }
               if (extraFields) {
-                const codearea = extraFields?.filter((field) => field.type == 'codearea');
+                const codearea = extraFields?.filter((field) => field.type == 'codearea')
                 if (
                   codearea[0] &&
                   updatedAttendees[i] &&
@@ -637,18 +729,25 @@ class ListEventUser extends Component {
                   key.name == codearea[0].name
                 ) {
                   updatedAttendees[i][codearea[0].name] = updatedAttendees[i]['code']
-                    ? '(' + updatedAttendees[i]['code'] + ')' + updatedAttendees[i].properties[codearea[0].name]
-                    : updatedAttendees[i].properties[codearea[0].name];
+                    ? '(' +
+                      updatedAttendees[i]['code'] +
+                      ')' +
+                      updatedAttendees[i].properties[codearea[0].name]
+                    : updatedAttendees[i].properties[codearea[0].name]
                 } else {
                   if (updatedAttendees[i][key.name]) {
-                    updatedAttendees[i][key.name] = Array.isArray(updatedAttendees[i]['properties'][key.name])
+                    updatedAttendees[i][key.name] = Array.isArray(
+                      updatedAttendees[i]['properties'][key.name],
+                    )
                       ? updatedAttendees[i]['properties'][key.name][0]
-                      : updatedAttendees[i]['properties'][key.name];
-                    updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] = '';
+                      : updatedAttendees[i]['properties'][key.name]
+                    updatedAttendees[i][
+                      'textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'
+                    ] = ''
                   }
                 }
               }
-            });
+            })
 
             if (updatedAttendees[i].payment) {
               updatedAttendees[i].payment =
@@ -659,18 +758,20 @@ class ListEventUser extends Component {
                 ' Referencia PayU: ' +
                 updatedAttendees[i].payment.payuReference +
                 ' Transaccion #: ' +
-                updatedAttendees[i].payment.transactionID;
+                updatedAttendees[i].payment.transactionID
             } else {
-              updatedAttendees[i].payment = 'No se ha registrado el pago';
+              updatedAttendees[i].payment = 'No se ha registrado el pago'
             }
           }
 
-          const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId);
+          const attendees = await UsersPerEventOrActivity(updatedAttendees, activityId)
 
           // The attribute `activityProperties` looks like unused, so I get the
           // attendee from Firebase... That's awful, but this is the effect non-thinking
           if (activityId) {
-            const collections = await firestore.collection(`${activityId}_event_attendees`).get()
+            const collections = await firestore
+              .collection(`${activityId}_event_attendees`)
+              .get()
             const docs = collections.docs
 
             const userDataList = []
@@ -678,10 +779,13 @@ class ListEventUser extends Component {
 
             const userDataIds = userDataList.map((user) => user.account_id)
 
-            while (attendees.length > 0) { attendees.pop() }
-            attendees.push(...updatedAttendees.filter((user) => userDataIds.includes(user.account_id)))
+            while (attendees.length > 0) {
+              attendees.pop()
+            }
+            attendees.push(
+              ...updatedAttendees.filter((user) => userDataIds.includes(user.account_id)),
+            )
           }
-
 
           // Inject here the org member data
           const extendedAttendees = []
@@ -690,25 +794,33 @@ class ListEventUser extends Component {
             if (!orgId) {
               console.warn('cannot get organization ID from event data')
             }
-            const { data: orgUsers } = await OrganizationApi.getUsers(orgId);
+            const { data: orgUsers } = await OrganizationApi.getUsers(orgId)
             console.log('orgUsers', orgUsers)
 
-            extendedAttendees.push(...attendees.map((eventUser) => {
-              // Find this event user in the organization member list
-              const orgMember = orgUsers.find((member) => member.account_id === eventUser.account_id)
-              if (!orgMember) {
-                console.warn('event user', eventUser, 'not found as organization member')
-                return eventUser
-              }
+            extendedAttendees.push(
+              ...attendees.map((eventUser) => {
+                // Find this event user in the organization member list
+                const orgMember = orgUsers.find(
+                  (member) => member.account_id === eventUser.account_id,
+                )
+                if (!orgMember) {
+                  console.warn(
+                    'event user',
+                    eventUser,
+                    'not found as organization member',
+                  )
+                  return eventUser
+                }
 
-              return {
-                ...eventUser, // Normal data
-                properties: {
-                  ...orgMember.properties, // organization member properties,
-                  ...eventUser.properties, // Overwritten event user properties
-                },
-              }
-            }))
+                return {
+                  ...eventUser, // Normal data
+                  properties: {
+                    ...orgMember.properties, // organization member properties,
+                    ...eventUser.properties, // Overwritten event user properties
+                  },
+                }
+              }),
+            )
           }
 
           console.info('extendedAttendees', extendedAttendees)
@@ -720,101 +832,95 @@ class ListEventUser extends Component {
             usersReq: updatedAttendees,
             auxArr: attendees,
             loading: false,
-          });
+          })
         },
-        () => {
-          //this.setState({ timeout: true, errorData: { message: error, status: 708 } });
-        },
-      );
+        () => {},
+      )
     } catch (error) {
-      const errorData = handleRequestError(error);
-      this.setState({ timeout: true, errorData });
+      const errorData = handleRequestError(error)
+      this.setState({ timeout: true, errorData })
     }
-  };
+  }
 
   async componentDidMount() {
-    this.getAttendes();
+    this.getAttendes()
   }
 
   async componentWillUnmount() {
-    this.state.unSusCribeConFigFast();
-    this.state.unSuscribeAttendees();
+    this.state.unSusCribeConFigFast()
+    this.state.unSuscribeAttendees()
   }
 
   obtenerName = (fileUrl) => {
     if (typeof fileUrl == 'string') {
-      const splitUrl = fileUrl?.split('/');
-      return splitUrl[splitUrl.length - 1];
+      const splitUrl = fileUrl?.split('/')
+      return splitUrl[splitUrl.length - 1]
     } else {
-      return null;
+      return null
     }
-  };
+  }
 
   exportFile = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault()
+    e.stopPropagation()
 
-    const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
+    const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at)
 
     console.info('attendees', attendees)
 
     const joint = [...this.state.extraFields, ...this.state.simplifyOrgProperties]
 
-    const data = await parseData2Excel(attendees, joint, this.state.rolesList);
-    const ws = utils.json_to_sheet(data);
-    const wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, 'Asistentes');
-    writeFileXLSX(wb, `asistentes_${this.props.event.name}.xls`);
-  };
+    const data = await parseData2Excel(attendees, joint, this.state.rolesList)
+    const ws = utils.json_to_sheet(data)
+    const wb = utils.book_new()
+    utils.book_append_sheet(wb, ws, 'Asistentes')
+    writeFileXLSX(wb, `asistentes_${this.props.event.name}.xls`)
+  }
 
   addUser = () => {
     this.setState({ edit: false }, () => {
       this.setState((prevState) => {
-        return { editUser: !prevState.editUser, selectedUser: null };
-      });
-    });
-  };
+        return { editUser: !prevState.editUser, selectedUser: null }
+      })
+    })
+  }
 
   modalUser = () => {
     this.setState((prevState) => {
-      return { editUser: !prevState.editUser, edit: undefined };
-    });
-  };
+      return { editUser: !prevState.editUser, edit: undefined }
+    })
+  }
 
   checkModal = () => {
     // this.setState((prevState) => {
     //   return { qrModal: !prevState.qrModal };
     // });
     this.setState((prevState) => {
-      return { qrModalOpen: !prevState.qrModalOpen };
-    });
-  };
+      return { qrModalOpen: !prevState.qrModalOpen }
+    })
+  }
   closeQRModal = () => {
     this.setState((prevState) => {
-      return { qrModalOpen: !prevState.qrModalOpen };
-    });
-  };
+      return { qrModalOpen: !prevState.qrModalOpen }
+    })
+  }
 
   checkIn = async (id, item) => {
-    let checkInStatus = null;
-    const { qrData } = this.state;
-    const { event } = this.props;
-    qrData.another = true;
-    /*  try {
-      let resp = await TicketsApi.checkInAttendee(event._id, id);
-      //message.success('Usuario Chequeado');
-    } catch (e) {
-      message.error(<FormattedMessage id="toast.error" defaultMessage='Sry :(' />);
-    } */
-    //return;
-    const eventIdSearch = this.props.match.params.id ? this.props.match.params.id : this.props.event._id;
+    let checkInStatus = null
+    const { qrData } = this.state
+    const { event } = this.props
+    qrData.another = true
 
-    let userRef = null;
+    const eventIdSearch = this.props.match.params.id
+      ? this.props.match.params.id
+      : this.props.event._id
+
+    let userRef = null
     try {
-      userRef = firestore.collection(`${eventIdSearch}_event_attendees`).doc(id);
+      userRef = firestore.collection(`${eventIdSearch}_event_attendees`).doc(id)
     } catch (error) {
-      checkInStatus = false;
-      return;
+      checkInStatus = false
+      return
     }
 
     // Actualiza el usuario en la base de datos
@@ -827,81 +933,76 @@ class ListEventUser extends Component {
         checked_in: true,
       })
       .then(() => {
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Usuario inscrito exitosamente...',
-          action: 'show',
-        });
-        checkInStatus = true;
+        StateMessage.show(null, 'success', 'Usuario inscrito exitosamente...')
+        checkInStatus = true
       })
       .catch((error) => {
-        console.error('Error updating document: ', error);
+        console.error('Error updating document: ', error)
         if (this.props.intl) {
-          DispatchMessageService({
-            type: 'error',
-            msj: this.props.intl.formatMessage({ id: 'toast.error', defaultMessage: 'Sry :(' }),
-            action: 'show',
-          });
+          StateMessage.show(
+            null,
+            'error',
+            this.props.intl.formatMessage({
+              id: 'toast.error',
+              defaultMessage: 'Sry :(',
+            }),
+          )
         } else {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Algo salió mal. Intentalo de nuevo',
-            action: 'show',
-          });
+          StateMessage.show(null, 'error', 'Algo salió mal. Intentalo de nuevo')
         }
-        checkInStatus = false;
-      });
-    return checkInStatus;
-  };
+        checkInStatus = false
+      })
+    return checkInStatus
+  }
 
   onChangePage = (pageOfItems) => {
-    this.setState({ pageOfItems: pageOfItems });
-  };
+    this.setState({ pageOfItems: pageOfItems })
+  }
 
   // Funcion para disminuir el contador y pasarlo como prop al modalUser
   substractSyncQuantity = () => {
-    this.setState((prevState) => ({ quantityUsersSync: prevState.quantityUsersSync - 1 }));
-    this.setState({ lastUpdate: new Date() });
-  };
+    this.setState((prevState) => ({ quantityUsersSync: prevState.quantityUsersSync - 1 }))
+    this.setState({ lastUpdate: new Date() })
+  }
 
   showMetaData = (value) => {
-    let content = '';
-    Object.keys(value).map((key) => (content += `<p><b>${key}:</b> ${value[key]}</p>`));
-    sweetAlert.simple('Información', content, 'Cerrar', '#1CDCB7', () => {});
-  };
+    let content = ''
+    Object.keys(value).map((key) => (content += `<p><b>${key}:</b> ${value[key]}</p>`))
+    sweetAlert.simple('Información', content, 'Cerrar', '#1CDCB7', () => {})
+  }
 
   // Function to check the firebase persistence and load page if this return false
   checkFirebasePersistence = () => {
-    let { disabledPersistence } = this.state;
+    let { disabledPersistence } = this.state
 
-    disabledPersistence = window.eviusFailedPersistenceEnabling;
-    this.setState({ disabledPersistence });
-  };
+    disabledPersistence = window.eviusFailedPersistenceEnabling
+    this.setState({ disabledPersistence })
+  }
 
   openEditModalUser = (item) => {
     item = {
       ...item,
       checked_in: item.checked_in,
       checkedin_at: item.checkedin_at,
-    };
-    this.setState({ editUser: true, selectedUser: item, edit: true });
-  };
+    }
+    this.setState({ editUser: true, selectedUser: item, edit: true })
+  }
 
   changeStage = (e) => {
-    const { value } = e.target;
+    const { value } = e.target
     const {
       event: { tickets },
-    } = this.props;
+    } = this.props
     if (value === '') {
       let check = 0,
-        acompanates = 0;
+        acompanates = 0
       this.setState({ checkIn: 0, total: 0 }, () => {
-        const list = this.state.usersReq;
+        const list = this.state.usersReq
         list.forEach((user) => {
-          if (user.checked_in) check += 1;
+          if (user.checked_in) check += 1
           if (user.properties.acompanates && /^\d+$/.test(user.properties.acompanates))
-            acompanates += parseInt(user.properties.acompanates, 10);
-        });
+            acompanates += parseInt(user.properties.acompanates, 10)
+        })
         this.setState((state) => {
           return {
             users: state.auxArr.slice(0, 50),
@@ -909,62 +1010,68 @@ class ListEventUser extends Component {
             stage: value,
             total: list.length + acompanates,
             checkIn: check,
-          };
-        });
-      });
+          }
+        })
+      })
     } else {
-      const options = tickets.filter((ticket) => ticket.stage_id === value);
-      this.setState({ stage: value, ticketsOptions: options });
+      const options = tickets.filter((ticket) => ticket.stage_id === value)
+      this.setState({ stage: value, ticketsOptions: options })
     }
-  };
+  }
 
   changeTicket = (e) => {
-    const { value } = e.target;
+    const { value } = e.target
     let check = 0,
-      acompanates = 0;
+      acompanates = 0
     this.setState({ checkIn: 0, total: 0 }, () => {
       const list =
-        value === '' ? this.state.usersReq : [...this.state.usersReq].filter((user) => user.ticket_id === value);
+        value === ''
+          ? this.state.usersReq
+          : [...this.state.usersReq].filter((user) => user.ticket_id === value)
       list.forEach((user) => {
-        if (user.checked_in) check += 1;
+        if (user.checked_in) check += 1
         if (user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/))
-          acompanates += parseInt(user.properties.acompanates, 10);
-      });
-      const users = value === '' ? [...this.state.auxArr].slice(0, 50) : list;
+          acompanates += parseInt(user.properties.acompanates, 10)
+      })
+      const users = value === '' ? [...this.state.auxArr].slice(0, 50) : list
 
-      this.setState({ users, ticket: value, checkIn: check, total: list.length + acompanates });
-    });
-  };
+      this.setState({
+        users,
+        ticket: value,
+        checkIn: check,
+        total: list.length + acompanates,
+      })
+    })
+  }
 
   //Search records at third column
   searchResult = (data) => {
-    !data ? this.setState({ users: [] }) : this.setState({ users: data });
-  };
+    !data ? this.setState({ users: [] }) : this.setState({ users: data })
+  }
 
   handleChange = (e) => {
-    /* console.log(e); */
-    this.setState({ typeScanner: e });
-    this.checkModal();
-  };
+    this.setState({ typeScanner: e })
+    this.checkModal()
+  }
 
   // Set options in dropdown list
   clearOption = () => {
-    this.setState({ typeScanner: 'options' });
-  };
+    this.setState({ typeScanner: 'options' })
+  }
 
   showModal = () => {
-    this.setState({ isModalVisible: true });
-  };
+    this.setState({ isModalVisible: true })
+  }
   hideModal = () => {
-    this.setState({ isModalVisible: false });
-  };
+    this.setState({ isModalVisible: false })
+  }
 
   getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input
           ref={(node) => {
-            this.searchInput = node;
+            this.searchInput = node
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
@@ -982,23 +1089,26 @@ class ListEventUser extends Component {
           >
             Search
           </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => this.handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    filterIcon: (filtered) => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
     onFilter: (value, record) =>
       record[dataIndex]
-        ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
         : '',
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
-        setTimeout(() => this.searchInput.select(), 100);
+        setTimeout(() => this.searchInput.select(), 100)
       }
     },
     render: (text) =>
@@ -1012,32 +1122,33 @@ class ListEventUser extends Component {
       ) : (
         text
       ),
-  });
+  })
 
   handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
+    confirm()
     this.setState({
       searchText: selectedKeys[0],
       searchedColumn: dataIndex,
-    });
-  };
+    })
+  }
 
   handleReset = (clearFilters) => {
-    clearFilters();
-    this.setState({ searchText: '' });
-  };
+    clearFilters()
+    this.setState({ searchText: '' })
+  }
   printUser = () => {
-    const resp = this.props.badgeEvent;
+    const resp = this.props.badgeEvent
     if (resp._id) {
-      const badges = resp.BadgeFields;
-      console.log(this.ifrmPrint, badges);
-      if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
+      const badges = resp.BadgeFields
+      console.log(this.ifrmPrint, badges)
+      if (this.props.value && !this.props.value.checked_in && this.props.edit)
+        this.props.checkIn(this.state.userId)
       const printBagdeUser = (...args) => {
-        console.warn('printBagdeUser function was copied here but not its definition. F');
-      };
-      printBagdeUser(this.ifrmPrint, badges, this.state.user);
-    } else this.setState({ noBadge: true });
-  };
+        console.warn('printBagdeUser function was copied here but not its definition. F')
+      }
+      printBagdeUser(this.ifrmPrint, badges, this.state.user)
+    } else this.setState({ noBadge: true })
+  }
 
   render() {
     const {
@@ -1059,34 +1170,48 @@ class ListEventUser extends Component {
       nameActivity,
       columns,
       fieldsForm,
-    } = this.state;
+    } = this.state
 
-    const activityId = this.props.match.params.id;
+    const activityId = this.props.match.params.id
 
-    const { type, loading, componentKey } = this.props;
-    const { eventIsActive } = this.context;
+    const { type, loading, componentKey } = this.props
+    const { eventIsActive } = this.context
 
     const inscritos =
       this.state.configfast && this.state.configfast.totalAttendees
         ? this.state.configfast.totalAttendees
-        : usersReq.length;
+        : usersReq.length
 
-    const participantes = inscritos != 0 ? Math.round((totalCheckedIn / inscritos) * 100) : 0;
-    const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
+    const participantes =
+      inscritos != 0 ? Math.round((totalCheckedIn / inscritos) * 100) : 0
+    const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100)
 
     return (
       <>
-        <ModalWithLessonsInfo
+        {/* <ModalWithLessonsInfo
           show={this.state.showModalOfProgress}
           onHidden={() => {
-            this.setState({ showModalOfProgress: false });
+            this.setState({ showModalOfProgress: false })
           }}
           allActivities={this.state.allActivities}
           attendee={this.state.attendee}
           currentUser={this.state.currentUser}
+        /> */}
+        <LessonsInfoModal
+          show={this.state.showModalOfProgress}
+          onHidden={() => {
+            this.setState({ showModalOfProgress: false })
+          }}
+          allActivities={this.stateallActivities || []}
+          user={this.state.currentUser}
+          event={this.props.event}
         />
         <Header
-          title={type == 'activity' ? 'Inscripción de ' + nameActivity : ('Inscripción de curso: ')}
+          title={
+            type == 'activity'
+              ? 'Inscripción de ' + nameActivity
+              : 'Inscripción de curso: '
+          }
           titleToMergingOrAdaptIt={
             componentKey === 'activity-checkin'
               ? 'Check-in actividad: ' + nameActivity
@@ -1097,22 +1222,27 @@ class ListEventUser extends Component {
         {disabledPersistence && (
           <div style={{ margin: '5%', textAlign: 'center' }}>
             <label>
-              El almacenamiento local de lso datos esta deshabilitado. Cierre otras pestañanas de la plataforma para
-              pode habilitar el almacenamiento local
+              El almacenamiento local de lso datos esta deshabilitado. Cierre otras
+              pestañanas de la plataforma para pode habilitar el almacenamiento local
             </label>
           </div>
         )}
 
-        {// localChanges &&
-        quantityUsersSync > 0 && localChanges === 'Local' && (
-          <Row gutter={8}>
-            <Col>
-              <p>
-                <small>Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</small>
-              </p>
-            </Col>
-          </Row>
-        )}
+        {
+          // localChanges &&
+          quantityUsersSync > 0 && localChanges === 'Local' && (
+            <Row gutter={8}>
+              <Col>
+                <p>
+                  <small>
+                    Cambios sin sincronizar :{' '}
+                    {quantityUsersSync < 0 ? 0 : quantityUsersSync}
+                  </small>
+                </p>
+              </Col>
+            </Row>
+          )
+        }
 
         {this.state.qrModalOpen && (
           <QrModal
@@ -1141,8 +1271,8 @@ class ListEventUser extends Component {
                 borderRadius: '3px',
               }}
             >
-              <strong> Última Sincronización: </strong> <FormattedDate value={lastUpdate} />{' '}
-              <FormattedTime value={lastUpdate} />
+              <strong> Última Sincronización: </strong>{' '}
+              <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
             </div>
           }
           titleTable={
@@ -1175,12 +1305,19 @@ class ListEventUser extends Component {
               )}
 
               <Col>
-                {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
+                {extraFields.reduce(
+                  (acc, item) => acc || item.name === 'pesovoto',
+                  false,
+                ) && (
                   <>
                     <Tag>
                       <small>
                         Asistencia por Coeficientes:
-                        {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
+                        {totalCheckedInWithWeight +
+                          '/100' +
+                          ' (' +
+                          asistenciaCoeficientes +
+                          '%)'}
                       </small>
                     </Tag>
                   </>
@@ -1189,7 +1326,11 @@ class ListEventUser extends Component {
 
               {!activityId && (
                 <Col>
-                  <Button type="ghost" icon={<FullscreenOutlined />} onClick={this.showModal}>
+                  <Button
+                    type="ghost"
+                    icon={<FullscreenOutlined />}
+                    onClick={this.showModal}
+                  >
                     Expandir
                   </Button>
                 </Col>
@@ -1210,13 +1351,17 @@ class ListEventUser extends Component {
                         <Option key={index} value="scanner-document">
                           Escanear {item.label}
                         </Option>
-                      );
+                      )
                   })}
                 </Select>
               </Col>
               <Col>
                 {usersReq.length > 0 && (
-                  <Button type="primary" icon={<DownloadOutlined />} onClick={this.exportFile}>
+                  <Button
+                    type="primary"
+                    icon={<DownloadOutlined />}
+                    onClick={this.exportFile}
+                  >
                     Exportar
                   </Button>
                 )}
@@ -1234,7 +1379,9 @@ class ListEventUser extends Component {
                   <Button
                     type="primary"
                     icon={<UploadOutlined />}
-                    disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                    disabled={
+                      !eventIsActive && window.location.toString().includes('eventadmin')
+                    }
                   >
                     Importar usuarios
                   </Button>
@@ -1246,7 +1393,9 @@ class ListEventUser extends Component {
                   icon={<PlusCircleOutlined />}
                   size="middle"
                   onClick={this.addUser}
-                  disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
+                  disabled={
+                    !eventIsActive && window.location.toString().includes('eventadmin')
+                  }
                 >
                   Agregar usuario
                 </Button>
@@ -1280,18 +1429,29 @@ class ListEventUser extends Component {
           title={
             <>
               <Title level={3}>Estadísticas</Title>
-              {this.props.event.name ? <Title level={5}>{this.props.event.name}</Title> : ''}
+              {this.props.event.name ? (
+                <Title level={5}>{this.props.event.name}</Title>
+              ) : (
+                ''
+              )}
             </>
           }
           visible={this.state.isModalVisible}
           closable={false}
           footer={[
-            <Button style={{ float: 'right' }} type="primary" size="large" onClick={this.hideModal} key="close">
+            <Button
+              style={{ float: 'right' }}
+              type="primary"
+              size="large"
+              onClick={this.hideModal}
+              key="close"
+            >
               Cerrar
             </Button>,
             <div key="fecha" style={{ float: 'left' }}>
               <Title level={5}>
-                Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+                Última Sincronización : <FormattedDate value={lastUpdate} />{' '}
+                <FormattedTime value={lastUpdate} />
               </Title>
             </div>,
           ]}
@@ -1324,7 +1484,10 @@ class ListEventUser extends Component {
                     <Statistic
                       valueStyle={{ fontSize: '80px', textAlign: 'center' }}
                       title={
-                        <Title level={2} style={{ textAlign: 'center', color: '#b5b5b5' }}>
+                        <Title
+                          level={2}
+                          style={{ textAlign: 'center', color: '#b5b5b5' }}
+                        >
                           Inscritos
                         </Title>
                       }
@@ -1337,11 +1500,16 @@ class ListEventUser extends Component {
                     <Statistic
                       valueStyle={{ fontSize: '80px', textAlign: 'center' }}
                       title={
-                        <Title level={2} style={{ textAlign: 'center', color: '#b5b5b5' }}>
+                        <Title
+                          level={2}
+                          style={{ textAlign: 'center', color: '#b5b5b5' }}
+                        >
                           Participantes
                         </Title>
                       }
-                      value={totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}
+                      value={
+                        totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'
+                      }
                     />
                   </Card>
                 </Col>
@@ -1350,7 +1518,10 @@ class ListEventUser extends Component {
                     <Statistic
                       valueStyle={{ fontSize: '80px', textAlign: 'center' }}
                       title={
-                        <Title level={2} style={{ textAlign: 'center', color: '#b5b5b5' }}>
+                        <Title
+                          level={2}
+                          style={{ textAlign: 'center', color: '#b5b5b5' }}
+                        >
                           Asistencia por Coeficientes
                         </Title>
                       }
@@ -1359,7 +1530,9 @@ class ListEventUser extends Component {
                         '/' +
                         this.state.totalWithWeight +
                         ' (' +
-                        Math.round((totalCheckedInWithWeight / this.state.totalWithWeight) * 100) +
+                        Math.round(
+                          (totalCheckedInWithWeight / this.state.totalWithWeight) * 100,
+                        ) +
                         '%)'
                       }
                     />
@@ -1370,8 +1543,8 @@ class ListEventUser extends Component {
           </Row>
         </Drawer>
       </>
-    );
+    )
   }
 }
 
-export default ListEventUser;
+export default withRouter(ListEventUser)

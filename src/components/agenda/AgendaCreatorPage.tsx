@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 import {
   FunctionComponent,
   useCallback,
@@ -9,16 +7,13 @@ import {
   useState,
 } from 'react'
 
-import {
-  Col,
-  Form, Input, Row, Select, TimePicker,
-} from 'antd'
+import { Col, Form, Input, Row, Select, TimePicker } from 'antd'
 import { useHistory } from 'react-router'
 import AgendaContext from '@context/AgendaContext'
 import { hourWithAdditionalMinutes } from './hooks/useHourWithAdditionalMinutes'
 import useAvailableDaysFromEvent from './hooks/useAvailableDaysFromEvent'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { FormValues } from './components/AgendaForm'
 import dayjs from 'dayjs'
 import { AgendaApi } from '@helpers/request'
@@ -34,14 +29,15 @@ const formLayout = {
 }
 
 interface IAgendaCreatorPageProps {
-  event: any,
-  matchUrl: string,
+  event: any
+  parentUrl: string
 }
 
 const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) => {
   const [shouldRedirect, setShouldRedirect] = useState(false)
   const [currentAgenda, setCurrentAgenda] = useState<AgendaType | undefined>()
-  const [selectedActivityType, setSelectedActivityType] = useState<ActivityType.Name | null>(null)
+  const [selectedActivityType, setSelectedActivityType] =
+    useState<ActivityType.Name | null>(null)
 
   const [form] = Form.useForm<FormValues>()
   const allDays = useAvailableDaysFromEvent(props.event)
@@ -52,7 +48,10 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
 
   const cAgenda = useContext(AgendaContext)
 
-  const somethingWasSelected = useMemo(() => selectedActivityType !== null, [selectedActivityType]);
+  const somethingWasSelected = useMemo(
+    () => selectedActivityType !== null,
+    [selectedActivityType],
+  )
 
   const onWidgetChange = useCallback((widget: ActivityType.CardUI) => {
     // In this case, the keys are the same of the activity type value
@@ -72,21 +71,20 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
     values.datetime_start = values.date + ' ' + dayjs(values.hour_start).format('HH:mm')
     values.datetime_end = values.date + ' ' + dayjs(values.hour_end).format('HH:mm')
 
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se guarda la información...',
+    )
 
     const _agenda: AgendaType = await AgendaApi.create(props.event._id, values)
     setCurrentAgenda(_agenda)
     setShouldRedirect(true)
     cAgenda.setActivityEdit(_agenda._id)
 
-    DispatchMessageService({ action: 'destroy', type: 'loading', key: 'loading', msj: '' })
+    StateMessage.destroy('loading')
 
-    DispatchMessageService({ msj: 'Información guardada correctamente!', type: 'success', action: 'show' })
+    StateMessage.show(null, 'success', 'Información guardada correctamente!')
   }, [])
 
   useEffect(() => {
@@ -96,10 +94,10 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
 
     if (selectedActivityType) {
       saveActivityType()
-    }    
+    }
 
     console.debug('redirecting to /activity')
-    history.push(`${props.matchUrl}/activity`, { edit: currentAgenda._id })
+    history.push(`${props.parentUrl}/activity`, { edit: currentAgenda._id })
   }, [shouldRedirect, currentAgenda, cAgenda.activityEdit])
 
   useEffect(() => {
@@ -107,17 +105,13 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
   }, [selectedActivityType])
 
   return (
-    <Form
-      form={form}
-      onFinish={(values) => onFinish(values)}
-      { ...formLayout }
-    >
+    <Form form={form} onFinish={(values) => onFinish(values)} {...formLayout}>
       <Header
         back
         save
         form
         saveNameIcon
-        customBack={props.matchUrl}
+        customBack={props.parentUrl}
         title="Crea actividad"
         saveName="Crear"
       />
@@ -127,11 +121,13 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
             hideSelectButton
             somethingWasSelected={somethingWasSelected}
             title={formWidgetFlow.MainTitle}
-            render={() => <ActivityTypeSelectableCards
-              selected={selectedActivityType}
-              widget={formWidgetFlow}
-              onWidgetChange={onWidgetChange}
-            />}
+            render={() => (
+              <ActivityTypeSelectableCards
+                selected={selectedActivityType}
+                widget={formWidgetFlow}
+                onWidgetChange={onWidgetChange}
+              />
+            )}
           />
         </Col>
         <Col span={20}>
@@ -145,12 +141,12 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
           <Form.Item
             label="Día"
             name="date"
-            initialValue={`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`}
+            initialValue={`${new Date().getFullYear()}-${
+              new Date().getMonth() + 1
+            }-${new Date().getDate()}`}
             rules={[{ required: true, message: 'La fecha es requerida' }]}
           >
-            <Select
-              options={allDays}
-            />
+            <Select options={allDays} />
           </Form.Item>
           <Row wrap justify="center" gutter={[8, 8]}>
             <Col span={12}>
@@ -160,7 +156,12 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
                 initialValue={hourWithAdditionalMinutes(0)}
                 rules={[{ required: true, message: 'La hora de inicio es requerida' }]}
               >
-                <TimePicker use12Hours format="h:mm a" allowClear={false} style={{ width: '100%' }} />
+                <TimePicker
+                  use12Hours
+                  format="h:mm a"
+                  allowClear={false}
+                  style={{ width: '100%' }}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -170,7 +171,12 @@ const AgendaCreatorPage: FunctionComponent<IAgendaCreatorPageProps> = (props) =>
                 initialValue={hourWithAdditionalMinutes(19)}
                 rules={[{ required: true, message: 'La hora final es requerida' }]}
               >
-                <TimePicker use12Hours format="h:mm a" allowClear={false} style={{ width: '100%' }} />
+                <TimePicker
+                  use12Hours
+                  format="h:mm a"
+                  allowClear={false}
+                  style={{ width: '100%' }}
+                />
               </Form.Item>
             </Col>
           </Row>

@@ -1,92 +1,106 @@
-import { useState, useEffect, ReactNode } from 'react';
-import { Steps, Button, Alert } from 'antd';
-import RegisterFast from './Content/RegisterFast';
-import RegistrationResult from './Content/RegistrationResult';
-import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline';
-import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline';
-import { ScheduleOutlined } from '@ant-design/icons';
-import FormComponent from '../events/registrationForm/form';
-import { UsersApi } from '@helpers/request';
-import { LoadingOutlined } from '@ant-design/icons';
-import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/createNewUser';
-import { useIntl } from 'react-intl';
-import { useEventContext } from '@context/eventContext';
-import { useHelper } from '@context/helperContext/hooks/useHelper';
-import { DispatchMessageService } from '@context/MessageService';
+import { useState, useEffect, ReactNode } from 'react'
+import { Steps, Button, Alert, Form } from 'antd'
+import RegisterFast from './Content/RegisterFast'
+import RegistrationResult from './Content/RegistrationResult'
+import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline'
+import TicketConfirmationOutlineIcon from '@2fd/ant-design-icons/lib/TicketConfirmationOutline'
+import { ScheduleOutlined } from '@ant-design/icons'
+import FormComponent from '../events/registrationForm/form'
+import { UsersApi } from '@helpers/request'
+import { LoadingOutlined } from '@ant-design/icons'
+import createNewUser, { CREATE_NEW_USER_SUCCESS } from './ModalsFunctions/createNewUser'
+import { useIntl } from 'react-intl'
+import { useEventContext } from '@context/eventContext'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
+import { StateMessage } from '@context/MessageService'
 
-const { Step } = Steps;
+const { Step } = Steps
 
-const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDesktop }: any) => {
-  const intl = useIntl();
-  const cEvent = useEventContext();
-  const [current, setCurrent] = useState(0);
+const RegisterUserAndEventUser = ({
+  screens,
+  stylePaddingMobile,
+  stylePaddingDesktop,
+}: any) => {
+  const intl = useIntl()
+  const [form] = Form.useForm()
+  const cEvent = useEventContext()
+  const [current, setCurrent] = useState(0)
   const [basicDataUser, setbasicDataUser] = useState<any>({
     names: '',
     email: '',
     password: '',
     picture: '',
-  });
-  const { helperDispatch, currentAuthScreen } = useHelper();
-  const [dataEventUser, setdataEventUser] = useState({});
-  const [buttonStatus, setbuttonStatus] = useState(true);
+  })
+  const { helperDispatch, currentAuthScreen } = useHelper()
+  const [dataEventUser, setdataEventUser] = useState({})
+  const [buttonStatus, setbuttonStatus] = useState(true)
   const [validationGeneral, setValidationGeneral] = useState<{
-    status: boolean,
-    textError: string,
-    isLoading: boolean,
-    component?: ReactNode,
+    status: boolean
+    textError: string
+    isLoading: boolean
+    component?: ReactNode
   }>({
     status: false,
     textError: '',
     isLoading: false,
-  });
+  })
   const [validateEventUser, setvalidateEventUser] = useState<{
-    status: boolean,
-    textError: string,
-    statusFields?: boolean,
+    status: boolean
+    textError: string
+    statusFields?: boolean
   }>({
     status: false,
     textError: '',
     statusFields: false,
-  });
+  })
+
+  const [organization, setOrganization] = useState({})
+  const [existGenialialityUser, setExistGenialialityUser] = useState(false)
 
   const hookValidations = (status: boolean, textError: string) => {
     setValidationGeneral({
       status: status,
       textError: textError,
       isLoading: false,
-    });
-    setbuttonStatus(status);
-  };
+    })
+    setbuttonStatus(status)
+  }
 
   const HandleHookForm = (e: any, fieldName: string, picture: any) => {
-    let value = '';
+    let value = ''
     if (fieldName === 'picture') {
-      value = picture;
+      value = picture
     } else {
-      value = e.target.value;
+      value = e.target.value
     }
 
     if (current === 0) {
       if (fieldName === 'picture') {
-        setbasicDataUser({ ...basicDataUser, [fieldName]: picture });
+        setbasicDataUser({ ...basicDataUser, [fieldName]: picture })
       } else {
         setbasicDataUser({
           ...basicDataUser,
           [fieldName]: value,
-        });
+        })
       }
     } else {
       setdataEventUser({
         ...dataEventUser,
         [fieldName]: value,
-      });
+      })
     }
-  };
+  }
+
+  const onSubmit = (values: any) => {
+    setdataEventUser(values)
+  }
 
   const steps = [
     {
       title: 'First',
-      content: <RegisterFast basicDataUser={basicDataUser} formDataHandler={HandleHookForm} />,
+      content: (
+        <RegisterFast basicDataUser={basicDataUser} formDataHandler={HandleHookForm} />
+      ),
       icon: <AccountOutlineIcon style={{ fontSize: '32px' }} />,
     },
     {
@@ -116,37 +130,52 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
       ),
       icon: <ScheduleOutlined style={{ fontSize: '32px' }} />,
     },
-  ];
+  ]
 
   const handleValidateAccountEvius = async () => {
     try {
       const validateEmail = await UsersApi.validateEmail({
         email: basicDataUser.email,
-      });
-      console.log(validateEmail, 'validateEmail');
+      })
+      console.log(validateEmail, 'validateEmail')
       if (validateEmail?.message === 'Email valid') {
         setValidationGeneral({
           isLoading: false,
           status: false,
           textError: '',
-        });
-        setCurrent(current + 1);
+        })
+        setCurrent(current + 1)
       }
-    } catch (err: any) {
+    } catch (err) {
       if (err?.response?.data?.errors?.email[0] === 'email ya ha sido registrado.') {
-        setValidationGeneral({
-          isLoading: false,
-          status: true,
-          textError: intl.formatMessage({
-            id: 'modal.feedback.title.error',
-            defaultMessage: 'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
-          }),
-          component: intl.formatMessage({
-            id: 'modal.feedback.title.errorlink',
-            defaultMessage: 'iniciar sesión',
-          }),
-        });
-      } else if (err?.response?.data?.errors?.email[0] === 'email no es un correo válido') {
+        if (isAdminPage()) {
+          setCurrent(current + 1)
+          setExistGenialialityUser(true)
+
+          setValidationGeneral({
+            isLoading: false,
+            status: false,
+            textError: '',
+            component: '',
+          })
+        } else {
+          setValidationGeneral({
+            isLoading: false,
+            status: true,
+            textError: intl.formatMessage({
+              id: 'modal.feedback.title.error',
+              defaultMessage:
+                'Correo electrónico ya en uso, inicie sesión si desea continuar con este correo.',
+            }),
+            component: intl.formatMessage({
+              id: 'modal.feedback.title.errorlink',
+              defaultMessage: 'iniciar sesión',
+            }),
+          })
+        }
+      } else if (
+        err?.response?.data?.errors?.email[0] === 'email no es un correo válido'
+      ) {
         setValidationGeneral({
           isLoading: false,
           status: true,
@@ -154,78 +183,106 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
             id: 'modal.feedback.errorDNSNotFound',
             defaultMessage: 'El correo ingresado no es válido.',
           }),
-        });
+        })
       } else {
         setValidationGeneral({
           isLoading: false,
           status: true,
           textError: intl.formatMessage({
             id: 'modal.feedback.errorGeneralInternal',
-            defaultMessage: 'Se ha presentado un error interno. Por favor intenta de nuevo',
+            defaultMessage:
+              'Se ha presentado un error interno. Por favor intenta de nuevo',
           }),
-        });
+        })
       }
     }
-  };
+  }
 
   const handleSubmit = () => {
-    setCurrent(current + 1);
+    setCurrent(current + 1)
 
     async function createEventUser() {
-      const clonBasicDataUser: any = { ...basicDataUser };
-      delete clonBasicDataUser.password;
-      delete clonBasicDataUser.picture;
+      const clonBasicDataUser: any = { ...basicDataUser }
+      delete clonBasicDataUser.password
+      delete clonBasicDataUser.picture
 
       const datauser = {
         ...clonBasicDataUser,
         ...dataEventUser,
-      };
+      }
 
-      const propertiesuser = { properties: { ...datauser } };
+      const propertiesuser = { properties: { ...datauser } }
+
       try {
-        const respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id);
+        const respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id)
         if (respUser && respUser._id) {
           setValidationGeneral({
-            status: false,
+            status: true,
             isLoading: false,
             textError: intl.formatMessage({
               id: 'text_error.successfully_registered',
               defaultMessage: 'Te has inscrito correctamente a este curso',
             }),
-          });
-          setbasicDataUser({});
-          setdataEventUser({});
+          })
+          setbasicDataUser({})
+          setdataEventUser({})
         }
       } catch (err) {
-        console.error(err)
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error',
-          action: 'show',
-        });
-      }
-    }
+        console.error('errorregistro', { err: err })
 
-    createNewUser(basicDataUser)
-      .then((createdUserInfo) => {
-        console.log('createdUserInfo returned:', {createdUserInfo})
-        const {status} = createdUserInfo
-
-        if (status === CREATE_NEW_USER_SUCCESS) {
-          createEventUser();
-        } else {
+        if (err.response) {
           setValidationGeneral({
             status: false,
             isLoading: false,
             textError: intl.formatMessage({
-              id: 'text_error.error_creating_user',
-              defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
+              id: 'text_error.already_registeredtrue',
+              defaultMessage: err.response.data.message,
             }),
-          });
+          })
+        } else {
+          alert('else')
         }
-      })
-      .catch((err) => console.error(err));
-  };
+        // if (err.response) {
+        //   setValidationGeneral({
+        //     status: false,
+        //     isLoading: false,
+        //     textError: intl.formatMessage({
+        //       id: 'text_error.already_registeredtrue',
+        //       defaultMessage: err.response.data.message,
+        //     }),
+        //   })
+        // } else {
+        //   DispatchMessageService({
+        //     type: 'error',
+        //     msj: 'Ha ocurrido un error',
+        //     action: 'show',
+        //   })
+        // }
+      }
+    }
+
+    if (existGenialialityUser) {
+      createEventUser()
+    } else {
+      createNewUser(basicDataUser)
+        .then((createdUserInfo) => {
+          const { status } = createdUserInfo
+          if (status === CREATE_NEW_USER_SUCCESS) {
+            createEventUser()
+          } else {
+            setValidationGeneral({
+              status: false,
+              isLoading: false,
+              textError: intl.formatMessage({
+                id: 'text_error.error_creating_user',
+                defaultMessage: 'Hubo un error al crear el usuario, intente nuevamente',
+              }),
+            })
+          }
+        })
+        .catch((err) => console.error(err))
+    }
+  }
 
   const next = () => {
     if (current == 0) {
@@ -233,16 +290,28 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         ...validationGeneral,
         isLoading: true,
         status: false,
-      });
+      })
 
-      handleValidateAccountEvius();
+      handleValidateAccountEvius()
     } else if (current == 1) {
       setvalidateEventUser({
         status: true,
         textError: '',
-      });
+      })
+      /* form
+        .validateFields()
+        .then(() => {
+          console.log('3. Validate Fields')
+          form.submit()
+          setValidationGeneral((previous) => ({
+            ...previous,
+            isLoading: true,
+            status: false,
+          }))
+        })
+        .catch((error) => console.log(error)) */
     }
-  };
+  }
 
   useEffect(() => {
     if (validateEventUser.statusFields) {
@@ -250,19 +319,25 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         ...validationGeneral,
         isLoading: true,
         status: false,
-      });
-      handleSubmit();
+      })
+      handleSubmit()
     }
-  }, [validateEventUser.statusFields]);
+  }, [validateEventUser.statusFields])
+
+  /*  useEffect(() => {
+    if (dataEventUser !== undefined) {
+      handleSubmit()
+    }
+  }, [dataEventUser]) */
 
   const prev = () => {
-    setCurrent(current - 1);
-    setbuttonStatus(false);
-  };
+    setCurrent(current - 1)
+    setbuttonStatus(false)
+  }
 
   function validateEmail(email: string) {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
+    const re = /\S+@\S+\.\S+/
+    return re.test(email)
   }
 
   const ValidateGeneralFields = () => {
@@ -272,13 +347,13 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         basicDataUser.password.length >= 6 &&
         basicDataUser.password.length <= 18
       ) {
-        setbuttonStatus(false);
+        setbuttonStatus(false)
         setValidationGeneral({
           ...validationGeneral,
           isLoading: false,
           status: false,
           textError: '',
-        });
+        })
       } else {
         setValidationGeneral({
           ...validationGeneral,
@@ -288,26 +363,34 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
             defaultMessage: 'Complete los campos solicitados correctamente.',
           }),
           status: true,
-        });
+        })
       }
     } else {
-      setbuttonStatus(true);
+      setbuttonStatus(true)
     }
-  };
+  }
+
+  const isAdminPage = () => {
+    const isAdmin = location.pathname.includes('admin')
+
+    if (isAdmin) {
+      return true
+    } else return false
+  }
 
   useEffect(() => {
     if (current == 0) {
-      ValidateGeneralFields();
+      ValidateGeneralFields()
     }
-  }, [basicDataUser, dataEventUser, current]);
+  }, [basicDataUser, dataEventUser, current])
 
   useEffect(() => {
-    if (currentAuthScreen === 'login') setCurrent(0);
+    if (currentAuthScreen === 'login') setCurrent(0)
 
     return () => {
-      setCurrent(0);
-    };
-  }, [currentAuthScreen]);
+      setCurrent(0)
+    }
+  }, [currentAuthScreen])
 
   return (
     <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
@@ -321,8 +404,8 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         {current > 0 && current < 2 && (
           <Button
             onClick={() => {
-              hookValidations(false, '');
-              prev();
+              hookValidations(false, '')
+              prev()
             }}
             size="large"
             style={{ margin: '0 8px' }}
@@ -347,7 +430,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
                     size="large"
                     type="primary"
                     onClick={() => {
-                      next();
+                      next()
                     }}
                   >
                     {current > 0
@@ -402,7 +485,7 @@ const RegisterUserAndEventUser = ({ screens, stylePaddingMobile, stylePaddingDes
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default RegisterUserAndEventUser;
+export default RegisterUserAndEventUser

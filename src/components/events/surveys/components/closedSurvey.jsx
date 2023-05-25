@@ -1,14 +1,21 @@
-import { Button, Card, Result } from 'antd';
-import { connect } from 'react-redux';
-import * as surveysActions from '../../../../redux/survey/actions';
-import { SmileOutlined } from '@ant-design/icons';
+import { Button, Card, Result } from 'antd'
+import { connect } from 'react-redux'
+import * as surveysActions from '../../../../redux/survey/actions'
+import { SmileOutlined } from '@ant-design/icons'
 
-const { setSurveyResult } = surveysActions;
+const { setSurveyResult } = surveysActions
 
 function ClosedSurvey(props) {
-  const { currentSurvey, setSurveyResult } = props;
+  const { currentSurvey, setSurveyResult } = props
   return (
-    <Card style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '80vh' }}>
+    <Card
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '80vh',
+      }}
+    >
       <Result
         icon={<SmileOutlined />}
         title={
@@ -23,12 +30,12 @@ function ClosedSurvey(props) {
         }
       />
     </Card>
-  );
+  )
 }
 const mapStateToProps = (state) => ({
   currentSurvey: state.survey.data.currentSurvey,
-});
+})
 const mapDispatchToProps = {
   setSurveyResult,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ClosedSurvey);
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ClosedSurvey)
