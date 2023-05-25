@@ -52,12 +52,12 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [discount, setDiscount] = useState<number | null>(null);
   const [discountEnabled, setDiscountEnabled] = useState<boolean>(false);
+  const [isSwitchEnabled, setIsSwitchEnabled] = useState(false);
+
 
   const handleDiscountEnabledChange = (checked: boolean) => {
     setDiscountEnabled(checked);
   };
-
-
   // subasta o tienda
   // const handleChange = (value: string): void => {
   //   setShop(value);
@@ -74,6 +74,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
         setProduct(product);
         setName(product.name);
         setCreator(product.by);
+        setDiscount(product.discount);
         // subasta o tienda
         // setShop(product.type)
         setDescription(product.description || '');
@@ -88,6 +89,13 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
       });
     }
   }, [props.match.params.id]);
+
+  useEffect(() => {
+    if (product.discount !== null) {
+      setDiscountEnabled(true);
+    }
+  }, [product.discount]);
+
 
   const goBack = () => props.history.goBack();
 
@@ -186,7 +194,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
               by: creator,
               description,
               price,
-              discount,
+              discount: discount,
               images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
               // subasta o tienda
               // type: shop,
@@ -205,7 +213,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
               by: creator,
               description,
               price,
-              discount,
+              discount: discount,
               images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
               // subasta o tienda
               // type: shop,
@@ -360,7 +368,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
             {discountEnabled && (
               <Form.Item label={<label style={{ marginTop: '2%' }}>Descuento</label>} rules={[{ required: false }]}>
                 <InputNumber
-                  defaultValue={100}
+                  defaultValue={discount ? discount: 100}
                   min={1}
                   max={100}
                   formatter={(value: number) => (value === null ? '' : `${value}%`)}
