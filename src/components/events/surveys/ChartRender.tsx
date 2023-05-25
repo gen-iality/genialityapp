@@ -80,7 +80,7 @@ export default function ChartRender(props: Props) {
   };
   return (
     <>
-		{props.typeQuestion === 'text' && <Result status={'info'} title={'No se pueden mostrar estadisticas de una pregunta abierta'} />}
+		{props.typeQuestion === 'text' && <Result status={'info'} title={'No se pueden mostrar graficas de una pregunta abierta'} />}
       <canvas className='chart-render' ref={canvasRef} id={props.id ? `chart-render-${props.id}` : 'chart-render'} style={{
 		display: props.typeQuestion === 'text'?'none':'block'
 	  }}/>
