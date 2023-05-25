@@ -264,8 +264,6 @@ const ProgressingColumn: FunctionComponent<IProgressingColumnProps> = (props) =>
     requestAttendees().then((gotAttendee) => setAttendee(gotAttendee))
   }, [shouldUpdate])
 
-  if (!onOpen) onOpen = () => {}
-
   if (shownAll) {
     return (
       <Button
