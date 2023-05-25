@@ -1202,7 +1202,7 @@ class ListEventUser extends Component {
           onHidden={() => {
             this.setState({ showModalOfProgress: false })
           }}
-          allActivities={this.stateallActivities || []}
+          allActivities={this.state.allActivities || []}
           user={this.state.currentUser}
           event={this.props.event}
         />

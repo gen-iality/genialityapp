@@ -75,7 +75,12 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
     if (!user) return
     if (allActivities.length == 0) return
 
-    requestAllData().finally(() => setDataLoaded(true))
+    requestAllData()
+      .catch((err) => {
+        console.error(err)
+        StateMessage.show(null, 'error', 'No se ha podido cargar los datos')
+      })
+      .finally(() => setDataLoaded(true))
 
     // if (!show) setLoaded(false)
     return () => setDataLoaded(false)
