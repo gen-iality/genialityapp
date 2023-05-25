@@ -31,3 +31,33 @@ export interface Product {
     _id: string;
 }
 
+//tipeo componente configuration
+export interface ConfigurationProps {
+    eventId: string;
+}
+
+// tipeo oferta producto 
+export interface OfertProdutsProps extends RouteComponentProps {
+    eventId: string;
+    match: any;
+}
+//tipeo productos 
+export interface ProductProps extends RouteComponentProps<RouteParams>  {
+    eventId: string;
+}
+
+export interface ProductState {
+    list: ProductData[];
+    loading: boolean;
+    loadingPosition: boolean;
+}
+export interface ProductData {
+    index: number;
+    _id: string;
+    event_id: string;
+    images?: string[];
+    name: string;
+    by?: string;
+    price: number;
+    discount?: number;
+}

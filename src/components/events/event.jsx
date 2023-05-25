@@ -25,7 +25,7 @@ import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
 import NetworkingPage from '../networking/Networking.page';
 import NewsSectionRoutes from '../news/newsRoute';
-import ProductSectionRoutes from '../products/productsRoute';
+import ProductSectionRoutes from '../products/routes/productsRoute';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../context/withContext';
 import { Layout, Space, Row, Col, Button, Result } from 'antd';

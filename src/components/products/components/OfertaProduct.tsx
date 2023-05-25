@@ -1,14 +1,14 @@
 import { Table, Tag } from 'antd';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { withRouter } from 'react-router';
-import API from '../../helpers/request';
-import Header from '../../antdComponents/Header';
+import { withRouter } from 'react-router-dom';
+import API from '@helpers/request';
+import { OfertProdutsProps } from '../interface/productTypes';
+import Header from '@/antdComponents/Header';
 
-const OfertProduts = (props) => {
-  
-  const goBack = () => props.history.goBack();
-  const [oferts, setOferts] = useState([]);
+const OfertProduts: React.FC<OfertProdutsProps> = (props) => {
+  // const goBack = () => props.history.goBack();
+  const [oferts, setOferts] = useState<any[]>([]);
   // Definición de variables de estado y funciones
   useEffect(() => {
     if (props.eventId) {
@@ -20,19 +20,19 @@ const OfertProduts = (props) => {
       );
 
       if (data) {
-        let orderOferts = data.data.data.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
+        let orderOferts = data.data.data.sort((a: any, b: any) => parseFloat(b.amount) - parseFloat(a.amount));
         setOferts(orderOferts);
       }
     }
-  }, [props.eventId]);
+  }, [props.eventId, props.match.params.id]);
   // Definición de las columnas de la tabla
   const columns = [
-    // Columna "Correo" 
+    // Columna "Correo"
     {
       title: 'Correo',
       dataIndex: 'email',
       key: 'email',
-      render(text) {
+      render(text: string) {
         return <a>{text}</a>;
       },
     },
@@ -40,7 +40,7 @@ const OfertProduts = (props) => {
       title: 'Nombre',
       dataIndex: 'first_name',
       key: 'name',
-      render(value, item) {
+      render(value: number, item: any) {
         return (
           <>
             {item.first_name} {item.last_name}
@@ -59,7 +59,7 @@ const OfertProduts = (props) => {
       title: 'Valor ofertado',
       key: 'amount',
       dataIndex: 'amount',
-      render(price, item) {
+      render(price: number, item: any) {
         return (
           <>
             {' '}
@@ -69,13 +69,13 @@ const OfertProduts = (props) => {
       },
     },
   ];
-    // Renderizado del componente
+  // Renderizado del componente
   return (
     <>
       {/* Componente Header */}
       <Header title={'Ofertas de la obra'} back />
-       {/* Tabla de ofertas */}
-      <Table columns={columns} dataSource={oferts.length > 0 && oferts} />
+      {/* Tabla de ofertas */}
+      <Table columns={columns} dataSource={oferts.length > 0 ? oferts : []} />
       {/* <Row>
             <Button shape='circle' onClick={goBack} icon={<ArrowLeftOutlined />} />{' '}
             <span style={{ marginLeft: 30 }}>Ofertas de la obra</span>

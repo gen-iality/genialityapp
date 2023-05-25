@@ -4,11 +4,11 @@ import { withRouter } from 'react-router-dom';
 /** --------------------
  *  secciones del evento
  * ---------------------*/
-import Product from './product';
 
-import Configuration from './configuration';
-import OfertProduts from './oferts';
-import AddProduct from './components/addProduct';
+import OfertProduts from '../components/OfertaProduct';
+import AddProduct from '../components/addProduct';
+import Product from '../components/product';
+import Configuration from '../components/configuration';
 
 const ProductSectionRoutes = (props) => {
   let { path } = useRouteMatch();
