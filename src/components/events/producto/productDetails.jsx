@@ -167,7 +167,7 @@ function DetailsProduct(props) {
                 }
                 { product.discount ?
                   <Statistic
-                    title={<Typography.Text delete>$ {product.price}</Typography.Text>}
+                    title={<Typography.Text delete>$ {new Intl.NumberFormat().format(product.price)}</Typography.Text>}
                     value={priceWithDiscount}
                     valueStyle={{ color: '#52c41a' }}
                     prefix='$'

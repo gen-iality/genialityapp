@@ -50,7 +50,7 @@ const ProductCard = ({ product, eventId, history }) => {
                   {/* {discountedPrice && <Typography.Text type='success'> $ {discountedPrice}</Typography.Text>} */}
                   { product.discount ?
                     <Statistic
-                      title={<Typography.Text delete>$ {product.price}</Typography.Text>}
+                      title={<Typography.Text delete>$ {new Intl.NumberFormat().format(product.price)}</Typography.Text>}
                       value={discountedPrice}
                       valueStyle={{ color: '#52c41a' }}
                       prefix='$'
