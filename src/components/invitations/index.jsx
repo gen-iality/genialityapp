@@ -6,10 +6,10 @@ import ImportUsers from '../import-users/importUser'
 import { EventsApi } from '@helpers/request'
 
 function ListaInvitados({ ...props }) {
-  const { eventId, event, matchUrl, location } = props
+  const { eventId, event, parentUrl, location } = props
 
   useEffect(() => {
-    if (matchUrl === `/eventadmin/${eventId}`) {
+    if (parentUrl === `/eventadmin/${eventId}`) {
       obtenerEvento()
     }
 
@@ -17,7 +17,7 @@ function ListaInvitados({ ...props }) {
       const respEvento = await EventsApi.getOne(eventId)
       setUserProperties(respEvento.user_properties)
     }
-  }, [matchUrl])
+  }, [parentUrl])
 
   const [guestSelected, setGuestSelected] = useState([])
   const [userProperties, setUserProperties] = useState([])
@@ -27,7 +27,7 @@ function ListaInvitados({ ...props }) {
       <Switch>
         <Route
           exact
-          path={`${matchUrl}/invitados`}
+          path={`${parentUrl}/invitados`}
           render={() => (
             <InvitedUsers
               event={event}
@@ -38,26 +38,26 @@ function ListaInvitados({ ...props }) {
         />
         <Route
           exact
-          path={`${matchUrl}/invitados/createmessage`}
+          path={`${parentUrl}/invitados/createmessage`}
           render={() => (
             <CreateMessage
               event={event}
               eventID={eventId}
               selection={guestSelected}
-              parentUrl={matchUrl}
+              parentUrl={parentUrl}
             />
           )}
         />
 
         <Route
           exact
-          path={`${matchUrl}/invitados/importar-excel`}
+          path={`${parentUrl}/invitados/importar-excel`}
           render={() => (
             <ImportUsers
               extraFields={userProperties}
               eventId={eventId}
               event={event}
-              parentUrl={matchUrl}
+              parentUrl={parentUrl}
               locationParams={location}
             />
           )}

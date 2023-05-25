@@ -407,7 +407,7 @@ class Event extends Component {
                 path={`${match.url}/invitados`}
                 event={event}
                 render={() => (
-                  <InvitedUsers eventId={event._id} event={event} matchUrl={match.url} />
+                  <InvitedUsers eventId={event._id} event={event} parentUrl={match.url} />
                 )}
               />
               <Protected
