@@ -334,6 +334,47 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
     return extraFields
   }
 
+  const checkIn = async (id: string, item: any) => {
+    let checkInStatus = null
+
+    const eventIdSearch = activityId ?? event._id
+
+    let userRef = null
+    try {
+      userRef = firestore.collection(`${eventIdSearch}_event_attendees`).doc(id)
+    } catch (error) {
+      checkInStatus = false
+      return
+    }
+
+    // Actualiza el usuario en la base de datos
+
+    await userRef
+      .update({
+        ...item,
+        updated_at: new Date(),
+        checkedin_at: new Date(),
+        checked_in: true,
+      })
+      .then(() => {
+        StateMessage.show(null, 'success', 'Usuario inscrito exitosamente...')
+        checkInStatus = true
+      })
+      .catch((error) => {
+        console.error('Error updating document: ', error)
+        StateMessage.show(
+          null,
+          'error',
+          intl.formatMessage({
+            id: 'toast.error',
+            defaultMessage: 'Sry :(',
+          }),
+        )
+        checkInStatus = false
+      })
+    return checkInStatus
+  }
+
   const getAllAttendees = async () => {
     const orgId = event.organizer._id
     const org = await OrganizationApi.getOne(orgId)
