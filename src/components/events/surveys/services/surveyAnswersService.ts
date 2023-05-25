@@ -97,7 +97,7 @@ const surveyAnswers = {
 				result = listResponse.val();
 				switch (operation) {
 					case 'onlyCount':
-						Object.keys(result).map((item: any) => {
+						Object.keys(result).forEach((item: any) => {
 							if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
 								if (parseInt(item) >= 0) {
 									result[item] = [result[item]];
@@ -107,7 +107,7 @@ const surveyAnswers = {
 						break;
 
 					case 'participationPercentage':
-						Object.keys(result).map((item: any) => {
+						Object.keys(result).forEach((item: any) => {
 							if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
 								if (parseInt(item) >= 0) {
 									total = total + result[item];
@@ -115,7 +115,7 @@ const surveyAnswers = {
 							}
 						});
 
-						Object.keys(result).map((item: any) => {
+						Object.keys(result).forEach((item: any) => {
 							if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
 								if (parseInt(item) >= 0) {
 									const calcPercentage = Math.round((result[item] / total) * 100);
