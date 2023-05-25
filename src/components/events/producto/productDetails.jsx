@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Col, Divider, Result, Row, Space, Spin, Typography } from 'antd';
+import { Card, Col, Divider, Result, Row, Space, Spin, Statistic, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { EventsApi } from '../../../helpers/request';
 import { IssuesCloseOutlined, TagsOutlined, PercentageOutlined } from '@ant-design/icons';
@@ -146,12 +146,44 @@ function DetailsProduct(props) {
             <Card 
               style={{height: '100%', borderRadius: 20}}
             >
-              <Space direction='vertical' style={{ width: '100%' }}>
-                {/* nombre de la obra Pan */}
-                <Title level={4}>{product && product.name ? product.name : 'Nombre del producto'}</Title>
+              <Space direction='vertical' /* style={{ width: '100%' }} */>
+                <Typography.Title level={5}>{product && product.name ? product.name : 'Nombre del producto'}</Typography.Title>
+                {product && product.by && product.by !== '' && (
+                  <Typography.Text strong type='secondary'>
+                    Por: {product.by}
+                  </Typography.Text>
+                )}
+                {
+                  product && product.description && 
+                  product.description !== '<p><br></p>' &&
+                  product.description !== null &&
+                  product.description !== `<p class="ql-align-center"><br></p>` &&
+                  product.description !== `<p class="ql-align-right"><br></p>` &&
+                  product.description !== `<p class="ql-align-justify"><br></p>` &&
+                    <div
+                    dangerouslySetInnerHTML={{
+                      __html: product.description,
+                    }}></div>
+                }
+                { product.discount ?
+                  <Statistic
+                    title={<Typography.Text delete>$ {product.price}</Typography.Text>}
+                    value={priceWithDiscount}
+                    valueStyle={{ color: '#52c41a' }}
+                    prefix='$'
+                    suffix={<Typography.Text><small>-{product.discount}%</small></Typography.Text>}
+                  />
+                  : product.price && 
+                    <Statistic
+                      title={<Typography.Text style={{color: 'transparent'}}>Valor del producto</Typography.Text>}
+                      value={product.price}
+                      valueStyle={{ color: '#52c41a' }}
+                      prefix='$'
+                    /> 
+                }
                 {/* OfertaProduct "No tienes permisos para pujar sobre esta obra." Precio Inicial:
                   $ 2000 */}
-                <div style={{ display: 'flex' }}>
+                {/* <div style={{ display: 'flex' }}>
                   {product && (product.price || product.start_price) && (
                     <div>
                       <h3 style={{ marginLeft: '5px', fontWeight: 'bold' }}>Ahora</h3>
@@ -187,27 +219,8 @@ function DetailsProduct(props) {
                       </div>
                     </Text>
                   )}
-                </div>
-                {product && product.by && product.by !== '' && (
-                  <Divider orientation='left'>
-                    {/* autor  */}
-                    <Title style={{ marginBottom: '0px' }} level={5}>
-                      Vendedor
-                    </Title>
-                  </Divider>
-                )}
-                {/* nombre del autor */}
-                {product && product.by && <Text>{product && product.by ? product.by : 'Sin Autor'} </Text>}
-                <Divider orientation='left'>
-                  <Title level={5}>Descripción</Title>
-                </Divider>
-                <Text>
-                  {/* descripcion  */}
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product && product.description ? product.description : 'Sin descripción',
-                    }}></div>
-                </Text>
+                </div> */}
+                
                 {/* <Row gutter={[12,12]}> 
                      <Col span={8}>
                      <span><strong>Oferta actual</strong></span>

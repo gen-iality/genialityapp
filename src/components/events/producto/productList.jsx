@@ -31,15 +31,15 @@ const ProductList = (props) => {
             gutter: 16,
             xs: 1,
             sm: 1,
-            md: 3,
-            lg: 4,
+            md: 2,
+            lg: 3,
             xl: 4,
             xxl: 4,
           }}
           style={{padding: 20}}
           dataSource={products}
           renderItem={product => (
-            <List.Item key={product.id}>
+            <List.Item style={{height: '100%'}} key={product.id}>
               <ProductCard history={history} eventId={props.cEvent.value._id} product={product}/>
             </List.Item>
           )}

@@ -11,7 +11,7 @@ const ProductCard = ({ product, eventId, history }) => {
   const discountedPrice = calculateDiscountedPrice();
 
   return (
-    <Badge.Ribbon text={product?.discount ? product?.discount + '%' : ''} color={product?.discount ? 'red': 'transparent'}>
+    <Badge.Ribbon text={product?.discount ? '-' + product?.discount + '%' : ''} color={product?.discount ? 'red': 'transparent'}>
       <Card
       /* actions={[
         product?.currency && product?.currency && (
@@ -25,13 +25,13 @@ const ProductCard = ({ product, eventId, history }) => {
         /* bordered={false} */
         hoverable
         style={{ width: '100%', cursor: 'pointer', borderRadius: 10 }}
-        bodyStyle={{ padding: '10px', minHeight: '120px', width: '100%' }}
+        bodyStyle={{ /* padding: '10px', */width: '100%', height: '160px'}}
         key={product?.type + product?.id}
         onClick={() => history.push(`/landing/${eventId}/producto/${product._id}/detailsproducts`)}
         cover={
           <img
             src={product && product.images && product.images[0]}
-            style={{ height: '250px', objectFit: 'contain', backgroundColor: '#C4C4C440' }}
+            style={{ height: '250px', objectFit: 'fill', backgroundColor: '#C4C4C440' }}
           />
         }>
         <Card.Meta
@@ -42,11 +42,11 @@ const ProductCard = ({ product, eventId, history }) => {
               </Typography.Title>
               {product && (
                 <Space direction='vertical'>
-                  {product?.by && (
-                    <Typography.Text type='secondary' /* italic */>
+                  {/* {product?.by && (
+                    <Typography.Text type='secondary'>
                       {product?.by}
                     </Typography.Text>
-                  )}
+                  )} */}
                   {/* {discountedPrice && <Typography.Text type='success'> $ {discountedPrice}</Typography.Text>} */}
                   { product.discount ?
                     <Statistic
