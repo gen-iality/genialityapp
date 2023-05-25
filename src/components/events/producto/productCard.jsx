@@ -9,7 +9,6 @@ const ProductCard = ({ product, eventId, history }) => {
     return product.price;
   };
   const discountedPrice = calculateDiscountedPrice();
-  console.log(product, 'product');
 
   return (
     <Badge.Ribbon text={product?.discount ? product?.discount + '%' : ''} color={product?.discount ? 'red': 'transparent'}>

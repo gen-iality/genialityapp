@@ -52,7 +52,6 @@ const ProductList = (props) => {
                 title={'Aún no existen artículos en la galería'}
               />
             </Card>
-            
           </Col>
         </Row>
       )}
