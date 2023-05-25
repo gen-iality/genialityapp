@@ -346,7 +346,7 @@ class Event extends Component {
                 render={() => <ReportNetworking event={event} />}
               />
               <Protected
-                path={`${match.url}/assistants.old`}
+                path={`${match.url}/assistants`}
                 event={event}
                 url={match.url}
                 render={() => (
@@ -354,7 +354,7 @@ class Event extends Component {
                 )}
               />
               <Protected
-                path={`${match.url}/assistants`}
+                path={`${match.url}/assistants.new`}
                 event={event}
                 url={match.url}
                 render={() => <ListEventUserPage event={event} parentUrl={match.url} />}
