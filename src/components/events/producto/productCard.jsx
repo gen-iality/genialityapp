@@ -37,9 +37,9 @@ const ProductCard = ({ product, eventId, history }) => {
         <Card.Meta
           description={
             <Space direction='vertical'>
-              <Typography.Text strong style={{width: '280px'}} ellipsis={{ rows: 2 }}>
+              <Typography.Title level={5} ellipsis={{ rows: 2 }}>
                 {product.name}
-              </Typography.Text>
+              </Typography.Title>
               {product && (
                 <Space direction='vertical'>
                   {product?.by && (

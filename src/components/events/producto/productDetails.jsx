@@ -76,42 +76,44 @@ function DetailsProduct(props) {
   return (
     <>
       {product && !loading && (
-        <Row style={{ padding: '10px' }} gutter={[8, 8]}>
+        <Row gutter={[16, 16]} style={{padding: 20}}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Card
               style={{
-                width: '100%',
-                height: '425px',
+                height: '100%',
+                /* width: '100%',
+                height: '425px', */
                 display: 'grid',
                 justifyContent: 'center',
                 alignItems: 'center',
+                borderRadius: 20
               }}>
-              <Swiper
-                style={{
-                  width: '400px',
-                  height: '280px',
-                  margin: '4px',
-                }}
-                loop={true}
-                spaceBetween={1}
-                thumbs={{ swiper: thumbsSwiper }}
-                modules={[Navigation, Thumbs]}
-                freeMode={true}>
-                {product &&
-                  product.images &&
-                  product.images
-                    .filter((img) => img != null)
-                    .map((image, index) => (
-                      <SwiperSlide key={'image' + index}>
-                        <img
-                          style={{ borderRadius: '10px', objectFit: 'contain', width: '100%', height: '280px' }}
-                          src={product.images[index]}
-                          alt='producto'
-                        />
-                      </SwiperSlide>
-                    ))}
-              </Swiper>
-              {product && product.images && product.images.filter((img) => img != null).length > 1 && (
+                <Swiper
+                  style={{
+                    width: '400px',
+                    height: '280px',
+                    margin: '4px',
+                  }}
+                  loop={true}
+                  spaceBetween={1}
+                  thumbs={{ swiper: thumbsSwiper }}
+                  modules={[Navigation, Thumbs]}
+                  freeMode={true}>
+                  {product &&
+                    product.images &&
+                    product.images
+                      .filter((img) => img != null)
+                      .map((image, index) => (
+                        <SwiperSlide key={'image' + index}>
+                          <img
+                            style={{ borderRadius: '10px', objectFit: 'contain', width: '100%', height: '280px' }}
+                            src={product.images[index]}
+                            alt='producto'
+                          />
+                        </SwiperSlide>
+                      ))}
+                </Swiper>
+                {product && product.images && product.images.filter((img) => img != null).length > 1 && (
                 <Swiper
                   style={{ width: '250px', height: '120px' }}
                   onSwiper={setThumbsSwiper}
@@ -141,10 +143,12 @@ function DetailsProduct(props) {
             </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Card>
+            <Card 
+              style={{height: '100%', borderRadius: 20}}
+            >
               <Space direction='vertical' style={{ width: '100%' }}>
                 {/* nombre de la obra Pan */}
-                <Title level={3}>{product && product.name ? product.name : 'Nombre del producto'}</Title>
+                <Title level={4}>{product && product.name ? product.name : 'Nombre del producto'}</Title>
                 {/* OfertaProduct "No tienes permisos para pujar sobre esta obra." Precio Inicial:
                   $ 2000 */}
                 <div style={{ display: 'flex' }}>
