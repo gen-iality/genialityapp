@@ -40,7 +40,7 @@ const ProductList = (props) => {
           dataSource={products}
           renderItem={product => (
             <List.Item key={product.id}>
-              <ProductCard history={history} eventId={props.cEvent.value._id} product={product} />
+              <ProductCard history={history} eventId={props.cEvent.value._id} product={product}/>
             </List.Item>
           )}
         />

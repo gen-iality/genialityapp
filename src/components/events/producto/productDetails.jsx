@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Col, Divider, Row, Space, Spin, Typography } from 'antd';
+import { Card, Col, Divider, Result, Row, Space, Spin, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { EventsApi } from '../../../helpers/request';
 import { IssuesCloseOutlined, TagsOutlined, PercentageOutlined } from '@ant-design/icons';
@@ -15,6 +15,7 @@ import 'swiper/swiper-bundle.css';
 
 // import required modules
 import { Navigation, Thumbs } from 'swiper';
+import { FormattedMessage } from 'react-intl';
 
 function DetailsProduct(props) {
   const { Title, Text } = Typography;
@@ -223,14 +224,22 @@ function DetailsProduct(props) {
         </Row>
       )}
       {!product && !loading && (
-        <Card style={{ textAlign: 'center', marginLeft: 30, marginRight: 30, marginTop: 60 }}>
-          <IssuesCloseOutlined style={{ marginRight: 20, fontSize: 20 }} />
-          No existe detalle de este producto
-        </Card>
+        <Row justify='center' align='middle' style={{padding: 20}}>
+          <Col span={23}>
+            <Card bordered={false}>
+              <Result title={'No existe detalle de este producto'}/>
+            </Card>
+          </Col>
+        </Row>
       )}
       {loading && (
-        <Row style={{ marginTop: 60 }}>
-          <Spin style={{ margin: 'auto' }} />
+        <Row justify='center' align='middle'>
+          <Col>
+            <Spin 
+              size='large'
+              tip={<Typography.Text strong><FormattedMessage id='loading' defaultMessage={'Cargando...'}/></Typography.Text>}
+            />
+          </Col>
         </Row>
       )}
     </>

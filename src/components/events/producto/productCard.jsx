@@ -1,4 +1,4 @@
-import { Badge, Card, Space, Typography } from 'antd';
+import { Badge, Card, Space, Statistic, Typography } from 'antd';
 
 const ProductCard = ({ product, eventId, history }) => {
   const calculateDiscountedPrice = () => {
@@ -23,33 +23,47 @@ const ProductCard = ({ product, eventId, history }) => {
           </div>
         ),
       ]} */
-        bordered={false}
+        /* bordered={false} */
         hoverable
+        style={{ width: '100%', cursor: 'pointer', borderRadius: 10 }}
         bodyStyle={{ padding: '10px', minHeight: '120px', width: '100%' }}
-        key={'Cardgallery' + product.id}
-        style={{ width: '100%', cursor: 'pointer', height: '100%' }}
+        key={product?.type + product?.id}
         onClick={() => history.push(`/landing/${eventId}/producto/${product._id}/detailsproducts`)}
         cover={
           <img
-            alt='example'
             src={product && product.images && product.images[0]}
-            style={{ height: '250px', objectFit: 'cover' }}
+            style={{ height: '250px', objectFit: 'contain', backgroundColor: '#C4C4C440' }}
           />
         }>
         <Card.Meta
           description={
             <Space direction='vertical'>
-              <Typography.Title level={5} ellipsis={{ rows: 2 }}>
+              <Typography.Text strong style={{width: '280px'}} ellipsis={{ rows: 2 }}>
                 {product.name}
-              </Typography.Title>
+              </Typography.Text>
               {product && (
                 <Space direction='vertical'>
                   {product?.by && (
-                    <Typography.Text type='secondary' italic>
+                    <Typography.Text type='secondary' /* italic */>
                       {product?.by}
                     </Typography.Text>
                   )}
-                  {discountedPrice && <Typography.Text type='success'> $ {discountedPrice}</Typography.Text>}
+                  {/* {discountedPrice && <Typography.Text type='success'> $ {discountedPrice}</Typography.Text>} */}
+                  { product.discount ?
+                    <Statistic
+                      title={<Typography.Text delete>$ {product.price}</Typography.Text>}
+                      value={discountedPrice}
+                      valueStyle={{ color: '#52c41a' }}
+                      prefix='$'
+                    />
+                    : product.price && 
+                      <Statistic
+                        title={<Typography.Text style={{color: 'transparent'}}>Valor del producto</Typography.Text>}
+                        value={product.price}
+                        valueStyle={{ color: '#52c41a' }}
+                        prefix='$'
+                      />
+                  }
                 </Space>
               )}
             </Space>
