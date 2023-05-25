@@ -288,7 +288,7 @@ function Graphics(props: any) {
 			</Col>
 			{/* Cards */}
 			<Col span={24}>
-				<Card headStyle={{border:'none'}} bodyStyle={{paddingTop:'0px'}} title={`Conteo de votos`}>
+				{state.currentChart.typeQuestion !== 'text' && <Card headStyle={{border:'none'}} bodyStyle={{paddingTop:'0px'}} title={`Conteo de votos`}>
 					<Row gutter={[16, 16]}>
 						{/* Cards Questions */}
 						{isAssambley &&
@@ -342,7 +342,7 @@ function Graphics(props: any) {
 							))}
 						{/* Card Users Without Answer */}
 					</Row>
-				</Card>
+				</Card>}
 			</Col>
 			{parseStringBoolean(cSurveys.currentSurvey.showNoVotos) && (
 				<Col span={24}>
