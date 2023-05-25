@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import Graphics from './graphics.old';
 import GraphicsRefactor from './graphicsRefactor';
 import SurveyComponent from './surveyComponent';
 import { Card, Result, Divider } from 'antd';
-import ClosedSurvey from './components/closedSurvey';
+
 
 /** Context´s */
 import { UseCurrentUser } from '../../../context/userContext';
 import { UseSurveysContext } from '../../../context/surveysContext';
 import { UseUserEvent } from '@context/eventUserContext';
 function SurveyDetailPage(props: any) {
-	const cSurveys = UseSurveysContext();
+	const cSurveys : any = UseSurveysContext();
 	const currentUser = UseCurrentUser();
 	const cEventUser = UseUserEvent();
 	const [showSurveyTemporarily, setShowSurveyTemporarily] = useState(false);
