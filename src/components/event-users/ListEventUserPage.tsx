@@ -553,6 +553,36 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
         }
       })
 
+    const editColumnRender = (item: any) => {
+      const badColumns = simplifyOrgProperties.map((item) => item.name)
+      const newItem = JSON.parse(JSON.stringify(item))
+      const filteredProperties = Object.fromEntries(
+        Object.entries(newItem.properties).filter(([key, value]) => {
+          return !badColumns.includes(key)
+        }),
+      )
+      newItem.properties = filteredProperties
+      return (
+        <Tooltip placement="topLeft" title="Editar">
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            size="small"
+            onClick={() => {
+              setWatchedUserInProgressingModal(newItem)
+              setIsRegistrationModalOpened(true)
+            }}
+          />
+        </Tooltip>
+      )
+    }
+    const editColumn: ColumnType<any> = {
+      title: 'Editar',
+      fixed: 'right',
+      width: 60,
+      render: editColumnRender,
+    }
+
     setColumns([
       checkInColumn,
       ...extraColumns,
@@ -561,6 +591,7 @@ const ListEventUserPage: FunctionComponent<IListEventUserPageProps> = (props) =>
       rolColumn,
       createdAtColumn,
       updatedAtColumn,
+      editColumn,
     ])
 
     eventUsersRef.onSnapshot((observer) => {
