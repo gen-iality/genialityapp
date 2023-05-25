@@ -58,11 +58,12 @@ import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox'
 import { HelperContext } from '@context/helperContext/helperContext'
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton'
 import { UsersPerEventOrActivity } from './utils/utils'
+import LessonsInfoModal from './LessonsInfoModal'
 
 const { Title, Text } = Typography
 const { Option } = Select
 
-const ModalWithLessonsInfo = ({
+const ModalWithLessonsInfo_ = ({
   show,
   onHidden,
   allActivities,
@@ -696,7 +697,7 @@ class ListEventUser extends Component {
           for (let i = 0; i < updatedAttendees.length; i++) {
             // Arreglo temporal para que se muestre el listado de usuarios sin romperse
             // algunos campos no son string y no se manejan bien
-            extraFields.forEach(function(key) {
+            extraFields.forEach(function (key) {
               if (
                 !(
                   (updatedAttendees[i][key.name] &&
@@ -1103,10 +1104,7 @@ class ListEventUser extends Component {
     ),
     onFilter: (value, record) =>
       record[dataIndex]
-        ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
         : '',
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
@@ -1190,7 +1188,7 @@ class ListEventUser extends Component {
 
     return (
       <>
-        <ModalWithLessonsInfo
+        {/* <ModalWithLessonsInfo
           show={this.state.showModalOfProgress}
           onHidden={() => {
             this.setState({ showModalOfProgress: false })
@@ -1198,6 +1196,15 @@ class ListEventUser extends Component {
           allActivities={this.state.allActivities}
           attendee={this.state.attendee}
           currentUser={this.state.currentUser}
+        /> */}
+        <LessonsInfoModal
+          show={this.state.showModalOfProgress}
+          onHidden={() => {
+            this.setState({ showModalOfProgress: false })
+          }}
+          allActivities={this.stateallActivities || []}
+          user={this.state.currentUser}
+          event={this.props.event}
         />
         <Header
           title={
@@ -1221,19 +1228,21 @@ class ListEventUser extends Component {
           </div>
         )}
 
-        {// localChanges &&
-        quantityUsersSync > 0 && localChanges === 'Local' && (
-          <Row gutter={8}>
-            <Col>
-              <p>
-                <small>
-                  Cambios sin sincronizar :{' '}
-                  {quantityUsersSync < 0 ? 0 : quantityUsersSync}
-                </small>
-              </p>
-            </Col>
-          </Row>
-        )}
+        {
+          // localChanges &&
+          quantityUsersSync > 0 && localChanges === 'Local' && (
+            <Row gutter={8}>
+              <Col>
+                <p>
+                  <small>
+                    Cambios sin sincronizar :{' '}
+                    {quantityUsersSync < 0 ? 0 : quantityUsersSync}
+                  </small>
+                </p>
+              </Col>
+            </Row>
+          )
+        }
 
         {this.state.qrModalOpen && (
           <QrModal
