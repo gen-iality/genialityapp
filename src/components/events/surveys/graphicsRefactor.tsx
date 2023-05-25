@@ -164,7 +164,7 @@ function Graphics(props: any) {
 
 		const colorsforGraphics = COLORS_SETTINGS.backgroundColor;
 
-		for (let a = 0; options.choices.length > a; a++) {
+		for (let a = 0; options.choices?.length > a; a++) {
 			// @ts-ignore
 			colorB = colorsforGraphics[a % colorsforGraphics.length];
 			// @ts-ignore
