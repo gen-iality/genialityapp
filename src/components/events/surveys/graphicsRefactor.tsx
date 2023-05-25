@@ -35,6 +35,7 @@ function Graphics(props: any) {
 		currentChart: {
 			labels: [],
 			dataValues: [],
+			typeQuestion:''
 		},
 		chart: null,
 		chartCreated: false,
@@ -221,6 +222,7 @@ function Graphics(props: any) {
 				...prev.currentChart,
 				dataValues: Object.values(totalPercentResponse || []),
 				labels: generatedlabels,
+				typeQuestion:options.type
 			},
 		}));
 	};
@@ -271,6 +273,7 @@ function Graphics(props: any) {
 								isMobile={state.isMobile}
 								labels={state.currentChart.labels}
 								type={graphicType}
+								typeQuestion={state.currentChart.typeQuestion}
 							/>
 						)}
 						<Col span={24}>
@@ -388,7 +391,7 @@ function Graphics(props: any) {
 const mapDispatchToProps = { setCurrentSurvey, setSurveyVisible };
 
 const mapStateToProps = (state: any) => ({
-	currentActivity: state.stage.data.currentActivity,
+  currentActivity: state.stage.data.currentActivity,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Graphics);

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import { CHART_TYPE } from './chartsConfiguration';
+import { Result } from 'antd';
 
 interface Props {
 	id?: string
@@ -8,6 +9,7 @@ interface Props {
 	dataValues: number[];
 	type: 'horizontal' | 'vertical' | 'pie';
 	isMobile: boolean;
+	typeQuestion?:string
 }
 
 export default function ChartRender(props: Props) {
@@ -76,6 +78,7 @@ export default function ChartRender(props: Props) {
 			chartInstance.update();
 		}
 	};
-
+	
+if(props.typeQuestion==='text') return <Result status={'info'} title={'No se pueden mostrar estadisticas de una pregunta abierta'}/>
 	return <canvas className='chart-render' ref={canvasRef} id={props.id ? `chart-render-${props.id}` : 'chart-render'} />;
 }
