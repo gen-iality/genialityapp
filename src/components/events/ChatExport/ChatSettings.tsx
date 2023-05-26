@@ -15,7 +15,8 @@ const ChatSettings = ({ eventId }: IChatSettingsProps) => {
 
   const onChangeControlled = async (controlled: boolean) => {
     setIsChangeControlled(true);
-    const resUpdate = await updateConfigChat(eventId, { message_controlled: controlled });
+
+    const resUpdate = await updateConfigChat(eventId, { ...eventConfigChat, message_controlled: controlled });
     if (resUpdate) setControlled(controlled);
     setIsChangeControlled(false);
   };
