@@ -7,6 +7,7 @@ export interface GraphicsState {
   currentChart: {
     labels: string[],
     dataValues: number[],
+    typeQuestion:string
   }
   chart:           Chart | null;
   chartCreated:    boolean;

@@ -9,14 +9,22 @@ interface IMessageListProps {
   eventId: string;
 }
 
-const renderMensaje = (text: string, record: any) => {
+interface DataType {
+  name: string;
+  text: string;
+  type: string;
+  hora: string;
+  key: string;
+  action?: React.ReactNode;
+}
 
-  if(record.type === 'image')return <Image src={record.text} height={100} width={100}/>
+const renderMensaje = (text: string, record: any) => {
+  if (record.type === 'image') return <Image src={record.text} height={100} width={100} />;
   return (
     <Tooltip title={record.text} placement='topLeft'>
       <Tag color='#3895FA'>{record.text}</Tag>
     </Tooltip>
-  )
+  );
 };
 
 const columns = [
@@ -41,11 +49,15 @@ const columns = [
     width: 150,
     ellipsis: true,
   },
+  {
+    title: 'Acciones',
+    key: 'action',
+    dataIndex: 'action',
+  },
 ];
 
 const MessageList = ({ eventId }: IMessageListProps) => {
   const { messages, isLoading } = useListeningMessage(eventId);
-console.log('messages',messages)
   const onDeleteMessage = async (messageEventId: string) => {
     const epa = await deleteMessages(eventId, messageEventId);
     if (epa) return DispatchMessageService({ type: 'success', action: 'show', msj: 'Se elimino el mensaje con exito' });
@@ -62,31 +74,28 @@ console.log('messages',messages)
     <>
       <Table
         loading={isLoading}
-        columns={[
-          ...columns,
-          {
-            title: 'Acciones',
-            key: 'action',
-            render: (_, record) => (
-              <Space size='middle'>
-                <Button onClick={() => onApproveMessage(record.key)} type='primary' icon={<CheckCircleOutlined />}>
-                  Aprobar
-                </Button>
-                <Button onClick={() => onDeleteMessage(record.key)} icon={<DeleteOutlined />}>
-                  Desaprobar
-                </Button>
-              </Space>
-            ),
-          },
-        ]}
-        dataSource={messages.map((message) => {
-          return {
+        columns={columns}
+        dataSource={messages.map((message, index) => {
+          const newRow: DataType = {
             name: message.name,
             text: message.text,
             type: message.type,
             hora: message.timestamp,
             key: message.id,
           };
+          if (index === 0) {
+            newRow.action = (
+              <Space size='middle'>
+                <Button onClick={() => onApproveMessage(message.id)} type='primary' icon={<CheckCircleOutlined />}>
+                  Aprobar
+                </Button>
+                <Button onClick={() => onDeleteMessage(message.id)} icon={<DeleteOutlined />}>
+                  Desaprobar
+                </Button>
+              </Space>
+            );
+          }
+          return newRow;
         })}
       />
     </>

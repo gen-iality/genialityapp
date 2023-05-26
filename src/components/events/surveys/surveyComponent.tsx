@@ -85,7 +85,6 @@ function SurveyComponent(props: Props) {
 			loadSurveyData.freezeGame = surveyRealTime.freezeGame;
 		}
 
-		/* Survey.StylesManager.applyTheme("darkblue"); */
 		let surveyModelData = new Survey.Model(loadSurveyData);
 		/* console.log(surveyModelData) */
 		surveyModelData.currentPageNo = surveyRealTime.currentPage;
@@ -102,7 +101,7 @@ function SurveyComponent(props: Props) {
 		UserGamification.getListPoints(eventId, setRankingList);
 
 		//Se obtiene el EventUser para los casos que se necesite saber el peso voto
-		await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight, cUser);
+		await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight, cUser,cEvent);
 	}
 
 	// Funcion para enviar la informacion de las respuestas
@@ -130,9 +129,9 @@ function SurveyComponent(props: Props) {
 
 		setRankingPoints(pointsForCorrectAnswer);
 		await registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
-		if (!(Object.keys(currentUser).length === 0)) {
+		if ((Object.keys(currentUser).length !== 0)) {
 			//Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
-			SurveyPage.setCurrentPage(surveyData._id, currentUser.value._id, surveyModel.currentPageNo);
+			await SurveyPage.setCurrentPage(surveyData._id, currentUser.value._id, surveyModel.currentPageNo);
 		}
 		let isLastPage = surveyModel.isLastPage;
 
