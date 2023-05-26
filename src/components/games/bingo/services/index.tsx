@@ -425,7 +425,7 @@ export const updateConfigChat = async (eventId: string, configChat: IConfigChat)
       .update({ configChat });
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 };
@@ -436,9 +436,13 @@ export const getEventConfigChat = async (eventId: string): Promise<IConfigChat |
       .doc(eventId)
       .get();
     const data = requestMeetings.data();
+    if (!data) {
+      return { message_controlled: false }
+    }
     return data?.configChat;
+   
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
