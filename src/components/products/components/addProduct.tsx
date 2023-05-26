@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Row, Input, Form, Col, Modal, InputNumber, Switch } from 'antd';
 import { withRouter } from 'react-router-dom';
@@ -35,6 +35,7 @@ const formLayout = {
 };
 
 const { confirm } = Modal;
+let oldDiscount = 0;
 
 const AddProduct: React.FC<AddProductProps> = (props) => {
   const [product, setProduct] = useState<Product>({} as Product);
@@ -43,7 +44,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
   //subasta o tienda
   // const [shop, setShop] = useState<string>('just-store');
   const [description, setDescription] = useState<string>('');
-  const [price, setPrice] = useState<string>('');
+  const [price, setPrice] = useState<string | number>(0);
   const [picture, setPicture] = useState<string | null>(null);
   const [optionalPicture, setOptionalPicture] = useState<string>('');
   const [imageFile, setImgFile] = useState<ImageFile[]>([]);
@@ -51,17 +52,11 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
   const [idNew, setIdNew] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [discount, setDiscount] = useState<number | null>(null);
-  const [discountEnabled, setDiscountEnabled] = useState(false);
-  const [discountValue, setDiscountValue] = useState(100);
+  const [discountEnabled, setDiscountEnabled] = useState<boolean>(false);
 
-  const handleDiscountEnabledChange = (checked: boolean) => {
-    setDiscountEnabled(checked);
+  const handleDiscountEnabledChange = () => {
+    setDiscountEnabled((old) => !old);
   };
-
-  const handleDiscountValueChange = (value: number) => {
-    setDiscountValue(value);
-  };
-
   // subasta o tienda
   // const handleChange = (value: string): void => {
   //   setShop(value);
@@ -69,6 +64,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
   // console.log(shop);
   const onChangeDiscount = (value: number | null): void => {
     setDiscount(value === null ? null : value);
+    oldDiscount = value || 0
   };
 
   useEffect(() => {
@@ -78,6 +74,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
         setProduct(product);
         setName(product.name);
         setCreator(product.by);
+        setDiscount(product.discount);
         // subasta o tienda
         // setShop(product.type)
         setDescription(product.description || '');
@@ -92,6 +89,14 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
       });
     }
   }, [props.match.params.id]);
+
+  useEffect(() => {
+    setDiscountEnabled(product.discount ? true : false );
+  }, [product.discount]);
+
+  useEffect(() => {
+    setDiscount(discountEnabled ? oldDiscount : 0);
+  }, [discountEnabled]);
 
   const goBack = () => props.history.goBack();
 
@@ -183,14 +188,14 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
       validators.price === false
     ) {
       try {
-        if (idNew !== undefined && idNew !== null) {
+        if (idNew !== undefined && idNew !== null && idNew !== 'null' && idNew !== 'undefined' && idNew !== '') {
           let resp = await EventsApi.editProduct(
             {
               name,
               by: creator,
               description,
               price,
-              discount,
+              discount: discount,
               images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
               // subasta o tienda
               // type: shop,
@@ -209,7 +214,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
               by: creator,
               description,
               price,
-              discount,
+              discount: discount,
               images: [renderTypeImage('Imagen', imageFile), renderTypeImage('img_optional', imageFile)],
               // subasta o tienda
               // type: shop,
@@ -313,7 +318,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
                 value={name as string}
                 placeholder='Nombre del producto'
                 name={'name'}
-                onChange={(e) => changeInput(e, 'name')}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => changeInput(e, 'name')}
               />
               {error != null && error.name && (
                 <small style={{ color: 'red' }}>El nombre del producto es requerido</small>
@@ -324,7 +329,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
                 value={creator}
                 placeholder='Nombre del autor, creador o descripción corta'
                 name={'creator'}
-                onChange={(e) => changeInput(e, 'creator')}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => changeInput(e, 'creator')}
               />
               {error != null && error.creator && <small style={{ color: 'red' }}>Este campo es requerido</small>}
             </Form.Item>
@@ -353,7 +358,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
                 value={price}
                 placeholder='Valor del producto'
                 name={'price'}
-                onChange={(e) => changeInput(e, 'price')}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => changeInput(e, 'price')}
               />
             </Form.Item>
             <Form.Item>
@@ -363,10 +368,10 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
             {discountEnabled && (
               <Form.Item label={<label style={{ marginTop: '2%' }}>Descuento</label>} rules={[{ required: false }]}>
                 <InputNumber
-                  defaultValue={100}
+                  defaultValue={discount ? discount : 100}
                   min={1}
                   max={100}
-                  formatter={(value) => (value === null ? '' : `${value}%`)}
+                  formatter={(value: number) => (value === null ? '' : `${value}%`)}
                   parser={(value: any) => (value ? value.replace('%', '') : undefined)}
                   onChange={onChangeDiscount}
                 />
