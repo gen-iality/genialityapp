@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Table, Tooltip, Space, Button, Image, Modal, Typography, Row, Col } from 'antd';
+import { Table, Tooltip, Space, Button, Image, Modal, Typography, Row, Col, Tag, Statistic } from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
@@ -252,6 +252,17 @@ class Product extends Component<ProductProps, ProductState> {
 
   goBack = () => this.props.history.goBack();
 
+  calculateDiscountedPrice = (product: any) => {
+    if (product && product.price) {
+      if (product.discount && product.discount > 0) {
+        const discountedPrice = product.price - (product.price * product.discount) / 100;      
+        return discountedPrice;
+      }
+      return product.price;
+    }
+    return 0;
+  };
+
   render() {
     const { eventIsActive } = this.context;
     return (
@@ -295,7 +306,7 @@ class Product extends Component<ProductProps, ProductState> {
                 row: this.DraggableBodyRow,
               },
             }}>
-            <Column
+            <Table.Column
               title=''
               dataIndex='move'
               width='50px'
@@ -310,32 +321,33 @@ class Product extends Component<ProductProps, ProductState> {
                 return !eventIsActive && window.location.toString().includes('eventadmin') ? null : <DragHandle />;
               }}
             />
-            <Column
+            <Table.Column
               title='Posición'
               align='center'
               dataIndex='index'
               width='80px'
               render={(data: any, index: any) => <div>{data + 1}</div>}
             />
-            <Column
+            <Table.Column
               key='_id'
               title='Imagen'
               align='center'
-              /* width='90px' */
+              width='200px'
               render={(data: any, index: any) => (
                 <Space key={index} size='small'>
                   {data.images &&
                     Array.isArray(data.images) &&
                     data.images.map((image: any, index: any) => {
-                      return <Image key={index} width={70} src={image} />;
+                      return image && <Image key={index} width={70} height={70} src={image} />;
                     })}
                 </Space>
               )}
             />
-            <Column
+            <Table.Column
               key='_id'
               title='Nombre'
               /* align='center' */
+              width='300px'
               sorter={(a: any, b: any) => a.name.localeCompare(b.name)}
               render={(data: any) => (
                 <Paragraph
@@ -348,37 +360,52 @@ class Product extends Component<ProductProps, ProductState> {
                 </Paragraph>
               )}
             />
-            <Column
+            <Table.Column
               key='_id'
               title='Por'
               /* align='center' */
-              width='120px'
+              width='180px'
               dataIndex='by'
               ellipsis={true}
               sorter={(a: any, b: any) => a.by?.localeCompare(b.by)}
             />
-            <Column
+            <Table.Column
               key='_id'
               title='Valor'
               /* align='center' */
               width='120px'
               dataIndex='price'
-              render={(data: any, prod: any) => <div>$ {prod.price}</div>}
+              render={(data: any, product: any) => product.discount ?
+                <Statistic
+                  title={<Typography.Text delete>$ {new Intl.NumberFormat().format(product.price)}</Typography.Text>}
+                  value={this.calculateDiscountedPrice(data)}
+                  valueStyle={{ color: '#52c41a' }}
+                  prefix='$'
+                  suffix={<Typography.Text><small><Tag color="red">-{product.discount}%</Tag></small></Typography.Text>}
+                />
+                :  
+                  <Statistic
+                    title={<Typography.Text style={{color: 'transparent'}}>Valor del producto</Typography.Text>}
+                    value={product.price}
+                    valueStyle={{ color: '#52c41a' }}
+                    prefix='$'
+                  />
+              }
               ellipsis={true}
             />
-            <Column
+           {/*  <Table.Column
               key='_id'
               title='Descuento'
               // align='center'
               width='120px'
               render={(data: any, index: any) => (
                 <Space key={index} size='small'>
-                  {data.discount ? `${data.discount}% ` : 'Este producto no tiene descuento'}
+                  {data.discount ? <Tag color='red'>{data.discount}%</Tag> : <Tag color='default'>Sin descuento</Tag>}
                 </Space>
               )}
-            />
+            /> */}
             {/* <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" .concat((data || prod?.price)?" $ "+prod?.price:"").concat((prod?.start_price|| prod?.price||''))}</div>)} /> */}
-            <Column
+            <Table.Column
               title='Opciones'
               key='_id'
               align='center'
@@ -402,7 +429,7 @@ class Product extends Component<ProductProps, ProductState> {
                         key={index}
                         id={`removeAction${index.index}`}
                         onClick={() => this.removeProduct(data)}
-                        type='danger'
+                        danger
                         icon={<DeleteOutlined /* style={{ fontSize: 25 }} */ />}
                         size='small'
                         disabled={!eventIsActive && window.location.toString().includes('eventadmin')}
