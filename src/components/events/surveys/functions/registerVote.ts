@@ -11,14 +11,14 @@ async function RegisterVote(surveyData: any, question: any, infoUser: any, event
    // Asigna puntos si la encuesta tiene
    let surveyPoints = question.points ? parseInt(question.points) : 1;
    let pointsForCorrectAnswer = 0;
-
+   const minValueChoices = 1
       // Funcion que retorna si la opcion escogida es la respuesta correcta
       correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
       /** Si la respuesta es correcta se asignan los puntos */
       if (correctAnswer) pointsForCorrectAnswer += surveyPoints;
       /** funcion para validar tipo de respuesta multiple o unica */
       await GetResponsesIndex(question).then((responseIndex) => {
-         optionQuantity = question.choices?.length || 1;
+         optionQuantity = question.choices?.length || minValueChoices;
          let optionIndex = responseIndex;
          let infoOptionQuestion =
             parseStringBoolean(surveyData.allow_gradable_survey)
