@@ -9,6 +9,15 @@ interface IMessageListProps {
   eventId: string;
 }
 
+interface DataType {
+  name: string;
+  text: string;
+  type: string;
+  hora: string;
+  key: string;
+  action?: React.ReactNode;
+}
+
 const renderMensaje = (text: string, record: any) => {
   if (record.type === 'image') return <Image src={record.text} height={100} width={100} />;
   return (
@@ -67,7 +76,7 @@ const MessageList = ({ eventId }: IMessageListProps) => {
         loading={isLoading}
         columns={columns}
         dataSource={messages.map((message, index) => {
-          const newRow: any = {
+          const newRow: DataType = {
             name: message.name,
             text: message.text,
             type: message.type,
