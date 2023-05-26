@@ -1372,7 +1372,7 @@ class ListEventUser extends Component {
                     pathname:
                       !eventIsActive && window.location.toString().includes('eventadmin')
                         ? ''
-                        : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`,
+                        : `/eventadmin/${this.props.event._id}/invitados/importar-excel`,
                     state: { activityId },
                   }}
                 >
