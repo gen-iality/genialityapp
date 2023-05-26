@@ -173,7 +173,7 @@ function DetailsProduct(props) {
                     prefix='$'
                     suffix={<Typography.Text><small><Tag color="red">-{product.discount}%</Tag></small></Typography.Text>}
                   />
-                  : product.price && 
+                  :  
                     <Statistic
                       title={<Typography.Text style={{color: 'transparent'}}>Valor del producto</Typography.Text>}
                       value={product.price}

@@ -55,7 +55,7 @@ const ProductCard = ({ product, eventId, history }) => {
                       valueStyle={{ color: '#52c41a' }}
                       prefix='$'
                     />
-                    : product.price && 
+                    :
                       <Statistic
                         title={<Typography.Text style={{color: 'transparent'}}>Valor del producto</Typography.Text>}
                         value={product.price}
