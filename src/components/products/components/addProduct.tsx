@@ -35,6 +35,7 @@ const formLayout = {
 };
 
 const { confirm } = Modal;
+let oldDiscount = 0;
 
 const AddProduct: React.FC<AddProductProps> = (props) => {
   const [product, setProduct] = useState<Product>({} as Product);
@@ -52,11 +53,9 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [discount, setDiscount] = useState<number | null>(null);
   const [discountEnabled, setDiscountEnabled] = useState<boolean>(false);
-  const [isSwitchEnabled, setIsSwitchEnabled] = useState(false);
 
-
-  const handleDiscountEnabledChange = (checked: boolean) => {
-    setDiscountEnabled(checked);
+  const handleDiscountEnabledChange = () => {
+    setDiscountEnabled((old) => !old);
   };
   // subasta o tienda
   // const handleChange = (value: string): void => {
@@ -65,6 +64,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
   // console.log(shop);
   const onChangeDiscount = (value: number | null): void => {
     setDiscount(value === null ? null : value);
+    oldDiscount = value || 0
   };
 
   useEffect(() => {
@@ -91,11 +91,12 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
   }, [props.match.params.id]);
 
   useEffect(() => {
-    if (product.discount !== null) {
-      setDiscountEnabled(true);
-    }
+    setDiscountEnabled(product.discount ? true : false );
   }, [product.discount]);
 
+  useEffect(() => {
+    setDiscount(discountEnabled ? oldDiscount : 0);
+  }, [discountEnabled]);
 
   const goBack = () => props.history.goBack();
 
@@ -187,7 +188,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
       validators.price === false
     ) {
       try {
-        if (idNew !== undefined && idNew !== null && idNew !== "null" && idNew !== "undefined" && idNew !== '' ) {
+        if (idNew !== undefined && idNew !== null && idNew !== 'null' && idNew !== 'undefined' && idNew !== '') {
           let resp = await EventsApi.editProduct(
             {
               name,
@@ -354,7 +355,6 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
               label={<label style={{ marginTop: '2%' }}>Valor</label>}
               rules={[{ required: false, message: 'Ingrese el valor del producto' }]}>
               <Input
-                
                 value={price}
                 placeholder='Valor del producto'
                 name={'price'}
@@ -368,7 +368,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
             {discountEnabled && (
               <Form.Item label={<label style={{ marginTop: '2%' }}>Descuento</label>} rules={[{ required: false }]}>
                 <InputNumber
-                  defaultValue={discount ? discount: 100}
+                  defaultValue={discount ? discount : 100}
                   min={1}
                   max={100}
                   formatter={(value: number) => (value === null ? '' : `${value}%`)}
