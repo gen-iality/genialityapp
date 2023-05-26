@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { Grid, Spin, Layout } from 'antd'
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
-import EventAdminPage from '@components/events/EventAdminPage'
+import EventAdminRoutes from '@components/events/EventAdminRoutes'
 import { ApiUrl } from '@helpers/constants'
 import WithFooter from '@components/withFooter'
 
@@ -89,8 +89,8 @@ const ContentContainer = () => {
               <NewEventPage />
             </NewEventProvider>
           </PrivateRoute>
-          <PrivateRoute path="/eventadmin/:event" component={EventAdminPage} />
-          <PrivateRoute path="/orgadmin/:event" component={EventAdminPage} />
+          <PrivateRoute path="/eventadmin/:event" component={EventAdminRoutes} />
+          <PrivateRoute path="/orgadmin/:event" component={EventAdminRoutes} />
           <PrivateRoute path="/create-event">
             <NewEventProvider>
               <NewEventPage />

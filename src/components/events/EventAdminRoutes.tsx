@@ -96,7 +96,7 @@ const Protected: FunctionComponent<IProtected> = (props) => {
   )
 }
 
-class Event extends Component {
+class EventAdminRoutes extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -557,4 +557,4 @@ const mapStateToProps = (state) => ({
   error: state.rols.error,
 })
 
-export default connect(mapStateToProps)(withContext(withRouter(Event)))
+export default connect(mapStateToProps)(withContext(withRouter(EventAdminRoutes)))
