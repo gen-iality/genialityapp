@@ -101,7 +101,7 @@ function SurveyComponent(props: Props) {
 		UserGamification.getListPoints(eventId, setRankingList);
 
 		//Se obtiene el EventUser para los casos que se necesite saber el peso voto
-		await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight, cUser);
+		await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight, cUser,cEvent);
 	}
 
 	// Funcion para enviar la informacion de las respuestas

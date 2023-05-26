@@ -18,7 +18,7 @@ async function RegisterVote(surveyData: any, question: any, infoUser: any, event
       if (correctAnswer) pointsForCorrectAnswer += surveyPoints;
       /** funcion para validar tipo de respuesta multiple o unica */
       await GetResponsesIndex(question).then((responseIndex) => {
-         optionQuantity = question.choices?.length || 0;
+         optionQuantity = question.choices?.length || 1;
          let optionIndex = responseIndex;
          let infoOptionQuestion =
             parseStringBoolean(surveyData.allow_gradable_survey)
