@@ -1,12 +1,13 @@
-import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
+import { Route, RouteComponentProps, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 /** --------------------
  *  secciones del evento
  * ---------------------*/
-import { UseEventContext } from '../../../context/eventContext';
-import DetailsProduct from './productDetails';
-import ProductList from './productList';
+import DetailsProduct from '../components/productDetails';
+import React from 'react';
+import { UseEventContext } from '@/context/eventContext';
+import ProductList from '../components/productList';
 
-const ProductoSectionRoutes = () => {
+const ProductoSectionRoutes: React.FC<RouteComponentProps> = () => {
   let { path } = useRouteMatch();
   let cEvent = UseEventContext();
 

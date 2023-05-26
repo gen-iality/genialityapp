@@ -1,4 +1,5 @@
-import ProductoSectionRoutes from './ProductoSectionRoutes';
+import ProductoSectionRoutes from "../routes/ProductoSectionRoutes";
+
 const Productos = () => {
   return <ProductoSectionRoutes />;
 };

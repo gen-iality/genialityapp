@@ -1,14 +1,13 @@
 import { Badge, Card, Space, Statistic, Typography } from 'antd';
+import React from 'react';
+import { ProductCardProps } from '../interfaces/productsLanding';
 
-const ProductCard = ({ product, eventId, history }) => {
-  const calculateDiscountedPrice = () => {
-    if (product.discount > 0) {
-      const discountedPrice = product.price - (product.price * product.discount) / 100;
-      return discountedPrice;
-    }
-    return product.price;
+const ProductCard: React.FC<ProductCardProps> = ({ product, eventId, history }) => {
+  const calculateDiscountedPrice = (): number => {
+    const discountedPrice = product.discount > 0 ? product.price - (product.price * product.discount) / 100 : product.price;
+    return discountedPrice;
   };
-  const discountedPrice = calculateDiscountedPrice();
+  const discountedPrice = calculateDiscountedPrice();  
 
   return (
     <Badge.Ribbon text={product?.discount ? '-' + product?.discount + '%' : ''} color={product?.discount ? 'red': 'transparent'}>
@@ -26,10 +25,10 @@ const ProductCard = ({ product, eventId, history }) => {
         hoverable
         style={{ width: '100%', cursor: 'pointer', borderRadius: 10 }}
         bodyStyle={{ /* padding: '10px', */width: '100%', height: '160px'}}
-        key={product?.type + product?.id}
+        key={product?.type + product?._id}
         onClick={() => history.push(`/landing/${eventId}/producto/${product._id}/detailsproducts`)}
         cover={
-          <img
+          <img alt='imagen del producto'
             src={product && product.images && product.images[0]}
             style={{ height: '250px', objectFit: 'fill', backgroundColor: '#C4C4C440' }}
           />

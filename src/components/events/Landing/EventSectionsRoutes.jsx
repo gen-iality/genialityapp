@@ -32,7 +32,7 @@ const NetworkingForm = loadable(() => import('../../networking'));
 const InformativeSection2 = loadable(() => import('../informativeSections/informativeSection2'));
 const InformativeSection = loadable(() => import('../informativeSections/informativeSection'));
 const Noticias = loadable(() => import('../noticias'));
-const Productos = loadable(() => import('../producto/index'));
+const Productos = loadable(() => import('../producto/components/index'));
 const MessageRegister = loadable(() => import('../registrationForm/messageRegister'));
 const ListVideoCard = loadable(() => import('../../shared/listVideoCard'));
 const Videos = loadable(() => import('../videos'));

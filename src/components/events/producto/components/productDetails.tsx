@@ -1,33 +1,35 @@
 import { useState, useEffect } from 'react';
 import { Card, Col, Divider, Result, Row, Space, Spin, Statistic, Tag, Typography } from 'antd';
-import { withRouter } from 'react-router-dom';
-import { EventsApi } from '../../../helpers/request';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { EventsApi } from '@/helpers/request';
 import { IssuesCloseOutlined, TagsOutlined, PercentageOutlined } from '@ant-design/icons';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 // import { Carousel } from 'react-responsive-carousel';
-import { firestore } from '../../../helpers/firebase';
+import { firestore } from '@/helpers/firebase';
 import OfertaProduct from './OfertaProducto';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
 import 'swiper/swiper-bundle.css';
+import { Swiper as SwiperType } from 'swiper/types';
 
 // import required modules
 import { Navigation, Thumbs } from 'swiper';
 import { FormattedMessage } from 'react-intl';
+import { FirestoreConfigData, MatchParams, Product } from '../interfaces/productsLanding';
 
-function DetailsProduct(props) {
+function DetailsProduct(props: RouteComponentProps<MatchParams>) {
   const { Title, Text } = Typography;
-  const [product, setProduct] = useState();
-  const [loading, setLoading] = useState(true);
-  const [habilty, setHability] = useState();
-  const [messageF, setMessage] = useState('');
-  const [eventId, setEventId] = useState('');
-  const [updateValue, setUpdateValue] = useState();
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [product, setProduct] = useState<Product>({} as Product);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [habilty, setHability] =  useState<boolean>();
+  const [messageF, setMessage] = useState<string>('');
+  const [eventId, setEventId] = useState<string>('');
+  const [updateValue, setUpdateValue] = useState<boolean>();
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
-  const calculateDiscountedPrice = () => {
+  const calculateDiscountedPrice = (): number => {
     if (product && product.price) {
       if (product.discount && product.discount > 0) {
         const discountedPrice = product.price - (product.price * product.discount) / 100;      
@@ -41,18 +43,19 @@ function DetailsProduct(props) {
   };
 
   const priceWithDiscount = calculateDiscountedPrice();
-  const priceWithoutDiscount = product && product.price;
+  // const priceWithoutDiscount = product && product.price;
 
   //currency
   useEffect(() => {
     let idProduct = props.match.params.id;
     let eventId = props.match.params.event_id;
+    
     firestore
       .collection('config')
       .doc(eventId)
-      .onSnapshot((onSnapshot) => {
+      .onSnapshot((onSnapshot: any) => {
         if (onSnapshot.exists) {
-          let doc = onSnapshot.data();
+          let doc = onSnapshot.data() as FirestoreConfigData;
           setHability(doc.data.habilitar_subasta);
           setMessage(doc.data.message);
         } else {

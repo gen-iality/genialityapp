@@ -1,24 +1,25 @@
-import { useState } from 'react';
-import { EventsApi } from '../../../helpers/request';
-import withContext from '../../../context/withContext';
+import React, { useState } from 'react';
+import withContext from '@/context/withContext';
 import { useHistory } from 'react-router-dom';
 import { Card, Col, List, Result, Row } from 'antd';
 import { useEffect } from 'react';
 import ProductCard from './productCard';
+import { EventsApi } from '@/helpers/request';
+import { Product, ProductListProps } from '../interfaces/productsLanding';
 
-const ProductList = (props) => {
-  const [products, setProducts] = useState([]);
-  const [grid, setGrid] = useState(true);
+const ProductList: React.FC<ProductListProps> = (props) => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [grid, setGrid] = useState<boolean>(true);
   let history = useHistory();
 
   useEffect(() => {
     obtenerGaleria();
   }, []);
 
-  const obtenerGaleria = () => {
+  const obtenerGaleria = (): void => {
     EventsApi.getProducts(props.cEvent.value._id).then((resp) => {
       if (resp && resp.data) {
-        let listporductOrder = resp.data.sort((a, b) => a?.position - b?.position);
+        let listporductOrder= resp.data.sort((a: Product, b: Product) => a?.position - b?.position);
         setProducts(listporductOrder);
       }
     });
@@ -38,8 +39,8 @@ const ProductList = (props) => {
           }}
           style={{padding: 20}}
           dataSource={products}
-          renderItem={product => (
-            <List.Item style={{height: '100%'}} key={product.id}>
+          renderItem={(product: Product) => (
+            <List.Item style={{height: '100%'}} key={product._id}>
               <ProductCard history={history} eventId={props.cEvent.value._id} product={product}/>
             </List.Item>
           )}
