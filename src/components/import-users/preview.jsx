@@ -11,6 +11,7 @@ import {
   Modal,
   Space,
   Badge,
+  Checkbox,
 } from 'antd'
 import { UploadOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
@@ -28,6 +29,7 @@ class Preview extends Component {
       password: null,
       genericPassword: false,
       showMessage: false,
+      notifyToUsers: true,
     }
   }
 
@@ -347,6 +349,17 @@ class Preview extends Component {
         </Row>
         <br />
         <br />
+        <Checkbox
+          defaultChecked={this.state.notifyToUsers}
+          onChange={() => {
+            this.state.notifyToUsers = !this.state.notifyToUsers
+            console.log('this.state.notifyToUsers', this.state.notifyToUsers)
+          }}
+        >
+          Deseo notificar por correo a los usuarios
+        </Checkbox>
+        <br />
+        <br />
         <Button
           type="primary"
           icon={<UploadOutlined />}
@@ -355,7 +368,7 @@ class Preview extends Component {
             (this.state.password === '' || this.state.password === null)
           }
           onClick={() => {
-            this.props.importUsers(list, this.state.password)
+            this.props.importUsers(list, this.state.password, this.state.notifyToUsers)
           }}
         >
           Finalizar

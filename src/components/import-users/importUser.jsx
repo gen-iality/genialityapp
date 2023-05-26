@@ -29,7 +29,7 @@ class ImportUsers extends Component {
     }
   }
 
-  importUsers = (users, password) => {
+  importUsers = (users, password, notiftyToUsers) => {
     const self = this
     StateMessage.show(
       'loading',
@@ -43,6 +43,10 @@ class ImportUsers extends Component {
         genericPassword.push(password)
       }
       users.push({ key: 'password', list: genericPassword, used: true })
+    }
+
+    if (notiftyToUsers) {
+      //Enviar los correos
     }
 
     try {
