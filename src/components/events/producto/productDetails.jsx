@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Col, Divider, Result, Row, Space, Spin, Statistic, Typography } from 'antd';
+import { Card, Col, Divider, Result, Row, Space, Spin, Statistic, Tag, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { EventsApi } from '../../../helpers/request';
 import { IssuesCloseOutlined, TagsOutlined, PercentageOutlined } from '@ant-design/icons';
@@ -171,7 +171,7 @@ function DetailsProduct(props) {
                     value={priceWithDiscount}
                     valueStyle={{ color: '#52c41a' }}
                     prefix='$'
-                    suffix={<Typography.Text><small>-{product.discount}%</small></Typography.Text>}
+                    suffix={<Typography.Text><small><Tag color="red">-{product.discount}%</Tag></small></Typography.Text>}
                   />
                   : product.price && 
                     <Statistic
