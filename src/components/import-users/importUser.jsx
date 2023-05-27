@@ -18,6 +18,7 @@ class ImportUsers extends Component {
       list: [],
       toImport: [],
       password: '',
+      no_send_mail: false,
     }
   }
 
@@ -29,7 +30,12 @@ class ImportUsers extends Component {
     }
   }
 
-  importUsers = (users, password, notiftyToUsers) => {
+  onChangeCheckbox = () => {
+    this.setState({ no_send_mail: !this.state.no_send_mail })
+    console.log('this.state.no_send_mail', this.state.no_send_mail)
+  }
+
+  importUsers = (users, password) => {
     const self = this
     StateMessage.show(
       'loading',
@@ -43,10 +49,6 @@ class ImportUsers extends Component {
         genericPassword.push(password)
       }
       users.push({ key: 'password', list: genericPassword, used: true })
-    }
-
-    if (notiftyToUsers) {
-      //Enviar los correos
     }
 
     try {
@@ -135,6 +137,8 @@ class ImportUsers extends Component {
         eventId={this.props.eventId}
         importUsers={this.importUsers}
         extraFields={this.props.extraFields}
+        no_send_mail={this.state.no_send_mail}
+        onChangeCheckbox={this.onChangeCheckbox}
       />,
       <Result
         key={3}
@@ -143,6 +147,7 @@ class ImportUsers extends Component {
         extraFields={this.props.extraFields}
         organization={this.props.organization}
         locationParams={this.props.locationParams}
+        no_send_mail={this.state.no_send_mail}
       />,
     ]
     return (

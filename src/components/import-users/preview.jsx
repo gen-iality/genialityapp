@@ -29,7 +29,6 @@ class Preview extends Component {
       password: null,
       genericPassword: false,
       showMessage: false,
-      notifyToUsers: true,
     }
   }
 
@@ -350,13 +349,10 @@ class Preview extends Component {
         <br />
         <br />
         <Checkbox
-          defaultChecked={this.state.notifyToUsers}
-          onChange={() => {
-            this.state.notifyToUsers = !this.state.notifyToUsers
-            console.log('this.state.notifyToUsers', this.state.notifyToUsers)
-          }}
+          defaultChecked={this.props.no_send_mail}
+          onChange={this.props.onChangeCheckbox}
         >
-          Deseo notificar por correo a los usuarios
+          No deseo notificar por correo a los usuarios
         </Checkbox>
         <br />
         <br />
@@ -368,7 +364,7 @@ class Preview extends Component {
             (this.state.password === '' || this.state.password === null)
           }
           onClick={() => {
-            this.props.importUsers(list, this.state.password, this.state.notifyToUsers)
+            this.props.importUsers(list, this.state.password)
           }}
         >
           Finalizar
