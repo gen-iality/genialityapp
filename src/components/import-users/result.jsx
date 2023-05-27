@@ -89,7 +89,7 @@ class Result extends Component {
             const activityId = this.props.locationParams?.state?.activityId
             const activity = activityId ? `activity_id=${activityId}` : ''
             Actions.post(
-              `/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}/?${activity}`,
+              `/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}/?${activity}&no_send_mail=${this.props.no_send_mail}`,
               user,
             )
               .then((resp) => {
