@@ -7,6 +7,9 @@ import SurveyDetailPage from '../SurveyDetailPage'
 import RankingTrivia from '../rankingTrivia'
 import ThisRouteCanBeDisplayed from '../../Landing/helpers/thisRouteCanBeDisplayed'
 
+/**
+ * @deprecated It is not used by any other components
+ */
 function SurveyDrawer(props) {
   const cSurveys = useSurveysContext()
   const cUser = useCurrentUser()
