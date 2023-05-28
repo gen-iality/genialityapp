@@ -16,8 +16,8 @@ export interface ProductCardProps {
 // tipeo componente productDetails
 export interface MatchParams {
     id: string;
-    eventId:string
-    event_id:string
+    eventId: string;
+    event_id: string;
 }
 
 export interface Product {
@@ -29,7 +29,9 @@ export interface Product {
     type: string;
     position: number;
     description: string;
-    by:string;
+    by: string;
+    currency: string;
+    start_price: number;
 }
 // export interface Product {
 //     by: string;
@@ -50,5 +52,25 @@ export interface FirestoreConfigData {
 
 // tipeo productList
 export interface ProductListProps extends SizeContextProps {
-    cEvent: string;
+    cEvent: {
+        value: {
+            _id: string
+        };
+    }
+}
+//tipeo oferta producto 
+export interface OfertaProductProps {
+    product: Product;
+    eventId: string;
+    cEventUser: {
+        value: {
+            rol_id: string;
+        };
+    };
+    cUser: number;
+    hability: boolean;
+    messageF: string;
+    updateValues: () => void;
+    priceWithDiscount: number;
+    priceWithoutDiscount: number;
 }

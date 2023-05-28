@@ -1,14 +1,15 @@
 import { MinusOutlined, PlayCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, Alert, Spin } from 'antd';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { EventsApi } from '../../../helpers/request';
 import withContext from '../../../context/withContext';
 import { useEffect } from 'react';
 import { DispatchMessageService } from '../../../context/MessageService';
+import { OfertaProductProps } from '../interfaces/productsLanding';
 
 const { Title, Text } = Typography;
 
-const OfertaProduct = ({
+const OfertaProduct: React.FC<OfertaProductProps> = ({
   product,
   eventId,
   cEventUser,
@@ -19,14 +20,14 @@ const OfertaProduct = ({
   priceWithDiscount,
   priceWithoutDiscount,
 }) => {
-  const [selectedValue, setSelectedValue] = useState(100000);
-  const [loadingSave, setLoadingSave] = useState(false);
-  const [priceProduct, setPriceProduct] = useState(product && product.price);
-  const [valuOferta, setValueOferta] = useState(0);
+  const [selectedValue, setSelectedValue] = useState<number>(100000);
+  const [loadingSave, setLoadingSave] = useState<boolean>(false);
+  const [priceProduct, setPriceProduct] = useState<number>(product && product.price);
+  const [valuOferta, setValueOferta] = useState<number>(0);
   const [valorProduct, setValorProduct] = useState(valuOferta);
-  const [totalOferts, setTotalOferts] = useState(0);
-  const [isUsd, setUsd] = useState(false);
-  const [bloquerPuja, setBloquearPuja] = useState(false);
+  const [totalOferts, setTotalOferts] = useState<number>(0);
+  const [isUsd, setUsd] = useState<boolean>(false);
+  const [bloquerPuja, setBloquearPuja] = useState<boolean>(false);
 
   const obtenerValor = () => {
     return (
@@ -69,8 +70,8 @@ const OfertaProduct = ({
       let minValueUp = product.currency === 'USD' ? 50 : 100000;
       let valueOfertaMin =
         product._id === '6116cae171f4b926d1363266'
-          ? parseFloat(obtenerValor())
-          : parseFloat(obtenerValor()) + minValueUp;
+          ? parseFloat(obtenerValor().toString())
+          : parseFloat(obtenerValor().toString()) + minValueUp;
       setValueOferta(valueOfertaMin);
     }
     async function obtenerOfertas() {
@@ -126,9 +127,11 @@ const OfertaProduct = ({
     return false;
   };
   //ONCHANGE INPUT VALUE
-  const changeValor = (e) => {
-    setValueOferta(e.target.value);
+  const changeValor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseInt(e.target.value);
+    setValueOferta(newValue);
   };
+
   //SAVE VALUE OFERTA
   const saveValue = async () => {
     setLoadingSave(true);
@@ -152,7 +155,7 @@ const OfertaProduct = ({
                 msj: 'Oferta realizada correctamente..!',
                 action: 'show',
               });
-              updateValues(true);
+              // updateValues(true);
             }
           } else {
             let minValueUp = product.currency === 'USD' ? 50 : 100000;
