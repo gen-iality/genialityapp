@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import {
   Card,
@@ -16,7 +16,12 @@ import {
   Result,
 } from 'antd'
 import ReactPlayer from 'react-player'
-import { CheckCircleOutlined, StopOutlined, YoutubeFilled } from '@ant-design/icons'
+import {
+  CheckCircleOutlined,
+  LoadingOutlined,
+  StopOutlined,
+  YoutubeFilled,
+} from '@ant-design/icons'
 import useActivityType from '@context/activityType/hooks/useActivityType'
 import { useContext, useState } from 'react'
 import AgendaContext from '@context/AgendaContext'
@@ -27,6 +32,7 @@ import { urlErrorCodeValidation } from '@Utilities/urlErrorCodeValidation'
 import type { ActivityType } from '@context/activityType/types/activityType'
 import convertSecondsToHourFormat from '../../utils/convertSecondsToHourFormat'
 import { TypeDisplayment } from '@context/activityType/constants/enum'
+import { Actions } from '@helpers/request'
 
 interface VideoPreviewerCardProps {
   type: ActivityType.TypeAsDisplayment
@@ -37,7 +43,13 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
   const [duration, setDuration] = useState(0)
   const [errorOcurred, setErrorOcurred] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [vimeoVideoInProgress, setVimeoVideoInProgress] = useState(true)
+  const [isVisibleReactPlayer, setIsVisibleReactPlayer] = useState(false)
+  const [finalVideoURL, setFinalVideoURL] = useState<undefined | string>()
+  const [timeoutId, setTimeoutId] = useState<any>()
+
   let { contentSource: data } = useActivityType()
+
   const {
     roomStatus,
     setRoomStatus,
@@ -67,6 +79,17 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
         </>
       )
     const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data)
+
+    if (visibleReactPlayer && errorMessage && vimeoVideoInProgress) {
+      return (
+        <Result
+          status="info"
+          title="Postprocesando"
+          subTitle="El vídeo se está postprocesando..."
+          icon={<LoadingOutlined />}
+        />
+      )
+    }
 
     return (
       <>
@@ -158,6 +181,68 @@ const VideoPreviewerCard = (props: VideoPreviewerCardProps) => {
     console.debug('VideoPreviewerCard::onDuration:', duration)
     setDuration(duration)
   }
+
+  const getVimeoVideoIdFromVimeoLink = (vimeoLink: string): null | string => {
+    const url = new URL(vimeoLink)
+    const pathname = url.pathname
+    const parts = pathname.split('/')
+    const id = parts[parts.length - 1]
+    console.debug('got', id, 'from the link', vimeoLink)
+    return id
+  }
+
+  const askForVimeoVideoStatus = async (url: string) => {
+    const id = getVimeoVideoIdFromVimeoLink(url)
+    if (id) {
+      console.debug('start requesting...')
+
+      Actions.get(`api/vimeo/status?video_id=${id}`, true)
+        .then((data: any) => {
+          console.debug(`video status of ${id} is`, { data })
+
+          const status = JSON.parse(data.status)
+          if (status.transcode.status !== 'complete') {
+            // Wait some seconds and ask again
+            const _id = setTimeout(() => askForVimeoVideoStatus(url), 3000)
+            setTimeoutId(_id)
+          } else {
+            // It is complete, then stop asking
+            setVimeoVideoInProgress(false)
+            setErrorOcurred(false)
+            if (timeoutId) clearTimeout(timeoutId)
+            setTimeoutId(undefined)
+          }
+        })
+        .catch((err: any) => {
+          console.error(err)
+          setVimeoVideoInProgress(false) // Finish because, the error can be from other things
+          if (timeoutId) clearTimeout(timeoutId)
+          setTimeoutId(undefined)
+        })
+    } else {
+      setTimeoutId(undefined)
+    }
+  }
+
+  useEffect(() => {
+    if (!data) return
+    const { urlVideo, visibleReactPlayer } = obtainUrl(props.type, data)
+
+    setIsVisibleReactPlayer(visibleReactPlayer)
+    setFinalVideoURL(urlVideo)
+  }, [props.type, data])
+
+  useEffect(() => {
+    if (
+      !isVisibleReactPlayer ||
+      !errorMessage ||
+      !vimeoVideoInProgress ||
+      !finalVideoURL
+    ) {
+      return
+    }
+    if (!timeoutId && finalVideoURL) askForVimeoVideoStatus(finalVideoURL)
+  }, [isVisibleReactPlayer, errorMessage, vimeoVideoInProgress, finalVideoURL])
 
   return (
     <Card

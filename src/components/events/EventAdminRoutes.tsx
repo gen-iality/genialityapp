@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import Loading from '../loaders/loading'
 import { EventsApi } from '@helpers/request'
-import ListEventUser_Old from '../event-users/index.bad'
+import ListEventUser_Old from '../event-users/index'
 import ListEventUserPage from '../event-users/ListEventUserPage'
 import { fetchRol } from '../../redux/rols/actions'
 import { fetchPermissions } from '../../redux/permissions/actions'
@@ -96,7 +96,7 @@ const Protected: FunctionComponent<IProtected> = (props) => {
   )
 }
 
-class Event extends Component {
+class EventAdminRoutes extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -346,7 +346,7 @@ class Event extends Component {
                 render={() => <ReportNetworking event={event} />}
               />
               <Protected
-                path={`${match.url}/assistants.old`}
+                path={`${match.url}/assistants`}
                 event={event}
                 url={match.url}
                 render={() => (
@@ -354,7 +354,7 @@ class Event extends Component {
                 )}
               />
               <Protected
-                path={`${match.url}/assistants`}
+                path={`${match.url}/assistants.new`}
                 event={event}
                 url={match.url}
                 render={() => <ListEventUserPage event={event} parentUrl={match.url} />}
@@ -557,4 +557,4 @@ const mapStateToProps = (state) => ({
   error: state.rols.error,
 })
 
-export default connect(mapStateToProps)(withContext(withRouter(Event)))
+export default connect(mapStateToProps)(withContext(withRouter(EventAdminRoutes)))
