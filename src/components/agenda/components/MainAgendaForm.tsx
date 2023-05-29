@@ -45,7 +45,7 @@ import AgendaType from '@Utilities/types/AgendaType'
 
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 
-import Speaker from '../../speakers/speaker'
+import Speaker from '../../speakers/SpeakerEditPage'
 import useLoadExtraAgendaData from '../hooks/useLoadExtraAgendaData'
 import useHourWithAdditionalMinutes from '../hooks/useHourWithAdditionalMinutes'
 

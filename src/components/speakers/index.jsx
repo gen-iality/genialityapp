@@ -1,6 +1,6 @@
 import { Route, Switch, withRouter } from 'react-router-dom'
 import SpeakersList from './list'
-import Speaker from './speaker'
+import Speaker from './SpeakerEditPage'
 
 function Speakers({ ...props }) {
   const { eventID, matchUrl } = props
