@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
 import { Col, Row, Spin, Switch } from 'antd';
-import { withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 import ReactQuill from 'react-quill';
-import { toolbarEditor } from '../../helpers/constants';
-import { firestore } from '../../helpers/firebase';
-import Header from '../../antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
+import { toolbarEditor } from '@/helpers/constants';
+import { firestore } from '@/helpers/firebase';
+import Header from '@/antdComponents/Header';
+import { DispatchMessageService } from '@/context/MessageService';
+import { ConfigurationProps } from '../interface/productTypes';
 
-const Configuration = (props) => {
-  const [checkSubasta, setCheckSubasta] = useState(false);
-  const [messageF, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [loadingData, setLoadingData] = useState(true);
+const Configuration: React.FC<ConfigurationProps & RouteComponentProps> = (props) => {
+  const [checkSubasta, setCheckSubasta] = useState<boolean>(false);
+  const [messageF, setMessage] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingData, setLoadingData] = useState<boolean>(true);
 
   useEffect(() => {
     if (props.eventId) {
@@ -26,18 +26,18 @@ const Configuration = (props) => {
       if (resp.exists) {
         /* console.log('respuesta firebase=>', resp.data()); */
         let data = resp.data();
-        setCheckSubasta(data.data.habilitar_subasta);
-        setMessage(data.data.message);
+        setCheckSubasta(data?.data.habilitar_subasta);
+        setMessage(data?.data.message);
       }
       setLoadingData(false);
     }
   }, []);
 
   const goBack = () => props.history.goBack();
-  function onChange(checked) {
+  function onChange(checked: boolean) {
     setCheckSubasta(checked);
   }
-  const changeMessage = (e) => {
+  const changeMessage = (e: string) => {
     setMessage(e);
   };
 

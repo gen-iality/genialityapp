@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Table, Tooltip, Space, Button, Image, Modal, Typography, Row, Col } from 'antd';
+import { Table, Tooltip, Space, Button, Image, Modal, Typography, Row, Col, Tag, Statistic } from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
@@ -11,22 +11,22 @@ import {
 } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
-import { EventsApi } from '../../helpers/request';
-import Loading from '../loaders/loading';
-import { withRouter } from 'react-router-dom';
-import Header from '../../antdComponents/Header';
-import { DispatchMessageService } from '../../context/MessageService';
-import { UseEventContext } from '@/context/eventContext';
 import { HelperContext } from '@/context/helperContext/helperContext';
+import { EventsApi } from '@/helpers/request';
+import Loading from '@/components/loaders/loading';
+import Header from '@/antdComponents/Header';
+import { DispatchMessageService } from '@/context/MessageService';
+import { ProductData, ProductProps, ProductState } from '../interface/productTypes';
+import { withRouter } from 'react-router-dom';
 
 const { Column } = Table;
 const { confirm } = Modal;
 const { Paragraph } = Typography;
-const SortableItem = sortableElement((props) => <tr {...props} />);
-const SortableContainer = sortableContainer((props) => <tbody {...props} />);
+const SortableItem = sortableElement((props: any) => <tr {...props} />);
+const SortableContainer = sortableContainer((props: any) => <tbody {...props} />);
 
-class Product extends Component {
-  constructor(props) {
+class Product extends Component<ProductProps, ProductState> {
+  constructor(props: ProductProps) {
     super(props);
     this.state = {
       list: [],
@@ -36,7 +36,7 @@ class Product extends Component {
   }
   static contextType = HelperContext;
   //DRAG TABLE
-  DraggableContainer = (props) => (
+  DraggableContainer = (props: any) => (
     <SortableContainer
       useDragHandle
       disableAutoscroll
@@ -45,20 +45,21 @@ class Product extends Component {
       {...props}
     />
   );
-  DraggableBodyRow = ({ className, style, ...restProps }) => {
+  DraggableBodyRow = ({ className, style, ...restProps }: any) => {
     const { list } = this.state;
     // function findIndex base on Table rowKey props and should always be a right array index
     const index = list.findIndex((x) => x.index === restProps['data-row-key']);
     return <SortableItem index={index} {...restProps} />;
   };
 
-  onSortEnd = ({ oldIndex, newIndex }) => {
+  onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
     const { list } = this.state;
     if (oldIndex !== newIndex) {
-      let newData = arrayMove([].concat(list), oldIndex, newIndex).filter((el) => !!el);
+      let newData = arrayMove([...list], oldIndex, newIndex).filter((el) => !!el);
       if (newData) {
-        newData = newData.map((product, key) => {
-          return { ...product, index: key };
+        newData = newData.map((product: ProductData) => {
+          const index = newData.indexOf(product);
+          return { ...product, index };
         });
       }
       this.setState({ list: newData });
@@ -74,11 +75,11 @@ class Product extends Component {
 
     let listproduct = [];
     if (data.data) {
-      listproduct = data.data.sort((a, b) => (a.position && b.position ? a.position - b.position : true));
-      listproduct = listproduct.map((product, index) => {
-        return { ...product, index: product.position == index ? product.position : index };
+      listproduct = data.data.sort((a: any, b: any) => (a.position && b.position ? a.position - b.position : true));
+      listproduct = listproduct.map((product: any, index: number) => {
+        return { ...product, index: product.position === index ? product.position : index };
       });
-      listproduct = listproduct.sort((a, b) => a.index - b.index);
+      listproduct = listproduct.sort((a: any, b: any) => a.index - b.index);
       this.setState({ list: listproduct, loading: false });
     }
   };
@@ -121,18 +122,43 @@ class Product extends Component {
     }
   };
 
-  editProduct = (cert) => {
+  editProduct = (cert: any) => {
     this.props.history.push(`/eventadmin/${this.props.eventId}/product/addproduct/${cert._id}`);
   };
-
-  removeProduct = (data) => {
+  removeProduct = (data: ProductData) => {
     DispatchMessageService({
       type: 'loading',
       key: 'loading',
       msj: ' Por favor espere mientras se borra la configuración...',
       action: 'show',
     });
-    let self = this;
+
+    const onHandlerRemove = async () => {
+      try {
+        await EventsApi.deleteProduct(data._id, data.event_id);
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'success',
+          msj: 'Producto eliminado correctamente',
+          action: 'show',
+        });
+        this.fetchItem();
+      } catch (e) {
+        DispatchMessageService({
+          key: 'loading',
+          action: 'destroy',
+        });
+        DispatchMessageService({
+          type: 'error',
+          msj: 'el producto no pudo ser eliminado intente nuevamente',
+          action: 'show',
+        });
+      }
+    };
+
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -142,38 +168,18 @@ class Product extends Component {
       cancelText: 'Cancelar',
       onOk() {
         return new Promise((resolve, reject) => {
-          EventsApi.deleteProduct(data._id, data.event_id).then((res) => {
-            self.fetchItem();
-            if (res === 1) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Producto eliminado correctamente',
-                action: 'show',
-              });
+          onHandlerRemove()
+            .then(() => {
               resolve(true);
-            } else {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              });
+            })
+            .catch(() => {
               DispatchMessageService({
                 type: 'error',
-                msj: 'Lo sentimos el producto no pudo ser eliminado intente nuevamente',
+                msj: 'Lo sentimos no hay respuesta del servidor',
                 action: 'show',
               });
               reject(false);
-            }
-          });
-        }).catch(() => {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Lo sentimos no hay respuesta del servidor',
-            action: 'show',
-          });
+            });
         });
       },
       onCancel() {},
@@ -189,6 +195,17 @@ class Product extends Component {
   };
 
   goBack = () => this.props.history.goBack();
+
+  calculateDiscountedPrice = (product: any) => {
+    if (product && product.price) {
+      if (product.discount && product.discount > 0) {
+        const discountedPrice = product.price - (product.price * product.discount) / 100;
+        return discountedPrice;
+      }
+      return product.price;
+    }
+    return 0;
+  };
 
   render() {
     const { eventIsActive } = this.context;
@@ -233,12 +250,12 @@ class Product extends Component {
                 row: this.DraggableBodyRow,
               },
             }}>
-            <Column
+            <Table.Column
               title=''
               dataIndex='move'
               width='50px'
               align='center'
-              render={(data, index) => {
+              render={(data: any, index: any) => {
                 const DragHandle = sortableHandle(() => (
                   <DragOutlined
                     id={`drag${index.index}`}
@@ -248,34 +265,35 @@ class Product extends Component {
                 return !eventIsActive && window.location.toString().includes('eventadmin') ? null : <DragHandle />;
               }}
             />
-            <Column
+            <Table.Column
               title='Posición'
               align='center'
               dataIndex='index'
               width='80px'
-              render={(data, index) => <div>{data + 1}</div>}
+              render={(data: any, index: any) => <div>{data + 1}</div>}
             />
-            <Column
+            <Table.Column
               key='_id'
               title='Imagen'
               align='center'
-              /* width='90px' */
-              render={(data, index) => (
+              width='200px'
+              render={(data: any, index: any) => (
                 <Space key={index} size='small'>
-                  {data.image &&
-                    Array.isArray(data.image) &&
-                    data.image.map((images, index) => {
-                      return <Image key={index} width={70} src={images} />;
+                  {data.images &&
+                    Array.isArray(data.images) &&
+                    data.images.map((image: any, index: any) => {
+                      return image && <Image key={index} width={70} height={70} src={image} />;
                     })}
                 </Space>
               )}
             />
-            <Column
+            <Table.Column
               key='_id'
               title='Nombre'
               /* align='center' */
-              sorter={(a, b) => a.name.localeCompare(b.name)}
-              render={(data) => (
+              width='300px'
+              sorter={(a: any, b: any) => a.name.localeCompare(b.name)}
+              render={(data: any) => (
                 <Paragraph
                   ellipsis={{
                     rows: 3,
@@ -286,32 +304,56 @@ class Product extends Component {
                 </Paragraph>
               )}
             />
-            <Column
-              key='_id'
-              title='Por'
-              /* align='center' */
-              width='120px'
-              dataIndex='by'
-              ellipsis={true}
-              sorter={(a, b) => a.by?.localeCompare(b.by)}
-            />
-            <Column
+            <Table.Column
               key='_id'
               title='Valor'
-              /* align='center' */
               width='120px'
               dataIndex='price'
-              render={(data, prod) => <div>$ {prod.price}</div>}
+              render={(data: any, product: any) =>
+                product.discount ? (
+                  <Statistic
+                    title={<Typography.Text delete>$ {new Intl.NumberFormat().format(product.price)}</Typography.Text>}
+                    value={this.calculateDiscountedPrice(product)}
+                    valueStyle={{ color: '#52c41a' }}
+                    prefix='$'
+                    suffix={
+                      <Typography.Text>
+                        <small>
+                          <Tag color='red'>-{product.discount}%</Tag>
+                        </small>
+                      </Typography.Text>
+                    }
+                  />
+                ) : (
+                  <Statistic
+                    title={<Typography.Text style={{ color: 'transparent' }}>Valor del producto</Typography.Text>}
+                    value={product.price}
+                    valueStyle={{ color: '#52c41a' }}
+                    prefix='$'
+                  />
+                )
+              }
               ellipsis={true}
             />
+            {/*  <Table.Column
+              key='_id'
+              title='Descuento'
+              // align='center'
+              width='120px'
+              render={(data: any, index: any) => (
+                <Space key={index} size='small'>
+                  {data.discount ? <Tag color='red'>{data.discount}%</Tag> : <Tag color='default'>Sin descuento</Tag>}
+                </Space>
+              )}
+            /> */}
             {/* <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" .concat((data || prod?.price)?" $ "+prod?.price:"").concat((prod?.start_price|| prod?.price||''))}</div>)} /> */}
-            <Column
+            <Table.Column
               title='Opciones'
               key='_id'
               align='center'
               fixed='right'
               width={150}
-              render={(data, index) => {
+              render={(data: any, index: any) => {
                 return (
                   <Space key={index} size='small'>
                     <Tooltip key={index} placement='topLeft' title='Editar'>
@@ -329,7 +371,7 @@ class Product extends Component {
                         key={index}
                         id={`removeAction${index.index}`}
                         onClick={() => this.removeProduct(data)}
-                        type='danger'
+                        danger
                         icon={<DeleteOutlined /* style={{ fontSize: 25 }} */ />}
                         size='small'
                         disabled={!eventIsActive && window.location.toString().includes('eventadmin')}

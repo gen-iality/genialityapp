@@ -37,14 +37,17 @@ export const handleImageName = (imageUrl: string) => {
   }
 };
 
-export const renderTypeImage = (name: string, imageFile: []): any => {
+interface ImageFile {
+  name: string;
+  file: File | null;
+}
+export const renderTypeImage = (name: string, imageFile: ImageFile[]): any => {
   const imageFilter: any = imageFile && imageFile.filter((image: any) => image.name === name);
   if (imageFilter.length > 0) {
     return imageFilter[0].file;
   }
 };
-
-export const removeObjectFromArray = (name: string, array: [], callback: (data: any) => void) => {
+export const removeObjectFromArray = (name: string, array: ImageFile[], callback: (data: any) => void) => {
   let filtered = array.filter((item: any) => item.name !== name);
   callback(filtered);
 };
