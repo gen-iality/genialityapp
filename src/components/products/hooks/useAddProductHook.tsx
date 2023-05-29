@@ -46,10 +46,10 @@ export default function useAddProductHook(props: useAddProductHookProps) {
         setDescription(product.description || '');
         setPicture(product.images && product.images[0] ? product.images[0] : defaultImage);
         setImgFile([
-          { name: 'Imagen', file: product.images[0] },
+          { name: 'Imagen', file: product.images && product.images[0] ? product.images[0] : defaultImage },
           { name: 'img_optional', file: product.images[1] },
         ]);
-        setOptionalPicture(product.images && product.images[1] ? product.images[1] : defaultImage);
+        setOptionalPicture(product.images && product.images[1] ? product.images[1] : null);
         setPrice(product.price);
         setIsLoading(false);
       });
