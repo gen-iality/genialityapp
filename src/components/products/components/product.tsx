@@ -127,45 +127,45 @@ class Product extends Component<ProductProps, ProductState> {
   };
   removeProduct = (data: ProductData) => {
     DispatchMessageService({
-      type: "loading",
-      key: "loading",
-      msj: " Por favor espere mientras se borra la configuración...",
-      action: "show",
+      type: 'loading',
+      key: 'loading',
+      msj: ' Por favor espere mientras se borra la configuración...',
+      action: 'show',
     });
-  
+
     const onHandlerRemove = async () => {
       try {
         await EventsApi.deleteProduct(data._id, data.event_id);
         DispatchMessageService({
-          key: "loading",
-          action: "destroy",
+          key: 'loading',
+          action: 'destroy',
         });
         DispatchMessageService({
-          type: "success",
-          msj: "Producto eliminado correctamente",
-          action: "show",
+          type: 'success',
+          msj: 'Producto eliminado correctamente',
+          action: 'show',
         });
         this.fetchItem();
       } catch (e) {
         DispatchMessageService({
-          key: "loading",
-          action: "destroy",
+          key: 'loading',
+          action: 'destroy',
         });
         DispatchMessageService({
-          type: "error",
-          msj: "el producto no pudo ser eliminado intente nuevamente",
-          action: "show",
+          type: 'error',
+          msj: 'el producto no pudo ser eliminado intente nuevamente',
+          action: 'show',
         });
       }
     };
-  
+
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
-      content: "Está seguro de borrar este producto?",
-      okText: "Borrar",
-      okType: "danger",
-      cancelText: "Cancelar",
+      content: 'Está seguro de borrar este producto?',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
       onOk() {
         return new Promise((resolve, reject) => {
           onHandlerRemove()
@@ -174,9 +174,9 @@ class Product extends Component<ProductProps, ProductState> {
             })
             .catch(() => {
               DispatchMessageService({
-                type: "error",
-                msj: "Lo sentimos no hay respuesta del servidor",
-                action: "show",
+                type: 'error',
+                msj: 'Lo sentimos no hay respuesta del servidor',
+                action: 'show',
               });
               reject(false);
             });
@@ -185,62 +185,6 @@ class Product extends Component<ProductProps, ProductState> {
       onCancel() {},
     });
   };
-  
-
-  // removeProduct = (data: ProductData) => {
-  //   DispatchMessageService({
-  //     type: 'loading',
-  //     key: 'loading',
-  //     msj: ' Por favor espere mientras se borra la configuración...',
-  //     action: 'show',
-  //   });
-  //   let self = this;
-  //   confirm({
-  //     title: `¿Está seguro de eliminar la información?`,
-  //     icon: <ExclamationCircleOutlined />,
-  //     content: 'Está seguro de borrar este producto?',
-  //     okText: 'Borrar',
-  //     okType: 'danger',
-  //     cancelText: 'Cancelar',
-  //     onOk() {
-  //       return new Promise((resolve, reject) => {
-  //         EventsApi.deleteProduct(data._id, data.event_id).then((res) => {
-  //           self.fetchItem();
-  //           if (res === 1) {
-  //             DispatchMessageService({
-  //               key: 'loading',
-  //               action: 'destroy',
-  //             });
-  //             DispatchMessageService({
-  //               type: 'success',
-  //               msj: 'Producto eliminado correctamente',
-  //               action: 'show',
-  //             });
-  //             resolve(true);
-  //           } else {
-  //             DispatchMessageService({
-  //               key: 'loading',
-  //               action: 'destroy',
-  //             });
-  //             DispatchMessageService({
-  //               type: 'error',
-  //               msj: 'Lo sentimos el producto no pudo ser eliminado intente nuevamente',
-  //               action: 'show',
-  //             });
-  //             reject(false);
-  //           }
-  //         });
-  //       }).catch(() => {
-  //         DispatchMessageService({
-  //           type: 'error',
-  //           msj: 'Lo sentimos no hay respuesta del servidor',
-  //           action: 'show',
-  //         });
-  //       });
-  //     },
-  //     onCancel() {},
-  //   });
-  // };
 
   newProduct = () => {
     this.props.history.push(`/eventadmin/${this.props.eventId}/product/addproduct`);
@@ -255,7 +199,7 @@ class Product extends Component<ProductProps, ProductState> {
   calculateDiscountedPrice = (product: any) => {
     if (product && product.price) {
       if (product.discount && product.discount > 0) {
-        const discountedPrice = product.price - (product.price * product.discount) / 100;      
+        const discountedPrice = product.price - (product.price * product.discount) / 100;
         return discountedPrice;
       }
       return product.price;
@@ -362,38 +306,36 @@ class Product extends Component<ProductProps, ProductState> {
             />
             <Table.Column
               key='_id'
-              title='Por'
-              /* align='center' */
-              width='180px'
-              dataIndex='by'
-              ellipsis={true}
-              sorter={(a: any, b: any) => a.by?.localeCompare(b.by)}
-            />
-            <Table.Column
-              key='_id'
               title='Valor'
-              /* align='center' */
               width='120px'
               dataIndex='price'
-              render={(data: any, product: any) => product.discount ?
-                <Statistic
-                  title={<Typography.Text delete>$ {new Intl.NumberFormat().format(product.price)}</Typography.Text>}
-                  value={this.calculateDiscountedPrice(data)}
-                  valueStyle={{ color: '#52c41a' }}
-                  prefix='$'
-                  suffix={<Typography.Text><small><Tag color="red">-{product.discount}%</Tag></small></Typography.Text>}
-                />
-                :  
+              render={(data: any, product: any) =>
+                product.discount ? (
                   <Statistic
-                    title={<Typography.Text style={{color: 'transparent'}}>Valor del producto</Typography.Text>}
+                    title={<Typography.Text delete>$ {new Intl.NumberFormat().format(product.price)}</Typography.Text>}
+                    value={this.calculateDiscountedPrice(product)}
+                    valueStyle={{ color: '#52c41a' }}
+                    prefix='$'
+                    suffix={
+                      <Typography.Text>
+                        <small>
+                          <Tag color='red'>-{product.discount}%</Tag>
+                        </small>
+                      </Typography.Text>
+                    }
+                  />
+                ) : (
+                  <Statistic
+                    title={<Typography.Text style={{ color: 'transparent' }}>Valor del producto</Typography.Text>}
                     value={product.price}
                     valueStyle={{ color: '#52c41a' }}
                     prefix='$'
                   />
+                )
               }
               ellipsis={true}
             />
-           {/*  <Table.Column
+            {/*  <Table.Column
               key='_id'
               title='Descuento'
               // align='center'

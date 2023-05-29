@@ -3,6 +3,8 @@ import { RouteComponentProps } from "react-router";
 //tipeo agregar producto 
 export interface RouteParams {
     id: string;
+    eventId: string;
+    event_id: string;
 }
 export interface Validators {
     price: boolean;
@@ -12,6 +14,9 @@ export interface Validators {
     picture: boolean;
 }
 export interface AddProductProps extends RouteComponentProps<RouteParams> {
+    eventId: string;
+}
+export interface useAddProductHookProps extends RouteComponentProps<RouteParams> {
     eventId: string;
 }
 
@@ -42,7 +47,7 @@ export interface OfertProdutsProps extends RouteComponentProps {
     match: any;
 }
 //tipeo productos 
-export interface ProductProps extends RouteComponentProps<RouteParams>  {
+export interface ProductProps extends RouteComponentProps<RouteParams> {
     eventId: string;
 }
 
