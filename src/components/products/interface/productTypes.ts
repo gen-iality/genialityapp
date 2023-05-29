@@ -22,7 +22,7 @@ export interface useAddProductHookProps extends RouteComponentProps<RouteParams>
 
 export interface ImageFile {
     name: string;
-    file: File | null | string;
+    file: File | any ;
 }
 
 export interface Product {
