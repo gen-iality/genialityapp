@@ -17,7 +17,7 @@ export interface AddProductProps extends RouteComponentProps<RouteParams> {
 
 export interface ImageFile {
     name: string;
-    file: File | null;
+    file: File | null | string;
 }
 
 export interface Product {
