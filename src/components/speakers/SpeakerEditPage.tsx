@@ -1,5 +1,5 @@
-import { FunctionComponent, useEffect, useState } from 'react'
-import { Redirect, withRouter } from 'react-router-dom'
+import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
+import { Redirect, useHistory, useLocation } from 'react-router-dom'
 import EviusReactQuill from '../shared/eviusReactQuill'
 import { fieldsSelect, handleRequestError, handleSelect } from '@helpers/utils'
 import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '@helpers/request'
@@ -25,19 +25,31 @@ const formLayout = {
   wrapperCol: { span: 24 },
 }
 
-interface ISpeakerEditPageProps {}
+type SpeakerDataType = {
+  name: string
+  description: string
+  description_activity: boolean
+  profession: string
+  published: boolean
+  image: string | null
+  order: number
+  category_id: string
+  index: number
+  newItem: boolean
+  phone?: any
+}
+
+interface ISpeakerEditPageProps {
+  eventID: string
+  parentUrl: string
+  justCreate?: boolean
+  onCreated?: () => void
+}
 
 const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
-  const {
-    eventID,
-    location: { state },
-    history,
-    parentUrl,
-    justCreate,
-  } = props
-  const match = parentUrl.split('/').slice(0)[1]
+  const { eventID, parentUrl, justCreate } = props
 
-  const [data, setData] = useState({
+  const [data, setData] = useState<SpeakerDataType>({
     name: '',
     description: '',
     description_activity: false,
@@ -51,15 +63,18 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
   })
   const [showDescription_activity, setShowDescription_activity] = useState(false)
   const [redirect, setRedirect] = useState(false)
-  const [categories, setCategories] = useState([])
-  const [selectedCategories, setSelectedCategories] = useState([])
+  const [categories, setCategories] = useState<any[]>([])
+  const [selectedCategories, setSelectedCategories] = useState<any>([])
   const [isloadingSelect, setIsloadingSelect] = useState({
     types: true,
     categories: true,
   })
-  const [event, setEvent] = useState()
+  const [event, setEvent] = useState<any>()
   const [areacodeselected, setareacodeselected] = useState(57)
   const [editDataIsLoading, setEditDataIsLoading] = useState(true)
+
+  const { state } = useLocation<any>()
+  const history = useHistory()
 
   useEffect(() => {
     dataTheLoaded()
@@ -94,41 +109,31 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
         })
       }
     }
-    const isloadingSelectChanged = { types: '', categories: '' }
+    const isloadingSelectChanged = { types: false, categories: false }
 
     setCategories(categoriesData)
     setIsloadingSelect(isloadingSelectChanged)
     setEditDataIsLoading(false)
   }
 
-  function handleChange(e) {
-    const { name } = e.target
-    const { value } = e.target
-    setData({
-      ...data,
-      [name]: value,
-    })
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target
+    setData({ ...data, [name]: value })
   }
 
-  function chgTxt(content) {
+  function changeDescriptionText(content: string) {
     let description = content
     if (description === '<p><br></p>') {
       description = ''
     }
-    setData({
-      ...data,
-      description,
-    })
+    setData({ ...data, description })
   }
 
-  async function handleImage(imageUrl) {
-    setData({
-      ...data,
-      image: imageUrl,
-    })
+  async function handleImage(imageUrl: string) {
+    setData({ ...data, image: imageUrl })
   }
 
-  async function submit(values) {
+  async function submit(values: any) {
     if (values.name) {
       StateMessage.show(
         'loading',
@@ -155,7 +160,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
         else await SpeakersApi.create(eventID, body)
         StateMessage.destroy('loading')
         StateMessage.show(null, 'success', 'Conferencista guardado correctamente!')
-        if (!justCreate) history.push(`/${match}/${eventID}/speakers`)
+        if (!justCreate) history.push(parentUrl)
         else if (props.onCreated) props.onCreated()
       } catch (e) {
         StateMessage.destroy('loading')
@@ -205,12 +210,12 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
   }
 
   //FN para guardar en el estado la opcion seleccionada
-  function selectCategory(selectedCategories) {
+  function selectCategory(selectedCategories: any) {
     setSelectedCategories(selectedCategories)
   }
 
   //FN para ir a una ruta específica (ruedas en los select)
-  function goSection(path, state) {
+  function goSection(path: string, state: any) {
     history.push(path, state)
   }
 
@@ -236,7 +241,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
     </Select>
   )
 
-  if (!props.location.state || redirect) return <Redirect to={parentUrl} />
+  if (!state || redirect) return <Redirect to={parentUrl} />
 
   return (
     <Form onFinish={() => submit(data)} {...formLayout}>
@@ -252,7 +257,6 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
             <Switch
               checkedChildren="Sí"
               unCheckedChildren="No"
-              name="published"
               checked={data.published}
               onChange={(checked) =>
                 setData({
@@ -365,7 +369,7 @@ const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
                   id="description"
                   name="description"
                   data={data.description}
-                  handleChange={chgTxt}
+                  handleChange={changeDescriptionText}
                   style={{ marginTop: '5px' }}
                 />
               )}

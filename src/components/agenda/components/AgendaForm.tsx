@@ -309,7 +309,7 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
             >
               <SpeakerEditPage
                 eventID={props.event._id}
-                matchUrl={props.matchUrl}
+                parentUrl={props.matchUrl}
                 onCreated={() => {
                   const loading = async () => {
                     const incommingHosts = await SpeakersApi.byEvent(props.event._id)
