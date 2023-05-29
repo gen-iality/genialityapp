@@ -33,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, eventId, history }) 
             src={product && product.images && product.images[0]}
             style={{ height: '250px', objectFit: 'fill', backgroundColor: '#C4C4C440' }}
           /> : 
-          <Empty description={'Sin imagen'} />
+          <Empty style={{height: '250px', display: 'grid', justifyContent: 'center', alignItems: 'center' }} description={'Sin imagen'} />
         }>
         <Card.Meta
           description={
