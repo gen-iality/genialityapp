@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { FunctionComponent, useEffect, useState } from 'react'
 import { Redirect, withRouter } from 'react-router-dom'
 import EviusReactQuill from '../shared/eviusReactQuill'
 import { fieldsSelect, handleRequestError, handleSelect } from '@helpers/utils'
@@ -25,7 +25,9 @@ const formLayout = {
   wrapperCol: { span: 24 },
 }
 
-function Speaker(props) {
+interface ISpeakerEditPageProps {}
+
+const SpeakerEditPage: FunctionComponent<ISpeakerEditPageProps> = (props) => {
   const {
     eventID,
     location: { state },
@@ -390,9 +392,4 @@ const dot = (color = 'transparent') => ({
   },
 })
 
-const catStyles = {
-  menu: (styles) => ({ ...styles, maxHeight: 'inherit' }),
-  multiValue: (styles, { data }) => ({ ...styles, ...dot(data.item.color) }),
-}
-
-export default withRouter(Speaker)
+export default SpeakerEditPage
