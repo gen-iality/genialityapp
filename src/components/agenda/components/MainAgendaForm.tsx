@@ -45,7 +45,7 @@ import AgendaType from '@Utilities/types/AgendaType'
 
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 
-import Speaker from '../../speakers/speaker'
+import SpeakerEditPage from '../../speakers/SpeakerEditPage'
 import useLoadExtraAgendaData from '../hooks/useLoadExtraAgendaData'
 import useHourWithAdditionalMinutes from '../hooks/useHourWithAdditionalMinutes'
 
@@ -487,9 +487,9 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                   onCancel={() => setIsSpeakerModalShown(false)}
                   okButtonProps={{ disabled: true }}
                 >
-                  <Speaker
+                  <SpeakerEditPage
                     eventID={props.event._id}
-                    matchUrl={props.matchUrl}
+                    parentUrl={props.matchUrl}
                     onCreated={() => {
                       const loading = async () => {
                         const incommingHosts = await SpeakersApi.byEvent(props.event._id)

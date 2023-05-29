@@ -201,7 +201,10 @@ function SpeakersList(props) {
   }
 
   const columnsData = {
-    data: props,
+    data: {
+      ...props,
+      matchUrl: props.parentUrl,
+    },
     searchedColumn: searchedColumn,
     handleSearch,
     handleReset,

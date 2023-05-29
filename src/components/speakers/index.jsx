@@ -1,6 +1,6 @@
 import { Route, Switch, withRouter } from 'react-router-dom'
 import SpeakersList from './list'
-import Speaker from './speaker'
+import SpeakerEditPage from './SpeakerEditPage'
 
 function Speakers({ ...props }) {
   const { eventID, matchUrl } = props
@@ -14,7 +14,7 @@ function Speakers({ ...props }) {
       <Route
         exact
         path={`${matchUrl}/speaker`}
-        render={() => <Speaker eventID={eventID} parentUrl={matchUrl} />}
+        render={() => <SpeakerEditPage eventID={eventID} parentUrl={matchUrl} />}
       />
     </Switch>
   )
