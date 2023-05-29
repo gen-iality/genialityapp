@@ -57,12 +57,8 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
               <Col xs={24} sm={24} md={16} lg={16} xl={16} xxl={16}>
                 <Card hoverable style={{ borderRadius: 20 }}>
                   <Form.Item
-                    label={
-                      <label style={{ marginTop: '2%' }}>
-                        Nombre del producto <label style={{ color: 'red' }}>*</label>
-                      </label>
-                    }
-                    rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]}>
+                    label={'Nombre del producto'}
+                    rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]} required>
                     <Input
                       value={name as string}
                       placeholder='Nombre del producto'
@@ -73,7 +69,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
                       <small style={{ color: 'red' }}>El nombre del producto es requerido</small>
                     )}
                   </Form.Item>
-                  <Form.Item label={<label style={{ marginTop: '2%' }}>Vendedor</label>} rules={[{ required: false }]}>
+                  <Form.Item label={'Vendedor'} rules={[{ required: false }]}>
                     <Input
                       value={creator}
                       placeholder='Nombre del autor, creador o descripción corta'
@@ -83,11 +79,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
                     {error != null && error.creator && <small style={{ color: 'red' }}>Este campo es requerido</small>}
                   </Form.Item>
                   <Form.Item
-                    label={
-                      <label style={{ marginTop: '2%' }}>
-                        Descripción <label style={{ color: 'red' }}>*</label>
-                      </label>
-                    }>
+                    label={'Descripción'} rules={[{ required: true }]} required>
                     <EviusReactQuill data={description} id={'descriptionProduct'} handleChange={changeDescription} />
                     {error != null && error.description && (
                       <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
@@ -98,7 +90,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
               <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Card hoverable style={{ borderRadius: 20 }}>
                   <Form.Item
-                    label={<label style={{ marginTop: '2%' }}>Valor</label>}
+                    label={'Valor'}
                     rules={[{ required: false, message: 'Ingrese el valor del producto' }]}>
                     <Input
                       value={price}
@@ -107,13 +99,12 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
                       onChange={(e: ChangeEvent<HTMLInputElement>) => changeInput(e, 'price')}
                     />
                   </Form.Item>
-                  <Form.Item>
-                    <label style={{ marginTop: '2%', marginRight: '5px' }}>Habilitar descuento</label>
+                  <Form.Item label={'Habilitar descuento'}>
                     <Switch checked={discountEnabled} onChange={handleDiscountEnabledChange} />
                   </Form.Item>
                   {discountEnabled && (
                     <Form.Item
-                      label={<label style={{ marginTop: '2%' }}>Descuento</label>}
+                      label={'Descuento'}
                       rules={[{ required: false }]}>
                       <InputNumber
                         defaultValue={discount ? discount : 100}
@@ -132,10 +123,7 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
           <Tabs.TabPane tab={<Typography.Text>Carga de imagenes</Typography.Text>} key='2'>
             <Row gutter={[16, 16]}>
               <Col span={12}>
-                <Card hoverable style={{ borderRadius: 20 }}>
-                  <label style={{ marginTop: '2%' }}>
-                    Imagen <label style={{ color: 'red' }}>*</label>
-                  </label>
+                <Form.Item label='Imagen' rules={[{ required: true }]} required>
                   <ImageUploaderDragAndDrop
                     imageDataCallBack={(file: any) => changeImg(file, 'Imagen')}
                     imageUrl={picture !== null ? (picture as string) : ''}
@@ -143,18 +131,17 @@ const AddProduct: React.FC<AddProductProps> = (props) => {
                     height='1080'
                   />
                   {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
-                </Card>
+                </Form.Item>
               </Col>
               <Col span={12}>
-                <Card hoverable style={{ borderRadius: 20 }}>
-                  <label style={{ marginTop: '2%' }}>Imagen opcional</label>
+                <Form.Item label={'Imagen opcional'}>
                   <ImageUploaderDragAndDrop
                     imageDataCallBack={(file: any) => changeImg(file, 'img_optional')}
                     imageUrl={optionalPicture}
                     width='1080'
                     height='1080'
                   />
-                </Card>
+                </Form.Item>
               </Col>
             </Row>
           </Tabs.TabPane>

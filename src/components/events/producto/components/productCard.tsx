@@ -1,4 +1,4 @@
-import { Badge, Card, Space, Statistic, Typography } from 'antd';
+import { Badge, Card, Empty, Space, Statistic, Typography } from 'antd';
 import React from 'react';
 import { ProductCardProps } from '../interfaces/productsLanding';
 
@@ -28,10 +28,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, eventId, history }) 
         key={product?.type + product?._id}
         onClick={() => history.push(`/landing/${eventId}/producto/${product._id}/detailsproducts`)}
         cover={
+          product && product.images && product.images[0] ?
           <img alt='imagen del producto'
             src={product && product.images && product.images[0]}
             style={{ height: '250px', objectFit: 'fill', backgroundColor: '#C4C4C440' }}
-          />
+          /> : 
+          <Empty description={'Sin imagen'} />
         }>
         <Card.Meta
           description={
