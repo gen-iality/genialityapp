@@ -432,7 +432,7 @@ export const UsersApi = {
   mineOrdes: async (id) => {
     return await Actions.getAll(`/api/users/${id}/orders`)
   },
-  createOne: async (data, id) => {
+  createOne: async (data, id, noSendEmail) => {
     //Este primero es que deberia estar pero no sirve
     //return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`, data);
     /** Se envia token para validar si el rol es cambiado por un damin */
@@ -444,8 +444,17 @@ export const UsersApi = {
       token = false
     }
 
+    const params = {}
+    if (token) {
+      params['token'] = token
+    }
+
+    params['no_send_mail'] = noSendEmail
+
+    const query = new URLSearchParams(params)
+
     return await Actions.post(
-      `/api/events/${id}/adduserwithemailvalidation${token ? `/?token=${token}` : '/'}`,
+      `/api/events/${id}/adduserwithemailvalidation/?${query.toString()}`,
       data,
       true,
     )

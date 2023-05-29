@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode } from 'react'
-import { Steps, Button, Alert, Form } from 'antd'
+import { Steps, Button, Alert, Form, Checkbox } from 'antd'
 import RegisterFast from './Content/RegisterFast'
 import RegistrationResult from './Content/RegistrationResult'
 import AccountOutlineIcon from '@2fd/ant-design-icons/lib/AccountOutline'
@@ -56,6 +56,7 @@ const RegisterUserAndEventUser = ({
 
   const [organization, setOrganization] = useState({})
   const [existGenialialityUser, setExistGenialialityUser] = useState(false)
+  const [noSendMail, setNoSendMail] = useState(false)
 
   const hookValidations = (status: boolean, textError: string) => {
     setValidationGeneral({
@@ -214,7 +215,11 @@ const RegisterUserAndEventUser = ({
       const propertiesuser = { properties: { ...datauser } }
 
       try {
-        const respUser = await UsersApi.createOne(propertiesuser, cEvent.value?._id)
+        const respUser = await UsersApi.createOne(
+          propertiesuser,
+          cEvent.value?._id,
+          noSendMail,
+        )
         if (respUser && respUser._id) {
           setValidationGeneral({
             status: true,
@@ -378,6 +383,10 @@ const RegisterUserAndEventUser = ({
     } else return false
   }
 
+  const onChangeNotifyToUserEnrolling = () => {
+    setNoSendMail((previous) => !previous)
+  }
+
   useEffect(() => {
     if (current == 0) {
       ValidateGeneralFields()
@@ -400,6 +409,14 @@ const RegisterUserAndEventUser = ({
         ))}
       </Steps>
       <div style={{ marginTop: '30px' }}>{steps[current].content}</div>
+      <div style={{ marginTop: '30px' }}>
+        {current > 0 && current < 2 && (
+          <Checkbox defaultChecked={noSendMail} onChange={onChangeNotifyToUserEnrolling}>
+            No deseo notificar por correo al usuario
+          </Checkbox>
+        )}
+      </div>
+
       <div style={{ marginTop: '30px' }}>
         {current > 0 && current < 2 && (
           <Button
