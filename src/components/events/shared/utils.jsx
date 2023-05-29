@@ -48,7 +48,7 @@ export const MenuItems = [
     key: 'event-content',
     items: [
       {
-        name: 'Agenda/Lecciones',
+        name: 'Lecciones',
         path: '/agenda',
         key: 'agenda',
         onClick: handleClick,
