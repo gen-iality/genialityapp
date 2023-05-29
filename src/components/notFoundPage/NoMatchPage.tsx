@@ -1,12 +1,19 @@
 import { Result, Button } from 'antd'
+import { FunctionComponent } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 
-function NoMatchPage(props) {
-  const error403 = '403'
-  const error404 = '404'
+interface INoMatchPageProps {
+  eventId?: any
+  org?: any
+  parentUrl?: string
+}
 
-  const params = useParams()
-  const location = useLocation()
+const error403 = '403'
+const error404 = '404'
+
+const NoMatchPage: FunctionComponent<INoMatchPageProps> = (props) => {
+  const params = useParams<any>()
+  const location = useLocation<any>()
 
   return (
     <Result
@@ -28,16 +35,16 @@ function NoMatchPage(props) {
               <b>La ruta a la cual deseas acceder no existe</b>
             </div>
             <div>
-              {(props.eventId ?? props?.org?._id) && <code>{location.pathname}</code>}
+              {(props.eventId ?? props.org?._id) && <code>{location.pathname}</code>}
             </div>
           </div>
         )
       }
       extra={[
         /** Si se recibe algun id de organización no se mostraran botones*/
-        !props?.org?._id &&
+        !props.org?._id &&
           params.id !== 'withoutPermissions' &&
-          (props?.parentUrl ? (
+          (props.parentUrl ? (
             <Link to={`${props.parentUrl}/main`}>
               <Button type="primary" key="eventData">
                 Ir a datos del curso
