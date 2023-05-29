@@ -9,7 +9,7 @@ import { Product, ProductListProps } from '../interfaces/productsLanding';
 
 const ProductList: React.FC<ProductListProps> = (props) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [grid, setGrid] = useState<boolean>(true);
+  const [grid, setGrid] = useState<boolean | any>(true);
   let history = useHistory();
 
   useEffect(() => {

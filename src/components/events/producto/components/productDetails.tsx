@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Col, Divider, Result, Row, Space, Spin, Statistic, Tag, Typography } from 'antd';
+import { Card, Col, Divider, Empty, Result, Row, Space, Spin, Statistic, Tag, Typography } from 'antd';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { EventsApi } from '@/helpers/request';
 import { IssuesCloseOutlined, TagsOutlined, PercentageOutlined } from '@ant-design/icons';
@@ -81,69 +81,74 @@ function DetailsProduct(props: RouteComponentProps<MatchParams>) {
       {product && !loading && (
         <Row gutter={[16, 16]} style={{padding: 20}}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Card
-              style={{
-                height: '100%',
-                /* width: '100%',
-                height: '425px', */
-                display: 'grid',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 20
-              }}>
-                <Swiper
-                  style={{
-                    width: '400px',
-                    height: '280px',
-                    margin: '4px',
-                  }}
-                  loop={true}
-                  spaceBetween={1}
-                  thumbs={{ swiper: thumbsSwiper }}
-                  modules={[Navigation, Thumbs]}
-                  freeMode={true}>
-                  {product &&
-                    product.images &&
-                    product.images
-                      .filter((img) => img != null)
-                      .map((image, index) => (
-                        <SwiperSlide key={'image' + index}>
-                          <img
-                            style={{ borderRadius: '10px', objectFit: 'contain', width: '100%', height: '280px' }}
-                            src={product.images[index]}
-                            alt='producto'
-                          />
-                        </SwiperSlide>
-                      ))}
-                </Swiper>
-                {product && product.images && product.images.filter((img) => img != null).length > 1 && (
-                <Swiper
-                  style={{ width: '250px', height: '120px' }}
-                  onSwiper={setThumbsSwiper}
-                  loop={true}
-                  spaceBetween={1}
-                  slidesPerView={2}
-                  freeMode={true}
-                  watchSlidesProgress={true}
-                  modules={[Navigation, Thumbs]}>
-                  {product &&
-                    product.images &&
-                    product.images
-                      .filter((img) => img != null)
-                      .map((image, index) => (
-                        <SwiperSlide
-                          key={'thumb' + index}
-                          style={{ objectFit: 'contain', width: '100px', height: '100px' }}>
-                          <img
-                            style={{ objectFit: 'cover', width: '100px', height: '100px' }}
-                            src={product.images[index]}
-                            alt='thumbnail'
-                          />
-                        </SwiperSlide>
-                      ))}
-                </Swiper>
-              )}
-            </Card>
+          <Card
+      style={{
+        height: '100%',
+        display: 'grid',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 20
+      }}
+    >
+      {product && product.images && product.images.filter((img) => img != null).length > 0 ? (
+        <>
+          <Swiper
+            style={{
+              width: '400px',
+              height: '280px',
+              margin: '4px',
+            }}
+            loop={true}
+            spaceBetween={1}
+            thumbs={{ swiper: thumbsSwiper }}
+            modules={[Navigation, Thumbs]}
+            freeMode={true}
+          >
+            {product.images
+              .filter((img) => img != null)
+              .map((image, index) => (
+                <SwiperSlide key={'image' + index}>
+                  <img
+                    style={{ borderRadius: '10px', objectFit: 'contain', width: '100%', height: '280px' }}
+                    src={product.images[index]}
+                    alt='producto'
+                  />
+                </SwiperSlide>
+              ))}
+          </Swiper>
+
+          {product.images.filter((img) => img != null).length > 1 && (
+            <Swiper
+              style={{ width: '250px', height: '120px' }}
+              onSwiper={setThumbsSwiper}
+              loop={true}
+              spaceBetween={1}
+              slidesPerView={2}
+              freeMode={true}
+              watchSlidesProgress={true}
+              modules={[Navigation, Thumbs]}
+            >
+              {product.images
+                .filter((img) => img != null)
+                .map((image, index) => (
+                  <SwiperSlide
+                    key={'thumb' + index}
+                    style={{ objectFit: 'contain', width: '100px', height: '100px' }}
+                  >
+                    <img
+                      style={{ objectFit: 'cover', width: '100px', height: '100px' }}
+                      src={product.images[index]}
+                      alt='thumbnail'
+                    />
+                  </SwiperSlide>
+                ))}
+            </Swiper>
+          )}
+        </>
+      ) : (
+        <Empty style={{display: 'grid', justifyContent: 'center', alignItems: 'center'}}  description={'Sin imagen'}  />
+      )}
+    </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Card 
