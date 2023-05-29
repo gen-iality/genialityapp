@@ -50,7 +50,7 @@ const QueryTesting = loadable(() =>
 )
 const EventFinished = loadable(() => import('../components/eventFinished/eventFinished'))
 const LoginWithCode = loadable(() => import('../components/AdminUsers/WithCode'))
-const NoMatchPage = loadable(() => import('../components/notFoundPage/noMatchPage'))
+const NoMatchPage = loadable(() => import('../components/notFoundPage/NoMatchPage'))
 
 const { useBreakpoint } = Grid
 const ContentContainer = () => {

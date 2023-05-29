@@ -20,7 +20,7 @@ function NoMatchPage(props) {
       // }
       title="Lo sentimos."
       subTitle={
-        props.match.params.withoutPermissions === 'true' ? (
+        params.withoutPermissions === 'true' ? (
           <b>no está autorizado para acceder a esta página</b>
         ) : (
           <div>
