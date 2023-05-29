@@ -1,5 +1,5 @@
 import { Route, Switch, withRouter } from 'react-router-dom'
-import SpeakersList from './list'
+import SpeakersList from './SpeakersListPage'
 import SpeakerEditPage from './SpeakerEditPage'
 
 function Speakers({ ...props }) {
