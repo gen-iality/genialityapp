@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { message, Result, Spin, Upload, Form, Input, Modal } from 'antd'
 import FileVideoOutlineIcon from '@2fd/ant-design-icons/lib/FileVideoOutline'
 import { RcFile } from 'antd/lib/upload'
+import { Actions } from '@/helpers/request'
 
 const urlUploadVideoVimeo = 'https://devapi.geniality.com.co/api/vimeo/upload'
+const urlVideoStatusVimeo = 'https://devapi.geniality.com.co/api/vimeo/status'
 
 const handleBeforeUpload = (file: RcFile) => {
   return file
@@ -31,6 +33,9 @@ function VimeoUploader(props: VimeoUploaderProps) {
           // )}?h=8866e9a7e6`
           props.onUploaded(finalURL)
           console.debug('file uploaded to', finalURL)
+
+          urlVideoStatusVimeo
+
           Modal.info({
             title: 'Procesando...',
             content: 'El vídeo se estará procesando y en un momento estará disponible',
