@@ -20,9 +20,9 @@ export default interface AgendaType {
   description: string
   registration_message: string
   capacity: number
-  activity_categories_ids: any[]
+  activity_categories_ids: string[]
   access_restriction_type: string
-  access_restriction_rol_ids: any[]
+  access_restriction_rol_ids: string[]
   has_date: boolean
   timeConference: any
   selected_document: any[]
@@ -41,7 +41,10 @@ export default interface AgendaType {
   length: string
   latitude: string
   short_description?: any
-  activity_categories?: any
+  activity_categories?: {
+    color: string
+    name: string
+  }[]
 }
 
 export interface ExtendedAgendaType extends AgendaType {
@@ -57,7 +60,7 @@ export interface TruncatedAgenda {
   type?: ActivityType.ContentValue
   timeString: string
   link: string
-  host_picture: string
+  host_picture?: string
   name_host: string
   ViewedStatusComponent?: FunctionComponent<{}>
   QuizProgressComponent?: FunctionComponent<{ userId: string; isAnswersDeleted: boolean }>
@@ -66,6 +69,9 @@ export interface TruncatedAgenda {
     onAnswersDeleted: (x: boolean) => void
   }>
   RibbonComponent: FunctionComponent<{ children: any }>
-  short_description?: any
-  categories?: any
+  short_description?: string
+  categories?: {
+    color: string
+    name: string
+  }[]
 }
