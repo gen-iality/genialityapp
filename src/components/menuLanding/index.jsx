@@ -381,9 +381,8 @@ class menuLanding extends Component {
         <Form {...formLayout} onFinish={this.submit}>
           <Header
             title={
-              this.props.organization != 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'
+              this.props.organization !== 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'
             }
-            description={'(Podrás guardar la configuración de tu menú en la parte inferior)'}
             save
             form
           />

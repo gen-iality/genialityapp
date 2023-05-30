@@ -24,8 +24,10 @@ const { confirm } = Modal;
 const { Paragraph } = Typography;
 const SortableItem = sortableElement((props: any) => <tr {...props} />);
 const SortableContainer = sortableContainer((props: any) => <tbody {...props} />);
-
+  //Valor minimo para hacer comparaciones cuando se quiere usar > 0 o === 0, etc
+  const MINIMUM_VALUE: number = 0;
 class Product extends Component<ProductProps, ProductState> {
+
   constructor(props: ProductProps) {
     super(props);
     this.state = {
@@ -198,7 +200,7 @@ class Product extends Component<ProductProps, ProductState> {
 
   calculateDiscountedPrice = (product: any) => {
     if (product && product.price) {
-      if (product.discount && product.discount > 0) {
+      if (product.discount && product.discount > MINIMUM_VALUE) {
         const discountedPrice = product.price - (product.price * product.discount) / 100;
         return discountedPrice;
       }
