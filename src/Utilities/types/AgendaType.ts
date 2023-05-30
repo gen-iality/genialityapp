@@ -2,6 +2,9 @@
 // _id,name,subtitle,bigmaker_meeting_id,datetime_start,datetime_end,space_id,image,description,registration_message,capacity,activity_categories_ids,access_restriction_type,access_restriction_rol_ids,has_date,meeting_id,vimeo_id,platform,start_url,join_url,requires_registration,host_ids,length,latitude,selected_document,event_id,date_start_zoom,date_end_zoom,updated_at,created_at,role_attendee_ids,access_restriction_types_available,activity_categories,space,hosts,type,access_restriction_roles
 // NOTE: where is real the agenda schema?
 
+import { ActivityType } from '@context/activityType/types/activityType'
+import { FunctionComponent } from 'react'
+
 export default interface AgendaType {
   _id?: string
   module_id: string | undefined
@@ -44,4 +47,25 @@ export default interface AgendaType {
 export interface ExtendedAgendaType extends AgendaType {
   type?: { name: string }
   video?: string | null
+}
+
+export interface TruncatedAgenda {
+  title: string
+  isInfoOnly?: boolean
+  module_name?: string
+  module_order?: number
+  type?: ActivityType.ContentValue
+  timeString: string
+  link: string
+  host_picture: string
+  name_host: string
+  ViewedStatusComponent?: FunctionComponent<{}>
+  QuizProgressComponent?: FunctionComponent<{ userId: string; isAnswersDeleted: boolean }>
+  DeleteSurveyAnswersButton?: FunctionComponent<{
+    userId: string
+    onAnswersDeleted: (x: boolean) => void
+  }>
+  RibbonComponent: FunctionComponent<{ children: any }>
+  short_description?: any
+  categories?: any
 }

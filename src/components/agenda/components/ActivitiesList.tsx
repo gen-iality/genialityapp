@@ -6,7 +6,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { AgendaApi } from '@helpers/request'
 import dayjs from 'dayjs'
-import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
+import { ExtendedAgendaType, TruncatedAgenda } from '@Utilities/types/AgendaType'
 import { ActivityType } from '@context/activityType/types/activityType'
 import { firestore } from '@helpers/firebase'
 import { ActivityCustomIcon } from './ActivityCustomIcon'
@@ -23,27 +23,6 @@ import {
 } from '@components/events/surveys/services/surveys'
 import { CurrentEventUserContext } from '@context/eventUserContext'
 import ReactQuill from 'react-quill'
-
-type TruncatedAgenda = {
-  title: string
-  isInfoOnly?: boolean
-  module_name?: string
-  module_order?: number
-  type?: ActivityType.ContentValue
-  timeString: string
-  link: string
-  host_picture: string
-  name_host: string
-  ViewedStatusComponent?: FunctionComponent<{}>
-  QuizProgressComponent?: FunctionComponent<{ userId: string; isAnswersDeleted: boolean }>
-  DeleteSurveyAnswersButton?: FunctionComponent<{
-    userId: string
-    onAnswersDeleted: (x: boolean) => void
-  }>
-  RibbonComponent: FunctionComponent<{ children: any }>
-  short_description?: any
-  categories?: any
-}
 
 interface ActivitiesListProps {
   eventId: string
