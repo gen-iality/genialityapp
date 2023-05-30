@@ -28,7 +28,8 @@ const OfertaProduct: React.FC<OfertaProductProps> = ({
   const [totalOferts, setTotalOferts] = useState<number>(0);
   const [isUsd, setUsd] = useState<boolean>(false);
   const [bloquerPuja, setBloquearPuja] = useState<boolean>(false);
-
+  const MINIMUM_VALUE: number = 0;
+  const MAXNUM_VALUE: number = 0
   const obtenerValor = () => {
     return (
       product && product.price
@@ -135,7 +136,7 @@ const OfertaProduct: React.FC<OfertaProductProps> = ({
   //SAVE VALUE OFERTA
   const saveValue = async () => {
     setLoadingSave(true);
-    if (valuOferta > 0) {
+    if (valuOferta > MINIMUM_VALUE) {
       let data = {
         valueOffered: valuOferta,
       };
@@ -285,7 +286,7 @@ const OfertaProduct: React.FC<OfertaProductProps> = ({
                     permission() && (
                       <div>
                         <small>
-                          Hay <strong>{totalOferts}</strong> oferta{totalOferts > 1 && 's'}
+                          Hay <strong>{totalOferts}</strong> oferta{totalOferts > MAXNUM_VALUE && 's'}
                         </small>
                       </div>
                     )

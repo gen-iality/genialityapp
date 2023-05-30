@@ -9,6 +9,8 @@ import Header from '@/antdComponents/Header';
 const OfertProduts: React.FC<OfertProdutsProps> = (props) => {
   // const goBack = () => props.history.goBack();
   const [oferts, setOferts] = useState<any[]>([]);
+  //Valor minimo para hacer comparaciones cuando se quiere usar > 0 o === 0, etc
+  const MINIMUM_VALUE: number = 0;
   // Definición de variables de estado y funciones
   useEffect(() => {
     if (props.eventId) {
@@ -75,7 +77,7 @@ const OfertProduts: React.FC<OfertProdutsProps> = (props) => {
       {/* Componente Header */}
       <Header title={'Ofertas de la obra'} back />
       {/* Tabla de ofertas */}
-      <Table columns={columns} dataSource={oferts.length > 0 ? oferts : []} />
+      <Table columns={columns} dataSource={oferts.length > MINIMUM_VALUE ? oferts : []} />
       {/* <Row>
             <Button shape='circle' onClick={goBack} icon={<ArrowLeftOutlined />} />{' '}
             <span style={{ marginLeft: 30 }}>Ofertas de la obra</span>

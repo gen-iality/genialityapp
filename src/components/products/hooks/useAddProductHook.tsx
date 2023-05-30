@@ -27,6 +27,9 @@ export default function useAddProductHook(props: useAddProductHookProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [discount, setDiscount] = useState<number | null>(null);
   const [discountEnabled, setDiscountEnabled] = useState<boolean>(false);
+
+  /*Se usa para hacer comparaciones con valor minimo que seria 0*/
+  const MINIMUM_VALUE: number = 0;
   const formLayout = {
     labelCol: { span: 24 },
     wrapperCol: { span: 24 },
@@ -97,11 +100,10 @@ export default function useAddProductHook(props: useAddProductHookProps) {
       //alert('NO PUEDE ESCRIBIR MAS');
     }
   };
-
   const changeImg = (file: File | null, name: string): void => {
     let temp = imageFile;
     let ImagenSearch = imageFile.filter((img) => img.name === name);
-    if (ImagenSearch.length > 0) {
+    if (ImagenSearch.length > MINIMUM_VALUE) {
       let newtemp = imageFile.filter((img) => img.name !== name);
       temp = newtemp;
       temp.push({ name, file });
@@ -152,7 +154,7 @@ export default function useAddProductHook(props: useAddProductHookProps) {
     //   validators.picture = false;
     // }
     let ImagenFilled = imageFile.filter((img) => img.name === 'Imagen');
-    if (ImagenFilled.length === 0) {
+    if (ImagenFilled.length === MINIMUM_VALUE) {
       validators.picture = true;
     } else {
       validators.picture = false;
@@ -278,7 +280,7 @@ export default function useAddProductHook(props: useAddProductHookProps) {
       });
     }
   };
-  
+
   return {
     name,
     price,
