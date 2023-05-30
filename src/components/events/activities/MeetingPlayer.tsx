@@ -1,10 +1,16 @@
-import { useContext, useMemo } from 'react'
+import { FunctionComponent, useContext, useMemo } from 'react'
 import { CurrentUserContext } from '@context/userContext'
 import { Grid } from 'antd'
 
 const { useBreakpoint } = Grid
 
-function MeetingPlayer({ activity }) {
+interface IMeetingPlayerProps {
+  activity: any
+}
+
+const MeetingPlayer: FunctionComponent<IMeetingPlayerProps> = (props) => {
+  const { activity } = props
+
   const screens = useBreakpoint()
 
   const userContext = useContext(CurrentUserContext)
