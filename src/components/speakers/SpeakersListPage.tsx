@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
+import { FunctionComponent, useEffect, useState } from 'react'
 import { useQuery, useQueryClient, useMutation } from 'react-query'
-import { withRouter } from 'react-router-dom'
 import { SpeakersApi } from '@helpers/request'
 import { Table, Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
@@ -16,10 +15,15 @@ const SortableContainer = sortableContainer((props) => <tbody {...props} />)
 
 const { confirm } = Modal
 
-function SpeakersList(props) {
+interface ISpeakersListPageProps {
+  eventID: any
+  parentUrl: string
+}
+
+const SpeakersListPage: FunctionComponent<ISpeakersListPageProps> = (props) => {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
-  const [dataSpeakers, setdataSpeakers] = useState([])
+  const [dataSpeakers, setdataSpeakers] = useState<any[]>([])
   const { isLoading, data, refetch } = useQuery('getSpeakersByEvent', () =>
     SpeakersApi.byEvent(props.eventID),
   )
@@ -36,7 +40,7 @@ function SpeakersList(props) {
     const data = dataSpeakers
     let list = []
     if (data) {
-      list = data.sort((a, b) => (a.sort && b.sort ? a.sort - b.sort : true))
+      list = data.sort((a, b) => (a.sort && b.sort ? a.sort - b.sort : 0))
       list = list.map((speaker, index) => {
         return { ...speaker, index: speaker.sort == index ? speaker.sort : index }
       })
@@ -46,7 +50,7 @@ function SpeakersList(props) {
     }
   }
 
-  function remove(info) {
+  function remove(info: any) {
     //Se coloco la constante "eventId" porque se perdia al momento de hacer la llamada al momento de eliminar
     StateMessage.show('loading', 'loading', 'Por favor espere...')
     const eventId = props.eventID
@@ -182,13 +186,13 @@ function SpeakersList(props) {
   )
 
   //FN para el draggable 2/3
-  const DraggableContainer = (props) => (
+  const DraggableContainer = (secondProps: any) => (
     <SortableContainer
       useDragHandle
       disableAutoscroll
       helperClass="row-dragging"
       onSortEnd={onSortEnd}
-      {...props}
+      {...secondProps}
     />
   )
 
@@ -244,4 +248,4 @@ function SpeakersList(props) {
   )
 }
 
-export default withRouter(SpeakersList)
+export default SpeakersListPage
