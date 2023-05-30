@@ -1,5 +1,5 @@
-// import { useContext } from 'react'
-// import { CurrentUserContext } from '@context/userContext'
+import { useContext, useMemo } from 'react'
+import { CurrentUserContext } from '@context/userContext'
 import { Grid } from 'antd'
 
 const { useBreakpoint } = Grid
@@ -7,11 +7,17 @@ const { useBreakpoint } = Grid
 function MeetingPlayer({ activity }) {
   const screens = useBreakpoint()
 
-  // const userContext = useContext(CurrentUserContext)
+  const userContext = useContext(CurrentUserContext)
 
   // const imageDefault = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU'
 
-  const eviusmeetUrl = `https://meet.evius.co/${activity._id}`
+  const eviusmeetUrl = useMemo(
+    () =>
+      `https://meet.evius.co/${activity._id}#userInfo.displayName="${encodeURIComponent(
+        userContext.value?.names,
+      )}"`,
+    [activity, userContext.value],
+  )
 
   return (
     <>
