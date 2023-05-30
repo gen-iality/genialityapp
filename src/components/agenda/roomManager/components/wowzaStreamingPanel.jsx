@@ -28,7 +28,7 @@ import {
   ResetLiveStream,
 } from '../../../../adaptors/wowzaStreamingAPI'
 import { realTimeviuschat } from '@helpers/firebase'
-import { useCurrentUser } from '@context/userContext'
+// import { useCurrentUser } from '@context/userContext'
 import AgendaContext from '@context/AgendaContext'
 import StoreAlreadyCreatedMeeting from '../components/storeAlreadyCreatedMeeting'
 import Loading from '../../../profile/loading'
@@ -46,8 +46,8 @@ const WowzaStreamingPanel = ({
   saveConfig,
 }) => {
   //Link para eviusmeet dónde se origina el video
-  const eviusmeets = `https://stagingeviusmeet.netlify.app/prepare`
-  const cUser = useCurrentUser()
+  const eviusmeets = 'https://meet.evius.co'
+  // const cUser = useCurrentUser()
   const [livestreamStatus, setLivestreamStatus] = useState(null)
   const [livestreamStats, setLivestreamStats] = useState(null)
   const [linkRolAdmin, setLinkRolAdmin] = useState(null)
@@ -71,17 +71,11 @@ const WowzaStreamingPanel = ({
 
   useEffect(() => {
     if (livestreamQuery && livestreamQuery.data) {
-      const { names, email, picture } = cUser.value
-      const rtmplink = livestreamQuery.data.source_connection_information
-      const linkAdmin =
-        eviusmeets +
-        `?meetingId=${activityEdit}&rtmp=${rtmplink.primary_server}/${
-          rtmplink.stream_name
-        }&rol=1&username=${names}&email=${email}&photo=${picture ? picture : ''}`
-      const linkProductor =
-        eviusmeets +
-        `?meetingId=${activityEdit}&rtmp=${rtmplink.primary_server}/${rtmplink.stream_name}&rol=1`
-      const linkAsistente = eviusmeets + `?meetingId=${activityEdit}`
+      // const { names, email, picture } = cUser.value
+      // const rtmplink = livestreamQuery.data.source_connection_information
+      const linkAdmin = `${eviusmeets}/${activityEdit}`
+      const linkProductor = `${eviusmeets}/${activityEdit}`
+      const linkAsistente = `${eviusmeets}/${activityEdit}`
       setLinkRolAdmin(linkAdmin)
       setLinkRolProductor(linkProductor)
       setLinkRolAsistente(linkAsistente)

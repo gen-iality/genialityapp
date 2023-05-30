@@ -1,5 +1,5 @@
-import { useContext } from 'react'
-import { CurrentUserContext } from '@context/userContext'
+// import { useContext } from 'react'
+// import { CurrentUserContext } from '@context/userContext'
 import { Grid } from 'antd'
 
 const { useBreakpoint } = Grid
@@ -7,16 +7,11 @@ const { useBreakpoint } = Grid
 function MeetingPlayer({ activity }) {
   const screens = useBreakpoint()
 
-  const userContext = useContext(CurrentUserContext)
+  // const userContext = useContext(CurrentUserContext)
 
-  const imageDefault =
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU'
+  // const imageDefault = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU'
 
-  const eviusmeetUrl = `https://stagingeviusmeet.netlify.app/?meetingId=${
-    activity._id
-  }&rol=0&username=${userContext.value?.names}&email=${userContext.value?.email}&photo=${
-    userContext.value?.picture || imageDefault
-  }`
+  const eviusmeetUrl = `https://meet.evius.co/${activity._id}`
 
   return (
     <>
