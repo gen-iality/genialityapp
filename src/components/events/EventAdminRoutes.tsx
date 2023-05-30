@@ -22,7 +22,7 @@ import ModulePage from '../agenda/ModulePage'
 import EmpresasRoutes from '../empresas'
 import TriviaRoutes from '../trivia/TriviaRoutes'
 import DocumentsRoutes from '../documents/DocumentsRoutes'
-import Speakers from '../speakers'
+import SpeakersRoutes from '../speakers/SpeakersRoutes'
 import MenuLanding from '../menuLanding'
 import ReportList from '../agenda/report'
 import ConferenceRoute from '../zoom/index'
@@ -467,7 +467,7 @@ class EventAdminRoutes extends Component {
                 path={`${match.url}/speakers`}
                 event={event}
                 render={(routeProps) => (
-                  <Speakers
+                  <SpeakersRoutes
                     event={event}
                     eventID={event._id}
                     matchUrl={routeProps.match.url}

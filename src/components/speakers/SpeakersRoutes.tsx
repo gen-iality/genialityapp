@@ -1,9 +1,16 @@
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import SpeakersListPage from './SpeakersListPage'
 import SpeakerEditPage from './SpeakerEditPage'
+import { FunctionComponent } from 'react'
 
-function Speakers({ ...props }) {
+interface ISpeakersRoutesProps {
+  eventID: string
+  matchUrl: string
+}
+
+const SpeakersRoutes: FunctionComponent<ISpeakersRoutesProps> = (props) => {
   const { eventID, matchUrl } = props
+
   return (
     <Switch>
       <Route
@@ -20,4 +27,4 @@ function Speakers({ ...props }) {
   )
 }
 
-export default withRouter(Speakers)
+export default SpeakersRoutes
