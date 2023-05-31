@@ -211,7 +211,7 @@ const RegisterUserAndOrgMember = ({
         }
         if (respUser && respUser.account_id) {
           setValidationGeneral({
-            status: false,
+            status: true,
             isLoading: false,
             textError: intl.formatMessage({
               // REVISAR: No se debería llamar TextError, si el texto es una respuesta afirmativa.
