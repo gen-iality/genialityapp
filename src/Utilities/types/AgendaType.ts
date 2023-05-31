@@ -54,6 +54,7 @@ export interface ExtendedAgendaType extends AgendaType {
 
 export interface TruncatedAgenda {
   title: string
+  datetime_start?: any
   isInfoOnly?: boolean
   module_name?: string
   module_order?: number
