@@ -8,13 +8,10 @@ import { activityContentValues } from '@context/activityType/constants/ui'
 
 interface IListTheseActivitiesProps {
   dataSource: TruncatedAgenda[]
-  user: any
-  isAnswersDeleted?: boolean
-  onAnswersIsDeleted?: (x: boolean) => void
 }
 
 const ListTheseActivities: FunctionComponent<IListTheseActivitiesProps> = (props) => {
-  const { dataSource, user, isAnswersDeleted, onAnswersIsDeleted = () => {} } = props
+  const { dataSource } = props
 
   return (
     <List

@@ -1,8 +1,5 @@
 import { FunctionComponent, useContext, useMemo } from 'react'
-import { Button, Spin, Badge, Space, Collapse } from 'antd'
-import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons'
-import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint'
-import { useLocation } from 'react-router-dom'
+import { Spin, Collapse } from 'antd'
 import { useState, useEffect } from 'react'
 import { AgendaApi } from '@helpers/request'
 import dayjs from 'dayjs'
@@ -10,22 +7,15 @@ import { ExtendedAgendaType, TruncatedAgenda } from '@Utilities/types/AgendaType
 import { ActivityType } from '@context/activityType/types/activityType'
 import { firestore } from '@helpers/firebase'
 import { activityContentValues } from '@context/activityType/constants/ui'
-import QuizProgress from '@components/quiz/QuizProgress'
 import { useCurrentUser } from '@context/userContext'
 import Service from '@components/agenda/roomManager/service'
-import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton'
-import { getRef as getSurveyStatusRef } from '@components/events/surveys/services/surveyStatus'
-import {
-  getAnswersRef,
-  getUserProgressRef,
-  getQuestionsRef,
-} from '@components/events/surveys/services/surveys'
 import { CurrentEventUserContext } from '@context/eventUserContext'
 import ListTheseActivities from './ListTheseActivities'
 import OnLiveRibbon from './OnLiveRibbon'
 import QuizProgressFromActivity from './QuizProgressFromActivity'
 import ButtonToDeleteSurveyAnswers from './ButtonToDeleteSurveyAnswers'
 import TakenActivityBadge from './TakenActivityBadge'
+import { useLocation } from 'react-router'
 
 interface ActivitiesListProps {
   eventId: string
@@ -48,7 +38,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   const currentUser = useCurrentUser()
   const currentEventUser = useContext(CurrentEventUserContext)
 
-  const location = useLocation()
+  const location = useLocation<any>()
 
   useEffect(() => {
     if (!eventId) return
@@ -218,9 +208,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
             dataSource={truncatedAgendaList.filter(
               (item) => item.module_name === nameToFilter,
             )}
-            user={currentUser.value}
-            isAnswersDeleted={isAnswersDeleted}
-            onAnswersIsDeleted={(x) => setAnswersIsDeleted(x)}
           />
         )}
       />
@@ -228,9 +215,6 @@ const ActivitiesList = (props: ActivitiesListProps) => {
       {/* Without modules: */}
       <ListTheseActivities
         dataSource={truncatedAgendaList.filter((item) => item.module_name === undefined)}
-        user={currentUser.value}
-        isAnswersDeleted={isAnswersDeleted}
-        onAnswersIsDeleted={(x) => setAnswersIsDeleted(x)}
       />
     </>
   )
