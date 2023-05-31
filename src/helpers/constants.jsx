@@ -1,4 +1,3 @@
-/* globals process */
 export const ApiUrl = import.meta.env.VITE_API_URL
 export const ApiDEVUrl = import.meta.env.VITE_API_DEV_URL
 export const AuthUrl = import.meta.env.VITE_APP_AUTH_URL
