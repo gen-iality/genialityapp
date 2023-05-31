@@ -11,6 +11,7 @@ import {
   Modal,
   Space,
   Badge,
+  Checkbox,
 } from 'antd'
 import { UploadOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
@@ -345,6 +346,14 @@ class Preview extends Component {
             </Badge.Ribbon>
           </Col>
         </Row>
+        <br />
+        <br />
+        <Checkbox
+          defaultChecked={this.props.no_send_mail}
+          onChange={this.props.onChangeCheckbox}
+        >
+          No deseo notificar por correo a los usuarios
+        </Checkbox>
         <br />
         <br />
         <Button

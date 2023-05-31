@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { Button, Typography, Space, Row, Col, Card, Tabs } from 'antd'
 import AgendaContext from '../../../../context/AgendaContext'
-import { useCurrentUser } from '@context/userContext'
+// import { useCurrentUser } from '@context/userContext'
 
 const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
   const vimeoUrl = 'https://vimeo.com/'
@@ -10,15 +10,11 @@ const VimeoStreamingPanel = ({ meeting_id, activityEdit }) => {
     'https://vimeo.zendesk.com/hc/es/articles/115012811168-Resumen-Crear-un-evento-y-transmitir-en-vivo#:~:text=El%20primer%20paso%20para%20transmitir,que%20sea%20un%20evento%20%C3%BAnico.'
   const streamYardUrl = 'https://streamyard.com/teams/nqMJDiHJSBnP5E7bmGs7JyZV/broadcasts'
   //Link para eviusmeet dónde se origina el video
-  const eviusmeets = `https://stagingeviusmeet.netlify.app/prepare`
-  const cUser = useCurrentUser()
+  const eviusmeets = `https://meet.evius.co`
+  // const cUser = useCurrentUser()
   const { transmition } = useContext(AgendaContext)
-  const { names, email, picture } = cUser.value
-  const linkAdmin =
-    eviusmeets +
-    `?meetingId=${activityEdit}&rol=1&username=${names}&email=${email}&photo=${
-      picture ? picture : ''
-    }`
+  // const { names, email, picture } = cUser.value
+  const linkAdmin = `${eviusmeets}/${activityEdit}`
 
   console.log('debug transmition ', transmition)
 

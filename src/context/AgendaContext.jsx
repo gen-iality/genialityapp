@@ -325,9 +325,13 @@ export const AgendaContextProvider = ({ children }) => {
         urlVideo = !dataLive?.live ? previewBaseUrlVideo : dataLive.iframe_url
         break
       case 'Video':
-        const dataSplit = data.split('*')
-        console.log('dataSplit', dataSplit)
-        urlVideo = dataSplit[0]
+        if (data) {
+          const dataSplit = data.split('*')
+          console.log('dataSplit', dataSplit)
+          urlVideo = dataSplit[0]
+        } else {
+          urlVideo = null
+        }
         break
       default:
         urlVideo = data

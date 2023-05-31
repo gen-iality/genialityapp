@@ -28,13 +28,7 @@ function WOWZAPlayer({ meeting_id, thereIsConnection }) {
     if (typeActivity === 'meeting') {
       setVisibleReactPlayer(false)
       setConected('Yes')
-      setPlatformurl(
-        `https://stagingeviusmeet.netlify.app/?meetingId=${activityEdit}&rol=0&username=${
-          userContext.value?.names
-        }&email=${userContext.value?.email}&photo=${
-          userContext.value?.picture || urlDefault
-        }`,
-      )
+      setPlatformurl(`https://meet.evius.co/${activityEdit}`)
     }
     if (!meeting_id) return
     if (

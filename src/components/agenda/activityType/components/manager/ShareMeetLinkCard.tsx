@@ -29,14 +29,12 @@ const CardShareLinkEviusMeet = (props: ShareMeetLinkCardProps) => {
             <Input
               style={{ width: 'calc(100% - 31px)' }}
               disabled
-              value={`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=1`} /* value={linkRolProductor} */
+              value={`https://meet.evius.co/${props.activityId}`} /* value={linkRolProductor} */
             />
             <Tooltip title="Copiar productor url">
               <Button
                 onClick={() =>
-                  copyToClipboard(
-                    `https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=1`,
-                  )
+                  copyToClipboard(`https://meet.evius.co/${props.activityId}`)
                 }
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}
               />
@@ -49,14 +47,12 @@ const CardShareLinkEviusMeet = (props: ShareMeetLinkCardProps) => {
             <Input
               style={{ width: 'calc(100% - 31px)' }}
               disabled
-              value={`https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=2`} /* value={linkRolProductor} */
+              value={`https://meet.evius.co/${props.activityId}`} /* value={linkRolProductor} */
             />
             <Tooltip title="Copiar speaker url">
               <Button
                 onClick={() =>
-                  copyToClipboard(
-                    `https://stagingeviusmeet.netlify.app/prepare?meetingId=${props.activityId}&rol=2`,
-                  )
+                  copyToClipboard(`https://meet.evius.co/${props.activityId}`)
                 }
                 icon={<CopyFilled style={{ color: '#0089FF' }} />}
               />

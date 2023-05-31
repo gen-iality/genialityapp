@@ -38,7 +38,7 @@ import BackTop from '@antdComponents/BackTop'
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector'
 
 import { hourWithAdditionalMinutes } from '../hooks/useHourWithAdditionalMinutes'
-import Speaker from '@components/speakers/speaker'
+import SpeakerEditPage from '@components/speakers/SpeakerEditPage'
 import { Link, useHistory } from 'react-router-dom'
 
 export interface FormValues {
@@ -307,9 +307,9 @@ const AgendaForm: FunctionComponent<IAgendaFormProps> = (props) => {
               onCancel={() => setIsSpeakerModalOpened(false)}
               okButtonProps={{ disabled: true }}
             >
-              <Speaker
+              <SpeakerEditPage
                 eventID={props.event._id}
-                matchUrl={props.matchUrl}
+                parentUrl={props.matchUrl}
                 onCreated={() => {
                   const loading = async () => {
                     const incommingHosts = await SpeakersApi.byEvent(props.event._id)

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import { Card, Button, Alert, Row, Col } from 'antd'
 
-import InitialSVG from '../typeActivity/components/svg/InitialSVG'
+import InitialSVG from './svg/InitialSVG'
 
 import type { ActivityType } from '@context/activityType/types/activityType'
 import ActivityContentManager from './ActivityContentManager'

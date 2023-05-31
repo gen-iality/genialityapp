@@ -50,7 +50,8 @@ const IframeZoomComponent = ({
         url = `https://player.vimeo.com/video/${meeting_id}`
         break
       case 'dolby':
-        url = `https://stagingeviusmeet.netlify.app/?username=${name}&email=${email}`
+        // url = `https://stagingeviusmeet.netlify.app/?username=${name}&email=${email}`
+        url = 'https://meet.evius.co'
         break
       case 'streaming':
         break

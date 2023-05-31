@@ -1,10 +1,11 @@
+import { FunctionComponent } from 'react'
 /** React's libraries */
-import { useIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import dayjs from 'dayjs'
 
 /** Antd imports */
-import { Button, PageHeader, Typography } from 'antd'
+import { Badge, Button, PageHeader, Typography } from 'antd'
 
 /** Helpers and utils */
 import { recordTypeForThisEvent } from '../events/Landing/helpers/thisRouteCanBeDisplayed'
@@ -17,13 +18,12 @@ import { useCurrentUser } from '@context/userContext'
 
 dayjs.extend(localizedFormat)
 
-const InfoEvent = () => {
+const InfoEvent: FunctionComponent = () => {
   const cEvent = useEventContext()
   const { handleChangeTypeModal, eventIsActive } = useHelper()
   const cEventUser = useUserEvent()
   const cUser = useCurrentUser()
 
-  const intl = useIntl()
   return (
     <PageHeader
       style={{
@@ -51,23 +51,23 @@ const InfoEvent = () => {
         </Typography.Title>
       }
       extra={
-        <>
-          {recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
-            cUser?.value &&
-            !cEventUser?.value && (
-              <Button
-                onClick={() => handleChangeTypeModal('registerForTheEvent')}
-                type="primary"
-                size="large"
-                disabled={!eventIsActive}
-              >
-                {intl.formatMessage({
-                  id: 'Button.signup',
-                  defaultMessage: 'Inscribirme al curso',
-                })}
-              </Button>
-            )}
-        </>
+        recordTypeForThisEvent(cEvent) !== 'PRIVATE_EVENT' &&
+        cUser?.value &&
+        cEventUser?.value ? (
+          <Badge
+            style={{ backgroundColor: '#EA4602', marginRight: '3px' }}
+            count="Inscrito"
+          />
+        ) : (
+          <Button
+            onClick={() => handleChangeTypeModal('registerForTheEvent')}
+            type="primary"
+            size="large"
+            disabled={!eventIsActive}
+          >
+            <FormattedMessage id="Button.signup" defaultMessage="Inscribirme al curso" />
+          </Button>
+        )
       }
       // footer={
       //   <Space style={{ color: cEvent.value.styles.textMenu }}>

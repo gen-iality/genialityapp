@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import WOWZAPlayer from '../../livetransmision/WOWZAPlayer'
-import { CurrentUserContext } from '@context/userContext'
+// import { CurrentUserContext } from '@context/userContext'
 import { Grid } from 'antd'
 import AgendaContext from '@context/AgendaContext'
 import { CurrentEventUserContext } from '@context/eventUserContext'
@@ -11,18 +11,13 @@ const { useBreakpoint } = Grid
 function WowzaStreamingPlayer({ meeting_id, transmition, activity }) {
   const screens = useBreakpoint()
   const [livestreamStats, setLivestreamStats] = useState(null)
-  const userContext = useContext(CurrentUserContext)
+  // const userContext = useContext(CurrentUserContext)
   const { request, typeActivity } = useContext(AgendaContext)
   const evetUserContext = useContext(CurrentEventUserContext)
   const [visibleMeets, setVisibleMeets] = useState(false)
   const [timer_id, setTimerId] = useState(null)
-  const urlDefault =
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU'
-  const eviusmeetUrl = `https://stagingeviusmeet.netlify.app/?meetingId=${
-    activity._id
-  }&rol=0&username=${userContext.value?.names}&email=${userContext.value?.email}&photo=${
-    userContext.value?.picture || urlDefault
-  }`
+  // const urlDefault = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FLnQiNROZEVxb5XJ2yTan-j7TZKt-SI7Bw&usqp=CAU'
+  const eviusmeetUrl = `https://meet.evius.co/${activity._id}`
 
   useEffect(() => {
     if (transmition !== 'EviusMeet' || !evetUserContext.value) return

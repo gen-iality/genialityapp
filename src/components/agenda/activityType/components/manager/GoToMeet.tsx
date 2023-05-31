@@ -11,7 +11,7 @@ export interface GoToMeetProps {
   type: ActivityType.TypeAsDisplayment
 }
 
-const baseUrl = 'https://stagingeviusmeet.netlify.app/prepare'
+const baseUrl = 'https://meet.evius.co'
 
 /**
  * Crea un componente que permite ir al Meet.
@@ -24,13 +24,12 @@ const GoToMeet = (props: GoToMeetProps) => {
   const user = useCurrentUser()
 
   const urlReunion = useMemo(
-    () => `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rol=1`,
+    () => `${baseUrl}/${props.activityId}`,
     [props.activityId, user, dataLive],
   )
 
   const urlEviusTransmision = useMemo(
-    () =>
-      `${baseUrl}?meetingId=${props.activityId}&username=${user.value?.names}&rtmp=${dataLive?.push_url}&rol=1`,
+    () => `${baseUrl}/${props.activityId}`,
     [props.activityId, user, dataLive],
   )
 

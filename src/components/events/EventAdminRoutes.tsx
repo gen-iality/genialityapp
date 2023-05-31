@@ -22,7 +22,7 @@ import ModulePage from '../agenda/ModulePage'
 import EmpresasRoutes from '../empresas'
 import TriviaRoutes from '../trivia/TriviaRoutes'
 import DocumentsRoutes from '../documents/DocumentsRoutes'
-import Speakers from '../speakers'
+import SpeakersRoutes from '../speakers/SpeakersRoutes'
 import MenuLanding from '../menuLanding'
 import ReportList from '../agenda/report'
 import ConferenceRoute from '../zoom/index'
@@ -34,7 +34,7 @@ import withContext from '@context/withContext'
 import { Layout, Row, Col, Button, Result, Tag } from 'antd'
 import { AdminUsers } from '@components/AdminUsers/AdminUsers'
 import loadable from '@loadable/component'
-import NoMatchPage from '../notFoundPage/noMatchPage'
+import NoMatchPage from '../notFoundPage/NoMatchPage'
 import ValidateAccessRouteCms from '../roles/hooks/validateAccessRouteCms'
 import { StateMessage } from '@context/MessageService'
 import { handleRequestError } from '@helpers/utils'
@@ -96,7 +96,7 @@ const Protected: FunctionComponent<IProtected> = (props) => {
   )
 }
 
-class Event extends Component {
+class EventAdminRoutes extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -467,7 +467,7 @@ class Event extends Component {
                 path={`${match.url}/speakers`}
                 event={event}
                 render={(routeProps) => (
-                  <Speakers
+                  <SpeakersRoutes
                     event={event}
                     eventID={event._id}
                     matchUrl={routeProps.match.url}
@@ -557,4 +557,4 @@ const mapStateToProps = (state) => ({
   error: state.rols.error,
 })
 
-export default connect(mapStateToProps)(withContext(withRouter(Event)))
+export default connect(mapStateToProps)(withContext(withRouter(EventAdminRoutes)))
