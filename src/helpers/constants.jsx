@@ -1,16 +1,16 @@
 /* globals process */
-export const ApiUrl = process.env.VITE_API_URL
-export const ApiDEVUrl = process.env.VITE_API_DEV_URL
-export const AuthUrl = process.env.VITE_APP_AUTH_URL
-export const BaseUrl = process.env.VITE_APP_BASE_URL
+export const ApiUrl = import.meta.env.VITE_API_URL
+export const ApiDEVUrl = import.meta.env.VITE_API_DEV_URL
+export const AuthUrl = import.meta.env.VITE_APP_AUTH_URL
+export const BaseUrl = import.meta.env.VITE_APP_BASE_URL
 export const EVIUS_GOOGLE_MAPS_KEY =
-  process.env.EVIUS_GOOGLE_MAPS_KEY || 'AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk'
-export const ApiEviusZoomServer = process.env.VITE_APP_API_EVIUS_ZOOM_SERVER
-export const ApiGoogleDocuments = process.env.VITE_APP_API_GOOGLE_API_DOCUMENTS
-export const ApiEviusZoomHosts = process.env.VITE_APP_API_EVIUS_ZOOM_HOSTS
-export const ApiEviusZoomSurvey = process.env.VITE_APP_API_EVIUS_ZOOM_SURVEY
-export const ApiUrlCountry = process.env.VITE_API_COUNTRY_URL
-export const KeyCountry = process.env.VITE_API_KEY_COUNTRY
+  import.meta.env.EVIUS_GOOGLE_MAPS_KEY || 'AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk'
+export const ApiEviusZoomServer = import.meta.env.VITE_APP_API_EVIUS_ZOOM_SERVER
+export const ApiGoogleDocuments = import.meta.env.VITE_APP_API_GOOGLE_API_DOCUMENTS
+export const ApiEviusZoomHosts = import.meta.env.VITE_APP_API_EVIUS_ZOOM_HOSTS
+export const ApiEviusZoomSurvey = import.meta.env.VITE_APP_API_EVIUS_ZOOM_SURVEY
+export const ApiUrlCountry = import.meta.env.VITE_API_COUNTRY_URL
+export const KeyCountry = import.meta.env.VITE_API_KEY_COUNTRY
 export const parseUrl = (url) => {
   try {
     const temporal = {}
