@@ -194,6 +194,15 @@ const RegisterUserAndOrgMember = ({
       delete propertiesOrgMember.properties.password
       delete propertiesOrgMember.properties.picture
 
+      if (!idOrganization) {
+        StateMessage.show(
+          null,
+          'error',
+          'No se puede proceder, recargue la página e intente nuevamente',
+        )
+        throw new Error(`The value of idOrganization is ${idOrganization}`)
+      }
+
       try {
         const respUser = await OrganizationApi.saveUser(
           idOrganization,
