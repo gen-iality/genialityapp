@@ -46,8 +46,8 @@ const Productos = loadable(() => import('../producto/index'))
 const MessageRegister = loadable(() => import('../registrationForm/messageRegister'))
 const ListVideoCard = loadable(() => import('../../shared/listVideoCard'))
 const Videos = loadable(() => import('../videos'))
-const InfoEvent = loadable(() => import('../../shared/infoEvent'))
-const ResponsePayu = loadable(() => import('../../shared/infoEvent'))
+const InfoEvent = loadable(() => import('../../shared/InfoEvent'))
+const ResponsePayu = loadable(() => import('../../shared/InfoEvent'))
 const ActivityDisplayerPage = loadable(() =>
   import('../activities/ActivityDisplayerPage'),
 )
