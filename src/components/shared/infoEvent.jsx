@@ -1,5 +1,5 @@
 /** React's libraries */
-import { useIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import dayjs from 'dayjs'
 
@@ -23,7 +23,6 @@ const InfoEvent = () => {
   const cEventUser = useUserEvent()
   const cUser = useCurrentUser()
 
-  const intl = useIntl()
   return (
     <PageHeader
       style={{
@@ -61,10 +60,10 @@ const InfoEvent = () => {
                 size="large"
                 disabled={!eventIsActive}
               >
-                {intl.formatMessage({
-                  id: 'Button.signup',
-                  defaultMessage: 'Inscribirme al curso',
-                })}
+                <FormattedMessage
+                  id="Button.signup"
+                  defaultMessage="Inscribirme al curso"
+                />
               </Button>
             )}
         </>
