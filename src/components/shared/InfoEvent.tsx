@@ -1,3 +1,4 @@
+import { FunctionComponent } from 'react'
 /** React's libraries */
 import { FormattedMessage } from 'react-intl'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
@@ -17,7 +18,7 @@ import { useCurrentUser } from '@context/userContext'
 
 dayjs.extend(localizedFormat)
 
-const InfoEvent = () => {
+const InfoEvent: FunctionComponent = () => {
   const cEvent = useEventContext()
   const { handleChangeTypeModal, eventIsActive } = useHelper()
   const cEventUser = useUserEvent()
