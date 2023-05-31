@@ -3,7 +3,7 @@
 // NOTE: where is real the agenda schema?
 
 import { ActivityType } from '@context/activityType/types/activityType'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, ReactElement } from 'react'
 
 export default interface AgendaType {
   _id?: string
@@ -63,13 +63,8 @@ export interface TruncatedAgenda {
   link: string
   host_picture?: string
   name_host: string
-  ViewedStatusComponent?: FunctionComponent<{}>
-  QuizProgressComponent?: FunctionComponent<{ userId: string; isAnswersDeleted: boolean }>
-  DeleteSurveyAnswersButton?: FunctionComponent<{
-    userId: string
-    onAnswersDeleted: (x: boolean) => void
-  }>
-  RibbonComponent: FunctionComponent<{ children: any }>
+  endComponents: (() => ReactElement)[]
+  ItemWrapper: FunctionComponent<{ children: any }>
   short_description?: string
   categories?: {
     color: string
