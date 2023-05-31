@@ -199,9 +199,9 @@ const RegisterUserAndOrgMember = ({
           idOrganization,
           propertiesOrgMember,
         )
-        console.log('3. RegisterUser: has default position Id', { defaultPositionId })
+        console.debug('RegisterUser: has default position Id', { defaultPositionId })
         if (defaultPositionId === undefined) {
-          console.error('4. This organization has no default position. Eh!')
+          console.warn('This organization has no default position. Eh!')
         } else {
           await PositionsApi.Organizations.addUser(
             idOrganization,
