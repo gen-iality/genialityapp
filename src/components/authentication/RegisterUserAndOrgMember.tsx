@@ -223,7 +223,7 @@ const RegisterUserAndOrgMember = ({
             status: true,
             isLoading: false,
             textError: intl.formatMessage({
-              // REVISAR: No se debería llamar TextError, si el texto es una respuesta afirmativa.
+              // TODO: No se debería llamar TextError, si el texto es una respuesta afirmativa.
               id: 'text_error.organization_successfully_registered',
               defaultMessage: 'Te has inscrito correctamente a esta organización',
             }),
