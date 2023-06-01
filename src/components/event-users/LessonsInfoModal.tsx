@@ -19,7 +19,7 @@ interface ILessonsInfoModalProps {
 }
 
 const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
-  const { show, onHidden, allActivities, user, event } = props
+  const { show, onHidden, allActivities, user: watchedUser, event } = props
 
   const [dataLoaded, setDataLoaded] = useState(false)
   const [viewedActivities, setViewedActivities] = useState<any[]>([])
@@ -29,7 +29,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
     const existentActivities = await allActivities.map(async (activity) => {
       const activity_attendee = await firestore
         .collection(`${activity._id}_event_attendees`)
-        .doc(user._id)
+        .doc(watchedUser._id)
         .get()
       if (activity_attendee.exists) {
         return activity
@@ -45,9 +45,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
 
   const handleSendCertificate = async () => {
     setIsSending(true)
-    const emailEncoded = encodeURIComponent(user.email)
-    const redirect = `${window.location.origin}/landing/${event._id}/certificate`
-    const url = `${window.location.origin}/direct-login?email=${emailEncoded}&redirect=${redirect}`
+    const emailEncoded = encodeURIComponent(watchedUser.email)
 
     try {
       await EventsApi.generalMagicLink(
@@ -55,7 +53,11 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
         url,
         'Entra al ver el certificado en el siguiente link',
       )
-      StateMessage.show(null, 'success', `Se ha enviado el mensaje a ${user.email}`)
+      StateMessage.show(
+        null,
+        'success',
+        `Se ha enviado el mensaje a ${watchedUser.email}`,
+      )
     } catch (err) {
       console.error(err)
       Modal.error({
@@ -72,7 +74,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
   )
 
   useEffect(() => {
-    if (!user) return
+    if (!watchedUser) return
     if (allActivities.length == 0) return
 
     requestAllData()
@@ -84,9 +86,9 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
 
     // if (!show) setLoaded(false)
     return () => setDataLoaded(false)
-  }, [allActivities, user, show])
+  }, [allActivities, watchedUser, show])
 
-  if (!user) return null
+  if (!watchedUser) return null
 
   return (
     <Modal centered footer={null} visible={show} closable onCancel={onHidden}>
@@ -97,7 +99,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
             header={
               <Row justify="space-between">
                 <Typography.Text strong>
-                  Lecciones vistas por {user.names}
+                  Lecciones vistas por {watchedUser.names}
                 </Typography.Text>
                 <Button
                   type="primary"
@@ -124,7 +126,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
                 ) : (
                   <Checkbox
                     onChange={async () => {
-                      await checkinAttendeeInActivity(user, item._id)
+                      await checkinAttendeeInActivity(watchedUser, item._id)
                       requestAllData()
                     }}
                   />
@@ -138,7 +140,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
             icon={<LoadingOutlined />}
             title="Cargando"
             status="info"
-            subTitle={`Cargando datos de ${user.names}...`}
+            subTitle={`Cargando datos de ${watchedUser.names}...`}
           />
         )}
       </Space>
