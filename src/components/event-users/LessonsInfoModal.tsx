@@ -45,11 +45,15 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
 
   const handleSendCertificate = async () => {
     setIsSending(true)
-    const emailEncoded = encodeURIComponent(watchedUser.email)
+    // const emailEncoded = encodeURIComponent(watchedUser.email)
+    // const redirect = `${window.location.origin}/landing/${event._id}/certificate`
+    // const url = `${window.location.origin}/direct-login?email=${emailEncoded}&redirect=${redirect}`
+    const url = `${window.location.origin}/certificate-generator/${watchedUser.account_id}/${event._id}/no-activities`
 
     try {
-      await EventsApi.generalMagicLink(
-        user.email,
+      // Before it was generalMagicLink, but now the mail is sent directly
+      await EventsApi.sendGenericMail(
+        watchedUser.email,
         url,
         'Entra al ver el certificado en el siguiente link',
       )
