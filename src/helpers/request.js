@@ -355,6 +355,9 @@ export const EventsApi = {
   generalMagicLink: async (email, url, content) => {
     return await Actions.post(`/api/general-magic-link`, { email, url, content })
   },
+  sendGenericMail: async (email, url, content) => {
+    return await Actions.post(`/api/generic-mail`, { email, url, content })
+  },
   //REFRESH URL LINK DE ACCESSO A CURSO
   refreshLinkEmailUserEvent: async (email, eventId) => {
     return await Actions.post(`/api/getloginlink`, {
@@ -401,6 +404,13 @@ export const UsersApi = {
     const token = await GetTokenUserFirebase()
     return await Actions.getAll(
       `api/events/${event_id}/eventusers/${user_id}?token=${token}`,
+    )
+  },
+  getEventUserByUser: async (eventId, userId) => {
+    return await Actions.getOne(
+      `/api/events/${eventId}/eventusers-by-user/${userId}`,
+      '',
+      true,
     )
   },
   mineTickets: async () => {
