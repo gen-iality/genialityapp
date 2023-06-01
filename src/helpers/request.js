@@ -406,6 +406,13 @@ export const UsersApi = {
       `api/events/${event_id}/eventusers/${user_id}?token=${token}`,
     )
   },
+  getEventUserByUser: async (eventId, userId) => {
+    return await Actions.getOne(
+      `/api/events/${eventId}/eventusers-by-user/${userId}`,
+      '',
+      true,
+    )
+  },
   mineTickets: async () => {
     return await Actions.getAll('/api/me/eventUsers/')
   },
