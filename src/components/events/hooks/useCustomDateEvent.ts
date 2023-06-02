@@ -49,9 +49,7 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
     const fetchEventData = async () => {
         try {
             setIsFetching(true);
-            console.log('data=>data',props)
             const data = await EventsApi.getOne(props.eventId);
-            console.log('data=>',data)
             if (!data) return;
             const datesFetched = data.dates;
             if (!data.dates || data.dates.length === 0) {
@@ -120,6 +118,7 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
     const handleInterceptor = (values: DateObject | DateObject[] | null) => {
         if (Array.isArray(values)) {
             const datesSelected = values.map((value) => value.toDate())
+            console.log('datesSelected=>',datesSelected)
             const newDateRangeList = datesSelected.map(date => {
                 const currentDate = new Date();
                 date.setHours(currentDate.getHours());
@@ -161,6 +160,7 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
     const handleSubmit = async () => {
         try {
             setIsSaving(true);
+            console.log('dates',dates)
             const payload = dates.map((date) => {
                 const dateStart = date.start;
                 const dateEnd = date.end;
@@ -169,6 +169,7 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
                     end: parseDate(dateEnd),
                 };
             });
+            return console.log('payload',payload)
             // 14 April 2023 15:00
             await EventsApi.editOne({ dates: payload }, props.eventId);
             notification.open({

@@ -901,7 +901,7 @@ class General extends Component {
                   />
 
                   <Form.Item label={'Especificar fechas'}>
-                    <CustomDateEvent eventId='' />
+                    <CustomDateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
                   </Form.Item>
 
                   <Form.Item label={'Descripción'}>
