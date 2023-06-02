@@ -6,6 +6,7 @@ import { GetTokenUserFirebase } from '../helpers/HelperAuth';
 import { configEventsTemplate } from '../helpers/constants';
 import { firestore } from '@/helpers/firebase';
 import { useIntl } from 'react-intl';
+import { dayToKey } from '@/components/events/hooks/useCustomDateEvent';
 
 export const cNewEventContext = createContext();
 //INITIAL STATE
@@ -328,6 +329,29 @@ export const NewEventProvider = ({ children }) => {
           show_title: true,
         },
       };
+      
+
+      const dateStart = new Date(data.datetime_from);
+      const dateEnd = new Date(data.datetime_to);
+      
+
+      
+      let currentDate = new Date(dateStart);
+      let newDateRanges = [];
+
+      while (currentDate <= dateEnd) {
+        const newCurrent = new Date(currentDate);
+        const newDateRange = {
+          id: dayToKey(new Date(newCurrent)),
+          start: new Date(newCurrent),
+          end: new Date(newCurrent.setHours(dateEnd.getHours(), dateEnd.getMinutes(), dateEnd.getSeconds())),
+        };
+        newDateRanges.push(newDateRange);
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      data.dates = newDateRanges
+
       const newMenu = {
         itemsMenu: {
           evento: {
@@ -352,8 +376,10 @@ export const NewEventProvider = ({ children }) => {
       //CREAR EVENTO
       try {
         let token = await GetTokenUserFirebase();
+        console.log('data=>',data)
 
         const result = await Actions.create(`/api/events?token=${token}`, data);
+        console.log('result=>',result)
         result._id = result._id ? result._id : result.data?._id;
         if (result._id) {
           let sectionsDefault = state.selectOrganization?.itemsMenu

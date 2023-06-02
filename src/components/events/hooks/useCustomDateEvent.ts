@@ -10,7 +10,7 @@ interface UseCustomDateEventProps {
 
 
 
-const dayToKey = (day: Date) => day.toISOString().substring(0, 10);
+export const dayToKey = (day: Date) => day.toISOString().substring(0, 10);
 
 const sortDates = (b: DateRangeEvius, a: DateRangeEvius) => new Date(b.start).getTime() - new Date(a.start).getTime();
 
@@ -49,7 +49,9 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
     const fetchEventData = async () => {
         try {
             setIsFetching(true);
+            console.log('data=>data',props)
             const data = await EventsApi.getOne(props.eventId);
+            console.log('data=>',data)
             if (!data) return;
             const datesFetched = data.dates;
             if (!data.dates || data.dates.length === 0) {
