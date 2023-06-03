@@ -16,17 +16,20 @@ import QuizProgressFromActivity from './QuizProgressFromActivity'
 import ButtonToDeleteSurveyAnswers from './ButtonToDeleteSurveyAnswers'
 import TakenActivityBadge from './TakenActivityBadge'
 import { useLocation } from 'react-router'
+import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton'
 
 interface ActivitiesListProps {
   eventId: string
   eventUserId?: string
   agendaList?: ExtendedAgendaType[] // If parent has this, why have we to re-do?
+  setActivitiesAttendee?: any
 }
 
 const ActivitiesList = (props: ActivitiesListProps) => {
   const {
     eventId, // The event ID
     eventUserId, // The event user ID
+    setActivitiesAttendee,
   } = props
 
   const service = new Service(firestore)
@@ -34,6 +37,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   const [isLoading, setIsLoading] = useState(true)
   const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([])
   const [isAnswersDeleted, setAnswersIsDeleted] = useState(false)
+  const [isActivitiesAttendeeDeleted, setActivitiesAttendeeIsDeleted] = useState(false)
 
   const currentUser = useCurrentUser()
   const currentEventUser = useContext(CurrentEventUserContext)
@@ -146,7 +150,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
       setIsLoading(false)
     })()
-  }, [eventId, eventUserId])
+  }, [eventId, eventUserId, isActivitiesAttendeeDeleted])
 
   if (isLoading) return <Spin />
 
@@ -193,14 +197,15 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   return (
     <>
       {currentEventUser.value?.rol.type === 'admin' ? (
-        <></>
-      ) : // <DeleteActivitiesTakenButton
-      //   eventId={eventId}
-      //   cEventUserId={eventUserId}
-      //   setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
-      //   setActivitiesAttendee={setActivitiesAttendee}
-      // />
-      undefined}
+        <>
+          <DeleteActivitiesTakenButton
+            eventId={eventId}
+            cEventUserId={eventUserId}
+            setActivitiesAttendeeIsDeleted={setActivitiesAttendeeIsDeleted}
+            setActivitiesAttendee={setActivitiesAttendee}
+          />
+        </>
+      ) : undefined}
       <ModuledActivityHOC
         list={truncatedAgendaList}
         render={(nameToFilter) => (

@@ -12,7 +12,7 @@ interface DeleteActivitiesTakenButtonProps {
   setActivitiesAttendee?: any
 }
 
-/** @deprecated remove temporally because setActivitiesAttendee */
+///** @deprecated remove temporally because setActivitiesAttendee */
 export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonProps) {
   const {
     eventId, // The event ID
