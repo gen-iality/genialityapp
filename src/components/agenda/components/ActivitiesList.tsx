@@ -1,7 +1,6 @@
 import { FunctionComponent, useContext, useMemo } from 'react'
 import { Spin, Collapse } from 'antd'
 import { useState, useEffect } from 'react'
-import { AgendaApi } from '@helpers/request'
 import dayjs from 'dayjs'
 import { ExtendedAgendaType, TruncatedAgenda } from '@Utilities/types/AgendaType'
 import { ActivityType } from '@context/activityType/types/activityType'
@@ -17,6 +16,7 @@ import ButtonToDeleteSurveyAnswers from './ButtonToDeleteSurveyAnswers'
 import TakenActivityBadge from './TakenActivityBadge'
 import { useLocation } from 'react-router'
 import { DeleteActivitiesTakenButton } from './DeleteActivitiesTakenButton'
+import { useHelper } from '@context/helperContext/hooks/useHelper'
 
 interface ActivitiesListProps {
   eventId: string
@@ -36,31 +36,23 @@ const ActivitiesList = (props: ActivitiesListProps) => {
   const [loadedActivities, setLoadedActivities] = useState<ExtendedAgendaType[]>([])
   const [truncatedAgendaList, setTruncatedAgendaList] = useState<TruncatedAgenda[]>([])
   const [isAnswersDeleted, setAnswersIsDeleted] = useState(false)
+  const [deletingTakenActivitiesCounter, setDeletingTakenActivitiesCounter] = useState(0)
 
   const currentUser = useCurrentUser()
   const currentEventUser = useContext(CurrentEventUserContext)
 
+  const { activitiesEvent } = useHelper()
+
   const location = useLocation<any>()
 
-  const requestAllActivities = async () => {
-    setTruncatedAgendaList([])
-
-    let agendaList: ExtendedAgendaType[] = []
-    if (props.agendaList === undefined) {
-      const { data } = (await AgendaApi.byEvent(eventId)) as {
-        data: ExtendedAgendaType[]
-      }
-      agendaList = data
-    } else {
-      agendaList = props.agendaList
-    }
-    // Update the activities
-    setLoadedActivities(agendaList)
-  }
-
   const onDeleteTakenActivities = () => {
-    requestAllActivities()
+    setDeletingTakenActivitiesCounter((previous) => previous + 1)
   }
+
+  useEffect(() => {
+    // We use the activities loaded by the HelperContext
+    setLoadedActivities(activitiesEvent)
+  }, [activitiesEvent])
 
   useEffect(() => {
     if (!eventId) return
@@ -78,7 +70,8 @@ const ActivitiesList = (props: ActivitiesListProps) => {
     }
 
     setIsLoading(true)
-    requestAllActivities().finally(() => setIsLoading(false))
+    setDeletingTakenActivitiesCounter((previous) => previous + 1)
+    setIsLoading(false)
   }, [eventId])
 
   useEffect(() => {
@@ -156,7 +149,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         return result
       }),
     ])
-  }, [eventUserId, loadedActivities])
+  }, [eventUserId, loadedActivities, deletingTakenActivitiesCounter])
 
   if (isLoading) return <Spin />
 
