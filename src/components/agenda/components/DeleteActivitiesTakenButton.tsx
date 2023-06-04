@@ -2,14 +2,13 @@ import { Button } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
 import { AgendaApi } from '@helpers/request'
 import { firestore } from '@helpers/firebase'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useCallback } from 'react'
 
 interface DeleteActivitiesTakenButtonProps {
   eventId: string
   cEventUserId?: string
-  setActivitiesAttendeeIsDeleted?: any
-  setActivitiesAttendee?: any
+  onDelete?: () => void
 }
 
 ///** @deprecated remove temporally because setActivitiesAttendee */
@@ -17,9 +16,10 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
   const {
     eventId, // The event ID
     cEventUserId, // The event user ID
-    setActivitiesAttendeeIsDeleted,
-    setActivitiesAttendee,
+    onDelete,
   } = props
+
+  const location = useLocation<any>()
 
   const deleteActivitiesTaken = useCallback(
     async (cEventUserId: any, eventId: any) => {
@@ -33,14 +33,18 @@ export function DeleteActivitiesTakenButton(props: DeleteActivitiesTakenButtonPr
         }),
       )
 
-      setActivitiesAttendee([])
-      setActivitiesAttendeeIsDeleted((prevState: any) => !prevState)
+      if (typeof onDelete === 'function') onDelete()
     },
     [cEventUserId, eventId],
   )
 
   return (
-    <Link to={`/landing/${eventId}/agenda`} replace>
+    <Link
+      to={`/landing/${eventId}/${
+        location.pathname.includes('evento') ? 'evento' : 'agenda'
+      }`}
+      replace
+    >
       <Button
         style={{
           background: '#B8415A',
