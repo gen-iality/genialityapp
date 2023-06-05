@@ -1,4 +1,5 @@
 import { firestore } from './firebase'
+import { FB } from './firestore-request'
 import { EventFieldsApi } from './request'
 
 //METODO PARA SABER SI SE ESTÁ POSICIONADO EN EL HOME DE GENIALITY
@@ -31,8 +32,7 @@ export function listenSurveysData(
   //visualizarEncuesta
 ) {
   console.log('600.listenSurveysData')
-  firestore
-    .collection('surveys')
+  FB.Surveys.collection()
     .where('eventId', '==', event_id)
     .where('isPublished', '==', 'true')
     .onSnapshot((querySnapshot) => {
@@ -151,17 +151,14 @@ export const zoomExternoHandleOpen = (activity, eventUser, isMobile) => {
 
 //obtener las generaltabs del curso
 
-export const GetGeneralTabsByEvent = (event_id, setgeneraltabs) => {
-  firestore
-    .collection('events')
-    .doc(event_id)
-    .onSnapshot(function (eventSnapshot) {
-      if (eventSnapshot.exists) {
-        if (eventSnapshot.data().tabs !== undefined) {
-          setgeneraltabs(eventSnapshot.data().tabs)
-        }
+export const GetGeneralTabsByEvent = (eventId, setgeneraltabs) => {
+  FB.Events.ref(eventId).onSnapshot(function (eventSnapshot) {
+    if (eventSnapshot.exists) {
+      if (eventSnapshot.data().tabs !== undefined) {
+        setgeneraltabs(eventSnapshot.data().tabs)
       }
-    })
+    }
+  })
 }
 
 export const useEventWithCedula = (event) => {

@@ -5,7 +5,7 @@ import { useEffect, useState, useMemo, memo, ReactNode } from 'react'
 import { Spin, Badge } from 'antd'
 
 /** Helpers and utils */
-import { firestore } from '@helpers/firebase'
+
 import { AgendaApi } from '@helpers/request'
 import type AgendaType from '@Utilities/types/AgendaType'
 import type { ExtendedAgendaType } from '@Utilities/types/AgendaType'
@@ -16,6 +16,7 @@ import { useUserEvent } from '@context/eventUserContext'
 
 /** Components */
 import CourseProgress from './CourseProgress'
+import { FB } from '@helpers/firestore-request'
 
 type CurrentEventAttendees = any // TODO: define this type and move to @Utilities/types/
 
@@ -59,20 +60,13 @@ function StudentSelfCourseProgress(props: StudentSelfCourseProgressProps) {
         .filter(activityFilter)
         .filter((activity) => !activity.is_info_only)
       setAllActivities(filteredData)
-      const existentActivities = filteredData.map(async (activity) => {
-        const activityAttendee = await firestore
-          .collection(`${activity._id}_event_attendees`)
-          .doc(cEventUser.value._id)
-          .get() //checkedin_at
-        if (activityAttendee.exists)
-          return activityAttendee.data() as CurrentEventAttendees
-        return null
-      })
-      // Filter existent activities and set the state
-      setActivitiesAttendee(
-        // Promises don't bite :)
-        (await Promise.all(existentActivities)).filter((item) => !!item),
+      const allAttendees = await FB.Attendees.getEventUserActivities(
+        filteredData.map((activity) => activity._id as string),
+        cEventUser.value._id,
       )
+
+      // Filter existent activities and set the state
+      setActivitiesAttendee(allAttendees.filter((attendee) => attendee !== undefined))
     }
     loadData().then(() => setIsLoading(false))
   }, [cEventContext.value, cEventUser.value])

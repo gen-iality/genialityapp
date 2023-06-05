@@ -1,4 +1,5 @@
 import { firestore, fireRealtime } from '@helpers/firebase'
+import { FB } from '@helpers/firestore-request'
 import dayjs from 'dayjs'
 
 const refSurvey = firestore.collection('surveys')
@@ -90,10 +91,7 @@ export const getAnswersByQuestion = (surveyId, questionId) => {
 export const getTriviaRanking = (surveyId) => {
   return new Promise((resolve, reject) => {
     const list = []
-    firestore
-      .collection('surveys')
-      .doc(surveyId)
-      .collection('ranking')
+    FB.Surveys.Ranking.collection(surveyId)
       .get()
       .then((result) => {
         if (!result.empty) {
@@ -120,15 +118,6 @@ export const getSurveyConfiguration = (surveyId) => {
       reject('Survey ID required')
     }
 
-    firestore
-      .collection('surveys')
-      .doc(surveyId)
-      .get()
-      .then((result) => {
-        if (result?.exists) {
-          const data = result.data()
-          resolve(data)
-        }
-      })
+    FB.Surveys.get(surveyId).then((data) => resolve(data))
   })
 }
