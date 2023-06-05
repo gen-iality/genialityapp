@@ -46,6 +46,8 @@ import {
   UsergroupAddOutlined,
   StarOutlined,
   CheckOutlined,
+  LoadingOutlined,
+  ArrowsAltOutlined,
 } from '@ant-design/icons'
 import QrModal from './qrModal'
 
@@ -267,6 +269,7 @@ class ListEventUser extends Component {
       typeScanner: 'CheckIn options',
       nameActivity: props.location.state?.item?.name || '',
       qrModalOpen: false,
+      isMasiveEmailing: false,
       unSusCribeConFigFast: () => {},
       unSuscribeAttendees: () => {},
     }
@@ -1171,6 +1174,7 @@ class ListEventUser extends Component {
       nameActivity,
       columns,
       fieldsForm,
+      isMasiveEmailing,
     } = this.state
 
     const activityId = this.props.match.params.id
@@ -1399,6 +1403,35 @@ class ListEventUser extends Component {
                   }
                 >
                   Agregar usuario
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  type="dashed"
+                  icon={isMasiveEmailing ? <LoadingOutlined /> : <ArrowsAltOutlined />}
+                  disabled={isMasiveEmailing}
+                  size="middle"
+                  onClick={() => {
+                    this.setState({ isMasiveEmailing: true })
+
+                    const promises = users.map(async (user) => {
+                      const { email } = user
+                      console.debug('emailing to', email)
+                      const url = `${window.location.origin}/certificate-generator/${user._id}/${this.props.event._id}/no-activities`
+                      await EventsApi.sendGenericMail(
+                        email,
+                        url,
+                        '<p>La Asociación Colombiana de Neurologia - ACN, agradece du asistencia y participación en el Simposio Nacional de Movimientos Anormales, realizado el 26 - 27 de mayo en Barranquilla, Colombia.</p><p>Nota: Para efectuar la descarga introduzca su número de cédula\nRecuerde consultar la agenda académica y programación de eventos en www.ACNWEB.org 🧠</p>',
+                        'Descargar certificado',
+                      )
+                    })
+                    Promise.all(promises)
+                      .then(() => StateMessage.show(null, 'success', 'Emails enviado'))
+                      .catch((err) => StateMessage.show(null, 'error', err))
+                      .finally(() => this.setState({ isMasiveEmailing: false }))
+                  }}
+                >
+                  Enviar certificados
                 </Button>
               </Col>
             </Row>
