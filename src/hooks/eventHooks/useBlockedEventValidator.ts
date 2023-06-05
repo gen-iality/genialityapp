@@ -1,4 +1,4 @@
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { AlertsPlanApi } from '@helpers/request'
 import dayjs from 'dayjs'
 
@@ -25,18 +25,10 @@ export const useBlockedEventValidator = (event: any, cUser: any) => {
           user_id: cUser.value?._id,
         })
         if (message) {
-          DispatchMessageService({
-            type: 'success',
-            msj: `Ya no puedes ver el curso`,
-            action: 'show',
-          })
+          StateMessage.show(null, 'success', `Ya no puedes ver el curso`)
         }
       } catch (error) {
-        DispatchMessageService({
-          type: 'error',
-          msj: `No se pudo cambiar el mensaje`,
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', `No se pudo cambiar el mensaje`)
       }
     }
 

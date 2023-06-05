@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { OrganizationApi, PositionsApi } from '@helpers/request'
 import { Modal, Row, Col, Form, Input, Select, FormInstance } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import Header from '@antdComponents/Header'
 import { handleRequestError } from '@helpers/utils'
 
@@ -118,39 +118,24 @@ function PositionsFormModal(props: PositionsFormModalProps) {
         updatedPosition = await PositionsApi.create(data)
       }
 
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Información guardada correctamente!',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', 'Información guardada correctamente!')
 
       onSubmitCallback && onSubmitCallback(updatedPosition)
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: handleRequestError(e).message,
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', handleRequestError(e).message)
     } finally {
       handler.close()
     }
   }
 
   const onRemoveId = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     if (handler.currentPosition) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
@@ -162,19 +147,11 @@ function PositionsFormModal(props: PositionsFormModalProps) {
         onOk: async () => {
           try {
             await PositionsApi.delete(handler.currentPosition!._id)
-            DispatchMessageService({ key: 'loading', action: 'destroy' })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
           } catch (e) {
-            DispatchMessageService({ key: 'loading', action: 'destroy' })
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           } finally {
             handler.close()
           }

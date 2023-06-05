@@ -15,7 +15,7 @@ import {
   FieldTimeOutlined,
   EnvironmentOutlined,
 } from '@ant-design/icons'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 import Loading from '../profile/loading'
 
@@ -112,12 +112,11 @@ class SendRsvp extends Component {
     })
 
   async submit() {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se envíe la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se envíe la información...',
+    )
     const { event } = this.props
     const { rsvp, include_date, selection } = this.state
     let users = []
@@ -161,25 +160,19 @@ class SendRsvp extends Component {
         redirect: true,
         url_redirect: '/eventadmin/' + event._id + '/messages',
       })
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Las notificaciones se mandaron de manera satisfactoria',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(
+        null,
+        'success',
+        'Las notificaciones se mandaron de manera satisfactoria',
+      )
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: `Lo sentimos las notificaciones no pudieron ser enviadas, código de error ${e.response.status}`,
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(
+        null,
+        'error',
+        `Lo sentimos las notificaciones no pudieron ser enviadas, código de error ${e.response.status}`,
+      )
       this.setState({
         disabled: false,
         redirect: true,
@@ -411,7 +404,7 @@ class SendRsvp extends Component {
                     )}
                   </Row>
                   <Row justify="center" gutter={8} wrap>
-                    <Link to={{ pathname: `${this.props.matchUrl}` }}>
+                    <Link to={{ pathname: `${this.props.parentUrl}/invitados` }}>
                       <Button type="primary">Editar seleccionados</Button>
                     </Link>
                   </Row>

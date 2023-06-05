@@ -9,7 +9,7 @@ import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { OrganizationApi, PositionsApi } from '@helpers/request'
 
 /** Context */
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 
 /** Components */
@@ -57,36 +57,21 @@ function ModalMembers(props) {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        DispatchMessageService({
-          type: 'loading',
-          key: 'loading',
-          msj: ' Por favor espere mientras se borra la información...',
-          action: 'show',
-        })
+        StateMessage.show(
+          'loading',
+          'loading',
+          ' Por favor espere mientras se borra la información...',
+        )
         const onHandlerRemove = async () => {
           try {
             await OrganizationApi.deleteUser(organizationId, user._id)
             props.closeOrOpenModalMembers()
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
             props.startingComponent()
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Hubo un error al eliminar',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', 'Hubo un error al eliminar')
           }
         }
         onHandlerRemove()
@@ -119,20 +104,20 @@ function ModalMembers(props) {
     }
 
     if (resp._id) {
-      DispatchMessageService({
-        type: 'success',
-        msj: `Usuario ${props.editMember ? 'editado ' : 'agregado'} correctamente`,
-        action: 'show',
-      })
+      StateMessage.show(
+        null,
+        'success',
+        `Usuario ${props.editMember ? 'editado ' : 'agregado'} correctamente`,
+      )
       props.setIsLoading(true)
       props.closeOrOpenModalMembers()
       props.startingComponent()
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: `No fue posible ${props.editMember ? 'editar ' : 'agregar'} el Usuario`,
-        action: 'show',
-      })
+      StateMessage.show(
+        null,
+        'error',
+        `No fue posible ${props.editMember ? 'editar ' : 'agregar'} el Usuario`,
+      )
     }
   }
 

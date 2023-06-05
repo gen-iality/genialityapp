@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { OrganizationApi, TypesApi } from '@helpers/request'
 import { Form, Input, Row, Col, Select, Tabs } from 'antd'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { CardSelector } from '@components/events/CardSelector'
 
 const formLayout = {
@@ -70,17 +70,9 @@ function OrganizationInformation(props: { org: any }) {
 
     try {
       await OrganizationApi.editOne(organizationData, organizationId)
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Información actualizada correctamente',
-        action: 'show',
-      })
+      StateMessage.show(null, 'success', 'Información actualizada correctamente')
     } catch (error) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'No se pudo actualizar la información',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'No se pudo actualizar la información')
     }
   }
 

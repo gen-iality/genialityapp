@@ -4,7 +4,7 @@ import { Actions } from '@helpers/request'
 import UserRegistration from '../events/userRegistration'
 import withContext from '@context/withContext'
 import { GetTokenUserFirebase } from 'helpers/HelperAuth'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 class TicketsForm extends Component {
   constructor(props) {
@@ -236,11 +236,11 @@ class TicketsForm extends Component {
           data.seats = list
           this.request(data)
         } else {
-          DispatchMessageService({
-            type: 'info',
-            msj: `Te quedan ${quantity - list.length} puestos por seleccionar`,
-            action: 'show',
-          })
+          StateMessage.show(
+            null,
+            'info',
+            `Te quedan ${quantity - list.length} puestos por seleccionar`,
+          )
         }
       })
     } else this.request(data)
@@ -263,18 +263,10 @@ class TicketsForm extends Component {
       } else {
         //Muestro error parseado
         this.setState({ loading: false })
-        DispatchMessageService({
-          type: 'error',
-          msj: JSON.stringify(resp),
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', JSON.stringify(resp))
       }
     } catch (err) {
-      DispatchMessageService({
-        type: 'error',
-        msj: JSON.stringify(err),
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', JSON.stringify(err))
       console.error(err)
       this.setState({ loading: false })
     }

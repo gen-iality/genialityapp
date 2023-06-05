@@ -768,7 +768,6 @@ class AgendaLanding extends Component {
                           agendaList={this.state.data}
                           eventId={this.props.cEvent.value._id}
                           eventUserId={this.props.cEventUser.value?._id}
-                          setActivitiesAttendee={this.props.setActivitiesAttendee}
                         />
                       </div>
                     </>

@@ -3,7 +3,7 @@ import { Row, Col, Form } from 'antd'
 import EviusReactQuill from '../../shared/eviusReactQuill'
 import { EventsApi } from '@helpers/request'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -34,37 +34,22 @@ function ConfirmacionRegistro(props) {
 
   //funcion para guardar la inormación
   const saveData = async () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se guarda el contenido...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se guarda el contenido...',
+    )
     const data = {
       registration_message: registrationMessage,
       validateEmail: validateEmail,
     }
     try {
       await EventsApi.editOne(data, props.event._id)
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Contenido guardada correctamente!',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', 'Contenido guardada correctamente!')
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: e,
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', e)
     }
   }
 

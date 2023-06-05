@@ -6,7 +6,7 @@ import { app } from '@helpers/firebase'
 import { useUserEvent } from '@context/eventUserContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { useIntl } from 'react-intl'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 import { AttendeeApi } from '@helpers/request'
 
@@ -35,11 +35,7 @@ const RegistrationResult = ({
         }
       } catch (err) {
         console.log(err)
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Ha ocurrido un error')
       }
     }
 
@@ -64,13 +60,26 @@ const RegistrationResult = ({
         </>
       ) : (
         <>
-          <Result status="success" title="Inscripción exitosa!" />
-          {requireAutomaticLoguin && (
-            <RedirectUser
-              basicDataUser={basicDataUser}
-              cEvent={cEvent}
-              dataEventUser={dataEventUser}
+          {!validationGeneral.status ? (
+            <Result
+              status="warning"
+              title={
+                (basicDataUser ? basicDataUser?.email : '') +
+                ' ' +
+                validationGeneral.textError
+              }
             />
+          ) : (
+            <>
+              <Result status="success" title="Inscripción exitosa!" />
+              {requireAutomaticLoguin && (
+                <RedirectUser
+                  basicDataUser={basicDataUser}
+                  cEvent={cEvent}
+                  dataEventUser={dataEventUser}
+                />
+              )}
+            </>
           )}
         </>
       )}
@@ -82,8 +91,9 @@ const RedirectUser = ({ basicDataUser, cEvent, dataEventUser }) => {
   const cEventUser = useUserEvent()
   const { helperDispatch } = useHelper()
   const intl = useIntl()
-  const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] =
-    useState(false)
+  const [signInWithEmailAndPasswordError, setSignInWithEmailAndPasswordError] = useState(
+    false,
+  )
 
   useEffect(() => {
     setSignInWithEmailAndPasswordError(false)

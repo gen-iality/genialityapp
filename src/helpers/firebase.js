@@ -1,4 +1,3 @@
-/* globals process */
 import app from 'firebase/compat/app'
 
 import 'firebase/compat/auth'
@@ -13,25 +12,25 @@ import 'firebase/compat/database'
  */
 
 const config = {
-  apiKey: process.env.VITE_FB_APIKEY_EVIUSAUTH,
-  authDomain: process.env.VITE_FB_AUTHDOMAIN_EVIUSAUTH,
-  databaseURL: process.env.VITE_FB_DB_EVIUSAUTH,
-  projectId: process.env.VITE_PROJECTID_EVIUSAUTH,
-  storageBucket: process.env.VITE_STORAGEBUCKET_EVIUSAUTH,
-  appId: process.env.VITE_APPID_EVIUSAUTH,
-  messagingSenderId: process.env.VITE_MESSAGINGSENDER_EVIUSAUTH,
-  measurementId: process.env.VITE_MEASUREMENTID_EVIUSAUTH,
+  apiKey: import.meta.env.VITE_FB_APIKEY_EVIUSAUTH,
+  authDomain: import.meta.env.VITE_FB_AUTHDOMAIN_EVIUSAUTH,
+  databaseURL: import.meta.env.VITE_FB_DB_EVIUSAUTH,
+  projectId: import.meta.env.VITE_PROJECTID_EVIUSAUTH,
+  storageBucket: import.meta.env.VITE_STORAGEBUCKET_EVIUSAUTH,
+  appId: import.meta.env.VITE_APPID_EVIUSAUTH,
+  messagingSenderId: import.meta.env.VITE_MESSAGINGSENDER_EVIUSAUTH,
+  measurementId: import.meta.env.VITE_MEASUREMENTID_EVIUSAUTH,
 }
 
 const configEviuschat = {
-  apiKey: process.env.VITE_FB_APIKEY_CHATEVIUS,
-  authDomain: process.env.VITE_FB_AUTHDOMAIN_CHATEVIUS,
-  databaseURL: process.env.VITE_FB_DB_CHATEVIUS,
-  projectId: process.env.VITE_PROJECTID_CHATEVIUS,
-  storageBucket: process.env.VITE_STORAGEBUCKET_CHATEVIUS,
-  appId: process.env.VITE_APPID_CHATEVIUS,
-  messagingSenderId: process.env.VITE_MESSAGINGSENDER_CHATEVIUS,
-  measurementId: process.env.VITE_MEASUREMENTID_CHATEVIUS,
+  apiKey: import.meta.env.VITE_FB_APIKEY_CHATEVIUS,
+  authDomain: import.meta.env.VITE_FB_AUTHDOMAIN_CHATEVIUS,
+  databaseURL: import.meta.env.VITE_FB_DB_CHATEVIUS,
+  projectId: import.meta.env.VITE_PROJECTID_CHATEVIUS,
+  storageBucket: import.meta.env.VITE_STORAGEBUCKET_CHATEVIUS,
+  appId: import.meta.env.VITE_APPID_CHATEVIUS,
+  messagingSenderId: import.meta.env.VITE_MESSAGINGSENDER_CHATEVIUS,
+  measurementId: import.meta.env.VITE_MEASUREMENTID_CHATEVIUS,
 }
 
 const eviusaauth = app.initializeApp(config)

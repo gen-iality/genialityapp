@@ -17,7 +17,7 @@ import UserModal from '../modal/modalUser'
 import dayjs from 'dayjs'
 import Header from '@antdComponents/Header'
 import Table from '@antdComponents/Table'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 class CheckAgenda extends Component {
   constructor(props) {
@@ -314,25 +314,21 @@ class CheckAgenda extends Component {
         checked_at: new Date(),
       })
       .then(() => {
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Usuario inscrito exitosamente',
-          action: 'show',
-        })
+        StateMessage.show(null, 'success', 'Usuario inscrito exitosamente')
         if (edit) {
           this.updateAttendeesList(id, user)
         }
       })
       .catch((error) => {
         console.error('Error updating document: ', error)
-        DispatchMessageService({
-          type: 'error',
-          msj: this.props.intl.formatMessage({
+        StateMessage.show(
+          null,
+          'error',
+          this.props.intl.formatMessage({
             id: 'toast.error',
             defaultMessage: 'Sry :(',
           }),
-          action: 'show',
-        })
+        )
       })
   }
 

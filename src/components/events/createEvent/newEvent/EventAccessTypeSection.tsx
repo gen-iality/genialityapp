@@ -2,7 +2,7 @@ import { FunctionComponent, Dispatch } from 'react'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { Badge, Card, Col, Divider, Row, Space, Typography, Checkbox } from 'antd'
 import {
-  useContextNewEvent,
+  useNewEventContext,
   NewEventActionEnum,
   NewEventAccessTypeEnum,
   NewEventAction,
@@ -18,7 +18,7 @@ const EventAccessTypeSection: FunctionComponent = () => {
   const {
     dispatch,
     state,
-  }: { dispatch: Dispatch<NewEventAction>; state: NewEventState } = useContextNewEvent()
+  }: { dispatch: Dispatch<NewEventAction>; state: NewEventState } = useNewEventContext()
 
   return (
     <Row

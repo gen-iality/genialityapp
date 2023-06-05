@@ -22,7 +22,7 @@ import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons'
 import { message } from 'antd'
 const { TextArea } = Input
 import withContext from '@context/withContext'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const Editor = ({
   onSubmit,
@@ -139,17 +139,9 @@ class CreatePost extends Component {
         )
         // Reset formulario
         this.formRef.current.resetFields()
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Mensaje publicado',
-          action: 'show',
-        })
+        StateMessage.show(null, 'success', 'Mensaje publicado')
       } else {
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Error al guardar',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Error al guardar')
       }
     } else {
       this.setState({ errNote: true })

@@ -9,11 +9,10 @@ export interface AgendaDocumentForm {
   eventId: string
   selectedDocuments: string[]
   onSelectedDocuments?: (changed: string[]) => void
-  matchUrl?: string
 }
 
 function AgendaDocumentForm(props: AgendaDocumentForm) {
-  const { eventId, selectedDocuments, onSelectedDocuments, matchUrl } = props
+  const { eventId, selectedDocuments, onSelectedDocuments } = props
 
   const [allNameDocuments, setAllNameDocuments] = useState<SelectOptionType[]>([])
   const [wasLoaded, setWasLoaded] = useState(true)
@@ -55,8 +54,6 @@ function AgendaDocumentForm(props: AgendaDocumentForm) {
       <Document
         simpleMode
         event={{ _id: eventId }} // Awful, but who are we
-        matchUrl={matchUrl}
-        location={{ location: { state: { edit: false } } }} // Awful, but who are we
         cbUploaded={() => {
           loadAllDocument().then()
           console.debug('calls cbUploaded')

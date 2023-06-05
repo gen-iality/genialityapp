@@ -1,6 +1,6 @@
 /** React's libraries */
 import { FunctionComponent, useState, useEffect, useContext } from 'react'
-import { withRouter } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 /** Antd imports */
 import { Steps, Button, Card, Row, Spin } from 'antd'
@@ -10,20 +10,16 @@ import { ContactsOutlined, ScheduleOutlined } from '@ant-design/icons'
 import { OrganizationFuction, UsersApi } from '@helpers/request'
 
 /** Context */
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 /*vista de resultado de la creacion de un curso */
-import { cNewEventContext } from '@context/newEventContext'
+import { NewEventContext } from '@context/newEventContext'
 
 /** Components */
 import InitialNewEventFormSection from './newEvent/InitialNewEventFormSection'
 import EventAccessTypeSection from './newEvent/EventAccessTypeSection'
 import EventTypeSection from './newEvent/EventTypeSection'
 
-interface INewEventPageProps {
-  match: any
-}
-
-const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
+const NewEventPage: FunctionComponent = () => {
   const [orgId, setOrgId] = useState<string | null>(null)
   const [stepsValid, setStepsValid] = useState({
     info: false,
@@ -46,7 +42,9 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
     },
   ])
 
-  const eventNewContext: any = useContext(cNewEventContext)
+  const params = useParams<any>()
+
+  const eventNewContext: any = useContext(NewEventContext)
 
   const goNextPage = () => setCurrent((previous) => previous + 1)
   const goPreviousPage = () => setCurrent((previous) => previous - 1)
@@ -79,11 +77,7 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
             { name: 'description', required: eventNewContext.addDescription, length: 9 },
           ])
         ) {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Error en los campos...',
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', 'Error en los campos...')
         } else {
           goNextPage()
         }
@@ -111,13 +105,13 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
     const newOrgId = urlParams.get('orgId')
     setOrgId(newOrgId)
 
-    if (props.match?.params?.user) {
+    if (params.user) {
       // eslint-disable-next-line react/prop-types
-      UsersApi.getProfile(props.match?.params?.user).then((profileUser) => {
+      UsersApi.getProfile(params.user).then((profileUser) => {
         setCurrentUser(profileUser)
       })
     }
-  }, [])
+  }, [params])
 
   useEffect(() => {
     if (orgId) {
@@ -233,4 +227,4 @@ const NewEventPage: FunctionComponent<INewEventPageProps> = (props) => {
   )
 }
 
-export default withRouter(NewEventPage)
+export default NewEventPage

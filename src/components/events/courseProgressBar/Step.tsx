@@ -1,6 +1,5 @@
 import { ReactNode } from 'react'
-import { useMemo, memo, useEffect } from 'react'
-import { useLocation } from 'react-router'
+import { useMemo, memo } from 'react'
 import './Step.css'
 
 export interface StepProps {
@@ -8,17 +7,12 @@ export interface StepProps {
   isActive?: boolean | number
   isSurvey?: boolean
   key?: string
-  /* onChangeFunction?: any; */
-  setCurrentId?: any
-  currentId?: any
-  id?: string
+  isFocus?: boolean
   onClick?: () => void
 }
 
 function Step(props: StepProps) {
-  const { children, isActive, isSurvey, currentId, setCurrentId, id, ...rest } = props
-
-  const location = useLocation()
+  const { children, isActive, isSurvey, isFocus, ...rest } = props
 
   const className = useMemo(() => {
     if (isActive) {
@@ -27,24 +21,16 @@ function Step(props: StepProps) {
     return 'Step'
   }, [isActive])
 
-  useEffect(() => {
-    const urlCompleta = location.pathname
-    const urlSplited = urlCompleta.split('activity/')
-    const currentActivityId = urlSplited[1]
-    setCurrentId(currentActivityId)
-  }, [location])
-
   return (
     <div
       className={className}
       style={{
         borderRadius: isSurvey ? '' : '50%',
-        backgroundColor: currentId == id ? '#043558' : '',
-        color: currentId == id ? '#fff' : '',
+        backgroundColor: isFocus ? '#043558' : '',
+        color: isFocus ? '#fff' : '',
       }}
       {...rest}
       onClick={() => {
-        setCurrentId(id)
         props.onClick && props.onClick()
       }}
     >

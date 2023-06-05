@@ -10,7 +10,7 @@ import { Form, Tabs, Col, Row, Switch, Modal, BackTop } from 'antd'
 
 import Header from '@antdComponents/Header'
 import { RouterPrompt } from '@antdComponents/RoutePrompt'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import Loading from '../profile/loading'
 
 import { Redirect, useHistory, useLocation } from 'react-router'
@@ -37,6 +37,7 @@ interface LocationStateType {
 interface IAgendaEditPageProps {
   event: any
   matchUrl: string
+  parentUrl: string
 }
 
 /**
@@ -92,12 +93,11 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
       values.datetime_end = values.date + ' ' + dayjs(values.hour_end).format('HH:mm')
       values.selected_document = selectedDocuments
 
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: 'Por favor espere mientras se guarda la información...',
-        action: 'show',
-      })
+      StateMessage.show(
+        'loading',
+        'loading',
+        'Por favor espere mientras se guarda la información...',
+      )
 
       let _agenda: AgendaType | undefined = undefined
       if (location.state?.edit || currentAgenda?._id) {
@@ -130,27 +130,18 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         setIsNeededConfirmRedirection(false)
       }
 
-      DispatchMessageService({
-        action: 'destroy',
-        type: 'loading',
-        key: 'loading',
-        msj: '',
-      })
+      StateMessage.destroy('loading')
 
       if (_agenda?._id) {
         console.log('agenda created (2)')
         setIsEditing(true)
         cAgenda.setIsPublished(true)
       } else if (changePathWithoutSaving) {
-        console.log('go to', props.matchUrl)
-        history.push(`${props.matchUrl}`)
+        console.log('go to', props.parentUrl)
+        history.push(`${props.parentUrl}`)
       }
 
-      DispatchMessageService({
-        msj: 'Información guardada correctamente!',
-        type: 'success',
-        action: 'show',
-      })
+      StateMessage.show(null, 'success', 'Información guardada correctamente!')
     },
     [selectedDocuments],
   )
@@ -209,12 +200,11 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
    * remove the current activity.
    */
   const onRemove = useCallback(async () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras borra la información...',
+    )
     if (currentAgenda) {
       Modal.confirm({
         title: '¿Está seguro de eliminar la información?',
@@ -227,7 +217,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
           deleteActivity(props.event._id, currentAgenda._id!, currentAgenda.name).then(
             () => {
               setShouldRedirect(true)
-              history.push(`${props.matchUrl}`)
+              history.push(`${props.parentUrl}`)
             },
           )
         },
@@ -248,7 +238,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
     cAgenda.saveConfig()
   }, [cAgenda.isPublished])
 
-  if (!location.state || shouldRedirect) return <Redirect to={props.matchUrl} />
+  if (!location.state || shouldRedirect) return <Redirect to={props.parentUrl} />
 
   return (
     <Form
@@ -291,7 +281,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
         form
         saveNameIcon
         remove={onRemove}
-        customBack={props.matchUrl}
+        customBack={props.parentUrl}
         title={cAgenda.activityName ? `Actividad - ${cAgenda.activityName}` : 'Actividad'}
         saveName={location.state.edit || cAgenda.activityEdit || isEditing ? '' : 'Crear'}
         edit={location.state.edit || cAgenda.activityEdit || isEditing}
@@ -321,7 +311,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
               activityId={cAgenda.activityEdit}
               event={props.event}
               agenda={currentAgenda}
-              matchUrl={props.matchUrl}
+              matchUrl={props.parentUrl}
             />
           </Tabs.TabPane>
           {isEditing && (
@@ -335,7 +325,7 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
                         activityName={currentAgenda.name}
                         eventId={props.event._id}
                         shouldLoad={currentTab === '2'}
-                        matchUrl={props.matchUrl}
+                        matchUrl={props.parentUrl}
                       />
                     )}
                     <BackTop />
@@ -353,7 +343,6 @@ const AgendaEditPage: React.FunctionComponent<IAgendaEditPageProps> = (props) =>
                           console.log('document update:', changed)
                           setSelectedDocuments(changed)
                         }}
-                        matchUrl={props.matchUrl}
                       />
                     </Form.Item>
                     <BackTop />

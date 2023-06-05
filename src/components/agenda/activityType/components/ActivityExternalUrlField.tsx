@@ -1,7 +1,8 @@
-import { ReactNode } from 'react'
-import { Input, Form, Result, Typography } from 'antd'
+import { ReactNode, useState } from 'react'
+import { Input, Form, Result, Typography, Divider } from 'antd'
 import rules from '../utils/formValidatorRules'
 import urlProcessorSet from '../utils/urlProcessorSet'
+import VimeoUploader from './VimeoUploader'
 
 const { Paragraph } = Typography
 
@@ -16,6 +17,7 @@ export interface ActivityExternalUrlFieldProps {
 
 function ActivityExternalUrlField(props: ActivityExternalUrlFieldProps) {
   const { type, subtitle, iconSrc, placeholder, addonBefore, onInput } = props
+  const [initialURL, setInitialURL] = useState('')
 
   return (
     <Result
@@ -36,10 +38,21 @@ function ActivityExternalUrlField(props: ActivityExternalUrlFieldProps) {
               type={type === 'vimeo' ? 'number' : 'text'}
               addonBefore={addonBefore}
               placeholder={placeholder}
+              value={initialURL}
               size="large"
               onChange={(e) => {
                 // This is for send the ID only if the URL is from YouTube or Vimeo
-                onInput(urlProcessorSet[type](e))
+                const url = urlProcessorSet[type](e)
+                onInput(url)
+                setInitialURL(url)
+              }}
+            />
+            <Divider />
+            <Typography.Paragraph>También puedes subir el archivo</Typography.Paragraph>
+            <VimeoUploader
+              onUploaded={(url) => {
+                setInitialURL(url)
+                onInput(url)
               }}
             />
           </Form.Item>

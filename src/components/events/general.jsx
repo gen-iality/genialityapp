@@ -50,7 +50,7 @@ import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
 import { ExclamationCircleOutlined, BellOutlined } from '@ant-design/icons'
 import { handleRequestError } from '@helpers/utils'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 
 import { CurrentUserContext } from '@context/userContext'
@@ -200,11 +200,7 @@ class General extends Component {
       if (error.response) {
         const { status, data } = error.response
         if (status === 401) {
-          DispatchMessageService({
-            type: 'error',
-            msj: `Error: ${data?.message || status}`,
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', `Error: ${data?.message || status}`)
         } else this.setState({ serverError: true, loader: false })
       } else {
         this.setState({
@@ -297,14 +293,14 @@ class General extends Component {
     if (valid) {
       this.setState({ valid: !valid, error })
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: this.props.intl.formatMessage({
+      StateMessage.show(
+        null,
+        'error',
+        this.props.intl.formatMessage({
           id: 'message.error.complete.requerid.data',
           defaultMessage: 'Hubo un error, por favor completa los datos obligatorios!',
         }),
-        action: 'show',
-      })
+      )
     }
   }
   //Cambio descripción
@@ -394,11 +390,7 @@ class General extends Component {
               id: 'message.success.updated.tabs',
               defaultMessage: 'Tabs de la zona social actualizados!',
             })
-            DispatchMessageService({
-              type: 'success',
-              msj: msg,
-              action: 'show',
-            })
+            StateMessage.show(null, 'success', msg)
             resolve({
               error: '',
               message: msg,
@@ -406,15 +398,15 @@ class General extends Component {
           })
           .catch((err) => {
             console.error(err)
-            DispatchMessageService({
-              type: 'error',
-              msj: intl.formatMessage({
+            StateMessage.show(
+              null,
+              'error',
+              intl.formatMessage({
                 id: 'message.error.updated.tabs',
                 defaultMessage:
                   'Ha ocurrido un error actualizando las tabs de la zona social',
               }),
-              action: 'show',
-            })
+            )
           })
       } else {
         firestore
@@ -426,11 +418,7 @@ class General extends Component {
               id: 'message.success.initialized.tabs',
               defaultMessage: 'Tabs de la zona social inicializados',
             })
-            DispatchMessageService({
-              type: 'success',
-              msj: msg,
-              action: 'show',
-            })
+            StateMessage.show(null, 'success', msg)
             resolve({
               error: '',
               message: msg,
@@ -438,15 +426,15 @@ class General extends Component {
           })
           .catch((err) => {
             console.error(err)
-            DispatchMessageService({
-              type: 'error',
-              msj: intl.formatMessage({
+            StateMessage.show(
+              null,
+              'error',
+              intl.formatMessage({
                 id: 'message.error.updated.tabs',
                 defaultMessage:
                   'Ha ocurrido un error actualizando las tabs de la zona social',
               }),
-              action: 'show',
-            })
+            )
           })
       }
     })
@@ -463,12 +451,11 @@ class General extends Component {
     const { intl } = this.props
     /* e.preventDefault();
     e.stopPropagation(); */
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se guarda la información...',
+    )
 
     // creacion o actualizacion de estado en firebase de los tabs de la zona social
     await this.upsertTabs()
@@ -542,49 +529,45 @@ class General extends Component {
         const info = await EventsApi.editOne(data, event._id)
         this.props.updateEvent(info)
         self.setState({ loading: false })
-        DispatchMessageService({
-          type: 'success',
-          msj: intl.formatMessage({
+        StateMessage.show(
+          null,
+          'success',
+          intl.formatMessage({
             id: 'toast.success',
             defaultMessage: 'Ok!',
           }),
-          action: 'show',
-        })
+        )
       } else {
         const result = await Actions.create('/api/events', data)
         this.setState({ loading: false })
         if (result._id) {
           window.location.replace(`${window.location.origin}/event/${result._id}`)
         } else {
-          DispatchMessageService({
-            type: 'warning',
-            msj: intl.formatMessage({
+          StateMessage.show(
+            null,
+            'warning',
+            intl.formatMessage({
               id: 'toast.warning',
               defaultMessage: 'Idk',
             }),
-            action: 'show',
-          })
+          )
           this.setState({ msg: "Can't create", create: false })
         }
       }
     } catch (error) {
-      DispatchMessageService({
-        type: 'error',
-        msj: intl.formatMessage({
+      StateMessage.show(
+        null,
+        'error',
+        intl.formatMessage({
           id: 'toast.error',
           defaultMessage: 'Sry :(',
         }),
-        action: 'show',
-      })
+      )
       if (error?.response) {
         const { status, data } = error.response
 
         if (status === 401) {
-          DispatchMessageService({
-            type: 'error',
-            msj: `Error : ${data?.message || status}`,
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', `Error : ${data?.message || status}`)
         } else this.setState({ serverError: true, loader: false, errorData: data })
       } else {
         let errorData = error.message
@@ -599,12 +582,11 @@ class General extends Component {
   //Delete event
   async deleteEvent() {
     const self = this
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: self.props.intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      self.props.intl.formatMessage({ id: 'toast.success', defaultMessage: 'Ok!' }),
+    )
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -616,26 +598,12 @@ class General extends Component {
         const onHandlerRemove = async () => {
           try {
             await EventsApi.deleteOne(self.state.event._id)
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
             window.location.replace(`${window.location.origin}/myprofile`)
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
         }
         onHandlerRemove()

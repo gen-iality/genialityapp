@@ -3,7 +3,7 @@ import { Card, Row, Col } from 'antd'
 import { firestore } from '@helpers/firebase'
 import { ExternalSurvey } from '@helpers/request'
 import { EditOutlined } from '@ant-design/icons'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 export default class SurveyExternal extends Component {
   constructor(props) {
@@ -48,11 +48,7 @@ export default class SurveyExternal extends Component {
     const result = await this.updateSurvey(survey_id, data)
 
     if (result && result.state === 'updated') {
-      DispatchMessageService({
-        type: 'success',
-        msj: result.message,
-        action: 'show',
-      })
+      StateMessage.show(null, 'success', result.message)
     }
   }
 

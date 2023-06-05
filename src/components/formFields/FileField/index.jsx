@@ -48,11 +48,6 @@ function FileField(rawProps) {
         setIsUploading(true)
         break
     }
-    /* DispatchMessageService({
-      type: 'success',
-      msj: this.props.intl.formatMessage({ id: 'toast.img', defaultMessage: 'Ok!' }),
-      action: 'show',
-    }); */
   }
 
   const draggerprops = {

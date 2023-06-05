@@ -17,7 +17,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { firestore } from '@helpers/firebase'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { handleRequestError } from '@helpers/utils'
 
@@ -52,12 +52,11 @@ function Empresas({ event, match }) {
   ))
 
   const orderCompany = async (updateList) => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se guarda el orden...',
-      action: 'destroy',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se guarda el orden...',
+    )
     const companies = updateList ? updateList : companyList
     try {
       for (let i = 0; i < companies.length; i++) {
@@ -75,35 +74,20 @@ function Empresas({ event, match }) {
             { merge: true },
           )
       }
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Orden guardado correctamente!',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', 'Orden guardado correctamente!')
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'Error',
-        msj: 'Ha ocurrido un problema al ordenar!',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'Error', 'Ha ocurrido un problema al ordenar!')
     }
   }
 
   function deleteCompany(id) {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -125,25 +109,11 @@ function Empresas({ event, match }) {
                 setCompanyList(updateList)
                 orderCompany(updateList).then((r) => {})
               })
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'Error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
         }
         onHandlerRemove()

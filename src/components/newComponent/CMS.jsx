@@ -5,7 +5,7 @@ import { Modal } from 'antd'
 import Header from '@antdComponents/Header'
 import Table from '@antdComponents/Table'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import Service from '../agenda/roomManager/service'
 import { firestore, fireRealtime } from '@helpers/firebase'
 import { deleteLiveStream, deleteAllVideos } from '@adaptors/gcoreStreamingApi'
@@ -97,12 +97,11 @@ const CMS = (props) => {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        DispatchMessageService({
-          type: 'loading',
-          key: 'loading',
-          msj: 'Por favor espere mientras se borra la información...',
-          action: 'show',
-        })
+        StateMessage.show(
+          'loading',
+          'loading',
+          'Por favor espere mientras se borra la información...',
+        )
         const onHandlerRemove = async () => {
           try {
             const refActivity = `request/${eventId}/activities/${id}`
@@ -116,26 +115,12 @@ const CMS = (props) => {
             await fireRealtime.ref(refActivity).remove()
             await service.deleteActivity(eventId, id)
             await API.deleteOne(id, eventId)
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
             getList()
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
         }
         onHandlerRemove()
@@ -147,11 +132,7 @@ const CMS = (props) => {
     setLoading(true)
     const updateMails = await API.updateOne(eventId, idMessage)
     await getList()
-    DispatchMessageService({
-      type: 'success',
-      msj: updateMails?.message,
-      action: 'show',
-    })
+    StateMessage.show(null, 'success', updateMails?.message)
     setLoading(false)
   }
 

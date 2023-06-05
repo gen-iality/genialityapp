@@ -117,6 +117,12 @@ export const initValues = () => {
   return valuesFields
 }
 
+/**
+ * IDK, search in arr taking the index from arrIndexx
+ * @param {number[]} arr Main array
+ * @param {number[]} arrIndex Index array
+ * @returns number[]
+ */
 export const searchWithMultipleIndex = (arr, arrIndex) => {
   const response = []
   for (let index = 0; index < arrIndex.length; index++) {

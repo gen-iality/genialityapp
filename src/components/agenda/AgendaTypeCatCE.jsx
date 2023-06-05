@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { withRouter, useHistory } from 'react-router-dom'
+import { withRouter, useHistory, useLocation } from 'react-router-dom'
 import { ChromePicker } from 'react-color'
 import { CategoriesAgendaApi, TypesAgendaApi } from '@helpers/request'
 import { handleRequestError } from '@helpers/utils'
 import { Row, Col, Form, Input, Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -16,9 +16,8 @@ const formLayout = {
 const { confirm } = Modal
 
 const AgendaTypeCatCE = (props) => {
-  const matchUrl = props.match.url
+  const matchUrl = props.matchUrl
   const eventID = props.event._id
-  const locationState = props.location.state //si viene new o edit en el state, si es edit es un id
   const subject = matchUrl.split('/').slice(-1)[0]
   const apiURL =
     subject === 'addcategorias' || subject === 'editcategorias'
@@ -28,6 +27,9 @@ const AgendaTypeCatCE = (props) => {
   const [categoryValues, setCategoryValues] = useState({})
   const [name, setName] = useState('')
   const [color, setColor] = useState('#000000')
+
+  const location = useLocation()
+  const locationState = location.state // If is coming from "new" or "edit" in the state, if "edit", then it is an ID
 
   useEffect(() => {
     if (locationState.edit) {
@@ -45,12 +47,11 @@ const AgendaTypeCatCE = (props) => {
   }
 
   const onSubmit = async () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se guarda la información..',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se guarda la información..',
+    )
 
     if (subject === 'addcategorias' || subject === 'editcategorias') {
       setCategoryValues({ name: name, color: color ? color : '#000000' })
@@ -65,15 +66,8 @@ const AgendaTypeCatCE = (props) => {
           await apiURL.create(eventID, categoryValues)
         }
 
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
         history.push(
           `${props.matchUrl}/${
             subject === 'addcategorias' || subject === 'editcategorias'
@@ -83,15 +77,8 @@ const AgendaTypeCatCE = (props) => {
         )
       }
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: handleRequestError(e).message,
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', handleRequestError(e).message)
     }
   }
 
@@ -104,12 +91,11 @@ const AgendaTypeCatCE = (props) => {
   }
 
   const onRemoveId = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se borra la información...',
+    )
     if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la categoría?`,
@@ -122,15 +108,12 @@ const AgendaTypeCatCE = (props) => {
           const onHandlerRemove = async () => {
             try {
               await apiURL.deleteOne(locationState.edit, eventID)
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó la información correctamente!',
+              )
               history.push(
                 `${props.matchUrl}/${
                   subject === 'addcategorias' || subject === 'editcategorias'
@@ -139,15 +122,8 @@ const AgendaTypeCatCE = (props) => {
                 }`,
               )
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
           }
           onHandlerRemove()

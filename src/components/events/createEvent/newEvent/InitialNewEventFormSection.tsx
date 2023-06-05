@@ -15,7 +15,7 @@ import {
 } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
 import 'react-day-picker/lib/style.css'
-import { NewEventActionEnum, useContextNewEvent } from '@context/newEventContext'
+import { NewEventActionEnum, useNewEventContext } from '@context/newEventContext'
 import { PlansApi } from '@helpers/request'
 import ModalOrgListCreate from './ModalOrgListCreate'
 /**
@@ -64,7 +64,7 @@ const InitialNewEventFormSection: FunctionComponent<InitialNewEventFormSectionPr
     templateId,
     dispatch,
     state,
-  } = useContextNewEvent()
+  } = useNewEventContext()
 
   const cUser = props.currentUser
 

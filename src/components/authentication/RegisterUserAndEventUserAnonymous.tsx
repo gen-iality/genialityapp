@@ -3,7 +3,7 @@ import { Typography } from 'antd'
 import { useIntl } from 'react-intl'
 import { useEventContext } from '@context/eventContext'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import FormEnrollAttendeeToEvent from '@components/forms/FormEnrollAttendeeToEvent'
 import { fieldNameEmailFirst } from '@helpers/utils'
 import { app } from '@helpers/firebase'
@@ -55,11 +55,7 @@ const RegisterUserAndEventUserAnonymous = ({}: any) => {
       })
       .catch((err) => {
         console.log(err)
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Ha ocurrido un error')
       })
   }
 

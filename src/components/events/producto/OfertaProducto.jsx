@@ -16,7 +16,7 @@ import { useState } from 'react'
 import { EventsApi } from '@helpers/request'
 import withContext from '@context/withContext'
 import { useEffect } from 'react'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const { Title, Text } = Typography
 
@@ -138,11 +138,7 @@ const OfertaProduct = ({
           ) {
             const respuestaApi = await EventsApi.storeOfert(eventId, product._id, data)
             if (respuestaApi) {
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Oferta realizada correctamente..!',
-                action: 'show',
-              })
+              StateMessage.show(null, 'success', 'Oferta realizada correctamente..!')
               updateValues(true)
             }
           } else {
@@ -151,19 +147,15 @@ const OfertaProduct = ({
             setValueOferta(valueOfertaMin)
             setPriceProduct(valueResp)
             setValorProduct(valueNumber)
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Actualmente se ha ofertado un valor mucho mayor para esta obra!',
-              action: 'show',
-            })
+            StateMessage.show(
+              null,
+              'error',
+              'Actualmente se ha ofertado un valor mucho mayor para esta obra!',
+            )
           }
         }
       } catch (error) {
-        DispatchMessageService({
-          type: 'error',
-          msj: 'No estás autorizado para realizar ofertas',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'No estás autorizado para realizar ofertas')
       }
     }
     setLoadingSave(false)

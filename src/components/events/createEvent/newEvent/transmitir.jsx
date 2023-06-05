@@ -1,9 +1,9 @@
 import { Col, Modal, Row, List } from 'antd'
 import { useEffect, useState } from 'react'
-import { useContextNewEvent } from '@context/newEventContext'
+import { useNewEventContext } from '@context/newEventContext'
 import { OrganizationApi } from '@helpers/request'
 import OptTranmitir from './optTransmitir'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 function Transmitir(props) {
   const {
@@ -14,7 +14,7 @@ function Transmitir(props) {
     selectedOrganization,
     isbyOrganization,
     setLoadingOrganization,
-  } = useContextNewEvent()
+  } = useNewEventContext()
   const [organizations, setOrganizations] = useState([])
 
   useEffect(() => {
@@ -52,11 +52,7 @@ function Transmitir(props) {
 
   const selectOrganizationOK = () => {
     if (!selectOrganization || selectOrganization == null) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Por favor seleccione una organización',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Por favor seleccione una organización')
     } else {
       changeOrganization(false)
     }

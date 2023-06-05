@@ -3,7 +3,7 @@ import { Modal, Form, Input, Button, Typography, Upload, Space } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import { PictureOutlined } from '@ant-design/icons'
 import functionCreateNewOrganization from './functionCreateNewOrganization'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const ModalCreateOrg = (props) => {
   const [form] = Form.useForm()
@@ -12,11 +12,7 @@ const ModalCreateOrg = (props) => {
   const beforeUpload = (file) => {
     const isLt5M = file.size / 1024 / 1024 < 5
     if (!isLt5M) {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Image must smaller than 5MB!',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Image must smaller than 5MB!')
     }
     return isLt5M
   }

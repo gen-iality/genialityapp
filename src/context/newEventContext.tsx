@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react'
 import dayjs from 'dayjs'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { Actions, AgendaApi, EventsApi, OrganizationApi } from '@helpers/request'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
 import { configEventsTemplate } from '@helpers/constants'
@@ -122,7 +122,7 @@ const initialState: NewEventState = {
   event_type: 'onlineEvent',
 }
 
-export const cNewEventContext = createContext<NewEventContextType>(
+export const NewEventContext = createContext<NewEventContextType>(
   {} as NewEventContextType,
 )
 
@@ -482,52 +482,28 @@ export const NewEventProvider = ({ children }: any) => {
                 template = await EventsApi.createTemplateEvent(result._id, templateId)
               }
               if (template) {
-                DispatchMessageService({
-                  type: 'success',
-                  msj: 'Curso creado correctamente...',
-                  action: 'show',
-                })
+                StateMessage.show(null, 'success', 'Curso creado correctamente...')
                 window.location.replace(
                   `${window.location.origin}/eventadmin/${result._id}`,
                 )
               } else {
-                DispatchMessageService({
-                  type: 'error',
-                  msj: 'Error al crear curso con su template',
-                  action: 'show',
-                })
+                StateMessage.show(null, 'error', 'Error al crear curso con su template')
               }
             }
           } else {
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Error al crear el curso',
-              action: 'show',
-            })
+            StateMessage.show(null, 'error', 'Error al crear el curso')
             dispatch({ type: NewEventActionEnum.COMPLETE })
           }
         } else {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Error al crear el curso',
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', 'Error al crear el curso')
           dispatch({ type: NewEventActionEnum.COMPLETE })
         }
       } catch (error) {
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Error al crear el curso catch',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Error al crear el curso catch')
         dispatch({ type: NewEventActionEnum.COMPLETE })
       }
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Seleccione una organización',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Seleccione una organización')
     }
   }
 
@@ -539,7 +515,7 @@ export const NewEventProvider = ({ children }: any) => {
     }
   }, [selectedDateEvent])
   return (
-    <cNewEventContext.Provider
+    <NewEventContext.Provider
       value={{
         addDescription,
         typeTransmission,
@@ -586,15 +562,15 @@ export const NewEventProvider = ({ children }: any) => {
       }}
     >
       {children}
-    </cNewEventContext.Provider>
+    </NewEventContext.Provider>
   )
 }
 
-export const useContextNewEvent = () => {
-  const context = useContext(cNewEventContext)
+export const useNewEventContext = () => {
+  const context = useContext(NewEventContext)
   if (!context) {
-    throw new Error('useContextNewEvent debe estar dentro del proveedor')
+    throw new Error('useNewEventContext debe estar dentro del proveedor')
   }
   return context
 }
-export default cNewEventContext
+export default NewEventContext

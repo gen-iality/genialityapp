@@ -22,7 +22,7 @@ import { OrganizationApi, PositionsApi, UsersApi } from '@helpers/request'
 
 /** Context imports */
 import { useHelper } from '@context/helperContext/hooks/useHelper'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import OrganizationPropertiesForm from '@components/organization/forms/OrganizationPropertiesForm'
 
 const { Step } = Steps
@@ -194,14 +194,23 @@ const RegisterUserAndOrgMember = ({
       delete propertiesOrgMember.properties.password
       delete propertiesOrgMember.properties.picture
 
+      if (!idOrganization) {
+        StateMessage.show(
+          null,
+          'error',
+          'No se puede proceder, recargue la página e intente nuevamente',
+        )
+        throw new Error(`The value of idOrganization is ${idOrganization}`)
+      }
+
       try {
         const respUser = await OrganizationApi.saveUser(
           idOrganization,
           propertiesOrgMember,
         )
-        console.log('3. RegisterUser: has default position Id', { defaultPositionId })
+        console.debug('RegisterUser: has default position Id', { defaultPositionId })
         if (defaultPositionId === undefined) {
-          console.error('4. This organization has no default position. Eh!')
+          console.warn('This organization has no default position. Eh!')
         } else {
           await PositionsApi.Organizations.addUser(
             idOrganization,
@@ -211,10 +220,10 @@ const RegisterUserAndOrgMember = ({
         }
         if (respUser && respUser.account_id) {
           setValidationGeneral({
-            status: false,
+            status: true,
             isLoading: false,
             textError: intl.formatMessage({
-              // REVISAR: No se debería llamar TextError, si el texto es una respuesta afirmativa.
+              // TODO: No se debería llamar TextError, si el texto es una respuesta afirmativa.
               id: 'text_error.organization_successfully_registered',
               defaultMessage: 'Te has inscrito correctamente a esta organización',
             }),
@@ -225,11 +234,7 @@ const RegisterUserAndOrgMember = ({
         }
       } catch (err) {
         console.error(err)
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Ha ocurrido un error',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Ha ocurrido un error')
       }
     }
 

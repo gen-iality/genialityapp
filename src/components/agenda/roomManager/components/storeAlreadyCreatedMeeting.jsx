@@ -3,7 +3,7 @@ import { getLiveStream } from '@adaptors/wowzaStreamingAPI'
 import { Form, Input, Alert } from 'antd'
 import { useState, useContext } from 'react'
 import AgendaContext from '@context/AgendaContext'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id }) {
   const [meetingValue, setMeetingValue] = useState()
@@ -26,27 +26,23 @@ export default function StoreAlreadyCreatedMeeting({ setMeetingId, meeting_id })
                     if (exist) {
                       setMeetingId(meetingValue)
                     } else {
-                      DispatchMessageService({
-                        type: 'error',
-                        msj: 'El id de la transmisión es incorrecto!',
-                        action: 'show',
-                      })
+                      StateMessage.show(
+                        null,
+                        'error',
+                        'El id de la transmisión es incorrecto!',
+                      )
                     }
                   } catch (e) {
-                    DispatchMessageService({
-                      type: 'error',
-                      msj: 'El id de la transmisión es incorrecto!',
-                      action: 'show',
-                    })
+                    StateMessage.show(
+                      null,
+                      'error',
+                      'El id de la transmisión es incorrecto!',
+                    )
                   }
                 } else if (meetingValue && platform != 'wowza') {
                   setMeetingId(meetingValue)
                 } else {
-                  DispatchMessageService({
-                    type: 'error',
-                    msj: 'Ingrese un id para la transmisión!',
-                    action: 'show',
-                  })
+                  StateMessage.show(null, 'error', 'Ingrese un id para la transmisión!')
                 }
               }}
             >

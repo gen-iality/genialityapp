@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import { Row, Col, Button, Divider, Upload } from 'antd'
 import { DownloadOutlined, InboxOutlined } from '@ant-design/icons'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { uploadImagedummyRequest } from '@/Utilities/imgUtils'
 
 dayjs.locale('es')
@@ -14,21 +14,16 @@ const Importacion = (props) => {
   const [errMsg, setErrMsg] = useState('')
   const handleXlsFile = (files) => {
     if (files.status === 'error') {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Error al cargar el archivo excel',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Error al cargar el archivo excel')
       return
     }
     // The execution stops, since ant design updates the upload event with each change in the file upload progress, this generates an error in the steps of importing users
     if (files.status !== 'done') return
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se envía la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se envía la información...',
+    )
     const f = files.originFileObj
     const reader = new FileReader()
     try {
@@ -58,15 +53,8 @@ const Importacion = (props) => {
             }
           }
 
-          DispatchMessageService({
-            key: 'loading',
-            action: 'destroy',
-          })
-          DispatchMessageService({
-            type: 'success',
-            msj: 'importación de usuarios exitosa',
-            action: 'show',
-          })
+          StateMessage.destroy('loading')
+          StateMessage.show(null, 'success', 'importación de usuarios exitosa')
 
           //por si no pudimos agregar ningún dato
           if (!fields.length) {
@@ -76,33 +64,16 @@ const Importacion = (props) => {
           props.handleXls(fields)
           return
         } else {
-          DispatchMessageService({
-            key: 'loading',
-            action: 'destroy',
-          })
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Excel en blanco',
-            action: 'show',
-          })
+          StateMessage.destroy('loading')
+          StateMessage.show(null, 'error', 'Excel en blanco')
           setErrMsg('Excel en blanco')
         }
       }
       reader.readAsBinaryString(f)
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
+      StateMessage.destroy('loading')
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Error cargando la información',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', 'Error cargando la información')
     }
   }
 

@@ -6,7 +6,7 @@ import Result from './result'
 import Async from 'async'
 import Header from '@antdComponents/Header'
 import { Steps } from 'antd'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const { Step } = Steps
 
@@ -18,6 +18,7 @@ class ImportUsers extends Component {
       list: [],
       toImport: [],
       password: '',
+      no_send_mail: false,
     }
   }
 
@@ -29,14 +30,18 @@ class ImportUsers extends Component {
     }
   }
 
+  onChangeCheckbox = () => {
+    this.setState({ no_send_mail: !this.state.no_send_mail })
+    console.log('this.state.no_send_mail', this.state.no_send_mail)
+  }
+
   importUsers = (users, password) => {
     const self = this
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se envía la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se envía la información...',
+    )
 
     if (password) {
       const genericPassword = []
@@ -93,25 +98,11 @@ class ImportUsers extends Component {
           })
         },
       )
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Información cargada correctamente!',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', 'Información cargada correctamente!')
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Error cargando la información',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', 'Error cargando la información')
     }
   }
 
@@ -146,6 +137,8 @@ class ImportUsers extends Component {
         eventId={this.props.eventId}
         importUsers={this.importUsers}
         extraFields={this.props.extraFields}
+        no_send_mail={this.state.no_send_mail}
+        onChangeCheckbox={this.onChangeCheckbox}
       />,
       <Result
         key={3}
@@ -154,12 +147,13 @@ class ImportUsers extends Component {
         extraFields={this.props.extraFields}
         organization={this.props.organization}
         locationParams={this.props.locationParams}
+        no_send_mail={this.state.no_send_mail}
       />,
     ]
     return (
       <>
         <Header
-          title={<Link to={this.props.matchUrl}>Invitados</Link>}
+          title={<Link to={`${this.props.parentUrl}/invitados`}>Invitados</Link>}
           back
           description="Importación de usuarios - Excel"
         />

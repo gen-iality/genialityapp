@@ -15,7 +15,7 @@ import { EventsApi } from '@helpers/request'
 import Loading from '../loaders/loading'
 import { withRouter } from 'react-router-dom'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { HelperContext } from '@context/helperContext/helperContext'
 
 const { Column } = Table
@@ -85,12 +85,11 @@ class Product extends Component {
   }
 
   savePosition = async () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se guarda la configuración...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se guarda la configuración...',
+    )
     try {
       if (this.state.list) {
         await Promise.all(
@@ -100,25 +99,11 @@ class Product extends Component {
           }),
         )
       }
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Configuración guardada correctamente!',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', 'Configuración guardada correctamente!')
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Ha ocurrido un error',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', 'Ha ocurrido un error')
     }
   }
 
@@ -129,12 +114,11 @@ class Product extends Component {
   }
 
   removeProduct = (data) => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se borra la configuración...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se borra la configuración...',
+    )
     const self = this
     confirm({
       title: `¿Está seguro de eliminar la información?`,
@@ -148,35 +132,21 @@ class Product extends Component {
           EventsApi.deleteProduct(data._id, data.event_id).then((res) => {
             self.fetchItem()
             if (res === 1) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Producto eliminado correctamente',
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'success', 'Producto eliminado correctamente')
               resolve(true)
             } else {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'error',
-                msj: 'Lo sentimos el producto no pudo ser eliminado intente nuevamente',
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'error',
+                'Lo sentimos el producto no pudo ser eliminado intente nuevamente',
+              )
               reject(false)
             }
           })
         }).catch(() => {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Lo sentimos no hay respuesta del servidor',
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', 'Lo sentimos no hay respuesta del servidor')
         })
       },
       onCancel() {},

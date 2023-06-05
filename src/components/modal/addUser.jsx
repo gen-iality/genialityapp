@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { UsersApi, eventTicketsApi } from '@helpers/request'
 import { Modal, Form, Input, Select, Checkbox, Button } from 'antd'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { handleRequestError } from '@helpers/utils'
 
 const { Option } = Select
@@ -41,35 +41,20 @@ class AddUser extends Component {
     }
 
     this.setState({ create: true })
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se guarda la información...',
+    )
     try {
       const resp = await UsersApi.createOne(snap, this.props.eventId)
       if (resp) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
       }
     } catch (err) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: handleRequestError(e).message || err?.response?.data?.message,
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', handleRequestError(e).message)
     }
     setTimeout(() => {
       this.setState({ create: false })

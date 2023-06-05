@@ -4,19 +4,19 @@ import TipoAsistentes from './TipoAsistentes'
 import TipoAsistente from './TipoAsistente'
 
 function TipoUsersRoutes(props) {
-  const { event, match } = props
+  const { event, matchUrl } = props
   return (
     <Fragment>
       <Switch>
         <Route
           exact
-          path={`${match.url}/`}
-          render={() => <TipoAsistentes event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/`}
+          render={() => <TipoAsistentes event={event} parentUrl={match.url} />}
         />
         <Route
           exact
-          path={`${match.url}/tipoAsistente`}
-          render={() => <TipoAsistente event={event} matchUrl={match.url} {...props} />}
+          path={`${matchUrl}/tipoAsistente`}
+          render={() => <TipoAsistente event={event} parentUrl={match.url} {...props} />}
         />
       </Switch>
     </Fragment>

@@ -5,7 +5,7 @@ import { handleRequestError } from '@helpers/utils'
 import { Row, Col, Form, Input, Modal, Switch } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -40,12 +40,11 @@ const Ticket = (props) => {
 
   const onSubmit = async () => {
     if (ticket.title) {
-      DispatchMessageService({
-        type: 'loading',
-        key: 'loading',
-        msj: 'Por favor espere mientras se guarda la información...',
-        action: 'show',
-      })
+      StateMessage.show(
+        'loading',
+        'loading',
+        'Por favor espere mientras se guarda la información...',
+      )
       try {
         if (locationState.edit) {
           await eventTicketsApi.update(eventID, ticket, locationState.edit)
@@ -57,43 +56,24 @@ const Ticket = (props) => {
           }
           await eventTicketsApi.create(eventID, data)
         }
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Información guardada correctamente!',
-          action: 'show',
-        })
-        history.push(`${props.matchUrl}/ticketsEvent`)
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'success', 'Información guardada correctamente!')
+        history.push(`${props.parentUrl}/ticketsEvent`)
       } catch (e) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: handleRequestError(e).message,
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', handleRequestError(e).message)
       }
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'El título es requerido',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'El título es requerido')
     }
   }
 
   const onRemoveId = () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     if (locationState.edit) {
       confirm({
         title: '¿Está seguro de eliminar la información?',
@@ -106,26 +86,16 @@ const Ticket = (props) => {
           const onHandlerRemove = async () => {
             try {
               await eventTicketsApi.deleteOne(locationState.edit, eventID)
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Se eliminó la información correctamente!',
-                action: 'show',
-              })
-              history.push(`${props.matchUrl}/ticketsEvent`)
+              StateMessage.destroy('loading')
+              StateMessage.show(
+                null,
+                'success',
+                'Se eliminó la información correctamente!',
+              )
+              history.push(`${props.parentUrl}/ticketsEvent`)
             } catch (e) {
-              DispatchMessageService({
-                key: 'loading',
-                action: 'destroy',
-              })
-              DispatchMessageService({
-                type: 'error',
-                msj: handleRequestError(e).message,
-                action: 'show',
-              })
+              StateMessage.destroy('loading')
+              StateMessage.show(null, 'error', handleRequestError(e).message)
             }
           }
           onHandlerRemove()

@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { Grid, Spin, Layout } from 'antd'
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
-import Event from '@components/events/event'
+import EventAdminRoutes from '@components/events/EventAdminRoutes'
 import { ApiUrl } from '@helpers/constants'
 import WithFooter from '@components/withFooter'
 
@@ -25,6 +25,8 @@ import ModalNoRegister from '@components/authentication/ModalNoRegister'
 import BlockedEvent from '@components/events/Landing/BlockedEvent'
 import ModalAuthAnonymous from '@components/authentication/ModalAuthAnonymous'
 import ModalUpdate from '@components/events/Landing/ModalUpdate'
+import DirectLoginPage from '@/pages/DirectLoginPage'
+import CertificateGeneraterPage from '@/pages/CertificateGeneraterPage'
 //Code splitting
 const Header = loadable(() => import('./header'))
 const Home = loadable(() => import('../pages/home'))
@@ -42,14 +44,14 @@ const socialZone = loadable(() => import('../components/socialZone/socialZone'))
 const AppointmentAccept = loadable(() =>
   import('../components/networking/appointmentAccept'),
 )
-const NotFoundPage = loadable(() => import('../components/notFoundPage'))
+const NotFoundPage = loadable(() => import('../components/notFoundPage/NotFoundPage'))
 const ForbiddenPage = loadable(() => import('../components/forbiddenPage'))
 const QueryTesting = loadable(() =>
   import('../components/events/surveys/components/queryTesting'),
 )
 const EventFinished = loadable(() => import('../components/eventFinished/eventFinished'))
 const LoginWithCode = loadable(() => import('../components/AdminUsers/WithCode'))
-const NoMatchPage = loadable(() => import('../components/notFoundPage/noMatchPage'))
+const NoMatchPage = loadable(() => import('../components/notFoundPage/NoMatchPage'))
 
 const { useBreakpoint } = Grid
 const ContentContainer = () => {
@@ -61,8 +63,13 @@ const ContentContainer = () => {
         /* Empty callback to block the default browser prompt, it is necessary to be able to use in custon hook RouterPrompt */
       }}
     >
-      <main className="main">
+      <main className="main" style={{ minHeight: '100vh' }}>
         <Switch>
+          <Route
+            exact
+            path="/certificate-generator/:userId/:eventId/:activityId"
+            render={() => <CertificateGeneraterPage />}
+          />
           <RouteContext
             path={['/landing/:event_id', '/event/:event_name']}
             component={Landing}
@@ -81,19 +88,6 @@ const ContentContainer = () => {
           <PrivateRoute exact path="/myprofile" component={MainProfile} />
 
           <Route path="/social/:event_id" component={socialZone} />
-          {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
-          <Route
-            path="/mentoriamastercard"
-            render={() => <Redirect to="/landing/5ef49fd9c6c89039a14c6412" />}
-          />
-          <Route
-            path="/meetupsfenalco"
-            render={() => <Redirect to="/landing/5f0622f01ce76d5550058c32" />}
-          />
-          <Route
-            path="/evento/tpgamers"
-            render={() => <Redirect to="/landing/5f4e41d5eae9886d464c6bf4" />}
-          />
           <Route path="/notfound" component={NotFoundPage} />
           <RouteContext path="/blockedEvent/:event_id" component={BlockedEvent} />
           <PrivateRoute path="/create-event/:user?">
@@ -101,9 +95,13 @@ const ContentContainer = () => {
               <NewEventPage />
             </NewEventProvider>
           </PrivateRoute>
-          <PrivateRoute path="/eventadmin/:event" component={Event} />
-          <PrivateRoute path="/orgadmin/:event" component={Event} />
-          <PrivateRoute path="/create-event" component={NewEventPage} />
+          <PrivateRoute path="/eventadmin/:event" component={EventAdminRoutes} />
+          <PrivateRoute path="/orgadmin/:event" component={EventAdminRoutes} />
+          <PrivateRoute path="/create-event">
+            <NewEventProvider>
+              <NewEventPage />
+            </NewEventProvider>
+          </PrivateRoute>
           <RouteContext
             exact
             path="/organization/:id/events"
@@ -127,6 +125,8 @@ const ContentContainer = () => {
           <Route exact path="/eventfinished" component={EventFinished} />
 
           <Route path="/loginWithCode" component={LoginWithCode} />
+
+          <Route path="/direct-login" component={DirectLoginPage} />
 
           <Route
             path="/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver"
@@ -186,28 +186,26 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         <CurrentEventProvider>
           <CurrentUserEventProvider>
             <CurrentUserProvider>
-              <NewEventProvider>
-                <HelperContextProvider>
-                  <AgendaContextProvider>
-                    <SurveysProvider>
-                      <Layout style={{ minHeight: '100vh' }}>
-                        <Header />
-                        {cUser.value ? (
-                          <Component {...props} />
-                        ) : cUser.value == null && cUser.status == 'LOADED' ? (
-                          <>
-                            <ModalAuth isPrivateRoute />
+              <HelperContextProvider>
+                <AgendaContextProvider>
+                  <SurveysProvider>
+                    <Layout style={{ minHeight: '100vh' }}>
+                      <Header />
+                      {cUser.value ? (
+                        <Component {...props} />
+                      ) : cUser.value == null && cUser.status == 'LOADED' ? (
+                        <>
+                          <ModalAuth isPrivateRoute />
 
-                            <ForbiddenPage />
-                          </>
-                        ) : (
-                          <Spin />
-                        )}
-                      </Layout>
-                    </SurveysProvider>
-                  </AgendaContextProvider>
-                </HelperContextProvider>
-              </NewEventProvider>
+                          <ForbiddenPage />
+                        </>
+                      ) : (
+                        <Spin />
+                      )}
+                    </Layout>
+                  </SurveysProvider>
+                </AgendaContextProvider>
+              </HelperContextProvider>
             </CurrentUserProvider>
           </CurrentUserEventProvider>
         </CurrentEventProvider>

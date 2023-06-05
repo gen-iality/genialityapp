@@ -9,7 +9,7 @@ import {
   DragOutlined,
 } from '@ant-design/icons'
 import { sortableHandle } from 'react-sortable-hoc'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 export const columns = (columnsData) => [
   {
@@ -104,18 +104,14 @@ export const columns = (columnsData) => [
           const res = await SpeakersApi.editOne(item, item._id, item.event_id)
           if (res) {
             columnsData.refetch()
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se actualizó la publicación!',
-              action: 'show',
-            })
+            StateMessage.show(null, 'success', 'Se actualizó la publicación!')
           }
         } catch (err) {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Ha ocurrido un problema actualizando la publicación!',
-            action: 'show',
-          })
+          StateMessage.show(
+            null,
+            'error',
+            'Ha ocurrido un problema actualizando la publicación!',
+          )
         }
       }
 

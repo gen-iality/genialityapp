@@ -25,7 +25,7 @@ import { handleRequestError } from '@helpers/utils'
 import { firestore } from '@helpers/firebase'
 import { SketchPicker } from 'react-color'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 
 const { Option } = Select
@@ -140,12 +140,11 @@ const Stands = (props) => {
   }
 
   async function saveConfiguration() {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se guarda la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se guarda la información...',
+    )
     await firestore
       .collection('event_companies')
       .doc(props.event._id)
@@ -155,15 +154,8 @@ const Stands = (props) => {
         },
         { merge: true },
       )
-    DispatchMessageService({
-      key: 'loading',
-      action: 'destroy',
-    })
-    DispatchMessageService({
-      type: 'success',
-      msj: 'Configuración guardada correctamente!',
-      action: 'show',
-    })
+    StateMessage.destroy('loading')
+    StateMessage.show(null, 'success', 'Configuración guardada correctamente!')
   }
 
   const editStand = async () => {
@@ -183,19 +175,11 @@ const Stands = (props) => {
         : list.push(selectedStandEdit)
       const modifyObject = { ...documentEmpresa, stand_types: list }
       await actualizarData(modifyObject)
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Información guardada correctamente!',
-        action: 'show',
-      })
+      StateMessage.show(null, 'success', 'Información guardada correctamente!')
 
       handleCancel()
     } else {
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Información inválida!',
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', 'Información inválida!')
       setNoValid(true)
     }
   }
@@ -210,12 +194,11 @@ const Stands = (props) => {
   }
 
   async function deleteStand(id) {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere mientras se borra la información...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      'Por favor espere mientras se borra la información...',
+    )
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -230,25 +213,11 @@ const Stands = (props) => {
             list = list.filter((stand) => stand.id !== id)
             const modifyObject = { ...documentEmpresa, stand_types: list }
             await actualizarData(modifyObject)
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'success',
-              msj: 'Se eliminó la información correctamente!',
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')
           } catch (e) {
-            DispatchMessageService({
-              key: 'loading',
-              action: 'destroy',
-            })
-            DispatchMessageService({
-              type: 'error',
-              msj: handleRequestError(e).message,
-              action: 'show',
-            })
+            StateMessage.destroy('loading')
+            StateMessage.show(null, 'error', handleRequestError(e).message)
           }
         }
         onHandlerRemove()

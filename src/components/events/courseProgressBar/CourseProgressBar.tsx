@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Tooltip } from 'antd'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { Spin, Tooltip } from 'antd'
 
 import { activityContentValues } from '@context/activityType/constants/ui'
 
@@ -10,6 +10,7 @@ import Step from './Step'
 import Line from './Line'
 
 import './CourseProgressBar.css'
+import { firestore } from '@helpers/firebase'
 
 type Activity = {
   _id: string
@@ -19,48 +20,95 @@ type Activity = {
 }
 
 export interface CourseProgressBarProps {
-  count: number
-  linkFormatter: (activityId: string) => string
+  eventId: string
+  eventUser: any
   activities: Activity[]
-  activitiesAttendee: Activity[]
-  onChange?: () => void
 }
 
 function CourseProgressBar(props: CourseProgressBarProps) {
-  const { linkFormatter, activities, activitiesAttendee } = props
+  const { activities, eventUser, eventId } = props
 
-  const [currentId, setCurrentId] = useState(null)
+  const [attendees, setAttendees] = useState<any[]>([])
+  const [watchedActivityId, setWatchedActivityId] = useState<undefined | string>()
+  const [isLoading, setIsLoading] = useState(false)
 
-  if (activities.length === 0) {
-    return null
+  const location = useLocation()
+
+  const requestAttendees = async () => {
+    console.debug('will request the attendee for', activities.length, 'activities')
+    const existentActivities = activities.map(async (activity) => {
+      const activity_attendee = await firestore
+        .collection(`${activity._id}_event_attendees`)
+        .doc(eventUser._id)
+        .get() //checkedin_at
+      if (activity_attendee.exists) {
+        const newAttendee = activity_attendee.data()
+        return { ...newAttendee, activity_id: activity._id }
+      }
+      return null
+    })
+
+    // Filter existent activities and set the state
+    setAttendees((await Promise.all(existentActivities)).filter((item) => !!item))
   }
+
+  useEffect(() => {
+    setIsLoading(true)
+    requestAttendees()
+      .then()
+      .finally(() => setIsLoading(false))
+  }, [activities, location])
+
+  // We don't have access to the param activity_id using useMatch because this
+  // component is upside of the EventSectionRoutes, then the activity_id will be
+  // taken from the url by parsing
+  useEffect(() => {
+    const urlCompleta = location.pathname
+    const urlSplited = urlCompleta.split('activity/')
+    const currentActivityId = urlSplited[1]
+    setWatchedActivityId(currentActivityId)
+  }, [location])
+
+  const activityAndAttendeeList = useMemo(
+    () =>
+      activities.map((activity) => ({
+        ...activity,
+        isViewed: attendees.some((attende) => attende.activity_id == activity._id),
+      })),
+    [activities, attendees],
+  )
+
+  if (activities.length == 0) return null
 
   return (
     <div>
       <div className="CourseProgressBar-container">
         <div className="CourseProgressBar-innerContainer">
-          {activities.map((activity, index) => (
+          {activityAndAttendeeList.map((activity, index) => (
             <div key={index} className="CourseProgressBar-stepContainer">
-              <Line
-                isActive={
-                  activitiesAttendee.filter(
-                    (attende) => attende.activity_id == activity._id,
-                  ).length
-                }
-              />
-              <Link to={linkFormatter(activity._id)} key={`key_${index}`}>
+              <Line isActive={activity.isViewed} />
+              <Link
+                to={`/landing/${eventId}/activity/${activity._id}`}
+                key={`key_${index}`}
+              >
                 <Step
-                  /* onChangeFunction={onChange} */
-                  onClick={props.onChange}
-                  setCurrentId={setCurrentId}
-                  currentId={currentId}
-                  id={activity._id}
+                  onClick={() => {
+                    // Fake assignation of attendee
+                    if (
+                      !attendees.some((attendee) => attendee.activity_id === activity._id)
+                    ) {
+                      console.debug('mark as viewed this activity:', activity._id)
+                      setAttendees((previous) => [
+                        ...previous,
+                        {
+                          activity_id: activity._id,
+                        },
+                      ])
+                    }
+                  }}
+                  isFocus={activity._id === watchedActivityId}
                   key={activity._id}
-                  isActive={
-                    activitiesAttendee.filter(
-                      (attende) => attende.activity_id == activity._id,
-                    ).length
-                  }
+                  isActive={activity.isViewed}
                   isSurvey={[
                     activityContentValues.quizing,
                     activityContentValues.survey,
@@ -72,7 +120,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                       [
                         activityContentValues.quizing,
                         activityContentValues.survey,
-                      ].includes(activity.type?.name! as any)
+                      ].includes(activity.type?.name as any)
                         ? 'al cuestionario'
                         : 'a la actividad'
                     } "${activity.name}", tipo ${(activity.type?.name
@@ -80,7 +128,9 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                       : 'sin contenido'
                     ).toLowerCase()}`}
                   >
-                    {index + 1}
+                    <Spin spinning={isLoading && activity._id === watchedActivityId}>
+                      {index + 1}
+                    </Spin>
                   </Tooltip>
                 </Step>
               </Link>

@@ -5,7 +5,7 @@ import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { Networking, UsersApi } from '@helpers/request'
 import { addNotification } from '@helpers/netWorkingFunctions'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { CurrentEventUserContext } from '@context/eventUserContext'
 import { CurrentEventContext } from '@context/eventContext'
 
@@ -255,11 +255,7 @@ export default function RequestList({
     const data = { response: state ? 'accepted' : 'rejected' }
     Networking.acceptOrDeclineInvitation(eventId, requestId._id, data)
       .then(async () => {
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Respuesta enviada',
-          action: 'show',
-        })
+        StateMessage.show(null, 'success', 'Respuesta enviada')
 
         const notificationr = {
           idReceive: currentUserAc._id,
@@ -273,11 +269,7 @@ export default function RequestList({
         )
       })
       .catch((err) => {
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Hubo un problema',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'Hubo un problema')
       })
   }
 

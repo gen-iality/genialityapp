@@ -5,7 +5,7 @@ import ReactQuill from 'react-quill'
 import { toolbarEditor } from '@helpers/constants'
 import { firestore } from '@helpers/firebase'
 import Header from '@antdComponents/Header'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const Configuration = (props) => {
   const [checkSubasta, setCheckSubasta] = useState(false)
@@ -37,12 +37,11 @@ const Configuration = (props) => {
   }
 
   const saveConfiguration = async () => {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: ' Por favor espere mientras se guarda la configuración...',
-      action: 'show',
-    })
+    StateMessage.show(
+      'loading',
+      'loading',
+      ' Por favor espere mientras se guarda la configuración...',
+    )
     setLoading(true)
     const data = {
       habilitar_subasta: checkSubasta,
@@ -51,25 +50,11 @@ const Configuration = (props) => {
 
     try {
       const resp = await firestore.collection('config').doc(props.eventId).set({ data })
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'success',
-        msj: 'Configuración guardada correctamente!',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'success', 'Configuración guardada correctamente!')
     } catch (e) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: 'Ha ocurrido un error',
-        action: 'show',
-      })
+      StateMessage.destroy('loading')
+      StateMessage.show(null, 'error', 'Ha ocurrido un error')
     }
     setLoading(false)
   }

@@ -159,9 +159,8 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
           simpleMode
           notRecordFileInDocuments
           event={eventContext.value} // Awful, but who are we
-          matchUrl={props.matchUrl}
-          location={{ location: { state: { edit: false } } }} // Awful, but who are we
-          activityId={activityEdit}
+          parentUrl={props.matchUrl}
+          // activityId={activityEdit}
           fromPDFDocumentURL={contentSource}
           onSave={(pdfUrl: string) => {
             console.debug('call onSave from Document. pdfUrl will be', pdfUrl)
@@ -179,7 +178,6 @@ function ActivityContentManager(props: ActivityContentManagerProps) {
               saveActivityContent(activityContentType, 'empty')
             }, 3000)
           }}
-          inserted
         />
       </>
     )

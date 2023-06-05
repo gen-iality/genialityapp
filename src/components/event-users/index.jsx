@@ -1,8 +1,10 @@
 import { Component, useState, useEffect } from 'react'
 import { FormattedDate, FormattedTime } from 'react-intl'
-import { firestore } from '@helpers/firebase'
+import { fireRealtime, firestore } from '@helpers/firebase'
 import { BadgeApi, EventsApi, RolAttApi } from '@helpers/request'
 import { AgendaApi, OrganizationApi } from '@helpers/request'
+import { checkinAttendeeInActivity } from '@helpers/HelperAuth'
+
 import UserModal from '../modal/modalUser'
 import ErrorServe from '../modal/serverError'
 import { utils, writeFileXLSX } from 'xlsx'
@@ -29,10 +31,11 @@ import {
   Tooltip,
   Select,
   Modal,
+  Checkbox,
 } from 'antd'
 
 import updateAttendees from './eventUserRealTime'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import {
   EditOutlined,
   FullscreenOutlined,
@@ -49,17 +52,18 @@ import QrModal from './qrModal'
 import Header from '@antdComponents/Header'
 import TableA from '@antdComponents/Table'
 import Highlighter from 'react-highlight-words'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import Loading from '../profile/loading'
 import AttendeeCheckInCheckbox from '../checkIn/AttendeeCheckInCheckbox'
 import { HelperContext } from '@context/helperContext/helperContext'
 import AttendeeCheckInButton from '../checkIn/AttendeeCheckInButton'
 import { UsersPerEventOrActivity } from './utils/utils'
+import LessonsInfoModal from './LessonsInfoModal'
 
 const { Title, Text } = Typography
 const { Option } = Select
 
-const ModalWithLessonsInfo = ({
+const ModalWithLessonsInfo_ = ({
   show,
   onHidden,
   allActivities,
@@ -68,6 +72,7 @@ const ModalWithLessonsInfo = ({
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [activities, setActivities] = useState([])
+  const [shouldUpdate, setshouldUpdate] = useState(0)
 
   useEffect(async () => {
     if (!currentUser) return
@@ -89,30 +94,33 @@ const ModalWithLessonsInfo = ({
     )
     setActivities(viewedActivities.map((activity) => activity.name))
     setLoaded(true)
-  }, [allActivities, attendee, currentUser])
+  }, [allActivities, attendee, currentUser, shouldUpdate])
 
   const Content = () => {
-    if (attendee.length === 0) {
-      return <p>No ha visto ningún curso</p>
-    }
-
     if (loaded) {
-      if (activities.length) {
-        return (
-          <List
-            header={<Text strong>Lecciones vistas</Text>}
-            // bordered
-            dataSource={activities}
-            renderItem={(item) => (
-              <List.Item>
-                <CheckOutlined /> {item}
-              </List.Item>
-            )}
-          />
-        )
-        // return (activities.map((activity) => <p>{activity}</p>));
-      }
-      return <p>Nada para mostrar</p>
+      return (
+        <List
+          header={<Text strong>Lecciones vistas</Text>}
+          // bordered
+          dataSource={allActivities}
+          renderItem={(item) => (
+            <List.Item>
+              {activities.filter((activityname) => activityname == item.name).length ? (
+                <CheckOutlined />
+              ) : (
+                <Checkbox
+                  onChange={async () => {
+                    await checkinAttendeeInActivity(currentUser, item._id)
+                    setshouldUpdate((value) => value + 1)
+                  }}
+                />
+              )}{' '}
+              {item.name}
+            </List.Item>
+          )}
+        />
+      )
+      // return (activities.map((activity) => <p>{activity}</p>));
     }
 
     return <p>Cargando...</p>
@@ -127,6 +135,36 @@ const ModalWithLessonsInfo = ({
   )
 }
 
+const TimeTrackingStats = ({ user }) => {
+  const [timing, setTiming] = useState(0)
+
+  useEffect(() => {
+    const localRef = fireRealtime.ref(`user_sessions/local/${user._id}`)
+    localRef.get().then((result) => {
+      const logDict = result && result.exists() ? result.val() : {}
+
+      if (!logDict) {
+        setTiming(0)
+        return
+      }
+
+      const filteredLogDict = Object.values(logDict)
+        .filter((log) => log.status === 'offline')
+        .filter((log) => log.startTimestamp !== undefined)
+        .filter((log) => log.endTimestamp !== undefined)
+
+      const divisor = 3600
+
+      const time = filteredLogDict
+        .map((log) => (log.endTimestamp - log.startTimestamp) / 1000 / divisor)
+        .reduce((a, b) => a + b, 0)
+      setTiming(time)
+    })
+  }, [user])
+
+  return <>{timing.toFixed(2)} horas</>
+}
+
 const ColumnProgreso = ({
   shownAll,
   item,
@@ -137,6 +175,7 @@ const ColumnProgreso = ({
   ...props
 }) => {
   const [attendee, setAttendee] = useState([])
+  const [shouldUpdate, setshouldUpdate] = useState(0)
   useEffect(async () => {
     // Get all existent activities, after will filter it
     const existentActivities = await allActivities.map(async (activity) => {
@@ -154,7 +193,7 @@ const ColumnProgreso = ({
       (item) => item !== null,
     )
     setAttendee(gotAttendee)
-  }, [])
+  }, [shouldUpdate])
 
   if (!onOpen) onOpen = () => {}
 
@@ -164,6 +203,7 @@ const ColumnProgreso = ({
         onClick={() => {
           updateAttendee(attendee)
           updateCurrentUser(item)
+          setshouldUpdate((previus) => previus + 1)
           onOpen()
         }}
       >
@@ -492,7 +532,8 @@ class ListEventUser extends Component {
                 /** When using the ant datePicker it saves the date with the time, therefore, since only the date is needed, the following split is performed */
                 case 'date':
                   const date = key[item.name]
-                  const dateSplit = date ? date?.split('T') : ''
+                  const dateSplit =
+                    date && typeof date.split === 'function' ? date?.split('T') : ''
                   return dateSplit[0]
 
                 case 'file':
@@ -544,16 +585,26 @@ class ListEventUser extends Component {
         ellipsis: true,
         sorter: (a, b) => true,
         render: (text, item, index) => (
-          <ColumnProgreso
-            shownAll={this.props.shownAll}
-            item={item}
-            onOpen={() => this.setState({ showModalOfProgress: true })}
-            updateAttendee={(attendee) => this.setState({ attendee })}
-            updateCurrentUser={(user) => this.setState({ currentUser: user })}
-            index={index}
-            allActivities={allActivities}
-          />
+          <>
+            <ColumnProgreso
+              shownAll={this.props.shownAll}
+              item={item}
+              onOpen={() => this.setState({ showModalOfProgress: true })}
+              updateAttendee={(attendee) => this.setState({ attendee })}
+              updateCurrentUser={(user) => this.setState({ currentUser: user })}
+              index={index}
+              allActivities={allActivities}
+            />
+          </>
         ),
+      }
+
+      const timeTrackingStatsColumn = {
+        title: 'Tiempo registrado',
+        key: 'time-tracking-stats',
+        dataIndex: 'user',
+        ellipsis: true,
+        render: (user) => <TimeTrackingStats user={user} />,
       }
 
       const rol = {
@@ -587,6 +638,7 @@ class ListEventUser extends Component {
         render: self.updated_at_component,
       }
       columns.push(progressing)
+      columns.push(timeTrackingStatsColumn)
       columns.push(rol)
       columns.push(created_at)
       columns.push(updated_at)
@@ -801,7 +853,7 @@ class ListEventUser extends Component {
 
   obtenerName = (fileUrl) => {
     if (typeof fileUrl == 'string') {
-      const splitUrl = fileUrl?.split('/')
+      const splitUrl = fileUrl.split('/')
       return splitUrl[splitUrl.length - 1]
     } else {
       return null
@@ -881,30 +933,22 @@ class ListEventUser extends Component {
         checked_in: true,
       })
       .then(() => {
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Usuario inscrito exitosamente...',
-          action: 'show',
-        })
+        StateMessage.show(null, 'success', 'Usuario inscrito exitosamente...')
         checkInStatus = true
       })
       .catch((error) => {
         console.error('Error updating document: ', error)
         if (this.props.intl) {
-          DispatchMessageService({
-            type: 'error',
-            msj: this.props.intl.formatMessage({
+          StateMessage.show(
+            null,
+            'error',
+            this.props.intl.formatMessage({
               id: 'toast.error',
               defaultMessage: 'Sry :(',
             }),
-            action: 'show',
-          })
+          )
         } else {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Algo salió mal. Intentalo de nuevo',
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', 'Algo salió mal. Intentalo de nuevo')
         }
         checkInStatus = false
       })
@@ -1144,7 +1188,7 @@ class ListEventUser extends Component {
 
     return (
       <>
-        <ModalWithLessonsInfo
+        {/* <ModalWithLessonsInfo
           show={this.state.showModalOfProgress}
           onHidden={() => {
             this.setState({ showModalOfProgress: false })
@@ -1152,6 +1196,15 @@ class ListEventUser extends Component {
           allActivities={this.state.allActivities}
           attendee={this.state.attendee}
           currentUser={this.state.currentUser}
+        /> */}
+        <LessonsInfoModal
+          show={this.state.showModalOfProgress}
+          onHidden={() => {
+            this.setState({ showModalOfProgress: false })
+          }}
+          allActivities={this.state.allActivities || []}
+          user={this.state.currentUser}
+          event={this.props.event}
         />
         <Header
           title={
@@ -1319,7 +1372,7 @@ class ListEventUser extends Component {
                     pathname:
                       !eventIsActive && window.location.toString().includes('eventadmin')
                         ? ''
-                        : `/eventAdmin/${this.props.event._id}/invitados/importar-excel`,
+                        : `/eventadmin/${this.props.event._id}/invitados/importar-excel`,
                     state: { activityId },
                   }}
                 >
@@ -1494,4 +1547,4 @@ class ListEventUser extends Component {
   }
 }
 
-export default ListEventUser
+export default withRouter(ListEventUser)

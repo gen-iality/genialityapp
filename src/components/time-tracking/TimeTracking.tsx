@@ -20,7 +20,6 @@ type UserSessionInfo = {
 }
 
 export interface TimeTrackingProps {
-  matchUrl: string
   event: any
 }
 

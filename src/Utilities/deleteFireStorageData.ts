@@ -1,4 +1,4 @@
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import { fireStorage } from '@helpers/firebase'
 
 export const deleteFireStorageData = async (fileUrl: string) => {
@@ -13,11 +13,7 @@ export const deleteFireStorageData = async (fileUrl: string) => {
     if (nameFileRefDirectory === 'template') {
       // File deleted successfully
       theFileWasDeleted = 'file deleted successfully'
-      DispatchMessageService({
-        type: 'success',
-        msj: theFileWasDeleted,
-        action: 'show',
-      })
+      StateMessage.show(null, 'success', theFileWasDeleted)
       return
     }
 
@@ -28,36 +24,20 @@ export const deleteFireStorageData = async (fileUrl: string) => {
         .then(function () {
           // File deleted successfully
           theFileWasDeleted = 'file deleted successfully'
-          DispatchMessageService({
-            type: 'success',
-            msj: theFileWasDeleted,
-            action: 'show',
-          })
+          StateMessage.show(null, 'success', theFileWasDeleted)
         })
         .catch(function (error: any) {
           // Some Error occurred
           theFileWasDeleted = `error deleting file - ${error}`
-          DispatchMessageService({
-            type: 'error',
-            msj: theFileWasDeleted,
-            action: 'show',
-          })
+          StateMessage.show(null, 'error', theFileWasDeleted)
         })
     } catch (error) {
       theFileWasDeleted = `unexpected error - ${error}`
-      DispatchMessageService({
-        type: 'error',
-        msj: theFileWasDeleted,
-        action: 'show',
-      })
+      StateMessage.show(null, 'error', theFileWasDeleted)
     }
   } catch (error) {
     theFileWasDeleted = `unexpected error - ${error}`
-    DispatchMessageService({
-      type: 'error',
-      msj: theFileWasDeleted,
-      action: 'show',
-    })
+    StateMessage.show(null, 'error', theFileWasDeleted)
   }
 
   return theFileWasDeleted

@@ -1,6 +1,6 @@
 import { saveImageStorage } from '@helpers/helperSaveImage'
 import { OrganizationApi } from '@helpers/request'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const functionCreateNewOrganization = (props) => {
   const styles = {
@@ -38,25 +38,21 @@ const functionCreateNewOrganization = (props) => {
     data_loader_page: null,
   }
 
-  DispatchMessageService({
-    type: 'loading',
-    key: 'loading',
-    msj: !props.newEventWithoutOrganization
+  StateMessage.show(
+    'loading',
+    'loading',
+    !props.newEventWithoutOrganization
       ? 'Estamos creando la organización.'
       : 'Redirigiendo al creador de cursos rápidos',
-    duration: 90,
-    action: 'show',
-  })
+    90,
+  )
 
   function linkToCreateNewEvent(menuRoute) {
     window.location.href = `${window.location.origin}${menuRoute}`
   }
 
   function sendDataFinished() {
-    DispatchMessageService({
-      key: 'loading',
-      action: 'destroy',
-    })
+    StateMessage.destroy('loading')
     props.closeModal(false)
   }
   const uploadLogo = async () => {
@@ -87,11 +83,11 @@ const functionCreateNewOrganization = (props) => {
         linkToCreateNewEvent(`/create-event/${response.author}/?orgId=${response._id}`)
       } else {
         sendDataFinished()
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Error al redirigir al creador de cursos rápidos',
-          action: 'show',
-        })
+        StateMessage.show(
+          null,
+          'error',
+          'Error al redirigir al creador de cursos rápidos',
+        )
       }
     } else {
       props.fetchItem && (await props.fetchItem())
@@ -99,18 +95,10 @@ const functionCreateNewOrganization = (props) => {
       props.resetFields && props.resetFields()
       if (response?._id) {
         sendDataFinished()
-        DispatchMessageService({
-          type: 'success',
-          msj: 'Organización creada correctamente',
-          action: 'show',
-        })
+        StateMessage.show(null, 'success', 'Organización creada correctamente')
       } else {
         sendDataFinished()
-        DispatchMessageService({
-          type: 'error',
-          msj: 'La organización no pudo ser creada',
-          action: 'show',
-        })
+        StateMessage.show(null, 'error', 'La organización no pudo ser creada')
       }
     }
   }

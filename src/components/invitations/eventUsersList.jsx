@@ -266,7 +266,7 @@ class EventUsersList extends Component {
 
     // if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
     this.props.setGuestSelected(attendeesForSendMessage)
-    this.props.history.push(`${this.props.matchUrl}/createmessage`)
+    this.props.history.push(`${this.props.match.url}/createmessage`)
     // } else {
     //   this.setState({ modalVisible: modalVisible ? false : true });
     // }
@@ -280,7 +280,7 @@ class EventUsersList extends Component {
         <Menu.Item key="1" icon={<UserOutlined />} onClick={this.modalUser}>
           Crear usuario
         </Menu.Item>
-        <Link className="dropdown-item" to={`${this.props.matchUrl}/importar-excel`}>
+        <Link className="dropdown-item" to={`${this.props.match.url}/importar-excel`}>
           <Menu.Item key="2" icon={<UserOutlined />}>
             Importar usuarios de Excel
           </Menu.Item>
@@ -351,7 +351,7 @@ class EventUsersList extends Component {
                   to={
                     !eventIsActive && window.location.toString().includes('eventadmin')
                       ? ''
-                      : `${this.props.matchUrl}/importar-excel`
+                      : `${this.props.match.url}/importar-excel`
                   }
                   icon={<UploadOutlined />}
                 >

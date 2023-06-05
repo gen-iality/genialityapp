@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FunctionComponent } from 'react'
 import { Card, Col, Row } from 'antd'
-import { useContextNewEvent, NewEventActionEnum } from '@context/newEventContext'
+import { useNewEventContext, NewEventActionEnum } from '@context/newEventContext'
 import type { EventTypeType } from '@Utilities/types/EventType'
 
 type CardType = {
@@ -17,7 +17,7 @@ interface EventTypeSectionProps {
 const EventTypeSection: FunctionComponent<EventTypeSectionProps> = (props) => {
   const { onEventTypeSectionChange = () => {} } = props
 
-  const { dispatch } = useContextNewEvent()
+  const { dispatch } = useNewEventContext()
 
   const [selectedEventType, setSelectedEventType] = useState<EventTypeType>('onlineEvent')
 

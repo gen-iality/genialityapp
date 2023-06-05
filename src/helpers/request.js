@@ -4,7 +4,7 @@ import { handleSelect } from './utils'
 import { firestore } from './firebase'
 import dayjs from 'dayjs'
 import { GetTokenUserFirebase } from './HelperAuth'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 const publicInstance = axios.create({
   url: ApiUrl,
@@ -116,36 +116,24 @@ export const getCurrentUser = async () => {
           // eslint-disable-next-line no-unused-vars
           const { status } = error.response
           if (status === 401) {
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Tu token a caducado, redirigiendo al login!',
-              action: 'show',
-            })
+            StateMessage.show(
+              null,
+              'error',
+              'Tu token a caducado, redirigiendo al login!',
+            )
           } else {
-            DispatchMessageService({
-              type: 'error',
-              msj: 'Ocurrió un error distinto al token!',
-              action: 'show',
-            })
+            StateMessage.show(null, 'error', 'Ocurrió un error distinto al token!')
           }
         } else {
           const errorData = {}
           console.error('Error', error.message)
           if (error.message) {
             errorData.message = error.message
-            DispatchMessageService({
-              type: 'error',
-              msj: errorData.message,
-              action: 'show',
-            })
+            StateMessage.show(null, 'error', errorData.message)
           } else if (error.request) {
             console.error(error.request)
             errorData.message = JSON.stringify(error.request)
-            DispatchMessageService({
-              type: 'error',
-              msj: errorData.message,
-              action: 'show',
-            })
+            StateMessage.show(null, 'error', errorData.message)
           }
           errorData.status = 708
         }
@@ -364,6 +352,12 @@ export const EventsApi = {
   refreshLinkEmailUser: async (email) => {
     return await Actions.post(`/api/getloginlink`, { email: email, refreshlink: true })
   },
+  generalMagicLink: async (email, url, content) => {
+    return await Actions.post(`/api/general-magic-link`, { email, url, content })
+  },
+  sendGenericMail: async (email, url, content) => {
+    return await Actions.post(`/api/generic-mail`, { email, url, content })
+  },
   //REFRESH URL LINK DE ACCESSO A CURSO
   refreshLinkEmailUserEvent: async (email, eventId) => {
     return await Actions.post(`/api/getloginlink`, {
@@ -412,6 +406,13 @@ export const UsersApi = {
       `api/events/${event_id}/eventusers/${user_id}?token=${token}`,
     )
   },
+  getEventUserByUser: async (eventId, userId) => {
+    return await Actions.getOne(
+      `/api/events/${eventId}/eventusers-by-user/${userId}`,
+      '',
+      true,
+    )
+  },
   mineTickets: async () => {
     return await Actions.getAll('/api/me/eventUsers/')
   },
@@ -441,7 +442,7 @@ export const UsersApi = {
   mineOrdes: async (id) => {
     return await Actions.getAll(`/api/users/${id}/orders`)
   },
-  createOne: async (data, id) => {
+  createOne: async (data, id, noSendEmail) => {
     //Este primero es que deberia estar pero no sirve
     //return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`, data);
     /** Se envia token para validar si el rol es cambiado por un damin */
@@ -453,8 +454,17 @@ export const UsersApi = {
       token = false
     }
 
+    const params = {}
+    if (token) {
+      params['token'] = token
+    }
+
+    params['no_send_mail'] = noSendEmail
+
+    const query = new URLSearchParams(params)
+
     return await Actions.post(
-      `/api/events/${id}/adduserwithemailvalidation${token ? `/?token=${token}` : '/'}`,
+      `/api/events/${id}/adduserwithemailvalidation/?${query.toString()}`,
       data,
       true,
     )

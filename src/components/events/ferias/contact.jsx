@@ -5,7 +5,7 @@ import {
   CopyOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 function Contact(props) {
   const numWhatsapp = props.codPais + props.tel
@@ -14,11 +14,7 @@ function Contact(props) {
   const { Text } = Typography
 
   const copyText = (campo) => {
-    DispatchMessageService({
-      type: 'success',
-      msj: campo + ' Copiado',
-      action: 'show',
-    })
+    StateMessage.show(null, 'success', campo + ' Copiado')
   }
 
   function showModal(info) {

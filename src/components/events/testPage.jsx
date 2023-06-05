@@ -3,7 +3,7 @@ import ComponentTest from './componentTest'
 import API from '@helpers/request'
 import { firestore } from '@helpers/firebase'
 import { GetTokenUserFirebase } from 'helpers/HelperAuth'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 
 class Test extends Component {
   constructor(props) {
@@ -30,11 +30,11 @@ class Test extends Component {
       .get()
       .then((snapshot) => {
         if (snapshot.empty) {
-          DispatchMessageService({
-            type: 'error',
-            msj: 'Usuario no inscrito a este curso, contacte al administrador',
-            action: 'show',
-          })
+          StateMessage.show(
+            null,
+            'error',
+            'Usuario no inscrito a este curso, contacte al administrador',
+          )
 
           this.setState({ currentUser: false })
           return
@@ -55,23 +55,19 @@ class Test extends Component {
             })
             .then(() => {
               // Disminuye el contador si la actualizacion en la base de datos se realiza
-              DispatchMessageService({
-                type: 'success',
-                msj: 'Usuario inscrito',
-                action: 'show',
-              })
+              StateMessage.show(null, 'success', 'Usuario inscrito')
               this.setState({ usuarioRegistrado: true })
             })
             .catch((error) => {
               console.error('Error updating document: ', error)
-              DispatchMessageService({
-                type: 'error',
-                msj: this.props.intl.formatMessage({
+              StateMessage.show(
+                null,
+                'error',
+                this.props.intl.formatMessage({
                   id: 'toast.error',
                   defaultMessage: 'Error :(',
                 }),
-                action: 'show',
-              })
+              )
             })
         })
       })

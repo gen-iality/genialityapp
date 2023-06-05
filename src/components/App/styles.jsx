@@ -6,7 +6,7 @@ import { Button, Typography, Modal, Space, Row, Col, Form, Tag, Select } from 'a
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
 import { GetTokenUserFirebase } from '@helpers/HelperAuth'
-import { DispatchMessageService } from '@context/MessageService'
+import { StateMessage } from '@context/MessageService'
 import ImageUploaderDragAndDrop from '../imageUploaderDragAndDrop/imageUploaderDragAndDrop'
 import Loading from '../profile/loading'
 
@@ -319,12 +319,7 @@ class Styles extends Component {
 
   //Se realiza una funcion asincrona submit para enviar los datos a la api
   async submit() {
-    DispatchMessageService({
-      type: 'loading',
-      key: 'loading',
-      msj: 'Por favor espere...',
-      action: 'show',
-    })
+    StateMessage.show('loading', 'loading', 'Por favor espere...')
     let info
     const { eventId } = this.state
     const thereIsAnOrganization = this.props.org?._id
@@ -340,58 +335,42 @@ class Styles extends Component {
 
       this.setState({ loading: false })
       if (info._id) {
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'success',
-          msj: this.props.intl.formatMessage({
+        StateMessage.destroy('loading')
+        StateMessage.show(
+          null,
+          'success',
+          this.props.intl.formatMessage({
             id: 'toast.success',
             defaultMessage: 'Información guardada correctamente!',
           }),
-          action: 'show',
-        })
+        )
       } else {
         this.setState({ msg: "Can't create", create: false })
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: this.props.intl.formatMessage({
+        StateMessage.destroy('loading')
+        StateMessage.show(
+          null,
+          'error',
+          this.props.intl.formatMessage({
             id: 'toast.warning',
             defaultMessage: 'Error al guardar',
           }),
-          action: 'show',
-        })
+        )
       }
     } catch (error) {
-      DispatchMessageService({
-        key: 'loading',
-        action: 'destroy',
-      })
-      DispatchMessageService({
-        type: 'error',
-        msj: this.props.intl.formatMessage({
+      StateMessage.destroy('loading')
+      StateMessage.show(
+        null,
+        'error',
+        this.props.intl.formatMessage({
           id: 'toast.error',
           defaultMessage: 'Sry :(',
         }),
-        action: 'show',
-      })
+      )
       if (error.response) {
         const { status, data } = error.response
         if (status === 401) {
-          DispatchMessageService({
-            key: 'loading',
-            action: 'destroy',
-          })
-          DispatchMessageService({
-            type: 'error',
-            msj: `Error: ${data?.message || status}`,
-            action: 'show',
-          })
+          StateMessage.destroy('loading')
+          StateMessage.show(null, 'error', `Error: ${data?.message || status}`)
         } else this.setState({ serverError: true, loader: false, errorData: data })
       } else {
         let errorData = error.message
@@ -399,15 +378,8 @@ class Styles extends Component {
           errorData = error.request
         }
         this.setState({ serverError: true, loader: false, errorData })
-        DispatchMessageService({
-          key: 'loading',
-          action: 'destroy',
-        })
-        DispatchMessageService({
-          type: 'error',
-          msj: 'Error al guardar.',
-          action: 'show',
-        })
+        StateMessage.destroy('loading')
+        StateMessage.show(null, 'error', 'Error al guardar.')
       }
     }
   }
@@ -497,11 +469,11 @@ class Styles extends Component {
                                   item.fieldColorName
                                 ].toUpperCase()}`,
                                 onCopy: () =>
-                                  DispatchMessageService({
-                                    type: 'success',
-                                    msj: 'Color hexadecimal copiado',
-                                    action: 'show',
-                                  }),
+                                  StateMessage.show(
+                                    null,
+                                    'success',
+                                    'Color hexadecimal copiado',
+                                  ),
                               }}
                             >{`HEX ${this.state.styles[
                               item.fieldColorName
@@ -518,11 +490,7 @@ class Styles extends Component {
                                   this.hexToRgb(this.state.styles[item.fieldColorName])?.b
                                 }`,
                                 onCopy: () =>
-                                  DispatchMessageService({
-                                    type: 'success',
-                                    msj: 'Color rgb copiado',
-                                    action: 'show',
-                                  }),
+                                  StateMessage.show(null, 'success', 'Color rgb copiado'),
                               }}
                             >{`RGB (${
                               this.hexToRgb(this.state.styles[item.fieldColorName])?.r

@@ -1,12 +1,5 @@
 import { useEffect } from 'react'
-import {
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-  useRouteMatch,
-  withRouter,
-} from 'react-router-dom'
+import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import { setSpaceNetworking } from '../../../redux/networking/actions'
@@ -53,10 +46,10 @@ const Productos = loadable(() => import('../producto/index'))
 const MessageRegister = loadable(() => import('../registrationForm/messageRegister'))
 const ListVideoCard = loadable(() => import('../../shared/listVideoCard'))
 const Videos = loadable(() => import('../videos'))
-const InfoEvent = loadable(() => import('../../shared/infoEvent'))
-const ResponsePayu = loadable(() => import('../../shared/infoEvent'))
-const AgendaActividadDetalle = loadable(() =>
-  import('../../events/AgendaActividadDetalle/index'),
+const InfoEvent = loadable(() => import('../../shared/InfoEvent'))
+const ResponsePayu = loadable(() => import('../../shared/InfoEvent'))
+const ActivityDisplayerPage = loadable(() =>
+  import('../activities/ActivityDisplayerPage'),
 )
 const MySection = loadable(() => import('../newSection'))
 const ThisRouteCanBeDisplayed = loadable(() =>
@@ -64,13 +57,11 @@ const ThisRouteCanBeDisplayed = loadable(() =>
 )
 
 const EventSectionRoutes = (props) => {
-  const { setActivitiesAttendee } = props
   const { path } = useRouteMatch()
   const { event_id, event_name } = useParams()
   const { GetPermissionsEvent } = useHelper()
   const cEventUser = useUserEvent()
   const cUser = useCurrentUser()
-  const history = useHistory()
 
   const obtenerFirstSection = () => {
     if (props.cEvent.value == null) return
@@ -279,7 +270,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/activity/:activity_id`}>
           <ThisRouteCanBeDisplayed>
-            <AgendaActividadDetalle
+            <ActivityDisplayerPage
               socialzonetabs={{
                 ...props?.generaltabs,
               }}
@@ -311,7 +302,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/evento`}>
           <ThisRouteCanBeDisplayed>
-            <EventHome key="evento" setActivitiesAttendee={setActivitiesAttendee} />
+            <EventHome key="evento" />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -354,7 +345,6 @@ const EventSectionRoutes = (props) => {
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
               setVirtualConference={props.setVirtualConference}
-              setActivitiesAttendee={setActivitiesAttendee}
             />
           </ThisRouteCanBeDisplayed>
         </Route>
