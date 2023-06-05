@@ -1,12 +1,9 @@
-import { firestore } from '@helpers/firebase'
+import { FB } from '@helpers/firestore-request'
 
 async function InitSurveysCompletedListener(currentUser, dispatch) {
   const userId = currentUser.value._id
 
-  const firebaseRef = firestore
-    .collection('votingStatusByUser')
-    .doc(userId)
-    .collection('surveyStatus')
+  const firebaseRef = FB.VotingStatus.SurveyStatus.collection(userId)
 
   const unSuscribe = firebaseRef.onSnapshot((snapShot) => {
     const surveysCompleted = {}
