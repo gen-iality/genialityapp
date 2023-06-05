@@ -355,8 +355,17 @@ export const EventsApi = {
   generalMagicLink: async (email, url, content) => {
     return await Actions.post(`/api/general-magic-link`, { email, url, content })
   },
-  sendGenericMail: async (email, url, content) => {
-    return await Actions.post(`/api/generic-mail`, { email, url, content })
+  sendGenericMail: async (email, url, content, actionText, subject) => {
+    const params = {
+      email,
+      url,
+      content,
+    }
+    if (actionText) params.action_text = actionText
+    if (subject) params.subject = subject
+
+    const query = new URLSearchParams(params)
+    return await Actions.post(`/api/generic-mail?${query.toString()}`)
   },
   //REFRESH URL LINK DE ACCESSO A CURSO
   refreshLinkEmailUserEvent: async (email, eventId) => {
