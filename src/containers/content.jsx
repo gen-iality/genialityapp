@@ -46,9 +46,7 @@ const AppointmentAccept = loadable(() =>
 )
 const NotFoundPage = loadable(() => import('../components/notFoundPage/NotFoundPage'))
 const ForbiddenPage = loadable(() => import('../components/forbiddenPage'))
-const QueryTesting = loadable(() =>
-  import('../components/events/surveys/components/queryTesting'),
-)
+
 const EventFinished = loadable(() => import('../components/eventFinished/eventFinished'))
 const LoginWithCode = loadable(() => import('../components/AdminUsers/WithCode'))
 const NoMatchPage = loadable(() => import('../components/notFoundPage/NoMatchPage'))
@@ -118,8 +116,7 @@ const ContentContainer = () => {
           <Route path="/policies" component={Policies} />
           <Route path="/about" component={About} />
           <Route path="/faqs" component={Faqs} />
-          {/* Ruta para realizar pruebas de consultas a firebase */}
-          <Route path="/queryTesting" component={QueryTesting} />
+
           <Route path="/api/generatorQr/:id" component={QRedirect} />
           <Route exact path="/transition/:event" component={Transition} />
           <Route exact path="/eventfinished" component={EventFinished} />
