@@ -20,7 +20,7 @@ import EmpresasRoutes from '../empresas';
 import TriviaRoutes from '../trivia';
 import DocumentsRoutes from '../documents';
 import Speakers from '../speakers';
-import MenuLanding from '../menuLanding';
+import MenuLanding from '../menuLanding/index';
 import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
 import NetworkingPage from '../networking/Networking.page';
