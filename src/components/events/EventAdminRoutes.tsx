@@ -45,6 +45,7 @@ import {
 import IsolatedRoutes from '../isolated/IsolatedRoutes'
 import TimeTrackingRoutes from '../time-tracking/TimeTrackingRoutes'
 import { FileProtectOutlined } from '@ant-design/icons'
+import CertificateEmailEditPage from '@components/invitations/CertificateEmailEditPage'
 
 const { Sider, Content } = Layout
 
@@ -409,6 +410,11 @@ class EventAdminRoutes extends Component {
                 render={() => (
                   <InvitedUsers eventId={event._id} event={event} parentUrl={match.url} />
                 )}
+              />
+              <Protected
+                path={`${match.url}/certificate-email`}
+                event={event}
+                render={() => <CertificateEmailEditPage event={event} />}
               />
               <Protected
                 path={`${match.url}/messages`}

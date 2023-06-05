@@ -51,7 +51,9 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
       await EventsApi.sendGenericMail(
         watchedUser.email,
         url,
-        'Entra al ver el certificado en el siguiente link',
+        event.certificate_email_settings?.content || 'Mensaje sin editar',
+        event.certificate_email_settings?.action_text,
+        event.certificate_email_settings?.subject,
       )
       StateMessage.show(
         null,
