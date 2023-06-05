@@ -72,11 +72,13 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
               )
             }
             nodeIfCompleted={
-              <Link to={`/landing/${event._id}/certificate`}>
-                <Typography.Text strong style={{ color: '#FFFFFF' }}>
-                  Obtener certificado
-                </Typography.Text>
-              </Link>
+              !event.hide_certificate_link && (
+                <Link to={`/landing/${event._id}/certificate`}>
+                  <Typography.Text strong style={{ color: '#FFFFFF' }}>
+                    Obtener certificado
+                  </Typography.Text>
+                </Link>
+              )
             }
           />
           {event.is_examen_required ? (

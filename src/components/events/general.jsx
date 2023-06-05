@@ -513,6 +513,7 @@ class General extends Component {
       googletagmanagerid: event.googletagmanagerid || null,
       facebookpixelid: event.facebookpixelid || null,
       is_examen_required: event.is_examen_required,
+      hide_certificate_link: event.hide_certificate_link,
       published_at_home: event.published_at_home,
       validity_days: event.validity_days,
       default_certification_description: event.default_certification_description,
@@ -1190,6 +1191,17 @@ class General extends Component {
                       checked={event.is_examen_required}
                       onChange={(checked) => {
                         this.handleChange(checked, 'is_examen_required')
+                      }}
+                    />
+                  </Form.Item>
+
+                  <Form.Item label="¿Ocultar certificados?">
+                    <Switch
+                      checkedChildren="Oculto"
+                      unCheckedChildren="Visible"
+                      checked={event.hide_certificate_link}
+                      onChange={(checked) => {
+                        this.handleChange(checked, 'hide_certificate_link')
                       }}
                     />
                   </Form.Item>

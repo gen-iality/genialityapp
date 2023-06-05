@@ -26,6 +26,7 @@ import BlockedEvent from '@components/events/Landing/BlockedEvent'
 import ModalAuthAnonymous from '@components/authentication/ModalAuthAnonymous'
 import ModalUpdate from '@components/events/Landing/ModalUpdate'
 import DirectLoginPage from '@/pages/DirectLoginPage'
+import CertificateGeneraterPage from '@/pages/CertificateGeneraterPage'
 //Code splitting
 const Header = loadable(() => import('./header'))
 const Home = loadable(() => import('../pages/home'))
@@ -62,8 +63,13 @@ const ContentContainer = () => {
         /* Empty callback to block the default browser prompt, it is necessary to be able to use in custon hook RouterPrompt */
       }}
     >
-      <main className="main">
+      <main className="main" style={{ minHeight: '100vh' }}>
         <Switch>
+          <Route
+            exact
+            path="/certificate-generator/:userId/:eventId/:activityId"
+            render={() => <CertificateGeneraterPage />}
+          />
           <RouteContext
             path={['/landing/:event_id', '/event/:event_name']}
             component={Landing}

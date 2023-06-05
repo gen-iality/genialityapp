@@ -19,7 +19,7 @@ interface ILessonsInfoModalProps {
 }
 
 const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
-  const { show, onHidden, allActivities, user, event } = props
+  const { show, onHidden, allActivities, user: watchedUser, event } = props
 
   const [dataLoaded, setDataLoaded] = useState(false)
   const [viewedActivities, setViewedActivities] = useState<any[]>([])
@@ -29,7 +29,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
     const existentActivities = await allActivities.map(async (activity) => {
       const activity_attendee = await firestore
         .collection(`${activity._id}_event_attendees`)
-        .doc(user._id)
+        .doc(watchedUser._id)
         .get()
       if (activity_attendee.exists) {
         return activity
@@ -45,17 +45,24 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
 
   const handleSendCertificate = async () => {
     setIsSending(true)
-    const emailEncoded = encodeURIComponent(user.email)
-    const redirect = `${window.location.origin}/landing/${event._id}/certificate`
-    const url = `${window.location.origin}/direct-login?email=${emailEncoded}&redirect=${redirect}`
+    // const emailEncoded = encodeURIComponent(watchedUser.email)
+    // const redirect = `${window.location.origin}/landing/${event._id}/certificate`
+    // const url = `${window.location.origin}/direct-login?email=${emailEncoded}&redirect=${redirect}`
+    const url = `${window.location.origin}/certificate-generator/${watchedUser.account_id}/${event._id}/no-activities`
 
     try {
-      await EventsApi.generalMagicLink(
-        user.email,
+      // Before it was generalMagicLink, but now the mail is sent directly
+      await EventsApi.sendGenericMail(
+        watchedUser.email,
         url,
-        'Entra al ver el certificado en el siguiente link',
+        '<p>La Asociación Colombiana de Neurologia - ACN, agradece du asistencia y participación en el Simposio Nacional de Movimientos Anormales, realizado el 26 - 27 de mayo en Barranquilla, Colombia.</p><p>Nota: Para efectuar la descarga introduzca su número de cédula\nRecuerde consultar la agenda académica y programación de eventos en www.ACNWEB.org 🧠</p>',
+        'Descargar certificado',
       )
-      StateMessage.show(null, 'success', `Se ha enviado el mensaje a ${user.email}`)
+      StateMessage.show(
+        null,
+        'success',
+        `Se ha enviado el mensaje a ${watchedUser.email}`,
+      )
     } catch (err) {
       console.error(err)
       Modal.error({
@@ -72,7 +79,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
   )
 
   useEffect(() => {
-    if (!user) return
+    if (!watchedUser) return
     if (allActivities.length == 0) return
 
     requestAllData()
@@ -84,9 +91,9 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
 
     // if (!show) setLoaded(false)
     return () => setDataLoaded(false)
-  }, [allActivities, user, show])
+  }, [allActivities, watchedUser, show])
 
-  if (!user) return null
+  if (!watchedUser) return null
 
   return (
     <Modal centered footer={null} visible={show} closable onCancel={onHidden}>
@@ -97,7 +104,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
             header={
               <Row justify="space-between">
                 <Typography.Text strong>
-                  Lecciones vistas por {user.names}
+                  Lecciones vistas por {watchedUser.names}
                 </Typography.Text>
                 <Button
                   type="primary"
@@ -124,7 +131,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
                 ) : (
                   <Checkbox
                     onChange={async () => {
-                      await checkinAttendeeInActivity(user, item._id)
+                      await checkinAttendeeInActivity(watchedUser, item._id)
                       requestAllData()
                     }}
                   />
@@ -138,7 +145,7 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
             icon={<LoadingOutlined />}
             title="Cargando"
             status="info"
-            subTitle={`Cargando datos de ${user.names}...`}
+            subTitle={`Cargando datos de ${watchedUser.names}...`}
           />
         )}
       </Space>

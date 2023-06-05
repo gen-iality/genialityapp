@@ -34,7 +34,7 @@
       }
     }
   },
-  "plugins": ["react", "@typescript-eslint", "cypress", "prettier"],
+  "plugins": ["react", "@typescript-eslint", "cypress", "prettier", "internal-rules"],
   "rules": {
     "no-undef": "error",
     "prefer-const": "error",
@@ -46,6 +46,7 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/ban-ts-comment": "off",
-    "cypress/no-unnecessary-waiting": "off"
+    "cypress/no-unnecessary-waiting": "off",
+    "internal-rules/nice-state-setter-name": [1]
   }
 }
