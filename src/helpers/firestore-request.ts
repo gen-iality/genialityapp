@@ -185,9 +185,35 @@ const Surveys = {
   },
 }
 
+const VotingStatus = {
+  collection: () => {
+    return firestore.collection('votingStatusByUser')
+  },
+  ref: (userId: string) => {
+    return VotingStatus.collection().doc(userId)
+  },
+  SurveyStatus: {
+    collection: (userId: string) => {
+      return VotingStatus.ref(userId).collection('surveyStatus')
+    },
+    ref: (userId: string, surveyId: string) => {
+      return VotingStatus.SurveyStatus.collection(userId).doc(surveyId)
+    },
+    get: async (userId: string, surveyId: string) => {
+      const document = await VotingStatus.SurveyStatus.ref(userId, surveyId).get()
+      if (!document.exists) return
+      return document.data()
+    },
+    edit: async (userId: string, surveyId: string, data: any, options?: any) => {
+      return await VotingStatus.SurveyStatus.ref(userId, surveyId).set(data, options)
+    },
+  },
+}
+
 export const FB = {
   Attendees,
   Activities,
   Events,
   Surveys,
+  VotingStatus,
 }
