@@ -335,20 +335,23 @@ export const NewEventProvider = ({ children }) => {
       const dateEnd = new Date(data.datetime_to);
       
 
-      
       let currentDate = new Date(dateStart);
       let newDateRanges = [];
-
       while (currentDate <= dateEnd) {
-        const newCurrent = new Date(currentDate);
+        const currentDateStart = new Date(currentDate);
+        const curretDateEnd = new Date(currentDate);
+
+        curretDateEnd.setHours(dateEnd.getHours());
+        curretDateEnd.setMinutes(dateEnd.getMinutes());
         const newDateRange = {
-          id: dayToKey(new Date(newCurrent)),
-          start: new Date(newCurrent),
-          end: new Date(newCurrent.setHours(dateEnd.getHours(), dateEnd.getMinutes(), dateEnd.getSeconds())),
+          id: dayToKey(new Date(currentDateStart)),
+          start: new Date(currentDateStart),
+          end: new Date(curretDateEnd),
         };
         newDateRanges.push(newDateRange);
         currentDate.setDate(currentDate.getDate() + 1);
       }
+
 
       data.dates = newDateRanges
 

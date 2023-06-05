@@ -128,7 +128,9 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
             const data = await EventsApi.getOne(props.eventId);
             if (!data) return;
             const datesFetched = data.dates;
+
             if (!data.dates || data.dates.length === 0) {
+                
                 const dateStart = new Date(data.datetime_from);
                 const dateEnd = new Date(data.datetime_to);
 
@@ -208,6 +210,7 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
                 if (currentDataRange) {
                     return currentDataRange
                 }
+
                 const today = new Date()
 
                 date.setHours(today.getHours())
