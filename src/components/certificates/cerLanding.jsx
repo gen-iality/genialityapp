@@ -202,24 +202,31 @@ class CertificadoLanding extends Component {
             <Row gutter={[8, 8]} wrap justify="center">
               <Col span={24}>
                 <Card>
-                  <>
-                    {/* Alert informativo de certificados disponibles */}
-                    <Alert message="Certificados disponibles" type="success" />
-                    {checkedInUsers.map((user, key) => (
-                      <div key={key}>
-                        <br />
-                        {/* Nombre de curso */}
+                  {this.props.cEvent.value.hide_certificate_link ? (
+                    <Alert
+                      message="Certificados bloqueado por administrador"
+                      type="warning"
+                    />
+                  ) : (
+                    <>
+                      {/* Alert informativo de certificados disponibles */}
+                      <Alert message="Certificados disponibles" type="success" />
+                      {checkedInUsers.map((user, key) => (
+                        <div key={key}>
+                          <br />
+                          {/* Nombre de curso */}
 
-                        {/* Importacion del boton para descargar certificado */}
-                        <IconText
-                          text="Descargar certificado"
-                          icon={DownloadOutlined}
-                          onSubmit={() => this.generateCert(user)}
-                        />
-                        <br />
-                      </div>
-                    ))}
-                  </>
+                          {/* Importacion del boton para descargar certificado */}
+                          <IconText
+                            text="Descargar certificado"
+                            icon={DownloadOutlined}
+                            onSubmit={() => this.generateCert(user)}
+                          />
+                          <br />
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </Card>
               </Col>
             </Row>

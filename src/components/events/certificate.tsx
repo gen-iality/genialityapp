@@ -363,45 +363,54 @@ function Certificate(props: CertificateProps) {
 
               {progressPercentValue === 100 && (
                 <>
-                  <Alert message="Certificado de curso completo" type="success" />
-                  <br />
-                  <IconText
-                    text="Descargar certificado del curso"
-                    icon={isGenerating ? LoadingOutlined : DownloadOutlined}
-                    onSubmit={() => generateCert(props.cEventUser.value)}
-                  />
-                  <br />
-                  <Typography.Text strong>
-                    Éste es una plantilla y no es el certificado final. Clic en descargar
-                    para obtener el certificado real.
-                  </Typography.Text>
-                  {lastRolCert ? (
-                    <Html2PdfCerts
-                      handler={pdfGeneralGeneratorRef}
-                      rows={finalCertRows}
-                      imageUrl={
-                        certificateData.background ?? defaultCertificateBackground
-                      }
-                      backgroundColor="#005882"
-                      enableLinks={true}
-                      filename="certificate-general.pdf"
-                      format={[
-                        certificateData.cert_width ?? 1280,
-                        certificateData.cert_height ?? 720,
-                      ]}
-                      sizeStyle={{
-                        height: certificateData.cert_height ?? 720,
-                        width: certificateData.cert_width ?? 1280,
-                      }}
-                      transformationScale={0.5}
-                      unit="px"
-                      orientation="landscape"
-                      onEndGenerate={() => {
-                        setIsGenerating(false)
-                      }}
+                  {props.cEvent.value.hide_certificate_link ? (
+                    <Alert
+                      message="Certificado bloqueado por administrador"
+                      type="warning"
                     />
                   ) : (
-                    <p>Falla crear el certificado por el administrador</p>
+                    <>
+                      <Alert message="Certificado de curso completo" type="success" />
+                      <br />
+                      <IconText
+                        text="Descargar certificado del curso"
+                        icon={isGenerating ? LoadingOutlined : DownloadOutlined}
+                        onSubmit={() => generateCert(props.cEventUser.value)}
+                      />
+                      <br />
+                      <Typography.Text strong>
+                        Éste es una plantilla y no es el certificado final. Clic en
+                        descargar para obtener el certificado real.
+                      </Typography.Text>
+                      {lastRolCert ? (
+                        <Html2PdfCerts
+                          handler={pdfGeneralGeneratorRef}
+                          rows={finalCertRows}
+                          imageUrl={
+                            certificateData.background ?? defaultCertificateBackground
+                          }
+                          backgroundColor="#005882"
+                          enableLinks={true}
+                          filename="certificate-general.pdf"
+                          format={[
+                            certificateData.cert_width ?? 1280,
+                            certificateData.cert_height ?? 720,
+                          ]}
+                          sizeStyle={{
+                            height: certificateData.cert_height ?? 720,
+                            width: certificateData.cert_width ?? 1280,
+                          }}
+                          transformationScale={0.5}
+                          unit="px"
+                          orientation="landscape"
+                          onEndGenerate={() => {
+                            setIsGenerating(false)
+                          }}
+                        />
+                      ) : (
+                        <p>Falla crear el certificado por el administrador</p>
+                      )}
+                    </>
                   )}
                 </>
               )}
