@@ -4,6 +4,7 @@
  */
 
 import { firestore } from '@helpers/firebase'
+import { DocumentData } from 'firebase/firestore'
 
 const Attendees = {
   collection: (activityId: string) => {
@@ -92,8 +93,8 @@ const Events = {
   update: async (eventId: string, data: any) => {
     return await firestore.collection('events').doc(eventId).update(data)
   },
-  edit: async (eventId: string, data: any) => {
-    return await firestore.collection('events').doc(eventId).set(data)
+  edit: async (eventId: string, data: any, options?: any) => {
+    return await firestore.collection('events').doc(eventId).set(data, options)
   },
 }
 
@@ -108,6 +109,11 @@ const Surveys = {
   ref: (surveyId: string) => {
     const documentRef = firestore.collection('surveys').doc(surveyId)
     return documentRef
+  },
+  get: async (surveyId: string) => {
+    const document = await Surveys.ref(surveyId).get()
+    if (!document.exists) return
+    return document.data()
   },
   /**
    * Update the survey.
@@ -124,6 +130,13 @@ const Surveys = {
     collection: (surveyId: string) => {
       return Surveys.ref(surveyId).collection('ranking')
     },
+    ref: (surveyId: string, rankingId: string) => {
+      return firestore
+        .collection('surveys')
+        .doc(surveyId)
+        .collection('ranking')
+        .doc(rankingId)
+    },
     get: async (surveyId: string, rankingId: string) => {
       const document = await firestore
         .collection('surveys')
@@ -134,14 +147,41 @@ const Surveys = {
       if (!document.exists) return
       return document.data()
     },
-    edit: async (surveyId: string, rankingId: string, data: any) => {
+    edit: async (surveyId: string, rankingId: string, data: any, options?: any) => {
       await firestore
         .collection('surveys')
         .doc(surveyId)
         .collection('ranking')
         .doc(rankingId)
-        .set(data)
-    }
+        .set(data, options)
+    },
+  },
+  Answers: {
+    collection: (surveyId: string) => {
+      return Surveys.ref(surveyId).collection('answers')
+    },
+    ref: (surveyId: string, answerId: string) => {
+      return Surveys.Answers.collection(surveyId).doc(answerId)
+    },
+    Responses: {
+      collection: (surveyId: string, answerId: string) => {
+        return Surveys.Answers.ref(surveyId, answerId).collection('responses')
+      },
+      getAll: async (surveyId: string, answerId: string) => {
+        const documents = await firestore
+          .collection('surveys')
+          .doc(surveyId)
+          .collection('answers')
+          .doc(answerId)
+          .collection('responses')
+          .get()
+        const documentData: DocumentData[] = []
+        documents.forEach((doc) => {
+          documentData.push(doc.data())
+        })
+        return documentData
+      },
+    },
   },
 }
 
