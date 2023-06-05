@@ -389,8 +389,8 @@ class EventUsersList extends Component {
                   onClick={() => {
                     this.setState({ isMasiveEmailing: true })
                     const { event } = this.props
-                    const filteredUsers = attendeesFormatedForTable.filter((user) =>
-                      selectedRowKeys.includes(user._id),
+                    const filteredUsers = attendeesFormatedForTable.filter(
+                      (user) => selectedRowKeys.includes(user._id || user.key), // Why this users has no ID!!?
                     )
                     if (filteredUsers.length === 0) {
                       StateMessage.show(
