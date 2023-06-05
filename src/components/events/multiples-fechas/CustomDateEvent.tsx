@@ -17,7 +17,6 @@ export default function CustomDateEvent(props: Props) {
     handleSubmit,
     handleUpdateTime,
     handleInterceptor,
-    days,
     mustUpdateDate,
     datesOld,
   } = useCustomDateEvent({
@@ -28,11 +27,11 @@ export default function CustomDateEvent(props: Props) {
   return (
     <Row gutter={[16, 24]}>
       <Col xs={24} lg={12}>
-        <MyMultiPicker multiple onChange={handleInterceptor} value={days} />
+        <MyMultiPicker multiple onChange={handleInterceptor} value={dates.map(dateRange=>dateRange.start)} />
         {mustUpdateDate && (
           <Alert
             message='Formato de fecha incorrecto'
-            description={`Fecha inicio ${datesOld?.startDateOld} y fecha final ${datesOld?.endDateOld}` }
+            description={`Fecha inicio ${datesOld?.startDateOld} y fecha final ${datesOld?.endDateOld}`}
             type='error'
             style={{ marginTop: '2rem' }}
           />
