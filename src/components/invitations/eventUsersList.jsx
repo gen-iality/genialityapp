@@ -388,6 +388,7 @@ class EventUsersList extends Component {
                   disabled={isMasiveEmailing}
                   onClick={() => {
                     this.setState({ isMasiveEmailing: true })
+                    const { event } = this.props
                     const filteredUsers = attendeesFormatedForTable.filter((user) =>
                       selectedRowKeys.includes(user._id),
                     )
@@ -403,12 +404,13 @@ class EventUsersList extends Component {
                     const promises = filteredUsers.map(async (user) => {
                       const { email } = user
                       console.debug('emailing to', email)
-                      const url = `${window.location.origin}/certificate-generator/${user._id}/${this.props.event._id}/no-activities`
+                      const url = `${window.location.origin}/certificate-generator/${user._id}/${event._id}/no-activities`
                       await EventsApi.sendGenericMail(
                         email,
                         url,
-                        '<p>La Asociación Colombiana de Neurologia - ACN, agradece du asistencia y participación en el Simposio Nacional de Movimientos Anormales, realizado el 26 - 27 de mayo en Barranquilla, Colombia.</p><p>Nota: Para efectuar la descarga introduzca su número de cédula\nRecuerde consultar la agenda académica y programación de eventos en www.ACNWEB.org 🧠</p>',
-                        'Descargar certificado',
+                        event.certificate_email_settings?.content || 'Mensaje sin editar',
+                        event.certificate_email_settings?.action_text,
+                        event.certificate_email_settings?.subject,
                       )
                     })
                     Promise.all(promises)
