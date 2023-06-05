@@ -55,7 +55,8 @@ const LessonsInfoModal: FunctionComponent<ILessonsInfoModalProps> = (props) => {
       await EventsApi.sendGenericMail(
         watchedUser.email,
         url,
-        'Entra al ver el certificado en el siguiente link',
+        '<p>La Asociación Colombiana de Neurologia - ACN, agradece du asistencia y participación en el Simposio Nacional de Movimientos Anormales, realizado el 26 - 27 de mayo en Barranquilla, Colombia.</p><p>Nota: Para efectuar la descarga introduzca su número de cédula\nRecuerde consultar la agenda académica y programación de eventos en www.ACNWEB.org 🧠</p>',
+        'Descargar certificado',
       )
       StateMessage.show(
         null,
