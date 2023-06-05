@@ -89,6 +89,7 @@ class Service {
     }
   }
 
+  /** @deprecated ue helpers/firestore-request.ts instead */
   getConfiguration = (event_id, activity_id) => {
     return new Promise((resolve, reject) => {
       this.firestore
@@ -110,6 +111,7 @@ class Service {
     })
   }
 
+  /** @deprecated use helpers/firestore-request.ts instead */
   deleteActivity = (event_id, activity_id) => {
     return new Promise((resolve, reject) => {
       this.firestore

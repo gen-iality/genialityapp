@@ -12,7 +12,7 @@ import {
   Grid,
 } from 'antd'
 import { AgendaApi } from '@helpers/request'
-import { firestore } from '@helpers/firebase'
+
 import Moment from 'moment-timezone'
 import { CaretRightOutlined, FieldTimeOutlined } from '@ant-design/icons'
 import { FormattedMessage } from 'react-intl'
@@ -22,6 +22,7 @@ import { Link } from 'react-router-dom'
 import * as StageActions from '../../redux/stage/actions'
 import AccessPointIcon from '@2fd/ant-design-icons/lib/AccessPoint'
 import ThisRouteCanBeDisplayed from '../events/Landing/helpers/thisRouteCanBeDisplayed'
+import { FB } from '@helpers/firestore-request'
 
 const { gotoActivity } = StageActions
 const { Title } = Typography
@@ -101,9 +102,7 @@ const VirtualConference = () => {
 
   useEffect(() => {
     agendageneral &&
-      firestore
-        .collection('events')
-        .doc(cEvent.value._id)
+      FB.Events.ref(cEvent.value._id)
         .collection('activities')
         .onSnapshot((infoActivity) => {
           const arratem = []
@@ -138,7 +137,7 @@ const VirtualConference = () => {
 
           setinfoAgenda(activitiesorder)
         })
-  }, [agendageneral, firestore])
+  }, [agendageneral])
 
   return (
     <ThisRouteCanBeDisplayed>

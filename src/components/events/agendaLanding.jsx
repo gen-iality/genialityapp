@@ -24,12 +24,13 @@ import {
   Badge,
   Row,
 } from 'antd'
-import { firestore } from '@helpers/firebase'
+
 import AgendaActivityItem from './AgendaActivityItem/index'
 import { CalendarOutlined } from '@ant-design/icons'
 import * as notificationsActions from '../../redux/notifications/actions'
 import { setTabs } from '../../redux/stage/actions'
 import ActivitiesList from '../agenda/components/ActivitiesList'
+import { FB } from '@helpers/firestore-request'
 
 const attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
@@ -170,12 +171,8 @@ class AgendaLanding extends Component {
 
   async listeningStateMeetingRoom(list) {
     list.forEach((activity, index, arr) => {
-      firestore
-        .collection('events')
-        .doc(this.props.cEvent.value._id)
-        .collection('activities')
-        .doc(activity._id)
-        .onSnapshot((infoActivity) => {
+      FB.Activities.ref(this.props.cEvent.value._id, activity._id).onSnapshot(
+        (infoActivity) => {
           if (!infoActivity.exists) return
           const data = infoActivity.data()
           const { habilitar_ingreso, isPublished, meeting_id, platform } = data
@@ -189,21 +186,15 @@ class AgendaLanding extends Component {
           arr[index] = updatedActivityInfo
           const filtered = this.filterByDay(this.state.days[0], arr)
           this.setState({ list: arr, filtered, toShow: filtered })
-        })
+        },
+      )
     })
   }
 
   async filterStateMeetingRoom(list) {
     const lista = await Promise.all(
       list.map(async (activity) => {
-        const infoActivity = await firestore
-          .collection('events')
-          .doc(this.props.cEvent.value._id)
-          .collection('activities')
-          .doc(activity._id)
-          .get()
-        //if (!infoActivity.exists) return;
-        const data = infoActivity.data()
+        const data = await FB.Activities.get(this.props.cEvent.value._id, activity._id)
         const habilitar_ingreso = data?.habilitar_ingreso
         const isPublished = data?.isPublished
         const meeting_id = data?.meeting_id

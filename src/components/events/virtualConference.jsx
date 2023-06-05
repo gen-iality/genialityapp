@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Avatar, Row, Col, Tooltip, Typography } from 'antd'
 import { AgendaApi } from '@helpers/request'
-import { firestore } from '@helpers/firebase'
+
 import Moment from 'moment-timezone'
 import { FieldTimeOutlined } from '@ant-design/icons'
 import { FormattedMessage } from 'react-intl'
@@ -9,6 +9,7 @@ import { useEventContext } from '@context/eventContext'
 import { Link } from 'react-router-dom'
 import { truncate } from 'lodash-es'
 import { imageUtils } from '../../Utilities/ImageUtils'
+import { FB } from '@helpers/firestore-request'
 const { Text } = Typography
 
 const VirtualConference = () => {
@@ -32,9 +33,7 @@ const VirtualConference = () => {
 
   useEffect(() => {
     agendageneral &&
-      firestore
-        .collection('events')
-        .doc(cEvent.value._id)
+      FB.Events.ref(cEvent.value._id)
         .collection('activities')
         .onSnapshot((infoActivity) => {
           const arratem = []
@@ -71,7 +70,7 @@ const VirtualConference = () => {
 
           setinfoAgenda(orderactivities)
         })
-  }, [agendageneral, firestore])
+  }, [agendageneral])
 
   return (
     <Fragment>

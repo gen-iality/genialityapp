@@ -16,7 +16,6 @@ import { DownloadOutlined, LoadingOutlined } from '@ant-design/icons'
 
 import { activityContentValues } from '@context/activityType/constants/ui'
 
-import { firestore } from '@helpers/firebase'
 import AgendaType from '@Utilities/types/AgendaType'
 import {
   defaultCertificateBackground,
@@ -26,6 +25,7 @@ import { CertRow, Html2PdfCerts, Html2PdfCertsRef } from 'html2pdf-certs'
 import 'html2pdf-certs/dist/styles.css'
 import { CertificateData } from '@components/certificates/types'
 import { replaceAllTagValues } from '@components/certificates/utils/replaceAllTagValues'
+import { FB } from '@helpers/firestore-request'
 
 type CurrentEventAttendees = any // TODO: define this type and move to @Utilities/types/
 
@@ -260,20 +260,13 @@ function Certificate(props: CertificateProps) {
         .filter((activity) => !activity.is_info_only)
 
       setAllActivities(filteredData)
-      const existentActivities = filteredData.map(async (activity) => {
-        const activityAttendee = await firestore
-          .collection(`${activity._id}_event_attendees`)
-          .doc(props.cEventUser?.value?._id)
-          .get() //checkedin_at
-        if (activityAttendee.exists)
-          return activityAttendee.data() as CurrentEventAttendees
-        return null
-      })
-      // Filter existent activities and set the state
-      setActivitiesAttendee(
-        // Promises don't bite :)
-        (await Promise.all(existentActivities)).filter((item) => !!item),
+      const allAttendees = await FB.Attendees.getEventUserActivities(
+        filteredData.map((activity) => activity._id as string),
+        props.cEventUser?.value?._id,
       )
+      const filteredAttendees = allAttendees.filter((attendee) => attendee !== undefined)
+      // Filter existent activities and set the state
+      setActivitiesAttendee(filteredAttendees)
     })()
   }, [props.cUser?.value, props.cEvent?.value, props.cEventUser?.value])
 

@@ -1,8 +1,8 @@
-import { firestore } from '@helpers/firebase'
+import { FB } from '@helpers/firestore-request'
 
 function listenSurveysData(event, activity, currentUser, callback) {
   //Listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
-  let $query = firestore.collection('surveys')
+  let $query = FB.Surveys.collection()
 
   //Filtro por curso
   if (event && event._id) {
