@@ -212,13 +212,16 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
 
                 date.setHours(today.getHours())
                 date.setMinutes(today.getMinutes())
-                
+
                 return {
                     id: dayToKey(date),
                     start: date,
                     end: new Date(date.getTime() + 1000 * 60 * 60),
                 };
             });
+
+
+            newDateRangeList.sort((a, b) => a.start.getTime() - b.start.getTime());
 
             setDates(newDateRangeList);
             setDays(datesSelected);
