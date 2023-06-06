@@ -26,7 +26,7 @@ import { EnableAnalyticsByEVENT } from './helpers/analyticsHelper'
 import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper'
 
 import loadable from '@loadable/component'
-import { StateMessage } from '@context/MessageService.tsx'
+import { StateMessage } from '@context/MessageService'
 import WithEviusContext from '@context/withContext'
 import { checkinAttendeeInEvent } from '@helpers/HelperAuth'
 import { useHelper } from '@context/helperContext/hooks/useHelper'

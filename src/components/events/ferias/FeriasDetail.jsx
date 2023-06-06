@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Tabs, Row, Col, Image, Typography, Space, Grid } from 'antd'
 import FeriaBanner from './FeriaBanner'
 import Information from './information'
-import Product from './product'
+import ProductCard from './ProductCard'
 import Contact from './contact'
 import { useParams } from 'react-router'
 import { connect } from 'react-redux'
@@ -127,11 +127,11 @@ const FeriasDetail = (props) => {
                             xxl={6}
                             key={'PoS-' + index}
                           >
-                            <Product
+                            <ProductCard
                               key={index}
                               imgProduct={prod.image}
                               title={prod.nombre}
-                              etiqueta={prod.category}
+                              tag={prod.category}
                               description={prod.description}
                               url={prod.web_url}
                             />
