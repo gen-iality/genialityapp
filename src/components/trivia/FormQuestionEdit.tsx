@@ -174,7 +174,10 @@ const FormQuestionEdit = forwardRef<any, IFormQuestionEditProps>((props, ref) =>
    * @returns The URL of the uploaded image.
    */
   async function saveEventImage() {
-    const selectedLogo = defaultImgValue !== null ? defaultImgValue[0].thumbUrl : null
+    const selectedLogo =
+      defaultImgValue !== null && defaultImgValue !== undefined
+        ? defaultImgValue[0].thumbUrl
+        : null
     if (selectedLogo?.includes('https://')) return selectedLogo
     if (selectedLogo) {
       const urlOfTheUploadedImage = await saveImageStorage(selectedLogo)

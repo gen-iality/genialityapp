@@ -632,15 +632,20 @@ class TriviaEdit extends Component {
       ranking,
       displayGraphsInSurveys,
     } = this.state
-    console.debug('variable:', variable, state)
+    console.debug('1. variable:', variable, state)
     switch (variable) {
       case 'allow_gradable_survey':
-        if (state && allow_vote_value_per_user === 'true')
+        if (state && allow_vote_value_per_user === 'true') {
+          console.log('1. Entro al if')
           return this.setState({
             allow_gradable_survey: 'true',
             allow_vote_value_per_user: 'false',
           })
-        this.setState({ allow_gradable_survey: state ? 'true' : 'false' })
+        } else {
+          console.log('1. No Entro al if')
+          console.log('1. state del checkbox', state)
+          this.setState({ allow_gradable_survey: state ? true : false })
+        }
         break
 
       case 'allow_vote_value_per_user':
