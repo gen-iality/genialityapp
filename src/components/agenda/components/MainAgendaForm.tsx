@@ -3,7 +3,7 @@ import { SetStateAction, Dispatch } from 'react';
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { Row, Col, Space, Typography, Button, Form, Input, InputRef, Switch, Card, TimePicker } from 'antd';
+import { Row, Col, Space, Typography, Button, Form, Input, InputRef, Switch, Card, TimePicker, Alert } from 'antd';
 import { Select as SelectAntd } from 'antd';
 import { ExclamationCircleOutlined, SettingOutlined } from '@ant-design/icons';
 
@@ -81,8 +81,8 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
   const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
-  const { isLoading, multiDates } = useGetMultiDate(props.event?._id);
-
+  const { multiDates } = useGetMultiDate(props.event?._id);
+  const [haveDateNotIncluded, sethaveDateNotIncluded] = useState(false);
   const history = useHistory();
   const nameInputRef = useRef<InputRef>(null);
 
@@ -144,6 +144,18 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   useEffect(() => {
     if (multiDates && agenda === null) handleChangeFormData('date', moment(multiDates[0]?.start).format('YYYY-M-DD'));
   }, [multiDates]);
+
+  useEffect(() => {
+    const existDate = multiDates.find((dateRange) => {
+      const exist = moment(dateRange.start).format('YYYY-M-DD') === moment(formdata.date).format('YYYY-M-DD');
+      return exist;
+    });
+    if (!existDate) {
+      sethaveDateNotIncluded(true);
+    } else {
+      sethaveDateNotIncluded(false);
+    }
+  }, [formdata.date]);
 
   /**
    * Custom hooks
@@ -307,6 +319,9 @@ function MainAgendaForm(props: MainAgendaFormProps) {
                 </label>
               }
               rules={[{ required: true, message: 'La fecha es requerida' }]}>
+              {haveDateNotIncluded && (
+                <Alert type='error' message='La fecha de la actividad no es una fecha del evento' />
+              )}
               <SelectAntd
                 options={multiDates.map((date) => ({
                   value: moment(date.start).format('YYYY-M-DD'),
