@@ -65,9 +65,6 @@ const EventSectionRoutes = (props) => {
   const cEventUser = useUserEvent()
   const cUser = useCurrentUser()
 
-  const [activitiesAttendee, setActivitiesAttendee] = useState<any[]>([])
-  const [allActivities, setAllActivities] = useState<any[]>([])
-
   const location = useLocation()
 
   const obtenerFirstSection = () => {
@@ -103,45 +100,6 @@ const EventSectionRoutes = (props) => {
       initUserPresence(props.cEvent.value)
     }
   }, [props.cEvent.value, cUser.value])
-
-  const activityFilter = (a: any) =>
-    [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
-
-  // This can be a context or well
-  useEffect(() => {
-    if (!props.cEvent.value) return
-
-    setActivitiesAttendee([])
-    const loadData = async () => {
-      const { data }: { data: ExtendedAgendaType[] } = await AgendaApi.byEvent(
-        props.cEvent.value._id,
-      )
-      const filteredData = data
-        .filter(activityFilter)
-        .filter((activity) => !activity.is_info_only)
-      setAllActivities(filteredData)
-      const existentActivities = filteredData.map(async (activity) => {
-        const activityAttendee = await firestore
-          .collection(`${activity._id}_event_attendees`)
-          .doc(cEventUser.value._id)
-          .get() //checkedin_at
-        if (activityAttendee.exists) return activityAttendee.data() as any
-        return null
-      })
-      // Filter existent activities and set the state
-      setActivitiesAttendee(
-        // Promises don't bite :)
-        (await Promise.all(existentActivities)).filter((item) => !!item),
-      )
-    }
-    loadData().then()
-  }, [props.cEvent.value])
-
-  const eventProgressPercent: number = useMemo(
-    () =>
-      Math.round(((activitiesAttendee.length || 0) / (allActivities.length || 0)) * 100),
-    [activitiesAttendee, allActivities],
-  )
 
   useEffect(() => {
     // seperar la url en un arrary
@@ -321,7 +279,7 @@ const EventSectionRoutes = (props) => {
                 ...props?.generaltabs,
               }}
               key="activity"
-              eventProgressPercent={eventProgressPercent}
+              eventProgressPercent={props.eventProgressPercent}
             />
           </ThisRouteCanBeDisplayed>
         </Route>
@@ -349,7 +307,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/evento`}>
           <ThisRouteCanBeDisplayed>
-            <EventHome key="evento" eventProgressPercent={eventProgressPercent} />
+            <EventHome key="evento" eventProgressPercent={props.eventProgressPercent} />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -392,7 +350,7 @@ const EventSectionRoutes = (props) => {
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
               setVirtualConference={props.setVirtualConference}
-              eventProgressPercent={eventProgressPercent}
+              eventProgressPercent={props.eventProgressPercent}
             />
           </ThisRouteCanBeDisplayed>
         </Route>
