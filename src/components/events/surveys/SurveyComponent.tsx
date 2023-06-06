@@ -57,6 +57,7 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
     queryData, // The survey data
   } = props
 
+  console.log('encuestadatai', queryData)
   const cEvent = useEventContext()
   const currentUser = useCurrentUser()
   const history = useHistory()
@@ -86,10 +87,14 @@ const SurveyComponent: FunctionComponent<SurveyComponentProps> = (props) => {
    */
   useEffect(() => {
     if (!(queryData?.questions.length > 0)) return
+    console.log('Encuesta', queryData)
     setSurveyModel(createSurveyModel(queryData))
   }, [queryData])
 
   const displayFeedbackAfterEachQuestion = (sender: Survey.SurveyModel, options: any) => {
+    //Enabled only for gradable suveys
+    if (!queryData.allow_gradable_survey) return
+
     if (showingFeedback !== true) {
       stopChangeToNextQuestion(options)
       hideTimerPanel()
