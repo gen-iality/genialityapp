@@ -321,6 +321,7 @@ const EventSectionRoutes = (props) => {
                 ...props?.generaltabs,
               }}
               key="activity"
+              eventProgressPercent={eventProgressPercent}
             />
           </ThisRouteCanBeDisplayed>
         </Route>
