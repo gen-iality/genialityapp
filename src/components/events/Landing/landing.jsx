@@ -160,9 +160,9 @@ const Landing = (props) => {
     }
   }, [isNotification])
 
-  const [generaltabs, setgeneraltabs] = useState(iniitalstatetabs)
+  const [generaltabs, setGeneraltabs] = useState(iniitalstatetabs)
   // eslint-disable-next-line prefer-const
-  let [totalNewMessages, settotalnewmessages] = useState(0)
+  let [totalNewMessages, setTotalnewmessages] = useState(0)
 
   useEffect(() => {
     if (cEventContext.status === 'LOADED') {
@@ -173,7 +173,7 @@ const Landing = (props) => {
           .onSnapshot(function (eventSnapshot) {
             if (eventSnapshot.exists) {
               if (eventSnapshot.data().tabs !== undefined) {
-                setgeneraltabs(eventSnapshot.data().tabs)
+                setGeneraltabs(eventSnapshot.data().tabs)
               }
             }
           })
@@ -193,7 +193,7 @@ const Landing = (props) => {
               data = doc.data()
 
               if (data.newMessages) {
-                settotalnewmessages(
+                setTotalnewmessages(
                   (totalNewMessages += !isNaN(parseInt(data.newMessages.length))
                     ? parseInt(data.newMessages.length)
                     : 0),

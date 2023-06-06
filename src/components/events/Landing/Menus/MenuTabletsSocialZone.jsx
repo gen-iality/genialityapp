@@ -13,7 +13,7 @@ import { useEventContext } from '@context/eventContext'
 import SocialZone from '../../../socialZone/socialZone'
 
 const MenuTabletsSocialZone = (props) => {
-  const [isDrawerVisible, setisDrawerVisible] = useState(false)
+  const [isDrawerVisible, setIsDrawerVisible] = useState(false)
   const [optionselected, setOptionselected] = useState('1')
   const cEvent = useEventContext()
 
@@ -37,7 +37,7 @@ const MenuTabletsSocialZone = (props) => {
               size="large"
               onClick={() => {
                 setOptionselected('1')
-                setisDrawerVisible(!isDrawerVisible)
+                setIsDrawerVisible(!isDrawerVisible)
               }}
             ></Button>
           )}
@@ -66,7 +66,7 @@ const MenuTabletsSocialZone = (props) => {
         height="90vh"
         placement="bottom"
         closable
-        onClose={() => setisDrawerVisible(!isDrawerVisible)}
+        onClose={() => setIsDrawerVisible(!isDrawerVisible)}
         visible={isDrawerVisible}
         maskClosable
         className="drawerMobile"

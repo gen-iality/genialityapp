@@ -85,11 +85,11 @@ const IframeZoomComponent = ({
 const ZoomIframe = ({ platform, meeting_id, generalTabs }) => {
   const cEventuser = useUserEvent()
   const cEvent = useEventContext()
-  const [userEvent, setuserEvent] = useState({})
+  const [userEvent, setUserEvent] = useState({})
   useEffect(() => {
     if (!cEventuser.value || !cEvent.value) return
     const { displayName, email } = cEventuser.value.properties
-    setuserEvent({
+    setUserEvent({
       displayName: displayName,
       email: email,
       isHostuser: isHost(cEventuser.value, cEvent.value),

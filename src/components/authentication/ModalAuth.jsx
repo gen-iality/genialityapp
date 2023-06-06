@@ -63,8 +63,8 @@ const ModalAuth = (props) => {
 
   const cEvent = useEventContext()
   const cUser = useCurrentUser()
-  const [modalVisible, setmodalVisible] = useState(false)
-  const [msjError, setmsjError] = useState('')
+  const [modalVisible, setModalVisible] = useState(false)
+  const [msjError, setMsjError] = useState('')
   const intl = useIntl()
 
   const isVisibleRegister = () => {
@@ -87,22 +87,22 @@ const ModalAuth = (props) => {
       const typeEvent = recordTypeForThisEvent(cEvent)
       switch (typeEvent) {
         case 'PRIVATE_EVENT':
-          setmodalVisible(true)
+          setModalVisible(true)
           helperDispatch({ type: 'showLogin', visible: true })
           break
 
         case 'PUBLIC_EVENT_WITH_REGISTRATION':
-          setmodalVisible(true)
+          setModalVisible(true)
           helperDispatch({ type: 'showRegister', visible: true })
           break
 
         case 'UN_REGISTERED_PUBLIC_EVENT':
-          setmodalVisible(true)
+          setModalVisible(true)
           helperDispatch({ type: 'showLogin', visible: false })
           break
 
         default:
-          setmodalVisible(true)
+          setModalVisible(true)
           break
       }
     }
@@ -110,7 +110,7 @@ const ModalAuth = (props) => {
     async function isUserAuth() {
       unsubscribe = app.auth().onAuthStateChanged((user) => {
         if (user) {
-          setmodalVisible(false)
+          setModalVisible(false)
 
           helperDispatch({ type: 'showLogin', visible: false })
         } else {
@@ -140,18 +140,18 @@ const ModalAuth = (props) => {
   const DetecError = (code) => {
     switch (code) {
       case 'auth/wrong-password':
-        setmsjError(intl.formatMessage({ id: 'auth.error.wrongPassword' }))
+        setMsjError(intl.formatMessage({ id: 'auth.error.wrongPassword' }))
         break
       case 'auth/user-not-found':
-        setmsjError(intl.formatMessage({ id: 'auth.error.userNotFound' }))
+        setMsjError(intl.formatMessage({ id: 'auth.error.userNotFound' }))
 
         break
       case 'auth/invalid-email':
-        setmsjError(intl.formatMessage({ id: 'auth.error.invalidEmail' }))
+        setMsjError(intl.formatMessage({ id: 'auth.error.invalidEmail' }))
         break
 
       case 'auth/too-many-requests':
-        setmsjError(intl.formatMessage({ id: 'auth.error.tooManyRequests' }))
+        setMsjError(intl.formatMessage({ id: 'auth.error.tooManyRequests' }))
         break
     }
   }

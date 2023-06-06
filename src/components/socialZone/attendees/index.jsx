@@ -9,10 +9,10 @@ import { knowMaleOrFemale } from '@Utilities/knowMaleOrFemale'
 
 const AttendeList = function (props) {
   //contextos
-  const [myattendelist, setmyattendelist] = useState()
+  const [myattendelist, setMyattendelist] = useState()
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState(0)
-  const [filteredlist, setfilteredlist] = useState([])
+  const [filteredlist, setFilteredlist] = useState([])
   const [hasMore, setHasMore] = useState(true)
   const { attendeeListPresence, attendeeList, maleIcons, femaleicons } = useHelper()
   const cUser = useCurrentUser()
@@ -75,8 +75,8 @@ const AttendeList = function (props) {
     const removeCurrentUserFromList = ordenadousers.filter(
       (users) => users.iduser !== userId,
     )
-    setmyattendelist(removeCurrentUserFromList)
-    setfilteredlist(removeCurrentUserFromList.slice(0, pag))
+    setMyattendelist(removeCurrentUserFromList)
+    setFilteredlist(removeCurrentUserFromList.slice(0, pag))
     setPage(1)
     const AttendeesOnline = removeCurrentUserFromList.filter((user) => {
       if (user.status === 'online') {
@@ -88,9 +88,9 @@ const AttendeList = function (props) {
 
   useEffect(() => {
     if (props.busqueda == undefined || props.busqueda == '') {
-      myattendelist && setfilteredlist(myattendelist.slice(0, pag))
+      myattendelist && setFilteredlist(myattendelist.slice(0, pag))
     } else {
-      setfilteredlist(
+      setFilteredlist(
         myattendelist.filter((a) =>
           a.names.toLowerCase().includes(props.busqueda.toLowerCase()),
         ),
@@ -116,7 +116,7 @@ const AttendeList = function (props) {
     let pagP = page
     pagP = pagP += 1
 
-    setfilteredlist(datosg)
+    setFilteredlist(datosg)
     setPage(pagP++)
     //
     setLoading(false)

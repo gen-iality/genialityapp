@@ -84,17 +84,17 @@ const VirtualConference = () => {
   const urlactivity = `/landing/${cEvent.value._id}/activity/`
   const urlAgenda = `/landing/${cEvent.value._id}/agenda/`
 
-  const [infoAgendaArr, setinfoAgenda] = useState([])
-  const [agendageneral, setagendageneral] = useState(null)
-  const [bandera, setbandera] = useState(false)
+  const [infoAgendaArr, setInfoAgenda] = useState([])
+  const [agendageneral, setAgendageneral] = useState(null)
+  const [bandera, setBandera] = useState(false)
   const screens = useBreakpoint()
 
   useEffect(() => {
     async function fetchData() {
       const response = await AgendaApi.byEvent(cEvent.value._id)
-      setagendageneral(response.data)
+      setAgendageneral(response.data)
 
-      setbandera(!bandera)
+      setBandera(!bandera)
     }
     fetchData()
   }, [])
@@ -136,7 +136,7 @@ const VirtualConference = () => {
           //ordenar
           const activitiesorder = arratem.sort((a, b) => a.updated_at - b.updated_at)
 
-          setinfoAgenda(activitiesorder)
+          setInfoAgenda(activitiesorder)
         })
   }, [agendageneral, firestore])
 

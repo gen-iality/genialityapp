@@ -12,11 +12,11 @@ function RankingList(props) {
     return result
   }
 
-  const [loading, setloading] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setloading(true)
-    setloading(false)
+    setLoading(true)
+    setLoading(false)
   }, [gameRanking])
 
   return (

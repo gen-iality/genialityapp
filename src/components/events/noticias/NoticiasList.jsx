@@ -20,7 +20,7 @@ const NoticiasList = (props) => {
   const [loading, setLoading] = useState(true)
   const [noticias, setNoticias] = useState()
   const [noticiasAll, setNoticiasAll] = useState()
-  const [viewMenos, setviewMenos] = useState(false)
+  const [viewMenos, setViewMenos] = useState(false)
   const [ellipsis] = useState(true)
 
   useEffect(() => {
@@ -63,13 +63,13 @@ const NoticiasList = (props) => {
   const viewAll = () => {
     if (!viewMenos) {
       setNoticias(noticiasAll)
-      setviewMenos(true)
+      setViewMenos(true)
     } else {
       if (size) {
         const noticeList = noticiasAll.slice(0, size)
         setNoticias(noticeList)
       }
-      setviewMenos(false)
+      setViewMenos(false)
     }
   }
 

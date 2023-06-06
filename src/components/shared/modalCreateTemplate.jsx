@@ -6,19 +6,19 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { StateMessage } from '@context/MessageService'
 
 const ModalCreateTemplate = (props) => {
-  const [loading, setloading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const { helperDispatch } = useHelper()
 
   const onFinish = async (values) => {
     //por defecto
     values.user_properties = DefaultProperties
     const organizerid = props.organizationid
-    setloading(true)
+    setLoading(true)
     await OrganizationPlantillaApi.createTemplate(organizerid, {
       template_properties: [values],
     })
     StateMessage.show(null, 'success', 'Template creada')
-    setloading(false)
+    setLoading(false)
     props.handlevisibleModal()
     helperDispatch({ type: 'reloadTemplatesCms' })
   }

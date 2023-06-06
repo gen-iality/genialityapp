@@ -188,13 +188,13 @@ const FormRegister = ({
   const [event, setEvent] = useState(null)
 
   // Estado de los datos iniciales del usuario. ¿Se usará solo para el Modal?
-  const [initialValues, setinitialValues] = useState({})
+  const [initialValues, setInitialValues] = useState({})
 
   // Estados de campos dinámicos
   const [extraFields, setExtraFields] = useState(
     cEvent.value?.user_properties || [] || fields,
   )
-  const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
+  const [extraFieldsOriginal, setExtraFieldsOriginal] = useState(
     organization ? fields : cEvent.value?.user_properties || {},
   )
 
@@ -320,7 +320,7 @@ const FormRegister = ({
       }
     }
     console.log('initialValues2', initialValuesGeneral, cUser, cEventUser)
-    setinitialValues(
+    setInitialValues(
       organization
         ? {
             ...initialOtherValue?.properties,

@@ -36,7 +36,7 @@ const ModalLoginHelpers = (props) => {
   const [registerUser, setRegisterUser] = useState(false)
   const [sendRecovery, setSendRecovery] = useState(null)
   const [status, setStatus] = useState('success')
-  const [resul, setresul] = useState('')
+  const [result, setResult] = useState('')
   const [loading, setLoading] = useState(false)
   const [form] = Form.useForm()
   const intl = useIntl()
@@ -72,7 +72,7 @@ const ModalLoginHelpers = (props) => {
             defaultMessage: 'Se ha enviado una nueva contraseña a:',
           })} ${email} `,
         )
-        setresul('OK')
+        setResult('OK')
         setStatus('success')
       }
     } catch (error) {
@@ -112,7 +112,7 @@ const ModalLoginHelpers = (props) => {
               defaultMessage: 'Se ha enviado un link de acceso a su correo electrónico',
             })} ${values.email}`,
           )
-          setresul('OK')
+          setResult('OK')
           setStatus('success')
         } else {
           setSendRecovery(
@@ -121,7 +121,7 @@ const ModalLoginHelpers = (props) => {
               defaultMessage: 'no se encuentra registrado en este curso',
             })}`,
           )
-          setresul('noRegister')
+          setResult('noRegister')
           setStatus('error')
         }
       } catch (error) {
@@ -240,7 +240,7 @@ const ModalLoginHelpers = (props) => {
               borderRadius: '5px',
             }}
             description={
-              resul !== 'OK' && (
+              result !== 'OK' && (
                 <Button
                   size="middle"
                   type="primary"

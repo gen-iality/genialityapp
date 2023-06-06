@@ -8,11 +8,11 @@ function RankingList(props) {
   const styles = cEvent.value.styles
   const { myScore } = cHelper
 
-  const [loading, setloading] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setloading(true)
-    setloading(false)
+    setLoading(true)
+    setLoading(false)
   }, [myScore])
 
   /** Se valida si el usuario ya participo, el name vacio es el estado inicial */

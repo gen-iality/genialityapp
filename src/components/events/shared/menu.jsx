@@ -11,7 +11,7 @@ import OpenInNewIcon from '@2fd/ant-design-icons/lib/OpenInNew'
 const { SubMenu } = Menu
 
 const MenuConfig = (props) => {
-  const [controller, setcontroller] = useState({
+  const [controller, setController] = useState({
     contentTab: true,
     generalTab: false,
     peopleTab: true,
@@ -33,7 +33,7 @@ const MenuConfig = (props) => {
   const eventOrganization = async (eventId) => {
     const currentEvent = await EventsApi.getOne(eventId)
     const organizationId = currentEvent.organizer_id
-    setcontroller({ ...controller, organizationId })
+    setController({ ...controller, organizationId })
   }
 
   useEffect(() => {

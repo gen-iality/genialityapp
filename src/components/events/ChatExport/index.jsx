@@ -33,10 +33,10 @@ function formatAMPM(hours, minutes) {
 
 const ChatExport = ({ eventId, event }) => {
   // eslint-disable-next-line prefer-const
-  let [datamsjevent, setdatamsjevent] = useState([])
+  const [datamsjevent, setDatamsjevent] = useState([])
   const [loading, setLoading] = useState(true)
   const [columnsData, setColumnsData] = useState({})
-  const [listUsersBlocked, setlistUsersBlocked] = useState([])
+  const [listUsersBlocked, setListUsersBlocked] = useState([])
   const cEvent = useEventContext()
   const { eventIsActive } = useHelper()
 
@@ -111,10 +111,10 @@ const ChatExport = ({ eventId, event }) => {
   const exportFile = async (e) => {
     e.preventDefault()
     e.stopPropagation()
-    datamsjevent = datamsjevent.filter(
+    const filteredDatamsjevent = datamsjevent.filter(
       (item) => item.text.toLowerCase().indexOf('spam') === -1,
     )
-    const ws = utils.json_to_sheet(datamsjevent)
+    const ws = utils.json_to_sheet(filteredDatamsjevent)
     const wb = utils.book_new()
     utils.book_append_sheet(wb, ws, 'Chat')
     writeFileXLSX(wb, `chatCURSO ${event.name}.xls`)
@@ -145,7 +145,7 @@ const ChatExport = ({ eventId, event }) => {
           }
           datamessagesthisevent.push(msjnew)
         })
-        setdatamsjevent(datamessagesthisevent)
+        setDatamsjevent(datamessagesthisevent)
         setLoading(false)
       })
       .catch()
@@ -170,7 +170,7 @@ const ChatExport = ({ eventId, event }) => {
           }
           list.push(newUser)
         })
-        setlistUsersBlocked(list)
+        setListUsersBlocked(list)
         setLoading(false)
       }).catch
   }
@@ -195,7 +195,7 @@ const ChatExport = ({ eventId, event }) => {
             datamsjevent.forEach(async (item) => {
               await deleteSingleChat(eventId, item.chatId)
             })
-            setdatamsjevent([])
+            setDatamsjevent([])
             setLoading(false)
             StateMessage.destroy('loading')
             StateMessage.show(null, 'success', 'Se eliminó la información correctamente!')

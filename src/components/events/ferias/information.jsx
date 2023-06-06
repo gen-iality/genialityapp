@@ -5,7 +5,7 @@ import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons'
 const { Text, Paragraph } = Typography
 
 function feriaInformation(props) {
-  const [loading, setloading] = useState(true)
+  const [loading, setLoading] = useState(true)
 
   return (
     <>
@@ -14,7 +14,7 @@ function feriaInformation(props) {
           <Col xxl={4} xl={5} lg={6} md={24} sm={24} xs={24} className="container-img">
             <Image
               loading={loading}
-              onLoad={() => setloading(false)}
+              onLoad={() => setLoading(false)}
               src={props.ImgCompany}
               width={200}
               height={200}
