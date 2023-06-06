@@ -205,7 +205,7 @@ const ActivitiesList = (props: ActivitiesListProps) => {
         </>
       ) : undefined}
       <ModuledActivityHOC
-        list={truncatedAgendaList}
+        list={truncatedAgendaList || []}
         render={(nameToFilter) => (
           <ListTheseActivities
             dataSource={truncatedAgendaList.filter(

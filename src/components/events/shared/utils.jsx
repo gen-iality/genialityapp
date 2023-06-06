@@ -207,6 +207,12 @@ export const MenuItems = [
         onClick: handleClick,
       },
       {
+        name: 'Editar mensaje de correo de certificado',
+        path: '/certificate-email',
+        key: 'certificate-email',
+        onClick: handleClick,
+      },
+      {
         name: 'Correos enviados',
         path: '/messages',
         key: 'comunicaciones-enviadas',

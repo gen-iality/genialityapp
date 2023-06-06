@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { withRouter, Link } from 'react-router-dom'
-import { UsersApi, eventTicketsApi } from '@helpers/request'
+import { EventsApi, UsersApi, eventTicketsApi } from '@helpers/request'
 import { Table, Input, Button, Space, Menu, Row, Col, Tag } from 'antd'
 import {
   SearchOutlined,
@@ -8,6 +8,8 @@ import {
   DownloadOutlined,
   UploadOutlined,
   PlusCircleOutlined,
+  LoadingOutlined,
+  ArrowsAltOutlined,
 } from '@ant-design/icons'
 import Highlighter from 'react-highlight-words'
 import { parseData2Excel } from '@helpers/utils'
@@ -16,6 +18,7 @@ import AddUser from '../modal/addUser'
 import ModalAdvise from './modal'
 import Header from '@antdComponents/Header'
 import { HelperContext } from '@context/helperContext/helperContext'
+import { StateMessage } from '@context/MessageService'
 
 class EventUsersList extends Component {
   constructor(props) {
@@ -26,6 +29,7 @@ class EventUsersList extends Component {
       columnsTable: [],
       selectedRowKeys: [], //Contiene los id de los usuarios, se llama de esta manera el array por funcionalidad de la tabla
       tickets: [],
+      isMasiveEmailing: false,
     }
     this.createTableColumns = this.createTableColumns.bind(this)
     this.onSelectChange = this.onSelectChange.bind(this)
@@ -287,7 +291,8 @@ class EventUsersList extends Component {
         </Link>
       </Menu>
     )
-    const { columnsTable, attendeesFormatedForTable, selectedRowKeys } = this.state
+    const { columnsTable, attendeesFormatedForTable, selectedRowKeys, isMasiveEmailing } =
+      this.state
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -375,6 +380,50 @@ class EventUsersList extends Component {
                   }
                 >
                   Agregar usuario
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  icon={isMasiveEmailing ? <LoadingOutlined /> : <ArrowsAltOutlined />}
+                  disabled={isMasiveEmailing}
+                  onClick={() => {
+                    this.setState({ isMasiveEmailing: true })
+                    const { event } = this.props
+                    const filteredUsers = attendeesFormatedForTable.filter(
+                      (user) => selectedRowKeys.includes(user._id || user.key), // Why this users has no ID!!?
+                    )
+                    if (filteredUsers.length === 0) {
+                      StateMessage.show(
+                        null,
+                        'warning',
+                        'Seleccione por lo menos 1 usuario eh',
+                      )
+                      this.setState({ isMasiveEmailing: false })
+                      return
+                    }
+                    const promises = filteredUsers.map(async (user) => {
+                      const { email } = user
+                      console.debug('emailing to', email)
+                      const url = `${window.location.origin}/certificate-generator/${user._id}/${event._id}/no-activities`
+                      await EventsApi.sendGenericMail(
+                        email,
+                        url,
+                        event.certificate_email_settings?.content || 'Mensaje sin editar',
+                        event.certificate_email_settings?.action_text,
+                        event.certificate_email_settings?.subject,
+                      )
+                    })
+                    Promise.all(promises)
+                      .then(() => StateMessage.show(null, 'success', 'Correo enviados'))
+                      .catch((err) => {
+                        console.error(err)
+                        StateMessage.show(null, 'error', err)
+                      })
+                      .finally(() => this.setState({ isMasiveEmailing: false }))
+                  }}
+                  type="ghost"
+                >
+                  Enviar certificados a todos
                 </Button>
               </Col>
             </Row>
