@@ -12,7 +12,6 @@ export const dateToCustomDate = (dateStart: Date, dateEnd: Date): DateRangeEvius
         curretDateEnd.setHours(dateEnd.getHours())
         curretDateEnd.setMinutes(dateEnd.getMinutes())
         
-        console.log({currentDateStart,curretDateEnd})
         const newDateRange = {
             id: dayToKey(new Date(currentDateStart)),
             start: new Date(currentDateStart),

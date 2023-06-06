@@ -30,6 +30,7 @@ import AgendaType from '@Utilities/types/AgendaType';
 import ActivityTypeSelector from '../activityType/ActivityTypeSelector';
 import loadExtraAgendaData from '../hooks/useLoadExtraAgendaData';
 import useHourWithAdditionalMinutes from '../hooks/useHourWithAdditionalMinutes';
+import { useGetMultiDate } from '@/hooks/useGetMultiDate';
 
 const { Text } = Typography;
 const { Option } = SelectAntd;
@@ -65,14 +66,13 @@ export interface MainAgendaFormProps {
   savedFormData: FormDataType;
   agenda: AgendaType | null;
   setFormData: (x: FormDataType) => void;
-  previousFormData: FormDataType,
+  previousFormData: FormDataType;
   setShowPendingChangesModal: (b: boolean) => void;
 }
 
 function MainAgendaForm(props: MainAgendaFormProps) {
   const { agendaContext, formdata, savedFormData, agenda, setFormData, setShowPendingChangesModal } = props;
   const { previousFormData } = props;
-
   const [isLoaded, setIsLoaded] = useState(false);
   const [thisIsLoading, setThisIsLoading] = useState<{ [key: string]: boolean }>({ categories: true });
   const [allDays, setAllDays] = useState<SelectOptionType[]>([]);
@@ -81,6 +81,7 @@ function MainAgendaForm(props: MainAgendaFormProps) {
   const [allCategories, setAllCategories] = useState<SelectOptionType[]>([]); // info.selectedCategories modifies that
   const [allRoles, setAllRoles] = useState<SelectOptionType[]>([]);
   const [allTickets, setAllTickets] = useState<SelectOptionType[]>([]);
+  const { isLoading, multiDates } = useGetMultiDate(props.event?._id);
 
   const history = useHistory();
   const nameInputRef = useRef<InputRef>(null);
@@ -139,6 +140,10 @@ function MainAgendaForm(props: MainAgendaFormProps) {
     // Focus the first field
     if (!formdata.name) nameInputRef.current?.focus();
   }, [nameInputRef.current]);
+
+  useEffect(() => {
+    if (multiDates && agenda === null) handleChangeFormData('date', moment(multiDates[0]?.start).format('YYYY-M-DD'));
+  }, [multiDates]);
 
   /**
    * Custom hooks
@@ -303,7 +308,10 @@ function MainAgendaForm(props: MainAgendaFormProps) {
               }
               rules={[{ required: true, message: 'La fecha es requerida' }]}>
               <SelectAntd
-                options={allDays}
+                options={multiDates.map((date) => ({
+                  value: moment(date.start).format('YYYY-M-DD'),
+                  label: moment(date.start).format('YYYY-M-DD'),
+                }))}
                 value={formdata.date}
                 defaultValue={formdata.date}
                 onChange={(value) => handleChangeFormData('date', value)}
