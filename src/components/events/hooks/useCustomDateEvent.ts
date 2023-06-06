@@ -3,6 +3,7 @@ import { notification } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { DateObject } from 'react-multi-date-picker';
+import { dateToCustomDate } from '../utils/CustomMultiDate';
 
 interface UseCustomDateEventProps {
     eventId: string;
@@ -49,78 +50,6 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
         fetchEventData();
     }, []);
 
-    /*  const fetchEventData = async () => {
-         try {
-             setIsFetching(true);
-             const data = await EventsApi.getOne(props.eventId);
-             if (!data) return;
-             const datesFetched = data.dates;
-             if (!data.dates || data.dates.length === 0) {
-                 const dateStart = new Date(data.datetime_from);
-                 const dateEnd = new Date(data.datetime_to);
-                 const options: Intl.DateTimeFormatOptions = {
-                     year: 'numeric',
-                     month: '2-digit',
-                     day: '2-digit',
-                     hour: '2-digit',
-                     minute: '2-digit',
-                     second: '2-digit',
-                     hour12: true,
-                 };
- 
-                 setDatesOld({
-                     startDateOld: dateStart.toLocaleString(undefined, options),
-                     endDateOld: dateEnd.toLocaleString(undefined, options),
-                 });
- 
-                 let currentDate = new Date(dateStart);
-                 let newDateRanges: DateRangeEvius[] = [];
-                 while (currentDate <= dateEnd) {
-                     const newCurrent = new Date(currentDate);
-                     const newDateRange = {
-                         id: dayToKey(new Date(newCurrent)),
-                         start: new Date(newCurrent),
-                         end: new Date(newCurrent),
-                     };
-                     newDateRanges.push(newDateRange);
-                     currentDate.setDate(currentDate.getDate() + 1);
-                 }
-                 const days = newDateRanges.map((date) => new Date(date.start));
-                 setDays(days);
-                 console.log('newDateRange=========', newDateRanges)
- 
-                 setMustUpdateDate(true);
-                 return;
-             }
-             if (!!datesFetched[0]?.start) {
-                 const dates: DateRangeEvius[] = datesFetched.map((date: any) => {
-                     console.log('first', date.start)
-                     return {
-                         id: dayToKey(new Date(date.start)),
-                         start: new Date(date.start),
-                         end: new Date(date.end),
-                     }
-                 });
-                 const days = dates.map((date) => new Date(date.start));
-                 setDays(days);
-                 setDates(dates);
-             } else {
-                 const dates: DateRangeEvius[] = datesFetched.map((date: string) => ({
-                     id: dayToKey(new Date(date)),
-                     start: new Date(date),
-                     end: new Date(new Date(date).getTime() + 1000 * 60 * 60),
-                 }));
-                 const days = dates.map((date) => new Date(date.start));
-                 setDays(days);
-                 setDates(dates);
-             }
-         } catch (error) {
-             console.error(error);
-         } finally {
-             setIsFetching(false);
-         }
-     }; */
-
 
     const fetchEventData = async () => {
         try {
@@ -129,8 +58,10 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
             if (!data) return;
             const datesFetched = data.dates;
 
+            // console.log('data.dates', data.dates)
+
             if (!data.dates || data.dates.length === 0) {
-                
+
                 const dateStart = new Date(data.datetime_from);
                 const dateEnd = new Date(data.datetime_to);
 
@@ -149,24 +80,8 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
                     endDateOld: dateEnd.toLocaleString(undefined, options),
                 });
 
-                let currentDate = new Date(dateStart);
-                let newDateRanges: DateRangeEvius[] = [];
-                while (currentDate <= dateEnd) {
-
-                    const currentDateStart = new Date(currentDate);
-                    const curretDateEnd = new Date(currentDate);
-
-                    curretDateEnd.setHours(dateEnd.getHours())
-                    curretDateEnd.setMinutes(dateEnd.getMinutes())
-                    const newDateRange = {
-                        id: dayToKey(new Date(currentDateStart)),
-                        start: new Date(currentDateStart),
-                        end: new Date(curretDateEnd),
-                    };
-                    newDateRanges.push(newDateRange);
-                    currentDate.setDate(currentDate.getDate() + 1);
-                }
-
+                let newDateRanges = dateToCustomDate(dateStart, dateEnd)
+                
                 const days = newDateRanges.map((date) => new Date(date.start));
                 setDays(days);
                 setDates(newDateRanges)
@@ -183,9 +98,7 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
                 }
             });
 
-            console.log('datesrange', dates)
             const days = dates.map((date) => new Date(date.start));
-            console.log('days', days)
             setDays(days);
             setDates(dates);
 
@@ -259,6 +172,11 @@ export const useCustomDateEvent = (props: UseCustomDateEventProps) => {
                 const dateStart = date.start;
                 const dateEnd = date.end;
 
+
+                console.log('fefefe', {
+                    start: parseDate(dateStart),
+                    end: parseDate(dateEnd),
+                })
                 return {
                     start: parseDate(dateStart),
                     end: parseDate(dateEnd),

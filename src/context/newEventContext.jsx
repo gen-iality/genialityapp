@@ -7,6 +7,7 @@ import { configEventsTemplate } from '../helpers/constants';
 import { firestore } from '@/helpers/firebase';
 import { useIntl } from 'react-intl';
 import { dayToKey } from '@/components/events/hooks/useCustomDateEvent';
+import { dateToCustomDate } from '@/components/events/utils/CustomMultiDate';
 
 export const cNewEventContext = createContext();
 //INITIAL STATE
@@ -334,25 +335,7 @@ export const NewEventProvider = ({ children }) => {
       const dateStart = new Date(data.datetime_from);
       const dateEnd = new Date(data.datetime_to);
       
-
-      let currentDate = new Date(dateStart);
-      let newDateRanges = [];
-      while (currentDate <= dateEnd) {
-        const currentDateStart = new Date(currentDate);
-        const curretDateEnd = new Date(currentDate);
-
-        curretDateEnd.setHours(dateEnd.getHours());
-        curretDateEnd.setMinutes(dateEnd.getMinutes());
-        const newDateRange = {
-          id: dayToKey(new Date(currentDateStart)),
-          start: new Date(currentDateStart),
-          end: new Date(curretDateEnd),
-        };
-        newDateRanges.push(newDateRange);
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-
-
+      let newDateRanges = dateToCustomDate(dateStart, dateEnd)
       data.dates = newDateRanges
 
       const newMenu = {
