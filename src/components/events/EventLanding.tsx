@@ -16,16 +16,15 @@ import QuizApprovedStatus from '../quiz/QuizApprovedStatus'
 interface EventLandingProps {
   event: any
   eventUser: any
+  eventProgressPercent?: number
 }
 
 const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
-  const { event, eventUser } = props
+  const { event, eventUser, eventProgressPercent } = props
 
   const [activityId, setActivityId] = useState<string | null>(null)
   const [activityDetail, setActivityDetail] = useState<any | null>(null)
   const [thereAreQuizingOrSurveys, setThereAreQuizingOrSurveys] = useState<boolean>(false)
-
-  const [eventProgressPercent, setEventProgressPercent] = useState(0)
 
   const isDescriptionVisible = useMemo(() => {
     if (
@@ -82,7 +81,6 @@ const EventLanding: FunctionComponent<EventLandingProps> = (props) => {
                 </Link>
               )
             }
-            onProgressChange={(percent) => setEventProgressPercent(percent)}
           />
           {event.is_examen_required ? (
             <StudentSelfCourseProgress

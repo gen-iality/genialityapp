@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
@@ -14,9 +14,11 @@ import initBroadcastViewers from '@containers/broadcastViewers'
 import withContext from '@context/withContext'
 import { useCurrentUser } from '@context/userContext'
 import { activityContentValues } from '@context/activityType/constants/ui'
-import { fireRealtime } from '@helpers/firebase'
+import { fireRealtime, firestore } from '@helpers/firebase'
 import Logger from '@Utilities/logger'
 import Presence from '@components/presence/Presence'
+import { ExtendedAgendaType } from '@Utilities/types/AgendaType'
+import { AgendaApi } from '@helpers/request'
 
 const { LOG, ERROR } = Logger('studentlanding')
 
@@ -35,11 +37,11 @@ const Ferias = loadable(() => import('../ferias/index'))
 const CertificadoLanding = loadable(() => import('../../certificates/cerLanding'))
 const MyAgendaIndepend = loadable(() => import('../../networking/myAgendaIndepend'))
 const NetworkingForm = loadable(() => import('../../networking'))
-const InformativeSection2 = loadable(() =>
-  import('../informativeSections/informativeSection2'),
+const InformativeSection2 = loadable(
+  () => import('../informativeSections/informativeSection2'),
 )
-const InformativeSection = loadable(() =>
-  import('../informativeSections/informativeSection'),
+const InformativeSection = loadable(
+  () => import('../informativeSections/informativeSection'),
 )
 const Noticias = loadable(() => import('../noticias'))
 const Productos = loadable(() => import('../producto/index'))
@@ -48,12 +50,12 @@ const ListVideoCard = loadable(() => import('../../shared/listVideoCard'))
 const Videos = loadable(() => import('../videos'))
 const InfoEvent = loadable(() => import('../../shared/InfoEvent'))
 const ResponsePayu = loadable(() => import('../../shared/InfoEvent'))
-const ActivityDisplayerPage = loadable(() =>
-  import('../activities/ActivityDisplayerPage'),
+const ActivityDisplayerPage = loadable(
+  () => import('../activities/ActivityDisplayerPage'),
 )
 const MySection = loadable(() => import('../newSection'))
-const ThisRouteCanBeDisplayed = loadable(() =>
-  import('./helpers/thisRouteCanBeDisplayed'),
+const ThisRouteCanBeDisplayed = loadable(
+  () => import('./helpers/thisRouteCanBeDisplayed'),
 )
 
 const EventSectionRoutes = (props) => {
@@ -62,6 +64,9 @@ const EventSectionRoutes = (props) => {
   const { GetPermissionsEvent } = useHelper()
   const cEventUser = useUserEvent()
   const cUser = useCurrentUser()
+
+  const [activitiesAttendee, setActivitiesAttendee] = useState<any[]>([])
+  const [allActivities, setAllActivities] = useState<any[]>([])
 
   const location = useLocation()
 
@@ -98,6 +103,45 @@ const EventSectionRoutes = (props) => {
       initUserPresence(props.cEvent.value)
     }
   }, [props.cEvent.value, cUser.value])
+
+  const activityFilter = (a: any) =>
+    [activityContentValues.quizing, activityContentValues.survey].includes(a.type?.name)
+
+  // This can be a context or well
+  useEffect(() => {
+    if (!props.cEvent.value) return
+
+    setActivitiesAttendee([])
+    const loadData = async () => {
+      const { data }: { data: ExtendedAgendaType[] } = await AgendaApi.byEvent(
+        props.cEvent.value._id,
+      )
+      const filteredData = data
+        .filter(activityFilter)
+        .filter((activity) => !activity.is_info_only)
+      setAllActivities(filteredData)
+      const existentActivities = filteredData.map(async (activity) => {
+        const activityAttendee = await firestore
+          .collection(`${activity._id}_event_attendees`)
+          .doc(cEventUser.value._id)
+          .get() //checkedin_at
+        if (activityAttendee.exists) return activityAttendee.data() as any
+        return null
+      })
+      // Filter existent activities and set the state
+      setActivitiesAttendee(
+        // Promises don't bite :)
+        (await Promise.all(existentActivities)).filter((item) => !!item),
+      )
+    }
+    loadData().then()
+  }, [props.cEvent.value])
+
+  const eventProgressPercent: number = useMemo(
+    () =>
+      Math.round(((activitiesAttendee.length || 0) / (allActivities.length || 0)) * 100),
+    [activitiesAttendee, allActivities],
+  )
 
   useEffect(() => {
     // seperar la url en un arrary
@@ -304,7 +348,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/evento`}>
           <ThisRouteCanBeDisplayed>
-            <EventHome key="evento" />
+            <EventHome key="evento" eventProgressPercent={eventProgressPercent} />
           </ThisRouteCanBeDisplayed>
         </Route>
 
@@ -347,6 +391,7 @@ const EventSectionRoutes = (props) => {
               activity={props.currentActivity}
               generalTabs={props.generalTabs}
               setVirtualConference={props.setVirtualConference}
+              eventProgressPercent={eventProgressPercent}
             />
           </ThisRouteCanBeDisplayed>
         </Route>
