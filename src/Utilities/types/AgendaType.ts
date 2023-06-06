@@ -8,6 +8,7 @@ import { FunctionComponent, ReactElement } from 'react'
 export default interface AgendaType {
   _id?: string
   module_id: string | undefined
+  require_completion?: number
   is_info_only?: boolean
   module?: { _id: string; event_id?: string; module_name: string; order?: number }
   name: string
@@ -53,8 +54,10 @@ export interface ExtendedAgendaType extends AgendaType {
 }
 
 export interface TruncatedAgenda {
+  _id?: string
   title: string
   datetime_start?: any
+  require_completion?: number
   isInfoOnly?: boolean
   module_name?: string
   module_order?: number
