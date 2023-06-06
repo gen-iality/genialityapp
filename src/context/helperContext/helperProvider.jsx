@@ -31,16 +31,16 @@ export const HelperContextProvider = ({ children }) => {
   const cUser = useCurrentUser()
   const cEventuser = useUserEvent()
 
-  const [containtNetworking, setcontaintNetworking] = useState(false)
-  const [infoAgenda, setinfoAgenda] = useState(null)
-  const [isNotification, setisNotification] = useState(initialStateNotification)
+  const [containtNetworking, setContaintNetworking] = useState(false)
+  const [infoAgenda, setInfoAgenda] = useState(null)
+  const [isNotification, setIsNotification] = useState(initialStateNotification)
   const [totalSolicitudAmistad, setTotalSolicitudAmistad] = useState(0)
   const [totalsolicitudAgenda, setTotalsolicitudAgenda] = useState(0)
   const [totalsolicitudes, setTotalsolicitudes] = useState(0)
-  const [propertiesProfile, setpropertiesProfile] = useState()
-  const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null)
-  const [activitiesEvent, setactivitiesEvent] = useState(null)
-  const [chatActual, setchatActual] = useState({
+  const [propertiesProfile, setPropertiesProfile] = useState()
+  const [propertiesOtherprofile, setPropertiesOtherprofile] = useState(null)
+  const [activitiesEvent, setActivitiesEvent] = useState([]) // Who fool initializes null an array
+  const [chatActual, setChatActual] = useState({
     chatid: null,
     idactualuser: null,
     idotheruser: null,
@@ -50,11 +50,11 @@ export const HelperContextProvider = ({ children }) => {
   const [privateChatsList, setPrivatechatlist] = useState()
   const [attendeeList, setAttendeeList] = useState({})
   const [attendeeListPresence, setAttendeeListPresence] = useState({})
-  const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(true)
-  const [chatAttendeChats, setchatAttendeChats] = useState('1')
-  const [chatPublicPrivate, setchatPublicPrivate] = useState('public')
-  const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' })
-  const [totalPrivateMessages, settotalPrivateMessages] = useState(0)
+  const [isCollapsedMenuRigth, setIsCollapsedMenuRigth] = useState(true)
+  const [chatAttendeChats, setChatAttendeChats] = useState('1')
+  const [chatPublicPrivate, setChatPublicPrivate] = useState('public')
+  const [eventPrivate, setEventPrivate] = useState({ private: false, section: 'evento' })
+  const [totalPrivateMessages, setTotalPrivateMessages] = useState(0)
   const [requestSend, setRequestSend] = useState([])
   const [typeModal, setTypeModal] = useState(null)
   const [visibleLoginEvents, setVisibleLoginEvents] = useState(false)
@@ -73,7 +73,7 @@ export const HelperContextProvider = ({ children }) => {
     if (!cEvent.value) return
     const firstroute = Object.keys(cEvent.value.itemsMenu)
     if (firstroute[0] != undefined) {
-      seteventPrivate({ private: false, section: firstroute[0] })
+      setEventPrivate({ private: false, section: firstroute[0] })
     }
   }, [])
 
@@ -95,17 +95,17 @@ export const HelperContextProvider = ({ children }) => {
   /*CERRAR Y ABRIR MENU DERECHO*/
 
   function HandleOpenCloseMenuRigth(status) {
-    setisCollapsedMenuRigth(status)
+    setIsCollapsedMenuRigth(status)
   }
 
   /*ENTRAR A CHAT O ATTENDE EN EL MENU*/
   function HandleChatOrAttende(key) {
-    setchatAttendeChats(key)
+    setChatAttendeChats(key)
   }
 
   /*ENTRAR A CHAT PUBLICO O PRIVADO*/
   function HandlePublicPrivate(key) {
-    setchatPublicPrivate(key)
+    setChatPublicPrivate(key)
     if (key == 'public') {
       createChatRoom('event_' + cEvent.value._id)
     }
@@ -118,7 +118,7 @@ export const HelperContextProvider = ({ children }) => {
     const messages = data.participants.filter(
       (participant) => participant.idparticipant != cUser.value.uid,
     )
-    settotalPrivateMessages(parseInt(totalPrivateMessages - messages[0].countmessajes))
+    setTotalPrivateMessages(parseInt(totalPrivateMessages - messages[0].countmessajes))
     messages[0].countmessajes = 0
     //otro participante
     const otherparticipant = data.participants.filter(
@@ -156,7 +156,7 @@ export const HelperContextProvider = ({ children }) => {
         type="primary"
         size="small"
         onClick={() => {
-          setisCollapsedMenuRigth(false)
+          setIsCollapsedMenuRigth(false)
           HandleChatOrAttende('1')
           HandlePublicPrivate('private')
           HandleGoToChat(
@@ -224,14 +224,14 @@ export const HelperContextProvider = ({ children }) => {
         break
     }
 
-    setchatActual(data)
+    setChatActual(data)
     ReadMessages(callbackdata)
   }
 
   const getProperties = async (eventId) => {
     const properties = await EventFieldsApi.getAll(eventId)
     if (properties.length > 0) {
-      setpropertiesProfile({
+      setPropertiesProfile({
         propertiesUserPerfil: properties,
       })
       return properties
@@ -243,7 +243,7 @@ export const HelperContextProvider = ({ children }) => {
     const activities = await AgendaApi.byEvent(eventId)
 
     if (activities.data.length > 0) {
-      setactivitiesEvent(activities.data)
+      setActivitiesEvent(activities.data)
     }
   }
 
@@ -330,7 +330,7 @@ export const HelperContextProvider = ({ children }) => {
   // Aca hay un bug al traer datos con bastantes campos
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id)
-    setpropertiesOtherprofile({
+    setPropertiesOtherprofile({
       _id: id,
       properties: eventUser.properties,
       eventUserId: eventUser._id,
@@ -338,7 +338,7 @@ export const HelperContextProvider = ({ children }) => {
   }
 
   const ChangeActiveNotification = (notify, message, type, activity) => {
-    setisNotification({
+    setIsNotification({
       notify,
       message,
       type,
@@ -374,14 +374,14 @@ export const HelperContextProvider = ({ children }) => {
 
   const GetInfoAgenda = async () => {
     const infoAgenda = await AgendaApi.byEvent(cEvent.value._id)
-    setinfoAgenda(infoAgenda.data)
+    setInfoAgenda(infoAgenda.data)
   }
 
   const containsNetWorking = () => {
     if (cEvent.value != undefined) {
       cEvent.value.itemsMenu &&
         cEvent.value.itemsMenu['networking'] !== undefined &&
-        setcontaintNetworking(true)
+        setContaintNetworking(true)
     }
   }
 
@@ -463,7 +463,7 @@ export const HelperContextProvider = ({ children }) => {
           }
         })
 
-        settotalPrivateMessages(totalNewMessages)
+        setTotalPrivateMessages(totalNewMessages)
         setPrivatechatlist(list)
       })
 
@@ -638,7 +638,7 @@ export const HelperContextProvider = ({ children }) => {
         routePermissions[0].permissions == 'assistants' &&
         cEventuser.value == null
       ) {
-        seteventPrivate({
+        setEventPrivate({
           private: true,
           section: 'permissions',
         })
@@ -676,7 +676,7 @@ export const HelperContextProvider = ({ children }) => {
         HandlePublicPrivate,
         chatPublicPrivate,
         eventPrivate,
-        seteventPrivate,
+        seteventPrivate: setEventPrivate,
         GetPermissionsEvent,
         totalPrivateMessages,
         requestSend,

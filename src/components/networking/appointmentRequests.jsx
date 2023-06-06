@@ -23,7 +23,7 @@ const requestStatusText = {
 }
 
 function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [loading1, setLoading1] = useState(true)
   const [fetching, setFetching] = useState(false)
   const [pendingAgendas, setPendingAgendas] = useState([])
@@ -37,7 +37,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
   useEffect(() => {
     if (eventContext.value != null && userEventContext.value !== null) {
       if (eventContext.value._id && userEventContext.value._id) {
-        setLoading(true)
+        setIsLoading(true)
         setPendingAgendas([])
 
         getPendingAgendasFromEventUser(eventContext.value._id, userEventContext.value._id)
@@ -59,7 +59,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
               description: 'Obteniendo las citas pendientes',
             })
           })
-          .finally(() => setLoading(false))
+          .finally(() => setIsLoading(false))
       }
     }
   }, [eventContext.value, userEventContext.value, eventUsers, sendRespuesta])
@@ -81,7 +81,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
               }, agendas)
 
               setPendingAgendasSent(pendingAgendas)
-              setLoading(false)
+              setIsLoading(false)
             }
           })
           .catch((error) => {
@@ -100,7 +100,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
     <>
       <Divider>Solicitudes de citas recibidas</Divider>
       <div style={{ marginBottom: 15 }}>
-        {!loading &&
+        {!isLoading &&
           (pendingAgendas.length > 0 ? (
             pendingAgendas.map((pendingAgenda) => (
               <RequestCard
@@ -119,7 +119,7 @@ function AppointmentRequests({ eventUsers, notificacion, showpendingsend }) {
             </Col>
           ))}
 
-        {loading && (
+        {isLoading && (
           <Row align="middle" justify="center" style={{ height: 100 }}>
             <Spin />
           </Row>

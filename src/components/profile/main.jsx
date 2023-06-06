@@ -49,12 +49,12 @@ const { useBreakpoint } = Grid
 
 const MainProfile = () => {
   const [activeTab, setActiveTab] = useState()
-  const [events, setevents] = useState([])
-  const [tickets, settickets] = useState([])
-  const [organizations, setorganizations] = useState([])
-  const [eventsLimited, seteventsLimited] = useState([])
-  const [ticketsLimited, setticketsLimited] = useState([])
-  const [organizationsLimited, setorganizationsLimited] = useState([])
+  const [events, setEvents] = useState([])
+  const [tickets, setTickets] = useState([])
+  const [organizations, setOrganizations] = useState([])
+  const [eventsLimited, setEventsLimited] = useState([])
+  const [ticketsLimited, setTicketsLimited] = useState([])
+  const [organizationsLimited, setOrganizationsLimited] = useState([])
   const [organizationsIsLoading, setOrganizationsIsLoading] = useState(true)
   const [eventsIHaveCreatedIsLoading, setEventsIHaveCreatedIsLoading] = useState(true)
   const [eventsThatIHaveParticipatedIsLoading, setEventsThatIHaveParticipatedIsLoading] =
@@ -93,8 +93,8 @@ const MainProfile = () => {
     const eventsDataSorted = events.sort(
       (a, b) => dayjs(b.datetime_from) - dayjs(a.datetime_from),
     )
-    setevents(eventsDataSorted)
-    seteventsLimited(events.slice(0, 3))
+    setEvents(eventsDataSorted)
+    setEventsLimited(events.slice(0, 3))
     setEventsIHaveCreatedIsLoading(false)
   }
 
@@ -102,7 +102,7 @@ const MainProfile = () => {
     const ticketsall = await TicketsApi.getAll()
 
     if (ticketsall.length === 0) {
-      settickets(ticketsall)
+      setTickets(ticketsall)
       setEventsThatIHaveParticipatedIsLoading(false)
       return
     }
@@ -120,8 +120,8 @@ const MainProfile = () => {
       if (eventByTicket) {
         usersInscription.push(eventByTicket)
       }
-      settickets(usersInscription)
-      setticketsLimited(usersInscription.slice(0, 4))
+      setTickets(usersInscription)
+      setTicketsLimited(usersInscription.slice(0, 4))
       setEventsThatIHaveParticipatedIsLoading(false)
     })
   }
@@ -132,8 +132,8 @@ const MainProfile = () => {
     const organizationDataSorted = organizationsFilter.sort(
       (a, b) => dayjs(b.created_at) - dayjs(a.created_at),
     )
-    setorganizations(organizationDataSorted)
-    setorganizationsLimited(organizationDataSorted.slice(0, 5))
+    setOrganizations(organizationDataSorted)
+    setOrganizationsLimited(organizationDataSorted.slice(0, 5))
     setOrganizationsIsLoading(false)
   }
 

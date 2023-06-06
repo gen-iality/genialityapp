@@ -69,7 +69,7 @@ function AppointmentModal({
   const [agendaMessage, setAgendaMessage] = useState('')
   const [timetable, setTimetable] = useState({})
   const [selectedDate, setSelectedDate] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [reloadFlag, setReloadFlag] = useState(false)
   const [eventDatesRange, setEventDatesRange] = useState(false)
 
@@ -78,7 +78,7 @@ function AppointmentModal({
       return
 
     const loadData = async () => {
-      setLoading(true)
+      setIsLoading(true)
       setTimetable({})
       setAgendaMessage('')
       setOpenAgenda('')
@@ -141,7 +141,7 @@ function AppointmentModal({
         }
       } catch (error) {
       } finally {
-        setLoading(false)
+        setIsLoading(false)
       }
     }
 
@@ -179,7 +179,7 @@ function AppointmentModal({
   const resetModal = () => {
     closeModal()
     setSelectedDate(eventDatesRange[0])
-    setLoading(true)
+    setIsLoading(true)
     setTimetable({})
     setAgendaMessage('')
     setOpenAgenda('')
@@ -193,7 +193,7 @@ function AppointmentModal({
       onCancel={resetModal}
       style={{ zIndex: 1031 }}
     >
-      {loading ? (
+      {isLoading ? (
         <Row align="middle" justify="center" style={{ height: 300 }}>
           <Spin />
         </Row>
@@ -292,7 +292,7 @@ function AppointmentModal({
                             shape="round"
                             onClick={() => {
                               if (timetableItem.status === 'free') {
-                                setLoading(true)
+                                setIsLoading(true)
                                 createAgendaToEventUser({
                                   eventId: cEvent.value._id,
                                   eventUser: cEventUser.value,

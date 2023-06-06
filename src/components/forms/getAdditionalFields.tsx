@@ -54,21 +54,21 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
   const [countries, setCountries] = useState([])
   const [regiones, setRegiones] = useState([])
   const [cities, setCities] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const getCountries = async () => {
-    setLoading(true)
+    setIsLoading(true)
     try {
       const response = await countryApi.getCountries()
       setCountries(response)
     } catch (error) {
       setCountries([])
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   const getState = async (country: string) => {
-    setLoading(true)
+    setIsLoading(true)
     try {
       const response = await countryApi.getStatesByCountry(country)
 
@@ -76,11 +76,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
     } catch (error) {
       setRegiones([])
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   const getCities = async (country: string, state: string) => {
-    setLoading(true)
+    setIsLoading(true)
     try {
       const response = await countryApi.getCities(country, state)
 
@@ -88,11 +88,11 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
     } catch (error) {
       setCities([])
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   const getCitiesByCountry = async (country: string) => {
-    setLoading(true)
+    setIsLoading(true)
     try {
       const response = await countryApi.getCitiesByCountry(country)
 
@@ -100,7 +100,7 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
     } catch (error) {
       setCities([])
     }
-    setLoading(false)
+    setIsLoading(false)
   }
   useEffect(() => {
     getCountries()
@@ -433,8 +433,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   inputName: name,
                 })
               }}
-              disabled={loading || countries.length === 0}
-              loading={loading}
+              disabled={isLoading || countries.length === 0}
+              loading={isLoading}
               placeholder="Seleccione un país"
             >
               {countries.map((country: any) => {
@@ -463,8 +463,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
                   inputName: name,
                 })
               }}
-              disabled={loading || regiones.length === 0}
-              loading={loading}
+              disabled={isLoading || regiones.length === 0}
+              loading={isLoading}
               placeholder="Seleccione un región"
             >
               {regiones.map((regiones: any) => {
@@ -486,8 +486,8 @@ const getAdditionalFields = ({ fields, attendee, visibleInCms }: any) => {
               showSearch
               optionFilterProp="children"
               style={{ width: '100%' }}
-              disabled={loading || cities.length === 0}
-              loading={loading}
+              disabled={isLoading || cities.length === 0}
+              loading={isLoading}
               onChange={(nameCity, aditionalData: any) => {
                 setCity({
                   name: nameCity,

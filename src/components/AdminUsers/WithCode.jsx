@@ -6,7 +6,7 @@ import ResultLink from './ResultLink'
 const WithCode = () => {
   const [email, setEmail] = useState()
   const [event, setEvent] = useState()
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(false)
   const [verifyLink, setVerifyLink] = useState(false)
   const conectionRef = firestore.collection(`connections`)
@@ -42,7 +42,7 @@ const WithCode = () => {
             }
           } else {
             setError(true)
-            setLoading(false)
+            setIsLoading(false)
           }
         })
     }
@@ -89,7 +89,7 @@ const WithCode = () => {
   }, [])
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <ResultLink status="loading" verifyLink={verifyLink} data={email} />
       ) : error ? (
         <ResultLink status="error" data={email} event={event} />

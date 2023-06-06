@@ -25,15 +25,15 @@ const RegisterUserAndEventUser = ({
   const [form] = Form.useForm()
   const cEvent = useEventContext()
   const [current, setCurrent] = useState(0)
-  const [basicDataUser, setbasicDataUser] = useState<any>({
+  const [basicDataUser, setBasicDataUser] = useState<any>({
     names: '',
     email: '',
     password: '',
     picture: '',
   })
   const { helperDispatch, currentAuthScreen } = useHelper()
-  const [dataEventUser, setdataEventUser] = useState({})
-  const [buttonStatus, setbuttonStatus] = useState(true)
+  const [dataEventUser, setDataEventUser] = useState({})
+  const [buttonStatus, setButtonStatus] = useState(true)
   const [validationGeneral, setValidationGeneral] = useState<{
     status: boolean
     textError: string
@@ -44,7 +44,7 @@ const RegisterUserAndEventUser = ({
     textError: '',
     isLoading: false,
   })
-  const [validateEventUser, setvalidateEventUser] = useState<{
+  const [validateEventUser, setValidateEventUser] = useState<{
     status: boolean
     textError: string
     statusFields?: boolean
@@ -64,7 +64,7 @@ const RegisterUserAndEventUser = ({
       textError: textError,
       isLoading: false,
     })
-    setbuttonStatus(status)
+    setButtonStatus(status)
   }
 
   const HandleHookForm = (e: any, fieldName: string, picture: any) => {
@@ -77,15 +77,15 @@ const RegisterUserAndEventUser = ({
 
     if (current === 0) {
       if (fieldName === 'picture') {
-        setbasicDataUser({ ...basicDataUser, [fieldName]: picture })
+        setBasicDataUser({ ...basicDataUser, [fieldName]: picture })
       } else {
-        setbasicDataUser({
+        setBasicDataUser({
           ...basicDataUser,
           [fieldName]: value,
         })
       }
     } else {
-      setdataEventUser({
+      setDataEventUser({
         ...dataEventUser,
         [fieldName]: value,
       })
@@ -93,7 +93,7 @@ const RegisterUserAndEventUser = ({
   }
 
   const onSubmit = (values: any) => {
-    setdataEventUser(values)
+    setDataEventUser(values)
   }
 
   const steps = [
@@ -113,7 +113,7 @@ const RegisterUserAndEventUser = ({
           basicDataUser={basicDataUser}
           HandleHookForm={HandleHookForm}
           validateEventUser={validateEventUser}
-          setvalidateEventUser={setvalidateEventUser}
+          setvalidateEventUser={setValidateEventUser}
         />
       ),
       icon: <TicketConfirmationOutlineIcon style={{ fontSize: '32px' }} />,
@@ -229,8 +229,8 @@ const RegisterUserAndEventUser = ({
               defaultMessage: 'Te has inscrito correctamente a este curso',
             }),
           })
-          setbasicDataUser({})
-          setdataEventUser({})
+          setBasicDataUser({})
+          setDataEventUser({})
         }
       } catch (err) {
         console.error('errorregistro', { err: err })
@@ -299,7 +299,7 @@ const RegisterUserAndEventUser = ({
 
       handleValidateAccountEvius()
     } else if (current == 1) {
-      setvalidateEventUser({
+      setValidateEventUser({
         status: true,
         textError: '',
       })
@@ -337,7 +337,7 @@ const RegisterUserAndEventUser = ({
 
   const prev = () => {
     setCurrent(current - 1)
-    setbuttonStatus(false)
+    setButtonStatus(false)
   }
 
   function validateEmail(email: string) {
@@ -352,7 +352,7 @@ const RegisterUserAndEventUser = ({
         basicDataUser.password.length >= 6 &&
         basicDataUser.password.length <= 18
       ) {
-        setbuttonStatus(false)
+        setButtonStatus(false)
         setValidationGeneral({
           ...validationGeneral,
           isLoading: false,
@@ -371,7 +371,7 @@ const RegisterUserAndEventUser = ({
         })
       }
     } else {
-      setbuttonStatus(true)
+      setButtonStatus(true)
     }
   }
 

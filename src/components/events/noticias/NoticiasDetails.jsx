@@ -19,7 +19,7 @@ const imgNotFound =
 const NoticiasDetails = (props) => {
   const { setVirtualConference, setTopBanner } = props
   const [eventId] = useState(props.cEvent.value._id)
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [noticia, setNoticia] = useState()
 
   const screens = useBreakpoint()
@@ -43,13 +43,13 @@ const NoticiasDetails = (props) => {
     const data = await NewsFeed.getOne(eventId, params.id)
     if (data) {
       setNoticia(data)
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
   return (
     <>
-      {loading && <Spin />}
+      {isLoading && <Spin />}
       {noticia && (
         <>
           <Row gutter={[8, 8]} wrap justify="center">

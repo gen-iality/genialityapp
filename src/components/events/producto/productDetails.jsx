@@ -11,7 +11,7 @@ import OfertaProduct from './OfertaProducto'
 function DetailsProduct() {
   const { Title, Text } = Typography
   const [product, setProduct] = useState()
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [habilty, setHability] = useState()
   const [messageF, setMessage] = useState('')
   const [eventId, setEventId] = useState('')
@@ -45,13 +45,13 @@ function DetailsProduct() {
       if (Object.keys(detalleProduct).length > 0) {
         setProduct(detalleProduct)
       }
-      setLoading(false)
+      setIsLoading(false)
     }
   }, [updateValue])
 
   return (
     <>
-      {product && !loading && (
+      {product && !isLoading && (
         <Row style={{ padding: '24px' }} gutter={[8, 8]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Card style={{ width: '100%', display: 'grid', justifyContent: 'center' }}>
@@ -122,7 +122,7 @@ function DetailsProduct() {
           </Col>
         </Row>
       )}
-      {!product && !loading && (
+      {!product && !isLoading && (
         <Card
           style={{ textAlign: 'center', marginLeft: 30, marginRight: 30, marginTop: 60 }}
         >
@@ -130,7 +130,7 @@ function DetailsProduct() {
           No existe detalle de este producto
         </Card>
       )}
-      {loading && (
+      {isLoading && (
         <Row style={{ marginTop: 60 }}>
           <Spin style={{ margin: 'auto' }} />
         </Row>

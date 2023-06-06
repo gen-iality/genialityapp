@@ -12,11 +12,11 @@ function RankingList(props) {
     return result
   }
 
-  const [loading, setloading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    setloading(true)
-    setloading(false)
+    setIsLoading(true)
+    setIsLoading(false)
   }, [gameRanking])
 
   return (
@@ -40,7 +40,7 @@ function RankingList(props) {
       >
         <List
           className="demo-loadmore-list"
-          loading={loading}
+          loading={isLoading}
           itemLayout="horizontal"
           dataSource={gameRanking}
           renderItem={(item, key) => <UsersCard key={key} type="ranking" item={item} />}

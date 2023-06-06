@@ -17,16 +17,16 @@ const VirtualConference = () => {
   const urlactivity = `/landing/${cEvent.value._id}/activity/`
   const urlAgenda = `/landing/${cEvent.value._id}/agenda/`
 
-  const [infoAgendaArr, setinfoAgenda] = useState([])
-  const [agendageneral, setagendageneral] = useState(null)
-  const [bandera, setbandera] = useState(false)
+  const [infoAgendaArr, setInfoAgenda] = useState([])
+  const [agendageneral, setAgendageneral] = useState(null)
+  const [bandera, setBandera] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
       const response = await AgendaApi.byEvent(cEvent.value._id)
-      setagendageneral(response.data)
+      setAgendageneral(response.data)
 
-      setbandera(!bandera)
+      setBandera(!bandera)
     }
     fetchData()
   }, [])
@@ -68,7 +68,7 @@ const VirtualConference = () => {
           const orderactivities = []
           orderactivities.push(activitiesorder[0])
 
-          setinfoAgenda(orderactivities)
+          setInfoAgenda(orderactivities)
         })
   }, [agendageneral])
 

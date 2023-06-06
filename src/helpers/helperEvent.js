@@ -151,11 +151,11 @@ export const zoomExternoHandleOpen = (activity, eventUser, isMobile) => {
 
 //obtener las generaltabs del curso
 
-export const GetGeneralTabsByEvent = (eventId, setgeneraltabs) => {
+export const GetGeneralTabsByEvent = (eventId, setGeneralTabs) => {
   FB.Events.ref(eventId).onSnapshot(function (eventSnapshot) {
     if (eventSnapshot.exists) {
       if (eventSnapshot.data().tabs !== undefined) {
-        setgeneraltabs(eventSnapshot.data().tabs)
+        setGeneralTabs(eventSnapshot.data().tabs)
       }
     }
   })
