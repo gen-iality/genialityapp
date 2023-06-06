@@ -1,6 +1,14 @@
 /** React's libraries */
 import { useState, useEffect } from 'react'
-import { Route, NavLink, Redirect, Switch, withRouter } from 'react-router-dom'
+import {
+  Route,
+  NavLink,
+  Redirect,
+  Switch,
+  useParams,
+  useLocation,
+  useRouteMatch,
+} from 'react-router-dom'
 
 /** Antd imports */
 import { Tag, Menu, Button, Layout } from 'antd'
@@ -39,8 +47,11 @@ import NoMatchPage from '@components/notFoundPage/NoMatchPage'
 import ValidateAccessRouteCms from '@components/roles/hooks/validateAccessRouteCms'
 import OrganizationTimeTrackingPage from './timetracking/OrganizationTimeTrackingPage'
 
-function Organization(props) {
-  const organizationId = props.match.params.id
+function Organization() {
+  const params = useParams()
+  const location = useLocation()
+  const match = useRouteMatch()
+  const organizationId = params.id
 
   const [organization, setOrganization] = useState({})
   const [isLoading, setIsLoading] = useState(true)
@@ -54,7 +65,7 @@ function Organization(props) {
 
   useEffect(() => {
     getOrganizationData()
-  }, [props.location.pathname])
+  }, [location.pathname])
 
   return (
     <>
@@ -84,43 +95,43 @@ function Organization(props) {
             >
               <Menu.Item key="1" icon={<BarsOutlined />}>
                 Información
-                <NavLink to={`${props.match.url}/information`} />
+                <NavLink to={`${match.url}/information`} />
               </Menu.Item>
               <Menu.Item key="2" icon={<ScheduleOutlined />}>
                 Cursos
-                <NavLink to={`${props.match.url}/events`} />
+                <NavLink to={`${match.url}/events`} />
               </Menu.Item>
               <Menu.Item key="3" icon={<SketchOutlined />}>
                 Apariencia
-                <NavLink to={`${props.match.url}/appearance`} />
+                <NavLink to={`${match.url}/appearance`} />
               </Menu.Item>
               <Menu.Item key="4" icon={<TeamOutlined />}>
                 Miembros
-                <NavLink to={`${props.match.url}/members`} />
+                <NavLink to={`${match.url}/members`} />
               </Menu.Item>
               {/* <Menu.Item key="4.1" icon={<DeleteOutlined />}>
                 Organization Properties
-                <NavLink to={`${props.match.url}/organization-properties`} />
+                <NavLink to={`${match.url}/organization-properties`} />
               </Menu.Item> */}
               <Menu.Item key="5" icon={<TeamOutlined />}>
                 Cargos
-                <NavLink to={`${props.match.url}/positions`} />
+                <NavLink to={`${match.url}/positions`} />
               </Menu.Item>
               <Menu.Item key="6" icon={<TeamOutlined />}>
                 Inscritos
-                <NavLink to={`${props.match.url}/registered`} />
+                <NavLink to={`${match.url}/registered`} />
               </Menu.Item>
               <Menu.Item key="7" icon={<UserSwitchOutlined />}>
                 <small>Configuración de Miembros</small>
-                <NavLink to={`${props.match.url}/membersettings`} />
+                <NavLink to={`${match.url}/membersettings`} />
               </Menu.Item>
               <Menu.Item key="8" icon={<ProjectOutlined />}>
                 <small>Configuración de Plantillas</small>
-                <NavLink to={`${props.match.url}/templatesettings`} />
+                <NavLink to={`${match.url}/templatesettings`} />
               </Menu.Item>
               <Menu.Item key="9" icon={<MenuOutlined />}>
                 {'Menú Items'}
-                <NavLink to={`${props.match.url}/menuItems`} />
+                <NavLink to={`${match.url}/menuItems`} />
               </Menu.Item>
             </Menu>
           </Layout.Sider>
@@ -145,103 +156,103 @@ function Organization(props) {
                 <Switch>
                   <Route
                     exact
-                    path={`${props.match.url}/`}
-                    render={() => <Redirect to={`${props.match.url}/events`} />}
+                    path={`${match.url}/`}
+                    render={() => <Redirect to={`${match.url}/events`} />}
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/events`}
+                    path={`${match.url}/events`}
                     component={OrgEvents}
                     org={organization}
                     componentKey="events"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/information`}
+                    path={`${match.url}/information`}
                     component={OrganizationProfile}
                     org={organization}
                     componentKey="information"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/appearance`}
+                    path={`${match.url}/appearance`}
                     component={Styles}
                     org={organization}
                     componentKey="appearance"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/members`}
+                    path={`${match.url}/members`}
                     component={OrgMembers}
                     org={organization}
                     componentKey="members"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/organization-properties`}
+                    path={`${match.url}/organization-properties`}
                     component={OrganizationPropertiesIsolatedPage}
                     org={organization}
                     componentKey="organization-properties"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/positions`}
+                    path={`${match.url}/positions`}
                     component={OrganizationPositionsPage}
                     org={organization}
                     componentKey="positions"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/positions/:positionId`}
+                    path={`${match.url}/positions/:positionId`}
                     component={PositionedUsersPage}
                     org={organization}
                     componentKey="current-positions"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/positions/:positionId/user/:userId`}
+                    path={`${match.url}/positions/:positionId/user/:userId`}
                     component={MembersCertificationPage}
                     org={organization}
                     componentKey="current-positions-certification-user"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/positions/:positionId/user/:userId/logs/:certificationId`}
+                    path={`${match.url}/positions/:positionId/user/:userId/logs/:certificationId`}
                     component={MemberCertificationLogsPage}
                     org={organization}
                     componentKey="current-positions-certification-logs-user"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/registered/`}
+                    path={`${match.url}/registered/`}
                     component={OrgRegisteredUsers}
                     org={organization}
                     componentKey="members"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/members/timetracking/:memberIdParam`}
+                    path={`${match.url}/members/timetracking/:memberIdParam`}
                     component={OrganizationTimeTrackingPage}
                     org={organization}
                     componentKey="members"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/membersettings`}
+                    path={`${match.url}/membersettings`}
                     component={MemberSettings}
                     org={organization}
                     componentKey="membersettings"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/templatesettings`}
+                    path={`${match.url}/templatesettings`}
                     component={TemplateMemberSettings}
                     org={organization}
                     componentKey="templatesettings"
                   />
                   <Protected
                     exact
-                    path={`${props.match.url}/menuItems`}
+                    path={`${match.url}/menuItems`}
                     component={MenuLanding}
                     org={organization}
                     organizationObj={organization}
@@ -250,7 +261,7 @@ function Organization(props) {
                   />
 
                   <Protected
-                    path={`${props.match.url}`}
+                    path={`${match.url}`}
                     component={NoMatchPage}
                     org={organization}
                     componentKey="NoMatch"
@@ -281,4 +292,4 @@ const Protected = ({ component: Component, org, ...rest }) => (
   />
 )
 
-export default withRouter(Organization)
+export default Organization

@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { setVirtualConference } from '../../../redux/virtualconference/actions'
 import withContext from '@context/withContext'
-import { withRouter } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { NewsFeed } from '@helpers/request'
 import { Card, Row, Spin, Col, Space, Badge, Typography, Button, Image } from 'antd'
@@ -15,12 +15,12 @@ const imgNotFound =
 const { Paragraph } = Typography
 
 const NoticiasList = (props) => {
-  const { setVirtualConference, match, size, newId } = props
+  const { setVirtualConference, size, newId } = props
   const [eventId] = useState(props.cEvent.value._id)
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [noticias, setNoticias] = useState()
   const [noticiasAll, setNoticiasAll] = useState()
-  const [viewMenos, setviewMenos] = useState(false)
+  const [viewMenos, setViewMenos] = useState(false)
   const [ellipsis] = useState(true)
 
   useEffect(() => {
@@ -42,17 +42,17 @@ const NoticiasList = (props) => {
           } else {
             setNoticias(noticeList)
           }
-          setLoading(false)
+          setIsLoading(false)
         } else {
           setNoticias([])
-          setLoading(false)
+          setIsLoading(false)
         }
       })
       .catch((err) => {
         console.error(err)
         //OCURRE UNA EXCEPCION===> unauthenticated user
         setNoticias([])
-        setLoading(false)
+        setIsLoading(false)
       })
 
     return () => {
@@ -63,19 +63,19 @@ const NoticiasList = (props) => {
   const viewAll = () => {
     if (!viewMenos) {
       setNoticias(noticiasAll)
-      setviewMenos(true)
+      setViewMenos(true)
     } else {
       if (size) {
         const noticeList = noticiasAll.slice(0, size)
         setNoticias(noticeList)
       }
-      setviewMenos(false)
+      setViewMenos(false)
     }
   }
 
   return (
     <>
-      {loading && <Spin />}
+      {isLoading && <Spin />}
       <Row style={{ padding: '30px 25px' }} gutter={[8, 8]} wrap>
         {noticias &&
           noticias.length > 0 &&
@@ -217,8 +217,5 @@ const NoticiasList = (props) => {
 const mapDispatchToProps = {
   setVirtualConference,
 }
-const NoticiasConnect = connect(
-  null,
-  mapDispatchToProps,
-)(withContext(withRouter(NoticiasList)))
+const NoticiasConnect = connect(null, mapDispatchToProps)(withContext(NoticiasList))
 export default NoticiasConnect

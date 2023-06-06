@@ -15,11 +15,11 @@ const AttendeeCheckInButton = ({
   reloadComponent,
   checkInAttendeeCallbak,
 }: AttendeeCheckInPropsTypes) => {
-  const [loading, setLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { _id } = attendee || {}
 
   const saveAttemdeeCheckIn = async () => {
-    setLoading(true)
+    setIsLoading(true)
     const updateOrNot = attendee?.checkedin_type === 'Físico' ? false : true
 
     if (updateOrNot) {
@@ -31,7 +31,7 @@ const AttendeeCheckInButton = ({
         activityId,
         checkInAttendeeCallbak,
       })
-      setLoading(false)
+      setIsLoading(false)
       return
     }
 
@@ -50,10 +50,10 @@ const AttendeeCheckInButton = ({
           activityId,
           checkInAttendeeCallbak,
         })
-        setLoading(false)
+        setIsLoading(false)
       },
       onCancel() {
-        setLoading(false)
+        setIsLoading(false)
       },
     })
   }
@@ -62,7 +62,7 @@ const AttendeeCheckInButton = ({
     <>
       {_id && (
         <Button
-          loading={loading}
+          loading={isLoading}
           size="small"
           type="primary"
           block

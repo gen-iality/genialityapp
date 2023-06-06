@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { NewsFeed } from '@helpers/request'
-import { withRouter } from 'react-router-dom'
 import dayjs from 'dayjs'
 import CMS from '../newComponent/CMS'
 import { getColumnSearchProps } from '../speakers/getColumnSearch'
@@ -36,12 +35,12 @@ const News = (props) => {
       title="Noticias"
       titleTooltip="Agregue o edite las Noticias que se muestran en la aplicación"
       addUrl={{
-        pathname: `${props.match.url}/new`,
+        pathname: `${props.matchUrl}/new`,
         state: { new: true },
       }}
       columns={columns}
       key="_id"
-      editPath={`${props.match.url}/new`}
+      editPath={`${props.matchUrl}/new`}
       pagination={false}
       actions
       search
@@ -50,4 +49,4 @@ const News = (props) => {
   )
 }
 
-export default withRouter(News)
+export default News

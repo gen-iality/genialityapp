@@ -21,14 +21,11 @@ const ModuledActivityDisplayer: FunctionComponent<IModuledActivityDisplayerProps
   }, [givenList])
 
   const moduleNames = useMemo(() => {
-    const uniqueSet = new Set(activityList.map((item) => item.module_name))
-    console.debug('uniqueSet:', uniqueSet, 'now as array:', Array.from(uniqueSet))
-    const uniqueNames = Array.from(uniqueSet).filter(
-      (item) => item !== undefined,
-    ) as string[]
-    console.debug('uniqueNames:', uniqueNames)
+    const uniqueNames = Array.from(
+      new Set(activityList.map((item) => item.module_name)),
+    ).filter((item) => item !== undefined) as string[]
 
-    const preSorttedNames = uniqueNames
+    const sorttedNames = uniqueNames
       .map((name) => {
         const data = activityList.find((item) => item.module_name == name)
         if (!data) return { name, order: 0 }
@@ -38,8 +35,7 @@ const ModuledActivityDisplayer: FunctionComponent<IModuledActivityDisplayerProps
         }
       })
       .sort((a, b) => (a.order || 0) - (b.order || 0))
-    console.debug('preSorttedNames:', preSorttedNames)
-    const sorttedNames = preSorttedNames.map((item) => item.name)
+      .map((item) => item.name)
     return sorttedNames
   }, [activityList])
 

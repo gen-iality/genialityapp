@@ -1,12 +1,12 @@
-import { Fragment } from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import Herramientas from './Herramientas'
 import Herramienta from './Herramienta'
 
 function HerramientaRoutes(props) {
   const { event, matchUrl } = props
+
   return (
-    <Fragment>
+    <>
       <Switch>
         <Route
           exact
@@ -19,8 +19,8 @@ function HerramientaRoutes(props) {
           render={() => <Herramienta event={event} parentUrl={matchUrl} {...props} />}
         />
       </Switch>
-    </Fragment>
+    </>
   )
 }
 
-export default withRouter(HerramientaRoutes)
+export default HerramientaRoutes

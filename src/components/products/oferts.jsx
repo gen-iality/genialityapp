@@ -1,7 +1,7 @@
 import { Table, Tag } from 'antd'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { withRouter } from 'react-router'
+import { useParams } from 'react-router'
 import API from '@helpers/request'
 import Header from '@antdComponents/Header'
 
@@ -9,13 +9,15 @@ const OfertProduts = (props) => {
   // const goBack = () => props.history.goBack()
   const [oferts, setOferts] = useState([])
 
+  const params = useParams()
+
   useEffect(() => {
     if (props.eventId) {
       obtenerOrdenes()
     }
     async function obtenerOrdenes() {
       const data = await API.get(
-        `api/events/${props.eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${props.match.params.id}"}]`,
+        `api/events/${props.eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${params.id}"}]`,
       )
 
       if (data) {
@@ -75,4 +77,4 @@ const OfertProduts = (props) => {
   )
 }
 
-export default withRouter(OfertProduts)
+export default OfertProduts

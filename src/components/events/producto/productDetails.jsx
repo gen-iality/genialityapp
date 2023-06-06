@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Card, Divider, Row, Space, Spin, Typography } from 'antd'
-import { withRouter } from 'react-router-dom'
+import { Card, Col, Divider, Row, Space, Spin, Typography } from 'antd'
+import { useParams } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
 import { IssuesCloseOutlined } from '@ant-design/icons'
 import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
@@ -8,18 +8,21 @@ import { Carousel } from 'react-responsive-carousel'
 import { firestore } from '@helpers/firebase'
 import OfertaProduct from './OfertaProducto'
 
-function DetailsProduct(props) {
+function DetailsProduct() {
   const { Title, Text } = Typography
   const [product, setProduct] = useState()
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [habilty, setHability] = useState()
   const [messageF, setMessage] = useState('')
   const [eventId, setEventId] = useState('')
   const [updateValue, setUpdateValue] = useState()
+
+  const params = useParams()
+
   //currency
   useEffect(() => {
-    const idProduct = props.match.params.id
-    const eventId = props.match.params.event_id
+    const idProduct = params.id
+    const eventId = params.event_id
     firestore
       .collection('config')
       .doc(eventId)
@@ -42,13 +45,13 @@ function DetailsProduct(props) {
       if (Object.keys(detalleProduct).length > 0) {
         setProduct(detalleProduct)
       }
-      setLoading(false)
+      setIsLoading(false)
     }
   }, [updateValue])
 
   return (
     <>
-      {product && !loading && (
+      {product && !isLoading && (
         <Row style={{ padding: '24px' }} gutter={[8, 8]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Card style={{ width: '100%', display: 'grid', justifyContent: 'center' }}>
@@ -119,7 +122,7 @@ function DetailsProduct(props) {
           </Col>
         </Row>
       )}
-      {!product && !loading && (
+      {!product && !isLoading && (
         <Card
           style={{ textAlign: 'center', marginLeft: 30, marginRight: 30, marginTop: 60 }}
         >
@@ -127,7 +130,7 @@ function DetailsProduct(props) {
           No existe detalle de este producto
         </Card>
       )}
-      {loading && (
+      {isLoading && (
         <Row style={{ marginTop: 60 }}>
           <Spin style={{ margin: 'auto' }} />
         </Row>
@@ -136,4 +139,4 @@ function DetailsProduct(props) {
   )
 }
 
-export default withRouter(DetailsProduct)
+export default DetailsProduct

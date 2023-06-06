@@ -9,7 +9,7 @@ const initialContextState = { status: 'LOADING', value: null }
 export function CurrentUserEventProvider({ children }) {
   const cEvent = useEventContext()
   const cUser = useCurrentUser()
-  const [userEvent, setuserEvent] = useState(initialContextState)
+  const [userEvent, setUserEvent] = useState(initialContextState)
   const [updateUser, setUpdateUser] = useState(true)
 
   useEffect(() => {
@@ -32,15 +32,15 @@ export function CurrentUserEventProvider({ children }) {
           (responseStatus) => {
             console.log('responseStatus ', responseStatus, 'upadateUser ', updateUser)
             if (responseStatus.data.length > 0) {
-              setuserEvent({ status: 'LOADED', value: responseStatus.data[0] })
+              setUserEvent({ status: 'LOADED', value: responseStatus.data[0] })
             } else {
-              setuserEvent({ status: 'LOADED', value: null })
+              setUserEvent({ status: 'LOADED', value: null })
             }
             setUpdateUser(false)
           },
         )
       } catch (e) {
-        setuserEvent({ status: 'LOADED', value: null })
+        setUserEvent({ status: 'LOADED', value: null })
         setUpdateUser(false)
       }
     }
@@ -53,7 +53,7 @@ export function CurrentUserEventProvider({ children }) {
     <CurrentEventUserContext.Provider
       value={{
         ...userEvent,
-        setuserEvent: setuserEvent,
+        setuserEvent: setUserEvent,
         setUpdateUser: setUpdateUser,
       }}
     >

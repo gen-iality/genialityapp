@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   Col,
-  Modal,
   notification,
   Row,
   Spin,
@@ -13,7 +12,6 @@ import {
   Popconfirm,
   Divider,
 } from 'antd'
-import { withRouter } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { find, map, mergeRight, path, propEq } from 'ramda'
 import { isNonEmptyArray } from 'ramda-adjunct'
@@ -28,7 +26,7 @@ const { TabPane } = Tabs
 const { Meta } = Card
 
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [enableMeetings, setEnableMeetings] = useState(false)
   const [acceptedAgendas, setAcceptedAgendas] = useState([])
   const [currentRoom, setCurrentRoom] = useState(null)
@@ -53,7 +51,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 
   useEffect(() => {
     if (event._id && currentEventUserId && isNonEmptyArray(eventUsers)) {
-      setLoading(true)
+      setIsLoading(true)
       getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
         .then((agendas) => {
           if (isNonEmptyArray(agendas)) {
@@ -80,7 +78,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             description: 'Obteniendo las citas del usuario',
           })
         })
-        .finally(() => setLoading(false))
+        .finally(() => setIsLoading(false))
     }
   }, [event._id, currentEventUserId, eventUsers])
 
@@ -90,7 +88,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
     }
   }, [currentRoom])
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Row align="middle" justify="center" style={{ height: 100 }}>
         <Spin />
@@ -219,7 +217,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 }
 
 function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom }) {
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [deleted, setDeleted] = useState(false)
 
   const userName =
@@ -244,8 +242,8 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   }
 
   const deleteThisAgenda = () => {
-    if (!loading) {
-      setLoading(true)
+    if (!isLoading) {
+      setIsLoading(true)
       deleteAgenda(eventId, data.id)
         .then(() => setDeleted(true))
         .catch((error) => {
@@ -255,7 +253,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
             description: 'Error eliminando la cita',
           })
         })
-        .finally(() => setLoading(false))
+        .finally(() => setIsLoading(false))
     }
   }
 
@@ -282,7 +280,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
             okText="Si"
             cancelText="No"
           >
-            <Button type="text" danger disabled={loading} loading={loading}>
+            <Button type="text" danger disabled={isLoading} loading={isLoading}>
               Cancelar cita
             </Button>
           </Popconfirm>
@@ -337,8 +335,8 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
               <Button
                 block
                 type="primary"
-                disabled={loading || (!enableMeetings && !validDateRoom(data))}
-                loading={loading}
+                disabled={isLoading || (!enableMeetings && !validDateRoom(data))}
+                loading={isLoading}
                 onClick={() => {
                   accessMeetRoom(data, eventUser)
                 }}
@@ -359,4 +357,4 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   )
 }
 
-export default withRouter(MyAgenda)
+export default MyAgenda

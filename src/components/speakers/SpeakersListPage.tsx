@@ -23,7 +23,7 @@ interface ISpeakersListPageProps {
 const SpeakersListPage: FunctionComponent<ISpeakersListPageProps> = (props) => {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
-  const [dataSpeakers, setdataSpeakers] = useState<any[]>([])
+  const [dataSpeakers, setDataSpeakers] = useState<any[]>([])
   const { isLoading, data, refetch } = useQuery('getSpeakersByEvent', () =>
     SpeakersApi.byEvent(props.eventID),
   )
@@ -31,7 +31,7 @@ const SpeakersListPage: FunctionComponent<ISpeakersListPageProps> = (props) => {
   const cEventIsActive = eventIsActive
 
   useEffect(() => {
-    setdataSpeakers(data)
+    setDataSpeakers(data)
   }, [data])
 
   const queryClient = useQueryClient()
@@ -173,7 +173,7 @@ const SpeakersListPage: FunctionComponent<ISpeakersListPageProps> = (props) => {
           const updateSpeakersAfterADelete = dataSpeakers.filter(
             (speakers) => speakers._id !== queryData.speakerData._id,
           )
-          setdataSpeakers(updateSpeakersAfterADelete)
+          setDataSpeakers(updateSpeakersAfterADelete)
           StateMessage.show(
             null,
             'success',

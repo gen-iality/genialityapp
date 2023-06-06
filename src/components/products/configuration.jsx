@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Col, Row, Spin, Switch } from 'antd'
-import { withRouter } from 'react-router'
+import { useHistory } from 'react-router'
 import ReactQuill from 'react-quill'
 import { toolbarEditor } from '@helpers/constants'
 import { firestore } from '@helpers/firebase'
@@ -10,8 +10,10 @@ import { StateMessage } from '@context/MessageService'
 const Configuration = (props) => {
   const [checkSubasta, setCheckSubasta] = useState(false)
   const [messageF, setMessage] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [loadingData, setLoadingData] = useState(true)
+
+  const history = useHistory()
 
   useEffect(() => {
     if (props.eventId) {
@@ -28,7 +30,7 @@ const Configuration = (props) => {
     }
   }, [])
 
-  const goBack = () => props.history.goBack()
+  const goBack = () => history.goBack()
   function onChange(checked) {
     setCheckSubasta(checked)
   }
@@ -42,7 +44,7 @@ const Configuration = (props) => {
       'loading',
       ' Por favor espere mientras se guarda la configuración...',
     )
-    setLoading(true)
+    setIsLoading(true)
     const data = {
       habilitar_subasta: checkSubasta,
       message: messageF,
@@ -56,7 +58,7 @@ const Configuration = (props) => {
       StateMessage.destroy('loading')
       StateMessage.show(null, 'error', 'Ha ocurrido un error')
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   return !loadingData ? (
@@ -84,4 +86,4 @@ const Configuration = (props) => {
   )
 }
 
-export default withRouter(Configuration)
+export default Configuration

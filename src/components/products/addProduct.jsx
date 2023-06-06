@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { Row, Input, Form, Col, Modal } from 'antd'
-import { withRouter } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
 import Header from '@antdComponents/Header'
 import BackTop from '@antdComponents/BackTop'
@@ -45,10 +45,13 @@ function AddProduct(props) {
   const [idNew, setIdNew] = useState()
   const [isLoading, setIsLoading] = useState(true)
 
+  const params = useParams()
+  const history = useHistory()
+
   useEffect(() => {
-    if (props.match.params.id) {
-      setIdNew(props.match.params.id)
-      EventsApi.getOneProduct(props.eventId, props.match.params.id).then((product) => {
+    if (params.id) {
+      setIdNew(params.id)
+      EventsApi.getOneProduct(props.eventId, params.id).then((product) => {
         setProduct(product)
         setName(product.name)
         setCreator(product.by)
@@ -63,9 +66,9 @@ function AddProduct(props) {
         setIsLoading(false)
       })
     }
-  }, [props.match.params.id])
+  }, [params.id])
 
-  const goBack = () => props.history.goBack()
+  const goBack = () => history.goBack()
 
   const changeInput = (e, key) => {
     if (key === 'name') {
@@ -163,7 +166,7 @@ function AddProduct(props) {
             product._id,
           )
           if (resp) {
-            props.history.push(`/eventadmin/${props.eventId}/product`)
+            history.push(`/eventadmin/${props.eventId}/product`)
           }
         } else {
           const newProduct = await EventsApi.createProducts(
@@ -180,7 +183,7 @@ function AddProduct(props) {
             props.eventId,
           )
           if (newProduct) {
-            props.history.push(`/eventadmin/${props.eventId}/product`)
+            history.push(`/eventadmin/${props.eventId}/product`)
           }
         }
         StateMessage.destroy('loading')
@@ -201,7 +204,7 @@ function AddProduct(props) {
       'loading',
       ' Por favor espere mientras se borra la información...',
     )
-    if (props.match.params.id) {
+    if (params.id) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -212,7 +215,7 @@ function AddProduct(props) {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await EventsApi.deleteProduct(props.match.params.id, props.eventId)
+              await EventsApi.deleteProduct(params.id, props.eventId)
               StateMessage.destroy('loading')
               StateMessage.show(
                 null,
@@ -233,16 +236,9 @@ function AddProduct(props) {
 
   return (
     <Form {...formLayout} onFinish={saveProduct}>
-      <Header
-        title="Producto"
-        back
-        save
-        form
-        edit={props.match.params.id}
-        remove={remove}
-      />
+      <Header title="Producto" back save form edit={params.id} remove={remove} />
       <Row justify="center" wrap gutter={12}>
-        {props.match.params.id && isLoading ? (
+        {params.id && isLoading ? (
           <Loading />
         ) : (
           <Col span={16}>
@@ -340,4 +336,4 @@ function AddProduct(props) {
   )
 }
 
-export default withRouter(AddProduct)
+export default AddProduct

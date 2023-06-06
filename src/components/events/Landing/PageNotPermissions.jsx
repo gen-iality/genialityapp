@@ -7,7 +7,6 @@ import { useEventContext } from '@context/eventContext'
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions'
 import { Redirect } from 'react-router-dom'
 import { EventsApi } from '@helpers/request'
-import { withRouter } from 'react-router-dom'
 import { useHelper } from '@context/helperContext/hooks/useHelper'
 import UserLoginContainer from '../UserLoginContainer'
 
@@ -17,7 +16,7 @@ const PageNotPermissions = (props) => {
   let redirect
   const urlsection = `/landing/${EventContext.value._id}/`
   const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const { eventPrivate } = useHelper()
 
   const center = {
@@ -26,12 +25,12 @@ const PageNotPermissions = (props) => {
   }
 
   const obtenerGaleria = () => {
-    setLoading(true)
+    setIsLoading(true)
     EventsApi.getProducts(EventContext.value._id).then((resp) => {
       if (resp && resp.data) {
         const threeList = resp.data.slice(0, 3)
         setProducts(threeList)
-        setLoading(false)
+        setIsLoading(false)
       }
     })
   }
@@ -74,12 +73,12 @@ const PageNotPermissions = (props) => {
           {redirect !== null ||
             (redirect !== undefined && <Redirect to={`${urlsection}${redirect}`} />)}
           {/* Sección quemada para curso de subasta sileciosa FTDJ */}
-          {loading && (
+          {isLoading && (
             <div style={{ textAlign: 'center' }}>
               <Spin></Spin>
             </div>
           )}
-          {!loading && (
+          {!isLoading && (
             <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
               {props.sectionPermissions.view && (
                 <Card>
@@ -103,7 +102,7 @@ const PageNotPermissions = (props) => {
               )}
             </Col>
           )}
-          {!props.sectionPermissions.ticketview && !loading && (
+          {!props.sectionPermissions.ticketview && !isLoading && (
             <TicketsForm setVirtualConference={props.setVirtualConference} />
           )}
         </>
@@ -120,7 +119,4 @@ const mapDispatchToProps = {
   setSectionPermissions,
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withRouter(PageNotPermissions))
+export default connect(mapStateToProps, mapDispatchToProps)(PageNotPermissions)

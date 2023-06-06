@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import Espacios from './Espacios'
 import Espacio from './Espacio'
 
@@ -24,4 +24,4 @@ function EspacioRoutes(props) {
   )
 }
 
-export default withRouter(EspacioRoutes)
+export default EspacioRoutes

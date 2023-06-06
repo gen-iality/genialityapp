@@ -4,7 +4,7 @@ import { ApiService, isError, multipleRequest } from '../interfaces/interfaces'
 import { ApiUrl } from '@helpers/constants'
 
 export const useApiMultiple = () => {
-  const [responseData, setresponseData] = useState({})
+  const [responseData, setResponseData] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState<isError>({
     status: false,
@@ -56,7 +56,7 @@ export const useApiMultiple = () => {
 
       requestToMake.map(([request, method, key, payload, withCredentials]) => {
         RequestPromise({ payload, method, request, withCredentials, key }).then((res) => {
-          setresponseData((prevState) => {
+          setResponseData((prevState) => {
             return {
               ...prevState,
               [key]: res.data.data,

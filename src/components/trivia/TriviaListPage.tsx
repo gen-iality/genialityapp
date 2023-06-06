@@ -17,11 +17,11 @@ export interface ITriviaListPageProps {
 
 const TriviaListPage: FunctionComponent<ITriviaListPageProps> = (props) => {
   const [columnsData, setColumnsData] = useState<any>({})
-  const [typeEvent, settypeEvent] = useState<string | undefined>()
+  const [typeEvent, setTypeEvent] = useState<string | undefined>()
 
   useEffect(() => {
     const eventType = recordTypeForThisEvent({ value: props.event })
-    settypeEvent(eventType)
+    setTypeEvent(eventType)
   }, [props])
 
   const columns = [

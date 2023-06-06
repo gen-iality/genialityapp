@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import { Fragment } from 'react'
-import { Route, Switch, withRouter, useHistory } from 'react-router-dom'
+import { Route, Switch, useHistory } from 'react-router-dom'
 import { Button, Typography } from 'antd'
 
 import { QuizProgressPage } from './quiz/QuizProgressPage'
@@ -90,22 +90,23 @@ function Home(props: HomeProps) {
   )
 }
 
-function IsolatedRoutes({ ...props }) {
-  const { event, match } = props
+function IsolatedRoutes(props: any) {
+  const { event, matchUrl } = props
+
   return (
     <Fragment>
       <Switch>
         <Route
           exact
-          path={`${match.url}/`}
-          render={() => <Home event={event} matchUrl={match.url} />}
+          path={`${matchUrl}/`}
+          render={() => <Home event={event} matchUrl={matchUrl} />}
         />
         {uiSet.map((ui, index) => (
           <Route
             exact
             key={index}
-            path={`${match.url}/${ui.url}`}
-            render={() => <ui.Component event={event} matchUrl={match.url} />}
+            path={`${matchUrl}/${ui.url}`}
+            render={() => <ui.Component event={event} matchUrl={matchUrl} />}
           />
         ))}
       </Switch>
@@ -113,4 +114,4 @@ function IsolatedRoutes({ ...props }) {
   )
 }
 
-export default withRouter(IsolatedRoutes)
+export default IsolatedRoutes

@@ -1,5 +1,4 @@
 import { Route, Switch } from 'react-router-dom'
-import { withRouter } from 'react-router-dom'
 
 /** --------------------
  *  secciones del curso
@@ -29,4 +28,4 @@ const ProductSectionRoutes = (props) => {
     </Switch>
   )
 }
-export default withRouter(ProductSectionRoutes)
+export default ProductSectionRoutes

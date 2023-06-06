@@ -4,7 +4,6 @@ import { SmileOutlined } from '@ant-design/icons'
 import HeaderColumnswithContext from '../HeaderColumns'
 import WithEviusContext from '@context/withContext'
 import ImageComponentwithContext from '../ImageComponent'
-import { withRouter } from 'react-router-dom'
 import GcoreStreamingPlayer from '../GcoreStreamingPlayer'
 import AgendaContext from '@context/AgendaContext'
 import ReactPlayer from 'react-player'
@@ -14,8 +13,8 @@ import { getActivityFirestoreData } from './getActivityFirestoreData'
 
 const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) => {
   const { activity } = props
-  const [activityState, setactivityState] = useState('')
-  const [meetingId, setmeetingId] = useState('')
+  const [activityState, setActivityState] = useState('')
+  const [meetingId, setMeetingId] = useState('')
   const [fnCiclo, setFnCiclo] = useState(false)
 
   // Estado para controlar origen de transmision
@@ -27,8 +26,8 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
       if (!fnCiclo) {
         await getActivityFirestoreData(props.cEvent.value._id, activity._id, (data) => {
           const { habilitar_ingreso, meeting_id } = data
-          setactivityState(habilitar_ingreso)
-          setmeetingId(meeting_id)
+          setActivityState(habilitar_ingreso)
+          setMeetingId(meeting_id)
           setTransmition(data.transmition)
           setFnCiclo(true)
         })
@@ -111,4 +110,4 @@ const StreamingActivityDisplayer: FunctionComponent<IBasicActivityProps> = (prop
   )
 }
 
-export default withRouter(WithEviusContext(StreamingActivityDisplayer))
+export default WithEviusContext(StreamingActivityDisplayer)

@@ -3,7 +3,6 @@ import SurveyDetailPage from '../../surveys/SurveyDetailPage'
 import HeaderColumnswithContext from '../HeaderColumns'
 
 import WithEviusContext from '@context/withContext'
-import { withRouter } from 'react-router-dom'
 import { Spin } from 'antd'
 
 import { IBasicActivityProps } from './basicTypes'
@@ -46,4 +45,4 @@ const QuizActivityDisplayer: FunctionComponent<IBasicActivityProps> = (props) =>
   )
 }
 
-export default withRouter(WithEviusContext(QuizActivityDisplayer))
+export default WithEviusContext(QuizActivityDisplayer)

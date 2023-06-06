@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import CertificateListPage from './CertificateListPage'
 import CertificateEditor from './CertificateEditor'
 
@@ -25,4 +25,4 @@ function CertificateRoutes(props: any) {
   )
 }
 
-export default withRouter(CertificateRoutes)
+export default CertificateRoutes

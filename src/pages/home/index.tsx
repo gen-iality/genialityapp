@@ -1,4 +1,3 @@
-import { withRouter } from 'react-router-dom'
 import dayjs from 'dayjs'
 import momentLocalizer from 'react-widgets-moment'
 import { useRequest } from '../../services/useRequest'
@@ -16,9 +15,9 @@ momentLocalizer()
 const Home = () => {
   const { isLoading, isError, isSuccess, useResponse, handleRequest } = useApiMultiple()
 
-  const [typeEvent, settypeEvent] = useState<string>('nextEvents')
+  const [typeEvent, setTypeEvent] = useState<string>('nextEvents')
   const [hasMore] = useState(false)
-  const [pagebyTypevent, setpagebyTypevent] = useState({
+  const [pagebyTypevent, setPagebyTypevent] = useState({
     nextEvents: 10,
     oldEvents: 10,
   })
@@ -39,13 +38,13 @@ const Home = () => {
   const SeeMoreEvents = () => {
     switch (typeEvent) {
       case 'nextEvents':
-        setpagebyTypevent({
+        setPagebyTypevent({
           ...pagebyTypevent,
           nextEvents: pagebyTypevent.nextEvents + 10,
         })
         break
       case 'oldEvents':
-        setpagebyTypevent({
+        setPagebyTypevent({
           ...pagebyTypevent,
           oldEvents: pagebyTypevent.oldEvents + 10,
         })
@@ -65,7 +64,7 @@ const Home = () => {
         <Col span={24}>
           <Space wrap>
             <Button
-              onClick={() => settypeEvent('nextEvents')}
+              onClick={() => setTypeEvent('nextEvents')}
               type={typeEvent === 'nextEvents' ? 'primary' : 'text'}
               size="large"
               shape="round"
@@ -73,7 +72,7 @@ const Home = () => {
               Próximos
             </Button>
             <Button
-              onClick={() => settypeEvent('oldEvents')}
+              onClick={() => setTypeEvent('oldEvents')}
               type={typeEvent === 'oldEvents' ? 'primary' : 'text'}
               size="large"
               shape="round"
@@ -147,4 +146,4 @@ const Home = () => {
   )
 }
 
-export default withRouter(Home)
+export default Home

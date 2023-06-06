@@ -15,14 +15,14 @@ const ContactList = ({ tabActive, agendarCita }) => {
   const [contactsList, setContactsList] = useState([])
   const [messageService, setMessageService] = useState('')
   const [userProperties, setUserProperties] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const userEventContext = useUserEvent()
   const eventContext = useEventContext()
   const userCurrentContext = useCurrentUser()
 
   useEffect(() => {
-    setLoading(true)
+    setIsLoading(true)
 
     const getContactList = async () => {
       // Servicio que trae los contactos
@@ -36,7 +36,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
           }
           if (typeof result == 'string') setMessageService(result)
 
-          setLoading(false)
+          setIsLoading(false)
         },
       )
     }
@@ -50,11 +50,11 @@ const ContactList = ({ tabActive, agendarCita }) => {
       // getuserContactList();
       getContactList()
     } else {
-      setLoading(false)
+      setIsLoading(false)
     }
   }, [eventContext.value._id, tabActive])
 
-  if (!loading)
+  if (!isLoading)
     return userCurrentContext.value === null ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} xxl={15} style={{ margin: '0 auto' }}>
         <Alert
@@ -64,7 +64,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
           showIcon
         />
       </Col>
-    ) : contactsList.length > 0 && !loading ? (
+    ) : contactsList.length > 0 && !isLoading ? (
       <div>
         <Row gutter={[10, 10]}>
           {contactsList.map((contact, key) => {
@@ -169,13 +169,13 @@ const ContactList = ({ tabActive, agendarCita }) => {
       </div>
     ) : (
       contactsList.length == 0 &&
-      !loading && (
+      !isLoading && (
         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
           <Card style={{ textAlign: 'center' }}>{messageService}</Card>
         </Col>
       )
     )
-  if (userCurrentContext.value || loading) return <Spin></Spin>
+  if (userCurrentContext.value || isLoading) return <Spin></Spin>
   if (!userCurrentContext.value) return <Spin></Spin>
 }
 export default ContactList

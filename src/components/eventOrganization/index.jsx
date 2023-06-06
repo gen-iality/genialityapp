@@ -1,6 +1,6 @@
 import { Col, Row, Typography, Badge, Space, Divider, Image, Empty, Button } from 'antd'
 import { useState, useEffect } from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { OrganizationFuction } from '@helpers/request'
 import EventCard from '../shared/eventCard'
 import dayjs from 'dayjs'
@@ -13,8 +13,9 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 
 const { Title, Text, Paragraph } = Typography
 
-const EventOrganization = (props) => {
-  const orgId = props.match.params.id
+const EventOrganization = () => {
+  const params = useParams()
+  const orgId = params.id
 
   const [upcomingEvents, setUpcomingEvents] = useState([])
   const [lastEvents, setLastEvents] = useState([])
@@ -144,7 +145,7 @@ const EventOrganization = (props) => {
           >
             {isAdminUser && (
               <Link
-                to={`/admin/organization/${props.match.params.id}`}
+                to={`/admin/organization/${orgId}`}
                 style={{
                   marginBottom: '-15px',
                   fontSize: '20px',
@@ -317,7 +318,7 @@ const EventOrganization = (props) => {
   )
 }
 
-export default withRouter(EventOrganization)
+export default EventOrganization
 
 /**
  * 

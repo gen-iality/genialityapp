@@ -1,8 +1,14 @@
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 import TimeTracking from './TimeTracking'
+import { FunctionComponent } from 'react'
 
-function TimeTrackingRoutes({ ...props }: { event: any; matchUrl: any }) {
+interface ITimeTrackingRoutesProps {
+  event: any
+  matchUrl: any
+}
+
+const TimeTrackingRoutes: FunctionComponent<ITimeTrackingRoutesProps> = (props) => {
   const { event, matchUrl } = props
   return (
     <>
@@ -17,4 +23,4 @@ function TimeTrackingRoutes({ ...props }: { event: any; matchUrl: any }) {
   )
 }
 
-export default withRouter(TimeTrackingRoutes)
+export default TimeTrackingRoutes

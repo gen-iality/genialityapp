@@ -1,4 +1,4 @@
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Result, Button } from 'antd'
 
 const ForbiddenPage = () => (
@@ -14,4 +14,4 @@ const ForbiddenPage = () => (
   />
 )
 
-export default withRouter(ForbiddenPage)
+export default ForbiddenPage

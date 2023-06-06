@@ -13,7 +13,7 @@ import { CurrentEventContext } from '@context/eventContext'
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
   const [invitationsReceived, setInvitationsReceived] = useState([])
   const cEvent = useContext(CurrentEventContext)
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const obtenerImageUser = async (idUser) => {
     const eventUser = await UsersApi.getOne(cEvent.value?._id, idUser)
     if (eventUser) {
@@ -27,7 +27,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
     }
 
     async function obtenerData() {
-      setLoading(true)
+      setIsLoading(true)
       const dataNew = await Promise.all(
         list.map(async (request) => {
           const picture = await obtenerImageUser(request.id_user_requested)
@@ -35,7 +35,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
         }),
       )
       setInvitationsReceived(dataNew)
-      setLoading(false)
+      setIsLoading(false)
     }
   }, [list])
 
@@ -83,7 +83,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
       </Col>
     )
 
-  return !loading ? (
+  return !isLoading ? (
     <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
       <Card>No tiene solicitudes actualmente</Card>
     </Col>
@@ -96,7 +96,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
 const InvitacionListSent = ({ list }) => {
   const [invitationsSent, setInvitationsSent] = useState([])
   const cEvent = useContext(CurrentEventContext)
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const obtenerImageUser = async (idUser) => {
     const eventUser = await UsersApi.getOne(cEvent.value?._id, idUser)
     if (eventUser) {
@@ -110,7 +110,7 @@ const InvitacionListSent = ({ list }) => {
     }
 
     async function obtenerData() {
-      setLoading(true)
+      setIsLoading(true)
       const dataNew = await Promise.all(
         list.map(async (request) => {
           const picture = await obtenerImageUser(request.id_user_requesting)
@@ -118,7 +118,7 @@ const InvitacionListSent = ({ list }) => {
         }),
       )
       setInvitationsSent(dataNew)
-      setLoading(false)
+      setIsLoading(false)
     }
   }, [list])
 
@@ -158,7 +158,7 @@ const InvitacionListSent = ({ list }) => {
       </Col>
     )
 
-  return !loading ? (
+  return !isLoading ? (
     <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
       <Card>No ha enviado ninguna solicitud</Card>
     </Col>
@@ -177,13 +177,13 @@ export default function RequestList({
   const [requestListReceived, setRequestListReceived] = useState([])
   const [requestListSent, setRequestListSent] = useState([])
   const [currentUserId, setCurrentUserId] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const eventUserCtx = useContext(CurrentEventUserContext)
 
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
     // Se consulta el id del usuario por el token
-    setLoading(true)
+    setIsLoading(true)
     const evius_token = await GetTokenUserFirebase()
     if (evius_token) {
       // Servicio que obtiene el eventUserId del usuario actual
@@ -201,7 +201,7 @@ export default function RequestList({
         } else {
           setRequestListReceived([])
         }
-        setLoading(false)
+        setIsLoading(false)
       })
 
       // Servicio que trae las invitaciones / solicitudes enviadas
@@ -210,11 +210,11 @@ export default function RequestList({
           setRequestListSent(
             data.filter((item) => !item.response || item.response === 'rejected'),
           )
-          setLoading(false)
+          setIsLoading(false)
         }
       })
     } else {
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
@@ -279,7 +279,7 @@ export default function RequestList({
     }
   }, [eventId, tabActive])
 
-  if (!loading)
+  if (!isLoading)
     return currentUser === null ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
         <Alert
@@ -300,5 +300,5 @@ export default function RequestList({
         <InvitacionListSent list={requestListSent} />
       </div>
     )
-  if (loading) return <Spin></Spin>
+  if (isLoading) return <Spin></Spin>
 }
