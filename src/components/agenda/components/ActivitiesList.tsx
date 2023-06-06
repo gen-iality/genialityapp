@@ -52,7 +52,12 @@ const ActivitiesList = (props: ActivitiesListProps) => {
 
   useEffect(() => {
     // We use the activities loaded by the HelperContext
-    setLoadedActivities(activitiesEvent)
+    if (!Array.isArray(activitiesEvent)) {
+      console.warn('activitiesEvent is not an array')
+      setLoadedActivities([])
+    } else {
+      setLoadedActivities(activitiesEvent)
+    }
   }, [activitiesEvent])
 
   useEffect(() => {
