@@ -10,14 +10,24 @@ interface IModuledActivityDisplayerProps {
 const ModuledActivityDisplayer: FunctionComponent<IModuledActivityDisplayerProps> = (
   props,
 ) => {
+  const { list: givenList, render } = props
+
+  const activityList = useMemo(() => {
+    if (!Array.isArray(givenList)) {
+      console.warn('givenList is not an array')
+      return []
+    }
+    return givenList
+  }, [givenList])
+
   const moduleNames = useMemo(() => {
     const uniqueNames = Array.from(
-      new Set(props.list.map((item) => item.module_name)),
+      new Set(activityList.map((item) => item.module_name)),
     ).filter((item) => item !== undefined) as string[]
 
     const sorttedNames = uniqueNames
       .map((name) => {
-        const data = props.list.find((item) => item.module_name == name)
+        const data = activityList.find((item) => item.module_name == name)
         if (!data) return { name, order: 0 }
         return {
           name,
@@ -27,7 +37,7 @@ const ModuledActivityDisplayer: FunctionComponent<IModuledActivityDisplayerProps
       .sort((a, b) => (a.order || 0) - (b.order || 0))
       .map((item) => item.name)
     return sorttedNames
-  }, [props.list])
+  }, [activityList])
 
   return (
     <Collapse>
@@ -36,10 +46,10 @@ const ModuledActivityDisplayer: FunctionComponent<IModuledActivityDisplayerProps
           header={`Módulo: ${name}`}
           key={index}
           extra={`${
-            props.list.filter((item) => item.module_name === name).length
+            activityList.filter((item) => item.module_name === name).length
           } elemento(s)`}
         >
-          {props.render(name)}
+          {render(name)}
         </Collapse.Panel>
       ))}
     </Collapse>
