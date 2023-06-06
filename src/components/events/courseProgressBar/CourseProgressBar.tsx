@@ -37,6 +37,14 @@ function CourseProgressBar(props: CourseProgressBarProps) {
 
   const location = useLocation()
 
+  const isThisActivityBlockedByRequirement = (activity: ExtendedAgendaType): boolean => {
+    if (eventProgressPercent === undefined) return false
+    if (activity.require_completion === undefined) return false
+
+    if (activity.require_completion > eventProgressPercent) return true
+    return false
+  }
+
   const requestAttendees = async () => {
     console.debug('will request the attendee for', activities.length, 'activities')
     const existentActivities = activities.map(async (activity) => {
@@ -101,8 +109,17 @@ function CourseProgressBar(props: CourseProgressBarProps) {
             <div key={index} className="CourseProgressBar-stepContainer">
               <Line isActive={activity.isViewed} />
               <Link
-                to={`/landing/${eventId}/activity/${activity._id}`}
+                to={
+                  isThisActivityBlockedByRequirement(activity)
+                    ? '#'
+                    : `/landing/${eventId}/activity/${activity._id}`
+                }
                 key={`key_${index}`}
+                title={
+                  isThisActivityBlockedByRequirement(activity)
+                    ? 'Curso bloqueado por requerimiento'
+                    : 'Ir al curso'
+                }
               >
                 <Step
                   onClick={() => {
@@ -122,6 +139,7 @@ function CourseProgressBar(props: CourseProgressBarProps) {
                   isFocus={activity._id === watchedActivityId}
                   key={activity._id}
                   isActive={activity.isViewed}
+                  isBlocked={isThisActivityBlockedByRequirement(activity)}
                   isSurvey={[
                     activityContentValues.quizing,
                     activityContentValues.survey,
