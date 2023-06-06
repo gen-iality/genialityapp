@@ -8,11 +8,11 @@ function RankingList(props) {
   const styles = cEvent.value.styles
   const { myScore } = cHelper
 
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
-    setLoading(false)
+    setIsLoading(true)
+    setIsLoading(false)
   }, [myScore])
 
   /** Se valida si el usuario ya participo, el name vacio es el estado inicial */
@@ -43,7 +43,7 @@ function RankingList(props) {
           >
             <List
               className="demo-loadmore-list"
-              loading={loading}
+              loading={isLoading}
               itemLayout="horizontal"
               dataSource={myScore}
               renderItem={(item) => <UsersCard type="ranking" item={item} />}

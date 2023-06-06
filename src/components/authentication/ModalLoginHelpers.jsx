@@ -37,7 +37,7 @@ const ModalLoginHelpers = (props) => {
   const [sendRecovery, setSendRecovery] = useState(null)
   const [status, setStatus] = useState('success')
   const [result, setResult] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [form] = Form.useForm()
   const intl = useIntl()
   const screens = useBreakpoint()
@@ -87,13 +87,13 @@ const ModalLoginHelpers = (props) => {
   }
   // Función que se ejecuta al presionar el boton
   const onFinish = async (values) => {
-    setLoading(true)
+    setIsLoading(true)
     setRegisterUser(false)
     setSendRecovery(null)
     // SI EL CURSO ES PARA RECUPERAR CONTRASEÑA
     if (typeModal == 'recover') {
       handleRecoveryPass(values)
-      setLoading(false)
+      setIsLoading(false)
     } else {
       // Enviar acceso al correo
       try {
@@ -134,7 +134,7 @@ const ModalLoginHelpers = (props) => {
         setStatus('error')
       }
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   // Failde de validaciones del formulario
@@ -300,7 +300,7 @@ const ModalLoginHelpers = (props) => {
             }
           />
         )}
-        {!loading && (
+        {!isLoading && (
           <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
             <Button
               id="submitButton"
@@ -313,7 +313,7 @@ const ModalLoginHelpers = (props) => {
             </Button>
           </Form.Item>
         )}
-        {loading && (
+        {isLoading && (
           <Row justify="center">
             <LoadingOutlined style={{ fontSize: '50px' }} />
           </Row>

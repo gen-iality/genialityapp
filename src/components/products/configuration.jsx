@@ -10,7 +10,7 @@ import { StateMessage } from '@context/MessageService'
 const Configuration = (props) => {
   const [checkSubasta, setCheckSubasta] = useState(false)
   const [messageF, setMessage] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [loadingData, setLoadingData] = useState(true)
 
   const history = useHistory()
@@ -44,7 +44,7 @@ const Configuration = (props) => {
       'loading',
       ' Por favor espere mientras se guarda la configuración...',
     )
-    setLoading(true)
+    setIsLoading(true)
     const data = {
       habilitar_subasta: checkSubasta,
       message: messageF,
@@ -58,7 +58,7 @@ const Configuration = (props) => {
       StateMessage.destroy('loading')
       StateMessage.show(null, 'error', 'Ha ocurrido un error')
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   return !loadingData ? (

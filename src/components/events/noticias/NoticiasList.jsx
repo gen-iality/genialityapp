@@ -17,7 +17,7 @@ const { Paragraph } = Typography
 const NoticiasList = (props) => {
   const { setVirtualConference, size, newId } = props
   const [eventId] = useState(props.cEvent.value._id)
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [noticias, setNoticias] = useState()
   const [noticiasAll, setNoticiasAll] = useState()
   const [viewMenos, setViewMenos] = useState(false)
@@ -42,17 +42,17 @@ const NoticiasList = (props) => {
           } else {
             setNoticias(noticeList)
           }
-          setLoading(false)
+          setIsLoading(false)
         } else {
           setNoticias([])
-          setLoading(false)
+          setIsLoading(false)
         }
       })
       .catch((err) => {
         console.error(err)
         //OCURRE UNA EXCEPCION===> unauthenticated user
         setNoticias([])
-        setLoading(false)
+        setIsLoading(false)
       })
 
     return () => {
@@ -75,7 +75,7 @@ const NoticiasList = (props) => {
 
   return (
     <>
-      {loading && <Spin />}
+      {isLoading && <Spin />}
       <Row style={{ padding: '30px 25px' }} gutter={[8, 8]} wrap>
         {noticias &&
           noticias.length > 0 &&

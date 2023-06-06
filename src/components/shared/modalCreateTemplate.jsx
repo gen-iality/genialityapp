@@ -6,19 +6,19 @@ import { useHelper } from '@context/helperContext/hooks/useHelper'
 import { StateMessage } from '@context/MessageService'
 
 const ModalCreateTemplate = (props) => {
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const { helperDispatch } = useHelper()
 
   const onFinish = async (values) => {
     //por defecto
     values.user_properties = DefaultProperties
     const organizerid = props.organizationid
-    setLoading(true)
+    setIsLoading(true)
     await OrganizationPlantillaApi.createTemplate(organizerid, {
       template_properties: [values],
     })
     StateMessage.show(null, 'success', 'Template creada')
-    setLoading(false)
+    setIsLoading(false)
     props.handlevisibleModal()
     helperDispatch({ type: 'reloadTemplatesCms' })
   }
@@ -51,7 +51,7 @@ const ModalCreateTemplate = (props) => {
           <Input type="text" size="large" placeholder="Nombre del template" />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
-          {loading ? (
+          {isLoading ? (
             <Spin />
           ) : (
             <Button

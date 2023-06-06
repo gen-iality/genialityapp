@@ -41,7 +41,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
   const [fileName, setFileName] = useState('')
   const [extention, setExtention] = useState('')
   const [folder, setFolder] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [loadPercentage, setLoadPercentage] = useState(0)
   const [fromEditing, setFromEditing] = useState(false)
 
@@ -104,7 +104,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
     setFolder(response.folder)
     setFiles([response.file])
     setDocumentList(response.documentList)
-    setLoading(false)
+    setIsLoading(false)
     setFromEditing(true)
   }
 
@@ -114,13 +114,13 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
     setFolder(false)
     setFiles('')
     setDocumentList([])
-    setLoading(false)
+    setIsLoading(false)
     setFromEditing(false)
     setLoadPercentage(0)
   }
 
   const onSubmit = async () => {
-    setLoading(true)
+    setIsLoading(true)
     if (folder) {
       setDocument({ ...document, type: 'folder', folder })
     }
@@ -164,7 +164,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
         }
 
         if (!props.simpleMode && props.parentUrl) history.push(`${props.parentUrl}`)
-        setLoading(false)
+        setIsLoading(false)
       } catch (e) {
         StateMessage.destroy('loading')
         StateMessage.show(null, 'error', handleRequestError(e).message)
@@ -260,7 +260,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
 
   const onHandlerFile = async (e: any) => {
     console.log('onHandlerFile calling...', e)
-    setLoading(true)
+    setIsLoading(true)
     setDocumentList(e.fileList)
 
     const ref = fireStorage.ref()
@@ -312,7 +312,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
         console.log(downloadURL)
         // Send the URL to the parent component. Save it.
         if (typeof props.onSave === 'function') props.onSave(downloadURL)
-        setLoading(false)
+        setIsLoading(false)
       })
       setDocument({
         ...document,
@@ -326,7 +326,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
       // if (props.simpleMode) setInterval(() => onSubmit(), 1000);
     } catch (e) {
       console.error('cannot re get file', e)
-      setLoading(true)
+      setIsLoading(true)
     }
   }
 
@@ -358,11 +358,11 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
           }
         }}
         edit={location.state.edit}
-        loadingSave={loading}
+        loadingSave={isLoading}
       />
 
       <Spin
-        spinning={loading}
+        spinning={isLoading}
         tip={
           <>
             Por favor espere mientras cargue... <br />
@@ -410,7 +410,7 @@ const Document: FunctionComponent<IDocumentProps> = (props) => {
                 placeholder={folder ? 'Título de la carpeta' : 'Título del documento'}
                 value={document.title}
                 onChange={(e) => handleChange(e)}
-                disabled={documentList.length === 0 ? true : loading}
+                disabled={documentList.length === 0 ? true : isLoading}
               />
             </Form.Item>
           </Col>

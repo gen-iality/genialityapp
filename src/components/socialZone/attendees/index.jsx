@@ -10,7 +10,7 @@ import { knowMaleOrFemale } from '@Utilities/knowMaleOrFemale'
 const AttendeList = function (props) {
   //contextos
   const [myattendelist, setMyattendelist] = useState()
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(0)
   const [filteredlist, setFilteredlist] = useState([])
   const [hasMore, setHasMore] = useState(true)
@@ -99,12 +99,12 @@ const AttendeList = function (props) {
   }, [props.busqueda])
 
   const handleInfiniteOnLoad = () => {
-    setLoading(true)
+    setIsLoading(true)
     setHasMore(true)
 
     if (filteredlist.length == myattendelist.length) {
       setHasMore(false)
-      setLoading(false)
+      setIsLoading(false)
       return
     }
 
@@ -119,7 +119,7 @@ const AttendeList = function (props) {
     setFilteredlist(datosg)
     setPage(pagP++)
     //
-    setLoading(false)
+    setIsLoading(false)
     setHasMore(true)
   }
 
@@ -128,7 +128,7 @@ const AttendeList = function (props) {
       initialLoad={false}
       pageStart={0}
       loadMore={() => handleInfiniteOnLoad()}
-      hasMore={!loading && hasMore}
+      hasMore={!isLoading && hasMore}
       useWindow={false}
     >
       <List

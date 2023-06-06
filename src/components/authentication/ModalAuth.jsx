@@ -49,7 +49,7 @@ const stylePaddingMobile = {
 
 const ModalAuth = (props) => {
   const screens = useBreakpoint()
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [errorLogin, setErrorLogin] = useState(false)
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false)
   const [form1] = Form.useForm()
@@ -174,7 +174,7 @@ const ModalAuth = (props) => {
 
   //Método ejecutado en el curso onSubmit (onFinish) del formulario de login
   const handleLoginEmailPassword = async (values) => {
-    setLoading(true)
+    setIsLoading(true)
     loginFirebase(values)
   }
 
@@ -185,7 +185,7 @@ const ModalAuth = (props) => {
       .signInWithEmailAndPassword(data.email, data.password)
       .then(async (response) => {
         if (response.user) {
-          setLoading(false)
+          setIsLoading(false)
           helperDispatch({ type: 'showLogin', visible: false })
           form1.resetFields()
         }
@@ -194,7 +194,7 @@ const ModalAuth = (props) => {
         console.log('error', error)
         DetecError(error.code)
         setErrorLogin(true)
-        setLoading(false)
+        setIsLoading(false)
       })
   }
 
@@ -260,7 +260,7 @@ const ModalAuth = (props) => {
                 ]}
               >
                 <Input
-                  disabled={loading}
+                  disabled={isLoading}
                   type="email"
                   size="large"
                   placeholder={intl.formatMessage({
@@ -289,7 +289,7 @@ const ModalAuth = (props) => {
                   ]}
                 >
                   <Input
-                    disabled={loading}
+                    disabled={isLoading}
                     size="large"
                     placeholder={intl.formatMessage({
                       id: 'modal.label.cedula',
@@ -320,7 +320,7 @@ const ModalAuth = (props) => {
                   ]}
                 >
                   <Input.Password
-                    disabled={loading}
+                    disabled={isLoading}
                     size="large"
                     placeholder={intl.formatMessage({
                       id: 'modal.label.password',
@@ -335,7 +335,7 @@ const ModalAuth = (props) => {
                   />
                 </Form.Item>
               )}
-              {!loading && (
+              {!isLoading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
                   <Typography.Text
                     onClick={() => handleChangeTypeModal('recover')}
@@ -371,7 +371,7 @@ const ModalAuth = (props) => {
                   message={msjError}
                 />
               )}
-              {!loading && (
+              {!isLoading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
                   <Button
                     id="loginButton"
@@ -387,7 +387,7 @@ const ModalAuth = (props) => {
                   </Button>
                 </Form.Item>
               )}
-              {loading && <LoadingOutlined style={{ fontSize: '50px' }} />}
+              {isLoading && <LoadingOutlined style={{ fontSize: '50px' }} />}
             </Form>
             {props.organization !== 'landing' && (
               <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
@@ -397,7 +397,7 @@ const ModalAuth = (props) => {
                 <Space direction="vertical" style={{ width: '100%' }}>
                   <Button
                     icon={<MailOutlined />}
-                    disabled={loading}
+                    disabled={isLoading}
                     onClick={() => handleChangeTypeModal('mail')}
                     type="primary"
                     block

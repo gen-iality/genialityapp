@@ -59,7 +59,7 @@ const CMS = (props) => {
   } = props
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [list, setList] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const { reloadTemplatesCms } = useHelper()
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const CMS = (props) => {
           .map((it, index) => ({ ...it, key: `table_cms_${index}` })),
       )
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   const remove = (id, name) => {
@@ -129,11 +129,11 @@ const CMS = (props) => {
   }
 
   const updateMails = async (idMessage) => {
-    setLoading(true)
+    setIsLoading(true)
     const updateMails = await API.updateOne(eventId, idMessage)
     await getList()
     StateMessage.show(null, 'success', updateMails?.message)
-    setLoading(false)
+    setIsLoading(false)
   }
 
   return (
@@ -155,7 +155,7 @@ const CMS = (props) => {
 
       <Table
         header={columns}
-        loading={loading}
+        loading={isLoading}
         list={list}
         setList={setList}
         key={key}

@@ -16,11 +16,11 @@ const RegisterUserAndEventUserAnonymous = ({}: any) => {
   const cEvent = useEventContext()
   const cEventUser = useUserEvent()
   const { helperDispatch } = useHelper()
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const { fields_conditions, user_properties } = cEvent?.value || {}
   const fields = fieldNameEmailFirst(user_properties)
   const handleSubmit = async (values: any) => {
-    setLoading(true)
+    setIsLoading(true)
     app
       .auth()
       .signInAnonymously()
@@ -48,7 +48,7 @@ const RegisterUserAndEventUserAnonymous = ({}: any) => {
                 console.log('response', data)
                 cEventUser.setUpdateUser(true)
                 helperDispatch({ type: 'showLogin', visible: false })
-                setLoading(false)
+                setIsLoading(false)
               })
             }
           })
@@ -71,7 +71,7 @@ const RegisterUserAndEventUserAnonymous = ({}: any) => {
         saveAttendee={handleSubmit}
         fields={fields}
         conditionalFields={fields_conditions}
-        loaderWhenSavingUpdatingOrDelete={loading}
+        loaderWhenSavingUpdatingOrDelete={isLoading}
         submitButtonProps={{
           styles: {
             marginTop: '20px',

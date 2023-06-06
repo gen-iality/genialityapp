@@ -36,7 +36,7 @@ const HeaderColumns = (props) => {
   const { currentActivity } = useHelper()
   const cEvent = useEventContext()
   const cEventUSer = useContext(CurrentEventUserContext)
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const {
     request,
     getRequestByActivity,
@@ -58,11 +58,11 @@ const HeaderColumns = (props) => {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        setLoading(true)
+        setIsLoading(true)
         removeRequestTransmision()
         async function removeRequestTransmision() {
           await removeRequest(refActivity, cEventUSer.value?._id)
-          setLoading(false)
+          setIsLoading(false)
         }
       },
       onCancel() {
@@ -96,7 +96,7 @@ const HeaderColumns = (props) => {
   }
 
   const sendOrCancelRequest = async () => {
-    setLoading(true)
+    setIsLoading(true)
     if (!haveRequest() && cEventUSer.value?._id) {
       await addRequest(refActivity + '/' + cEventUSer.value?._id, {
         id: cEventUSer.value?._id,
@@ -109,7 +109,7 @@ const HeaderColumns = (props) => {
     } else {
       StateMessage.show(null, 'error', 'Error al enviar solicitud')
     }
-    setLoading(false)
+    setIsLoading(false)
   }
 
   const intl = useIntl()
@@ -262,11 +262,11 @@ const HeaderColumns = (props) => {
               recordTypeForThisEvent(cEvent) !== 'UN_REGISTERED_PUBLIC_EVENT' && (
                 <Button
                   style={{ transition: 'all 1s' }}
-                  onClick={() => (!loading ? sendOrCancelRequest() : null)}
+                  onClick={() => (!isLoading ? sendOrCancelRequest() : null)}
                   icon={
-                    !haveRequest() && !loading ? (
+                    !haveRequest() && !isLoading ? (
                       <HumanGreetingVariantIcon style={{ fontSize: '16px' }} />
-                    ) : haveRequest() && !loading ? (
+                    ) : haveRequest() && !isLoading ? (
                       <CancelIcon style={{ fontSize: '16px' }} />
                     ) : (
                       <Spin />
@@ -275,9 +275,9 @@ const HeaderColumns = (props) => {
                   disabled={request && request[cEventUSer.value?._id]?.active}
                   type={!haveRequest() ? 'primary' : 'danger'}
                 >
-                  {!haveRequest() && !loading
+                  {!haveRequest() && !isLoading
                     ? 'Solicitar participar en la transmisión'
-                    : !loading
+                    : !isLoading
                     ? 'Cancelar solicitud'
                     : 'Espere...'}
                 </Button>
